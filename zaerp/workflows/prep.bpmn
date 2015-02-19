@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_0h2OoKxJEeSbpuVyFIedbA" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="Process_1" isExecutable="false">
+    <bpmn2:exclusiveGateway id="is_course_needs_prep" name="Course needs a preperation?" default="no_need_to_argue">
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>we_need_to_prepare</bpmn2:outgoing>
+      <bpmn2:outgoing>no_need_to_argue</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="we_need_to_prepare" name="" sourceRef="is_course_needs_prep" targetRef="prof_exam">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="python">int(course_id) in [1, 2, 3, 4, 5]</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="no_need_to_argue" name="" sourceRef="is_course_needs_prep" targetRef="joiner"/>
+    <bpmn2:exclusiveGateway id="joiner">
+      <bpmn2:incoming>no_need_to_argue</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="joiner" targetRef="congrat"/>
+    <bpmn2:startEvent id="StartEvent_1" name="welcome">
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="enter_data"/>
+    <bpmn2:userTask id="enter_data" name="get data">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="user_questions">
+            <camunda:map>
+              <camunda:entry key="student_id">Öğrenci numarasını giriniz</camunda:entry>
+              <camunda:entry key="course_id">Ders kodunu giriniz</camunda:entry>
+              <camunda:entry/>
+            </camunda:map>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="callbacks">
+            <camunda:list>
+              <camunda:value>get_user_data</camunda:value>
+              <camunda:value>check_saved_wf</camunda:value>
+            </camunda:list>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:properties>
+          <camunda:property value="ext_val" name="ext_key"/>
+          <camunda:property value="ext_val2" name="ext_key2"/>
+          <camunda:property/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="enter_data" targetRef="is_course_needs_prep"/>
+    <bpmn2:userTask id="prof_course" name="prepertaion course">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="get_data">
+            <camunda:map>
+              <camunda:entry key="is_course_finished">Hazırlık kursu tamamlandı mı?</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>exam_failed</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+      <bpmn2:standardLoopCharacteristics/>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="prof_course" targetRef="prof_exam"/>
+    <bpmn2:task id="congrat" name="Conguratulations">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="send_message">
+            <camunda:map>
+              <camunda:entry key="to">informer</camunda:entry>
+              <camunda:entry key="message">preperation_passed </camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:exclusiveGateway id="is_prep_exam_passed" name="exam passed or not?">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+      <bpmn2:outgoing>exam_failed</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" name="pass" sourceRef="is_prep_exam_passed" targetRef="joiner">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">int(exam_score) >= 60</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:endEvent id="EndEvent_1">
+      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="congrat" targetRef="EndEvent_1"/>
+    <bpmn2:userTask id="prof_exam" name="proficiency exam">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="user_questions">
+            <camunda:map>
+              <camunda:entry key="exam_score">Öğrencinin sınav notunu giriniz?</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="callbacks">
+            <camunda:list>
+              <camunda:value>get_user_data</camunda:value>
+            </camunda:list>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>we_need_to_prepare</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="prof_exam" targetRef="is_prep_exam_passed"/>
+    <bpmn2:sequenceFlow id="exam_failed" name="fail" sourceRef="is_prep_exam_passed" targetRef="prof_course">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[int(exam_score) < 60]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="47.0" y="228.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="46.0" x="42.0" y="269.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_2" bpmnElement="enter_data">
+        <dc:Bounds height="80.0" width="100.0" x="132.0" y="206.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_2" targetElement="_BPMNShape_Task_2">
+        <di:waypoint xsi:type="dc:Point" x="83.0" y="246.0"/>
+        <di:waypoint xsi:type="dc:Point" x="132.0" y="246.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="9.0" y="246.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_2" bpmnElement="is_course_needs_prep" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="360.0" y="220.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="142.0" x="314.0" y="275.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="_BPMNShape_Task_2" targetElement="_BPMNShape_ExclusiveGateway_2">
+        <di:waypoint xsi:type="dc:Point" x="232.0" y="246.0"/>
+        <di:waypoint xsi:type="dc:Point" x="290.0" y="246.0"/>
+        <di:waypoint xsi:type="dc:Point" x="290.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="360.0" y="245.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="0.0" y="239.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_3" bpmnElement="prof_exam">
+        <dc:Bounds height="80.0" width="100.0" x="432.0" y="115.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="we_need_to_prepare" sourceElement="_BPMNShape_ExclusiveGateway_2" targetElement="_BPMNShape_Task_3">
+        <di:waypoint xsi:type="dc:Point" x="385.0" y="220.0"/>
+        <di:waypoint xsi:type="dc:Point" x="385.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="432.0" y="155.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="382.0" y="195.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_4" bpmnElement="congrat">
+        <dc:Bounds height="80.0" width="120.0" x="936.0" y="188.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="no_need_to_argue" sourceElement="_BPMNShape_ExclusiveGateway_2" targetElement="_BPMNShape_ExclusiveGateway_4">
+        <di:waypoint xsi:type="dc:Point" x="410.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="614.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="614.0" y="227.0"/>
+        <di:waypoint xsi:type="dc:Point" x="819.0" y="227.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="449.0" y="245.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_3" bpmnElement="is_prep_exam_passed" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="618.0" y="142.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="104.0" x="591.0" y="197.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_Task_3" targetElement="_BPMNShape_ExclusiveGateway_3">
+        <di:waypoint xsi:type="dc:Point" x="532.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="583.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="583.0" y="167.0"/>
+        <di:waypoint xsi:type="dc:Point" x="618.0" y="167.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="558.0" y="177.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_5" bpmnElement="prof_course">
+        <dc:Bounds height="80.0" width="100.0" x="744.0" y="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_ExclusiveGateway_4">
+        <di:waypoint xsi:type="dc:Point" x="668.0" y="167.0"/>
+        <di:waypoint xsi:type="dc:Point" x="743.0" y="167.0"/>
+        <di:waypoint xsi:type="dc:Point" x="743.0" y="227.0"/>
+        <di:waypoint xsi:type="dc:Point" x="819.0" y="227.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="40.0" x="741.0" y="168.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_8" sourceElement="_BPMNShape_Task_5" targetElement="_BPMNShape_Task_3">
+        <di:waypoint xsi:type="dc:Point" x="744.0" y="76.0"/>
+        <di:waypoint xsi:type="dc:Point" x="656.0" y="76.0"/>
+        <di:waypoint xsi:type="dc:Point" x="482.0" y="76.0"/>
+        <di:waypoint xsi:type="dc:Point" x="482.0" y="115.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="613.0" y="124.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_4" bpmnElement="joiner" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="819.0" y="202.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="844.0" y="257.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_9" sourceElement="_BPMNShape_ExclusiveGateway_4" targetElement="_BPMNShape_Task_4">
+        <di:waypoint xsi:type="dc:Point" x="869.0" y="227.0"/>
+        <di:waypoint xsi:type="dc:Point" x="902.0" y="227.0"/>
+        <di:waypoint xsi:type="dc:Point" x="902.0" y="228.0"/>
+        <di:waypoint xsi:type="dc:Point" x="936.0" y="228.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="924.0" y="228.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_2" bpmnElement="EndEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="1106.0" y="210.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_10" sourceElement="_BPMNShape_Task_4" targetElement="_BPMNShape_EndEvent_2">
+        <di:waypoint xsi:type="dc:Point" x="1056.0" y="228.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1106.0" y="228.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="exam_failed" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_Task_5">
+        <di:waypoint xsi:type="dc:Point" x="668.0" y="167.0"/>
+        <di:waypoint xsi:type="dc:Point" x="706.0" y="167.0"/>
+        <di:waypoint xsi:type="dc:Point" x="706.0" y="76.0"/>
+        <di:waypoint xsi:type="dc:Point" x="744.0" y="76.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="19.0" x="708.0" y="124.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

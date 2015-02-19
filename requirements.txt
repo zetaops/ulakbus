@@ -1,0 +1,5 @@
+beaker
+falcon
+beaker_extensions
+redis
+-e https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow

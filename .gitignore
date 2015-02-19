@@ -1,0 +1,8 @@
+*.map
+*.db
+*.pyc
+*~
+.idea
+local_settings.py
+.DS_Store
+.project
