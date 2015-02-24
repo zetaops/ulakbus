@@ -6,8 +6,8 @@ Then route all requests to workflow engine.
 
 We process request and response objects for json data in middleware layer,
 so activity methods (which will be invoked from workflow engine)
-can read json data from request.context.in
-and writeback to request.context.out
+can read json data from request.context.jsonin
+and writeback to request.context.jsonout
 
 """
 # Copyright (C) 2015 ZetaOps Inc.
@@ -24,10 +24,21 @@ __author__ = 'Evren Esat Ozkan'
 
 
 class WFEngine(ZEngine):
-    def save_workflow(self):
-        if 'workflows' in self.current.request.session:
-            self.current.request.session['workflows'][self.current.workflow_name] = self.serialize_workflow()
-            self.current.request.session.save()  # TODO: check if this is realy neccessary
+
+    WORKFLOW_DIRECTORY = settings.WORKFLOW_PACKAGES_PATH,
+    ACTIVITY_MODULES_PATH = settings.ACTIVITY_MODULES_IMPORT_PATH
+
+    def save_workflow(self, wf_name, serialized_wf_instance):
+        if 'workflows' not in self.current.request.session:
+            self.current.request.session['workflows'] = {}
+        self.current.request.session['workflows'][wf_name] = serialized_wf_instance
+        self.current.request.session.save()  # TODO: check if this is realy neccessary
+
+    def load_workflow(self, workflow_name):
+        try:
+            self.current.request.session['workflows'].get(workflow_name, None)
+        except KeyError:
+            return None
 
 
 class Connector(object):
@@ -38,11 +49,7 @@ class Connector(object):
     # def __init__(self):
     # self.logger = logging.getLogger('dispatch.' + __name__)
     def __init__(self):
-        engine_configuration = {
-            'WORKFLOW_DIRECTORY': settings.WORKFLOW_PACKAGES_PATH,
-            'ACTIVITY_MODULES_PATH': settings.ACTIVITY_MODULES_IMPORT_PATH
-        }
-        self.engine = ZEngine(**engine_configuration)
+        self.engine = WFEngine()
 
     def __call__(self, req, resp, wf_name):
         self.engine.set_current(request=req, response=resp, workflow_name=wf_name)

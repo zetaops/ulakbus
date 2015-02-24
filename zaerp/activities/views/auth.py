@@ -13,21 +13,20 @@ from zaerp.modules.forms import get_form
 from zaerp.modules.auth.student import authenticate
 
 
-def do_student_login(current):
-    login_successful = False
+def do_login(current):
     try:
-        login_credentials = current.request.context['data']['login_crd']
+        login_credentials = current.request.context.jsonin.login_crd
     except KeyError:
         raise HTTPBadRequest("Missing login data")
     user = authenticate(login_credentials)
-    login_successful = bool(user)
-    if login_successful:
-        current.request.context['result'] = {'success': True}
-        login_successful = True
-    current.task.data['is_login_successful'] = login_successful
+    is_login_successful = bool(user)
+    if is_login_successful:
+        current.request.context.jsonout = {'success': True}
+        current.request.session['user'] = user
+    current.task.data['is_login_successful'] = is_login_successful
 
 
-def show_student_login(current):
+def show_login(current):
     if 'user' not in current.request.session:
         current.request.context['result']['forms'] = get_form('student_login_form')
     else:
