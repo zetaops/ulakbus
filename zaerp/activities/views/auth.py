@@ -1,10 +1,16 @@
-from falcon.errors import HTTPBadRequest
-from zaerp.modules.forms import get_form
+# -*-  coding: utf-8 -*-
+"""Authentication views"""
 
-from zaerp.modules.services.auth.student import authenticate
-
-
+# Copyright (C) 2015 ZetaOps Inc.
+#
+# This file is licensed under the GNU General Public License v3
+# (GPLv3).  See LICENSE.txt for details.
 __author__ = 'Evren Esat Ozkan'
+
+from falcon.errors import HTTPBadRequest
+
+from zaerp.modules.forms import get_form
+from zaerp.modules.auth.student import authenticate
 
 
 def do_student_login(current):

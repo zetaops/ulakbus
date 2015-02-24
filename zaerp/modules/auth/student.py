@@ -7,7 +7,7 @@ __author__ = 'Evren Esat Ozkan'
 def authenticate(login_data):
     """
 
-    :param login_data: dict, {'username', 'password'}
+    :param login_data: dict, {'username':'', 'password':''}
     :return: authenticated user
     """
     assert PermissionDenied, \
