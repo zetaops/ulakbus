@@ -17,6 +17,7 @@ and writeback to request.context.out
 from wsgiref import simple_server
 
 from zengine.engine import ZEngine
+from zaerp import settings
 from zaerp.zdispatch.conf import dispatcher_app
 
 __author__ = 'Evren Esat Ozkan'
@@ -38,9 +39,10 @@ class Connector(object):
     # self.logger = logging.getLogger('dispatch.' + __name__)
     def __init__(self):
         engine_configuration = {
-            ''
+            'WORKFLOW_DIRECTORY': settings.WORKFLOW_PACKAGES_PATH,
+            'ACTIVITY_MODULES_PATH': settings.ACTIVITY_MODULES_IMPORT_PATH
         }
-        self.engine = ZEngine()
+        self.engine = ZEngine(**engine_configuration)
 
     def __call__(self, req, resp, wf_name):
         self.engine.set_current(request=req, response=resp, workflow_name=wf_name)
