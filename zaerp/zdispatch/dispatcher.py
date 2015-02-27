@@ -36,5 +36,5 @@ ENABLED_MIDDLEWARES = [
 class ZRequest(falcon.Request):
     context_type = DotDict
 
-dispatcher_app = falcon.API(middleware=ENABLED_MIDDLEWARES, request_type=ZRequest)
-dispatcher_app = SessionMiddleware(dispatcher_app, SESSION_OPTIONS)
+app = falcon.API(middleware=ENABLED_MIDDLEWARES, request_type=ZRequest)
+app = SessionMiddleware(app, SESSION_OPTIONS)

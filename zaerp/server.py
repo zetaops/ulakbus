@@ -18,7 +18,7 @@ from wsgiref import simple_server
 
 from zengine.engine import ZEngine
 from zaerp import settings
-from zaerp.zdispatch.conf import dispatcher_app
+from zaerp.zdispatch.dispatcher import app
 
 __author__ = 'Evren Esat Ozkan'
 
@@ -36,7 +36,7 @@ class WFEngine(ZEngine):
 
     def load_workflow(self, workflow_name):
         try:
-            self.current.request.session['workflows'].get(workflow_name, None)
+            return self.current.request.session['workflows'].get(workflow_name, None)
         except KeyError:
             return None
 
@@ -58,10 +58,10 @@ class Connector(object):
 
 
 workflow_connector = Connector()
-dispatcher_app.add_route('^(?P<wf_name>\w+)/', workflow_connector)
+app.add_route('^(?P<wf_name>\w+)/', workflow_connector)
 
 
 # Useful for debugging problems in your API; works with pdb.set_trace()
 if __name__ == '__main__':
-    httpd = simple_server.make_server('127.0.0.1', 8000, dispatcher_app)
+    httpd = simple_server.make_server('127.0.0.1', 8000, app)
     httpd.serve_forever()

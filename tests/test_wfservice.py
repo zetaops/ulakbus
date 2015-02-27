@@ -1,5 +1,5 @@
 from tests.test_utils import get_worfklow_path
-from zaerp.zengine.engine import ZEngine
+from zengine.engine import ZEngine
 
 __author__ = 'Evren Esat Ozkan'
 
