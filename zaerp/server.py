@@ -44,7 +44,7 @@ class WFEngine(ZEngine):
 class Connector(object):
     """
     this is a callable object to catch all requests and map them to workflow engine.
-    domain.edu.tr/show_dashboard/blah/blah/x=2&y=1 will invoke a workflow named show_dashboard
+    domain.com/show_dashboard/blah/blah/x=2&y=1 will invoke a workflow named show_dashboard
     """
     # def __init__(self):
     # self.logger = logging.getLogger('dispatch.' + __name__)
