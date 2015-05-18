@@ -1,0 +1,282 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg viewBox="0 0 2064 1520" xmlns="http://www.w3.org/2000/svg" xmlns:inkspace="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs id="defs_block">
+    <filter height="1.504" id="filter_blur" inkspace:collect="always" width="1.1575" x="-0.07875" y="-0.252">
+      <feGaussianBlur id="feGaussianBlur3780" inkspace:collect="always" stdDeviation="4.2" />
+    </filter>
+  </defs>
+  <title>blockdiag</title>
+  <desc>{
+autonumber = True;
+//activation = None;
+default_note_color = lightblue;
+edge_length = 180;
+span_height = 3;
+b[label="User\n(Browser)"];
+e[label="Ext. HA Proxy"];
+f[label="Gunicorn → Falcon"];
+ze[label="Zengine"];
+sw[label="SpiffWorkflow"];
+m[label="ZAERP Modules"];
+z[label="Zato Service"];
+p[label="Pyoko DAL"];
+c[label="Redis"];
+i[label="Int. HA Proxy"];
+r[label="Riak"]
+
+
+b -&gt; e  [label = "POST:authenticate_user"];
+e -&gt; f [label = "POST:authenticate_user", note="Gunicorn and Falcon\n combined for brevity"];
+f -&gt; ze [label = "dispatch_request(authenticate_user)"];
+ze -&gt; sw [label = "start_or_resume_wf\n(authenticate_user, context)"];
+sw -&gt; sw [label = "execute READY \n tasks with context", leftnote="\"context\" holds request\n  and response objects", notecolor=lightgreen];
+sw -&gt; m [label = "authenticate_user(context)", note="zaerp.views.authentication.authenticate_user"];
+m -&gt; i -&gt; z [diagonal, label = "POST:192.168.0.0/16/authenticate_user/?json_payload"]
+z -&gt; p [label="get_authenticated_user(STD_ID, PASSWD)", leftnote="Auth service can be configured\n for different authentication sources", notecolor=lightgreen]
+alt{
+p =&gt; c [label ="get_from_cache('email_to_id'+email)",
+ return="None", note="Not found in cache "]
+p =&gt; i =&gt; r [label ="bucket: user, \n query(email=email)",
+ return="found"]
+p =&gt; c [label="cache user object", return="ok"]
+}
+z &lt;-- p [label="return authenticated_user"]
+
+m &lt;-- i &lt;-- z[diagonal, label="return authenticated_user"]
+sw &lt;-- m [label="return authenticated_user"]
+sw --&gt; sw [label="Set WF data: is_auth=bool(auth_user)"]
+sw --&gt; sw [label="mark_current_task(COMPLETE)"]
+sw --&gt; sw [label="XOR:is_auth==True → goto next page", leftnote="if user authenticated\ngoto previously requested page\n which requires auth. user", notecolor=lightgreen]
+ze &lt;-- sw [label="return authentication data"]
+ze --&gt; ze [label="save(serialize(workflow))"]
+f &lt;-- ze  [label="return json response"]
+f -&gt; f [label="set authentication cookie"]
+b &lt;-- e &lt;-- f [label="return json response"]
+}
+</desc>
+  <rect fill="rgb(0,0,0)" height="1448" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="127" y="68" />
+  <rect fill="rgb(0,0,0)" height="1407" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="307" y="68" />
+  <rect fill="rgb(0,0,0)" height="1337" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="487" y="95" />
+  <rect fill="rgb(0,0,0)" height="1192" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="667" y="142" />
+  <rect fill="rgb(0,0,0)" height="1045" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="847" y="185" />
+  <rect fill="rgb(0,0,0)" height="717" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="1027" y="269" />
+  <rect fill="rgb(0,0,0)" height="490" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="1207" y="378" />
+  <rect fill="rgb(0,0,0)" height="381" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="1395" y="444" />
+  <rect fill="rgb(0,0,0)" height="27" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="1575" y="495" />
+  <rect fill="rgb(0,0,0)" height="41" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="1575" y="739" />
+  <rect fill="rgb(0,0,0)" height="608" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="1755" y="319" />
+  <rect fill="rgb(0,0,0)" height="113" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="1759" y="581" />
+  <rect fill="rgb(0,0,0)" height="27" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="8" x="1935" y="624" />
+  <polygon fill="rgb(0,0,0)" points="507,81 623,81 631,89 631,109 507,109 507,81" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="698,209 827,209 835,217 835,239 698,239 698,209" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1047,261 1284,261 1292,269 1292,277 1047,277 1047,261" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1000,430 1187,430 1195,438 1195,458 1000,458 1000,430" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="1595,488 1702,488 1710,496 1710,502 1595,502 1595,488" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="658,1166 827,1166 835,1174 835,1208 658,1208 658,1166" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="67" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="247" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="427" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="607" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="787" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="967" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="1147" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="1335" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="1515" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="1695" y="9" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="1875" y="9" />
+  <rect fill="none" height="373" stroke="rgb(0,0,0)" width="720" x="1306" y="435" />
+  <path d="M 1306 449 L 1333 449" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1333 449 L 1349 435" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="11" x="1319" y="447">alt</text>
+  <path d="M 128 43 L 128 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="1448" stroke="rgb(0,0,0)" width="8" x="124" y="62" />
+  <path d="M 308 43 L 308 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="1407" stroke="rgb(0,0,0)" width="8" x="304" y="62" />
+  <path d="M 488 43 L 488 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="1337" stroke="rgb(0,0,0)" width="8" x="484" y="89" />
+  <path d="M 668 43 L 668 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="1192" stroke="rgb(0,0,0)" width="8" x="664" y="136" />
+  <path d="M 848 43 L 848 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="1045" stroke="rgb(0,0,0)" width="8" x="844" y="179" />
+  <path d="M 1028 43 L 1028 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="717" stroke="rgb(0,0,0)" width="8" x="1024" y="263" />
+  <path d="M 1208 43 L 1208 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="490" stroke="rgb(0,0,0)" width="8" x="1204" y="372" />
+  <path d="M 1396 43 L 1396 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="381" stroke="rgb(0,0,0)" width="8" x="1392" y="438" />
+  <path d="M 1576 43 L 1576 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="27" stroke="rgb(0,0,0)" width="8" x="1572" y="489" />
+  <rect fill="moccasin" height="41" stroke="rgb(0,0,0)" width="8" x="1572" y="733" />
+  <path d="M 1756 43 L 1756 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="608" stroke="rgb(0,0,0)" width="8" x="1752" y="313" />
+  <rect fill="moccasin" height="113" stroke="rgb(0,0,0)" width="8" x="1756" y="575" />
+  <path d="M 1936 43 L 1936 1526" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="moccasin" height="27" stroke="rgb(0,0,0)" width="8" x="1932" y="618" />
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="64" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="23" x="128" y="21">User</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="51" x="128" y="35">(Browser)</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="244" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="67" x="308" y="29">Ext. HA Proxy</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="424" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="93" x="488" y="28">Gunicorn → Falcon</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="604" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="39" x="668" y="29">Zengine</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="784" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="70" x="848" y="29">SpiffWorkflow</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="964" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="77" x="1028" y="28">ZAERP Modules</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="1144" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="62" x="1208" y="28">Zato Service</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="1332" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="53" x="1396" y="29">Pyoko DAL</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="1512" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="27" x="1576" y="28">Redis</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="1692" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="63" x="1756" y="29">Int. HA Proxy</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="1872" y="3" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="20" x="1936" y="28">Riak</text>
+  <path d="M 136 62 L 300 62" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="292,58 300,62 292,66" stroke="rgb(0,0,0)" />
+  <path d="M 316 89 L 480 89" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="472,85 480,89 472,93" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(173,216,230)" points="504,75 620,75 628,83 628,103 504,103 504,75" stroke="rgb(0,0,0)" />
+  <path d="M 620 75 L 620 83" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 620 83 L 628 83" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="100" x="562" y="87">Gunicorn and Falcon</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="99" x="561" y="101">combined for brevity</text>
+  <path d="M 496 136 L 660 136" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="652,132 660,136 652,140" stroke="rgb(0,0,0)" />
+  <path d="M 676 179 L 840 179" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="832,175 840,179 832,183" stroke="rgb(0,0,0)" />
+  <path d="M 856 218 L 938 218" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 938 218 L 938 234" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 938 234 L 856 234" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="864,230 856,234 864,238" stroke="rgb(0,0,0)" />
+  <polygon fill="lightgreen" points="695,203 824,203 832,211 832,233 695,233 695,203" stroke="rgb(0,0,0)" />
+  <path d="M 824 203 L 824 211" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 824 211 L 832 211" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="113" x="759" y="217">"context" holds request</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="105" x="755" y="231">and response objects</text>
+  <path d="M 856 263 L 1020 263" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1012,259 1020,263 1012,267" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(173,216,230)" points="1044,255 1281,255 1289,263 1289,271 1044,271 1044,255" stroke="rgb(0,0,0)" />
+  <path d="M 1281 255 L 1281 263" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1281 263 L 1289 263" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="221" x="1162" y="269">zaerp.views.authentication.authenticate_user</text>
+  <path d="M 1036 306 L 1748 336" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1740,332 1748,336 1740,340" stroke="rgb(0,0,0)" />
+  <path d="M 1216 395 L 1748 365" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1224,391 1216,395 1224,399" stroke="rgb(0,0,0)" />
+  <path d="M 1216 438 L 1388 438" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1380,434 1388,438 1380,442" stroke="rgb(0,0,0)" />
+  <polygon fill="lightgreen" points="997,424 1184,424 1192,432 1192,452 997,452 997,424" stroke="rgb(0,0,0)" />
+  <path d="M 1184 424 L 1184 432" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1184 432 L 1192 432" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="153" x="1081" y="438">Auth service can be configured</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="171" x="1090" y="450">for different authentication sources</text>
+  <path d="M 1404 489 L 1568 489" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1560,485 1568,489 1560,493" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(173,216,230)" points="1592,482 1699,482 1707,490 1707,496 1592,496 1592,482" stroke="rgb(0,0,0)" />
+  <path d="M 1699 482 L 1699 490" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 1699 490 L 1707 490" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="91" x="1645" y="494">Not found in cache</text>
+  <path d="M 1404 516 L 1568 516" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="1412,512 1404,516 1412,520" stroke="rgb(0,0,0)" />
+  <path d="M 1404 575 L 1748 575" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1740,571 1748,575 1740,579" stroke="rgb(0,0,0)" />
+  <path d="M 1768 618 L 1928 618" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1920,614 1928,618 1920,622" stroke="rgb(0,0,0)" />
+  <path d="M 1768 645 L 1928 645" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="1776,641 1768,645 1776,649" stroke="rgb(0,0,0)" />
+  <path d="M 1404 688 L 1748 688" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="1412,684 1404,688 1412,692" stroke="rgb(0,0,0)" />
+  <path d="M 1404 733 L 1568 733" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="1560,729 1568,733 1560,737" stroke="rgb(0,0,0)" />
+  <path d="M 1404 774 L 1568 774" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="1412,770 1404,774 1412,778" stroke="rgb(0,0,0)" />
+  <path d="M 1216 819 L 1388 819" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="1224,815 1216,819 1224,823" stroke="rgb(0,0,0)" />
+  <path d="M 1216 862 L 1748 892" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="1740,888 1748,892 1740,896" stroke="rgb(0,0,0)" />
+  <path d="M 1036 951 L 1748 921" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="1044,947 1036,951 1044,955" stroke="rgb(0,0,0)" />
+  <path d="M 856 980 L 1020 980" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="864,976 856,980 864,984" stroke="rgb(0,0,0)" />
+  <path d="M 856 1049 L 938 1049" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <path d="M 938 1049 L 938 1065" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <path d="M 938 1065 L 856 1065" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="864,1061 856,1065 864,1069" stroke="rgb(0,0,0)" />
+  <path d="M 856 1108 L 938 1108" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <path d="M 938 1108 L 938 1124" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <path d="M 938 1124 L 856 1124" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="864,1120 856,1124 864,1128" stroke="rgb(0,0,0)" />
+  <path d="M 856 1181 L 938 1181" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <path d="M 938 1181 L 938 1197" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <path d="M 938 1197 L 856 1197" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="864,1193 856,1197 864,1201" stroke="rgb(0,0,0)" />
+  <polygon fill="lightgreen" points="655,1160 824,1160 832,1168 832,1202 655,1202 655,1160" stroke="rgb(0,0,0)" />
+  <path d="M 824 1160 L 824 1168" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 824 1168 L 832 1168" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="99" x="712" y="1172">if user authenticated</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="153" x="739" y="1186">goto previously requested page</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="125" x="725" y="1200">which requires auth. user</text>
+  <path d="M 676 1224 L 840 1224" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="684,1220 676,1224 684,1228" stroke="rgb(0,0,0)" />
+  <path d="M 676 1283 L 758 1283" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <path d="M 758 1283 L 758 1299" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <path d="M 758 1299 L 676 1299" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="684,1295 676,1299 684,1303" stroke="rgb(0,0,0)" />
+  <path d="M 496 1328 L 660 1328" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="504,1324 496,1328 504,1332" stroke="rgb(0,0,0)" />
+  <path d="M 496 1381 L 578 1381" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 578 1381 L 578 1397" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 578 1397 L 496 1397" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="504,1393 496,1397 504,1401" stroke="rgb(0,0,0)" />
+  <path d="M 316 1426 L 480 1426" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="324,1422 316,1426 324,1430" stroke="rgb(0,0,0)" />
+  <path d="M 136 1469 L 300 1469" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="4" />
+  <polygon fill="rgb(0,0,0)" points="144,1465 136,1469 144,1473" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="128" x="204" y="60">1. POST:authenticate_user</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="128" x="384" y="87">2. POST:authenticate_user</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="159" x="579" y="120">3. dispatch_request(authenticate</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="32" x="516" y="134">_user)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="112" x="736" y="163">4. start_or_resume_wf</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="137" x="748" y="177">(authenticate_user, context)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="90" x="901" y="204">5. execute READY</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="89" x="900" y="216">tasks with context</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="143" x="931" y="261">6. authenticate_user(context)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="276" x="1178" y="304">7. POST:192.168.0.0/16/authenticate_user/?json_payload</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="276" x="1610" y="363">8. POST:192.168.0.0/16/authenticate_user/?json_payload</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="158" x="1299" y="422">9. get_authenticated_user(STD_I</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="62" x="1251" y="436">D, PASSWD)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="164" x="1490" y="473">10. get_from_cache('email_to_id'+</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="28" x="1422" y="487">email)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="43" x="1546" y="514">11. None</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="81" x="1448" y="559">12. bucket: user,</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="90" x="1453" y="573">query(email=email)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="81" x="1812" y="602">13. bucket: user,</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="90" x="1817" y="616">query(email=email)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="46" x="1905" y="643">14. found</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="46" x="1725" y="686">15. found</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="105" x="1460" y="731">16. cache user object</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="29" x="1553" y="772">17. ok</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="143" x="1316" y="817">18. return authenticated_user</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="143" x="1291" y="860">19. return authenticated_user</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="143" x="1676" y="919">20. return authenticated_user</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="143" x="948" y="978">21. return authenticated_user</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="103" x="907" y="1027">22. Set WF data: is_a</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="98" x="905" y="1041">uth=bool(auth_user)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="103" x="907" y="1092">23. mark_current_tas</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="66" x="889" y="1106">k(COMPLETE)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="106" x="909" y="1158">24. XOR:is_auth==Tru</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="95" x="903" y="1172">e → goto next page</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="141" x="769" y="1222">25. return authentication data</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="106" x="729" y="1267">26. save(serialize(wo</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="39" x="695" y="1281">rkflow))</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="119" x="600" y="1326">27. return json response</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="103" x="547" y="1367">28. set authentication</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="34" x="513" y="1379"> cookie</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="119" x="420" y="1424">29. return json response</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="119" x="240" y="1467">30. return json response</text>
+</svg>
