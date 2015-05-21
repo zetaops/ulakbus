@@ -70,9 +70,13 @@ class Student <<(M,orchid)>> extends Base, User {
 |_ code     String
 |_ credit   String
 |_ **Exam(pyoko.ListModel)**
-` |_ type String
-` |_ date Date
-` |_ point Integer
+|   |_ type String
+|   |_ date Date
+|   |_ point Integer
+|_ **Attendance(pyoko.ListModel)**
+`   |_ attended Boolean
+`   |_ date Date
+`   |_ hour Integer
 --
 get_draft_registrations()
 foo()
