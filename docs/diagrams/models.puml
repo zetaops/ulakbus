@@ -1,0 +1,88 @@
+@startuml
+
+skinparam classAttributeFontName Monospaced
+skinparam classBackgroundColor #EFF2FB
+skinparam classBorderColor #D8D8D8
+skinparam packageBorderColor #BDBDBD
+skinparam classArrowColor #0B615E
+skinparam shadowing false
+skinparam tabSize 1
+'skinparam monochrome true
+'skinparam nodesep 100
+skinparam ranksep 100
+
+package pyoko{
+    class Base{
+    }
+    class Model{
+
+    }
+    class AbstractBase{
+    }
+    class ListModel extends Model{
+    }
+
+}
+
+package auth{
+
+abstract class User <<(A,orchid)>> extends AbstractBase{
+id                  integer
+**IdentityInfo(pyoko.Model)**
+|_  tckno           string
+|_  name            string
+|_  surname         string
+|_  birth_date      Date
+|_  birth_place     Date
+|_  neighborhood    string
+|_  father_name     String
+|_  mother_name     String
+|_  gender          String
+|_  marital_status  String
+|_  town_code       Integer
+|_  city            Integer
+|_  blood_type      String
+|_  former_surname  String
+**ContactInfo(pyoko.Model)**
+|_  home_phone      String
+|_  work_phone      String
+|_  mobile_phone    String
+|_  address_pri     String
+|_  address_sec     String
+|_  postal_code     Integer
+|_  primary_email   String
+|_  secondary_email String
+|_  website         String
+--
+}
+
+class Role extends Base, Model{
+}
+
+class Permission extends Base, Model{
+}
+
+}
+
+class Student <<(M,orchid)>> extends Base, User {
+**Lecture(pyoko.ListModel)**
+|_ name     String
+|_ code     String
+|_ credit   String
+|_ **Exam(pyoko.ListModel)**
+` |_ type String
+` |_ date Date
+` |_ point Integer
+--
+get_draft_registrations()
+foo()
+}
+
+class Personel <<(M,orchid)>> extends Base, User{
+
+}
+
+
+
+
+@enduml
