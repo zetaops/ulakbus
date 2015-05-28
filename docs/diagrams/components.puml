@@ -1,0 +1,66 @@
+@startuml
+skinparam componentStyle uml2
+'skinparam monochrome true
+
+skinparam Interface{
+BackgroundColor #ffffff
+BorderColor #b0c4de
+}
+skinparam Cloud{
+
+FontSize 18
+BackgroundColor #b0c4de
+BorderColor #b0c4de
+}
+skinparam component {
+  FontSize 18
+  InterfaceBackgroundColor LightBlue
+ArrowColor 638CAC
+
+
+  BorderColor gray
+  BackgroundColor #b0c4de
+  ArrowFontName Impact
+
+  ArrowFontColor #777777
+}
+
+[Browser] as brw
+cloud "External HAProxy" {
+interface " " as eha
+}
+[Gunicorn] as gun
+[Falcon] as fal
+[Zengine] as zen
+[SpiffWorflow] as wfe
+[ZAERP Modules] as zaerp
+[Redis] as red
+
+[Riak] as riak
+[Riak CS] as rcs
+[Zato] as zato
+cloud "Internal HAProxy" {
+interface " " as iha
+}
+
+
+brw <-down-> eha
+eha -down-> gun
+gun -down-> fal
+fal -down-> zen
+zen -down-> wfe
+wfe -down-> zaerp
+zaerp -down-> iha
+zaerp -down-> red
+zaerp -down-> iha
+iha <-down-> riak
+iha <-down-> riak
+iha <-down-> rcs
+iha <-down-> zato
+iha <-down-> zato
+brw <-down-> eha
+eha <-down-> rcs
+
+
+
+@enduml
