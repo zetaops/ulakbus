@@ -1,47 +1,51 @@
 {
+// configuration
 autonumber = True;
 //activation = None;
 default_note_color = lightblue;
 edge_length = 180;
 span_height = 3;
-b[label="User\n(Browser)"];
-e[label="Ext. HA Proxy"];
-f[label="Gunicorn → Falcon"];
-ze[label="Zengine"];
-sw[label="SpiffWorkflow"];
-m[label="ZAERP Modules"];
-z[label="Zato Service"];
-p[label="Pyoko DAL"];
+
+// nodes
+brw[label="User\n(Browser)"];
+ehp[label="Ext. HA Proxy"];
+fal[label="Gunicorn → Falcon"];
+zen[label="Zengine"];
+wfe[label="SpiffWorkflow"];
+modls[label="ZAERP Modules"];
+zato[label="Zato Service"];
+pyoko[label="Pyoko DAL"];
 c[label="Redis"];
 i[label="Int. HA Proxy"];
 r[label="Riak"]
 
+// steps
+brw -> ehp  [label = "POST:authenticate_user"];
+ehp -> fal [label = "POST:authenticate_user", note="Gunicorn and Falcon\n combined for brevity"];
+fal -> zen [label = "dispatch_request(authenticate_user)"];
+zen -> wfe [label = "start_or_resume_wf\n(authenticate_user, context)"];
+wfe -> wfe [label = "execute READY \n tasks with context", leftnote="\"context\" holds request\n  and response objects", notecolor=lightgreen];
+wfe -> modls [label = "authenticate_user(context)", note="zaerp.views.authentication.authenticate_user"];
+modls -> i -> zato [diagonal, label = "POST:192.168.0.0/16/authenticate_user/?json_payload"]
+zato -> pyoko [label="get_authenticated_user(STD_ID, PASSWD)", leftnote="Auth service can be configured\n for different authentication sources", notecolor=lightgreen]
 
-b -> e  [label = "POST:authenticate_user"];
-e -> f [label = "POST:authenticate_user", note="Gunicorn and Falcon\n combined for brevity"];
-f -> ze [label = "dispatch_request(authenticate_user)"];
-ze -> sw [label = "start_or_resume_wf\n(authenticate_user, context)"];
-sw -> sw [label = "execute READY \n tasks with context", leftnote="\"context\" holds request\n  and response objects", notecolor=lightgreen];
-sw -> m [label = "authenticate_user(context)", note="zaerp.views.authentication.authenticate_user"];
-m -> i -> z [diagonal, label = "POST:192.168.0.0/16/authenticate_user/?json_payload"]
-z -> p [label="get_authenticated_user(STD_ID, PASSWD)", leftnote="Auth service can be configured\n for different authentication sources", notecolor=lightgreen]
 alt{
-p => c [label ="get_from_cache('email_to_id'+email)",
- return="None", note="Not found in cache "]
-p => i => r [label ="bucket: user, \n query(email=email)",
- return="found"]
-p => c [label="cache user object", return="ok"]
+    pyoko => c [label ="get_from_cache('email_to_id'+email)", return="None", note="Not found in cache "]
+    pyoko => i => r [label ="bucket: user, \n query(email=email)", return="found"]
+    pyoko => c [label="cache user object", return="ok"]
 }
-z <-- p [label="return authenticated_user"]
 
-m <-- i <-- z[diagonal, label="return authenticated_user"]
-sw <-- m [label="return authenticated_user"]
-sw --> sw [label="Set WF data: is_auth=bool(auth_user)"]
-sw --> sw [label="mark_current_task(COMPLETE)"]
-sw --> sw [label="XOR:is_auth==True → goto next page", leftnote="if user authenticated\ngoto previously requested page\n which requires auth. user", notecolor=lightgreen]
-ze <-- sw [label="return authentication data"]
-ze --> ze [label="save(serialize(workflow))"]
-f <-- ze  [label="return json response"]
-f -> f [label="set authentication cookie"]
-b <-- e <-- f [label="return json response"]
+zato <-- pyoko [label="return authenticated_user"]
+
+modls <-- i <-- z[diagonal, label="return authenticated_user"]
+wfe <-- modls [label="return authenticated_user"]
+wfe --> wfe [label="Set WF data: is_auth=bool(auth_user)"]
+wfe --> wfe [label="mark_current_task(COMPLETE)"]
+wfe --> wfe [label="XOR:is_auth==True → goto next page", leftnote="if user authenticated\ngoto previously requested page\n which requires auth. user", notecolor=lightgreen]
+zen <-- wfe [label="return authentication data"]
+zen --> zen [label="save(serialize(workflow))"]
+fal <-- zen  [label="return json response"]
+fal -> fal [label="set authentication cookie"]
+brw <-- ehp <-- fal [label="return json response"]
+
 }

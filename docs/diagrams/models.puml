@@ -6,87 +6,377 @@ skinparam classBorderColor #D8D8D8
 skinparam packageBorderColor #BDBDBD
 skinparam classArrowColor #0B615E
 skinparam shadowing false
-skinparam tabSize 1
+
 'skinparam monochrome true
 'skinparam nodesep 100
-skinparam ranksep 100
+'skinparam ranksep 100
+
+
+legend left
+n..*     n or more instances
+n..m    Min n, Max m instances
+endlegend
+
+
+
+
 
 package pyoko{
+
+
+note  "All <color:black><b> (M)odels</b></color> extends <b>Base</b> and <b>Model</b>" as n1 #orchid
+n1 .. Base
+n1 .. Model
+
+class DBObjects{
+
+- __client
+- _cfg
+- _data_type
+- _new_record_value
+- _riak_cache
+- _solr_cache
+- _solr_locked
+- _solr_params
+- _solr_query
+--
++ set_bucket()
++ count_bucket()
++ new()
++ save()
++ filter()
++ get()
++ count()
++ fields()
++ solr()
++ data()
+- __iter__()
+- __len__()
+- __getitem__()
+- __deepcopy__()
+- _save_model()
+- _get_from_db()
+- _get_data_from_db()
+- _get()
+- _params()
+- _compile_query()
+- _process_params()
+- _exec_query()
+}
     class Base{
+    - _DEFAULT_BASE_FIELDS
+  |_ archived Boolean
+  |_ timestamp DateTime
+  |_ deleted Boolean
+    + save()
+    + delete()
+    + objects = DBObjects()
     }
     class Model{
+    + clean_data()
+    - _load_data()
 
     }
     class AbstractBase{
     }
     class ListModel extends Model{
     }
-
+Base --o DBObjects
 }
+
 
 package auth{
 
 abstract class User <<(A,orchid)>> extends AbstractBase{
-id                  integer
-**IdentityInfo(pyoko.Model)**
-|_  tckno           string
-|_  name            string
-|_  surname         string
-|_  birth_date      Date
-|_  birth_place     Date
-|_  neighborhood    string
-|_  father_name     String
-|_  mother_name     String
-|_  gender          String
-|_  marital_status  String
-|_  town_code       Integer
-|_  city            Integer
-|_  blood_type      String
-|_  former_surname  String
-**ContactInfo(pyoko.Model)**
-|_  home_phone      String
-|_  work_phone      String
-|_  mobile_phone    String
-|_  address_pri     String
-|_  address_sec     String
-|_  postal_code     Integer
-|_  primary_email   String
-|_  secondary_email String
-|_  website         String
+|_ id                  Int
+|_ **IdentityInfo(Model)**
+   |_  tckno           string
+   |_  name            string
+   |_  surname         string
+   |_  birth_date      Date
+   |_  birth_place     Date
+   |_  neighborhood    string
+   |_  father_name     String
+   |_  mother_name     String
+   |_  gender          String
+   |_  marital_status  String
+   |_  town_code       Int
+   |_  city            Int
+   |_  blood_type      String
+   |_  former_surname  String
+|_ **ContactInfo(Model)**
+   |_  home_phone      String
+   |_  work_phone      String
+   |_  mobile_phone    String
+   |_  address_pri     String
+   |_  address_sec     String
+   |_  postal_code     Int
+   |_  primary_email   String
+   |_  secondary_email String
+   |_  website         String
+--
+authenticate()
+get_permissions()
+
+}
+
+class Role{
+}
+class Permission{
+}
+
+}
+
+package SpiffWorkflow{
+class Workflow{
++ completed_event
++ data
++ debug
++ last_task
++ locks
++ outer_workflow
++ spec
++ success
++ task_tree
+--
+- _get_waiting_tasks()
+- _task_completed_notify()
+- _get_mutex()
++ is_completed()
++ get_data()
++ cancel()
++ get_task_spec_from_name()
++ get_task()
++ get_tasks_from_spec_name()
++ get_tasks()
++ complete_task_from_id()
++ complete_next()
++ complete_all()
++ get_dump()
++ dump()
++ serialize()
++ deserialize()
+}
+class BPMNWorkflow extends Workflow{
+- _is_busy_with_restore
+- _is_engine_task
+- _task_completed_notify
+- _task_cancelled_notify
+- _busy_with_restore
+- name
+- read_only
+- script_engine
+--
++ accept_message()
++ do_engine_steps()
++ refresh_waiting_tasks()
++ get_ready_user_tasks()
++ get_waiting_tasks()
+}
+class BPMNParser{
++ OVERRIDE_PARSER_CLASSES
++ PARSER_CLASSES
++ PROCESS_PARSER_CLASS
++ WORKFLOW_CLASS
++ process_parsers
++ process_parsers_by_name
+--
++ get_process_parser()
++ add_bpmn_file()
++ add_bpmn_files_by_glob()
++ add_bpmn_files()
++ add_bpmn_xml()
++ parse_condition()
++ parse_documentation()
++ get_spec()
+- _get_parser_class()
+- _parse_condition()
+- _parse_documentation()
+}
+BPMNParser --o BPMNWorkflow
+}
+
+BPMNWorkflow --o zengine.ZEngine
+package zengine{
+    class ZEngine{
+        + **workflow(BPMNWorkflow)**
+        + ACTIVITY_MODULES_PATH
+        + WORKFLOW_DIRECTORY
+        + activities
+        + current
+        + workflow_spec
+        --
+        - _load_workflow()
+        - _save_workflow()
+        + create_workflow()
+        + load_or_create_workflow()
+        + get_worfklow_spec()
+        + serialize_workflow()
+        + save_workflow()
+        + load_workflow()
+        + set_current()
+        + complete_current_task()
+        + run()
+        + run_activity()
+        + process_activities()
+        + cleanup()
+    }
+}
+
+
+class Employee <<(M,orchid)>> extends User{
+service_records      **ServiceRecords()**
+registry_code        String
+status_code          Int
+labour_class_code    String
+health_status        String
+degree_of_disabled   String
+tax_no               String
+retirement_no        String
+retirement_date      Date
+address_city_code    String
+address_town_code    String
+country_code         String
+min_degree           Int
+min_grade            Int
+nomination           String
+
+}
+
+class ServiceRecord<<(M,orchid)>>{
+employee                     **FK(Employee)**
+start_date                   Date
+end_date                     Date
+task                         String
+code                         String
+wages                        Float
+salary                       Float
+class                        String
+staff                        String
+payment_degree               Int
+payment_grade                Int
+payment_indicator            Int
+earned_salary_grade          Int
+retirement_degree            Int
+retirement_grade             Int
+retirement_indicator         Int
+reason_code                  String
+organization_approval_date   Date
 --
 }
 
-class Role extends Base, Model{
+class Unit<<(M,orchid)>>{
+type        String
+name        String
+**parent    FK(Unit)**
+--
+employees   **Assignment()**
+--
+
 }
 
-class Permission extends Base, Model{
+
+
+
+
+
+
+class DutyType<<(M,orchid)>>{
+|_ id   Int
+|_ name String
+
 }
+class Assignment<<(M,orchid)>>{
+active       Boolean
+duty_type    **FK(DutyType)**
+employee     **FK(Employee)**
+unit         **FK(Unit)**
+start_date   Date
+end_date     Date
+--
+}
+
+class Lecturer{
+employe **Employee()**
+name    String
+--
+}
+
+class Curriculum<<(M,orchid)>>{
+unit        **FK(Unit)**
+period      Int
+--
+lectures    **BaseLecture()**
 
 }
 
-class Student <<(M,orchid)>> extends Base, User {
-**Lecture(pyoko.ListModel)**
-|_ name     String
-|_ code     String
-|_ credit   String
-|_ **Exam(pyoko.ListModel)**
-|   |_ type String
-|   |_ date Date
-|   |_ point Integer
-|_ **Attendance(pyoko.ListModel)**
-`   |_ attended Boolean
-`   |_ date Date
-`   |_ hour Integer
+class TimeTable<<(M,orchid)>>{
+student         **FK(Student)**
+lecture         **FK(Lecture)**
+classroom       **FK(Classroom)**
+week_day        Int
+day_hour        Int
+course_hours    Int
+}
+
+class Classroom{
+code            String
+building        String
+--
+lectures        **Lecture()**
+}
+
+class Lecture<<(M,orchid)>>{
+lecturer    **FK(Lecturer)**
+base        **FK(BaseLecture)**
+--
+}
+class BaseLecture<<(M,orchid)>>{
+name     String
+code     String
+credit   String
+--
+}
+
+
+
+class Student <<(M,orchid)>> extends User {
+lectures        **FK(Lecture)**
+timetable        **FK(TimeTable)**
+**Exam(ListModel)**
+|_ type         String
+|_ date         Date
+|_ point        Int
+**Attendance(ListModel)**
+|_ attended     Boolean
+|_ date         Date
+|_ hour         Int
 --
 get_draft_registrations()
-foo()
 }
 
-class Personel <<(M,orchid)>> extends Base, User{
+Lecture -- Lecturer
+Lecture -- Student
+Unit "1..*" --o "0..*" Curriculum
+BaseLecture -- Curriculum
+BaseLecture -- Lecture
 
-}
+Unit "0..*" -- "1..1" Assignment
+Unit "0..1" --o "0..*" Unit
+Employee "0..*" -- "1..1" Assignment
+Lecturer --o Employee
+Lecture --o TimeTable
+Assignment "1..1" --o "0..*" DutyType
 
 
+TimeTable "1..1" --o "0..*" Student
+TimeTable "1..1" --o "0..*" Classroom
 
 
+Employee "1..*" --o ServiceRecord
+
+' XXXXXXXXXXXX
+' Unit "0..*" -- "0..*" Employee
+' Student "1..*" --o "0..*" Curriculum
+' XXXXXXXXXXXX
 @enduml

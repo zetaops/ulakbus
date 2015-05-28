@@ -1,0 +1,71 @@
+@startuml
+autonumber
+
+title Request to Response Sequence Diagram
+
+actor "User\n(Browser)" as brw
+boundary "Ext. HA Proxy" as ehp
+participant "Gunicorn / Falcon" as fal
+participant "Zengine" as zen
+control "SpiffWorkflow" as wfe
+participant "ZAERP Modules" as modls
+participant "Zato Service" as zato
+entity "Pyoko DAL" as pyoko
+database "Redis" as c
+boundary "Int. HA Proxy" as ihp
+database "Riak" as riak
+
+
+brw -> ehp: POST request
+
+ehp -> fal : POST request
+note over fal #lightgreen : Gunicorn and Falcon\n combined for brevity
+
+fal -> zen :dispatch_request(authenticate_user)
+
+zen -> wfe :start_or_resume_wf\n(workflow_name, context)
+note over wfe #lightgreen : "workflow_name" comes from request object
+
+wfe -> wfe :execute READY \n tasks with context
+
+note left : "context" holds request\n  and response objects
+
+wfe -> modls :authenticate_user(context)
+
+
+modls -\\ ihp : POST:192.168.0.0/16/service_name/?json_payload
+
+ihp -\\ zato : POST:192.168.0.0/16/service_name/?json_payload
+
+zato -> pyoko  : get_object()
+
+pyoko -> c : get_from_cache()
+pyoko <--  c: found
+alt cache miss
+pyoko <--  c: not found
+pyoko -> ihp
+ihp -> riak
+ihp <-- riak: found
+pyoko <-- ihp : found
+end
+
+zato <-- pyoko : return object
+
+ihp //-- zato : return object
+
+modls //-- ihp : return object
+
+wfe <-- modls  : return object
+
+wfe --> wfe  : mark_current_task(COMPLETE)
+
+
+zen <--  wfe: return json data
+zen --> zen : save(serialize(workflow))
+fal <--  zen : return json response
+
+ehp <-- fal  : return json response
+
+brw <-- ehp : return json response
+
+@enduml
