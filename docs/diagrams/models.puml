@@ -22,66 +22,11 @@ endlegend
 
 
 package pyoko{
-
-
-note  "All <color:black><b> (M)odels</b></color> extends <b>Base</b> and <b>Model</b>" as n1 #orchid
-n1 .. Base
-n1 .. Model
-
-class DBObjects{
-
-- __client
-- _cfg
-- _data_type
-- _new_record_value
-- _riak_cache
-- _solr_cache
-- _solr_locked
-- _solr_params
-- _solr_query
---
-+ set_bucket()
-+ count_bucket()
-+ new()
-+ save()
-+ filter()
-+ get()
-+ count()
-+ fields()
-+ solr()
-+ data()
-- __iter__()
-- __len__()
-- __getitem__()
-- __deepcopy__()
-- _save_model()
-- _get_from_db()
-- _get_data_from_db()
-- _get()
-- _params()
-- _compile_query()
-- _process_params()
-- _exec_query()
-}
-    class Base{
-    - _DEFAULT_BASE_FIELDS
-  |_ archived Boolean
-  |_ timestamp DateTime
-  |_ deleted Boolean
-    + save()
-    + delete()
-    + objects = DBObjects()
-    }
-    class Model{
-    + clean_data()
-    - _load_data()
-
-    }
-    class AbstractBase{
-    }
-    class ListModel extends Model{
-    }
-Base --o DBObjects
+class Base
+class Model
+Model <- ListModel
+note "All <color:black><b> (M)odels</b></color> extends  <b>Base</b> and <b>Model</b>" as N1 #orchid
+class AbstractBase
 }
 
 
@@ -120,107 +65,25 @@ get_permissions()
 
 }
 
-class Role{
+
+class AbstractRole<<(M,orchid)>>{
+|_ id   Int
+|_ name String
+
 }
+class Role<<(M,orchid)>>{
+active       Boolean
+abstract_role    **FK(AbstractRole)**
+employee     **FK(Employee)**
+unit         **FK(Unit)**
+start_date   Date
+end_date     Date
+--
+}
+
 class Permission{
 }
 
-}
-
-package SpiffWorkflow{
-class Workflow{
-+ completed_event
-+ data
-+ debug
-+ last_task
-+ locks
-+ outer_workflow
-+ spec
-+ success
-+ task_tree
---
-- _get_waiting_tasks()
-- _task_completed_notify()
-- _get_mutex()
-+ is_completed()
-+ get_data()
-+ cancel()
-+ get_task_spec_from_name()
-+ get_task()
-+ get_tasks_from_spec_name()
-+ get_tasks()
-+ complete_task_from_id()
-+ complete_next()
-+ complete_all()
-+ get_dump()
-+ dump()
-+ serialize()
-+ deserialize()
-}
-class BPMNWorkflow extends Workflow{
-- _is_busy_with_restore
-- _is_engine_task
-- _task_completed_notify
-- _task_cancelled_notify
-- _busy_with_restore
-- name
-- read_only
-- script_engine
---
-+ accept_message()
-+ do_engine_steps()
-+ refresh_waiting_tasks()
-+ get_ready_user_tasks()
-+ get_waiting_tasks()
-}
-class BPMNParser{
-+ OVERRIDE_PARSER_CLASSES
-+ PARSER_CLASSES
-+ PROCESS_PARSER_CLASS
-+ WORKFLOW_CLASS
-+ process_parsers
-+ process_parsers_by_name
---
-+ get_process_parser()
-+ add_bpmn_file()
-+ add_bpmn_files_by_glob()
-+ add_bpmn_files()
-+ add_bpmn_xml()
-+ parse_condition()
-+ parse_documentation()
-+ get_spec()
-- _get_parser_class()
-- _parse_condition()
-- _parse_documentation()
-}
-BPMNParser --o BPMNWorkflow
-}
-
-BPMNWorkflow --o zengine.ZEngine
-package zengine{
-    class ZEngine{
-        + **workflow(BPMNWorkflow)**
-        + ACTIVITY_MODULES_PATH
-        + WORKFLOW_DIRECTORY
-        + activities
-        + current
-        + workflow_spec
-        --
-        - _load_workflow()
-        - _save_workflow()
-        + create_workflow()
-        + load_or_create_workflow()
-        + get_worfklow_spec()
-        + serialize_workflow()
-        + save_workflow()
-        + load_workflow()
-        + set_current()
-        + complete_current_task()
-        + run()
-        + run_activity()
-        + process_activities()
-        + cleanup()
-    }
 }
 
 
@@ -270,7 +133,7 @@ type        String
 name        String
 **parent    FK(Unit)**
 --
-employees   **Assignment()**
+employees   **Role()**
 --
 
 }
@@ -281,20 +144,6 @@ employees   **Assignment()**
 
 
 
-class DutyType<<(M,orchid)>>{
-|_ id   Int
-|_ name String
-
-}
-class Assignment<<(M,orchid)>>{
-active       Boolean
-duty_type    **FK(DutyType)**
-employee     **FK(Employee)**
-unit         **FK(Unit)**
-start_date   Date
-end_date     Date
---
-}
 
 class Lecturer{
 employe **Employee()**
@@ -361,12 +210,12 @@ Unit "1..*" --o "0..*" Curriculum
 BaseLecture -- Curriculum
 BaseLecture -- Lecture
 
-Unit "0..*" -- "1..1" Assignment
+Unit "0..*" -- "1..1" Role
 Unit "0..1" --o "0..*" Unit
-Employee "0..*" -- "1..1" Assignment
+Employee "0..*" -- "1..1" Role
 Lecturer --o Employee
 Lecture --o TimeTable
-Assignment "1..1" --o "0..*" DutyType
+Role "1..1" --o "0..*" AbstractRole
 
 
 TimeTable "1..1" --o "0..*" Student

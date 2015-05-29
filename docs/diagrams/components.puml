@@ -1,33 +1,28 @@
 @startuml
 skinparam componentStyle uml2
-'skinparam monochrome true
-
 skinparam Interface{
-BackgroundColor #ffffff
+BackgroundColor #a0c4ef
 BorderColor #b0c4de
+shadowing false
 }
 skinparam Cloud{
-
 FontSize 18
+FontStyle normal
 BackgroundColor #b0c4de
 BorderColor #b0c4de
 }
 skinparam component {
-  FontSize 18
-  InterfaceBackgroundColor LightBlue
-ArrowColor 638CAC
-
-
-  BorderColor gray
-  BackgroundColor #b0c4de
-  ArrowFontName Impact
-
-  ArrowFontColor #777777
+FontSize 18
+InterfaceBackgroundColor LightBlue
+ArrowColor #6E6E6E
+BorderColor gray
+BackgroundColor #b0c4de
 }
 
 [Browser] as brw
 cloud "External HAProxy" {
 interface " " as eha
+interface " " as eha_static
 }
 [Gunicorn] as gun
 [Falcon] as fal
@@ -40,26 +35,39 @@ interface " " as eha
 [Riak CS] as rcs
 [Zato] as zato
 cloud "Internal HAProxy" {
-interface " " as iha
+interface " " as iha_r
+interface " " as iha_rcs
+interface " " as iha_z
 }
 
 
-brw <-down-> eha
-eha -down-> gun
-gun -down-> fal
-fal -down-> zen
-zen -down-> wfe
-wfe -down-> zaerp
-zaerp -down-> iha
-zaerp -down-> red
-zaerp -down-> iha
-iha <-down-> riak
-iha <-down-> riak
-iha <-down-> rcs
-iha <-down-> zato
-iha <-down-> zato
-brw <-down-> eha
-eha <-down-> rcs
+brw -d-> eha
+eha -d-> gun
+gun -d-> fal
+fal -d-> zen
+zen -d-> wfe
+wfe -d-> zaerp
+zaerp -d-> red
+
+zaerp -d-> iha_z
+
+iha_z -> zato
+iha_rcs <-d- zato
+iha_r <-d- zato
+
+iha_r -d-> riak
+iha_r -d-> riak
+iha_rcs -d-> rcs
+iha_rcs -d-> rcs
+
+zaerp -d-> iha_rcs
+zaerp -d-> iha_r
+
+
+
+
+brw -d-> eha_static
+eha_static -d-> rcs
 
 
 
