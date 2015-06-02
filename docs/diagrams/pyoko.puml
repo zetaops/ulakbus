@@ -16,9 +16,9 @@ skinparam shadowing false
 package pyoko{
 
 
-note  "All <color:black><b> (M)odels</b></color> extends <b>Base</b> and <b>Model</b>" as n1 #orchid
-n1 .. Base
-n1 .. Model
+'note  "All <color:black><b> (M)odels</b></color> extends <b>Base</b> and <b>Model</b>" as n1 #orchid
+'n1 .. Base
+'n1 .. Model
 
 class DBObjects{
 
