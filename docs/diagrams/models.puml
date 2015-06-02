@@ -10,29 +10,24 @@ skinparam shadowing false
 'skinparam monochrome true
 'skinparam nodesep 100
 'skinparam ranksep 100
+'note "All <color:black><b> (M)odels</b></color> extends <b>pyoko.Model</b> class" as N #orchid
+title
+<size:24>Entity Based Model Diagram</size>
+( All Models extends <b>pyoko.Model</b> class )
+endtitle
+'legend left
+'n..*     n or more instances
+'n..m    Min n, Max m instances
+'endlegend
 
 
-legend left
-n..*     n or more instances
-n..m    Min n, Max m instances
-endlegend
 
 
-
-
-
-package pyoko{
-class Base
-class Model
-Model <- ListModel
-note "All <color:black><b> (M)odels</b></color> extends  <b>Base</b> and <b>Model</b>" as N1 #orchid
-class AbstractBase
-}
 
 
 package auth{
 
-abstract class User <<(A,orchid)>> extends AbstractBase{
+class User <<(M,orchid)>>{
 |_ id                  Int
 |_ **IdentityInfo(Model)**
    |_  tckno           string
@@ -64,31 +59,30 @@ authenticate()
 get_permissions()
 
 }
-
-
 class AbstractRole<<(M,orchid)>>{
-|_ id   Int
-|_ name String
-
-}
-class Role<<(M,orchid)>>{
-active       Boolean
-abstract_role    **FK(AbstractRole)**
-employee     **FK(Employee)**
-unit         **FK(Unit)**
-start_date   Date
-end_date     Date
+permissions     FK(**Permissions**)
+id              Int
+name            String
 --
 }
-
-class Permission{
+class Role<<(M,orchid)>>{
+abstract_role   FK(**AbstractRole**)
+user            FK(**User**)
+unit            FK(**Unit**)
+permissions     FK(**Permissions**)
+active          Boolean
+start_date      Date
+end_date        Date
+--
 }
-
+class Permission<<(M,orchid)>>{
+name            String
+code            String
 }
-
-
-class Employee <<(M,orchid)>> extends User{
+}
+class Employee <<(M,orchid)>>{
 service_records      **ServiceRecords()**
+user                 FK(**User**)
 registry_code        String
 status_code          Int
 labour_class_code    String
@@ -103,11 +97,10 @@ country_code         String
 min_degree           Int
 min_grade            Int
 nomination           String
-
+--
 }
-
 class ServiceRecord<<(M,orchid)>>{
-employee                     **FK(Employee)**
+employee                     FK(**Employee**)
 start_date                   Date
 end_date                     Date
 task                         String
@@ -127,48 +120,41 @@ reason_code                  String
 organization_approval_date   Date
 --
 }
-
 class Unit<<(M,orchid)>>{
 type        String
 name        String
-**parent    FK(Unit)**
+parent      FK(**Unit**)
 --
-employees   **Role()**
---
-
+people      **Role()**
 }
 
-
-
-
-
-
-
-
-class Lecturer{
-employe **Employee()**
-name    String
+class Lecturer<<(M,orchid)>>{
+employe         FK(**Employee**)
+name            String
+type            [String]
+--
+note: non-employee (guest) lecturers data
+will be stored here
 --
 }
 
 class Curriculum<<(M,orchid)>>{
-unit        **FK(Unit)**
+unit        FK(**Unit**)
 period      Int
 --
 lectures    **BaseLecture()**
 
 }
 
-class TimeTable<<(M,orchid)>>{
-student         **FK(Student)**
-lecture         **FK(Lecture)**
-classroom       **FK(Classroom)**
-week_day        Int
-day_hour        Int
-course_hours    Int
-}
 
-class Classroom{
+'class StudentTimeTable<<(M,orchid)>>{
+'student         FK(**Student**)
+'timetable       FK(**TimeTable**)
+'week_day        Int
+'hours           [Int]
+'}
+
+class Location<<(M,orchid)>>{
 code            String
 building        String
 --
@@ -176,8 +162,8 @@ lectures        **Lecture()**
 }
 
 class Lecture<<(M,orchid)>>{
-lecturer    **FK(Lecturer)**
-base        **FK(BaseLecture)**
+lecturer    FK(**Lecturer**)
+base        FK(**BaseLecture**)
 --
 }
 class BaseLecture<<(M,orchid)>>{
@@ -186,43 +172,56 @@ code     String
 credit   String
 --
 }
+class TimeTable<<(M,orchid)>>{
+lecture         FK(**Lecture**)
+location        FK(**Location**)
+week_day        Int
+day_hour        Int
+hours           [Int]
+--
+}
 
 
 
-class Student <<(M,orchid)>> extends User {
-lectures        **FK(Lecture)**
-timetable        **FK(TimeTable)**
-**Exam(ListModel)**
-|_ type         String
-|_ date         Date
-|_ point        Int
+class Student <<(M,orchid)>> {
+lectures            FK(**Lecture**)
+timetable           FK(**TimeTable**)
+role                FK(**Role**)
+timetable       FK(**TimeTable**)
+**Exam(ListModel**
+|_ type              String
+|_ date              Date
+|_ point             Int
 **Attendance(ListModel)**
-|_ attended     Boolean
-|_ date         Date
-|_ hour         Int
+|_ attended          Boolean
+|_ date              Date
+|_ hour              Int
+**TimeTable(ListModel)**
 --
 get_draft_registrations()
 }
 
 Lecture -- Lecturer
 Lecture -- Student
-Unit "1..*" --o "0..*" Curriculum
+Unit "0..*" o-- "1" Curriculum
 BaseLecture -- Curriculum
 BaseLecture -- Lecture
 
-Unit "0..*" -- "1..1" Role
+Unit "0..*" -- "1" Role
 Unit "0..1" --o "0..*" Unit
-Employee "0..*" -- "1..1" Role
+User "0..*" o-- "1" Role
 Lecturer --o Employee
 Lecture --o TimeTable
-Role "1..1" --o "0..*" AbstractRole
+Role "1" --o "0..*" AbstractRole
+AbstractRole "0..*" o-- "0..*" Permission
+Role "0..*" o-- "0..*" Permission
 
-
-TimeTable "1..1" --o "0..*" Student
-TimeTable "1..1" --o "0..*" Classroom
-
-
+User "1" -- "1" Student
+User "1" -- "1" Employee
+TimeTable "1" o-- "0..*" Location
+Unit "0..*" o-- "1..*" Location
 Employee "1..*" --o ServiceRecord
+TimeTable "0..*" --o "0..*" Student
 
 ' XXXXXXXXXXXX
 ' Unit "0..*" -- "0..*" Employee
