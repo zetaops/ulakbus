@@ -81,7 +81,6 @@ code            String
 }
 }
 class Employee <<(M,orchid)>>{
-service_records      **ServiceRecords()**
 user                 FK(**User**)
 registry_code        String
 status_code          Int
@@ -98,6 +97,7 @@ min_degree           Int
 min_grade            Int
 nomination           String
 --
+service_records      **ServiceRecords()**
 }
 class ServiceRecord<<(M,orchid)>>{
 employee                     FK(**Employee**)
