@@ -196,7 +196,6 @@ timetable       FK(**TimeTable**)
 |_ attended          Boolean
 |_ date              Date
 |_ hour              Int
-**TimeTable(ListModel)**
 --
 get_draft_registrations()
 }
