@@ -18,7 +18,7 @@ from wsgiref import simple_server
 
 from zengine.engine import ZEngine
 from zaerp import settings
-from zaerp.zdispatch.dispatcher import app
+from zaerp.zdispatch.dispatcher import app, falcon_app
 
 __author__ = 'Evren Esat Ozkan'
 
@@ -58,7 +58,7 @@ class Connector(object):
 
 
 workflow_connector = Connector()
-app.add_route('^(?P<wf_name>\w+)/', workflow_connector)
+falcon_app.add_route('/^(?P<wf_name>\w+)/', workflow_connector)
 
 
 # Useful for debugging problems in your API; works with pdb.set_trace()

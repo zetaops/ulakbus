@@ -9,19 +9,13 @@ __author__ = 'Evren Esat Ozkan'
 
 import falcon
 from zaerp.lib.utils import DotDict
-
 from beaker.middleware import SessionMiddleware
-import beaker
-from beaker_extensions.redis_ import RedisManager
-
-beaker.cache.clsmap['ext:redis'] = RedisManager
-
-
+from beaker_extensions import redis_
 from zaerp.zdispatch import middlewares
 
 SESSION_OPTIONS = {
     'session.cookie_expires': True,
-    'session.type': 'ext:redis',
+    'session.type': redis_,
     'session.url': '127.0.0.1:6379',
     'auto': True,
 }
@@ -32,9 +26,8 @@ ENABLED_MIDDLEWARES = [
     middlewares.SessionMiddleware(),
 ]
 
-
 class ZRequest(falcon.Request):
     context_type = DotDict
 
-app = falcon.API(middleware=ENABLED_MIDDLEWARES, request_type=ZRequest)
-app = SessionMiddleware(app, SESSION_OPTIONS)
+falcon_app = falcon.API(middleware=ENABLED_MIDDLEWARES, request_type=ZRequest)
+app = SessionMiddleware(falcon_app, SESSION_OPTIONS)
