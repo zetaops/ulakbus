@@ -10,13 +10,17 @@ __author__ = 'Evren Esat Ozkan'
 import falcon
 from zaerp.lib.utils import DotDict
 from beaker.middleware import SessionMiddleware
+import beaker
 from beaker_extensions import redis_
 from zaerp.zdispatch import middlewares
 
+beaker.session.type = redis_
+beaker.session.url = '127.0.0.1:6379'
+
 SESSION_OPTIONS = {
     'session.cookie_expires': True,
-    'session.type': redis_,
-    'session.url': '127.0.0.1:6379',
+    # 'session.type': redis_,
+    # 'session.url': '127.0.0.1:6379',
     'auto': True,
 }
 
