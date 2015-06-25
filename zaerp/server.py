@@ -56,9 +56,15 @@ class Connector(object):
         self.engine.load_or_create_workflow()
         self.engine.run()
 
+    def on_post(self, req, resp, wf_name):
+        self.engine.set_current(request=req, response=resp, workflow_name=wf_name)
+        self.engine.load_or_create_workflow()
+        self.engine.run()
+
+
 
 workflow_connector = Connector()
-falcon_app.add_route('/^(?P<wf_name>\w+)/', workflow_connector)
+falcon_app.add_route('/{wf_name}/', workflow_connector)
 
 
 # Useful for debugging problems in your API; works with pdb.set_trace()
