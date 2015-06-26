@@ -34,6 +34,8 @@ class JSONTranslator(object):
         # See also: PEP 3333
         if req.content_length in (None, 0):
             # Nothing to do
+            req.context['data'] = {}
+            req.context['result'] = {}
             return
 
         body = req.stream.read()
