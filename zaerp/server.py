@@ -32,7 +32,7 @@ class WFEngine(ZEngine):
         if 'workflows' not in self.current.request.session:
             self.current.request.session['workflows'] = {}
         self.current.request.session['workflows'][wf_name] = serialized_wf_instance
-        self.current.request.session.save()  # TODO: check if this is realy neccessary
+        self.current.request.session.save()
 
     def load_workflow(self, workflow_name):
         try:
