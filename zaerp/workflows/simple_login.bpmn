@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_qyVjYLNPEeSf4I-xcGOQ0Q" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="simple_login" isExecutable="false">
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="show_login_form" camunda:assignee="views.auth.Login" camunda:class="views.auth.Login" name="show login">
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:incoming>login_fail</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="show_login_form"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="show_login_form" targetRef="Task_3"/>
+    <bpmn2:serviceTask id="Task_3" camunda:class="views.auth.Login" name="authenticate">
+      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="Task_3" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="login_fail">
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:outgoing>login_fail</bpmn2:outgoing>
+      <bpmn2:outgoing>login_successful</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="login_fail" name="login failed" sourceRef="ExclusiveGateway_1" targetRef="show_login_form">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" camunda:resource=""/>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="login_successful" name="login successful" sourceRef="ExclusiveGateway_1" targetRef="ShowDashboard">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">is_login_successful</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:dataObject id="DataObject_1" name="d1"/>
+    <bpmn2:dataObject id="DataObject_2" name="d2"/>
+    <bpmn2:endEvent id="EndEvent_1">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:userTask id="ShowDashboard" camunda:class="views.core.Dashboard" camunda:assignee="views.core.Dashboard" name="show_dashboard">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="activities">
+            <camunda:list>
+              <camunda:value>views.show_dashboard</camunda:value>
+            </camunda:list>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>login_successful</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="ShowDashboard" targetRef="EndEvent_1"/>
+  </bpmn2:process>
+  <bpmn2:dataStore id="DataStore_1"/>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="56.0" y="208.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_2" bpmnElement="show_login_form">
+        <dc:Bounds height="80.0" width="100.0" x="142.0" y="186.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_2" targetElement="_BPMNShape_Task_2">
+        <di:waypoint xsi:type="dc:Point" x="92.0" y="226.0"/>
+        <di:waypoint xsi:type="dc:Point" x="142.0" y="226.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_5" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="504.0" y="200.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="529.0" y="255.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="login_fail" sourceElement="_BPMNShape_ExclusiveGateway_5" targetElement="_BPMNShape_Task_2">
+        <di:waypoint xsi:type="dc:Point" x="529.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="529.0" y="312.0"/>
+        <di:waypoint xsi:type="dc:Point" x="266.0" y="312.0"/>
+        <di:waypoint xsi:type="dc:Point" x="266.0" y="276.0"/>
+        <di:waypoint xsi:type="dc:Point" x="242.0" y="260.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="56.0" x="501.0" y="275.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_3" bpmnElement="EndEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="720.0" y="208.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="738.0" y="249.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="login_successful" sourceElement="_BPMNShape_ExclusiveGateway_5" targetElement="_BPMNShape_UserTask_2">
+        <di:waypoint xsi:type="dc:Point" x="554.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="587.0" y="226.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="79.0" x="532.0" y="226.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_6" bpmnElement="Task_3">
+        <dc:Bounds height="58.0" width="100.0" x="341.0" y="197.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="_BPMNShape_Task_2" targetElement="_BPMNShape_Task_6">
+        <di:waypoint xsi:type="dc:Point" x="242.0" y="226.0"/>
+        <di:waypoint xsi:type="dc:Point" x="341.0" y="226.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="274.0" y="226.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="_BPMNShape_Task_6" targetElement="_BPMNShape_ExclusiveGateway_5">
+        <di:waypoint xsi:type="dc:Point" x="441.0" y="226.0"/>
+        <di:waypoint xsi:type="dc:Point" x="466.0" y="226.0"/>
+        <di:waypoint xsi:type="dc:Point" x="466.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="504.0" y="225.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="470.0" y="225.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_2" bpmnElement="ShowDashboard">
+        <dc:Bounds height="58.0" width="100.0" x="587.0" y="197.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_UserTask_2" targetElement="_BPMNShape_EndEvent_3">
+        <di:waypoint xsi:type="dc:Point" x="687.0" y="226.0"/>
+        <di:waypoint xsi:type="dc:Point" x="720.0" y="226.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
