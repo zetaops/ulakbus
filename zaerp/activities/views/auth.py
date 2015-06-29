@@ -23,14 +23,14 @@ class Login(SimpleView):
         user = authenticate(login_credentials)
         is_login_successful = bool(user)
         if is_login_successful:
-            self.current.request.context.result = {'success': True}
+            self.current.request.context['result'] = {'success': True}
             self.current.request.session['user'] = user
         self.current.task.data['is_login_successful'] = is_login_successful
 
     def _show(self):
-        if 'user' not in self.current.request.session:
-            self.current.request.context['result']['forms'] = get_form(
+        if 'user' not in self.current['request']['session']:
+            self.current['request']['context']['result']['forms'] = get_form(
                 'student_login_form')
         else:
-            self.current.request.context[
+            self.current['request']['context'][
                 'show_user_message'] = "Zaten giriş yapmış durumdasınız"
