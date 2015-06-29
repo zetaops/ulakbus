@@ -1,7 +1,7 @@
 from pprint import pprint
 from zengine.utils import DotDict
 from zaerp.modules.forms import get_form
-from server import Connector as workflow_connector
+from zaerp.server import Connector as workflow_connector
 from tests.test_utils import get_worfklow_path
 from zengine.engine import ZEngine
 
@@ -23,11 +23,15 @@ def make_request(session_obj, **kwargs):
 def test_simple():
     wfc = workflow_connector()
     session = MockSessionStore()
-    req = make_request(session, do='show')
+    req = make_request(session)
     resp = DotDict()
     wfc.on_post(req, resp=resp, wf_name='simple_login')
     assert req['context']['result']['forms'] == get_form('student_login_form')
-    make_request(session, do='do')
+    req= make_request(session, cmd='do', login_crd={'username':'user', 'password':'pass'})
     pprint(session)
     wfc.on_post(req, resp=DotDict(), wf_name='simple_login')
-    assert True
+    # print(session)
+    # print(req)
+    assert session['user']['username'] == 'user'
+    assert req['context']['result']['dashboard'] == 'Dashboard'
+
