@@ -11,8 +11,8 @@ DEVELOPMENT ENVIRONMENT SETUP
     ulimit -n 65536
      
  . Install Riak and requirements. 
-     # install java for riak solr search
 ```
+     # install java for riak solr search
      apt-add-repository ppa:webupd8team/java -y && apt-get update
      echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
      apt-get install -y oracle-java8-installer```
@@ -76,7 +76,7 @@ DEVELOPMENT ENVIRONMENT SETUP
      virtualenv --no-site-packages env
      source env/bin/activate
 ``` 
- . Clones ulakbus from https://github.com/zetaops/ulakbus.git and installs requirenments.
+ . Clone ulakbus from https://github.com/zetaops/ulakbus.git and install requirenments.
 ```  
      pip install --upgrade pip
      git clone https://github.com/zetaops/ulakbus.git
