@@ -29,7 +29,7 @@ DEVELOPMENT ENVIRONMENT SETUP
     
     
     # Install Redis-Server.
-    apt-get install redis-server ```
+    apt-get install redis-server
      
  . Make all setups for installation of Zato.
 ```
