@@ -1,22 +1,24 @@
 PROJECT SETUP
 =============
 
- . First updates and upgrades base system
+ . First update and upgrade base system
 ``` 
      apt-get update
      apt-get upgrade
 ```     
- . Changes file size limit to 65536 for Riak.
-```   ulimit -n 65536
-```     
- . Install Riak. 
+ . Change file size limit to 65536 for Riak.
+ 
+    ulimit -n 65536
+     
+ . Install Riak and requirements. 
      # install java for riak solr search
 ```
      apt-add-repository ppa:webupd8team/java -y && apt-get update
      echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
      apt-get install -y oracle-java8-installer
 ```
-```curl -s https://packagecloud.io/install/repositories/zetaops/riak/script.deb.sh | sudo bash
+    # install riak
+    curl -s https://packagecloud.io/install/repositories/zetaops/riak/script.deb.sh |sudo bash
      apt-get install riak=2.1.1-1
 ```
     # activate search
@@ -26,7 +28,7 @@ PROJECT SETUP
      ``` service riak restart ```
      
           
- . Installs Redis-Server.
+ . Install Redis-Server.
      ``` apt-get install redis-server ```
      
  . Make all setups for installation of Zato.
@@ -48,7 +50,7 @@ PROJECT SETUP
 ```     zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose ```
  
  .  Install Pyoko
-```    pip install git+https://github.com/zetaops/pyoko.git  ```
+```    pip install git+https://github.com/zetaops/pyoko.git ```
     
 
  . Switch back to root user to prepare python virtual environment for Ulakbus Application.
