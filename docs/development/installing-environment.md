@@ -15,21 +15,21 @@ PROJECT SETUP
 ```
      apt-add-repository ppa:webupd8team/java -y && apt-get update
      echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-     apt-get install -y oracle-java8-installer
-```
+     apt-get install -y oracle-java8-installer```
+
     # install riak
     curl -s https://packagecloud.io/install/repositories/zetaops/riak/script.deb.sh |sudo bash
      apt-get install riak=2.1.1-1
 ```
     # activate search
-    ``` sed -i "s/search = off/search = on/" /etc/riak/riak.conf ```
+    sed -i "s/search = off/search = on/" /etc/riak/riak.conf 
      
-     # restart riak service
-     ``` service riak restart ```
-     
-          
- . Install Redis-Server.
-     ``` apt-get install redis-server ```
+# restart riak service
+    service riak restart     
+    
+    
+# Install Redis-Server.
+    apt-get install redis-server ```
      
  . Make all setups for installation of Zato.
 ```
@@ -47,7 +47,8 @@ PROJECT SETUP
      
      
  .  Create a Zato Cluster. This will set up a Certificate Authority (CA), web admin, a load-balancer, and Zato servers without asking password.
-```     zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose ```
+
+```zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose``` 
  
  .  Install Pyoko
 ```    pip install git+https://github.com/zetaops/pyoko.git ```
