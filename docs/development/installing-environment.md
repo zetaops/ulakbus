@@ -1,5 +1,5 @@
-RONMENT SETUP
-============================
+DEVELOPMENT ENVIRONMENT SETUP
+=============================
 
  . First update and upgrade base system
 ``` 
@@ -24,11 +24,11 @@ RONMENT SETUP
     # activate search
     sed -i "s/search = off/search = on/" /etc/riak/riak.conf 
      
- # restart riak service
+    # restart riak service
     service riak restart     
     
     
- # Install Redis-Server.
+    # Install Redis-Server.
     apt-get install redis-server ```
      
  . Make all setups for installation of Zato.
@@ -86,4 +86,4 @@ RONMENT SETUP
 ``` 
  . Start server port 8000 default
 ```     python server.py  ```
-PROJECT SETUP
+
