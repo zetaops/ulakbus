@@ -7,46 +7,46 @@
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="Lane_1" name="Personel Isleri Memuru">
         <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>UserTask_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>UserTask_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>UserTask_3</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Personel_Listele</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Personel_Goruntule</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Personel_Duzenle</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>EndEvent_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ServiceTask_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>UserTask_4</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Personel_Kaydet</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Degisiklikleri_Onizle</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
     <bpmn2:startEvent id="StartEvent_1" name="Dasboard&#xA;Personel &#xA;Duzenle&#xA;Butonu">
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="UserTask_1"/>
-    <bpmn2:userTask id="UserTask_1" camunda:assignee="views_personel.personel_listele" name="Personel&#xA;Listele">
+    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="Personel_Listele"/>
+    <bpmn2:userTask id="Personel_Listele" camunda:assignee="views_personel.personel_listele" name="Personel&#xA;Listele">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="UserTask_1" targetRef="UserTask_2"/>
-    <bpmn2:userTask id="UserTask_2" camunda:assignee="views_personel.personel_goruntule" name="Personel&#xA;Görüntüle">
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="Personel_Listele" targetRef="Personel_Goruntule"/>
+    <bpmn2:userTask id="Personel_Goruntule" camunda:assignee="views_personel.personel_goruntule" name="Personel&#xA;Görüntüle">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="UserTask_2" targetRef="UserTask_3"/>
-    <bpmn2:userTask id="UserTask_3" camunda:assignee="views_personel.personel_duzenle" name="Personel &#xA;Düzenle">
+    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="Personel_Goruntule" targetRef="Personel_Duzenle"/>
+    <bpmn2:userTask id="Personel_Duzenle" camunda:assignee="views_personel.personel_duzenle" name="Personel &#xA;Düzenle">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="UserTask_3" targetRef="UserTask_4"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="Personel_Duzenle" targetRef="Degisiklikleri_Onizle"/>
     <bpmn2:endEvent id="EndEvent_2">
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="ServiceTask_1" camunda:assignee="views_personel.personel_kaydet" name="Personel&#xA;Kaydet">
+    <bpmn2:userTask id="Personel_Kaydet" camunda:assignee="views_personel.personel_kaydet" name="Personel&#xA;Kaydet">
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="ServiceTask_1" targetRef="EndEvent_2"/>
-    <bpmn2:userTask id="UserTask_4" camunda:assignee="views_personel.degisiklikleri_onizle" name="Deişiklikleri&#xA;Önizle">
+    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="Personel_Kaydet" targetRef="EndEvent_2"/>
+    <bpmn2:userTask id="Degisiklikleri_Onizle" camunda:assignee="views_personel.degisiklikleri_onizle" name="Deişiklikleri&#xA;Önizle">
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="UserTask_4" targetRef="ServiceTask_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="Degisiklikleri_Onizle" targetRef="Personel_Kaydet"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_2">
@@ -62,7 +62,7 @@
           <dc:Bounds height="70.0" width="62.0" x="438.0" y="370.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_3" bpmnElement="UserTask_1">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_3" bpmnElement="Personel_Listele">
         <dc:Bounds height="80.0" width="100.0" x="588.0" y="307.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_3" targetElement="_BPMNShape_UserTask_3">
@@ -72,7 +72,7 @@
           <dc:Bounds height="6.0" width="6.0" x="501.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_4" bpmnElement="UserTask_2">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_4" bpmnElement="Personel_Goruntule">
         <dc:Bounds height="80.0" width="100.0" x="738.0" y="307.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_UserTask_3" targetElement="_BPMNShape_UserTask_4">
@@ -82,7 +82,7 @@
           <dc:Bounds height="6.0" width="6.0" x="710.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_5" bpmnElement="UserTask_3">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_5" bpmnElement="Personel_Duzenle">
         <dc:Bounds height="80.0" width="100.0" x="888.0" y="307.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="_BPMNShape_UserTask_4" targetElement="_BPMNShape_UserTask_5">
@@ -92,7 +92,7 @@
           <dc:Bounds height="6.0" width="6.0" x="860.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_6" bpmnElement="UserTask_4">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_6" bpmnElement="Degisiklikleri_Onizle">
         <dc:Bounds height="80.0" width="100.0" x="1056.0" y="308.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="_BPMNShape_UserTask_5" targetElement="_BPMNShape_UserTask_6">
@@ -102,7 +102,7 @@
           <dc:Bounds height="6.0" width="6.0" x="1010.0" y="347.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_2" bpmnElement="ServiceTask_1">
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_2" bpmnElement="Personel_Kaydet">
         <dc:Bounds height="80.0" width="100.0" x="1320.0" y="308.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_EndEvent_5" bpmnElement="EndEvent_2">
