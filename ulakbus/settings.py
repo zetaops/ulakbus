@@ -12,6 +12,6 @@ import os.path
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 # path of the activity modules which will be invoked by workflow tasks
-ACTIVITY_MODULES_IMPORT_PATH = 'zaerp.activities'
+ACTIVITY_MODULES_IMPORT_PATH = 'ulakbus.activities'
 # absolute path to the workflow packages
 WORKFLOW_PACKAGES_PATH = os.path.join(BASE_DIR, 'workflows')

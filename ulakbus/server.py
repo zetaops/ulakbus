@@ -17,8 +17,8 @@ and writeback to request.context.jsonout
 from wsgiref import simple_server
 
 from zengine.engine import ZEngine
-from zaerp import settings
-from zaerp.zdispatch.dispatcher import app, falcon_app
+from ulakbus import settings
+from ulakbus.zdispatch.dispatcher import app, falcon_app
 
 __author__ = 'Evren Esat Ozkan'
 

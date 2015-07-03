@@ -8,11 +8,11 @@
 __author__ = 'Evren Esat Ozkan'
 
 import falcon
-from zaerp.lib.utils import DotDict
+from ulakbus.lib.utils import DotDict
 from beaker.middleware import SessionMiddleware
 import beaker
 from beaker_extensions import redis_
-from zaerp.zdispatch import middlewares
+from ulakbus.zdispatch import middlewares
 
 beaker.session.type = redis_
 beaker.session.url = '127.0.0.1:6379'
