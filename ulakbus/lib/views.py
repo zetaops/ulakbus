@@ -25,7 +25,7 @@ class SimpleView(BaseView):
     """
     def __init__(self, current):
         super(SimpleView, self).__init__(current)
-        if current['request']['context']['data'].get('cmd', '') == 'do':
+        if current['request'].context['data'].get('cmd', '') == 'do':
             self._do()
         else:
             self._show()

@@ -29,14 +29,14 @@ class WFEngine(ZEngine):
     ACTIVITY_MODULES_PATH = settings.ACTIVITY_MODULES_IMPORT_PATH
 
     def save_workflow(self, wf_name, serialized_wf_instance):
-        if 'workflows' not in self.current.request.session:
-            self.current.request.session['workflows'] = {}
-        self.current.request.session['workflows'][wf_name] = serialized_wf_instance
-        self.current.request.session.save()
+        if 'workflows' not in self.current.request.env['session']:
+            self.current.request.env['session']['workflows'] = {}
+        self.current.request.env['session']['workflows'][wf_name] = serialized_wf_instance
+        self.current.request.env['session'].save()
 
     def load_workflow(self, workflow_name):
         try:
-            return self.current.request.session['workflows'].get(workflow_name, None)
+            return self.current.request.env['session']['workflows'].get(workflow_name, None)
         except KeyError:
             return None
 
