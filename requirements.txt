@@ -4,4 +4,5 @@ falcon
 redis
 -e git://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 -e git://github.com/zetaops/zengine.git#egg=zengine
+-e git://github.com/zetaops/pyoko.git#egg=pyoko
 pytest
