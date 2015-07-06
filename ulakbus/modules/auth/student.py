@@ -1,5 +1,5 @@
-from zaerp.lib.utils import DotDict
-from zaerp.modules.exceptions import PermissionDenied
+from ulakbus.lib.utils import DotDict
+from ulakbus.modules.exceptions import PermissionDenied
 
 __author__ = 'Evren Esat Ozkan'
 

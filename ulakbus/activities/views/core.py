@@ -5,12 +5,12 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from zaerp.lib.views import SimpleView
+from ulakbus.lib.views import SimpleView
 
 from falcon.errors import HTTPBadRequest
 
-# from zaerp.modules.forms import get_form
-# from zaerp.modules.auth.student import authenticate
+# from ulakbus.modules.forms import get_form
+# from ulakbus.modules.auth.student import authenticate
 
 
 class Dashboard(SimpleView):
