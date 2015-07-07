@@ -3,7 +3,7 @@
   <bpmn2:collaboration id="_Collaboration_2">
     <bpmn2:participant id="_Participant_2" name="Personel Duzenle" processRef="personel_duzenle"/>
   </bpmn2:collaboration>
-  <bpmn2:process id="personel_duzenle" isExecutable="false">
+  <bpmn2:process id="personel_duzenle_basitlestirilmis" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="Lane_1" name="Personel Isleri Memuru">
         <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
@@ -19,17 +19,17 @@
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="Personel_Listele"/>
-    <bpmn2:userTask id="Personel_Listele" camunda:assignee="views_personel.personel_listele" name="Personel&#xA;Listele">
+    <bpmn2:userTask id="Personel_Listele" camunda:assignee="views.employee.List" name="Personel&#xA;Listele">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="Personel_Listele" targetRef="Personel_Goruntule"/>
-    <bpmn2:userTask id="Personel_Goruntule" camunda:assignee="views_personel.personel_goruntule" name="Personel&#xA;Görüntüle">
+    <bpmn2:userTask id="Personel_Goruntule" camunda:assignee="views.employee.Show" name="Personel&#xA;Görüntüle">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="Personel_Goruntule" targetRef="Personel_Duzenle"/>
-    <bpmn2:userTask id="Personel_Duzenle" camunda:assignee="views_personel.personel_duzenle" name="Personel &#xA;Düzenle">
+    <bpmn2:userTask id="Personel_Duzenle" camunda:assignee="views.employee.Edit" name="Personel &#xA;Düzenle">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:userTask>
@@ -37,12 +37,12 @@
     <bpmn2:endEvent id="EndEvent_2">
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="Personel_Kaydet" camunda:assignee="views_personel.personel_kaydet" name="Personel&#xA;Kaydet">
+    <bpmn2:userTask id="Personel_Kaydet" camunda:assignee="views.employee.Save" name="Personel&#xA;Kaydet">
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="Personel_Kaydet" targetRef="EndEvent_2"/>
-    <bpmn2:userTask id="Degisiklikleri_Onizle" camunda:assignee="views_personel.degisiklikleri_onizle" name="Deişiklikleri&#xA;Önizle">
+    <bpmn2:userTask id="Degisiklikleri_Onizle" camunda:assignee="views.employee.Preview" name="Deişiklikleri&#xA;Önizle">
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
     </bpmn2:userTask>
