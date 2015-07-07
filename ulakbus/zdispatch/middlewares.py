@@ -12,6 +12,30 @@ class SessionMiddleware(object):
         req.session = req.env['beaker.session']
 
 
+ALLOWED_ORIGINS = ['127.0.0.1']
+
+class CORS(object):
+    """
+    allow origins
+    """
+    def process_response(self, request, response):
+        origin = request.get_header('Origin')
+        if origin in ALLOWED_ORIGINS:
+            response.set_header(
+                'Access-Control-Allow-Origin',
+                origin
+            )
+        response.set_header(
+            'Access-Control-Allow-Headers',
+            'Content-Type'
+        )
+        # This could be overridden in the resource level
+        response.set_header(
+            'Access-Control-Allow-Methods',
+            'OPTIONS'
+        )
+
+
 class RequireJSON(object):
     def process_request(self, req, resp):
         if not req.client_accepts_json:

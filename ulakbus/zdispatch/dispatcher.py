@@ -29,6 +29,7 @@ SESSION_OPTIONS = {
 ENABLED_MIDDLEWARES = [
     middlewares.RequireJSON(),
     middlewares.JSONTranslator(),
+    middlewares.CORS(),
     # middlewares.SessionMiddleware(),
 ]
 
