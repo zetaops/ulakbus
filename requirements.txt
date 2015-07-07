@@ -6,3 +6,4 @@ redis
 -e git://github.com/zetaops/zengine.git#egg=zengine
 -e git://github.com/zetaops/pyoko.git#egg=pyoko
 pytest
+enum34
