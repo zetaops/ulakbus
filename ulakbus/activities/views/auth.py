@@ -16,6 +16,10 @@ class LoginForm(AngularForm):
     username = field.String("Username")
     password = field.String("Password")
 
+
+def Logout(current):
+    current.request.env['session'].delete()
+
 class Login(SimpleView):
 
     def _do(self):
@@ -36,5 +40,4 @@ class Login(SimpleView):
         if 'user' not in self.current['request'].env['session']:
             self.current['request'].context['result']['forms'] = LoginForm().serialize()
         else:
-            self.current['request'].context[
-                'show_user_message'] = "Zaten giriş yapmış durumdasınız"
+            self.current['request'].context['result']['show_user_message'] = "Zaten giriş yapmış durumdasınız"
