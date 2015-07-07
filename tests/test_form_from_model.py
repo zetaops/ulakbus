@@ -4,7 +4,7 @@ from ulakbus.modules.forms import AngularForm
 __author__ = 'Evren Esat Ozkan'
 
 serialized_empty_test_employee = {
-    'model': {'birth_date': '2015-07-06T00:00:00Z', 'archived': False, 'last_name': None,
+    'model': {'birth_date': '', 'archived': False, 'last_name': None,
               'first_name': None, 'staff_type': None},
     'form': ['archived', 'last_name', 'first_name', 'staff_type', 'birth_date'],
     'schema': {'required': ['archived', 'last_name', 'first_name', 'staff_type', 'birth_date'],

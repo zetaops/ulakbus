@@ -16,7 +16,7 @@ class Employee(Model):
     first_name = field.String("Adı", index=True)
     last_name = field.String("Soyadı", index=True)
     staff_type = field.String("Personel Türü", index=True)
-    birth_date = field.Date("Doğum Tarihi", index=True)
+    birth_date = field.Date("Doğum Tarihi", index=True, default='')
 
     class ServiceRecords(ListNode):
         start_date = field.Date("Başlangıç Tarihi", index=True)
