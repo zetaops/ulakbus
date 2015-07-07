@@ -70,7 +70,7 @@ Create a Zato Cluster. This will set up a Certificate Authority (CA), web admin,
 zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose
 ```
 
-Create pwzato.config file under ~/ulakbus and write down below script in it
+Create pwzato.config file under ~/ulakbus and write down below script in it.To use this script you should run ```zato from-config ~/ulakbus/pwzato.config```
 
 ```bash
 command=update_password
