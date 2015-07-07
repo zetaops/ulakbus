@@ -29,6 +29,7 @@ class Login(SimpleView):
         if is_login_successful:
             # self.current.request.context['result'] = {'success': True}
             self.current.request.env['session']['user_id'] = user.key
+            self.current.request.env['session'].save()
         self.current['task'].data['is_login_successful'] = is_login_successful
 
     def _show(self):

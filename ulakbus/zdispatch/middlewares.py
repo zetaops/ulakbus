@@ -3,13 +3,13 @@ import falcon
 
 __author__ = 'Evren Esat Ozkan'
 
-
-class SessionMiddleware(object):
-    """
-    just for easier access to session dict
-    """
-    def process_request(self, req, resp):
-        req.session = req.env['beaker.session']
+#
+# class SessionMiddleware(object):
+#     """
+#     just for easier access to session dict
+#     """
+#     def process_request(self, req, resp):
+#         req.session = req.env['session']
 
 
 ALLOWED_ORIGINS = ['http://127.0.0.1:8080', 'http://127.0.0.1:9001']
