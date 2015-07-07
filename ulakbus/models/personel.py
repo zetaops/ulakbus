@@ -103,7 +103,7 @@ class Employee(Model):
         retirement_grade = field.Integer("Emeklilik Kademe", index=True)
         assignment = field.String("Görev", index_as='text_tr')
         title_code = field.Integer("Ünvan Kodu", index=True)
-        duty_class = field.String("Hizmet Sınıfı", index_as=True)
+        duty_class = field.String("Hizmet Sınıfı", index=True)
         record_id = field.Integer("Kayıt No", index=True)
         aquired_degree = field.Integer("Kazanılmış Hak Aylığı Derece", index=True)
         aquired_grade = field.Integer("Kazanılmış Hak Aylığı Kademe", index=True)
@@ -116,6 +116,6 @@ class Employee(Model):
         reason_code = field.Integer("Sebep Kodu", index=True)
         pno = field.Integer("TC No", index=True)
         salary = field.Float("Ücret", index=True)
-        wage = field.Float("Yemiye", index_as=True)
+        wage = field.Float("Yemiye", index=True)
         approval_date = field.Date("Kurum Onay Tarihi", index=True)
 
