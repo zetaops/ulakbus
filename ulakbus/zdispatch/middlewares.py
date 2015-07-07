@@ -12,13 +12,13 @@ class SessionMiddleware(object):
         req.session = req.env['beaker.session']
 
 
-ALLOWED_ORIGINS = ['127.0.0.1']
+ALLOWED_ORIGINS = ['http://127.0.0.1:8080']
 
 class CORS(object):
     """
     allow origins
     """
-    def process_response(self, request, response):
+    def process_response(self, request, response, resource):
         origin = request.get_header('Origin')
         if origin in ALLOWED_ORIGINS:
             response.set_header(

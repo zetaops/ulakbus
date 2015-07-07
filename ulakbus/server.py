@@ -45,8 +45,11 @@ class WFEngine(ZEngine):
         if 'cmd' in request_data and request_data['cmd'] in self.ALLOWED_CLIENT_COMMANDS:
             self.current.task_data[request_data['cmd']] = True
             self.current.task_data['cmd'] = request_data['cmd']
+        else:
+            for cmd in self.ALLOWED_CLIENT_COMMANDS:
+                self.current.task_data[cmd] = None
         self.current.task_data['object_id'] = request_data.get('object_id', None)
-        self.current.task_data['add_object'] = request_data.get('add_object', None)
+
 
 
 
