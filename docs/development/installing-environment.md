@@ -77,7 +77,7 @@ command=update_password
 path=/opt/zato/ulakbus/web-admin
 store_config=True
 username=admin
-password=ulakbus
+password=ulakbus  
 ```
 
 Switch back to root user to prepare python virtual environment for Ulakbus Application.
@@ -87,7 +87,7 @@ logout
 apt-get install virtualenvwrapper
 ```
 
-Create app folder and add a user for app
+Create app folder and add ulakbus(user) for app
 ```bash
 mkdir /app
 /usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
