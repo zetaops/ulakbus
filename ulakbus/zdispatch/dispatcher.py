@@ -5,6 +5,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from pyoko.conf import settings
+
 __author__ = 'Evren Esat Ozkan'
 
 import falcon
@@ -15,7 +17,7 @@ from beaker_extensions import redis_
 from ulakbus.zdispatch import middlewares
 
 beaker.session.type = redis_
-beaker.session.url = '127.0.0.1:6379'
+beaker.session.url = settings.REDIS_SERVER
 
 SESSION_OPTIONS = {
     'session.cookie_expires': True,
