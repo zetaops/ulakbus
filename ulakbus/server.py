@@ -24,7 +24,7 @@ __author__ = 'Evren Esat Ozkan'
 
 
 class WFEngine(ZEngine):
-
+    ALLOWED_CLIENT_COMMANDS = ['edit_object', 'add_object', 'update_object', 'cancel']
     WORKFLOW_DIRECTORY = settings.WORKFLOW_PACKAGES_PATH,
     ACTIVITY_MODULES_PATH = settings.ACTIVITY_MODULES_IMPORT_PATH
 
@@ -40,6 +40,15 @@ class WFEngine(ZEngine):
         except KeyError:
             return None
 
+    def process_client_commands(self, request_data):
+        self.current.task_data = {}
+        if 'cmd' in request_data and request_data['cmd'] in self.ALLOWED_CLIENT_COMMANDS:
+            self.current.task_data[request_data['cmd']] = True
+            self.current.task_data['cmd'] = request_data['cmd']
+        self.current.task_data['object_id'] = request_data.get('object_id', None)
+        self.current.task_data['add_object'] = request_data.get('add_object', None)
+
+
 
 class Connector(object):
     """
@@ -51,13 +60,11 @@ class Connector(object):
     def __init__(self):
         self.engine = WFEngine()
 
-    def __call__(self, req, resp, wf_name):
-        self.engine.set_current(request=req, response=resp, workflow_name=wf_name)
-        self.engine.load_or_create_workflow()
-        self.engine.run()
+
 
     def on_post(self, req, resp, wf_name):
         self.engine.set_current(request=req, response=resp, workflow_name=wf_name)
+        self.engine.process_client_commands(req.context['data'])
         self.engine.load_or_create_workflow()
         self.engine.run()
 

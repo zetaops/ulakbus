@@ -20,3 +20,5 @@ WORKFLOW_PACKAGES_PATH = os.path.join(BASE_DIR, 'workflows')
 RIAK_SERVER = 'localhost'
 RIAK_PROTOCOL = 'http'
 RIAK_PORT = '8098'
+
+REDIS_SERVER = '127.0.0.1:6379'
