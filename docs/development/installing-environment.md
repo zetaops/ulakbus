@@ -109,6 +109,14 @@ Clone ulakbus from ``` https://github.com/zetaops/ulakbus.git  ``` and install r
 
 ```bash
 pip install --upgrade pip
+
+pip install falcon
+pip install beaker
+pip install redis
+pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
+pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
+pip install git+https://github.com/zetaops/zengine.git#egg=zengine
+
 git clone https://github.com/zetaops/ulakbus.git
 cd /app/ulakbus
 pip install -r requirements.txt
