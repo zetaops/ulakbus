@@ -105,11 +105,19 @@ virtualenv --no-site-packages env
 source env/bin/activate
 ```
 
+Clone pyoko from ``` https://github.com/zetaops/pyoko.git  ``` and install requirenments.
+
+```bash
+
+pip install riak
+pip install enum34
+pip install six
+
+pip install git+https://github.com/zetaops/pyoko.git
+```
 Clone ulakbus from ``` https://github.com/zetaops/ulakbus.git  ``` and install requirenments.
 
 ```bash
-pip install --upgrade pip
-
 pip install falcon
 pip install beaker
 pip install redis
@@ -118,9 +126,7 @@ pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 pip install git+https://github.com/zetaops/zengine.git#egg=zengine
 
 git clone https://github.com/zetaops/ulakbus.git
-cd /app/ulakbus
-pip install -r requirements.txt
-pip install git+https://github.com/zetaops/pyoko.git
+
 ```
 Start server on port 8000 default
 ```bash
