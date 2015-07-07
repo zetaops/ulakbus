@@ -37,10 +37,10 @@
     <bpmn2:endEvent id="EndEvent_1">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="show_dashboard" camunda:class="views.core.Dashboard" camunda:assignee="views.core.Dashboard" name="show_dashboard">
+    <bpmn2:serviceTask id="show_dashboard" camunda:class="views.core.Dashboard" name="show_dashboard">
       <bpmn2:incoming>login_successful</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:userTask>
+    </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="show_dashboard" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmn2:dataStore id="DataStore_1"/>

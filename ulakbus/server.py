@@ -29,8 +29,12 @@ class WFEngine(ZEngine):
     ACTIVITY_MODULES_PATH = settings.ACTIVITY_MODULES_IMPORT_PATH
 
     def save_workflow(self, wf_name, serialized_wf_instance):
+        if self.current.name.startswith('End'):
+            del self.current.request.env['session']['workflows'][wf_name]
+            return
         if 'workflows' not in self.current.request.env['session']:
             self.current.request.env['session']['workflows'] = {}
+
         self.current.request.env['session']['workflows'][wf_name] = serialized_wf_instance
         self.current.request.env['session'].save()
 
