@@ -9,11 +9,8 @@ from pyoko import field
 from ulakbus.lib.views import SimpleView
 
 from falcon.errors import HTTPBadRequest
-
-
-from ulakbus.modules.auth.student import authenticate
+from ulakbus.models import User
 from ulakbus.modules.forms import AngularForm
-
 
 class LoginForm(AngularForm):
     username = field.String("Username")
@@ -26,11 +23,12 @@ class Login(SimpleView):
             login_credentials = self.current['request'].context['data']['login_crd']
         except KeyError:
             raise HTTPBadRequest("Missing login data")
-        user = authenticate(login_credentials)
-        is_login_successful = bool(user)
+        user = User.objects.filter(username=login_credentials['username']).get()
+
+        is_login_successful = user.check_password(login_credentials['password'])
         if is_login_successful:
             self.current.request.context['result'] = {'success': True}
-            self.current.request.env['session']['user'] = user
+            self.current.request.env['session']['user_id'] = user.key
         self.current['task'].data['is_login_successful'] = is_login_successful
 
     def _show(self):

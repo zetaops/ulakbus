@@ -65,6 +65,9 @@ class Connector(object):
 
 
 
+    def on_get(self, req, resp, wf_name):
+        self.on_post(req, resp, wf_name)
+
     def on_post(self, req, resp, wf_name):
         self.engine.set_current(request=req, response=resp, workflow_name=wf_name)
         self.engine.process_client_commands(req.context['data'])
@@ -79,5 +82,5 @@ falcon_app.add_route('/{wf_name}/', workflow_connector)
 
 # Useful for debugging problems in your API; works with pdb.set_trace()
 if __name__ == '__main__':
-    httpd = simple_server.make_server('127.0.0.1', 8000, app)
+    httpd = simple_server.make_server('127.0.0.1', 9001, app)
     httpd.serve_forever()

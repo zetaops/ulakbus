@@ -12,7 +12,7 @@ class SessionMiddleware(object):
         req.session = req.env['beaker.session']
 
 
-ALLOWED_ORIGINS = ['http://127.0.0.1:8080']
+ALLOWED_ORIGINS = ['http://127.0.0.1:8080', 'http://127.0.0.1:9001']
 
 class CORS(object):
     """
