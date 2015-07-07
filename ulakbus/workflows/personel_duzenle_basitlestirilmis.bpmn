@@ -56,7 +56,7 @@
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="listele" name="" sourceRef="ExclusiveGateway_1" targetRef="Personel_Listele"/>
     <bpmn2:sequenceFlow id="dogrudan_duzenle" name="dogrudan_duzenle" sourceRef="ExclusiveGateway_1" targetRef="Personel_Duzenle">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" camunda:resource="(object_id and edit_object) or add_object"/>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">(object_id and edit_object) or add_object</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -145,12 +145,12 @@
         <di:waypoint xsi:type="dc:Point" x="588.0" y="347.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="dogrudan_duzenle" sourceElement="_BPMNShape_ExclusiveGateway_2" targetElement="_BPMNShape_UserTask_5">
-        <di:waypoint xsi:type="dc:Point" x="553.0" y="399.0"/>
-        <di:waypoint xsi:type="dc:Point" x="607.0" y="441.0"/>
-        <di:waypoint xsi:type="dc:Point" x="835.0" y="437.0"/>
-        <di:waypoint xsi:type="dc:Point" x="892.0" y="387.0"/>
+        <di:waypoint xsi:type="dc:Point" x="553.0" y="394.0"/>
+        <di:waypoint xsi:type="dc:Point" x="660.0" y="457.0"/>
+        <di:waypoint xsi:type="dc:Point" x="829.0" y="457.0"/>
+        <di:waypoint xsi:type="dc:Point" x="898.0" y="387.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="718.0" y="439.0"/>
+          <dc:Bounds height="17.0" width="94.0" x="671.0" y="456.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

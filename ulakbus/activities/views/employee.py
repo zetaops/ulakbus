@@ -8,7 +8,7 @@ from ulakbus.lib.views import SimpleView
 
 from falcon.errors import HTTPBadRequest
 
-def manage(current):
+# def manage(current):
 
 
 class List(SimpleView):

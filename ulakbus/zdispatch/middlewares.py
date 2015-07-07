@@ -37,6 +37,8 @@ class JSONTranslator(object):
             req.context['data'] = {}
             req.context['result'] = {}
             return
+        else:
+            req.context['result'] = {}
 
         body = req.stream.read()
         if not body:
