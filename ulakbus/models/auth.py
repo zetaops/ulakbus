@@ -12,7 +12,7 @@ from pyoko.model import Model
 from passlib.hash import pbkdf2_sha512
 
 class User(Model):
-    username = field.String("Username")
+    username = field.String("Username", index=True)
     password = field.String("Password")
 
     def set_password(self, raw_password):

@@ -35,4 +35,4 @@ class Dashboard(SimpleView):
         # else:
         #     self.current.request.context[
         #         'show_user_message'] = "Zaten giriş yapmış durumdasınız"
-        self.current.request.context['result']['dashboard'] = "Dashboard"
+        self.current.request.context['result']['screen'] = "dashboard"

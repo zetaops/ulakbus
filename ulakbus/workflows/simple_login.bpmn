@@ -15,12 +15,12 @@
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="show_login_form"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="show_login_form" targetRef="Task_3"/>
-    <bpmn2:serviceTask id="Task_3" camunda:class="views.auth.Login" name="authenticate">
+    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="show_login_form" targetRef="authenticate"/>
+    <bpmn2:serviceTask id="authenticate" camunda:class="views.auth.Login" name="authenticate">
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="Task_3" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="authenticate" targetRef="ExclusiveGateway_1"/>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="login_fail">
       <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
       <bpmn2:outgoing>login_fail</bpmn2:outgoing>
@@ -29,7 +29,7 @@
     <bpmn2:sequenceFlow id="login_fail" name="login failed" sourceRef="ExclusiveGateway_1" targetRef="show_login_form">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" camunda:resource=""/>
     </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="login_successful" name="login successful" sourceRef="ExclusiveGateway_1" targetRef="ShowDashboard">
+    <bpmn2:sequenceFlow id="login_successful" name="login successful" sourceRef="ExclusiveGateway_1" targetRef="show_dashboard">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">is_login_successful</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:dataObject id="DataObject_1" name="d1"/>
@@ -37,11 +37,11 @@
     <bpmn2:endEvent id="EndEvent_1">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="ShowDashboard" camunda:class="views.core.Dashboard" camunda:assignee="views.core.Dashboard" name="show_dashboard">
+    <bpmn2:userTask id="show_dashboard" camunda:class="views.core.Dashboard" camunda:assignee="views.core.Dashboard" name="show_dashboard">
       <bpmn2:incoming>login_successful</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="ShowDashboard" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="show_dashboard" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmn2:dataStore id="DataStore_1"/>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -85,7 +85,7 @@
           <dc:Bounds height="17.0" width="79.0" x="532.0" y="226.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_Task_6" bpmnElement="Task_3">
+      <bpmndi:BPMNShape id="_BPMNShape_Task_6" bpmnElement="authenticate">
         <dc:Bounds height="58.0" width="100.0" x="341.0" y="197.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="_BPMNShape_Task_2" targetElement="_BPMNShape_Task_6">
@@ -104,7 +104,7 @@
           <dc:Bounds height="6.0" width="6.0" x="470.0" y="225.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_2" bpmnElement="ShowDashboard">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_2" bpmnElement="show_dashboard">
         <dc:Bounds height="58.0" width="100.0" x="587.0" y="197.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_UserTask_2" targetElement="_BPMNShape_EndEvent_3">
