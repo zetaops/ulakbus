@@ -132,6 +132,11 @@ pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 pip install git+https://github.com/zetaops/zengine.git#egg=zengine
 
 git clone https://github.com/zetaops/ulakbus.git
+
+```
+Clone ulakbus-ui from ``` https://github.com/zetaops/ulakbus.git  ```
+
+```bash
 git clone https://github.com/zetaops/ulakbus-ui.git
 ```
 Add ulakbus and ulakbus-ui to PYTHONPATH
