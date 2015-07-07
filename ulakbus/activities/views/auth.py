@@ -35,7 +35,7 @@ class Login(SimpleView):
 
     def _show(self):
         if 'user' not in self.current['request'].env['session']:
-            self.current['request'].context['result']['forms'] = LoginForm._serialize()
+            self.current['request'].context['result']['forms'] = LoginForm.serialize()
         else:
             self.current['request'].context[
                 'show_user_message'] = "Zaten giriş yapmış durumdasınız"
