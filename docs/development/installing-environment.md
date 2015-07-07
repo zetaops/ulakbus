@@ -134,6 +134,13 @@ pip install git+https://github.com/zetaops/zengine.git#egg=zengine
 git clone https://github.com/zetaops/ulakbus.git
 git clone https://github.com/zetaops/ulakbus-ui.git
 ```
+Add ulakbus and ulakbus-ui to PYTHONPATH
+
+```bash
+echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
+echo '/app/ulakbus-ui' >> /app/env/lib/python2.7/site-packages/ulakbus-ui.pth
+```
+
 Start server on port 8000 default
 ```bash
 python server.py
