@@ -104,6 +104,12 @@ Create virtual environment and activate it.
 virtualenv --no-site-packages env
 source env/bin/activate
 ```
+Upgrade pip and install ipython
+```bash
+pip install --upgrade pip
+pip install ipython
+
+```
 
 Clone pyoko from ``` https://github.com/zetaops/pyoko.git  ``` and install requirenments.
 
