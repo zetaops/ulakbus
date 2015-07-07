@@ -132,7 +132,7 @@ pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 pip install git+https://github.com/zetaops/zengine.git#egg=zengine
 
 git clone https://github.com/zetaops/ulakbus.git
-
+git clone https://github.com/zetaops/ulakbus-ui.git
 ```
 Start server on port 8000 default
 ```bash
