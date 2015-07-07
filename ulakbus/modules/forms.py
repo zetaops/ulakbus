@@ -1,37 +1,25 @@
 __author__ = 'Evren Esat Ozkan'
+from pyoko.form import ModelForm, Form
 
-
-# form creation, validation etc.
-
-def get_form(name, **kwargs):
-    return [{
-        "schema": {
-            "title": "Add Student",
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "title": "Name"
-                },
-                "email": {
-                    "type": "email",
-                    "title": "Email"
-                }
+class AngularForm(Form):
+    def serialize(self):
+        result = {
+            "schema": {
+                "title": self.title,
+                "type": "object",
+                "properties": {},
+                "required": []
             },
-            "required": ["email", "name"]
-        },
-        "form": [
-            {
-                "key": "email",
-                "type": "email",
-                "validationMessages": {
-                    'emailNotValid': 'Email is not valid!'
-                }
-            },
-            "name"
-        ],
-        "model": {
-            "name": "evren kutar",
-            "email": "a@a.com"
+            "form": [],
+            "model": {}
         }
-    }]
+        for itm in self._serialize():
+            result["schema"]["properties"][itm['name']] = {'type': itm['type'],
+                                                           'title': itm['title']}
+            result["model"][itm['name']] = itm['value'] or itm['default']
+            result["form"].append(itm['name'])
+            if itm['required']:
+                result["schema"]["required"].append(itm['name'])
+        return result
+
+
