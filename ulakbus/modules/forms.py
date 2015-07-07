@@ -1,7 +1,7 @@
 __author__ = 'Evren Esat Ozkan'
-from pyoko.form import ModelForm
+from pyoko.form import ModelForm, Form
 
-class AngularForm(ModelForm):
+class AngularForm(Form):
     def serialize(self):
         result = {
             "schema": {
