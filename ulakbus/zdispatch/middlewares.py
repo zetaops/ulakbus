@@ -82,6 +82,6 @@ class JSONTranslator(object):
     def process_response(self, req, resp, resource):
         if 'result' not in req.context:
             return
-
+        req.context['result']['is_login'] = 'user_id' in req.env['session']
         resp.body = json.dumps(req.context['result'])
         resp.status = falcon.HTTP_201

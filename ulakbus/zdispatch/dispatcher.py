@@ -23,6 +23,7 @@ SESSION_OPTIONS = {
     'session.type': 'redis',
     'session.url': settings.REDIS_SERVER,
     'auto': True,
+    'session.path': '/',
 }
 
 ENABLED_MIDDLEWARES = [
