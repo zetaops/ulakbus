@@ -8,7 +8,7 @@
 from pyoko import field
 from ulakbus.lib.views import SimpleView
 
-from falcon.errors import HTTPBadRequest
+from falcon.errors import HTTPBadRequest, HTTPUnauthorized
 from ulakbus.models import User
 from ulakbus.modules.forms import AngularForm
 
@@ -24,20 +24,27 @@ class Login(SimpleView):
 
     def _do(self):
         try:
-            login_credentials = self.current['request'].context['data']['login_crd']
+            username = self.current['request'].context['data']['login_crd']['username']
+            password = self.current['request'].context['data']['login_crd']['password']
         except KeyError:
-            raise HTTPBadRequest("Missing login data")
-        user = User.objects.filter(username=login_credentials['username']).get()
+            raise HTTPBadRequest("Eksik bilgi girdiniz", "Lütfen kullanıcı adınızı ve parolanızı giriniz")
+        try:
+            user = User.objects.filter(username=username).get()
 
-        is_login_successful = user.check_password(login_credentials['password'])
-        if is_login_successful:
-            # self.current.request.context['result'] = {'success': True}
-            self.current.request.env['session']['user_id'] = user.key
-            self.current.request.env['session'].save()
-        self.current['task'].data['IS'].login_successful = is_login_successful
+
+            is_login_successful = user.check_password(password)
+            if is_login_successful:
+                # self.current.request.context['result'] = {'success': True}
+                self.current.request.env['session']['user_id'] = user.key
+            self.current['task'].data['IS'].login_successful = is_login_successful
+
+        except IndexError:
+            raise HTTPUnauthorized('Giriş bilgileri hatalı',
+                                   "Girdiğiniz kullanıcı adı ya da parola ile eşleşen bir "
+                                   "kullanıcı kaydı bulamadık")
 
     def _show(self):
         if 'user' not in self.current['request'].env['session']:
             self.current['request'].context['result']['forms'] = LoginForm().serialize()
         else:
-            self.current['request'].context['result']['show_user_message'] = "Zaten giriş yapmış durumdasınız"
+            self.current['request'].context['result']['error'] = "Zaten giriş yapmış durumdasınız"
