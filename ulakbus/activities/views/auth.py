@@ -44,7 +44,7 @@ class Login(SimpleView):
                                    "kullanıcı kaydı bulamadık")
 
     def _show(self):
-        if 'user' not in self.current['request'].env['session']:
-            self.current['request'].context['result']['forms'] = LoginForm().serialize()
+        if 'user_id' not in self.current['request'].env['session']:
+            self.current['request'].context['result']['forms'] = LoginForm(types={"password": "password"}).serialize()
         else:
             self.current['request'].context['result']['error'] = "Zaten giriş yapmış durumdasınız"

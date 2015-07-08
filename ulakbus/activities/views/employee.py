@@ -17,10 +17,10 @@ def List(current):
 
 
 def Show(current):
-    employee_id = current['request'].context['data']['object_id']
-    employee = Employee.objects.get(employee_id)
+    key = current['request'].context['data']['object_id']
+    employee = Employee.objects.get(key)
     if len(employee) > 0:
-        current['request'].context['result']['employee'] = Employee.objects.get(employee_id)
+        current['request'].context['result']['employee'] = Employee.objects.get(key)
     else:
         current['request'].context['result']['employee'] = []
 
