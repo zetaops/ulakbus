@@ -17,8 +17,7 @@ ACTIVITY_MODULES_IMPORT_PATH = 'ulakbus.activities'
 WORKFLOW_PACKAGES_PATH = os.path.join(BASE_DIR, 'workflows')
 
 #PYOKO SETTINGS
-RIAK_SERVER = 'localhost'
-RIAK_PROTOCOL = 'http'
-RIAK_PORT = '8098'
-
-REDIS_SERVER = '127.0.0.1:6379'
+RIAK_SERVER = os.environ.get('RIAK_SERVER')
+RIAK_PROTOCOL = os.environ.get('RIAK_PROTOCOL')
+RIAK_PORT = os.environ.get('RIAK_PORT')
+REDIS_SERVER = os.environ.get('REDIS_SERVER')
