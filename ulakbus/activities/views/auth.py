@@ -34,7 +34,7 @@ class Login(SimpleView):
             # self.current.request.context['result'] = {'success': True}
             self.current.request.env['session']['user_id'] = user.key
             self.current.request.env['session'].save()
-        self.current['task'].data['is_login_successful'] = is_login_successful
+        self.current['task'].data['IS'].login_successful = is_login_successful
 
     def _show(self):
         if 'user' not in self.current['request'].env['session']:

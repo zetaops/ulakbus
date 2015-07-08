@@ -22,6 +22,10 @@ from ulakbus.zdispatch.dispatcher import app, falcon_app
 
 __author__ = 'Evren Esat Ozkan'
 
+class Condition(object):
+
+    def __getattr__(self, name):
+        return None
 
 class WFEngine(ZEngine):
     ALLOWED_CLIENT_COMMANDS = ['edit_object', 'add_object', 'update_object', 'cancel']
@@ -45,7 +49,7 @@ class WFEngine(ZEngine):
             return None
 
     def process_client_commands(self, request_data):
-        self.current.task_data = {}
+        self.current.task_data = {'IS': Condition()}
         if 'cmd' in request_data and request_data['cmd'] in self.ALLOWED_CLIENT_COMMANDS:
             self.current.task_data[request_data['cmd']] = True
             self.current.task_data['cmd'] = request_data['cmd']

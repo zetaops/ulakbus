@@ -30,7 +30,7 @@
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" camunda:resource=""/>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="login_successful" name="login successful" sourceRef="ExclusiveGateway_1" targetRef="show_dashboard">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">is_login_successful</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">IS.login_successful == True</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:dataObject id="DataObject_1" name="d1"/>
     <bpmn2:dataObject id="DataObject_2" name="d2"/>
