@@ -25,6 +25,10 @@ class CORS(object):
                 'Access-Control-Allow-Origin',
                 origin
             )
+            response.set_header(
+                'Access-Control-Allow-Credentials',
+                "true"
+            )
         response.set_header(
             'Access-Control-Allow-Headers',
             'Content-Type'
