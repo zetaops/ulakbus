@@ -8,3 +8,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from personel import *
+from auth import *
+from student import *
+from lectures import *

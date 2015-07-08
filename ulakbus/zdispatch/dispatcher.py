@@ -5,6 +5,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from beaker.cache import _backends
 from pyoko.conf import settings
 
 __author__ = 'Evren Esat Ozkan'
@@ -15,21 +16,20 @@ from beaker.middleware import SessionMiddleware
 import beaker
 from beaker_extensions import redis_
 from ulakbus.zdispatch import middlewares
-
-beaker.session.type = redis_
-beaker.session.url = settings.REDIS_SERVER
+beaker.cache.clsmap = _backends({'redis': redis_.RedisManager})
 
 SESSION_OPTIONS = {
     'session.cookie_expires': True,
-    # 'session.type': redis_,
-    # 'session.url': '127.0.0.1:6379',
+    'session.type': 'redis',
+    'session.url': settings.REDIS_SERVER,
     'auto': True,
+    'session.path': '/',
 }
 
 ENABLED_MIDDLEWARES = [
     middlewares.RequireJSON(),
     middlewares.JSONTranslator(),
-    # middlewares.SessionMiddleware(),
+    middlewares.CORS(),
 ]
 
 class ZRequest(falcon.Request):

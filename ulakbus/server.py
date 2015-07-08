@@ -29,8 +29,12 @@ class WFEngine(ZEngine):
     ACTIVITY_MODULES_PATH = settings.ACTIVITY_MODULES_IMPORT_PATH
 
     def save_workflow(self, wf_name, serialized_wf_instance):
+        if self.current.name.startswith('End'):
+            del self.current.request.env['session']['workflows'][wf_name]
+            return
         if 'workflows' not in self.current.request.env['session']:
             self.current.request.env['session']['workflows'] = {}
+
         self.current.request.env['session']['workflows'][wf_name] = serialized_wf_instance
         self.current.request.env['session'].save()
 
@@ -45,8 +49,11 @@ class WFEngine(ZEngine):
         if 'cmd' in request_data and request_data['cmd'] in self.ALLOWED_CLIENT_COMMANDS:
             self.current.task_data[request_data['cmd']] = True
             self.current.task_data['cmd'] = request_data['cmd']
+        else:
+            for cmd in self.ALLOWED_CLIENT_COMMANDS:
+                self.current.task_data[cmd] = None
         self.current.task_data['object_id'] = request_data.get('object_id', None)
-        self.current.task_data['add_object'] = request_data.get('add_object', None)
+
 
 
 
@@ -62,6 +69,9 @@ class Connector(object):
 
 
 
+    def on_get(self, req, resp, wf_name):
+        self.on_post(req, resp, wf_name)
+
     def on_post(self, req, resp, wf_name):
         self.engine.set_current(request=req, response=resp, workflow_name=wf_name)
         self.engine.process_client_commands(req.context['data'])
@@ -76,5 +86,5 @@ falcon_app.add_route('/{wf_name}/', workflow_connector)
 
 # Useful for debugging problems in your API; works with pdb.set_trace()
 if __name__ == '__main__':
-    httpd = simple_server.make_server('127.0.0.1', 8000, app)
+    httpd = simple_server.make_server('127.0.0.1', 9001, app)
     httpd.serve_forever()

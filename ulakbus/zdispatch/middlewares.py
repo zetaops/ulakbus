@@ -3,13 +3,37 @@ import falcon
 
 __author__ = 'Evren Esat Ozkan'
 
+#
+# class SessionMiddleware(object):
+#     """
+#     just for easier access to session dict
+#     """
+#     def process_request(self, req, resp):
+#         req.session = req.env['session']
 
-class SessionMiddleware(object):
+
+ALLOWED_ORIGINS = ['http://127.0.0.1:8080', 'http://127.0.0.1:9001']
+
+class CORS(object):
     """
-    just for easier access to session dict
+    allow origins
     """
-    def process_request(self, req, resp):
-        req.session = req.env['beaker.session']
+    def process_response(self, request, response, resource):
+        origin = request.get_header('Origin')
+        if origin in ALLOWED_ORIGINS:
+            response.set_header(
+                'Access-Control-Allow-Origin',
+                origin
+            )
+        response.set_header(
+            'Access-Control-Allow-Headers',
+            'Content-Type'
+        )
+        # This could be overridden in the resource level
+        response.set_header(
+            'Access-Control-Allow-Methods',
+            'OPTIONS'
+        )
 
 
 class RequireJSON(object):
@@ -58,6 +82,6 @@ class JSONTranslator(object):
     def process_response(self, req, resp, resource):
         if 'result' not in req.context:
             return
-
+        req.context['result']['is_login'] = 'user_id' in req.env['session']
         resp.body = json.dumps(req.context['result'])
         resp.status = falcon.HTTP_201
