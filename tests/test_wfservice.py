@@ -20,12 +20,10 @@ def make_request(session_obj, **kwargs):
 
 
 def test_add_user_then_login():
-    existing = list(User.objects.filter(username='test_user').data())
-    if existing:
-        existing[0].delete()
-        sleep(1)
-    u = User(username='test_user')
-    u.set_password('123123')
+    User.objects._clear_bucket()
+    sleep(1)
+    u = User(username='user')
+    u.set_password('123')
     u.save()
     sleep(1)
     wfc = workflow_connector()
@@ -33,9 +31,9 @@ def test_add_user_then_login():
     req = make_request(session)
     resp = DotDict()
     wfc.on_post(req, resp=resp, wf_name='simple_login')
-    assert req['context']['result']['forms'] == LoginForm().serialize()
+    assert req['context']['result']['forms'] == LoginForm(types={"password": "password"}).serialize()
     req = make_request(session, cmd='do',
-                       login_crd={'username': 'test_user', 'password': '123123'})
+                       login_crd={'username': 'user', 'password': '123'})
     wfc.on_post(req, resp=DotDict(), wf_name='simple_login')
     assert session['user_id'] == u.key
     assert req['context']['result']['screen'] == 'dashboard'
