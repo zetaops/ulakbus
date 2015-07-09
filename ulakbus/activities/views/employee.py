@@ -13,7 +13,7 @@ def List(current):
     current['request'].context['result']['employees'] = []
     for employee in Employee.objects.filter().data():
         current['request'].context['result']['employees'].append(
-            employee.data)
+            {"data": employee.data, "key": employee.key})
 
 
 def Show(current):

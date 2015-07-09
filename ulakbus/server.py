@@ -48,9 +48,8 @@ class WFEngine(ZEngine):
         except KeyError:
             return None
 
-
     def process_client_commands(self, request_data, wf_name):
-        if 'clear_wf' in request_data and 'workflows' in self.current.request.env['session']:
+        if 'clear_wf' in request_data and 'workflows' in self.current.request.env['session'] and wf_name in self.current.request.env['session']['workflows']:
             del self.current.request.env['session']['workflows'][wf_name]
         self.current.task_data = {'IS': Condition()}
         if 'cmd' in request_data and request_data['cmd'] in self.ALLOWED_CLIENT_COMMANDS:
