@@ -121,6 +121,14 @@ pip install six
 
 pip install git+https://github.com/zetaops/pyoko.git
 ```
+
+Add PYOKO_SETTINGS variable to env as root(user)
+
+```bash
+echo "export PYOKO_SETTINGS='ulakbus.settings'" >> /etc/profile
+
+```
+
 Clone ulakbus from ``` https://github.com/zetaops/ulakbus.git  ``` and install requirenments.
 
 ```bash
