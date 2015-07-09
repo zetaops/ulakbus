@@ -25,19 +25,23 @@ def Show(current):
         current['request'].context['result']['employee'] = []
 
 
-def Edit(current):
-    if current['request'].context['data'].get('object_id'):
-        employee_id = current['request'].context['data']['object_id']
-        serialized_form = AngularForm(Employee.objects.get(employee_id), types={"birth_date": "string"}).serialize()
-    else:
-        serialized_form = AngularForm(Employee(), types={"birth_date": "string"}).serialize()
-    current['request'].context['result']['forms'] = serialized_form
+class Edit(SimpleView):
+    def _show(self):
+        if self.current['request'].context['data'].get('object_id'):
+            employee_id = self.current['request'].context['data']['object_id']
+            serialized_form = AngularForm(Employee.objects.get(employee_id), types={"birth_date": "string"}).serialize()
+        else:
+            serialized_form = AngularForm(Employee(), types={"birth_date": "string"}).serialize()
+        self.current['request'].context['result']['forms'] = serialized_form
 
 
-def Save(current):
-    employee_id = current['request'].context['data']['object_id']
-    employee = Employee.objects.get(employee_id)
-    employee._load_data(current['request'].context['data']['form'])
-    employee.save()
-    current['request'].context['result']['success'] = True
+    def _do(self):
+        employee_id = self.current['request'].context['data'].get('object_id')
+        if employee_id:
+            employee = Employee.objects.get(employee_id)
+        else:
+            employee = Employee()
+        employee._load_data(self.current['request'].context['data']['form'])
+        employee.save()
+        self.current['task'].data['IS'].opertation_successful = True
 

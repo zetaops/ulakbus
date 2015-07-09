@@ -47,7 +47,7 @@ class RequireJSON(object):
                 'This API only supports responses encoded as JSON.',
                 href='http://docs.examples.com/api/json')
         if req.method in ('POST', 'PUT'):
-            if req.content_type not in ['application/json', 'text/plain']:
+            if 'application/json' not in req.content_type and 'text/plain' not in req.content_type:
                 raise falcon.HTTPUnsupportedMediaType(
                     'This API only supports requests encoded as JSON.',
                     href='http://docs.examples.com/api/json')
