@@ -155,6 +155,12 @@ echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
 echo '/app/ulakbus-ui' >> /app/env/lib/python2.7/site-packages/ulakbus-ui.pth
 ```
 
+Create __init__.py file to make google library working
+
+```bash
+touch /app/env/lib/python2.7/site-packages/google/__init__.py
+```
+
 Create symbolic links for zato as root(user)
 
 ```bash
