@@ -155,6 +155,17 @@ echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
 echo '/app/ulakbus-ui' >> /app/env/lib/python2.7/site-packages/ulakbus-ui.pth
 ```
 
+Create symbolic links for zato as root(user)
+
+```bash
+ln -s /app/pyoko/pyoko /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/riak /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
+
+```
+
 Start server on port 8000 default
 ```bash
 python server.py
