@@ -161,6 +161,14 @@ Create __init__.py file to make google library working
 touch /app/env/lib/python2.7/site-packages/google/__init__.py
 ```
 
+Download solr_schema_template for pyoko
+
+```bash
+cd ~/env/local/lib/python2.7/site-packages/pyoko/db
+wget https://raw.githubusercontent.com/zetaops/pyoko/master/pyoko/db/solr_schema_template.xml
+
+```
+
 Create symbolic links for zato as root(user)
 
 ```bash
