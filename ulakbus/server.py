@@ -27,6 +27,9 @@ class Condition(object):
     def __getattr__(self, name):
         return None
 
+    def __str__(self):
+        return self.__dict__
+
 class WFEngine(ZEngine):
     ALLOWED_CLIENT_COMMANDS = ['edit_object', 'add_object', 'update_object', 'cancel', 'clear_wf']
     WORKFLOW_DIRECTORY = settings.WORKFLOW_PACKAGES_PATH,
