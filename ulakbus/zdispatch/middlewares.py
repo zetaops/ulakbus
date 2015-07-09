@@ -12,7 +12,7 @@ __author__ = 'Evren Esat Ozkan'
 #         req.session = req.env['session']
 
 
-ALLOWED_ORIGINS = ['http://127.0.0.1:8080', 'http://127.0.0.1:9001']
+ALLOWED_ORIGINS = ['http://127.0.0.1:8080', 'http://127.0.0.1:9001', 'http://104.155.6.147']
 
 class CORS(object):
     """
@@ -20,15 +20,15 @@ class CORS(object):
     """
     def process_response(self, request, response, resource):
         origin = request.get_header('Origin')
-        if origin in ALLOWED_ORIGINS:
-            response.set_header(
-                'Access-Control-Allow-Origin',
-                origin
-            )
-            response.set_header(
-                'Access-Control-Allow-Credentials',
-                "true"
-            )
+        # if origin in ALLOWED_ORIGINS:
+        response.set_header(
+            'Access-Control-Allow-Origin',
+            origin
+        )
+        response.set_header(
+            'Access-Control-Allow-Credentials',
+            "true"
+        )
         response.set_header(
             'Access-Control-Allow-Headers',
             'Content-Type'
@@ -46,9 +46,8 @@ class RequireJSON(object):
             raise falcon.HTTPNotAcceptable(
                 'This API only supports responses encoded as JSON.',
                 href='http://docs.examples.com/api/json')
-
         if req.method in ('POST', 'PUT'):
-            if 'application/json' not in req.content_type:
+            if req.content_type not in ['application/json', 'text/plain']:
                 raise falcon.HTTPUnsupportedMediaType(
                     'This API only supports requests encoded as JSON.',
                     href='http://docs.examples.com/api/json')

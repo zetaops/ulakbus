@@ -92,5 +92,5 @@ falcon_app.add_route('/{wf_name}/', workflow_connector)
 
 # Useful for debugging problems in your API; works with pdb.set_trace()
 if __name__ == '__main__':
-    httpd = simple_server.make_server('127.0.0.1', 9001, app)
+    httpd = simple_server.make_server('0.0.0.0', 9001, app)
     httpd.serve_forever()
