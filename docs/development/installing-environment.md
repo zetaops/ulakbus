@@ -155,13 +155,13 @@ echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
 echo '/app/ulakbus-ui' >> /app/env/lib/python2.7/site-packages/ulakbus-ui.pth
 ```
 
-Create __init__.py file to make google library working
+Create __init__.py file to make google library working as ulakbus(user)
 
 ```bash
 touch /app/env/lib/python2.7/site-packages/google/__init__.py
 ```
 
-Download solr_schema_template for pyoko
+Download solr_schema_template for pyoko as ulakbus(user)
 
 ```bash
 cd ~/env/local/lib/python2.7/site-packages/pyoko/db
