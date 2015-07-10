@@ -31,7 +31,7 @@ def test_add_user_then_login():
     req = make_request(session)
     resp = DotDict()
     wfc.on_post(req, resp=resp, wf_name='simple_login')
-    assert req['context']['result']['forms'] == LoginForm(types={"password": "password"}).serialize()
+    assert req['context']['result']['forms'] == LoginForm().serialize()
     req = make_request(session, cmd='do',
                        login_crd={'username': 'user', 'password': '123'})
     wfc.on_post(req, resp=DotDict(), wf_name='simple_login')

@@ -12,8 +12,9 @@ from falcon.errors import HTTPBadRequest
 def List(current):
     current['request'].context['result']['employees'] = []
     for employee in Employee.objects.filter().data():
+        data = employee.data
         current['request'].context['result']['employees'].append(
-            {"data": employee.data, "key": employee.key})
+            {"data": data, "key": employee.key})
 
 
 def Show(current):
@@ -29,9 +30,9 @@ class Edit(SimpleView):
     def _show(self):
         if self.current['request'].context['data'].get('object_id'):
             employee_id = self.current['request'].context['data']['object_id']
-            serialized_form = AngularForm(Employee.objects.get(employee_id), types={"birth_date": "string"}).serialize()
+            serialized_form = AngularForm(Employee.objects.get(employee_id), customized_types={"birth_date": "string"}).serialize()
         else:
-            serialized_form = AngularForm(Employee(), types={"birth_date": "string"}).serialize()
+            serialized_form = AngularForm(Employee()).serialize()
         self.current['request'].context['result']['forms'] = serialized_form
 
 

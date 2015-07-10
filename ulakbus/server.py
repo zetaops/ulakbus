@@ -16,53 +16,12 @@ and writeback to request.context.jsonout
 # (GPLv3).  See LICENSE.txt for details.
 from wsgiref import simple_server
 
-from zengine.engine import ZEngine
+from ulakbus.engine import ZEngine
 from ulakbus import settings
+from ulakbus.models import User
 from ulakbus.zdispatch.dispatcher import app, falcon_app
 
 __author__ = 'Evren Esat Ozkan'
-
-class Condition(object):
-
-    def __getattr__(self, name):
-        return None
-
-    def __str__(self):
-        return self.__dict__
-
-class WFEngine(ZEngine):
-    ALLOWED_CLIENT_COMMANDS = ['edit_object', 'add_object', 'update_object', 'cancel', 'clear_wf']
-    WORKFLOW_DIRECTORY = settings.WORKFLOW_PACKAGES_PATH,
-    ACTIVITY_MODULES_PATH = settings.ACTIVITY_MODULES_IMPORT_PATH
-
-    def save_workflow(self, wf_name, serialized_wf_instance):
-        if self.current.name.startswith('End'):
-            del self.current.request.env['session']['workflows'][wf_name]
-            return
-        if 'workflows' not in self.current.request.env['session']:
-            self.current.request.env['session']['workflows'] = {}
-
-        self.current.request.env['session']['workflows'][wf_name] = serialized_wf_instance
-        self.current.request.env['session'].save()
-
-    def load_workflow(self, workflow_name):
-        try:
-            return self.current.request.env['session']['workflows'].get(workflow_name, None)
-        except KeyError:
-            return None
-
-    def process_client_commands(self, request_data, wf_name):
-        if 'clear_wf' in request_data and 'workflows' in self.current.request.env['session'] and wf_name in self.current.request.env['session']['workflows']:
-            del self.current.request.env['session']['workflows'][wf_name]
-        self.current.task_data = {'IS': Condition()}
-        if 'cmd' in request_data and request_data['cmd'] in self.ALLOWED_CLIENT_COMMANDS:
-            self.current.task_data[request_data['cmd']] = True
-            self.current.task_data['cmd'] = request_data['cmd']
-        else:
-            for cmd in self.ALLOWED_CLIENT_COMMANDS:
-                self.current.task_data[cmd] = None
-        self.current.task_data['object_id'] = request_data.get('object_id', None)
-
 
 
 
@@ -74,7 +33,7 @@ class Connector(object):
     # def __init__(self):
     # self.logger = logging.getLogger('dispatch.' + __name__)
     def __init__(self):
-        self.engine = WFEngine()
+        self.engine = ZEngine()
 
 
 
@@ -82,7 +41,10 @@ class Connector(object):
         self.on_post(req, resp, wf_name)
 
     def on_post(self, req, resp, wf_name):
-        self.engine.set_current(request=req, response=resp, workflow_name=wf_name)
+        self.engine.set_current(request=req,
+                                response=resp,
+                                workflow_name=wf_name,
+                                )
         self.engine.process_client_commands(req.context['data'], wf_name)
         self.engine.load_or_create_workflow()
         self.engine.run()

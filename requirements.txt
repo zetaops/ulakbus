@@ -3,7 +3,6 @@ falcon
 -e git://github.com/didip/beaker_extensions.git#egg=beaker_extensions
 redis
 -e git://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
--e git://github.com/zetaops/zengine.git#egg=zengine
 -e git://github.com/zetaops/pyoko.git#egg=pyoko
 passlib
 pytest
