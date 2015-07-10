@@ -148,11 +148,10 @@ Clone ulakbus-ui from ``` https://github.com/zetaops/ulakbus-ui.git  ```
 ```bash
 git clone https://github.com/zetaops/ulakbus-ui.git
 ```
-Add ulakbus and ulakbus-ui to PYTHONPATH
+Add ulakbus to PYTHONPATH
 
 ```bash
 echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
-echo '/app/ulakbus-ui' >> /app/env/lib/python2.7/site-packages/ulakbus-ui.pth
 ```
 
 Create __init__.py file to make google library working as ulakbus(user)
