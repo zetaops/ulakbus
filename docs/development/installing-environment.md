@@ -169,7 +169,7 @@ wget https://raw.githubusercontent.com/zetaops/pyoko/master/pyoko/db/solr_schema
 
 ```
 
-Create symbolic links for zato as root(user)
+Create symbolic links for zato(user)
 
 ```bash
 ln -s /app/pyoko/pyoko /opt/zato/2.0.5/zato_extra_paths/
