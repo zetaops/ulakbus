@@ -179,6 +179,19 @@ ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_pa
 
 ```
 
+Create a bucket type named models and activate it with following commands as root(user)
+```bash
+riak-admin bucket-type create models '{"props":{"last_write_wins":true, "allow_mult":false}}'
+riak-admin bucket-type activate models
+```
+
+To update schemas run the following command for ulakbus(user)
+```bash
+source env/bin/activate
+cd ~/ulakbus/ulakbus
+python manage.py update_schema --bucket all
+```
+
 Start server on port 8000 default
 ```bash
 python server.py
