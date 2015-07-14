@@ -8,52 +8,40 @@ from ulakbus.lib.views import SimpleView
 
 from falcon.errors import HTTPBadRequest
 
-# def manage(current):
+
+def List(current):
+    current['request'].context['result']['employees'] = []
+    for employee in Employee.objects.filter().data():
+        current['request'].context['result']['employees'].append(
+            {"data": employee.data, "key": employee.key})
 
 
-class List(SimpleView):
-
-    def _do(self):
-        self.current.request.context['result'] = {'success': True}
-
-    def _show(self):
-        self.current['request'].context['result']['employees'] = []
-        for employee in Employee.objects.filter().data():
-            self.current['request'].context['result']['employees'].append(employee.data)
-
-
-class Show(SimpleView):
-
-    def _do(self):
-        self.current.request.context['result'] = {'success': True}
-
-    def _show(self):
-        self.current['request'].context['result']['forms'] = get_form('student_login_form')
+def Show(current):
+    key = current['request'].context['data']['object_id']
+    employee = Employee.objects.get(key)
+    if len(employee) > 0:
+        current['request'].context['result']['employee'] = Employee.objects.get(key)
+    else:
+        current['request'].context['result']['employee'] = []
 
 
 class Edit(SimpleView):
-
-    def _do(self):
-        self.current.request.context['result'] = {'success': True}
-
     def _show(self):
-        serialized_form = AngularForm(Employee()).serialize()
+        if self.current['request'].context['data'].get('object_id'):
+            employee_id = self.current['request'].context['data']['object_id']
+            serialized_form = AngularForm(Employee.objects.get(employee_id), types={"birth_date": "string"}).serialize()
+        else:
+            serialized_form = AngularForm(Employee(), types={"birth_date": "string"}).serialize()
         self.current['request'].context['result']['forms'] = serialized_form
 
 
-class Save(SimpleView):
-
     def _do(self):
-        self.current.request.context['result'] = {'success': True}
+        employee_id = self.current['request'].context['data'].get('object_id')
+        if employee_id:
+            employee = Employee.objects.get(employee_id)
+        else:
+            employee = Employee()
+        employee._load_data(self.current['request'].context['data']['form'])
+        employee.save()
+        self.current['task'].data['IS'].opertation_successful = True
 
-    def _show(self):
-        self.current['request'].context['result']['forms'] = get_form('student_login_form')
-
-
-class Preview(SimpleView):
-
-    def _do(self):
-        self.current.request.context['result'] = {'success': True}
-
-    def _show(self):
-        self.current['request'].context['result']['forms'] = get_form('student_login_form')

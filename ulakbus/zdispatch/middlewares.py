@@ -3,13 +3,41 @@ import falcon
 
 __author__ = 'Evren Esat Ozkan'
 
+#
+# class SessionMiddleware(object):
+#     """
+#     just for easier access to session dict
+#     """
+#     def process_request(self, req, resp):
+#         req.session = req.env['session']
 
-class SessionMiddleware(object):
+
+ALLOWED_ORIGINS = ['http://127.0.0.1:8080', 'http://127.0.0.1:9001', 'http://104.155.6.147']
+
+class CORS(object):
     """
-    just for easier access to session dict
+    allow origins
     """
-    def process_request(self, req, resp):
-        req.session = req.env['beaker.session']
+    def process_response(self, request, response, resource):
+        origin = request.get_header('Origin')
+        # if origin in ALLOWED_ORIGINS:
+        response.set_header(
+            'Access-Control-Allow-Origin',
+            origin
+        )
+        response.set_header(
+            'Access-Control-Allow-Credentials',
+            "true"
+        )
+        response.set_header(
+            'Access-Control-Allow-Headers',
+            'Content-Type'
+        )
+        # This could be overridden in the resource level
+        response.set_header(
+            'Access-Control-Allow-Methods',
+            'OPTIONS'
+        )
 
 
 class RequireJSON(object):
@@ -18,9 +46,8 @@ class RequireJSON(object):
             raise falcon.HTTPNotAcceptable(
                 'This API only supports responses encoded as JSON.',
                 href='http://docs.examples.com/api/json')
-
         if req.method in ('POST', 'PUT'):
-            if 'application/json' not in req.content_type:
+            if 'application/json' not in req.content_type and 'text/plain' not in req.content_type:
                 raise falcon.HTTPUnsupportedMediaType(
                     'This API only supports requests encoded as JSON.',
                     href='http://docs.examples.com/api/json')
@@ -58,6 +85,6 @@ class JSONTranslator(object):
     def process_response(self, req, resp, resource):
         if 'result' not in req.context:
             return
-
+        req.context['result']['is_login'] = 'user_id' in req.env['session']
         resp.body = json.dumps(req.context['result'])
         resp.status = falcon.HTTP_201

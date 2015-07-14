@@ -30,13 +30,11 @@ class SimpleView(BaseView):
         else:
             self._show()
 
-
     def _do(self):
         """
         You should override this method in your class
         """
         raise NotImplementedError
-
 
     def _show(self):
         """

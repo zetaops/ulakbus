@@ -22,15 +22,26 @@ from ulakbus.zdispatch.dispatcher import app, falcon_app
 
 __author__ = 'Evren Esat Ozkan'
 
+class Condition(object):
+
+    def __getattr__(self, name):
+        return None
+
+    def __str__(self):
+        return self.__dict__
 
 class WFEngine(ZEngine):
-    ALLOWED_CLIENT_COMMANDS = ['edit_object', 'add_object', 'update_object', 'cancel']
+    ALLOWED_CLIENT_COMMANDS = ['edit_object', 'add_object', 'update_object', 'cancel', 'clear_wf']
     WORKFLOW_DIRECTORY = settings.WORKFLOW_PACKAGES_PATH,
     ACTIVITY_MODULES_PATH = settings.ACTIVITY_MODULES_IMPORT_PATH
 
     def save_workflow(self, wf_name, serialized_wf_instance):
+        if self.current.name.startswith('End'):
+            del self.current.request.env['session']['workflows'][wf_name]
+            return
         if 'workflows' not in self.current.request.env['session']:
             self.current.request.env['session']['workflows'] = {}
+
         self.current.request.env['session']['workflows'][wf_name] = serialized_wf_instance
         self.current.request.env['session'].save()
 
@@ -40,13 +51,18 @@ class WFEngine(ZEngine):
         except KeyError:
             return None
 
-    def process_client_commands(self, request_data):
-        self.current.task_data = {}
+    def process_client_commands(self, request_data, wf_name):
+        if 'clear_wf' in request_data and 'workflows' in self.current.request.env['session'] and wf_name in self.current.request.env['session']['workflows']:
+            del self.current.request.env['session']['workflows'][wf_name]
+        self.current.task_data = {'IS': Condition()}
         if 'cmd' in request_data and request_data['cmd'] in self.ALLOWED_CLIENT_COMMANDS:
             self.current.task_data[request_data['cmd']] = True
             self.current.task_data['cmd'] = request_data['cmd']
+        else:
+            for cmd in self.ALLOWED_CLIENT_COMMANDS:
+                self.current.task_data[cmd] = None
         self.current.task_data['object_id'] = request_data.get('object_id', None)
-        self.current.task_data['add_object'] = request_data.get('add_object', None)
+
 
 
 
@@ -62,9 +78,12 @@ class Connector(object):
 
 
 
+    def on_get(self, req, resp, wf_name):
+        self.on_post(req, resp, wf_name)
+
     def on_post(self, req, resp, wf_name):
         self.engine.set_current(request=req, response=resp, workflow_name=wf_name)
-        self.engine.process_client_commands(req.context['data'])
+        self.engine.process_client_commands(req.context['data'], wf_name)
         self.engine.load_or_create_workflow()
         self.engine.run()
 
@@ -76,5 +95,5 @@ falcon_app.add_route('/{wf_name}/', workflow_connector)
 
 # Useful for debugging problems in your API; works with pdb.set_trace()
 if __name__ == '__main__':
-    httpd = simple_server.make_server('127.0.0.1', 8000, app)
+    httpd = simple_server.make_server('0.0.0.0', 9001, app)
     httpd.serve_forever()
