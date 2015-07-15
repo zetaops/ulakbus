@@ -227,3 +227,4 @@ veya
 redis-cli 
 CONFIG SET requirepass "1"
 AUTH 1
+
