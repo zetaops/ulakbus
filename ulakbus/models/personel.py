@@ -95,10 +95,11 @@ class Employee(Model):
     staff_type = field.String("Personel Türü", index=True)
     birth_date = field.Date("Doğum Tarihi", index=True)
     mobile_phone = field.String("Cep Telefonu", index=True)
+    pno = field.String("TC No", index=True)
 
     class ServiceRecords(ListNode):
-        start_date = field.Date("Başlangıç Tarihi", index=True)
-        end_date = field.Date("Bitiş Tarihi", index=True)
+        start_date = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
+        end_date = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
         retirement_degree = field.Integer("Emeklilik Derece", index=True)
         retirement_grade = field.Integer("Emeklilik Kademe", index=True)
         assignment = field.String("Görev", index_as='text_tr')
@@ -114,7 +115,7 @@ class Employee(Model):
         aquired_sup_indicator = field.Integer("Kazanılmış Hak Aylığı Ek gösterge", index=True)
         salary_sup_indicator = field.Integer("Ödeme Ek Gösterge", index=True)
         reason_code = field.Integer("Sebep Kodu", index=True)
-        pno = field.Integer("TC No", index=True)
+        pno = field.String("TC No", index=True)
         salary = field.Float("Ücret", index=True)
         wage = field.Float("Yemiye", index=True)
         approval_date = field.Date("Kurum Onay Tarihi", index=True)
