@@ -66,7 +66,7 @@ komutları ile yapılır.
 
 Ubuntu/trusty14.04 için
 
-PostgreSQL Apt Repository altından sürüm seçimi yapın, deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main burdaki repoyu ```/etc/apt/sources.list.d/pgdg.list``` ' ya ekleyin.
+PostgreSQL Apt Repository altından sürüm seçimi yapın, ```deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main``` burdaki repoyu ```/etc/apt/sources.list.d/pgdg.list``` ' ya ekleyin.
 
 
 Ardından gpg keyi terminale giriniz,
@@ -90,16 +90,16 @@ su postgres
 
 komutu ile postgres kullanıcısına geçiniz.
 
-Ardından sırası ile
+Ardından ```psql``` komutunu ve
 
 ```
 create user zato createdb createuser password 'zatopassword';
 create database zatodb;
 ```
-diyerek zato için gerekli postgresql kurulumunu tamamlayınız.
+komutları ile zato için gerekli postgresql kullanıcısı ve database kurulumunu tamamlayınız.
 
 
-Ardından iki kere ard arda``` exit ``` diyerek postgres ve root kullanıcısından çıkıp, bundan sonraki işlemlerde zato kullanıcısına geçilir ve yeni bir klasör oluşturulur.
+Ardından önce ```\q``` sonra iki kere ard arda``` exit ``` diyerek postgres ve root kullanıcısından çıkıp, bundan sonraki işlemlerde zato kullanıcısına geçilir ve yeni bir klasör oluşturulur.
 
 ```
 sudo su - zato
@@ -114,14 +114,24 @@ Kurulum için aşağıdaki kullanımdan yararlanarak
 
 ```
   zato create odb [-h] [--store-log] [--verbose] [--store-config]
-  [--postgresql_schema POSTGRESQL_SCHEMA] [--odb_password ODB_PASSWORD]
-  odb_type odb_host odb_port odb_user odb_db_name
+                       [--odb_host ODB_HOST] [--odb_port ODB_PORT]
+                       [--odb_user ODB_USER] [--odb_db_name ODB_DB_NAME]
+                       [--postgresql_schema POSTGRESQL_SCHEMA]
+                       [--odb_password ODB_PASSWORD]
+                       odb_type
 ```
 
 veya
 
 ```
-zato create odb postgresql --odb_host localhost --odb_port 5432 --odb_user zato --odb_db_name zatodb --postgresql_schema zato --odb_password 'zatopassword'
+zato create odb \
+   postgresql \
+   --odb_host localhost \
+   --odb_port 5432 \
+   --odb_user zato \
+   --odb_db_name zatodb \
+   --postgresql_schema zato \
+   --odb_password 'zatopassword'
 ```
 
 komutu ile sqlite türünde odb kurulumunu gerçekleştirilir.
@@ -131,17 +141,35 @@ komutu ile sqlite türünde odb kurulumunu gerçekleştirilir.
 Kurulum için aşağıdaki kullanımdan yararlanarak
 
 ```
-    zato create cluster [-h] [--store-log] [--verbose] [--store-config]
-    [--postgresql_schema POSTGRESQL_SCHEMA] [--odb_password ODB_PASSWORD]
-    [--tech_account_password TECH_ACCOUNT_PASSWORD]
-    odb_type odb_host odb_port odb_user odb_db_name
-    lb_host lb_port lb_agent_port
-    broker_host broker_port cluster_name tech_account_name
+zato create cluster [-h] [--store-log] [--verbose] [--store-config]
+                           [--odb_host ODB_HOST] [--odb_port ODB_PORT]
+                           [--odb_user ODB_USER] [--odb_db_name ODB_DB_NAME]
+                           [--postgresql_schema POSTGRESQL_SCHEMA]
+                           [--odb_password ODB_PASSWORD]
+                           [--tech_account_password TECH_ACCOUNT_PASSWORD]
+                           odb_type lb_host lb_port lb_agent_port broker_host
+                           broker_port cluster_name tech_account_name
 ```
 veya direk
 
 ```
-zato create cluster postgresql localhost 11223 20151 localhost 6379 PROD3 techacc --odb_host localhost --odb_port 5432 --odb_user zato --odb_db_name zatodb --postgresql_schema zato --odb_password 'zatopassword'
+zato create cluster \
+    postgresql \
+    localhost \
+    11223 \
+    20151 \
+    localhost \
+    6379 \
+    PROD3 \
+    techacc \
+    --odb_host \
+    localhost \
+    --odb_port \
+    5432 \
+    --odb_user zato \
+    --odb_db_name zatodb \
+    --postgresql_schema zato \
+    --odb_password 'zatopassword'
 ```
 
 komutu ile PROD3 adında cluster eklenir. Şifre için herhangi birşey girebilir.
@@ -154,75 +182,109 @@ komutu ile PROD3 adında cluster eklenir. Şifre için herhangi birşey girebili
 CA kurulumları gerçekleştirilir,
 
 ```
-mkdir aa/ca1
-zato ca create ca ~/aa/ca1
-zato ca create lb_agent ~/aa/ca1/ zato_lb_agent1
-zato ca create server ~/aa/ca1/ PROD3 server
-zato ca create web_admin ~/aa/ca1/
+mkdir aa/ca
+zato ca create ca ~/aa/ca
+zato ca create lb_agent ~/aa/ca/ zato_lb_agent1
+zato ca create server ~/aa/ca/ PROD3 server
+zato ca create web_admin ~/aa/ca/
 ```
 
 İsterseniz kendiniz aşağıdaki komutlar yardımı ile,
 
 ```
 zato create server [-h] [--store-log] [--verbose] [--store-config]
-    [--postgresql_schema POSTGRESQL_SCHEMA] [--odb_password ODB_PASSWORD]
-    [--kvdb_password KVDB_PASSWORD]
-    path odb_type odb_host odb_port odb_user odb_db_name
-    kvdb_host kvdb_port pub_key_path priv_key_path
-    cert_path ca_certs_path cluster_name server_name
+                          [--odb_host ODB_HOST] [--odb_port ODB_PORT]
+                          [--odb_user ODB_USER] [--odb_db_name ODB_DB_NAME]
+                          [--postgresql_schema POSTGRESQL_SCHEMA]
+                          [--odb_password ODB_PASSWORD]
+                          [--kvdb_password KVDB_PASSWORD]
+                          path odb_type kvdb_host kvdb_port pub_key_path
+                          priv_key_path cert_path ca_certs_path cluster_name
+                          server_name
 ```
 
 isterseniz de,
 
 ```
-zato create server ~/aa/server postgresql localhost 6379 ~/aa/ca1/out-pub/PROD3*.pem ~/aa/ca1/out-priv/PROD3*.pem ~/aa/ca1/out-cert/PROD3*.pem ~/aa/ca1/ca-material/ca-cert.pem PROD3 server --odb_host localhost --odb_port 5432 --odb_user zato --odb_db_name zatodb --postgresql_schema zato --odb_password 'zatopassword'
+zato create server \
+   ~/aa/server \
+   postgresql \
+   localhost \
+   6379 \
+   ~/aa/ca/out-pub/PROD3*.pem \
+   ~/aa/ca/out-priv/PROD3*.pem \
+   ~/aa/ca/out-cert/PROD3*.pem \
+   ~/aa/ca/ca-material/ca-cert.pem \
+   PROD3 \
+   server \
+   --odb_host \
+   localhost \
+   --odb_port \
+   5432 \
+   --odb_user zato \
+   --odb_db_name zatodb \
+   --postgresql_schema zato \
+   --odb_password 'zatopassword'
 ```
 
 komutu ile kurulumu gerçekleştirebilirsiniz.
 
 4 - WEB ADMIN KURULUMU
 
-Öncelikle sırası ile aşağıdaki komutları çalıştırarak gerekli sertifikalar kurulur
+Öncelikle ``` mkdir aa/web-admin ``` ile bir uzantı oluşturulur ve
 
 ```
-mkdir aa/ca2
-zato ca create ca ~/aa/ca2
-zato ca create lb_agent ~/aa/ca2/ zato_lb_agent1
-zato ca create server ~/aa/ca2/ PROD3 server
-zato ca create web_admin ~/aa/ca2/
+zato create web_admin [-h] [--store-log] [--verbose] [--store-config]
+                             [--odb_host ODB_HOST] [--odb_port ODB_PORT]
+                             [--odb_user ODB_USER] [--odb_db_name ODB_DB_NAME]
+                             [--postgresql_schema POSTGRESQL_SCHEMA]
+                             [--odb_password ODB_PASSWORD]
+                             [--tech_account_password TECH_ACCOUNT_PASSWORD]
+                             path odb_type pub_key_path priv_key_path
+                             cert_path ca_certs_path tech_account_name
 ```
 
-ardından, ``` mkdir aa/web-admin ``` ile bir uzantı oluşturulur ve
+komutundan yardım alınarak,
 
 ```
-zato create web_admin ~/aa/web-admin postgresql ~/aa/ca2/out-pub/web-admin*.pem ~/aa/ca2/out-priv/web-admin*.pem ~/aa/ca2/out-cert/web-admin*.pem ~/aa/ca2/ca-material/ca-cert.pem techacc --odb_host localhost --odb_port 5432 --odb_user zato --odb_db_name zatodb --postgresql_schema zato --odb_password 'zatopassword'
+zato create web_admin \
+   ~/aa/web-admin postgresql \
+   ~/aa/ca/out-pub/web-admin*.pem \
+   ~/aa/ca/out-priv/web-admin*.pem \
+   ~/aa/ca/out-cert/web-admin*.pem \
+   ~/aa/ca/ca-material/ca-cert.pem \
+   techacc \
+   --odb_host localhost \
+   --odb_port 5432 \
+   --odb_user zato \
+   --odb_db_name zatodb \
+   --postgresql_schema zato \
+   --odb_password 'zatopassword'
 ```
 
 komutu ile kurulum gerçekleştirilir.
 
 5 - LOAD BALANCER KURULUMU
 
-```
-mkdir aa/ca3
-zato ca create ca ~/aa/ca3
-zato ca create lb_agent ~/aa/ca3/ zato_lb_agent1
-zato ca create server ~/aa/ca3/ PROD3 server
-zato ca create web_admin ~/aa/ca3/
-```
-
-komutları ile sertifikalar kurulur.
 
 ``` mkdir aa/load-balancer ``` diye uzantı oluşturulur ve gerekli kurulum yapılır
 
 ```
-zato create load_balancer ~/aa/load-balancer/ ~/aa/ca3/out-pub/lb*.pem ~/aa/ca3/out-priv/lb*.pem ~/aa/ca3/out-cert/lb*.pem ~/aa/ca3/ca-material/ca-cert.pem
+zato create load_balancer \
+   ~/aa/load-balancer/ \
+   ~/aa/ca/out-pub/lb*.pem \
+   ~/aa/ca/out-priv/lb*.pem \
+   ~/aa/ca/out-cert/lb*.pem \
+   ~/aa/ca/ca-material/ca-cert.pem
 ```
 
 veya
 
 ```
-    zato create load_balancer [-h] [--store-log] [--verbose] [--store-config]
-    path pub_key_path priv_key_path cert_path ca_certs_path
+    zato create load_balancer [-h] [--store-log] [--verbose]
+                                 [--store-config]
+                                 path pub_key_path priv_key_path cert_path
+                                 ca_certs_path
 ```
 
 Ardından redis server a password atamak için ilk olarak ```redis-cli ``` komutunu giriniz.
@@ -242,3 +304,13 @@ zato start ~/aa/server
 zato start ~/aa/load-balancer
 zato start ~/aa/web-admin
 ```
+
+Şimdi herhangi bir tarayıcı açarak http://localhost:8183 adresine bağlanınız.
+
+kullanıcı adı:admin
+şifre: 1
+
+olarak giriş yapınız.
+
+Gelen sayfada ilk sekme olan Cluster->Server-> add-to-lb ye basiniz.
+Ardından Clusters -> (pick one from the table) -> Load-balancer -> Config GUI view 'den  server port'u 17010 olarak  değiştiriniz.
