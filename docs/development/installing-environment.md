@@ -80,10 +80,27 @@ username=admin
 password=ulakbus  
 ```
 
-Switch back to root user to prepare python virtual environment for Ulakbus Application.
+Switch back to root user to start zato as service
+
+Create symbolic links  for zato components
 
 ```bash
-logout
+ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer
+ln -s /opt/zato/ulakbus/server1 /etc/zato/components-enabled/ulakbus.server1
+ln -s /opt/zato/ulakbus/server2 /etc/zato/components-enabled/ulakbus.server2
+ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
+```
+
+Start zato service
+
+```bash
+service zato start
+
+```
+
+Prepare python virtual environment for Ulakbus Application.
+
+```bash
 apt-get install virtualenvwrapper
 ```
 
