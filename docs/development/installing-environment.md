@@ -80,10 +80,27 @@ username=admin
 password=ulakbus  
 ```
 
-Switch back to root user to prepare python virtual environment for Ulakbus Application.
+Switch back to root user to start zato as service
+
+Create symbolic links  for zato components
 
 ```bash
-logout
+ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer
+ln -s /opt/zato/ulakbus/server1 /etc/zato/components-enabled/ulakbus.server1
+ln -s /opt/zato/ulakbus/server2 /etc/zato/components-enabled/ulakbus.server2
+ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
+```
+
+Start zato service
+
+```bash
+service zato start
+
+```
+
+Prepare python virtual environment for Ulakbus Application.
+
+```bash
 apt-get install virtualenvwrapper
 ```
 
@@ -121,12 +138,21 @@ pip install six
 
 pip install git+https://github.com/zetaops/pyoko.git
 ```
+
+Add PYOKO_SETTINGS variable to env as root(user)
+
+```bash
+echo "export PYOKO_SETTINGS='ulakbus.settings'" >> /etc/profile
+
+```
+
 Clone ulakbus from ``` https://github.com/zetaops/ulakbus.git  ``` and install requirenments.
 
 ```bash
 pip install falcon
 pip install beaker
 pip install redis
+pip install passlib
 pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
 pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 pip install git+https://github.com/zetaops/zengine.git#egg=zengine
@@ -139,11 +165,48 @@ Clone ulakbus-ui from ``` https://github.com/zetaops/ulakbus-ui.git  ```
 ```bash
 git clone https://github.com/zetaops/ulakbus-ui.git
 ```
-Add ulakbus and ulakbus-ui to PYTHONPATH
+Add ulakbus to PYTHONPATH
 
 ```bash
 echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
-echo '/app/ulakbus-ui' >> /app/env/lib/python2.7/site-packages/ulakbus-ui.pth
+```
+
+Create __init__.py file to make google library working as ulakbus(user)
+
+```bash
+touch /app/env/lib/python2.7/site-packages/google/__init__.py
+```
+
+Download solr_schema_template for pyoko as ulakbus(user)
+
+```bash
+cd ~/env/local/lib/python2.7/site-packages/pyoko/db
+wget https://raw.githubusercontent.com/zetaops/pyoko/master/pyoko/db/solr_schema_template.xml
+
+```
+
+Create symbolic links for zato(user)
+
+```bash
+ln -s /app/pyoko/pyoko /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/riak /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
+
+```
+
+Create a bucket type named models and activate it with following commands as root(user)
+```bash
+riak-admin bucket-type create models '{"props":{"last_write_wins":true, "allow_mult":false}}'
+riak-admin bucket-type activate models
+```
+
+To update schemas run the following command for ulakbus(user)
+```bash
+source env/bin/activate
+cd ~/ulakbus/ulakbus
+python manage.py update_schema --bucket all
 ```
 
 Start server on port 8000 default
