@@ -1,9 +1,9 @@
-from pprint import pprint
 from time import sleep
-from zengine.utils import DotDict
+
+from zengine.lib.utils import DotDict
 from ulakbus.activities.views.auth import LoginForm
 from ulakbus.models import User
-from ulakbus.server import Connector as workflow_connector
+from zengine.server import Connector as workflow_connector
 
 __author__ = 'Evren Esat Ozkan'
 

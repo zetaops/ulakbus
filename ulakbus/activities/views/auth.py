@@ -6,11 +6,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko import field
-from ulakbus.lib.views import SimpleView
+from zengine.lib.views import SimpleView
 
-from falcon.errors import HTTPBadRequest, HTTPUnauthorized
+from zengine.lib.exceptions import HTTPBadRequest, HTTPUnauthorized
 from ulakbus.models import User
-from ulakbus.modules.forms import AngularForm
+from zengine.lib.forms import AngularForm
 
 
 class LoginForm(AngularForm):

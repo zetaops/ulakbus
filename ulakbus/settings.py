@@ -15,10 +15,12 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 ACTIVITY_MODULES_IMPORT_PATH = 'ulakbus.activities'
 # absolute path to the workflow packages
 WORKFLOW_PACKAGES_PATH = os.path.join(BASE_DIR, 'workflows')
-DEFAULT_BUCKET_TYPE = 'models'
+
 
 #PYOKO SETTINGS
-RIAK_SERVER = os.environ.get('RIAK_SERVER')
-RIAK_PROTOCOL = os.environ.get('RIAK_PROTOCOL')
+DEFAULT_BUCKET_TYPE = 'models'
+RIAK_SERVER = os.environ.get('RIAK_SERVER', 'localhost')
+RIAK_PROTOCOL = os.environ.get('RIAK_PROTOCOL', 'http')
 RIAK_PORT = os.environ.get('RIAK_PORT')
+
 REDIS_SERVER = os.environ.get('REDIS_SERVER')

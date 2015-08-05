@@ -1,6 +1,6 @@
 from tests.deep_eq import deep_eq
 from tests.models import Employee
-from ulakbus.modules.forms import AngularForm
+from zengine.lib.forms import AngularForm
 __author__ = 'Evren Esat Ozkan'
 
 serialized_empty_test_employee = {
