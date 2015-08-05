@@ -4,3 +4,4 @@ lazy_object_proxy
 passlib
 pytest
 enum34
+requests
