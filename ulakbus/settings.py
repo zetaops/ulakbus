@@ -21,6 +21,6 @@ WORKFLOW_PACKAGES_PATH = os.path.join(BASE_DIR, 'workflows')
 DEFAULT_BUCKET_TYPE = 'models'
 RIAK_SERVER = os.environ.get('RIAK_SERVER', 'localhost')
 RIAK_PROTOCOL = os.environ.get('RIAK_PROTOCOL', 'http')
-RIAK_PORT = os.environ.get('RIAK_PORT')
+RIAK_PORT = os.environ.get('RIAK_PORT', 8098)
 
 REDIS_SERVER = os.environ.get('REDIS_SERVER')

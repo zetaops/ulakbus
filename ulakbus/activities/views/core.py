@@ -30,9 +30,9 @@ class Dashboard(SimpleView):
 
     def _show(self):
         # if 'user' not in self.current.request.session:
-        #     self.current.request.context['result']['forms'] = get_form(
+        #     self.current.output['forms'] = get_form(
         #         'student_login_form')
         # else:
         #     self.current.request.context[
         #         'show_user_message'] = "Zaten giriş yapmış durumdasınız"
-        self.current.request.context['result']['screen'] = "dashboard"
+        self.current.output['screen'] = "dashboard"

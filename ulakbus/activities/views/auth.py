@@ -20,14 +20,14 @@ class LoginForm(AngularForm):
 
 
 def Logout(current):
-    current.request.env['session'].delete()
+    current.session.delete()
 
 
 class Login(SimpleView):
     def _do(self):
         try:
-            username = self.current['request'].context['data']['login_crd']['username']
-            password = self.current['request'].context['data']['login_crd']['password']
+            username = self.current.input['login_crd']['username']
+            password = self.current.input['login_crd']['password']
         except KeyError:
             raise HTTPBadRequest("Eksik bilgi girdiniz",
                                  "Lütfen kullanıcı adınızı ve parolanızı giriniz")
@@ -36,8 +36,8 @@ class Login(SimpleView):
 
             is_login_successful = user.check_password(password)
             if is_login_successful:
-                # self.current.request.context['result'] = {'success': True}
-                self.current.request.env['session']['user_id'] = user.key
+                # self.current.output = {'success': True}
+                self.current.session['user_id'] = user.key
             self.current['task'].data['IS'].login_successful = is_login_successful
 
         except IndexError:
@@ -46,8 +46,10 @@ class Login(SimpleView):
                                    "kullanıcı kaydı bulamadık")
 
     def _show(self):
-        if 'user_id' not in self.current['request'].env['session']:
-            self.current['request'].context['result']['forms'] = LoginForm(
+        self.current.session['dfdf'] = 'sdfdf'
+        # self.current.session.save()
+        if 'user_id' not in self.current.session:
+            self.current.output['forms'] = LoginForm(
                 types={"password": "password"}).serialize()
         else:
-            self.current['request'].context['result']['error'] = "Zaten giriş yapmış durumdasınız"
+            self.current.output['error'] = "Zaten giriş yapmış durumdasınız"
