@@ -4,7 +4,7 @@ from wsgiref import simple_server
 from zengine.dispatcher import app
 from tests.deep_eq import deep_eq
 from tests.models import Employee
-from zengine.lib.forms import AngularForm
+from zengine.lib.forms import JsonForm
 from tests.test_utils import BaseTestCase
 from ulakbus.models import User
 
@@ -27,7 +27,7 @@ serialized_empty_test_employee = {
 
 
 def test_simple():
-    serialized_form = AngularForm(Employee()).serialize()
+    serialized_form = JsonForm(Employee()).serialize()
     # assert serialized_empty_test_employee['model'] == serialized_form['model']
     assert deep_eq(serialized_empty_test_employee, serialized_form,
                    _assert=True)

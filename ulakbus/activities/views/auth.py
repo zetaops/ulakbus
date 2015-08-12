@@ -10,10 +10,10 @@ from zengine.lib.views import SimpleView
 
 from zengine.lib.exceptions import HTTPBadRequest, HTTPUnauthorized
 from ulakbus.models import User
-from zengine.lib.forms import AngularForm
+from zengine.lib.forms import JsonForm
 
 
-class LoginForm(AngularForm):
+class LoginForm(JsonForm):
     TYPES = {'password': 'password'}
     username = field.String("Username")
     password = field.String("Password")

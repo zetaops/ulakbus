@@ -3,7 +3,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models.personel import Employee
-from zengine.lib.forms import AngularForm
+from zengine.lib.forms import JsonForm
 from zengine.lib.views import SimpleView
 
 
@@ -28,9 +28,9 @@ class Edit(SimpleView):
     def _show(self):
         if self.current.input.get('object_id'):
             employee_id = self.current.input['object_id']
-            serialized_form = AngularForm(Employee.objects.get(employee_id), customized_types={"birth_date": "string"}).serialize()
+            serialized_form = JsonForm(Employee.objects.get(employee_id), customized_types={"birth_date": "string"}).serialize()
         else:
-            serialized_form = AngularForm(Employee()).serialize()
+            serialized_form = JsonForm(Employee()).serialize()
         self.current.output['forms'] = serialized_form
 
 
