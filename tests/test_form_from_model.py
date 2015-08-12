@@ -1,12 +1,8 @@
 # -*-  coding: utf-8 -*-
-from time import sleep
-from wsgiref import simple_server
-from zengine.dispatcher import app
+
 from tests.deep_eq import deep_eq
 from tests.models import Employee
 from zengine.lib.forms import JsonForm
-from tests.test_utils import BaseTestCase
-from ulakbus.models import User
 
 __author__ = 'Evren Esat Ozkan'
 
@@ -32,29 +28,3 @@ def test_simple():
     assert deep_eq(serialized_empty_test_employee, serialized_form,
                    _assert=True)
 
-
-login_form_response = {
-    'forms': {'model': {'username': None, 'password': None},
-              'form': ['username', 'password'],
-              'schema': {'required': ['username', 'password'],
-                         'type': 'object', 'properties': {
-                      'username': {'type': 'string',
-                                   'title': 'Username'},
-                      'password': {'type': 'password',
-                                   'title': 'Password'}},
-                         'title': 'LoginForm'}},
-    'is_login': False}
-
-
-class TestCase(BaseTestCase):
-    def test_real_login(self):
-        self.prepare_client('simple_login')
-        # User.objects._clear_bucket()
-        # sleep(1)
-        # u = User(username='user')
-        # u.set_password('123')
-        # u.save()
-        # sleep(1)
-        resp = self.client.post()
-        print(resp.json)
-        # assert resp.json == login_form_response
