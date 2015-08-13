@@ -8,13 +8,15 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from pyoko import field
-from pyoko.model import Model
+from pyoko.model import Model, ListNode
 from passlib.hash import pbkdf2_sha512
 
 
 class User(Model):
     username = field.String("Username", index=True)
     password = field.String("Password")
+    name = field.String("First Name", index=True)
+    surname = field.String("Surname", index=True)
 
     def __unicode__(self):
         return "User %s" % self.username
@@ -36,10 +38,48 @@ class User(Model):
         return False
 
 
+class Permission(Model):
+    name = field.String("Name", index=True)
+    code = field.String("Code Name", index=True)
+
+
+class AbstractRole(Model):
+    id = field.Integer("ID No", index=True)
+    name = field.String("Name", index=True)
+
+    class Permissions(ListNode):
+        permission = Permission()
+
+
+class Role(Model):
+    abstract_role = AbstractRole()
+    user = User()
+
+    class Permissions(ListNode):
+        permission = Permission()
+
+
+class LimitedPermissions(Model):
+    restrictive = field.Boolean(default=False)
+    time_start = field.String("Start Time", index=True)
+    time_end = field.String("End Time", index=True)
+
+    class IPList(ListNode):
+        ip = field.String()
+
+    class Permissions(ListNode):
+        permission = Permission()
+
+    class AbstractRoles(ListNode):
+        abstract_role = AbstractRole()
+
+    class Roles(ListNode):
+        role = Role()
+
+
 class AuthBackend(object):
     def __init__(self, session):
         self.session = session
-
 
     def get_user(self):
         if self.session:
