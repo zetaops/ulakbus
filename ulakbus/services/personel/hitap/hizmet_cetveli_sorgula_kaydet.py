@@ -133,10 +133,14 @@ class HizmetCetveliSorgula(Service):
             # if any record exists in riak but not in hitap delete it
             for riak_dict_key, riak_dict_values in riak_dict_from_db_queries_with_pno.items():
                 if not hitap_dict.has_key(riak_dict_key):
+                    employee_not_in_hitap_records = Employee.objects.filter(pno=tckn, service_records__record_id=riak_dict_key)[0].get()
                     service_record_not_in_hitap_records = \
                     Employee.objects.filter(pno=tckn, service_records__record_id=riak_dict_key)[0].ServiceRecords[0]
                     service_record_not_in_hitap_records.remove()
-                    self.logger.info("Deleted ")
+                    sleep(1)
+                    employee_not_in_hitap_records.save()
+                    sleep(1)
+                    self.logger.info("Deleted.")
 
         except IndexError:
             employee = Employee()
