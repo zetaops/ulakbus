@@ -57,19 +57,40 @@ class User <<(M,orchid)>>{
 --
 authenticate()
 get_permissions()
-
 }
+
+class LimitedPermissions <<(M,orchid)>> {
+restrictive     Boolean(False)
+time_start      String
+time_end        String
+--
+**IPList(ListNode)**
+|_ ip           String
+**Permissions(ListNode)**
+|_ permission       **Permission()**
+**AbstractRoles(ListNode)**
+|_ abstract_role    **AbstractRole()**
+**Roles(ListNode)**
+|_ role             **Role()**
+--
+}
+LimitedPermissions "0..*" -- "0..*" Permission
+LimitedPermissions "0..*" -- "0..*" Role
+LimitedPermissions "0..*" -- "0..*" AbstractRole
+
 class AbstractRole<<(M,orchid)>>{
-permissions     FK(**Permissions**)
+Permissions(ListNode)
+|_permission    **Permissions()**
 id              Int
 name            String
 --
 }
 class Role<<(M,orchid)>>{
-abstract_role   FK(**AbstractRole**)
-user            FK(**User**)
-unit            FK(**Unit**)
-permissions     FK(**Permissions**)
+abstract_role   **AbstractRole()**
+user            **User()**
+unit            **Unit()**
+Permissions(ListNode)
+|_permission    **Permissions()**
 active          Boolean
 start_date      Date
 end_date        Date
@@ -81,7 +102,7 @@ code            String
 }
 }
 class Employee <<(M,orchid)>>{
-user                 FK(**User**)
+user                 **User()**
 registry_code        String
 status_code          Int
 labour_class_code    String
@@ -96,40 +117,36 @@ country_code         String
 min_degree           Int
 min_grade            Int
 nomination           String
---
-service_records      **ServiceRecords()**
-}
-class ServiceRecord<<(M,orchid)>>{
-employee                     FK(**Employee**)
-start_date                   Date
-end_date                     Date
-task                         String
-code                         String
-wages                        Float
-salary                       Float
-class                        String
-staff                        String
-payment_degree               Int
-payment_grade                Int
-payment_indicator            Int
-earned_salary_grade          Int
-retirement_degree            Int
-retirement_grade             Int
-retirement_indicator         Int
-reason_code                  String
-organization_approval_date   Date
+**ServiceRecords(ListNode)**
+|_ start_date                   Date
+|_ end_date                     Date
+|_ task                         String
+|_ code                         String
+|_ wages                        Float
+|_ salary                       Float
+|_ class                        String
+|_ staff                        String
+|_ payment_degree               Int
+|_ payment_grade                Int
+|_ payment_indicator            Int
+|_ earned_salary_grade          Int
+|_ retirement_degree            Int
+|_ retirement_grade             Int
+|_ retirement_indicator         Int
+|_ reason_code                  String
+|_ organization_approval_date   Date
 --
 }
 class Unit<<(M,orchid)>>{
 type        String
 name        String
-parent      FK(**Unit**)
+parent      **Unit()**
 --
 people      **Role()**
 }
 
 class Lecturer<<(M,orchid)>>{
-employe         FK(**Employee**)
+employe         **Employee()**
 name            String
 type            [String]
 --
@@ -139,7 +156,7 @@ will be stored here
 }
 
 class Curriculum<<(M,orchid)>>{
-unit        FK(**Unit**)
+unit        **Unit()**
 period      Int
 --
 lectures    **BaseLecture()**
@@ -148,8 +165,8 @@ lectures    **BaseLecture()**
 
 
 'class StudentTimeTable<<(M,orchid)>>{
-'student         FK(**Student**)
-'timetable       FK(**TimeTable**)
+'student         **Student()**
+'timetable       **TimeTable()**
 'week_day        Int
 'hours           [Int]
 '}
@@ -162,8 +179,8 @@ lectures        **Lecture()**
 }
 
 class Lecture<<(M,orchid)>>{
-lecturer    FK(**Lecturer**)
-base        FK(**BaseLecture**)
+lecturer    **Lecturer()**
+base        **BaseLecture()**
 --
 }
 class BaseLecture<<(M,orchid)>>{
@@ -173,8 +190,8 @@ credit   String
 --
 }
 class TimeTable<<(M,orchid)>>{
-lecture         FK(**Lecture**)
-location        FK(**Location**)
+lecture         **Lecture()**
+location        **Location()**
 week_day        Int
 day_hour        Int
 hours           [Int]
@@ -184,20 +201,35 @@ hours           [Int]
 
 
 class Student <<(M,orchid)>> {
-lectures            FK(**Lecture**)
-timetable           FK(**TimeTable**)
-role                FK(**Role**)
-timetable       FK(**TimeTable**)
-**Exam(ListModel**
-|_ type              String
-|_ date              Date
-|_ point             Int
-**Attendance(ListModel)**
-|_ attended          Boolean
-|_ date              Date
-|_ hour              Int
+
+timetable           **TimeTable()**
+role                **Role()**
+timetable           **TimeTable()**
+
+**Lectures(ListNode)**
+|_ lecture         **Lecture()**
+
+**Exams(ListModel)**
+|_ exam             **Exam()**
+
+**Attendances(ListModel)**
+|_ attendance        **Attendance()**
+
+}
+class Exam <<(M,orchid)>> {
+lecture           **Lecture()**
+type              String
+date              Date
+point             Int
 --
-get_draft_registrations()
+}
+
+class Attendance <<(M,orchid)>> {
+lecture           **Lecture()**
+attended          Boolean
+date              Date
+hour              Int
+--
 }
 
 Lecture -- Lecturer
@@ -215,11 +247,15 @@ Role "1" --o "0..*" AbstractRole
 AbstractRole "0..*" o-- "0..*" Permission
 Role "0..*" o-- "0..*" Permission
 
+Lecture "0..*" -- "1" Exam
+Lecture "0..*" -- "1" Attendance
+Student "0..*" -- "1" Exam
+Student "0..*" -- "1" Attendance
+
 User "1" -- "1" Student
 User "1" -- "1" Employee
 TimeTable "1" o-- "0..*" Location
 Unit "0..*" o-- "1..*" Location
-Employee "1..*" --o ServiceRecord
 TimeTable "0..*" --o "0..*" Student
 
 ' XXXXXXXXXXXX
