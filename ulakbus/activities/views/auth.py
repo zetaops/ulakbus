@@ -38,7 +38,7 @@ class Login(SimpleView):
             if is_login_successful:
                 # self.current.output = {'success': True}
                 self.current.session['user_id'] = user.key
-            self.current['task'].data['IS'].login_successful = is_login_successful
+            self.current.task_data['IS'].login_successful = is_login_successful
 
         except IndexError:
             raise HTTPUnauthorized('Giriş bilgileri hatalı',

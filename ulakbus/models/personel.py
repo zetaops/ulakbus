@@ -19,6 +19,11 @@ class Employee(Model):
     mobile_phone = field.String("Cep Telefonu", index=True)
     pno = field.String("TC No", index=True)
 
+
+    # def row_level_access(self):
+    #     if self.context.has_perm('can_see_all_employees'):
+    #         self.objects = self.objects.filter()
+
     class ServiceRecords(ListNode):
         start_date = field.Date("Başlangıç Tarihi", index=True,
                                 format="%d.%m.%Y")
