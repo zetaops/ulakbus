@@ -72,7 +72,6 @@ time_end        String
 |_ abstract_role    **AbstractRole()**
 **Roles(ListNode)**
 |_ role             **Role()**
---
 }
 LimitedPermissions "0..*" -- "0..*" Permission
 LimitedPermissions "0..*" -- "0..*" Role
@@ -201,20 +200,16 @@ hours           [Int]
 
 
 class Student <<(M,orchid)>> {
-
 timetable           **TimeTable()**
 role                **Role()**
 timetable           **TimeTable()**
-
+--
 **Lectures(ListNode)**
 |_ lecture         **Lecture()**
-
 **Exams(ListModel)**
 |_ exam             **Exam()**
-
 **Attendances(ListModel)**
 |_ attendance        **Attendance()**
-
 }
 class Exam <<(M,orchid)>> {
 lecture           **Lecture()**
