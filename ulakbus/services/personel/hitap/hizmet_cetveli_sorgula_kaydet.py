@@ -96,7 +96,8 @@ class HizmetCetveliSorgula(Service):
         self.logger.info("hitap_dict created.")
 
         riak_dict_from_db_queries_with_pno = {}
-        for record in Employee.objects.filter(pno=tckn).get().ServiceRecords:
+        employee = Employee.objects.filter(pno=tckn).get()
+        for record in employee.ServiceRecords:
             riak_dict_from_db_queries_with_pno[record.record_id] = {
                 'baslamaTarihi': record.start_date,
                 'bitisTarihi': record.end_date,
@@ -124,23 +125,18 @@ class HizmetCetveliSorgula(Service):
 
         # if employee saved before, find that and add new records from hitap to riak
         try:
-            employee = Employee.objects.filter(pno=tckn)[0]
+            for item in employee.ServiceRecords:
+                if not hitap_dict.has_key(item.record_id):
+                    self.logger.info("item key: %s " % (item.record_id))
+                    item.remove()
+                    self.logger.info("Deleted.")
+
             for hitap_key, hitap_values in hitap_dict.items():
                 if not riak_dict_from_db_queries_with_pno.has_key(hitap_key):
                     pass_service_records(employee, hitap_values)
-                employee.save()
 
             # if any record exists in riak but not in hitap delete it
-            for riak_dict_key, riak_dict_values in riak_dict_from_db_queries_with_pno.items():
-                if not hitap_dict.has_key(riak_dict_key):
-                    employee_not_in_hitap_records = Employee.objects.filter(pno=tckn, service_records__record_id=riak_dict_key)[0].get()
-                    service_record_not_in_hitap_records = \
-                    Employee.objects.filter(pno=tckn, service_records__record_id=riak_dict_key)[0].ServiceRecords[0]
-                    service_record_not_in_hitap_records.remove()
-                    sleep(1)
-                    employee_not_in_hitap_records.save()
-                    sleep(1)
-                    self.logger.info("Deleted.")
+            employee.save()
 
         except IndexError:
             employee = Employee()
@@ -149,3 +145,4 @@ class HizmetCetveliSorgula(Service):
                 pass_service_records(employee, record_values)
                 employee.save()
             sleep(1)
+
