@@ -9,14 +9,25 @@
 from time import sleep
 
 from tests.test_utils import BaseTestCase
-from ulakbus.models import User
-
 
 RESPONSES = {}
 
 class TestCase(BaseTestCase):
 
     def test_employee_edit(self):
-        self.prepare_client('personel_duzenle_basitlestirilmis')
-        resp = self.client.post(cmd='add_object', clear_wf=True)
+        self.prepare_client('crud')
+
+
+        resp = self.client.post(model='Employee', clear_wf=True)
+        assert 'objects' in resp.json
+        list_objects = resp.json['objects']
+        if list_objects:
+            assert list_objects[0]['data']['first_name'] == 'Em1'
+        resp = self.client.post(model='Employee',cmd='add', clear_wf=True)
+        resp = self.client.post(model='Employee',cmd='add', subcmd="do",
+                                form=dict(first_name="Em1", pno="12323121443"))
         resp.raw()
+
+
+
+

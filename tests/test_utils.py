@@ -1,9 +1,10 @@
 # -*-  coding: utf-8 -*-
 import os
 from time import sleep
+from pyoko.model import model_registry
 from werkzeug.test import Client
 from zengine.server import app
-from ulakbus.models import User
+from ulakbus.models import User, AbstractRole, Role
 
 __author__ = 'Evren Esat Ozkan'
 
@@ -32,6 +33,7 @@ class RWrapper(object):
         pprint(self.json)
         pprint(self.headers)
         pprint(self.content)
+
 
 class TestClient(object):
     def __init__(self, workflow):
@@ -81,6 +83,10 @@ RESPONSES = {"get_login_form": {
     "successful_login": {u'screen': u'dashboard',
                          u'is_login': True}}
 
+# encrypted form of test password (123)
+user_pass = '$pbkdf2-sha512$10000$nTMGwBjDWCslpA$iRDbnITHME58h1/eVolNmPsHVq' \
+            'xkji/.BH0Q0GQFXEwtFvVwdwgxX4KcN/G9lUGTmv7xlklDeUp4DD4ClhxP/Q'
+
 
 class BaseTestCase:
     """
@@ -104,21 +110,19 @@ class BaseTestCase:
 
         if login and self.client.user is None:
             self.client.set_workflow("simple_login")
-            User.objects._clear_bucket()
-            sleep(1)
-            self.client.user = User(username='user')
-            self.client.user.set_password('123')
-            self.client.user.save()
-            sleep(1)
-            ### User.objects.filter()[0].username
+            abs_role, new = AbstractRole.objects.get_or_create(id=1,
+                                                               name='W.C. Hero')
+            self.client.user, new = User.objects.get_or_create(
+                username='test_user', password=user_pass)
+            if new:
+                Role(user=self.client.user, abstract_role=abs_role).save()
+                sleep(1)
             self._do_login()
             self.client.set_workflow(workflow_name)
-
 
     @classmethod
     def _do_login(self):
         resp = self.client.post()
-        resp.raw()
         assert resp.json == RESPONSES["get_login_form"]
         data = {"login_crd": {"username": "user", "password": "123"},
                 "cmd": "do"}

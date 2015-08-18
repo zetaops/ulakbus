@@ -24,7 +24,7 @@ def Logout(current):
 
 
 class Login(SimpleView):
-    def _do(self):
+    def do_view(self):
         try:
             username = self.current.input['login_crd']['username']
             password = self.current.input['login_crd']['password']
@@ -41,8 +41,7 @@ class Login(SimpleView):
                                    "Girdiğiniz kullanıcı adı ya da parola ile "
                                    "eşleşen bir kullanıcı kaydı bulamadık")
 
-    def _show(self):
-        self.current.session['dfdf'] = 'sdfdf'
+    def show_view(self):
         # self.current.session.save()
         if 'user_id' not in self.current.session:
             self.current.output['forms'] = LoginForm(

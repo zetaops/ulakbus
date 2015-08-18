@@ -106,12 +106,12 @@ class AuthBackend(object):
         """
         user = user
         self.session['user_id'] = user.key
-        self.session['user_data'] = user.clean_data()
+        self.session['user_data'] = user.clean_value()
 
         # TODO: this should be remembered from previous login
         # TODO: discuss for storage method/location of user settings
-        default_role = user.role_set[0]
-        self.session['role_data'] = default_role.clean_data()
+        default_role = user.role_set[0].role
+        self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
 
         self.session['permissions'] = default_role.get_permissions()
@@ -126,7 +126,7 @@ class AuthBackend(object):
         elif 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
-            # TODO: admins should be informed
+            # TODO: admins should be informed about a user without role
             raise PermissionDenied("Your dont have a \"Role\" in this system")
 
     def authenticate(self, username, password):
