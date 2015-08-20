@@ -18,8 +18,13 @@ WORKFLOW_PACKAGES_PATH = os.path.join(BASE_DIR, 'workflows')
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 
+# left blank to use StreamHandler aka stderr
+LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
 
-DEFAULT_CACHE_EXPIRE_TIME = 90  # seconds
+# logging dir for file handler
+LOG_DIR = os.environ.get('LOG_DIR', '/tmp/')
+
+DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # workflows that dosen't require logged in user
 ANONYMOUS_WORKFLOWS = ['simple_login',]

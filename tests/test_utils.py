@@ -25,6 +25,7 @@ class RWrapper(object):
         self.headers = list(args[2])
         try:
             self.json = json.loads(self.content[0])
+            self.token = self.json.get('token')
         except:
             self.json = None
 
@@ -40,6 +41,7 @@ class TestClient(object):
         self.workflow = workflow
         self._client = Client(app, response_wrapper=RWrapper)
         self.user = None
+        self.token = None
 
     def set_workflow(self, workflow):
         self.workflow = workflow
@@ -60,8 +62,12 @@ class TestClient(object):
 
         if make_json:
             conf['content_type'] = 'application/json'
+            if 'token' not in data and self.token:
+                data['token'] = self.token
             data = json.dumps(data)
-        return self._client.post(self.workflow, data=data, **conf)
+        wrapper = self._client.post(self.workflow, data=data, **conf)
+        self.token = wrapper.token
+        return wrapper
 
 
 RESPONSES = {"get_login_form": {
@@ -123,8 +129,15 @@ class BaseTestCase:
     @classmethod
     def _do_login(self):
         resp = self.client.post()
-        assert resp.json == RESPONSES["get_login_form"]
+
+
+        output = resp.json
+        del output['token']
+        assert output == RESPONSES["get_login_form"]
         data = {"login_crd": {"username": "user", "password": "123"},
                 "cmd": "do"}
         resp = self.client.post(**data)
-        assert resp.json == RESPONSES["successful_login"]
+        output = resp.json
+        del output['token']
+        assert output == RESPONSES["successful_login"]
+        self.client.token = ''
