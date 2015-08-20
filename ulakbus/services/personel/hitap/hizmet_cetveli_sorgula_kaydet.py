@@ -7,6 +7,8 @@ __author__ = 'Ozgur Firat Cinar'
 from zato.server.service import Service
 import os
 from time import sleep
+import urllib2
+import socket
 
 os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
 from ulakbus.models.personel import Employee
@@ -54,95 +56,99 @@ class HizmetCetveliSorgula(Service):
                 pass
             service_records.approval_date = record_values['kurumOnayTarihi']
 
-            self.logger.info("Record saved successfully.")
-            self.logger.info("RIAK KEY: %s " % employee.key)
-            self.logger.info("kayitNo: %s " % service_records.record_id)
-
         tckn = self.request.payload['personel']['tckn']
         conn = self.outgoing.soap['HITAP'].conn
 
         # connects with soap client to the HITAP
-        with conn.client() as client:
-            service_bean = client.service.HizmetCetvelSorgula(H_USER, H_PASS, tckn).HizmetCetveliServisBean
-
-        self.logger.info("zato service started to work.")
-
-        # collects data from HITAP {record_id: record_values_belong_to_that_record_id}
-        hitap_dict = {}
-        for record in range(0, len(service_bean)):
-            hitap_dict[service_bean[record].kayitNo] = {
-                'baslamaTarihi': service_bean[record].baslamaTarihi,
-                'bitisTarihi': service_bean[record].bitisTarihi,
-                'emekliDerece': service_bean[record].emekliDerece,
-                'emekliKademe': service_bean[record].emekliKademe,
-                'gorev': service_bean[record].gorev,
-                'unvanKod': service_bean[record].unvanKod,
-                'hizmetSinifi': service_bean[record].hizmetSinifi,
-                'kayitNo': service_bean[record].kayitNo,
-                'kazanilmisHakAyligiDerece': service_bean[record].kazanilmisHakAyligiDerece,
-                'kazanilmisHakAyligiKademe': service_bean[record].kazanilmisHakAyligiKademe,
-                'odemeDerece': service_bean[record].odemeDerece,
-                'odemeKademe': service_bean[record].odemeKademe,
-                'emekliEkGosterge': service_bean[record].emekliEkGosterge,
-                'kadroDerece': service_bean[record].kadroDerece,
-                'kazanilmisHakAyligiEkGosterge': service_bean[record].kazanilmisHakAyligiEkGosterge,
-                'odemeEkGosterge': service_bean[record].odemeEkGosterge,
-                'sebepKod': service_bean[record].sebepKod,
-                'tckn': service_bean[record].tckn,
-                'ucret': service_bean[record].ucret,
-                'yevmiye': service_bean[record].yevmiye,
-                'kurumOnayTarihi': service_bean[record].kurumOnayTarihi
-            }
-        self.logger.info("hitap_dict created.")
-
-        riak_dict_from_db_queries_with_pno = {}
-        employee = Employee.objects.filter(pno=tckn).get()
-        for record in employee.ServiceRecords:
-            riak_dict_from_db_queries_with_pno[record.record_id] = {
-                'baslamaTarihi': record.start_date,
-                'bitisTarihi': record.end_date,
-                'emekliDerece': record.retirement_degree,
-                'emekliKademe': record.retirement_grade,
-                'gorev': record.assignment,
-                'unvanKod': record.title_code,
-                'hizmetSinifi': record.duty_class,
-                'kayitNo': record.record_id,
-                'kazanilmisHakAyligiDerece': record.aquired_degree,
-                'kazanilmisHakAyligiKademe': record.aquired_grade,
-                'odemeDerece': record.salary_degree,
-                'odemeKademe': record.salary_grade,
-                'emekliEkGosterge': record.retirement_indicator,
-                'kadroDerece': record.position_degree,
-                'kazanilmisHakAyligiEkGosterge': record.aquired_sup_indicator,
-                'odemeEkGosterge': record.salary_sup_indicator,
-                'sebepKod': record.reason_code,
-                'tckn': record.pno,
-                'ucret': record.salary,
-                'yevmiye': record.wage,
-                'kurumOnayTarihi': record.approval_date
-            }
-        self.logger.info("riak_dict_from_db_queries_with_pno created.")
-
-        # if employee saved before, find that and add new records from hitap to riak
         try:
-            for item in employee.ServiceRecords:
-                if not hitap_dict.has_key(item.record_id):
-                    self.logger.info("item key: %s " % (item.record_id))
-                    item.remove()
-                    self.logger.info("Deleted.")
+            with conn.client() as client:
+                service_bean = client.service.HizmetCetvelSorgula(H_USER, H_PASS, tckn).HizmetCetveliServisBean
+                self.logger.info("zato service started to work.")
 
-            for hitap_key, hitap_values in hitap_dict.items():
-                if not riak_dict_from_db_queries_with_pno.has_key(hitap_key):
-                    pass_service_records(employee, hitap_values)
+                # collects data from HITAP {record_id: record_values_belong_to_that_record_id}
+                hitap_dict = {}
+                for record in range(0, len(service_bean)):
+                    hitap_dict[service_bean[record].kayitNo] = {
+                        'baslamaTarihi': service_bean[record].baslamaTarihi,
+                        'bitisTarihi': service_bean[record].bitisTarihi,
+                        'emekliDerece': service_bean[record].emekliDerece,
+                        'emekliKademe': service_bean[record].emekliKademe,
+                        'gorev': service_bean[record].gorev,
+                        'unvanKod': service_bean[record].unvanKod,
+                        'hizmetSinifi': service_bean[record].hizmetSinifi,
+                        'kayitNo': service_bean[record].kayitNo,
+                        'kazanilmisHakAyligiDerece': service_bean[record].kazanilmisHakAyligiDerece,
+                        'kazanilmisHakAyligiKademe': service_bean[record].kazanilmisHakAyligiKademe,
+                        'odemeDerece': service_bean[record].odemeDerece,
+                        'odemeKademe': service_bean[record].odemeKademe,
+                        'emekliEkGosterge': service_bean[record].emekliEkGosterge,
+                        'kadroDerece': service_bean[record].kadroDerece,
+                        'kazanilmisHakAyligiEkGosterge': service_bean[record].kazanilmisHakAyligiEkGosterge,
+                        'odemeEkGosterge': service_bean[record].odemeEkGosterge,
+                        'sebepKod': service_bean[record].sebepKod,
+                        'tckn': service_bean[record].tckn,
+                        'ucret': service_bean[record].ucret,
+                        'yevmiye': service_bean[record].yevmiye,
+                        'kurumOnayTarihi': service_bean[record].kurumOnayTarihi
+                    }
 
-            # if any record exists in riak but not in hitap delete it
-            employee.save()
+                self.logger.info("hitap_dict created.")
 
-        except IndexError:
-            employee = Employee()
-            employee.pno = tckn
-            for record_id, record_values in hitap_dict.items():
-                pass_service_records(employee, record_values)
-                employee.save()
-            sleep(1)
+                # if employee saved before, find that and add new records from hitap to riak
+                try:
+                    riak_dict_from_db_queries_with_pno = {}
+                    employee = Employee.objects.filter(pno=tckn).get()
+                    for record in employee.ServiceRecords:
+                        riak_dict_from_db_queries_with_pno[record.record_id] = {
+                            'baslamaTarihi': record.start_date,
+                            'bitisTarihi': record.end_date,
+                            'emekliDerece': record.retirement_degree,
+                            'emekliKademe': record.retirement_grade,
+                            'gorev': record.assignment,
+                            'unvanKod': record.title_code,
+                            'hizmetSinifi': record.duty_class,
+                            'kayitNo': record.record_id,
+                            'kazanilmisHakAyligiDerece': record.aquired_degree,
+                            'kazanilmisHakAyligiKademe': record.aquired_grade,
+                            'odemeDerece': record.salary_degree,
+                            'odemeKademe': record.salary_grade,
+                            'emekliEkGosterge': record.retirement_indicator,
+                            'kadroDerece': record.position_degree,
+                            'kazanilmisHakAyligiEkGosterge': record.aquired_sup_indicator,
+                            'odemeEkGosterge': record.salary_sup_indicator,
+                            'sebepKod': record.reason_code,
+                            'tckn': record.pno,
+                            'ucret': record.salary,
+                            'yevmiye': record.wage,
+                            'kurumOnayTarihi': record.approval_date
+                        }
 
+                    self.logger.info("riak_dict_from_db_queries_with_pno created.")
+
+                    for item in employee.ServiceRecords:
+                        if not hitap_dict.has_key(item.record_id):
+                            self.logger.info("item key: %s " % (item.record_id))
+                            item.remove()
+                            self.logger.info("Service record deleted.")
+
+                    for hitap_key, hitap_values in hitap_dict.items():
+                        if not riak_dict_from_db_queries_with_pno.has_key(hitap_key):
+                            pass_service_records(employee, hitap_values)
+
+                    # if any record exists in riak but not in hitap delete it
+                    employee.save()
+
+                except IndexError:
+                    employee = Employee()
+                    employee.pno = tckn
+                    for record_id, record_values in hitap_dict.items():
+                        pass_service_records(employee, record_values)
+                        employee.save()
+                    sleep(1)
+                except socket.error:
+                    self.logger.info("Riak connection refused!")
+
+        except AttributeError:
+            self.logger.info("TCKN should be wrong!")
+        except urllib2.URLError:
+            self.logger.info("No internet connection!")
