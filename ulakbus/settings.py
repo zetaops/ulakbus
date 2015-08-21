@@ -16,8 +16,24 @@ ACTIVITY_MODULES_IMPORT_PATH = 'ulakbus.activities'
 # absolute path to the workflow packages
 WORKFLOW_PACKAGES_PATH = os.path.join(BASE_DIR, 'workflows')
 
+AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
+
+# left blank to use StreamHandler aka stderr
+LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
+
+# logging dir for file handler
+LOG_DIR = os.environ.get('LOG_DIR', '/tmp/')
+
+DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
+
+# workflows that dosen't require logged in user
+ANONYMOUS_WORKFLOWS = ['simple_login',]
+
 #PYOKO SETTINGS
-RIAK_SERVER = os.environ.get('RIAK_SERVER')
-RIAK_PROTOCOL = os.environ.get('RIAK_PROTOCOL')
-RIAK_PORT = os.environ.get('RIAK_PORT')
+DEFAULT_BUCKET_TYPE = 'models'
+RIAK_SERVER = os.environ.get('RIAK_SERVER', 'localhost')
+RIAK_PROTOCOL = os.environ.get('RIAK_PROTOCOL', 'http')
+RIAK_PORT = os.environ.get('RIAK_PORT', 8098)
+
 REDIS_SERVER = os.environ.get('REDIS_SERVER')
+
