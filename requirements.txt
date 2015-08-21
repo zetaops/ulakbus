@@ -9,3 +9,4 @@ passlib
 pytest
 enum34
 requests
+Werkzeug

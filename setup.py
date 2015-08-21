@@ -9,7 +9,7 @@ setup(
     description='Ulakbus Butunlesik Universite Sistemi',
     author='Zetaops',
     requires=['zengine', 'pyoko'],
-    install_requires=['pyoko', 'zengine', 'passlib'],
+    install_requires=['pyoko', 'zengine', 'passlib', 'Werkzeug'],
     dependency_links=[
         'git+https://github.com/zetaops/pyoko.git#egg=pyoko',
         'git+https://github.com/zetaops/zengine.git#egg=zengine'],
