@@ -46,6 +46,7 @@ class TestClient(object):
 
     def set_workflow(self, workflow):
         self.workflow = workflow
+        self.token = ''
 
     def post(self, conf=None, **data):
         """
@@ -141,4 +142,4 @@ class BaseTestCase:
         output = resp.json
         del output['token']
         assert output == RESPONSES["successful_login"]
-        self.client.token = ''
+
