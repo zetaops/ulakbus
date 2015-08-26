@@ -28,21 +28,17 @@ class TestCase(BaseTestCase):
         # count
         num_of_objects = len(resp.json['objects'])
 
-        # add
-        resp = self.client.post(model='Employee',cmd='add')
+        # add then list
+        self.client.post(model='Employee',cmd='add')
         resp = self.client.post(model='Employee',cmd='add', subcmd="do_list",
                                 form=dict(first_name="Em1", pno="12323121443"))
 
         assert num_of_objects + 1 == len(resp.json['objects'])
 
-
-        # delete
+        # delete then list
         resp = self.client.post(model='Employee', cmd='delete', subcmd="do_list",
                                 object_id=resp.json['objects'][0]['key'])
-        resp.raw()
-        assert 'objects' in resp.json
-        # BUG: subcmd="do_list" does not work after delete view
-        # assert num_of_objects == len(resp.json['objects'])
+        assert num_of_objects == len(resp.json['objects'])
 
 
 

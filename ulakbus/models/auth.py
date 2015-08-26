@@ -10,7 +10,12 @@
 from pyoko import field
 from pyoko.model import Model, ListNode
 from passlib.hash import pbkdf2_sha512
-from zengine.lib.exceptions import PermissionDenied
+
+try:
+    from zengine.lib.exceptions import PermissionDenied
+except ImportError:
+    class PermissionDenied(Exception):
+        pass
 
 
 class User(Model):

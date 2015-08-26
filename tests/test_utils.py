@@ -3,6 +3,7 @@ import os
 from time import sleep
 from pyoko.model import model_registry
 from werkzeug.test import Client
+from zengine.log import getlogger
 from zengine.server import app
 from ulakbus.models import User, AbstractRole, Role
 
@@ -99,7 +100,7 @@ class BaseTestCase:
     preapre_client() varsayilan olarak bir kullanici yaratip sisteme giris yapar.
     """
     client = None
-
+    log = getlogger()
     @classmethod
     def prepare_client(self, workflow_name, reset=False, login=True):
         """
@@ -119,7 +120,7 @@ class BaseTestCase:
             abs_role, new = AbstractRole.objects.get_or_create(id=1,
                                                                name='W.C. Hero')
             self.client.user, new = User.objects.get_or_create(
-                username='test_user', password=user_pass)
+                {"password": user_pass}, username='test_user')
             if new:
                 Role(user=self.client.user, abstract_role=abs_role).save()
                 sleep(1)
@@ -134,7 +135,7 @@ class BaseTestCase:
         output = resp.json
         del output['token']
         assert output == RESPONSES["get_login_form"]
-        data = {"login_crd": {"username": "user", "password": "123"},
+        data = {"login_crd": {"username": "test_user", "password": "123"},
                 "cmd": "do"}
         resp = self.client.post(**data)
         output = resp.json
