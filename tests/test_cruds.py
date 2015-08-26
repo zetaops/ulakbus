@@ -7,6 +7,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from time import sleep
+from pyoko.model import model_registry
 
 from tests.test_utils import BaseTestCase
 from ulakbus.models import Employee
@@ -15,10 +16,17 @@ RESPONSES = {}
 
 class TestCase(BaseTestCase):
 
+
+
+
     def test_employee_edit(self):
-        Employee.objects._clear_bucket()
-        sleep(2)
         self.prepare_client('crud')
+
+        # call the crud view without any command to get available models list
+        resp = self.client.post()
+        assert resp.json['models'] == [m.__name__ for m in
+                                       model_registry.get_base_models()]
+
         resp = self.client.post(model='Employee')
         assert 'objects' in resp.json
         list_objects = resp.json['objects']
