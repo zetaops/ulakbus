@@ -7,14 +7,12 @@
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko import field
 from zengine.lib.views import SimpleView
-
 from zengine.lib.exceptions import HTTPBadRequest, HTTPUnauthorized
-from ulakbus.models import User
 from zengine.lib.forms import JsonForm
 
 
 class LoginForm(JsonForm):
-    TYPES = {'password': 'password'}
+    TYPE_OVERRIDES = {'password': 'password'}
     username = field.String("Username")
     password = field.String("Password")
 
@@ -44,7 +42,6 @@ class Login(SimpleView):
     def show_view(self):
         # self.current.session.save()
         if 'user_id' not in self.current.session:
-            self.current.output['forms'] = LoginForm(
-                types={"password": "password"}).serialize()
+            self.current.output['forms'] = LoginForm().serialize()
         else:
             self.current.output['error'] = "Zaten giriş yapmış durumdasınız"

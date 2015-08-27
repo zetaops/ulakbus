@@ -11,7 +11,7 @@ from pyoko.model import model_registry
 from tests.test_utils import BaseTestCase
 RESPONSES = {}
 
-class CRUDTestCase(BaseTestCase):
+class TestCase(BaseTestCase):
     def test_list_add_delete_with_employee_model(self):
 
         # setup workflow
@@ -50,10 +50,3 @@ class CRUDTestCase(BaseTestCase):
 
         # number of objects should be equal to starting point
         assert num_of_objects == len(resp.json['objects'])
-
-
-
-
-
-
-
