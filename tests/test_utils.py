@@ -7,7 +7,6 @@ from zengine.log import getlogger
 from zengine.server import app
 from ulakbus.models import User, AbstractRole, Role
 
-__author__ = 'Evren Esat Ozkan'
 
 
 def get_worfklow_path(wf_name):
@@ -18,6 +17,8 @@ def get_worfklow_path(wf_name):
 from pprint import pprint
 import json
 
+# TODO: TestClient and BaseTestCase should be moved to Zengine,
+# but without automatic handling of user logins
 
 class RWrapper(object):
     def __init__(self, *args):
@@ -39,6 +40,11 @@ class RWrapper(object):
 
 class TestClient(object):
     def __init__(self, workflow):
+        """
+        this is a wsgi test client based on werkzeug.test.Client
+
+        :param str workflow: workflow name
+        """
         self.workflow = workflow
         self._client = Client(app, response_wrapper=RWrapper)
         self.user = None
@@ -52,24 +58,24 @@ class TestClient(object):
         """
         by default data dict encoded as json and
         content type set as application/json
-        :param data: post data,
-        :return: tuple with 3 items :
-        """
 
+        :param dict conf: additional configs for test client's post method.
+                          pass "no_json" in conf dict to prevent json encoding
+        :param data: post data,
+        :return: RWrapper response object
+        :rtype: RWrapper
+        """
         conf = conf or {}
         make_json = not conf.pop('no_json', False)
-
-        if '_data' in conf:
-            data = conf.pop('_data')
-
         if make_json:
             conf['content_type'] = 'application/json'
             if 'token' not in data and self.token:
                 data['token'] = self.token
             data = json.dumps(data)
-        wrapper = self._client.post(self.workflow, data=data, **conf)
-        self.token = wrapper.token
-        return wrapper
+        response_wrapper = self._client.post(self.workflow, data=data, **conf)
+        # update client token from response
+        self.token = response_wrapper.token
+        return response_wrapper
 
 
 RESPONSES = {"get_login_form": {
@@ -105,6 +111,7 @@ class BaseTestCase:
     @classmethod
     def prepare_client(self, workflow_name, reset=False, login=True):
         """
+        setups the workflow, logins if necessary
 
         :param workflow_name: change or set workflow name
         :param reset: create a new client
@@ -130,9 +137,11 @@ class BaseTestCase:
 
     @classmethod
     def _do_login(self):
+        """
+        logs in the test user with test client
+
+        """
         resp = self.client.post()
-
-
         output = resp.json
         del output['token']
         assert output == RESPONSES["get_login_form"]

@@ -8,17 +8,10 @@
 # (GPLv3).  See LICENSE.txt for details.
 from time import sleep
 from pyoko.model import model_registry
-
 from tests.test_utils import BaseTestCase
-from ulakbus.models import Employee
-
 RESPONSES = {}
 
 class CRUDTestCase(BaseTestCase):
-
-
-
-
     def test_list_add_delete_with_employee_model(self):
 
         # setup workflow
@@ -41,14 +34,18 @@ class CRUDTestCase(BaseTestCase):
 
         # add a new employee record, then go to list view (do_list subcmd)
         self.client.post(model='Employee',cmd='add')
-        resp = self.client.post(model='Employee',cmd='add', subcmd="do_list",
+        resp = self.client.post(model='Employee',
+                                cmd='add',
+                                subcmd="do_list",
                                 form=dict(first_name="Em1", pno="12323121443"))
 
         # we should have 1 more object relative to previous listing
         assert num_of_objects + 1 == len(resp.json['objects'])
 
         # delete the first object then go to list view
-        resp = self.client.post(model='Employee', cmd='delete', subcmd="do_list",
+        resp = self.client.post(model='Employee',
+                                cmd='delete',
+                                subcmd="do_list",
                                 object_id=resp.json['objects'][0]['key'])
 
         # number of objects should be equal to starting point
