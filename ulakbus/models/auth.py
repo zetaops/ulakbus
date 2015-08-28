@@ -10,7 +10,12 @@
 from pyoko import field
 from pyoko.model import Model, ListNode
 from passlib.hash import pbkdf2_sha512
-from zengine.lib.exceptions import PermissionDenied
+
+try:
+    from zengine.lib.exceptions import PermissionDenied
+except ImportError:
+    class PermissionDenied(Exception):
+        pass
 
 
 class User(Model):
@@ -126,7 +131,7 @@ class AuthBackend(object):
         elif 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
-            # TODO: admins should be informed about a user without role
+            # TODO: admins should be informed about a user without a role
             raise PermissionDenied("Your dont have a \"Role\" in this system")
 
     def authenticate(self, username, password):
@@ -136,6 +141,7 @@ class AuthBackend(object):
             self.set_user(user)
         else:
             pass
-            # TODO: failed login attempts for a user should be count to prevent brute force attack
+            # TODO: failed login attempts for a user should be counted
+            # for prevention of brute force attacks
 
         return is_login_ok
