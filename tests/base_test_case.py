@@ -1,14 +1,8 @@
 # -*-  coding: utf-8 -*-
-import os
 from time import sleep
-from pyoko.model import model_registry
-from werkzeug.test import Client
 from zengine.log import getlogger
-from zengine.server import app
 from ulakbus.models import User, AbstractRole, Role
-from pprint import pprint
-import json
-
+from zengine.lib.test_utils import TestClient
 
 RESPONSES = {"get_login_form": {
     'forms': {'model': {'username': None,
@@ -26,7 +20,7 @@ RESPONSES = {"get_login_form": {
                                  'title': 'Password'}},
                          'title': 'LoginForm'}},
     'is_login': False},
-    "successful_login": {u'screen': u'dashboard',
+    "successful_login": {u'msg': u'Success',
                          u'is_login': True}}
 
 # encrypted form of test password (123)
@@ -56,7 +50,7 @@ class BaseTestCase:
             self.client.set_workflow(workflow_name)
 
         if login and self.client.user is None:
-            self.client.set_workflow("simple_login")
+            self.client.set_workflow("login")
             abs_role, new = AbstractRole.objects.get_or_create(id=1, name='W.C. Hero')
             self.client.user, new = User.objects.get_or_create({"password": user_pass},
                                                                username='test_user')
@@ -76,7 +70,7 @@ class BaseTestCase:
         output = resp.json
         del output['token']
         assert output == RESPONSES["get_login_form"]
-        data = {"login_crd": {"username": "test_user", "password": "123"}, "cmd": "do"}
+        data = {"username": "test_user", "password": "123", "cmd": "do"}
         resp = self.client.post(**data)
         output = resp.json
         del output['token']
