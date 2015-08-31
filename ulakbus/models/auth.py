@@ -91,6 +91,15 @@ class AuthBackend(object):
     def __init__(self, session):
         self.session = session
 
+
+    def get_permissions(self):
+        return self.get_role().get_permissions()
+
+
+    def has_permission(self, perm):
+        return True
+        # return perm in self.get_role().get_permissions()
+
     def get_user(self):
         if 'user_data' in self.session:
             user = User()
