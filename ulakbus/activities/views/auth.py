@@ -30,8 +30,7 @@ class Login(SimpleView):
             raise HTTPBadRequest("Eksik bilgi girdiniz",
                                  "Lütfen kullanıcı adınızı ve parolanızı giriniz")
         try:
-            self.current.task_data[
-                'IS'].login_successful = self.current.auth.authenticate(
+            self.current.task_data['IS'].login_successful = self.current.auth.authenticate(
                 username, password)
 
         except IndexError:

@@ -10,8 +10,6 @@
 from pyoko.model import model_registry
 from base_test_case import BaseTestCase
 
-RESPONSES = {}
-
 
 class TestCase(BaseTestCase):
     def test_list_add_delete_with_employee_model(self):

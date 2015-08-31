@@ -27,7 +27,7 @@ AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # workflows that dosen't require logged in user
-ANONYMOUS_WORKFLOWS = ['simple_login',]
+ANONYMOUS_WORKFLOWS = ['login',]
 
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = 'models'
