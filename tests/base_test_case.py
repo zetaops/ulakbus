@@ -1,7 +1,8 @@
 # -*-  coding: utf-8 -*-
 from time import sleep
-from ulakbus.models import User, AbstractRole, Role
-from zengine.lib.test_utils import BaseTestCase as ZengineBaseTestCase, user_pass
+from ulakbus.models import User, AbstractRole, Role, Permission
+from zengine.lib.test_utils import BaseTestCase as ZengineBaseTestCase, user_pass, \
+    base_test_permissions
 
 
 class BaseTestCase(ZengineBaseTestCase):
@@ -12,5 +13,10 @@ class BaseTestCase(ZengineBaseTestCase):
         self.client.user, new = User.objects.get_or_create({"password": user_pass},
                                                            username='test_user')
         if new:
-            Role(user=self.client.user, abstract_role=abs_role).save()
+            role = Role(user=self.client.user, abstract_role=abs_role).save()
+            for perm in base_test_permissions:
+                permission = Permission(name=perm, code=perm).save()
+                role.Permissions(permission=permission)
+            role.save()
             sleep(1)
+
