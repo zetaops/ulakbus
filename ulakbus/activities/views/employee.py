@@ -4,7 +4,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models import Employee
 from zengine.lib.forms import JsonForm
-from zengine.lib.views import SimpleView
+from zengine.views.base import SimpleView
 
 
 def List(current):

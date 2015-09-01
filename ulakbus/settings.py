@@ -30,7 +30,7 @@ AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 ANONYMOUS_WORKFLOWS = ['login',]
 
 # #PYOKO SETTINGS
-DEFAULT_BUCKET_TYPE = 'models'
+DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 # RIAK_SERVER = os.environ.get('RIAK_SERVER', 'localhost')
 # RIAK_PROTOCOL = os.environ.get('RIAK_PROTOCOL', 'http')
 # RIAK_PORT = os.environ.get('RIAK_PORT', 8098)
