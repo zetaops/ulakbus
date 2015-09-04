@@ -64,6 +64,8 @@ def main():
             print()
             print('========= Found PEP8 non-conformance ==========')
             print(output)
+            sys.exit(1)
+            return
     # Run unit tests.
 
     print('============== Running unit tests =============')
