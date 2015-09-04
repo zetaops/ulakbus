@@ -7,7 +7,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from pyoko.manage import *
-environ.setdefault('PYOKO_SETTINGS', 'ulakbus.settings')
-ManagementCommands(argv[1:])
+from zengine.management_commands import *
+environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
+environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
+ManagementCommands()
 

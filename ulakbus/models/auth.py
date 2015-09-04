@@ -23,6 +23,7 @@ class User(Model):
     password = field.String("Password")
     name = field.String("First Name", index=True)
     surname = field.String("Surname", index=True)
+    superuser = field.Boolean("Super user", default=False)
 
     def __unicode__(self):
         return "User %s" % self.username
@@ -43,6 +44,7 @@ class User(Model):
 class Permission(Model):
     name = field.String("Name", index=True)
     code = field.String("Code Name", index=True)
+    description = field.String("Description", index=True)
 
 
 class AbstractRole(Model):

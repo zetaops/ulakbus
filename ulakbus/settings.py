@@ -18,6 +18,8 @@ WORKFLOW_PACKAGES_PATHS.append(os.path.join(BASE_DIR, 'workflows'))
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 
+PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
+USER_MODEL = 'ulakbus.models.auth.User'
 # # left blank to use StreamHandler aka stderr
 # LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
 #
