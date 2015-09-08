@@ -23,7 +23,7 @@ ZEngine ile İş Akışı Temelli Uygulama Geliştirme
 İş akışı ve iş akışı temelli uygulama
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-İş akışları bir kurumun yürüttüğü işlerin belirli bir notasyona göre görselleştirilmesi amacıyla kullanılırlar. İşlerin kim tarafından, hangi sırayla, hangi koşullara bağlı olarak yürütüleceğinin tüm ilgili personel tarafından üzerinde uzlaşılmış bir standartta ifade edilmesi, iş süreçlerinin kişiler arasında daha kolay ve doğru biçimde anlatılabilmesini sağladığı gibi sürecin iyileştirilmesi için yapılacak değişiklikleri tasarlamayı da kolaylaştırmaktadır.
+İş akışları bir kurumun yürüttüğü işlerin belirli bir notasyona göre görselleştirilmesi amacıyla kullanılırlar. İşlerin kim tarafından, hangi sırayla, hangi koşullara bağlı olarak yürütüleceğinin ilgili personel tarafından üzerinde uzlaşılmış bir standartta ifade edilmesi, iş süreçlerinin kişiler arasında daha kolay ve doğru biçimde anlatılabilmesini sağladığı gibi sürecin iyileştirilmesi için yapılacak değişiklikleri tasarlamayı da kolaylaştırmaktadır.
 
 .. image:: http://pm.zetaops.io/attachments/39/kayit_yenileme_ve_ders_kaydi.png
 
@@ -33,11 +33,11 @@ ZEngine ile İş Akışı Temelli Uygulama Geliştirme
 ZEngine Web Çatısı
 %%%%%%%%%%%%%%%%%%
 
-ZEngine, Zetaops tarafından Python dili kullanılarak geliştirilen, Ulakbüs projesinin de üzerine inşa edildiği BPMN 2.0 destekleyen REST odaklı bir web çatısıdır. Falcon, SpiffWorkflow ve Pyoko olmak üzere üç temel ögenin üzerine kurulmuş olan ZEngine, iş akışı tabanlı web servislerinin Python nesneleri ile kolayca inşa edilmesini sağlayan, ölçeklenebilir ve güvenli bir platform sunmaktadır.
+ZEngine, Zetaops tarafından Python dili kullanılarak geliştirilen, Ulakbüs projesinin de üzerine inşa edildiği, BPMN 2.0 iş akışlarını destekleyen REST odaklı bir web çatısıdır. Falcon, SpiffWorkflow ve Pyoko olmak üzere üç temel öge üzerine kurulmuş olan ZEngine, iş akışı tabanlı web servislerinin Python nesneleri ile kolayca inşa edilmesini sağlayan, ölçeklenebilir ve güvenli bir platform sunmaktadır.
 
 Falcon
 ******
-Falcon Python'un WSGI standardını destekleyen, REST mimarisinde servisler düşünülerek hazırlanmış aşırı hızlı ve hafif bir web çatısıdır.
+Falcon, WSGI standardını destekleyen, REST mimarisinde servisler oluşturmak için geliştirilmiş aşırı hızlı ve hafif bir web çatısıdır.
 
 SpiffWorkflow
 *************
@@ -45,6 +45,18 @@ Spiffworkflow Python ile yazılmış BPMN 2 notasyonunu destekleyen güçlü bir
 
 Pyoko
 *****
-Pyoko Riak KV için tasarlanmış gelişmiş bir ORM (Object Relational Mapper) aracıdır. NoSQL bir veri tabanı olan Riak KV'nin Solr ile entegre şekilde kullanımı oldukça kolaylaştıran ve uygulama içinde ihtiyaç duyulan veri modellerinin Python sınıfları olarak tasarlanıp geliştirilmesine olanak tanıyan
+Riak KV için tasarlanmış bir ORM (Object Relational Mapper) aracı olan Pyoko, Riak KV'nin Solr arama motoru ile olan entegrasyonunu tümüyle desteklemekte ve bu iki ürünün tek bir API üzerinden ilişkisel bir veri tabanı rahatlığında kullanılabilmesini olanaklı kılmaktadır.
+
+Modeleler
+*********
+Uygulamanın konusunu oluşturan varlıklar (entities) Pyoko modelleri olarak tasarlanmakta, bu modeller altında saklanan verilere erişim yine modellerde tanımlanan yetki koşullarına uygun olarak yönetilmektedir. Bir varlıkla doğrudan ilişkili metodlar kendi modelinin altında tanımlanebilmekte, böylece kod organizasyonu kolaylaşmaktadır.
+::
+	from pyoko import field
+	from pyoko.model import Model, ListNode
+
+	class Student(Model):
+		name = field.String("Adı", index=True)
+		join_date = field.Date("Kayıt tarihi", index=True)
+
 
 
