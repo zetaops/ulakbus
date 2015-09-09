@@ -12,9 +12,9 @@ import os.path
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 # path of the activity modules which will be invoked by workflow tasks
-ACTIVITY_MODULES_IMPORT_PATHS.append('ulakbus.activities')
+ACTIVITY_MODULES_IMPORT_PATHS.append('ulakbus.workflows')
 # absolute path to the workflow packages
-WORKFLOW_PACKAGES_PATHS.append(os.path.join(BASE_DIR, 'workflows'))
+WORKFLOW_PACKAGES_PATHS.append(os.path.join(BASE_DIR, 'diagrams'))
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 
@@ -28,7 +28,7 @@ USER_MODEL = 'ulakbus.models.auth.User'
 
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
-# workflows that dosen't require logged in user
+# diagrams that dosen't require logged in user
 ANONYMOUS_WORKFLOWS = ['login',]
 
 # #PYOKO SETTINGS
