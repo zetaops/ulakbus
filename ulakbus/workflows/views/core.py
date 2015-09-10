@@ -5,7 +5,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from zengine.views.base import SimpleView
+from zengine.workflows.base import SimpleView
 
 from falcon.errors import HTTPBadRequest
 
