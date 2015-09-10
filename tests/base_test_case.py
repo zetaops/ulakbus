@@ -16,4 +16,6 @@ class BaseTestCase(ZengineBaseTestCase):
                 role.Permissions(permission=perm)
             role.save()
             sleep(1)
+            # pyoko dose not update the user instance
+            self.client.user = User.objects.get(self.client.user.key)
 
