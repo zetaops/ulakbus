@@ -1,9 +1,9 @@
 beaker
 falcon
--e git://github.com/didip/beaker_extensions.git#egg=beaker_extensions
+git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
 redis
--e git://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
--e git://github.com/zetaops/pyoko.git#egg=pyoko
+git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
+git+https://github.com/zetaops/pyoko.git#egg=pyoko
 lazy_object_proxy
 passlib
 pytest
