@@ -7,7 +7,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from staff import *
+from personel import *
 from auth import *
 from student import *
 from lectures import *
