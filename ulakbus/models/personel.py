@@ -38,6 +38,24 @@ class Personel(Model):
         durum = field.String("Durum", index=True)
         sebep = field.Integer("Sebep", index=True)
 
+    class AskerlikKayitlari(ListNode):
+        askerlikNevi = field.Integer("Askerlik Nevi", index=True)
+        baslamaTarihi = field.String("Başlama Tarihi", index=True)
+        bitisTarihi = field.String("Bitiş Tarihi", index=True)
+        kayitNo = field.Integer("Kayıt No", index=True)
+        kitaBaslamaTarihi = field.String("Kıta Başlama Tarihi", index=True)
+        kitaBitisTarihi = field.String("Kıta Bitiş Tarihi", index=True)
+        muafiyetNeden = None
+        sayilmayanGunSayisi = field.Integer("Sayılmayan Gün Sayısı", index=True)
+        sinifOkuluSicil = None
+        subayliktanErligeGecisTarihi = field.String("Subaylıktan Erliğe Geçiş Tarihi", index=True)
+        subayOkuluGirisTarihi = field.String("Subay Okulu Giriş Tarihi", index=True)
+        tckn = field.Integer("TC Kimlik No", index=True)
+        tegmenNaspTarihi = field.String("Teğmen Nasp Tarihi", index=True)
+        gorevYeri = None
+        kurumOnayTarihi = None
+        astegmenNaspTarihi = field.String("Asteğmen Nasp Tarihi", index=True)
+
 
     class HizmetKayitlari(ListNode):
         tckn = field.String("Sigortalının TC Kimlik No", index=True)
