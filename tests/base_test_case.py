@@ -13,8 +13,7 @@ class BaseTestCase(ZengineBaseTestCase):
         if new:
             role = Role(user=self.client.user, abstract_role=abs_role).save()
             for perm in Permission.objects.raw("code:crud* OR code:login* OR code:User*"):
-                permission = Permission(name=perm, code=perm).save()
-                role.Permissions(permission=permission)
+                role.Permissions(permission=perm)
             role.save()
             sleep(1)
 
