@@ -18,7 +18,7 @@
 #       range.
 #
 
-bind = '0.0.0.0:8000'
+bind = '0.0.0.0:9001'
 backlog = 2048
 
 #
@@ -73,6 +73,7 @@ workers = 5
 worker_class = 'gevent'
 worker_connections = 1000
 keepalive = 2
+#timeout = 30
 
 #
 #   spew - Install a trace function that spews every line of Python
@@ -181,10 +182,9 @@ proc_name = None
 
 
 
-#limit_request_line = 8190 # This parameter can be used to prevent any DDOS attack.This parameter is used to limit the allowed size of a client’s HTTP request-line
+#limit_request_line = 8190 # This parameter can be used to prevent any DDOS attack.This parameter is used to limit the allowed size of a client's HTTP request-line
 #limit_request_fields = 100 # Limit the number of HTTP headers fields in a request.
 #limit_request_field_size = 8190 # Limit the allowed size of an HTTP request header field.
-#timeout = 30
 
 
 def post_fork(server, worker):
