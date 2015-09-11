@@ -39,7 +39,7 @@ class CreateUser(Command):
             perm_list.append(perm.name)
         role.save()
         user_type = 'super user' if self.manager.args.super else 'user'
-        return "New % created with these permissions: \n\n%s" % (user_type, "\n".join(perm_list))
+        return "New %s created with these permissions: \n\n%s" % (user_type, "\n".join(perm_list))
 
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
