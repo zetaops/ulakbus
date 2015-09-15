@@ -45,15 +45,15 @@ class Personel(Model):
         kayitNo = field.Integer("Kayıt No", index=True)
         kitaBaslamaTarihi = field.String("Kıta Başlama Tarihi", index=True)
         kitaBitisTarihi = field.String("Kıta Bitiş Tarihi", index=True)
-        muafiyetNeden = None
+        muafiyetNeden = field.String("Muafiyet Neden", index=True)
         sayilmayanGunSayisi = field.Integer("Sayılmayan Gün Sayısı", index=True)
-        sinifOkuluSicil = None
+        sinifOkuluSicil = field.String("Sınıf Okulu Sicil", index=True)
         subayliktanErligeGecisTarihi = field.String("Subaylıktan Erliğe Geçiş Tarihi", index=True)
         subayOkuluGirisTarihi = field.String("Subay Okulu Giriş Tarihi", index=True)
         tckn = field.Integer("TC Kimlik No", index=True)
         tegmenNaspTarihi = field.String("Teğmen Nasp Tarihi", index=True)
-        gorevYeri = None
-        kurumOnayTarihi = None
+        gorevYeri = field.String("Görev Yeri", index=True)
+        kurumOnayTarihi = field.String("Kurum Onay Tarihi", index=True)
         astegmenNaspTarihi = field.String("Asteğmen Nasp Tarihi", index=True)
 
 
@@ -79,6 +79,39 @@ class Personel(Model):
         emekliEkgosterge = field.Integer("Emeklilige Esas Ekgosterge")
         sebepKod = field.Integer("Sebep Kod", index=True)
         kurumOnayTarihi = field.String("Kurum Onay Tarihi", index=True)
+
+        class Kullanici(ListNode):
+            id = field.Integer("Kullanıcının ID No", index=True)
+            tckn = field.String("Kullanıcının TC Kimlik No", index=True)
+            name = field.String("Kullanıcının Adı", index=True)
+            surname = field.String("Kullanıcının Soyadı", index=True)
+            birth_date = field.String("Kullanıcının Doğum Tarihi", index=True)
+            birth_place = field.String("Kullanıcının Doğum Yeri", index=True)
+            neighborhood = field.String("Kullanıcının Mahallesi", index=True)
+            father_name = field.String("Kullanıcının Baba Adı", index=True)
+            mother_name = field.String("Kullanıcının Anne Adı", index=True)
+            gender = field.String("Kullanıcının Cinsiyeti", index=True)
+            marital_status = field.String("Kullanıcının Medeni Durumu", index=True)
+            town_code = field.Integer("Kullanıcının Şehir Kodu", index=True)
+            city = field.Integer("Kullanıcının Yaşadığı Şehir", index=True)
+            blood_type = field.String("Kullanıcının Kan Grubu", index=True)
+            former_surname = field.String("Kullanıcının Eski Soyadı", index=True)
+            home_phone = field.String("Kullanıcının Ev Telefonu", index=True)
+            work_phone = field.String("Kullanıcının İş Telefonu", index=True)
+            mobile_phone = field.String("Kullanıcının Cep Telefonu", index=True)
+            address_sec = field.String("Kullanıcının Mahallesi", index=True)
+            postal_code = field.String("Kullanıcının Mahallesi", index=True)
+            primary_email = field.String("Kullanıcının Birinci Maili", index=True)
+            secondary_email = field.String("Kullanıcının İkinci Maili", index=True)
+            website = field.String("Kullanıcının Web Sitesi", index=True)
+
+        class Yetki(ListNode):
+            name = field.String("Yetki Adı", index=True)
+            code= field.String("Yetki Kodu", index=True)
+
+
+
+
 
         '''
         suspension_date = field.Date("Açığa Alınma Tarihi", index=True)
