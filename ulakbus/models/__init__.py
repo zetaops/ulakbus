@@ -11,3 +11,4 @@ from personel import *
 from auth import *
 from student import *
 from lectures import *
+from hitap import *
