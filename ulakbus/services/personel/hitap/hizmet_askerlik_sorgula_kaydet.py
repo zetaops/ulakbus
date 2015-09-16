@@ -8,7 +8,7 @@ from time import sleep
 import socket
 
 os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
-from ulakbus.models.personel import Personel
+from ulakbus.models.employee import Employee
 
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
@@ -21,25 +21,25 @@ class HizmetAskerlikSorgula(Service):
 
     def handle(self):
 
-        def pass_askerlik_kayitlari(personel, record_values):
-            askerlik_kaytlari = personel.AskerlikKayitlari()
-            askerlik_kaytlari.tckn = record_values['tckn']
-            askerlik_kaytlari.ad = record_values['ad']
-            askerlik_kaytlari.soyad = record_values['soyad']
-            askerlik_kaytlari.ilkSoyad = record_values['ilkSoyad']
-            askerlik_kaytlari.dogumTarihi = record_values['dogumTarihi']
-            askerlik_kaytlari.cinsiyet = record_values['cinsiyet']
-            askerlik_kaytlari.emekliSicilNo = record_values['emekliSicilNo']
-            askerlik_kaytlari.memuriyetBaslamaTarihi = record_values['memuriyetBaslamaTarihi']
-            askerlik_kaytlari.kurumSicil = record_values['kurumSicili']
-            askerlik_kaytlari.maluliyetKod = record_values['maluliyetKod']
-            askerlik_kaytlari.yetkiSeviyesi = record_values['yetkiSeviyesi']
-            askerlik_kaytlari.aciklama = record_values['aciklama']
-            askerlik_kaytlari.kurumaBaslamaTarihi = record_values['kurumaBaslamaTarihi']
-            askerlik_kaytlari.gorevTarihi6495 = record_values['gorevTarihi6495']
-            askerlik_kaytlari.emekliSicil6495 = record_values['emekliSicil6495']
-            askerlik_kaytlari.durum = record_values['durum']
-            askerlik_kaytlari.sebep = record_values['sebep']
+        def pass_askerlik_kayitlari(employee, record_values):
+            askerlik_kayitlari = employee.AskerlikKayitlari()
+
+            askerlik_kayitlari.askerlik_nevi = record_values['askerlik_nevi']
+            askerlik_kayitlari.baslama_tarihi = record_values['baslama_tarihi']
+            askerlik_kayitlari.bitis_tarihi = record_values['bitis_tarihi']
+            askerlik_kayitlari.kayit_no = record_values['kayit_no']
+            askerlik_kayitlari.kita_baslama_tarihi = record_values['kita_baslama_tarihi']
+            askerlik_kayitlari.kita_bitis_tarihi = record_values['kita_bitis_tarihi']
+            askerlik_kayitlari.muafiyet_neden = record_values['muafiyet_neden']
+            askerlik_kayitlari.sayilmayan_gun_sayisi = record_values['sayilmayan_gun_sayisi']
+            askerlik_kayitlari.sinif_okulu_sicil = record_values['sinif_okulu_sicil']
+            askerlik_kayitlari.subayliktan_erlige_gecis_tarihi = record_values['subayliktan_erlige_gecis_tarihi']
+            askerlik_kayitlari.subay_okulu_giris_tarihi = record_values['subay_okulu_giris_tarihi']
+            askerlik_kayitlari.tckn = record_values['tckn']
+            askerlik_kayitlari.tegmen_nasp_tarihi = record_values['tegmen_nasp_tarihi']
+            askerlik_kayitlari.gorev_yeri = record_values['gorev_yeri']
+            askerlik_kayitlari.kurum_onay_tarihi = record_values['kurum_onay_tarihi']
+            askerlik_kayitlari.astegmen_nasp_tarihi = record_values['astegmen_nasp_tarihi']
 
             self.logger.info("Nufus kayitlari successfully passed.")
 
@@ -49,58 +49,60 @@ class HizmetAskerlikSorgula(Service):
         # connects with soap client to the HITAP
         try:
             with conn.client() as client:
-                service_bean = client.service.HizmetNufusSorgula(H_USER, H_PASS, tckn)
+                service_bean = client.service.HizmetAskerlikSorgula(H_USER, H_PASS, tckn)
                 self.logger.info("zato service started to work.")
 
                 # collects data from HITAP {record_id: record_values_belong_to_that_record_id}
                 hitap_dict = {}
-                hitap_dict['askerlik_sorgula'] = {
-                    'askerlikNevi' : service_bean.askerlikNevi,
-                    'baslamaTarihi' : service_bean.baslamaTarihi,
-                    'bitisTarihi' : service_bean.bitisTarihi,
-                    'kayitNo' : service_bean.kayitNo,
-                    'kitaBaslamaTarihi' : service_bean.kitaBaslamaTarihi,
-                    'kitaBitisTarihi' : service_bean.kitaBitisTarihi,
-                    'muafiyetNeden' : service_bean.muafiyetNeden,
-                    'sayilmayanGunSayisi' : service_bean.sayilmayanGunSayisi,
-                    'sinifOkuluSicil' : service_bean.sinifOkuluSicil,
-                    'subayliktanErligeGecisTarihi' : service_bean.subayliktanErligeGecisTarihi,
-                    'subayOkuluGirisTarihi' : service_bean.subayOkuluGirisTarihi,
-                    'tckn' : service_bean.tckn,
-                    'tegmenNaspTarihi' : service_bean.tegmenNaspTarihi,
-                    'gorevYeri' : service_bean.gorevYeri,
-                    'kurumOnayTarihi' : service_bean.kurumOnayTarihi,
-                    'astegmenNaspTarihi' : service_bean.astegmenNaspTarihi
-                }
+                for record in range(0, len(service_bean)):
+                    self.logger.info("Trying to create hitap_dict.")
+                    hitap_dict[service_bean[record].kayitNo] = {
+                        'askerlik_nevi': service_bean[record].askerlikNevi,
+                        'baslama_tarihi': service_bean[record].baslamaTarihi,
+                        'bitis_tarihi': service_bean[record].bitisTarihi,
+                        'kayit_no': service_bean[record].kayitNo,
+                        'kita_baslama_tarihi': service_bean[record].kitaBaslamaTarihi,
+                        'kita_bitis_tarihi': service_bean[record].kitaBitisTarihi,
+                        'muafiyet_neden': service_bean[record].muafiyetNeden,
+                        'sayilmayan_gun_sayisi': service_bean[record].sayilmayanGunSayisi,
+                        'sinif_okulu_sicil': service_bean[record].sinifOkuluSicil,
+                        'subayliktan_erlige_gecis_tarihi': service_bean[record].subayliktanErligeGecisTarihi,
+                        'subay_okulu_giris_tarihi': service_bean[record].subayOkuluGirisTarihi,
+                        'tckn': service_bean[record].tckn,
+                        'tegmen_nasp_tarihi': service_bean[record].tegmenNaspTarihi,
+                        'gorev_yeri': service_bean[record].gorevYeri,
+                        'kurum_onay_tarihi': service_bean[record].kurumOnayTarihi,
+                        'astegmen_nasp_tarihi': service_bean[record].astegmenNaspTarihi
+                    }
                 self.logger.info("hitap_dict created.")
 
                 # if employee saved before, find that and add new records from hitap to riak
                 try:
                     riak_dict_from_db_queries_with_pno = {}
-                    personel = Personel.objects.filter(pno=tckn).get()
-                    for record in personel.AskerlikKayitlari:
+                    employee = Employee.objects.filter(tckn=tckn).get()
+                    for record in employee.AskerlikKayitlari:
                         riak_dict_from_db_queries_with_pno[record.record_id] = {
-                            'askerlikNevi' : record.askerlikNevi,
-                            'baslamaTarihi' : record.baslamaTarihi,
-                            'bitisTarihi' : record.bitisTarihi,
-                            'kayitNo' : record.kayitNo,
-                            'kitaBaslamaTarihi' : record.kitaBaslamaTarihi,
-                            'kitaBitisTarihi' : record.kitaBitisTarihi,
-                            'muafiyetNeden' : record.muafiyetNeden,
-                            'sayilmayanGunSayisi' : record.sayilmayanGunSayisi,
-                            'sinifOkuluSicil' : record.sinifOkuluSicil,
-                            'subayliktanErligeGecisTarihi' : record.subayliktanErligeGecisTarihi,
-                            'subayOkuluGirisTarihi' : record.subayOkuluGirisTarihi,
-                            'tckn' : record.tckn,
-                            'tegmenNaspTarihi' : record.tegmenNaspTarihi,
-                            'gorevYeri' : record.gorevYeri,
-                            'kurumOnayTarihi' : record.kurumOnayTarihi,
-                            'astegmenNaspTarihi' : record.astegmenNaspTarihi
+                            'askerlik_nevi': record.askerlik_nevi,
+                            'baslama_tarihi': record.baslama_tarihi,
+                            'bitis_tarihi': record.bitis_tarihi,
+                            'kayit_no': record.kayit_no,
+                            'kita_baslama_tarihi': record.kita_baslama_tarihi,
+                            'kita_bitis_tarihi': record.kita_bitis_tarihi,
+                            'muafiyet_neden': record.muafiyet_neden,
+                            'sayilmayan_gun_sayisi': record.sayilmayan_gun_sayisi,
+                            'sinif_okulu_sicil': record.sinif_okulu_sicil,
+                            'subayliktan_erlige_gecis_tarihi': record.subayliktan_erlige_gecis_tarihi,
+                            'subay_okulu_giris_tarihi': record.subay_okulu_giris_tarihi,
+                            'tckn': record.tckn,
+                            'tegmen_nasp_tarihi': record.tegmen_nasp_tarihi,
+                            'gorev_yeri': record.gorev_yeri,
+                            'kurum_onay_tarihi': record.kurum_onay_tarihi,
+                            'astegmen_nasp_tarihi': record.astegmen_nasp_tarihi
                         }
 
                     self.logger.info("riak_dict_from_db_queries_with_pno created.")
 
-                    for item in personel.AskerlikKayitlari:
+                    for item in employee.AskerlikKayitlari:
                         if not hitap_dict.has_key(item.record_id):
                             self.logger.info("item key: %s " % (item.record_id))
                             item.remove()
@@ -108,19 +110,19 @@ class HizmetAskerlikSorgula(Service):
 
                     for hitap_key, hitap_values in hitap_dict.items():
                         if not riak_dict_from_db_queries_with_pno.has_key(hitap_key):
-                            pass_askerlik_kayitlari(personel, hitap_values)
+                            pass_askerlik_kayitlari(employee, hitap_values)
 
                     # if any record exists in riak but not in hitap delete it
-                    personel.save()
-                    self.logger.info("personel saved.")
+                    employee.save()
+                    self.logger.info("employee saved.")
 
                 except IndexError:
-                    personel = Personel()
-                    personel.pno = tckn
+                    employee = Employee()
+                    employee.tckn = tckn
                     for record_id, record_values in hitap_dict.items():
-                        pass_askerlik_kayitlari(personel, record_values)
-                        personel.save()
-                        self.logger.info("personel saved.")
+                        pass_askerlik_kayitlari(employee, record_values)
+                        employee.save()
+                        self.logger.info("employee saved.")
                     sleep(1)
                 except socket.error:
                     self.logger.info("Riak connection refused!")
