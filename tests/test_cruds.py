@@ -26,7 +26,7 @@ class TestCase(BaseTestCase):
 
         list_objects = resp.json['objects']
         if list_objects:
-            assert list_objects[0]['data']['first_name'] == 'Em1'
+            assert list_objects[0]['data']['ad'] == 'Em1'
 
         # count number of records
         num_of_objects = len(resp.json['objects'])
@@ -36,7 +36,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post(model='Employee',
                                 cmd='add',
                                 subcmd="do_list",
-                                form=dict(first_name="Em1", pno="12323121443"))
+                                form=dict(ad="Em1", tckn="12323121443"))
 
         # we should have 1 more object relative to previous listing
         assert num_of_objects + 1 == len(resp.json['objects'])

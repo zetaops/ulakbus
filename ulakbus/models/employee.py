@@ -19,6 +19,10 @@ class Employee(Model):
     dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     cep_telefonu = field.String("Cep Telefonu", index=True)
 
+    class Meta:
+        verbose_name = "Personel"
+        verbose_name_plural = "Personeller"
+
     class NufusKayitlari(Node):
         tckn = field.String("Sigortalının TC Kimlik No", index=True)
         ad = field.String("Adi", index=True)
@@ -39,3 +43,17 @@ class Employee(Model):
         emekli_sicil_6495 = field.Integer("2. Emekli Sicil No", index=True)
         durum = field.Boolean("Durum", index=True)
         sebep = field.Integer("Sebep", index=True)
+
+
+        class Meta:
+            verbose_name = "Nüfus Bilgileri"
+
+    class AdresBilgileri(ListNode):
+        ad = field.String("Adres Adı", index=True)
+        adres = field.String("Adres", index=True)
+        ilce = field.String("İlçe", index=True)
+        il = field.String("İl", index=True)
+
+    class Meta:
+        verbose_name = "Nüfus Bilgisi"
+        verbose_name_plural  = "Nüfus Bilgileri"
