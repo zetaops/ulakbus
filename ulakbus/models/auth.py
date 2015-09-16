@@ -10,7 +10,12 @@
 from pyoko import field
 from pyoko.model import Model, ListNode
 from passlib.hash import pbkdf2_sha512
-from zengine.lib.exceptions import PermissionDenied
+
+try:
+    from zengine.lib.exceptions import PermissionDenied
+except ImportError:
+    class PermissionDenied(Exception):
+        pass
 
 
 class User(Model):
@@ -18,6 +23,7 @@ class User(Model):
     password = field.String("Password")
     name = field.String("First Name", index=True)
     surname = field.String("Surname", index=True)
+    superuser = field.Boolean("Super user", default=False)
 
     def __unicode__(self):
         return "User %s" % self.username
@@ -38,6 +44,7 @@ class User(Model):
 class Permission(Model):
     name = field.String("Name", index=True)
     code = field.String("Code Name", index=True)
+    description = field.String("Description", index=True)
 
 
 class AbstractRole(Model):
@@ -86,6 +93,15 @@ class AuthBackend(object):
     def __init__(self, session):
         self.session = session
 
+
+    def get_permissions(self):
+        return self.get_role().get_permissions()
+
+
+    def has_permission(self, perm):
+        return True
+        # return perm in self.get_role().get_permissions()
+
     def get_user(self):
         if 'user_data' in self.session:
             user = User()
@@ -126,7 +142,7 @@ class AuthBackend(object):
         elif 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
-            # TODO: admins should be informed about a user without role
+            # TODO: admins should be informed about a user without a role
             raise PermissionDenied("Your dont have a \"Role\" in this system")
 
     def authenticate(self, username, password):
@@ -136,6 +152,7 @@ class AuthBackend(object):
             self.set_user(user)
         else:
             pass
-            # TODO: failed login attempts for a user should be count to prevent brute force attack
+            # TODO: failed login attempts for a user should be counted
+            # for prevention of brute force attacks
 
         return is_login_ok

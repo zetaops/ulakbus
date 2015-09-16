@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_bEzKEOKPEeS7M8UkBUcISA" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
   <bpmn2:collaboration id="_Collaboration_3">
-    <bpmn2:participant id="_Participant_2" name="Ders Sube Hoca Atama" processRef="Process_1"/>
+    <bpmn2:participant id="_Participant_2" name="Ders Sube Hoca Atama" processRef="ders_hoca_sube_atama"/>
     <bpmn2:participant id="Participant_1" name="Pool" processRef="Process_2"/>
   </bpmn2:collaboration>
-  <bpmn2:process id="Process_1" isExecutable="false">
+  <bpmn2:process id="ders_hoca_sube_atama" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_3" name="Lane Set 3">
       <bpmn2:lane id="Lane_3" name="Bolum Baskani">
         <bpmn2:flowNodeRef>UserTask_1</bpmn2:flowNodeRef>

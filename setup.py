@@ -8,8 +8,7 @@ setup(
     version='0.0.1',
     description='Ulakbus Butunlesik Universite Sistemi',
     author='Zetaops',
-    requires=['zengine', 'pyoko'],
-    install_requires=['pyoko', 'zengine'],
+    install_requires=['pyoko', 'zengine', 'passlib', 'Werkzeug'],
     dependency_links=[
         'git+https://github.com/zetaops/pyoko.git#egg=pyoko',
         'git+https://github.com/zetaops/zengine.git#egg=zengine'],
@@ -17,4 +16,7 @@ setup(
     author_email='info@zetaops.io',
     url='https://github.com/zetaops/ulakbus',
     packages=find_packages(exclude=['tests', 'tests.*']),
+    package_data = {
+        'ulakbus': ['diagrams/*.bpmn'],
+    }
 )

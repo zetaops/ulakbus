@@ -5,9 +5,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from zengine.lib.views import SimpleView
+from zengine.views.base import SimpleView
 
-from falcon.errors import HTTPBadRequest
 
 # from ulakbus.modules.forms import get_form
 # from ulakbus.modules.auth.student import authenticate
