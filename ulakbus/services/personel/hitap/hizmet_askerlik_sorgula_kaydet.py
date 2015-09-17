@@ -8,7 +8,7 @@ from time import sleep
 import socket
 
 os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
-from ulakbus.models.employee import Employee
+from ulakbus.models.personel import Personel
 
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
@@ -79,7 +79,7 @@ class HizmetAskerlikSorgula(Service):
                 # if employee saved before, find that and add new records from hitap to riak
                 try:
                     riak_dict_from_db_queries_with_pno = {}
-                    employee = Employee.objects.filter(tckn=tckn).get()
+                    employee = Personel.objects.filter(tckn=tckn).get()
                     for record in employee.AskerlikKayitlari:
                         riak_dict_from_db_queries_with_pno[record.record_id] = {
                             'askerlik_nevi': record.askerlik_nevi,
@@ -117,7 +117,7 @@ class HizmetAskerlikSorgula(Service):
                     self.logger.info("employee saved.")
 
                 except IndexError:
-                    employee = Employee()
+                    employee = Personel()
                     employee.tckn = tckn
                     for record_id, record_values in hitap_dict.items():
                         pass_askerlik_kayitlari(employee, record_values)

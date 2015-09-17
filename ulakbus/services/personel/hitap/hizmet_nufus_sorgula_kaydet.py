@@ -6,7 +6,7 @@ from zato.server.service import Service
 import os, urllib2
 
 os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
-from ulakbus.models.employee import Employee
+from ulakbus.models.personel import Personel
 
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
@@ -89,7 +89,7 @@ class HizmetNufusSorgula(Service):
 
                 try:
                     self.logger.info("Trying to find object in db if it not exist create.")
-                    employee, new = Employee.objects.get_or_create(hitap_dict['nufus_sorgula'],
+                    employee, new = Personel.objects.get_or_create(hitap_dict['nufus_sorgula'],
                                                                    nufus_kayitlari__tckn=tckn)
                     if new:
                         employee.NufusKayitlari(hitap_dict['nufus_sorgula'])
@@ -107,7 +107,7 @@ class HizmetNufusSorgula(Service):
                 except IndexError:
                     self.logger.info("Personel not found in RIAK DB.")
                     self.logger.info("New personel created.")
-                    employee = Employee()
+                    employee = Personel()
                     employee.tckn = tckn
                     pass_nufus_kayitlari(employee, hitap_dict['nufus_sorgula'])
                     employee.save()

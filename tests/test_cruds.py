@@ -21,7 +21,7 @@ class TestCase(BaseTestCase):
         assert resp.json['models'] == [m.__name__ for m in model_registry.get_base_models()]
 
         # calling with just model name (without any cmd) equals to cmd="list"
-        resp = self.client.post(model='Employee')
+        resp = self.client.post(model='Personel')
         assert 'objects' in resp.json
 
         list_objects = resp.json['objects']
@@ -32,8 +32,8 @@ class TestCase(BaseTestCase):
         num_of_objects = len(resp.json['objects'])
 
         # add a new employee record, then go to list view (do_list subcmd)
-        self.client.post(model='Employee', cmd='add')
-        resp = self.client.post(model='Employee',
+        self.client.post(model='Personel', cmd='add')
+        resp = self.client.post(model='Personel',
                                 cmd='add',
                                 subcmd="do_list",
                                 form=dict(ad="Em1", tckn="12323121443"))
@@ -42,7 +42,7 @@ class TestCase(BaseTestCase):
         assert num_of_objects + 1 == len(resp.json['objects'])
 
         # delete the first object then go to list view
-        resp = self.client.post(model='Employee',
+        resp = self.client.post(model='Personel',
                                 cmd='delete',
                                 subcmd="do_list",
                                 object_id=resp.json['objects'][0]['key'])

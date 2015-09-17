@@ -11,7 +11,7 @@ from pyoko.model import Model, ListNode, Node
 from pyoko import field
 
 
-class Employee(Model):
+class Personel(Model):
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)

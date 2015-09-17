@@ -11,7 +11,7 @@ import urllib2
 import socket
 
 os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
-from ulakbus.models.employee import Employee
+from ulakbus.models.personel import Personel
 
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
@@ -99,7 +99,7 @@ class HizmetCetveliSorgula(Service):
                 # if employee saved before, find that and add new records from hitap to riak
                 try:
                     riak_dict_from_db_queries_with_pno = {}
-                    employee = Employee.objects.filter(hizmet_kayitlari__tckn=tckn).get()
+                    employee = Personel.objects.filter(hizmet_kayitlari__tckn=tckn).get()
                     for record in employee.HizmetKayitlari:
                         riak_dict_from_db_queries_with_pno[record.kayit_no] = {
                             'baslama_tarihi': record.baslama_tarihi,
@@ -143,7 +143,7 @@ class HizmetCetveliSorgula(Service):
                     self.logger.info("employee saved. OLD RECORD")
 
                 except IndexError:
-                    employee = Employee()
+                    employee = Personel()
                     employee.tckn = tckn
                     for record_id, record_values in hitap_dict.items():
                         pass_service_records(employee, record_values)
@@ -153,7 +153,7 @@ class HizmetCetveliSorgula(Service):
                         self.logger.info("employee saved. NEW RECORD (Index Error)")
                     sleep(1)
                 except KeyError:
-                    employee = Employee()
+                    employee = Personel()
                     employee.tckn = tckn
                     for record_id, record_values in hitap_dict.items():
                         pass_service_records(employee, record_values)
