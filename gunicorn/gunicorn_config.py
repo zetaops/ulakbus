@@ -146,6 +146,7 @@ tmp_upload_dir = None
 errorlog = '-'
 loglevel = 'debug'
 accesslog = '-'
+debug = True
 
 #
 # Process naming
