@@ -25,6 +25,11 @@ class User(Model):
     surname = field.String("Surname", index=True)
     superuser = field.Boolean("Super user", default=False)
 
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Kullanıcı"
+        verbose_name_plural = "Kullanıcılar"
+
     def __unicode__(self):
         return "User %s" % self.username
 
@@ -47,9 +52,20 @@ class Permission(Model):
     description = field.String("Description", index=True)
 
 
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Yetki"
+        verbose_name_plural = "Yetkiler"
+
 class AbstractRole(Model):
     id = field.Integer("ID No", index=True)
     name = field.String("Name", index=True)
+
+
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Soyut Rol"
+        verbose_name_plural = "Soyut Roller"
 
     class Permissions(ListNode):
         permission = Permission()
@@ -58,6 +74,12 @@ class AbstractRole(Model):
 class Role(Model):
     abstract_role = AbstractRole()
     user = User()
+
+
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Rol"
+        verbose_name_plural = "Roller"
 
     class Permissions(ListNode):
         permission = Permission()
@@ -75,6 +97,12 @@ class LimitedPermissions(Model):
     restrictive = field.Boolean(default=False)
     time_start = field.String("Start Time", index=True)
     time_end = field.String("End Time", index=True)
+
+
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Sınırlandırılmış Yetki"
+        verbose_name_plural = "Sınırlandırılmış Yetkiler"
 
     class IPList(ListNode):
         ip = field.String()
@@ -143,7 +171,7 @@ class AuthBackend(object):
             return Role.objects.get(self.session['role_id'])
         else:
             # TODO: admins should be informed about a user without a role
-            raise PermissionDenied("Your dont have a \"Role\" in this system")
+            raise PermissionDenied("Your don't have a \"Role\" in this system")
 
     def authenticate(self, username, password):
         user = User.objects.filter(username=username).get()

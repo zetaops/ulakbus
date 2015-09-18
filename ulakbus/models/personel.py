@@ -20,8 +20,18 @@ class Personel(Model):
     cep_telefonu = field.String("Cep Telefonu", index=True)
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Personel"
         verbose_name_plural = "Personeller"
+        list_fields = ['ad', 'soyad', 'tckn', 'durum']
+
+    def durum(self):
+        return self.NufusKayitlari.durum
+    durum.title = "Durum"
+
+    def __unicode__(self):
+        return "%s %s (%s | %s)" % (self.ad, self.soyad, self.tckn,
+                                    self.NufusKayitlari.emekli_sicil_no)
 
     class NufusKayitlari(Node):
         tckn = field.String("Sigortalının TC Kimlik No", index=True)
@@ -54,6 +64,6 @@ class Personel(Model):
         ilce = field.String("İlçe", index=True)
         il = field.String("İl", index=True)
 
-    class Meta:
-        verbose_name = "Nüfus Bilgisi"
-        verbose_name_plural  = "Nüfus Bilgileri"
+        class Meta:
+            verbose_name = "Adres Bilgisi"
+            verbose_name_plural  = "Adres Bilgileri"

@@ -26,6 +26,7 @@ class HizmetKurs(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Kurs"
         verbose_name_plural = "Kurslar"
 
@@ -50,6 +51,7 @@ class HizmetOkul(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Okul"
         verbose_name_plural = "Okullar"
 
@@ -78,6 +80,7 @@ class HizmetMahkeme(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Mahkeme"
         verbose_name_plural = "Mahkemeler"
 
@@ -105,6 +108,7 @@ class HizmetBirlestirme(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Birleştirme"
         verbose_name_plural = "Birleştirmeler"
 
@@ -126,6 +130,7 @@ class HizmetTazminat(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Tazminat"
         verbose_name_plural = "Tazminatlar"
 
@@ -147,6 +152,7 @@ class HizmetUnvan(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Ünvan"
         verbose_name_plural = "Ünvanlar"
 
@@ -175,6 +181,7 @@ class HizmetAcikSure(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Açığa Alınma"
         verbose_name_plural = "Açığa Alınmalar"
 
@@ -207,6 +214,7 @@ class HizmetBorclanma(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Borçlanma"
         verbose_name_plural = "Borçlanmalar"
 
@@ -223,6 +231,7 @@ class HizmetIHS(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "İtibari Hizmet Süresi"
         verbose_name_plural = "İtibari Hizmet Süreleri"
 
@@ -242,6 +251,7 @@ class HizmetIstisnaiIlgi(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "İstisnai İlgi"
         verbose_name_plural = "İstisnai İlgiler"
 
@@ -274,6 +284,7 @@ class HizmetKayitlari(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Kayıt"
         verbose_name_plural = "Kayıtlar"
 
@@ -301,6 +312,7 @@ class AskerlikKayitlari(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Kayıt"
         verbose_name_plural = "Kayıtlar"
 
@@ -315,6 +327,7 @@ class Birim(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Birim"
         verbose_name_plural = "Birimler"
 
@@ -341,6 +354,7 @@ class Atama(Model):
     personel = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Atama"
         verbose_name_plural = "Atamalar"
 
@@ -356,6 +370,7 @@ class Kadro(Model):
     aciklama = field.String("Açıklama", index=True)
 
     class Meta:
+        app = 'Personel'
         verbose_name = "Kadro"
         verbose_name_plural = "Kadrolar"
 
@@ -374,6 +389,7 @@ class Izin(Model):
     vekil = Personel()
 
     class Meta:
+        app = 'Personel'
         verbose_name = "İzin"
         verbose_name_plural = "İzinler"
 
@@ -393,6 +409,7 @@ class UcretsizIzin(Model):
         ise_baslama = field.Date("İşe Başlama", index=True)
 
     class Meta:
+        app = 'Personel'
         verbose_name = "İzin"
         verbose_name_plural = "İzinler"
 
