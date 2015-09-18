@@ -26,11 +26,14 @@ class HizmetKurs(Model):
     personel = Personel()
 
     class Meta:
-       verbose_name = "Kurs"
-       verbose_name_plural = "Kurslar"
+        app = 'Personel'
+        verbose_name = "Kurs"
+        verbose_name_plural = "Kurslar"
+        list_fields = ['kayit_no', 'bolum_ad', 'okul_ad']
+        search_fields = ['tckn', 'okul_ad', 'bolum_ad']
 
-   def __unicode__(self):
-       return '%s %s %s' % (self.kurs_nevi, self.bolum_ad, self.okul_ad)
+    def __unicode__(self):
+        return '%s %s %s' % (self.kurs_nevi, self.bolum_ad, self.okul_ad)
 
 
 class HizmetOkul(Model):
@@ -49,13 +52,16 @@ class HizmetOkul(Model):
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Okul"
-       verbose_name_plural = "Okullar"
 
-   def __unicode__(self):
-       return '%s %s %s' % (self.kayit_no, self.bolum, self.okul_ad)
+    class Meta:
+      app = 'Personel'
+      verbose_name = "Okul"
+      verbose_name_plural = "Okullar"
+      list_fields = ['okul_ad', 'bolum', 'hazirlik', 'kayit_no']
+      search_fields = ['okul_ad', 'bolum', 'tckn']
 
+    def __unicode__(self):
+        return '%s %s %s' % (self.kayit_no, self.bolum, self.okul_ad)
 
 
 class HizmetMahkeme(Model):
@@ -78,12 +84,16 @@ class HizmetMahkeme(Model):
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Mahkeme"
-       verbose_name_plural = "Mahkemeler"
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Mahkeme"
+        verbose_name_plural = "Mahkemeler"
+        list_fields = ['mahkeme_ad', 'karar_sayisi', 'aciklama', 'kurum_onay_tarihi']
+        search_fields = ['kayit_no', 'mahkeme_ad', 'karar_sayisi']
 
-   def __unicode__(self):
-       return '%s %s %s' % (self.mahkeme_ad, self.karar_tarihi, self.aciklama)
+    def __unicode__(self):
+        return '%s %s %s' % (self.mahkeme_ad, self.karar_tarihi, self.aciklama)
+
 
 class HizmetBirlestirme(Model):
     tckn = field.String("TC Kimlik No", index=True)
@@ -105,11 +115,14 @@ class HizmetBirlestirme(Model):
     personel = Personel()
 
     class Meta:
-       verbose_name = "Birleştirme"
-       verbose_name_plural = "Birleştirmeler"
+        app = 'Personel'
+        verbose_name = "Birleştirme"
+        verbose_name_plural = "Birleştirmeler"
+        list_fields = ['sgk_sicil_no', 'baslama_tarihi', 'bitis_tarihi', 'kamuIsyeri_ad']
+        search_fields = ['kayit_no', 'sgk_sicil_no', 'kamuIsyeri_ad']
 
-   def __unicode__(self):
-       return '%s %s' % (self.kayit_no, self.sgk_nevi)
+    def __unicode__(self):
+        return '%s %s' % (self.kayit_no, self.sgk_nevi)
 
 
 class HizmetTazminat(Model):
@@ -125,12 +138,17 @@ class HizmetTazminat(Model):
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Tazminat"
-       verbose_name_plural = "Tazminatlar"
 
-   def __unicode__(self):
-       return '%d %s' % (self.gorev, self.tazminat_tarihi)
+    class Meta:
+      app = 'Personel'
+      verbose_name = "Tazminat"
+      verbose_name_plural = "Tazminatlar"
+      list_fields = ['unvan_kod', 'makam', 'gorev']
+      search_fields = ['makam', 'gorev', 'temsil']
+
+    def __unicode__(self):
+        return '%s %s' % (self.gorev, self.tazminat_tarihi)
+
 
 class HizmetUnvan(Model):
     kayit_no = field.String("Hizmet Kayıt No", index=True)
@@ -145,12 +163,16 @@ class HizmetUnvan(Model):
     fhz_orani = field.Float("FHZ Oranı", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Ünvan"
-       verbose_name_plural = "Ünvanlar"
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Ünvan"
+        verbose_name_plural = "Ünvanlar"
+        list_fields = ['unvan_kod', 'hizmet_sinifi', 'kurum_onay_tarihi']
+        search_fields = ['unvan_kod', 'hizmet_sinifi']
 
-   def __unicode__(self):
-       return '%d %s' % (self.unvan_kod, self.hizmet_sinifi)
+    def __unicode__(self):
+        return '%d %s' % (self.unvan_kod, self.hizmet_sinifi)
+
 
 class HizmetAcikSure(Model):
     tckn = field.String("TC Kimlik No", index=True)
@@ -172,12 +194,16 @@ class HizmetAcikSure(Model):
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Açığa Alınma"
-       verbose_name_plural = "Açığa Alınmalar"
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Açığa Alınma"
+        verbose_name_plural = "Açığa Alınmalar"
+        list_fields = ['acik_sekil', 'acıga_alinma_tarih', 'kurum_onay_tarihi']
+        search_fields = ['hizmet_durum', 'acik_sekil', 'aciga_alinma_tarih']
 
-   def __unicode__(self):
-       return '%d %s %s' % (self.durum, self.kayit_no, self.aciga_alinma_tarih)
+    def __unicode__(self):
+        return '%d %s %s' % (self.durum, self.kayit_no, self.aciga_alinma_tarih)
+
 
 class HizmetBorclanma(Model):
     tckn = field.String("TC Kimlik No", index=True)
@@ -203,12 +229,17 @@ class HizmetBorclanma(Model):
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Borçlanma"
-       verbose_name_plural = "Borçlanmalar"
 
-   def __unicode__(self):
-       return '%s %s %s' % (self.emekli_sicil, self.baslama_tarihi, self.odeme_tarihi, self.calistigi_kurum)
+    class Meta:
+      app = 'Personel'
+      verbose_name = "Borçlanma"
+      verbose_name_plural = "Borçlanmalar"
+      list_fields = ['ad', 'soyad', 'toplam_tutar', 'odenen_miktar', 'borclanma_tarihi']
+      search_fields = ['tckn', 'ad', 'soyad']
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.borc_nevi, self.calistigi_kurum, self.gun_sayisi)
+
 
 class HizmetIHS(Model):
     tckn = field.String("TC Kimlik No", index=True)
@@ -218,12 +249,15 @@ class HizmetIHS(Model):
     ihz_nevi = field.Integer("İHZ Nevi", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "İtibari Hizmet Süresi"
-       verbose_name_plural = "İtibari Hizmet Süreleri"
+    class Meta:
+      app = 'Personel'
+      verbose_name = "İtibari Hizmet Süresi"
+      verbose_name_plural = "İtibari Hizmet Süreleri"
+      list_fields = ['kayit_no', 'ihz_nevi']
+      search_fields = ['tckn', 'ihz_nevi']
 
-   def __unicode__(self):
-       return '%s %d' % (self.baslama_tarihi, self.ihz_nevi)
+    def __unicode__(self):
+      return '%s %d' % (self.baslama_tarihi, self.ihz_nevi)
 
 class HizmetIstisnaiIlgi(Model):
     tckn = field.String("TC Kimlik No", index=True)
@@ -237,11 +271,14 @@ class HizmetIstisnaiIlgi(Model):
     personel = Personel()
 
     class Meta:
-       verbose_name = "İstisnai İlgi"
-       verbose_name_plural = "İstisnai İlgiler"
+      app = 'Personel'
+      verbose_name = "İstisnai İlgi"
+      verbose_name_plural = "İstisnai İlgiler"
+      list_fields = ['baslama_tarihi', 'bitis_tarihi', 'istisnai_ilgi_nevi', 'kha_durum']
+      search_fields = ['istisnai_ilgi_nevi', 'kha_durum']
 
-   def __unicode__(self):
-       return '%s %d %s' % (self.kayit_no, self.istisnai_nevi_ilgi, self.kha_durum)
+    def __unicode__(self):
+         return '%s %d %s' % (self.kayit_no, self.istisnai_nevi_ilgi, self.kha_durum)
 
 
 class HizmetKayitlari(Model):
@@ -268,12 +305,17 @@ class HizmetKayitlari(Model):
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Kayıt"
-       verbose_name_plural = "Kayıtlar"
 
-   def __unicode__(self):
-       return '%d %s %s' % (self.unvan_kodu, self.hizmet_sinifi, self.gorev)
+    class Meta:
+     app = 'Personel'
+     verbose_name = "Kayıt"
+     verbose_name_plural = "Kayıtlar"
+     list_fields = ['unvan_kod', 'gorev', 'yevmiye', 'ucret', 'hizmet_sinifi']
+     search_fields = ['unvan_kod', 'gorev', 'yevmiye']
+
+    def __unicode__(self):
+        return '%d %s %s' % (self.unvan_kodu, self.hizmet_sinifi, self.gorev)
+
 
 class AskerlikKayitlari(Model):
     askerlik_nevi = field.Integer("Askerlik Nevi", index=True)
@@ -294,12 +336,17 @@ class AskerlikKayitlari(Model):
     astegmen_nasp_tarihi = field.Date("Asteğmen Nasp Tarihi", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Kayıt"
-       verbose_name_plural = "Kayıtlar"
 
-   def __unicode__(self):
-       return '%d %s %s %s' % (self.askerlik_nevi, self.kayit_no, self.kita_baslama_tarihi, self.gorev_yeri)
+    class Meta:
+      app = 'Personel'
+      verbose_name = "Kayıt"
+      verbose_name_plural = "Kayıtlar"
+      list_fields = ['askerlik_nevi', 'kita_baslama_tarihi', 'gorev_yeri']
+      search_fields = ['askerlik_nevi', 'gorev_yeri', 'tckn']
+
+    def __unicode__(self):
+        return '%d %s %s %s' % (self.askerlik_nevi, self.kayit_no, self.kita_baslama_tarihi, self.gorev_yeri)
+
 
 class Birim(Model):
     type = field.String("Tip", index=True)
@@ -308,11 +355,14 @@ class Birim(Model):
     personel = Personel()
 
     class Meta:
-       verbose_name = "Birim"
-       verbose_name_plural = "Birimler"
+      app = 'Personel'
+      verbose_name = "Birim"
+      verbose_name_plural = "Birimler"
+      list_fields = ['tip', 'ad']
+      search_fields = ['ad', 'tip']
 
-   def __unicode__(self):
-       return '%s %s' % (self.type, self.name)
+    def __unicode__(self):
+        return '%s %s' % (self.type, self.name)
 
 
 class Atama(Model):
@@ -333,12 +383,17 @@ class Atama(Model):
     kadro_derece = field.Integer("Kadro Derece", index=True)
     personel = Personel()
 
-class Meta:
-       verbose_name = "Atama"
-       verbose_name_plural = "Atamalar"
 
-   def __unicode__(self):
-       return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
+    class Meta:
+      app = 'Personel'
+      verbose_name = "Atama"
+      verbose_name_plural = "Atamalar"
+      list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi', 'durum']
+      search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
+
 
 class Kadro(Model):
     durum = field.Integer("Durum", index=True)
@@ -347,12 +402,15 @@ class Kadro(Model):
     rol = Role()
     aciklama = field.String("Açıklama", index=True)
 
-class Meta:
-       verbose_name = "Kadro"
-       verbose_name_plural = "Kadrolar"
+    class Meta:
+      app = 'Personel'
+      verbose_name = "Kadro"
+      verbose_name_plural = "Kadrolar"
+      list_fields = ['durum', 'unvan', 'aciklama']
+      search_fields = ['unvan', 'derece']
 
-   def __unicode__(self):
-       return '%d %d' % (self.unvan, self.durum)
+    def __unicode__(self):
+        return '%s %s' % (self.unvan, self.durum)
 
 class Izin(Model):
     tip = field.Integer("Tip", index=True)
@@ -364,12 +422,16 @@ class Izin(Model):
     personel = Personel()
     vekil = Personel()
 
-class Meta:
-       verbose_name = "İzin"
-       verbose_name_plural = "İzinler"
+    class Meta:
+        app = 'Personel'
+        verbose_name = "İzin"
+        verbose_name_plural = "İzinler"
+        list_fields = ['tip', 'baslangic', 'bitis', 'onay']
+        search_fields = ['tip', 'baslangic', 'onay']
 
-   def __unicode__(self):
-       return '%d %s' % (self.tip, self.onay)
+    def __unicode__(self):
+        return '%s %s' % (self.tip, self.onay)
+
 
 class UcretsizIzin(Model):
     tip = field.Integer("Tip", index=True)
@@ -382,9 +444,12 @@ class UcretsizIzin(Model):
         donus_sebep = field.Integer("Dönüş Sebebi", index=True)
         ise_baslama = field.Date("İşe Başlama", index=True)
 
-        class Meta:
-       verbose_name = "İzin"
-       verbose_name_plural = "İzinler"
+    class Meta:
+        app = 'Personel'
+        verbose_name = "İzin"
+        verbose_name_plural = "İzinler"
+        list_fields = ['tip', 'baslangic', 'ise_baslama']
+        search_fields = ['tip', 'onay']
 
-   def __unicode__(self):
-       return '%d %s' % (self.tip, self.onay)
+    def __unicode__(self):
+        return '%d %s' % (self.tip, self.onay)
