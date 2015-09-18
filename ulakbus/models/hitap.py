@@ -138,7 +138,6 @@ class HizmetTazminat(Model):
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
     personel = Personel()
 
-
     class Meta:
       app = 'Personel'
       verbose_name = "Tazminat"
