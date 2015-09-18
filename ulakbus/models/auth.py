@@ -46,26 +46,32 @@ class User(Model):
     def get_role(self, role_id):
         return self.role_set.get(role_id)
 
+
 class Permission(Model):
     name = field.String("Name", index=True)
     code = field.String("Code Name", index=True)
     description = field.String("Description", index=True)
-
 
     class Meta:
         app = 'Sistem'
         verbose_name = "Yetki"
         verbose_name_plural = "Yetkiler"
 
+    def __unicode__(self):
+        return "%s %s" % (self.name, self.description)
+
+
 class AbstractRole(Model):
     id = field.Integer("ID No", index=True)
     name = field.String("Name", index=True)
-
 
     class Meta:
         app = 'Sistem'
         verbose_name = "Soyut Rol"
         verbose_name_plural = "Soyut Roller"
+
+    def __unicode__(self):
+        return "%s" % self.name
 
     class Permissions(ListNode):
         permission = Permission()
@@ -75,19 +81,19 @@ class Role(Model):
     abstract_role = AbstractRole()
     user = User()
 
-
     class Meta:
         app = 'Sistem'
         verbose_name = "Rol"
         verbose_name_plural = "Roller"
 
+    def __unicode__(self):
+        return "%s %s" % (self.abstract_role.name, self.user.username)
+
     class Permissions(ListNode):
         permission = Permission()
 
-
     def get_permissions(self):
         return []
-
 
     def has_permission(self, perm):
         return False
@@ -98,11 +104,13 @@ class LimitedPermissions(Model):
     time_start = field.String("Start Time", index=True)
     time_end = field.String("End Time", index=True)
 
-
     class Meta:
         app = 'Sistem'
         verbose_name = "Sınırlandırılmış Yetki"
         verbose_name_plural = "Sınırlandırılmış Yetkiler"
+
+    def __unicode__(self):
+        return "%s - %s" % (self.abstract_role.name, self.role.user.username)
 
     class IPList(ListNode):
         ip = field.String()
@@ -121,10 +129,8 @@ class AuthBackend(object):
     def __init__(self, session):
         self.session = session
 
-
     def get_permissions(self):
         return self.get_role().get_permissions()
-
 
     def has_permission(self, perm):
         return True
