@@ -262,8 +262,8 @@ class HizmetIstisnaiIlgi(Model):
 class HizmetKayitlari(Model):
     tckn = field.String("TC Kimlik No", index=True)
     kayit_no = field.String("Kayıt No", index=True)
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True)
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True)
+    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     gorev = field.String("Görev", index=True)
     unvan_kod = field.Integer("Unvan Kod", index=True)
     yevmiye = field.String("Yevmiye", index=True)
@@ -280,7 +280,7 @@ class HizmetKayitlari(Model):
     emekli_kademe = field.Integer("Emekli Kademe", index=True)
     emekli_ekgosterge = field.Integer("Emekli Ek Göstergesi", index=True)
     sebep_kod = field.Integer("Sebep Kodu", index=True)
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
+    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -294,21 +294,21 @@ class HizmetKayitlari(Model):
 
 class AskerlikKayitlari(Model):
     askerlik_nevi = field.Integer("Askerlik Nevi", index=True)
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True)
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True)
+    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     kayit_no = field.String("Kayıt No", index=True)
-    kita_baslama_tarihi = field.Date("Kıta Başlama Tarihi", index=True)
-    kita_bitis_tarihi = field.Date("Kıta Bitiş Tarihi", index=True)
+    kita_baslama_tarihi = field.Date("Kıta Başlama Tarihi", index=True, format="%d.%m.%Y")
+    kita_bitis_tarihi = field.Date("Kıta Bitiş Tarihi", index=True, format="%d.%m.%Y")
     muafiyet_neden = field.String("Muafiyet Neden", index=True)
     sayilmayan_gun_sayisi = field.Integer("Sayılmayan Gün Sayısı", index=True)
     sinif_okulu_sicil = field.String("Sınıf Okulu Sicil", index=True)
-    subayliktan_erlige_gecis_tarihi = field.Date("Subaylıktan Erliğe Geçiş Tarihi", index=True)
-    subay_okulu_giris_tarihi = field.Date("Subay Okulu Giriş Tarihi", index=True)
+    subayliktan_erlige_gecis_tarihi = field.Date("Subaylıktan Erliğe Geçiş Tarihi", index=True, format="%d.%m.%Y")
+    subay_okulu_giris_tarihi = field.Date("Subay Okulu Giriş Tarihi", index=True, format="%d.%m.%Y")
     tckn = field.String("TC Kimlik No", index=True)
-    tegmen_nasp_tarihi = field.Date("Teğmen Nasp Tarihi", index=True)
+    tegmen_nasp_tarihi = field.Date("Teğmen Nasp Tarihi", index=True, format="%d.%m.%Y")
     gorev_yeri = field.String("Görev Yeri", index=True)
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True)
-    astegmen_nasp_tarihi = field.Date("Asteğmen Nasp Tarihi", index=True)
+    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    astegmen_nasp_tarihi = field.Date("Asteğmen Nasp Tarihi", index=True, format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
