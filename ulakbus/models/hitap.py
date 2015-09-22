@@ -20,7 +20,7 @@ class HizmetKurs(Model):
     okul_ad = field.String("Okul Adı", index=True)
     ogrenim_yeri = field.String("Öğrenim Yeri", index=True)
     denklik_tarihi = field.Date("Denklik Tarihi", index=True, format="%d.%m.%Y")
-    denklik_okulu = field.String("Denklik Okulu", index=True, format="%d.%m.%Y")
+    denklik_okulu = field.String("Denklik Okulu", index=True)
     denklik_bolum = field.String("Denklik Bölüm", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     personel = Personel()
