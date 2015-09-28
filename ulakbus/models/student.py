@@ -7,17 +7,29 @@
 
 
 from personel import Personel
-from pyoko import Model, field
+from pyoko import Model, field, ListNode
 from auth import Role
+from auth import Unit
 
 
 class Okutman(Model):
-    calisan = Personel()
-    ad = field.String("Ad", index=True)
+    personel = Personel()
+    harici_okutman_ad = field.String("Harici Okutman Ad", index=True)
+    harici_okutman_soyad = field.String("Harici Okutman Soyad", index=True)
     tip = field.String("Tip", index=True)
 
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Okutman"
+        verbose_name_plural = "Okutmanlar"
+        search_fields = ['tip', 'personel']
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.personel.ad, self.personel.soyad, self.tip)
+
+
 class Program(Model):
-    birim = Birim()
+    birim = Unit()
     ucret = field.Integer("Ücret", index=True)
     yil = field.String("Yıl", index=True)
     donem = field.Integer("Dönem", index=True)
@@ -31,22 +43,34 @@ class Program(Model):
     ects_bolum_kordinator = Role()
     akademik_kordinator = Role()
 
-class Derslik(Model):
-    kod = field.String("Kod", index=True)
-    bina = field.String("Bina", index=True)
-    dersler = Sube()
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Program"
+        verbose_name_plural = "Programlar"
+        list_fields = ['ad', 'yil']
+        search_fields = ['ad', 'yil', 'tanim']
 
-class Sube(Model):
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.yil)
+
+
+class Donem(Model):
+    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True)
+    bitis_tarihi = field.Date("Bitiş Tarihi", index=True)
     ad = field.String("Ad", index=True)
-    kod = field.String("Kod", index=True)
-    okutman = Okutman()
-    ana_ders = Ders()
-    derslik = Derslik()
-    saat = field.Integer("Saat", index=True)
-    gun = field.String("Gün", index=True)
-    kredi = field.Integer("Kredi", index=True)
-    donem = field.String("Dönem", index=True)
-    kontenjan = field.Integer("Kontenjan", index=True)
+    ucret = field.Integer("Ücret", index=True)
+    program = Program()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Dönem"
+        verbose_name_plural = "Dönemler"
+        list_fields = ['ad', 'baslangic_tarihi']
+        search_fields = ['ad']
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.baslangic_tarihi)
+
 
 class Ders(Model):
     ad = field.String("Ad", index=True)
@@ -55,12 +79,58 @@ class Ders(Model):
     zorunlu = field.Boolean("Zorunlu", index=True)
     akts_teori = field.Float("AKTS Teori", index=True)
     akts_uygulama = field.Float("AKTS Uygulama", index=True)
-    donem = field.Integer("Dönem", index=True)
+    donem = Donem()
     ders_dili = field.String("Ders Dili", index=True)
     verilis_bicimi = field.Integer("Veriliş Biçimi", index=True)
+    program = Program()
 
-class Sinav(Model):
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Ders"
+        verbose_name_plural = "Dersler"
+        list_fields = ['ad', 'kod', 'ders_dili']
+        search_fields = ['ad', 'kod']
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.ad, self.kod, self.ders_dili)
+
+
+class Derslik(Model):
+    kod = field.String("Kod", index=True)
+    # TODO: Bina ve diger fiziki varkliklar map edilecek.
+    bina = field.String("Bina", index=True)
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Derslik"
+        verbose_name_plural = "Derslikler"
+        list_fields = ['kod', 'bina']
+        search_fields = ['bina', 'kod']
+
+    def __unicode__(self):
+        return '%s %s' % (self.bina, self.kod)
+
+
+class Sube(Model):
+    ad = field.String("Ad", index=True)
+    kod = field.String("Kod", index=True)
+    okutman = Okutman()
     ders = Ders()
+    saat = field.Integer("Saat", index=True)
+    gun = field.String("Gün", index=True)
+    kredi = field.Integer("Kredi", index=True)
+    donem = field.String("Dönem", index=True)
+    kontenjan = field.Integer("Kontenjan", index=True)
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Sube"
+        verbose_name_plural = "Subeler"
+        list_fields = ['ad', 'kod']
+        search_fields = ['ad', 'kod']
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.kod, self.ders.ad, self.ders.donem)
 
 
 class Ogrenci(Model):
@@ -79,9 +149,8 @@ class Ogrenci(Model):
     ogrenci_no = field.Integer("Öğrenci Numarası", index=True)
     tel_no = field.Integer("Telefon Numarası", index=True)
     akademik_yil = field.String("Akademik Yıl", index=True)
-    donem = field.String("Dönem", index=True)
+    aktif_donem = field.String("Dönem", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
-    ders_programi = DersProgrami()
     rol = Role()
 
     class Dersler(ListNode):
@@ -91,21 +160,61 @@ class Ogrenci(Model):
         on_kosul = field.Boolean("Ön Koşul", index=True)
         gecme_notu = field.Integer("Geçme Notu", index=True)
         akademik_yil = field.String("Akademik Yıl", index=True)
-        donem = field.String("Dönem", index=True)
         ders = Sube()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Ogrenci"
+        verbose_name_plural = "Ogrenci"
+        list_fields = ['ad', 'soyad']
+        search_fields = ['ad', 'soyad']
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.soyad)
+
+
+class DegerlendirmeTipi(Model):
+    ad = field.String("Sinav Turu", index=True)
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Degerlendirme Tipi"
+        verbose_name_plural = "Degerlendirme Tipleri"
+        list_fields = ['ad']
+        search_fields = ['ad']
+
+    def __unicode__(self):
+        return "%s" % self.ad
 
 
 class Degerlendirme(Model):
-    ogrenci = Ogrenci()
     ders = Ders()
-    tur = field.String("Tür", index=True)
+    tur = DegerlendirmeTipi()
     tarih = field.Date("Tarih", index=True)
     puan = field.Integer("Puan", index=True)
 
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Degerlendirme"
+        verbose_name_plural = "Degerlendirmeler"
+
+    def __unicode__(self):
+        return '%s %s' % (self.ders.ad, self.tur.ad)
+
+
 class DersDevamsizligi(Model):
-    katilim_durumu = field.Integer("Katılım Durumu", index=True)
+    katilim_durumu = field.Float("Katılım Durumu", index=True)
     ders = Sube()
     ogrenci = Ogrenci()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Ders Devamsizligi"
+        verbose_name_plural = "Ders Devamsizliklari"
+
+    def __unicode__(self):
+        return '%s %s' % (self.katilim_durumu, self.ders.ad)
+
 
 class Borc(Model):
     miktar = field.Float("Miktar", index=True)
@@ -115,13 +224,23 @@ class Borc(Model):
     son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
     odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
 
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Borc"
+        verbose_name_plural = "Borclar"
+
+    def __unicode__(self):
+        return '%s %s %s %s' % (self.ogrenci.ad, self.ogrenci.soyad, self.donem.ad, self.miktar)
+
+
 class Not(Model):
-    sinav = Sinav()
+    degerlendirme = Degerlendirme()
     ogrenci = Ogrenci()
 
-class Donem(Model):
-    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True)
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True)
-    ad = field.String("Ad", index=True)
-    ucret = field.Integer("Ücret", index=True)
-    program = Program()
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Not"
+        verbose_name_plural = "Notlar"
+
+    def __unicode__(self):
+        return '%s %s' % (self.degerlendirme.ders.ad, self.ogrenci.ad)
