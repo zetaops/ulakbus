@@ -99,6 +99,12 @@ class Role(Model):
         return False
 
 
+class Unit(Model):
+    name = field.String("Name", index=True)
+    # TODO: implement self relation
+    #parent = self
+
+
 class LimitedPermissions(Model):
     restrictive = field.Boolean(default=False)
     time_start = field.String("Start Time", index=True)
@@ -109,8 +115,8 @@ class LimitedPermissions(Model):
         verbose_name = "Sınırlandırılmış Yetki"
         verbose_name_plural = "Sınırlandırılmış Yetkiler"
 
-    def __unicode__(self):
-        return "%s - %s" % (self.abstract_role.name, self.role.user.username)
+    # def __unicode__(self):
+    #     return "%s - %s" % (self.abstract_role.name, self.role.user.username)
 
     class IPList(ListNode):
         ip = field.String()
