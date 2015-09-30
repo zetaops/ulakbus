@@ -51,12 +51,12 @@ class Program(Model):
         search_fields = ['ad', 'yil', 'tanim']
 
     def __unicode__(self):
-        return '%s %s' % (self.ad, self.yil)
+        return '%s %s' % (self.adi, self.yil)
 
 
 class Donem(Model):
-    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True)
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True)
+    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     ad = field.String("Ad", index=True)
     ucret = field.Integer("Ücret", index=True)
     program = Program()
@@ -138,11 +138,11 @@ class Ogrenci(Model):
     soyad = field.String("Soyad", index=True)
     tckn = field.String("TC Kimlik No", index=True)
     ikamet_adresi = field.String("İkamet Adresi", index=True)
-    dogum_tarihi = field.Date("Doğum Tarihi", index=True)
+    dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     dogum_yeri = field.String("Doğum Yeri", index=True)
     uyruk = field.String("Uyruk", index=True)
-    giris_tarihi = field.Date("Giriş Tarihi", index=True)
-    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True)
+    giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
+    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
     bolum = field.String("Bölüm", index=True)
     fakulte = field.String("Fakülte", index=True)
     e_posta = field.String("E-Posta", index=True)
@@ -190,7 +190,7 @@ class DegerlendirmeTipi(Model):
 class Degerlendirme(Model):
     ders = Ders()
     tur = DegerlendirmeTipi()
-    tarih = field.Date("Tarih", index=True)
+    tarih = field.Date("Tarih", index=True, format="%d.%m.%Y")
     puan = field.Integer("Puan", index=True)
 
     class Meta:
@@ -221,8 +221,8 @@ class Borc(Model):
     tur = field.Integer("Tür", index=True)
     ogrenci = Ogrenci()
     donem = Donem()
-    son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
-    odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
+    son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True, format="%d.%m.%Y")
+    odeme_tarihi = field.Date("Ödeme Tarihi", index=True, format="%d.%m.%Y")
 
     class Meta:
         app = 'Ogrenci'
