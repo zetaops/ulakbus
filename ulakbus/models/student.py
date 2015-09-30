@@ -47,8 +47,8 @@ class Program(Model):
         app = 'Ogrenci'
         verbose_name = "Program"
         verbose_name_plural = "Programlar"
-        list_fields = ['ad', 'yil']
-        search_fields = ['ad', 'yil', 'tanim']
+        list_fields = ['adi', 'yil']
+        search_fields = ['adi', 'yil', 'tanim']
 
     def __unicode__(self):
         return '%s %s' % (self.adi, self.yil)
