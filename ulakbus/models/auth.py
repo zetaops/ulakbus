@@ -132,8 +132,9 @@ class LimitedPermissions(Model):
 
 
 class AuthBackend(object):
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, current):
+        self.session = current.session
+        self.current = current
 
     def get_permissions(self):
         return self.get_role().get_permissions()
@@ -146,10 +147,11 @@ class AuthBackend(object):
         if 'user_data' in self.session:
             user = User()
             user.set_data(self.session['user_data'])
-            if 'user_id' in self.session:
-                user.key = self.session['user_id']
+            user.key = self.session['user_id']
+            self.current.user_id = self.session['user_id']
         elif 'user_id' in self.session:
             user = User.objects.get(self.session['user_id'])
+            self.current.user_id = self.session['user_id']
         else:
             user = User()
         return user
