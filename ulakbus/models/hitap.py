@@ -199,7 +199,7 @@ class HizmetAcikSure(Model):
         app = 'Personel'
         verbose_name = "Açığa Alınma"
         verbose_name_plural = "Açığa Alınmalar"
-        list_fields = ['acik_sekil', 'acıga_alinma_tarih', 'kurum_onay_tarihi']
+        list_fields = ['acik_sekil', 'aciga_alinma_tarih', 'kurum_onay_tarihi']
         search_fields = ['hizmet_durum', 'acik_sekil', 'aciga_alinma_tarih']
 
     def __unicode__(self):
