@@ -6,10 +6,10 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
-from personel import Personel
+from .personel import Personel
 from pyoko import Model, field, ListNode
-from auth import Role
-from auth import Unit
+from .auth import Role
+from .auth import Unit
 
 
 class Okutman(Model):

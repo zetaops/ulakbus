@@ -5,9 +5,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from personel import Personel
+from .personel import Personel
 from pyoko import Model, field, Node
-from auth import Role
+from .auth import Role
 
 
 class HizmetKurs(Model):

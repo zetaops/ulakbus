@@ -9,10 +9,9 @@
 import time
 
 from pyoko.model import model_registry
-from base_test_case import BaseTestCase
+from .base_test_case import BaseTestCase
 from ulakbus.models import Personel
 
-Personel.objects.filter()[3]
 
 class TestCase(BaseTestCase):
     def test_list_add_delete_with_employee_model(self):
