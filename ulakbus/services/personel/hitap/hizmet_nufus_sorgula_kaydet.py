@@ -54,17 +54,22 @@ class HizmetNufusSorgula(Service):
                     'sebep': service_bean.sebep
                 }
                 self.logger.info("hitap_dict created.")
+                self.logger.info("TCKN : %s" % hitap_dict['nufus_sorgula']['tckn'])
 
                 self.logger.info("Trying to find object in db if it not exist create.")
                 personel, new = Personel.objects.get_or_create(None, tckn=service_bean.tckn)
                 if new:
                     self.logger.info("Personel not found in db. New created.")
-                    nufus_kayitlari = personel.NufusKayitlari()
-                    nufus_kayitlari = hitap_dict['nufus_sorgula']
+
+                    personel.NufusKayitlari(hitap_dict['nufus_sorgula'])
                     personel.save()
 
                 if not new:
                     self.logger.info("Personel also in db.")
+                    personel.NufusKayitlari(hitap_dict['nufus_sorgula'])
+                    personel.save()
+
+                    self.logger.info("Personel's NufusKayitlari updated and saved.")
 
                 self.logger.info("Nufus kayitlari successfully saved.")
                 self.logger.info("RIAK KEY: %s " % personel.key)
