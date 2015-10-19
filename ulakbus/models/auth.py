@@ -99,6 +99,12 @@ class Role(Model):
         return False
 
 
+class Unit(Model):
+    name = field.String("Name", index=True)
+    # TODO: implement self relation
+    #parent = self
+
+
 class LimitedPermissions(Model):
     restrictive = field.Boolean(default=False)
     time_start = field.String("Start Time", index=True)
@@ -109,8 +115,8 @@ class LimitedPermissions(Model):
         verbose_name = "Sınırlandırılmış Yetki"
         verbose_name_plural = "Sınırlandırılmış Yetkiler"
 
-    def __unicode__(self):
-        return "%s - %s" % (self.abstract_role.name, self.role.user.username)
+    # def __unicode__(self):
+    #     return "%s - %s" % (self.abstract_role.name, self.role.user.username)
 
     class IPList(ListNode):
         ip = field.String()
@@ -126,8 +132,9 @@ class LimitedPermissions(Model):
 
 
 class AuthBackend(object):
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, current):
+        self.session = current.session
+        self.current = current
 
     def get_permissions(self):
         return self.get_role().get_permissions()
@@ -140,10 +147,11 @@ class AuthBackend(object):
         if 'user_data' in self.session:
             user = User()
             user.set_data(self.session['user_data'])
-            if 'user_id' in self.session:
-                user.key = self.session['user_id']
+            user.key = self.session['user_id']
+            self.current.user_id = self.session['user_id']
         elif 'user_id' in self.session:
             user = User.objects.get(self.session['user_id'])
+            self.current.user_id = self.session['user_id']
         else:
             user = User()
         return user

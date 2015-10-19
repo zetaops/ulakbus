@@ -24,7 +24,7 @@ class Personel(Model):
         verbose_name = "Personel"
         verbose_name_plural = "Personeller"
         list_fields = ['ad', 'soyad', 'tckn', 'durum']
-        search_fields = ['ad', 'soyad', 'cep_telefonu']
+        search_fields = ['ad', 'soyad', 'cep_telefonu', 'tckn']
 
     def durum(self):
         return self.NufusKayitlari.durum
