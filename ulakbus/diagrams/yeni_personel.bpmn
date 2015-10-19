@@ -6,7 +6,7 @@
   <bpmn2:process id="yeni_personel" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_2" name="Lane Set 2">
       <bpmn2:lane id="baskan" name="baskan">
-        <bpmn2:flowNodeRef>UserTask_2</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>kontrol_by_baskan</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ExclusiveGateway_3</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>EndEvent_3</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>iptal_by_baskan</bpmn2:flowNodeRef>
@@ -33,11 +33,11 @@
       </bpmn2:lane>
     </bpmn2:laneSet>
     <bpmn2:userTask id="UserTask_1"/>
-    <bpmn2:userTask id="UserTask_2">
+    <bpmn2:userTask id="kontrol_by_baskan" name="kontrol_by_baskan">
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="UserTask_2" targetRef="ExclusiveGateway_3"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="kontrol_by_baskan" targetRef="ExclusiveGateway_3"/>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_3">
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
@@ -135,7 +135,7 @@
       <bpmn2:incoming>kaydett</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="kaydet" targetRef="UserTask_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="kaydet" targetRef="kontrol_by_baskan"/>
     <bpmn2:endEvent id="EndEvent_2">
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
     </bpmn2:endEvent>
@@ -289,7 +289,7 @@
           <dc:Bounds height="6.0" width="6.0" x="145.0" y="761.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_10" bpmnElement="UserTask_2">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_10" bpmnElement="kontrol_by_baskan">
         <dc:Bounds height="80.0" width="100.0" x="1082.0" y="307.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_12" sourceElement="_BPMNShape_ServiceTask_7" targetElement="_BPMNShape_UserTask_10">
