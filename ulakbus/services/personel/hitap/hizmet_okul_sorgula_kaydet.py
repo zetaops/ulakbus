@@ -36,7 +36,7 @@ class HizmetOkulSorgula(Service):
             okul_kayitlari_passed.hazirlik = record_values['hazirlik']
             okul_kayitlari_passed.kurum_onay_tarihi = record_values['kurum_onay_tarihi']
 
-            self.logger.info("Nufus kayitlari successfully passed.")
+            self.logger.info("okul_kayitlari successfully passed.")
 
         tckn = self.request.payload['personel']['tckn']
         conn = self.outgoing.soap['HITAP'].conn
@@ -45,7 +45,7 @@ class HizmetOkulSorgula(Service):
         try:
             with conn.client() as client:
                 service_bean = client.service.HizmetOkulSorgula(H_USER, H_PASS,
-                                                                    tckn).HizmetEgitimOkulServisBean
+                                                                tckn).HizmetEgitimOkulServisBean
                 self.logger.info("zato service started to work.")
 
                 hitap_dict = {}
@@ -76,10 +76,10 @@ class HizmetOkulSorgula(Service):
 
                 # if personel saved before, find that and add new records from hitap to riak
                 try:
-                    riak_dict_from_db_queries_with_pno = {}
+                    local_records = {}
                     # okul_kayitlari_list = HizmetOkul.objects.filter(tckn=tckn)
                     for record in HizmetOkul.objects.filter(tckn=tckn):
-                        riak_dict_from_db_queries_with_pno[record.kayit_no] = {
+                        local_records[record.kayit_no] = {
                             'bolum': record.bolum,
                             'mezuniyet_tarihi': record.mezuniyet_tarihi,
                             'denklik_tarihi': record.denklik_tarihi,
@@ -94,22 +94,27 @@ class HizmetOkulSorgula(Service):
                             'tckn': record.tckn,
                             'kurum_onay_tarihi': record.kurum_onay_tarihi,
                         }
-                    self.logger.info("riak_dict_from_db_queries_with_pno created.")
+                    self.logger.info("local_records created.")
 
-                    # if any record exists in riak but not in hitap delete it
-                    for record in HizmetOkul.objects.filter(tckn=tckn):
-                        if record.kayit_no not in hitap_dict:
-                            record.delete()
-                            self.logger.info(
-                                "Okul record deleted. Record No: %s" % record.kayit_no)
-
-                    # if any record comes from hitap and not in riak, save it to riak
-                    for hitap_key, hitap_values in hitap_dict.items():
-                        if hitap_key not in riak_dict_from_db_queries_with_pno:
+                    for record_id, record_values in hitap_dict.items():
+                        if record_id in local_records:
+                            okul_kayitlari = HizmetOkul.objects.filter(
+                                kayit_no=record_id).get()
+                            okul_kayitlari.sync = 1
+                        else:
                             okul_kayitlari = HizmetOkul()
-                            pass_okul_kayitlari(okul_kayitlari, hitap_values)
-                            okul_kayitlari.save()
-                            self.logger.info("HizmetOkul records updated")
+                            pass_okul_kayitlari(okul_kayitlari, record_values)
+                            okul_kayitlari.sync = 1
+                        okul_kayitlari.save()
+
+                    for record_id, record_values in local_records.items():
+                        okul_kayitlari = HizmetOkul.objects.filter(
+                            kayit_no=record_id).get()
+                        if record_id not in hitap_dict:
+                            if okul_kayitlari.sync == 1:
+                                okul_kayitlari.sync = 2
+                            if okul_kayitlari.sync == 2:
+                                okul_kayitlari.sync = 3
 
                     self.logger.info("Service runned.")
 
