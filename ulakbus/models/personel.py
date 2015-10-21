@@ -15,9 +15,22 @@ class Personel(Model):
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)
-    personel_turu = field.String("Personel Türü", index=True)
     dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
+    dogum_yeri = field.String("Doğum Yeri", index=True)
+    uyruk = field.String("Uyruk", index=True)
+    medeni_hali = field.String("Medeni Hali", index=True)
+    ikamet_adresi = field.String("İkamet Adresi", index=True)
+    oda_no = field.Integer("Oda Numarası", index=True)
+    oda_tel_no = field.String("Oda Telefon Numarası", index=True)
     cep_telefonu = field.String("Cep Telefonu", index=True)
+    e_posta = field.String("E-Posta", index=True)
+    web_sitesi = field.String("Web Sitesi", index=True)
+    yayinlar = field.String("Yayınlar", index=True)
+    projeler = field.String("Projeler", index=True)
+    kan_grubu = field.String("Kan Grubu", index=True)
+    ehliyet = field.String("Ehliyet", index=True)
+    verdigi_dersler = field.String("Verdiği Dersler", index=True)
+    unvan = field.String("Unvan", index=True)
 
     class Meta:
         app = 'Personel'
@@ -28,6 +41,7 @@ class Personel(Model):
 
     def durum(self):
         return self.NufusKayitlari.durum
+
     durum.title = "Durum"
 
     def __unicode__(self):
@@ -55,7 +69,6 @@ class Personel(Model):
         durum = field.Boolean("Durum", index=True)
         sebep = field.Integer("Sebep", index=True)
 
-
         class Meta:
             verbose_name = "Nüfus Bilgileri"
 
@@ -67,4 +80,4 @@ class Personel(Model):
 
         class Meta:
             verbose_name = "Adres Bilgisi"
-            verbose_name_plural  = "Adres Bilgileri"
+            verbose_name_plural = "Adres Bilgileri"
