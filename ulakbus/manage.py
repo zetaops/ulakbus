@@ -27,7 +27,8 @@ class CreateUser(Command):
     def run(self):
         from ulakbus.models import AbstractRole, User, Role, Permission
         if User.objects.filter(username=self.manager.args.username).count():
-            return "User already exists!"
+            print("User already exists!")
+            return
         abs_role, new = AbstractRole.objects.get_or_create(name=self.manager.args.abstract_role)
         user = User(username=self.manager.args.username, superuser=self.manager.args.super)
         user.set_password(self.manager.args.password)
@@ -39,7 +40,7 @@ class CreateUser(Command):
             perm_list.append(perm.name)
         role.save()
         user_type = 'super user' if self.manager.args.super else 'user'
-        return "New %s created with these permissions: \n\n%s" % (user_type, "\n".join(perm_list))
+        print("New %s created with these permissions: \n\n%s" % (user_type, "\n".join(perm_list)))
 
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
