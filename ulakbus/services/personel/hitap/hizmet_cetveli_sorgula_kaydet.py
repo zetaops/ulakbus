@@ -56,6 +56,8 @@ class HizmetCetveliSorgula(Service):
                 pass
             hizmet_kayitlari_passed.kurum_onay_tarihi = record_values['kurum_onay_tarihi']
 
+            self.logger.info("hizmet_kayitlari successfully passed.")
+
         tckn = self.request.payload['personel']['tckn']
         conn = self.outgoing.soap['HITAP'].conn
 

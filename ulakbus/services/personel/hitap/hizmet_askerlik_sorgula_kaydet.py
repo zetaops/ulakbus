@@ -41,7 +41,7 @@ class HizmetAskerlikSorgula(Service):
             askerlik_kayitlari_passed.kurum_onay_tarihi = record_values['kurum_onay_tarihi']
             askerlik_kayitlari_passed.astegmen_nasp_tarihi = record_values['astegmen_nasp_tarihi']
 
-            self.logger.info("Nufus kayitlari successfully passed.")
+            self.logger.info("askerlik_kayitlari successfully passed.")
 
         tckn = self.request.payload['personel']['tckn']
         conn = self.outgoing.soap['HITAP'].conn
