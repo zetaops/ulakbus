@@ -28,21 +28,24 @@ USER_MODEL = 'ulakbus.models.auth.User'
 
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
-# diagrams that dosen't require logged in user
-ANONYMOUS_WORKFLOWS = ['login',]
+# diagrams that does not require logged in user
+ANONYMOUS_WORKFLOWS = ['login', ]
 
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
-# RIAK_SERVER = os.environ.get('RIAK_SERVER', 'localhost')
-# RIAK_PROTOCOL = os.environ.get('RIAK_PROTOCOL', 'http')
-# RIAK_PORT = os.environ.get('RIAK_PORT', 8098)
-#
-# REDIS_SERVER = os.environ.get('REDIS_SERVER')
 
-#
-# ALLOWED_ORIGINS = ['http://127.0.0.1:8080',
-#                    'http://127.0.0.1:9001',
-#                    'http://ulakbus.zetaops.io',
-#                    'http://ulakbus.org',
-#                    'http://ulakbus.net',
-#                    'http://104.155.6.147']
+CRUD_MENUS = {
+    # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
+    #                                             'field':'field_name',
+    #                                             'verbose_name': 'verbose_name'}]
+    # 'field' defaults to 'personel' or 'ogrenci'
+    # verbose_name can be given to override model's verbose_name
+    'personel': [{'name': 'UcretsizIzin'}, {'name': 'Izin'}, ],
+    'ogrenci': [{'name': 'Borc'}, {'name': 'DersDevamsizligi'}, ],
+}
+
+VIEW_URLS = {
+    # ('falcon URI template', 'python path to view method/class')
+    ('/menu/', 'zengine.views.system.Menu'),
+
+}
