@@ -351,23 +351,6 @@ class AskerlikKayitlari(Model):
             self.askerlik_nevi, self.kayit_no, self.kita_baslama_tarihi, self.gorev_yeri)
 
 
-class Birim(Model):
-    type = field.String("Tip", index=True)
-    name = field.String("Ad", index=True)
-    # parent = Birim()
-    personel = Personel()
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Birim"
-        verbose_name_plural = "Birimler"
-        list_fields = ['tip', 'ad']
-        search_fields = ['ad', 'tip']
-
-    def __unicode__(self):
-        return '%s %s' % (self.type, self.name)
-
-
 class Atama(Model):
     kurum_sicil_no = field.String("Kurum Sicil No", index=True)
     personel_tip = field.Integer("Personel Tipi", index=True)
