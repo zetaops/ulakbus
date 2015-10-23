@@ -240,16 +240,28 @@ class Ogrenci(Model):
     class KayitliOluduguProgramlar(ListNode):
         program = Program()
 
-    class Dersler(ListNode):
-        alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
-        ders = Sube()
-
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Ogrenci"
         verbose_name_plural = "Ogrenciler"
         list_fields = ['ad', 'soyad']
         search_fields = ['ad', 'soyad']
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.soyad)
+
+
+class OgrenciDersi(Model):
+    alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
+    ders = Sube()
+    ogrenci = Ogrenci()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Ogrenci Dersi"
+        verbose_name_plural = "Ogrenci Dersleri"
+        list_fields = ['ders', 'alis_bicimi']
+        search_fields = ['alis_bicimi',]
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
