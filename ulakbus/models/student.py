@@ -208,7 +208,6 @@ class DersProgrami(Model):
         return '%s %s' % (self.gun, self.saat)
 
 
-
 class Ogrenci(Model):
     ad = field.String("Ad", index=True)
     soyad = field.String("Soyad", index=True)
@@ -251,7 +250,8 @@ class Ogrenci(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
-class DersDevamsizligi(Model):
+
+class DersKatilimi(Model):
     katilim_durumu = field.Float("Katılım Durumu", index=True)
     ders = Sube()
     ogrenci = Ogrenci()
@@ -266,6 +266,7 @@ class DersDevamsizligi(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.katilim_durumu, self.ogrenci)
+
 
 class Borc(Model):
     miktar = field.Float("Borç Miktarı", index=True)
