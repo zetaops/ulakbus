@@ -39,10 +39,10 @@ class Okutman(Model):
         app = 'Ogrenci'
         verbose_name = "Okutman"
         verbose_name_plural = "Okutmanlar"
-        search_fields = ['tip', 'personel']
+        search_fields = ['unvan', 'personel']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.personel.ad, self.personel.soyad, self.tip)
+        return '%s %s %s' % (self.personel_ad, self.personel_soyad, self.unvan)
 
 
 class Program(Model):
@@ -165,11 +165,11 @@ class Sube(Model):
         app = 'Ogrenci'
         verbose_name = "Sube"
         verbose_name_plural = "Subeler"
-        list_fields = ['ad', 'kod']
-        search_fields = ['ad', 'kod']
+        list_fields = ['ad', 'kontenjan']
+        search_fields = ['ad', 'kontenjan']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.kod, self.ders.ad, self.ders.donem)
+        return '%s %s' % (self.ad, self.kontenjan)
 
 
 class Sinav(Model):
@@ -227,7 +227,7 @@ class Ogrenci(Model):
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Ogrenci"
-        verbose_name_plural = "Ogrenci"
+        verbose_name_plural = "Ogrenciler"
         list_fields = ['ad', 'soyad']
         search_fields = ['ad', 'soyad']
 
@@ -240,6 +240,16 @@ class DersProgrami(Model):
     saat = field.Integer("Ders Saati", index=True)
     sube = Sube()
     derslik = Derslik()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Ders Programi"
+        verbose_name_plural = "Ders Programlari"
+        list_fields = ['gun', 'saat']
+        search_fields = ['gun', 'saat']
+
+    def __unicode__(self):
+        return '%s %s' % (self.gun, self.saat)
 
 
 class Borc(Model):
@@ -258,9 +268,11 @@ class Borc(Model):
         app = 'Ogrenci'
         verbose_name = "Borc"
         verbose_name_plural = "Borclar"
+        list_fields = ['miktar', 'son_odeme_tarihi']
+        search_fields = ['miktar', 'odeme_tarihi']
 
     def __unicode__(self):
-        return '%s %s %s %s' % (self.ogrenci_ad, self.ogrenci_soyad, self.donem_ad, self.miktar)
+        return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
 
 
 class DersDevamsizligi(Model):
@@ -273,6 +285,8 @@ class DersDevamsizligi(Model):
         app = 'Ogrenci'
         verbose_name = "Ders Devamsizligi"
         verbose_name_plural = "Ders Devamsizliklari"
+        list_fields = ['katilim_durumu', 'ders']
+        search_fields = ['ders', 'katilim_durumu']
 
     def __unicode__(self):
         return '%s %s' % (self.katilim_durumu, self.ogrenci)
@@ -280,7 +294,7 @@ class DersDevamsizligi(Model):
 
 class Not(Model):
     puan = field.Integer("Puan", index=True)
-    aciklama = field.String("Borç Açıklaması", index=True)
+    aciklama = field.String("Puan Açıklaması", index=True)
     yil = field.String("Yıl", index=True)
     donem = field.String("Dönem", index=True)
     ogretim_elemani = field.String("Öğretim Elemanı", index=True)
@@ -292,6 +306,8 @@ class Not(Model):
         app = 'Ogrenci'
         verbose_name = "Not"
         verbose_name_plural = "Notlar"
+        list_fields = ['puan', 'ders']
+        search_fields = ['aciklama', 'puan']
 
     def __unicode__(self):
-        return '%s %s' % (self.degerlendirme.ders_ad, self.ogrenci_ad)
+        return '%s %s' % (self.puan, self.sinav)
