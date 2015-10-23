@@ -43,7 +43,7 @@ CRUD_MENUS = {
    'personel': [
        {'name': 'KurumDisiGorevlendirmeBilgileri'},
        {'name': 'KurumIciGorevlendirmeBilgileri'},
-       {'name': 'Adres'},
+       {'name': 'AdresBilgileri'},
        {'name': 'HizmetKurs'},
        {'name': 'HizmetOkul'},
        {'name': 'HizmetMahkeme'},
@@ -67,15 +67,6 @@ CRUD_MENUS = {
        {'name': 'Not'},
        {'name': 'OgrenciDersi'},
    ],
-}
-CRUD_MENUS = {
-    # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
-    #                                             'field':'field_name',
-    #                                             'verbose_name': 'verbose_name'}]
-    # 'field' defaults to 'personel' or 'ogrenci'
-    # verbose_name can be specified to override the model's verbose_name_plural
-    'personel': [{'name': 'UcretsizIzin'}, {'name': 'Izin'}, ],
-    'ogrenci': [{'name': 'Borc'}, {'name': 'DersDevamsizligi'}, ],
 }
 
 VIEW_URLS = [

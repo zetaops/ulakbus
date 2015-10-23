@@ -35,7 +35,7 @@ class Menu(BaseView):
         return results
 
     def get_workflow_menus(self):
-        get_wf_menu = lambda: (wf.spec.wf_name, '/wf/%s?id=' % wf.spec.name)
+        get_wf_menu = lambda: (wf.spec.wf_name, '/%s?id=' % wf.spec.name)
         results = defaultdict(list)
         for wf in get_workflows():
             if self.current.has_permission(wf.spec.name):
