@@ -63,6 +63,7 @@ class Donem(Model):
 
 
 class Program(Model):
+    yoksis_id = field.String("YOKSIS ID", index=True)
     bolum = field.String("Bölüm", index=True)
     ucret = field.Integer("Ücret", index=True)
     yil = field.String("Yıl", index=True)
@@ -157,9 +158,13 @@ class Derslik(Model):
 class Sube(Model):
     ad = field.String("Ad", index=True)
     kontenjan = field.Integer("Kontenjan", index=True)
+    dis_kontenjan = field.Integer("Dis Kontenjan", index=True)
     okutman = Okutman()
     ders = Ders()
     donem = Donem()
+
+    class Programlar(ListNode):
+        programlar = Program()
 
     class Meta:
         app = 'Ogrenci'
@@ -229,12 +234,11 @@ class Ogrenci(Model):
     aktif_donem = field.String("Dönem", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
     basari_durumu = field.String("Başarı Durumu", index=True)
-    ilisik_kesme = field.String("İlişik Kesme", index=True)
-    hazirlik_durumu = field.String("Hazırlık Durumu", index=True)
-    belge_basvurusu = field.String("Belge Başvurusu", index=True)
-    devamsizlik_durumu = field.String("Devamsızlık Durumu", index=True)
     rol = Role()
     ders_programi = DersProgrami()
+
+    class KayitliOluduguProgramlar(ListNode):
+        program = Program()
 
     class Dersler(ListNode):
         alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
