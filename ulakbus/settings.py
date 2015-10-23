@@ -35,17 +35,53 @@ ANONYMOUS_WORKFLOWS = ['login', ]
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 
 CRUD_MENUS = {
+   # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
+   #                                             'field':'field_name',
+   #                                             'verbose_name': 'verbose_name'}]
+   # 'field' defaults to 'personel' or 'ogrenci'
+   # verbose_name can be specified to override the model's verbose_name_plural
+   'personel': [
+       {'name': 'KurumDisiGorevlendirmeBilgileri'},
+       {'name': 'KurumIciGorevlendirmeBilgileri'},
+       {'name': 'Adres'},
+       {'name': 'HizmetKurs'},
+       {'name': 'HizmetOkul'},
+       {'name': 'HizmetMahkeme'},
+       {'name': 'HizmetBirlestirme'},
+       {'name': 'HizmetTazminat'},
+       {'name': 'HizmetUnvan'},
+       {'name': 'HizmetAcikSure'},
+       {'name': 'HizmetBorclanma'},
+       {'name': 'HizmetIHS'},
+       {'name': 'HizmetIstisnaiIlgi'},
+       {'name': 'HizmetKayitlari'},
+       {'name': 'AskerlikKayitlari'},
+       {'name': 'Atama'},
+       {'name': 'Kadro'},
+       {'name': 'Izin'},
+       {'name': 'UcretsizIzin'},
+   ],
+   'ogrenci': [
+       {'name': 'DersKatilimi'},
+       {'name': 'Borc'},
+       {'name': 'Not'},
+       {'name': 'OgrenciDersi'},
+   ],
+}
+CRUD_MENUS = {
     # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
     #                                             'field':'field_name',
     #                                             'verbose_name': 'verbose_name'}]
     # 'field' defaults to 'personel' or 'ogrenci'
-    # verbose_name can be given to override model's verbose_name
+    # verbose_name can be specified to override the model's verbose_name_plural
     'personel': [{'name': 'UcretsizIzin'}, {'name': 'Izin'}, ],
     'ogrenci': [{'name': 'Borc'}, {'name': 'DersDevamsizligi'}, ],
 }
 
-VIEW_URLS = {
+VIEW_URLS = [
     # ('falcon URI template', 'python path to view method/class')
-    ('/menu/', 'zengine.views.system.Menu'),
+    ('/menu', 'ulakbus.views.system.Menu'),
+    ('/ara/ogrenci/{query}', 'ulakbus.views.system.SearchStudent'),
+    ('/ara/personel/{query}', 'ulakbus.views.system.SearchPerson'),
 
-}
+]
