@@ -45,6 +45,23 @@ class Okutman(Model):
         return '%s %s %s' % (self.personel_ad, self.personel_soyad, self.unvan)
 
 
+class Donem(Model):
+    ad = field.String("Ad", index=True)
+    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
+    guncel = field.Boolean()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Dönem"
+        verbose_name_plural = "Dönemler"
+        list_fields = ['ad', 'baslangic_tarihi']
+        search_fields = ['ad']
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.baslangic_tarihi)
+
+
 class Program(Model):
     bolum = field.String("Bölüm", index=True)
     ucret = field.Integer("Ücret", index=True)
@@ -72,23 +89,6 @@ class Program(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.adi, self.yil)
-
-
-class Donem(Model):
-    ad = field.String("Ad", index=True)
-    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    guncel = field.Boolean()
-
-    class Meta:
-        app = 'Ogrenci'
-        verbose_name = "Dönem"
-        verbose_name_plural = "Dönemler"
-        list_fields = ['ad', 'baslangic_tarihi']
-        search_fields = ['ad']
-
-    def __unicode__(self):
-        return '%s %s' % (self.ad, self.baslangic_tarihi)
 
 
 class Ders(Model):
@@ -191,6 +191,24 @@ class Sinav(Model):
         return '%s %s' % (self.tarih, self.yapilacagi_yer)
 
 
+class DersProgrami(Model):
+    gun = field.String("Ders Günü", index=True)
+    saat = field.Integer("Ders Saati", index=True)
+    sube = Sube()
+    derslik = Derslik()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Ders Programi"
+        verbose_name_plural = "Ders Programlari"
+        list_fields = ['gun', 'saat']
+        search_fields = ['gun', 'saat']
+
+    def __unicode__(self):
+        return '%s %s' % (self.gun, self.saat)
+
+
+
 class Ogrenci(Model):
     ad = field.String("Ad", index=True)
     soyad = field.String("Soyad", index=True)
@@ -218,7 +236,6 @@ class Ogrenci(Model):
     devamsizlik_durumu = field.String("Devamsızlık Durumu", index=True)
     rol = Role()
     ders_programi = DersProgrami()
-    ders_devamsizligi = DersDevamsizligi()
 
     class Dersler(ListNode):
         alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
@@ -234,23 +251,21 @@ class Ogrenci(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
-
-class DersProgrami(Model):
-    gun = field.String("Ders Günü", index=True)
-    saat = field.Integer("Ders Saati", index=True)
-    sube = Sube()
-    derslik = Derslik()
+class DersDevamsizligi(Model):
+    katilim_durumu = field.Float("Katılım Durumu", index=True)
+    ders = Sube()
+    ogrenci = Ogrenci()
+    okutman = Okutman()
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ders Programi"
-        verbose_name_plural = "Ders Programlari"
-        list_fields = ['gun', 'saat']
-        search_fields = ['gun', 'saat']
+        verbose_name = "Ders Devamsizligi"
+        verbose_name_plural = "Ders Devamsizliklari"
+        list_fields = ['katilim_durumu', 'ders']
+        search_fields = ['ders', 'katilim_durumu']
 
     def __unicode__(self):
-        return '%s %s' % (self.gun, self.saat)
-
+        return '%s %s' % (self.katilim_durumu, self.ogrenci)
 
 class Borc(Model):
     miktar = field.Float("Borç Miktarı", index=True)
@@ -273,23 +288,6 @@ class Borc(Model):
 
     def __unicode__(self):
         return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
-
-
-class DersDevamsizligi(Model):
-    katilim_durumu = field.Float("Katılım Durumu", index=True)
-    ders = Sube()
-    ogrenci = Ogrenci()
-    okutman = Okutman()
-
-    class Meta:
-        app = 'Ogrenci'
-        verbose_name = "Ders Devamsizligi"
-        verbose_name_plural = "Ders Devamsizliklari"
-        list_fields = ['katilim_durumu', 'ders']
-        search_fields = ['ders', 'katilim_durumu']
-
-    def __unicode__(self):
-        return '%s %s' % (self.katilim_durumu, self.ogrenci)
 
 
 class Not(Model):
