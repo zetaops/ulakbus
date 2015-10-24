@@ -1,28 +1,43 @@
 # -*-  coding: utf-8 -*-
 from time import sleep
 from pyoko.exceptions import MultipleObjectsReturned
+from pyoko.model import super_context
 from ulakbus.models import User, AbstractRole, Role, Permission
 from zengine.lib.test_utils import BaseTestCase as ZengineBaseTestCase, user_pass
 
+import sys
+
+sys.TEST_MODELS_RESET = False
+
 class BaseTestCase(ZengineBaseTestCase):
 
+
+    @staticmethod
+    def cleanup():
+        if not sys.TEST_MODELS_RESET:
+            for mdl in [AbstractRole, User, Role]:
+                mdl(super_context).objects._clear_bucket()
+            sleep(2)
+            sys.TEST_MODELS_RESET = True
+
     @classmethod
-    def create_user(self):
-        try:
-            abs_role, new = AbstractRole.objects.get_or_create(id=1, name='W.C. Hero')
-            self.client.user, new = User.objects.get_or_create({"password": user_pass},
-                                                               username='test_user')
-        except MultipleObjectsReturned:
-            AbstractRole.objects._clear_bucket()
-            User.objects._clear_bucket()
-            raise
+    def create_user(cls):
+
+        cls.cleanup()
+
+        abs_role, new = AbstractRole(super_context).objects.get_or_create(id=1, name='W.C. Hero')
+        cls.client.user, new = User(super_context).objects.get_or_create({"password": user_pass},
+                                                           username='test_user')
+
 
         if new:
-            role = Role(user=self.client.user, abstract_role=abs_role).save()
-            for perm in Permission.objects.raw("code:crud* OR code:login* OR code:User*"):
+            role = Role(super_context, user=cls.client.user, abstract_role=abs_role).save()
+            sleep(2)
+            for perm in Permission(super_context).objects.raw(
+                    "code:crud* OR code:login* OR code:User*"):
                 role.Permissions(permission=perm)
             role.save()
             sleep(1)
             # pyoko dose not update the user instance
-            self.client.user = User.objects.get(self.client.user.key)
+            cls.client.user = User(super_context).objects.get(cls.client.user.key)
 
