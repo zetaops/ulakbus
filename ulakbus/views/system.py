@@ -57,9 +57,10 @@ class SearchStudent(Search):
     def do_search(self):
         try:
             tckn = int(self.query.strip())
-            objects = Ogrenci.objects.filter(tckn=tckn)
+            objects = Ogrenci.objects.filter(tckn='%s*' % tckn)
         except:
-            objects = Ogrenci.objects.raw('ad:*%s* OR soyad:*%s*' % (self.query, self.query))
+            q = self.query.replace(' ', '\ ')
+            objects = Ogrenci.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
         for o in objects:
             self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
 
@@ -68,9 +69,10 @@ class SearchPerson(Search):
     def do_search(self):
         try:
             tckn = int(self.query.strip())
-            objects = Personel.objects.filter(tckn=tckn)
+            objects = Personel.objects.filter(tckn='%s*' % tckn)
         except:
-            objects = Personel.objects.raw('ad:*%s* OR soyad:*%s*' % (self.query, self.query))
+            q = self.query.replace(' ', '\ ')
+            objects = Personel.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
         for o in objects:
             self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
 
