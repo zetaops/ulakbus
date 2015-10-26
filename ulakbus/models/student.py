@@ -261,7 +261,7 @@ class OgrenciDersi(Model):
         verbose_name = "Ogrenci Dersi"
         verbose_name_plural = "Ogrenci Dersleri"
         list_fields = ['ders', 'alis_bicimi']
-        search_fields = ['alis_bicimi',]
+        search_fields = ['alis_bicimi', ]
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
@@ -307,7 +307,7 @@ class Borc(Model):
         return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
 
 
-class Not(Model):
+class DegerlendirmeNot(Model):
     puan = field.Integer("Puan", index=True)
     aciklama = field.String("Puan Açıklaması", index=True)
     yil = field.String("Yıl", index=True)
