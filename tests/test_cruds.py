@@ -15,7 +15,7 @@ from .base_test_case import BaseTestCase
 class TestCase(BaseTestCase):
     def test_list_add_delete_with_employee_model(self):
         # setup workflow
-        self.prepare_client('crud')
+        self.prepare_client('/crud')
 
         # calling the crud view without any model should list available models
         resp = self.client.post()
@@ -54,7 +54,7 @@ class TestCase(BaseTestCase):
 
     def test_add_search_filter(self):
         # setup workflow
-        self.prepare_client('crud')
+        self.prepare_client('/crud')
         resp = self.client.post(model='Personel')
         resp = self.client.post(model='Personel', query="1234567")
         if len(resp.json['nobjects']) < 2:

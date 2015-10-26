@@ -154,7 +154,7 @@ class HizmetCetveliSorgula(Service):
                                 hizmet_kayitlari.sync = 2
                             if hizmet_kayitlari.sync == 2:
                                 hizmet_kayitlari.sync = 3
-
+                        hizmet_kayitlari.save()
                     self.logger.info("Service runned.")
 
                 except IndexError:

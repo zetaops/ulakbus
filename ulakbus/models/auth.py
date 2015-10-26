@@ -93,10 +93,8 @@ class Role(Model):
         permission = Permission()
 
     def get_permissions(self):
-        return []
+        return [p.permission.code for p in self.Permissions]
 
-    def has_permission(self, perm):
-        return False
 
 
 class Unit(Model):
@@ -140,8 +138,8 @@ class AuthBackend(object):
         return self.get_role().get_permissions()
 
     def has_permission(self, perm):
-        return True
-        # return perm in self.get_role().get_permissions()
+        # return True
+        return perm in self.get_role().get_permissions()
 
     def get_user(self):
         if 'user_data' in self.session:
