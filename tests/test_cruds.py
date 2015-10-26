@@ -39,7 +39,6 @@ class TestCase(BaseTestCase):
                                 cmd='add',
                                 subcmd="do_list",
                                 form=dict(ad="Em1", tckn="12323121443"))
-
         # we should have 1 more object relative to previous listing
         assert num_of_objects + 1 == len(resp.json['nobjects']) - 1
 
