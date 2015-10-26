@@ -1,0 +1,87 @@
+{
+  "medeni_hali": {
+    "1": {
+      "tr": "Evli",
+      "en": "Married"
+    },
+    "2": {
+      "tr": "Bekar",
+      "en": "Single"
+    }
+  },
+  "akademik_unvan": {
+    "1": {
+      "tr": "Profesör",
+      "en": "Professor"
+    },
+    "2": {
+      "tr": "Doçent",
+      "en": "Associate Professor"
+    },
+    "meta": {
+      "sibling": "akademik_unvan_kisa"
+    }
+  },
+  "akademik_unvan_kisa": {
+    "1": {
+      "tr": "Prof",
+      "en": "Prof"
+    },
+    "2": {
+      "tr": "Doç",
+      "en": "Ass. Prof"
+    },
+    "meta": {
+      "sibling": "akademik_unvan_kisa"
+    }
+  },
+  "ders_verilis_bicimleri": {
+    "1": {
+      "tr": "Uzaktan",
+      "en": "Remote"
+    },
+    "2": {
+      "tr": "Yüzyüze",
+      "en": "Face to face"
+    }
+  },
+  "ders_kategorileri": {
+    "1": {
+      "tr": "Temel Meslek Dersleri",
+      "en": ""
+    },
+    "2": {
+      "tr": "Uzmanlık Alan Dersleri",
+      "en": ""
+    }
+  },
+  "ders_turleri": {
+    "1": {
+      "tr": "Zorunlu",
+      "en": "Zorunlu"
+    },
+    "2": {
+      "tr": "Secmeli",
+      "en": "Seçmeli"
+    }
+  },
+  "derslik_turleri": {
+    "1": {
+      "tr": "Lab",
+      "en": "Lab"
+    },
+    "2": {
+      "tr": "Sınıf",
+      "en": "Room"
+    }
+  },
+}
+yoksis_program_id
+
+
+
+
+sinav_turleri
+odeme_sekli
+ogrenci_borc_sebepleri
+para_birimleri
