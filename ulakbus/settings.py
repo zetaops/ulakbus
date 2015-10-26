@@ -74,5 +74,6 @@ VIEW_URLS = [
     ('/menu', 'ulakbus.views.system.Menu'),
     ('/ara/ogrenci/{query}', 'ulakbus.views.system.SearchStudent'),
     ('/ara/personel/{query}', 'ulakbus.views.system.SearchPerson'),
+    ('/notify/', 'ulakbus.views.system.Notification'),
 
 ]

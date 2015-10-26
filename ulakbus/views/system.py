@@ -30,12 +30,12 @@ class Menu(BaseView):
                     field_name = model_data['field'] if 'field' in model_data else user_type
                     verbose_name = (model_data['verbose_name'] if 'verbose_name' in model_data
                                     else model.Meta.verbose_name_plural)
-                    crud_path = 'crud/%s/?%s=' % (model_data['name'], field_name)
-                    results[user_type].append((verbose_name, crud_path))
+                    crud_path = 'crud/%s/' % model_data['name']
+                    results[user_type].append((verbose_name, crud_path, field_name))
         return results
 
     def get_workflow_menus(self):
-        get_wf_menu = lambda: (wf.spec.wf_name, '/%s?id=' % wf.spec.name)
+        get_wf_menu = lambda: (wf.spec.wf_name, '/%s' % wf.spec.name, 'id')
         results = defaultdict(list)
         for wf in get_workflows():
             if self.current.has_permission(wf.spec.name):
@@ -45,36 +45,40 @@ class Menu(BaseView):
                     results['other'].append(get_wf_menu())
         return results
 
+
 from ulakbus.models import Personel, Ogrenci
+
+
 class Search(BaseView):
     def __init__(self, current, query):
         super(Search, self).__init__(current)
         self.query = query
         self.output['results'] = []
-        self.do_search()
+
+        def do_search(self, obj):
+            try:
+                tckn = int(self.query.strip())
+                objects = obj.objects.filter(tckn='%s*' % tckn)
+            except:
+                q = self.query.replace(' ', '\ ')
+                objects = obj.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
+            for o in objects:
+                self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
+
 
 class SearchStudent(Search):
-    def do_search(self):
-        try:
-            tckn = int(self.query.strip())
-            objects = Ogrenci.objects.filter(tckn='%s*' % tckn)
-        except:
-            q = self.query.replace(' ', '\ ')
-            objects = Ogrenci.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
-        for o in objects:
-            self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
+    def __init__(self, *args, **kwargs):
+        super(Search, self).__init__(*args, **kwargs)
+        self.do_search(Personel)
 
 
 class SearchPerson(Search):
-    def do_search(self):
-        try:
-            tckn = int(self.query.strip())
-            objects = Personel.objects.filter(tckn='%s*' % tckn)
-        except:
-            q = self.query.replace(' ', '\ ')
-            objects = Personel.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
-        for o in objects:
-            self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
+    def __init__(self, *args, **kwargs):
+        super(Search, self).__init__(*args, **kwargs)
+        self.do_search(Ogrenci)
 
 
-
+class Notification(BaseView):
+    def __init__(self, current):
+        super(Notification, self).__init__(current)
+        self.output['notifications'] = self.current.msg_cache.get_all()
