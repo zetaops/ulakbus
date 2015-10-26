@@ -37,7 +37,8 @@ DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 CRUD_MENUS = {
    # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
    #                                             'field':'field_name',
-   #                                             'verbose_name': 'verbose_name'}]
+   #                                             'verbose_name': 'verbose_name',
+   #                                             'category': 'Genel'}]
    # 'field' defaults to 'personel' or 'ogrenci'
    # verbose_name can be specified to override the model's verbose_name_plural
    'personel': [

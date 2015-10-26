@@ -3,7 +3,7 @@
   <bpmn2:collaboration id="_Collaboration_3" name="Yeni Personel Ekle (coll)">
     <bpmn2:extensionElements>
       <camunda:properties>
-        <camunda:property value="generic" name="object"/>
+        <camunda:property value="Alt Kategori" name="menu_category"/>
       </camunda:properties>
     </bpmn2:extensionElements>
     <bpmn2:participant id="_Participant_3" name="Yeni Personel Ekle (pool)" processRef="yeni_personel"/>

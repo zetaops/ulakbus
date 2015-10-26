@@ -12,6 +12,7 @@ from zengine.auth.permissions import get_workflows
 from zengine.views.base import BaseView
 from zengine.config import settings
 
+DEFAULT_CATEGORY = 'Genel'
 
 class Menu(BaseView):
     def __init__(self, current):
@@ -31,14 +32,22 @@ class Menu(BaseView):
                     verbose_name = (model_data['verbose_name'] if 'verbose_name' in model_data
                                     else model.Meta.verbose_name_plural)
                     crud_path = 'crud/%s/' % model_data['name']
-                    results[user_type].append((verbose_name, crud_path, field_name))
+                    category = model_data.get('category', DEFAULT_CATEGORY)
+                    results[user_type].append({"text": verbose_name,
+                                               "url": crud_path,
+                                               "kategori": category,
+                                               "param": field_name})
         return results
 
     def get_workflow_menus(self):
-        get_wf_menu = lambda: (wf.spec.wf_name, '/%s' % wf.spec.name, 'id')
+        get_wf_menu = lambda: ({"text": wf.spec.wf_name,
+                                "url": '/%s' % wf.spec.name,
+                                "kategori": category,
+                                "param": "id"})
         results = defaultdict(list)
         for wf in get_workflows():
             if self.current.has_permission(wf.spec.name):
+                category = wf.spec.wf_properties.get("menu_category", DEFAULT_CATEGORY)
                 if 'object' in wf.spec.wf_properties:
                     results[wf.spec.wf_properties['object']].append(get_wf_menu())
                 else:
