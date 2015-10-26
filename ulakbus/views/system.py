@@ -59,32 +59,29 @@ from ulakbus.models import Personel, Ogrenci
 
 
 class Search(BaseView):
-    def __init__(self, current, query):
-        super(Search, self).__init__(current)
-        self.query = query
+    def __init__(self, *args, **kwargs):
+        self.query = kwargs.pop('query')
+        super(Search, self).__init__(*args)
         self.output['results'] = []
+        self.do_search()
 
-        def do_search(self, obj):
-            try:
-                tckn = int(self.query.strip())
-                objects = obj.objects.filter(tckn='%s*' % tckn)
-            except:
-                q = self.query.replace(' ', '\ ')
-                objects = obj.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
-            for o in objects:
-                self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
+    def do_search(self):
+        try:
+            tckn = int(self.query.strip())
+            objects = self.SEARCH_ON.objects.filter(tckn='%s*' % tckn)
+        except:
+            q = self.query.replace(' ', '\ ')
+            objects = self.SEARCH_ON.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
+        for o in objects:
+            self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
 
 
 class SearchStudent(Search):
-    def __init__(self, *args, **kwargs):
-        super(Search, self).__init__(*args, **kwargs)
-        self.do_search(Personel)
+    SEARCH_ON = Ogrenci
 
 
 class SearchPerson(Search):
-    def __init__(self, *args, **kwargs):
-        super(Search, self).__init__(*args, **kwargs)
-        self.do_search(Ogrenci)
+    SEARCH_ON = Personel
 
 
 class Notification(BaseView):
