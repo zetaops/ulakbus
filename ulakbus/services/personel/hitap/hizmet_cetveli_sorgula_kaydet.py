@@ -140,11 +140,12 @@ class HizmetCetveliSorgula(Service):
                             hizmet_kayitlari = HizmetKayitlari.objects.filter(
                                 kayit_no=record_id).get()
                             hizmet_kayitlari.sync = 1
+                            hizmet_kayitlari.save()
                         else:
                             hizmet_kayitlari = HizmetKayitlari()
                             pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
                             hizmet_kayitlari.sync = 1
-                        hizmet_kayitlari.save()
+                            hizmet_kayitlari.save()
 
                     for record_id, record_values in local_records.items():
                         hizmet_kayitlari = HizmetKayitlari.objects.filter(
@@ -152,8 +153,11 @@ class HizmetCetveliSorgula(Service):
                         if record_id not in hitap_dict:
                             if hizmet_kayitlari.sync == 1:
                                 hizmet_kayitlari.sync = 2
+                                hizmet_kayitlari.save()
                             if hizmet_kayitlari.sync == 2:
                                 hizmet_kayitlari.sync = 3
+                                hizmet_kayitlari.save()
+                        hizmet_kayitlari.sync = 99
                         hizmet_kayitlari.save()
                     self.logger.info("Service runned.")
 
