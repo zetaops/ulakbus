@@ -18,6 +18,14 @@
       "tr": "Doçent",
       "en": "Associate Professor"
     },
+    "3": {
+      "tr": "Araştırma Görevlisi",
+      "en": "Research Assistant"
+    },
+    "4": {
+      "tr": "Öğretim Görevlisi",
+      "en": "Lecturer"
+    },
     "meta": {
       "sibling": "akademik_unvan_kisa"
     }
@@ -30,6 +38,14 @@
     "2": {
       "tr": "Doç",
       "en": "Ass. Prof"
+    },
+    "3": {
+      "tr": "Araş. Gör.",
+      "en": "Res. Assist."
+    },
+    "4": {
+      "tr": "Öğr. Gör.",
+      "en": "Lect."
     },
     "meta": {
       "sibling": "akademik_unvan_kisa"
@@ -48,21 +64,45 @@
   "ders_kategorileri": {
     "1": {
       "tr": "Temel Meslek Dersleri",
-      "en": ""
+      "en": "Basic Job Lessons"
     },
     "2": {
-      "tr": "Uzmanlık Alan Dersleri",
-      "en": ""
+      "tr": "Uzmanlık/Alan Dersleri",
+      "en": "Expertise/Area Lessons"
+    },
+    "3": {
+      "tr": "Destek Dersleri",
+      "en": "Support Lessons"
+    },
+    "4": {
+      "tr": "İletişim ve Yönetim Becerileri Dersleri",
+      "en": "Communication and Management Skills Lessons"
+    },
+    "5": {
+      "tr": "Aktarılabilir Beceri Dersleri",
+      "en": "Transferable Skill Lessons"
     }
   },
   "ders_turleri": {
     "1": {
       "tr": "Zorunlu",
-      "en": "Zorunlu"
+      "en": "Required"
     },
     "2": {
       "tr": "Secmeli",
-      "en": "Seçmeli"
+      "en": "Elective"
+    },
+    "3": {
+      "tr": "Hazırlık",
+      "en": "Preparation"
+    },
+    "4": {
+      "tr": "Staj",
+      "en": "Internship"
+    },
+    "5": {
+      "tr": "Entegre",
+      "en": "Integrated"
     }
   },
   "derslik_turleri": {
@@ -72,16 +112,93 @@
     },
     "2": {
       "tr": "Sınıf",
-      "en": "Room"
+      "en": "Class"
+    },
+    "3": {
+      "tr": "Amfi",
+      "en": "Lecture Theater"
     }
   },
+  "YÖKSİS Program ID": {
+  "1": {
+    "tr": "",
+    "en": ""
+  },
+  "2": {
+    "tr": "",
+    "en": ""
+  },
+  "3": {
+    "tr": "",
+    "en": ""
+    }
+  },
+  "Sınav Türleri": {
+    "1": {
+    "tr": "Ara Sınav",
+    "en": "Midterm Exam"
+  },
+    "2": {
+    "tr": "Genel Sınav",
+    "en": "Final Exam"
+  },
+    "3": {
+    "tr": "Bütünleme",
+    "en": "Integration Exam"
+  },
+    "4": {
+    "tr": "Tek Ders",
+    "en": "One Exam"
+  },
+    "5": {
+    "tr": "Muafiyet",
+    "en": "Exemption Exam"
+  },
+    "6": {
+    "tr": "Mazeret",
+    "en": "Excuse Exam"
+  },
+    "7": {
+    "tr": "Ek Sınav",
+    "en": "Additional Exam"
+  }
+  },
+  "Ödeme Şekli": {
+    "1": {
+    "tr": "Nakit",
+    "en": "Cash"
+  },
+    "2": {
+    "tr": "Kredi Kartı",
+    "en": "Credit Card"
+  }
+  },
+  "Öğrenci Borç Sebepleri": {
+    "1": {
+    "tr": "Öğretim Ücreti",
+    "en": "Education Fee"
+  },
+    "2": {
+    "tr": "Yaz Okulu Ücreti",
+    "en": "Summer School Fee"
+  },
+    "3": {
+    "tr": "Kimlik Ücreti",
+    "en": "Identity Card Fee"
+  }
+  },
+  "Para Birimleri": {
+    "1": {
+    "tr": "Türk Lirası",
+    "en": "Turkish Liras"
+  },
+    "2": {
+    "tr": "Amerikan Doları",
+    "en": "US Dollars"
+  },
+    "3": {
+    "tr": "Avro",
+    "en": "Euro"
+  }
+  }
 }
-yoksis_program_id
-
-
-
-
-sinav_turleri
-odeme_sekli
-ogrenci_borc_sebepleri
-para_birimleri
