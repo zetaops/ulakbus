@@ -65,7 +65,7 @@ CRUD_MENUS = {
    'ogrenci': [
        {'name': 'DersKatilimi'},
        {'name': 'Borc'},
-       {'name': 'Not'},
+       {'name': 'DegerlendirmeNot'},
        {'name': 'OgrenciDersi'},
    ],
 }
