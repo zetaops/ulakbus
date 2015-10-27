@@ -50,6 +50,7 @@ class HizmetOkul(Model):
     ogrenim_suresi = field.Integer("Öğrenim Süresi", index=True)
     hazirlik = field.Boolean("Hazırlık", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -306,6 +307,7 @@ class HizmetKayitlari(Model):
     emekli_ekgosterge = field.Integer("Emekli Ek Göstergesi", index=True)
     sebep_kod = field.Integer("Sebep Kodu", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -337,6 +339,7 @@ class AskerlikKayitlari(Model):
     gorev_yeri = field.String("Görev Yeri", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     astegmen_nasp_tarihi = field.Date("Asteğmen Nasp Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
