@@ -32,7 +32,7 @@ class HizmetCetveliGetir(Service):
             with conn.client() as client:
                 service_bean = client.service.HizmetCetvelSorgula(H_USER, H_PASS,
                                                                   tckn).HizmetCetveliServisBean
-                self.logger.info("zato service started to work.")
+                self.logger.info("HizmetCetveliGetir started to work.")
 
                 hitap_dict = {}
                 for record in range(0, len(service_bean)):
@@ -71,9 +71,12 @@ class HizmetCetveliGetir(Service):
                 self.logger.info("hitap_dict created.")
 
             response_json = dumps(hitap_dict)
-            self.response.payload = response_json
+            self.response.payload["status"] = u"ok"
+            self.response.payload["result"] = response_json
 
         except AttributeError:
-            self.logger.info("TCKN should be wrong!")
+            self.response.payload['status'] = 'error'
+            self.response.payload['result'] = 'TCKN may be wrong!'
+            self.logger.info("TCKN may be wrong!")
         except urllib2.URLError:
             self.logger.info("No internet connection!")

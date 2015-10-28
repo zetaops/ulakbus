@@ -5,10 +5,12 @@
 __author__ = 'Ozgur Firat Cinar'
 
 from zato.server.service import Service
+from zato.common import DATA_FORMAT
 import os
 from time import sleep
 import urllib2
 import socket
+from json import loads, dumps
 
 os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
 from ulakbus.models.hitap import HizmetKayitlari
@@ -58,127 +60,97 @@ class HizmetCetveliSenkronizeEt(Service):
 
             self.logger.info("hizmet_kayitlari successfully passed.")
 
+        self.logger.info("zato service started to work.")
+
         tckn = self.request.payload['tckn']
-        conn = self.outgoing.soap['HITAP'].conn
 
-        # connects with soap client to the HITAP
+        input_data = {'tckn': tckn}
+        input_data = dumps(input_data)
+        service_name = 'hizmet-cetveli-getir.hizmet-cetveli-getir'
+        response = self.invoke_async(service_name, input_data, data_format=DATA_FORMAT.JSON)
+        response_status = response[0]
+        if response_status == 'ok':
+            hitap_dict = loads(response['result'])
+            self.logger.info("hitap_dict created.")
+        else:
+            hitap_dict = {}
+            self.logger.info("hitap_dict cannot created.")
+
+        # if employee saved before, find that and add new records from hitap to riak
         try:
-            with conn.client() as client:
-                service_bean = client.service.HizmetCetvelSorgula(H_USER, H_PASS,
-                                                                  tckn).HizmetCetveliServisBean
-                self.logger.info("zato service started to work.")
+            local_records = {}
+            # hizmet_kayitlari_list = HizmetKayitlari.objects.filter(tckn=tckn)
+            for record in HizmetKayitlari.objects.filter(tckn=tckn):
+                local_records[record.kayit_no] = {
+                    'baslama_tarihi': record.baslama_tarihi,
+                    'bitis_tarihi': record.bitis_tarihi,
+                    'emekli_derece': record.emekli_derece,
+                    'emekli_kademe': record.emekli_kademe,
+                    'gorev': record.gorev,
+                    'unvan_kod': record.unvan_kod,
+                    'hizmet_sinifi': record.hizmet_sinifi,
+                    'kayit_no': record.kayit_no,
+                    'kazanilmis_hak_ayligi_derece': record.kazanilmis_hak_ayligi_derece,
+                    'kazanilmis_hak_ayligi_kademe': record.kazanilmis_hak_ayligi_kademe,
+                    'odeme_derece': record.odeme_derece,
+                    'odeme_kademe': record.odeme_kademe,
+                    'emekli_ekgosterge': record.emekli_ekgosterge,
+                    'kadro_derece': record.kadro_derece,
+                    'kazanilmis_hak_ayligi_ekgosterge':
+                        record.kazanilmis_hak_ayligi_ekgosterge,
+                    'odeme_ekgosterge': record.odeme_ekgosterge,
+                    'sebep_kod': record.sebep_kod,
+                    'tckn': record.tckn,
+                    'ucret': record.ucret,
+                    'yevmiye': record.yevmiye,
+                    'kurum_onay_tarihi': record.kurum_onay_tarihi
+                }
+            self.logger.info("local_records created.")
 
-                hitap_dict = {}
-                for record in range(0, len(service_bean)):
-                    hitap_dict[service_bean[record].kayitNo] = {
-                        'baslama_tarihi': '01.01.1900' if
-                        service_bean[record].baslamaTarihi == "01.01.0001" else
-                        service_bean[record].baslamaTarihi,
-                        'bitis_tarihi': '01.01.1900' if
-                        service_bean[record].bitisTarihi == "01.01.0001" else
-                        service_bean[record].bitisTarihi,
-                        'emekli_derece': service_bean[record].emekliDerece,
-                        'emekli_kademe': service_bean[record].emekliKademe,
-                        'gorev': service_bean[record].gorev,
-                        'unvan_kod': service_bean[record].unvanKod,
-                        'hizmet_sinifi': service_bean[record].hizmetSinifi,
-                        'kayit_no': service_bean[record].kayitNo,
-                        'kazanilmis_hak_ayligi_derece': service_bean[
-                            record].kazanilmisHakAyligiDerece,
-                        'kazanilmis_hak_ayligi_kademe': service_bean[
-                            record].kazanilmisHakAyligiKademe,
-                        'odeme_derece': service_bean[record].odemeDerece,
-                        'odeme_kademe': service_bean[record].odemeKademe,
-                        'emekli_ek_gosterge': service_bean[record].emekliEkGosterge,
-                        'kadro_derece': service_bean[record].kadroDerece,
-                        'kazanilmis_hak_ayligi_ekgosterge': service_bean[
-                            record].kazanilmisHakAyligiEkGosterge,
-                        'odeme_ekgosterge': service_bean[record].odemeEkGosterge,
-                        'sebep_kod': service_bean[record].sebepKod,
-                        'tckn': service_bean[record].tckn,
-                        'ucret': service_bean[record].ucret,
-                        'yevmiye': service_bean[record].yevmiye,
-                        'kurum_onay_tarihi': '01.01.1900' if
-                        service_bean[record].kurumOnayTarihi == "01.01.0001" else service_bean[
-                            record].kurumOnayTarihi
-                    }
-                self.logger.info("hitap_dict created.")
-
-                # if employee saved before, find that and add new records from hitap to riak
-                try:
-                    local_records = {}
-                    # hizmet_kayitlari_list = HizmetKayitlari.objects.filter(tckn=tckn)
-                    for record in HizmetKayitlari.objects.filter(tckn=tckn):
-                        local_records[record.kayit_no] = {
-                            'baslama_tarihi': record.baslama_tarihi,
-                            'bitis_tarihi': record.bitis_tarihi,
-                            'emekli_derece': record.emekli_derece,
-                            'emekli_kademe': record.emekli_kademe,
-                            'gorev': record.gorev,
-                            'unvan_kod': record.unvan_kod,
-                            'hizmet_sinifi': record.hizmet_sinifi,
-                            'kayit_no': record.kayit_no,
-                            'kazanilmis_hak_ayligi_derece': record.kazanilmis_hak_ayligi_derece,
-                            'kazanilmis_hak_ayligi_kademe': record.kazanilmis_hak_ayligi_kademe,
-                            'odeme_derece': record.odeme_derece,
-                            'odeme_kademe': record.odeme_kademe,
-                            'emekli_ekgosterge': record.emekli_ekgosterge,
-                            'kadro_derece': record.kadro_derece,
-                            'kazanilmis_hak_ayligi_ekgosterge':
-                                record.kazanilmis_hak_ayligi_ekgosterge,
-                            'odeme_ekgosterge': record.odeme_ekgosterge,
-                            'sebep_kod': record.sebep_kod,
-                            'tckn': record.tckn,
-                            'ucret': record.ucret,
-                            'yevmiye': record.yevmiye,
-                            'kurum_onay_tarihi': record.kurum_onay_tarihi
-                        }
-                    self.logger.info("local_records created.")
-
-                    # compare hitap incoming data and local db
-                    for record_id, record_values in hitap_dict.items():
-                        if record_id in local_records:
-                            hizmet_kayitlari = HizmetKayitlari.objects.filter(
-                                kayit_no=record_id).get()
-                            if hizmet_kayitlari.sync == 1:
-                                pass
-                            elif hizmet_kayitlari.sync == 2:
-                                pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
-                                hizmet_kayitlari.sync = 1
-                                hizmet_kayitlari.save()
-                            else:
-                                pass
-                        else:
-                            hizmet_kayitlari = HizmetKayitlari()
-                            pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
-                            hizmet_kayitlari.sync = 1
-                            hizmet_kayitlari.save()
-
-                    # compare hitap incoming data and local db
-                    for record_id, record_values in local_records.items():
-                        hizmet_kayitlari = HizmetKayitlari.objects.filter(
-                            kayit_no=record_id).get()
-                        if record_id not in hitap_dict:
-                            if hizmet_kayitlari.sync == 1:
-                                hizmet_kayitlari.delete()
-                                hizmet_kayitlari.save()
-                            else:
-                                pass
-
-                        hizmet_kayitlari.save()
-                    self.logger.info("Service runned.")
-
-                # If not any record belongs to given tcno, create new one
-                except IndexError:
-                    hizmet_kayitlari = HizmetKayitlari()
-                    for hitap_keys, hitap_values in hitap_dict.items():
-                        pass_hizmet_kayitlari(hizmet_kayitlari, hitap_values)
+            # compare hitap incoming data and local db
+            for record_id, record_values in hitap_dict.items():
+                if record_id in local_records:
+                    hizmet_kayitlari = HizmetKayitlari.objects.filter(
+                        kayit_no=record_id).get()
+                    if hizmet_kayitlari.sync == 1:
+                        pass
+                    elif hizmet_kayitlari.sync == 2:
+                        pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
                         hizmet_kayitlari.sync = 1
                         hizmet_kayitlari.save()
-                        self.logger.info("New HizmetKayitlari saved.")
-                    sleep(1)
-                except socket.error:
-                    self.logger.info("Riak connection refused!")
+                    else:
+                        pass
+                else:
+                    hizmet_kayitlari = HizmetKayitlari()
+                    pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
+                    hizmet_kayitlari.sync = 1
+                    hizmet_kayitlari.save()
+
+            # compare hitap incoming data and local db
+            for record_id, record_values in local_records.items():
+                hizmet_kayitlari = HizmetKayitlari.objects.filter(
+                    kayit_no=record_id).get()
+                if record_id not in hitap_dict:
+                    if hizmet_kayitlari.sync == 1:
+                        hizmet_kayitlari.delete()
+                        hizmet_kayitlari.save()
+                    else:
+                        pass
+
+                hizmet_kayitlari.save()
+            self.logger.info("Service runned.")
+
+        # If not any record belongs to given tcno, create new one
+        except IndexError:
+            hizmet_kayitlari = HizmetKayitlari()
+            for hitap_keys, hitap_values in hitap_dict.items():
+                pass_hizmet_kayitlari(hizmet_kayitlari, hitap_values)
+                hizmet_kayitlari.sync = 1
+                hizmet_kayitlari.save()
+                self.logger.info("New HizmetKayitlari saved.")
+            sleep(1)
+        except socket.error:
+            self.logger.info("Riak connection refused!")
 
         except AttributeError:
             self.logger.info("TCKN should be wrong!")
