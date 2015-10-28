@@ -21,36 +21,62 @@ def zato_request(service_uri, payload):
     :return: return if fails None, or simply return string of zato service response payload
     """
     url = '/'.join([settings.ZATO_SERVER, service_uri])
-    r = requests.post(url, data=payload)
-    if r.status_code is '200':
+    payload = json.loads(payload)
+    r = requests.post(url, data=json.dumps(payload))
+    if r.status_code == 200:
         response = r.json()
         r.close()
-        return response['result']
-    if r.status_code is '404':
-        return '404'
+        try:
+            if response['status'] == 'ok':
+                return response['result']
+            else:
+                # all zato internal errors will be handled here, riak error, connection error etc..
+                raise Exception("your service request failed with error %s" % response['result'])
+        except KeyError:
+            raise Exception("your service response contains no status code, check your zato service package")
+
+    if r.status_code == 404:
+        raise Exception("Service called '%s' is not defined on zato servers or service_uri changed" % service_uri)
+    # other than 404 errors will be handled here, such as unauthorized requests, permission denied or etc..
     else:
-        return None
+        raise Exception("Status code is something different 200 or 404 which is %s, "
+                        "this means something really went bad, check zato server logs" % r.status_code)
 
 
-def hitap_hizmet_cetveli_getir(service_uri='hizmet-cetvel', tckn=None):
+def kimlik_no(tckn):
+    if tckn is None:
+        raise Exception("tckn can not be empty")
+
+    if type(tckn) is not str:
+        raise TypeError("tckn must be string which is %s" % type(tckn))
+
+    if len(tckn) != 11:
+        raise Exception("tckn length must be 11")
+
+    return tckn
+
+
+def hitap_hizmet_cetveli_getir(service_uri='hizmet-cetveli-getir', tckn=None):
     """
-    this service takes tckn as string, consume hizmet_cetvel of hitap, sync local data on riak.
+    this service takes tckn as string, consume "hizmet cetveli getir" of hitap which syncs local data on riak.
+
+    :param service_uri: string, default hizmet-cetveli-getir
+    :param tckn: string, of 11 byte length, can not be empty
+    :return: list, with lines of hizmet_cetveli
+    """
+
+    payload = '{"personel":{"tckn":"%s"}}' % kimlik_no(tckn)
+    return zato_request(service_uri, payload)
+
+
+def hitap_hizmet_cetveli_senkronize_et(service_uri='hizmet-cetveli-senkronize-et', tckn=None):
+    """
+    this service takes tckn as string, consume "hizmet cetvel senkronize et" of hitap, sync local data on riak.
 
     :param service_uri: string, default hizmet-cetvel
     :param tckn: string of 11 byte length, can not be empty
-    :return: if request fails None, or simply return string
-             'ok' for successful sync data of existent person
-             'new' for successful sync data of new person
-             'connection error' for zato internal error
-             'riak error' for zato riak connection error
-             '404' for not found services on zato servers, check service_uri
+    :return: string, 'ok' for successful sync data of existent person
     """
-    if tckn is None:
-        return "tckn couldn't be empty"
 
-    if len(tckn) == 11:
-        payload = '{"personel":{"tckn":"%s"}}' % tckn
-        response = zato_request(service_uri, json.dumps(payload))
-        return response
-    else:
-        return "check tckn"
+    payload = '{"personel":{"tckn":"%s"}}' % kimlik_no(tckn)
+    return zato_request(service_uri, payload)
