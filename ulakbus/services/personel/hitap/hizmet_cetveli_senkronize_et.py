@@ -135,36 +135,45 @@ class HizmetCetveliSorgula(Service):
                         }
                     self.logger.info("local_records created.")
 
+                    # compare hitap incoming data and local db
                     for record_id, record_values in hitap_dict.items():
                         if record_id in local_records:
                             hizmet_kayitlari = HizmetKayitlari.objects.filter(
                                 kayit_no=record_id).get()
-                            hizmet_kayitlari.sync = 1
-                            hizmet_kayitlari.save()
+                            if hizmet_kayitlari.sync == 1:
+                                pass
+                            elif hizmet_kayitlari.sync == 2:
+                                pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
+                                hizmet_kayitlari.sync = 1
+                                hizmet_kayitlari.save()
+                            else:
+                                pass
                         else:
                             hizmet_kayitlari = HizmetKayitlari()
                             pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
                             hizmet_kayitlari.sync = 1
                             hizmet_kayitlari.save()
 
+                    # compare hitap incoming data and local db
                     for record_id, record_values in local_records.items():
                         hizmet_kayitlari = HizmetKayitlari.objects.filter(
                             kayit_no=record_id).get()
                         if record_id not in hitap_dict:
                             if hizmet_kayitlari.sync == 1:
-                                hizmet_kayitlari.sync = 2
+                                hizmet_kayitlari.delete()
                                 hizmet_kayitlari.save()
-                            if hizmet_kayitlari.sync == 2:
-                                hizmet_kayitlari.sync = 3
-                                hizmet_kayitlari.save()
-                        hizmet_kayitlari.sync = 99
+                            else:
+                                pass
+
                         hizmet_kayitlari.save()
                     self.logger.info("Service runned.")
 
+                # If not any record belongs to given tcno, create new one
                 except IndexError:
                     hizmet_kayitlari = HizmetKayitlari()
                     for hitap_keys, hitap_values in hitap_dict.items():
                         pass_hizmet_kayitlari(hizmet_kayitlari, hitap_values)
+                        hizmet_kayitlari.sync = 1
                         hizmet_kayitlari.save()
                         self.logger.info("New HizmetKayitlari saved.")
                     sleep(1)
