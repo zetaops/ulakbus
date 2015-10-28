@@ -249,47 +249,47 @@
   },
   "hizmet_nufus_sebep": {
     "0":{
-      "tr": "GÖREVE GİRİŞ (YENİ KAYIT)",
+      "tr": "Göreve Giriş (Yeni Kayıt)",
       "en": ""
     },
     "1":{
-      "tr": "NAKİL (KAMU İDARESİ İÇİ NAKİL)",
+      "tr": "Nakil (Kamu İdaresi İçi Nakil)",
       "en": ""
     },
     "2":{
-      "tr": "NAKİL (KAMU İDARESİ DIŞI NAKİL)",
+      "tr": "Nakil (Kamu İdaresi Dışı Nakil)",
       "en": ""
     },
     "3":{
-      "tr": "EMEKLİLİK",
-      "en": ""
+      "tr": "Emeklilik",
+      "en": "Retiring"
     },
     "4":{
-      "tr": "İSTİFA",
-      "en": ""
+      "tr": "İstifa",
+      "en": "Resigning"
     },
     "5":{
-      "tr": "GÖREVE SON VERİLME",
+      "tr": "Göreve Son Verilme",
       "en": ""
     },
     "6":{
-      "tr": "MÜSTAFİ SAYILMA",
+      "tr": "Müstafi Sayılma",
       "en": ""
     },
     "7":{
-      "tr": "SÖZLEŞME FESHİ",
+      "tr": "Sözleşme Feshi",
       "en": ""
     },
     "8":{
-      "tr": "GÖREV SÜRESİNİN SONA ERMESİ",
+      "tr": "Görev SÜresinin Sona Ermesi",
       "en": ""
     },
     "9":{
-      "tr": "ÖLÜM",
-      "en": ""
+      "tr": "Ölüm",
+      "en": "Death"
     },
     "10":{
-      "tr": "RESMEN EMEKLİ",
+      "tr": "Resmen Emekli",
       "en": ""
     }
   },
@@ -323,43 +323,43 @@
   },
   "kurs_nevi": {
     "1":{
-      "tr": "KURUMCA DÜZENLENEN HİZMET İÇİ EĞİTİM SAYILMAYAN KURSLAR",
+      "tr": "Kurumca Düzenlenen Hizmet İçi Eğitim Sayılmayan Kurslar",
       "en": ""
     },
     "2":{
-      "tr": "LİSANSÜSTÜ",
+      "tr": "Lisansüstü",
       "en": ""
     },
     "3":{
-      "tr": "MASTER",
+      "tr": "Master",
       "en": ""
     },
     "4":{
-      "tr": "TIPTA UZMANLIK",
+      "tr": "Tıpta Uzmanlık",
       "en": ""
     },
     "5":{
-      "tr": "DOKTORA",
+      "tr": "Doktora",
       "en": ""
     },
     "6":{
-      "tr": ":AVUKATLIK STAJI",
+      "tr": ":Avukatlık Stajı",
       "en": ""
     },
     "7":{
-      "tr": "HAFIZLIK",
+      "tr": "Hafızlık",
       "en": ""
     },
     "8":{
-      "tr": "SANATTA YETERLİLİK",
+      "tr": "Sanatta Yeterlilik",
       "en": ""
     },
     "9":{
-      "tr": "DOÇENT",
+      "tr": "Doçent",
       "en": ""
     },
     "10":{
-      "tr": "YANDAL UZMANLIK",
+      "tr": "Yandal Uzmanlık",
       "en": ""
     }
   },
@@ -401,43 +401,43 @@
   },
   "ogrenim_durumu": {
     "1":{
-      "tr": "OKURYAZAR",
+      "tr": "Okuryazar",
       "en": ""
     },
     "2":{
-      "tr": "İLKOKUL",
+      "tr": "İlkokul",
       "en": ""
     },
     "3":{
-      "tr": "ORTAOKUL",
+      "tr": "Ortaokul",
       "en": ""
     },
     "4":{
-      "tr": "İLKÖĞRETİM",
+      "tr": "İlköğretim",
       "en": ""
     },
     "5":{
-      "tr": "LİSE",
+      "tr": "Lise",
       "en": ""
     },
     "6":{
-      "tr": "MESLEK LİSESİ",
+      "tr": "Meslek Lisesi",
       "en": ""
     },
     "7":{
-      "tr": "YÜKSEK OKUL",
+      "tr": "Yüksekokul",
       "en": ""
     },
     "8":{
-      "tr": "LİSANS TAMAMLAMA",
+      "tr": "Lisans Tamamlama",
       "en": ""
     },
     "9":{
-      "tr": "ÜNİVERSİTE",
+      "tr": "Üniversite",
       "en": ""
     },
     "10":{
-      "tr": "ORTAOKUL",
+      "tr": "Ortaokul",
       "en": ""
     }
   },
@@ -493,18 +493,443 @@
       "en": ""
     }
   },
-  "husus": {
-    "1":{
-      "tr": "",
+  "ogrenim_yeri": {
+    "1": {
+      "tr": "Yurt İçi",
+      "en": "Home Country"
+    },
+    "2": {
+      "tr": "Yurt Dışı",
+      "en": "Abroad"
+    }
+  },
+  "hazirlik_bilgisi": {
+    "0": {
+      "tr": "YOK",
+      "en": "NO"
+    },
+    "1": {
+      "tr": "VAR",
+      "en": "YES"
+    }
+  },
+  "askerlik_nevi": {
+    "1": {
+      "tr": "Tecilli",
       "en": ""
     },
-    "2":{
-      "tr": "",
+    "2": {
+      "tr": "Er, Erbaş",
       "en": ""
     },
-    "3":{
-      "tr": "",
+    "3": {
+      "tr": "Yedek Subay",
+      "en": ""
+    },
+    "4": {
+      "tr": "Bedelli",
+      "en": ""
+    },
+    "5": {
+      "tr": "Muaf",
+      "en": ""
+    },
+    "6": {
+      "tr": "Yedek Subay Öğretmen",
+      "en": ""
+    },
+    "7": {
+      "tr": "Er Öğretmen",
+      "en": ""
+    },
+    "8": {
+      "tr": "Erlikten Yedek Subaylığa Geçen",
+      "en": ""
+    },
+    "9": {
+      "tr": "Yedek Subaylıktan Erliğe Geçen",
+      "en": ""
+    },
+    "10": {
+      "tr": "İhtiyati Askerlik",
       "en": ""
     }
+  },
+  "sgk_nevi": {
+    "1": {
+      "tr": "SSK Kamu",
+      "en": ""
+    },
+    "2": {
+      "tr": "SSK Öze",
+      "en": ""
+    },
+    "3": {
+      "tr": "Bağ-Kur",
+      "en": ""
+    },
+    "4": {
+      "tr": "Yurt Dışı Hizmetleri",
+      "en": ""
+    },
+    "5": {
+      "tr": "Banka Emekli Sandıkları",
+      "en": ""
+    },
+    "6": {
+      "tr": "SSK Askerlik Borçlanması",
+      "en": ""
+    },
+    "7": {
+      "tr": "SSK Diğer Borçlanma",
+      "en": ""
+    },
+    "8": {
+      "tr": "Bağ-Kur Askerlik Borçlanması",
+      "en": ""
+    },
+    "9": {
+      "tr": "Bağ-Kur Diğer Borçlanma",
+      "en": ""
+    },
+    "10": {
+      "tr": "Banka Emekli Sandık Askerlik Borçlanması",
+      "en": ""
+    },
+    "11": {
+      "tr": "Banka Emekli Sandık Diğer Borçlanma",
+      "en": ""
+    },
+    "12": {
+      "tr": "SSK FHZ (01/10/2008 Sonrası İçin)",
+      "en": ""
+    }
+  },
+  "banka_kod": {
+    "1": {
+      "tr": "Türkiye Öğretmenler Bankası A.Ş. Sağlık ve Sosyal Yardım Sandığı Vakfı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Türkiye Tütüncüler Bankası A.Ş. Memur ve Hizmetlileri Sosyal Sigorta ve Yardım Sandığı Vakfı ",
+      "en": ""
+    }
+  },
+  "atama_sekli": {
+    "1": {
+      "tr": "Kurumun Atamaya Yetkili Amiri Tarafından Yapılan Atamalar (68/b Md. Torba Kadro)",
+      "en": ""
+    },
+    "2": {
+      "tr": "Üçlü Kararnameye Göre Yapılan Atamalar",
+      "en": ""
+    },
+    "3": {
+      "tr": "Kurumun Yönetim Kurulu Kararı Ve Bakan Onayı İle Yapılan Atamalar",
+      "en": ""
+    },
+    "4": {
+      "tr": "Yetki Devrine Göre Yapılan Atamalar",
+      "en": ""
+    },
+    "5": {
+      "tr": "Diğerleri",
+      "en": ""
+    }
+  },
+  "hizmet_sinifi": {
+    "1": {
+      "tr": "Genel İdare Hizmetleri",
+      "en": ""
+    },
+    "2": {
+      "tr": "Mülki İdare Amirliği Hizmetleri",
+      "en": ""
+    },
+    "3": {
+      "tr": "Sağlık Hizmetleri",
+      "en": ""
+    },
+    "4": {
+      "tr": "Teknik Hizmetler",
+      "en": ""
+    },
+    "5": {
+      "tr": "Eğitim Öğretim Hizmetleri",
+      "en": ""
+    },
+    "6": {
+      "tr": "Avukatlık Hizmetleri",
+      "en": ""
+    },
+    "7": {
+      "tr": "Emniyet Hizmetleri",
+      "en": ""
+    },
+    "8": {
+      "tr": "Din Hizmetleri",
+      "en": ""
+    },
+    "9": {
+      "tr": "Yardımcı Hizmetler",
+      "en": ""
+    },
+    "10": {
+      "tr": "Milli İstihbarat Teşkilatı",
+      "en": ""
+    },
+    "11": {
+      "tr": "Askeri Hakim Ve Savcılar",
+      "en": ""
+    },
+    "12": {
+      "tr": "Belediye Başkanı",
+      "en": ""
+    },
+    "13": {
+      "tr": "Cumhurbaşkanı",
+      "en": ""
+    },
+    "14": {
+      "tr": "Cumhurbaşkanlığı Personeli",
+      "en": ""
+    },
+    "15": {
+      "tr": "Denetim Elemanları",
+      "en": ""
+    },
+    "16": {
+      "tr": "Devlet Sanatçıları",
+      "en": ""
+    },
+    "17": {
+      "tr": "Hakim Ve Savcılar",
+      "en": ""
+    },
+    "18": {
+      "tr": "Merkez Bankası",
+      "en": ""
+    },
+    "19": {
+      "tr": "Milletvekili",
+      "en": ""
+    },
+    "20": {
+      "tr": "Öğretim Üyeleri",
+      "en": ""
+    },
+    "21": {
+      "tr": "Sayıştay Üyeleri Ve Meslek Mensupları",
+      "en": ""
+    },
+    "22": {
+      "tr": "Türkiye Büyük Millet Meclisi Personeli",
+      "en": ""
+    },
+    "23": {
+      "tr": "Türkiye Radyo Televizyon Kurumu",
+      "en": ""
+    },
+    "24": {
+      "tr": "Türk Silahlı Kuvvetleri",
+      "en": ""
+    },
+    "25": {
+      "tr": "Öğretim Üyeleri",
+      "en": ""
+    },
+    "26": {
+      "tr": "Yardımcı Sağlık Hizmetleri",
+      "en": ""
+    },
+    "27": {
+      "tr": "Öğretim Görevlileri Ve Okutmanlar",
+      "en": ""
+    },
+    "28": {
+      "tr": "Öğretim Yardımcıları",
+      "en": ""
+    },
+    "29": {
+      "tr": "Sözleşmeli Personel",
+      "en": ""
+    }
+  },
+  "acik_sekli": {
+    "1": {
+      "tr": "Açığa Alınma/Görevden Uzaklaştırılma",
+      "en": ""
+    },
+    "2": {
+      "tr": "Tutuklama",
+      "en": "Arresting"
+    },
+    "3": {
+      "tr": "Hapis",
+      "en": "Prison"
+    },
+    "4": {
+      "tr": "Açığa Alınıp Daha Sonra Göreve Son",
+      "en": ""
+    },
+    "5": {
+      "tr": "Görevine Son Verilme",
+      "en": ""
+    },
+    "6": {
+      "tr": "1402 S. Sıkıyönetim K.Göre Göreve Son",
+      "en": ""
+    },
+    "7": {
+      "tr": "Açığa Alınıp 1402 S. Sıkıyönetim K.Göre Göreve Son",
+      "en": ""
+    },
+    "8": {
+      "tr": "Açıktan Göreve Atanmama",
+      "en": ""
+    }
+  },
+  "iade_sekli": {
+    "acik_sekli_1": {
+      "1": "Göreve İade",
+      "2": "Göreve Son",
+      "3": "Emeklilik",
+      "4": "İstifa",
+      "5": "Vefat",
+      "6": "Kamu İdaresi Dışı Nakil"
+    },
+    "acik_sekli_2": {
+      "1": "Göreve İade",
+      "2": "Göreve Son",
+      "3": "Emeklilik",
+      "4": "İstifa",
+      "5": "Vefat",
+      "6": "Kamu İdaresi Dışı Nakil"
+    },
+    "acik_sekli_3": {
+      "1": "Göreve İade",
+      "2": "Göreve Son",
+      "3": "Emeklilik",
+      "4": "İstifa",
+      "5": "Vefat",
+      "6": "Kamu İdaresi Dışı Nakil"
+    },
+    "acik_sekli_4": {
+      "1": "Göreve Mahkeme Kararı İle İade",
+      "2": "Af Kanununa Göre Göreve İade",
+      "3": "Yüksek Disiplin Kurulu Kararının İptali Üzerine",
+      "4": "Göreve İade Edilmemesine İlişkin İşlemin İptali"
+    },
+    "acik_sekli_5": {
+      "1": "Göreve Mahkeme Kararı İle İade",
+      "2": "Af Kanununa Göre Göreve İade",
+      "3": "Yüksek Disiplin Kurulu Kararının İptali Üzerine",
+      "4": "Göreve İade Edilmemesine İlişkin İşlemin İptali"
+    },
+    "acik_sekli_6": {
+      "1": "Sakıncalılık Halinin Kaldırılması Üzerine İade",
+      "2": "Danıştay İçtihadleri Birleştirme Kurul Kararı",
+      "3": "Göreve İade Edilmemesine İlişkin İşlemin İptali",
+      "4": "Açıktan Atama"
+    },
+    "acik_sekli_7": {
+      "1": "Sakıncalılık Halinin Kaldırılması Üzerine İade",
+      "2": "Danıştay İçtihadleri Birleştirme Kurul Kararı",
+      "3": "Göreve İade Edilmemesine İlişkin İşlemin İptali",
+      "4": "Açıktan Atama"
+    },
+    "acik_sekli_8": {
+      "1": "Göreve Mahkeme Kararı İle İade",
+      "2": "Af Kanununa Göre Göreve İade",
+      "3": "Yüksek Disiplin Kurulu Kararının İptali Üzerine",
+      "4": "Göreve İade Edilmemesine İlişkin İşlemin İptali",
+      "5": "Göreve Atanmamasına İlişkin İşlemin İptali"
+    }
+  },
+  "hizmet_durumu": {
+    "acik_sekli_1": {
+      "1": "Tam Olarak",
+      "2": "1/2 Oranında",
+      "3": "Hiç"
+    },
+    "acik_sekli_2": {
+      "1": "Tam Olarak",
+      "2": "1/2 Oranında",
+      "3": "Hiç"
+    },
+    "acik_sekli_3": {
+      "1": "Tam Olarak",
+      "2": "1/2 Oranında",
+      "3": "Hiç"
+    },
+    "acik_sekli_4": {
+      "1": "Tam Olarak",
+      "2": "1/2 Oranında",
+      "3": "Açık Süre 1/2, Göreve Son Tam Olarak",
+      "4": "Hiç",
+      "5": "Açık SÜre 1/2 Oranında",
+      "6": "1/2 Oranında İade İsteminde Bulunduğu Tarih İle Göreve Başladığı Tarih Tam",
+      "7": "İade İsteminde Bulunduğu Tarih İle Göreve Başladığı Tarih Tam "
+    },
+    "acik_sekli_5": {
+      "1": "Tam Olarak",
+      "2": "Hiç",
+      "3": "İade İsteminde Bulunduğu Tarih İle Göreve Başladığı Tarih Arası Tam "
+    },
+    "acik_sekli_6": {
+      "1": "Tam Olarak",
+      "2": "Hiç",
+      "3": "İçtihad Kararına Göre Belirli Tarih Arası Tam",
+      "4": "İade İsteminde Bulunduğu Tarih İle Göreve Başladığı Tarih Tam "
+    },
+    "acik_sekli_7": {
+      "1": "Tam Olarak",
+      "2": "1/2 Oranında",
+      "3": "Açık Süre 1/2, Göreve Son Tam Olarak",
+      "4": "Hiç",
+      "5": "1/2 Oranında Ve İçtihad Kararına Göre Belirli Tarih Arası Tam",
+      "6": "İçtihad Kararına Göre Belirli Tarih Arası Tam",
+      "7": "1/2 Oranında İade İsteminde Bulunduğu Tarih İle Göreve Başladığı Tarih Tam",
+      "8": "İade İsteminde Bulunduğu Tarih İle Göreve Başladığı Tarih Tam"
+    },
+    "acik_sekli_8": {
+      "1": "Tam Olarak",
+      "2": "Hiç"
+    }
+  },
+  "husus": {
+    "1": "Hiç Aylık Ödenmedi",
+    "2": "Aylık Ve Keseneklere Ait Kayıt Bulunamadı",
+    "3": "Aylık Ve Keseneklere Ait Kayıtlar Arşivde Yangın, Su Basması Veya Sel,Deprem Gibi Nedenlerle Bulunamadı",
+    "4": "2/3 Oranındaki Aylıkları Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Gönderildi",
+    "5": "2/3 Oranındaki Aylıklari Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları, Göreve İade Edildiği Tarihte 1/3 Oranındaki Aylıkları Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Gönderildi",
+    "6": "Aylıkları Tam Olarak Ödenip Emekli Keseneği Ve Kurum Karşılıkları Tam Olarak Gönderildi",
+    "7": "2/3 Oranındaki Aylıkları Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Gönderildi. Göreve Iade Edildiği Tarihte Noksan Ödenen 1/3 Oranındaki Aylıkları Ödenip Göreve Son Olarak Geçen Süreye Ait Aylıkları Tam Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Kesenekleri İle Göreve Sondaki Kesenekleri Tam Olarak Gönderildi",
+    "8": "2/3 Oranındaki Aylıkları Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Gönderildi. Göreve İade İsteminde Bulunduğu GG.AA.YYYY Tarih İle Göreve İade Edildiği GG.AA.YYYY Tarih Arasındaki Süreye Ait Aylıklari Ödenip Emekli Keseneği Ve Kurum Karşılıkları Gönderildi.",
+    "9": "Göreve İade İsteminde Bulunduğu GG.AA.YYYY Tarih İle Göreve İade Edildiği GG.AA.YYYY Tarih Arasındaki Süreye Ait Aylıkları Ödenip Emekli Keseneği Ve Kurum Karşılıkları Gönderildi",
+    "10": "2/3 Oranındaki Aylıklari Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Gönderildi Sakıncası Kaldırılınca Göreve İade Edildiği Tarihte Noksan Ödenen 1/3 Oranındaki Aylıkları Ödenip Göreve Son Olarak Geçen Süreye Ait Aylıkları Tam Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Kesenekleri İle Göreve Sondaki Kesenekleri Tam Olarak Gönderildi",
+    "11": "Sakıncası Kaldırılması Üzerine Göreve İade Edildiği Tarihte Aylıkları Tam Ödenip, Emekli Keseneği Ve Kurum Karşılıkları Tam Olarak Gönderildi",
+    "12": "Danıştay İçtihadleri Birleştirme Kurulu Kararı Gereğince GG.AA.YYYY/GG.AA.YYYY Tarihleri Arasındaki Süreye Ait Aylıkları Tam Olarak Ödenip Kesenek Ve Kurum Karşılıkları Tam Olarak Gönderilmiştir.",
+    "13": "2/3 Oranındaki Aylıkları Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Gönderildi. Danıştay İçtihadleri Birleştirme Kurulu Kararı Gereğince GG.AA.YYYY/GG.AA.YYYY Tarihleri Arasındaki Süreye Ait Aylıkları Tam Olarak Ödenip Kesenek Ve Kurum Karşılıkları Tam Olarak Gönderilmiştir",
+    "14": "Tarihleri Arasındaki Süreye Ait Aylıkları Tam Olarak Ödenip Kesenek Ve Kurum Karşılıkları Tam Olarak Gönderilmiştir",
+    "15": "Görev Yaptığı İlde Sıkıyönetimin Kaldırılması Üzerine Göreve İade İsteminde Bulunduğu GG.AA.YYYY Tarih İle Göreve İade Edildiği GG.AA.YYYY Tarih Arasındaki Süreye Ait Aylıkları Ödenip Emekli Keseneği Ve Kurum Karşılıkları Gönderildi",
+    "16": "2/3 Oranındaki Aylıkları Ödenip, 1/2 Oranındaki Emekli Keseneği Ve Kurum Karşılıkları Gönderildi. Görev Yaptığı İlde Sıkıyönetimin Kaldırılması Üzerine Göreve İade İsteminde Bulunduğu GG.AA.YYYY Tarih İle Göreve İade Edildiği GG.AA.YYYY Tarih Arasındaki Süreye Ait Aylıkları Ödenip Emekli Keseneği Ve Kurum Karşılıkları Gönderildi",
+    "17": "Mahkeme Kararı Gereğince GG.AA.YYYY/GG.AA.YYYY Tarihleri Arasındaki Süreye Ait Aylıkları Ödenip, Emekli Keseneği Ve Kurum Karşılıkları Gönderildi",
+    "18": "Mahkeme Adı, Tarihi, Sayısı Ve Kararı İçeren Text"
+  },
+  "kanun_kod": {
+    "1": "5434: 5434 S.K. Tabi Borçlanma",
+    "2": "5510: 5510 S.K. tabi borçlanma"
+  },
+  "borc_nevi": {
+    "1": "22:Personel Mevzuatına Göre Aylıksız İzin Süreleri(4c)",
+    "2": "28:5434 SK geçici 209 borçlanması",
+    "3": "30:5510 S.K. Geç. 4. MD. 17. Fıkra Borç.(5525 S.K.)",
+    "4": "31:5510 S.K. Geç. 36. MD. Borç.(1402)",
+    "5": "32:5510 S.K. Geç. 43. MD. Borç.(1416)",
+    "6": "33:5510 S.K. Geç. 44. MD. Borç.(5525 S.K.)",
+    "7": "34:5510 S.K. Geç. 51. MD. Borç.(5525 S.K.)",
+    "8": "35:5510 S.K. 41 MD. (4/C STATÜLÜ DOĞUM BORÇLANMASI)",
+    "9": "36:5510 S.K. Geç. 56. MD. Borç.(5525 S.K.)"
   }
 }
