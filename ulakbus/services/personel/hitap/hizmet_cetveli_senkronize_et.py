@@ -17,9 +17,9 @@ H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HizmetCetveliSorgula(Service):
+class HizmetCetveliSenkronizeEt(Service):
     """
-    HITAP HizmetCetveliSorgula Zato Servisi
+    HITAP HizmetCetveliSenkronizeEt Zato Servisi
     """
 
     def handle(self):
@@ -58,7 +58,7 @@ class HizmetCetveliSorgula(Service):
 
             self.logger.info("hizmet_kayitlari successfully passed.")
 
-        tckn = self.request.payload['personel']['tckn']
+        tckn = self.request.payload['tckn']
         conn = self.outgoing.soap['HITAP'].conn
 
         # connects with soap client to the HITAP
