@@ -135,11 +135,16 @@ class AuthBackend(object):
         self.current = current
 
     def get_permissions(self):
-        return self.get_role().get_permissions()
+        if 'permissions' in self.session:
+            return self.session['permissions']
+        else:
+            perms = self.get_role().get_permissions()
+            self.session['permissions'] = perms
+            return perms
 
     def has_permission(self, perm):
         # return True
-        return perm in self.get_role().get_permissions()
+        return perm in self.get_permissions()
 
     def get_user(self):
         if 'user_data' in self.session:
@@ -165,21 +170,20 @@ class AuthBackend(object):
         self.session['user_data'] = user.clean_value()
 
         # TODO: this should be remembered from previous login
-        # TODO: discuss for storage method/location of user settings
         default_role = user.role_set[0].role
-        self.session['role_data'] = default_role.clean_value()
+        # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
 
         self.session['permissions'] = default_role.get_permissions()
 
     def get_role(self):
-        if 'role_data' in self.session:
-            role = Role()
-            role.set_data(self.session['role_data'])
-            if 'role_id' in self.session:
-                role.key = self.session['role_id']
-            return role
-        elif 'role_id' in self.session:
+        # if 'role_data' in self.session:
+        #     role = Role()
+        #     role.set_data(self.session['role_data'])
+            # if 'role_id' in self.session:
+            #     role.key = self.session['role_id']
+            # return role
+        if 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
             # TODO: admins should be informed about a user without a role
