@@ -48,7 +48,7 @@
       "en": "Lect."
     },
     "meta": {
-      "sibling": "akademik_unvan_kisa"
+      "sibling": "akademik_unvan"
     }
   },
   "ders_verilis_bicimleri": {
@@ -119,86 +119,392 @@
       "en": "Lecture Theater"
     }
   },
-  "YÖKSİS Program ID": {
-  "1": {
-    "tr": "",
-    "en": ""
-  },
-  "2": {
-    "tr": "",
-    "en": ""
-  },
-  "3": {
-    "tr": "",
-    "en": ""
+  "yoksis_program_id": {
+    "1": {
+      "tr": "",
+      "en": ""
+    },
+    "2": {
+      "tr": "",
+      "en": ""
+    },
+    "3": {
+      "tr": "",
+      "en": ""
     }
   },
-  "Sınav Türleri": {
+  "sinav_turleri": {
     "1": {
-    "tr": "Ara Sınav",
-    "en": "Midterm Exam"
-  },
+      "tr": "Ara Sınav",
+      "en": "Midterm Exam"
+    },
     "2": {
-    "tr": "Genel Sınav",
-    "en": "Final Exam"
-  },
+      "tr": "Genel Sınav",
+      "en": "Final Exam"
+    },
     "3": {
-    "tr": "Bütünleme",
-    "en": "Integration Exam"
-  },
+      "tr": "Bütünleme",
+      "en": "Integration Exam"
+    },
     "4": {
-    "tr": "Tek Ders",
-    "en": "One Exam"
-  },
+      "tr": "Tek Ders",
+      "en": "One Exam"
+    },
     "5": {
-    "tr": "Muafiyet",
-    "en": "Exemption Exam"
-  },
+      "tr": "Muafiyet",
+      "en": "Exemption Exam"
+    },
     "6": {
-    "tr": "Mazeret",
-    "en": "Excuse Exam"
-  },
+      "tr": "Mazeret",
+      "en": "Excuse Exam"
+    },
     "7": {
-    "tr": "Ek Sınav",
-    "en": "Additional Exam"
-  }
+      "tr": "Ek Sınav",
+      "en": "Additional Exam"
+    }
   },
-  "Ödeme Şekli": {
+  "odeme_sekli": {
     "1": {
-    "tr": "Nakit",
-    "en": "Cash"
-  },
+      "tr": "Nakit",
+      "en": "Cash"
+    },
     "2": {
-    "tr": "Kredi Kartı",
-    "en": "Credit Card"
-  }
+      "tr": "Kredi Kartı",
+      "en": "Credit Card"
+    }
   },
-  "Öğrenci Borç Sebepleri": {
+  "ogrenci_borc_sebepleri": {
     "1": {
-    "tr": "Öğretim Ücreti",
-    "en": "Education Fee"
-  },
+      "tr": "Öğretim Ücreti",
+      "en": "Education Fee"
+    },
     "2": {
-    "tr": "Yaz Okulu Ücreti",
-    "en": "Summer School Fee"
-  },
+      "tr": "Yaz Okulu Ücreti",
+      "en": "Summer School Fee"
+    },
     "3": {
-    "tr": "Kimlik Ücreti",
-    "en": "Identity Card Fee"
-  }
+      "tr": "Kimlik Ücreti",
+      "en": "Identity Card Fee"
+    }
   },
-  "Para Birimleri": {
+  "para_birimleri": {
     "1": {
-    "tr": "Türk Lirası",
-    "en": "Turkish Liras"
-  },
+      "tr": "Türk Lirası",
+      "en": "Turkish Liras"
+    },
     "2": {
-    "tr": "Amerikan Doları",
-    "en": "US Dollars"
-  },
+      "tr": "Amerikan Doları",
+      "en": "US Dollars"
+    },
     "3": {
-    "tr": "Avro",
-    "en": "Euro"
-  }
+      "tr": "Avro",
+      "en": "Euro"
+    }
+  },
+  "maluliyet_kod": {
+    "0": {
+      "tr": "Engelli Değil",
+      "en": ""
+    },
+    "1": {
+      "tr": "Göreve Girişte Engelli (Engelli Mevz. Göre Atanan), 5434 Tabi",
+      "en": ""
+    },
+    "2": {
+      "tr": "Engelli Mevz. Göre Atanmayan, 5434 Tabi, Göreve Girişten Önce %40 Ve Üzeri Rap.",
+      "en": ""
+    },
+    "3": {
+      "tr": "Engelli Mevz. Göre Atanmayan, 5434 Tabi, Doğuştan Engelli Raporu Olan",
+      "en": ""
+    },
+    "4": {
+      "tr": "Engelli Mevz. Göre Atanmayan, 5434 Tabi, Gör. Girişten Sonra Engelli (%40 İla 49 Rap.)",
+      "en": ""
+    },
+    "5": {
+      "tr": "Engelli Mevz. Göre Atanmayan, 5434 Tabi, Gör. Girişten Sonra Engelli (%50 İla 59 Rap.)",
+      "en": ""
+    },
+    "6": {
+      "tr": "Engelli Mevz. Göre Atanmayan, 5434 Tabi, Gör. Girişten Sonra Engelli (%60 Ve Üzeri Rap.)",
+      "en": ""
+    },
+    "7": {
+      "tr": "5510 Tabi Göreve Girişten Önce Engelli (%60 Ve Üzeri Raporlu)",
+      "en": ""
+    },
+    "8": {
+      "tr": "5510 Tabi Engelli (%40 İla 49 Raporlu)",
+      "en": ""
+    },
+    "9": {
+      "tr": "5510 Tabi Engelli (%50 İla 59 Raporlu)",
+      "en": ""
+    },
+    "A":{
+      "tr": "5510 Tabi Engelli (%60 Ve Üzeri Raporlu)",
+      "en": ""
+    }
+  },
+  "hizmet_nufus_sebep": {
+    "0":{
+      "tr": "GÖREVE GİRİŞ (YENİ KAYIT)",
+      "en": ""
+    },
+    "1":{
+      "tr": "NAKİL (KAMU İDARESİ İÇİ NAKİL)",
+      "en": ""
+    },
+    "2":{
+      "tr": "NAKİL (KAMU İDARESİ DIŞI NAKİL)",
+      "en": ""
+    },
+    "3":{
+      "tr": "EMEKLİLİK",
+      "en": ""
+    },
+    "4":{
+      "tr": "İSTİFA",
+      "en": ""
+    },
+    "5":{
+      "tr": "GÖREVE SON VERİLME",
+      "en": ""
+    },
+    "6":{
+      "tr": "MÜSTAFİ SAYILMA",
+      "en": ""
+    },
+    "7":{
+      "tr": "SÖZLEŞME FESHİ",
+      "en": ""
+    },
+    "8":{
+      "tr": "GÖREV SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "9":{
+      "tr": "ÖLÜM",
+      "en": ""
+    },
+    "10":{
+      "tr": "RESMEN EMEKLİ",
+      "en": ""
+    }
+  },
+  "gorev_tipi": {
+    "1":{
+      "tr": "kurum dışı görev",
+      "en": ""
+    },
+    "2":{
+      "tr": "kurum içi görev",
+      "en": ""
+    }
+  },
+  "ulke": {
+    "1":{
+      "tr": "Belçika",
+      "en": "Belgium"
+    },
+    "2":{
+      "tr": "Hollanda",
+      "en": "Holland"
+    },
+    "3":{
+      "tr": "Fransa",
+      "en": "France"
+    },
+    "4":{
+      "tr": "Avusturya",
+      "en": "Austria"
+    }
+  },
+  "kurs_nevi": {
+    "1":{
+      "tr": "KURUMCA DÜZENLENEN HİZMET İÇİ EĞİTİM SAYILMAYAN KURSLAR",
+      "en": ""
+    },
+    "2":{
+      "tr": "LİSANSÜSTÜ",
+      "en": ""
+    },
+    "3":{
+      "tr": "MASTER",
+      "en": ""
+    },
+    "4":{
+      "tr": "TIPTA UZMANLIK",
+      "en": ""
+    },
+    "5":{
+      "tr": "DOKTORA",
+      "en": ""
+    },
+    "6":{
+      "tr": ":AVUKATLIK STAJI",
+      "en": ""
+    },
+    "7":{
+      "tr": "HAFIZLIK",
+      "en": ""
+    },
+    "8":{
+      "tr": "SANATTA YETERLİLİK",
+      "en": ""
+    },
+    "9":{
+      "tr": "DOÇENT",
+      "en": ""
+    },
+    "10":{
+      "tr": "YANDAL UZMANLIK",
+      "en": ""
+    }
+  },
+  "bolum_ad": {
+    "1":{
+      "tr": "",
+      "en": ""
+    },
+    "2":{
+      "tr": "",
+      "en": ""
+    },
+    "3":{
+      "tr": "",
+      "en": ""
+    },
+    "4":{
+      "tr": "",
+      "en": ""
+    }
+  },
+  "okul_ad": {
+    "1":{
+      "tr": "",
+      "en": ""
+    },
+    "2":{
+      "tr": "",
+      "en": ""
+    },
+    "3":{
+      "tr": "",
+      "en": ""
+    },
+    "4":{
+      "tr": "",
+      "en": ""
+    }
+  },
+  "ogrenim_durumu": {
+    "1":{
+      "tr": "OKURYAZAR",
+      "en": ""
+    },
+    "2":{
+      "tr": "İLKOKUL",
+      "en": ""
+    },
+    "3":{
+      "tr": "ORTAOKUL",
+      "en": ""
+    },
+    "4":{
+      "tr": "İLKÖĞRETİM",
+      "en": ""
+    },
+    "5":{
+      "tr": "LİSE",
+      "en": ""
+    },
+    "6":{
+      "tr": "MESLEK LİSESİ",
+      "en": ""
+    },
+    "7":{
+      "tr": "YÜKSEK OKUL",
+      "en": ""
+    },
+    "8":{
+      "tr": "LİSANS TAMAMLAMA",
+      "en": ""
+    },
+    "9":{
+      "tr": "ÜNİVERSİTE",
+      "en": ""
+    },
+    "10":{
+      "tr": "ORTAOKUL",
+      "en": ""
+    }
+  },
+  "mahkeme_sebep": {
+    "1":{
+      "tr": "Doğum Tarihi Değişikliği (Yaş Tashihi)",
+      "en": ""
+    },
+    "2":{
+      "tr": "Ad, soyad değişikliği",
+      "en": ""
+    },
+    "3":{
+      "tr": "Kazai Rüşt",
+      "en": ""
+    },
+    "4":{
+      "tr": "İdari Kayıt Düzeltme",
+      "en": ""
+    },
+    "5":{
+      "tr": "İntibaka İlişkin Mahkeme Kararı",
+      "en": ""
+    },
+    "6":{
+      "tr": "1416 SK Yurtdışı Eğitim Süresi",
+      "en": ""
+    }
+  },
+  "kha_durum": {
+    "0":{
+      "tr": "Değerlendirilmedi",
+      "en": ""
+    },
+    "1":{
+      "tr": "Prim gün sayısının 2/3 oranında değerlendirildi",
+      "en": ""
+    },
+    "2":{
+      "tr": "Prim gün sayısının 3/4 oranında değerlendirildi",
+      "en": ""
+    },
+    "3":{
+      "tr": "Prim gün sayısının 4/4 oranında değerlendirildi",
+      "en": ""
+    },
+    "4":{
+      "tr": "Belirlenemedi",
+      "en": ""
+    },
+    "5":{
+      "tr": "İki tarih arasının tamamı değerlendirildi",
+      "en": ""
+    }
+  },
+  "husus": {
+    "1":{
+      "tr": "",
+      "en": ""
+    },
+    "2":{
+      "tr": "",
+      "en": ""
+    },
+    "3":{
+      "tr": "",
+      "en": ""
+    }
   }
 }
