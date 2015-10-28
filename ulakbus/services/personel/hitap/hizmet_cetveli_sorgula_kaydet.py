@@ -160,6 +160,7 @@ class HizmetCetveliSorgula(Service):
                         hizmet_kayitlari.sync = 99
                         hizmet_kayitlari.save()
                     self.logger.info("Service runned.")
+                    response = {'result': 'ok'}
 
                 except IndexError:
                     hizmet_kayitlari = HizmetKayitlari()
@@ -167,11 +168,16 @@ class HizmetCetveliSorgula(Service):
                         pass_hizmet_kayitlari(hizmet_kayitlari, hitap_values)
                         hizmet_kayitlari.save()
                         self.logger.info("New HizmetKayitlari saved.")
+                        response = {'result': 'new'}
                     sleep(1)
                 except socket.error:
                     self.logger.info("Riak connection refused!")
+                    response = {'result': 'riak error'}
 
         except AttributeError:
-            self.logger.info("TCKN should be wrong!")
+            self.logger.info("TCKN may be wrong!")
+            response = {'result': 'tckn error'}
         except urllib2.URLError:
             self.logger.info("No internet connection!")
+            response = {'result': 'connection error'}
+        self.response.payload = response
