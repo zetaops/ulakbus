@@ -1,4 +1,4 @@
-# -*-  coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # Copyright (C) 2015 ZetaOps Inc.
 
@@ -71,7 +71,7 @@ class HizmetCetveliGetir(Service):
                 self.logger.info("hitap_dict created.")
 
             response_json = dumps(hitap_dict)
-            self.response.payload["status"] = u"ok"
+            self.response.payload["status"] = "ok"
             self.response.payload["result"] = response_json
 
         except AttributeError:
