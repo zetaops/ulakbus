@@ -68,7 +68,7 @@
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="kimlik_no_gir"/>
-    <bpmn2:userTask id="kimlik_no_gir" camunda:assignee="personel.yeni_personel_ekle" name="Kimlik No Gir">
+    <bpmn2:userTask id="kimlik_no_gir" camunda:assignee="personel.YeniPersonelEkle" name="Kimlik No Gir">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_26</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
