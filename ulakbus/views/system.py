@@ -116,4 +116,4 @@ class Notification(BaseView):
         notifies = self.current.msg_cache.get_all()
         if not notifies:
             notifies = [get_random_msg()]
-        self.output['notifications'] = notifies
+        self.output['notifications'] = list(notifies)
