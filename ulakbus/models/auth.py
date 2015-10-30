@@ -44,7 +44,7 @@ class User(Model):
         return pbkdf2_sha512.verify(raw_password, self.password)
 
     def get_role(self, role_id):
-        return self.role_set.get(role_id)
+        return self.role_set.node_dict[role_id]
 
 
 class Permission(Model):
@@ -95,12 +95,24 @@ class Role(Model):
     def get_permissions(self):
         return [p.permission.code for p in self.Permissions]
 
+    def add_permission(self, perm):
+        self.Permissions(permission=perm)
+        self.save()
+
+    def add_permission_by_name(self, code, save=False):
+        if not save:
+            return ["%s | %s" % (p.name, p.code) for p in
+                     Permission.objects.filter(code='*' + code + '*')]
+        for p in Permission.objects.filter(code='*' + code + '*'):
+            self.Permissions(permission=p)
+        if p:
+            self.save()
 
 
 class Unit(Model):
     name = field.String("Name", index=True)
     # TODO: implement self relation
-    #parent = self
+    # parent = self
 
 
 class LimitedPermissions(Model):
@@ -180,13 +192,14 @@ class AuthBackend(object):
         # if 'role_data' in self.session:
         #     role = Role()
         #     role.set_data(self.session['role_data'])
-            # if 'role_id' in self.session:
-            #     role.key = self.session['role_id']
-            # return role
+        # if 'role_id' in self.session:
+        #     role.key = self.session['role_id']
+        # return role
         if 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
             # TODO: admins should be informed about a user without a role
+            self.session.delete()
             raise PermissionDenied("Your don't have a \"Role\" in this system")
 
     def authenticate(self, username, password):
