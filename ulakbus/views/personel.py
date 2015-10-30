@@ -10,11 +10,14 @@ from pyoko.model import field
 from zengine.lib.forms import JsonForm
 from zengine.views.base import SimpleView
 
+
 class TCKNForm(JsonForm):
-    TYPE_OVERRIDES = {'add': 'submit'}
+    class Meta:
+        customize_types = {'cmd': 'submit'}
+        title = 'Yeni Personel'
+
     tcno = field.String("TC No")
     cmd = field.String("Ekle", default='do')
-
 
 
 class YeniPersonelEkle(SimpleView):
@@ -24,4 +27,3 @@ class YeniPersonelEkle(SimpleView):
 
 def get_personel_from_hitap(tcno):
     pass
-
