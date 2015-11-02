@@ -58,7 +58,7 @@ class HizmetCetveliSorgula(Service):
 
             self.logger.info("hizmet_kayitlari successfully passed.")
 
-        tckn = self.request.payload['personel']['tckn']
+        tckn = self.request.payload['tckn']
         conn = self.outgoing.soap['HITAP'].conn
 
         # connects with soap client to the HITAP
@@ -102,7 +102,7 @@ class HizmetCetveliSorgula(Service):
                         service_bean[record].kurumOnayTarihi == "01.01.0001" else service_bean[
                             record].kurumOnayTarihi
                     }
-                self.logger.info("hitap_dict created.")
+                self.logger.info("hitap_dict created.: %s" % hitap_dict)
 
                 # if employee saved before, find that and add new records from hitap to riak
                 try:
@@ -180,4 +180,5 @@ class HizmetCetveliSorgula(Service):
         except urllib2.URLError:
             self.logger.info("No internet connection!")
             response = {'result': 'connection error'}
+        response['status'] = 'ok'
         self.response.payload = response
