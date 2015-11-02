@@ -7,6 +7,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from collections import defaultdict
+import random
+from uuid import uuid4
 from pyoko.model import model_registry
 from zengine.auth.permissions import get_workflows
 from zengine.views.base import BaseView
@@ -37,6 +39,9 @@ class Menu(BaseView):
                                                "url": crud_path,
                                                "kategori": category,
                                                "param": field_name})
+                # else:
+                #     print("NONONONON PERM FOR CRUD PERM %s" % model_data['name'])
+                #     print(self.current.get_permissions())
         return results
 
     def get_workflow_menus(self):
@@ -47,11 +52,14 @@ class Menu(BaseView):
         results = defaultdict(list)
         for wf in get_workflows():
             if self.current.has_permission(wf.spec.name):
-                category = wf.spec.wf_properties.get("menu_category", DEFAULT_CATEGORY)
-                if 'object' in wf.spec.wf_properties:
-                    results[wf.spec.wf_properties['object']].append(get_wf_menu())
-                else:
-                    results['other'].append(get_wf_menu())
+                category = wf.spec.wf_properties.get("menu_category")
+                if category:
+                    if 'object' in wf.spec.wf_properties:
+                        results[wf.spec.wf_properties['object']].append(get_wf_menu())
+                    else:
+                        results['other'].append(get_wf_menu())
+            # else:
+            #     print("NONONONON PERM FOR %s" % wf.spec.name)
         return results
 
 
@@ -84,7 +92,28 @@ class SearchPerson(Search):
     SEARCH_ON = Personel
 
 
+def get_random_msg():
+
+    msgs = [{'type': 1, 'title': 'İşlem tamamlandı',
+             'body': 'Uzun süren işlem başarıyla tamamlandı',
+             'url': '#yeni_personel/?t=%s' % uuid4().hex},
+            {'type': 2, 'title': 'Yeni İleti', 'body': 'Dene Mem\'den mesajınız var',
+             'url': '#show_msg/?t=%s' % uuid4().hex},
+            {'type': 3, 'title': 'Hata', 'body': 'Ulakbus ölümcül bir hatadan kurtarıldı!',
+             'url': ''}
+            ]
+    return msgs[random.randrange(0, len(msgs))]
+
+
 class Notification(BaseView):
     def __init__(self, current):
         super(Notification, self).__init__(current)
-        self.output['notifications'] = self.current.msg_cache.get_all()
+
+        if 'read' in current.input:
+            read_messages = current.input['read']
+            for msg in read_messages:
+                current.msg_cache.remove_item(msg)
+        notifies = self.current.msg_cache.get_all()
+        if not notifies:
+            notifies = [get_random_msg()]
+        self.output['notifications'] = list(notifies)

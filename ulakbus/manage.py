@@ -19,7 +19,7 @@ class CreateUser(Command):
         {'name': 'password', 'required': True, 'help': 'Login password'},
         {'name': 'abstract_role', 'default': 'BaseAbsRole', 'help': 'Name of the AbstractRole'},
         {'name': 'super', 'action': 'store_true', 'help': 'This is a super user'},
-        {'name': 'permission_query', 'default': "code:crud* OR code:login*",
+        {'name': 'permission_query', 'default': "code:crud* OR code:login* OR logout*",
          'help': 'Permissions which will be returned from this query will be granted to the user. '
                  'Defaults to: "code:crud* OR code:login*"'},
     ]
