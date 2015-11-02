@@ -33,7 +33,7 @@ class Menu(BaseView):
                     field_name = model_data['field'] if 'field' in model_data else user_type
                     verbose_name = (model_data['verbose_name'] if 'verbose_name' in model_data
                                     else model.Meta.verbose_name_plural)
-                    crud_path = 'crud/%s/' % model_data['name']
+                    crud_path = 'crud/%s' % model_data['name']
                     category = model_data.get('category', DEFAULT_CATEGORY)
                     results[user_type].append({"text": verbose_name,
                                                "url": crud_path,
@@ -114,6 +114,6 @@ class Notification(BaseView):
             for msg in read_messages:
                 current.msg_cache.remove_item(msg)
         notifies = self.current.msg_cache.get_all()
-        if not notifies:
-            notifies = [get_random_msg()]
+        # if not notifies:
+        #     notifies = [get_random_msg()]
         self.output['notifications'] = list(notifies)
