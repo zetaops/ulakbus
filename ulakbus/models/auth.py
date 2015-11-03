@@ -96,7 +96,6 @@ class Role(Model):
         return [p.permission.code for p in self.Permissions]
 
 
-
 class Unit(Model):
     name = field.String("Name", index=True)
     id = field.Integer("Unit ID", index=True)
@@ -136,8 +135,8 @@ class LimitedPermissions(Model):
         verbose_name = "Sınırlandırılmış Yetki"
         verbose_name_plural = "Sınırlandırılmış Yetkiler"
 
-    # def __unicode__(self):
-    #     return "%s - %s" % (self.abstract_role.name, self.role.user.username)
+    def __unicode__(self):
+         return "%s - %s" % (self.time_start, self.time_end)
 
     class IPList(ListNode):
         ip = field.String()

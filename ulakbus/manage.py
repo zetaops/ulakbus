@@ -15,7 +15,7 @@ class CreateUser(Command):
     CMD_NAME = 'create_user'
     HELP = 'Creates a new user'
     PARAMS = [
-        {'name': 'username', 'required': True, 'help': 'Login username'},
+        {'name':  'username', 'required': True, 'help': 'Login username'},
         {'name': 'password', 'required': True, 'help': 'Login password'},
         {'name': 'abstract_role', 'default': 'BaseAbsRole', 'help': 'Name of the AbstractRole'},
         {'name': 'super', 'action': 'store_true', 'help': 'This is a super user'},

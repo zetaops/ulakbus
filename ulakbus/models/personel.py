@@ -60,7 +60,7 @@ class Personel(Model):
         memuriyet_baslama_tarihi = field.Date("Memuriyete Ilk Baslama Tarihi", index=True,
                                               format="%d.%m.%Y")
         kurum_sicil = field.String("Kurum Sicili", index=True)
-        maluliyet_kod = field.String("Malul Kod", index=True)
+        maluliyet_kod = field.Integer("Malul Kod", index=True)
         yetki_seviyesi = field.String("Yetki Seviyesi", index=True)
         aciklama = field.String("Aciklama", index=True)
         kuruma_baslama_tarihi = field.Date("Kuruma Baslama Tarihi", index=True, format="%d.%m.%Y")
@@ -117,7 +117,7 @@ class KurumIciGorevlendirmeBilgileri(Model):
 
 
 class KurumDisiGorevlendirmeBilgileri(Model):
-    gorev_tipi = field.String("Görev Tipi", index=True)
+    gorev_tipi = field.Integer("Görev Tipi", index=True)
     kurum_disi_gorev_baslama_tarihi = field.Date("Baslama Tarihi", index=True, format="%d.%m.%Y")
     kurum_disi_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     aciklama = field.Text("Aciklama")
