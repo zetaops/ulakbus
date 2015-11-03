@@ -30,7 +30,7 @@ class Menu(BaseView):
             for model_data in settings.CRUD_MENUS[user_type]:
                 if self.current.has_permission(model_data['name']):
                     model = model_registry.get_model(model_data['name'])
-                    field_name = model_data['field'] if 'field' in model_data else user_type
+                    field_name = model_data.get('field', user_type + '_id')
                     verbose_name = (model_data['verbose_name'] if 'verbose_name' in model_data
                                     else model.Meta.verbose_name_plural)
                     crud_path = 'crud/%s' % model_data['name']
