@@ -19,24 +19,19 @@ class TCKNForm(JsonForm):
     cmd = field.String("Ekle", type="button")
 
 
-class YeniPersonelEkle(SimpleView):
-    def show_view(self):
-        self.current.output['forms'] = TCKNForm().serialize()
-
-
 def get_personel_from_hitap(current):
     tcno = current.input['form']['tcno']
     current.task_data['hitap_tamam'] = True
     current.task_data['tcno'] = tcno
     current.set_message(title='%s TC no için Hitap servisi başlatıldı' % tcno,
-                             msg='', typ=1, url="/wftoken/%s" % current.token)
-
+                        msg='', typ=1, url="/wftoken/%s" % current.token)
 
 
 def get_from_mernis(current):
     current.task_data['mernis_tamam'] = False
     current.set_message(title='%s için Mernis\'e erişilemedi' % current.task_data['tcno'],
-                             msg='', typ=1, url="/wftoken/%s" % current.token)
+                        msg='', typ=1, url="/wftoken/%s" % current.token)
+
 
 class HataIncele(JsonForm):
     class Meta:
@@ -45,11 +40,13 @@ class HataIncele(JsonForm):
                     "aklsjsd haskljdhasklj dhaskldh akdhaksj dajskh dgasjkhdg ajshgdasj dgas" \
                     "aslkd haskldhaskdhaskldhaskl dhaklsd"
 
-    restart = field.String("Tekrar Dene",  type="button")
-    cancel = field.String("İşlemi İptal Et",  type="button")
+    restart = field.String("Tekrar Dene", type="button")
+    cancel = field.String("İşlemi İptal Et", type="button")
+
 
 def review_service_errors(current):
     if 'restart' in current.input['form']:
         current.task_data['hata_to_tcno'] = True
     else:
         current.output['forms'] = HataIncele().serialize()
+
