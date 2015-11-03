@@ -135,10 +135,7 @@ class Unit(Model):
 
      def __unicode__(self):
         return '%s %s' % (self.name, self.id)
-=======
-    # TODO: implement self relation
-    # parent = self
->>>>>>> 844cffb4a51a86f892d260543175ad1b333c75e7
+
 
 
 class LimitedPermissions(Model):
