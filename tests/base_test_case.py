@@ -22,7 +22,8 @@ class BaseTestCase(ZengineBaseTestCase):
 
     @classmethod
     def create_user(cls):
-
+        # FIXME: To prevent existence of test_user in production,
+        # this should be depend on an env. flag
         cls.cleanup()
 
         abs_role, new = AbstractRole(super_context).objects.get_or_create(id=1, name='W.C. Hero')
@@ -32,9 +33,9 @@ class BaseTestCase(ZengineBaseTestCase):
 
         if new:
             role = Role(super_context, user=cls.client.user, abstract_role=abs_role).save()
-            sleep(2)
+            # sleep(2)
             for perm in Permission(super_context).objects.raw(
-                    "code:crud* OR code:login* OR code:User*"):
+                    "code:crud* OR code:login* OR code:logout* OR code:User* OR code:Personel* OR code:yeni*"):
                 role.Permissions(permission=perm)
             role.save()
             sleep(1)

@@ -69,6 +69,7 @@ class Personel(Model):
         emekli_sicil_6495 = field.Integer("2. Emekli Sicil No", index=True)
         durum = field.Boolean("Durum", index=True)
         sebep = field.Integer("Sebep", index=True)
+        sync = field.Integer("Senkronize", index=True)
 
         class Meta:
             verbose_name = "Nüfus Bilgileri"

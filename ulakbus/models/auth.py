@@ -44,7 +44,7 @@ class User(Model):
         return pbkdf2_sha512.verify(raw_password, self.password)
 
     def get_role(self, role_id):
-        return self.role_set.get(role_id)
+        return self.role_set.node_dict[role_id]
 
 
 class Permission(Model):
@@ -95,10 +95,22 @@ class Role(Model):
     def get_permissions(self):
         return [p.permission.code for p in self.Permissions]
 
+    def add_permission(self, perm):
+        self.Permissions(permission=perm)
+        self.save()
+
+    def add_permission_by_name(self, code, save=False):
+        if not save:
+            return ["%s | %s" % (p.name, p.code) for p in
+                     Permission.objects.filter(code='*' + code + '*')]
+        for p in Permission.objects.filter(code='*' + code + '*'):
+            self.Permissions(permission=p)
+        if p:
+            self.save()
 
 class Unit(Model):
     name = field.String("Name", index=True)
-    id = field.Integer("Unit ID", index=True)
+    yoksis_id = field.Integer("Unit ID", index=True)
     unit_type = field.String("Unit Type", index=True)
     parent_unit_id = field.Integer("Parent Unit ID", index=True)
     current_situation = field.String("Current Situation", index=True)
@@ -123,6 +135,10 @@ class Unit(Model):
 
      def __unicode__(self):
         return '%s %s' % (self.name, self.id)
+=======
+    # TODO: implement self relation
+    # parent = self
+>>>>>>> 844cffb4a51a86f892d260543175ad1b333c75e7
 
 
 class LimitedPermissions(Model):
@@ -157,11 +173,16 @@ class AuthBackend(object):
         self.current = current
 
     def get_permissions(self):
-        return self.get_role().get_permissions()
+        if 'permissions' in self.session:
+            return self.session['permissions']
+        else:
+            perms = self.get_role().get_permissions()
+            self.session['permissions'] = perms
+            return perms
 
     def has_permission(self, perm):
         # return True
-        return perm in self.get_role().get_permissions()
+        return perm in self.get_permissions()
 
     def get_user(self):
         if 'user_data' in self.session:
@@ -187,24 +208,24 @@ class AuthBackend(object):
         self.session['user_data'] = user.clean_value()
 
         # TODO: this should be remembered from previous login
-        # TODO: discuss for storage method/location of user settings
         default_role = user.role_set[0].role
-        self.session['role_data'] = default_role.clean_value()
+        # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
 
         self.session['permissions'] = default_role.get_permissions()
 
     def get_role(self):
-        if 'role_data' in self.session:
-            role = Role()
-            role.set_data(self.session['role_data'])
-            if 'role_id' in self.session:
-                role.key = self.session['role_id']
-            return role
-        elif 'role_id' in self.session:
+        # if 'role_data' in self.session:
+        #     role = Role()
+        #     role.set_data(self.session['role_data'])
+        # if 'role_id' in self.session:
+        #     role.key = self.session['role_id']
+        # return role
+        if 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
             # TODO: admins should be informed about a user without a role
+            self.session.delete()
             raise PermissionDenied("Your don't have a \"Role\" in this system")
 
     def authenticate(self, username, password):

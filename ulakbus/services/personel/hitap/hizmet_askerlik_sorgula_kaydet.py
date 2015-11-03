@@ -41,7 +41,7 @@ class HizmetAskerlikSorgula(Service):
             askerlik_kayitlari_passed.kurum_onay_tarihi = record_values['kurum_onay_tarihi']
             askerlik_kayitlari_passed.astegmen_nasp_tarihi = record_values['astegmen_nasp_tarihi']
 
-            self.logger.info("Nufus kayitlari successfully passed.")
+            self.logger.info("askerlik_kayitlari successfully passed.")
 
         tckn = self.request.payload['personel']['tckn']
         conn = self.outgoing.soap['HITAP'].conn
@@ -96,10 +96,10 @@ class HizmetAskerlikSorgula(Service):
 
                 # if personel saved before, find that and add new records from hitap to riak
                 try:
-                    riak_dict_from_db_queries_with_pno = {}
+                    local_records = {}
                     # askerlik_kayitlari_list = AskerlikKayitlari.objects.filter(tckn=tckn)
                     for record in AskerlikKayitlari.objects.filter(tckn=tckn):
-                        riak_dict_from_db_queries_with_pno[record.kayit_no] = {
+                        local_records[record.kayit_no] = {
                             'askerlik_nevi': record.askerlik_nevi,
                             'baslama_tarihi': record.baslama_tarihi,
                             'bitis_tarihi': record.bitis_tarihi,
@@ -110,7 +110,7 @@ class HizmetAskerlikSorgula(Service):
                             'sayilmayan_gun_sayisi': record.sayilmayan_gun_sayisi,
                             'sinif_okulu_sicil': record.sinif_okulu_sicil,
                             'subayliktan_erlige_gecis_tarihi':
-                            record.subayliktan_erlige_gecis_tarihi,
+                                record.subayliktan_erlige_gecis_tarihi,
                             'subay_okulu_giris_tarihi': record.subay_okulu_giris_tarihi,
                             'tckn': record.tckn,
                             'tegmen_nasp_tarihi': record.tegmen_nasp_tarihi,
@@ -118,22 +118,27 @@ class HizmetAskerlikSorgula(Service):
                             'kurum_onay_tarihi': record.kurum_onay_tarihi,
                             'astegmen_nasp_tarihi': record.astegmen_nasp_tarihi
                         }
-                    self.logger.info("riak_dict_from_db_queries_with_pno created.")
+                    self.logger.info("local_records created.")
 
-                    # if any record exists in riak but not in hitap delete it
-                    for record in AskerlikKayitlari.objects.filter(tckn=tckn):
-                        if record.kayit_no not in hitap_dict:
-                            record.delete()
-                            self.logger.info(
-                                "Askerlik record deleted. Record No: %s" % record.kayit_no)
-
-                    # if any record comes from hitap and not in riak, save it to riak
-                    for hitap_key, hitap_values in hitap_dict.items():
-                        if hitap_key not in riak_dict_from_db_queries_with_pno:
+                    for record_id, record_values in hitap_dict.items():
+                        if record_id in local_records:
+                            askerlik_kayitlari = AskerlikKayitlari.objects.filter(
+                                kayit_no=record_id).get()
+                            askerlik_kayitlari.sync = 1
+                        else:
                             askerlik_kayitlari = AskerlikKayitlari()
-                            pass_askerlik_kayitlari(askerlik_kayitlari, hitap_values)
-                            askerlik_kayitlari.save()
-                            self.logger.info("AskerlikKayitlari updated")
+                            pass_askerlik_kayitlari(askerlik_kayitlari, record_values)
+                            askerlik_kayitlari.sync = 1
+                        askerlik_kayitlari.save()
+
+                    for record_id, record_values in local_records.items():
+                        askerlik_kayitlari = AskerlikKayitlari.objects.filter(
+                            kayit_no=record_id).get()
+                        if record_id not in hitap_dict:
+                            if askerlik_kayitlari.sync == 1:
+                                askerlik_kayitlari.sync = 2
+                            if askerlik_kayitlari.sync == 2:
+                                askerlik_kayitlari.sync = 3
 
                     self.logger.info("Service runned.")
 
