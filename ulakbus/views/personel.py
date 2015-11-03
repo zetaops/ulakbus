@@ -8,15 +8,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko.model import field
 from zengine.lib.forms import JsonForm
-from zengine.views.base import SimpleView
-
-
-class TCKNForm(JsonForm):
-    class Meta:
-        title = 'Yeni Personel'
-
-    tcno = field.String("TC No")
-    cmd = field.String("Ekle", type="button")
 
 
 def get_personel_from_hitap(current):
@@ -49,4 +40,3 @@ def review_service_errors(current):
         current.task_data['hata_to_tcno'] = True
     else:
         current.output['forms'] = HataIncele().serialize()
-

@@ -16,15 +16,19 @@ class Personel(Model):
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)
-    dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
-    dogum_yeri = field.String("Doğum Yeri", index=True)
+    cinsiyet = field.String("Cinsiyet", index=True)
     uyruk = field.String("Uyruk", index=True)
-    medeni_hali = field.String("Medeni Hali", index=True)
+    ikamet_il = field.String("İkamet Il", index=True)
+    ikamet_ilce = field.String("İkamet Ilce", index=True)
     ikamet_adresi = field.String("İkamet Adresi", index=True)
+    adres_2 = field.String("Adres 2", index=True)
+    adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True)
     oda_no = field.Integer("Oda Numarası", index=True)
     oda_tel_no = field.String("Oda Telefon Numarası", index=True)
     cep_telefonu = field.String("Cep Telefonu", index=True)
     e_posta = field.String("E-Posta", index=True)
+    e_posta_2 = field.String("E-Posta 2", index=True)
+    e_posta_3 = field.String("E-Posta 3", index=True)
     web_sitesi = field.String("Web Sitesi", index=True)
     yayinlar = field.String("Yayınlar", index=True)
     projeler = field.String("Projeler", index=True)
@@ -32,6 +36,12 @@ class Personel(Model):
     ehliyet = field.String("Ehliyet", index=True)
     verdigi_dersler = field.String("Verdiği Dersler", index=True)
     unvan = field.String("Unvan", index=True)
+    biyografi = field.Text("Biyografi")
+    notlar = field.Text("Notlar")
+    engelli_durumu = field.String("Engellilik", index=True)
+    engel_grubu = field.String("Engel Grubu", index=True)
+    engel_derecesi = field.String("Engel Derecesi")
+    engel_orani = field.Integer("Engellilik Orani")
 
     class Meta:
         app = 'Personel'
@@ -48,6 +58,25 @@ class Personel(Model):
     def __unicode__(self):
         return "%s %s (%s | %s)" % (self.ad, self.soyad, self.tckn,
                                     self.NufusKayitlari.emekli_sicil_no)
+
+    class KimlikBilgileri(Node):
+        cuzdan_seri = field.String("Seri", index=True)
+        cuzdan_seri_no = field.String("Seri No", index=True)
+        baba_adi = field.String("Ana Adi", index=True)
+        ana_adi = field.String("Baba Adi", index=True)
+        dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
+        dogum_yeri = field.String("Doğum Yeri", index=True)
+        medeni_hali = field.String("Medeni Hali", index=True)
+        kayitli_oldugu_il = field.String("Il", index=True)
+        kayitli_oldugu_ilce = field.String("Ilce", index=True)
+        kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
+        kayitli_oldugu_cilt_no = field.String("Cilt No")
+        kayitli_oldugu_aile_sira_no = field.String("Aile Sira No")
+        kayitli_oldugu_sira_no = field.String("Sira No")
+        kimlik_cuzdani_verildigi_yer = field.String("Cuzdanin Verildigi Yer")
+        kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
+        kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
+        kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
 
     class NufusKayitlari(Node):
         tckn = field.String("Sigortalının TC Kimlik No", index=True)
@@ -163,3 +192,31 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
             },
         ]
+
+
+class Kadro(Model):
+    kadro_no = field.Integer("Kadro No")
+    unvan = field.String("Unvan", index=True)
+    derece = field.Integer("Derece", index=True)
+    durum = field.Integer("Durum", index=True)
+    birim = Unit("Birim")
+
+    class Meta:
+        verbose_name = "Kadro"
+        verbose_name_plural = "Kadrolar"
+
+    def __unicode__(self):
+        return "%s %s %s" % (self.unvan, self.derece, self.durum)
+
+
+class Atama(Model):
+    personel = Personel("Personel")
+    kadro = Kadro("Kadro")
+    notlar = field.String("Aciklama", index=True)
+
+    class Meta:
+        verbose_name = "Atama"
+        verbose_name_plural = "Atamalar"
+
+    def __unicode__(self):
+        return "%s %s" % (self.personel, self.kadro)

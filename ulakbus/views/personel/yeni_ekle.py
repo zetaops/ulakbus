@@ -12,12 +12,86 @@
 from pyoko.model import field
 from zengine.lib.forms import JsonForm
 from zengine.views.base import SimpleView
+from ulakbus.models.personel import Kadro
 
 
 # Views
 class YeniPersonelEkle(SimpleView):
     def show_view(self):
         self.current.output['forms'] = YeniPersonelTcknForm().serialize()
+
+
+class KimlikBilgileri(SimpleView):
+    def show_view(self):
+        form = KimlikBilgileriForm()
+        form.ad = self.current.input['kimlik_bilgileri']['ad']
+        form.ad = self.current.input['kimlik_bilgileri']['soyad']
+        form.ad = self.current.input['kimlik_bilgileri']['tckn']
+        form.ad = self.current.input['kimlik_bilgileri']['dogum_yeri']
+        form.ad = self.current.input['kimlik_bilgileri']['dogum_tarihi']
+        self.current.output['forms'] = form.serialize()
+
+    def do_view(self):
+        from ulakbus.models.personel import Personel
+        yeni_personel = Personel()
+        yeni_personel.tckn = self.current.input['form']['tckn']
+
+        nufus_kayitlari = yeni_personel.NufusKayitlari()
+        nufus_kayitlari.ad = self.current.input['form']['ad']
+        nufus_kayitlari.soyad = self.current.input['form']['soyad']
+        nufus_kayitlari.dogum_tarihi = self.current.input['form']['dogum_tarihi']
+        yeni_personel.save()
+
+        self.current['task_data']['tckn'] = self.current.input['form']['tckn']
+
+
+class IletisimveEngelliDurumBilgileri(SimpleView):
+    def show_view(self):
+        mernis_adres = mernis_adres_bilgileri_getir(self.current.input['tckn'])
+        form = IletisimveEngelliDurumBilgileriForm()
+        form.ikamet_adresi = mernis_adres['adres']
+        form.il = mernis_adres['il']
+        form.ilce = mernis_adres['ilce']
+        self.current.output['forms'] = form.serialize()
+
+    def do_view(self):
+        pass
+
+
+class Atama(SimpleView):
+    def show_view(self):
+        pass
+
+    def do_view(self):
+        pass
+
+
+def mernis_kimlik_bilgileri_getir(current):
+    tckn = current.input['tckn']
+    # mernis servisi henuz hazir degil
+    # from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
+    # mernis_bilgileri = MernisKimlikBilgileriGetir(tckn=tckn)
+    # response = mernis_bilgileri.zato_request()
+    # bu sebeple response elle olusturuyoruz.
+
+    response = {"ad": "Kamil", "soyad": "Soylu", "tckn": "12345678900", "dogum_yeri": "Afyon",
+                "dogum_tarihi": "10.10.1940"}
+    current.task_data['mernis_tamam'] = True
+    current.task_data['kimlik_bilgileri'] = response
+
+    current.set_message(title='%s TC no için Hitap servisi başlatıldı' % tckn,
+                        msg='', typ=1, url="/wftoken/%s" % current.token)
+
+
+def mernis_adres_bilgileri_getir(tckn):
+    # mernis servisi henuz hazir degil
+    # from ulakbus.services.zato_wrapper import MernisAdresBilgileriGetir
+    # mernis_bilgileri = MernisAdresBilgileriGetir(tckn=tckn)
+    # response = mernis_bilgileri.zato_request()
+    # bu sebeple response elle olusturuyoruz.
+
+    response = {"il": "Konya", "ilce": "Meram", "adres": "Meram Caddesi No4 Meram Konya"}
+    return response
 
 
 # Formlar
@@ -57,8 +131,7 @@ class KimlikBilgileriForm(JsonForm):
     kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
-    cmd = field.String("Kimlik Bilgileri Getir", type="button")
-    cmd = field.String("Kaydet", type="submit")
+    cmd = field.String("Kaydet", type="submit", action="do")
 
 
 class IletisimveEngelliDurumBilgileriForm(JsonForm):
@@ -115,10 +188,10 @@ class AtamaForm(JsonForm):
     gorev_suresi_bitis = field.Date("Bitis Tarihi")
     gorev_suresi_aciklama = field.String("Aciklama")
 
-    atama_yapilan_kadro = field.String("Kadro")
-    atama_yapilan_kadro_tarih = field.String("Kadro Tarih")
-    atama_yapilan_kadro_derece = field.String("Kadro Derece")
-    atama_yapilan_kadro_derece_tarih = field.String("Kadro Derece Tarih")
+    atama_yapilan_kadro = Kadro("Kadro")
+    atama_yapilan_kadro_tarih = field.Date("Kadro Tarih")
+    atama_yapilan_kadro_derece = field.Integer("Kadro Derece")
+    atama_yapilan_kadro_derece_tarih = field.Date("Kadro Derece Tarih")
     atama_yapilan_kadro_unvan = field.String("Kadro Unvan")
     atama_yapilan_kadro_unvan_tarih = field.String("Kadro Unvan Tarih")
 
