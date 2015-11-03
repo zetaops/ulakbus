@@ -111,3 +111,17 @@ class HitapHizmetCetveliSenkronizeEt(HitapService):
         super(HitapHizmetCetveliSenkronizeEt, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class MernisKimlikBilgileriGetir(HitapService):
+    def __init__(self, service_uri='mernis-kimlik-bilgileri-getir-tckn', tckn=None):
+        """
+        this service takes tckn as string, consume "hizmet cetvel senkronize et" of hitap, sync local data on riak.
+
+        :param service_uri: string, default hizmet-cetvel
+        :param tckn: string of 11 byte length, can not be empty
+        :return: string, 'ok' for successful sync data of existent person
+        """
+        super(MernisKimlikBilgileriGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
