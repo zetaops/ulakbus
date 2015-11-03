@@ -133,7 +133,7 @@ class Unit(Model):
         list_fields = ['name', 'id', 'unit_type']
         search_fields = ['name', 'id']
 
-     def __unicode__(self):
+    def __unicode__(self):
         return '%s %s' % (self.name, self.id)
 
 
