@@ -8,6 +8,20 @@
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko.model import field
 from zengine.lib.forms import JsonForm
+from zengine.views.base import SimpleView
+
+
+class TCKNForm(JsonForm):
+    class Meta:
+        title = 'Yeni Personel'
+
+    tcno = field.String("TC No")
+    cmd = field.String("Ekle", type="button")
+
+
+class YeniPersonelEkle(SimpleView):
+    def show_view(self):
+        self.current.output['forms'] = TCKNForm().serialize()
 
 
 def get_personel_from_hitap(current):
