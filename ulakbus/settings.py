@@ -34,6 +34,8 @@ ANONYMOUS_WORKFLOWS = ['login', ]
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 
+DATE_DEFAULT_FORMAT = "%d.%m.%Y"
+
 CRUD_MENUS = {
     # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
     #                                             'field':'field_name',
