@@ -104,7 +104,8 @@ class Role(Model):
             return ["%s | %s" % (p.name, p.code) for p in
                      Permission.objects.filter(code='*' + code + '*')]
         for p in Permission.objects.filter(code='*' + code + '*'):
-            self.Permissions(permission=p)
+            if p not in self.Permissions:
+                self.Permissions(permission=p)
         if p:
             self.save()
 

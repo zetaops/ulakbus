@@ -48,14 +48,14 @@ class LoadFixture(Command):
     HELP = 'Load fixtures from given json file or files in given directory and ' \
            'dumps into ulakbus_settings_fixtures bucket, overwriting data of all existing keys.'
     PARAMS = [
-        {'name': 'path', 'required': True, 'help': 'Fixture file or including directory'},
+        {'name': 'path', 'required': True, 'help': 'Load fixture file or directory'},
     ]
 
     def run(self):
         from pyoko.db.connection import client
         import os
 
-        fixture_bucket = client.bucket_type('models').bucket('ulakbus_settings_fixtures')
+        fixture_bucket = client.bucket_type('catalog').bucket('ulakbus_settings_fixtures')
         path = self.manager.args.path
 
         if os.path.isdir(path):
@@ -68,19 +68,19 @@ class LoadFixture(Command):
     @staticmethod
     def dump(fixture_file, fixture_bucket):
         try:
-            with open(fixture_file, "r") as f:
+            with open(fixture_file) as f:
                 import json
                 try:
                     fixtures = json.load(f)
                     for fix in fixtures:
                         f = fixture_bucket.get(fix)
                         f.data = fixtures[fix]
-                        print "%s: %s stored.." % (fix, fixtures[fix])
+                        print("%s: %s stored.." % (fix, fixtures[fix]))
                         f.store()
                 except ValueError as e:
-                    print "please validate your json file: %s" % e
+                    print("please validate your json file: %s" % e)
         except IOError:
-            print "file not found: %s" % fixture_file
+            print("file not found: %s" % fixture_file)
 
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
