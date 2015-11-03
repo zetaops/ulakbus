@@ -99,8 +99,31 @@ class Role(Model):
 
 class Unit(Model):
     name = field.String("Name", index=True)
-    # TODO: implement self relation
-    #parent = self
+    id = field.Integer("Unit ID", index=True)
+    unit_type = field.String("Unit Type", index=True)
+    parent_unit_id = field.Integer("Parent Unit ID", index=True)
+    current_situation = field.String("Current Situation", index=True)
+    language = field.String("Learning Language", index=True)
+    learning_type = field.String("Learning Type", index=True)
+    osym_code = field.String("ÖSYM Code", index=True)
+    opening_date = field.Date("Opening Date", index=True)
+    learning_duration = field.Integer("Learning Duration", index=True)
+    english_name = field.String("Unit Name in English", index=True)
+    quota = field.Integer("Unit Quota", index=True)
+    city_code = field.Integer("City Code", index=True)
+    district_code = field.Integer("District Code", index=True)
+    unit_group = field.Integer("Unit Group", index=True)
+    foet_code = field.Integer("FOET Code", index=True)
+
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Unit"
+        verbose_name_plural = "Units"
+        list_fields = ['name', 'id', 'unit_type']
+        search_fields = ['name', 'id']
+
+     def __unicode__(self):
+        return '%s %s' % (self.name, self.id)
 
 
 class LimitedPermissions(Model):
