@@ -18,8 +18,7 @@ class Personel(Model):
     soyad = field.String("Soyadı", index=True)
     cinsiyet = field.String("Cinsiyet", index=True)
     uyruk = field.String("Uyruk", index=True)
-    ikamet_il = field.String("İkamet Il", index=True)
-    ikamet_ilce = field.String("İkamet Ilce", index=True)
+    medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
     ikamet_adresi = field.String("İkamet Adresi", index=True)
     adres_2 = field.String("Adres 2", index=True)
     adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True)
@@ -35,13 +34,7 @@ class Personel(Model):
     kan_grubu = field.String("Kan Grubu", index=True)
     ehliyet = field.String("Ehliyet", index=True)
     verdigi_dersler = field.String("Verdiği Dersler", index=True)
-    unvan = field.String("Unvan", index=True)
-    biyografi = field.Text("Biyografi")
-    notlar = field.Text("Notlar")
-    engelli_durumu = field.String("Engellilik", index=True)
-    engel_grubu = field.String("Engel Grubu", index=True)
-    engel_derecesi = field.String("Engel Derecesi")
-    engel_orani = field.Integer("Engellilik Orani")
+    unvan = field.Integer("Unvan", index=True, choices="akademik_unvan")
 
     class Meta:
         app = 'Personel'
@@ -89,7 +82,7 @@ class Personel(Model):
         memuriyet_baslama_tarihi = field.Date("Memuriyete Ilk Baslama Tarihi", index=True,
                                               format="%d.%m.%Y")
         kurum_sicil = field.String("Kurum Sicili", index=True)
-        maluliyet_kod = field.Integer("Malul Kod", index=True)
+        maluliyet_kod = field.Integer("Malul Kod", index=True, choices="maluliyet_kod")
         yetki_seviyesi = field.String("Yetki Seviyesi", index=True)
         aciklama = field.String("Aciklama", index=True)
         kuruma_baslama_tarihi = field.Date("Kuruma Baslama Tarihi", index=True, format="%d.%m.%Y")
@@ -147,7 +140,7 @@ class KurumIciGorevlendirmeBilgileri(Model):
 
 
 class KurumDisiGorevlendirmeBilgileri(Model):
-    gorev_tipi = field.Integer("Görev Tipi", index=True, choices="askerlik_nevi")
+    gorev_tipi = field.Integer("Görev Tipi", index=True, choices="gorev_tipi")
     kurum_disi_gorev_baslama_tarihi = field.Date("Baslama Tarihi", index=True, format="%d.%m.%Y")
     kurum_disi_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     aciklama = field.Text("Aciklama")
@@ -156,7 +149,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     maas = field.Boolean("Maas")
     yevmiye = field.Boolean("Yevmiye", default=False)
     yolluk = field.Boolean("Yolluk", default=False)
-    ulke = field.Integer("Ulke", default="90")
+    ulke = field.Integer("Ulke", default="90", choices="ulke")
     personel = Personel()
 
     class Meta:
