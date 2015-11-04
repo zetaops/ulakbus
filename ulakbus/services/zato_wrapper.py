@@ -14,9 +14,10 @@ import json
 
 class ZatoService(object):
     """
+
     Simple zato service wrapper class
     You can write your zato services extending this class
-    This class simply needs to parameter to be set as you see in init
+    This class simply needs some parameter to be set as you see in init
     """
 
     def __init__(self):
@@ -25,14 +26,17 @@ class ZatoService(object):
 
     def get_uri(self):
         """
-        simply returns full uri of zato service
+        Simply returns full uri of zato service
+
         :return: string
         """
         return '/'.join([settings.ZATO_SERVER, self.service_uri])
 
     def zato_request(self):
         """
-        :return: return if fails None, or simply return string of zato service response payload
+        Makes zato requests
+
+        :return: if fails None, or simply string of zato service response payload
         """
         uri = self.get_uri()
         payload = json.loads(self.payload)
@@ -79,16 +83,20 @@ class HitapService(ZatoService):
 
 
 class HitapHizmetCetvelGetir(HitapService):
-    def __init__(self, service_uri='hizmet-cetveli-getir', tckn=None):
-        """
-        this service takes tckn as string, consume "hizmet cetveli getir" of hitap which syncs local data on riak.
+    """
+    This service takes tckn as string, consume "hizmet cetveli getir" of hitap which syncs local data on riak.
 
-        usage:
-        ```
+    Example
+    ::
+
         from zato_wrapper_class import HitapHizmetCetvelGetir
         zs = HitapHizmetCetvelGetir(tckn="12345678900")
         response = zs.zato_request()
-        ```
+
+    """
+
+    def __init__(self, service_uri='hizmet-cetveli-getir', tckn=None):
+        """
 
         :param service_uri: string, default hizmet-cetveli-getir
         :param tckn: string, of 11 byte length, can not be empty
