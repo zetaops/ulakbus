@@ -11,6 +11,8 @@ import os.path
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
+DEFAULT_LANG = 'tr'
+
 # path of the activity modules which will be invoked by workflow tasks
 ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
 # absolute path to the workflow packages

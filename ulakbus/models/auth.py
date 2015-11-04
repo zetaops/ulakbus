@@ -187,10 +187,8 @@ class AuthBackend(object):
             user = User()
             user.set_data(self.session['user_data'])
             user.key = self.session['user_id']
-            self.current.user_id = self.session['user_id']
         elif 'user_id' in self.session:
             user = User.objects.get(self.session['user_id'])
-            self.current.user_id = self.session['user_id']
         else:
             user = User()
         return user
@@ -209,7 +207,7 @@ class AuthBackend(object):
         default_role = user.role_set[0].role
         # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
-
+        self.current.user_id = default_role.key
         self.session['permissions'] = default_role.get_permissions()
 
     def get_role(self):
