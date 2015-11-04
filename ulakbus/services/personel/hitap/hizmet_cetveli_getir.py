@@ -71,12 +71,15 @@ class HizmetCetveliGetir(Service):
                 self.logger.info("hitap_dict created.")
 
             response_json = dumps(hitap_dict)
-            self.response.payload["status"] = "ok"
-            self.response.payload["result"] = response_json
+            return_dict = {"status": "ok", "result": response_json}
+            #self.response.payload = dumps(return_dict)
+            self.response.payload = {"status": "ok", "result": response_json}
+            #self.response.payload["status"] = "ok"
+            #self.response.payload["result"] = response_json
 
         except AttributeError:
-            self.response.payload['status'] = 'error'
-            self.response.payload['result'] = 'TCKN may be wrong!'
+            self.response.payload["status"] = "error"
+            self.response.payload["result"] = "TCKN may be wrong!"
             self.logger.info("TCKN may be wrong!")
         except urllib2.URLError:
             self.logger.info("No internet connection!")

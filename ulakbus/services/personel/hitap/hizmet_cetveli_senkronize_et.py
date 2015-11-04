@@ -67,10 +67,11 @@ class HizmetCetveliSenkronizeEt(Service):
         input_data = {'tckn': tckn}
         input_data = dumps(input_data)
         service_name = 'hizmet-cetveli-getir.hizmet-cetveli-getir'
-        response = self.invoke_async(service_name, input_data, data_format=DATA_FORMAT.JSON)
-        response_status = response[0]
+        response = self.invoke(service_name, input_data, data_format=DATA_FORMAT.JSON, as_bunch=True)
+
+        response_status = response["status"]
         if response_status == 'ok':
-            hitap_dict = loads(response['result'])
+            hitap_dict = loads(response["result"])
             self.logger.info("hitap_dict created.")
         else:
             hitap_dict = {}
@@ -110,8 +111,7 @@ class HizmetCetveliSenkronizeEt(Service):
             # compare hitap incoming data and local db
             for record_id, record_values in hitap_dict.items():
                 if record_id in local_records:
-                    hizmet_kayitlari = HizmetKayitlari.objects.filter(
-                        kayit_no=record_id).get()
+                    hizmet_kayitlari = HizmetKayitlari.objects.filter(kayit_no=record_id).get()
                     if hizmet_kayitlari.sync == 1:
                         pass
                     elif hizmet_kayitlari.sync == 2:
@@ -128,8 +128,7 @@ class HizmetCetveliSenkronizeEt(Service):
 
             # compare hitap incoming data and local db
             for record_id, record_values in local_records.items():
-                hizmet_kayitlari = HizmetKayitlari.objects.filter(
-                    kayit_no=record_id).get()
+                hizmet_kayitlari = HizmetKayitlari.objects.filter(kayit_no=record_id).get()
                 if record_id not in hitap_dict:
                     if hizmet_kayitlari.sync == 1:
                         hizmet_kayitlari.delete()
