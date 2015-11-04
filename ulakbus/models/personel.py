@@ -110,7 +110,7 @@ class AdresBilgileri(Model):
 
 
 class KurumIciGorevlendirmeBilgileri(Model):
-    gorev_tipi = field.String("Görev Tipi", index=True)
+    gorev_tipi = field.String("Görev Tipi", index=True, choices="gorev_tipi")
     kurum_ici_gorev_baslama_tarihi = field.Date("Baslama Tarihi", index=True, format="%d.%m.%Y")
     kurum_ici_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     birim = Unit()
