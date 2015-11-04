@@ -171,6 +171,8 @@ class AuthBackend(object):
         self.current = current
 
     def get_permissions(self):
+        # TODO: We can move caching of permissions out of session to
+        # speedup the login. with proper invalidation routine
         if 'permissions' in self.session:
             return self.session['permissions']
         else:
