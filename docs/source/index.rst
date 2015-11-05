@@ -19,18 +19,36 @@ ZATO WRAPPER
 .. automodule:: ulakbus.services.zato_wrapper
    :members:
    :undoc-members:
-..   :inherited-members:
    :show-inheritance:
 
 
+HITAP
++++++
+
+HITAP SERVISI YAZMAK
+--------------------
+.. currentmodule:: ulakbus.services.zato_wrapper
+
+Hitap servislerini :func:ulakbus.services.HitapService extend edip kullanabilirsiniz.
+
+.. autoclass:: HitapService
+
+HIZMET CETVELI
+--------------
+Bilgilerin Hitaptan cekilmesi
+
+.. autoclass:: HitapHizmetCetvelGetir
+
+Bilgilerin Hitaptan cekilmesi ve senkronize edilmesi
+
+.. autoclass:: HitapHizmetCetveliSenkronizeEt
+
 PYOKO
 #####
-
 PYOKO MODEL
 +++++++++++
-.. automodule:: pyoko.model
-   :members:
-   :undoc-members:
-..   :inherited-members:
-..   :show-inheritance:
+.. automodule:: pyoko.db.base
+ :members:
+ :undoc-members:
+ :show-inheritance:
 
