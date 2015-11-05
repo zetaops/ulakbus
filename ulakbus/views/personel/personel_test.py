@@ -6,7 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from pyoko.model import field
+from pyoko import form
 from zengine.lib.forms import JsonForm
 from zengine.views.base import SimpleView
 
@@ -15,8 +15,8 @@ class TCKNForm(JsonForm):
     class Meta:
         title = 'Yeni Personel'
 
-    tcno = field.String("TC No")
-    cmd = field.String("Ekle", type="button")
+    tcno = form.String("TC No")
+    ekle = form.Button("Ekle")
 
 
 class YeniPersonelEkle(SimpleView):
@@ -45,8 +45,16 @@ class HataIncele(JsonForm):
                     "aklsjsd haskljdhasklj dhaskldh akdhaksj dajskh dgasjkhdg ajshgdasj dgas" \
                     "aslkd haskldhaskdhaskldhaskl dhaklsd"
 
-    restart = field.String("Tekrar Dene", type="button")
-    cancel = field.String("İşlemi İptal Et", type="button")
+    restart = form.Button("Tekrar Dene", cmd="hata_to_tcno")
+    cancel = form.Button("İşlemi İptal Et", cmd="iptal_hata")
+
+class Iptal(JsonForm):
+    class Meta:
+        title = 'İptal'
+        help_text = "Başarıyla iptal edildi"
+
+def delete_draft(current):
+    current.output['forms'] = Iptal().serialize()
 
 
 def review_service_errors(current):
