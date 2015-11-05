@@ -23,7 +23,7 @@ class User(Model):
     password = field.String("Password")
     name = field.String("First Name", index=True)
     surname = field.String("Surname", index=True)
-    superuser = field.String("Super user", default=False)
+    superuser = field.Boolean("Super user", default=False)
 
     class Meta:
         app = 'Sistem'

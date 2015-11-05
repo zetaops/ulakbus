@@ -48,7 +48,7 @@ class HizmetOkul(Model):
     denklik_okul = field.String("Denklik Okul", index=True)
     denklik_bolum = field.String("Denklik Bölüm", index=True)
     ogrenim_suresi = field.Integer("Öğrenim Süresi", index=True)
-    hazirlik = field.Boolean("Hazırlık", index=True, choices="hazirlik_bilgisi")
+    hazirlik = field.Integer("Hazırlık", index=True, choices="hazirlik_bilgisi")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     sync = field.Integer("Senkronize", index=True)
     personel = Personel()

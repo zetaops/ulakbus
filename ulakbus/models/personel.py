@@ -20,6 +20,8 @@ class Personel(Model):
     uyruk = field.String("Uyruk", index=True)
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
     ikamet_adresi = field.String("İkamet Adresi", index=True)
+    ikamet_il = field.String("İkamet Il", index=True)
+    ikamet_ilce = field.String("İkamet Ilce", index=True)
     adres_2 = field.String("Adres 2", index=True)
     adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True)
     oda_no = field.Integer("Oda Numarası", index=True)
@@ -35,6 +37,13 @@ class Personel(Model):
     ehliyet = field.String("Ehliyet", index=True)
     verdigi_dersler = field.String("Verdiği Dersler", index=True)
     unvan = field.Integer("Unvan", index=True, choices="akademik_unvan")
+    biyografi = field.Text("Biyografi")
+    notlar = field.Text("Notlar")
+    engelli_durumu = field.String("Engellilik", index=True)
+    engel_grubu = field.String("Engel Grubu", index=True)
+    engel_derecesi = field.String("Engel Derecesi")
+    engel_orani = field.Integer("Engellilik Orani")
+
 
     class Meta:
         app = 'Personel'
