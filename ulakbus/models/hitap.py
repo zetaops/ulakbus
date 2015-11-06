@@ -435,9 +435,9 @@ class UcretsizIzin(Model):
 
     class Meta:
         app = 'Personel'
-        verbose_name = "İzin"
-        verbose_name_plural = "İzinler"
-        list_fields = ['tip', 'baslangic', 'ise_baslama']
+        verbose_name = "Ücretsiz İzin"
+        verbose_name_plural = "Ücretsiz İzinler"
+        list_fields = ['tip', 'baslangic']
         search_fields = ['tip', 'onay']
 
     def __unicode__(self):
