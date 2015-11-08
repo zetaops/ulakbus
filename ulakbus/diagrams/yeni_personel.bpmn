@@ -72,7 +72,7 @@
       <bpmn2:outgoing>mernis_hata</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_19" name="" sourceRef="ExclusiveGateway_4" targetRef="aks_bilgileri">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd is 'mernis_tamam'</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'mernis_tamam'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:serviceTask id="aks_bilgileri" camunda:class="services.aks.get_by_tckn" name="Adres Bilgileri&#xA;Getir">
       <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
@@ -85,7 +85,7 @@
       <bpmn2:outgoing>aks_hata</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ExclusiveGateway_5" targetRef="personel_atama">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd is 'aks_tamam'</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'aks_tamam'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:userTask id="personel_atama" camunda:assignee="personel.atama_yap" name="Atama Yap">
       <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
@@ -108,7 +108,7 @@
       <bpmn2:outgoing>hitap_hata</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="ExclusiveGateway_2" targetRef="mernis_kimlik_bilgileri">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd is 'hitap_tamam'</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'hitap_tamam'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:serviceTask id="mernis_kimlik_bilgileri" camunda:class="personel.get_from_mernis" name="Mernis Bilgileri&#xA;Getir">
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
@@ -129,7 +129,7 @@
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">eksik_yanlis_bilgi==False</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="Iptal" name="iptal" sourceRef="ExclusiveGateway_1" targetRef="iptal">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd is 'iptal'</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'iptal'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="hitap_hata" name="" sourceRef="ExclusiveGateway_2" targetRef="hatayi_gozden_gecir"/>
     <bpmn2:sequenceFlow id="mernis_hata" name="" sourceRef="ExclusiveGateway_4" targetRef="hatayi_gozden_gecir"/>
@@ -161,7 +161,7 @@
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="iptal_hata" name="" sourceRef="ExclusiveGateway_6" targetRef="iptal"/>
     <bpmn2:sequenceFlow id="SequenceFlow_26" name="" sourceRef="ExclusiveGateway_6" targetRef="kimlik_no_gir">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd is 'hata_to_tcno'</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'hata_to_tcno'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_3" default="BaskanIptalEdiyor">
       <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
@@ -170,7 +170,7 @@
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="BaskanIptalEdiyor" name="" sourceRef="ExclusiveGateway_3" targetRef="iptal_by_baskan"/>
     <bpmn2:sequenceFlow id="baskan_kaydediyor" name="" sourceRef="ExclusiveGateway_3" targetRef="kaydet_by_baskan">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd is 'kaydet_baskan'</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'kaydet_baskan'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:serviceTask id="baskan_isle">
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>

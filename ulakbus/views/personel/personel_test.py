@@ -57,8 +57,7 @@ def delete_draft(current):
     current.output['forms'] = Iptal().serialize()
 
 
-def review_service_errors(current):
-    if 'restart' in current.input['form']:
-        current.task_data['hata_to_tcno'] = True
-    else:
-        current.output['forms'] = HataIncele().serialize()
+class review_service_errors(SimpleView):
+
+    def show_view(self):
+        self.current.output['forms'] = HataIncele().serialize()
