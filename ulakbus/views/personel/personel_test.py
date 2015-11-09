@@ -8,7 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko import form
 from zengine.lib.forms import JsonForm
-from zengine.views.base import SimpleView
+from zengine.views.base import SimpleView, BaseView
 
 
 class TCKNForm(JsonForm):
@@ -19,9 +19,9 @@ class TCKNForm(JsonForm):
     ekle = form.Button("Ekle")
 
 
-class YeniPersonelEkle(SimpleView):
-    def show_view(self):
-        self.current.output['forms'] = TCKNForm().serialize()
+class YeniPersonelEkle(BaseView):
+    def __init__(self, current=None):
+        current.output['forms'] = TCKNForm().serialize()
 
 
 def get_personel_from_hitap(current):
