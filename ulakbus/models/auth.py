@@ -131,11 +131,11 @@ class Unit(Model):
         app = 'Sistem'
         verbose_name = "Unit"
         verbose_name_plural = "Units"
-        search_fields = ['name', 'id']
-        list_fields = ['name', 'id', 'unit_type']
+        search_fields = ['name']
+        list_fields = ['name', 'unit_type']
 
     def __unicode__(self):
-        return '%s %s' % (self.name, self.id)
+        return '%s %s' % (self.name, self.key)
 
 
 
