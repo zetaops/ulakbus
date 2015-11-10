@@ -48,16 +48,16 @@ class HataIncele(JsonForm):
     restart = form.Button("Tekrar Dene", cmd="hata_to_tcno")
     cancel = form.Button("İşlemi İptal Et", cmd="iptal_hata")
 
-class Iptal(JsonForm):
-    class Meta:
-        title = 'İptal'
-        help_text = "Başarıyla iptal edildi"
+
+# class Iptal(JsonForm):
+#     class Meta:
+#         title = 'İptal'
+#         help_text = "Başarıyla iptal edildi"
 
 def delete_draft(current):
-    current.output['forms'] = Iptal().serialize()
+    current.output['msgbox'] = {'type': 'info', "title": 'İptal', "msg": 'Başarıyla iptal edildi'}
 
 
 class review_service_errors(SimpleView):
-
     def show_view(self):
         self.current.output['forms'] = HataIncele().serialize()
