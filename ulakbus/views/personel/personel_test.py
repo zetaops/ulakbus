@@ -45,8 +45,8 @@ class HataIncele(JsonForm):
                     "aklsjsd haskljdhasklj dhaskldh akdhaksj dajskh dgasjkhdg ajshgdasj dgas" \
                     "aslkd haskldhaskdhaskldhaskl dhaklsd"
 
-    restart = form.Button("Tekrar Dene", cmd="hata_to_tcno")
-    cancel = form.Button("İşlemi İptal Et", cmd="iptal_hata")
+    restart = form.Button("Tekrar Dene", flow="hata_to_tcno")
+    cancel = form.Button("İşlemi İptal Et", flow="iptal_hata")
 
 
 # class Iptal(JsonForm):
