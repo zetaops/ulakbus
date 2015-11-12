@@ -74,7 +74,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_19" name="" sourceRef="ExclusiveGateway_4" targetRef="aks_bilgileri">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">mernis_tamam</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="aks_bilgileri" camunda:class="services.aks.get_by_tckn" name="Adres Bilgileri&#xA;Getir">
+    <bpmn2:serviceTask id="aks_bilgileri" camunda:class="personel.aks.get_by_tckn" name="Adres Bilgileri&#xA;Getir">
       <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
     </bpmn2:serviceTask>
@@ -87,7 +87,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ExclusiveGateway_5" targetRef="personel_atama">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'aks_tamam'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:userTask id="personel_atama" camunda:assignee="personel.atama_yap" name="Atama Yap">
+    <bpmn2:userTask id="personel_atama" camunda:assignee="personel.AtamaYap" name="Atama Yap">
       <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
     </bpmn2:userTask>

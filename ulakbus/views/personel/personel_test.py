@@ -6,9 +6,12 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import random
+
 from pyoko import form
 from zengine.lib.forms import JsonForm
 from zengine.views.base import SimpleView, BaseView
+from zengine.views.crud import CrudView
 
 
 class TCKNForm(JsonForm):
@@ -31,12 +34,17 @@ def get_personel_from_hitap(current):
     current.set_message(title='%s TC no için Hitap servisi başlatıldı' % tcno,
                         msg='', typ=1, url="/wftoken/%s" % current.token)
 
+def get_by_tckn(current):
+    current.task_data['aks_tamam'] = True
 
 def get_from_mernis(current):
-    current.task_data['mernis_tamam'] = False
+    # %60 ihtimalle yeni atama ekranina gidecek, %40  hata verecek...
+    current.task_data['mernis_tamam'] = random.choice((1,2,3,4,5)) in (1,2,3)
     current.set_message(title='%s için Mernis\'e erişilemedi' % current.task_data['tcno'],
                         msg='', typ=1, url="/wftoken/%s" % current.token)
 
+class AtamaYap(CrudView):
+    MODEL = 'Atama'
 
 class HataIncele(JsonForm):
     class Meta:
