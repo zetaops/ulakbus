@@ -9,7 +9,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
-
+from zengine.management_commands import *
 
 class CreateUser(Command):
     CMD_NAME = 'create_user'
