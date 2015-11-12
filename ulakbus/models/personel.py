@@ -12,6 +12,7 @@ from pyoko import field
 from .auth import Unit
 
 
+
 class Personel(Model):
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
