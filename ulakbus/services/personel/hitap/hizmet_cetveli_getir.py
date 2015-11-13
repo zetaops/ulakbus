@@ -47,7 +47,7 @@ class HizmetCetveliGetir(Service):
                         'emekli_kademe': service_bean[record].emekliKademe,
                         'gorev': service_bean[record].gorev,
                         'unvan_kod': service_bean[record].unvanKod,
-                        'hizmet_sinifi': service_bean[record].hizmetSinifi,
+                        'hizmet_sinifi': self.hizmet_sinifi_int_kontrol(service_bean[record].hizmetSinifi),
                         'kayit_no': service_bean[record].kayitNo,
                         'kazanilmis_hak_ayligi_derece': service_bean[
                             record].kazanilmisHakAyligiDerece,
@@ -72,10 +72,10 @@ class HizmetCetveliGetir(Service):
 
             response_json = dumps(hitap_dict)
             return_dict = {"status": "ok", "result": response_json}
-            #self.response.payload = dumps(return_dict)
+            # self.response.payload = dumps(return_dict)
             self.response.payload = {"status": "ok", "result": response_json}
-            #self.response.payload["status"] = "ok"
-            #self.response.payload["result"] = response_json
+            # self.response.payload["status"] = "ok"
+            # self.response.payload["result"] = response_json
 
         except AttributeError:
             self.response.payload["status"] = "error"
@@ -83,3 +83,52 @@ class HizmetCetveliGetir(Service):
             self.logger.info("TCKN may be wrong!")
         except urllib2.URLError:
             self.logger.info("No internet connection!")
+
+    def hizmet_sinifi_int_kontrol(self, hs):
+        """
+        Bu metod ilgili HITAP servisinin hizmet_sinifi alaninin, hem 1, 2, 3 ... 29 gibi integer degerler hem de
+        GIH, MIAH, ... SOZ gibi string almasi problemini duzeltmek icindir.
+
+        :param hs: hitaptan donen hizmet sinifi
+        :type hs: str
+        :return int: hitap sinifi int or 0
+
+        """
+        hizmet_siniflari = {
+            "GİH": 1,
+            "MİAH": 2,
+            "SH": 3,
+            "TH": 4,
+            "EÖH": 5,
+            "AH": 6,
+            "EH": 7,
+            "DH": 8,
+            "YH": 9,
+            "MİT": 10,
+            "AHS": 11,
+            "BB": 12,
+            "CU": 13,
+            "CUM": 14,
+            "DE": 15,
+            "DVS": 16,
+            "HS": 17,
+            "MB": 18,
+            "MV": 19,
+            "ÖÜ": 20,
+            "SAY": 21,
+            "TBM": 22,
+            "TRT": 23,
+            "TSK": 24,
+            "YÖK": 25,
+            "YSH": 26,
+            "ÖGO": 27,
+            "ÖY": 28,
+            "SÖZ": 29
+        }
+        if type(hs) is str:
+            return hizmet_siniflari[hs.strip()]
+        elif type(hs) is int and hs in range(1, 30):
+            return hs
+        else:
+            self.logger.info("HIZMET SINIFINI KONTROL EDIN")
+            return 0
