@@ -24,14 +24,14 @@ class TestCase(BaseTestCase):
 
         # calling with just model name (without any cmd) equals to cmd="list"
         resp = self.client.post(model='Personel')
-        assert 'nobjects' in resp.json
+        assert 'objects' in resp.json
 
-        # list_objects = resp.json['nobjects']
+        # list_objects = resp.json['objects']
         # if list_objects and len(list_objects) > 1:
         #     assert list_objects[1][1] == 'Em1'
 
         # count number of records
-        num_of_objects = len(resp.json['nobjects']) - 1
+        num_of_objects = len(resp.json['objects']) - 1
 
         # add a new employee record, then go to list view (do_list subcmd)
         self.client.post(model='Personel', cmd='add')
@@ -40,23 +40,23 @@ class TestCase(BaseTestCase):
                                 subcmd="do_list",
                                 form=dict(ad="Em1", tckn="12323121443"))
         # we should have 1 more object relative to previous listing
-        assert num_of_objects + 1 == len(resp.json['nobjects']) - 1
+        assert num_of_objects + 1 == len(resp.json['objects']) - 1
 
         # delete the first object then go to list view
         resp = self.client.post(model='Personel',
                                 cmd='delete',
                                 subcmd="do_list",
-                                object_id=resp.json['nobjects'][1][0])
+                                object_id=resp.json['objects'][1][0])
 
         # number of objects should be equal to starting point
-        assert num_of_objects == len(resp.json['nobjects']) - 1
+        assert num_of_objects == len(resp.json['objects']) - 1
 
     def test_add_search_filter(self):
         # setup workflow
         self.prepare_client('/crud')
         resp = self.client.post(model='Personel')
         resp = self.client.post(model='Personel', query="1234567")
-        if len(resp.json['nobjects']) < 2:
+        if len(resp.json['objects']) < 2:
             self.client.post(model='Personel', cmd='add')
             for i in range(9):
                 resp = self.client.post(model='Personel',
@@ -66,4 +66,4 @@ class TestCase(BaseTestCase):
             time.sleep(3)
         resp = self.client.post(model='Personel')
         resp = self.client.post(model='Personel', query="12345678")
-        assert len(resp.json['nobjects']) > 8
+        assert len(resp.json['objects']) > 8
