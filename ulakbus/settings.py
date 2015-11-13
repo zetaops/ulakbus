@@ -11,6 +11,8 @@ import os.path
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
+DEFAULT_LANG = 'tr'
+
 # path of the activity modules which will be invoked by workflow tasks
 ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
 # absolute path to the workflow packages
@@ -34,40 +36,42 @@ ANONYMOUS_WORKFLOWS = ['login', ]
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 
+DATE_DEFAULT_FORMAT = "%d.%m.%Y"
+
 CRUD_MENUS = {
-   # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
-   #                                             'field':'field_name',
-   #                                             'verbose_name': 'verbose_name',
-   #                                             'category': 'Genel'}]
-   # 'field' defaults to 'personel' or 'ogrenci'
-   # verbose_name can be specified to override the model's verbose_name_plural
-   'personel': [
-       {'name': 'KurumDisiGorevlendirmeBilgileri'},
-       {'name': 'KurumIciGorevlendirmeBilgileri'},
-       {'name': 'AdresBilgileri'},
-       {'name': 'HizmetKurs'},
-       {'name': 'HizmetOkul'},
-       {'name': 'HizmetMahkeme'},
-       {'name': 'HizmetBirlestirme'},
-       {'name': 'HizmetTazminat'},
-       {'name': 'HizmetUnvan'},
-       {'name': 'HizmetAcikSure'},
-       {'name': 'HizmetBorclanma'},
-       {'name': 'HizmetIHS'},
-       {'name': 'HizmetIstisnaiIlgi'},
-       {'name': 'HizmetKayitlari'},
-       {'name': 'AskerlikKayitlari'},
-       {'name': 'Atama'},
-       {'name': 'Kadro'},
-       {'name': 'Izin'},
-       {'name': 'UcretsizIzin'},
-   ],
-   'ogrenci': [
-       {'name': 'DersKatilimi'},
-       {'name': 'Borc'},
-       {'name': 'DegerlendirmeNot'},
-       {'name': 'OgrenciDersi'},
-   ],
+    # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
+    #                                             'field':'field_name',
+    #                                             'verbose_name': 'verbose_name',
+    #                                             'category': 'Genel'}]
+    # 'field' defaults to 'personel' or 'ogrenci'
+    # verbose_name can be specified to override the model's verbose_name_plural
+    'personel': [
+        {'name': 'KurumDisiGorevlendirmeBilgileri'},
+        {'name': 'KurumIciGorevlendirmeBilgileri'},
+        {'name': 'AdresBilgileri'},
+        {'name': 'HizmetKurs'},
+        {'name': 'HizmetOkul'},
+        {'name': 'HizmetMahkeme'},
+        {'name': 'HizmetBirlestirme'},
+        {'name': 'HizmetTazminat'},
+        {'name': 'HizmetUnvan'},
+        {'name': 'HizmetAcikSure'},
+        {'name': 'HizmetBorclanma'},
+        {'name': 'HizmetIHS'},
+        {'name': 'HizmetIstisnaiIlgi'},
+        {'name': 'HizmetKayitlari'},
+        {'name': 'AskerlikKayitlari'},
+        {'name': 'Atama'},
+        {'name': 'Kadro'},
+        {'name': 'Izin'},
+        {'name': 'UcretsizIzin'},
+    ],
+    'ogrenci': [
+        {'name': 'DersKatilimi'},
+        {'name': 'Borc'},
+        {'name': 'DegerlendirmeNot'},
+        {'name': 'OgrenciDersi'},
+    ],
 }
 
 VIEW_URLS = [
@@ -78,3 +82,5 @@ VIEW_URLS = [
     ('/notify/', 'ulakbus.views.system.Notification'),
 
 ]
+
+ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')

@@ -20,7 +20,7 @@ class Okutman(Model):
     dogum_tarihi = field.Date("Okutmanın Doğum Tarihi", index=True)
     dogum_yeri = field.String("Okutmanın Doğum Yeri", index=True)
     uyruk = field.String("Uyruk", index=True)
-    medeni_hali = field.String("Medeni Hali", index=True)
+    medeni_hali = field.String("Medeni Hali", index=True, choices="medeni_hali")
     ikamet_adresi = field.String("İkamet Adresi", index=True)
     telefon_no = field.String("Telefon Numarası", index=True)
     oda_no = field.String("Oda Numarası", index=True)
@@ -33,7 +33,7 @@ class Okutman(Model):
     ehliyet = field.String("Ehliyet", index=True)
     akademik_yayinlari = field.String("Akademik Yayınları", index=True)
     verdigi_dersler = field.String("Verdiği Dersler", index=True)
-    unvan = field.String("Unvan", index=True)
+    unvan = field.String("Unvan", index=True, choices="akademik_unvan")
 
     class Meta:
         app = 'Ogrenci'
@@ -104,14 +104,14 @@ class Ders(Model):
     yerel_kredisi = field.Integer("Yerel Kredisi", index=True)
     zorunlu = field.Boolean("Zorunlu", index=True)
     ders_dili = field.String("Ders Dili", index=True)
-    ders_turu = field.String("Ders Türü", index=True)
+    ders_turu = field.Integer("Ders Türü", index=True, choices="ders_turleri")
     ders_amaci = field.String("Ders Amacı", index=True)
     ogrenme_ciktilari = field.String("Öğrenme Çıktıları", index=True)
     ders_icerigi = field.String("Ders İçeriği", index=True)
-    ders_kategorisi = field.String("Ders Kategorisi", index=True)
+    ders_kategorisi = field.Integer("Ders Kategorisi", index=True, choices="ders_kategorileri")
     ders_kaynaklari = field.String("Ders kaynakları", index=True)
     ders_mufredati = field.String("Ders Müfredatı", index=True)
-    verilis_bicimi = field.Integer("Veriliş Biçimi", index=True)
+    verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
     program = Program()
     donem = Donem()
     ders_koordinatoru = Personel()
@@ -141,7 +141,7 @@ class Derslik(Model):
     kod = field.String("Kod", index=True)
     # TODO: Bina ve diger fiziki varkliklar map edilecek.
     bina = field.String("Bina", index=True)
-    tur = field.String("Derslik Türü", index=True)
+    tur = field.Integer("Derslik Türü", index=True, choices="derslik_turleri")
     kapasite = field.String("Kapasite", index=True)
 
     class Meta:
@@ -180,7 +180,7 @@ class Sube(Model):
 class Sinav(Model):
     tarih = field.Date("Sınav Tarihi", index=True)
     yapilacagi_yer = field.String("Yapılacağı Yer", index=True)
-    tur = field.String("Sınav Türü", index=True)
+    tur = field.String("Sınav Türü", index=True, choices="sinav_turleri")
     aciklama = field.String("Açıklama", index=True)
     sube = Sube()
     ders = Ders()
@@ -286,11 +286,11 @@ class DersKatilimi(Model):
 
 class Borc(Model):
     miktar = field.Float("Borç Miktarı", index=True)
-    para_birimi = field.String("Para Birimi", index=True)
-    sebep = field.String("Borç Sebebi", index=True)
+    para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
+    sebep = field.Integer("Borç Sebebi", index=True, choices="ogrenci_borc_sebepleri")
     son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
     aciklama = field.String("Borç Açıklaması", index=True)
-    odeme_sekli = field.String("Ödeme Şekli", index=True)
+    odeme_sekli = field.Integer("Ödeme Şekli", index=True, choices="odeme_sekli")
     odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
     odenen_miktar = field.String("Ödenen Miktar", index=True)
     ogrenci = Ogrenci()
