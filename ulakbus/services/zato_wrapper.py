@@ -15,9 +15,7 @@ import json
 class ZatoService(object):
     """
 
-    Simple zato service wrapper class.
-
-    You can write your zato services extending this class.
+    Simple zato service wrapper class. You can write your zato services extending this class.
 
     This class simply needs some parameter to be set as you see in init payload and service uri.
     Defaults are an empty dict for payload, string "ping" for service_uri.
@@ -35,33 +33,36 @@ class ZatoService(object):
     def get_uri(self):
         """
 
-        Simply returns full uri of zato service
+        Simply returns full uri of zato service object. It uses ``ZATO_SERVER`` from settings module.
 
-        :return: unique identification string of service on zato services including
-                 join of zato server url (generally a load balancer url) and service name on zato.
-
-        settings.ZATO_SERVER should be set as environment variable. Example:
+        The ``ZATO_SERVER`` can be set as environment variable as below:
         ::
 
             export ZATO_SERVER='http://127.0.0.1/'
 
+
+        :return: unique identification string of service on zato services including
+                 join of zato server url (generally a load balancer url) and service name on zato.
+
+
         """
+
         return '/'.join([settings.ZATO_SERVER, self.service_uri])
 
     def zato_request(self):
         """
-        Makes zato requests
 
-        Zato expects payloads as json over POST method and sends back json. Return json cotains two parts
-        one is status and the other is result.
+        Makes zato requests. Zato expects payloads as json over POST method and sends back json. Return json cotains
+        two parts one is status and the other is result.
 
-        Status part is can be ``ok`` or ``error`` depends on what happens in zato servers while running.
-
-        Result part is the data part which is expected by consumer.
+        Status part is can be ``ok`` or ``error`` depends on what happens in zato servers while running. Result part is
+        the data part which is expected by consumer.
 
         :return: if requests fails, returns ``None``, or simply string of zato service response payload
 
+
         """
+
         uri = self.get_uri()
         payload = json.loads(self.payload)
         r = requests.post(uri, data=json.dumps(payload))
@@ -99,6 +100,7 @@ class HitapService(ZatoService):
         :return: string tckn or raises exception
 
         """
+
         if not tckn:
             raise Exception("tckn can not be empty")
 
@@ -137,6 +139,7 @@ class HitapHizmetCetvelGetir(HitapService):
         :type tckn: str
 
         """
+
         super(HitapHizmetCetvelGetir, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
@@ -169,7 +172,9 @@ class HitapHizmetCetveliSenkronizeEt(HitapService):
         :param tckn: 11 byte length tckn number, can not be empty
         :type tckn: str
 
+
         """
+
         super(HitapHizmetCetveliSenkronizeEt, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
