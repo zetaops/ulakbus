@@ -37,6 +37,8 @@ class Menu(BaseView):
                     category = model_data.get('category', DEFAULT_CATEGORY)
                     results[user_type].append({"text": verbose_name,
                                                "url": crud_path,
+                                               "wf": "crud",
+                                               "model": model_data['name'],
                                                "kategori": category,
                                                "param": field_name})
                 # else:
@@ -47,6 +49,7 @@ class Menu(BaseView):
     def get_workflow_menus(self):
         get_wf_menu = lambda: ({"text": wf.spec.wf_name,
                                 "url": '/%s' % wf.spec.name,
+                                "wf": wf.spec.name,
                                 "kategori": category,
                                 "param": "id"})
         results = defaultdict(list)
