@@ -25,7 +25,7 @@ class TCKNForm(JsonForm):
 class YeniPersonelEkle(BaseView):
     def __init__(self, current=None):
         current.output['forms'] = TCKNForm().serialize()
-        current.output['client_cmd'] = 'edit'
+        current.output['client_cmd'] = ['form']
 
 
 def get_personel_from_hitap(current):
