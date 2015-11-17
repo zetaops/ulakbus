@@ -9,6 +9,5 @@
 
 from .personel import *
 from .auth import *
-from .student import *
-from .lectures import *
+from .ogrenci import *
 from .hitap import *
