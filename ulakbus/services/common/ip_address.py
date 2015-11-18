@@ -20,7 +20,6 @@ class GetIPAddress(Service):
     """
 
     def handle(self):
-        tckn = self.request.payload['tckn']
-        service = self.outgoing.plain_http.get('IPAddress')
-        response = service.conn.send()
+        service = self.outgoing.plain_http.get('IPIFY')
+        response = service.conn.get(self.cid)
         self.response.payload = {"status": "ok", "result": json.dumps(response.data)}
