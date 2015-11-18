@@ -38,8 +38,8 @@ class STSGetToken(Service):
 
         created = datetime.datetime.now().isoformat()
         expire = (datetime.datetime.now() + datetime.timedelta(minutes=10)).isoformat()
-        username = os.environ["NIV_USER"]
-        password = os.environ["NIV_PASS"]
+        username = os.environ["NVI_USER"]
+        password = os.environ["NVI_PASS"]
 
         sts_request = """
         <s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
