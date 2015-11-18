@@ -234,7 +234,7 @@ class Ogrenci(Model):
     aktif_donem = field.String("Dönem", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
     basari_durumu = field.String("Başarı Durumu", index=True)
-    rol = Role()
+    rol = Role(one_to_one=True)
     ders_programi = DersProgrami()
 
     class KayitliOluduguProgramlar(ListNode):

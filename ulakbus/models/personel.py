@@ -9,8 +9,7 @@
 
 from pyoko.model import Model, Node
 from pyoko import field
-from .auth import Unit
-
+from .auth import Unit, Role
 
 
 class Personel(Model):
@@ -44,6 +43,7 @@ class Personel(Model):
     engel_grubu = field.String("Engel Grubu", index=True)
     engel_derecesi = field.String("Engel Derecesi")
     engel_orani = field.Integer("Engellilik Orani")
+    rol = Role(one_to_one=True)
 
 
     class Meta:
