@@ -404,6 +404,7 @@ class Borc(Model):
     para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
     sebep = field.Integer("Borç Sebebi", index=True, choices="ogrenci_borc_sebepleri")
     son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
+    tahakkuk_referans_no = field.String("Tahakkuk Referans No")
     aciklama = field.String("Borç Açıklaması", index=True)
     odeme_sekli = field.Integer("Ödeme Şekli", index=True, choices="odeme_sekli")
     odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
@@ -420,6 +421,56 @@ class Borc(Model):
 
     def __unicode__(self):
         return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
+
+
+class Odeme(Model):
+    miktar = field.Float("Borç Miktarı", index=True)
+    para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
+    aciklama = field.String("Borç Açıklaması", index=True)
+    odeme_sekli = field.Integer("Ödeme Şekli", index=True, choices="odeme_sekli")
+    odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
+    borc = Borc()
+    ogrenci = Ogrenci()
+    banka = Banka()
+    banka_sube_kodu = field.String("Banka Sube Kodu")
+    banka_kanal_kodu = field.String("Kanal Kodu")
+    tahsilat_referans_no = field.String("Tahsilat Referans No")
+    donem = Donem()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Borc"
+        verbose_name_plural = "Borclar"
+        list_fields = ['miktar', 'son_odeme_tarihi']
+        search_fields = ['miktar', 'odeme_tarihi']
+
+    def __unicode__(self):
+        return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
+
+
+class Banka(Model):
+    ad = field.String("Banka Adi", index=True)
+    kod = field.String("Banka Kodu", index=True)
+
+    class Meta:
+        verbose_name = "Banka"
+        verbose_name_plural = "Bankalar"
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.kod)
+
+
+class BankaAuth(Model):
+    username = field.String("Username")
+    password = field.String("Password")
+    banka = Banka()
+
+    class Meta:
+        verbose_name = "Banka Kullanicisi"
+        verbose_name_plural = "Banka Kullanicilari"
+
+    def __unicode__(self):
+        return '%s %s' % (self.username, self.banka.ad)
 
 
 class DegerlendirmeNot(Model):
