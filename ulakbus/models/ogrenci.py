@@ -236,6 +236,7 @@ class Ogrenci(Model):
     basari_durumu = field.String("Başarı Durumu", index=True)
     rol = Role(one_to_one=True)
     ders_programi = DersProgrami()
+    danisman = Personel()
 
     class KayitliOluduguProgramlar(ListNode):
         program = Program()
