@@ -86,4 +86,5 @@ class LoadFixture(Command):
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
 
-ManagementCommands()
+if __name__ == '__main__':
+    ManagementCommands()
