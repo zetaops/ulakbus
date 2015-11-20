@@ -15,6 +15,9 @@ from .base_test_case import BaseTestCase
 class TestCase(BaseTestCase):
     def test_list_add_delete_with_employee_model(self):
         # setup workflow
+        def len_1(lst):
+            return len(lst) - 1
+
         self.prepare_client('/crud')
 
         # calling the crud view without any model should list available models
@@ -31,25 +34,24 @@ class TestCase(BaseTestCase):
         #     assert list_objects[1][1] == 'Em1'
 
         # count number of records
-        num_of_objects = len(resp.json['objects']) - 1
+        num_of_objects = len_1(resp.json['objects'])
 
         # add a new employee record, then go to list view (do_list subcmd)
-        self.client.post(model='Personel', cmd='add')
+        self.client.post(model='Personel', cmd='form')
         resp = self.client.post(model='Personel',
-                                cmd='add',
-                                subcmd="do_list",
+                                cmd='save::list',
                                 form=dict(ad="Em1", tckn="12323121443"))
+
         # we should have 1 more object relative to previous listing
-        assert num_of_objects + 1 == len(resp.json['objects']) - 1
+        assert num_of_objects + 1 == len_1(resp.json['objects'])
 
         # delete the first object then go to list view
         resp = self.client.post(model='Personel',
                                 cmd='delete',
-                                subcmd="do_list",
-                                object_id=resp.json['objects'][1][0])
+                                object_id=resp.json['objects'][1]['key'])
 
         # number of objects should be equal to starting point
-        assert num_of_objects == len(resp.json['objects']) - 1
+        assert 'reload' in resp.json['client_cmd']
 
     def test_add_search_filter(self):
         # setup workflow
@@ -57,11 +59,10 @@ class TestCase(BaseTestCase):
         resp = self.client.post(model='Personel')
         resp = self.client.post(model='Personel', query="1234567")
         if len(resp.json['objects']) < 2:
-            self.client.post(model='Personel', cmd='add')
+            self.client.post(model='Personel', cmd='form')
             for i in range(9):
                 resp = self.client.post(model='Personel',
-                                        cmd='add',
-                                        subcmd="do_add",
+                                        cmd='save::form',
                                         form=dict(ad="Per%s" % i, tckn="123456789%s" % i))
             time.sleep(3)
         resp = self.client.post(model='Personel')

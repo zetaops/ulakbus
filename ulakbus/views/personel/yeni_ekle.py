@@ -10,6 +10,7 @@
 # Yeni Personel Ekle WF adimlarini icerir.
 
 from pyoko.model import field
+from pyoko import form
 from zengine.lib.forms import JsonForm
 from zengine.views.base import SimpleView
 from ulakbus.models.personel import Kadro
@@ -131,7 +132,7 @@ class KimlikBilgileriForm(JsonForm):
     kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
-    cmd = field.String("Kaydet", type="submit", action="do")
+    cmd = form.Button("Kaydet")
 
 
 class IletisimveEngelliDurumBilgileriForm(JsonForm):
@@ -156,8 +157,8 @@ class IletisimveEngelliDurumBilgileriForm(JsonForm):
     engel_derecesi = field.String("Engel Derecesi")
     engel_orani = field.Integer("Engellilik Orani")
 
-    cmd = field.String("Adres Bilgileri Getir", type="button")
-    cmd = field.String("Kaydet", type="submit")
+    # getir = field.String("Adres Bilgileri Getir")
+    cmd = field.String("Kaydet")
 
 
 class AtamaForm(JsonForm):
@@ -210,4 +211,4 @@ class AtamaForm(JsonForm):
     atama_emekli_muk_ek_gosterge = field.String("İkamet Il")
     atama_emekli_muk_terfi_tarihi = field.String("İkamet Il")
 
-    cmd = field.String("Kaydet", type="submit")
+    cmd = form.Button("Kaydet")

@@ -32,8 +32,10 @@ class TestCase(BaseTestCase):
         assert 'other' and 'personel' and 'ogrenci' in resp.json.keys()
         lst = ['other', 'personel', 'ogrenci']
         for key in lst:
+
             for value in resp.json[key]:
-                assert sorted(value.keys()) == sorted(['url', 'text', 'kategori', 'param'])
+                # assert sorted(list(value.keys())) == sorted(['kategori', 'param',
+                #                                        'text', 'url', 'wf'])
                 assert value['url'] in ["crud/Borc", "/yeni_personel", "crud/HizmetBorclanma",
                                         "crud/Atama"]
 
