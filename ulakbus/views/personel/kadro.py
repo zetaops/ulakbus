@@ -27,9 +27,13 @@ class KadroIslemleri(CrudView):
 
         save_edit = form.Button("Kaydet")
 
+    #
+    # ObjectForm birden cok view da farklilasiyorsa metod icinde bu sekilde kullanilmali.
+    #
     # def kadro_ekle_form(self):
     #     self.object_form.exclude = ['durum',]
     #     self.form()
+    #
 
     def kadro_kaydet(self):
         super(KadroIslemleri, self).set_form_data_to_object()
@@ -54,7 +58,7 @@ class KadroIslemleri(CrudView):
 
     @obj_filter
     def duzenlenebilir_veya_silinebilir_kadro(self, obj, result):
-        if obj.durum == 2 or obj.durum == 1:
+        if obj.durum in [1, 2]:
             result['actions'] = [
                 {'name': 'Sil', 'cmd': 'delete', 'mode': 'bg', 'show_as': 'button'},
                 {'name': 'Düzenle', 'cmd': 'form', 'mode': 'normal', 'show_as': 'button'},
