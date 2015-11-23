@@ -79,6 +79,7 @@ class AbstractRole(Model):
 
 class Unit(Model):
     name = field.String("Name", index=True)
+    long_name = field.String("Name", index=True)
     yoksis_id = field.Integer("Unit ID", index=True, choices="yoksis_program_id")
     unit_type = field.String("Unit Type", index=True)
     parent_unit_id = field.Integer("Parent Unit ID", index=True)
@@ -93,8 +94,9 @@ class Unit(Model):
     city_code = field.Integer("City Code", index=True)
     district_code = field.Integer("District Code", index=True)
     unit_group = field.Integer("Unit Group", index=True)
-    foet_code = field.Integer("FOET Code", index=True)
-    is_academic = field.Boolean()
+    foet_code = field.Integer("FOET Code", index=True)  # yoksis KILAVUZ_KODU mu?
+    is_academic = field.Boolean("Is Academic")
+    is_active = field.Boolean("Is Active")
 
     class Meta:
         app = 'Sistem'
