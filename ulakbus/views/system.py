@@ -55,14 +55,10 @@ class Menu(BaseView):
         results = defaultdict(list)
         for wf in get_workflows():
             if self.current.has_permission(wf.spec.name):
-                category = wf.spec.wf_properties.get("menu_category")
-                if category:
-                    if 'object' in wf.spec.wf_properties:
-                        results[wf.spec.wf_properties['object']].append(get_wf_menu())
-                    else:
-                        results['other'].append(get_wf_menu())
-            # else:
-            #     print("NONONONON PERM FOR %s" % wf.spec.name)
+                print(wf.spec.wf_properties)
+                category = wf.spec.wf_properties.get("menu_category", 'Genel')
+                if category != 'hidden':
+                    results[wf.spec.wf_properties.get('object', 'other')].append(get_wf_menu())
         return results
 
 
