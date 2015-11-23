@@ -77,9 +77,40 @@ class AbstractRole(Model):
         permission = Permission()
 
 
+class Unit(Model):
+    name = field.String("Name", index=True)
+    yoksis_id = field.Integer("Unit ID", index=True, choices="yoksis_program_id")
+    unit_type = field.String("Unit Type", index=True)
+    parent_unit_id = field.Integer("Parent Unit ID", index=True)
+    current_situation = field.String("Current Situation", index=True)
+    language = field.String("Learning Language", index=True)
+    learning_type = field.String("Learning Type", index=True)
+    osym_code = field.String("ÖSYM Code", index=True)
+    opening_date = field.Date("Opening Date", index=True)
+    learning_duration = field.Integer("Learning Duration", index=True)
+    english_name = field.String("Unit Name in English", index=True)
+    quota = field.Integer("Unit Quota", index=True)
+    city_code = field.Integer("City Code", index=True)
+    district_code = field.Integer("District Code", index=True)
+    unit_group = field.Integer("Unit Group", index=True)
+    foet_code = field.Integer("FOET Code", index=True)
+    is_academic = field.Boolean()
+
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Unit"
+        verbose_name_plural = "Units"
+        search_fields = ['name']
+        list_fields = ['name', 'unit_type']
+
+    def __unicode__(self):
+        return '%s %s' % (self.name, self.key)
+
+
 class Role(Model):
     abstract_role = AbstractRole()
     user = User()
+    unit = Unit()
 
     class Meta:
         app = 'Sistem'
@@ -102,41 +133,12 @@ class Role(Model):
     def add_permission_by_name(self, code, save=False):
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
-                     Permission.objects.filter(code='*' + code + '*')]
+                    Permission.objects.filter(code='*' + code + '*')]
         for p in Permission.objects.filter(code='*' + code + '*'):
             if p not in self.Permissions:
                 self.Permissions(permission=p)
         if p:
             self.save()
-
-class Unit(Model):
-    name = field.String("Name", index=True)
-    yoksis_id = field.Integer("Unit ID", index=True, choices="yoksis_program_id")
-    unit_type = field.String("Unit Type", index=True)
-    parent_unit_id = field.Integer("Parent Unit ID", index=True)
-    current_situation = field.String("Current Situation", index=True)
-    language = field.String("Learning Language", index=True)
-    learning_type = field.String("Learning Type", index=True)
-    osym_code = field.String("ÖSYM Code", index=True)
-    opening_date = field.Date("Opening Date", index=True)
-    learning_duration = field.Integer("Learning Duration", index=True)
-    english_name = field.String("Unit Name in English", index=True)
-    quota = field.Integer("Unit Quota", index=True)
-    city_code = field.Integer("City Code", index=True)
-    district_code = field.Integer("District Code", index=True)
-    unit_group = field.Integer("Unit Group", index=True)
-    foet_code = field.Integer("FOET Code", index=True)
-
-    class Meta:
-        app = 'Sistem'
-        verbose_name = "Unit"
-        verbose_name_plural = "Units"
-        search_fields = ['name']
-        list_fields = ['name', 'unit_type']
-
-    def __unicode__(self):
-        return '%s %s' % (self.name, self.key)
-
 
 
 class LimitedPermissions(Model):
@@ -150,7 +152,7 @@ class LimitedPermissions(Model):
         verbose_name_plural = "Sınırlandırılmış Yetkiler"
 
     def __unicode__(self):
-         return "%s - %s" % (self.time_start, self.time_end)
+        return "%s - %s" % (self.time_start, self.time_end)
 
     class IPList(ListNode):
         ip = field.String()

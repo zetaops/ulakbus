@@ -24,18 +24,16 @@ class TestCase(BaseTestCase):
         # Kullanicinin izin desgisikliklerini gormesi icin cikis yapmasi gerekiyor
         self.client.set_path('/logout')
         self.client.post()
-        # Login'e true atayip varolan kullaniciyi direkt login yaptiriyoruz.
+        # Login'e true atayip varolan kullaniciyi direkt login yaptiriyor.
         self.prepare_client('/menu', login=True)
         resp = self.client.post()
         resp.raw()
-        # Ciktinin asagida tanimlanmis keylere sahip olup olmadigini kontrol ediyor
-        assert 'other' and 'personel' and 'ogrenci' in resp.json.keys()
         lst = ['other', 'personel', 'ogrenci']
+        # Ciktinin asagida tanimlanmis keylere sahip olup olmadigini kontrol ediyor
+        assert set(lst).issubset(resp.json.keys())
         for key in lst:
-
             for value in resp.json[key]:
-                # assert sorted(list(value.keys())) == sorted(['kategori', 'param',
-                #                                        'text', 'url', 'wf'])
+                assert set(value.keys()).issubset({'kategori', 'param', 'text', 'url', 'wf', 'model'})
                 assert value['url'] in ["crud/Borc", "/yeni_personel", "crud/HizmetBorclanma",
                                         "crud/Atama"]
 
