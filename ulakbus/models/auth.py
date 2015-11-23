@@ -80,6 +80,7 @@ class AbstractRole(Model):
 class Role(Model):
     abstract_role = AbstractRole()
     user = User()
+    unit = Unit()
 
     class Meta:
         app = 'Sistem'
@@ -102,12 +103,13 @@ class Role(Model):
     def add_permission_by_name(self, code, save=False):
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
-                     Permission.objects.filter(code='*' + code + '*')]
+                    Permission.objects.filter(code='*' + code + '*')]
         for p in Permission.objects.filter(code='*' + code + '*'):
             if p not in self.Permissions:
                 self.Permissions(permission=p)
         if p:
             self.save()
+
 
 class Unit(Model):
     name = field.String("Name", index=True)
@@ -126,6 +128,7 @@ class Unit(Model):
     district_code = field.Integer("District Code", index=True)
     unit_group = field.Integer("Unit Group", index=True)
     foet_code = field.Integer("FOET Code", index=True)
+    is_academic = field.Boolean()
 
     class Meta:
         app = 'Sistem'
@@ -136,7 +139,6 @@ class Unit(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.name, self.key)
-
 
 
 class LimitedPermissions(Model):
@@ -150,7 +152,7 @@ class LimitedPermissions(Model):
         verbose_name_plural = "Sınırlandırılmış Yetkiler"
 
     def __unicode__(self):
-         return "%s - %s" % (self.time_start, self.time_end)
+        return "%s - %s" % (self.time_start, self.time_end)
 
     class IPList(ListNode):
         ip = field.String()
