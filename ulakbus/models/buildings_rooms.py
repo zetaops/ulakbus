@@ -6,10 +6,9 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from pyoko import field, Model
 
 __author__ = 'Ali Riza Keles'
-
-from pyoko import field, Model
 
 
 class Campus(Model):
