@@ -7,12 +7,55 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-# Yeni Personel Ekle WF adimlarini icerir.
+# Kadro Islemleri WF adimlarini yurutur. WF 5 adimdan olusmaktadir.
+#
+# 1- Kadro listele
+# 2- Sakli Kadro Ekle
+# 3- Kaydet
+# 4- Kadro Durumunu Sakli veya Izinli yap
+# 5- Kadro Sil
+#
+#
+# Bu WF, CrudView extend edilerek isletilmektedir. Adimlar arasi dispatch manuel sekilde yurutulmektedir.
+# Her adim basina kullanilan metodlar su sekildedir:
+#
+# 1- Kadro Listele:
+#    CrudView list metodu kullanilmistir. Liste ekraninda CrudView standart filtreleme ve arama ozellikleri
+#    kullanilmaktadir. Listenin her bir ogesi icin object_actions filtreleri @obj_filter dekoratorleri
+#    yardimiyla ozellestirilmistir.
+#
+#    Kadro islemleri kurallarina gore sadece sakli kadrolar eklenebilmekte veya
+#    silinebilmektedir. Bu sebeple 'sil' eylemi sadece bu turdeki kadrolar icin aktifdir.
+#
+#    Sakli / Izinli Yap butonu ise sadece sakli veya izinli kadrolar icin gorunurdur.
+#
+#
+# 2- Sakli Kadro Ekle
+#    Kadrolar sadece ve sadece sakli olarak sisteme eklenebilirler. Bu amacla Crudview add_edit_form metodu
+#    bastirilarak durum alani formdan cikarilmistir.
+#
+#
+# 3- Kaydet
+#    WF'nin 2. adimindan gelen data CrudView'in set_form_data_to_object metoduyla bir Kadro instance olusturularak
+#    aktarilir.
+#
+#    Durum alani sakli (1) olarak sabitlenip kaydedilir.
+#
+#
+# 4- Kadro Durumunu Sakli veya Izinli yap
+#    Bunun icin ozel bir metod eklenmistir: sakli_izinli_degistir. Bu istenilen kadronun durumu arasinda gecis yapar.
+#
+#
+# 5- Kadro Sil
+#    Sadece durumu sakli (1) olan kadrolar silinebilir. Bunun icin kadro sil metodunda bu kontrol yapilir ve delete
+#    metodu calistrilir.
+#
+
+
 from pyoko import form
 from zengine.views.crud import CrudView, obj_filter
 
 from zengine.lib.forms import JsonForm
-from ulakbus.models.personel import Kadro
 
 
 class KadroIslemleri(CrudView):
@@ -50,6 +93,14 @@ class KadroIslemleri(CrudView):
 
         # Kadroyu kaydet
         self.object.save()
+
+    def kadro_sil(self):
+        # sadece sakli kadrolar silinebilir
+        if self.object.durum == 1:
+            # Kadroyu kaydet
+            self.delete()
+        else:
+            pass
 
     def sakli_izinli_degistir(self):
         """
