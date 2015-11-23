@@ -16,6 +16,7 @@ from zengine.config import settings
 
 DEFAULT_CATEGORY = 'Genel'
 
+
 class Menu(BaseView):
     def __init__(self, current):
         super(Menu, self).__init__(current)
@@ -29,37 +30,39 @@ class Menu(BaseView):
         for user_type in settings.CRUD_MENUS:
             for model_data in settings.CRUD_MENUS[user_type]:
                 if self.current.has_permission(model_data['name']):
-                    model = model_registry.get_model(model_data['name'])
-                    field_name = model_data.get('field', user_type + '_id')
-                    verbose_name = (model_data['verbose_name'] if 'verbose_name' in model_data
-                                    else model.Meta.verbose_name_plural)
-                    crud_path = 'crud/%s' % model_data['name']
-                    category = model_data.get('category', DEFAULT_CATEGORY)
-                    results[user_type].append({"text": verbose_name,
-                                               "url": crud_path,
-                                               "wf": "crud",
-                                               "model": model_data['name'],
-                                               "kategori": category,
-                                               "param": field_name})
-                # else:
-                #     print("NONONONON PERM FOR CRUD PERM %s" % model_data['name'])
-                #     print(self.current.get_permissions())
+                    self.add_crud(model_data, user_type, results)
         return results
 
+    def add_crud(self, model_data, user_type, results):
+        model = model_registry.get_model(model_data['name'])
+        field_name = model_data.get('field', user_type + '_id')
+        verbose_name = model_data.get('verbose_name', model.Meta.verbose_name_plural)
+        crud_path = 'crud/%s' % model_data['name']
+        category = model_data.get('category', DEFAULT_CATEGORY)
+        results[user_type].append({"text": verbose_name,
+                                   "url": crud_path,
+                                   "wf": "crud",
+                                   "model": model_data['name'],
+                                   "kategori": category,
+                                   "param": field_name})
+
     def get_workflow_menus(self):
-        get_wf_menu = lambda: ({"text": wf.spec.wf_name,
-                                "url": '/%s' % wf.spec.name,
-                                "wf": wf.spec.name,
-                                "kategori": category,
-                                "param": "id"})
         results = defaultdict(list)
         for wf in get_workflows():
             if self.current.has_permission(wf.spec.name):
-                print(wf.spec.wf_properties)
-                category = wf.spec.wf_properties.get("menu_category", 'Genel')
-                if category != 'hidden':
-                    results[wf.spec.wf_properties.get('object', 'other')].append(get_wf_menu())
+                self.add_wf(wf, results)
         return results
+
+    def add_wf(self, wf, results):
+        category = wf.spec.wf_properties.get("menu_category", 'Genel')
+        object_of_wf = wf.spec.wf_properties.get('object', 'other')
+        if category != 'hidden':
+            results[object_of_wf].append({"text": wf.spec.wf_name,
+                                          "url": '/%s' % wf.spec.name,
+                                          "wf": wf.spec.name,
+                                          "kategori": category,
+                                          "param": "id"}
+                                         )
 
 
 from ulakbus.models import Personel, Ogrenci
@@ -92,7 +95,6 @@ class SearchPerson(Search):
 
 
 def get_random_msg():
-
     msgs = [{'type': 1, 'title': 'İşlem tamamlandı',
              'body': 'Uzun süren işlem başarıyla tamamlandı',
              'url': '#yeni_personel/?t=%s' % uuid4().hex},
@@ -109,10 +111,12 @@ class Notification(BaseView):
         super(Notification, self).__init__(current)
 
         if 'read' in current.input:
-            read_messages = current.input['read']
-            for msg in read_messages:
-                current.msg_cache.remove_item(msg)
+            self.mark_as_read()
+
         notifies = self.current.msg_cache.get_all()
-        # if not notifies:
-        #     notifies = [get_random_msg()]
         self.output['notifications'] = list(notifies)
+
+    def mark_as_read(self):
+        read_messages = self.current.input['read']
+        for msg in read_messages:
+            self.current.msg_cache.remove_item(msg)
