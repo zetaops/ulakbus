@@ -22,6 +22,7 @@ AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 
 PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
+ROLE_MODEL = 'ulakbus.models.auth.Role'
 # # left blank to use StreamHandler aka stderr
 # LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
 #

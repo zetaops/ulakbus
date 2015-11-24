@@ -77,40 +77,9 @@ class AbstractRole(Model):
         permission = Permission()
 
 
-class Role(Model):
-    abstract_role = AbstractRole()
-    user = User()
-
-    class Meta:
-        app = 'Sistem'
-        verbose_name = "Rol"
-        verbose_name_plural = "Roller"
-
-    def __unicode__(self):
-        return "%s %s" % (self.abstract_role.name, self.user.username)
-
-    class Permissions(ListNode):
-        permission = Permission()
-
-    def get_permissions(self):
-        return [p.permission.code for p in self.Permissions]
-
-    def add_permission(self, perm):
-        self.Permissions(permission=perm)
-        self.save()
-
-    def add_permission_by_name(self, code, save=False):
-        if not save:
-            return ["%s | %s" % (p.name, p.code) for p in
-                     Permission.objects.filter(code='*' + code + '*')]
-        for p in Permission.objects.filter(code='*' + code + '*'):
-            if p not in self.Permissions:
-                self.Permissions(permission=p)
-        if p:
-            self.save()
-
 class Unit(Model):
     name = field.String("Name", index=True)
+    long_name = field.String("Name", index=True)
     yoksis_id = field.Integer("Unit ID", index=True, choices="yoksis_program_id")
     unit_type = field.String("Unit Type", index=True)
     parent_unit_id = field.Integer("Parent Unit ID", index=True)
@@ -125,7 +94,9 @@ class Unit(Model):
     city_code = field.Integer("City Code", index=True)
     district_code = field.Integer("District Code", index=True)
     unit_group = field.Integer("Unit Group", index=True)
-    foet_code = field.Integer("FOET Code", index=True)
+    foet_code = field.Integer("FOET Code", index=True)  # yoksis KILAVUZ_KODU mu?
+    is_academic = field.Boolean("Is Academic")
+    is_active = field.Boolean("Is Active")
 
     class Meta:
         app = 'Sistem'
@@ -137,6 +108,42 @@ class Unit(Model):
     def __unicode__(self):
         return '%s %s' % (self.name, self.key)
 
+
+class Role(Model):
+    abstract_role = AbstractRole()
+    user = User()
+    unit = Unit()
+
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Rol"
+        verbose_name_plural = "Roller"
+
+    def __unicode__(self):
+        try:
+            return "%s %s" % (self.abstract_role.name, self.user.username)
+        except:
+            return "Role #%s" % self.key
+
+    class Permissions(ListNode):
+        permission = Permission()
+
+    def get_permissions(self):
+        return [p.permission.code for p in self.Permissions]
+
+    def add_permission(self, perm):
+        self.Permissions(permission=perm)
+        self.save()
+
+    def add_permission_by_name(self, code, save=False):
+        if not save:
+            return ["%s | %s" % (p.name, p.code) for p in
+                    Permission.objects.filter(code='*' + code + '*')]
+        for p in Permission.objects.filter(code='*' + code + '*'):
+            if p not in self.Permissions:
+                self.Permissions(permission=p)
+        if p:
+            self.save()
 
 
 class LimitedPermissions(Model):
@@ -150,7 +157,7 @@ class LimitedPermissions(Model):
         verbose_name_plural = "Sınırlandırılmış Yetkiler"
 
     def __unicode__(self):
-         return "%s - %s" % (self.time_start, self.time_end)
+        return "%s - %s" % (self.time_start, self.time_end)
 
     class IPList(ListNode):
         ip = field.String()

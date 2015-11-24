@@ -1,0 +1,156 @@
+{
+  "ana_bilim_dali_roller": [
+    "ana bilim dali baskani",
+    "ana bilim dali uyesi"
+  ],
+  "bilim_dali_roller": [
+    "bilim dali baskani",
+    "bilim dali uyesi"
+  ],
+  "bolum_roller": [
+    "bolum baskani",
+    "bolum kurulu baskani",
+    "bolum kurulu uyesi"
+  ],
+  "dis_hekimligi_fakultesi_roller": [
+    "fakulte dekani",
+    "fakulte dekan yardimcisi",
+    "fakulte kurulu baskani",
+    "fakulte kurulu uyesi",
+    "fakulte sekreteri",
+    "fakulte ogrenci isleri personeli",
+    "fakulte ogrenci isleri sefi",
+    "fakulte yonetim kurulu baskani",
+    "fakulte yonetim kurulu uyesi",
+    "etik kurulu baskani",
+    "etik kurulu uyesi"
+  ],
+  "doktora_program_roller": [
+    "doktora ogrencisi"
+  ],
+  "enstitu_roller": [
+    "enstitu mudur",
+    "enstitu mudur yardimcisi",
+    "enstitu kurulu baskani",
+    "enstitu kurulu uyesi",
+    "enstitu yonetim kurulu baskani",
+    "enstitu yonetim kurulu uyesi",
+    "enstitu sekreteri",
+    "enstitu ogrenci isleri personeli",
+    "enstitu muhasebe isleri personeli"
+  ],
+  "fakulte_roller": [
+    "fakulte dekani",
+    "fakulte dekan yardimcisi",
+    "fakulte kurulu baskani",
+    "fakulte kurulu uyesi",
+    "fakulte sekreteri",
+    "fakulte ogrenci isleri personeli",
+    "fakulte ogrenci isleri sefi",
+    "fakulte yonetim kurulu baskani",
+    "fakulte yonetim kurulu uyesi"
+  ],
+  "lisans_program_roller": [
+    "lisans ogrencisi"
+  ],
+  "on_lisans_program_roller": [
+    "on lisans ogrencisi"
+  ],
+  "tip_fakultesi_roller": [
+    "fakulte dekani",
+    "fakulte dekan yardimcisi",
+    "fakulte kurulu baskani",
+    "fakulte kurulu uyesi",
+    "fakulte sekreteri",
+    "fakulte ogrenci isleri personeli",
+    "fakulte ogrenci isleri sefi",
+    "fakulte yonetim kurulu baskani",
+    "fakulte yonetim kurulu uyesi",
+    "etik kurulu baskani",
+    "etik kurulu uyesi",
+    "bas koordinator",
+    "bas koordinator yardimcisi",
+    "donem koordinatoru",
+    "egitim komisyonu baskani",
+    "egitim komisyonu uyesi"
+  ],
+  "tum_roller": [
+    "ana bilim dali baskani",
+    "ana bilim dali uyesi",
+    "bas koordinator",
+    "bas koordinator yardimcisi",
+    "bilim dali baskani",
+    "bilim dali uyesi",
+    "bolum baskani",
+    "bolum kurulu baskani",
+    "bolum kurulu uyesi",
+    "doktora ogrencisi",
+    "donem koordinatoru",
+    "egitim komisyonu baskani",
+    "egitim komisyonu uyesi",
+    "enstitu kurulu baskani",
+    "enstitu kurulu uyesi",
+    "enstitu mudur",
+    "enstitu mudur yardimcisi",
+    "enstitu muhasebe isleri personeli",
+    "enstitu ogrenci isleri personeli",
+    "enstitu sekreteri",
+    "enstitu yonetim kurulu baskani",
+    "enstitu yonetim kurulu uyesi",
+    "etik kurulu baskani",
+    "etik kurulu uyesi",
+    "fakulte dekan yardimcisi",
+    "fakulte dekani",
+    "fakulte kurulu baskani",
+    "fakulte kurulu uyesi",
+    "fakulte ogrenci isleri personeli",
+    "fakulte ogrenci isleri sefi",
+    "fakulte sekreteri",
+    "fakulte yonetim kurulu baskani",
+    "fakulte yonetim kurulu uyesi",
+    "lisans ogrencisi",
+    "on lisans ogrencisi",
+    "yuksek lisans ogrencisi",
+    "yuksekokul birim koordinatoru",
+    "yuksekokul kurulu baskani",
+    "yuksekokul kurulu uyesi",
+    "yuksekokul mudur yardimcisi",
+    "yuksekokul muduru",
+    "yuksekokul muhasebe personeli",
+    "yuksekokul ogrenci isleri personeli",
+    "yuksekokul ogrenci isleri sefi",
+    "yuksekokul sekreteri",
+    "yuksekokul yonetim kurulu baskani",
+    "yuksekokul yonetim kurulu uyesi"
+  ],
+  "yabanci_diller_yuksek_okulu_roller": [
+    "yuksekokul muduru",
+    "yuksekokul mudur yardimcisi",
+    "yuksekokul kurulu baskani",
+    "yuksekokul kurulu uyesi",
+    "yuksekokul yonetim kurulu baskani",
+    "yuksekokul yonetim kurulu uyesi",
+    "yuksekokul sekreteri",
+    "yuksekokul ogrenci isleri personeli",
+    "yuksekokul ogrenci isleri sefi",
+    "yuksekokul sekreteri",
+    "yuksekokul muhasebe personeli",
+    "yuksekokul birim koordinatoru"
+  ],
+  "yuksek_lisans_program_roller": [
+    "yuksek lisans ogrencisi"
+  ],
+  "yuksekokul_roller": [
+    "yuksekokul muduru",
+    "yuksekokul mudur yardimcisi",
+    "yuksekokul kurulu baskani",
+    "yuksekokul kurulu uyesi",
+    "yuksekokul yonetim kurulu baskani",
+    "yuksekokul yonetim kurulu uyesi",
+    "yuksekokul sekreteri",
+    "yuksekokul ogrenci isleri personeli",
+    "yuksekokul ogrenci isleri sefi",
+    "yuksekokul sekreteri",
+    "yuksekokul muhasebe personeli"
+  ]
+}
