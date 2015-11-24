@@ -63,11 +63,10 @@ class KadroIslemleri(CrudView):
         # CrudViev icin kullanilacak temel Model
         model = 'Kadro'
 
-        # viewlar arasi gecisi manuel yapacagiz.
-        dispatch = False
-
         # ozel bir eylem listesi hazirlayacagiz. bu sebeple listeyi bosaltiyoruz.
-        object_actions = []
+        object_actions = [
+            # {'fields': [0, ], 'cmd': 'show', 'mode': 'normal', 'show_as': 'link'},
+        ]
 
     class ObjectForm(JsonForm):
         class Meta:
@@ -96,11 +95,8 @@ class KadroIslemleri(CrudView):
 
     def kadro_sil(self):
         # sadece sakli kadrolar silinebilir
-        if self.object.durum == 1:
-            # Kadroyu kaydet
-            self.delete()
-        else:
-            pass
+        assert self.object.durum != 1, "attack detected, should be logged/banned"
+        self.delete()
 
     def sakli_izinli_degistir(self):
         """
@@ -112,11 +108,11 @@ class KadroIslemleri(CrudView):
         izinliyse sakli yap 3 - 2 = 1
 
         """
-
+        print("SAKKLI: %s" % self.object.durum)
         self.object.durum = 3 - self.object.durum
         self.save()
 
-    @obj_filter
+    @obj_filter()
     def sakli_kadro(self, obj, result):
         """
         sakli kadro filtresi
@@ -131,7 +127,8 @@ class KadroIslemleri(CrudView):
                 {'name': 'Izinli Yap', 'cmd': 'sakli_izinli_degistir', 'mode': 'normal', 'show_as': 'button'}, ]
         return result
 
-    @obj_filter
+
+    @obj_filter()
     def izinli_kadro(self, obj, result):
         """
         sakli kadro filtresi
@@ -146,7 +143,7 @@ class KadroIslemleri(CrudView):
                 {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'mode': 'normal', 'show_as': 'button'}, ]
         return result
 
-    @obj_filter
+    @obj_filter()
     def duzenlenebilir_veya_silinebilir_kadro(self, obj, result):
         """
         sakli kadro filtresi
@@ -158,7 +155,7 @@ class KadroIslemleri(CrudView):
         """
         if obj.durum in [1, 2]:
             result['actions'] = [
-                {'name': 'Sil', 'cmd': 'delete', 'mode': 'bg', 'show_as': 'button'},
+                {'name': 'Sil', 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'},
                 {'name': 'Düzenle', 'cmd': 'form', 'mode': 'normal', 'show_as': 'button'},
             ]
         return result
