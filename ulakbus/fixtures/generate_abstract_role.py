@@ -66,13 +66,13 @@ yabanci_diller_yuksek_okulu_roller = yuksekokul_roller + yabanci_diller_yuksek_o
 tip_fakultesi_roller = fakulte_roller + tip_fakultesi_extra_roller
 dis_hekimligi_fakultesi_roller = fakulte_roller + dis_hekimligi_fakultesi_extra_roller
 
-abstract_roller = bolum_roller + ana_bilim_dali_roller + \
-                  bilim_dali_roller + on_lisans_program_roller + \
-                  lisans_program_roller + yuksek_lisans_program_roller + \
-                  doktora_program_roller + fakulte_roller + \
-                  tip_fakultesi_extra_roller + \
-                  dis_hekimligi_fakultesi_extra_roller + enstitu_roller + \
-                  yuksekokul_roller + yabanci_diller_yuksek_okulu_extra_roller
+abstract_roller = set(bolum_roller + ana_bilim_dali_roller + \
+                      bilim_dali_roller + on_lisans_program_roller + \
+                      lisans_program_roller + yuksek_lisans_program_roller + \
+                      doktora_program_roller + fakulte_roller + \
+                      tip_fakultesi_extra_roller + \
+                      dis_hekimligi_fakultesi_extra_roller + enstitu_roller + \
+                      yuksekokul_roller + yabanci_diller_yuksek_okulu_extra_roller)
 
 roller = {
     "bolum_roller": bolum_roller,
@@ -88,6 +88,5 @@ roller = {
     "enstitu_roller": enstitu_roller,
     "yuksekokul_roller": yuksekokul_roller,
     "yabanci_diller_yuksek_okulu_roller": yabanci_diller_yuksek_okulu_roller,
-    "tum_roller": set(abstract_roller)
-
+    "tum_roller": list(abstract_roller)
 }

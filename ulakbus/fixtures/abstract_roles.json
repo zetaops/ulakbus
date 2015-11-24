@@ -74,7 +74,7 @@
     "egitim komisyonu baskani",
     "egitim komisyonu uyesi"
   ],
-  "tum_roller": {
+  "tum_roller": [
     "ana bilim dali baskani",
     "ana bilim dali uyesi",
     "bas koordinator",
@@ -122,7 +122,7 @@
     "yuksekokul sekreteri",
     "yuksekokul yonetim kurulu baskani",
     "yuksekokul yonetim kurulu uyesi"
-  },
+  ],
   "yabanci_diller_yuksek_okulu_roller": [
     "yuksekokul muduru",
     "yuksekokul mudur yardimcisi",
