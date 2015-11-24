@@ -134,9 +134,12 @@ class KurumIciGorevlendirmeBilgileri(Model):
     resmi_yazi_tarih = field.Date("Resmi Yazi Tarihi", index=True, format="%d.%m.%Y")
     personel = Personel()
 
+    def __unicode__(self):
+        return "%s %s" % (self.gorev_tipi, self.aciklama)
+
     class Meta:
-        verbose_name = "Kurum Ici Gorevlendirme"
-        verbose_name_plural = "Kurum Ici Gorevlendirmeler"
+        verbose_name = "Kurum İçi Görevlendirme"
+        verbose_name_plural = "Kurum İçi Görevlendirmeler"
         form_grouping = [
             {
                 "group_title": "Gorev",
@@ -166,6 +169,9 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     yolluk = field.Boolean("Yolluk", default=False)
     ulke = field.Integer("Ulke", default="90", choices="ulke")
     personel = Personel()
+
+    def __unicode__(self):
+        return "%s %s %s" % (self.gorev_tipi, self.aciklama, self.ulke)
 
     class Meta:
         verbose_name = "Kurum Disi Gorevlendirme"
@@ -202,29 +208,29 @@ class KurumDisiGorevlendirmeBilgileri(Model):
         ]
 
 
-class Kadro(Model):
-    kadro_no = field.Integer("Kadro No")
-    unvan = field.String("Unvan", index=True)
-    derece = field.Integer("Derece", index=True)
-    durum = field.Integer("Durum", index=True)
-    birim = Unit("Birim")
+# class Kadro(Model):
+#     kadro_no = field.Integer("Kadro No")
+#     unvan = field.String("Unvan", index=True)
+#     derece = field.Integer("Derece", index=True)
+#     durum = field.Integer("Durum", index=True)
+#     birim = Unit("Birim")
+#
+#     class Meta:
+#         verbose_name = "Kadro"
+#         verbose_name_plural = "Kadrolar"
+#
+#     def __unicode__(self):
+#         return "%s %s %s" % (self.unvan, self.derece, self.durum)
 
-    class Meta:
-        verbose_name = "Kadro"
-        verbose_name_plural = "Kadrolar"
 
-    def __unicode__(self):
-        return "%s %s %s" % (self.unvan, self.derece, self.durum)
-
-
-class Atama(Model):
-    personel = Personel("Personel")
-    kadro = Kadro("Kadro")
-    notlar = field.String("Aciklama", index=True)
-
-    class Meta:
-        verbose_name = "Atama"
-        verbose_name_plural = "Atamalar"
-
-    def __unicode__(self):
-        return "%s %s" % (self.personel, self.kadro)
+# class Atama(Model):
+#     personel = Personel("Personel")
+#     kadro = Kadro("Kadro")
+#     notlar = field.String("Aciklama", index=True)
+#
+#     class Meta:
+#         verbose_name = "Atama"
+#         verbose_name_plural = "Atamalar"
+#
+#     def __unicode__(self):
+#         return "%s %s" % (self.personel, self.kadro)

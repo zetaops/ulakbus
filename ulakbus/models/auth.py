@@ -120,7 +120,10 @@ class Role(Model):
         verbose_name_plural = "Roller"
 
     def __unicode__(self):
-        return "%s %s" % (self.abstract_role.name, self.user.username)
+        try:
+            return "%s %s" % (self.abstract_role.name, self.user.username)
+        except:
+            return "Role #%s" % self.key
 
     class Permissions(ListNode):
         permission = Permission()
