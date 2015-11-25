@@ -37,11 +37,9 @@ class Menu(BaseView):
         model = model_registry.get_model(model_data['name'])
         field_name = model_data.get('field', user_type + '_id')
         verbose_name = model_data.get('verbose_name', model.Meta.verbose_name_plural)
-        crud_path = 'crud/%s' % model_data['name']
         category = model_data.get('category', DEFAULT_CATEGORY)
         results[user_type].append({"text": verbose_name,
-                                   "url": crud_path,
-                                   "wf": "crud",
+                                   "wf": model_data.get('wf', "crud"),
                                    "model": model_data['name'],
                                    "kategori": category,
                                    "param": field_name})
@@ -58,7 +56,6 @@ class Menu(BaseView):
         object_of_wf = wf.spec.wf_properties.get('object', 'other')
         if category != 'hidden':
             results[object_of_wf].append({"text": wf.spec.wf_name,
-                                          "url": '/%s' % wf.spec.name,
                                           "wf": wf.spec.name,
                                           "kategori": category,
                                           "param": "id"}

@@ -43,7 +43,8 @@ CRUD_MENUS = {
     # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
     #                                             'field':'field_name',
     #                                             'verbose_name': 'verbose_name',
-    #                                             'category': 'Genel'}]
+    #                                             'category': 'Genel'
+    #                                             'wf':'crud'}]
     # 'field' defaults to 'personel' or 'ogrenci'
     # verbose_name can be specified to override the model's verbose_name_plural
     'personel': [
