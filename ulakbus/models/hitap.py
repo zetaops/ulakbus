@@ -318,7 +318,7 @@ class HizmetKayitlari(Model):
         search_fields = ['unvan_kod', 'gorev', 'yevmiye']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.unvan_kodu, self.hizmet_sinifi, self.gorev)
+        return '%s %s %s' % (self.unvan_kod, self.hizmet_sinifi, self.gorev)
 
 
 class AskerlikKayitlari(Model):
