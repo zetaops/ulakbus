@@ -38,6 +38,7 @@ ANONYMOUS_WORKFLOWS = ['login', ]
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 
 DATE_DEFAULT_FORMAT = "%d.%m.%Y"
+DATETIME_DEFAULT_FORMAT = "%d.%m.%Y %H:%s"
 
 CRUD_MENUS = {
     # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
