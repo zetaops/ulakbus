@@ -113,7 +113,7 @@ class KadroIslemleri(CrudView):
         """
         print("SAKKLI: %s" % self.object.durum)
         self.object.durum = 3 - self.object.durum
-        self.save()
+        self.object.save()
 
     @obj_filter()
     def sakli_kadro(self, obj, result):
@@ -127,7 +127,7 @@ class KadroIslemleri(CrudView):
         """
         if obj.durum == 1:
             result['actions'] = [
-                {'name': 'Izinli Yap', 'cmd': 'sakli_izinli_degistir', 'mode': 'normal', 'show_as': 'button'}, ]
+                {'name': 'Izinli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'}, ]
         return result
 
 
@@ -143,7 +143,7 @@ class KadroIslemleri(CrudView):
         """
         if obj.durum == 2:
             result['actions'] = [
-                {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'mode': 'normal', 'show_as': 'button'}, ]
+                {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir',  'show_as': 'button'}, ]
         return result
 
     @obj_filter()
@@ -158,7 +158,7 @@ class KadroIslemleri(CrudView):
         """
         if obj.durum in [1, 2]:
             result['actions'] = [
-                {'name': 'Sil', 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'},
-                {'name': 'Düzenle', 'cmd': 'form', 'mode': 'normal', 'show_as': 'button'},
+                {'name': 'Sil', 'cmd': 'delete', 'show_as': 'button'},
+                {'name': 'Düzenle', 'cmd': 'add_edit_form', 'show_as': 'button'},
             ]
         return result
