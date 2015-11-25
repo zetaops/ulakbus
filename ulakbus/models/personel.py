@@ -176,6 +176,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     class Meta:
         verbose_name = "Kurum Disi Gorevlendirme"
         verbose_name_plural = "Kurum Disi Gorevlendirmeler"
+        list_fields = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
         form_grouping = [
             {
                 "layout": "4",
