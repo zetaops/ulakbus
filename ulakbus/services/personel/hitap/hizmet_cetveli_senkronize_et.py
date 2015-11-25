@@ -106,63 +106,75 @@ class HizmetCetveliSenkronizeEt(Service):
                     'yevmiye': record.yevmiye,
                     'kurum_onay_tarihi': record.kurum_onay_tarihi
                 }
-            self.logger.info(local_records)
+
+            # for k, v in local_records.iteritems():
+            #     self.logger.info("Localdeki keyler => %s type %s" % (str(k), type(k)))
+
+            # self.logger.info(local_records)
             self.logger.info("local_records created.")
-            for kayit in HizmetKayitlari.objects.filter(tckn=tckn):
-                self.logger.info("Localdeki kayit no: " + str(kayit.kayit_no))
-            for record_id in hitap_dict.keys():
-                self.logger.info("Hitap dictteki kayit no: " + str(record_id))
-            # compare hitap incoming data and local db
 
             self.logger.info("Localdeki kayit sayisi: " + str(len(local_records)))
             self.logger.info("Hitaptan gelen kayit sayisi: " + str(len(hitap_dict)))
 
-            for record_id, record_values in hitap_dict.items():
-                if record_id in local_records:
+            '''
+            for k, v in hitap_dict.items():
+                if k not in local_records:
+                    print "Bu kayit localde yok! => " + str(k)
+
+            for k, v in local_records.items():
+                if k not in hitap_dict:
+                    print "Bu kayit hitapta yok! => " + str(k)
+            '''
+
+            # compare hitap incoming data and local db
+            for hitap_key, hitap_values in hitap_dict.items():
+                # self.logger.info("Hitap key: %s type %s" % (hitap_key, type(hitap_key)))
+                if int(hitap_key) in local_records:
                     self.logger.info("hitap gelen data localde var.")
-                    hizmet_kayitlari = HizmetKayitlari.objects.filter(kayit_no=record_id).get()
+                    hizmet_kayitlari = HizmetKayitlari.objects.filter(kayit_no=hitap_key).get()
                     if hizmet_kayitlari.sync == 1:
                         self.logger.info("hitaptan gelen data localde var ve senkronize.")
-                        pass
                     elif hizmet_kayitlari.sync == 2:
                         self.logger.info("hitap gelen data localde senkronize edildi.")
-                        pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
+                        pass_hizmet_kayitlari(hizmet_kayitlari, hitap_values)
                         hizmet_kayitlari.sync = 1
                         hizmet_kayitlari.save()
+                        # sleep(1.5)
                     else:
                         pass
                 else:
-                    for k in local_records.keys():
-                        self.logger.info("Localdeki keyler: " + str(k))
-                    self.logger.info("Hitaptan gelen localde olmayan key: " + str(record_id))
-
+                    self.logger.info("hitap gelen data localde yok. Kayit no => " + str(hitap_key))
                     hizmet_kayitlari = HizmetKayitlari()
-                    pass_hizmet_kayitlari(hizmet_kayitlari, record_values)
+                    pass_hizmet_kayitlari(hizmet_kayitlari, hitap_values)
                     hizmet_kayitlari.sync = 1
                     hizmet_kayitlari.save()
-                    self.logger.info("hitap gelen data localde yok. yenisi kaydedildi.")
+                    # sleep(1.5)
 
             # compare local db and hitap incoming data
             for record_id, record_values in local_records.items():
-                if record_id not in hitap_dict:
+                if unicode(record_id) not in hitap_dict:
                     hizmet_kayitlari = HizmetKayitlari.objects.filter(kayit_no=record_id).get()
                     if hizmet_kayitlari.sync == 1:
                         hizmet_kayitlari.delete()
+                        self.logger.info("localdeki sync data, hitapta yok, kayit no degismis olabilir, kayit silindi.")
                     else:
                         pass
+                else:
+                    if hizmet_kayitlari.sync != 1 or hizmet_kayitlari.sync != 2:
+                        hizmet_kayitlari.delete()
 
                 # hizmet_kayitlari.save()
             self.logger.info("Service runned.")
 
         # If not any record belongs to given tcno, create new one
-        # except IndexError:
-        #     for hitap_keys, hitap_values in hitap_dict.items():
-        #         hizmet_kayitlari = HizmetKayitlari()
-        #         pass_hizmet_kayitlari(hizmet_kayitlari, hitap_values)
-        #         hizmet_kayitlari.sync = 1
-        #         hizmet_kayitlari.save()
-        #         self.logger.info("New HizmetKayitlari saved.")
-        #     sleep(1)
+        except IndexError:
+            for hitap_keys, hitap_values in hitap_dict.items():
+                hizmet_kayitlari = HizmetKayitlari()
+                pass_hizmet_kayitlari(hizmet_kayitlari, hitap_values)
+                hizmet_kayitlari.sync = 1
+                hizmet_kayitlari.save()
+                self.logger.info("New HizmetKayitlari saved.")
+            # sleep(1)
         except socket.error:
             self.logger.info("Riak connection refused!")
 
@@ -170,3 +182,52 @@ class HizmetCetveliSenkronizeEt(Service):
             self.logger.info("TCKN should be wrong!")
         except urllib2.URLError:
             self.logger.info("No internet connection!")
+
+    def hizmet_sinifi_int_kontrol(self, hs):
+        """
+        Bu metod ilgili HITAP servisinin hizmet_sinifi alaninin, hem 1, 2, 3 ... 29 gibi integer degerler hem de
+        GIH, MIAH, ... SOZ gibi string almasi problemini duzeltmek icindir.
+
+        :param hs: hitaptan donen hizmet sinifi
+        :type hs: str
+        :return int: hitap sinifi int or 0
+
+        """
+        hizmet_siniflari = {
+            "GİH": 1,
+            "MİAH": 2,
+            "SH": 3,
+            "TH": 4,
+            "EÖH": 5,
+            "AH": 6,
+            "EH": 7,
+            "DH": 8,
+            "YH": 9,
+            "MİT": 10,
+            "AHS": 11,
+            "BB": 12,
+            "CU": 13,
+            "CUM": 14,
+            "DE": 15,
+            "DVS": 16,
+            "HS": 17,
+            "MB": 18,
+            "MV": 19,
+            "ÖÜ": 20,
+            "SAY": 21,
+            "TBM": 22,
+            "TRT": 23,
+            "TSK": 24,
+            "YÖK": 25,
+            "YSH": 26,
+            "ÖGO": 27,
+            "ÖY": 28,
+            "SÖZ": 29
+        }
+        if type(hs) is str:
+            return hizmet_siniflari[hs.strip()]
+        elif type(hs) is int and hs in range(1, 30):
+            return hs
+        else:
+            self.logger.info("HIZMET SINIFINI KONTROL EDIN")
+            return 0
