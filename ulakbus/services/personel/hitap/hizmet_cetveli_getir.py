@@ -6,10 +6,8 @@ __author__ = 'Ozgur Firat Cinar'
 
 from zato.server.service import Service
 import os
-from time import sleep
 import urllib2
 from json import dumps
-import socket
 
 # os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
 # from ulakbus.models.hitap import HizmetKayitlari
