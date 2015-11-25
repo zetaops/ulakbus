@@ -85,13 +85,16 @@ class KadroIslemleri(CrudView):
 
     def kadro_kaydet(self):
         # formdan gelen datayi, instance a gecir.
-        super(KadroIslemleri, self).set_form_data_to_object()
+        self.set_form_data_to_object()
 
         # durumu ne olursa olsun 1 (sakli) yap!..
         self.object.durum = 1
 
         # Kadroyu kaydet
         self.object.save()
+
+        # isakisini bastan baslat
+        self.reset()
 
     def kadro_sil(self):
         # sadece sakli kadrolar silinebilir
