@@ -16,6 +16,7 @@ PERSONEL_TURU = [
     (2, 'İdari')
 ]
 
+
 class Personel(Model):
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
@@ -49,7 +50,23 @@ class Personel(Model):
     engel_orani = field.Integer("Engellilik Orani")
     personel_turu = field.Integer("Personel Türü", choices=PERSONEL_TURU)
     rol = Role(one_to_one=True)
-
+    cuzdan_seri = field.String("Seri", index=True)
+    cuzdan_seri_no = field.String("Seri No", index=True)
+    baba_adi = field.String("Ana Adi", index=True)
+    ana_adi = field.String("Baba Adi", index=True)
+    dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
+    dogum_yeri = field.String("Doğum Yeri", index=True)
+    medeni_hali = field.String("Medeni Hali", index=True)
+    kayitli_oldugu_il = field.String("Il", index=True)
+    kayitli_oldugu_ilce = field.String("Ilce", index=True)
+    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
+    kayitli_oldugu_cilt_no = field.String("Cilt No")
+    kayitli_oldugu_aile_sira_no = field.String("Aile Sira No")
+    kayitli_oldugu_sira_no = field.String("Sira No")
+    kimlik_cuzdani_verildigi_yer = field.String("Cuzdanin Verildigi Yer")
+    kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
+    kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
+    kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
 
     class Meta:
         app = 'Personel'
@@ -64,52 +81,7 @@ class Personel(Model):
     durum.title = "Durum"
 
     def __unicode__(self):
-        return "%s %s (%s | %s)" % (self.ad, self.soyad, self.tckn,
-                                    self.NufusKayitlari.emekli_sicil_no)
-
-    class KimlikBilgileri(Node):
-        cuzdan_seri = field.String("Seri", index=True)
-        cuzdan_seri_no = field.String("Seri No", index=True)
-        baba_adi = field.String("Ana Adi", index=True)
-        ana_adi = field.String("Baba Adi", index=True)
-        dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
-        dogum_yeri = field.String("Doğum Yeri", index=True)
-        medeni_hali = field.String("Medeni Hali", index=True)
-        kayitli_oldugu_il = field.String("Il", index=True)
-        kayitli_oldugu_ilce = field.String("Ilce", index=True)
-        kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
-        kayitli_oldugu_cilt_no = field.String("Cilt No")
-        kayitli_oldugu_aile_sira_no = field.String("Aile Sira No")
-        kayitli_oldugu_sira_no = field.String("Sira No")
-        kimlik_cuzdani_verildigi_yer = field.String("Cuzdanin Verildigi Yer")
-        kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
-        kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
-        kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
-
-    class NufusKayitlari(Node):
-        tckn = field.String("Sigortalının TC Kimlik No", index=True)
-        ad = field.String("Adi", index=True)
-        soyad = field.String("Soyadi", index=True)
-        ilk_soy_ad = field.String("Memuriyete Girişteki İlk Soyadı", index=True)
-        dogum_tarihi = field.Date("Dogum Tarihi", index=True, format="%d.%m.%Y")
-        cinsiyet = field.String("Cinsiyet", index=True)
-        emekli_sicil_no = field.Integer("Emekli Sicil No", index=True)
-        memuriyet_baslama_tarihi = field.Date("Memuriyete Ilk Baslama Tarihi", index=True,
-                                              format="%d.%m.%Y")
-        kurum_sicil = field.String("Kurum Sicili", index=True)
-        maluliyet_kod = field.Integer("Malul Kod", index=True, choices="maluliyet_kod")
-        yetki_seviyesi = field.String("Yetki Seviyesi", index=True)
-        aciklama = field.String("Aciklama", index=True)
-        kuruma_baslama_tarihi = field.Date("Kuruma Baslama Tarihi", index=True, format="%d.%m.%Y")
-        gorev_tarihi_6495 = field.Date("Emeklilik Sonrası Göreve Başlama Tarihi", index=True,
-                                       format="%d.%m.%Y")
-        emekli_sicil_6495 = field.Integer("2. Emekli Sicil No", index=True)
-        durum = field.Boolean("Durum", index=True)
-        sebep = field.Integer("Sebep", index=True)
-        sync = field.Integer("Senkronize", index=True)
-
-        class Meta:
-            verbose_name = "Nüfus Bilgileri"
+        return "%s %s" % (self.ad, self.soyad)
 
 
 class AdresBilgileri(Model):
@@ -207,7 +179,6 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
             },
         ]
-
 
 # class Kadro(Model):
 #     kadro_no = field.Integer("Kadro No")

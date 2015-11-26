@@ -9,6 +9,34 @@ from .personel import Personel
 from pyoko import Model, field, Node
 from .auth import Role
 
+class NufusKayitlari(Model):
+    tckn = field.String("Sigortalının TC Kimlik No", index=True)
+    ad = field.String("Adi", index=True)
+    soyad = field.String("Soyadi", index=True)
+    ilk_soy_ad = field.String("Memuriyete Girişteki İlk Soyadı", index=True)
+    dogum_tarihi = field.Date("Dogum Tarihi", index=True, format="%d.%m.%Y")
+    cinsiyet = field.String("Cinsiyet", index=True)
+    emekli_sicil_no = field.Integer("Emekli Sicil No", index=True)
+    memuriyet_baslama_tarihi = field.Date("Memuriyete Ilk Baslama Tarihi", index=True,
+                                          format="%d.%m.%Y")
+    kurum_sicil = field.String("Kurum Sicili", index=True)
+    maluliyet_kod = field.Integer("Malul Kod", index=True, choices="maluliyet_kod")
+    yetki_seviyesi = field.String("Yetki Seviyesi", index=True)
+    aciklama = field.String("Aciklama", index=True)
+    kuruma_baslama_tarihi = field.Date("Kuruma Baslama Tarihi", index=True, format="%d.%m.%Y")
+    gorev_tarihi_6495 = field.Date("Emeklilik Sonrası Göreve Başlama Tarihi", index=True,
+                                   format="%d.%m.%Y")
+    emekli_sicil_6495 = field.Integer("2. Emekli Sicil No", index=True)
+    durum = field.Boolean("Durum", index=True)
+    sebep = field.Integer("Sebep", index=True)
+    sync = field.Integer("Senkronize", index=True)
+    personel = Personel(one_to_one=True)
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Nüfus Bilgileri"
+        verbose_name_plural = "Nüfus Bilgileri"
+
 
 class HizmetKurs(Model):
     tckn = field.String("TC Kimlik No", index=True)
