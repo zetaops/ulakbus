@@ -49,6 +49,30 @@ class ZatoService(object):
 
         return '/'.join([settings.ZATO_SERVER, self.service_uri])
 
+    @staticmethod
+    def check_turkish_identity_number(tckn):
+        """
+
+        Checks Turkish ID Number, if empty, not a string or different than 11 length
+
+        :param tckn: string, 11 length
+        :type tckn: str
+
+        :return: string tckn or raises exception
+
+        """
+
+        if not tckn:
+            raise Exception("tckn can not be empty")
+
+        if type(tckn) is not str:
+            raise TypeError("tckn must be string which is %s" % type(tckn))
+
+        if len(tckn) != 11:
+            raise Exception("tckn length must be 11")
+
+        return tckn
+
     def zato_request(self):
         """
 
@@ -88,29 +112,7 @@ class ZatoService(object):
 
 
 class HitapService(ZatoService):
-    @staticmethod
-    def check_turkish_identity_number(tckn):
-        """
-
-        Checks Turkish ID Number, if empty, not a string or different than 11 length
-
-        :param tckn: string, 11 length
-        :type tckn: str
-
-        :return: string tckn or raises exception
-
-        """
-
-        if not tckn:
-            raise Exception("tckn can not be empty")
-
-        if type(tckn) is not str:
-            raise TypeError("tckn must be string which is %s" % type(tckn))
-
-        if len(tckn) != 11:
-            raise Exception("tckn length must be 11")
-
-        return tckn
+    HITAP_USER = ''
 
 
 class HitapHizmetCetvelGetir(HitapService):
@@ -180,7 +182,7 @@ class HitapHizmetCetveliSenkronizeEt(HitapService):
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
-class MernisKimlikBilgileriGetir(HitapService):
+class MernisKimlikBilgileriGetir(ZatoService):
     """
 
     This service takes tckn as string, consume "mernis kimlik bilgileri getir" of hitap services
@@ -210,5 +212,39 @@ class MernisKimlikBilgileriGetir(HitapService):
 
         """
         super(MernisKimlikBilgileriGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class KPSAdresBilgileriGetir(ZatoService):
+    """
+
+    This service takes tckn as string, consume "mernis kimlik bilgileri getir" of hitap services
+    and sync local data on riak.
+
+    Example
+    ::
+
+        from zato_wrapper_class import MernisKimlikBilgileriGetir
+        zs = MernisKimlikBilgileriGetir(tckn="12345678900")
+        response = zs.zato_request()
+
+        response: dict containing identity information as key value pairs
+
+    """
+
+    def __init__(self, service_uri='kps-adres-bilgileri-getir-tckn', tckn=""):
+        """
+
+        Takes two parameters service_uri and tckn
+
+        :param service_uri: service name on zato, default is hizmet-cetvel
+        :type service_uri: str
+
+        :param tckn: string of 11 byte length, can not be empty
+        :type tckn: str
+
+        """
+        super(KPSAdresBilgileriGetir, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
