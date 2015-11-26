@@ -10,6 +10,7 @@
 
 from zengine.views.crud import CrudView
 
+# Modellere karsilik gelen HitapServisleri listesi
 zato_service_list = {
     'HizmetMahkeme': {
         "add": "HitapMahkemeBilgileriEkle",
