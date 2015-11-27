@@ -63,6 +63,7 @@ class KadroIslemleri(CrudView):
     IZINLI = 2
     BOS = 3
     DOLU = 4
+
     class Meta:
         # CrudViev icin kullanilacak temel Model
         model = 'Kadro'
@@ -131,10 +132,9 @@ class KadroIslemleri(CrudView):
         """
         if obj.durum == self.SAKLI:
             result['actions'].extend([
-                    {'name': 'Sil', 'cmd': 'delete', 'show_as': 'button'},
+                {'name': 'Sil', 'cmd': 'delete', 'show_as': 'button'},
                 {'name': 'Izinli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'}])
         return result
-
 
     @obj_filter()
     def izinli_kadro(self, obj, result):
@@ -148,7 +148,7 @@ class KadroIslemleri(CrudView):
         """
         if obj.durum == self.IZINLI:
             result['actions'].append(
-                {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir',  'show_as': 'button'})
+                {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
         return result
 
     @obj_filter()

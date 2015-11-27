@@ -30,7 +30,8 @@ class NufusKayitlari(Model):
     durum = field.Boolean("Durum", index=True)
     sebep = field.Integer("Sebep", index=True)
     sync = field.Integer("Senkronize", index=True)
-    personel = Personel(one_to_one=True)
+    # personel = Personel(one_to_one=True)
+    personel = Personel()
 
     class Meta:
         app = 'Personel'
