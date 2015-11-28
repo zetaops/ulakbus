@@ -29,7 +29,8 @@ class BaseTestCase(ZengineBaseTestCase):
         abs_role, new = AbstractRole(super_context).objects.get_or_create(id=1, name='W.C. Hero')
         cls.client.user, new = User(super_context).objects.get_or_create({"password": user_pass},
                                                            username='test_user')
-
+        cls.client.user.superuser = True
+        cls.client.user.save()
 
         if new:
             role = Role(super_context, user=cls.client.user, abstract_role=abs_role).save()
