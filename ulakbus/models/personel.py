@@ -76,7 +76,7 @@ class Personel(Model):
         search_fields = ['ad', 'soyad', 'cep_telefonu', 'tckn']
 
     def durum(self):
-        return self.NufusKayitlari.durum
+        return self.nufus_kayitlari.durum if self.nufus_kayitlari.key else None
 
     durum.title = "Durum"
 
