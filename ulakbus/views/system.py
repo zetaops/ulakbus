@@ -6,62 +6,9 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from collections import defaultdict
 import random
 from uuid import uuid4
-from pyoko.model import model_registry
-from zengine.auth.permissions import get_workflows
 from zengine.views.base import BaseView
-from zengine.config import settings
-
-DEFAULT_CATEGORY = 'Genel'
-
-
-class Menu(BaseView):
-    def __init__(self, current):
-        super(Menu, self).__init__(current)
-        result = self.get_crud_menus()
-        for k, v in self.get_workflow_menus().items():
-            result[k].extend(v)
-        self.output.update(result)
-
-    def get_crud_menus(self):
-        results = defaultdict(list)
-        for user_type in settings.CRUD_MENUS:
-            for model_data in settings.CRUD_MENUS[user_type]:
-                if self.current.has_permission(model_data['name']):
-                    self.add_crud(model_data, user_type, results)
-        return results
-
-    def add_crud(self, model_data, user_type, results):
-        model = model_registry.get_model(model_data['name'])
-        field_name = model_data.get('field', user_type + '_id')
-        verbose_name = model_data.get('verbose_name', model.Meta.verbose_name_plural)
-        category = model_data.get('category', DEFAULT_CATEGORY)
-        results[user_type].append({"text": verbose_name,
-                                   "wf": model_data.get('wf', "crud"),
-                                   "model": model_data['name'],
-                                   "kategori": category,
-                                   "param": field_name})
-
-    def get_workflow_menus(self):
-        results = defaultdict(list)
-        for wf in get_workflows():
-            if self.current.has_permission(wf.spec.name):
-                self.add_wf(wf, results)
-        return results
-
-    def add_wf(self, wf, results):
-        category = wf.spec.wf_properties.get("menu_category", 'Genel')
-        object_of_wf = wf.spec.wf_properties.get('object', 'other')
-        if category != 'hidden':
-            results[object_of_wf].append({"text": wf.spec.wf_name,
-                                          "wf": wf.spec.name,
-                                          "kategori": category,
-                                          "param": "id"}
-                                         )
-
-
 from ulakbus.models import Personel, Ogrenci
 
 

@@ -78,13 +78,11 @@ CRUD_MENUS = {
     ],
 }
 
-VIEW_URLS = [
+VIEW_URLS.extend([
     # ('falcon URI template', 'python path to view method/class')
-    ('/menu', 'ulakbus.views.system.Menu'),
     ('/ara/ogrenci/{query}', 'ulakbus.views.system.SearchStudent'),
     ('/ara/personel/{query}', 'ulakbus.views.system.SearchPerson'),
     ('/notify/', 'ulakbus.views.system.Notification'),
-
-]
+])
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
