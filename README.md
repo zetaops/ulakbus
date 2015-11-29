@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/zetaops/ulakbus/badge.svg?branch=master&service=github)](https://coveralls.io/github/zetaops/ulakbus?branch=master)
+
 #Ulakbüs - Bütünleşik Üniversite Sistemi
 
 [![Sohbet odamız açıldı. https://gitter.im/zetaops/ulakbus](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/zetaops/ulakbus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
