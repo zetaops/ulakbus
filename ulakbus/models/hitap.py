@@ -411,25 +411,6 @@ class Atama(Model):
     def __unicode__(self):
         return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
 
-
-class Kadro(Model):
-    durum = field.Integer("Durum", index=True)
-    unvan = field.Integer("Unvan", index=True)
-    derece = field.Integer("Derece", index=True)
-    rol = Role()
-    aciklama = field.String("Açıklama", index=True)
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Kadro"
-        verbose_name_plural = "Kadrolar"
-        list_fields = ['durum', 'unvan', 'aciklama']
-        search_fields = ['unvan', 'derece']
-
-    def __unicode__(self):
-        return '%s %s' % (self.unvan, self.durum)
-
-
 class Izin(Model):
     tip = field.Integer("Tip", index=True)
     baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
