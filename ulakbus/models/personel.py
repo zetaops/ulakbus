@@ -182,20 +182,23 @@ class KurumDisiGorevlendirmeBilgileri(Model):
             },
         ]
 
-# class Kadro(Model):
-#     kadro_no = field.Integer("Kadro No")
-#     unvan = field.String("Unvan", index=True)
-#     derece = field.Integer("Derece", index=True)
-#     durum = field.Integer("Durum", index=True)
-#     birim = Unit("Birim")
-#
-#     class Meta:
-#         verbose_name = "Kadro"
-#         verbose_name_plural = "Kadrolar"
-#
-#     def __unicode__(self):
-#         return "%s %s %s" % (self.unvan, self.derece, self.durum)
+class Kadro(Model):
+    kadro_no = field.Integer("Kadro No")
+    unvan = field.Integer("Unvan", index=True,choices="akademik_unvan")
+    derece = field.Integer("Derece", index=True)
+    durum = field.Integer("Durum", index=True)
+    birim = Unit("Birim")
+    aciklama = field.String("Açıklama", index=True)
 
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Kadro"
+        verbose_name_plural = "Kadrolar"
+        list_fields = ['durum', 'unvan', 'aciklama']
+        search_fields = ['unvan', 'derece']
+
+    def __unicode__(self):
+        return "%s %s %s" % (self.unvan, self.derece, self.durum)
 
 # class Atama(Model):
 #     personel = Personel("Personel")
