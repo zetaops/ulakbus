@@ -77,7 +77,7 @@
     <bpmn2:endEvent id="end">
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="UserTask_1" name="Diger Bilgiler">
+    <bpmn2:userTask id="UserTask_1" camunda:assignee="personel.kimlik_ve_iletisim.KimlikIletisim.diger_bilgiler" name="Diger Bilgiler">
       <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:userTask>

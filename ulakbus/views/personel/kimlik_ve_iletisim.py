@@ -19,16 +19,20 @@
 # Bu WF, CrudView extend edilerek isletilmektedir. Adimlar arasi dispatch manuel sekilde yurutulmektedir.
 # Her adim basina kullanilan metodlar su sekildedir:
 #
-
+from zengine.lib.forms import JsonForm
 
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
+from pyoko import form
 
 
 class KimlikIletisim(CrudView):
     class Meta:
         model = 'Personel'
+
+    class ObjectForm(JsonForm):
+        pass
 
     def kimlik_bilgileri(self):
         self.object_form.include = ['tckn', 'ad', 'soyad', 'cinsiyet', 'uyruk', 'medeni_hali', 'cuzdan_seri',
@@ -38,10 +42,12 @@ class KimlikIletisim(CrudView):
                                     'kayitli_oldugu_cilt_no', 'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no',
                                     'kimlik_cuzdani_verildigi_yer', 'kimlik_cuzdani_verilis_nedeni',
                                     'kimlik_cuzdani_kayit_no',
-                                    'kimlik_cuzdani_verilis_tarihi', ]
-        self.form.Button("Kaydet")
-        self.form.Button("Mernis'ten Kimlik Bilgileri Getir")
-        self.form()
+                                    'kimlik_cuzdani_verilis_tarihi']
+        # self.object_form._ordered_fields.append(('mernis', form.Button("Mernis'ten Kimlik Bilgileri Getir")))
+        self.object_form.mernis = form.Button("Mernis'ten Kimlik Bilgileri Getir",
+                                              cmd="mernis_kimlik_sorgula")
+        self.object_form.kaydet = form.Button("Kaydet", cmd="save")
+        self.form_out()
 
     def mernis_kimlik_sorgula(self):
         zs = MernisKimlikBilgileriGetir(tckn=self.object.tckn)
@@ -55,7 +61,10 @@ class KimlikIletisim(CrudView):
         self.object_form.include = ['ikamet_adresi', 'ikamet_il', 'ikamet_ilce', 'adres_2', 'adres_2_posta_kodu',
                                     'oda_no', 'oda_tel_no', 'cep_telefonu', 'e_posta', 'e_posta_2', 'e_posta_3',
                                     'web_sitesi']
-        pass
+        self.object_form.mernis = form.Button("KPS'den Adres Bilgileri Getir",
+                                              cmd="kps_adres_sorgula")
+        self.object_form.kaydet = form.Button("Kaydet", cmd="save")
+        self.form_out()
 
     def kps_adres_sorgula(self):
         zs = KPSAdresBilgileriGetir(tckn=self.object.tckn)
@@ -69,3 +78,5 @@ class KimlikIletisim(CrudView):
         self.object_form.include = ['yayinlar', 'projeler', 'verdigi_dersler', 'kan_grubu', 'ehliyet',
                                     'unvan', 'biyografi', 'notlar', 'engelli_durumu', 'engel_grubu', 'engel_derecesi',
                                     'engel_orani', 'personel_turu']
+        self.object_form.kaydet = form.Button("Kaydet", cmd="save")
+        self.form_out()
