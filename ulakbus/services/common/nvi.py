@@ -5,13 +5,22 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-
-__author__ = 'Ali Riza Keles'
-
 from zato.server.service import Service
 import json
 import uuid
 import httplib
+import os
+
+__author__ = 'Ali Riza Keles'
+
+DEBUG = os.environ["DEBUG"]
+if DEBUG:
+    import logging
+
+    httplib.HTTPConnection.debuglevel = 1
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger('httplib').setLevel(logging.DEBUG)
 
 
 class NVIService(Service):
@@ -28,7 +37,10 @@ class NVIService(Service):
             self.invoke_sso_service()
 
     def invoke_sso_service(self):
-        pass
+        response = self.invoke('nvi-sts.sts-get-token')
+        if response['status'] == 'ok':
+            for k, v in response['result']:
+                self.sso_data.update({k, v})
 
     def request_xml(self):
         request_xml = """

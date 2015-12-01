@@ -19,7 +19,7 @@ import datetime
 import json
 import uuid
 
-DEBUG = False
+DEBUG = os.environ["DEBUG"]
 if DEBUG:
     import logging
 
@@ -39,7 +39,7 @@ class STSGetToken(Service):
 
         created = datetime.datetime.now().isoformat()
         expire = (datetime.datetime.now() + datetime.timedelta(minutes=10)).isoformat()
-        username = os.environ["NVI_USER:"]
+        username = os.environ["NVI_USER"]
         password = os.environ["NVI_PASS"]
 
         sts_request = """
@@ -113,6 +113,7 @@ class STSGetToken(Service):
             self.kvdb.conn.set(k, v)
             self.kvdb.conn.expire(k, 600)
 
-        self.logger.info("NVI SSO invoked: %s" % json.dumps(result))
+        if DEBUG:
+            self.logger.info("NVI SSO invoked: %s" % json.dumps(result))
 
-        # self.response.payload = {"status": "ok", "result": json.dumps(result)}
+        self.response.payload = {"status": "ok", "result": json.dumps(result)}
