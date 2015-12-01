@@ -15,9 +15,9 @@
         <bpmn2:flowNodeRef>iletisim_bilgileri</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>kps_adres_sorgula</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ExclusiveGateway_3</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>end</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>UserTask_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ServiceTask_3</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>end</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
     <bpmn2:startEvent id="basla">
@@ -74,19 +74,36 @@
     <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ExclusiveGateway_3" targetRef="kps_adres_sorgula">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'kps_adres_sorgula'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:endEvent id="end">
-      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
-    </bpmn2:endEvent>
     <bpmn2:userTask id="UserTask_1" camunda:assignee="personel.kimlik_ve_iletisim.KimlikIletisim.diger_bilgiler" name="Diger Bilgiler">
       <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="UserTask_1" targetRef="ServiceTask_3"/>
     <bpmn2:serviceTask id="ServiceTask_3" camunda:class="personel.kimlik_ve_iletisim.KimlikIletisim.save" name="Diger Bilgileri Kaydet">
+      
+      
+       <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="client_message">
+            <camunda:map>
+              <camunda:entry key="title">Teşekkürler</camunda:entry>
+              <camunda:entry key="body">İşlem Başarılı</camunda:entry>
+              <camunda:entry key="type">info</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      
+
+      
+      
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="ServiceTask_3" targetRef="end"/>
+    <bpmn2:endEvent id="end">
+      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="ServiceTask_3" targetRef="end"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
@@ -97,10 +114,10 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Participant_3" bpmnElement="_Participant_3" isHorizontal="true">
-        <dc:Bounds height="289.0" width="1357.0" x="48.0" y="103.0"/>
+        <dc:Bounds height="289.0" width="1441.0" x="48.0" y="103.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Lane_13" bpmnElement="personel" isHorizontal="true">
-        <dc:Bounds height="289.0" width="1327.0" x="78.0" y="103.0"/>
+        <dc:Bounds height="289.0" width="1411.0" x="78.0" y="103.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_StartEvent_4" targetElement="_BPMNShape_ServiceTask_22">
         <di:waypoint xsi:type="dc:Point" x="156.0" y="313.0"/>
@@ -119,9 +136,9 @@
         <dc:Bounds height="80.0" width="100.0" x="228.0" y="273.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_EndEvent_14" bpmnElement="end">
-        <dc:Bounds height="36.0" width="36.0" x="1332.0" y="296.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="1416.0" y="296.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="1350.0" y="337.0"/>
+          <dc:Bounds height="0.0" width="0.0" x="1434.0" y="337.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_ServiceTask_21" targetElement="_BPMNShape_ExclusiveGateway_5">
@@ -230,12 +247,11 @@
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_28" bpmnElement="ServiceTask_3">
         <dc:Bounds height="80.0" width="100.0" x="1164.0" y="273.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="_BPMNShape_ServiceTask_28" targetElement="_BPMNShape_EndEvent_14">
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="_BPMNShape_ServiceTask_28" targetElement="_BPMNShape_EndEvent_14">
         <di:waypoint xsi:type="dc:Point" x="1264.0" y="313.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1332.0" y="314.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="1268.0" y="313.0"/>
-        </bpmndi:BPMNLabel>
+        <di:waypoint xsi:type="dc:Point" x="1340.0" y="313.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1340.0" y="314.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1416.0" y="314.0"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -57,8 +57,7 @@ class DigerBilgilerForm(JsonForm):
     class Meta:
         include = ['yayinlar', 'projeler', 'verdigi_dersler', 'kan_grubu', 'ehliyet',
                    'unvan', 'biyografi', 'notlar', 'engelli_durumu', 'engel_grubu',
-                   'engel_derecesi',
-                   'engel_orani', 'personel_turu']
+                   'engel_derecesi', 'engel_orani', 'personel_turu']
 
     kaydet = form.Button("Kaydet", cmd="save")
 
@@ -86,4 +85,4 @@ class KimlikIletisim(CrudView):
         self.form_out(IletisimBilgileriForm(self.object, current=self.current))
 
     def diger_bilgiler(self):
-        self.form_out(self.form_out(DigerBilgilerForm(self.object, current=self.current)))
+        self.form_out(DigerBilgilerForm(self.object, current=self.current))
