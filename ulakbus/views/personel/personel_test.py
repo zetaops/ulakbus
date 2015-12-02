@@ -80,7 +80,7 @@ def delete_draft(current):
 
 class review_service_errors(SimpleView):
     def show_view(self):
-        self.form_out(HataIncele(current=self.current))
+        self.output['forms'] = HataIncele(current=self.current).serialize()
 
 
 def yeni_ekle_kontrol(current):
