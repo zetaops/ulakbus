@@ -120,7 +120,7 @@ class KadroIslemleri(CrudView):
         self.object.durum = 3 - self.object.durum
         self.object.save()
 
-    @obj_filter()
+    @obj_filter
     def sakli_kadro(self, obj, result):
         """
         sakli kadro filtresi
@@ -136,7 +136,7 @@ class KadroIslemleri(CrudView):
                 {'name': 'Izinli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'}])
         return result
 
-    @obj_filter()
+    @obj_filter
     def izinli_kadro(self, obj, result):
         """
         sakli kadro filtresi
@@ -151,7 +151,7 @@ class KadroIslemleri(CrudView):
                 {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
         return result
 
-    @obj_filter()
+    @obj_filter
     def duzenlenebilir_veya_silinebilir_kadro(self, obj, result):
         """
         sakli kadro filtresi
