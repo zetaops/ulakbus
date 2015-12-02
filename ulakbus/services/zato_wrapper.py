@@ -44,6 +44,7 @@ class ZatoService(object):
         :return: unique identification string of service on zato services including
                  join of zato server url (generally a load balancer url) and service name on zato.
 
+
         """
 
         return '/'.join([settings.ZATO_SERVER, self.service_uri])
@@ -240,6 +241,10 @@ class KPSAdresBilgileriGetir(ZatoService):
         """
 
         Takes two parameters service_uri and tckn
+
+        :param service_uri: service name on zato, default is hizmet-cetvel
+        :type service_uri: str
+
         :param tckn: string of 11 byte length, can not be empty
         :type tckn: str
 
