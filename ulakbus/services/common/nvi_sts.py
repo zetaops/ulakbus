@@ -19,14 +19,13 @@ import datetime
 import json
 import uuid
 
-DEBUG = os.environ["DEBUG"]
+DEBUG = os.environ.get('DEBUG', False)
 if DEBUG:
     import logging
 
     httplib.HTTPConnection.debuglevel = 1
     logging.basicConfig()
     logging.getLogger().setLevel(logging.DEBUG)
-    logging.getLogger('httplib').setLevel(logging.DEBUG)
 
 
 class STSGetToken(Service):
@@ -102,14 +101,24 @@ class STSGetToken(Service):
                                               '<SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"></CanonicalizationMethod><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#hmac-sha1"></SignatureMethod><Reference URI="#_0"><Transforms><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"></Transform></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod><DigestValue>' + digest_value + '</DigestValue></Reference></SignedInfo>',
                                               hashlib.sha1).digest())
 
-        result = {"nvi_sso_encrypted_data": encrypted_data,
-                  "nvi_sso_digest_value": digest_value, "nvi_sso_signature": signature,
-                  "nvi_sso_key_identifier_path": key_identifier_path, "nvi_sso_created": created,
-                  "nvi_sso_expire": expire}
+        result = {
+            "nvi_sso_encrypted_data": encrypted_data,
+            "nvi_sso_digest_value": digest_value,
+            "nvi_sso_signature": signature,
+            "nvi_sso_key_identifier_path": key_identifier_path,
+            "nvi_sso_created": created,
+            "nvi_sso_expire": expire
+        }
+        if DEBUG:
+            self.logger.info("type: %s" % type(encrypted_data))
+            self.logger.info("type: %s" % type(digest_value))
+            self.logger.info("type: %s" % type(signature))
+            self.logger.info("type: %s" % type(key_identifier_path))
+            self.logger.info("type: %s" % type(created))
+            self.logger.info("type: %s" % type(expire))
 
-
-        # save nvi sso data into redis for `3600` seconds
         for k, v in result:
+            # save nvi sso data into redis for `3600` seconds
             self.kvdb.conn.set(k, v)
             self.kvdb.conn.expire(k, 600)
 

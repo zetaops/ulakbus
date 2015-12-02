@@ -13,14 +13,13 @@ import os
 
 __author__ = 'Ali Riza Keles'
 
-DEBUG = os.environ["DEBUG"]
+DEBUG = os.environ.get('DEBUG', False)
 if DEBUG:
     import logging
 
     httplib.HTTPConnection.debuglevel = 1
     logging.basicConfig()
     logging.getLogger().setLevel(logging.DEBUG)
-    logging.getLogger('httplib').setLevel(logging.DEBUG)
 
 
 class NVIService(Service):
