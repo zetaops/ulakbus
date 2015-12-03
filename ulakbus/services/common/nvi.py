@@ -34,12 +34,13 @@ class NVIService(Service):
                 'nvi_sso_digest_value', 'nvi_sso_signature',
                 'nvi_sso_created', 'nvi_sso_expire']
         for k in keys:
-            self.logger.info("k, v" % k, self.kvdb.conn.get(k))
-            self.sso_data.update({k, self.kvdb.conn.get(k)})
+            val = self.kvdb.conn.get(k)
+            self.logger.info("k: %s, v: %s, type: %s" % (k, val, type(val)))
+            self.sso_data.update({k: self.kvdb.conn.get(k)})
         if not all(self.sso_data.values()):
             self.invoke_sso_service()
 
-        response = self.request()
+        response = self.requestx()
         self.response.payload = {"status": response.status, "result": json.dumps(response.read())}
 
     def invoke_sso_service(self):
@@ -50,9 +51,7 @@ class NVIService(Service):
 
     def request_xml(self):
         request_xml = """
-        <?xml version="1.0"?><s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
-          xmlns:a="http://www.w3.org/2005/08/addressing"
-          xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <?xml version="1.0"?><s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
           <s:Header>
             <a:Action s:mustUnderstand="1">http://kps.nvi.gov.tr%s</a:Action>
             <a:MessageID>urn:uuid:%s</a:MessageID>
@@ -60,8 +59,7 @@ class NVIService(Service):
               <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
             </a:ReplyTo>
             <a:To s:mustUnderstand="1">https://kpsv2.nvi.gov.tr/Services/RoutingService.svc</a:To>
-            <o:Security s:mustUnderstand="1"
-             xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <o:Security s:mustUnderstand="1" xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
               <u:Timestamp u:Id="_0">
                 <u:Created>%s</u:Created>
                 <u:Expires>%s</u:Expires>
@@ -79,11 +77,8 @@ class NVIService(Service):
                 </SignedInfo>
                 <SignatureValue>%s</SignatureValue>
                 <KeyInfo>
-                  <o:SecurityTokenReference
-                    k:TokenType="http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV1.1"
-                      xmlns:k="http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd">
-                    <o:KeyIdentifier
-                      ValueType="http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.0#SAMLAssertionID">%s</o:KeyIdentifier>
+                  <o:SecurityTokenReference k:TokenType="http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV1.1" xmlns:k="http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd">
+                    <o:KeyIdentifier ValueType="http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.0#SAMLAssertionID">%s</o:KeyIdentifier>
                   </o:SecurityTokenReference>
                 </KeyInfo>
               </Signature>
@@ -97,8 +92,9 @@ class NVIService(Service):
                                            self.service_xml_body)
         return request_xml
 
-    def request(self):
+    def requestx(self):
         request_xml = self.request_xml().replace('  ', '').replace('\n', '')
+        self.logger.info("\n\n rxml: %s \n\n\n" % request_xml)
         conn = httplib.HTTPConnection("services.konya.edu.tr", 3128)
         headers = {"Content-Type": "application/soap+xml; charset=utf-8"}
         conn.request("POST", "https://kpsv2.nvi.gov.tr/Services/RoutingService.svc",
@@ -115,8 +111,7 @@ class KisiSorgulaTCKimlikNo(NVIService):
         tckn = self.request.payload['tckn']
         self.service_action = "/2011/01/01/KisiSorgulaTCKimlikNoServis/ListeleCoklu"
         self.service_xml_body = """
-            <env:Body xmlns:env="http://www.w3.org/2003/05/soap-envelope"
-              xmlns:ns1="http://kps.nvi.gov.tr/2011/01/01">
+            <env:Body xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:ns1="http://kps.nvi.gov.tr/2011/01/01">
                   <ns1:ListeleCoklu>
                       <ns1:kriterListesi>
                           <ns1:KisiSorgulaTCKimlikNoSorguKriteri>
@@ -137,8 +132,7 @@ class CuzdanSorgulaTCKimlikNo(NVIService):
         tckn = self.request.payload['tckn']
         self.service_action = "/2014/09/01/CuzdanSorgulaTCKimlikNoServis/ListeleCoklu"
         self.service_xml_body = """
-            <env:Body xmlns:env="http://www.w3.org/2003/05/soap-envelope"
-              xmlns:ns1="http://kps.nvi.gov.tr/2014/09/01">
+            <env:Body xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:ns1="http://kps.nvi.gov.tr/2014/09/01">
                 <ns1:ListeleCoklu>
                     <ns1:kriterListesi>
                         <ns1:CuzdanSorgulaTCKimlikNoSorguKriteri>
@@ -159,8 +153,7 @@ class YabanciKisiSorgula(NVIService):
         tckn = self.request.payload['tckn']
         self.service_action = "/2013/06/01/YbKisiSorgulaYbKimlikNoServis/ListeleCoklu"
         self.service_xml_body = """
-              <env:Body xmlns:env="http://www.w3.org/2003/05/soap-envelope"
-                    xmlns:ns2="http://kps.nvi.gov.tr/2013/06/01" xmlns:ns1="http://kps.nvi.gov.tr/2011/01/01">
+              <env:Body xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:ns2="http://kps.nvi.gov.tr/2013/06/01" xmlns:ns1="http://kps.nvi.gov.tr/2011/01/01">
                   <ns2:ListeleCoklu>
                       <ns2:kriterListesi>
                           <ns1:YbKisiSorgulaYbKimlikNoSorguKriteri>
