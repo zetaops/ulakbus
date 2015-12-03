@@ -149,7 +149,11 @@ class KurumDisiGorevlendirmeBilgileri(Model):
         verbose_name_plural = "Kurum Disi Gorevlendirmeler"
         list_fields = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
         list_filters =[
-            {'display_name':''}
+            {
+                'field': 'gorev_tipi',
+                'values': [1, 2],
+                'display_name': '',
+            }
         ]
         form_grouping = [
             {
