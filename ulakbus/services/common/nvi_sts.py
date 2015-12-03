@@ -109,15 +109,8 @@ class STSGetToken(Service):
             "nvi_sso_created": created,
             "nvi_sso_expire": expire
         }
-        if DEBUG:
-            self.logger.info("type: %s" % type(encrypted_data))
-            self.logger.info("type: %s" % type(digest_value))
-            self.logger.info("type: %s" % type(signature))
-            self.logger.info("type: %s" % type(key_identifier_path))
-            self.logger.info("type: %s" % type(created))
-            self.logger.info("type: %s" % type(expire))
 
-        for k, v in result:
+        for k, v in result.iteritems():
             # save nvi sso data into redis for `3600` seconds
             self.kvdb.conn.set(k, v)
             self.kvdb.conn.expire(k, 600)
