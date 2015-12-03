@@ -148,13 +148,6 @@ class KurumDisiGorevlendirmeBilgileri(Model):
         verbose_name = "Kurum Disi Gorevlendirme"
         verbose_name_plural = "Kurum Disi Gorevlendirmeler"
         list_fields = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
-        list_filters =[
-            {
-                'field': 'gorev_tipi',
-                'values': [1, 2],
-                'display_name': '',
-            }
-        ]
         form_grouping = [
             {
                 "layout": "4",
@@ -194,12 +187,14 @@ class Kadro(Model):
     birim = Unit("Birim")
     aciklama = field.String("Açıklama", index=True)
 
+
     class Meta:
         app = 'Personel'
         verbose_name = "Kadro"
         verbose_name_plural = "Kadrolar"
         list_fields = ['durum', 'unvan', 'aciklama']
         search_fields = ['unvan', 'derece']
+        list_filters = ['durum']
 
     def __unicode__(self):
         return "%s %s %s" % (self.unvan, self.derece, self.durum)
