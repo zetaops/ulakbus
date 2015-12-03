@@ -23,8 +23,8 @@ if DEBUG:
 
 
 class NVIService(Service):
-    def __init__(self):
-        super(NVIService, self).__init__()
+    def __init__(self, *ignored_args, **ignored_kwargs):
+        super(NVIService, self).__init__(*ignored_args, **ignored_kwargs)
         self.service = {}
         keys = ['nvi_sso_encrypted_data', 'nvi_sso_key_identifier_path',
                 'nvi_sso_digest_value', 'nvi_sso_signature',
@@ -38,7 +38,7 @@ class NVIService(Service):
     def invoke_sso_service(self):
         response = self.invoke('nvi-sts.sts-get-token')
         if response['status'] == 'ok':
-            for k, v in response['result']:
+            for k, v in response['result'].iteritems():
                 self.sso_data.update({k, v})
 
     def request_xml(self):
