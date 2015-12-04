@@ -48,14 +48,15 @@ class User(Model):
 
 
 class Permission(Model):
-    name = field.String("Name", index=True)
-    code = field.String("Code Name", index=True)
-    description = field.String("Description", index=True)
+    name = field.String("İsim", index=True)
+    code = field.String("Kod Adı", index=True)
+    description = field.String("Tanım", index=True)
 
     class Meta:
         app = 'Sistem'
         verbose_name = "Yetki"
         verbose_name_plural = "Yetkiler"
+        list_fields = ["name", "code", "description"]
 
     def __unicode__(self):
         return "%s %s" % (self.name, self.description)

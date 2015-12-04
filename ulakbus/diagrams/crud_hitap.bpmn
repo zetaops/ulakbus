@@ -5,6 +5,7 @@
     <bpmn2:extensionElements>
       <camunda:properties>
         <camunda:property value="other" name="object"/>
+        <camunda:property value="hidden" name="menu_category"/>
       </camunda:properties>
     </bpmn2:extensionElements>
     <bpmn2:userTask id="form" camunda:assignee="personel.crud_hitap.CrudHitap" name="add/edit form">

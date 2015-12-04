@@ -14,26 +14,26 @@ from .auth import Unit
 
 class Okutman(Model):
     personel = Personel()
-    harici_okutman_ad = field.String("Harici Okutman Ad", index=True)
-    harici_okutman_soyad = field.String("Harici Okutman Soyad", index=True)
-    tckn = field.String("Okutmanın TC Kimlik Numarası", index=True)
-    dogum_tarihi = field.Date("Okutmanın Doğum Tarihi", index=True)
-    dogum_yeri = field.String("Okutmanın Doğum Yeri", index=True)
-    uyruk = field.String("Uyruk", index=True)
-    medeni_hali = field.String("Medeni Hali", index=True, choices="medeni_hali")
-    ikamet_adresi = field.String("İkamet Adresi", index=True)
-    telefon_no = field.String("Telefon Numarası", index=True)
-    oda_no = field.String("Oda Numarası", index=True)
-    oda_tel_no = field.String("Oda Telefon Numarası", index=True)
-    e_posta = field.String("E-posta Adresi", index=True)
-    web_sitesi = field.String("Web Sitesi", index=True)
-    yayinlar = field.String("Yayınlar", index=True)
-    projeler = field.String("Projeler", index=True)
-    kan_grubu = field.String("Kan Grubu", index=True)
-    ehliyet = field.String("Ehliyet", index=True)
-    akademik_yayinlari = field.String("Akademik Yayınları", index=True)
-    verdigi_dersler = field.String("Verdiği Dersler", index=True)
-    unvan = field.String("Unvan", index=True, choices="akademik_unvan")
+    harici_okutman_ad = field.String("Harici Okutman Ad", index=True, required=False)
+    harici_okutman_soyad = field.String("Harici Okutman Soyad", index=True, required=False)
+    tckn = field.String("Okutmanın TC Kimlik Numarası", index=True, required=False)
+    dogum_tarihi = field.Date("Okutmanın Doğum Tarihi", index=True, required=False)
+    dogum_yeri = field.String("Okutmanın Doğum Yeri", index=True, required=False)
+    uyruk = field.String("Uyruk", index=True, required=False)
+    medeni_hali = field.String("Medeni Hali", index=True, choices="medeni_hali", required=False)
+    ikamet_adresi = field.String("İkamet Adresi", index=True, required=False)
+    telefon_no = field.String("Telefon Numarası", index=True, required=False)
+    oda_no = field.String("Oda Numarası", index=True, required=False)
+    oda_tel_no = field.String("Oda Telefon Numarası", index=True, required=False)
+    e_posta = field.String("E-posta Adresi", index=True, required=False)
+    web_sitesi = field.String("Web Sitesi", index=True, required=False)
+    yayinlar = field.String("Yayınlar", index=True, required=False)
+    projeler = field.String("Projeler", index=True, required=False)
+    kan_grubu = field.String("Kan Grubu", index=True, required=False)
+    ehliyet = field.String("Ehliyet", index=True, required=False)
+    akademik_yayinlari = field.String("Akademik Yayınları", index=True, required=False)
+    verdigi_dersler = field.String("Verdiği Dersler", index=True, required=False)
+    unvan = field.String("Unvan", index=True, choices="akademik_unvan", required=False)
 
     class Meta:
         app = 'Ogrenci'
@@ -42,7 +42,7 @@ class Okutman(Model):
         search_fields = ['unvan', 'personel']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.personel_ad, self.personel_soyad, self.unvan)
+        return '%s %s' % (self.personel.key, self.harici_okutman_ad)
 
 
 class Donem(Model):
