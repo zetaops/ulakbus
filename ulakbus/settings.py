@@ -83,6 +83,7 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'Permission', 'wf': 'crud', 'param': 'id', 'text': 'Yetki'},
     {'kategori': 'Admin', 'model': 'Personel', 'wf': 'crud', 'param': 'id', 'text': 'Personel'},
     {'kategori': 'Admin', 'model': 'Ogrenci', 'wf': 'crud', 'param': 'id', 'text': 'Öğrenci'},
+    {'kategori': 'Admin', 'model': 'Okutman', 'wf': 'crud', 'param': 'id', 'text': 'Okutman'},
 
 ]
 
