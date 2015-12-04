@@ -108,7 +108,7 @@ class Unit(Model):
         list_fields = ['name', 'unit_type']
 
     def __unicode__(self):
-        return '%s %s' % (self.name, self.key)
+        return '%s - %s - %s' % (self.name, self.english_name, self.yoksis_ID)
 
 
 class Role(Model):
