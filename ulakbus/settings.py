@@ -77,6 +77,14 @@ CRUD_MENUS = {
         {'name': 'OgrenciDersi'},
     ],
 }
+ADMIN_MENUS = [
+    {'kategori': 'Admin', 'model': 'User', 'wf': 'crud', 'param': 'id', 'text': 'Kullanıcı'},
+    {'kategori': 'Admin', 'model': 'Role', 'wf': 'crud', 'param': 'id', 'text': 'Rol'},
+    {'kategori': 'Admin', 'model': 'Permission', 'wf': 'crud', 'param': 'id', 'text': 'Yetki'},
+    {'kategori': 'Admin', 'model': 'Personel', 'wf': 'crud', 'param': 'id', 'text': 'Personel'},
+    {'kategori': 'Admin', 'model': 'Ogrenci', 'wf': 'crud', 'param': 'id', 'text': 'Öğrenci'},
+
+]
 
 VIEW_URLS.extend([
     # ('falcon URI template', 'python path to view method/class')
