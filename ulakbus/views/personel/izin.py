@@ -137,3 +137,22 @@ class IzinIslemleri(CrudView):
 
 
         return { 'yillik':yillik_izinler, 'mazeret':mazeret_izinler }
+
+    def goster(self):
+        self.list()
+        personel = Personel.objects.get(self.input['personel_id'])
+        izin = self.izin_hesapla(personel)
+        self.output['object'] = { "Adı":personel.ad, "Kalan İzin":"30" }
+
+        # Formun üzerinde gösterilen bilgilerin başlığı
+        # set edilmezse {add=null} görünüyor
+        self.output['forms']['model'] = personel.ad + " izin bilgileri"
+
+    def izin_hesapla(self,personel):
+        from datetime import datetime
+        self.ge
+        for izin in self.output['objects']:
+            izin.fields
+            print
+
+        pass
