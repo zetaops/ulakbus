@@ -422,27 +422,6 @@ class Atama(Model):
         return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
 
 
-class Izin(Model):
-    tip = field.Integer("Tip", index=True)
-    baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
-    bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
-    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
-    adres = field.String("Adres", index=True)
-    telefon = field.String("Telefon", index=True)
-    personel = Personel()
-    vekil = Personel()
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "İzin"
-        verbose_name_plural = "İzinler"
-        list_fields = ['tip', 'baslangic', 'bitis', 'onay']
-        search_fields = ['tip', 'baslangic', 'onay']
-
-    def __unicode__(self):
-        return '%s %s' % (self.tip, self.onay)
-
-
 class UcretsizIzin(Model):
     tip = field.Integer("Tip", index=True)
     baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
