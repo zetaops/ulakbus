@@ -214,3 +214,24 @@ class Kadro(Model):
 #
 #     def __unicode__(self):
 #         return "%s %s" % (self.personel, self.kadro)
+
+
+class Izin(Model):
+    tip = field.Integer("Tip", index=True,choices="izin")
+    baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
+    bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
+    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
+    adres = field.String("Geçireği Adres", index=True)
+    telefon = field.String("Telefon", index=True)
+    personel = Personel()
+    vekil = Personel()
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "İzin"
+        verbose_name_plural = "İzinler"
+        list_fields = ['tip', 'baslangic', 'bitis', 'onay', 'telefon']
+        search_fields = ['tip', 'baslangic', 'onay']
+
+    def __unicode__(self):
+        return '%s %s' % (self.tip, self.onay)
