@@ -9,6 +9,7 @@ from .personel import Personel
 from pyoko import Model, field, Node
 from .auth import Role
 
+
 class NufusKayitlari(Model):
     tckn = field.String("Sigortalının TC Kimlik No", index=True)
     ad = field.String("Adi", index=True)
@@ -52,6 +53,7 @@ class HizmetKurs(Model):
     denklik_okulu = field.String("Denklik Okulu", index=True)
     denklik_bolum = field.String("Denklik Bölüm", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -111,6 +113,7 @@ class HizmetMahkeme(Model):
     aciklama = field.String("Açıklama", index=True)
     gun_sayisi = field.Integer("Gün Sayısı", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -141,6 +144,7 @@ class HizmetBirlestirme(Model):
     ayrilma_nedeni = field.Integer("Ayrılma Nedeni", index=True)
     kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -165,6 +169,7 @@ class HizmetTazminat(Model):
     tazminat_bitis_tarihi = field.Date("Tazminat Bitiş Tarihi", index=True, format="%d.%m.%Y")
     kadrosuzluk = field.Integer("Kadrosuzluk", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -189,6 +194,7 @@ class HizmetUnvan(Model):
     atama_sekli = field.String("Atama Sekli", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     fhz_orani = field.Float("FHZ Oranı", index=True)
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -223,6 +229,7 @@ class HizmetAcikSure(Model):
                                       format="%d.%m.%Y")
     aciktan_atanma_tarih = field.Date("Açıktan Atanma Tarihi", index=True, format="%d.%m.%Y")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -259,6 +266,7 @@ class HizmetBorclanma(Model):
     borclanma_tarihi = field.Date("Borçlanma Tarihi", index=True, format="%d.%m.%Y")
     odeme_tarihi = field.Date("Ödeme Tarihi", index=True, format="%d.%m.%Y")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -278,6 +286,7 @@ class HizmetIHS(Model):
     baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     ihz_nevi = field.Integer("İHZ Nevi", index=True)
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -300,6 +309,7 @@ class HizmetIstisnaiIlgi(Model):
     istisnai_ilgi_nevi = field.Integer("İstisnai İlgi Nevi", index=True)
     kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -410,6 +420,7 @@ class Atama(Model):
 
     def __unicode__(self):
         return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
+
 
 class Izin(Model):
     tip = field.Integer("Tip", index=True)
