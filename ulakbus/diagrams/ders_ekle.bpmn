@@ -17,6 +17,17 @@
     <bpmn2:dataObject id="DataObject_1" name="Data Object 1"/>
     <bpmn2:dataObject id="DataObject_2" name="Data Object 2"/>
     <bpmn2:endEvent id="EndEvent_1">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="client_message">
+            <camunda:map>
+              <camunda:entry key="title">Teşekkürler</camunda:entry>
+              <camunda:entry key="body">İşlem Başarılı</camunda:entry>
+              <camunda:entry key="type">info</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:startEvent id="basla">
