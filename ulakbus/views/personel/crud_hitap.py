@@ -52,10 +52,10 @@ class CrudHitap(CrudView):
         kayit no guncellenir ve senkronize olarak isaretlenir.
 
     Buna gore sync field su degerlerde bulunabilir:
-        1: senkronize
-        2: guncellenecek
-        3: silinecek
-        4: eklenecek
+        1: all is good
+        2: updated locally, update on hitap
+        3: deleted locally, delete from hitap
+        4: created locally, send to hitap
 
     """
 
