@@ -11,7 +11,7 @@ from pyoko import form
 from zengine.lib.forms import JsonForm
 from zengine.views.base import SimpleView, BaseView
 from zengine.views.crud import CrudView
-from ulakbus.models import ogrenci
+from ulakbus.models.ogrenci import Program
 
 class Ders_View(CrudView):
 	class Meta:
@@ -46,11 +46,11 @@ class DersEkle(CrudView):
 		model = "Ders"
 
 	def program_sec(self):
-		current.task_data['program_id'] = self.object.program.key
+		self.current.task_data['program_id'] = self.object.program.key
 
 	def kaydet_yeni_kayit(self):
 		self.set_form_data_to_object()
-		self.object.program = Program.object.get(current.task_data['program_id'])
+		self.object.program = Program.objects.get(self.current.task_data['program_id'])
 		self.save_object()
 
 	def ders_bilgileri(self):
