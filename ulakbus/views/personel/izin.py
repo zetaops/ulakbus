@@ -50,6 +50,8 @@ class IzinIslemleri(CrudView):
         self.list()
         personel = Personel.objects.get(self.input['personel_id'])
         izin_gun = self.hizmet_izin_yil_hesapla(personel)
+        kalan_izin = self.kalan_izin_hesapla()
+        print kalan_izin
 
         # Personelin izin gün sayısı 365 günden azsa eklemeyi kaldır.
         # Personel pasifse eklemeyi kaldır.
@@ -61,11 +63,15 @@ class IzinIslemleri(CrudView):
                                "type": "table",
                                "fields": [
                                 {
-                                 "name": izin_gun,
-                                 "surname": "Aktif" if self.personel_aktif else "Pasif"
+                                 "name":personel.ad,
+                                 "surname": personel.soyad
+                                },
+                                {
+                                 "gun": izin_gun,
+                                 "durum": "Aktif" if self.personel_aktif else "Pasif"
                                 },{
-                                 "name": "ali riza",
-                                 "surname": "keles"
+                                 "izinler": kalan_izin,
+                                 "hizmet_sure": izin_gun
                                 }
                                ]
                               }
@@ -80,11 +86,19 @@ class IzinIslemleri(CrudView):
             baslangic_liste.add(hizmet.baslama_tarihi)
             bitis_liste.add(hizmet.bitis_tarihi)
 
-        baslangic_liste.remove(date( 1900, 1, 1))
-        bitis_liste.remove(date(1900, 1, 1))
+        try:
+            baslangic_liste.remove(date( 1900, 1, 1))
+            bitis_liste.remove(date(1900, 1, 1))
+        except:
+            pass
 
         baslangic_liste = sorted(baslangic_liste)
         bitis_liste = sorted(bitis_liste)
+
+        if len(baslangic_liste)>0:
+            self.ilk_izin_hakedis = baslangic_liste[0] + timedelta(365)
+        else:
+            self.ilk_izin_hakedis = date.today()
 
         ZERO = timedelta(0)
         toplam_sure = ZERO
@@ -125,8 +139,25 @@ class IzinIslemleri(CrudView):
         self.personel_aktif = aktif
         return emekli_sandigi_gun + sgk_gun
 
-    def kullanilan_izin_hesapla(self):
+    def kalan_izin_hesapla(self):
         query = self._apply_list_queries(self.object.objects.filter())
-        izinler = list()
-        # for izin in query:
-        #     if izin. izinler
+        yillik_izinler = dict()
+        mazeret_izinler = dict()
+
+        for yil in range(self.ilk_izin_hakedis.year,date.today().year):
+            yillik_izinler[yil] = 20
+            mazeret_izinler[yil] = 10
+
+        for izin in query:
+            if izin.tip==1:
+                yil = izin.baslangic.year-1
+                if yil in yillik_izinler.keys() and yillik_izinler[yil]>0:
+                    yillik_izinler[yil] -= (izin.bitis- izin.baslangic).days
+                else:
+                    yil+=1
+                    yillik_izinler[yil] -= (izin.bitis- izin.baslangic).days
+            elif izin.tip==5:
+                mazeret_izinler[yil] -= (izin.bitis- izin.baslangic).days
+
+
+        return { 'yillik':yillik_izinler, 'mazeret':mazeret_izinler }
