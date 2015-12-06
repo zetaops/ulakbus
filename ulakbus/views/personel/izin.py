@@ -87,8 +87,10 @@ class IzinIslemleri(CrudView):
             bitis_liste.add(hizmet.bitis_tarihi)
 
         try:
-            baslangic_liste.remove(date( 1900, 1, 1))
+            baslangic_liste.remove(date(1900, 1, 1))
+            baslangic_liste.remove('') # Pyoko string girilmemiş olursa boş str dönüyor
             bitis_liste.remove(date(1900, 1, 1))
+            bitis_liste.remove('')
         except:
             pass
 
