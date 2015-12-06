@@ -1,0 +1,5340 @@
+{
+	"unvan_kod": {
+		{
+			"tr": "SÖZLEŞMELİ PERSONEL",
+			"en": ""
+		},
+		"21602": {
+			"tr": "SÖZLEŞMELİ SANATÇI",
+			"en": ""
+		},
+		"42833": {
+			"tr": "SÖZLEŞMELİ TABİP",
+			"en": ""
+		},
+		"43043": {
+			"tr": "SÖZLEŞMELİ TEĞMEN",
+			"en": ""
+		},
+		"42834": {
+			"tr": "SÖZLEŞMELİ TEKNİSYEN",
+			"en": ""
+		},
+		"42835": {
+			"tr": "SÖZLEŞMELİ UZMAN",
+			"en": ""
+		},
+		"43045": {
+			"tr": "SÖZLEŞMELİ YÜZBAŞI",
+			"en": ""
+		},
+		"22032": {
+			"tr": "SÜLFÜRÜKASİT FABRİKASI MÜDÜRÜ",
+			"en": ""
+		},
+		"24132": {
+			"tr": "SÜREÇ DANIŞMANI",
+			"en": ""
+		},
+		"24133": {
+			"tr": "SÜREÇ YÖNETİCİSİ",
+			"en": ""
+		},
+		"43016": {
+			"tr": "SÜREÇ YÖNETİM UZMANI",
+			"en": ""
+		},
+		"8850": {
+			"tr": "SÜRVEYAN",
+			"en": ""
+		},
+		"4753": {
+			"tr": "SAĞLIK İŞLERİ İL MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4507": {
+			"tr": "SAĞLIK İŞLERİ İL MÜDÜRÜ",
+			"en": ""
+		},
+		"2895": {
+			"tr": "SAĞLIK İŞLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"4855": {
+			"tr": "SAĞLIK İŞLERİ MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"42516": {
+			"tr": "SAĞLIK İŞLERİ MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4470": {
+			"tr": "SAĞLIK İŞLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"42538": {
+			"tr": "SAĞLIK İSTATİSTİKÇİSİ",
+			"en": ""
+		},
+		"42392": {
+			"tr": "SAĞLIK ŞEFİ                                                                    ",
+			"en": ""
+		},
+		"42393": {
+			"tr": "SAĞLIK AMİRİ                                                                    ",
+			"en": ""
+		},
+		"3087": {
+			"tr": "SAĞLIK BAŞDENETÇİSİ",
+			"en": ""
+		},
+		"2870": {
+			"tr": "SAĞLIK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"3126": {
+			"tr": "SAĞLIK DENETÇİ YARDIMCISI",
+			"en": ""
+		},
+		"3327": {
+			"tr": "SAĞLIK DENETÇİSİ",
+			"en": ""
+		},
+		"8055": {
+			"tr": "SAĞLIK EĞİTİM MERKEZİ BAŞTABİB YARDIMCISI",
+			"en": ""
+		},
+		"8020": {
+			"tr": "SAĞLIK EĞİTİM MERKEZİ BAŞTABİBİ",
+			"en": ""
+		},
+		"4465": {
+			"tr": "SAĞLIK EĞİTİM MERKEZİ MÜDÜRÜ",
+			"en": ""
+		},
+		"375": {
+			"tr": "SAĞLIK EĞİTİMİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"1670": {
+			"tr": "SAĞLIK EĞİTİMCİSİ",
+			"en": ""
+		},
+		"8305": {
+			"tr": "SAĞLIK EĞİTİMCİSİ",
+			"en": ""
+		},
+		"8310": {
+			"tr": "SAĞLIK FİZİKÇİSİ",
+			"en": ""
+		},
+		"41217": {
+			"tr": "SAĞLIK HİZMETLİSİ",
+			"en": ""
+		},
+		"2890": {
+			"tr": "SAĞLIK HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2463": {
+			"tr": "SAĞLIK HİZMETLERİ SATINALMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2865": {
+			"tr": "SAĞLIK KÜLTÜR VE SPOR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4475": {
+			"tr": "SAĞLIK KORUMA YERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"8410": {
+			"tr": "SAĞLIK MEMURU",
+			"en": ""
+		},
+		"43150": {
+			"tr": "SAĞLIK MEMURU (CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"42806": {
+			"tr": "SAĞLIK MEMURU LABORATUVAR TEK.",
+			"en": ""
+		},
+		"4860": {
+			"tr": "SAĞLIK MESLEK LİSESİ MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4480": {
+			"tr": "SAĞLIK MESLEK LİSESİ MÜDÜRÜ",
+			"en": ""
+		},
+		"8420": {
+			"tr": "SAĞLIK SAVAŞ MEMURU",
+			"en": ""
+		},
+		"4485": {
+			"tr": "SAĞLIK TEKAMÜL EĞİTİM MÜDÜRÜ",
+			"en": ""
+		},
+		"8424": {
+			"tr": "SAĞLIK TEKNİKERİ",
+			"en": ""
+		},
+		"9325": {
+			"tr": "SAĞLIK TEKNİSYEN YARDIMCISI",
+			"en": ""
+		},
+		"8425": {
+			"tr": "SAĞLIK TEKNİSYENİ",
+			"en": ""
+		},
+		"2464": {
+			"tr": "SAĞLIK TESİSLERİ İŞLETMESİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"3628": {
+			"tr": "SAĞLIK UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3436": {
+			"tr": "SAĞLIK UZMANI",
+			"en": ""
+		},
+		"2466": {
+			"tr": "SAĞLIK VE MALULİYET İŞLEMLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42299": {
+			"tr": "SAĞLIK VE MEYDAN ACİL YARDIM HİZMETLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"22914": {
+			"tr": "SAĞLIK VE SOSYAL İŞLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"21618": {
+			"tr": "SAH.UYG.UZMAN MEMUR",
+			"en": ""
+		},
+		"8015": {
+			"tr": "SAHİL SAĞLIK DENETLEME MRK.BAŞTABİBİ",
+			"en": ""
+		},
+		"41343": {
+			"tr": "SAHNE ŞEF MAKİNİSTİ",
+			"en": ""
+		},
+		"41340": {
+			"tr": "SAHNE AMİRİ YARDIMCISI",
+			"en": ""
+		},
+		"41345": {
+			"tr": "SAHNE AMİRİ ",
+			"en": ""
+		},
+		"22833": {
+			"tr": "SAHNE BOYACISI",
+			"en": ""
+		},
+		"22835": {
+			"tr": "SAHNE DEMİRCİSİ",
+			"en": ""
+		},
+		"42226": {
+			"tr": "SAHNE FOTOĞRAFÇISI",
+			"en": ""
+		},
+		"41342": {
+			"tr": "SAHNE IŞIKÇISI",
+			"en": ""
+		},
+		"22845": {
+			"tr": "SAHNE KOSTÜMCÜSÜ",
+			"en": ""
+		},
+		"42227": {
+			"tr": "SAHNE KUNDURACISI",
+			"en": ""
+		},
+		"22970": {
+			"tr": "SAHNE KUNDURACISI (POİNTÇİ)",
+			"en": ""
+		},
+		"22813": {
+			"tr": "SAHNE MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"22812": {
+			"tr": "SAHNE MÜDÜRÜ",
+			"en": ""
+		},
+		"22843": {
+			"tr": "SAHNE MAKİNİSTİ",
+			"en": ""
+		},
+		"22842": {
+			"tr": "SAHNE MAKİNİSTİ ŞEF YARDIMCISI",
+			"en": ""
+		},
+		"22841": {
+			"tr": "SAHNE MAKİNİSTİ ŞEFİ",
+			"en": ""
+		},
+		"22820": {
+			"tr": "SAHNE MARANGOZU",
+			"en": ""
+		},
+		"22979": {
+			"tr": "SAHNE MEKANİK GRUP ŞEF YRD.",
+			"en": ""
+		},
+		"22834": {
+			"tr": "SAHNE MEKANİKÇİSİ",
+			"en": ""
+		},
+		"23146": {
+			"tr": "SAHNE SES DÜZENLEYİCİSİ",
+			"en": ""
+		},
+		"41344": {
+			"tr": "SAHNE TERZİSİ",
+			"en": ""
+		},
+		"5800": {
+			"tr": "SAHNE UYGULATICISI",
+			"en": ""
+		},
+		"24105": {
+			"tr": "SAHNE UZMAN ŞEF YARDIMCISI",
+			"en": ""
+		},
+		"24104": {
+			"tr": "SAHNE UZMAN ŞEFİ",
+			"en": ""
+		},
+		"22816": {
+			"tr": "SAHNE UZMANI",
+			"en": ""
+		},
+		"42264": {
+			"tr": "SAHNE YÖNETMEN YARDIMCISI",
+			"en": ""
+		},
+		"42263": {
+			"tr": "SAHNE YÖNETMENİ",
+			"en": ""
+		},
+		"2475": {
+			"tr": "SAKATLAR VE FELÇLİLER REHABİLİTASYON DAİ.BAŞKANI",
+			"en": ""
+		},
+		"4490": {
+			"tr": "SALGIN HASTALIKLAR ARAŞTIRMA MÜDÜRÜ",
+			"en": ""
+		},
+		"42026": {
+			"tr": "SALON VE SAHA BAKICISI",
+			"en": ""
+		},
+		"43073": {
+			"tr": "SANAT DANIŞMANI",
+			"en": ""
+		},
+		"2016": {
+			"tr": "SANAT ESERLERİ VE YAPI İŞLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"22331": {
+			"tr": "SANAT TARİHÇİSİ",
+			"en": ""
+		},
+		"42284": {
+			"tr": "SANAT TEKNİK ŞEFİ",
+			"en": ""
+		},
+		"22801": {
+			"tr": "SANAT TEKNİK MÜDÜRÜ",
+			"en": ""
+		},
+		"5720": {
+			"tr": "SANAT UYGULATICISI",
+			"en": ""
+		},
+		"42246": {
+			"tr": "SANAT YÖNETMEN YARDIMCISI",
+			"en": ""
+		},
+		"42245": {
+			"tr": "SANAT YÖNETMENİ",
+			"en": ""
+		},
+		"2024": {
+			"tr": "SANAT YAPILARI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"22445": {
+			"tr": "SANATÇI",
+			"en": ""
+		},
+		"42251": {
+			"tr": "SANATÇI (DANSÇI)",
+			"en": ""
+		},
+		"42250": {
+			"tr": "SANATÇI (SEMAZEN)",
+			"en": ""
+		},
+		"42228": {
+			"tr": "SANATÇI - AKTÖR",
+			"en": ""
+		},
+		"42229": {
+			"tr": "SANATÇI - AKTRİS",
+			"en": ""
+		},
+		"41906": {
+			"tr": "SANATÇI ÖĞRETMEN",
+			"en": ""
+		},
+		"5600": {
+			"tr": "SANATÇI Ö?RET?M ELEMANI",
+			"en": ""
+		},
+		"41907": {
+			"tr": "SANATKAR",
+			"en": ""
+		},
+		"410": {
+			"tr": "SANAYİ ARAŞTIRMA VE GELİŞTİRME GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"405": {
+			"tr": "SANAYİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"2680": {
+			"tr": "SANAYİ VE İŞ İSTATİSTİKLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"3371": {
+			"tr": "SANAYİ VE TİCARET UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6266": {
+			"tr": "SANAYİ VE TİCARET UZMANI",
+			"en": ""
+		},
+		"6691": {
+			"tr": "SANAYİ VE TİCARET UZMANI YARDIMCISI",
+			"en": ""
+		},
+		"3623": {
+			"tr": "SANAYİ VE TEKNOLOJİ UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3431": {
+			"tr": "SANAYİ VE TEKNOLOJİ UZMANI",
+			"en": ""
+		},
+		"42899": {
+			"tr": "SANTRAL MAKİNİSTİ",
+			"en": ""
+		},
+		"7690": {
+			"tr": "SANTRAL MEMURU",
+			"en": ""
+		},
+		"42916": {
+			"tr": "SANTRAL MEMURU (VHKİ)",
+			"en": ""
+		},
+		"41844": {
+			"tr": "SANTRAL MOTORCUSU",
+			"en": ""
+		},
+		"8630": {
+			"tr": "SANTRAL OPERATÖRÜ",
+			"en": ""
+		},
+		"42807": {
+			"tr": "SARAY MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"42808": {
+			"tr": "SARAY MÜDÜRÜ",
+			"en": ""
+		},
+		"22853": {
+			"tr": "SATIŞ ŞEFİ",
+			"en": ""
+		},
+		"42120": {
+			"tr": "SATIŞ KOMİSYON ÜYESİ",
+			"en": ""
+		},
+		"42027": {
+			"tr": "SATIŞ MÜDÜRÜ",
+			"en": ""
+		},
+		"7700": {
+			"tr": "SATIŞ MEMURU",
+			"en": ""
+		},
+		"41392": {
+			"tr": "SATIŞ TEMSİLCİSİ",
+			"en": ""
+		},
+		"42811": {
+			"tr": "SATIŞ UZMANI",
+			"en": ""
+		},
+		"2787": {
+			"tr": "SATIŞ VE DEVİR DAİRE BAŞKANI",
+			"en": ""
+		},
+		"43085": {
+			"tr": "SATIŞ YÖNETİCİSİ",
+			"en": ""
+		},
+		"22278": {
+			"tr": "SATIN ALMA MÜDÜRÜ",
+			"en": ""
+		},
+		"31422": {
+			"tr": "SATINALMA İKMAL DAİRE BAŞKANI",
+			"en": ""
+		},
+		"41463": {
+			"tr": "SATINALMA ŞEFİ",
+			"en": ""
+		},
+		"22178": {
+			"tr": "SATINALMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42809": {
+			"tr": "SATINALMA KOMİS.BŞK.",
+			"en": ""
+		},
+		"42810": {
+			"tr": "SATINALMA KOMİS.BŞK.(MERKEZ)",
+			"en": ""
+		},
+		"31346": {
+			"tr": "SATINALMA KOMİSYONU DAİ.BŞK.",
+			"en": ""
+		},
+		"42577": {
+			"tr": "SATINALMA MÜDÜRÜ",
+			"en": ""
+		},
+		"7695": {
+			"tr": "SATINALMA MEMURU",
+			"en": ""
+		},
+		"2757": {
+			"tr": "SATINALMA VE KAMULAŞTIRMA DAİ.BŞK.",
+			"en": ""
+		},
+		"2758": {
+			"tr": "SATINALMA,MALZEME VE İDARİ İŞLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"3015": {
+			"tr": "SAVCI",
+			"en": ""
+		},
+		"3020": {
+			"tr": "SAVCI BAŞYARDIMCISI",
+			"en": ""
+		},
+		"3025": {
+			"tr": "SAVCI YARDIMCISI",
+			"en": ""
+		},
+		"22945": {
+			"tr": "SAVUNMA AMİRİ",
+			"en": ""
+		},
+		"42133": {
+			"tr": "SAVUNMA MÜDÜRÜ",
+			"en": ""
+		},
+		"3637": {
+			"tr": "SAVUNMA SANAYİİ UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3445": {
+			"tr": "SAVUNMA SANAYİİ UZMANI",
+			"en": ""
+		},
+		"1340": {
+			"tr": "SAVUNMA SEKRETERİ",
+			"en": ""
+		},
+		"6265": {
+			"tr": "SAVUNMA UZMANI",
+			"en": ""
+		},
+		"41816": {
+			"tr": "SAYAÇ MEMURU",
+			"en": ""
+		},
+		"41628": {
+			"tr": "SAYAÇ OKUMA KONTROLÖRÜ",
+			"en": ""
+		},
+		"22203": {
+			"tr": "SAYAÇ OKUMA MEMURU",
+			"en": ""
+		},
+		"41494": {
+			"tr": "SAYAÇ OKUMA VE TAHAKKUK MEMURU",
+			"en": ""
+		},
+		"42306": {
+			"tr": "SAYAÇ SİCİL MEMUR YARDIMCISI",
+			"en": ""
+		},
+		"42143": {
+			"tr": "SAYAÇ SİCİL MEMURU",
+			"en": ""
+		},
+		"41629": {
+			"tr": "SAYAÇ TAKİPÇİSİ",
+			"en": ""
+		},
+		"42112": {
+			"tr": "SAYIŞTAY DENETÇİSİ",
+			"en": ""
+		},
+		"7975": {
+			"tr": "SAYICI",
+			"en": ""
+		},
+		"23126": {
+			"tr": "SAYICI-OPERATÖR",
+			"en": ""
+		},
+		"23127": {
+			"tr": "SAYIM MEMURU",
+			"en": ""
+		},
+		"7515": {
+			"tr": "SAYMAN",
+			"en": ""
+		},
+		"42093": {
+			"tr": "SAYMAN MUTEMEDİ",
+			"en": ""
+		},
+		"42812": {
+			"tr": "SAYMAN REFİKİ",
+			"en": ""
+		},
+		"7900": {
+			"tr": "SAYMAN YARDIMCISI",
+			"en": ""
+		},
+		"4865": {
+			"tr": "SAYMANLIK MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4495": {
+			"tr": "SAYMANLIK MÜDÜRÜ",
+			"en": ""
+		},
+		"42813": {
+			"tr": "SAYMANLIK MEMURU",
+			"en": ""
+		},
+		"42028": {
+			"tr": "SAYMANLIK MUTEMET DENETÇİSİ",
+			"en": ""
+		},
+		"42247": {
+			"tr": "SAZ SANATÇISI",
+			"en": ""
+		},
+		"22986": {
+			"tr": "SAZ TAMİR ATÖLYE ŞEF YRD.",
+			"en": ""
+		},
+		"22985": {
+			"tr": "SAZ TAMİR ATÖLYE ŞEFİ",
+			"en": ""
+		},
+		"41546": {
+			"tr": "SEÇİM ŞEFİ",
+			"en": ""
+		},
+		"21965": {
+			"tr": "SEÇİM BÜRO AMİRİ",
+			"en": ""
+		},
+		"4503": {
+			"tr": "SEÇİM MÜDÜRÜ",
+			"en": ""
+		},
+		"235": {
+			"tr": "SEÇMEN KÜTÜĞÜ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"7795": {
+			"tr": "SEKRETER",
+			"en": ""
+		},
+		"7797": {
+			"tr": "SEKRETER (Ö)",
+			"en": ""
+		},
+		"7796": {
+			"tr": "SEKRETER DAKTİLO",
+			"en": ""
+		},
+		"42814": {
+			"tr": "SEKRETER-STENOGRAF",
+			"en": ""
+		},
+		"41773": {
+			"tr": "SEKSİYON ŞEFİ",
+			"en": ""
+		},
+		"43065": {
+			"tr": "SEKTÖR UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"43031": {
+			"tr": "SEKTÖR UZMANI",
+			"en": ""
+		},
+		"2448": {
+			"tr": "SEKTÖREL İSTATİSTİKLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"43129": {
+			"tr": "SEKTÖREL İZLEME VE DEĞERLENDİRME RAPORTÖRÜ",
+			"en": ""
+		},
+		"1821": {
+			"tr": "SEKTÖREL DÜZENLEME VE EĞİTİM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"43068": {
+			"tr": "SELLEKTÖR MAKİNİSTİ",
+			"en": ""
+		},
+		"42261": {
+			"tr": "SEMA BÖLÜMÜ ŞEFİ",
+			"en": ""
+		},
+		"41393": {
+			"tr": "SENARİST",
+			"en": ""
+		},
+		"42338": {
+			"tr": "SENEDAT TAKİP MEMURU",
+			"en": ""
+		},
+		"8913": {
+			"tr": "SERAMİKÇİ",
+			"en": ""
+		},
+		"4867": {
+			"tr": "SERBEST BÖLGE MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4497": {
+			"tr": "SERBEST BÖLGE MÜDÜRÜ",
+			"en": ""
+		},
+		"615": {
+			"tr": "SERBEST BÖLGELER BAŞKANI",
+			"en": ""
+		},
+		"247": {
+			"tr": "SERBEST BÖLGELER GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"2477": {
+			"tr": "SERMAYE PİYASALARI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2893": {
+			"tr": "SERMAYE PİYASASI İŞLEMLERİ DAİ.BŞK.",
+			"en": ""
+		},
+		"41908": {
+			"tr": "SERVİS ŞEFİ",
+			"en": ""
+		},
+		"42815": {
+			"tr": "SERVİS ŞEFİ YRD.",
+			"en": ""
+		},
+		"41675": {
+			"tr": "SERVİS ASİSTANI                                                                 ",
+			"en": ""
+		},
+		"23031": {
+			"tr": "SERVİS GÖREVLİSİ",
+			"en": ""
+		},
+		"22892": {
+			"tr": "SERVİS MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"31415": {
+			"tr": "SERVİS MÜDÜRÜ",
+			"en": ""
+		},
+		"42389": {
+			"tr": "SERVİS MÜDÜRÜ (YURTDIŞI)",
+			"en": ""
+		},
+		"41598": {
+			"tr": "SERVİS MEMURU",
+			"en": ""
+		},
+		"23032": {
+			"tr": "SERVİS YETKİLİSİ",
+			"en": ""
+		},
+		"42816": {
+			"tr": "SERVİS-GRUP ŞEFİ",
+			"en": ""
+		},
+		"22972": {
+			"tr": "SES ATÖLYE ŞEF YRD.",
+			"en": ""
+		},
+		"22971": {
+			"tr": "SES ATÖLYE ŞEFİ",
+			"en": ""
+		},
+		"22829": {
+			"tr": "SES EFEKT ŞEFİ",
+			"en": ""
+		},
+		"42817": {
+			"tr": "SES KAYIT MEMURU",
+			"en": ""
+		},
+		"6525": {
+			"tr": "SES KAYITÇISI",
+			"en": ""
+		},
+		"42248": {
+			"tr": "SES SANATÇISI",
+			"en": ""
+		},
+		"22499": {
+			"tr": "SESCİ",
+			"en": ""
+		},
+		"22481": {
+			"tr": "SESLENDİRME YÖNETMENİ",
+			"en": ""
+		},
+		"22482": {
+			"tr": "SESLENDİRME YÖNETMENİ YARDIMCISI",
+			"en": ""
+		},
+		"42230": {
+			"tr": "SEVK MEMURU",
+			"en": ""
+		},
+		"42030": {
+			"tr": "SEYİS",
+			"en": ""
+		},
+		"31410": {
+			"tr": "SEYRÜSEFER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4704": {
+			"tr": "SHB MÜDÜR YRD.",
+			"en": ""
+		},
+		"7518": {
+			"tr": "SIHHİ MALZEME SAYMANI",
+			"en": ""
+		},
+		"42819": {
+			"tr": "SIHHİ TESİSAT ŞEFİ",
+			"en": ""
+		},
+		"42818": {
+			"tr": "SIHHİ TESİSAT KISIM AMİRİ",
+			"en": ""
+		},
+		"42970": {
+			"tr": "SIHHİ TESİSAT TEKNİKERİ",
+			"en": ""
+		},
+		"42820": {
+			"tr": "SIHHİ TESİSAT TEKNİSYENİ",
+			"en": ""
+		},
+		"23128": {
+			"tr": "SIHHİ TESİSATÇI",
+			"en": ""
+		},
+		"21996": {
+			"tr": "SIHHİ ZABITA MEMURU",
+			"en": ""
+		},
+		"1825": {
+			"tr": "SINAV GÖREVLİLERİ YÖNETİMİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"2962": {
+			"tr": "SINAV HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4500": {
+			"tr": "SINAV HİZMETLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"42109": {
+			"tr": "SINIF ÖĞRETMENİ",
+			"en": ""
+		},
+		"42821": {
+			"tr": "SIR PİŞİRİCİ",
+			"en": ""
+		},
+		"42822": {
+			"tr": "SIR YÜKLEME BOŞALTICISI",
+			"en": ""
+		},
+		"42823": {
+			"tr": "SIR YÜKLEME POSTABAŞISI",
+			"en": ""
+		},
+		"2485": {
+			"tr": "SITMA SAVAŞ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42824": {
+			"tr": "SIVACI",
+			"en": ""
+		},
+		"42567": {
+			"tr": "SIVACI",
+			"en": ""
+		},
+		"41790": {
+			"tr": "SOĞUK HAVA DEPO MEMURU         ",
+			"en": ""
+		},
+		"41501": {
+			"tr": "SOĞUK HAVA DEPO TAŞIYICISI",
+			"en": ""
+		},
+		"41830": {
+			"tr": "SOĞUK HAVA TEKNİSYENİ",
+			"en": ""
+		},
+		"42827": {
+			"tr": "SOĞUTMA MAKİNALARI ŞEFİ",
+			"en": ""
+		},
+		"42828": {
+			"tr": "SOĞUTMA TEKNİSYENİ",
+			"en": ""
+		},
+		"42829": {
+			"tr": "SOĞUTMA TESİSLERİ ŞEFİ",
+			"en": ""
+		},
+		"22782": {
+			"tr": "SOLİST SANATÇI",
+			"en": ""
+		},
+		"2505": {
+			"tr": "SONDAJ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42032": {
+			"tr": "SORGU HAKİMİ",
+			"en": ""
+		},
+		"2961": {
+			"tr": "SORU HAZIRLAMA VE GELİŞTİRME DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41430": {
+			"tr": "SORUMLU",
+			"en": ""
+		},
+		"41219": {
+			"tr": "SORUMLU BAŞMÜHENDİS-BAŞMİMAR",
+			"en": ""
+		},
+		"7520": {
+			"tr": "SORUMLU SAYMAN",
+			"en": ""
+		},
+		"42500": {
+			"tr": "SORUMLU SAYMAN ŞEFİ",
+			"en": ""
+		},
+		"42033": {
+			"tr": "SORUMLU SAYMAN YARDIMCISI",
+			"en": ""
+		},
+		"42901": {
+			"tr": "SORUMLU TABİP YARDIMCISI",
+			"en": ""
+		},
+		"2898": {
+			"tr": "SOS HAYATA UYUM DAİRESİ BŞK.",
+			"en": ""
+		},
+		"6340": {
+			"tr": "SOSYAL ÇALIŞMACI",
+			"en": ""
+		},
+		"42999": {
+			"tr": "SOSYAL ÇALIŞMACI UZMANI",
+			"en": ""
+		},
+		"2510": {
+			"tr": "SOSYAL İSTATİSTİKLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"6690": {
+			"tr": "SOSYAL ARAŞTIRMA UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6226": {
+			"tr": "SOSYAL ARAŞTIRMA UZMANI",
+			"en": ""
+		},
+		"42505": {
+			"tr": "SOSYAL BİLİMCİ",
+			"en": ""
+		},
+		"10625": {
+			"tr": "SOSYAL DESTEK HİZMETLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"43076": {
+			"tr": "SOSYAL ETÜT PROJE MÜDÜRÜ",
+			"en": ""
+		},
+		"4754": {
+			"tr": "SOSYAL GÜVENLİK İL MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"3755": {
+			"tr": "SOSYAL GÜVENLİK İL MÜDÜRÜ",
+			"en": ""
+		},
+		"3774": {
+			"tr": "SOSYAL GÜVENLİK İL MÜDÜRÜ",
+			"en": ""
+		},
+		"6001": {
+			"tr": "SOSYAL GÜVENLİK DENETMEN YARDIMCISI",
+			"en": ""
+		},
+		"5995": {
+			"tr": "SOSYAL GÜVENLİK DENETMENİ",
+			"en": ""
+		},
+		"6338": {
+			"tr": "SOSYAL GÜVENLİK KONTROL MEMURU",
+			"en": ""
+		},
+		"777": {
+			"tr": "SOSYAL GÜVENLİK KURULUŞ GENEL MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"395": {
+			"tr": "SOSYAL GÜVENLİK KURULUŞLARI GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"724": {
+			"tr": "SOSYAL GÜVENLİK KURUMU BAŞKAN YARDIMCISI",
+			"en": ""
+		},
+		"67": {
+			"tr": "SOSYAL GÜVENLİK KURUMU BAŞKANI",
+			"en": ""
+		},
+		"4036": {
+			"tr": "SOSYAL GÜVENLİK MERKEZİ MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4467": {
+			"tr": "SOSYAL GÜVENLİK MERKEZİ MÜDÜRÜ",
+			"en": ""
+		},
+		"2169": {
+			"tr": "SOSYAL GÜVENLİK SÖZ.DAİRE BAŞKANI",
+			"en": ""
+		},
+		"6686": {
+			"tr": "SOSYAL GÜVENLİK UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6256": {
+			"tr": "SOSYAL GÜVENLİK UZMANI",
+			"en": ""
+		},
+		"6342": {
+			"tr": "SOSYAL HİZ.UZMANI",
+			"en": ""
+		},
+		"41395": {
+			"tr": "SOSYAL HİZMET MÜTEHASSISI",
+			"en": ""
+		},
+		"2511": {
+			"tr": "SOSYAL HİZMETLER DAİRE BAŞKANI",
+			"en": ""
+		},
+		"2513": {
+			"tr": "SOSYAL HİZMETLER EĞİTİM MERKEZİ BAŞKANI",
+			"en": ""
+		},
+		"41814": {
+			"tr": "SOSYAL HİZMETLER MÜDÜRÜ",
+			"en": ""
+		},
+		"585": {
+			"tr": "SOSYAL PLANLAMA BAŞKANI",
+			"en": ""
+		},
+		"207": {
+			"tr": "SOSYAL PLANLAMA GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"524": {
+			"tr": "SOSYAL SİGORTALAR GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"6699": {
+			"tr": "SOSYAL SİGORTALAR UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6227": {
+			"tr": "SOSYAL SİGORTALAR UZMANI",
+			"en": ""
+		},
+		"2451": {
+			"tr": "SOSYAL SEKTÖRLER VE ARAŞTIRMALAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"397": {
+			"tr": "SOSYAL SEKTÖRLER VE KOORDİNASYON GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"565": {
+			"tr": "SOSYAL VE KÜLTÜREL İŞLER BAŞKANI",
+			"en": ""
+		},
+		"22239": {
+			"tr": "SOSYAL YARDIM İŞLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"2966": {
+			"tr": "SOSYAL YARDIM HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"3398": {
+			"tr": "SOSYAL YARDIM UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3186": {
+			"tr": "SOSYAL YARDIM UZMANI",
+			"en": ""
+		},
+		"22241": {
+			"tr": "SOSYAL YARDIM UZMANI YARDIMCISI",
+			"en": ""
+		},
+		"1450": {
+			"tr": "SOSYAL YARDIMCI",
+			"en": ""
+		},
+		"393": {
+			"tr": "SOSYAL YARDIMLAŞMA VE DAYANIŞMA GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"6495": {
+			"tr": "SOSYOLOG",
+			"en": ""
+		},
+		"6450": {
+			"tr": "SPİKER",
+			"en": ""
+		},
+		"43118": {
+			"tr": "SPOR İŞLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"4647": {
+			"tr": "SPOR EĞİTİM MERKEZİ MÜDÜRÜ",
+			"en": ""
+		},
+		"2512": {
+			"tr": "SPOR FAALİYETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2429": {
+			"tr": "SPOR HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"43042": {
+			"tr": "SPOR HİZMETLERİ UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"43041": {
+			"tr": "SPOR HİZMETLERİ UZMANI",
+			"en": ""
+		},
+		"7553": {
+			"tr": "SPOR KONTROLÖRÜ",
+			"en": ""
+		},
+		"967": {
+			"tr": "SPOR KONTROLÖRLERİ KURUL BAŞKANI",
+			"en": ""
+		},
+		"2514": {
+			"tr": "SPOR KURULUŞLARI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"1312": {
+			"tr": "SPOR MÜŞAVİRİ",
+			"en": ""
+		},
+		"20440": {
+			"tr": "SPOR UZMANI(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"2515": {
+			"tr": "SPORTİF EĞİTİM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"6240": {
+			"tr": "SPORTİF EĞİTİM UZMANI",
+			"en": ""
+		},
+		"69": {
+			"tr": "SSK BAŞKANI",
+			"en": ""
+		},
+		"22495": {
+			"tr": "STÜDYO ŞEFİ",
+			"en": ""
+		},
+		"22496": {
+			"tr": "STÜDYO SORUMLUSU",
+			"en": ""
+		},
+		"22434": {
+			"tr": "STÜDYO VE FİLM YAPIM ELEMANI",
+			"en": ""
+		},
+		"42034": {
+			"tr": "STAJYER",
+			"en": ""
+		},
+		"41397": {
+			"tr": "STAJYER ÖĞRETMEN",
+			"en": ""
+		},
+		"41910": {
+			"tr": "STAJYER ÖGRETMEN",
+			"en": ""
+		},
+		"1613": {
+			"tr": "STAJYER AIM MEMURU",
+			"en": ""
+		},
+		"41911": {
+			"tr": "STAJYER ASİSTAN",
+			"en": ""
+		},
+		"41396": {
+			"tr": "STAJYER AVUKAT",
+			"en": ""
+		},
+		"3416": {
+			"tr": "STAJYER BÜTÇE KONTROLÖRÜ",
+			"en": ""
+		},
+		"3293": {
+			"tr": "STAJYER DIŞTİCARET KONTROLÖRÜ",
+			"en": ""
+		},
+		"42506": {
+			"tr": "STAJYER GÜMRÜK KONTROLOÖRÜ",
+			"en": ""
+		},
+		"3417": {
+			"tr": "STAJYER GELİRLER KONTROLÖRÜ",
+			"en": ""
+		},
+		"1612": {
+			"tr": "STAJYER HAVA TRF. KONT.",
+			"en": ""
+		},
+		"3415": {
+			"tr": "STAJYER HAZİNE KONTROLÖRÜ",
+			"en": ""
+		},
+		"23042": {
+			"tr": "STAJYER HV.TRF.KONT.",
+			"en": ""
+		},
+		"3410": {
+			"tr": "STAJYER KAMU İŞLEMCİSİ",
+			"en": ""
+		},
+		"41928": {
+			"tr": "STAJYER KONTROL MEMURU",
+			"en": ""
+		},
+		"3425": {
+			"tr": "STAJYER KONTROLÖR",
+			"en": ""
+		},
+		"22800": {
+			"tr": "STAJYER KORO SANATÇISI",
+			"en": ""
+		},
+		"3419": {
+			"tr": "STAJYER MİLLİ EMLAK KONTROLÖRÜ",
+			"en": ""
+		},
+		"41676": {
+			"tr": "STAJYER MÜFETTİŞ YARDIMCISI                                                    ",
+			"en": ""
+		},
+		"22479": {
+			"tr": "STAJYER MONTAJCI",
+			"en": ""
+		},
+		"22468": {
+			"tr": "STAJYER MUHABİR",
+			"en": ""
+		},
+		"3418": {
+			"tr": "STAJYER MUHASEBAT KONTROLÖRÜ",
+			"en": ""
+		},
+		"22790": {
+			"tr": "STAJYER ORKESTRA SANATÇISI",
+			"en": ""
+		},
+		"22444": {
+			"tr": "STAJYER SANATÇI",
+			"en": ""
+		},
+		"41909": {
+			"tr": "STAJYER SANATÇI ÖGRETMEN",
+			"en": ""
+		},
+		"41677": {
+			"tr": "STAJYER SERVİS GÖREVLİSİ                                                       ",
+			"en": ""
+		},
+		"22783": {
+			"tr": "STAJYER SOLİST SANATÇI",
+			"en": ""
+		},
+		"22471": {
+			"tr": "STAJYER SPİKER",
+			"en": ""
+		},
+		"41678": {
+			"tr": "STAJYER UZMAN YARDIMCISI                                                        ",
+			"en": ""
+		},
+		"41912": {
+			"tr": "STAJYER VAIZ",
+			"en": ""
+		},
+		"31350": {
+			"tr": "STAND.VE KAL.KONT.D.BŞK.",
+			"en": ""
+		},
+		"2518": {
+			"tr": "STANDARTLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42836": {
+			"tr": "STENO GRUP AMİRİ",
+			"en": ""
+		},
+		"8784": {
+			"tr": "STENOGRAF",
+			"en": ""
+		},
+		"42837": {
+			"tr": "STENOGRAF YARDIMCISI",
+			"en": ""
+		},
+		"8805": {
+			"tr": "STEREO KIYMETLENDİRME TEKNİSYENİ",
+			"en": ""
+		},
+		"41398": {
+			"tr": "STOK KONTROL ŞEFİ",
+			"en": ""
+		},
+		"42082": {
+			"tr": "STOK KONTROL MEMURU",
+			"en": ""
+		},
+		"2092": {
+			"tr": "STRATEJİ GELİŞTİRME BİRİM BAŞKANI",
+			"en": ""
+		},
+		"572": {
+			"tr": "STRATEJİ GELİŞTİRME BAŞKANI",
+			"en": ""
+		},
+		"2091": {
+			"tr": "STRATEJİ GELİŞTİRME DAİRE BAŞKANI",
+			"en": ""
+		},
+		"22321": {
+			"tr": "STRATEJİ GELİŞTİRME MÜDÜRÜ",
+			"en": ""
+		},
+		"3733": {
+			"tr": "STRATEJİ GELİŞTİRME MÜDÜRÜ",
+			"en": ""
+		},
+		"41220": {
+			"tr": "STRATEJİ UZMANI",
+			"en": ""
+		},
+		"1210": {
+			"tr": "STRATEJİK ARAŞTIRMALAR MERKEZİ BAŞK.,BÜYÜKELÇİ",
+			"en": ""
+		},
+		"1211": {
+			"tr": "STRATEJİK ARAŞTIRMALAR MERKEZİ BAŞKANI",
+			"en": ""
+		},
+		"1215": {
+			"tr": "STRATEJİK ARAŞTIRMALAR MERKEZİ SEKRETERİ",
+			"en": ""
+		},
+		"22137": {
+			"tr": "SU İŞLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"41540": {
+			"tr": "SU İŞLERİ TEKNİSYENİ",
+			"en": ""
+		},
+		"41788": {
+			"tr": "SU İŞLETME MEMURU                     ",
+			"en": ""
+		},
+		"22294": {
+			"tr": "SU ŞEBEKE AMİRİ",
+			"en": ""
+		},
+		"42142": {
+			"tr": "SU ŞEBEKE KATİBİ",
+			"en": ""
+		},
+		"41495": {
+			"tr": "SU ŞEBEKE MEMURU",
+			"en": ""
+		},
+		"41531": {
+			"tr": "SU ŞEBEKE YARDIMCISI",
+			"en": ""
+		},
+		"41455": {
+			"tr": "SU ÜRÜNLERİ MÜHENDİSİ",
+			"en": ""
+		},
+		"42402": {
+			"tr": "SU ÜRÜNLERİ YÜKSEK MÜHENDİSİ",
+			"en": ""
+		},
+		"43120": {
+			"tr": "SU ARITMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41718": {
+			"tr": "SU BAĞLAMA MEMURU",
+			"en": ""
+		},
+		"43067": {
+			"tr": "SU BAKIM MEMUR YARDIMCISI",
+			"en": ""
+		},
+		"22937": {
+			"tr": "SU BAKIM MEMURU",
+			"en": ""
+		},
+		"41789": {
+			"tr": "SU DEPO BEKÇİSİ                          ",
+			"en": ""
+		},
+		"41415": {
+			"tr": "SU ENDEKS MEMURU",
+			"en": ""
+		},
+		"42298": {
+			"tr": "SU HAT MEMUR YARDIMCISI",
+			"en": ""
+		},
+		"42297": {
+			"tr": "SU HAT MEMURU",
+			"en": ""
+		},
+		"41624": {
+			"tr": "SU MÖNTÖRÜ",
+			"en": ""
+		},
+		"42084": {
+			"tr": "SU MEMURU",
+			"en": ""
+		},
+		"41800": {
+			"tr": "SU SANTRAL BEKÇİSİ",
+			"en": ""
+		},
+		"41804": {
+			"tr": "SU SANTRAL BEKÇİSİ",
+			"en": ""
+		},
+		"41689": {
+			"tr": "SU SANTRAL MAKİNİSTİ",
+			"en": ""
+		},
+		"42838": {
+			"tr": "SU TAHAKKUK ŞEFİ",
+			"en": ""
+		},
+		"42543": {
+			"tr": "SU TAHAKKUK MEMUR YARDIMCISI",
+			"en": ""
+		},
+		"41552": {
+			"tr": "SU TAHAKKUK MEMURU",
+			"en": ""
+		},
+		"41547": {
+			"tr": "SU TAHAKKUK MEMURU ",
+			"en": ""
+		},
+		"41772": {
+			"tr": "SU TAHSİLDARI",
+			"en": ""
+		},
+		"42839": {
+			"tr": "SU TASFİYE CİHAZI MAKİNİSTİ",
+			"en": ""
+		},
+		"22315": {
+			"tr": "SU TEKNİSYEN YARDIMCISI",
+			"en": ""
+		},
+		"22275": {
+			"tr": "SU TEKNİSYENİ",
+			"en": ""
+		},
+		"42840": {
+			"tr": "SU TESİSAT CİHAZI MAKİNİSTİ",
+			"en": ""
+		},
+		"41594": {
+			"tr": "SU TESİSLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42035": {
+			"tr": "SU TULUMBACISI",
+			"en": ""
+		},
+		"24123": {
+			"tr": "SU USTASI",
+			"en": ""
+		},
+		"24124": {
+			"tr": "SU USTASI YARDIMCISI",
+			"en": ""
+		},
+		"43122": {
+			"tr": "SU VE KANAL İŞLETME DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"1157": {
+			"tr": "SU VE KANAL HİZMETLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"21906": {
+			"tr": "SU VE KANAL MÜDÜRÜ",
+			"en": ""
+		},
+		"41590": {
+			"tr": "SU VE KANALİZASYON MÜDÜRÜ",
+			"en": ""
+		},
+		"43121": {
+			"tr": "SU VE YAPI İŞLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"22296": {
+			"tr": "SU YOL BAKIM MEMURU",
+			"en": ""
+		},
+		"43090": {
+			"tr": "SU YOLCUSU",
+			"en": ""
+		},
+		"41528": {
+			"tr": "SU  MOTOR MAKİNİSTİ",
+			"en": ""
+		},
+		"22502": {
+			"tr": "SUBAY",
+			"en": ""
+		},
+		"43134": {
+			"tr": "SUBAY ADAYI",
+			"en": ""
+		},
+		"22808": {
+			"tr": "SUFLÖR",
+			"en": ""
+		},
+		"2516": {
+			"tr": "SULAMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41412": {
+			"tr": "SULAR MEMURU",
+			"en": ""
+		},
+		"43088": {
+			"tr": "TİCARİ FAALİYETLER EKİP LİDERİ",
+			"en": ""
+		},
+		"43124": {
+			"tr": "TİCARET İŞLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42456": {
+			"tr": "TİCARET ATAŞE YARDIMCISI",
+			"en": ""
+		},
+		"1383": {
+			"tr": "TİCARET ATAŞESİ",
+			"en": ""
+		},
+		"1278": {
+			"tr": "TİCARET BAŞMÜŞAVİRİ",
+			"en": ""
+		},
+		"22335": {
+			"tr": "TİCARET DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"1363": {
+			"tr": "TİCARET MÜŞAVİR YARDIMCISI",
+			"en": ""
+		},
+		"1291": {
+			"tr": "TİCARET MÜŞAVİRİ",
+			"en": ""
+		},
+		"22024": {
+			"tr": "TİCARET MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4560": {
+			"tr": "TİCARET MÜDÜRÜ",
+			"en": ""
+		},
+		"2926": {
+			"tr": "TİCARET VE HİZMET SEKTÖRÜ ÖZL.UYG.DAİ.BŞK.",
+			"en": ""
+		},
+		"2925": {
+			"tr": "TİCARET VE MALZEME DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"31575": {
+			"tr": "TİCARET VE PAZARLAMA DAİ.BŞK.",
+			"en": ""
+		},
+		"2555": {
+			"tr": "TİCARET VE TURİZM ÖĞRETİMİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"487": {
+			"tr": "TİCARET VE TURİZM ÖĞRETİMİ GEN.MÜD.",
+			"en": ""
+		},
+		"3630": {
+			"tr": "TİKA UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3439": {
+			"tr": "TİKA UZMANI",
+			"en": ""
+		},
+		"41515": {
+			"tr": "TİM ELEMANI",
+			"en": ""
+		},
+		"8627": {
+			"tr": "TİP.BAS.M.OPERATORÜ",
+			"en": ""
+		},
+		"4035": {
+			"tr": "TİYATRO MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"5040": {
+			"tr": "TÖMER SEKRETERİ",
+			"en": ""
+		},
+		"3801": {
+			"tr": "TÜKETİCİ HAKEM HEYETİ RAPORTÖRÜ",
+			"en": ""
+		},
+		"6187": {
+			"tr": "TÜKETİCİ VE REKABET UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6185": {
+			"tr": "TÜKETİCİ VE REKABET UZMANI",
+			"en": ""
+		},
+		"313": {
+			"tr": "TÜKETİCİNİN KORUNMASI VE PİYASA GÖZETİMİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"353": {
+			"tr": "TÜKETİCİNİN VE REKABETİN KOR.GN.MD.",
+			"en": ""
+		},
+		"41841": {
+			"tr": "TÜMAMİRAL",
+			"en": ""
+		},
+		"22509": {
+			"tr": "TÜMGENERAL",
+			"en": ""
+		},
+		"4188": {
+			"tr": "TÜRK DÜNYA MÜZİĞİ TOPLULUĞU MÜDÜRÜ",
+			"en": ""
+		},
+		"269": {
+			"tr": "TÜRK DEVLETLERİ İLE EKONOMİK VE TİCARİ İLİŞ.GN.MD.",
+			"en": ""
+		},
+		"4717": {
+			"tr": "TÜRK TASAVVUF MÜZ.KOROSU MD.YRD.",
+			"en": ""
+		},
+		"4197": {
+			"tr": "TÜRK TASAVVUF MÜZİĞİ TOPL.MÜD.",
+			"en": ""
+		},
+		"722": {
+			"tr": "TÜRKİYE İSTATİSTİK KURUMU BAŞKAN YARDIMCISI",
+			"en": ""
+		},
+		"63": {
+			"tr": "TÜRKİYE İSTATİSTİK KURUMU BAŞKANI",
+			"en": ""
+		},
+		"3385": {
+			"tr": "TÜRKİYE İSTATİSTİK KURUMU UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3170": {
+			"tr": "TÜRKİYE İSTATİSTİK KURUMU UZMANI",
+			"en": ""
+		},
+		"601": {
+			"tr": "TÜRKİYE YAZMA ESERLER KURUMU BAŞKANI",
+			"en": ""
+		},
+		"42382": {
+			"tr": "TÜTÜN BAŞ EKSPERİ                                                              ",
+			"en": ""
+		},
+		"42346": {
+			"tr": "TÜTÜN DEPO MEMURU                                                              ",
+			"en": ""
+		},
+		"42293": {
+			"tr": "TÜTÜN EKSPERİ",
+			"en": ""
+		},
+		"42408": {
+			"tr": "TÜTÜN TEKNİK MÜHENDİSİ",
+			"en": ""
+		},
+		"41587": {
+			"tr": "TAŞ OCAĞI MAKİNİSTİ",
+			"en": ""
+		},
+		"42852": {
+			"tr": "TAŞÇI USTASI",
+			"en": ""
+		},
+		"4545": {
+			"tr": "TAŞINMAZ KÜL. VE TABİAT VAR. BÖL. KURULU BÜRO MÜD",
+			"en": ""
+		},
+		"42515": {
+			"tr": "TAŞINMAZ MALLAR DAİRE BAŞKANI",
+			"en": ""
+		},
+		"2542": {
+			"tr": "TAŞINMAZ MALLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2028": {
+			"tr": "TAŞINMAZLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"22295": {
+			"tr": "TAŞITLAR AMİRİ",
+			"en": ""
+		},
+		"41514": {
+			"tr": "TAŞIYICI",
+			"en": ""
+		},
+		"4520": {
+			"tr": "TABİAT TARİHİ MÜZE MÜDÜRÜ",
+			"en": ""
+		},
+		"42036": {
+			"tr": "TABİLATÖR",
+			"en": ""
+		},
+		"8110": {
+			"tr": "TABİP",
+			"en": ""
+		},
+		"42231": {
+			"tr": "TABİP (UZMAN)",
+			"en": ""
+		},
+		"8121": {
+			"tr": "TABİP(DAİRE TABİBİ)",
+			"en": ""
+		},
+		"42037": {
+			"tr": "TABİYET MEMURU",
+			"en": ""
+		},
+		"43010": {
+			"tr": "TABELACI - PANTOĞRAFÇI",
+			"en": ""
+		},
+		"42843": {
+			"tr": "TABLDOT MEMURU",
+			"en": ""
+		},
+		"42844": {
+			"tr": "TABLDOT YÖNETİCİSİ",
+			"en": ""
+		},
+		"41776": {
+			"tr": "TAHAKKUK ŞEFİ",
+			"en": ""
+		},
+		"41864": {
+			"tr": "TAHAKKUK ŞUBE KATİBİ",
+			"en": ""
+		},
+		"41585": {
+			"tr": "TAHAKKUK KATİBİ",
+			"en": ""
+		},
+		"22285": {
+			"tr": "TAHAKKUK MÜDÜRÜ",
+			"en": ""
+		},
+		"22939": {
+			"tr": "TAHAKKUK MEMURU",
+			"en": ""
+		},
+		"42141": {
+			"tr": "TAHAKKUK ORERATÖRÜ",
+			"en": ""
+		},
+		"41539": {
+			"tr": "TAHAKKUK YOKLAMA MEMURU",
+			"en": ""
+		},
+		"43039": {
+			"tr": "TAHMİL TAHLİYE MEMURU",
+			"en": ""
+		},
+		"1807": {
+			"tr": "TAHMİNLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"7510": {
+			"tr": "TAHRİRAT KATİBİ",
+			"en": ""
+		},
+		"42845": {
+			"tr": "TAHRİRAT MEMURU",
+			"en": ""
+		},
+		"41330": {
+			"tr": "TAHSİL ŞEFİ",
+			"en": ""
+		},
+		"41630": {
+			"tr": "TAHSİL KATİBİ",
+			"en": ""
+		},
+		"41618": {
+			"tr": "TAHSİL M. MUAVİNİ",
+			"en": ""
+		},
+		"42519": {
+			"tr": "TAHSİL MÜDÜRÜ",
+			"en": ""
+		},
+		"41453": {
+			"tr": "TAHSİL MEMURU",
+			"en": ""
+		},
+		"41762": {
+			"tr": "TAHSİL TAHAKKUK MEMURU",
+			"en": ""
+		},
+		"42846": {
+			"tr": "TAHSİLAT ŞEFİ",
+			"en": ""
+		},
+		"43022": {
+			"tr": "TAHSİLAT KATİBİ",
+			"en": ""
+		},
+		"42038": {
+			"tr": "TAHSİLAT MEMUR YARDIMCISI",
+			"en": ""
+		},
+		"42039": {
+			"tr": "TAHSİLAT MEMURU",
+			"en": ""
+		},
+		"42160": {
+			"tr": "TAHSİLAT VE SAYAÇ MEMURU",
+			"en": ""
+		},
+		"7785": {
+			"tr": "TAHSİLDAR",
+			"en": ""
+		},
+		"42159": {
+			"tr": "TAHSİLDAR VE SAYAÇ OKUMA MEMURU",
+			"en": ""
+		},
+		"42232": {
+			"tr": "TAHSİS MEMURU",
+			"en": ""
+		},
+		"2520": {
+			"tr": "TAHSİSLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42847": {
+			"tr": "TAKİP İŞLERİ MEMURU",
+			"en": ""
+		},
+		"23133": {
+			"tr": "TAKİP MEMURU",
+			"en": ""
+		},
+		"6025": {
+			"tr": "TAKDİR KOMİSYONU BAŞKANI",
+			"en": ""
+		},
+		"43086": {
+			"tr": "TAKIM LİDERİ",
+			"en": ""
+		},
+		"2523": {
+			"tr": "TALİH OYUNLARI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"180": {
+			"tr": "TALİM VE TERBİYE KURULU ÜYESİ",
+			"en": ""
+		},
+		"165": {
+			"tr": "TALİM VE TERBİYE KURULU BAŞKANI",
+			"en": ""
+		},
+		"6210": {
+			"tr": "TALİM VE TERBİYE KURULU UZMANI",
+			"en": ""
+		},
+		"42848": {
+			"tr": "TAMİRAT MAKİNİST YRD.",
+			"en": ""
+		},
+		"42849": {
+			"tr": "TAMİRAT MAKİNİSTİ",
+			"en": ""
+		},
+		"42850": {
+			"tr": "TAMİRAT TEKNİSYENİ",
+			"en": ""
+		},
+		"21958": {
+			"tr": "TAMİRCİ",
+			"en": ""
+		},
+		"4883": {
+			"tr": "TAMİRHANE MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4523": {
+			"tr": "TAMİRHANE MÜDÜRÜ",
+			"en": ""
+		},
+		"41609": {
+			"tr": "TAMİRHANE MOTORCU",
+			"en": ""
+		},
+		"31516": {
+			"tr": "TANITIM VE PAZARLAMA DAİRE BAŞKANI",
+			"en": ""
+		},
+		"1415": {
+			"tr": "TANITMA ATAŞE YRD.",
+			"en": ""
+		},
+		"1390": {
+			"tr": "TANITMA ATAŞEŞİ",
+			"en": ""
+		},
+		"433": {
+			"tr": "TANITMA GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"6165": {
+			"tr": "TANITMA MÜŞAVİRİ",
+			"en": ""
+		},
+		"6167": {
+			"tr": "TANITMA MÜŞAVİRİ YRD.",
+			"en": ""
+		},
+		"430": {
+			"tr": "TANITMA VE PAZARLAMA GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"41785": {
+			"tr": "TANK ŞÖFORÜ",
+			"en": ""
+		},
+		"41866": {
+			"tr": "TANZİFAT MEMURU",
+			"en": ""
+		},
+		"42140": {
+			"tr": "TANZİM SATIŞ MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"22280": {
+			"tr": "TANZİM SATIŞLAR MÜDÜRÜ",
+			"en": ""
+		},
+		"43030": {
+			"tr": "TAPDK UZMANI",
+			"en": ""
+		},
+		"2525": {
+			"tr": "TAPU ARŞİV DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"7720": {
+			"tr": "TAPU ARŞİV MEMURU",
+			"en": ""
+		},
+		"6320": {
+			"tr": "TAPU AZASI",
+			"en": ""
+		},
+		"2530": {
+			"tr": "TAPU DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"3711": {
+			"tr": "TAPU MÜDÜRÜ",
+			"en": ""
+		},
+		"4885": {
+			"tr": "TAPU SİCİL MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4525": {
+			"tr": "TAPU SİCİL MÜDÜRÜ",
+			"en": ""
+		},
+		"42040": {
+			"tr": "TAPU SİCİL MUHAFIZ YARDIMCISI",
+			"en": ""
+		},
+		"7725": {
+			"tr": "TAPU TETKİK MEMURU",
+			"en": ""
+		},
+		"6267": {
+			"tr": "TAPU UZMANI",
+			"en": ""
+		},
+		"3312": {
+			"tr": "TAPU VE KADASTRO DENETMENİ",
+			"en": ""
+		},
+		"3318": {
+			"tr": "TAPU VE KADASTRO DENETMENİ YARDIMCISI",
+			"en": ""
+		},
+		"3707": {
+			"tr": "TAPU VE KADASTRO EĞİTİM MÜDÜRÜ",
+			"en": ""
+		},
+		"4530": {
+			"tr": "TAPU VE KADASTRO KURS MÜDÜRÜ",
+			"en": ""
+		},
+		"4535": {
+			"tr": "TAPU VE KADASTRO MESLEK LİSESİ MÜDÜRÜ",
+			"en": ""
+		},
+		"6693": {
+			"tr": "TAPU VE KADASTRO UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6269": {
+			"tr": "TAPU VE KADASTRO UZMANI",
+			"en": ""
+		},
+		"42041": {
+			"tr": "TAPULAMA SİCİL KATİBİ",
+			"en": ""
+		},
+		"8810": {
+			"tr": "TAPULAMA TEKNİSYENİ",
+			"en": ""
+		},
+		"42532": {
+			"tr": "TARİFE ŞEFİ",
+			"en": ""
+		},
+		"42233": {
+			"tr": "TARİFE MEMURU",
+			"en": ""
+		},
+		"2535": {
+			"tr": "TARİFE VE TİCARET DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42938": {
+			"tr": "TARİH ARAŞTIRMA GÖREVLİSİ",
+			"en": ""
+		},
+		"42939": {
+			"tr": "TARİH ARAŞTIRMA UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"42940": {
+			"tr": "TARİH ARAŞTIRMA UZMANI",
+			"en": ""
+		},
+		"4208": {
+			"tr": "TARİHİ TÜRK MÜZİĞİ TOPLULUĞU MÜDÜRÜ",
+			"en": ""
+		},
+		"1289": {
+			"tr": "TARIM MÜŞAVİRİ",
+			"en": ""
+		},
+		"201": {
+			"tr": "TARIM REFORMU GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"42851": {
+			"tr": "TARIM TEKNİSYENİ",
+			"en": ""
+		},
+		"2661": {
+			"tr": "TARIM VE ÇEVRE İSTATİSTİKLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"2897": {
+			"tr": "TARIM VE GIDA SEKTÖRÜ ÖZEL.UYG.DAİ.BŞK.",
+			"en": ""
+		},
+		"2657": {
+			"tr": "TARIM VE SANAYİ İSTATİSTİKLERİ DAİ.BŞK.",
+			"en": ""
+		},
+		"31520": {
+			"tr": "TARIMSAL ÜRETİM DAİRESİ BŞK.",
+			"en": ""
+		},
+		"431": {
+			"tr": "TARIMSAL ÜRETİM VE GELİŞTİRME GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"33275": {
+			"tr": "TARIMSAL ARAŞTIRMA MD.",
+			"en": ""
+		},
+		"432": {
+			"tr": "TARIMSAL ARAŞTIRMALAR GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"202": {
+			"tr": "TARIMSAL ARAŞTIRMALAR VE POLİTİKALAR GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"33274": {
+			"tr": "TARIMSAL EĞİTİM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4798": {
+			"tr": "TARIMSAL HİDROLOJİ ARAŞTIRMA VE EĞİT.MER.MD.YRD.",
+			"en": ""
+		},
+		"4537": {
+			"tr": "TARIMSAL HİDROLOJİ ARAŞTIRMA VE EĞİTİM MERKEZİ MD.",
+			"en": ""
+		},
+		"43105": {
+			"tr": "TARIMSAL HİZMETLER DAİRE BAŞKANI",
+			"en": ""
+		},
+		"41591": {
+			"tr": "TARIMSAL HİZMETLER MÜDÜRÜ",
+			"en": ""
+		},
+		"31560": {
+			"tr": "TARIMSAL MEKANİZASYON VE PANCAR DIŞI ÜRÜNLER D.BŞK",
+			"en": ""
+		},
+		"31530": {
+			"tr": "TARIMSAL PROJE VE TES.DAİ.BŞK.",
+			"en": ""
+		},
+		"4540": {
+			"tr": "TARLA KÜLTÜR MÜDÜRÜ",
+			"en": ""
+		},
+		"22227": {
+			"tr": "TARTI MEMURU",
+			"en": ""
+		},
+		"2570": {
+			"tr": "TASARIM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"3370": {
+			"tr": "TASARIM UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3199": {
+			"tr": "TASARIM UZMANI",
+			"en": ""
+		},
+		"2540": {
+			"tr": "TASARRUF İŞLEMLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"304": {
+			"tr": "TASFİYE İŞLERİ DÖNER SERMAYE İŞLETMESİ GENEL MD.",
+			"en": ""
+		},
+		"3976": {
+			"tr": "TASFİYE İŞLETME MÜDÜRÜ",
+			"en": ""
+		},
+		"312": {
+			"tr": "TASFİYE HİZMETLERİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"8592": {
+			"tr": "TASHİHÇİ",
+			"en": ""
+		},
+		"42042": {
+			"tr": "TASNİF AMİRİ",
+			"en": ""
+		},
+		"41913": {
+			"tr": "TASNİF AMİRİ",
+			"en": ""
+		},
+		"41400": {
+			"tr": "TASNİFÇİ",
+			"en": ""
+		},
+		"42043": {
+			"tr": "TASNİFÇİ YARDIMCISI",
+			"en": ""
+		},
+		"22520": {
+			"tr": "TEĞMEN",
+			"en": ""
+		},
+		"1421": {
+			"tr": "TEŞKİL MEMURU",
+			"en": ""
+		},
+		"42052": {
+			"tr": "TEŞKİLAT MUAMELE MEMURU",
+			"en": ""
+		},
+		"2545": {
+			"tr": "TEŞKİLAT VE YÖNETİMİ GELİŞTİRME DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"425": {
+			"tr": "TEŞKİLATLANDIRMA GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"388": {
+			"tr": "TEŞKİLATLANMA VE DESTEKLEME GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"42860": {
+			"tr": "TEŞRİFAT MEMURU",
+			"en": ""
+		},
+		"7587": {
+			"tr": "TEŞRİFATÇI",
+			"en": ""
+		},
+		"605": {
+			"tr": "TEŞVİK UYGULAMA BAŞKANI",
+			"en": ""
+		},
+		"237": {
+			"tr": "TEŞVİK VE UYGULAMA GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"7545": {
+			"tr": "TEBERRUKAT SAYMANI",
+			"en": ""
+		},
+		"42139": {
+			"tr": "TEBLİĞ MEMURU",
+			"en": ""
+		},
+		"7730": {
+			"tr": "TEBLİGAT MEMURU",
+			"en": ""
+		},
+		"2004": {
+			"tr": "TEDARİK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"43074": {
+			"tr": "TEDARİK MÜDÜRÜ",
+			"en": ""
+		},
+		"2259": {
+			"tr": "TEDARİK UYGULAMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2461": {
+			"tr": "TEDAVİ HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"365": {
+			"tr": "TEDAVİ HİZMETLERİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"2469": {
+			"tr": "TEDAVİ HİZMETLERİ VE MALULİYET DAİRE BAŞKANI",
+			"en": ""
+		},
+		"21911": {
+			"tr": "TEFTİŞ HEYETİ MÜDÜRÜ",
+			"en": ""
+		},
+		"42314": {
+			"tr": "TEFTİŞ KURULU BAŞKAN VEKİLİ                                                    ",
+			"en": ""
+		},
+		"712": {
+			"tr": "TEFTİŞ KURULU BAŞKAN YARDIMCISI",
+			"en": ""
+		},
+		"140": {
+			"tr": "TEFTİŞ KURULU BAŞKANI",
+			"en": ""
+		},
+		"42044": {
+			"tr": "TEFTİŞ KURULU KONTROLÖRÜ",
+			"en": ""
+		},
+		"22277": {
+			"tr": "TEFTİŞ KURULU MÜDÜRÜ",
+			"en": ""
+		},
+		"5135": {
+			"tr": "TEKNİK İŞLER ŞUBESİ MÜDÜRÜ",
+			"en": ""
+		},
+		"2910": {
+			"tr": "TEKNİK İŞLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4553": {
+			"tr": "TEKNİK İŞLER MÜDÜRÜ",
+			"en": ""
+		},
+		"22915": {
+			"tr": "TEKNİK İŞLER VE OTOMASYON DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41300": {
+			"tr": "TEKNİK ÖĞRETMEN",
+			"en": ""
+		},
+		"8863": {
+			"tr": "TEKNİK ŞEF",
+			"en": ""
+		},
+		"41680": {
+			"tr": "TEKNİK ŞEF YARDIMCISI                                                          ",
+			"en": ""
+		},
+		"22921": {
+			"tr": "TEKNİK AMİR",
+			"en": ""
+		},
+		"2905": {
+			"tr": "TEKNİK ARAŞTIRMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2900": {
+			"tr": "TEKNİK ARAŞTIRMA VE KALİTE KONTROL DAİRESİ BAŞKAN",
+			"en": ""
+		},
+		"350": {
+			"tr": "TEKNİK ARAŞTIRMA VE UYGULAMA GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"41914": {
+			"tr": "TEKNİK ASİSTAN",
+			"en": ""
+		},
+		"41915": {
+			"tr": "TEKNİK ASİSTAN",
+			"en": ""
+		},
+		"4552": {
+			"tr": "TEKNİK BAKIM MD.",
+			"en": ""
+		},
+		"4551": {
+			"tr": "TEKNİK BAKIM YAPIM VE ONARIM MÜDÜRÜ",
+			"en": ""
+		},
+		"23134": {
+			"tr": "TEKNİK DANIŞMAN",
+			"en": ""
+		},
+		"23007": {
+			"tr": "TEKNİK DENETİM UZMANI",
+			"en": ""
+		},
+		"42234": {
+			"tr": "TEKNİK DEPO ŞEFİ",
+			"en": ""
+		},
+		"22936": {
+			"tr": "TEKNİK ELEMAN",
+			"en": ""
+		},
+		"42235": {
+			"tr": "TEKNİK ELEMAN(YÜK.MÜH.VEYA MÜH)",
+			"en": ""
+		},
+		"21977": {
+			"tr": "TEKNİK FEN MEMURU",
+			"en": ""
+		},
+		"24134": {
+			"tr": "TEKNİK GÖREVLİ",
+			"en": ""
+		},
+		"42343": {
+			"tr": "TEKNİK GRUP MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"5060": {
+			"tr": "TEKNİK HİZMET ŞUBE MÜDÜRÜ",
+			"en": ""
+		},
+		"9767": {
+			"tr": "TEKNİK HİZMETLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"263": {
+			"tr": "TEKNİK HİZMETLER GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"3760": {
+			"tr": "TEKNİK HİZMETLER MÜDÜRÜ",
+			"en": ""
+		},
+		"42045": {
+			"tr": "TEKNİK HESAPÇI",
+			"en": ""
+		},
+		"22222": {
+			"tr": "TEKNİK KONTROLÖR",
+			"en": ""
+		},
+		"42431": {
+			"tr": "TEKNİK MÜŞAVİR",
+			"en": ""
+		},
+		"22805": {
+			"tr": "TEKNİK MÜDÜR",
+			"en": ""
+		},
+		"42404": {
+			"tr": "TEKNİK MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"42403": {
+			"tr": "TEKNİK MÜDÜR YARDIMCISI -ŞUBE",
+			"en": ""
+		},
+		"41679": {
+			"tr": "TEKNİK MEMUR                                                                   ",
+			"en": ""
+		},
+		"42128": {
+			"tr": "TEKNİK REİS MUAVİNİ",
+			"en": ""
+		},
+		"8860": {
+			"tr": "TEKNİK RESSAM",
+			"en": ""
+		},
+		"21976": {
+			"tr": "TEKNİK SORUMLU",
+			"en": ""
+		},
+		"42569": {
+			"tr": "TEKNİK TERCÜMAN",
+			"en": ""
+		},
+		"22035": {
+			"tr": "TEKNİK UZMAN",
+			"en": ""
+		},
+		"41401": {
+			"tr": "TEKNİK UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"42236": {
+			"tr": "TEKNİK VE AMBAR MEMURU",
+			"en": ""
+		},
+		"22483": {
+			"tr": "TEKNİK YÖNETMEN",
+			"en": ""
+		},
+		"6689": {
+			"tr": "TEKNİK YARDIM UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6198": {
+			"tr": "TEKNİK YARDIM UZMANI",
+			"en": ""
+		},
+		"8750": {
+			"tr": "TEKNİKER",
+			"en": ""
+		},
+		"8740": {
+			"tr": "TEKNİKER(ÖZELLEŞTİRME)",
+			"en": ""
+		},
+		"20470": {
+			"tr": "TEKNİKER(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"8790": {
+			"tr": "TEKNİSYEN",
+			"en": ""
+		},
+		"8791": {
+			"tr": "TEKNİSYEN (ÖZELLEŞTİRME) (3-12)",
+			"en": ""
+		},
+		"9300": {
+			"tr": "TEKNİSYEN YARDIMCISI",
+			"en": ""
+		},
+		"43151": {
+			"tr": "TEKNİSYEN YARDIMCISI (CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"20500": {
+			"tr": "TEKNİSYEN YARDIMCISI(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"20490": {
+			"tr": "TEKNİSYEN(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"42853": {
+			"tr": "TEKNOLOG",
+			"en": ""
+		},
+		"2915": {
+			"tr": "TEKNOLOJİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"31631": {
+			"tr": "TEKNOLOJİ GELİŞTİRME DAİ.BŞK",
+			"en": ""
+		},
+		"33270": {
+			"tr": "TEKNOLOJİK ARAŞTIRMA MÜDÜRÜ",
+			"en": ""
+		},
+		"8789": {
+			"tr": "TEKSİRCİ",
+			"en": ""
+		},
+		"42984": {
+			"tr": "TEKSTİL MÜHENDİSİ",
+			"en": ""
+		},
+		"4719": {
+			"tr": "TEL.HAK.VE SİN.MD.YRD.",
+			"en": ""
+		},
+		"457": {
+			"tr": "TELİF HAK.VE SİN. GEN.MÜD.",
+			"en": ""
+		},
+		"214": {
+			"tr": "TELİF HAKLARI GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"517": {
+			"tr": "TELİF HAKLARI GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"23008": {
+			"tr": "TELİF HAKLARI UZMANI",
+			"en": ""
+		},
+		"522": {
+			"tr": "TELİF HAKLARI VE SİNEMA GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"4186": {
+			"tr": "TELİF HAKLARI VE SİNEMA MÜDÜRÜ",
+			"en": ""
+		},
+		"4204": {
+			"tr": "TELİF HAKLARI VE SİNEMASYON MÜDÜRÜ",
+			"en": ""
+		},
+		"41221": {
+			"tr": "TELEBİLGİ KOORDİNATÖRÜ",
+			"en": ""
+		},
+		"22423": {
+			"tr": "TELEBİLGİ OPERATÖRÜ",
+			"en": ""
+		},
+		"41541": {
+			"tr": "TELEFON OPERATÖRÜ",
+			"en": ""
+		},
+		"7716": {
+			"tr": "TELEFON SANTRAL MEMURU",
+			"en": ""
+		},
+		"42342": {
+			"tr": "TELEFON TAMİRCİSİ                                                              ",
+			"en": ""
+		},
+		"42350": {
+			"tr": "TELEFON TEKNİSYENİ                                                             ",
+			"en": ""
+		},
+		"41791": {
+			"tr": "TELEFONCU",
+			"en": ""
+		},
+		"43087": {
+			"tr": "TELEKOM MÜDÜRÜ",
+			"en": ""
+		},
+		"41916": {
+			"tr": "TELEKOM MUHAFIZI",
+			"en": ""
+		},
+		"42425": {
+			"tr": "TELEKOM UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"42426": {
+			"tr": "TELEKOM UZMANI",
+			"en": ""
+		},
+		"42542": {
+			"tr": "TELEKOM YÖNETMEN YARDIMCISI",
+			"en": ""
+		},
+		"22253": {
+			"tr": "TELEKOMÜNİKASYON İLETİŞİM BAŞKANI",
+			"en": ""
+		},
+		"6275": {
+			"tr": "TELEKOMÜNİKASYON BAŞ UZMANI",
+			"en": ""
+		},
+		"22252": {
+			"tr": "TELEKOMÜNİKASYON UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6696": {
+			"tr": "TELEKOMÜNİKASYON UZMAN YRD.",
+			"en": ""
+		},
+		"3189": {
+			"tr": "TELEKOMÜNİKASYON UZMANI",
+			"en": ""
+		},
+		"41681": {
+			"tr": "TELEKS MEMURU                                                                   ",
+			"en": ""
+		},
+		"7718": {
+			"tr": "TELEKS OPERATORÜ",
+			"en": ""
+		},
+		"42046": {
+			"tr": "TELEM MEMURU",
+			"en": ""
+		},
+		"42127": {
+			"tr": "TELEMCİ",
+			"en": ""
+		},
+		"22425": {
+			"tr": "TELETEKST KOODİNATÖRÜ",
+			"en": ""
+		},
+		"22424": {
+			"tr": "TELETEKST YAPIM VE YAYIN EL.",
+			"en": ""
+		},
+		"22456": {
+			"tr": "TELEVİZYON MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"22455": {
+			"tr": "TELEVİZYON MÜDÜRÜ",
+			"en": ""
+		},
+		"42047": {
+			"tr": "TELGRAF MEMURU",
+			"en": ""
+		},
+		"41462": {
+			"tr": "TELLAL",
+			"en": ""
+		},
+		"43014": {
+			"tr": "TELLAT",
+			"en": ""
+		},
+		"385": {
+			"tr": "TELSİZ İŞLERİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"42048": {
+			"tr": "TELSİZ MEMURU",
+			"en": ""
+		},
+		"21623": {
+			"tr": "TELSİZ OPERATÖRÜ",
+			"en": ""
+		},
+		"6221": {
+			"tr": "TELSİZ SÖRVEY UZMANI",
+			"en": ""
+		},
+		"42049": {
+			"tr": "TELSİZ TEKNİSYENİ",
+			"en": ""
+		},
+		"41692": {
+			"tr": "TEMİZLİK İŞÇİSİ",
+			"en": ""
+		},
+		"41580": {
+			"tr": "TEMİZLİK İŞLERİ ÇAVUŞU",
+			"en": ""
+		},
+		"41761": {
+			"tr": "TEMİZLİK İŞLERİ AMİRİ",
+			"en": ""
+		},
+		"21905": {
+			"tr": "TEMİZLİK İŞLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"41745": {
+			"tr": "TEMİZLİK İŞLERİ MEMURU",
+			"en": ""
+		},
+		"22273": {
+			"tr": "TEMİZLİK HİZMETLİSİ",
+			"en": ""
+		},
+		"41543": {
+			"tr": "TEMİZLİK MEMURU",
+			"en": ""
+		},
+		"41778": {
+			"tr": "TEMİZLİK ONBAŞISI",
+			"en": ""
+		},
+		"41682": {
+			"tr": "TEMİZLİKÇİ                                                                     ",
+			"en": ""
+		},
+		"466": {
+			"tr": "TEMEL EĞİTİM GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"360": {
+			"tr": "TEMEL SAĞLIK HİZMETLERİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"22462": {
+			"tr": "TEMSİLCİ",
+			"en": ""
+		},
+		"23135": {
+			"tr": "TEMSİLCİ YARDIMCISI",
+			"en": ""
+		},
+		"43063": {
+			"tr": "TEMSİLCİLİK MEMURU",
+			"en": ""
+		},
+		"42854": {
+			"tr": "TENEKECİ",
+			"en": ""
+		},
+		"42362": {
+			"tr": "TENEKECİ LEHİMCİ                                                                ",
+			"en": ""
+		},
+		"42237": {
+			"tr": "TEPHİRHANE DOKTORU",
+			"en": ""
+		},
+		"2544": {
+			"tr": "TERÖRLE MÜCADELE DAİ. BŞK.",
+			"en": ""
+		},
+		"2543": {
+			"tr": "TERÖRLE MÜCADELE VE HAREKAT DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"6425": {
+			"tr": "TERCÜMAN",
+			"en": ""
+		},
+		"6426": {
+			"tr": "TERCÜMAN(MÜTERCİM)",
+			"en": ""
+		},
+		"42855": {
+			"tr": "TERCÜMAN-SEKRETER",
+			"en": ""
+		},
+		"2018": {
+			"tr": "TERCÜME DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"977": {
+			"tr": "TERCÜME MERKEZİ BAŞKANI",
+			"en": ""
+		},
+		"42856": {
+			"tr": "TERCÜME-DAKTİLO",
+			"en": ""
+		},
+		"21909": {
+			"tr": "TERMİNAL MÜDÜRÜ",
+			"en": ""
+		},
+		"512": {
+			"tr": "TERSANELER VE KIYI YAPILARI GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"42857": {
+			"tr": "TERTİP  KISIM ŞEFİ",
+			"en": ""
+		},
+		"42858": {
+			"tr": "TERTİPÇİ",
+			"en": ""
+		},
+		"42859": {
+			"tr": "TERTİPÇİ YARDIMCISI",
+			"en": ""
+		},
+		"9420": {
+			"tr": "TERZİ",
+			"en": ""
+		},
+		"21939": {
+			"tr": "TERZİ YARDIMCISI",
+			"en": ""
+		},
+		"20640": {
+			"tr": "TERZİ(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"22960": {
+			"tr": "TESİS MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4555": {
+			"tr": "TESİS MÜDÜRÜ",
+			"en": ""
+		},
+		"41312": {
+			"tr": "TESİS MÜDÜRÜ VEKİLİ",
+			"en": ""
+		},
+		"22060": {
+			"tr": "TESİS MÜHENDİSLİK HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41731": {
+			"tr": "TESİSAT YARDIMCISI",
+			"en": ""
+		},
+		"41730": {
+			"tr": "TESİSATÇI",
+			"en": ""
+		},
+		"41402": {
+			"tr": "TESİSATÇI YARDIMCISI",
+			"en": ""
+		},
+		"23136": {
+			"tr": "TESİSATÇI-TEKNİSYEN",
+			"en": ""
+		},
+		"42051": {
+			"tr": "TESİSLER AMİRİ",
+			"en": ""
+		},
+		"9751": {
+			"tr": "TESİSLER DAİRE BAŞKAN YARDIMCISI",
+			"en": ""
+		},
+		"2920": {
+			"tr": "TESİSLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4550": {
+			"tr": "TESİSLER MÜDÜRÜ",
+			"en": ""
+		},
+		"2022": {
+			"tr": "TESİSLER VE BAKIM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42050": {
+			"tr": "TESCİL MEMURU",
+			"en": ""
+		},
+		"41739": {
+			"tr": "TESELLÜM MEMURU",
+			"en": ""
+		},
+		"42238": {
+			"tr": "TESPİT MEMURU",
+			"en": ""
+		},
+		"42914": {
+			"tr": "TESVİYE USTASI",
+			"en": ""
+		},
+		"3070": {
+			"tr": "TETKİK HAKİMİ",
+			"en": ""
+		},
+		"9753": {
+			"tr": "TETKİK KURULU ÜYESİ",
+			"en": ""
+		},
+		"9752": {
+			"tr": "TETKİK KURULU BAŞKANI",
+			"en": ""
+		},
+		"42433": {
+			"tr": "TETKİK KURULU UZMANI",
+			"en": ""
+		},
+		"41403": {
+			"tr": "TETKİK MEMURU",
+			"en": ""
+		},
+		"2550": {
+			"tr": "TETKİK VE ARAŞTIRMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42457": {
+			"tr": "TEVZİ MEMURU",
+			"en": ""
+		},
+		"42861": {
+			"tr": "TEYP MEMURU",
+			"en": ""
+		},
+		"42862": {
+			"tr": "TEYP TEKNİSYENİ",
+			"en": ""
+		},
+		"42863": {
+			"tr": "TEZGAH AYARLAYICISI",
+			"en": ""
+		},
+		"42864": {
+			"tr": "TEZGAHTAR",
+			"en": ""
+		},
+		"8803": {
+			"tr": "TIB.LAB.TEKNİSYENİ",
+			"en": ""
+		},
+		"2462": {
+			"tr": "TIBBİ DONANIM,İLAÇ VE ECZACILIK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2921": {
+			"tr": "TIBBİ HİZMETLER DAİRE BAŞKANI",
+			"en": ""
+		},
+		"43001": {
+			"tr": "TIBBİ LABORATUVAR TEKNİKERİ",
+			"en": ""
+		},
+		"43000": {
+			"tr": "TIBBİ LABORATUVAR TEKNİSYENİ",
+			"en": ""
+		},
+		"22874": {
+			"tr": "TIBBİ SEKRETER",
+			"en": ""
+		},
+		"8300": {
+			"tr": "TIBBİ TEKNOLOG",
+			"en": ""
+		},
+		"22443": {
+			"tr": "TONMAYSTER",
+			"en": ""
+		},
+		"2558": {
+			"tr": "TOPLU KONUT PROJE VE ARAŞTIRMA DAİ.BŞK.",
+			"en": ""
+		},
+		"2557": {
+			"tr": "TOPLU KONUT PROJELERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42239": {
+			"tr": "TOPLU TAŞIMA ŞEFİ",
+			"en": ""
+		},
+		"8760": {
+			"tr": "TOPLUM SAĞLIĞI TEKNİKERİ",
+			"en": ""
+		},
+		"42110": {
+			"tr": "TOPLUM SAĞLIĞI TEKNİSYENİ",
+			"en": ""
+		},
+		"8855": {
+			"tr": "TOPOĞRAF",
+			"en": ""
+		},
+		"43019": {
+			"tr": "TOPOĞRAF YARDIMCISI",
+			"en": ""
+		},
+		"2563": {
+			"tr": "TOPRAK ETÜD VE HARİTALAMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4373": {
+			"tr": "TOPRAK MUH.PROJE MÜDÜRÜ",
+			"en": ""
+		},
+		"4797": {
+			"tr": "TOPRAK MUH.PROJE MD.YRD.",
+			"en": ""
+		},
+		"2559": {
+			"tr": "TOPRAK MUHAFAZA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2562": {
+			"tr": "TOPRAK MUHAFAZA VE HAVZA ISLAHI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2564": {
+			"tr": "TOPRAK VE SU KAYNAKLARI ARAŞTIRMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4887": {
+			"tr": "TOPRAKSU MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4543": {
+			"tr": "TOPRAKSU MÜDÜRÜ",
+			"en": ""
+		},
+		"41404": {
+			"tr": "TORNACI",
+			"en": ""
+		},
+		"42865": {
+			"tr": "TRİPORTÖR ŞOFÖRÜ",
+			"en": ""
+		},
+		"41820": {
+			"tr": "TRAFİK İŞLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2891": {
+			"tr": "TRAFİK İHTİSAS DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41461": {
+			"tr": "TRAFİK ŞEFİ",
+			"en": ""
+		},
+		"4574": {
+			"tr": "TRAFİK ARAŞTIRMA MERKEZİ MÜDÜRÜ",
+			"en": ""
+		},
+		"2560": {
+			"tr": "TRAFİK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2896": {
+			"tr": "TRAFİK EĞİTİM VE ARAŞTIRMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2023": {
+			"tr": "TRAFİK GÜVENLİĞİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"22136": {
+			"tr": "TRAFİK MÜDÜRÜ",
+			"en": ""
+		},
+		"42240": {
+			"tr": "TRAFİK MÜHENDİSİ(İNŞAAT MÜHENDİSİ)",
+			"en": ""
+		},
+		"22271": {
+			"tr": "TRAFİK MEMURU",
+			"en": ""
+		},
+		"2894": {
+			"tr": "TRAFİK PLANLAMA VE DESTEK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42241": {
+			"tr": "TRAFİK SİNS.AL.ŞEF.",
+			"en": ""
+		},
+		"2892": {
+			"tr": "TRAFİK UYGULAMA VE DENETLEME DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"22319": {
+			"tr": "TRAFİK ZABITA ŞEFİ",
+			"en": ""
+		},
+		"22313": {
+			"tr": "TRAFİK ZABITA MEMURU",
+			"en": ""
+		},
+		"9490": {
+			"tr": "TRAKTÖR SÜRÜCÜSÜ",
+			"en": ""
+		},
+		"2537": {
+			"tr": "TRANSİT PETROL BORU HATLARI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2261": {
+			"tr": "TRANSFER VE KREDİ TAKİP DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41917": {
+			"tr": "TRANSMİSYON MÜDÜRÜ",
+			"en": ""
+		},
+		"41351": {
+			"tr": "TREN TEŞKİL MEMURU",
+			"en": ""
+		},
+		"41223": {
+			"tr": "TRT MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"41222": {
+			"tr": "TRT MÜDÜRÜ",
+			"en": ""
+		},
+		"43141": {
+			"tr": "TRT MEDYA EĞİTİM KOORDİNATÖRÜ",
+			"en": ""
+		},
+		"41842": {
+			"tr": "TUĞAMİRAL",
+			"en": ""
+		},
+		"22510": {
+			"tr": "TUĞGENERAL",
+			"en": ""
+		},
+		"1823": {
+			"tr": "TUİK DAİRE BAŞKANI",
+			"en": ""
+		},
+		"4573": {
+			"tr": "TURİZM AŞÇILIK EĞİTİM MERKEZİ MÜDÜRÜ",
+			"en": ""
+		},
+		"6371": {
+			"tr": "TURİZM ARAŞTIRMACISI",
+			"en": ""
+		},
+		"42866": {
+			"tr": "TURİZM BÜROSU ŞEFİ",
+			"en": ""
+		},
+		"4565": {
+			"tr": "TURİZM DANIŞMA MÜDÜRÜ",
+			"en": ""
+		},
+		"4570": {
+			"tr": "TURİZM EĞİTİM MERKEZİ MÜDÜRÜ",
+			"en": ""
+		},
+		"434": {
+			"tr": "TURİZM EĞİTİMİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"435": {
+			"tr": "TURİZM GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"2565": {
+			"tr": "TURİZM PLANLAMASI VE YATIRIMLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42941": {
+			"tr": "TURİZM REHBERİ",
+			"en": ""
+		},
+		"791": {
+			"tr": "TUZLA MEMURU",
+			"en": ""
+		},
+		"2731": {
+			"tr": "TV PRODÜKSİYON DAİ.BŞK.",
+			"en": ""
+		},
+		"4580": {
+			"tr": "TV.PRODÜKSİYON MÜDÜRÜ",
+			"en": ""
+		},
+		"8502": {
+			"tr": "UÇAK BAKIM MÜH.(UÇAK-ELEKTRONİK)",
+			"en": ""
+		},
+		"8815": {
+			"tr": "UÇAK ELEKTRONİK TEKNİSYENİ",
+			"en": ""
+		},
+		"8865": {
+			"tr": "UÇAK FOTOĞRAFÇISI",
+			"en": ""
+		},
+		"8875": {
+			"tr": "UÇAK KONTROL MAKİNİSTİ",
+			"en": ""
+		},
+		"42960": {
+			"tr": "UÇAK MOTOR TEKNİKERİ",
+			"en": ""
+		},
+		"42959": {
+			"tr": "UÇAK MOTOR TEKNİSYENİ",
+			"en": ""
+		},
+		"8792": {
+			"tr": "UÇAK MOTOR-ELEKT. VE ELEKTRONİK TEKNİSYENİ",
+			"en": ""
+		},
+		"8870": {
+			"tr": "UÇAK TELSİZCİSİ",
+			"en": ""
+		},
+		"23050": {
+			"tr": "UÇUŞ KONT.PANEL OPRT.",
+			"en": ""
+		},
+		"1820": {
+			"tr": "UÇUŞ OPERASYON DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2204": {
+			"tr": "UÇUŞ STANDARTLARI DAİRE BAŞKANI",
+			"en": ""
+		},
+		"1819": {
+			"tr": "UÇUŞA ELVERİŞLİLİK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42307": {
+			"tr": "ULAŞIM DAİRE BAŞKANI",
+			"en": ""
+		},
+		"24135": {
+			"tr": "ULAŞIM GÖREVLİSİ",
+			"en": ""
+		},
+		"24109": {
+			"tr": "ULAŞIM HİZMETLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"21766": {
+			"tr": "ULAŞIM PLAN VE PROJE MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"21733": {
+			"tr": "ULAŞIM PLAN VE PROJE MÜDÜRÜ",
+			"en": ""
+		},
+		"21703": {
+			"tr": "ULAŞIM PLANLAMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42924": {
+			"tr": "ULAŞTIRMA HİZMETLERİ MEMURU",
+			"en": ""
+		},
+		"2929": {
+			"tr": "ULAŞTIRMA VE İLEETİŞİM SEKTÖRÜ ÖZL.UYG.DAİ.BŞK.",
+			"en": ""
+		},
+		"3358": {
+			"tr": "ULAŞTIRMA VE HABERLEŞME UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3167": {
+			"tr": "ULAŞTIRMA VE HABERLEŞME UZMANI",
+			"en": ""
+		},
+		"642": {
+			"tr": "ULAŞTIRMA, DENİZCİLİK VE HABERLEŞME ARAŞTIRMALARI MERKEZİ BAŞKANI",
+			"en": ""
+		},
+		"2627": {
+			"tr": "ULUSAL HESAPLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2443": {
+			"tr": "ULUSAL HESAPLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2628": {
+			"tr": "ULUSAL HESAPLAR VE EKONOMİK GÖSTERGELER DAİ.BŞK.",
+			"en": ""
+		},
+		"41698": {
+			"tr": "ULUSL.İLİŞ.VE AND.UZMANI ",
+			"en": ""
+		},
+		"2647": {
+			"tr": "ULUSLARARASI İLİŞKİLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4119": {
+			"tr": "ULUSLARARASI İLİŞKİLER GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"41473": {
+			"tr": "ULUSLARARASI İLİŞKİLER MÜDÜRÜ",
+			"en": ""
+		},
+		"42942": {
+			"tr": "ULUSLARARASI İLİŞKİLER MEMURU",
+			"en": ""
+		},
+		"42943": {
+			"tr": "ULUSLARARASI İLİŞKİLER UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"23009": {
+			"tr": "ULUSLARARASI İLİŞKİLER UZMANI",
+			"en": ""
+		},
+		"289": {
+			"tr": "ULUSLARARASI HUKUK VE DIŞ İLİŞKİLER GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"2043": {
+			"tr": "ULUSLARARASI KORUMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2431": {
+			"tr": "ULUSLARARASI ORGANİZASYONLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"22436": {
+			"tr": "USTA",
+			"en": ""
+		},
+		"6560": {
+			"tr": "USTA ÖĞRETİCİ",
+			"en": ""
+		},
+		"41918": {
+			"tr": "USTA GEMİCİ",
+			"en": ""
+		},
+		"42130": {
+			"tr": "USTA TESİSATÇI",
+			"en": ""
+		},
+		"42053": {
+			"tr": "USTA YARDIMCISI",
+			"en": ""
+		},
+		"42867": {
+			"tr": "USTABAŞI",
+			"en": ""
+		},
+		"2575": {
+			"tr": "UYGULAMA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42091": {
+			"tr": "UYGULAMA MEMURU",
+			"en": ""
+		},
+		"22429": {
+			"tr": "UYGULAMA PROGRAMCISI",
+			"en": ""
+		},
+		"42954": {
+			"tr": "UYGULAMA PROGRAMCISI UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"42955": {
+			"tr": "UYGULAMA PROGRAMCISI UZMANI",
+			"en": ""
+		},
+		"22964": {
+			"tr": "UYGULATICI DEKORATÖR",
+			"en": ""
+		},
+		"22967": {
+			"tr": "UYGULATICI GRAFİK DEKORATÖRÜ",
+			"en": ""
+		},
+		"2044": {
+			"tr": "UYUM VE İLETİŞİM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41516": {
+			"tr": "UZAK YOL ZABİTİ",
+			"en": ""
+		},
+		"6175": {
+			"tr": "UZMAN",
+			"en": ""
+		},
+		"42268": {
+			"tr": "UZMAN ÇALGI BİLİMCİ",
+			"en": ""
+		},
+		"22505": {
+			"tr": "UZMAN ÇAVUŞ",
+			"en": ""
+		},
+		"6184": {
+			"tr": "UZMAN (ÖZELLEŞTİRME)",
+			"en": ""
+		},
+		"3175": {
+			"tr": "UZMAN (ŞUBE MD.)",
+			"en": ""
+		},
+		"8100": {
+			"tr": "UZMAN (TAB.UZ.TÜZ.GÖRE)",
+			"en": ""
+		},
+		"5979": {
+			"tr": "UZMAN İMAM-HATİP",
+			"en": ""
+		},
+		"43002": {
+			"tr": "UZMAN ÖĞRETMEN",
+			"en": ""
+		},
+		"8122": {
+			"tr": "UZMAN DİŞ TABİBİ",
+			"en": ""
+		},
+		"3090": {
+			"tr": "UZMAN DENETÇİ",
+			"en": ""
+		},
+		"3095": {
+			"tr": "UZMAN DENETÇİ (ANAYASA MAHKEMESİ RAPORTÖRÜ)",
+			"en": ""
+		},
+		"42095": {
+			"tr": "UZMAN DOKTOR",
+			"en": ""
+		},
+		"20350": {
+			"tr": "UZMAN DOKTOR(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"22504": {
+			"tr": "UZMAN ERBAŞ",
+			"en": ""
+		},
+		"43136": {
+			"tr": "UZMAN ERBAŞ ADAYI",
+			"en": ""
+		},
+		"23137": {
+			"tr": "UZMAN HEKİM",
+			"en": ""
+		},
+		"41919": {
+			"tr": "UZMAN HEKİM YRD",
+			"en": ""
+		},
+		"22925": {
+			"tr": "UZMAN HEKİM-HEKİM",
+			"en": ""
+		},
+		"22926": {
+			"tr": "UZMAN HEKİM-HEKİM DİŞ HEKİMİ",
+			"en": ""
+		},
+		"43093": {
+			"tr": "UZMAN HUKUKÇU",
+			"en": ""
+		},
+		"22401": {
+			"tr": "UZMAN HUKUKÇU YARDIMCISI",
+			"en": ""
+		},
+		"41724": {
+			"tr": "UZMAN JANDARMA ÇAVUŞ",
+			"en": ""
+		},
+		"41725": {
+			"tr": "UZMAN JANDARMA I.KADEMELİ ÇAVUŞ",
+			"en": ""
+		},
+		"41726": {
+			"tr": "UZMAN JANDARMA II.KADEMELİ ÇAVUŞ",
+			"en": ""
+		},
+		"41727": {
+			"tr": "UZMAN JANDARMA III.KADEMELİ ÇAVUŞ",
+			"en": ""
+		},
+		"41728": {
+			"tr": "UZMAN JANDARMA IV. KADEMELİ ÇAVUŞ",
+			"en": ""
+		},
+		"42469": {
+			"tr": "UZMAN JANDARMA V. KADEMELİ ÇAVUŞ",
+			"en": ""
+		},
+		"42470": {
+			"tr": "UZMAN JANDARMA VI. KADEMELİ ÇAVUŞ",
+			"en": ""
+		},
+		"42471": {
+			"tr": "UZMAN JANDARMA VII. KADEMELİ ÇAVUŞ",
+			"en": ""
+		},
+		"42472": {
+			"tr": "UZMAN JANDARMA VIII. KADEMELİ ÇAVUŞ",
+			"en": ""
+		},
+		"1320": {
+			"tr": "UZMAN MÜŞAVİR",
+			"en": ""
+		},
+		"1365": {
+			"tr": "UZMAN MÜŞAVİR YARDIMCISI",
+			"en": ""
+		},
+		"41920": {
+			"tr": "UZMAN MÜHENDİS",
+			"en": ""
+		},
+		"42055": {
+			"tr": "UZMAN MÜHENDİS",
+			"en": ""
+		},
+		"42931": {
+			"tr": "UZMAN MÜTERCİM",
+			"en": ""
+		},
+		"43035": {
+			"tr": "UZMAN MATEMATİKÇİ",
+			"en": ""
+		},
+		"42121": {
+			"tr": "UZMAN MEMUR",
+			"en": ""
+		},
+		"22506": {
+			"tr": "UZMAN ONBAŞI",
+			"en": ""
+		},
+		"41622": {
+			"tr": "UZMAN PROGRAMCI",
+			"en": ""
+		},
+		"42868": {
+			"tr": "UZMAN RAPORTÖR",
+			"en": ""
+		},
+		"21983": {
+			"tr": "UZMAN SİSTEM ÇÖZÜMLEYİCİ",
+			"en": ""
+		},
+		"42869": {
+			"tr": "UZMAN STENOGRAF",
+			"en": ""
+		},
+		"8105": {
+			"tr": "UZMAN TABİB",
+			"en": ""
+		},
+		"41553": {
+			"tr": "UZMAN TEKNİKER",
+			"en": ""
+		},
+		"5952": {
+			"tr": "UZMAN VAİZ",
+			"en": ""
+		},
+		"6675": {
+			"tr": "UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"41696": {
+			"tr": "UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"9754": {
+			"tr": "UZMAN(ŞUBE MÜDÜRÜ)",
+			"en": ""
+		},
+		"20450": {
+			"tr": "UZMAN(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"42870": {
+			"tr": "UZMAN(RESSAM)",
+			"en": ""
+		},
+		"9771": {
+			"tr": "UZMAN(TAŞRA)",
+			"en": ""
+		},
+		"1520": {
+			"tr": "UZMAN(TAB.UZ.TÜZ.GÖRE)",
+			"en": ""
+		},
+		"42054": {
+			"tr": "UZMAN(4.SINIF)",
+			"en": ""
+		},
+		"41484": {
+			"tr": "UZMAN-1",
+			"en": ""
+		},
+		"41485": {
+			"tr": "UZMAN-2",
+			"en": ""
+		},
+		"41486": {
+			"tr": "UZMAN-3",
+			"en": ""
+		},
+		"5955": {
+			"tr": "VAİZ",
+			"en": ""
+		},
+		"41352": {
+			"tr": "VAGON TEKNİSYENİ",
+			"en": ""
+		},
+		"6235": {
+			"tr": "VAKİT HESAPLAMA UZMANI",
+			"en": ""
+		},
+		"2416": {
+			"tr": "VAKIF HİZMETLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"6705": {
+			"tr": "VAKIF UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"6704": {
+			"tr": "VAKIF UZMANI",
+			"en": ""
+		},
+		"860": {
+			"tr": "VAKIFLAR MECLİSİ ÜYESİ",
+			"en": ""
+		},
+		"900": {
+			"tr": "VALİ",
+			"en": ""
+		},
+		"901": {
+			"tr": "VALİ YARDIMCISI",
+			"en": ""
+		},
+		"41467": {
+			"tr": "VARİDAT MASRAF MEMURU",
+			"en": ""
+		},
+		"42455": {
+			"tr": "VARİDAT MEMURU",
+			"en": ""
+		},
+		"21993": {
+			"tr": "VARDİYA SORUMLU",
+			"en": ""
+		},
+		"42872": {
+			"tr": "VASITA VE GARAJ TEMİZLEYİCİSİ",
+			"en": ""
+		},
+		"22304": {
+			"tr": "VASITALAR MÜDÜRÜ",
+			"en": ""
+		},
+		"41838": {
+			"tr": "VATMAN",
+			"en": ""
+		},
+		"22942": {
+			"tr": "VEKİL İMAM HATİP",
+			"en": ""
+		},
+		"22941": {
+			"tr": "VEKİL ÖĞRETMEN",
+			"en": ""
+		},
+		"22996": {
+			"tr": "VEKİL EBE",
+			"en": ""
+		},
+		"22995": {
+			"tr": "VEKİL HEMŞİRE",
+			"en": ""
+		},
+		"42574": {
+			"tr": "VEKİL KURAN KURSU ÖĞRETİCİSİ",
+			"en": ""
+		},
+		"22944": {
+			"tr": "VEKİL MİMAR",
+			"en": ""
+		},
+		"42573": {
+			"tr": "VEKİL MÜEZZİN KAYYIM",
+			"en": ""
+		},
+		"22943": {
+			"tr": "VEKİL MÜHENDİS",
+			"en": ""
+		},
+		"41719": {
+			"tr": "VEKİL VETERİNER HEKİMİ",
+			"en": ""
+		},
+		"21025": {
+			"tr": "VERİ İLETİŞİM UZMANI",
+			"en": ""
+		},
+		"23138": {
+			"tr": "VERİ GİRİŞ İŞLETMENİ",
+			"en": ""
+		},
+		"20540": {
+			"tr": "VERİ GİRİŞ OPERATÖRÜ(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"41683": {
+			"tr": "VERİ GİRİŞ YETKİLİSİ                                                           ",
+			"en": ""
+		},
+		"42061": {
+			"tr": "VERİ HAZIRLAMA ŞEFİ",
+			"en": ""
+		},
+		"22308": {
+			"tr": "VERİ HAZIRLAMA KONTROL MEMURU",
+			"en": ""
+		},
+		"42060": {
+			"tr": "VERİ HAZIRLAMA MEMURU",
+			"en": ""
+		},
+		"42874": {
+			"tr": "VERİ HAZIRLAMA OPERATÖRÜ",
+			"en": ""
+		},
+		"21501": {
+			"tr": "VERİ HAZIRLAMA VE KONT.İŞL.ŞEFİ(MERKEZ)",
+			"en": ""
+		},
+		"21503": {
+			"tr": "VERİ HAZIRLAMA VE KONT.İŞL.ŞEFİ(TAŞRA)",
+			"en": ""
+		},
+		"7825": {
+			"tr": "VERİ HAZIRLAMA VE KONTROL İŞLETMENİ",
+			"en": ""
+		},
+		"7826": {
+			"tr": "VERİ HAZIRLAMA VE KONTROL İŞLETMENİ (Ö)",
+			"en": ""
+		},
+		"43152": {
+			"tr": "VERİ HAZIRLAMA VE KONTROL İŞLETMENİ (CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"21984": {
+			"tr": "VERİ KAYIT OPERATÖRÜ",
+			"en": ""
+		},
+		"41224": {
+			"tr": "VERİCİLER MÜDÜRÜ",
+			"en": ""
+		},
+		"2580": {
+			"tr": "VEREM SAVAŞ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"3525": {
+			"tr": "VERGİ İSTİHBARAT MÜDÜRÜ",
+			"en": ""
+		},
+		"4733": {
+			"tr": "VERGİ İSTİHBARAT MÜDÜRÜ YARDIMCISI",
+			"en": ""
+		},
+		"6682": {
+			"tr": "VERGİ İSTİHBARAT UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3193": {
+			"tr": "VERGİ İSTİHBARAT UZMANI",
+			"en": ""
+		},
+		"42056": {
+			"tr": "VERGİ BAŞKONTROL MEMURU",
+			"en": ""
+		},
+		"3145": {
+			"tr": "VERGİ BAŞMÜFETTİŞİ",
+			"en": ""
+		},
+		"2987": {
+			"tr": "VERGİ DAİRESİ BAŞKAN YARDIMCISI",
+			"en": ""
+		},
+		"2747": {
+			"tr": "VERGİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42057": {
+			"tr": "VERGİ DAİRESİ MÜDÜR BAŞYARDIMCISI",
+			"en": ""
+		},
+		"4890": {
+			"tr": "VERGİ DAİRESİ MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4575": {
+			"tr": "VERGİ DAİRESİ MÜDÜRÜ",
+			"en": ""
+		},
+		"713": {
+			"tr": "VERGİ DENETİM KURULU BAŞKAN YARDIMCISI",
+			"en": ""
+		},
+		"147": {
+			"tr": "VERGİ DENETİM KURULU BAŞKANI",
+			"en": ""
+		},
+		"3308": {
+			"tr": "VERGİ DENETMEN YARDIMCISI",
+			"en": ""
+		},
+		"3307": {
+			"tr": "VERGİ DENETMENİ",
+			"en": ""
+		},
+		"7550": {
+			"tr": "VERGİ KONTROL MEMURU",
+			"en": ""
+		},
+		"3535": {
+			"tr": "VERGİ MÜDÜRÜ",
+			"en": ""
+		},
+		"4731": {
+			"tr": "VERGİ MÜDÜRÜ YARDIMCISI",
+			"en": ""
+		},
+		"3345": {
+			"tr": "VERGİ MÜFETTİŞ YARDIMCISI",
+			"en": ""
+		},
+		"3258": {
+			"tr": "VERGİ MÜFETTİŞİ",
+			"en": ""
+		},
+		"42873": {
+			"tr": "VERGİ MAHK.ÜYESİ",
+			"en": ""
+		},
+		"42058": {
+			"tr": "VERGİ MEMUR YARDIMCISI",
+			"en": ""
+		},
+		"41338": {
+			"tr": "VERGİ MEMURU",
+			"en": ""
+		},
+		"42059": {
+			"tr": "VERGİ TAHSİL MEMURU",
+			"en": ""
+		},
+		"22293": {
+			"tr": "VETERİNER",
+			"en": ""
+		},
+		"21913": {
+			"tr": "VETERİNER İŞLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"42995": {
+			"tr": "VETERİNER HİJYEN UZMANI",
+			"en": ""
+		},
+		"8130": {
+			"tr": "VETERİNER HEKİM",
+			"en": ""
+		},
+		"22935": {
+			"tr": "VETERİNER ISLERI MÜDÜRÜ",
+			"en": ""
+		},
+		"22276": {
+			"tr": "VETERİNER MÜDÜRÜ",
+			"en": ""
+		},
+		"8427": {
+			"tr": "VETERİNER SAĞLIK TEKNİKERİ",
+			"en": ""
+		},
+		"42523": {
+			"tr": "VETERİNER SAĞLIK TEKNİKERİ (Ö)",
+			"en": ""
+		},
+		"1730": {
+			"tr": "VETERİNER SAĞLIK TEKNİSYENİ",
+			"en": ""
+		},
+		"8426": {
+			"tr": "VETERİNER SAĞLIK TEKNİSYENİ",
+			"en": ""
+		},
+		"23034": {
+			"tr": "VEZNE ŞEF YARDIMCISI",
+			"en": ""
+		},
+		"7815": {
+			"tr": "VEZNEDAR",
+			"en": ""
+		},
+		"41405": {
+			"tr": "VEZNEDAR YARDIMCISI",
+			"en": ""
+		},
+		"23139": {
+			"tr": "VEZNEDAR-KASİYER",
+			"en": ""
+		},
+		"3953": {
+			"tr": "Y.S.İ MÜDÜRÜ",
+			"en": ""
+		},
+		"4736": {
+			"tr": "Y.S.İ. MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"23036": {
+			"tr": "YÖN.DİR.GEN.MD.YRD.",
+			"en": ""
+		},
+		"23037": {
+			"tr": "YÖN.KRL.ÜYESİ GEN.MD.",
+			"en": ""
+		},
+		"23140": {
+			"tr": "YÖNETİCİ",
+			"en": ""
+		},
+		"23038": {
+			"tr": "YÖNETİCİ ASİSTAN",
+			"en": ""
+		},
+		"42323": {
+			"tr": "YÖNETİCİ ASİSTAN YARDIMCISI",
+			"en": ""
+		},
+		"41306": {
+			"tr": "YÖNETİCİ MEMUR",
+			"en": ""
+		},
+		"20520": {
+			"tr": "YÖNETİCİ SEKRETERİ(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"23141": {
+			"tr": "YÖNETİCİ YARDIMCISI",
+			"en": ""
+		},
+		"42882": {
+			"tr": "YÖNETİM AMİR YARDIMCISI",
+			"en": ""
+		},
+		"42883": {
+			"tr": "YÖNETİM AMİRİ",
+			"en": ""
+		},
+		"2623": {
+			"tr": "YÖNETİM BİLGİ MERKEZİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"41806": {
+			"tr": "YÖNETİM GÖREVLİSİ",
+			"en": ""
+		},
+		"42155": {
+			"tr": "YÖNETİM HİZMETLERİ BAŞKANI",
+			"en": ""
+		},
+		"2174": {
+			"tr": "YÖNETİM HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4122": {
+			"tr": "YÖNETİM HİZMETLERİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"43023": {
+			"tr": "YÖNETİM HİZMETLERİ UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"41620": {
+			"tr": "YÖNETİM HİZMETLERİ UZMANI",
+			"en": ""
+		},
+		"865": {
+			"tr": "YÖNETİM KURULU ÜYESİ",
+			"en": ""
+		},
+		"42905": {
+			"tr": "YÖNETİM KURULU BÜRO MÜDÜRÜ",
+			"en": ""
+		},
+		"43132": {
+			"tr": "YÖNETİM KURULU BÜROSU KOORDİNATÖRÜ",
+			"en": ""
+		},
+		"42399": {
+			"tr": "YÖNETİM KURULU BAŞ MÜŞAVİR",
+			"en": ""
+		},
+		"41686": {
+			"tr": "YÖNETİM KURULU BAŞKAN VEKİLİ                                                    ",
+			"en": ""
+		},
+		"22050": {
+			"tr": "YÖNETİM KURULU BAŞKANI",
+			"en": ""
+		},
+		"43089": {
+			"tr": "YÖNETİM KURULU GENEL SEKRETERİ",
+			"en": ""
+		},
+		"7554": {
+			"tr": "YÖNETİM MEMURU",
+			"en": ""
+		},
+		"42884": {
+			"tr": "YÖNETİM MEMURU YRD.",
+			"en": ""
+		},
+		"42906": {
+			"tr": "YÖNETİM PERSONELİ",
+			"en": ""
+		},
+		"22480": {
+			"tr": "YÖNETMEN",
+			"en": ""
+		},
+		"6511": {
+			"tr": "YÖNETMEN",
+			"en": ""
+		},
+		"23039": {
+			"tr": "YÖNETMEN YARDIMCISI",
+			"en": ""
+		},
+		"43034": {
+			"tr": "YÖNEYLEM ARAŞTIRMA UZMANI",
+			"en": ""
+		},
+		"8590": {
+			"tr": "YÖNEYLEMCİ",
+			"en": ""
+		},
+		"2685": {
+			"tr": "YÖNTEM ARAŞTIRMALARI DAİRE BAŞKANI",
+			"en": ""
+		},
+		"41349": {
+			"tr": "YÜK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42885": {
+			"tr": "YÜK TAŞIYICI VE KOMİ",
+			"en": ""
+		},
+		"21973": {
+			"tr": "YÜKSEK İNŞAAT MÜHENDİSİ",
+			"en": ""
+		},
+		"2630": {
+			"tr": "YÜKSEK ÖĞRETİM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"189": {
+			"tr": "YÜKSEK FEN KURULU ÜYESİ",
+			"en": ""
+		},
+		"171": {
+			"tr": "YÜKSEK FEN KURULU BAŞKANI",
+			"en": ""
+		},
+		"1105": {
+			"tr": "YÜKSEK HAKEM KURULU GENEL SEKRETERİ",
+			"en": ""
+		},
+		"43050": {
+			"tr": "YÜKSEK HEMŞİRE",
+			"en": ""
+		},
+		"41545": {
+			"tr": "YÜKSEK JEOLOJİ MÜHENDİSİ",
+			"en": ""
+		},
+		"43015": {
+			"tr": "YÜKSEK KİMYAGER",
+			"en": ""
+		},
+		"725": {
+			"tr": "YÜKSEK KURUM BAŞKAN YARDIMCISI",
+			"en": ""
+		},
+		"70": {
+			"tr": "YÜKSEK KURUM BAŞKANI",
+			"en": ""
+		},
+		"3633": {
+			"tr": "YÜKSEK KURUM UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3442": {
+			"tr": "YÜKSEK KURUM UZMANI",
+			"en": ""
+		},
+		"21972": {
+			"tr": "YÜKSEK MİMAR",
+			"en": ""
+		},
+		"21975": {
+			"tr": "YÜKSEK MİMAR ŞEHİR PLANCISI",
+			"en": ""
+		},
+		"41616": {
+			"tr": "YÜKSEK MİMAR-MİMAR",
+			"en": ""
+		},
+		"21971": {
+			"tr": "YÜKSEK MÜHENDİS",
+			"en": ""
+		},
+		"42243": {
+			"tr": "YÜKSEK MÜHENDİS-MÜHENDİS",
+			"en": ""
+		},
+		"41578": {
+			"tr": "YÜKSEK MAKİNA MÜHENDİSİ",
+			"en": ""
+		},
+		"4517": {
+			"tr": "YÜKSEK OKUL MÜDÜRÜ",
+			"en": ""
+		},
+		"5025": {
+			"tr": "YÜKSEK OKUL SEKRETERİ",
+			"en": ""
+		},
+		"8755": {
+			"tr": "YÜKSEK TEKNİKER",
+			"en": ""
+		},
+		"41435": {
+			"tr": "YÜKSEK TEKNİKER TEKNİSYEN",
+			"en": ""
+		},
+		"463": {
+			"tr": "YÜKSEKÖĞ.VE Y.DIŞI EĞ.VE DIŞİL.GEN.MÜD.",
+			"en": ""
+		},
+		"41357": {
+			"tr": "YÜKSEKÖĞRETİM DENETLEME KURULU ÜYESİ",
+			"en": ""
+		},
+		"41358": {
+			"tr": "YÜKSEKÖĞRETİM DENETLEME KURULU BAŞKANI",
+			"en": ""
+		},
+		"461": {
+			"tr": "YÜKSEKÖĞRETİM GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"41354": {
+			"tr": "YÜKSEKÖĞRETİM KURULU BAŞKAN VEKİLİ",
+			"en": ""
+		},
+		"41355": {
+			"tr": "YÜKSEKÖĞRETİM KURULU BAŞKANI",
+			"en": ""
+		},
+		"3645": {
+			"tr": "YÜKSEKÖĞRETİM KURULU UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3453": {
+			"tr": "YÜKSEKÖĞRETİM KURULU UZMANI",
+			"en": ""
+		},
+		"482": {
+			"tr": "YÜKSEKÖĞRETİM VE YURT DIŞI EĞİTİM GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"43100": {
+			"tr": "YÜKSEKÖĞRETİM VE YURTDIŞI EĞİTİM GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"41356": {
+			"tr": "YÜKSEKÖĞRETİM YÜRÜTME KURULU ÜYESİ",
+			"en": ""
+		},
+		"22517": {
+			"tr": "YÜZBAŞI",
+			"en": ""
+		},
+		"41537": {
+			"tr": "YAĞCI",
+			"en": ""
+		},
+		"41610": {
+			"tr": "YAĞCI DÖŞEMECİ",
+			"en": ""
+		},
+		"2596": {
+			"tr": "YAŞLI BAKIM HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2595": {
+			"tr": "YAŞLI HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2600": {
+			"tr": "YAŞLILAR VE SOSYAL GÜVENLİK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2585": {
+			"tr": "YABANCI İŞLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2963": {
+			"tr": "YABANCI DİL SINAVLARI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"6250": {
+			"tr": "YABANCI DİL UZMANI",
+			"en": ""
+		},
+		"3910": {
+			"tr": "YABANCI DİLLER EĞİTİM MERKEZİ MÜDÜRÜ",
+			"en": ""
+		},
+		"610": {
+			"tr": "YABANCI SERMAYE BAŞKANI",
+			"en": ""
+		},
+		"243": {
+			"tr": "YABANCI SERMAYE GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"42443": {
+			"tr": "YABANCI SERMAYE MÜDÜRÜ",
+			"en": ""
+		},
+		"42463": {
+			"tr": "YABANCI SERMAYE UZMANI",
+			"en": ""
+		},
+		"2046": {
+			"tr": "YABANCILAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2590": {
+			"tr": "YABANCILAR HUDUT İLTİCA DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"3905": {
+			"tr": "YAKIN VE ORTA DOĞU ÇALIŞMA EĞİTİM MRK. MÜD.",
+			"en": ""
+		},
+		"4005": {
+			"tr": "YAKIN VE ORTA DOĞU ÇALIŞMA EĞT. MRK. MD. YRD.",
+			"en": ""
+		},
+		"746": {
+			"tr": "YAKIN VE ORTADOĞU ÇALIŞMA EĞİTİM MERKEZİ BŞK.YRD.",
+			"en": ""
+		},
+		"175": {
+			"tr": "YAKIN VE ORTADOĞU ÇALIŞMA EĞİTİM MERKEZİ BAŞKANI",
+			"en": ""
+		},
+		"21963": {
+			"tr": "YANGIN KONTROL DENETİM AMİRİ",
+			"en": ""
+		},
+		"42875": {
+			"tr": "YANGIN SÖNDÜRME AMİRİ",
+			"en": ""
+		},
+		"42876": {
+			"tr": "YANGIN SÖNDÜRME ERİ",
+			"en": ""
+		},
+		"42877": {
+			"tr": "YANGIN SÖNDÜRME ONBAŞISI",
+			"en": ""
+		},
+		"2935": {
+			"tr": "YAPI İŞLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"340": {
+			"tr": "YAPI İŞLERİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"2930": {
+			"tr": "YAPI İŞLERİ VE TEKNİK DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41416": {
+			"tr": "YAPI KALFASI MEMURU",
+			"en": ""
+		},
+		"41819": {
+			"tr": "YAPI KONTROL DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"22303": {
+			"tr": "YAPI KONTROL MÜDÜRÜ",
+			"en": ""
+		},
+		"41851": {
+			"tr": "YAPI KONTROL YIKIM MEMURU",
+			"en": ""
+		},
+		"42164": {
+			"tr": "YAPI TEKNİK MİMARI",
+			"en": ""
+		},
+		"42466": {
+			"tr": "YAPI TETKİK TEKNİKERİ",
+			"en": ""
+		},
+		"2943": {
+			"tr": "YAPIM İŞLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"2940": {
+			"tr": "YAPIM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41226": {
+			"tr": "YAPIM KOORDİNATÖR YARDIMCISI",
+			"en": ""
+		},
+		"41225": {
+			"tr": "YAPIM KOORDİNATÖRÜ",
+			"en": ""
+		},
+		"22433": {
+			"tr": "YAPIM VE YAYIN ELEMANI",
+			"en": ""
+		},
+		"41227": {
+			"tr": "YAPIM VE YAYIN GÖREVLİSİ",
+			"en": ""
+		},
+		"239": {
+			"tr": "YAPISAL UYUM SOSYAL POLİTİKALAR VE KOOR.GN.MD.",
+			"en": ""
+		},
+		"22513": {
+			"tr": "YARBAY",
+			"en": ""
+		},
+		"31820": {
+			"tr": "YARDIMCI İŞLETMELER DAİRESİ BŞK.",
+			"en": ""
+		},
+		"6363": {
+			"tr": "YARDIMCI ARAŞTIRMACI",
+			"en": ""
+		},
+		"1565": {
+			"tr": "YARDIMCI DOÇENT",
+			"en": ""
+		},
+		"42911": {
+			"tr": "YARDIMCI DOÇENT - ÖĞRETİM GÖREVLİSİ",
+			"en": ""
+		},
+		"42910": {
+			"tr": "YARDIMCI DOÇENT - DOÇENT",
+			"en": ""
+		},
+		"42878": {
+			"tr": "YARDIMCI DOÇENT DR.",
+			"en": ""
+		},
+		"41684": {
+			"tr": "YARDIMCI ELEMAN                                                                ",
+			"en": ""
+		},
+		"42907": {
+			"tr": "YARDIMCI HİZMET PERSONELİ",
+			"en": ""
+		},
+		"23035": {
+			"tr": "YARDIMCI HİZMETLİ",
+			"en": ""
+		},
+		"42413": {
+			"tr": "YARDIMCI HİZMETLER AMİRİ",
+			"en": ""
+		},
+		"41497": {
+			"tr": "YARDIMCI KATİP",
+			"en": ""
+		},
+		"41406": {
+			"tr": "YARDIMCI MEMUR",
+			"en": ""
+		},
+		"22465": {
+			"tr": "YARDIMCI PRODÜKTÖR",
+			"en": ""
+		},
+		"41685": {
+			"tr": "YARDIMCI TEKNİK ELEMAN                                                         ",
+			"en": ""
+		},
+		"22432": {
+			"tr": "YARDIMCI YAPIM ELEMANI",
+			"en": ""
+		},
+		"22475": {
+			"tr": "YARDIMCI YAYIN ARŞİV ÇÖZÜMLEYİCİSİ",
+			"en": ""
+		},
+		"2083": {
+			"tr": "YARDIMLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42107": {
+			"tr": "YARGITAY TETKİK HAKİMİ",
+			"en": ""
+		},
+		"42879": {
+			"tr": "YASAMA UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"42880": {
+			"tr": "YASAMA UZMANI",
+			"en": ""
+		},
+		"41740": {
+			"tr": "YATIRIM DERLEME MEMURU",
+			"en": ""
+		},
+		"4121": {
+			"tr": "YATIRIM PROGRAMLAMA, İZLEME VE DEĞERLENDİRME GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"284": {
+			"tr": "YATIRIM VE İŞLETMELER GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"42272": {
+			"tr": "YATIRIM VE İNŞAAT DAİRE BAŞKANI",
+			"en": ""
+		},
+		"42548": {
+			"tr": "YATIRIM VE İNŞAAT MÜDÜRÜ",
+			"en": ""
+		},
+		"2946": {
+			"tr": "YATIRIM VE EMLAK DAİRE BAŞKANI",
+			"en": ""
+		},
+		"283": {
+			"tr": "YATIRIMLAR GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"21737": {
+			"tr": "YATIRIMLAR MÜDÜRÜ",
+			"en": ""
+		},
+		"231": {
+			"tr": "YATIRIMLAR SEKTÖR PROGRAMLARI VE KOOR.GN.MD.",
+			"en": ""
+		},
+		"2945": {
+			"tr": "YATIRIMLAR VE TESİSLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"20080": {
+			"tr": "YAVER(DENİZ)(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"20070": {
+			"tr": "YAVER(HAVA)(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"20090": {
+			"tr": "YAVER(JANDARMA)(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"20060": {
+			"tr": "YAVER(KARA)(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"42062": {
+			"tr": "YAYA TAHSİLDAR",
+			"en": ""
+		},
+		"2950": {
+			"tr": "YAYIMLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2957": {
+			"tr": "YAYIN İŞLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4585": {
+			"tr": "YAYIN İŞLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"22494": {
+			"tr": "YAYIN ŞEFİ",
+			"en": ""
+		},
+		"41228": {
+			"tr": "YAYIN ARŞİV ÇÖZÜMLEYİCİSİ",
+			"en": ""
+		},
+		"2980": {
+			"tr": "YAYIN DÖKÜMANTASYON VE EĞİTİM DAİ.BŞK.",
+			"en": ""
+		},
+		"2951": {
+			"tr": "YAYIN DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41575": {
+			"tr": "YAYIN DANIŞMANI",
+			"en": ""
+		},
+		"41232": {
+			"tr": "YAYIN DENETLEME VE KOORDİNASYON KURULU BŞK. YARDIMCISI",
+			"en": ""
+		},
+		"41231": {
+			"tr": "YAYIN DENETLEME VE KOORDİNASYON KURULU BAŞKANI",
+			"en": ""
+		},
+		"41229": {
+			"tr": "YAYIN DENETMENİ",
+			"en": ""
+		},
+		"22463": {
+			"tr": "YAYIN KOORDİNATÖRÜ",
+			"en": ""
+		},
+		"2952": {
+			"tr": "YAYIN VE BİLGİ DAĞITIM DAİRE BAŞKANI",
+			"en": ""
+		},
+		"2955": {
+			"tr": "YAYIN VE DÖKÜMANTASYON DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4590": {
+			"tr": "YAYIN VE DÖKÜMANTASYON MÜDÜRÜ",
+			"en": ""
+		},
+		"3736": {
+			"tr": "YAYIN VE HALKLA İLİŞKİLER MÜDÜRÜ",
+			"en": ""
+		},
+		"43142": {
+			"tr": "YAYIN VE KÜLTÜR DANIŞMANI",
+			"en": ""
+		},
+		"2960": {
+			"tr": "YAYIN VE TEMSİL DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"4595": {
+			"tr": "YAYINEVİ SATIŞ MÜDÜRÜ",
+			"en": ""
+		},
+		"21928": {
+			"tr": "YAZI İŞLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"42242": {
+			"tr": "YAZI İŞLERİ KARARLAR DAİRE BAŞKANI",
+			"en": ""
+		},
+		"41767": {
+			"tr": "YAZI İŞLERİ KATİBİ",
+			"en": ""
+		},
+		"41803": {
+			"tr": "YAZI İŞLERİ MÜDÜR MUAVİNİ",
+			"en": ""
+		},
+		"42292": {
+			"tr": "YAZI İŞLERİ MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4600": {
+			"tr": "YAZI İŞLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"41521": {
+			"tr": "YAZI İŞLERİ MEMURU",
+			"en": ""
+		},
+		"41818": {
+			"tr": "YAZI İŞLERİ VE KARARLAR DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"22932": {
+			"tr": "YAZI İŞLERİ VE KARARLAR MÜDÜRÜ",
+			"en": ""
+		},
+		"41687": {
+			"tr": "YAZI VE KARARLAR  DAİRE BAŞKANI",
+			"en": ""
+		},
+		"22428": {
+			"tr": "YAZILIM DESTEK ELEMANI",
+			"en": ""
+		},
+		"20430": {
+			"tr": "YAZILIM UZMANI(CUMHURBAŞKANLIĞI)",
+			"en": ""
+		},
+		"4336": {
+			"tr": "YAZMA ESER KÜTÜPHANE MÜDÜRÜ",
+			"en": ""
+		},
+		"3386": {
+			"tr": "YAZMA ESER UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3169": {
+			"tr": "YAZMA ESER UZMANI",
+			"en": ""
+		},
+		"2101": {
+			"tr": "YAZMA VE NADİR ESERLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"855": {
+			"tr": "YEDEK ÜYE",
+			"en": ""
+		},
+		"42407": {
+			"tr": "YEDEK KORUMA VE GÜVENLİK GÖREVLİSİ",
+			"en": ""
+		},
+		"4884": {
+			"tr": "YEDEK PARÇA DEPO MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"3973": {
+			"tr": "YEDEK PARÇA DEPO MÜDÜRÜ",
+			"en": ""
+		},
+		"22521": {
+			"tr": "YEDEK TEĞMEN",
+			"en": ""
+		},
+		"21995": {
+			"tr": "YEMEKHANE İŞLERİ SORUMLUSU",
+			"en": ""
+		},
+		"21991": {
+			"tr": "YEMEKHANE.SAYMANI",
+			"en": ""
+		},
+		"31810": {
+			"tr": "YEMEKLİ VE YAT.VAG.DAİ.BAŞKANI",
+			"en": ""
+		},
+		"473": {
+			"tr": "YENİLİK VE EĞİTİM TEKNOLOJİLERİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"521": {
+			"tr": "YENİLENEBİLİR ENERJİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"41871": {
+			"tr": "YENİYERLEŞMELER MÜDÜRÜ",
+			"en": ""
+		},
+		"2264": {
+			"tr": "YERALTI ETÜDLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42406": {
+			"tr": "YEREL MEMUR                                                                    ",
+			"en": ""
+		},
+		"42325": {
+			"tr": "YEREL PERSONEL                                                                 ",
+			"en": ""
+		},
+		"2605": {
+			"tr": "YETİŞTİRME YURTLARI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41576": {
+			"tr": "YETKİLİ BT DENETÇİ YARDIMCISI",
+			"en": ""
+		},
+		"41577": {
+			"tr": "YETKİLİ DENETÇİ YARDIMCISI",
+			"en": ""
+		},
+		"42377": {
+			"tr": "YETKİLİ MEMUR                                                                  ",
+			"en": ""
+		},
+		"42376": {
+			"tr": "YETKİSİZ MEMUR                                                                 ",
+			"en": ""
+		},
+		"41350": {
+			"tr": "YHT  MAKİNİSTİ",
+			"en": ""
+		},
+		"219": {
+			"tr": "YILLIK PROGRAMLAR VE KONJONKTÜR DEĞERLENDİRME GN.M",
+			"en": ""
+		},
+		"7735": {
+			"tr": "YOKLAMA MEMURU",
+			"en": ""
+		},
+		"42063": {
+			"tr": "YOKLAMA MEMURU(VEKİL)",
+			"en": ""
+		},
+		"22302": {
+			"tr": "YOKLAMA VE İCRA MEMURU",
+			"en": ""
+		},
+		"42312": {
+			"tr": "YOL BAKIM VE ALTYAPI KOORDİNASYON DAİRE BAŞKANI",
+			"en": ""
+		},
+		"41347": {
+			"tr": "YOL DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42881": {
+			"tr": "YOL DANIŞMA MEMURU",
+			"en": ""
+		},
+		"43055": {
+			"tr": "YOL KANAL BAKIM ŞEFİ",
+			"en": ""
+		},
+		"11183": {
+			"tr": "YOL VE ULAŞIM HİZMETLERİ MÜDÜRÜ",
+			"en": ""
+		},
+		"2021": {
+			"tr": "YOL YAPIM DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41348": {
+			"tr": "YOLCU DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41697": {
+			"tr": "YRD.TEK ELEM.",
+			"en": ""
+		},
+		"2610": {
+			"tr": "YURT İDARE VE İŞLETME DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"6287": {
+			"tr": "YURT DIŞI İŞÇİ HİZMETLERİ UZMAN YRD.",
+			"en": ""
+		},
+		"464": {
+			"tr": "YURT DIŞI EĞİTİM ÖĞRETİM GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"22906": {
+			"tr": "YURT DIŞI OFİS MÜDÜRÜ",
+			"en": ""
+		},
+		"4895": {
+			"tr": "YURT MÜDÜR YARDIMCISI",
+			"en": ""
+		},
+		"4605": {
+			"tr": "YURT MÜDÜRÜ",
+			"en": ""
+		},
+		"7740": {
+			"tr": "YURT YÖNETİM MEMURU",
+			"en": ""
+		},
+		"42330": {
+			"tr": "YURTİÇİ İŞTİRAK GENEL MÜDÜRÜ                                                   ",
+			"en": ""
+		},
+		"2625": {
+			"tr": "YURTİÇİ VE YURTDIŞI İLİŞKİLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"42514": {
+			"tr": "YURTDIŞI İŞÇİ HİZHİZMETLERİ DAİRE BAŞKANI",
+			"en": ""
+		},
+		"2620": {
+			"tr": "YURTDIŞI İŞÇİ HİZMETLERİ DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"400": {
+			"tr": "YURTDIŞI İŞÇİ HİZMETLERİ GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"6192": {
+			"tr": "YURTDIŞI İŞÇİ HİZMETLERİ UZMANI",
+			"en": ""
+		},
+		"2615": {
+			"tr": "YURTDIŞI EĞİTİMİ VE DIŞ İLİŞKİLER DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"462": {
+			"tr": "YURTDIŞI EĞİTİMİ VE DIŞ İLİŞKİLER GENEL MÜDÜRÜ",
+			"en": ""
+		},
+		"3352": {
+			"tr": "YURTDIŞI TÜRKLER VE AKRABA TOPLULUKLAR UZMAN YARDIMCISI",
+			"en": ""
+		},
+		"3171": {
+			"tr": "YURTDIŞI TÜRKLER VE AKRABA TOPLULUKLAR UZMANI",
+			"en": ""
+		},
+		"41230": {
+			"tr": "YURTDIŞI TEMSİLCİSİ",
+			"en": ""
+		},
+		"5905": {
+			"tr": "YUVA ÖĞRETMENİ",
+			"en": ""
+		},
+		"2635": {
+			"tr": "ZİRAİ ARAŞTIRMA VE PROJE DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"2640": {
+			"tr": "ZİRAİ METEOROLOJİ VE İKLİM RAS. DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"1805": {
+			"tr": "ZİRAİ METEOROLOJİ VE İKLİM RASATLARI DAİRESİ BAŞKANI",
+			"en": ""
+		},
+		"41605": {
+			"tr": "ZİRAAT KİMYA MÜHENDİSİ",
+			"en": ""
+		},
+		"42244": {
+			"tr": "ZİRAAT MÜCADELE ŞEFİ(TEK.EL.ZİR.M)",
+			"en": ""
+		},
+		"22221": {
+			"tr": "ZİRAAT MÜHENDİSİ",
+			"en": ""
+		},
+		"4615": {
+			"tr": "ZİRAAT SANAYİ MÜDÜRÜ",
+			"en": ""
+		},
+		"42064": {
+			"tr": "ZİRAAT TEKNİSYEN YARDIMCISI",
+			"en": ""
+		},
+		"41407": {
+			"tr": "ZİRAAT TEKNİSYENİ",
+			"en": ""
+		},
+		"41600": {
+			"tr": "ZİRAAT YÜKSEK MÜHENDİSİ",
+			"en": ""
+		},
+		"7810": {
+			"tr": "ZABIT KATİBİ",
+			"en": ""
+		},
+		"42886": {
+			"tr": "ZABIT TASNİF VE DOSYA MEMURU",
+			"en": ""
+		},
+		"41503": {
+			"tr": "ZABITA ŞOFÖRÜ",
+			"en": ""
+		},
+		"41829": {
+			"tr": "ZABITA ŞUBE MÜDÜRÜ",
+			"en": ""
+		},
+		"21603": {
+			"tr": "ZABITA AMİRİ",
+			"en": ""
+		},
+		"21604": {
+			"tr": "ZABITA BAŞKOMİSERİ",
+			"en": ""
+		},
+		"41607": {
+			"tr": "ZABITA DAİRE BAŞKANI",
+			"en": ""
+		},
+		"42277": {
+			"tr": "ZABITA DAKTİLOSU",
+			"en": ""
+		},
+		"21606": {
+			"tr": "ZABITA KOMİSER YRD.",
+			"en": ""
+		},
+		"21605": {
+			"tr": "ZABITA KOMİSERİ",
+			"en": ""
+		},
+		"41524": {
+			"tr": "ZABITA KOMSER MUAVİNİ",
+			"en": ""
+		},
+		"21608": {
+			"tr": "ZABITA MÜDÜR YRD.",
+			"en": ""
+		},
+		"21607": {
+			"tr": "ZABITA MÜDÜRÜ",
+			"en": ""
+		},
+		"21609": {
+			"tr": "ZABITA MEMURU",
+			"en": ""
+		},
+		"41732": {
+			"tr": "ZABITA MEMURU ŞOFÖR",
+			"en": ""
+		},
+		"42276": {
+			"tr": "ZABITA MEMURU VE TAHSİLDAR",
+			"en": ""
+		},
+		"22139": {
+			"tr": "ZAT İŞLERİ MEMURU",
+			"en": ""
+		},
+		"42887": {
+			"tr": "ZAYIF AKIM TEKNİSYENİ",
+			"en": ""
+		},
+		"4610": {
+			"tr": "ZEHİR ARAŞTIRMALARI MÜDÜRÜ",
+			"en": ""
+		},
+		"6500": {
+			"tr": "ZOOLOG",
+			"en": ""
+		},
+		"41639": {
+			"tr": "1.AMİR                                                                          ",
+			"en": ""
+		},
+		"42888": {
+			"tr": "1.GRUP YÖN-MÜHENDİS",
+			"en": ""
+		},
+		"23080": {
+			"tr": "1.HUK.MÜŞ. VE HUK.İŞL.GN.MD.YARD.",
+			"en": ""
+		},
+		"1175": {
+			"tr": "1.HUKUK MÜŞAVİRİ",
+			"en": ""
+		},
+		"42258": {
+			"tr": "1.KEMAN ÜYESİ",
+			"en": ""
+		},
+		"42065": {
+			"tr": "1.MÜMEYYIZ",
+			"en": ""
+		},
+		"23081": {
+			"tr": "1.SINIF ÇEVİRMEN",
+			"en": ""
+		},
+		"43157": {
+			"tr": "1.SINIF İSTİHBARAT UZMANI",
+			"en": ""
+		},
+		"42135": {
+			"tr": "1.SINIF BANDO MÜZİSYENİ",
+			"en": ""
+		},
+		"42475": {
+			"tr": "1.SINIF DENETÇİ",
+			"en": ""
+		},
+		"42889": {
+			"tr": "1.SINIF GİŞE ŞEF MUAVİNİ",
+			"en": ""
+		},
+		"42066": {
+			"tr": "1.SINIF GİŞE MEMURU",
+			"en": ""
+		},
+		"42067": {
+			"tr": "1.SINIF KATİP",
+			"en": ""
+		},
+		"41359": {
+			"tr": "1.SINIF MÜFETTİŞ",
+			"en": ""
+		},
+		"42891": {
+			"tr": "1.SINIF MÜMEYYİZ",
+			"en": ""
+		},
+		"42890": {
+			"tr": "1.SINIF MEMUR",
+			"en": ""
+		},
+		"42458": {
+			"tr": "1.SINIF MURAKIP",
+			"en": ""
+		},
+		"42068": {
+			"tr": "1.SINIF RASATÇI",
+			"en": ""
+		},
+		"42892": {
+			"tr": "1.SINIF STENOGRAF",
+			"en": ""
+		},
+		"42333": {
+			"tr": "1.SINIF UZMAN                                                                  ",
+			"en": ""
+		},
+		"3699": {
+			"tr": "112 ACİL ÇAĞRI MERKEZİ MÜDÜRÜ",
+			"en": ""
+		},
+		"24147": {
+			"tr": "2. BAŞKAN",
+			"en": ""
+		},
+		"9755": {
+			"tr": "2.HUKUK MÜŞAVİRİ",
+			"en": ""
+		},
+		"41640": {
+			"tr": "2.MÜDÜR                                                                        ",
+			"en": ""
+		},
+		"42069": {
+			"tr": "2.MÜMEYYİZ",
+			"en": ""
+		},
+		"43158": {
+			"tr": "2.SINIF İSTİHBARAT UZMANI",
+			"en": ""
+		},
+		"42136": {
+			"tr": "2.SINIF BANDO MÜZİSYENİ",
+			"en": ""
+		},
+		"42476": {
+			"tr": "2.SINIF DENETÇİ",
+			"en": ""
+		},
+		"42522": {
+			"tr": "2.SINIF DENETÇİ YARDIMCISI",
+			"en": ""
+		},
+		"42521": {
+			"tr": "2.SINIF DENETÇİ YARDIMCISI (ADAY)",
+			"en": ""
+		},
+		"42070": {
+			"tr": "2.SINIF GİŞE MEMURU",
+			"en": ""
+		},
+		"42071": {
+			"tr": "2.SINIF KATİP",
+			"en": ""
+		},
+		"42072": {
+			"tr": "2.SINIF KONTROLÖR",
+			"en": ""
+		},
+		"41360": {
+			"tr": "2.SINIF MÜFETTİŞ",
+			"en": ""
+		},
+		"41641": {
+			"tr": "2.SINIF MÜHENDİS                                                               ",
+			"en": ""
+		},
+		"42073": {
+			"tr": "2.SINIF MEMUR",
+			"en": ""
+		},
+		"42459": {
+			"tr": "2.SINIF MURAKIP",
+			"en": ""
+		},
+		"42893": {
+			"tr": "2.SINIF RAPORTÖR",
+			"en": ""
+		},
+		"42894": {
+			"tr": "2.SINIF STENOGRAF",
+			"en": ""
+		},
+		"42396": {
+			"tr": "2.SINIF UZMAN                                                                  ",
+			"en": ""
+		},
+		"42074": {
+			"tr": "3.HUKUK MÜŞAVİRİ",
+			"en": ""
+		},
+		"42113": {
+			"tr": "3.SINIF İSTİHBARAT UZMANI",
+			"en": ""
+		},
+		"42477": {
+			"tr": "3.SINIF DENETÇİ",
+			"en": ""
+		},
+		"41642": {
+			"tr": "3.SINIF KONTROLÖR                                                               ",
+			"en": ""
+		},
+		"41643": {
+			"tr": "3.SINIF MİMAR                                                                  ",
+			"en": ""
+		},
+		"41361": {
+			"tr": "3.SINIF MÜFETTİŞ",
+			"en": ""
+		},
+		"41644": {
+			"tr": "3.SINIF MÜHENDİS                                                               ",
+			"en": ""
+		},
+		"42460": {
+			"tr": "3.SINIF MURAKIP",
+			"en": ""
+		},
+		"42895": {
+			"tr": "3.SINIF RAPORTÖR",
+			"en": ""
+		},
+		"42896": {
+			"tr": "3.SINIF STENOGRAF",
+			"en": ""
+		},
+		"42897": {
+			"tr": "3.SINIF TURİZM VE TAN.ATEŞESİ",
+			"en": ""
+		},
+		"42097": {
+			"tr": "3.SINIF UZMAN",
+			"en": ""
+		},
+		"41793": {
+			"tr": "4. SINIF MÜFETTİŞ",
+			"en": ""
+		},
+		"41794": {
+			"tr": "4. SINIF MÜFETTİŞ YARDIMCISI",
+			"en": ""
+		},
+		"42075": {
+			"tr": "4.HUKUK MÜŞAVİRİ",
+			"en": ""
+		},
+		"42114": {
+			"tr": "4.SINIF İSTİHBARAT UZMANI",
+			"en": ""
+		},
+		"42137": {
+			"tr": "4.SINIF BANDO MÜZİSYENİ",
+			"en": ""
+		},
+		"42076": {
+			"tr": "4.SINIF DENETÇİ",
+			"en": ""
+		},
+		"42478": {
+			"tr": "5.SINIF DENETÇİ",
+			"en": ""
+		},
+		"42077": {
+			"tr": "5.SINIF GELİRLER KONTROLÖRÜ",
+			"en": ""
+		},
+		"42452": {
+			"tr": "5.SINIF MÜŞAVİR",
+			"en": ""
+		},
+		"42078": {
+			"tr": "5.SINIF MÜFETTİŞ",
+			"en": ""
+		},
+		"42079": {
+			"tr": "6.SINIF GELİRLER KONTROLÖRÜ",
+			"en": ""
+		},
+		"42080": {
+			"tr": "6.SINIF YARDIMCISI",
+			"en": ""
+		}
+	}
+}
