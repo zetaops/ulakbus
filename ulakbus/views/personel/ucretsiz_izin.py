@@ -13,7 +13,7 @@ class UcretsizIzinIslemleri(CrudView):
     class Meta:
         # CrudViev icin kullanilacak temel Model
         model = 'UcretsizIzin'
-        #exclude = ['donus_tarihi','donus_tip']
+        exclude = ['donus_tarihi','donus_tip']
 
         # ozel bir eylem listesi hazirlayacagiz. bu sebeple listeyi bosaltiyoruz.
         # kayit tipine bagli olarak ekleyecegimiz eylemleri .append() ile ekleyecegiz
@@ -75,16 +75,13 @@ class UcretsizIzinIslemleri(CrudView):
                 self.current.task_data['cmd'] = 'izne_ayir'
             else:
                 hitap_kaydi = HizmetKayitlari()
-                hitap_kaydi.personel = self.object.personel
-                hitap_kaydi.tckn = self.object.personel.tckn
+                personel = self.object.personel
+                hitap_kaydi.personel = personel
+                hitap_kaydi.tckn = personel.tckn
                 hitap_kaydi.bitis_tarihi = self.object.baslangic_tarihi
                 hitap_kaydi.gorev = ".."
-
-                ## TODO: Unvan kod bulunamadı, fixtures eklenecek
-#                hitap_kaydi.unvan_kod
-
-                ## TODO: Hizmet Sınıfı personel modeline eklenecek
-#                hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+                hitap_kaydi.hizmet_sinifi= personel.hizmet_sinifi
+                hitap_kaydi.unvan_kod = personel.kadro().unvan_kod
 
                 ## TODO: Sebep Kodları fixtures eklenecek
                 hitap_kaydi.sebep_kod = 269
@@ -95,19 +92,15 @@ class UcretsizIzinIslemleri(CrudView):
                 self.save()
         else: ## cmd="izin_donus"
                 hitap_kaydi = HizmetKayitlari()
-                hitap_kaydi.personel = self.object.personel
-                hitap_kaydi.tckn = self.object.personel.tckn
+                personel = self.object.personel
+                hitap_kaydi.personel = personel
+                hitap_kaydi.tckn = personel.tckn
                 hitap_kaydi.baslama_tarihi = self.object.donus_tarihi
                 hitap_kaydi.gorev = ".."
-
-                ## TODO: Unvan kod bulunamadı, fixtures eklenecek
-#                hitap_kaydi.unvan_kod
-
-                ## TODO: Hizmet Sınıfı personel modeline eklenecek
-#                hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+                hitap_kaydi.hizmet_sinifi = personel.hizmet_sinifi
+                hitap_kaydi.unvan_kod = personel.kadro().unvan_kod
 
                 ## TODO: Sebep Kodları fixtures eklenecek, form içerisinden seçilecek
-
                 hitap_kaydi.sebep_kod = 269
                 hitap_kaydi.kurum_onay_tarihi = self.object.onay_tarihi
                 hitap_kaydi.sync = 2
