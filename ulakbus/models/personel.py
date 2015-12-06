@@ -209,6 +209,18 @@ class Kadro(Model):
         return "%s %s %s" % (self.unvan, self.derece, self.durum)
 
 
+# class Atama(Model):
+#     personel = Personel("Personel")
+#     kadro = Kadro("Kadro")
+#     notlar = field.String("Aciklama", index=True)
+#
+#     class Meta:
+#         verbose_name = "Atama"
+#         verbose_name_plural = "Atamalar"
+#
+#     def __unicode__(self):
+#         return "%s %s" % (self.personel, self.kadro)
+
 class Izin(Model):
     tip = field.Integer("Tip", index=True, choices="izin")
     baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
@@ -248,3 +260,31 @@ class UcretsizIzin(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.tip, self.onay_tarihi)
+
+
+class Atama(Model):
+    kurum_sicil_no = field.String("Kurum Sicil No", index=True)
+    personel_tip = field.Integer("Personel Tipi", index=True)
+    hizmet_sinif = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+    statu = field.Integer("Statü", index=True)
+    gorev_suresi_baslama = field.Date("Görev Süresi Başlama", index=True, format="%d.%m.%Y")
+    gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", index=True, format="%d.%m.%Y")
+    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
+    ibraz_tarihi = field.Date("İbraz Tarihi", index=True, format="%d.%m.%Y")
+    durum = field.Integer("Durum", index=True)
+    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
+    nereden = field.Integer("Nereden", index=True)
+    atama_aciklama = field.String("Atama Açıklama", index=True)
+    goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
+    kadro = Kadro()
+    personel = Personel()
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Atama"
+        verbose_name_plural = "Atamalar"
+        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi', 'durum']
+        search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
