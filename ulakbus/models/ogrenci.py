@@ -10,10 +10,10 @@ from .personel import Personel
 from pyoko import Model, field, ListNode
 from .auth import Role
 from .auth import Unit
+from .buildings_rooms import Room
 
 
-class Okutman(Model):
-    personel = Personel()
+class HariciOkutman(Model):
     harici_okutman_ad = field.String("Harici Okutman Ad", index=True, required=False)
     harici_okutman_soyad = field.String("Harici Okutman Soyad", index=True, required=False)
     tckn = field.String("Okutmanın TC Kimlik Numarası", index=True, required=False)
@@ -34,12 +34,35 @@ class Okutman(Model):
     akademik_yayinlari = field.String("Akademik Yayınları", index=True, required=False)
     verdigi_dersler = field.String("Verdiği Dersler", index=True, required=False)
     unvan = field.String("Unvan", index=True, choices="akademik_unvan", required=False)
+    aktif = field.Boolean("Aktif", index=True, required=False)
 
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Okutman"
         verbose_name_plural = "Okutmanlar"
         search_fields = ['unvan', 'personel']
+
+    def __unicode__(self):
+        return '%s %s' % (self.personel.key, self.harici_okutman_ad)
+
+
+class Okutman():
+    ad = field.String("Ad", index=True)
+    soyad = field.String("Soyad", index=True)
+    unvan = field.String("Unvan", index=True)
+    birim_no = field.String("Birim ID", index=True)
+    personel = Personel()
+    harici_okutman = HariciOkutman()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Okutman"
+        verbose_name_plural = "Okutmanlar"
+        search_fields = ['unvan', 'personel']
+
+    def okutman(self):
+        p = self.personel if self.personel else self.harici_okutman
+        return p
 
     def __unicode__(self):
         return '%s %s' % (self.personel.key, self.harici_okutman_ad)
@@ -124,7 +147,7 @@ class Ders(Model):
         ders_yardimcilari = Personel()
 
     class DersVerenler(ListNode):
-        dersi_verenler = Personel()
+        dersi_verenler = Okutman()
 
     class Meta:
         app = 'Ogrenci'
@@ -135,24 +158,6 @@ class Ders(Model):
 
     def __unicode__(self):
         return '%s %s %s' % (self.ad, self.kod, self.ders_dili)
-
-
-class Derslik(Model):
-    kod = field.String("Kod", index=True)
-    # TODO: Bina ve diger fiziki varkliklar map edilecek.
-    bina = field.String("Bina", index=True)
-    tur = field.Integer("Derslik Türü", index=True, choices="derslik_turleri")
-    kapasite = field.String("Kapasite", index=True)
-
-    class Meta:
-        app = 'Ogrenci'
-        verbose_name = "Derslik"
-        verbose_name_plural = "Derslikler"
-        list_fields = ['kod', 'bina']
-        search_fields = ['bina', 'kod']
-
-    def __unicode__(self):
-        return '%s %s' % (self.bina, self.kod)
 
 
 class Sube(Model):
@@ -200,7 +205,7 @@ class DersProgrami(Model):
     gun = field.String("Ders Günü", index=True)
     saat = field.Integer("Ders Saati", index=True)
     sube = Sube()
-    derslik = Derslik()
+    derslik = Room()
 
     class Meta:
         app = 'Ogrenci'

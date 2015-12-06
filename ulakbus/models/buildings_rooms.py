@@ -53,10 +53,10 @@ class Building(Model):
 class Room(Model):
     code = field.String("Code", index=True)
     name = field.String("Name", index=True)
+    room_type = RoomType("Room Type", index=True)
     floor = field.String("Floor", index=True)
     capacity = field.Integer("Capacity", index=True)
     building = Building()
-    campus = Campus()
     is_active = field.Boolean("Active", index=True)
 
     class Meta:
@@ -67,3 +67,11 @@ class Room(Model):
 
     def __unicode__(self):
         return '%s %s %s' % (self.code, self.name, self.capacity)
+
+
+class RoomType(Model):
+    type = field.String("Room Type", index=True)
+    notes = field.Text("Notes", index=True)
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.type)

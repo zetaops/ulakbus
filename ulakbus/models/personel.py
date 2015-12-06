@@ -48,7 +48,6 @@ class Personel(Model):
     engel_derecesi = field.String("Engel Derecesi")
     engel_orani = field.Integer("Engellilik Orani")
     personel_turu = field.Integer("Personel Türü", choices=PERSONEL_TURU)
-    # rol = Role(one_to_one=True)
     cuzdan_seri = field.String("Seri", index=True)
     cuzdan_seri_no = field.String("Seri No", index=True)
     baba_adi = field.String("Ana Adi", index=True)
@@ -66,6 +65,7 @@ class Personel(Model):
     kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
+    birim = Unit("Birim")
 
     class Meta:
         app = 'Personel'
@@ -182,14 +182,14 @@ class KurumDisiGorevlendirmeBilgileri(Model):
             },
         ]
 
+
 class Kadro(Model):
     kadro_no = field.Integer("Kadro No")
-    unvan = field.Integer("Unvan", index=True,choices="akademik_unvan")
+    unvan = field.Integer("Unvan", index=True, choices="akademik_unvan")
     derece = field.Integer("Derece", index=True)
     durum = field.Integer("Durum", index=True)
     birim = Unit("Birim")
     aciklama = field.String("Açıklama", index=True)
-
 
     class Meta:
         app = 'Personel'
