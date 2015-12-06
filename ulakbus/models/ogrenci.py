@@ -221,7 +221,7 @@ class Ogrenci(Model):
     dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     dogum_yeri = field.String("Doğum Yeri", index=True)
     uyruk = field.String("Uyruk", index=True)
-    medeni_hali = field.String("Medeni Hali", index=True)
+    medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
     ehliyet = field.String("Ehliyet", index=True)
     giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
