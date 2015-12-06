@@ -58,23 +58,25 @@ class ProgramForm(JsonForm):
     programs = Program.objects.filter()
     program_choices = []
     for pr in programs:
-        program_choices.append((pr.id, pr.adi))
+        program_choices.append((pr.key, pr.adi))
 
     program = form.Integer(choices=program_choices)
     sec = form.Button("Sec", cmd="ders_sec")
 
+
 class DersListeForm(JsonForm):
-    dersler = Ders.objects.filter(program_id=self.current.input['form']['program'])
+    dersler = Ders.objects.filter(program_key=self.current.input['form']['program'])
+    ders = Ders.objects.filter()
     for d in dersler:
-        form.String("")
+        f[d.id] = form.String(d.ad)
+
 
 class DersSubelendirme(CrudView):
     class Meta:
-        model = 'Sube'
+        model = "Sube"
 
     def program_sec(self):
         self.form_out(ProgramForm(current=self.current))
 
     def ders_sec(self):
-
-        self.form_out()
+        self.form_out(DersListeForm())
