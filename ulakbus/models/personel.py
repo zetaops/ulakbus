@@ -150,7 +150,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
         list_search = ["aciklama"]
         list_fields = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
         list_filters = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
-        search_fields = ["aciklama",]
+        search_fields = ["aciklama", ]
         form_grouping = [
             {
                 "layout": "4",
@@ -191,7 +191,6 @@ class Kadro(Model):
     birim = Unit("Birim")
     aciklama = field.String("Açıklama", index=True)
 
-
     class Meta:
         app = 'Personel'
         verbose_name = "Kadro"
@@ -202,6 +201,7 @@ class Kadro(Model):
 
     def __unicode__(self):
         return "%s %s %s" % (self.unvan, self.derece, self.durum)
+
 
 # class Atama(Model):
 #     personel = Personel("Personel")
@@ -217,7 +217,7 @@ class Kadro(Model):
 
 
 class Izin(Model):
-    tip = field.Integer("Tip", index=True,choices="izin")
+    tip = field.Integer("Tip", index=True, choices="izin")
     baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
     bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
     onay = field.Date("Onay", index=True, format="%d.%m.%Y")
@@ -232,6 +232,26 @@ class Izin(Model):
         verbose_name_plural = "İzinler"
         list_fields = ['tip', 'baslangic', 'bitis', 'onay', 'telefon']
         search_fields = ['tip', 'baslangic', 'onay']
+
+    def __unicode__(self):
+        return '%s %s' % (self.tip, self.onay)
+
+
+class UcretsizIzin(Model):
+    tip = field.Integer("Tip", index=True)
+    baslangic = field.Date("İzin Başlangıç Tarihi", index=True, format="%d.%m.%Y")
+    bitis = field.Date("İzin Bitiş Tarihi", index=True, format="%d.%m.%Y")
+    donus_tarihi = field.Date("Dönüş Tarihi", index=True, format="%d.%m.%Y")
+    donus_tip = field.Integer("Dönüş Tip", index=True)
+    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
+    personel = Personel()
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Ücretsiz İzin"
+        verbose_name_plural = "Ücretsiz İzinler"
+        list_fields = ['tip', 'baslangic', 'bitis', 'donus_tarihi']
+        search_fields = ['tip', 'onay']
 
     def __unicode__(self):
         return '%s %s' % (self.tip, self.onay)
