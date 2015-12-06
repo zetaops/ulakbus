@@ -209,19 +209,6 @@ class Kadro(Model):
         return "%s %s %s" % (self.unvan, self.derece, self.durum)
 
 
-class Atama(Model):
-    personel = Personel("Personel")
-    kadro = Kadro("Kadro")
-    notlar = field.String("Aciklama", index=True)
-
-    class Meta:
-        verbose_name = "Atama"
-        verbose_name_plural = "Atamalar"
-
-    def __unicode__(self):
-        return "%s %s" % (self.personel, self.kadro)
-
-
 class Izin(Model):
     tip = field.Integer("Tip", index=True, choices="izin")
     baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
