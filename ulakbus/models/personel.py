@@ -66,6 +66,7 @@ class Personel(Model):
     kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
     birim = Unit("Birim")
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
 
     class Meta:
         app = 'Personel'
@@ -78,6 +79,10 @@ class Personel(Model):
         return self.nufus_kayitlari.durum if self.nufus_kayitlari.key else None
 
     durum.title = "Durum"
+
+    def kadro(self):
+        atama = Atama.objects.get(personel=self)
+        return atama.kadro
 
     def __unicode__(self):
         return "%s %s" % (self.ad, self.soyad)
@@ -190,6 +195,7 @@ class Kadro(Model):
     durum = field.Integer("Durum", index=True, choices="kadro_durumlari")
     birim = Unit("Birim")
     aciklama = field.String("Açıklama", index=True)
+    unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod")
 
     class Meta:
         app = 'Personel'
@@ -203,17 +209,17 @@ class Kadro(Model):
         return "%s %s %s" % (self.unvan, self.derece, self.durum)
 
 
-# class Atama(Model):
-#     personel = Personel("Personel")
-#     kadro = Kadro("Kadro")
-#     notlar = field.String("Aciklama", index=True)
-#
-#     class Meta:
-#         verbose_name = "Atama"
-#         verbose_name_plural = "Atamalar"
-#
-#     def __unicode__(self):
-#         return "%s %s" % (self.personel, self.kadro)
+class Atama(Model):
+    personel = Personel("Personel")
+    kadro = Kadro("Kadro")
+    notlar = field.String("Aciklama", index=True)
+
+    class Meta:
+        verbose_name = "Atama"
+        verbose_name_plural = "Atamalar"
+
+    def __unicode__(self):
+        return "%s %s" % (self.personel, self.kadro)
 
 
 class Izin(Model):
