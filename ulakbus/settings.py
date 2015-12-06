@@ -75,6 +75,7 @@ CRUD_MENUS = {
         {'name': 'Borc'},
         {'name': 'DegerlendirmeNot'},
         {'name': 'OgrenciDersi'},
+        {'name': 'Ogrenci', 'field':'object_id', 'wf':'ogrenci_kimlik_bilgileri', 'verbose_name': 'Kimlik Bilgileri'},
     ],
 }
 ADMIN_MENUS = [
