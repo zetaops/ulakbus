@@ -1316,5 +1316,15 @@
       "tr": "Görevlendirme",
       "en": ""
     }
+  },
+  "cinsiyet": {
+    "1": {
+      "tr": "Bay",
+      "en": "Male"
+    },
+    "2": {
+      "tr": "Bayan",
+      "en": "Female"
+    }
   }
 }
