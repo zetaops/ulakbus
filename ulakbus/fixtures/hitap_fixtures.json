@@ -1270,5 +1270,51 @@
       "tr":"Refakat",
       "en":""
     }
+  },
+  "ucretsiz_izin": {
+    "1" : {
+      "tr": "Doğum Öncesi",
+      "en": ""
+	},
+	"2" : {
+      "tr": "Doğum Sonrası",
+      "en": ""
+	},
+	"3" : {
+      "tr": "39.Madde",
+      "en": ""
+	},
+	"4" : {
+      "tr": "Hastalık",
+      "en": ""
+	},
+	"5" : {
+      "tr": "Kaza",
+      "en": ""
+	},
+	"6" : {
+      "tr": "10 Yıl Hizmet Nedeniyle",
+      "en": ""
+	},
+	"7" : {
+      "tr": "Eğitim",
+      "en": ""
+	},
+	"8" : {
+      "tr": "Sürekli Görev",
+      "en": ""
+    },
+	"9" : {
+      "tr": "5 Yıl Hizmet Nedeniyle",
+      "en": ""
+	},
+	"10" : {
+      "tr": "2547 S.K. Geçici 59. Mad.",
+      "en": ""
+	},
+	"11" : {
+      "tr": "Görevlendirme",
+      "en": ""
+    }
   }
 }
