@@ -150,6 +150,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
         list_search = ["aciklama"]
         list_fields = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
         list_filters = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
+        search_fields = ["aciklama",]
         form_grouping = [
             {
                 "layout": "4",
