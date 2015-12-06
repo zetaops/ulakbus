@@ -191,6 +191,7 @@ class Kadro(Model):
     birim = Unit("Birim")
     aciklama = field.String("Açıklama", index=True)
 
+
     class Meta:
         app = 'Personel'
         verbose_name = "Kadro"

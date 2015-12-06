@@ -50,6 +50,14 @@ class Building(Model):
         return '%s %s' % (self.coordinate_x, self.coordinate_y)
 
 
+class RoomType(Model):
+    type = field.String("Room Type", index=True)
+    notes = field.Text("Notes", index=True)
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.type)
+
+
 class Room(Model):
     code = field.String("Code", index=True)
     name = field.String("Name", index=True)
@@ -67,11 +75,3 @@ class Room(Model):
 
     def __unicode__(self):
         return '%s %s %s' % (self.code, self.name, self.capacity)
-
-
-class RoomType(Model):
-    type = field.String("Room Type", index=True)
-    notes = field.Text("Notes", index=True)
-
-    def __unicode__(self):
-        return '%s %s %s' % (self.type)

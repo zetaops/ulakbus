@@ -12,6 +12,7 @@ from pyoko import form
 from zengine.lib.forms import JsonForm
 from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import Program
+from ulakbus.models.ogrenci import Ders
 
 
 class ProgramBilgisiForm(JsonForm):
@@ -51,3 +52,29 @@ class DersEkle(CrudView):
 
     def program_bilgisi(self):
         self.form_out(ProgramBilgisiForm(self.object, current=self.current))
+
+
+class ProgramForm(JsonForm):
+    programs = Program.objects.filter()
+    program_choices = []
+    for pr in programs:
+        program_choices.append((pr.id, pr.adi))
+
+    program = form.Integer(choices=program_choices)
+    sec = form.Button("Sec", cmd="ders_sec")
+
+class DersListeForm(JsonForm):
+    dersler = Ders.objects.filter(program_id=self.current.input['form']['program'])
+    for d in dersler:
+        form.String("")
+
+class DersSubelendirme(CrudView):
+    class Meta:
+        model = 'Sube'
+
+    def program_sec(self):
+        self.form_out(ProgramForm(current=self.current))
+
+    def ders_sec(self):
+
+        self.form_out()
