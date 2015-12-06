@@ -53,7 +53,8 @@ OBJECT_MENU = {
     # verbose_name can be specified to override the model's verbose_name_plural
     'personel': [
         {'name': 'Personel', 'field':'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri', 'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
-        {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'Izin Bilgileri'},
+        {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri'},
+        {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri'},
         {'name': 'KurumDisiGorevlendirmeBilgileri'},
         {'name': 'KurumIciGorevlendirmeBilgileri'},
         {'name': 'AdresBilgileri'},
@@ -71,7 +72,6 @@ OBJECT_MENU = {
         {'name': 'AskerlikKayitlari'},
         {'name': 'Atama'},
         {'name': 'Kadro'},
-        {'name': 'UcretsizIzin'},
     ],
     'ogrenci': [
         {'name': 'DersKatilimi'},

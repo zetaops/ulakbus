@@ -32,6 +32,7 @@ class NufusKayitlari(Model):
     sebep = field.Integer("Sebep", index=True)
     sync = field.Integer("Senkronize", index=True)
     personel = Personel(one_to_one=True)
+
     # personel = Personel()
 
     class Meta:
