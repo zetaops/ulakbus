@@ -16,7 +16,7 @@ from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 
 class KimlikBilgileriForm(JsonForm):
     class Meta:
-        include = ['tckn',"ogrenci_no","ad","soyad","dogum_tarihi","dogum_yeri","uyruk","medeni_hali","baba_adi", "ana_adi",
+        include = ['tckn',"ogrenci_no","ad","soyad","cinsiyet","dogum_tarihi","dogum_yeri","uyruk","medeni_hali","baba_adi", "ana_adi",
                    "cuzdan_seri", "cuzdan_seri_no", "kayitli_oldugu_il", "kayitli_oldugu_ilce", "kayitli_oldugu_mahalle_koy",
                    "kayitli_oldugu_cilt_no","kayitli_oldugu_aile_sıra_no", "kayitli_oldugu_sira_no", "kimlik_cuzdani_verildigi_yer",
                    "kimlik_cuzdani_verilis_nedeni", "kimlik_cuzdani_kayit_no",
