@@ -18,7 +18,7 @@
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="kimlik_bilgileri"/>
-    <bpmn2:userTask id="kimlik_bilgileri" camunda:assignee="ogrenci.ogrenci.KimlikIletisim.kimlik_bilgileri" name="Kimlik Bilgileri">
+    <bpmn2:userTask id="kimlik_bilgileri" camunda:assignee="ogrenci.ogrenci.KimlikBilgileri.kimlik_bilgileri" name="Kimlik Bilgileri">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
@@ -28,12 +28,12 @@
       <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_33</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:serviceTask id="kimlik_bilgileri_kaydet" camunda:class="ogrenci.ogrenci.KimlikIletisim.save" name="Kimlik Bilgileri Kaydet">
+    <bpmn2:serviceTask id="kimlik_bilgileri_kaydet" camunda:class="ogrenci.ogrenci.KimlikBilgileri.save" name="Kimlik Bilgileri Kaydet">
       <bpmn2:incoming>SequenceFlow_33</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_34</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="kimlik_bilgileri" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:serviceTask id="mernis_kimlik_sorgula" camunda:class="ogrenci.ogrenci.KimlikIletisim.mernis_sorgula" name="Mernis Kimlik Sorgula">
+    <bpmn2:serviceTask id="mernis_kimlik_sorgula" camunda:class="ogrenci.ogrenci.KimlikBilgileri.mernis_sorgula" name="Mernis Kimlik Sorgula">
       <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
     </bpmn2:serviceTask>

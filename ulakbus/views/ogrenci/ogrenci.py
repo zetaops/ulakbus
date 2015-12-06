@@ -31,7 +31,7 @@ class IletisimBilgileriForm(JsonForm):
 
     kaydet = form.Button("Kaydet","save")
 
-class KimlikIletisim(CrudView):
+class KimlikBilgileri(CrudView):
     class Meta:
         model = "Ogrenci"
 
