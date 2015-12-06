@@ -238,20 +238,20 @@ class Izin(Model):
 
 
 class UcretsizIzin(Model):
-    tip = field.Integer("Tip", index=True)
-    baslangic = field.Date("İzin Başlangıç Tarihi", index=True, format="%d.%m.%Y")
-    bitis = field.Date("İzin Bitiş Tarihi", index=True, format="%d.%m.%Y")
+    tip = field.Integer("Tip", index=True, choices="ucretsiz_izin")
+    baslangic_tarihi = field.Date("İzin Başlangıç Tarihi", index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date("İzin Bitiş Tarihi", index=True, format="%d.%m.%Y")
     donus_tarihi = field.Date("Dönüş Tarihi", index=True, format="%d.%m.%Y")
     donus_tip = field.Integer("Dönüş Tip", index=True)
-    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
+    onay_tarihi = field.Date("Onay Tarihi", index=True, format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
         app = 'Personel'
         verbose_name = "Ücretsiz İzin"
         verbose_name_plural = "Ücretsiz İzinler"
-        list_fields = ['tip', 'baslangic', 'bitis', 'donus_tarihi']
-        search_fields = ['tip', 'onay']
+        list_fields = ['tip', 'baslangic_tarihi', 'bitis_tarihi', 'donus_tarihi']
+        search_fields = ['tip', 'onay_tarihi']
 
     def __unicode__(self):
-        return '%s %s' % (self.tip, self.onay)
+        return '%s %s' % (self.tip, self.onay_tarihi)
