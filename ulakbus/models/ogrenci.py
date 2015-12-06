@@ -63,7 +63,7 @@ class Donem(Model):
 
 
 class Program(Model):
-    yoksis_id = field.String("YOKSIS ID", index=True)
+    yoksis_no = field.String("YOKSIS ID", index=True)
     bolum = field.String("Bölüm", index=True)
     ucret = field.Integer("Ücret", index=True)
     yil = field.String("Yıl", index=True)

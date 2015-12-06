@@ -81,9 +81,9 @@ class AbstractRole(Model):
 class Unit(Model):
     name = field.String("Name", index=True)
     long_name = field.String("Name", index=True)
-    yoksis_ID = field.Integer("Yoksis ID", index=True, choices="yoksis_program_id")
+    yoksis_no = field.Integer("Yoksis ID", index=True, choices="yoksis_program_id")
     unit_type = field.String("Unit Type", index=True)
-    parent_unit_ID = field.Integer("Parent Unit ID", index=True)
+    parent_unit_no = field.Integer("Parent Unit ID", index=True)
     current_situation = field.String("Current Situation", index=True)
     language = field.String("Learning Language", index=True)
     learning_type = field.String("Learning Type", index=True)
