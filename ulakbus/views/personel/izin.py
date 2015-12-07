@@ -22,15 +22,15 @@ class IzinIslemleri(CrudView):
 
     def goster(self):
         self.list()
-        personel = Personel.objects.get(self.input['personel_id'])
+        personel = Personel.objects.get(self.input['id'])
         izin_gun = self.hizmet_izin_yil_hesapla(personel)
         kalan_izin = self.kalan_izin_hesapla()
 
         # Personelin izin gün sayısı 365 günden azsa eklemeyi kaldır.
         # Personel pasifse eklemeyi kaldır.
-        if izin_gun<365 or not self.personel_aktif:
-            self.list_form.add = None
-            #del self.output['forms']['schema']['properties']['add']
+        yil = date.today().year
+        if izin_gun<365 or not self.personel_aktif or (kalan_izin['yillik'][yil-1]<=0 and kalan_izin['yillik'][yil]<=0 and kalan_izin['mazeret'][yil]<=0):
+            self.ListForm.add = None
 
         ## ToDo: Personel bilgileri tabloda gösterilecek
         self.output['object'] = {
@@ -62,8 +62,8 @@ class IzinIslemleri(CrudView):
 
         try:
             baslangic_liste.remove(date(1900, 1, 1))
-            baslangic_liste.remove('') # Pyoko string girilmemiş olursa boş str dönüyor
             bitis_liste.remove(date(1900, 1, 1))
+            baslangic_liste.remove('') # Pyoko string girilmemiş olursa boş str dönüyor
             bitis_liste.remove('')
         except:
             pass
@@ -120,7 +120,7 @@ class IzinIslemleri(CrudView):
         yillik_izinler = dict()
         mazeret_izinler = dict()
 
-        for yil in range(self.ilk_izin_hakedis.year,date.today().year):
+        for yil in range(self.ilk_izin_hakedis.year,date.today().year+1):
             yillik_izinler[yil] = 20
             mazeret_izinler[yil] = 10
 
@@ -137,22 +137,3 @@ class IzinIslemleri(CrudView):
 
 
         return { 'yillik':yillik_izinler, 'mazeret':mazeret_izinler }
-
-    def goster(self):
-        self.list()
-        personel = Personel.objects.get(self.input['personel_id'])
-        izin = self.izin_hesapla(personel)
-        self.output['object'] = { "Adı":personel.ad, "Kalan İzin":"30" }
-
-        # Formun üzerinde gösterilen bilgilerin başlığı
-        # set edilmezse {add=null} görünüyor
-        self.output['forms']['model'] = personel.ad + " izin bilgileri"
-
-    def izin_hesapla(self,personel):
-        from datetime import datetime
-        self.ge
-        for izin in self.output['objects']:
-            izin.fields
-            print
-
-        pass

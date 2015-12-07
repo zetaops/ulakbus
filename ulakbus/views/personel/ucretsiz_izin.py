@@ -39,8 +39,8 @@ class UcretsizIzinIslemleri(CrudView):
 
 
     def goster(self):
-        if 'personel_id' in self.input:
-            personel = Personel.objects.get(self.input['personel_id'])
+        if 'id' in self.input:
+            personel = Personel.objects.get(self.input['id'])
 
             ucretsiz_izinler = UcretsizIzin.objects.filter(personel=personel)
             ucretsiz_izinde = False
