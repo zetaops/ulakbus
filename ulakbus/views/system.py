@@ -25,7 +25,8 @@ class Search(BaseView):
             objects = self.SEARCH_ON.objects.filter(tckn='%s*' % tckn)
         except:
             q = self.query.replace(' ', '\ ')
-            objects = self.SEARCH_ON.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
+            # objects = self.SEARCH_ON.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
+            objects = self.SEARCH_ON.objects.search_on('ad', 'soyad', contains=q)
         for o in objects:
             self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
 
