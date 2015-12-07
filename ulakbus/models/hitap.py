@@ -463,3 +463,18 @@ class UcretsizIzin(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.tip, self.onay)
+
+class HitapSebep(Model):
+    sebep_no = field.Integer("Sebep No", index=True)
+    ad = field.String("Sebep Adı",index=True)
+    nevi = field.Integer("Sebep Nevi",index=True)
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Hitap Sebep Kodu"
+        verbose_name_plural = "Hitap Sebep Kodları"
+        list_fields = ['sebep_no', 'ad', 'nevi']
+        search_fields = ['sebep_no', 'ad']
+
+    def __unicode__(self):
+        return '%s %s' % (self.sebep_no, self.ad)
