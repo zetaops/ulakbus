@@ -20,43 +20,17 @@ class IzinIslemleri(CrudView):
         #     # {'fields': [0, ], 'cmd': 'show', 'mode': 'normal', 'show_as': 'link'},
         # ]
 
-    # class ObjectForm(JsonForm):
-    #     class Meta:
-    #         # durum alanini formdan cikar. kadrolar sadece sakli olarak kaydedilebilir.
-    #         exclude = ['personel', 'vekil', ]
-    #
-    #     save_edit = form.Button("Kaydet", cmd="save")
-
-    #
-    # ObjectForm birden cok view da farklilasiyorsa metod icinde bu sekilde kullanilmali.
-    #
-    # def kadro_ekle_form(self):
-    #     self.object_form.exclude = ['durum',]
-    #     self.form()
-    #
-
-    # def izin_kaydet(self):
-    #     # formdan gelen datayi, instance a gecir.
-    #     self.set_form_data_to_object()
-    #     print self.object
-    #
-    #     # Kadroyu kaydet
-    #     self.object.save()
-    #
-    #     # isakisini bastan baslat
-    #     self.reset()
-
     def goster(self):
         self.list()
         personel = Personel.objects.get(self.input['personel_id'])
         izin_gun = self.hizmet_izin_yil_hesapla(personel)
         kalan_izin = self.kalan_izin_hesapla()
-        print kalan_izin
 
         # Personelin izin gün sayısı 365 günden azsa eklemeyi kaldır.
         # Personel pasifse eklemeyi kaldır.
         if izin_gun<365 or not self.personel_aktif:
-            del self.output['forms']['schema']['properties']['add']
+            self.list_form.add = None
+            #del self.output['forms']['schema']['properties']['add']
 
         ## ToDo: Personel bilgileri tabloda gösterilecek
         self.output['object'] = {
