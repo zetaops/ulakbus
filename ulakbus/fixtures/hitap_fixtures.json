@@ -1230,5 +1230,15 @@
       "tr": "36:5510 S.K. Geç. 56. MD. Borç.(5525 S.K.)",
       "en": ""
     }
+  },
+  "cinsiyet": {
+    "1": {
+      "tr": "Bay",
+      "en": "Male"
+    },
+    "2": {
+      "tr": "Bayan",
+      "en": "Female"
+    }
   }
 }
