@@ -13,6 +13,7 @@ from zengine.lib.forms import JsonForm
 from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import Program
 from ulakbus.models.ogrenci import Ders
+from ulakbus.models.ogrenci import Sube
 
 
 class ProgramBilgisiForm(JsonForm):
@@ -64,13 +65,6 @@ class ProgramForm(JsonForm):
     sec = form.Button("Sec", cmd="ders_sec")
 
 
-class DersListeForm(JsonForm):
-    dersler = Ders.objects.filter(program_key=self.current.input['form']['program'])
-    ders = Ders.objects.filter()
-    for d in dersler:
-        f[d.id] = form.String(d.ad)
-
-
 class DersSubelendirme(CrudView):
     class Meta:
         model = "Sube"
@@ -79,4 +73,35 @@ class DersSubelendirme(CrudView):
         self.form_out(ProgramForm(current=self.current))
 
     def ders_sec(self):
-        self.form_out(DersListeForm())
+        self.set_client_cmd('form')
+        self.output['objects'] = [['Dersler'], ]
+        dersler = Ders.objects.filter(program_key=self.current.input['form']['program'])
+        dersler = Ders.objects.filter()
+        for d in dersler:
+            ders = "{} - {} ({} ECTS)".format(d.kod, d.ad, d.ects_kredisi)
+            subeler = Sube.objects.filter(ders=d)
+            sube = []
+            for s in subeler:
+                sube.append(
+                    {
+                        "sube_ad": s.ad,
+                        "okutman_ad": s.okutman.ad,
+                        "okutman_soyad": s.okutman.soyad,
+                        "okutman_unvan": s.okutman.unvan,
+                        "kontenjan": s.kontenjan,
+                    }
+                )
+
+            subeler = ["{okutman_unvan} {okutman_ad} {okutman_soyad}, Sube:{sube_ad} Kontenjan{kontenjan} \n".format(s)
+                       for
+                       s in sube]
+
+            item = {
+                "fields": ["{} \n {}".format(ders, subeler), ],
+                "actions": [],
+                "key": d.key
+            }
+            self.output['objects'].append(item)
+
+    def ders_okutman_formu(self):
+        pass

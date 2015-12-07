@@ -61,8 +61,7 @@ class Okutman():
         search_fields = ['unvan', 'personel']
 
     def okutman(self):
-        p = self.personel if self.personel else self.harici_okutman
-        return p
+        return self.personel if self.personel else self.harici_okutman
 
     def __unicode__(self):
         return '%s %s' % (self.personel.key, self.harici_okutman_ad)
