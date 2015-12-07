@@ -46,7 +46,7 @@ class HariciOkutman(Model):
         return '%s %s' % (self.personel.key, self.harici_okutman_ad)
 
 
-class Okutman():
+class Okutman(Model):
     ad = field.String("Ad", index=True)
     soyad = field.String("Soyad", index=True)
     unvan = field.String("Unvan", index=True)
