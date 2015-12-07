@@ -98,3 +98,11 @@ VIEW_URLS.extend([
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
 ENABLE_SIMPLE_CRUD_MENU = False
+
+
+ALLOWED_ORIGINS += [
+    'http://ulakbus.net',
+    'http://www.ulakbus.net',
+    'http://dev.zetaops.io',
+    'http://nightly.zetaops.io',
+]
