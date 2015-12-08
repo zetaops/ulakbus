@@ -287,7 +287,7 @@ class OgrenciDersi(Model):
         search_fields = ['alis_bicimi', ]
 
     def __unicode__(self):
-        return '%s %s' % (self.ad, self.soyad)
+        return '%s %s' % (self.ders.kod, self.ders.ad, self.alis_bicimi)
 
 
 class DersKatilimi(Model):

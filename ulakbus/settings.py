@@ -90,6 +90,7 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'Okutman', 'wf': 'crud', 'param': 'id', 'text': 'Okutman'},
     {'kategori': 'Admin', 'model': 'Donem', 'wf': 'crud', 'param': 'id', 'text': 'Dönem'},
     {'kategori': 'Admin', 'model': 'Program', 'wf': 'crud', 'param': 'id', 'text': 'Program'},
+    {'kategori': 'Admin', 'model': 'Ders', 'wf': 'crud', 'param': 'id', 'text': 'Ders'},
 
 ]
 
