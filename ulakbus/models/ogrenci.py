@@ -11,6 +11,7 @@ from pyoko import Model, field, ListNode
 from .auth import Role
 from .auth import Unit
 from .buildings_rooms import Room
+import six
 
 
 class HariciOkutman(Model):
@@ -283,11 +284,17 @@ class OgrenciDersi(Model):
         app = 'Ogrenci'
         verbose_name = "Ogrenci Dersi"
         verbose_name_plural = "Ogrenci Dersleri"
-        list_fields = ['ders', 'alis_bicimi']
+        list_fields = ['sube_dersi', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
 
+    def sube_dersi(self):
+        # return '%s - %s' % (self.ders.ders.kod, self.ders.ders)
+        return six.text_type(self.ders)
+
+    sube_dersi.title = 'Ders'
+
     def __unicode__(self):
-        return '%s %s' % (self.ders.kod, self.ders.ad, self.alis_bicimi)
+        return '%s %s %s' % (self.ders.ders.kod, self.ders.ders.ad, self.alis_bicimi)
 
 
 class DersKatilimi(Model):
