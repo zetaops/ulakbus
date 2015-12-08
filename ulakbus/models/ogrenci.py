@@ -14,8 +14,8 @@ from .buildings_rooms import Room
 
 
 class HariciOkutman(Model):
-    harici_okutman_ad = field.String("Harici Okutman Ad", index=True, required=False)
-    harici_okutman_soyad = field.String("Harici Okutman Soyad", index=True, required=False)
+    ad = field.String("Harici Okutman Ad", index=True, required=False)
+    soyad = field.String("Harici Okutman Soyad", index=True, required=False)
     tckn = field.String("Okutmanın TC Kimlik Numarası", index=True, required=False)
     dogum_tarihi = field.Date("Okutmanın Doğum Tarihi", index=True, required=False)
     dogum_yeri = field.String("Okutmanın Doğum Yeri", index=True, required=False)
@@ -38,12 +38,12 @@ class HariciOkutman(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Okutman"
-        verbose_name_plural = "Okutmanlar"
-        search_fields = ['unvan', 'personel']
+        verbose_name = "Harici Okutman"
+        verbose_name_plural = "Harici Okutmanlar"
+        search_fields = ['unvan', 'ad', 'soyad']
 
     def __unicode__(self):
-        return '%s %s' % (self.personel.key, self.harici_okutman_ad)
+        return '%s %s' % (self.ad, self.soyad)
 
 
 class Okutman(Model):
@@ -60,11 +60,12 @@ class Okutman(Model):
         verbose_name_plural = "Okutmanlar"
         search_fields = ['unvan', 'personel']
 
+    @property
     def okutman(self):
         return self.personel if self.personel else self.harici_okutman
 
     def __unicode__(self):
-        return '%s %s' % (self.personel.key, self.harici_okutman_ad)
+        return '%s %s' % (self.ad, self.soyad)
 
 
 class Donem(Model):
@@ -220,7 +221,7 @@ class DersProgrami(Model):
 class Ogrenci(Model):
     ad = field.String("Ad", index=True)
     soyad = field.String("Soyad", index=True)
-    cinsiyet = field.Integer("Cinsiyet", index = True, choices = "cinsiyet")
+    cinsiyet = field.Integer("Cinsiyet", index=True, choices="cinsiyet")
     tckn = field.String("TC Kimlik No", index=True)
     cuzdan_seri = field.String("Seri", index=True)
     cuzdan_seri_no = field.String("Seri No", index=True)
@@ -233,7 +234,7 @@ class Ogrenci(Model):
     kimlik_cuzdani_verildigi_yer = field.String("Nüfus Cuzdanı Verildigi Yer")
     kimlik_cuzdani_verilis_nedeni = field.String("Nufus Cuzdanı Verilis Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Nüfus Cuzdanı Kayit No")
-    kimlik_cuzdani_verilis_tarihi = field.Date("Nüfus Cüzdanı Veriliş Tarihi", index = True, format = "%d.%m.%Y")
+    kimlik_cuzdani_verilis_tarihi = field.Date("Nüfus Cüzdanı Veriliş Tarihi", index=True, format="%d.%m.%Y")
     baba_adi = field.String("Ana Adı", index=True)
     ana_adi = field.String("Baba Adı", index=True)
     ikamet_il = field.String("İkamet İl", index=True)
