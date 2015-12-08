@@ -98,6 +98,7 @@ class Unit(Model):
     foet_code = field.Integer("FOET Code", index=True)  # yoksis KILAVUZ_KODU mu?
     is_academic = field.Boolean("Is Academic")
     is_active = field.Boolean("Is Active")
+    uid = field.Integer(index=True)
 
     class Meta:
         app = 'Sistem'

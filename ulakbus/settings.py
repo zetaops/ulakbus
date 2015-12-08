@@ -52,7 +52,8 @@ OBJECT_MENU = {
     # 'field' defaults to 'personel' or 'ogrenci'
     # verbose_name can be specified to override the model's verbose_name_plural
     'personel': [
-        {'name': 'Personel', 'field':'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri', 'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
+        {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
+         'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
         {'name': 'KurumDisiGorevlendirmeBilgileri'},
         {'name': 'KurumIciGorevlendirmeBilgileri'},
         {'name': 'AdresBilgileri'},
@@ -78,7 +79,7 @@ OBJECT_MENU = {
         {'name': 'Borc'},
         {'name': 'DegerlendirmeNot'},
         {'name': 'OgrenciDersi'},
-        {'name': 'Ogrenci', 'field':'object_id', 'wf':'ogrenci_kimlik_bilgileri', 'verbose_name': 'Kimlik Bilgileri'},
+        {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri', 'verbose_name': 'Kimlik Bilgileri'},
     ],
 }
 ADMIN_MENUS = [
@@ -105,10 +106,11 @@ ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
 ENABLE_SIMPLE_CRUD_MENU = False
 
-
 ALLOWED_ORIGINS += [
     'http://ulakbus.net',
     'http://www.ulakbus.net',
     'http://dev.zetaops.io',
     'http://nightly.zetaops.io',
 ]
+
+UID = 173500

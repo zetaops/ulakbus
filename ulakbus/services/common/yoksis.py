@@ -9,6 +9,9 @@
 __author__ = 'Ali Riza Keles'
 
 from zato.server.service import Service
+from ulakbus import settings
+
+UID = settings.UID
 
 DEBUG = False
 if DEBUG:
@@ -141,3 +144,41 @@ class DumpAllUnitsToRiak(BirimAgaci):
             root_unit = 0
         conn = self.connection()
         self.bir(conn, root_unit=root_unit)
+
+
+class DumpUnitsToUnitModel(BirimAgaci):
+    """
+     Dump All Units To Ulakbus auth.Unit Model by UID.
+     """
+
+    def handle(self):
+        if self.request.raw_request:
+            root_unit = self.request.raw_request
+        else:
+            root_unit = 0
+        conn = self.connection()
+        self.bir(conn, root_unit=UID)
+
+    def birim_kaydet(self, birim_id):
+        # self.kvdb.conn.set(birim_id, self.birim_detaylari())
+        # self.logger.info("%s icin degerler: %s\n\n" % (birim_id, self.birim_detaylari()))
+        from ulakbus.models.auth import Unit
+        y = yoksis_birim.get(str(birim_id))
+        data = self.birim_detaylari()
+        u = Unit.objects.get_or_create(yoksis_no=birim_id)
+        u.name = data['birim_adi']
+        u.long_name = data['birim_uzun_adi']
+        u.city_code = data['il_kodu']
+        u.district_code = data['ilce_kodu']
+        u.language = data['ogrenim_dili']
+        u.english_name = data['birim_adi_ingilizce']
+        u.parent_unit_no = data['bagli_oldugu_birim_id']
+        u.learning_duration = data['ogrenim_suresi']
+        u.osym_code = data['klavuz_kodu']
+        u.learning_type = data['ogrenim_turu']
+        u.unit_type = data['birim_turu_adi']
+        u.is_academic = True
+        u.current_situation = data['aktif']
+        u.is_active = False if u.current_situation in ['Kapalı', 'Pasif'] else True
+        u.uid = UID
+        u.save()
