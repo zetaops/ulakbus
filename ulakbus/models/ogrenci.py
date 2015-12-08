@@ -307,8 +307,14 @@ class DersKatilimi(Model):
         app = 'Ogrenci'
         verbose_name = "Ders Devamsizligi"
         verbose_name_plural = "Ders Devamsizliklari"
-        list_fields = ['katilim_durumu', 'ders']
-        search_fields = ['ders', 'katilim_durumu']
+        list_fields = ['katilim_durumu', 'sube_dersi']
+        search_fields = ['sube_dersi', 'katilim_durumu']
+
+    def sube_dersi(self):
+        # return '%s - %s' % (self.ders.ders.kod, self.ders.ders)
+        return six.text_type(self.ders)
+
+    sube_dersi.title = 'Ders'
 
     def __unicode__(self):
         return '%s %s' % (self.katilim_durumu, self.ogrenci)
