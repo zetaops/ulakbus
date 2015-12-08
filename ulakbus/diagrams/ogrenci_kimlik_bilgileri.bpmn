@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="__tFEoJwSEeWVovXFaGFh8g" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
   <bpmn2:collaboration id="dasda" name="Öğrenci Kimlik Bilgileri">
+    <bpmn2:extensionElements>
+      <camunda:properties>
+        <camunda:property value="hidden" name="menu_category"/>
+      </camunda:properties>
+    </bpmn2:extensionElements>
     <bpmn2:participant id="ogrenci_kimlik_bilgileriss" name="Öğrenci Kimlik Bilgileri" processRef="ogrenci_kimlik_bilgileri"/>
   </bpmn2:collaboration>
   <bpmn2:process id="ogrenci_kimlik_bilgileri" isExecutable="false">
