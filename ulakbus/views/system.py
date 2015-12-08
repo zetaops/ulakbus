@@ -22,7 +22,7 @@ class Search(BaseView):
     def do_search(self):
         try:
             tckn = int(self.query.strip())
-            objects = self.SEARCH_ON.objects.filter(tckn='%s*' % tckn)
+            objects = self.SEARCH_ON.objects.filter(tckn__startswith=tckn)
         except:
             q = self.query.replace(' ', '\ ')
             # objects = self.SEARCH_ON.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
