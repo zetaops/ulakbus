@@ -138,7 +138,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     maas = field.Boolean("Maas")
     yevmiye = field.Boolean("Yevmiye", default=False)
     yolluk = field.Boolean("Yolluk", default=False)
-    ulke = field.Integer("Ulke", default="90", choices="ulke")
+    ulke = field.Integer("Ulke", default="90", choices="ulke", index=True)
     personel = Personel()
 
     def __unicode__(self):
