@@ -11,7 +11,7 @@ enum34
 requests
 Werkzeug
 celery
-
+requests
 
 
 # following projects are parts of our project,
