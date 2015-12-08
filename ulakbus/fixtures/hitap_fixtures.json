@@ -1233,11 +1233,11 @@
   },
   "cinsiyet": {
     "1": {
-      "tr": "Bay",
+      "tr": "Erkek",
       "en": "Male"
     },
     "2": {
-      "tr": "Bayan",
+      "tr": "Kadın",
       "en": "Female"
     }
   }
