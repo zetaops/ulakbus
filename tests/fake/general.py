@@ -45,8 +45,9 @@ def driver_license_class():
 
 
 def id_card_serial():
-    #return "%s%02d" % (fake.random_letter().upper(), fake.random_int(1, 99))
+    # return "%s%02d" % (fake.random_letter().upper(), fake.random_int(1, 99))
     return ints(11)
+
 
 def birth_date(student=False):
     age_range = range(17, 30) if student else range(26, 80)
@@ -54,13 +55,11 @@ def birth_date(student=False):
         days=random.choice(age_range) * 365 + random.choice(range(-120, 120)))
 
 
-
 def create_fake_geo_data():
-
-    #TODO generate lat,long that releated with fake.city() / fake.state() methods
+    # TODO generate lat,long that releated with fake.city() / fake.state() methods
 
     x0 = 39.91
     y0 = 32.83
-    dec_lat = random.random()/100
-    dec_lon = random.random()/100
-    return [x0-dec_lat,y0-dec_lon]
+    dec_lat = random.random() / 100
+    dec_lon = random.random() / 100
+    return [x0 - dec_lat, y0 - dec_lon]
