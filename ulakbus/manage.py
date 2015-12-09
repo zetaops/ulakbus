@@ -82,6 +82,18 @@ class LoadFixture(Command):
         except IOError:
             print("file not found: %s" % fixture_file)
 
+class GenerateRandomOkutman(Command):
+    CMD_NAME = 'random_okutman'
+    HELP = 'Generates Random Okutmans'
+    PARAMS = [
+        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+    ]
+
+    def run(self):
+        from tests.fake.okutman import yeni_okutman
+        length = int(self.manager.args.length)
+        for x in range(0, length):
+            yeni_okutman()
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
