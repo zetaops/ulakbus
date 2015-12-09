@@ -166,19 +166,34 @@ class DumpUnitsToUlakbusUnitModel(BirimAgaci):
         from ulakbus.models.auth import Unit
         data = self.birim_detaylari()
         u, is_new = Unit.objects.get_or_create(yoksis_no=birim_id)
-        u.name = data['birim_adi']
-        u.long_name = data['birim_uzun_adi']
-        u.city_code = data['il_kodu']
-        u.district_code = data['ilce_kodu']
-        u.language = data['ogrenim_dili']
-        u.english_name = data['birim_adi_ingilizce']
-        u.parent_unit_no = data['bagli_oldugu_birim_id']
-        u.learning_duration = data['ogrenim_suresi']
-        u.osym_code = data['klavuz_kodu']
-        u.learning_type = data['ogrenim_turu']
-        u.unit_type = data['birim_turu_adi']
-        u.is_academic = True
-        u.current_situation = data['aktif']
+
+        u.name, should_save = (u.name, False) if u.name == data['birim_adi'] else (data['birim_adi'], True)
+        u.long_name, should_save = (u.long_name, False) if u.name == data['birim_uzun_adi'] else (
+            data['birim_uzun_adi'], True)
+        u.city_code, should_save = (u.city_code, False) if u.name == data['il_kodu'] else (data['il_kodu'], True)
+        u.district_code, should_save = (u.district_code, False) if u.name == data['ilce_kodu'] else (
+            data['ilce_kodu'], True)
+        u.language, should_save = (u.language, False) if u.name == data['ogrenim_dili'] else (
+            data['ogrenim_dili'], True)
+        u.english_name, should_save = (u.english_name, False) if u.name == data['birim_adi_ingilizce'] else (
+            data['birim_adi_ingilizce'], True)
+        u.parent_unit_no, should_save = (u.parent_unit_no, False) if u.name == data['bagli_oldugu_birim_id'] else (
+            data['bagli_oldugu_birim_id'], True)
+        u.learning_duration, should_save = (u.learning_duration, False) if u.name == data['ogrenim_suresi'] else (
+            data['ogrenim_suresi'], True)
+        u.osym_code, should_save = (u.osym_code, False) if u.name == data['klavuz_kodu'] else (
+            data['klavuz_kodu'], True)
+        u.learning_type, should_save = (u.learning_type, False) if u.name == data['ogrenim_turu'] else (
+            data['ogrenim_turu'], True)
+        u.unit_type, should_save = (u.unit_type, False) if u.name == data['birim_turu_adi'] else (
+            data['birim_turu_adi'], True)
+
+        new_situation = False if data['aktif'] in ['Kapalı', 'Pasif'] else True
+        u.is_active, should_save = (u.is_active, False) if u.is_active == new_situation else (new_situation, True)
+
         u.is_active = False if u.current_situation in ['Kapalı', 'Pasif'] else True
-        u.uid = UID
-        u.save()
+
+        if is_new or should_save:
+            u.is_academic = True
+            u.uid = UID
+            u.save()
