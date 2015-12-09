@@ -28,7 +28,7 @@ class Personel(Model):
     ikamet_ilce = field.String("İkamet Ilce", index=True)
     adres_2 = field.String("Adres 2", index=True)
     adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True)
-    oda_no = field.Integer("Oda Numarası", index=True)
+    oda_no = field.String("Oda Numarası", index=True)
     oda_tel_no = field.String("Oda Telefon Numarası", index=True)
     cep_telefonu = field.String("Cep Telefonu", index=True)
     e_posta = field.String("E-Posta", index=True)
