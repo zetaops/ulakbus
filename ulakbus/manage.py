@@ -11,11 +11,12 @@
 
 from zengine.management_commands import *
 
+
 class CreateUser(Command):
     CMD_NAME = 'create_user'
     HELP = 'Creates a new user'
     PARAMS = [
-        {'name':  'username', 'required': True, 'help': 'Login username'},
+        {'name': 'username', 'required': True, 'help': 'Login username'},
         {'name': 'password', 'required': True, 'help': 'Login password'},
         {'name': 'abstract_role', 'default': 'BaseAbsRole', 'help': 'Name of the AbstractRole'},
         {'name': 'super', 'action': 'store_true', 'help': 'This is a super user'},
@@ -82,6 +83,7 @@ class LoadFixture(Command):
         except IOError:
             print("file not found: %s" % fixture_file)
 
+
 class GenerateRandomOkutman(Command):
     CMD_NAME = 'random_okutman'
     HELP = 'Generates Random Okutmans'
@@ -90,10 +92,11 @@ class GenerateRandomOkutman(Command):
     ]
 
     def run(self):
-        from tests.fake.okutman import yeni_okutman
+        from tests.fake.personel import yeni_personel
         length = int(self.manager.args.length)
         for x in range(0, length):
-            yeni_okutman()
+            yeni_personel()
+
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
