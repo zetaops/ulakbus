@@ -9,9 +9,6 @@
 __author__ = 'Ali Riza Keles'
 
 from zato.server.service import Service
-from ulakbus import settings
-
-UID = settings.UID
 
 DEBUG = False
 if DEBUG:
@@ -146,24 +143,22 @@ class DumpAllUnitsToRiak(BirimAgaci):
         self.bir(conn, root_unit=root_unit)
 
 
-class DumpUnitsToUnitModel(BirimAgaci):
+class DumpUnitsToUlakbusUnitModel(BirimAgaci):
     """
      Dump All Units To Ulakbus auth.Unit Model by UID.
      """
 
     def handle(self):
+        from ulakbus import settings
         if self.request.raw_request:
             root_unit = self.request.raw_request
         else:
-            root_unit = 0
+            root_unit = settings.UID
         conn = self.connection()
-        self.bir(conn, root_unit=UID)
+        self.bir(conn, root_unit=root_unit)
 
     def birim_kaydet(self, birim_id):
-        # self.kvdb.conn.set(birim_id, self.birim_detaylari())
-        # self.logger.info("%s icin degerler: %s\n\n" % (birim_id, self.birim_detaylari()))
         from ulakbus.models.auth import Unit
-        y = yoksis_birim.get(str(birim_id))
         data = self.birim_detaylari()
         u = Unit.objects.get_or_create(yoksis_no=birim_id)
         u.name = data['birim_adi']
