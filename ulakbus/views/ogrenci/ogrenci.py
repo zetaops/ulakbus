@@ -63,13 +63,13 @@ class IletisimBilgileri(CrudView):
 
 class OncekiEgitimBilgileriForm(JsonForm):
     class Meta:
-        include = ["ad", "soyad ", "OncekiEgitimBilgileri"]
+        include = ["okul_adi", "diploma_notu", "mezuniyet_yili"]
 
     kaydet = form.Button("Kaydet", cmd="save")
 
 class OncekiEgitimBilgileri(CrudView):
     class Meta:
-        model = "Ogrenci"
+        model = "OncekiEgitimBilgileri"
 
     def onceki_egitim_bilgileri(self):
         self.form_out(OncekiEgitimBilgileriForm(self.object, current = self.current))

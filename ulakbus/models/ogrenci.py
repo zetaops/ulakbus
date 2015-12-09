@@ -252,11 +252,6 @@ class Ogrenci(Model):
     tel_no = field.Integer("Telefon Numarası", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
 
-    class OncekiEgitimBilgileri(ListNode):
-        okul_adi = field.String("Mezun Olduğu Okul")
-        diploma_notu = field.Float("Diploma Notu")
-        mezuniyet_yili = field.String("Mezuniyet Yılı")
-
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Ogrenci"
@@ -266,6 +261,12 @@ class Ogrenci(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
+
+class OncekiEgitimBilgileri(Model):
+    okul_adi = field.String("Mezun Olduğu Okul", index=True)
+    diploma_notu = field.Float("Diploma Notu", index=True)
+    mezuniyet_yili = field.String("Mezuniyet Yılı", index=True)
+    ogrenci = Ogrenci()
 
 
 class OgrenciProgram(Model):
