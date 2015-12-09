@@ -6,9 +6,12 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
+from zato.server.service import Service
+from ulakbus import settings
+
 __author__ = 'Ali Riza Keles'
 
-from zato.server.service import Service
+UID = settings.UID
 
 DEBUG = False
 if DEBUG:
@@ -58,7 +61,9 @@ class YOKSIS(Service):
             'birim_turu_adi': birim.BIRIM_TURU_ADI,
             'ilce_kodu': birim.ILCE_KODU,
             'klavuz_kodu': birim.KILAVUZ_KODU,
-            'ogrenim_suresi': birim.OGRENIM_SURESI
+            'ogrenim_suresi': birim.OGRENIM_SURESI,
+            'ogrenim_dili': '',
+            'birim_adi_ingilizce': ''
         }
         if birim.OGRENIM_DILI:
             ret.update({'ogrenim_dili': birim.OGRENIM_DILI})
@@ -149,18 +154,18 @@ class DumpUnitsToUlakbusUnitModel(BirimAgaci):
      """
 
     def handle(self):
-        from ulakbus import settings
+
         if self.request.raw_request:
             root_unit = self.request.raw_request
         else:
-            root_unit = settings.UID
+            root_unit = UID
         conn = self.connection()
         self.bir(conn, root_unit=root_unit)
 
     def birim_kaydet(self, birim_id):
         from ulakbus.models.auth import Unit
         data = self.birim_detaylari()
-        u = Unit.objects.get_or_create(yoksis_no=birim_id)
+        u, is_new = Unit.objects.get_or_create(yoksis_no=birim_id)
         u.name = data['birim_adi']
         u.long_name = data['birim_uzun_adi']
         u.city_code = data['il_kodu']
