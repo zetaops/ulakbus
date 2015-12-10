@@ -45,8 +45,8 @@ class Building(Model):
 
     def campus_display(self):
         return "%s" % self.campus.name
-    campus_display.title = 'Yerleşke'
 
+    campus_display.title = 'Yerleşke'
 
     def __unicode__(self):
         return '%s %s %s %s' % (self.code, self.name, self.coordinates(), self.campus)
@@ -80,6 +80,7 @@ class Room(Model):
 
     def building_display(self):
         return "%s" % self.building.name
+
     building_display.title = 'Bina'
 
     def __unicode__(self):
