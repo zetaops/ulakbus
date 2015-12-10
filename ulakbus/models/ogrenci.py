@@ -63,7 +63,8 @@ class Okutman(Model):
 
     @property
     def okutman(self):
-        return self.personel if self.personel else self.harici_okutman
+        # self.personel layz model dondurdugu icin self.personel.key seklinde kontrol etmeliyiz.
+        return self.personel if self.personel.key else self.harici_okutman
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
