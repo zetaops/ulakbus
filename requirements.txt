@@ -13,7 +13,7 @@ celery
 requests
 lxml
 
-# following projects are parts of our project,
+# following projeets are parts of our project,
 # so creating symbolic links for them is more convenient for us
 
 #git+https://github.com/zetaops/pyoko.git#egg=pyoko
