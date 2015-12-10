@@ -18,8 +18,8 @@ class Campus(Model):
     coordinate_y = field.String("Coordinate Y", index=True)
 
     class Meta:
-        verbose_name = "Campus"
-        verbose_name_plural = "Campuses"
+        verbose_name = "Yerleşke"
+        verbose_name_plural = "Yerleşkeler"
         search_fields = ['code', 'name']
         list_fields = ['code', 'name']
 
@@ -38,8 +38,8 @@ class Building(Model):
     campus = Campus()
 
     class Meta:
-        verbose_name = "Building"
-        verbose_name_plural = "Buildings"
+        verbose_name = "Bina"
+        verbose_name_plural = "Binalar"
         search_fields = ['code', 'name', 'campus']
         list_fields = ['code', 'name', 'campus']
 
@@ -68,8 +68,8 @@ class Room(Model):
     is_active = field.Boolean("Active", index=True)
 
     class Meta:
-        verbose_name = "Room"
-        verbose_name_plural = "Rooms"
+        verbose_name = "Oda"
+        verbose_name_plural = "Odalar"
         search_fields = ['code', 'name', 'building']
         list_fields = ['code', 'name', 'building']
 
