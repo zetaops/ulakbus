@@ -60,7 +60,36 @@ class RoomType(Model):
     notes = field.Text("Notes", index=True)
 
     def __unicode__(self):
-        return '%s' % (self.type)
+        return '%s' % self.type
+
+
+class RoomFeature(Model):
+    feature_name = field.String()
+    type = field.Integer(choices='room_feature_types')
+
+    def __unicode__(self):
+        return '%s - %s' % (self.feature, self.type)
+
+
+class RoomFeatureValue(Model):
+    feature = RoomFeature()
+    val = field.String()
+    option = RoomFeatureOption()
+
+    @property
+    def value(self):
+        return self.val if self.val else self.option.option_value
+
+    def __unicode__(self):
+        return '%s  - %s' % (self.feature.feature_name, self.value)
+
+
+class RoomFeatureOption(Model):
+    feature = RoomFeature()
+    option_value = field.String()
+
+    def __unicode__(self):
+        return '%s - %s' % (self.feature.feature_name, self.option_value)
 
 
 class Room(Model):
@@ -71,6 +100,9 @@ class Room(Model):
     capacity = field.Integer("Capacity", index=True)
     building = Building()
     is_active = field.Boolean("Active", index=True)
+
+    class Features(ListNode):
+        feature = RoomFeatureValue()
 
     class Meta:
         verbose_name = "Oda"
