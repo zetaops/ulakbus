@@ -40,8 +40,13 @@ class Building(Model):
     class Meta:
         verbose_name = "Bina"
         verbose_name_plural = "Binalar"
-        search_fields = ['code', 'name', 'campus']
-        list_fields = ['code', 'name', 'campus']
+        search_fields = ['code', 'name']
+        list_fields = ['code', 'name', 'campus_display']
+
+    def campus_display(self):
+        return "%s" % self.campus.name
+    campus_display.title = 'Yerleşke'
+
 
     def __unicode__(self):
         return '%s %s %s %s' % (self.code, self.name, self.coordinates(), self.campus)
@@ -55,7 +60,7 @@ class RoomType(Model):
     notes = field.Text("Notes", index=True)
 
     def __unicode__(self):
-        return '%s %s %s' % (self.type)
+        return '%s' % (self.type)
 
 
 class Room(Model):
@@ -70,8 +75,12 @@ class Room(Model):
     class Meta:
         verbose_name = "Oda"
         verbose_name_plural = "Odalar"
-        search_fields = ['code', 'name', 'building']
-        list_fields = ['code', 'name', 'building']
+        search_fields = ['code', 'name']
+        list_fields = ['code', 'name', 'building_display']
+
+    def building_display(self):
+        return "%s" % self.building.name
+    building_display.title = 'Bina'
 
     def __unicode__(self):
         return '%s %s %s' % (self.code, self.name, self.capacity)
