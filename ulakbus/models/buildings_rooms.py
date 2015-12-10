@@ -70,8 +70,8 @@ class Room(Model):
     class Meta:
         verbose_name = "Room"
         verbose_name_plural = "Rooms"
-        search_fields = ['code', 'name', 'campus']
-        list_fields = ['code', 'name', 'campus']
+        search_fields = ['code', 'name', 'building']
+        list_fields = ['code', 'name', 'building']
 
     def __unicode__(self):
         return '%s %s %s' % (self.code, self.name, self.capacity)
