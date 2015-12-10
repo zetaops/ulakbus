@@ -24,7 +24,7 @@ class Campus(Model):
         list_fields = ['code', 'name']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.code, self.name, self.coordinates)
+        return '%s %s %s' % (self.code, self.name, self.coordinates())
 
     def coordinates(self):
         return '%s %s' % (self.coordinate_x, self.coordinate_y)
@@ -38,13 +38,13 @@ class Building(Model):
     campus = Campus()
 
     class Meta:
-        verbose_name = "Campus"
-        verbose_name_plural = "Campuses"
-        search_fields = ['name', 'campus']
-        list_fields = ['name', 'campus']
+        verbose_name = "Building"
+        verbose_name_plural = "Buildings"
+        search_fields = ['code', 'name', 'campus']
+        list_fields = ['code', 'name', 'campus']
 
     def __unicode__(self):
-        return '%s %s %s %s' % (self.code, self.name, self.coordinates, self.campus)
+        return '%s %s %s %s' % (self.code, self.name, self.coordinates(), self.campus)
 
     def coordinates(self):
         return '%s %s' % (self.coordinate_x, self.coordinate_y)
@@ -68,8 +68,8 @@ class Room(Model):
     is_active = field.Boolean("Active", index=True)
 
     class Meta:
-        verbose_name = "Campus"
-        verbose_name_plural = "Campuses"
+        verbose_name = "Room"
+        verbose_name_plural = "Rooms"
         search_fields = ['code', 'name', 'campus']
         list_fields = ['code', 'name', 'campus']
 
