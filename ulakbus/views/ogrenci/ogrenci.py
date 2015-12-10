@@ -69,7 +69,7 @@ class OncekiEgitimBilgileriForm(JsonForm):
 
 class OncekiEgitimBilgileri(CrudView):
     class Meta:
-        model = "OncekiEgitimBilgileri"
+        model = "OncekiEgitimBilgisi"
 
     def onceki_egitim_bilgileri(self):
         self.form_out(OncekiEgitimBilgileriForm(self.object, current = self.current))

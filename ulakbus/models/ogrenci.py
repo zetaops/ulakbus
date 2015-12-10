@@ -262,11 +262,18 @@ class Ogrenci(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
-class OncekiEgitimBilgileri(Model):
+class OncekiEgitimBilgisi(Model):
     okul_adi = field.String("Mezun Olduğu Okul", index=True)
     diploma_notu = field.Float("Diploma Notu", index=True)
     mezuniyet_yili = field.String("Mezuniyet Yılı", index=True)
     ogrenci = Ogrenci()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Önceki Eğitim Bilgisi"
+        verbose_name_plural = "Önceki Eğitim Bilgileri"
+        list_fields = ['okul_adi', 'diploma_notu','mezuniyet_yili']
+        search_fields = ['okul_adi', 'diploma_notu','mezuniyet_yili']
 
 
 class OgrenciProgram(Model):
