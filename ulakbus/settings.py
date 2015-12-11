@@ -100,6 +100,7 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'Campus', 'wf': 'crud', 'param': 'id', 'text': 'Kampüs'},
     {'kategori': 'Admin', 'model': 'Building', 'wf': 'crud', 'param': 'id', 'text': 'Bina'},
     {'kategori': 'Admin', 'model': 'Room', 'wf': 'crud', 'param': 'id', 'text': 'Oda'},
+    {'kategori': 'Admin', 'model': 'RoomType', 'wf': 'crud', 'param': 'id', 'text': 'Oda Tipi'},
 ]
 
 VIEW_URLS.extend([
