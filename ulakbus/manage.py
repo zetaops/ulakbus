@@ -98,6 +98,54 @@ class GenerateRandomOkutman(Command):
             yeni_personel()
 
 
+class ExportRoomsToXml(Command):
+    CMD_NAME = 'export_rooms'
+    HELP = 'Generates Unitime XML import file for rooms'
+    PARAMS = []
+
+    def run(self):
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import *
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        term = Donem.objects.filter(guncel=True)[0]
+        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+        campuses = Campus.objects.filter()
+
+        # create XML
+        for campus in campuses:
+            if campus.building_set:
+                root = etree.Element('buildingsRooms', campus="%s" % uni, term="%s" % term.ad, \
+                                     year="%s" % term.baslangic_tarihi.year)
+                for building in campus.building_set:
+                    buildingel = etree.SubElement(root, 'building', externalId="%s" % building.building.key, \
+                                                  abbreviation="%s" % building.building.code, \
+                                                  locationX="%s" % building.building.coordinate_x, \
+                                                  locationY="%s" % building.building.coordinate_y, \
+                                                  name="%s" % building.building.name)
+                    if building.building.room_set:
+
+                        for room in building.building.room_set:
+                            etree.SubElement(buildingel, 'room', externalId="%s" % room.room.key, \
+                                             locationX="%s" % building.building.coordinate_x, \
+                                             locationY="%s" % building.building.coordinate_y, \
+                                             roomNumber="%s" % room.room.code, \
+                                             roomClassification="%s" % room.room.room_type.type, \
+                                             capacity="%s" % room.room.capacity, instructional="True")
+
+        # pretty string
+
+        s = etree.tostring(root, pretty_print=True)
+        current_date = datetime.datetime.now()
+        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+        outDirectory = root_directory+'/bin/dphs/data_exchange/'+directory_name
+        if not os.path.exists(outDirectory):
+            os.makedirs(outDirectory)
+        outFile = open(outDirectory+'/buildingRoomImport.xml', 'w+')
+        outFile.write("%s" % s)
+        print "Dosya %s dizini altina kayit edilmistir" % outDirectory
+
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
 
