@@ -119,6 +119,7 @@ class ExportRoomsToXml(Command):
                 root = etree.Element('buildingsRooms', campus="%s" % uni, term="%s" % term.ad, \
                                      year="%s" % term.baslangic_tarihi.year)
                 for building in campus.building_set:
+
                     buildingel = etree.SubElement(root, 'building', externalId="%s" % building.building.key, \
                                                   abbreviation="%s" % building.building.code, \
                                                   locationX="%s" % building.building.coordinate_x, \
@@ -139,12 +140,12 @@ class ExportRoomsToXml(Command):
         s = etree.tostring(root, pretty_print=True)
         current_date = datetime.datetime.now()
         directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-        outDirectory = root_directory+'/bin/dphs/data_exchange/'+directory_name
-        if not os.path.exists(outDirectory):
-            os.makedirs(outDirectory)
-        outFile = open(outDirectory+'/buildingRoomImport.xml', 'w+')
+        export_directory = root_directory+'/bin/dphs/data_exchange/'+directory_name
+        if not os.path.exists(export_directory):
+            os.makedirs(export_directory)
+        outFile = open(export_directory+'/buildingRoomImport.xml', 'w+')
         outFile.write("%s" % s)
-        print "Dosya %s dizini altina kayit edilmistir" % outDirectory
+        print "Dosya %s dizini altina kayit edilmistir" % export_directory
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
