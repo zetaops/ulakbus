@@ -107,7 +107,7 @@ class ExportRoomsToXml(Command):
         import os
         import datetime
         from lxml import etree
-        from ulakbus.models import *
+        from ulakbus.models import Donem, Unit, Campus
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
@@ -144,7 +144,8 @@ class ExportRoomsToXml(Command):
             os.makedirs(outDirectory)
         outFile = open(outDirectory+'/buildingRoomImport.xml', 'w+')
         outFile.write("%s" % s)
-        print "Dosya %s dizini altina kayit edilmistir" % outDirectory
+        print("Dosya %s dizini altina kayit edilmistir" % outDirectory)
+
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
