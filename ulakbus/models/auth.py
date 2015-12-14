@@ -115,7 +115,7 @@ class Role(Model):
     abstract_role = AbstractRole()
     user = User()
     unit = Unit()
-    name = field.String("Rol Adı")
+    name = field.String("Rol Adı", hidden=True)
 
     class Meta:
         app = 'Sistem'
