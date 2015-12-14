@@ -74,7 +74,7 @@ class Donem(Model):
     ad = field.String("Ad", index=True)
     baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    guncel = field.Boolean()
+    guncel = field.Boolean(index=True)
 
     class Meta:
         app = 'Ogrenci'
