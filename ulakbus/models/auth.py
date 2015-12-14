@@ -115,17 +115,19 @@ class Role(Model):
     abstract_role = AbstractRole()
     user = User()
     unit = Unit()
+    name = field.String("Rol Adı")
 
     class Meta:
         app = 'Sistem'
         verbose_name = "Rol"
         verbose_name_plural = "Roller"
+        search_fields = ['name']
 
     def __unicode__(self):
         try:
             return "%s %s" % (self.abstract_role.name, self.user.username)
         except:
-            return "Role #%s" % self.key
+            return "Role #%s" % self.key if self.is_in_db() else ''
 
     class Permissions(ListNode):
         permission = Permission()
@@ -146,6 +148,10 @@ class Role(Model):
                 self.Permissions(permission=p)
         if p:
             self.save()
+
+    def save(self):
+        self.name = self.__unicode__()
+        super(Role, self).save()
 
 
 class LimitedPermissions(Model):
