@@ -67,7 +67,7 @@ class Okutman(Model):
         return self.personel if self.personel.key else self.harici_okutman
 
     def __unicode__(self):
-        return '%s %s' % (self.ad, self.soyad)
+        return '%s %s' % (self.okutman.ad, self.okutman.soyad)
 
 
 class Donem(Model):
