@@ -98,9 +98,11 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
-    bolum_baskani = Role()
-    ects_bolum_kordinator = Role()
-    akademik_kordinator = Role()
+    bolum_baskani = Role(verbose_name='Bolum Başkanı', reverse_name='bolum_baskani_program')
+    ects_bolum_kordinator = Role(verbose_name='ECTS Bölüm Koordinator',
+                                 reverse_name='ects_koordinator_program')
+    akademik_kordinator = Role(verbose_name='Akademik Koordinator',
+                               reverse_name='akademik_koordinator_program')
     birim = Unit()
 
     class Donemler(ListNode):
