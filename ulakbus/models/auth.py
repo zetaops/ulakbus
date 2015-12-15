@@ -8,7 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from pyoko import field
-from pyoko.model import Model, ListNode
+from pyoko import Model, ListNode
 from passlib.hash import pbkdf2_sha512
 
 try:
