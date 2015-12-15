@@ -54,6 +54,8 @@ OBJECT_MENU = {
     'personel': [
         {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
          'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
+        {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri'},
+        {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri'},
         {'name': 'KurumDisiGorevlendirmeBilgileri'},
         {'name': 'KurumIciGorevlendirmeBilgileri'},
         {'name': 'AdresBilgileri'},
@@ -71,8 +73,6 @@ OBJECT_MENU = {
         {'name': 'AskerlikKayitlari'},
         {'name': 'Atama'},
         {'name': 'Kadro'},
-        {'name': 'Izin'},
-        {'name': 'UcretsizIzin'},
     ],
     'ogrenci': [
         {'name': 'DersKatilimi'},
@@ -80,6 +80,8 @@ OBJECT_MENU = {
         {'name': 'DegerlendirmeNot'},
         {'name': 'OgrenciDersi'},
         {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri', 'verbose_name': 'Kimlik Bilgileri'},
+        {'name': 'Ogrenci', 'field':'object_id', 'wf':'ogrenci_iletisim_bilgileri', 'verbose_name': 'İletişim Bilgileri'},
+        {'name': 'OncekiEgitimBilgisi'},
     ],
 }
 ADMIN_MENUS = [

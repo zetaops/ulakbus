@@ -250,22 +250,9 @@ class Ogrenci(Model):
     uyruk = field.String("Uyruk", index=True)
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
     ehliyet = field.String("Ehliyet", index=True)
-    giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
-    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
-    bolum = field.String("Bölüm", index=True)
-    fakulte = field.String("Fakülte", index=True)
     e_posta = field.String("E-Posta", index=True)
-    ogrenci_no = field.Integer("Öğrenci Numarası", index=True)
     tel_no = field.Integer("Telefon Numarası", index=True)
-    akademik_yil = field.String("Akademik Yıl", index=True)
-    aktif_donem = field.String("Dönem", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
-    basari_durumu = field.String("Başarı Durumu", index=True)
-    ders_programi = DersProgrami()
-    danisman = Personel()
-
-    class KayitliOluduguProgramlar(ListNode):
-        program = Program()
 
     class Meta:
         app = 'Ogrenci'
@@ -277,11 +264,36 @@ class Ogrenci(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
+class OncekiEgitimBilgisi(Model):
+    okul_adi = field.String("Mezun Olduğu Okul", index=True)
+    diploma_notu = field.Float("Diploma Notu", index=True)
+    mezuniyet_yili = field.String("Mezuniyet Yılı", index=True)
+    ogrenci = Ogrenci()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Önceki Eğitim Bilgisi"
+        verbose_name_plural = "Önceki Eğitim Bilgileri"
+        list_fields = ['okul_adi', 'diploma_notu','mezuniyet_yili']
+        search_fields = ['okul_adi', 'diploma_notu','mezuniyet_yili']
+
+
+class OgrenciProgram(Model):
+    ogrenci_no = field.Integer("Öğrenci Numarası", index=True)
+    giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
+    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
+    aktif_donem = field.String("Dönem", index=True)
+    basari_durumu = field.String("Başarı Durumu", index=True)
+    ders_programi = DersProgrami()
+    danisman = Personel()
+    program = Program()
+    ogrenci = Ogrenci()
+
 
 class OgrenciDersi(Model):
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
     ders = Sube()
-    ogrenci = Ogrenci()
+    ogrenci_program = OgrenciProgram()
 
     class Meta:
         app = 'Ogrenci'

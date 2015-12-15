@@ -66,6 +66,7 @@ class Personel(Model):
     kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
     birim = Unit("Birim")
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
 
     class Meta:
         app = 'Personel'
@@ -78,6 +79,10 @@ class Personel(Model):
         return self.nufus_kayitlari.durum if self.nufus_kayitlari.key else None
 
     durum.title = "Durum"
+
+    def kadro(self):
+        atama = Atama.objects.get(personel=self)
+        return atama.kadro
 
     def __unicode__(self):
         return "%s %s" % (self.ad, self.soyad)
@@ -150,7 +155,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
         list_search = ["aciklama"]
         list_fields = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
         list_filters = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
-        search_fields = ["aciklama",]
+        search_fields = ["aciklama", ]
         form_grouping = [
             {
                 "layout": "4",
@@ -190,7 +195,7 @@ class Kadro(Model):
     durum = field.Integer("Durum", index=True, choices="kadro_durumlari")
     birim = Unit("Birim")
     aciklama = field.String("Açıklama", index=True)
-
+    unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod")
 
     class Meta:
         app = 'Personel'
@@ -203,6 +208,7 @@ class Kadro(Model):
     def __unicode__(self):
         return "%s %s %s" % (self.unvan, self.derece, self.durum)
 
+
 # class Atama(Model):
 #     personel = Personel("Personel")
 #     kadro = Kadro("Kadro")
@@ -214,3 +220,73 @@ class Kadro(Model):
 #
 #     def __unicode__(self):
 #         return "%s %s" % (self.personel, self.kadro)
+
+class Izin(Model):
+    tip = field.Integer("Tip", index=True, choices="izin")
+    baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
+    bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
+    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
+    adres = field.String("Geçireği Adres", index=True)
+    telefon = field.String("Telefon", index=True)
+    personel = Personel()
+    vekil = Personel()
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "İzin"
+        verbose_name_plural = "İzinler"
+        list_fields = ['tip', 'baslangic', 'bitis', 'onay', 'telefon']
+        search_fields = ['tip', 'baslangic', 'onay']
+
+    def __unicode__(self):
+        return '%s %s' % (self.tip, self.onay)
+
+
+class UcretsizIzin(Model):
+    tip = field.Integer("Tip", index=True, choices="ucretsiz_izin")
+    baslangic_tarihi = field.Date("İzin Başlangıç Tarihi", index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date("İzin Bitiş Tarihi", index=True, format="%d.%m.%Y")
+    donus_tarihi = field.Date("Dönüş Tarihi", index=True, format="%d.%m.%Y")
+    donus_tip = field.Integer("Dönüş Tip", index=True)
+    onay_tarihi = field.Date("Onay Tarihi", index=True, format="%d.%m.%Y")
+    personel = Personel()
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Ücretsiz İzin"
+        verbose_name_plural = "Ücretsiz İzinler"
+        list_fields = ['tip', 'baslangic_tarihi', 'bitis_tarihi', 'donus_tarihi']
+        search_fields = ['tip', 'onay_tarihi']
+
+    def __unicode__(self):
+        return '%s %s' % (self.tip, self.onay_tarihi)
+
+
+class Atama(Model):
+    kurum_sicil_no = field.String("Kurum Sicil No", index=True)
+    personel_tip = field.Integer("Personel Tipi", index=True)
+    hizmet_sinif = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+    statu = field.Integer("Statü", index=True)
+    gorev_suresi_baslama = field.Date("Görev Süresi Başlama", index=True, format="%d.%m.%Y")
+    gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", index=True, format="%d.%m.%Y")
+    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
+    ibraz_tarihi = field.Date("İbraz Tarihi", index=True, format="%d.%m.%Y")
+    durum = field.Integer("Durum", index=True)
+    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
+    nereden = field.Integer("Nereden", index=True)
+    atama_aciklama = field.String("Atama Açıklama", index=True)
+    goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
+    kadro_unvan = field.Integer("Kadro Unvan", index=True)
+    kadro_derece = field.Integer("Kadro Derece", index=True)
+    kadro = Kadro()
+    personel = Personel()
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Atama"
+        verbose_name_plural = "Atamalar"
+        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi', 'durum']
+        search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
