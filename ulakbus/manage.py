@@ -120,15 +120,15 @@ class ExportRoomsToXml(Command):
                                      year="%s" % term.baslangic_tarihi.year)
                 for building in campus.building_set:
 
-                    buildingel = etree.SubElement(root, 'building', externalId="%s" % building.building.key, \
-                                                  abbreviation="%s" % building.building.code, \
-                                                  locationX="%s" % building.building.coordinate_x, \
-                                                  locationY="%s" % building.building.coordinate_y, \
-                                                  name="%s" % building.building.name)
+                    buildingelement = etree.SubElement(root, 'building', externalId="%s" % building.building.key, \
+                                                       abbreviation="%s" % building.building.code, \
+                                                       locationX="%s" % building.building.coordinate_x, \
+                                                       locationY="%s" % building.building.coordinate_y, \
+                                                       name="%s" % building.building.name)
                     if building.building.room_set:
 
                         for room in building.building.room_set:
-                            etree.SubElement(buildingel, 'room', externalId="%s" % room.room.key, \
+                            etree.SubElement(buildingelement, 'room', externalId="%s" % room.room.key, \
                                              locationX="%s" % building.building.coordinate_x, \
                                              locationY="%s" % building.building.coordinate_y, \
                                              roomNumber="%s" % room.room.code, \
@@ -140,10 +140,10 @@ class ExportRoomsToXml(Command):
         s = etree.tostring(root, pretty_print=True)
         current_date = datetime.datetime.now()
         directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-        export_directory = root_directory+'/bin/dphs/data_exchange/'+directory_name
+        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
         if not os.path.exists(export_directory):
             os.makedirs(export_directory)
-        outFile = open(export_directory+'/buildingRoomImport.xml', 'w+')
+        outFile = open(export_directory + '/buildingRoomImport.xml', 'w+')
         outFile.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % outDirectory)
 
@@ -157,14 +157,36 @@ class ExportSessionsToXml(Command):
         import os
         import datetime
         from lxml import etree
-        from ulakbus.models import *
+        from ulakbus.models import Donem, Unit, Campus
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
         campuses = Campus.objects.filter()
         sessions = Donem.objects.filter()
 
+        # create XML
+        for campus in campuses:
+            if campus:
 
+                root = etree.Element('session', campus="%s" % uni, term="%s" % term.ad, \
+                                     year="%s" % term.baslangic_tarihi.year, dateFormat="M/d/y")
+                for session in sessions:
+                    start_date = session.baslangic_tarihi.strftime("%m/%d/%Y")
+                    end_date = session.bitis_tarihi.strftime("%m/%d/%Y")
+                    etree.SubElement(root, 'sessionDates', beginDate="%s" % start_date, endDate="%s" % end_date, \
+                                     classesEnd="%s" % end_date, examBegin="%s" % start_date, \
+                                     eventBegin="%s" % start_date, eventEnd="%s" % end_date)
+        # pretty string
+        s = etree.tostring(root, pretty_print=True)
+        current_date = datetime.datetime.now()
+        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+        if not os.path.exists(export_directory):
+            os.makedirs(export_directory)
+        outFile = open(export_directory + '/sessionImport.xml', 'w+')
+        outFile.write("%s" % s)
+        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+        
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
 
