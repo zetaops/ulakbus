@@ -80,6 +80,8 @@ OBJECT_MENU = {
         {'name': 'DegerlendirmeNot'},
         {'name': 'OgrenciDersi'},
         {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri', 'verbose_name': 'Kimlik Bilgileri'},
+        {'name': 'Ogrenci', 'field':'object_id', 'wf':'ogrenci_iletisim_bilgileri', 'verbose_name': 'İletişim Bilgileri'},
+        {'name': 'OncekiEgitimBilgisi'},
     ],
 }
 ADMIN_MENUS = [

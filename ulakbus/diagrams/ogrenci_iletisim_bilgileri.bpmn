@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_rbcVoJxNEeWVovXFaGFh8g" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:collaboration id="iletisim_bilgiler" name="Öğrenci İletişim Bilgileri">
+    <bpmn2:participant id="ogrenci_iletisim_bilgileri_pool" name="Öğrenci İletişim Bilgileri" processRef="ogrenci_iletisim_bilgileri"/>
+  </bpmn2:collaboration>
+  <bpmn2:process id="ogrenci_iletisim_bilgileri" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn2:lane id="personel" name="Personel">
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>iletisim_bilgileri</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>kps_adres_sorgula</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>iletisim_bilgileri_kaydet</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="iletisim_bilgileri" camunda:assignee="ogrenci.ogrenci.IletisimBilgileri.iletisim_bilgileri" name="İletişim Bilgileri">
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="iletisim_bilgileri"/>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_4">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="iletisim_bilgileri" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:serviceTask id="kps_adres_sorgula" camunda:class="ogrenci.ogrenci.IletisimBilgileri.kps_sorgula" name="KPS Adres Sorgula">
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="ExclusiveGateway_1" targetRef="kps_adres_sorgula">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == "kps_sorgula"]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:serviceTask id="iletisim_bilgileri_kaydet" camunda:class="ogrenci.ogrenci.IletisimBilgileri.save" name="İletişim Bilgileri Kaydet">
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ExclusiveGateway_1" targetRef="iletisim_bilgileri_kaydet"/>
+    <bpmn2:endEvent id="EndEvent_1">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="client_message">
+            <camunda:map>
+              <camunda:entry key="title">Başarılı</camunda:entry>
+              <camunda:entry key="body">Bilgiler Kaydedildi</camunda:entry>
+              <camunda:entry key="type">info</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="iletisim_bilgileri_kaydet" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="kps_adres_sorgula" targetRef="iletisim_bilgileri"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="iletisim_bilgiler">
+      <bpmndi:BPMNShape id="_BPMNShape_Participant_9" bpmnElement="ogrenci_iletisim_bilgileri_pool" isHorizontal="true">
+        <dc:Bounds height="313.0" width="829.0" x="84.0" y="60.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_14" bpmnElement="personel" isHorizontal="true">
+        <dc:Bounds height="313.0" width="799.0" x="114.0" y="60.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_10" bpmnElement="StartEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="192.0" y="240.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="210.0" y="281.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_22" bpmnElement="iletisim_bilgileri">
+        <dc:Bounds height="80.0" width="100.0" x="312.0" y="218.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_10" targetElement="_BPMNShape_UserTask_22">
+        <di:waypoint xsi:type="dc:Point" x="228.0" y="258.0"/>
+        <di:waypoint xsi:type="dc:Point" x="312.0" y="258.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="267.0" y="258.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_23" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="504.0" y="232.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="529.0" y="287.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_UserTask_22" targetElement="_BPMNShape_ExclusiveGateway_23">
+        <di:waypoint xsi:type="dc:Point" x="412.0" y="258.0"/>
+        <di:waypoint xsi:type="dc:Point" x="458.0" y="258.0"/>
+        <di:waypoint xsi:type="dc:Point" x="458.0" y="257.0"/>
+        <di:waypoint xsi:type="dc:Point" x="504.0" y="257.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="455.0" y="258.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_39" bpmnElement="kps_adres_sorgula">
+        <dc:Bounds height="80.0" width="100.0" x="312.0" y="72.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="_BPMNShape_ExclusiveGateway_23" targetElement="_BPMNShape_ServiceTask_39">
+        <di:waypoint xsi:type="dc:Point" x="529.0" y="232.0"/>
+        <di:waypoint xsi:type="dc:Point" x="529.0" y="112.0"/>
+        <di:waypoint xsi:type="dc:Point" x="412.0" y="112.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="526.0" y="114.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_40" bpmnElement="iletisim_bilgileri_kaydet">
+        <dc:Bounds height="80.0" width="100.0" x="624.0" y="218.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="_BPMNShape_ExclusiveGateway_23" targetElement="_BPMNShape_ServiceTask_40">
+        <di:waypoint xsi:type="dc:Point" x="554.0" y="257.0"/>
+        <di:waypoint xsi:type="dc:Point" x="589.0" y="257.0"/>
+        <di:waypoint xsi:type="dc:Point" x="589.0" y="258.0"/>
+        <di:waypoint xsi:type="dc:Point" x="624.0" y="258.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="586.0" y="258.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_15" bpmnElement="EndEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="816.0" y="232.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="834.0" y="273.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="_BPMNShape_ServiceTask_40" targetElement="_BPMNShape_EndEvent_15">
+        <di:waypoint xsi:type="dc:Point" x="724.0" y="258.0"/>
+        <di:waypoint xsi:type="dc:Point" x="770.0" y="258.0"/>
+        <di:waypoint xsi:type="dc:Point" x="770.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="816.0" y="250.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="767.0" y="254.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_ServiceTask_39" targetElement="_BPMNShape_UserTask_22">
+        <di:waypoint xsi:type="dc:Point" x="362.0" y="152.0"/>
+        <di:waypoint xsi:type="dc:Point" x="362.0" y="218.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
