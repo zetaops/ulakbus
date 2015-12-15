@@ -107,7 +107,7 @@ class ExportRoomsToXml(Command):
         import os
         import datetime
         from lxml import etree
-        from ulakbus.models import Donem, Unit, Campus
+        from ulakbus.models import *
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
@@ -119,16 +119,15 @@ class ExportRoomsToXml(Command):
                 root = etree.Element('buildingsRooms', campus="%s" % uni, term="%s" % term.ad, \
                                      year="%s" % term.baslangic_tarihi.year)
                 for building in campus.building_set:
-
-                    buildingelement = etree.SubElement(root, 'building', externalId="%s" % building.building.key, \
-                                                       abbreviation="%s" % building.building.code, \
-                                                       locationX="%s" % building.building.coordinate_x, \
-                                                       locationY="%s" % building.building.coordinate_y, \
-                                                       name="%s" % building.building.name)
+                    buildingel = etree.SubElement(root, 'building', externalId="%s" % building.building.key, \
+                                                  abbreviation="%s" % building.building.code, \
+                                                  locationX="%s" % building.building.coordinate_x, \
+                                                  locationY="%s" % building.building.coordinate_y, \
+                                                  name="%s" % building.building.name)
                     if building.building.room_set:
 
                         for room in building.building.room_set:
-                            etree.SubElement(buildingelement, 'room', externalId="%s" % room.room.key, \
+                            etree.SubElement(buildingel, 'room', externalId="%s" % room.room.key, \
                                              locationX="%s" % building.building.coordinate_x, \
                                              locationY="%s" % building.building.coordinate_y, \
                                              roomNumber="%s" % room.room.code, \
@@ -140,94 +139,12 @@ class ExportRoomsToXml(Command):
         s = etree.tostring(root, pretty_print=True)
         current_date = datetime.datetime.now()
         directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-        if not os.path.exists(export_directory):
-            os.makedirs(export_directory)
-        out_file = open(export_directory + '/buildingRoomImport.xml', 'w+')
-        out_file.write("%s" % s)
-        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-
-class ExportSessionsToXml(Command):
-    CMD_NAME = 'export_sessions'
-    HELP = 'Generates Unitime XML import file for academic sessions'
-    PARAMS = []
-
-    def run(self):
-        import os
-        import datetime
-        from lxml import etree
-        from ulakbus.models import Donem, Unit, Campus
-        root_directory = os.path.dirname(os.path.abspath(__file__))
-        term = Donem.objects.filter(guncel=True)[0]
-        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        campuses = Campus.objects.filter()
-        sessions = Donem.objects.filter()
-
-        # create XML
-        for campus in campuses:
-            if campus:
-
-                root = etree.Element('session', campus="%s" % uni, term="%s" % term.ad, \
-                                     year="%s" % term.baslangic_tarihi.year, dateFormat="M/d/y")
-                for session in sessions:
-                    start_date = session.baslangic_tarihi.strftime("%m/%d/%Y")
-                    end_date = session.bitis_tarihi.strftime("%m/%d/%Y")
-                    etree.SubElement(root, 'sessionDates', beginDate="%s" % start_date, endDate="%s" % end_date, \
-                                     classesEnd="%s" % end_date, examBegin="%s" % start_date, \
-                                     eventBegin="%s" % start_date, eventEnd="%s" % end_date)
-        # pretty string
-        s = etree.tostring(root, pretty_print=True)
-        current_date = datetime.datetime.now()
-        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-        if not os.path.exists(export_directory):
-            os.makedirs(export_directory)
-        out_file = open(export_directory + '/sessionImport.xml', 'w+')
-        out_file.write("%s" % s)
-        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-<<<<<<< HEAD
-
-class ExportDepartmentsToXML(Command):
-    CMD_NAME = 'export_departments'
-    HELP = 'Generates Unitime XML import file for academic departments'
-    PARAMS = []
-
-    def run(self):
-        import os
-        import datetime
-        from lxml import etree
-        from ulakbus.models import Donem, Unit, Campus
-        root_directory = os.path.dirname(os.path.abspath(__file__))
-        term = Donem.objects.filter(guncel=True)[0]
-        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        units = Unit.objects.filter()
-        campuses = Campus.objects.filter()
-        sessions = Donem.objects.filter()
-        doc_type = '<!DOCTYPE departments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Department.dtd">'
-
-        # create XML
-        for campus in campuses:
-            if campus:
-                root = etree.Element('departments', campus="%s" % uni, term="%s" % term.ad, \
-                                     year="%s" % term.baslangic_tarihi.year)
-            for unit in units:
-                etree.SubElement(root, 'department', externalId="%s" % unit.key, \
-                                 abbreviation="%s" % unit.name, name="%s" % unit.long_name, \
-                                 deptCode="%s" % unit.yoksis_no, allowEvents="true")
-        # pretty string
-        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
-        current_date = datetime.datetime.now()
-        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-        if not os.path.exists(export_directory):
-            os.makedirs(export_directory)
-        out_file = open(export_directory + '/departmentImport.xml', 'w+')
-        out_file.write("%s" % s)
-        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-=======
->>>>>>> e45d737a47c10807cb19160f097c7117a1b4eb7f
+        outDirectory = root_directory+'/bin/dphs/data_exchange/'+directory_name
+        if not os.path.exists(outDirectory):
+            os.makedirs(outDirectory)
+        outFile = open(outDirectory+'/buildingRoomImport.xml', 'w+')
+        outFile.write("%s" % s)
+        print "Dosya %s dizini altina kayit edilmistir" % outDirectory
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
