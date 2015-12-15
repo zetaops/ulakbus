@@ -143,9 +143,9 @@ class ExportRoomsToXml(Command):
         export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
         if not os.path.exists(export_directory):
             os.makedirs(export_directory)
-        outFile = open(export_directory + '/buildingRoomImport.xml', 'w+')
-        outFile.write("%s" % s)
-        print("Dosya %s dizini altina kayit edilmistir" % outDirectory)
+        out_file = open(export_directory + '/buildingRoomImport.xml', 'w+')
+        out_file.write("%s" % s)
+        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
 
 
 class ExportSessionsToXml(Command):
@@ -183,8 +183,8 @@ class ExportSessionsToXml(Command):
         export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
         if not os.path.exists(export_directory):
             os.makedirs(export_directory)
-        outFile = open(export_directory + '/sessionImport.xml', 'w+')
-        outFile.write("%s" % s)
+        out_file = open(export_directory + '/sessionImport.xml', 'w+')
+        out_file.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
 
 
