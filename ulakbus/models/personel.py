@@ -276,6 +276,8 @@ class Atama(Model):
     nereden = field.Integer("Nereden", index=True)
     atama_aciklama = field.String("Atama Açıklama", index=True)
     goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
+    kadro_unvan = field.Integer("Kadro Unvan", index=True)
+    kadro_derece = field.Integer("Kadro Derece", index=True)
     kadro = Kadro()
     personel = Personel()
 

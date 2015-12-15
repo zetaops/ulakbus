@@ -110,6 +110,7 @@ class Unit(Model):
     def __unicode__(self):
         return '%s - %s - %s' % (self.name, self.english_name, self.yoksis_no)
 
+
 class Role(Model):
     abstract_role = AbstractRole()
     user = User()

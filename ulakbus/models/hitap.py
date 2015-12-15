@@ -394,57 +394,6 @@ class AskerlikKayitlari(Model):
             self.askerlik_nevi, self.kayit_no, self.kita_baslama_tarihi, self.gorev_yeri)
 
 
-class Atama(Model):
-    kurum_sicil_no = field.String("Kurum Sicil No", index=True)
-    personel_tip = field.Integer("Personel Tipi", index=True)
-    hizmet_sinif = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
-    statu = field.Integer("Statü", index=True)
-    gorev_suresi_baslama = field.Date("Görev Süresi Başlama", index=True, format="%d.%m.%Y")
-    gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", index=True, format="%d.%m.%Y")
-    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
-    ibraz_tarihi = field.Date("İbraz Tarihi", index=True, format="%d.%m.%Y")
-    durum = field.Integer("Durum", index=True)
-    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
-    nereden = field.Integer("Nereden", index=True)
-    atama_aciklama = field.String("Atama Açıklama", index=True)
-    goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
-    kadro_unvan = field.Integer("Kadro Unvan", index=True)
-    kadro_derece = field.Integer("Kadro Derece", index=True)
-    personel = Personel()
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Atama"
-        verbose_name_plural = "Atamalar"
-        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi', 'durum']
-        search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
-
-    def __unicode__(self):
-        return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
-
-
-class UcretsizIzin(Model):
-    tip = field.Integer("Tip", index=True)
-    baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
-    bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
-    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
-    personel = Personel()
-
-    class Donus(Node):
-        donus_sebep = field.Integer("Dönüş Sebebi", index=True)
-        ise_baslama = field.Date("İşe Başlama", index=True, format="%d.%m.%Y")
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Ücretsiz İzin"
-        verbose_name_plural = "Ücretsiz İzinler"
-        list_fields = ['tip', 'baslangic']
-        search_fields = ['tip', 'onay']
-
-    def __unicode__(self):
-        return '%s %s' % (self.tip, self.onay)
-
-
 class HitapSebep(Model):
     sebep_no = field.Integer("Sebep No", index=True)
     ad = field.String("Sebep Adı", index=True)
