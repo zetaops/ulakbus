@@ -10,6 +10,7 @@
 from pyoko import field
 from pyoko import Model, ListNode
 from passlib.hash import pbkdf2_sha512
+from pyoko import LinkProxy
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -99,6 +100,7 @@ class Unit(Model):
     is_academic = field.Boolean("Is Academic")
     is_active = field.Boolean("Is Active")
     uid = field.Integer(index=True)
+    parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
 
     class Meta:
         app = 'Sistem'
