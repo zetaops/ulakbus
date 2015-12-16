@@ -8,8 +8,9 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from pyoko import field
-from pyoko.model import Model, ListNode
+from pyoko import Model, ListNode
 from passlib.hash import pbkdf2_sha512
+from pyoko import LinkProxy
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -99,6 +100,7 @@ class Unit(Model):
     is_academic = field.Boolean("Is Academic")
     is_active = field.Boolean("Is Active")
     uid = field.Integer(index=True)
+    parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
 
     class Meta:
         app = 'Sistem'
@@ -108,7 +110,7 @@ class Unit(Model):
         list_fields = ['name', 'unit_type']
 
     def __unicode__(self):
-        return '%s %s' % (self.name, self.key)
+        return '%s - %s - %s' % (self.name, self.english_name, self.yoksis_no)
 
 
 class Role(Model):
