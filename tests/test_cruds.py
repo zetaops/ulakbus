@@ -37,7 +37,7 @@ class TestCase(BaseTestCase):
         num_of_objects = len_1(resp.json['objects'])
 
         # add a new employee record, then go to list view (do_list subcmd)
-        self.client.post(model='Personel', cmd='form')
+        self.client.post(model='Personel', cmd='add_edit_form')
         resp = self.client.post(model='Personel',
                                 cmd='save::list',
                                 form=dict(ad="Em1", tckn="12323121443"))
@@ -59,10 +59,10 @@ class TestCase(BaseTestCase):
         resp = self.client.post(model='Personel')
         resp = self.client.post(model='Personel', query="1234567")
         if len(resp.json['objects']) < 2:
-            self.client.post(model='Personel', cmd='form')
+            self.client.post(model='Personel', cmd='add_edit_form')
             for i in range(9):
                 resp = self.client.post(model='Personel',
-                                        cmd='save::form',
+                                        cmd='save::add_edit_form',
                                         form=dict(ad="Per%s" % i, tckn="123456789%s" % i))
             time.sleep(3)
         resp = self.client.post(model='Personel')

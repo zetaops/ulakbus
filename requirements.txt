@@ -1,5 +1,6 @@
 git+https://github.com/basho/riak-python-client.git#egg=riak
 git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
+git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 beaker
 falcon
 redis
@@ -7,15 +8,13 @@ lazy_object_proxy
 passlib
 pytest
 enum34
-requests
 Werkzeug
 celery
+requests
+lxml
 
-
-
-# following projects are parts of our project,
+# following projeets are parts of our project,
 # so creating symbolic links for them is more convenient for us
 
-#git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 #git+https://github.com/zetaops/pyoko.git#egg=pyoko
 #git+https://github.com/zetaops/zengine.git#egg=zengine

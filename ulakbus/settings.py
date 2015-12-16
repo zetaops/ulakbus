@@ -22,6 +22,7 @@ AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 
 PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
+ROLE_MODEL = 'ulakbus.models.auth.Role'
 # # left blank to use StreamHandler aka stderr
 # LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
 #
@@ -37,15 +38,24 @@ ANONYMOUS_WORKFLOWS = ['login', ]
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 
 DATE_DEFAULT_FORMAT = "%d.%m.%Y"
+DATETIME_DEFAULT_FORMAT = "%d.%m.%Y %H:%s"
 
-CRUD_MENUS = {
+DEFAULT_WF_CATEGORY_NAME = 'Genel'
+DEFAULT_OBJECT_CATEGORY_NAME = 'Seçime Uygun Görevler'
+
+OBJECT_MENU = {
     # 'personel|ogrenci|personeller|ogrenciler': [{'name':'ModelName',
     #                                             'field':'field_name',
     #                                             'verbose_name': 'verbose_name',
-    #                                             'category': 'Genel'}]
+    #                                             'category': 'Genel'
+    #                                             'wf':'crud'}]
     # 'field' defaults to 'personel' or 'ogrenci'
     # verbose_name can be specified to override the model's verbose_name_plural
     'personel': [
+        {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
+         'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
+        {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri'},
+        {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri'},
         {'name': 'KurumDisiGorevlendirmeBilgileri'},
         {'name': 'KurumIciGorevlendirmeBilgileri'},
         {'name': 'AdresBilgileri'},
@@ -63,24 +73,51 @@ CRUD_MENUS = {
         {'name': 'AskerlikKayitlari'},
         {'name': 'Atama'},
         {'name': 'Kadro'},
-        {'name': 'Izin'},
-        {'name': 'UcretsizIzin'},
     ],
     'ogrenci': [
         {'name': 'DersKatilimi'},
         {'name': 'Borc'},
         {'name': 'DegerlendirmeNot'},
         {'name': 'OgrenciDersi'},
+        {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri', 'verbose_name': 'Kimlik Bilgileri'},
+        {'name': 'Ogrenci', 'field':'object_id', 'wf':'ogrenci_iletisim_bilgileri', 'verbose_name': 'İletişim Bilgileri'},
+        {'name': 'OncekiEgitimBilgisi'},
     ],
 }
+ADMIN_MENUS = [
+    {'kategori': 'Admin', 'model': 'User', 'wf': 'crud', 'param': 'id', 'text': 'Kullanıcı'},
+    {'kategori': 'Admin', 'model': 'Role', 'wf': 'crud', 'param': 'id', 'text': 'Rol'},
+    {'kategori': 'Admin', 'model': 'Permission', 'wf': 'crud', 'param': 'id', 'text': 'Yetki'},
+    {'kategori': 'Admin', 'model': 'Unit', 'wf': 'crud', 'param': 'id', 'text': 'Birim'},
+    {'kategori': 'Admin', 'model': 'Personel', 'wf': 'crud', 'param': 'id', 'text': 'Personel'},
+    {'kategori': 'Admin', 'model': 'Ogrenci', 'wf': 'crud', 'param': 'id', 'text': 'Öğrenci'},
+    {'kategori': 'Admin', 'model': 'Okutman', 'wf': 'crud', 'param': 'id', 'text': 'Okutman'},
+    {'kategori': 'Admin', 'model': 'HariciOkutman', 'wf': 'crud', 'param': 'id', 'text': 'Harici Okutman'},
+    {'kategori': 'Admin', 'model': 'Donem', 'wf': 'crud', 'param': 'id', 'text': 'Dönem'},
+    {'kategori': 'Admin', 'model': 'Program', 'wf': 'crud', 'param': 'id', 'text': 'Program'},
+    {'kategori': 'Admin', 'model': 'Ders', 'wf': 'crud', 'param': 'id', 'text': 'Ders'},
+    {'kategori': 'Admin', 'model': 'Sube', 'wf': 'crud', 'param': 'id', 'text': 'Sube'},
+    {'kategori': 'Admin', 'model': 'Campus', 'wf': 'crud', 'param': 'id', 'text': 'Kampüs'},
+    {'kategori': 'Admin', 'model': 'Building', 'wf': 'crud', 'param': 'id', 'text': 'Bina'},
+    {'kategori': 'Admin', 'model': 'Room', 'wf': 'crud', 'param': 'id', 'text': 'Oda'},
+]
 
-VIEW_URLS = [
+VIEW_URLS.extend([
     # ('falcon URI template', 'python path to view method/class')
-    ('/menu', 'ulakbus.views.system.Menu'),
     ('/ara/ogrenci/{query}', 'ulakbus.views.system.SearchStudent'),
     ('/ara/personel/{query}', 'ulakbus.views.system.SearchPerson'),
     ('/notify/', 'ulakbus.views.system.Notification'),
-
-]
+])
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
+
+ENABLE_SIMPLE_CRUD_MENU = False
+
+ALLOWED_ORIGINS += [
+    'http://ulakbus.net',
+    'http://www.ulakbus.net',
+    'http://dev.zetaops.io',
+    'http://nightly.zetaops.io',
+]
+
+UID = 173500

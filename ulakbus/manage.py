@@ -11,11 +11,12 @@
 
 from zengine.management_commands import *
 
+
 class CreateUser(Command):
     CMD_NAME = 'create_user'
     HELP = 'Creates a new user'
     PARAMS = [
-        {'name':  'username', 'required': True, 'help': 'Login username'},
+        {'name': 'username', 'required': True, 'help': 'Login username'},
         {'name': 'password', 'required': True, 'help': 'Login password'},
         {'name': 'abstract_role', 'default': 'BaseAbsRole', 'help': 'Name of the AbstractRole'},
         {'name': 'super', 'action': 'store_true', 'help': 'This is a super user'},
@@ -81,6 +82,69 @@ class LoadFixture(Command):
                     print("please validate your json file: %s" % e)
         except IOError:
             print("file not found: %s" % fixture_file)
+
+
+class GenerateRandomOkutman(Command):
+    CMD_NAME = 'random_okutman'
+    HELP = 'Generates Random Okutmans'
+    PARAMS = [
+        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+    ]
+
+    def run(self):
+        from tests.fake.personel import yeni_personel
+        length = int(self.manager.args.length)
+        for x in range(0, length):
+            yeni_personel()
+
+
+class ExportRoomsToXml(Command):
+    CMD_NAME = 'export_rooms'
+    HELP = 'Generates Unitime XML import file for rooms'
+    PARAMS = []
+
+    def run(self):
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import Donem, Unit, Campus
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        term = Donem.objects.filter(guncel=True)[0]
+        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+        campuses = Campus.objects.filter()
+
+        # create XML
+        for campus in campuses:
+            if campus.building_set:
+                root = etree.Element('buildingsRooms', campus="%s" % uni, term="%s" % term.ad, \
+                                     year="%s" % term.baslangic_tarihi.year)
+                for building in campus.building_set:
+                    buildingel = etree.SubElement(root, 'building', externalId="%s" % building.building.key, \
+                                                  abbreviation="%s" % building.building.code, \
+                                                  locationX="%s" % building.building.coordinate_x, \
+                                                  locationY="%s" % building.building.coordinate_y, \
+                                                  name="%s" % building.building.name)
+                    if building.building.room_set:
+
+                        for room in building.building.room_set:
+                            etree.SubElement(buildingel, 'room', externalId="%s" % room.room.key, \
+                                             locationX="%s" % building.building.coordinate_x, \
+                                             locationY="%s" % building.building.coordinate_y, \
+                                             roomNumber="%s" % room.room.code, \
+                                             roomClassification="%s" % room.room.room_type.type, \
+                                             capacity="%s" % room.room.capacity, instructional="True")
+
+        # pretty string
+
+        s = etree.tostring(root, pretty_print=True)
+        current_date = datetime.datetime.now()
+        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+        outDirectory = root_directory+'/bin/dphs/data_exchange/'+directory_name
+        if not os.path.exists(outDirectory):
+            os.makedirs(outDirectory)
+        outFile = open(outDirectory+'/buildingRoomImport.xml', 'w+')
+        outFile.write("%s" % s)
+        print("Dosya %s dizini altina kayit edilmistir" % outDirectory)
 
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'

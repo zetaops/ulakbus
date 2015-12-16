@@ -34,8 +34,6 @@ class TestCase(BaseTestCase):
         for key in lst:
             for value in resp.json[key]:
                 assert set(value.keys()).issubset({'kategori', 'param', 'text', 'url', 'wf', 'model'})
-                assert value['url'] in ["crud/Borc", "/yeni_personel", "crud/HizmetBorclanma",
-                                        "crud/Atama"]
 
     def test_unauthorized_in_menu(self):
         self.client.set_path('/logout')

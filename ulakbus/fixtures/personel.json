@@ -1,0 +1,20 @@
+{
+  "kadro_durumlari": {
+    "1": {
+      "tr": "Saklı",
+      "en": "Reserved"
+    },
+    "2": {
+      "tr": "İzinli",
+      "en": "Available"
+    },
+    "2": {
+      "tr": "Bos",
+      "en": "Free"
+    },
+    "2": {
+      "tr": "Dolu",
+      "en": "Occupied"
+    }
+  }
+}

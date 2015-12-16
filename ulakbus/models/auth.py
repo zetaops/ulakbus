@@ -8,8 +8,9 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from pyoko import field
-from pyoko.model import Model, ListNode
+from pyoko import Model, ListNode
 from passlib.hash import pbkdf2_sha512
+from pyoko import LinkProxy
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -48,14 +49,15 @@ class User(Model):
 
 
 class Permission(Model):
-    name = field.String("Name", index=True)
-    code = field.String("Code Name", index=True)
-    description = field.String("Description", index=True)
+    name = field.String("İsim", index=True)
+    code = field.String("Kod Adı", index=True)
+    description = field.String("Tanım", index=True)
 
     class Meta:
         app = 'Sistem'
         verbose_name = "Yetki"
         verbose_name_plural = "Yetkiler"
+        list_fields = ["name", "code", "description"]
 
     def __unicode__(self):
         return "%s %s" % (self.name, self.description)
@@ -77,17 +79,57 @@ class AbstractRole(Model):
         permission = Permission()
 
 
+class Unit(Model):
+    name = field.String("Name", index=True)
+    long_name = field.String("Name", index=True)
+    yoksis_no = field.Integer("Yoksis ID", index=True)
+    unit_type = field.String("Unit Type", index=True)
+    parent_unit_no = field.Integer("Parent Unit ID", index=True)
+    current_situation = field.String("Current Situation", index=True)
+    language = field.String("Learning Language", index=True)
+    learning_type = field.String("Learning Type", index=True)
+    osym_code = field.String("ÖSYM Code", index=True)
+    opening_date = field.Date("Opening Date", index=True)
+    learning_duration = field.Integer("Learning Duration", index=True)
+    english_name = field.String("Unit Name in English", index=True)
+    quota = field.Integer("Unit Quota", index=True)
+    city_code = field.Integer("City Code", index=True)
+    district_code = field.Integer("District Code", index=True)
+    unit_group = field.Integer("Unit Group", index=True)
+    foet_code = field.Integer("FOET Code", index=True)  # yoksis KILAVUZ_KODU mu?
+    is_academic = field.Boolean("Is Academic")
+    is_active = field.Boolean("Is Active")
+    uid = field.Integer(index=True)
+    parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
+
+    class Meta:
+        app = 'Sistem'
+        verbose_name = "Unit"
+        verbose_name_plural = "Units"
+        search_fields = ['name']
+        list_fields = ['name', 'unit_type']
+
+    def __unicode__(self):
+        return '%s - %s - %s' % (self.name, self.english_name, self.yoksis_no)
+
+
 class Role(Model):
     abstract_role = AbstractRole()
     user = User()
+    unit = Unit()
+    name = field.String("Rol Adı", hidden=True)
 
     class Meta:
         app = 'Sistem'
         verbose_name = "Rol"
         verbose_name_plural = "Roller"
+        search_fields = ['name']
 
     def __unicode__(self):
-        return "%s %s" % (self.abstract_role.name, self.user.username)
+        try:
+            return "%s %s" % (self.abstract_role.name, self.user.username)
+        except:
+            return "Role #%s" % self.key if self.is_in_db() else ''
 
     class Permissions(ListNode):
         permission = Permission()
@@ -102,41 +144,16 @@ class Role(Model):
     def add_permission_by_name(self, code, save=False):
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
-                     Permission.objects.filter(code='*' + code + '*')]
+                    Permission.objects.filter(code='*' + code + '*')]
         for p in Permission.objects.filter(code='*' + code + '*'):
             if p not in self.Permissions:
                 self.Permissions(permission=p)
         if p:
             self.save()
 
-class Unit(Model):
-    name = field.String("Name", index=True)
-    yoksis_id = field.Integer("Unit ID", index=True, choices="yoksis_program_id")
-    unit_type = field.String("Unit Type", index=True)
-    parent_unit_id = field.Integer("Parent Unit ID", index=True)
-    current_situation = field.String("Current Situation", index=True)
-    language = field.String("Learning Language", index=True)
-    learning_type = field.String("Learning Type", index=True)
-    osym_code = field.String("ÖSYM Code", index=True)
-    opening_date = field.Date("Opening Date", index=True)
-    learning_duration = field.Integer("Learning Duration", index=True)
-    english_name = field.String("Unit Name in English", index=True)
-    quota = field.Integer("Unit Quota", index=True)
-    city_code = field.Integer("City Code", index=True)
-    district_code = field.Integer("District Code", index=True)
-    unit_group = field.Integer("Unit Group", index=True)
-    foet_code = field.Integer("FOET Code", index=True)
-
-    class Meta:
-        app = 'Sistem'
-        verbose_name = "Unit"
-        verbose_name_plural = "Units"
-        search_fields = ['name']
-        list_fields = ['name', 'unit_type']
-
-    def __unicode__(self):
-        return '%s %s' % (self.name, self.key)
-
+    def save(self):
+        self.name = self.__unicode__()
+        super(Role, self).save()
 
 
 class LimitedPermissions(Model):
@@ -150,7 +167,7 @@ class LimitedPermissions(Model):
         verbose_name_plural = "Sınırlandırılmış Yetkiler"
 
     def __unicode__(self):
-         return "%s - %s" % (self.time_start, self.time_end)
+        return "%s - %s" % (self.time_start, self.time_end)
 
     class IPList(ListNode):
         ip = field.String()

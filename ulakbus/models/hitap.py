@@ -10,6 +10,37 @@ from pyoko import Model, field, Node
 from .auth import Role
 
 
+class NufusKayitlari(Model):
+    tckn = field.String("Sigortalının TC Kimlik No", index=True)
+    ad = field.String("Adi", index=True)
+    soyad = field.String("Soyadi", index=True)
+    ilk_soy_ad = field.String("Memuriyete Girişteki İlk Soyadı", index=True)
+    dogum_tarihi = field.Date("Dogum Tarihi", index=True, format="%d.%m.%Y")
+    cinsiyet = field.String("Cinsiyet", index=True)
+    emekli_sicil_no = field.Integer("Emekli Sicil No", index=True)
+    memuriyet_baslama_tarihi = field.Date("Memuriyete Ilk Baslama Tarihi", index=True,
+                                          format="%d.%m.%Y")
+    kurum_sicil = field.String("Kurum Sicili", index=True)
+    maluliyet_kod = field.Integer("Malul Kod", index=True, choices="maluliyet_kod")
+    yetki_seviyesi = field.String("Yetki Seviyesi", index=True)
+    aciklama = field.String("Aciklama", index=True)
+    kuruma_baslama_tarihi = field.Date("Kuruma Baslama Tarihi", index=True, format="%d.%m.%Y")
+    gorev_tarihi_6495 = field.Date("Emeklilik Sonrası Göreve Başlama Tarihi", index=True,
+                                   format="%d.%m.%Y")
+    emekli_sicil_6495 = field.Integer("2. Emekli Sicil No", index=True)
+    durum = field.Boolean("Durum", index=True)
+    sebep = field.Integer("Sebep", index=True)
+    sync = field.Integer("Senkronize", index=True)
+    personel = Personel(one_to_one=True)
+
+    # personel = Personel()
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Nüfus Bilgileri"
+        verbose_name_plural = "Nüfus Bilgileri"
+
+
 class HizmetKurs(Model):
     tckn = field.String("TC Kimlik No", index=True)
     kayit_no = field.String("Kursa Kayıt No", index=True)
@@ -23,6 +54,7 @@ class HizmetKurs(Model):
     denklik_okulu = field.String("Denklik Okulu", index=True)
     denklik_bolum = field.String("Denklik Bölüm", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -82,6 +114,7 @@ class HizmetMahkeme(Model):
     aciklama = field.String("Açıklama", index=True)
     gun_sayisi = field.Integer("Gün Sayısı", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -112,6 +145,7 @@ class HizmetBirlestirme(Model):
     ayrilma_nedeni = field.Integer("Ayrılma Nedeni", index=True)
     kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -136,6 +170,7 @@ class HizmetTazminat(Model):
     tazminat_bitis_tarihi = field.Date("Tazminat Bitiş Tarihi", index=True, format="%d.%m.%Y")
     kadrosuzluk = field.Integer("Kadrosuzluk", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -160,6 +195,7 @@ class HizmetUnvan(Model):
     atama_sekli = field.String("Atama Sekli", index=True)
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     fhz_orani = field.Float("FHZ Oranı", index=True)
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -194,6 +230,7 @@ class HizmetAcikSure(Model):
                                       format="%d.%m.%Y")
     aciktan_atanma_tarih = field.Date("Açıktan Atanma Tarihi", index=True, format="%d.%m.%Y")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -230,6 +267,7 @@ class HizmetBorclanma(Model):
     borclanma_tarihi = field.Date("Borçlanma Tarihi", index=True, format="%d.%m.%Y")
     odeme_tarihi = field.Date("Ödeme Tarihi", index=True, format="%d.%m.%Y")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -249,6 +287,7 @@ class HizmetIHS(Model):
     baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     ihz_nevi = field.Integer("İHZ Nevi", index=True)
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -271,6 +310,7 @@ class HizmetIstisnaiIlgi(Model):
     istisnai_ilgi_nevi = field.Integer("İstisnai İlgi Nevi", index=True)
     kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
+    sync = field.Integer("Senkronize", index=True)
     personel = Personel()
 
     class Meta:
@@ -318,7 +358,7 @@ class HizmetKayitlari(Model):
         search_fields = ['unvan_kod', 'gorev', 'yevmiye']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.unvan_kodu, self.hizmet_sinifi, self.gorev)
+        return '%s %s %s' % (self.unvan_kod, self.hizmet_sinifi, self.gorev)
 
 
 class AskerlikKayitlari(Model):
@@ -354,91 +394,18 @@ class AskerlikKayitlari(Model):
             self.askerlik_nevi, self.kayit_no, self.kita_baslama_tarihi, self.gorev_yeri)
 
 
-class Atama(Model):
-    kurum_sicil_no = field.String("Kurum Sicil No", index=True)
-    personel_tip = field.Integer("Personel Tipi", index=True)
-    hizmet_sinif = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
-    statu = field.Integer("Statü", index=True)
-    gorev_suresi_baslama = field.Date("Görev Süresi Başlama", index=True, format="%d.%m.%Y")
-    gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", index=True, format="%d.%m.%Y")
-    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
-    ibraz_tarihi = field.Date("İbraz Tarihi", index=True, format="%d.%m.%Y")
-    durum = field.Integer("Durum", index=True)
-    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
-    nereden = field.Integer("Nereden", index=True)
-    atama_aciklama = field.String("Atama Açıklama", index=True)
-    goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
-    kadro_unvan = field.Integer("Kadro Unvan", index=True)
-    kadro_derece = field.Integer("Kadro Derece", index=True)
-    personel = Personel()
+class HitapSebep(Model):
+    sebep_no = field.Integer("Sebep No", index=True)
+    ad = field.String("Sebep Adı", index=True)
+    nevi = field.Integer("Sebep Nevi", index=True)
+    zorunlu_alan = field.String("Zorunlu ALan")
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Atama"
-        verbose_name_plural = "Atamalar"
-        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi', 'durum']
-        search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
+        verbose_name = "Hitap Sebep Kodu"
+        verbose_name_plural = "Hitap Sebep Kodları"
+        list_fields = ['sebep_no', 'ad', 'nevi', 'zorunlu_alan']
+        search_fields = ['sebep_no', 'ad']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
-
-
-class Kadro(Model):
-    durum = field.Integer("Durum", index=True)
-    unvan = field.Integer("Unvan", index=True)
-    derece = field.Integer("Derece", index=True)
-    rol = Role()
-    aciklama = field.String("Açıklama", index=True)
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Kadro"
-        verbose_name_plural = "Kadrolar"
-        list_fields = ['durum', 'unvan', 'aciklama']
-        search_fields = ['unvan', 'derece']
-
-    def __unicode__(self):
-        return '%s %s' % (self.unvan, self.durum)
-
-
-class Izin(Model):
-    tip = field.Integer("Tip", index=True)
-    baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
-    bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
-    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
-    adres = field.String("Adres", index=True)
-    telefon = field.String("Telefon", index=True)
-    personel = Personel()
-    vekil = Personel()
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "İzin"
-        verbose_name_plural = "İzinler"
-        list_fields = ['tip', 'baslangic', 'bitis', 'onay']
-        search_fields = ['tip', 'baslangic', 'onay']
-
-    def __unicode__(self):
-        return '%s %s' % (self.tip, self.onay)
-
-
-class UcretsizIzin(Model):
-    tip = field.Integer("Tip", index=True)
-    baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
-    bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
-    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
-    personel = Personel()
-
-    class Donus(Node):
-        donus_sebep = field.Integer("Dönüş Sebebi", index=True)
-        ise_baslama = field.Date("İşe Başlama", index=True, format="%d.%m.%Y")
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Ücretsiz İzin"
-        verbose_name_plural = "Ücretsiz İzinler"
-        list_fields = ['tip', 'baslangic']
-        search_fields = ['tip', 'onay']
-
-    def __unicode__(self):
-        return '%s %s' % (self.tip, self.onay)
+        return '%s - %s' % (self.sebep_no, self.ad)

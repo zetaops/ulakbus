@@ -51,11 +51,11 @@ def get_from_mernis(current):
 class AtamaYap(CrudView):
 
     class Meta:
-        model = 'Atama'
+        model = 'Kadro'
 
-    class CrudForm(JsonForm):
-        save_list = form.Button("Kaydet", cmd="save::list")
-        save_edit = form.Button("Kaydet ve Devam Et", cmd="save::devam_et")
+    class ObjectForm(JsonForm):
+        save_list = form.Button("Kaydet", cmd="save::list", flow="goto_service")
+        save_edit = form.Button("Kaydet ve Devam Et", cmd="save::devam_et", flow="goto_service")
 
 
 class HataIncele(JsonForm):
@@ -80,4 +80,9 @@ def delete_draft(current):
 
 class review_service_errors(SimpleView):
     def show_view(self):
-        self.current.output['forms'] = HataIncele().serialize()
+        self.output['forms'] = HataIncele(current=self.current).serialize()
+
+
+def yeni_ekle_kontrol(current):
+    current.output['object'] = {'bumudur': 'budur'}
+    current.output['client_cmd'] = ['show']

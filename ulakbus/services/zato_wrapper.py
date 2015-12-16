@@ -49,6 +49,30 @@ class ZatoService(object):
 
         return '/'.join([settings.ZATO_SERVER, self.service_uri])
 
+    @staticmethod
+    def check_turkish_identity_number(tckn):
+        """
+
+        Checks Turkish ID Number, if empty, not a string or different than 11 length
+
+        :param tckn: string, 11 length
+        :type tckn: str
+
+        :return: string tckn or raises exception
+
+        """
+
+        if not tckn:
+            raise Exception("tckn can not be empty")
+
+        if type(tckn) is not str:
+            raise TypeError("tckn must be string which is %s" % type(tckn))
+
+        if len(tckn) != 11:
+            raise Exception("tckn length must be 11")
+
+        return tckn
+
     def zato_request(self):
         """
 
@@ -88,29 +112,11 @@ class ZatoService(object):
 
 
 class HitapService(ZatoService):
-    @staticmethod
-    def check_turkish_identity_number(tckn):
-        """
+    HITAP_USER = ''
 
-        Checks Turkish ID Number, if empty, not a string or different than 11 length
 
-        :param tckn: string, 11 length
-        :type tckn: str
-
-        :return: string tckn or raises exception
-
-        """
-
-        if not tckn:
-            raise Exception("tckn can not be empty")
-
-        if type(tckn) is not str:
-            raise TypeError("tckn must be string which is %s" % type(tckn))
-
-        if len(tckn) != 11:
-            raise Exception("tckn length must be 11")
-
-        return tckn
+class HitapServiceError(Exception):
+    pass
 
 
 class HitapHizmetCetvelGetir(HitapService):
@@ -180,7 +186,7 @@ class HitapHizmetCetveliSenkronizeEt(HitapService):
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
-class MernisKimlikBilgileriGetir(HitapService):
+class MernisKimlikBilgileriGetir(ZatoService):
     """
 
     This service takes tckn as string, consume "mernis kimlik bilgileri getir" of hitap services
@@ -212,3 +218,144 @@ class MernisKimlikBilgileriGetir(HitapService):
         super(MernisKimlikBilgileriGetir, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class KPSAdresBilgileriGetir(ZatoService):
+    """
+
+    This service takes tckn as string, consume "mernis kimlik bilgileri getir" of hitap services
+    and sync local data on riak.
+
+    Example
+    ::
+
+        from zato_wrapper_class import MernisKimlikBilgileriGetir
+        zs = MernisKimlikBilgileriGetir(tckn="12345678900")
+        response = zs.zato_request()
+
+        response: dict containing identity information as key value pairs
+
+    """
+
+    def __init__(self, service_uri='kps-adres-bilgileri-getir-tckn', tckn=""):
+        """
+
+        Takes two parameters service_uri and tckn
+
+        :param service_uri: service name on zato, default is hizmet-cetvel
+        :type service_uri: str
+
+        :param tckn: string of 11 byte length, can not be empty
+        :type tckn: str
+
+        """
+        super(KPSAdresBilgileriGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapMahkemeBilgileriGuncelle(HitapService):
+    def __init__(self, service_uri='hitap-mahkeme-bilgileri-guncelle', kayit=None):
+        """
+
+        Takes two parameters service_uri, tckn and payload
+
+        :param service_uri: service name on zato, default is hizmet-cetvel
+        :type service_uri: str
+
+        :param kayit: object, can not be empty
+        :type tckn: object
+        """
+
+        super(HitapMahkemeBilgileriGuncelle, self).__init__()
+        self.service_uri = service_uri
+
+        if kayit:
+            data = {
+                "tckn": kayit.tckn,
+                "kayit_no": kayit.kayit_no,
+                "mahkeme_ad": kayit.mahkeme_ad,
+                "sebep": kayit.sebep,
+                "karar_tarihi": kayit.karar_tarihi,
+                "karar_sayisi": kayit.karar_sayisi,
+                "kesinlesme_tarihi": kayit.kesinlesme_tarihi,
+                "asil_dogum_tarihi": kayit.asil_dogum_tarihi,
+                "tashih_dogum_tarihi": kayit.tashih_dogum_tarihi,
+                "asil_ad": kayit.asil_ad,
+                "tashih_ad": kayit.tashih_ad,
+                "asil_soyad": kayit.asil_soyad,
+                "tashih_soyad": kayit.tashih_soyad,
+                "gecerli_dogum_tarihi": kayit.gecerli_dogum_tarihi,
+                "aciklama": kayit.aciklama,
+                "gun_sayisi": kayit.gun_sayisi,
+                "kurum_onay_tarihi": kayit.kurum_onay_tarihi
+            }
+            self.payload = '{"tckn":"%s", "kayit_no":"%s", "data":"%s"}' % (
+                self.check_turkish_identity_number(kayit.tckn), kayit.kayit_no, data)
+        else:
+            raise Exception("'kayit_no' can not be empty")
+
+
+class HitapMahkemeBilgileriEkle(HitapService):
+    def __init__(self, service_uri='hitap-mahkeme-bilgileri-guncelle', kayit=None):
+        """
+
+        Takes two parameters service_uri, and kayit
+
+        :param service_uri: service name on zato, default is hizmet-cetvel
+        :type service_uri: str
+
+        :param kayit: object, can not be empty
+        :type tckn: object
+
+        """
+        super(HitapMahkemeBilgileriEkle, self).__init__()
+        self.service_uri = service_uri
+
+        if kayit:
+            data = {
+                "tckn": kayit.tckn,
+                # "kayit_no": kayit.kayit_no,
+                "mahkeme_ad": kayit.mahkeme_ad,
+                "sebep": kayit.sebep,
+                "karar_tarihi": kayit.karar_tarihi,
+                "karar_sayisi": kayit.karar_sayisi,
+                "kesinlesme_tarihi": kayit.kesinlesme_tarihi,
+                "asil_dogum_tarihi": kayit.asil_dogum_tarihi,
+                "tashih_dogum_tarihi": kayit.tashih_dogum_tarihi,
+                "asil_ad": kayit.asil_ad,
+                "tashih_ad": kayit.tashih_ad,
+                "asil_soyad": kayit.asil_soyad,
+                "tashih_soyad": kayit.tashih_soyad,
+                "gecerli_dogum_tarihi": kayit.gecerli_dogum_tarihi,
+                "aciklama": kayit.aciklama,
+                "gun_sayisi": kayit.gun_sayisi,
+                "kurum_onay_tarihi": kayit.kurum_onay_tarihi
+            }
+
+            self.payload = '{"tckn":"%s",  "data":"%s"}' % (
+                self.check_turkish_identity_number(kayit.tckn), data)
+        else:
+            raise Exception("be sure that all 'data' and 'tckn' are not empty")
+
+
+class HitapMahkemeBilgileriSil(HitapService):
+    def __init__(self, service_uri='hitap-mahkeme-bilgileri-sil', kayit=None):
+        """
+
+        Takes two parameters service_uri, tckn and payload
+
+        :param service_uri: service name on zato, default is hizmet-cetvel
+        :type service_uri: str
+
+        :param kayit: object, can not be empty and instance of ulakbus.models.hitap.HizmetMahkeme
+        :type kayit: object
+
+        """
+        super(HitapMahkemeBilgileriSil, self).__init__()
+        self.service_uri = service_uri
+        if kayit:
+            self.payload = '{"tckn":"%s", "kayit_no":"%s"}' % (
+                self.check_turkish_identity_number(kayit.tckn), kayit.kayit_no)
+        else:
+            raise Exception("be sure that 'kayit' can not be empty and must be instance of HizmetMahkeme")
