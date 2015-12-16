@@ -84,10 +84,17 @@ class KadroIslemleri(CrudView):
                     "layout": "4",
                     "groups": [
                         {
-                            "group_title": "Unvan ve Derece",
-                            "items": ['unvan', 'derece', 'unvan_kod']
-                        },
+                            "group_title": "Ünvan ve Derece",
+                            "items": ['unvan', 'derece', 'unvan_kod'],
+                            "collapse": True,
+                        }
+                    ]
+                },
+                {
+                    "layout": "4",
+                    "groups": [
                         {
+                            "group_title": "Diğer",
                             "items": ['kadro_no', 'aciklama', 'birim_id']
                         }
                     ]
