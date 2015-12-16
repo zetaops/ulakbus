@@ -189,6 +189,7 @@ class ExportSessionsToXml(Command):
         out_file.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
 
+
 class ExportDepartmentsToXML(Command):
     CMD_NAME = 'export_departments'
     HELP = 'Generates Unitime XML import file for academic departments'
@@ -226,6 +227,63 @@ class ExportDepartmentsToXML(Command):
         out_file = open(export_directory + '/departmentImport.xml', 'w+')
         out_file.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+
+class ExportStaffToXML(Command):
+    CMD_NAME = 'export_staff'
+    HELP = 'Generates Unitime XML import file for staff'
+    PARAMS = []
+
+    def run(self):
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import Donem, Unit, Campus, Personel
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        term = Donem.objects.filter(guncel=True)[0]
+        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+        units = Unit.objects.filter()
+        campuses = Campus.objects.filter()
+        sessions = Donem.objects.filter()
+        stafflist = Personel.objects.filter()
+        doc_type = '<!DOCTYPE staff PUBLIC "-//UniTime//UniTime Staff Import DTD/EN" "http://www.unitime.org/interface/Staff.dtd">'
+
+        for campus in campuses:
+            if campus:
+                root = etree.Element('staff', campus="%s" % uni, term="%s" % term.ad, \
+                                     year="%s" % term.baslangic_tarihi.year)
+            for staffmember in stafflist:
+                unvan = self.acadTitle(title=staffmember.unvan)
+
+                etree.SubElement(root, 'staffMember', externalId="%s" % staffmember.key, \
+                                 firstName="%s" % staffmember.ad, lastName="%s" % staffmember.soyad, \
+                                 department="%s" % staffmember.birim.yoksis_no, acadTitle="%s" % unvan[0], \
+                                 positionType="%s" % unvan[1])
+        # pretty string
+        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
+        current_date = datetime.datetime.now()
+        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+        if not os.path.exists(export_directory):
+            os.makedirs(export_directory)
+        out_file = open(export_directory + '/staffImport.xml', 'w+')
+        out_file.write("%s" % s)
+        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+
+    @staticmethod
+    def acadTitle(title):
+        if title == 1:
+            return ["Professor", "Prof"]
+        elif title == 2:
+            return ["Associate Professor", "Ass. Prof"]
+        elif title == 3:
+            return ["Research Assistant", "Res. Assist."]
+        elif title == 4:
+            return ["Lecturer", "Lect."]
+        else:
+            return ""
+
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
