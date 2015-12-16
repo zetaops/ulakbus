@@ -212,7 +212,7 @@ class ExportDepartmentsToXML(Command):
                                      year="%s" % term.baslangic_tarihi.year)
             for unit in units:
                 etree.SubElement(root, 'department', externalId="%s" % unit.key, \
-                                 abbreviation="%s" % unit.name, name="%s" % unit.long_name, \
+                                 abbreviation="%s" % unit.yoksis_no, name="%s" % unit.name, \
                                  deptCode="%s" % unit.yoksis_no, allowEvents="true")
         # pretty string
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
