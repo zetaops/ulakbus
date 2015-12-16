@@ -112,6 +112,7 @@ class ExportRoomsToXml(Command):
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
         campuses = Campus.objects.filter()
+        doc_type = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
 
         # create XML
         for campus in campuses:
@@ -137,7 +138,7 @@ class ExportRoomsToXml(Command):
 
         # pretty string
 
-        s = etree.tostring(root, pretty_print=True)
+        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
         current_date = datetime.datetime.now()
         directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
         export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
@@ -163,6 +164,7 @@ class ExportSessionsToXml(Command):
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
         campuses = Campus.objects.filter()
         sessions = Donem.objects.filter()
+        doc_type = '<!DOCTYPE session PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Session.dtd">'
 
         # create XML
         for campus in campuses:
@@ -177,7 +179,7 @@ class ExportSessionsToXml(Command):
                                      classesEnd="%s" % end_date, examBegin="%s" % start_date, \
                                      eventBegin="%s" % start_date, eventEnd="%s" % end_date)
         # pretty string
-        s = etree.tostring(root, pretty_print=True)
+        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
         current_date = datetime.datetime.now()
         directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
         export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
