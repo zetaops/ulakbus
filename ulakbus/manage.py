@@ -187,8 +187,6 @@ class ExportSessionsToXml(Command):
         out_file.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
 
-<<<<<<< HEAD
-
 class ExportDepartmentsToXML(Command):
     CMD_NAME = 'export_departments'
     HELP = 'Generates Unitime XML import file for academic departments'
@@ -226,8 +224,6 @@ class ExportDepartmentsToXML(Command):
         out_file = open(export_directory + '/departmentImport.xml', 'w+')
         out_file.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-=======
->>>>>>> e45d737a47c10807cb19160f097c7117a1b4eb7f
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
