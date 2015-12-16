@@ -65,6 +65,11 @@ class ProgramForm(JsonForm):
     sec = form.Button("Sec", cmd="ders_sec")
 
 
+class SubelendirmeForm(JsonForm):
+    str = form.String("Test")
+    sec = form.Button("Kaydet", cmd="ders_sec")
+
+
 class DersSubelendirme(CrudView):
     class Meta:
         model = "Sube"
@@ -75,7 +80,7 @@ class DersSubelendirme(CrudView):
     def ders_sec(self):
         self.set_client_cmd('form')
         self.output['objects'] = [['Dersler'], ]
-        dersler = Ders.objects.filter(program_key=self.current.input['form']['program'])
+        # dersler = Ders.objects.filter(program_key=self.current.input['form']['program'])
         dersler = Ders.objects.filter()
         for d in dersler:
             ders = "{} - {} ({} ECTS)".format(d.kod, d.ad, d.ects_kredisi)
@@ -83,25 +88,26 @@ class DersSubelendirme(CrudView):
             sube = []
             for s in subeler:
                 sube.append(
-                    {
-                        "sube_ad": s.ad,
-                        "okutman_ad": s.okutman.ad,
-                        "okutman_soyad": s.okutman.soyad,
-                        "okutman_unvan": s.okutman.unvan,
-                        "kontenjan": s.kontenjan,
-                    }
+                        {
+                            "sube_ad": s.ad,
+                            "okutman_ad": s.okutman.ad,
+                            "okutman_soyad": s.okutman.soyad,
+                            "okutman_unvan": s.okutman.unvan,
+                            "kontenjan": s.kontenjan,
+                        }
                 )
 
-            subeler = ["{okutman_unvan} {okutman_ad} {okutman_soyad}, Sube:{sube_ad} Kontenjan{kontenjan} \n".format(s)
-                       for
-                       s in sube]
+            ders_subeleri = ["{okutman_unvan} {okutman_ad}"
+                             "{okutman_soyad}, Sube:{sube_ad} Kontenjan{kontenjan} \n".format(**sb) for sb in sube]
 
             item = {
-                "fields": ["{} \n {}".format(ders, subeler), ],
-                "actions": [],
+                "fields": ["{} \n {}".format(ders, ders_subeleri), ],
+                "actions": [
+                    {'name': 'Subelendir', 'cmd': 'ders_okutman_formu', 'show_as': 'button', 'object_key': d.key},
+                ],
                 "key": d.key
             }
             self.output['objects'].append(item)
 
     def ders_okutman_formu(self):
-        pass
+        self.form_out(SubelendirmeForm(current=self.current))
