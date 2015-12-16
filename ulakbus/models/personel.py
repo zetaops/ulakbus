@@ -189,13 +189,13 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
 
 class Kadro(Model):
-    kadro_no = field.Integer("Kadro No")
-    unvan = field.Integer("Unvan", index=True, choices="akademik_unvan")
-    derece = field.Integer("Derece", index=True)
-    durum = field.Integer("Durum", index=True, choices="kadro_durumlari")
-    birim = Unit("Birim")
-    aciklama = field.String("Açıklama", index=True)
-    unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod")
+    kadro_no = field.Integer("Kadro No", required=False)
+    unvan = field.Integer("Akademik Unvan", index=True, choices="akademik_unvan", required=False)
+    derece = field.Integer("Derece", index=True, required=False)
+    durum = field.Integer("Durum", index=True, choices="kadro_durumlari", required=False)
+    birim = Unit("Birim", required=False)
+    aciklama = field.String("Açıklama", index=True, required=False)
+    unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
 
     class Meta:
         app = 'Personel'
