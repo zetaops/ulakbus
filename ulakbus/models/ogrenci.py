@@ -46,12 +46,27 @@ class HariciOkutman(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
+    def update_okutman(self):
+        try:
+            okutman = Okutman.objects.get(harici_okutman=self)
+        except:
+            okutman = Okutman()
+        okutman.harici_okutman = self
+        okutman.ad = self.ad
+        okutman.soyad = self.soyad
+        okutman.unvan = self.unvan
+        okutman.save()
+
+    def save(self):
+        super(HariciOkutman, self).save()
+        self.update_okutman()
+
 
 class Okutman(Model):
-    ad = field.String("Ad", index=True)
-    soyad = field.String("Soyad", index=True)
-    unvan = field.String("Unvan", index=True)
-    birim_no = field.String("Birim ID", index=True)
+    ad = field.String("Ad", index=True, required=False)
+    soyad = field.String("Soyad", index=True, required=False)
+    unvan = field.String("Unvan", index=True, required=False)
+    birim_no = field.String("Birim ID", index=True, required=False)
     personel = Personel()
     harici_okutman = HariciOkutman()
 
@@ -68,6 +83,20 @@ class Okutman(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.okutman.ad, self.okutman.soyad)
+
+    def check_uniqueness(self):
+        p = len(self.objects.filter(personel=self.personel)) if self.okutman.key else 0
+        return False if p > 0 else True
+
+    def save(self):
+        self.ad = self.okutman.ad
+        self.soyad = self.okutman.soyad
+        self.unvan = self.okutman.unvan
+
+        if self.is_in_db() or self.check_uniqueness():
+            super(Okutman, self).save()
+        else:
+            raise Exception("Okutman must be unique %s")
 
 
 class Donem(Model):
@@ -264,6 +293,7 @@ class Ogrenci(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
+
 class OncekiEgitimBilgisi(Model):
     okul_adi = field.String("Mezun Olduğu Okul", index=True)
     diploma_notu = field.Float("Diploma Notu", index=True)
@@ -274,8 +304,8 @@ class OncekiEgitimBilgisi(Model):
         app = 'Ogrenci'
         verbose_name = "Önceki Eğitim Bilgisi"
         verbose_name_plural = "Önceki Eğitim Bilgileri"
-        list_fields = ['okul_adi', 'diploma_notu','mezuniyet_yili']
-        search_fields = ['okul_adi', 'diploma_notu','mezuniyet_yili']
+        list_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
+        search_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
 
 
 class OgrenciProgram(Model):
