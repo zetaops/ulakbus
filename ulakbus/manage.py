@@ -98,7 +98,9 @@ class GenerateRandomOkutman(Command):
     CMD_NAME = 'random_okutman'
     HELP = 'Generates Random Okutmans'
     PARAMS = [
+
         {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+        
     ]
 
     def run(self):
