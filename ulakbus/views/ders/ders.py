@@ -8,12 +8,13 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 import random
-from pyoko import form
+from pyoko import form, ListNode
 from zengine.lib.forms import JsonForm
 from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import Program
 from ulakbus.models.ogrenci import Ders
 from ulakbus.models.ogrenci import Sube
+from ulakbus.models.ogrenci import Okutman
 
 
 class ProgramBilgisiForm(JsonForm):
@@ -66,8 +67,13 @@ class ProgramForm(JsonForm):
 
 
 class SubelendirmeForm(JsonForm):
-    str = form.String("Test")
     sec = form.Button("Kaydet", cmd="ders_sec")
+
+    class Subeler(ListNode):
+        subead = form.String('Sube Adi')
+    # 'subekon_%s' % i: form.String('Sube Kontenjan', default=sube.kontenjan),
+    # 'subediskon_%s' % i: form.String('Sube Dis Kontenjan', default=sube.dis_kontenjan),
+    # 'subeoktman_%s' % i: form.String('Okutman', default=sube.okutman.ad)
 
 
 class DersSubelendirme(CrudView):
@@ -103,11 +109,29 @@ class DersSubelendirme(CrudView):
             item = {
                 "fields": ["{} \n {}".format(ders, ders_subeleri), ],
                 "actions": [
-                    {'name': 'Subelendir', 'cmd': 'ders_okutman_formu', 'show_as': 'button', 'object_key': d.key},
+                    {'name': 'Subelendir', 'cmd': 'ders_okutman_formu', 'show_as': 'button', 'object_key': 'sube'},
                 ],
                 "key": d.key
             }
             self.output['objects'].append(item)
 
     def ders_okutman_formu(self):
-        self.form_out(SubelendirmeForm(current=self.current))
+        ders = Ders.objects.get(key=self.current.input['sube'])
+        subelendirme_form = SubelendirmeForm(current=self.current)
+        subelendirme_form.Meta.title = '%s / %s dersi icin subelendirme' % (ders.donem, ders)
+        subeler = Sube.objects.filter(ders=ders)
+        # okutmanlar = Okutman.
+        sb = {}
+        i = 0
+        for sube in subeler:
+            sb.update({
+                'subead_%s' % i: form.String('Sube Adi', default=sube.ad),
+                'subekon_%s' % i: form.String('Sube Kontenjan', default=sube.kontenjan),
+                'subediskon_%s' % i: form.String('Sube Dis Kontenjan', default=sube.dis_kontenjan),
+                'subeoktman_%s' % i: form.String('Okutman', default=sube.okutman.ad)
+            })
+            i += 1
+        for k, v in sb.items():
+            setattr(subelendirme_form, k, v)
+
+        self.form_out(subelendirme_form)
