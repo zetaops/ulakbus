@@ -79,6 +79,31 @@ class KadroIslemleri(CrudView):
             # durum alanini formdan cikar. kadrolar sadece sakli olarak kaydedilebilir.
             exclude = ['durum', ]
 
+            grouping = [
+                {
+                    "layout": "4",
+                    "groups": [
+                        {
+                            "group_title": "Unvan ve Derece",
+                            "items": ['unvan', 'derece', 'unvan_kod']
+                        },
+                        {
+                            "items": ['kadro_no', 'aciklama', 'birim_id']
+                        }
+                    ]
+                }
+            ]
+            constraints = [
+                {
+                    'cons': [{'id': 'unvan_kod', 'cond': 'exists'}],
+                    'do': 'change_fields', 'fields': [{'unvan': None}]
+                },
+                {
+                    'cons': [{'id': 'unvan', 'cond': 'exists'}],
+                    'do': 'change_fields', 'fields': [{'unvan_kod': None}]
+                }
+            ]
+
         save_edit = form.Button("Kaydet")
 
     #
@@ -148,7 +173,7 @@ class KadroIslemleri(CrudView):
         """
         if obj.durum == self.IZINLI:
             result['actions'].append(
-                {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
+                    {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
         return result
 
     @obj_filter

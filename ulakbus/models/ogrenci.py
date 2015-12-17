@@ -46,12 +46,27 @@ class HariciOkutman(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
+    def update_okutman(self):
+        try:
+            okutman = Okutman.objects.get(harici_okutman=self)
+        except:
+            okutman = Okutman()
+        okutman.harici_okutman = self
+        okutman.ad = self.ad
+        okutman.soyad = self.soyad
+        okutman.unvan = self.unvan
+        okutman.save()
+
+    def save(self):
+        super(HariciOkutman, self).save()
+        self.update_okutman()
+
 
 class Okutman(Model):
-    ad = field.String("Ad", index=True)
-    soyad = field.String("Soyad", index=True)
-    unvan = field.String("Unvan", index=True)
-    birim_no = field.String("Birim ID", index=True)
+    ad = field.String("Ad", index=True, required=False)
+    soyad = field.String("Soyad", index=True, required=False)
+    unvan = field.String("Unvan", index=True, required=False)
+    birim_no = field.String("Birim ID", index=True, required=False)
     personel = Personel()
     harici_okutman = HariciOkutman()
 
@@ -68,6 +83,20 @@ class Okutman(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.okutman.ad, self.okutman.soyad)
+
+    def check_uniqueness(self):
+        p = len(self.objects.filter(personel=self.personel)) if self.okutman.key else 0
+        return False if p > 0 else True
+
+    def save(self):
+        self.ad = self.okutman.ad
+        self.soyad = self.okutman.soyad
+        self.unvan = self.okutman.unvan
+
+        if self.is_in_db() or self.check_uniqueness():
+            super(Okutman, self).save()
+        else:
+            raise Exception("Okutman must be unique %s")
 
 
 class Donem(Model):
@@ -98,9 +127,11 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
-    bolum_baskani = Role()
-    ects_bolum_kordinator = Role()
-    akademik_kordinator = Role()
+    bolum_baskani = Role(verbose_name='Bolum Başkanı', reverse_name='bolum_baskani_program')
+    ects_bolum_kordinator = Role(verbose_name='ECTS Bölüm Koordinator',
+                                 reverse_name='ects_koordinator_program')
+    akademik_kordinator = Role(verbose_name='Akademik Koordinator',
+                               reverse_name='akademik_koordinator_program')
     birim = Unit()
 
     class Donemler(ListNode):
@@ -248,22 +279,9 @@ class Ogrenci(Model):
     uyruk = field.String("Uyruk", index=True)
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
     ehliyet = field.String("Ehliyet", index=True)
-    giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
-    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
-    bolum = field.String("Bölüm", index=True)
-    fakulte = field.String("Fakülte", index=True)
     e_posta = field.String("E-Posta", index=True)
-    ogrenci_no = field.Integer("Öğrenci Numarası", index=True)
     tel_no = field.Integer("Telefon Numarası", index=True)
-    akademik_yil = field.String("Akademik Yıl", index=True)
-    aktif_donem = field.String("Dönem", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
-    basari_durumu = field.String("Başarı Durumu", index=True)
-    ders_programi = DersProgrami()
-    danisman = Personel()
-
-    class KayitliOluduguProgramlar(ListNode):
-        program = Program()
 
     class Meta:
         app = 'Ogrenci'
@@ -276,10 +294,36 @@ class Ogrenci(Model):
         return '%s %s' % (self.ad, self.soyad)
 
 
+class OncekiEgitimBilgisi(Model):
+    okul_adi = field.String("Mezun Olduğu Okul", index=True)
+    diploma_notu = field.Float("Diploma Notu", index=True)
+    mezuniyet_yili = field.String("Mezuniyet Yılı", index=True)
+    ogrenci = Ogrenci()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Önceki Eğitim Bilgisi"
+        verbose_name_plural = "Önceki Eğitim Bilgileri"
+        list_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
+        search_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
+
+
+class OgrenciProgram(Model):
+    ogrenci_no = field.Integer("Öğrenci Numarası", index=True)
+    giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
+    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
+    aktif_donem = field.String("Dönem", index=True)
+    basari_durumu = field.String("Başarı Durumu", index=True)
+    ders_programi = DersProgrami()
+    danisman = Personel()
+    program = Program()
+    ogrenci = Ogrenci()
+
+
 class OgrenciDersi(Model):
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
     ders = Sube()
-    ogrenci = Ogrenci()
+    ogrenci_program = OgrenciProgram()
 
     class Meta:
         app = 'Ogrenci'
