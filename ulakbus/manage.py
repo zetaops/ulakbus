@@ -124,6 +124,21 @@ class GenerateRandomOkutman(Command):
         for x in range(0, length):
             yeni_okutman()
 
+class GenerateRandomHariciOkutman(Command):
+    CMD_NAME = 'random_harici_okutman'
+    HELP = 'Generates Random Okutman From Personel Objects'
+    PARAMS = [
+
+        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+
+    ]
+
+    def run(self):
+        from tests.fake.harici_okutman import yeni_harici_okutman
+        length = int(self.manager.args.length)
+        for x in range(0, length):
+            yeni_harici_okutman()
+
 class GenerateRandomOogrenci(Command):
     CMD_NAME = 'random_ogrenci'
     HELP = 'Generates Random Ogrenci Model Objects'
