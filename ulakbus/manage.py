@@ -83,6 +83,7 @@ class LoadFixture(Command):
         except IOError:
             print("file not found: %s" % fixture_file)
 
+
 class GenerateBuildingList(Command):
     CMD_NAME = 'generate_buildings'
     HELP = 'Generates fake Building model objects from Unit Faculties'
@@ -91,6 +92,7 @@ class GenerateBuildingList(Command):
     def run(self):
         from tests.fake.building import yeni_bina
         yeni_bina()
+
 
 class GenerateRandomOkutman(Command):
     CMD_NAME = 'random_okutman'
@@ -105,6 +107,21 @@ class GenerateRandomOkutman(Command):
         for x in range(0, length):
             yeni_personel()
 
+
+class GenerateRandomOogrenci(Command):
+    CMD_NAME = 'random_ogrenci'
+    HELP = 'Generates Random Ogrenci Model Objects'
+    PARAMS = [
+        {'name': 'length', 'required': True, 'help': 'Amount of random ogrenci'},
+    ]
+
+    def run(self):
+        from tests.fake.ogrenci import yeni_ogrenci
+        length = int(self.manager.args.length)
+        for x in range(0, length):
+            yeni_ogrenci()
+
+
 class GenerateProgramList(Command):
     CMD_NAME = 'generate_programs'
     HELP = 'Generates Programs From Unit Model'
@@ -114,6 +131,7 @@ class GenerateProgramList(Command):
         from tests.fake.program import yeni_program
         yeni_program()
 
+
 class GenerateDersList(Command):
     CMD_NAME = 'generate_ders'
     HELP = 'Generates fake Ders model objects'
@@ -122,6 +140,7 @@ class GenerateDersList(Command):
     def run(self):
         from tests.fake.ders import yeni_ders
         yeni_ders()
+
 
 class ExportRoomsToXml(Command):
     CMD_NAME = 'export_rooms'
@@ -294,7 +313,6 @@ class ExportStaffToXML(Command):
         out_file = open(export_directory + '/staffImport.xml', 'w+')
         out_file.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
 
     @staticmethod
     def acadTitle(title):
