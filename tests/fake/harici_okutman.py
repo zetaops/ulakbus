@@ -42,7 +42,7 @@ def yeni_harici_okutman():
     ho.kan_grubu = blood_type()
     ho.ehliyet = driver_license_class()
     ho.verdigi_dersler = '\n'.join([fake.lecture() for _ in range(3)])
-    ho.unvan = random.choice(range(1, 5))
+    ho.unvan = randint(1, 5)
     ho.biyografi = '\n'.join(fake.paragraphs(5))
     ho.notlar = '\n'.join(fake.paragraphs(1))
     ho.cuzdan_seri = id_card_serial()
