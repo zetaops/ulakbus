@@ -83,6 +83,14 @@ class LoadFixture(Command):
         except IOError:
             print("file not found: %s" % fixture_file)
 
+class GenerateBuildingList(Command):
+    CMD_NAME = 'generate_buildings'
+    HELP = 'Generates fake Building model objects from Unit Faculties'
+    PARAMS = []
+
+    def run(self):
+        from tests.fake.building import yeni_bina
+        yeni_bina()
 
 class GenerateRandomOkutman(Command):
     CMD_NAME = 'random_okutman'
