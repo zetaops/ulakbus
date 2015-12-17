@@ -254,7 +254,7 @@ class DersProgrami(Model):
 class Ogrenci(Model):
     ad = field.String("Ad", index=True)
     soyad = field.String("Soyad", index=True)
-    cinsiyet = field.Integer("Cinsiyet", index=True, choices="cinsiyet")
+    cinsiyet = field.String("Cinsiyet", index=True, choices="cinsiyet")
     tckn = field.String("TC Kimlik No", index=True)
     cuzdan_seri = field.String("Seri", index=True)
     cuzdan_seri_no = field.String("Seri No", index=True)
