@@ -107,6 +107,7 @@ VIEW_URLS.extend([
     ('/ara/ogrenci/{query}', 'ulakbus.views.system.SearchStudent'),
     ('/ara/personel/{query}', 'ulakbus.views.system.SearchPerson'),
     ('/notify/', 'ulakbus.views.system.Notification'),
+    ('/get_current_user/', 'ulakbus.views.system.GetCurrentUser'),
 ])
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
