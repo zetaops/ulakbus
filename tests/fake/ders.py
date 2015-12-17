@@ -27,7 +27,7 @@ def yeni_ders():
             d.kod = ints(length=10)
             d.program = program
             d.donem = term
-            d.ders_koordinatoru = personel_list[randint(0, len(personel_list))]
+            d.ders_koordinatoru = personel_list[randint(0, len(personel_list)-1)]
             d.save()
 
     print("Fake ders tanınlaması başarılı")
