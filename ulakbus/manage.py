@@ -106,6 +106,15 @@ class GenerateProgramList(Command):
         from tests.fake.program import yeni_program
         yeni_program()
 
+class GenerateDersList(Command):
+    CMD_NAME = 'generate_ders'
+    HELP = 'Generates fake Ders model objects'
+    PARAMS = []
+
+    def run(self):
+        from tests.fake.ders import yeni_ders
+        yeni_ders()
+
 class ExportRoomsToXml(Command):
     CMD_NAME = 'export_rooms'
     HELP = 'Generates Unitime XML import file for rooms'
