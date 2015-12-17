@@ -94,13 +94,13 @@ class GenerateBuildingList(Command):
         yeni_bina()
 
 
-class GenerateRandomOkutman(Command):
-    CMD_NAME = 'random_okutman'
-    HELP = 'Generates Random Okutmans'
+class GenerateRandomPersonel(Command):
+    CMD_NAME = 'random_personel'
+    HELP = 'Generates Random Personel'
     PARAMS = [
 
-        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
-        
+        {'name': 'length', 'required': True, 'help': 'Amount of random personel'},
+
     ]
 
     def run(self):
@@ -109,6 +109,20 @@ class GenerateRandomOkutman(Command):
         for x in range(0, length):
             yeni_personel()
 
+class GenerateRandomOkutman(Command):
+    CMD_NAME = 'random_okutman'
+    HELP = 'Generates Random Okutman From Personel Objects'
+    PARAMS = [
+
+        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+
+    ]
+
+    def run(self):
+        from tests.fake.okutman import yeni_okutman
+        length = int(self.manager.args.length)
+        for x in range(0, length):
+            yeni_okutman()
 
 class GenerateRandomOogrenci(Command):
     CMD_NAME = 'random_ogrenci'
