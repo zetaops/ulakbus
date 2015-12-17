@@ -17,6 +17,7 @@ import six
 class HariciOkutman(Model):
     ad = field.String("Harici Okutman Ad", index=True, required=False)
     soyad = field.String("Harici Okutman Soyad", index=True, required=False)
+    cinsiyet = field.String("Cinsiyet", index=True)
     tckn = field.String("Okutmanın TC Kimlik Numarası", index=True, required=False)
     dogum_tarihi = field.Date("Okutmanın Doğum Tarihi", index=True, required=False)
     dogum_yeri = field.String("Okutmanın Doğum Yeri", index=True, required=False)
