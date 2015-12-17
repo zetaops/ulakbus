@@ -97,6 +97,14 @@ class GenerateRandomOkutman(Command):
         for x in range(0, length):
             yeni_personel()
 
+class GenerateProgramList(Command):
+    CMD_NAME = 'generate_programs'
+    HELP = 'Generates Programs From Unit Model'
+    PARAMS = []
+
+    def run(self):
+        from tests.fake.program import yeni_program
+        yeni_program()
 
 class ExportRoomsToXml(Command):
     CMD_NAME = 'export_rooms'
