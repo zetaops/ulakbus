@@ -18,7 +18,7 @@ __author__ = 'Halil İbrahim Yılmaz'
 def yeni_ders():
     program_list = Program.objects.filter()
     term = Donem.objects.filter(guncel=True)[0]
-    personel_list = personel_list = Personel.objects.filter(unvan=1)
+    personel_list = Personel.objects.filter(unvan=1)
 
     for program in program_list:
         for i in range(randint(1, 9)):
