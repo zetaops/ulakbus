@@ -280,7 +280,7 @@ class Ogrenci(Model):
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
     ehliyet = field.String("Ehliyet", index=True)
     e_posta = field.String("E-Posta", index=True)
-    tel_no = field.Integer("Telefon Numarası", index=True)
+    tel_no = field.String("Telefon Numarası", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
 
     class Meta:
