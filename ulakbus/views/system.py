@@ -65,3 +65,19 @@ class Notification(BaseView):
         read_messages = self.current.input['read']
         for msg in read_messages:
             self.current.msg_cache.remove_item(msg)
+
+
+class GetCurrentUser(BaseView):
+    def __init__(self, current):
+        super(GetCurrentUser, self).__init__(current)
+        self.output['current_user'] = {}
+        self.getUser(current.user)
+
+    def getUser(self, userObject):
+        currentUser = {
+            "name": userObject.name,
+            "surname": userObject.surname,
+            "username": userObject.username,
+            "roles": [{"role": role.__unicode__()} for role in userObject.role_set]
+        }
+        self.output['current_user'] = currentUser
