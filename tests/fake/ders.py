@@ -23,11 +23,11 @@ def yeni_ders():
     for program in program_list:
         for i in range(randint(1, 9)):
             d = Ders()
-            ders.ad = fake.lecture()
-            kod = ints(length=10)
-            program = program
-            donem = term
-            ders_koordinatoru = personel_list[randint(0, len(personel_list))]
+            d.ad = fake.lecture()
+            d.kod = ints(length=10)
+            d.program = program
+            d.donem = term
+            d.ders_koordinatoru = personel_list[randint(0, len(personel_list))]
             d.save()
 
     print("Fake ders tanınlaması başarılı")
