@@ -30,4 +30,4 @@ def yeni_ders():
             d.ders_koordinatoru = personel_list[randint(0, len(personel_list) - 1)]
             d.save()
 
-    print("Fake ders tanınlaması başarılı")
+    print("Fake ders tanımlaması başarılı")
