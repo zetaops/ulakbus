@@ -9,7 +9,7 @@
 
 
 from ulakbus.models.auth import Unit
-from ulakbus.models.ogrenci import Program,Donem
+from ulakbus.models.ogrenci import Program, Donem
 import datetime
 
 __author__ = 'Halil İbrahim Yılmaz'
