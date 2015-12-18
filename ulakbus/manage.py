@@ -321,7 +321,7 @@ class ExportStaffToXML(Command):
         units = Unit.objects.filter()
         campuses = Campus.objects.filter()
         sessions = Donem.objects.filter()
-        stafflist = Personel.objects.filter()
+        stafflist = Okutman.objects.filter()
         doc_type = '<!DOCTYPE staff PUBLIC "-//UniTime//UniTime Staff Import DTD/EN" "http://www.unitime.org/interface/Staff.dtd">'
 
         for campus in campuses:
@@ -333,7 +333,7 @@ class ExportStaffToXML(Command):
 
                 etree.SubElement(root, 'staffMember', externalId="%s" % staffmember.key, \
                                  firstName="%s" % staffmember.ad, lastName="%s" % staffmember.soyad, \
-                                 department="%s" % staffmember.birim.yoksis_no, acadTitle="%s" % unvan[0], \
+                                 department="%s" % staffmember.birim_no, acadTitle="%s" % unvan[0], \
                                  positionType="%s" % unvan[1])
         # pretty string
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
@@ -357,7 +357,7 @@ class ExportStaffToXML(Command):
         elif title == 4:
             return ["Lecturer", "Lect."]
         else:
-            return ""
+            return ["",""]
 
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
