@@ -317,7 +317,7 @@ class ExportStaffToXML(Command):
         import os
         import datetime
         from lxml import etree
-        from ulakbus.models import Donem, Unit, Campus, Personel
+        from ulakbus.models import Donem, Unit, Campus, Okutman
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
