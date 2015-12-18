@@ -189,6 +189,8 @@ class NotGirisi(CrudView):
 
     def ders_sec(self):
         _form = SecimForm(current=self.current)
+        user = self.current.user
+        subeler = Sube.objects.filter(okutman__okutman__user=user)
         filter = {"okutman": ""}
         _form.ders = fields.Integer("Sube Sec", choices=prepare_choices_for_model(Sube))
         self.form_out(_form)
