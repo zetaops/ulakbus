@@ -9,7 +9,7 @@
 
 from pyoko.model import Model, Node
 from pyoko import field
-from .auth import Unit, Role
+from .auth import Unit, Role, User
 
 PERSONEL_TURU = [
     (1, 'Akademik'),
@@ -67,6 +67,7 @@ class Personel(Model):
     kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+    user = User()
 
     class Meta:
         app = 'Personel'

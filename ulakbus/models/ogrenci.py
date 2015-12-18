@@ -8,7 +8,7 @@
 
 from .personel import Personel
 from pyoko import Model, field, ListNode
-from .auth import Role
+from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room
 import six
@@ -309,6 +309,7 @@ class Ogrenci(Model):
     e_posta = field.String("E-Posta", index=True)
     tel_no = field.String("Telefon Numarası", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
+    user = User()
 
     class Meta:
         app = 'Ogrenci'
