@@ -381,7 +381,6 @@ class ExportStudentInfoToXML(Command):
 
         root = etree.Element('students', campus="%s" % uni, term="%s" % term.ad, year="%s" % term.baslangic_tarihi.year)
         for student in students:
-            # <student externalId="1001" firstName="Andrew" lastName="Student" middleName='Frank' email="demo@unitime.org">
             etree.SubElement(root, 'student', externalId="%s" % student.key, firstName="%s" % student.ad,
                              lastName="%s" % student.soyad,
                              email="%s" % student.e_posta)
