@@ -11,7 +11,7 @@ from pyoko import ListNode
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from ulakbus.models.ogrenci import Program, Okutman
+from ulakbus.models.ogrenci import Program, Okutman, DegerlendirmeNot
 from ulakbus.models.ogrenci import Ders
 from ulakbus.models.ogrenci import Sube
 
@@ -66,7 +66,7 @@ class DersEkle(CrudView):
         self.form_out(ProgramBilgisiForm(self.object, current=self.current))
 
 
-class BosForm(forms.JsonForm):
+class SecimForm(forms.JsonForm):
     sec = fields.Button("Sec", cmd="ders_sec")
 
 
@@ -177,6 +177,31 @@ class DersSubelendirme(CrudView):
     def bilgi_ver(self):
         sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
         okutmanlar = [s.okutman.__unicode__() for s in sbs]
+
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Mesaj Iletildi',
             "msg": 'Şubelendirme Bilgileri şu hocalara iletildi: %s' % ", ".join(okutmanlar)}
+
+
+class NotGirisi(CrudView):
+    class Meta:
+        model = "DegerlendirmeNot"
+
+    def ders_sec(self):
+        _form = SecimForm(current=self.current)
+        filter = {"okutman": ""}
+        _form.ders = fields.Integer("Sube Sec", choices=prepare_choices_for_model(Sube))
+        self.form_out(_form)
+
+    def sinav_sec(self):
+        # ders_key=self.current.input['form']['ders']
+        pass
+
+    def not_girisi(self):
+        pass
+
+    def not_kontrol(self):
+        pass
+
+    def not_kaydet(self):
+        pass
