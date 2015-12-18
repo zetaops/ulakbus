@@ -100,6 +100,7 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'Campus', 'wf': 'crud', 'param': 'id', 'text': 'Kampüs'},
     {'kategori': 'Admin', 'model': 'Building', 'wf': 'crud', 'param': 'id', 'text': 'Bina'},
     {'kategori': 'Admin', 'model': 'Room', 'wf': 'crud', 'param': 'id', 'text': 'Oda'},
+    {'kategori': 'Admin', 'model': 'AkademikTakvim', 'wf': 'crud', 'param': 'id', 'text': 'Akademik Takvim'},
 ]
 
 VIEW_URLS.extend([

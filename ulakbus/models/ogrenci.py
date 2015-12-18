@@ -434,3 +434,82 @@ class DegerlendirmeNot(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.puan, self.sinav)
+
+
+AKADEMIK_TAKVIM_ETKINLIKLERI = [
+    ('1', 'Yeni Öğrenci Ön Kayıt'),
+    ('2', 'Güz Dönem Başlangıcı'),
+    ('3', 'Derslerin Acılması'),
+    ('4', 'Subelendirme ve Ders Programının Ilan Edilmesi'),
+    ('5', 'Öğrenci Harç'),
+    ('6', 'Öğrenci Ek Harç'),
+    ('7', 'Mazeretli Öğrenci Harç'),
+    ('8', 'Yeni Öğrenci Ders Kayıt'),
+    ('9', 'Yeni Öğrenci Danışman Onay'),
+    ('10', 'Ders Kayıt'),
+    ('11', 'Danışman Onay'),
+    ('12', 'Mazeretli Ders Kayıt'),
+    ('13', 'Mazeretli Danışman Onay'),
+    ('14', 'Ders Ekle/Bırak'),
+    ('15', 'Ders Ekle/Bırak Danışman Onay'),
+    ('16', 'Danışman Dersten Çekilme İşlemleri'),
+    ('17', 'Ara Sinav'),
+    ('18', 'Ara Sınav Not Giriş'),
+    ('19', 'Ara Sınav Notlarının Öğrenciye Yayınlanması'),
+    ('20', 'Ara Sinav Mazeretli'),
+    ('21', 'Ara Sınav Mazeret Not Giriş'),
+    ('22', 'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması'),
+    ('23', 'Sınav Maddi Hata Düzeltme'),
+    ('24', 'Yariyil Sinav'),
+    ('25', 'Yarıyıl Sınavı Not Giriş'),
+    ('26', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
+    ('27', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı'),
+    ('28', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Not Giriş'),
+    ('29', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye Yayınlanması'),
+    ('30', 'Harf Notlarının Öğrenciye Yayınlanması'),
+    ('31', 'Bütünleme Harf Notlarının Öğrenciye Yayınlanması'),
+    ('32', 'Öğretim Elemanı Yoklama Girişi'),
+    ('33', 'Bahar Donemi Derslerin Acilmasi'),
+    ('34', 'Bahar Donemi Subelendirme ve Ders Programının Ilan Edilmesi'),
+    ('35', 'Bahar Dönem Başlangıcı'),
+    ('36', 'Öğrenci Harç'),
+    ('37', 'Öğrenci Ek Harç'),
+    ('38', 'Mazeretli Öğrenci Harç'),
+    ('39', 'Ders Kayıt'),
+    ('40', 'Danışman Onay'),
+    ('41', 'Mazeretli Ders Kayıt'),
+    ('42', 'Mazeretli Danışman Onay'),
+    ('43', 'Ders Ekle / Bırak'),
+    ('44', 'Ders Ekle / Bırak Onay'),
+    ('45', 'Ara Sinav'),
+    ('46', 'Ara Sınav Not Giriş'),
+    ('47', 'Ara Sınav Notlarının Öğrenciye Yayınlanması'),
+    ('48', 'Ara Sinav Mazeretli'),
+    ('49', 'Ara Sınav Mazeret Not Giriş'),
+    ('50', 'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması'),
+    ('51', 'Sınav Maddi Hata Düzeltme'),
+    ('52', 'Yariyil Sinav'),
+    ('53', 'Yarıyıl Sınavı Not Giriş'),
+    ('54', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
+    ('55', 'Öğretim Elemanı Yoklama Girişi'),
+]
+
+
+class AkademikTakvim(Model):
+    birim = Unit("Birim", index=True)
+    yil = field.Date("Yil", index=True)
+
+    class Takvim(ListNode):
+        etkinlik = field.Integer("Etkinlik", index=True, choices=AKADEMIK_TAKVIM_ETKINLIKLERI)
+        baslangic = field.Date("Başlangiç", index=True)
+        bitis = field.Date("Bitiş", index=True, required=False)
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Akademik Takvim"
+        verbose_name_plural = "Akademik Takvim"
+        list_fields = ['birim', 'yil']
+        search_fields = ['yil', 'birim']
+
+    def __unicode__(self):
+        return '%s %s' % (self.birim, self.yil)
