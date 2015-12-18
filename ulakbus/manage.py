@@ -381,7 +381,6 @@ class ExportStudentInfoToXML(Command):
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        # students = Ogrenci.objects.filter()
         doc_type = '<!DOCTYPE students PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Student.dtd">'
 
         # FIX for default row size in pyoko filter
