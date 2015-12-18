@@ -10,9 +10,18 @@
 from pyoko import form, ListNode
 from zengine.lib.forms import JsonForm
 from zengine.views.crud import CrudView
-from ulakbus.models.ogrenci import Program
+from ulakbus.models.ogrenci import Program, Okutman
 from ulakbus.models.ogrenci import Ders
 from ulakbus.models.ogrenci import Sube
+
+
+def prepare_choices_for_model(model, **kwargs):
+    query_filter = ''
+    ms = model.objects.filter(**kwargs)
+    choices = []
+    for m in ms:
+        choices.append((m.key, m.__unicode__()))
+    return choices
 
 
 class ProgramBilgisiForm(JsonForm):
@@ -66,10 +75,10 @@ class SubelendirmeForm(JsonForm):
     sec = form.Button("Kaydet", cmd="subelendirme_kaydet")
 
     class Subeler(ListNode):
-        subead = form.String('Sube Adi')
-        sube_kontenjan = form.Integer('Sube Kontenjani')
-        sube_dis_kontenjan = form.Integer('Sube Dis Kontenjani')
-        sube_okutman = form.Integer('Okutman', )
+        ad = form.String('Sube Adi')
+        kontenjan = form.Integer('Sube Kontenjani')
+        dis_kontenjan = form.Integer('Sube Dis Kontenjani')
+        okutman = form.Integer('Okutman', choices=prepare_choices_for_model(Okutman))
 
 
 class DersSubelendirme(CrudView):
@@ -78,7 +87,7 @@ class DersSubelendirme(CrudView):
 
     def program_sec(self):
         _form = ProgramForm(current=self.current)
-        choices = self.prepare_choices_for_model(Program)
+        choices = prepare_choices_for_model(Program)
         _form.program = form.Integer(choices=choices)
         self.form_out(_form)
 
@@ -115,12 +124,19 @@ class DersSubelendirme(CrudView):
             self.output['objects'].append(item)
 
     def ders_okutman_formu(self):
-        ders = Ders.objects.filter(key=self.current.input['sube'])[0]
+        # subelendirme icin secilen dersi getir
+        ders = Ders.objects.get(key=self.current.input['sube'])
+        # sonraki adimlar icin task data icine koy
+        self.current.task_data['ders_key'] = ders.key
+
+        # formu olusturmaya basla
         subelendirme_form = SubelendirmeForm(current=self.current,
                                              title='%s / %s dersi icin subelendirme' % (ders.donem, ders))
-        self.current.task_data['ders_key'] = ders.key
-        # subeler = Sube.objects.filter(ders=ders)
-
+        # formun sube listesini olustur
+        subeler = Sube.objects.filter(ders=ders)
+        for sube in subeler:
+            subelendirme_form.Subeler(ad=sube.ad, kontenjan=sube.kontenjan, dis_kontenjan=sube.dis_kontenjan,
+                                      okutman=sube.okutman.key)
         # sb = {}
         # i = 0
         # for sube in subeler:
@@ -137,14 +153,12 @@ class DersSubelendirme(CrudView):
         self.form_out(subelendirme_form)
 
     def subelendirme_kaydet(self):
-        c = self.current
-        c = self.current
-
-    @staticmethod
-    def prepare_choices_for_model(model, **kwargs):
-        query_filter = ''
-        ms = model.objects.filter(**kwargs)
-        choices = []
-        for m in ms:
-            choices.append((m.key, m.__unicode__()))
-        return choices
+        sb = self.input['form']['Subeler']
+        ders = Ders.objects.get(key=self.current.task_data['ders_key'])
+        for s in sb:
+            okutman = s.okutman
+            sube = Sube.objects.get_or_create(okutman=okutman, ders=ders)
+            sube.kontenjan = s.kontenjan
+            sube.dis_kontenjan = s.dis_kontenjan
+            sube.ad = s.ad
+            sube.save()
