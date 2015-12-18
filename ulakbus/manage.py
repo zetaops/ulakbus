@@ -366,7 +366,12 @@ class ExportStaffToXML(Command):
 class ExportStudentInfoToXML(Command):
     CMD_NAME = 'export_student_info'
     HELP = 'Generates Unitime XML import file for student info'
-    PARAMS = []
+    PARAMS = [
+
+        {'name': 'batch_size', 'type': int, 'default': 1000,
+         'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
+
+    ]
 
     def run(self):
         import os
@@ -379,17 +384,16 @@ class ExportStudentInfoToXML(Command):
         # students = Ogrenci.objects.filter()
         doc_type = '<!DOCTYPE students PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Student.dtd">'
 
-        #FIX for default row size in pyoko filter
-        batch_size=1000
+        # FIX for default row size in pyoko filter
+        batch_size = int(self.manager.args.batch_size)
         count = Ogrenci.objects.count()
         rounds = int(count / batch_size) + 1
 
         root = etree.Element('students', campus="%s" % uni, term="%s" % term.ad, year="%s" % term.baslangic_tarihi.year)
-        #FIX for default row size in pyoko filter
+        # FIX for default row size in pyoko filter
         for i in range(rounds):
-            for student in Ogrenci.objects.set_params(rows=1000, start=i*batch_size).filter():
-
-            #for student in students:
+            for student in Ogrenci.objects.set_params(rows=1000, start=i * batch_size).filter():
+                # for student in students:
                 etree.SubElement(root, 'student', externalId="%s" % student.key, firstName="%s" % student.ad,
                                  lastName="%s" % student.soyad,
                                  email="%s" % student.e_posta)
