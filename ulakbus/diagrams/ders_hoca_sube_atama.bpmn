@@ -21,7 +21,7 @@
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="ders_okutman_subelendir" targetRef="kaydet"/>
-    <bpmn2:serviceTask id="kaydet" camunda:class="ders.ders.DersView.sube_kaydet" name="Subeleri Kaydet">
+    <bpmn2:serviceTask id="kaydet" camunda:class="ders.ders.DersSubelendirme.subelendirme_kaydet" name="Subeleri Kaydet">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
     </bpmn2:serviceTask>

@@ -7,14 +7,12 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-import random
 from pyoko import form, ListNode
 from zengine.lib.forms import JsonForm
 from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import Program
 from ulakbus.models.ogrenci import Ders
 from ulakbus.models.ogrenci import Sube
-from ulakbus.models.ogrenci import Okutman
 
 
 class ProgramBilgisiForm(JsonForm):
@@ -56,24 +54,22 @@ class DersEkle(CrudView):
         self.form_out(ProgramBilgisiForm(self.object, current=self.current))
 
 
-class ProgramForm(JsonForm):
-    programs = Program.objects.filter()
-    program_choices = []
-    for pr in programs:
-        program_choices.append((pr.key, pr.adi))
+class BosForm(JsonForm):
+    sec = form.Button("Sec", cmd="ders_sec")
 
-    program = form.Integer(choices=program_choices)
+
+class ProgramForm(JsonForm):
     sec = form.Button("Sec", cmd="ders_sec")
 
 
 class SubelendirmeForm(JsonForm):
-    sec = form.Button("Kaydet", cmd="ders_sec")
+    sec = form.Button("Kaydet", cmd="subelendirme_kaydet")
 
     class Subeler(ListNode):
         subead = form.String('Sube Adi')
-    # 'subekon_%s' % i: form.String('Sube Kontenjan', default=sube.kontenjan),
-    # 'subediskon_%s' % i: form.String('Sube Dis Kontenjan', default=sube.dis_kontenjan),
-    # 'subeoktman_%s' % i: form.String('Okutman', default=sube.okutman.ad)
+        sube_kontenjan = form.Integer('Sube Kontenjani')
+        sube_dis_kontenjan = form.Integer('Sube Dis Kontenjani')
+        sube_okutman = form.Integer('Okutman', )
 
 
 class DersSubelendirme(CrudView):
@@ -81,7 +77,10 @@ class DersSubelendirme(CrudView):
         model = "Sube"
 
     def program_sec(self):
-        self.form_out(ProgramForm(current=self.current))
+        _form = ProgramForm(current=self.current)
+        choices = self.prepare_choices_for_model(Program)
+        _form.program = form.Integer(choices=choices)
+        self.form_out(_form)
 
     def ders_sec(self):
         self.set_client_cmd('form')
@@ -116,22 +115,36 @@ class DersSubelendirme(CrudView):
             self.output['objects'].append(item)
 
     def ders_okutman_formu(self):
-        ders = Ders.objects.get(key=self.current.input['sube'])
-        subelendirme_form = SubelendirmeForm(current=self.current)
-        subelendirme_form.Meta.title = '%s / %s dersi icin subelendirme' % (ders.donem, ders)
-        subeler = Sube.objects.filter(ders=ders)
-        # okutmanlar = Okutman.
-        sb = {}
-        i = 0
-        for sube in subeler:
-            sb.update({
-                'subead_%s' % i: form.String('Sube Adi', default=sube.ad),
-                'subekon_%s' % i: form.String('Sube Kontenjan', default=sube.kontenjan),
-                'subediskon_%s' % i: form.String('Sube Dis Kontenjan', default=sube.dis_kontenjan),
-                'subeoktman_%s' % i: form.String('Okutman', default=sube.okutman.ad)
-            })
-            i += 1
-        for k, v in sb.items():
-            setattr(subelendirme_form, k, v)
+        ders = Ders.objects.filter(key=self.current.input['sube'])[0]
+        subelendirme_form = SubelendirmeForm(current=self.current,
+                                             title='%s / %s dersi icin subelendirme' % (ders.donem, ders))
+        self.current.task_data['ders_key'] = ders.key
+        # subeler = Sube.objects.filter(ders=ders)
+
+        # sb = {}
+        # i = 0
+        # for sube in subeler:
+        #     sb.update({
+        #         'subead_%s' % i: form.String('Sube Adi', default=sube.ad),
+        #         'subekon_%s' % i: form.String('Sube Kontenjan', default=sube.kontenjan),
+        #         'subediskon_%s' % i: form.String('Sube Dis Kontenjan', default=sube.dis_kontenjan),
+        #         'subeoktman_%s' % i: form.String('Okutman', default=sube.okutman.ad)
+        #     })
+        #     i += 1
+        # for k, v in sb.items():
+        #     setattr(subelendirme_form, k, v)
 
         self.form_out(subelendirme_form)
+
+    def subelendirme_kaydet(self):
+        c = self.current
+        c = self.current
+
+    @staticmethod
+    def prepare_choices_for_model(model, **kwargs):
+        query_filter = ''
+        ms = model.objects.filter(**kwargs)
+        choices = []
+        for m in ms:
+            choices.append((m.key, m.__unicode__()))
+        return choices
