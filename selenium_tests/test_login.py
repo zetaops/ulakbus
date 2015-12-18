@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from page_objects import PageObject, PageElement
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 
-class LoginPage(PageObject):
-    username = PageElement(id_='username')
-    password = PageElement(id_='password')
-    login = PageElement(css='input[type="submit"]')
-    form = PageElement(tag_name='form')
+class Logging(object):
     driver = webdriver.Firefox()
-
-    def __init__(self):
-        super(LoginPage, self).__init__(self.driver, root_uri="http://nightly.ulakbus.net/#/login")
+    driver.get('http://nightly.ulakbus.net/#/dashboard')
+    driver.implicitly_wait(10)
 
     def do_login(self):
-        self.get('')
-        self.username = 'test_user'
-        self.password = '123'
-        self.login.click()
-LoginPage().do_login()
+        email_field = self.driver.find_element_by_id("username")
+        # Kullanici adi alanina 'test_user' yolluyor.
+        email_field.send_keys("test_user")
+        password_field = self.driver.find_element_by_id("password")
+        # Sifre alanina '123' yolluyor.
+        password_field.send_keys("123")
+        # Giris tusuna tikliyor.
+        self.driver.find_element_by_css_selector('.btn').click()
+        # Panel tusunu gorene kadar test_user login olmasini 25 saniye bekliyor.
+        WebDriverWait(self.driver, 25).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, '#side-menu > li:nth-child(1) > a:nth-child(1)')))
