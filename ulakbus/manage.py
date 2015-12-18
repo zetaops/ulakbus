@@ -376,14 +376,23 @@ class ExportStudentInfoToXML(Command):
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        students = Ogrenci.objects.filter()
+        # students = Ogrenci.objects.filter()
         doc_type = '<!DOCTYPE students PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Student.dtd">'
 
+        #FIX for default row size in pyoko filter
+        batch_size=1000
+        count = Ogrenci.objects.count()
+        rounds = int(count / batch_size) + 1
+
         root = etree.Element('students', campus="%s" % uni, term="%s" % term.ad, year="%s" % term.baslangic_tarihi.year)
-        for student in students:
-            etree.SubElement(root, 'student', externalId="%s" % student.key, firstName="%s" % student.ad,
-                             lastName="%s" % student.soyad,
-                             email="%s" % student.e_posta)
+        #FIX for default row size in pyoko filter
+        for i in range(rounds):
+            for student in Ogrenci.objects.set_params(rows=1000, start=i*batch_size).filter():
+
+            #for student in students:
+                etree.SubElement(root, 'student', externalId="%s" % student.key, firstName="%s" % student.ad,
+                                 lastName="%s" % student.soyad,
+                                 email="%s" % student.e_posta)
         # pretty string
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
 
