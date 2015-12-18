@@ -110,6 +110,7 @@ class GenerateRandomPersonel(Command):
         for x in range(0, length):
             yeni_personel()
 
+
 class GenerateRandomOkutman(Command):
     CMD_NAME = 'random_okutman'
     HELP = 'Generates Random Okutman From Personel Objects'
@@ -125,6 +126,7 @@ class GenerateRandomOkutman(Command):
         for x in range(0, length):
             yeni_okutman()
 
+
 class GenerateRandomHariciOkutman(Command):
     CMD_NAME = 'random_harici_okutman'
     HELP = 'Generates Random Okutman From Personel Objects'
@@ -139,6 +141,7 @@ class GenerateRandomHariciOkutman(Command):
         length = int(self.manager.args.length)
         for x in range(0, length):
             yeni_harici_okutman()
+
 
 class GenerateRandomOogrenci(Command):
     CMD_NAME = 'random_ogrenci'
@@ -357,7 +360,47 @@ class ExportStaffToXML(Command):
         elif title == 4:
             return ["Lecturer", "Lect."]
         else:
-            return ["",""]
+            return ["", ""]
+
+
+class ExportStudentInfoToXML(Command):
+    CMD_NAME = 'export_student_info'
+    HELP = 'Generates Unitime XML import file for student info'
+    PARAMS = []
+
+    def run(self):
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import Donem, Ogrenci, Unit
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        term = Donem.objects.filter(guncel=True)[0]
+        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+        students = Ogrenci.objects.filter()
+        doc_type = '<!DOCTYPE students PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Student.dtd">'
+
+        root = etree.Element('students', campus="%s" % uni, term="%s" % term.ad, year="%s" % term.baslangic_tarihi.year)
+        for student in students:
+            # <student externalId="1001" firstName="Andrew" lastName="Student" middleName='Frank' email="demo@unitime.org">
+            etree.SubElement(root, 'student', externalId="%s" % student.key, firstName="%s" % student.ad,
+                             lastName="%s" % student.soyad,
+                             email="%s" % student.e_posta)
+        # pretty string
+        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
+
+        if len(s):
+
+            current_date = datetime.datetime.now()
+            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+            if not os.path.exists(export_directory):
+                os.makedirs(export_directory)
+            out_file = open(export_directory + '/studentInfoImport.xml', 'w+')
+            out_file.write("%s" % s)
+            print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+        else:
+            print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
 
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
