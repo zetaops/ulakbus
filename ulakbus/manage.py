@@ -84,11 +84,23 @@ class LoadFixture(Command):
             print("file not found: %s" % fixture_file)
 
 
-class GenerateRandomOkutman(Command):
-    CMD_NAME = 'random_okutman'
-    HELP = 'Generates Random Okutmans'
+class GenerateBuildingList(Command):
+    CMD_NAME = 'generate_buildings'
+    HELP = 'Generates fake Building model objects from Unit Faculties'
+    PARAMS = []
+
+    def run(self):
+        from tests.fake.building import yeni_bina
+        yeni_bina()
+
+
+class GenerateRandomPersonel(Command):
+    CMD_NAME = 'random_personel'
+    HELP = 'Generates Random Personel'
     PARAMS = [
-        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+
+        {'name': 'length', 'required': True, 'help': 'Amount of random personel'},
+
     ]
 
     def run(self):
@@ -96,6 +108,69 @@ class GenerateRandomOkutman(Command):
         length = int(self.manager.args.length)
         for x in range(0, length):
             yeni_personel()
+
+class GenerateRandomOkutman(Command):
+    CMD_NAME = 'random_okutman'
+    HELP = 'Generates Random Okutman From Personel Objects'
+    PARAMS = [
+
+        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+
+    ]
+
+    def run(self):
+        from tests.fake.okutman import yeni_okutman
+        length = int(self.manager.args.length)
+        for x in range(0, length):
+            yeni_okutman()
+
+class GenerateRandomHariciOkutman(Command):
+    CMD_NAME = 'random_harici_okutman'
+    HELP = 'Generates Random Okutman From Personel Objects'
+    PARAMS = [
+
+        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+
+    ]
+
+    def run(self):
+        from tests.fake.harici_okutman import yeni_harici_okutman
+        length = int(self.manager.args.length)
+        for x in range(0, length):
+            yeni_harici_okutman()
+
+class GenerateRandomOogrenci(Command):
+    CMD_NAME = 'random_ogrenci'
+    HELP = 'Generates Random Ogrenci Model Objects'
+    PARAMS = [
+        {'name': 'length', 'required': True, 'help': 'Amount of random ogrenci'},
+    ]
+
+    def run(self):
+        from tests.fake.ogrenci import yeni_ogrenci
+        length = int(self.manager.args.length)
+        for x in range(0, length):
+            yeni_ogrenci()
+
+
+class GenerateProgramList(Command):
+    CMD_NAME = 'generate_programs'
+    HELP = 'Generates Programs From Unit Model'
+    PARAMS = []
+
+    def run(self):
+        from tests.fake.program import yeni_program
+        yeni_program()
+
+
+class GenerateDersList(Command):
+    CMD_NAME = 'generate_ders'
+    HELP = 'Generates fake Ders model objects'
+    PARAMS = []
+
+    def run(self):
+        from tests.fake.ders import yeni_ders
+        yeni_ders()
 
 
 class ExportRoomsToXml(Command):
@@ -269,7 +344,6 @@ class ExportStaffToXML(Command):
         out_file = open(export_directory + '/staffImport.xml', 'w+')
         out_file.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
 
     @staticmethod
     def acadTitle(title):

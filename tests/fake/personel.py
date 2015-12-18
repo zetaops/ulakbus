@@ -16,6 +16,7 @@ import random
 
 __author__ = 'Halil İbrahim Yılmaz'
 
+
 def yeni_personel():
     p = Personel()
     p.tckn = ints(length=11)
