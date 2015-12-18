@@ -105,7 +105,7 @@ class IletisimBilgileriForm(forms.JsonForm):
     """
 
     class Meta:
-        include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi", "posta_kodu", "eposta", "tel_no"]
+        include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi","adres2", "posta_kodu", "e_posta","e_posta2", "tel_no","gsm"]
 
     kaydet = fields.Button("Kaydet", cmd="save")
     kps_sorgula = fields.Button("KPS Sorgula", cmd="kps_sorgula")
