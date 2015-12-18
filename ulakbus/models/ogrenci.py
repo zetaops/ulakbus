@@ -425,6 +425,7 @@ class Ogrenci(Model):
     ikamet_il = field.String("İkamet İl", index=True)
     ikamet_ilce = field.String("İkamet İlçe", index=True)
     ikamet_adresi = field.String("İkametgah Adresi", index=True)
+    adres2 = field.String("2.Adres", index=True)
     posta_kodu = field.String("Posta Kodu", index=True)
     dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     dogum_yeri = field.String("Doğum Yeri", index=True)
@@ -432,7 +433,9 @@ class Ogrenci(Model):
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
     ehliyet = field.String("Ehliyet", index=True)
     e_posta = field.String("E-Posta", index=True)
+    e_posta2 = field.String("2.E-Posta", index=True)
     tel_no = field.String("Telefon Numarası", index=True)
+    gsm = field.String("Gsm",index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
     #: İlişki[model]: Kullanıcı Model'ine, bire bir ilişki tipi
     user = User(one_to_one=True)
