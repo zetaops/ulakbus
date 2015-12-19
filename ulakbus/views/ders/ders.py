@@ -16,12 +16,7 @@ from ulakbus.models.ogrenci import Sube
 
 
 def prepare_choices_for_model(model, **kwargs):
-    query_filter = ''
-    ms = model.objects.filter(**kwargs)
-    choices = []
-    for m in ms:
-        choices.append((m.key, m.__unicode__()))
-    return choices
+    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
 
 
 class ProgramBilgisiForm(JsonForm):
@@ -78,7 +73,7 @@ class SubelendirmeForm(JsonForm):
         ad = form.String('Sube Adi')
         kontenjan = form.Integer('Sube Kontenjani')
         dis_kontenjan = form.Integer('Sube Dis Kontenjani')
-        okutman = form.Integer('Okutman', choices=prepare_choices_for_model(Okutman))
+        okutman = form.String('Okutman', choices=lambda: prepare_choices_for_model(Okutman))
 
 
 class DersSubelendirme(CrudView):
