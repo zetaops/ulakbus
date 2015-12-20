@@ -34,7 +34,8 @@ class CreateUser(Command):
         user = User(username=self.manager.args.username, superuser=self.manager.args.super)
         user.set_password(self.manager.args.password)
         user.save()
-        role = Role(user=user, abstract_role=abs_role).save()
+        role = Role(user=user, abstract_role=abs_role)
+        role.save()
         perm_list = []
         for perm in Permission.objects.raw(self.manager.args.permission_query):
             role.Permissions(permission=perm)
