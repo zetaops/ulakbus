@@ -79,8 +79,10 @@ OBJECT_MENU = {
         {'name': 'Borc'},
         {'name': 'DegerlendirmeNot'},
         {'name': 'OgrenciDersi'},
-        {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri', 'verbose_name': 'Kimlik Bilgileri'},
-        {'name': 'Ogrenci', 'field':'object_id', 'wf':'ogrenci_iletisim_bilgileri', 'verbose_name': 'İletişim Bilgileri'},
+        {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri',
+         'verbose_name': 'Kimlik Bilgileri'},
+        {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_iletisim_bilgileri',
+         'verbose_name': 'İletişim Bilgileri'},
         {'name': 'OncekiEgitimBilgisi'},
     ],
 }
@@ -92,7 +94,8 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'Personel', 'wf': 'crud', 'param': 'id', 'text': 'Personel'},
     {'kategori': 'Admin', 'model': 'Ogrenci', 'wf': 'crud', 'param': 'id', 'text': 'Öğrenci'},
     {'kategori': 'Admin', 'model': 'Okutman', 'wf': 'crud', 'param': 'id', 'text': 'Okutman'},
-    {'kategori': 'Admin', 'model': 'HariciOkutman', 'wf': 'crud', 'param': 'id', 'text': 'Harici Okutman'},
+    {'kategori': 'Admin', 'model': 'HariciOkutman', 'wf': 'crud', 'param': 'id',
+     'text': 'Harici Okutman'},
     {'kategori': 'Admin', 'model': 'Donem', 'wf': 'crud', 'param': 'id', 'text': 'Dönem'},
     {'kategori': 'Admin', 'model': 'Program', 'wf': 'crud', 'param': 'id', 'text': 'Program'},
     {'kategori': 'Admin', 'model': 'Ders', 'wf': 'crud', 'param': 'id', 'text': 'Ders'},
@@ -100,7 +103,8 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'Campus', 'wf': 'crud', 'param': 'id', 'text': 'Kampüs'},
     {'kategori': 'Admin', 'model': 'Building', 'wf': 'crud', 'param': 'id', 'text': 'Bina'},
     {'kategori': 'Admin', 'model': 'Room', 'wf': 'crud', 'param': 'id', 'text': 'Oda'},
-    {'kategori': 'Admin', 'model': 'AkademikTakvim', 'wf': 'crud', 'param': 'id', 'text': 'Akademik Takvim'},
+    {'kategori': 'Admin', 'model': 'AkademikTakvim', 'wf': 'crud', 'param': 'id',
+     'text': 'Akademik Takvim'},
 ]
 
 VIEW_URLS.extend([
@@ -123,3 +127,23 @@ ALLOWED_ORIGINS += [
 ]
 
 UID = 173500
+
+FILE_MANAGER = 'ulakbus.lib.s3_file_manager.S3FileManager'
+ALLOWED_FILE_TYPES = {
+    'png': ('image/png', 'png'),
+    'jpg': ('image/jpeg', 'jpg'),
+    'jpeg': ('image/jpeg', 'jpg'),
+    'pdf': ('application/pdf', 'pdf'),
+    'doc': ('application/msword', 'doc'),
+    'xls': ('application/vnd.ms-excel', 'xls'),
+    'ppt': ('application/vnd.ms-powerpoint', 'ppt'),
+    'pptx': ('application/vnd.openxmlformats-officedocument.presentationml.presentation', 'pptx'),
+    'xlsx': ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'xlsx'),
+    'docx': ('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'docx'),
+}
+
+S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
+S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
+S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
+S3_PROXY_PORT = '8080'
+S3_BUCKET_NAME = 'ulakbus'
