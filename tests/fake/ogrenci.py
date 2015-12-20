@@ -11,6 +11,7 @@
 from ulakbus.models.ogrenci import Ogrenci
 from .general import ints, gender, marital_status, blood_type, driver_license_class, id_card_serial, birth_date
 from .general import fake
+from user import new_user
 import random
 
 __author__ = 'Halil İbrahim Yılmaz'
@@ -43,4 +44,9 @@ def yeni_ogrenci():
     o.dogum_tarihi = birth_date(student=True)
     o.dogum_yeri = fake.state()
     o.tel_no = fake.phone_number()
+
+    username = fake.slug(u'%s-%s' % (o.ad, o.soyad))
+    user = new_user(username=username)
+    o.user = user
+
     o.save()

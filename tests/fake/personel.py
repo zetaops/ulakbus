@@ -6,8 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
-
+from tests.fake.user import new_user
 from ulakbus.models.personel import \
     Personel  # AdresBilgileri, KurumIciGorevlendirmeBilgileri, KurumDisiGorevlendirmeBilgileri
 from .general import ints, gender, marital_status, blood_type, driver_license_class, id_card_serial, birth_date
@@ -52,4 +51,9 @@ def yeni_personel():
     p.ana_adi = fake.first_name_female()
     p.dogum_tarihi = birth_date(student=False)
     p.dogum_yeri = fake.state()
+
+    username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
+    user = new_user(username=username)
+    p.user = user
+
     p.save()

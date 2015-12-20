@@ -22,7 +22,8 @@ def ints(length=1):
 
 
 def gender():
-    return random.choice(['Erkek', 'Kadin'])
+    # return random.choice(['Erkek', 'Kadin'])
+    return random.choice([1, 2])
 
 
 def marital_status(student=False):
@@ -52,7 +53,7 @@ def id_card_serial():
 def birth_date(student=False):
     age_range = range(17, 30) if student else range(26, 80)
     return datetime.datetime.now() - datetime.timedelta(
-        days=random.choice(age_range) * 365 + random.choice(range(-120, 120)))
+            days=random.choice(age_range) * 365 + random.choice(range(-120, 120)))
 
 
 def create_fake_geo_data():
