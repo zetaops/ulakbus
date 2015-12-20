@@ -150,10 +150,16 @@ class DersSubelendirme(CrudView):
     def subelendirme_kaydet(self):
         sb = self.input['form']['Subeler']
         ders = Ders.objects.get(key=self.current.task_data['ders_key'])
+        mevcut_subeler = Sube.objects.filter(ders=ders)
         for s in sb:
             okutman = s.okutman
             sube = Sube.objects.get_or_create(okutman=okutman, ders=ders)
+            # mevcut_subelerden cikar
+            mevcut_subeler = list(set(mevcut_subeler) - set([sube, ]))
             sube.kontenjan = s.kontenjan
             sube.dis_kontenjan = s.dis_kontenjan
             sube.ad = s.ad
             sube.save()
+        # mevcut subelerde kalanlari sil
+        for s in mevcut_subeler:
+            s.delete()
