@@ -13,6 +13,7 @@ Werkzeug
 celery
 requests
 lxml
+boto
 
 # following projeets are parts of our project,
 # so creating symbolic links for them is more convenient for us

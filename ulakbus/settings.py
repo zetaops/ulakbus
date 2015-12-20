@@ -131,6 +131,7 @@ UID = 173500
 FILE_MANAGER = 'ulakbus.lib.s3_file_manager.S3FileManager'
 ALLOWED_FILE_TYPES = {
     'png': ('image/png', 'png'),
+    'txt': ('text/plain', 'txt'),
     'jpg': ('image/jpeg', 'jpg'),
     'jpeg': ('image/jpeg', 'jpg'),
     'pdf': ('application/pdf', 'pdf'),
@@ -145,5 +146,11 @@ ALLOWED_FILE_TYPES = {
 S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
 S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
 S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
-S3_PROXY_PORT = '8080'
+S3_PUBLIC_URL = os.environ.get('S3_PUBLIC_URL')
+S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '8080')
 S3_BUCKET_NAME = 'ulakbus'
+
+QUICK_MENU = [
+    'kadro_islemleri',
+    'izin',
+]
