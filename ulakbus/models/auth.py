@@ -75,6 +75,23 @@ class AbstractRole(Model):
     def __unicode__(self):
         return "%s" % self.name
 
+    def get_permissions(self):
+        return [p.permission.code for p in self.Permissions]
+
+    def add_permission(self, perm):
+        self.Permissions(permission=perm)
+        self.save()
+
+    def add_permission_by_name(self, code, save=False):
+        if not save:
+            return ["%s | %s" % (p.name, p.code) for p in
+                    Permission.objects.filter(code='*' + code + '*')]
+        for p in Permission.objects.filter(code='*' + code + '*'):
+            if p not in self.Permissions:
+                self.Permissions(permission=p)
+        if p:
+            self.save()
+
     class Permissions(ListNode):
         permission = Permission()
 
@@ -135,7 +152,9 @@ class Role(Model):
         permission = Permission()
 
     def get_permissions(self):
-        return [p.permission.code for p in self.Permissions]
+        return [p.permission.code for p in self.Permissions] + (
+            self.abstract_role.get_permissions() if self.abstract_role.key else [])
+
 
     def add_permission(self, perm):
         self.Permissions(permission=perm)
