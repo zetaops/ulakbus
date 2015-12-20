@@ -72,6 +72,7 @@ class AbstractRole(Model):
         app = 'Sistem'
         verbose_name = "Soyut Rol"
         verbose_name_plural = "Soyut Roller"
+        search_fields = ['id', 'name']
 
     def __unicode__(self):
         return "%s" % self.name
