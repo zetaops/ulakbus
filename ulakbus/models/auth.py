@@ -22,6 +22,7 @@ except ImportError:
 class User(Model):
     username = field.String("Username", index=True)
     password = field.String("Password")
+    avatar = field.File("Profile Photo", random_name=True)
     name = field.String("First Name", index=True)
     surname = field.String("Surname", index=True)
     superuser = field.Boolean("Super user", default=False)
