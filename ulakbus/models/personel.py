@@ -21,7 +21,7 @@ class Personel(Model):
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)
-    cinsiyet = field.String("Cinsiyet", index=True)
+    cinsiyet = field.Integer("Cinsiyet", index=True, choices='cinsiyet')
     uyruk = field.String("Uyruk", index=True)
     ikamet_adresi = field.String("İkamet Adresi", index=True)
     ikamet_il = field.String("İkamet Il", index=True)
