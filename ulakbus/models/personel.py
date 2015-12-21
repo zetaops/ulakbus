@@ -67,7 +67,7 @@ class Personel(Model):
     kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
-    user = User()
+    user = User(one_to_one=True)
 
     class Meta:
         app = 'Personel'

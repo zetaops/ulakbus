@@ -131,11 +131,19 @@ class Unit(Model):
     def __unicode__(self):
         return '%s - %s - %s' % (self.name, self.english_name, self.yoksis_no)
 
+ROL_TIPI = [
+    (1, 'Personel'),
+    (2, 'Ogrenci'),
+    (3, 'Harici')
+]
+
+
 
 class Role(Model):
     abstract_role = AbstractRole()
     user = User()
     unit = Unit()
+    typ = field.Integer("Rol tipi", choices=ROL_TIPI)
     name = field.String("Rol Adı", hidden=True)
 
     class Meta:
@@ -225,7 +233,7 @@ class AuthBackend(object):
     def get_user(self):
         if 'user_data' in self.session:
             user = User()
-            user.set_data(self.session['user_data'])
+            user.set_data(self.session['user_data'], from_db=True)
             user.key = self.session['user_id']
         elif 'user_id' in self.session:
             user = User.objects.get(self.session['user_id'])

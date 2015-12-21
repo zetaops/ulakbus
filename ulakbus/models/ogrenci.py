@@ -309,7 +309,7 @@ class Ogrenci(Model):
     e_posta = field.String("E-Posta", index=True)
     tel_no = field.String("Telefon Numarası", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
-    user = User()
+    user = User(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
