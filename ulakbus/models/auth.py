@@ -152,6 +152,9 @@ class Role(Model):
         verbose_name_plural = "Roller"
         search_fields = ['name']
 
+    def get_user(self):
+        return self.user
+
     def __unicode__(self):
         try:
             return "%s %s" % (self.abstract_role.name, self.user.username)

@@ -89,6 +89,7 @@ OBJECT_MENU = {
 ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'User', 'wf': 'crud', 'param': 'id', 'text': 'Kullanıcı'},
     {'kategori': 'Admin', 'model': 'Role', 'wf': 'crud', 'param': 'id', 'text': 'Rol'},
+    {'kategori': 'Admin', 'model': 'AbstractRole', 'wf': 'crud', 'param': 'id', 'text': 'Soyut Rol'},
     {'kategori': 'Admin', 'model': 'Permission', 'wf': 'crud', 'param': 'id', 'text': 'Yetki'},
     {'kategori': 'Admin', 'model': 'Unit', 'wf': 'crud', 'param': 'id', 'text': 'Birim'},
     {'kategori': 'Admin', 'model': 'Personel', 'wf': 'crud', 'param': 'id', 'text': 'Personel'},
