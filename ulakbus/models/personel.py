@@ -7,9 +7,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from pyoko.model import Model, Node
-from pyoko import field
-from .auth import Unit, Role, User
+from pyoko import Model,  field
+from .auth import Unit, User
 
 PERSONEL_TURU = [
     (1, 'Akademik'),
