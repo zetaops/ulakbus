@@ -28,6 +28,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_11" name="" sourceRef="kaydet" targetRef="ExclusiveGateway_1"/>
     <bpmn2:userTask id="program_sec" camunda:assignee="ders.ders.DersSubelendirme.program_sec" name="Program Seç">
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="program_sec" targetRef="ders_sec"/>
@@ -35,14 +36,15 @@
       <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="ExclusiveGateway_1" targetRef="ders_sec">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "ders_okutman_formu"]]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="ExclusiveGateway_1" targetRef="bilgi_ver">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "ders_okutman_formu"]]></bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "bilgi_ver"]]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="bilgi_ver" camunda:class="ders.ders.DersView.bilgi_ver" name="Hocalara Bilgi Ver">
+    <bpmn2:serviceTask id="bilgi_ver" camunda:class="ders.ders.DersSubelendirme.bilgi_ver" name="Hocalara Bilgi Ver">
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
     </bpmn2:serviceTask>
@@ -60,6 +62,9 @@
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ders_sec" targetRef="ders_okutman_subelendir"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="ExclusiveGateway_1" targetRef="program_sec">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "program_sec"]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
@@ -158,6 +163,15 @@
         <di:waypoint xsi:type="dc:Point" x="984.0" y="268.0"/>
         <bpmndi:BPMNLabel>
           <dc:Bounds height="6.0" width="6.0" x="958.0" y="279.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_ExclusiveGateway_13" targetElement="_BPMNShape_UserTask_5">
+        <di:waypoint xsi:type="dc:Point" x="841.0" y="242.0"/>
+        <di:waypoint xsi:type="dc:Point" x="842.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="242.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="242.0" y="228.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="785.0" y="183.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

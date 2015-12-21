@@ -19,6 +19,10 @@ def prepare_choices_for_model(model, **kwargs):
     return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
 
 
+def okutman_choices():
+    return [{'name': name, 'value': value} for value, name in prepare_choices_for_model(Okutman)]
+
+
 class ProgramBilgisiForm(JsonForm):
     class Meta:
         include = ['program']
@@ -67,13 +71,15 @@ class ProgramForm(JsonForm):
 
 
 class SubelendirmeForm(JsonForm):
-    sec = form.Button("Kaydet", cmd="subelendirme_kaydet")
+    kaydet_ders = form.Button("Kaydet ve Ders Seçim Ekranına Dön", cmd="subelendirme_kaydet", flow="ders_okutman_formu")
+    program_sec = form.Button("Kaydet ve Program Seçim Ekranına Dön", cmd="subelendirme_kaydet", flow="program_sec")
+    bilgi_ver = form.Button("Tamamla ve Hocaları Bilgilendir", cmd="subelendirme_kaydet", flow="bilgi_ver")
 
     class Subeler(ListNode):
         ad = form.String('Sube Adi')
         kontenjan = form.Integer('Sube Kontenjani')
         dis_kontenjan = form.Integer('Sube Dis Kontenjani')
-        okutman = form.String('Okutman', choices=lambda: prepare_choices_for_model(Okutman))
+        okutman = form.String('Okutman', choices=okutman_choices)
 
 
 class DersSubelendirme(CrudView):
@@ -89,8 +95,13 @@ class DersSubelendirme(CrudView):
     def ders_sec(self):
         self.set_client_cmd('form')
         self.output['objects'] = [['Dersler'], ]
-        # dersler = Ders.objects.filter(program_key=self.current.input['form']['program'])
-        dersler = Ders.objects.filter()
+
+        if 'program' in self.current.input['form']:
+            self.current.task_data['program'] = self.current.input['form']['program']
+
+        p = Program.objects.get(key=self.current.task_data['program'])
+        dersler = Ders.objects.filter(program=p)
+        # dersler = Ders.objects.filter()
         for d in dersler:
             ders = "{} - {} ({} ECTS)".format(d.kod, d.ad, d.ects_kredisi)
             subeler = Sube.objects.filter(ders=d)
@@ -132,34 +143,28 @@ class DersSubelendirme(CrudView):
         for sube in subeler:
             subelendirme_form.Subeler(ad=sube.ad, kontenjan=sube.kontenjan, dis_kontenjan=sube.dis_kontenjan,
                                       okutman=sube.okutman.key)
-        # sb = {}
-        # i = 0
-        # for sube in subeler:
-        #     sb.update({
-        #         'subead_%s' % i: form.String('Sube Adi', default=sube.ad),
-        #         'subekon_%s' % i: form.String('Sube Kontenjan', default=sube.kontenjan),
-        #         'subediskon_%s' % i: form.String('Sube Dis Kontenjan', default=sube.dis_kontenjan),
-        #         'subeoktman_%s' % i: form.String('Okutman', default=sube.okutman.ad)
-        #     })
-        #     i += 1
-        # for k, v in sb.items():
-        #     setattr(subelendirme_form, k, v)
 
         self.form_out(subelendirme_form)
 
     def subelendirme_kaydet(self):
         sb = self.input['form']['Subeler']
-        ders = Ders.objects.get(key=self.current.task_data['ders_key'])
-        mevcut_subeler = Sube.objects.filter(ders=ders)
+        ders = self.current.task_data['ders_key']
+        mevcut_subeler = Sube.objects.filter(ders_id=ders)
         for s in sb:
-            okutman = s.okutman
-            sube = Sube.objects.get_or_create(okutman=okutman, ders=ders)
+            okutman = s['okutman']
+            sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders)
             # mevcut_subelerden cikar
             mevcut_subeler = list(set(mevcut_subeler) - set([sube, ]))
-            sube.kontenjan = s.kontenjan
-            sube.dis_kontenjan = s.dis_kontenjan
-            sube.ad = s.ad
+            sube.kontenjan = s['kontenjan']
+            sube.dis_kontenjan = s['dis_kontenjan']
+            sube.ad = s['ad']
             sube.save()
         # mevcut subelerde kalanlari sil
         for s in mevcut_subeler:
             s.delete()
+
+    def bilgi_ver(self):
+        sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
+        okutmanlar = [s.okutman.__unicode__() for s in sbs]
+        self.current.output['msgbox'] = {'type': 'info', "title": 'Mesaj Iletildi',
+                                         "msg": 'Şubelendirme Bilgileri %s hocalara iletildi.' % ", ".join(okutmanlar)}
