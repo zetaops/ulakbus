@@ -156,3 +156,5 @@ QUICK_MENU = [
     'izin',
     'AkademikTakvim',
 ]
+
+MAX_NUM_DROPDOWN_LINKED_MODELS = 20
