@@ -194,7 +194,7 @@ class ExportRoomsToXml(Command):
         doc_type = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
 
         # create XML
-        for campus in campuses:-
+        for campus in campuses:
             if campus.building_set:
                 root = etree.Element('buildingsRooms', campus="%s" % uni, term="%s" % term.ad, \
                                      year="%s" % term.baslangic_tarihi.year)
@@ -535,7 +535,7 @@ class ExportCurriculaToXML(Command):
         for program in program_list:
             ders_list = Ders.objects.filter(program=program).count()
             if ders_list:
-                classification = etree.SubElement(curriculum, 'classification', enrollment='2')
+                classification = etree.SubElement(curriculum, 'classification', name="01", enrollment='2')
                 etree.SubElement(curriculum, 'academicClassification', code="01")
                 for program_ders in Ders.objects.filter(program=program):
                     etree.SubElement(curriculum, 'course', subject="%s" % program_ders.kod,
