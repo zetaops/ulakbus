@@ -194,7 +194,7 @@ class ExportRoomsToXml(Command):
         doc_type = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
 
         # create XML
-        for campus in campuses:
+        for campus in campuses:-
             if campus.building_set:
                 root = etree.Element('buildingsRooms', campus="%s" % uni, term="%s" % term.ad, \
                                      year="%s" % term.baslangic_tarihi.year)
@@ -306,43 +306,7 @@ class ExportDepartmentsToXML(Command):
         out_file = open(export_directory + '/departmentImport.xml', 'w+')
         out_file.write("%s" % s)
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-class ExportDepartmentsToXML(Command):
-    CMD_NAME = 'export_departments'
-    HELP = 'Generates Unitime XML import file for academic departments'
-    PARAMS = []
 
-    def run(self):
-        import os
-        import datetime
-        from lxml import etree
-        from ulakbus.models import Donem, Unit, Campus
-        root_directory = os.path.dirname(os.path.abspath(__file__))
-        term = Donem.objects.filter(guncel=True)[0]
-        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        units = Unit.objects.filter()
-        campuses = Campus.objects.filter()
-        sessions = Donem.objects.filter()
-        doc_type = '<!DOCTYPE departments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Department.dtd">'
-
-        # create XML
-        for campus in campuses:
-            if campus:
-                root = etree.Element('departments', campus="%s" % uni, term="%s" % term.ad, \
-                                     year="%s" % term.baslangic_tarihi.year)
-            for unit in units:
-                etree.SubElement(root, 'department', externalId="%s" % unit.key, \
-                                 abbreviation="%s" % unit.yoksis_no, name="%s" % unit.name, \
-                                 deptCode="%s" % unit.yoksis_no, allowEvents="true")
-        # pretty string
-        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
-        current_date = datetime.datetime.now()
-        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-        if not os.path.exists(export_directory):
-            os.makedirs(export_directory)
-        out_file = open(export_directory + '/departmentImport.xml', 'w+')
-        out_file.write("%s" % s)
-        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
 
 class ExportAcademicSubjectsToXML(Command):
     CMD_NAME = 'export_academic_subjects'
@@ -567,7 +531,7 @@ class ExportCurriculaToXML(Command):
 
         curriculum = etree.SubElement(root, 'curriculum')
         etree.SubElement(curriculum, 'academicArea', abbreviation='A')
-        #major = etree.SubElement(curriculum, 'major', code='M3')
+        # major = etree.SubElement(curriculum, 'major', code='M3')
         for program in program_list:
             ders_list = Ders.objects.filter(program=program).count()
             if ders_list:
@@ -575,7 +539,7 @@ class ExportCurriculaToXML(Command):
                 etree.SubElement(curriculum, 'academicClassification', code="01")
                 for program_ders in Ders.objects.filter(program=program):
                     etree.SubElement(curriculum, 'course', subject="%s" % program_ders.kod,
-                                    courseNbr="%s" % program_ders.kod)
+                                     courseNbr="%s" % program_ders.kod)
         # pretty string
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
 
