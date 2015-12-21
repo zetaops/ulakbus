@@ -502,7 +502,7 @@ class AkademikTakvim(Model):
 
     class Takvim(ListNode):
         etkinlik = field.Integer("Etkinlik", index=True, choices=AKADEMIK_TAKVIM_ETKINLIKLERI)
-        baslangic = field.Date("Başlangiç", index=True)
+        baslangic = field.Date("Başlangıç", index=True)
         bitis = field.Date("Bitiş", index=True, required=False)
 
     class Meta:
