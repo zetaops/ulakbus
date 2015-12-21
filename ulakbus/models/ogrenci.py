@@ -509,8 +509,12 @@ class AkademikTakvim(Model):
         app = 'Ogrenci'
         verbose_name = "Akademik Takvim"
         verbose_name_plural = "Akademik Takvim"
-        list_fields = ['birim', 'yil']
-        search_fields = ['yil', 'birim']
+        list_fields = ['_birim', 'yil']
+        # search_fields = ['yil']
+
+    def _birim(self):
+        return "%s" % self.birim
+    _birim.title = 'Birim'
 
     def __unicode__(self):
         return '%s %s' % (self.birim, self.yil)
