@@ -84,6 +84,7 @@ OBJECT_MENU = {
         {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_iletisim_bilgileri',
          'verbose_name': 'İletişim Bilgileri'},
         {'name': 'OncekiEgitimBilgisi', 'verbose_name': 'Önceki Eğitim Bilgileri'},
+        {'name': 'AkademikTakvim', 'verbose_name': 'Akademik Takvim'},
     ],
 }
 ADMIN_MENUS = [
@@ -104,8 +105,7 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'Campus', 'wf': 'crud', 'param': 'id', 'text': 'Kampüs'},
     {'kategori': 'Admin', 'model': 'Building', 'wf': 'crud', 'param': 'id', 'text': 'Bina'},
     {'kategori': 'Admin', 'model': 'Room', 'wf': 'crud', 'param': 'id', 'text': 'Oda'},
-    {'kategori': 'Admin', 'model': 'AkademikTakvim', 'wf': 'crud', 'param': 'id',
-     'text': 'Akademik Takvim'},
+    {'kategori': 'Admin', 'model': 'AkademikTakvim', 'wf': 'crud', 'param': 'id', 'text': 'Akademik Takvim'},
 ]
 
 VIEW_URLS.extend([
