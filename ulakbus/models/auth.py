@@ -64,7 +64,7 @@ class Permission(Model):
         list_fields = ["name", "code", "description"]
 
     def __unicode__(self):
-        return "%s %s" % (self.name, self.description)
+        return "%s %s" % (self.name, self.code)
 
 
 class AbstractRole(Model):
@@ -91,9 +91,9 @@ class AbstractRole(Model):
     def add_permission_by_name(self, code, save=False):
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
-                    Permission.objects.filter(code='*' + code + '*')]
+                    Permission.objects.filter(code__contains=code)]
         PermissionCache.flush()
-        for p in Permission.objects.filter(code='*' + code + '*'):
+        for p in Permission.objects.filter(code__contains=code):
             if p not in self.Permissions:
                 self.Permissions(permission=p)
         if p:
@@ -163,18 +163,19 @@ class Role(Model):
         verbose_name = "Rol"
         verbose_name_plural = "Roller"
         search_fields = ['name']
+        list_fields = []
 
     def get_user(self):
         return self.user
 
     def __unicode__(self):
-        try:
-            return "%s %s" % (self.abstract_role.name, self.user.username)
-        except:
-            return "Role #%s" % self.key if self.is_in_db() else ''
+        return "Role %s" % self.name or (self.key if self.is_in_db() else '')
 
     class Permissions(ListNode):
         permission = Permission()
+
+        def __unicode__(self):
+            return "%s" % self.permission
 
     def get_db_permissions(self):
         return [p.permission.code for p in self.Permissions] + (
@@ -197,16 +198,22 @@ class Role(Model):
     def add_permission_by_name(self, code, save=False):
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
-                    Permission.objects.filter(code='*' + code + '*')]
+                    Permission.objects.filter(code__contains=code)]
         PermissionCache(self.key).delete()
-        for p in Permission.objects.filter(code='*' + code + '*'):
+        for p in Permission.objects.filter(code__contains=code):
             if p not in self.Permissions:
                 self.Permissions(permission=p)
         if p:
             self.save()
 
+    def _make_name(self):
+        if self.abstract_role.key or self.user.key:
+            return "%s | %s" % (self.abstract_role.name, self.user.username)
+        else:
+            return "Role #%s" % self.key if self.is_in_db() else ''
+
     def save(self):
-        self.name = self.__unicode__()
+        self.name = self._make_name()
         super(Role, self).save()
 
 
