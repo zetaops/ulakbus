@@ -11,6 +11,9 @@ from pyoko import field
 from pyoko import Model, ListNode
 from passlib.hash import pbkdf2_sha512
 from pyoko import LinkProxy
+from zengine.dispatch.dispatcher import receiver
+from zengine.signals import crud_post_save
+from zengine.lib.cache import Cache
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -82,12 +85,14 @@ class AbstractRole(Model):
 
     def add_permission(self, perm):
         self.Permissions(permission=perm)
+        PermissionCache.flush()
         self.save()
 
     def add_permission_by_name(self, code, save=False):
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
                     Permission.objects.filter(code='*' + code + '*')]
+        PermissionCache.flush()
         for p in Permission.objects.filter(code='*' + code + '*'):
             if p not in self.Permissions:
                 self.Permissions(permission=p)
@@ -131,12 +136,19 @@ class Unit(Model):
     def __unicode__(self):
         return '%s - %s - %s' % (self.name, self.english_name, self.yoksis_no)
 
+
 ROL_TIPI = [
     (1, 'Personel'),
     (2, 'Ogrenci'),
     (3, 'Harici')
 ]
 
+
+class PermissionCache(Cache):
+    PREFIX = 'PRM'
+
+    def __init__(self, role_id):
+        super(PermissionCache, self).__init__(role_id)
 
 
 class Role(Model):
@@ -164,19 +176,29 @@ class Role(Model):
     class Permissions(ListNode):
         permission = Permission()
 
-    def get_permissions(self):
+    def get_db_permissions(self):
         return [p.permission.code for p in self.Permissions] + (
             self.abstract_role.get_permissions() if self.abstract_role.key else [])
 
+    def _cache_permisisons(self, pcache):
+        perms = self.get_db_permissions()
+        pcache.set(perms)
+        return perms
+
+    def get_permissions(self):
+        pcache = PermissionCache(self.key)
+        return pcache.get() or self._cache_permisisons(pcache)
 
     def add_permission(self, perm):
         self.Permissions(permission=perm)
+        PermissionCache(self.key).delete()
         self.save()
 
     def add_permission_by_name(self, code, save=False):
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
                     Permission.objects.filter(code='*' + code + '*')]
+        PermissionCache(self.key).delete()
         for p in Permission.objects.filter(code='*' + code + '*'):
             if p not in self.Permissions:
                 self.Permissions(permission=p)
@@ -218,16 +240,11 @@ class AuthBackend(object):
     def __init__(self, current):
         self.session = current.session
         self.current = current
+        self.perm_cache = None
 
     def get_permissions(self):
-        # TODO: We can move caching of permissions out of session to
-        # speedup the login. with proper invalidation routine
-        if 'permissions' in self.session:
-            return self.session['permissions']
-        else:
-            perms = self.get_role().get_permissions()
-            self.session['permissions'] = perms
-            return perms
+        perm_cache = PermissionCache(self.session['role_id'])
+        return perm_cache.get() or self.get_role().get_permissions()
 
     def has_permission(self, perm):
         # return True
@@ -260,6 +277,7 @@ class AuthBackend(object):
         # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
         self.current.user_id = default_role.key
+        self.perm_cache = PermissionCache(default_role.key)
         self.session['permissions'] = default_role.get_permissions()
 
     def get_role(self):
@@ -287,3 +305,12 @@ class AuthBackend(object):
             # for prevention of brute force attacks
 
         return is_login_ok
+
+
+# invalidate permission cache on crud updates on Role and AbstractRole models
+@receiver(crud_post_save)
+def set_password(sender, *args, **kwargs):
+    if sender.model_class.__name__ == 'Role':
+        PermissionCache(kwargs['object'].key).delete()
+    elif sender.model_class.__name__ == 'AbstractRole':
+        PermissionCache.flush()
