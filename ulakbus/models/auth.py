@@ -34,6 +34,7 @@ class User(Model):
         app = 'Sistem'
         verbose_name = "Kullanıcı"
         verbose_name_plural = "Kullanıcılar"
+        search_fields = ['username', 'name', 'surname']
 
     def __unicode__(self):
         return "User %s" % self.username
