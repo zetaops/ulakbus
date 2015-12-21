@@ -32,7 +32,7 @@ ROLE_MODEL = 'ulakbus.models.auth.Role'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # diagrams that does not require logged in user
-ANONYMOUS_WORKFLOWS = ['login', ]
+ANONYMOUS_WORKFLOWS = ['login', 'logout']
 
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
