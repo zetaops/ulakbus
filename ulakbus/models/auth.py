@@ -234,11 +234,12 @@ class AuthBackend(object):
         return perm in self.get_permissions()
 
     def get_user(self):
-        if 'user_data' in self.session:
-            user = User()
-            user.set_data(self.session['user_data'], from_db=True)
-            user.key = self.session['user_id']
-        elif 'user_id' in self.session:
+        # if 'user_data' in self.session:
+        #     user = User()
+        #     user.set_data(self.session['user_data'], from_db=True)
+        #     user.key = self.session['user_id']
+        # elif 'user_id' in self.session:
+        if 'user_id' in self.session:
             user = User.objects.get(self.session['user_id'])
         else:
             user = User()
