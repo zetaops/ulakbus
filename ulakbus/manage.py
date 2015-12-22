@@ -486,7 +486,7 @@ class ExportCourseCatalogToXML(Command):
             for ders in Ders.objects.set_params(rows=1000, start=i * batch_size).filter():
                 # for student in students:
                 derselement = etree.SubElement(root, 'course', externalId="%s" % ders.key, courseNumber="%s" % ders.kod,
-                                               subject="%s" % ders.kod,
+                                               subject="%s" % ders.program.yoksis_no,
                                                title="%s" % ders.ad)
                 etree.SubElement(derselement, 'courseCredit', creditType="collegiate", creditUnitType="semesterHours",
                                  creditFormat="fixedUnit", fixedCredit="%s" % ders.yerel_kredisi)
