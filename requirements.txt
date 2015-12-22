@@ -14,7 +14,10 @@ celery
 requests
 lxml
 boto
+reportlab
 
+
+# apt-get install libjpeg-dev libpng-dev zlib1g-dev
 # following projeets are parts of our project,
 # so creating symbolic links for them is more convenient for us
 
