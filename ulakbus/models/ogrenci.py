@@ -337,7 +337,7 @@ class OncekiEgitimBilgisi(Model):
 
 
 class OgrenciProgram(Model):
-    ogrenci_no = field.Integer("Öğrenci Numarası", index=True)
+    ogrenci_no = field.String("Öğrenci Numarası", index=True)
     giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
     aktif_donem = field.String("Dönem", index=True)

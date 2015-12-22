@@ -58,11 +58,7 @@ class ReporterRegistry(type):
 
 
 FILENAME_RE = re.compile(r'[^A-Za-z0-9\-\.]+')
-register_fonts_from_paths('AndikaNewBasic.ttf',
-                          'AndikaNewBasic-I.ttf',
-                          'AndikaNewBasic-B.ttf',
-                          'AndikaNewBasic-BI.ttf',
-                          'AndikaNewBasic')
+
 
 @six.add_metaclass(ReporterRegistry)
 class Reporter(BaseView):
@@ -71,6 +67,11 @@ class Reporter(BaseView):
         pass
 
     def __init__(self, current):
+        register_fonts_from_paths('AndikaNewBasic.ttf',
+                                  'AndikaNewBasic-I.ttf',
+                                  'AndikaNewBasic-B.ttf',
+                                  'AndikaNewBasic-BI.ttf',
+                                  'AndikaNewBasic')
         super(Reporter, self).__init__(current)
         self.cmd = current.input.get('cmd', 'show')
         # print("CMD", self.cmd)
@@ -112,13 +113,27 @@ class Reporter(BaseView):
         pdf = PDFDocument(f, font_name='AndikaNewBasic', font_size=14)
         pdf.init_report()
         pdf.h1(self.tr2ascii(self.get_title()))
-        # pdf.table(objects, style=pdf.style.tableBase)
-        pdf.story.append(Table(objects, style=pdf.style.tableBase))
+
+        # pdf.story.append(Table(objects))
+        if len(objects[0]) == 2:
+            ascii_objects = []
+            for o in objects:
+                ascii_objects.append((self.tr2ascii(o[0]), self.tr2ascii(o[1])))
+            pdf.table(ascii_objects)
+        else:
+            pdf.table(objects)
+        #     else:
+        #         pdf.table(o)
         pdf.generate()
         self.current.response.body = f.getvalue()
 
     def convert_choices(self, choices_dict_list):
-        return dict([(d[0], self.tr2ascii(d[1])) for d in choices_dict_list])
+        result = []
+        for d in choices_dict_list:
+            try: k = int(d[0])
+            except: k = d[0]
+            result.append((k, d[1]))
+        return dict(result)
 
     def get_headers(self):
         return self.HEADERS
@@ -131,6 +146,7 @@ class Reporter(BaseView):
         raise NotImplementedError
 
     def tr2ascii(self, inp):
+        inp = six.text_type(inp)
         shtlst = [
             ('ğ','g'),
             ('ı','i'),

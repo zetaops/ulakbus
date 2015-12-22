@@ -65,6 +65,7 @@ class Permission(Model):
         verbose_name = "Yetki"
         verbose_name_plural = "Yetkiler"
         list_fields = ["name", "code", "description"]
+        search_fields = ["name", "code", "description"]
 
     def __unicode__(self):
         return "%s %s" % (self.name, self.code)

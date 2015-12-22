@@ -6,6 +6,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import six
+
 from ulakbus.models import Personel
 from ulakbus.views.reports.base import Reporter
 
@@ -16,8 +18,14 @@ class PersonelByGender(Reporter):
 
     def get_objects(self):
         genders = self.convert_choices(Personel().get_choices_for('cinsiyet'))
-        return [(genders[int(val)] + "   ", num) for val, num in
-                Personel.objects.distinct_values_of('cinsiyet').items() ]
+        result = []
+        for val, num in Personel.objects.distinct_values_of('cinsiyet').items():
+            try:
+                val = int(val)
+            except:
+                pass
+            result.append((genders.get(val, val) , num))
+        return result
 
 class PersonelByAkademikIdari(Reporter):
     HEADERS = ['', '']
@@ -25,5 +33,11 @@ class PersonelByAkademikIdari(Reporter):
 
     def get_objects(self):
         genders = self.convert_choices(Personel().get_choices_for('personel_turu'))
-        return [(genders[int(val)] + "   ", num) for val, num in
-                Personel.objects.distinct_values_of('personel_turu').items() ]
+        result = []
+        for val, num in Personel.objects.distinct_values_of('personel_turu').items():
+            try:
+                val = int(val)
+            except:
+                pass
+            result.append((genders.get(val, val), num))
+        return result

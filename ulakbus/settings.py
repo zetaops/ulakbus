@@ -109,6 +109,7 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'Building', 'wf': 'crud', 'param': 'id', 'text': 'Bina'},
     {'kategori': 'Admin', 'model': 'Room', 'wf': 'crud', 'param': 'id', 'text': 'Oda'},
     {'kategori': 'Admin', 'model': 'AkademikTakvim', 'wf': 'crud', 'param': 'id', 'text': 'Akademik Takvim'},
+    {'kategori': 'Admin', 'model': 'OgrenciProgram', 'wf': 'crud', 'param': 'id', 'text': 'Öğrenci Programları'},
 ]
 
 VIEW_URLS= [

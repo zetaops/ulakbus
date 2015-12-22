@@ -10,7 +10,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     BaseDocTemplate, Spacer, Frame, PageTemplate, NextPageTemplate, PageBreak,
-    Table, KeepTogether, CondPageBreak, Paragraph as _Paragraph)
+    Table, KeepTogether, CondPageBreak, Paragraph as _Paragraph, TableStyle)
 from reportlab.platypus.flowables import HRFlowable
 
 import copy
@@ -380,7 +380,7 @@ class PDFDocument(object):
         ])
         self.story.append(NextPageTemplate('Later'))
 
-        self.generate_style(font_size=8)
+        self.generate_style(font_size=12)
 
     def init_confidential_report(self, page_fn=dummy_stationery,
                                  page_fn_later=None):
@@ -465,8 +465,15 @@ class PDFDocument(object):
         self.story.append(Spacer(1, height))
 
     def table(self, data, style=None):
-        self.story.append(
-            Table(data, style=style or self.style.table))
+        table= Table(data, hAlign='LEFT', colWidths=(100*mm, None))
+        table.setStyle(TableStyle([
+            ('FONT', (0, 0), (-1, 0), 'AndikaNewBasic'),
+            ('ALIGN', (10, 0), (-1, 0), 'CENTER'),
+            ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+            ('INNERGRID', (0, 0), (-1, -1), 0.50, colors.black),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        self.story.append(table)
 
     def hr(self):
         self.story.append(

@@ -16,8 +16,14 @@ class OgrenciByGender(Reporter):
 
     def get_objects(self):
         genders = self.convert_choices(Ogrenci().get_choices_for('cinsiyet'))
-        return [(genders[int(val)] + "   ", num) for val, num in
-                Ogrenci.objects.distinct_values_of('cinsiyet').items() ]
+        result = []
+        for val, num in Ogrenci.objects.distinct_values_of('cinsiyet').items():
+            try:
+                val = int(val)
+            except:
+                pass
+            result.append((genders.get(val, val), num))
+        return result
 
 
 class OgrenciByBrithPlace(Reporter):
@@ -26,5 +32,5 @@ class OgrenciByBrithPlace(Reporter):
 
     def get_objects(self):
         # genders = self.convert_choices(Ogrenci().get_choices_for('dogum_yeri'))
-        return [(val + "   ", num) for val, num in
-                Ogrenci.objects.distinct_values_of('dogum_yeri').items() ]
+        return [(val, num) for val, num in
+                Ogrenci.objects.distinct_values_of('dogum_yeri').items()]
