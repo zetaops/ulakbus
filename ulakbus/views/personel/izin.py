@@ -106,7 +106,7 @@ class IzinIslemleri(CrudView):
             personel_aktif = True
             toplam_sure += date.today() - son_baslama
 
-        print str(int(toplam_sure.days / 360)) + " Yıl, " + str(int(toplam_sure.days % 360)) + " Gün"
+        # print str(int(toplam_sure.days / 360)) + " Yıl, " + str(int(toplam_sure.days % 360)) + " Gün"
         return toplam_sure.days, personel_aktif
 
     @staticmethod
