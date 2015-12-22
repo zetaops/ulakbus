@@ -84,7 +84,6 @@ OBJECT_MENU = {
         {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_iletisim_bilgileri',
          'verbose_name': 'İletişim Bilgileri'},
         {'name': 'OncekiEgitimBilgisi', 'verbose_name': 'Önceki Eğitim Bilgileri'},
-        {'name': 'AkademikTakvim', 'verbose_name': 'Akademik Takvim'},
     ],
 }
 ADMIN_MENUS = [
