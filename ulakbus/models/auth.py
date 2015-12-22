@@ -317,7 +317,7 @@ class AuthBackend(object):
 
 # invalidate permission cache on crud updates on Role and AbstractRole models
 @receiver(crud_post_save)
-def set_password(sender, *args, **kwargs):
+def clear_perm_cache(sender, *args, **kwargs):
     if sender.model_class.__name__ == 'Role':
         PermissionCache(kwargs['object'].key).delete()
     elif sender.model_class.__name__ == 'AbstractRole':
