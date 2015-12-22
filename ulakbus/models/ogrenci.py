@@ -347,6 +347,14 @@ class OgrenciProgram(Model):
     program = Program()
     ogrenci = Ogrenci()
 
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Öğrenci Program"
+        verbose_name_plural = "Öğrenci Program"
+
+    def __unicode__(self):
+        return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad, self.program.adi, self.program.yil)
+
 
 class OgrenciDersi(Model):
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
