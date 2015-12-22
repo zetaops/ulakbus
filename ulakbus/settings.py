@@ -157,8 +157,13 @@ S3_BUCKET_NAME = 'ulakbus'
 
 QUICK_MENU = [
     'kadro_islemleri',
-    'izin',
-    'AkademikTakvim',
+    # 'izin',
+    'akademik_takvim',
+    'ders_hoca_sube_atama',
+    'ders_ekle',
+    'Birim',
+    'Ders',
+    'Program'
 ]
 
 MAX_NUM_DROPDOWN_LINKED_MODELS = 20

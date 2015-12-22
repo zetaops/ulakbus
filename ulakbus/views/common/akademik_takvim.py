@@ -8,11 +8,11 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 #
-
-
+from ulakbus.models import Unit
 from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI
 from ulakbus.models.ogrenci import AkademikTakvim
+from ulakbus.settings import UID
 
 __author__ = 'Ali Riza Keles'
 
@@ -22,8 +22,10 @@ class AkademikTakvimView(CrudView):
         model = "AkademikTakvim"
 
     def goster(self):
-        role = self.current.role
-        unit = role.unit
+        # role = self.current.role
+        # unit = role.unit
+        # akademik_takvim = AkademikTakvim.objects.filter(birim=unit)[0]
+        unit = Unit.objects.get(yoksis_no=UID)
         akademik_takvim = AkademikTakvim.objects.filter(birim=unit)[0]
 
         etkinlikler = [{'Etkinlik': dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(e['etkinlik']), ''),
