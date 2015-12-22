@@ -188,11 +188,14 @@ class NotGirisi(CrudView):
         model = "DegerlendirmeNot"
 
     def ders_sec(self):
-        _form = SecimForm(current=self.current)
+        # role = self.current.user.role
+        # unit = role.unit
+        _form = forms.JsonForm(current=self.current)
         user = self.current.user
         subeler = Sube.objects.filter(okutman__okutman__user=user)
         filter = {"okutman": ""}
         _form.ders = fields.Integer("Sube Sec", choices=prepare_choices_for_model(Sube))
+        _form.sec = fields.Button("Seç", cmd="Ders Subesi Secin")
         self.form_out(_form)
 
     def sinav_sec(self):
