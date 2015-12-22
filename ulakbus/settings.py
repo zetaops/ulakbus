@@ -51,6 +51,10 @@ OBJECT_MENU = {
     #                                             'wf':'crud'}]
     # 'field' defaults to 'personel' or 'ogrenci'
     # verbose_name can be specified to override the model's verbose_name_plural
+    'other': [
+        {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
+         'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
+    ],
     'personel': [
         {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
          'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
@@ -107,13 +111,14 @@ ADMIN_MENUS = [
     {'kategori': 'Admin', 'model': 'AkademikTakvim', 'wf': 'crud', 'param': 'id', 'text': 'Akademik Takvim'},
 ]
 
-VIEW_URLS.extend([
+VIEW_URLS= [
     # ('falcon URI template', 'python path to view method/class')
     ('/ara/ogrenci/{query}', 'ulakbus.views.system.SearchStudent'),
     ('/ara/personel/{query}', 'ulakbus.views.system.SearchPerson'),
     ('/notify/', 'ulakbus.views.system.Notification'),
     ('/get_current_user/', 'ulakbus.views.system.GetCurrentUser'),
-])
+    ('/menu', 'ulakbus.views.system.UlakbusMenu'),
+]
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
@@ -157,3 +162,5 @@ QUICK_MENU = [
 ]
 
 MAX_NUM_DROPDOWN_LINKED_MODELS = 20
+
+PERMISSION_PROVIDER = 'ulakbus.models.auth.ulakbus_permissions'

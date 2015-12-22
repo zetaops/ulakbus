@@ -6,15 +6,25 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import Personel, Ogrenci
-from ulakbus.views.reports import Reporter
+from ulakbus.models import Ogrenci
+from ulakbus.views.reports.base import Reporter
 
 
-class ByGender(Reporter):
-    HEADERS = ['a', 'a']
+class OgrenciByGender(Reporter):
+    HEADERS = ['', '']
     TITLE = 'Cinsiyete göre öğrenci sayıları'
 
     def get_objects(self):
         genders = self.convert_choices(Ogrenci().get_choices_for('cinsiyet'))
         return [(genders[int(val)], num) for val, num in
                 Ogrenci.objects.distinct_values_of('cinsiyet').items() ]
+
+
+class OgrenciByBrithPlace(Reporter):
+    HEADERS = ['', '']
+    TITLE = 'Doğum yerine göre öğrenci sayıları'
+
+    def get_objects(self):
+        # genders = self.convert_choices(Ogrenci().get_choices_for('dogum_yeri'))
+        return [(val, num) for val, num in
+                Ogrenci.objects.distinct_values_of('dogum_yeri').items() ]

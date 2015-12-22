@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_I1tKIKhVEeW0bbHkvk4fZw" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:process id="rapor_ogrenci_cinsiyet" name="Kız / Erkek Öğrenci Sayısı" isExecutable="false">
+  <bpmn2:process id="generic_reporter" name="" isExecutable="false">
     <bpmn2:extensionElements>
       <camunda:properties>
-        <camunda:property value="Raporlar" name="menu_category"/>
+        <camunda:property value="hidden" name="menu_category"/>
       </camunda:properties>
     </bpmn2:extensionElements>
     <bpmn2:startEvent id="StartEvent_1">
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:startEvent>
-    <bpmn2:userTask id="show" camunda:assignee="reports.ogrenci.ByGender.show" name="show">
+    <bpmn2:userTask id="show" camunda:assignee="reports.base.ReportDispatcher" name="show">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:incoming>return</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="show"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="the_end">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="return">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>the_end</bpmn2:outgoing>
       <bpmn2:outgoing>goto_printout</bpmn2:outgoing>
+      <bpmn2:outgoing>return</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="show" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:sequenceFlow id="the_end" name="" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_2"/>
     <bpmn2:sequenceFlow id="goto_printout" name="" sourceRef="ExclusiveGateway_1" targetRef="printout">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'printout'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:endEvent id="EndEvent_2">
-      <bpmn2:incoming>the_end</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:serviceTask id="printout" camunda:class="reports.ogrenci.ByGender.printout" name="printout">
+    <bpmn2:userTask id="printout" camunda:assignee="reports.base.ReportDispatcher" name="printout">
       <bpmn2:incoming>goto_printout</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="printout" targetRef="EndEvent_2"/>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="return" name="" sourceRef="ExclusiveGateway_1" targetRef="show"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="printout" targetRef="show"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="rapor_personel_cinsiyet">
@@ -53,38 +51,35 @@
         <di:waypoint xsi:type="dc:Point" x="355.0" y="225.0"/>
         <di:waypoint xsi:type="dc:Point" x="405.0" y="225.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_17" bpmnElement="EndEvent_2">
-        <dc:Bounds height="36.0" width="36.0" x="556.0" y="207.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="574.0" y="248.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="the_end" sourceElement="_BPMNShape_ExclusiveGateway_24" targetElement="_BPMNShape_EndEvent_17">
-        <di:waypoint xsi:type="dc:Point" x="455.0" y="225.0"/>
-        <di:waypoint xsi:type="dc:Point" x="556.0" y="225.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="477.0" y="225.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_41" bpmnElement="printout">
-        <dc:Bounds height="80.0" width="100.0" x="455.0" y="312.0"/>
+        <dc:Bounds height="80.0" width="100.0" x="528.0" y="186.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="goto_printout" sourceElement="_BPMNShape_ExclusiveGateway_24" targetElement="_BPMNShape_ServiceTask_41">
-        <di:waypoint xsi:type="dc:Point" x="430.0" y="250.0"/>
-        <di:waypoint xsi:type="dc:Point" x="430.0" y="263.0"/>
-        <di:waypoint xsi:type="dc:Point" x="430.0" y="352.0"/>
-        <di:waypoint xsi:type="dc:Point" x="455.0" y="352.0"/>
+        <di:waypoint xsi:type="dc:Point" x="455.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="491.0" y="225.0"/>
+        <di:waypoint xsi:type="dc:Point" x="491.0" y="226.0"/>
+        <di:waypoint xsi:type="dc:Point" x="528.0" y="226.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="427.0" y="325.0"/>
+          <dc:Bounds height="6.0" width="6.0" x="488.0" y="226.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_ServiceTask_41" targetElement="_BPMNShape_EndEvent_17">
-        <di:waypoint xsi:type="dc:Point" x="555.0" y="351.0"/>
-        <di:waypoint xsi:type="dc:Point" x="573.0" y="351.0"/>
-        <di:waypoint xsi:type="dc:Point" x="573.0" y="260.0"/>
-        <di:waypoint xsi:type="dc:Point" x="573.0" y="243.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="return" sourceElement="_BPMNShape_ExclusiveGateway_24" targetElement="_BPMNShape_ServiceTask_32">
+        <di:waypoint xsi:type="dc:Point" x="430.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="430.0" y="285.0"/>
+        <di:waypoint xsi:type="dc:Point" x="380.0" y="285.0"/>
+        <di:waypoint xsi:type="dc:Point" x="355.0" y="265.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="570.0" y="332.0"/>
+          <dc:Bounds height="6.0" width="6.0" x="427.0" y="275.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="_BPMNShape_ServiceTask_41" targetElement="_BPMNShape_ServiceTask_32">
+        <di:waypoint xsi:type="dc:Point" x="578.0" y="266.0"/>
+        <di:waypoint xsi:type="dc:Point" x="577.0" y="353.0"/>
+        <di:waypoint xsi:type="dc:Point" x="467.0" y="353.0"/>
+        <di:waypoint xsi:type="dc:Point" x="304.0" y="353.0"/>
+        <di:waypoint xsi:type="dc:Point" x="305.0" y="265.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="574.0" y="353.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

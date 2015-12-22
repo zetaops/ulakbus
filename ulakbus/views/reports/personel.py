@@ -7,11 +7,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models import Personel
-from ulakbus.views.reports import Reporter
+from ulakbus.views.reports.base import Reporter
 
 
-class ByGender(Reporter):
-    HEADERS = ['a', 'a']
+class PersonelByGender(Reporter):
+    HEADERS = ['', '']
     TITLE = 'Cinsiyete göre personel sayıları'
 
     def get_objects(self):

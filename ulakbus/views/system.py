@@ -8,9 +8,12 @@
 # (GPLv3).  See LICENSE.txt for details.
 import random
 from uuid import uuid4
+
+from pyoko.conf import settings
+from ulakbus.views.reports import ReporterRegistry
 from zengine.views.base import BaseView
 from ulakbus.models import Personel, Ogrenci
-
+from zengine.views.menu import Menu
 
 class Search(BaseView):
     def __init__(self, *args, **kwargs):
@@ -81,3 +84,17 @@ class GetCurrentUser(BaseView):
             "roles": [{"role": role.__unicode__()} for role in userObject.role_set]
         }
         self.output['current_user'] = currentUser
+
+class UlakbusMenu(Menu):
+    def __init__(self, current):
+        super(UlakbusMenu, self).__init__(current)
+        self.add_reporters()
+        print(self.output)
+
+    def add_reporters(self):
+        for mdl in ReporterRegistry.get_reporters():
+            perm = "report.%s" % mdl['model']
+            if self.current.has_permission(perm):
+                self.output['other'].append(mdl)
+
+

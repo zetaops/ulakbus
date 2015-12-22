@@ -11,6 +11,8 @@ from pyoko import field
 from pyoko import Model, ListNode
 from passlib.hash import pbkdf2_sha512
 from pyoko import LinkProxy
+
+from zengine.auth.permissions import get_all_permissions
 from zengine.dispatch.dispatcher import receiver
 from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
@@ -322,3 +324,9 @@ def clear_perm_cache(sender, *args, **kwargs):
         PermissionCache(kwargs['object'].key).delete()
     elif sender.model_class.__name__ == 'AbstractRole':
         PermissionCache.flush()
+
+def ulakbus_permissions():
+    default_perms = get_all_permissions()
+    from ulakbus.views.reports import ReporterRegistry
+    report_perms = ReporterRegistry.get_permissions()
+    return default_perms + report_perms
