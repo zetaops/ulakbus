@@ -46,7 +46,7 @@ class Personel(Model):
     engel_grubu = field.String("Engel Grubu", index=True)
     engel_derecesi = field.String("Engel Derecesi")
     engel_orani = field.Integer("Engellilik Orani")
-    personel_turu = field.Integer("Personel Türü", choices=PERSONEL_TURU)
+    personel_turu = field.Integer("Personel Türü", choices=PERSONEL_TURU, index=True)
     cuzdan_seri = field.String("Seri", index=True)
     cuzdan_seri_no = field.String("Seri No", index=True)
     baba_adi = field.String("Ana Adi", index=True)

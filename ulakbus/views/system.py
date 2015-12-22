@@ -89,7 +89,6 @@ class UlakbusMenu(Menu):
     def __init__(self, current):
         super(UlakbusMenu, self).__init__(current)
         self.add_reporters()
-        print(self.output)
 
     def add_reporters(self):
         for mdl in ReporterRegistry.get_reporters():

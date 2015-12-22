@@ -9,12 +9,13 @@
 from io import BytesIO
 
 import six
+from reportlab.platypus import Table
 
 from pyoko import form
 from zengine.lib.forms import JsonForm
 from zengine.views.base import BaseView
 import re
-from ulakbus.lib.pdfdocument.document import PDFDocument
+from ulakbus.lib.pdfdocument.document import PDFDocument, register_fonts_from_paths
 
 
 class ReporterRegistry(type):
@@ -57,6 +58,11 @@ class ReporterRegistry(type):
 
 
 FILENAME_RE = re.compile(r'[^A-Za-z0-9\-\.]+')
+register_fonts_from_paths('AndikaNewBasic.ttf',
+                          'AndikaNewBasic-I.ttf',
+                          'AndikaNewBasic-B.ttf',
+                          'AndikaNewBasic-BI.ttf',
+                          'AndikaNewBasic')
 
 @six.add_metaclass(ReporterRegistry)
 class Reporter(BaseView):
@@ -67,7 +73,7 @@ class Reporter(BaseView):
     def __init__(self, current):
         super(Reporter, self).__init__(current)
         self.cmd = current.input.get('cmd', 'show')
-        print("CMD", self.cmd)
+        # print("CMD", self.cmd)
         if self.cmd == 'show':
             self.show()
         elif self.cmd == 'printout':
@@ -103,15 +109,16 @@ class Reporter(BaseView):
         objects = self.get_objects()
         self.set_headers()
         f = BytesIO()
-        pdf = PDFDocument(f)
+        pdf = PDFDocument(f, font_name='AndikaNewBasic', font_size=14)
         pdf.init_report()
-        pdf.h1(self.get_title())
-        pdf.table(objects)
+        pdf.h1(self.tr2ascii(self.get_title()))
+        # pdf.table(objects, style=pdf.style.tableBase)
+        pdf.story.append(Table(objects, style=pdf.style.tableBase))
         pdf.generate()
         self.current.response.body = f.getvalue()
 
     def convert_choices(self, choices_dict_list):
-        return dict([(d['value'], d['name']) for d in choices_dict_list])
+        return dict([(d[0], self.tr2ascii(d[1])) for d in choices_dict_list])
 
     def get_headers(self):
         return self.HEADERS
@@ -122,6 +129,25 @@ class Reporter(BaseView):
 
     def get_objects(self):
         raise NotImplementedError
+
+    def tr2ascii(self, inp):
+        shtlst = [
+            ('ğ','g'),
+            ('ı','i'),
+            ('İ','I'),
+            ('ç','c'),
+            ('ö','o'),
+            ('ü','u'),
+            ('ş','s'),
+            ('Ğ','G'),
+            ('Ş','S'),
+            ('Ö','O'),
+            ('Ü','U'),
+            ('Ç','C'),
+        ]
+        for t,a in shtlst:
+            inp = inp.replace(t, a)
+        return inp
 
 
 def ReportDispatcher(current):

@@ -35,8 +35,7 @@ def register_fonts_from_paths(regular, italic=None, bold=None, bolditalic=None,
     pdfmetrics.registerFont(TTFont('%s' % font_name, regular))
     pdfmetrics.registerFont(TTFont('%s-Italic' % font_name, italic or regular))
     pdfmetrics.registerFont(TTFont('%s-Bold' % font_name, bold or regular))
-    pdfmetrics.registerFont(
-        TTFont('%s-BoldItalic' % font_name, bolditalic or bold or regular))
+    pdfmetrics.registerFont(TTFont('%s-BoldItalic' % font_name, bolditalic or bold or regular))
 
     addMapping('%s' % font_name, 0, 0, '%s' % font_name)
     addMapping('%s' % font_name, 0, 1, '%s-Italic' % font_name)
@@ -219,7 +218,7 @@ class PDFDocument(object):
         self.doc.PDFDocument = self
         self.story = []
 
-        self.font_name = kwargs.get('font_name', 'Helvetica')
+        self.font_name = kwargs.get('font_name', 'AndikaNewBasic')
         self.font_size = kwargs.get('font_size', 9)
 
     def page_index_string(self, current_page, total_pages):
