@@ -8,7 +8,9 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models.auth import Unit
-from ulakbus.models.buildings_rooms import Building, Campus
+from ulakbus.models.buildings_rooms import Building, Campus, Room, RoomType
+from general import fake, ints
+import random
 
 __author__ = 'Halil İbrahim Yılmaz'
 
@@ -28,3 +30,17 @@ def yeni_bina():
         b.save()
 
     print("Fake bina tanımlaması başarılı")
+
+
+def yeni_derslik(count=1):
+    for i in range(1, count):
+        room = Room(
+                code=fake.classroom_code(),
+                name=fake.classroom(),
+                building=random.choice(Building.objects.filter()),
+                room_type=random.choice(RoomType.objects.filter()),
+                floor=ints(2),
+                capacity=random.choice(range(30, 100)),
+                is_active=True
+        )
+        room.save()
