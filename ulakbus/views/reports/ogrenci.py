@@ -6,9 +6,11 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from collections import defaultdict
+
 from ulakbus.models import Ogrenci
 from ulakbus.views.reports.base import Reporter
-
+from zengine.lib.utils import *
 
 class OgrenciByGender(Reporter):
     HEADERS = ['', '']
@@ -31,6 +33,16 @@ class OgrenciByBrithPlace(Reporter):
     TITLE = 'Doğum yerine göre öğrenci sayıları'
 
     def get_objects(self):
-        # genders = self.convert_choices(Ogrenci().get_choices_for('dogum_yeri'))
         return [(val, num) for val, num in
                 Ogrenci.objects.distinct_values_of('dogum_yeri').items()]
+
+
+class OgrenciByBrithDate(Reporter):
+    HEADERS = ['', '']
+    TITLE = 'Doğum tarihine göre öğrenci sayıları'
+
+    def get_objects(self):
+        dates = defaultdict(lambda: 0)
+        for val, num in Ogrenci.objects.distinct_values_of('dogum_tarihi').items():
+            dates[solr_to_year(val)] += int(num)
+        return dates.items()
