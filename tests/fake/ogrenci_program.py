@@ -84,7 +84,7 @@ def yeni_program(yoksis_program):
 
 def yeni_ders(program, personel):
     d = Ders()
-    d.ad = "DERS_" + random.randint(1000, 9999)
+    d.ad = "DERS_" + str(random.randint(1000, 9999))
     d.kod = ints(length=11)
     d.program = program
     d.donem = random.choice(Donem.objects.filter(guncel=True))
@@ -96,7 +96,7 @@ def yeni_ders(program, personel):
 
 def yeni_sube(ders, okutman):
     s = Sube()
-    s.ad = "SUBE_" + random.randint(1000, 9999)
+    s.ad = "SUBE_" + str(random.randint(1000, 9999))
     s.kontenjan = random.randint(1, 500)
     s.dis_kontenjan = random.randint(1, 500)
     s.okutman = okutman
@@ -124,7 +124,7 @@ def yeni_sinav(sube):
 
 def yeni_ogrenci_program(ogrenci, program, personel):
     op = OgrenciProgram()
-    op.ogrenci_no = ints(11)
+    op.ogrenci_no = str(ints(11))
     op.giris_tarihi = datetime.datetime(int(program.yil), 10, 1)
     op.danisman = personel
     op.program = program
@@ -165,17 +165,17 @@ def fake_data():
 
         ders_count = random.randint(3,10)
         for dc in range(ders_count):
-            personel = random.choice[personel_list]
+            personel = random.choice(personel_list)
             ders = yeni_ders(program, personel)
 
             sube_count = random.randint(1,3)
             for sc in range(sube_count):
-                okutman = random.choice[okutman_list]
+                okutman = random.choice(okutman_list)
                 sube = yeni_sube(ders, okutman)
 
                 ogrenci_liste = [yeni_ogrenci().user.username for og in range(random.randint(3,10))]
                 for ogrenci in ogrenci_liste:
-                    personel = random.choice[personel_list]
+                    personel = random.choice(personel_list)
 
                     ogrenci_program = yeni_ogrenci_program(ogrenci, program, personel)
                     ogrenci_dersi = yeni_ogrenci_dersi(sube, ogrenci_program)
