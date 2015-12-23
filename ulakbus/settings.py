@@ -52,8 +52,8 @@ OBJECT_MENU = {
     # 'field' defaults to 'personel' or 'ogrenci'
     # verbose_name can be specified to override the model's verbose_name_plural
     'other': [
-        {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
-         'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
+        # {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
+        #  'verbose_name': 'Kimlik ve Iletisim Bilgileri'},
     ],
     'personel': [
         {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
