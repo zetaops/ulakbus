@@ -321,7 +321,7 @@ class HizmetIstisnaiIlgi(Model):
         search_fields = ['istisnai_ilgi_nevi', 'kha_durum']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.kayit_no, self.istisnai_nevi_ilgi, self.kha_durum)
+        return '%s %s %s' % (self.kayit_no, self.istisnai_ilgi_nevi, self.kha_durum)
 
 
 class HizmetKayitlari(Model):
