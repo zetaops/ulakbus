@@ -524,7 +524,45 @@ class ExportCurriculaToXML(Command):
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
         program_list = Program.objects.filter()
 
+        '''
+        academicAreas Import File
+        '''
+
+        academic_area_doc_type = '<!DOCTYPE academicAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicArea.dtd">'
+        academic_classification_doc_type = '<!DOCTYPE academicClassifications PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicClassification.dtd">'
         doc_type = '<!DOCTYPE curricula PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Curricula_3_2.dtd">'
+
+        current_date = datetime.datetime.now()
+        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+        if not os.path.exists(export_directory):
+            os.makedirs(export_directory)
+
+        academic_area_root = etree.Element('academicAreas', campus="%s" % uni, term="%s" % term.ad,
+                                           year="%s" % term.baslangic_tarihi.year)
+        etree.SubElement(academic_area_root, 'academicArea', abbreviation='A', externalID='A')
+
+        academic_area_string = etree.tostring(academic_area_root, pretty_print=True, xml_declaration=True,
+                                              encoding='UTF-8', doctype="%s" % academic_area_doc_type)
+        out_file = open(export_directory + '/academicAreaImport.xml', 'w+')
+        out_file.write("%s" % academic_area_string)
+        print("Academic Area Import dosyası %s dizini altina kayit edilmistir" % export_directory)
+
+        '''
+        academicClassifications Import File
+        '''
+
+        academic_classification_root = etree.Element('academicClassifications', campus="%s" % uni, term="%s" % term.ad,
+                                                     year="%s" % term.baslangic_tarihi.year)
+        etree.SubElement(academic_area_root, 'academicClassification', externalId="01", code="01", name="Birinci Donem")
+        etree.SubElement(academic_area_root, 'academicClassification', externalId="02", code="02", name="Ikinci Donem")
+
+        academic_classification_string = etree.tostring(academic_classification_root, pretty_print=True,
+                                                        xml_declaration=True, encoding='UTF-8',
+                                                        doctype="%s" % academic_classification_doc_type)
+        out_file = open(export_directory + '/academicClassificationImport.xml', 'w+')
+        out_file.write("%s" % academic_area_string)
+        print("Academic Classification Import dosyası %s dizini altina kayit edilmistir" % export_directory)
 
         root = etree.Element('curricula', campus="%s" % uni, term="%s" % term.ad,
                              year="%s" % term.baslangic_tarihi.year)
@@ -545,12 +583,6 @@ class ExportCurriculaToXML(Command):
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
 
         if len(s):
-
-            current_date = datetime.datetime.now()
-            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-            if not os.path.exists(export_directory):
-                os.makedirs(export_directory)
             out_file = open(export_directory + '/curricula.xml', 'w+')
             out_file.write("%s" % s)
             print("Dosya %s dizini altina kayit edilmistir" % export_directory)
