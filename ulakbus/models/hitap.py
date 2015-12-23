@@ -136,7 +136,7 @@ class HizmetBirlestirme(Model):
     baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     sure = field.Integer("Süre", index=True)
-    kamuIsyeri_ad = field.String("Kamu İşyeri Adı", index=True)
+    kamu_isyeri_ad = field.String("Kamu İşyeri Adı", index=True)
     ozel_isyeri_ad = field.String("Özel İşyeri Adı", index=True)
     bag_kur_meslek = field.String("Bağ-Kur Meslek", index=True)
     ulke_kod = field.Integer("Ülke Kodu", index=True)
