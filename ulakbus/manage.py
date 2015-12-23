@@ -282,7 +282,7 @@ class ExportDepartmentsToXML(Command):
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        units = Unit.objects.filter()
+        units = Unit.objects.filter(unit_type='Bölüm')
         campuses = Campus.objects.filter()
         sessions = Donem.objects.filter()
         doc_type = '<!DOCTYPE departments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Department.dtd">'
@@ -528,17 +528,18 @@ class ExportCurriculaToXML(Command):
 
         root = etree.Element('curricula', campus="%s" % uni, term="%s" % term.ad,
                              year="%s" % term.baslangic_tarihi.year)
-
-        curriculum = etree.SubElement(root, 'curriculum')
-        etree.SubElement(curriculum, 'academicArea', abbreviation='A')
         # major = etree.SubElement(curriculum, 'major', code='M3')
         for program in program_list:
             ders_list = Ders.objects.filter(program=program).count()
             if ders_list:
+                curriculum = etree.SubElement(root, 'curriculum')
+                etree.SubElement(curriculum, 'academicArea', abbreviation='A')
+                etree.SubElement(curriculum, 'department', code="%s" % program.yoksis_no)
+                etree.SubElement(curriculum, 'major', code="qwerty")
                 classification = etree.SubElement(curriculum, 'classification', name="01", enrollment='2')
-                etree.SubElement(curriculum, 'academicClassification', code="01")
+                etree.SubElement(classification, 'academicClassification', code="01")
                 for program_ders in Ders.objects.filter(program=program):
-                    etree.SubElement(curriculum, 'course', subject="%s" % program_ders.kod,
+                    etree.SubElement(classification, 'course', subject="%s" % program.yoksis_no,
                                      courseNbr="%s" % program_ders.kod)
         # pretty string
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
