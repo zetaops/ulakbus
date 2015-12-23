@@ -530,6 +530,7 @@ class ExportCurriculaToXML(Command):
 
         academic_area_doc_type = '<!DOCTYPE academicAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicArea.dtd">'
         academic_classification_doc_type = '<!DOCTYPE academicClassifications PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicClassification.dtd">'
+        pos_major_doc_type = '<!DOCTYPE posMajors PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/PosMajor.dtd">'
         doc_type = '<!DOCTYPE curricula PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Curricula_3_2.dtd">'
 
         current_date = datetime.datetime.now()
@@ -540,7 +541,7 @@ class ExportCurriculaToXML(Command):
 
         academic_area_root = etree.Element('academicAreas', campus="%s" % uni, term="%s" % term.ad,
                                            year="%s" % term.baslangic_tarihi.year)
-        etree.SubElement(academic_area_root, 'academicArea', abbreviation='A', externalID='A', title="%s" % uni+' - '+term.ad)
+        etree.SubElement(academic_area_root, 'academicArea', abbreviation='A', externalId='A', title="%s" % uni+' - '+term.ad)
 
         academic_area_string = etree.tostring(academic_area_root, pretty_print=True, xml_declaration=True,
                                               encoding='UTF-8', doctype="%s" % academic_area_doc_type)
@@ -554,13 +555,32 @@ class ExportCurriculaToXML(Command):
 
         academic_classification_root = etree.Element('academicClassifications', campus="%s" % uni, term="%s" % term.ad,
                                                      year="%s" % term.baslangic_tarihi.year)
-        etree.SubElement(academic_area_root, 'academicClassification', externalId="01", code="01", name="01")
+        etree.SubElement(academic_classification_root, 'academicClassification', externalId="01", code="01", name="01")
         academic_classification_string = etree.tostring(academic_classification_root, pretty_print=True,
                                                         xml_declaration=True, encoding='UTF-8',
                                                         doctype="%s" % academic_classification_doc_type)
         out_file = open(export_directory + '/academicClassificationImport.xml', 'w+')
-        out_file.write("%s" % academic_area_string)
+        out_file.write("%s" % academic_classification_string)
         print("Academic Classification Import dosyası %s dizini altina kayit edilmistir" % export_directory)
+
+
+        '''
+        posMajors Import File
+        '''
+        pos_major_root = etree.Element('posMajors', campus="%s" % uni, term="%s" % term.ad,
+                                                     year="%s" % term.baslangic_tarihi.year)
+        etree.SubElement(pos_major_root, 'posMajor', externalId="M1", code="M1",
+                         name="%s Major 1" % term.baslangic_tarihi.year, academicArea="A")
+        pos_major_string = etree.tostring(pos_major_root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                                                        doctype="%s" % academic_classification_doc_type)
+        out_file = open(export_directory + '/posMajorImport.xml', 'w+')
+        out_file.write("%s" % pos_major_string)
+        print("Pos Major Import dosyası %s dizini altina kayit edilmistir" % export_directory)
+
+
+        '''
+        curricula Import File
+        '''
 
         root = etree.Element('curricula', campus="%s" % uni, term="%s" % term.ad,
                              year="%s" % term.baslangic_tarihi.year)
@@ -571,7 +591,7 @@ class ExportCurriculaToXML(Command):
                 curriculum = etree.SubElement(root, 'curriculum')
                 etree.SubElement(curriculum, 'academicArea', abbreviation='A')
                 etree.SubElement(curriculum, 'department', code="%s" % program.yoksis_no)
-                etree.SubElement(curriculum, 'major', code="qwerty")
+                etree.SubElement(curriculum, 'major', code="M1")
                 classification = etree.SubElement(curriculum, 'classification', name="01", enrollment='2')
                 etree.SubElement(classification, 'academicClassification', code="01")
                 for program_ders in Ders.objects.filter(program=program):
