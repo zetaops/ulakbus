@@ -52,7 +52,18 @@ OBJECT_MENU = {
     # 'field' defaults to 'personel' or 'ogrenci'
     # verbose_name can be specified to override the model's verbose_name_plural
     'other': [
-        # {'name': 'Personel', 'category': 'Genel', 'verbose_name': 'Çalışanlar',},
+        {'name': 'Personel', 'category': 'Genel'},
+        {'name': 'Ogrenci', 'category': 'Genel'},
+        {'name': 'Okutman', 'category': 'Genel'},
+        {'name': 'HariciOkutman', 'category': 'Genel'},
+        {'name': 'Donem', 'category': 'Genel'},
+        {'name': 'Program', 'category': 'Genel'},
+        {'name': 'Ders', 'category': 'Genel'},
+        {'name': 'Campus', 'category': 'Genel'},
+        {'name': 'Building', 'category': 'Genel'},
+        {'name': 'Room', 'category': 'Genel'},
+        {'name': 'AkademikTakvim', 'category': 'Genel'},
+        {'name': 'OgrenciProgram', 'category': 'Genel'},
     ],
     'personel': [
         {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
