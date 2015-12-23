@@ -540,7 +540,7 @@ class ExportCurriculaToXML(Command):
 
         academic_area_root = etree.Element('academicAreas', campus="%s" % uni, term="%s" % term.ad,
                                            year="%s" % term.baslangic_tarihi.year)
-        etree.SubElement(academic_area_root, 'academicArea', abbreviation='A', externalID='A')
+        etree.SubElement(academic_area_root, 'academicArea', abbreviation='A', externalID='A', title="%s" % uni+' - '+term.ad)
 
         academic_area_string = etree.tostring(academic_area_root, pretty_print=True, xml_declaration=True,
                                               encoding='UTF-8', doctype="%s" % academic_area_doc_type)
@@ -554,9 +554,7 @@ class ExportCurriculaToXML(Command):
 
         academic_classification_root = etree.Element('academicClassifications', campus="%s" % uni, term="%s" % term.ad,
                                                      year="%s" % term.baslangic_tarihi.year)
-        etree.SubElement(academic_area_root, 'academicClassification', externalId="01", code="01", name="Birinci Donem")
-        etree.SubElement(academic_area_root, 'academicClassification', externalId="02", code="02", name="Ikinci Donem")
-
+        etree.SubElement(academic_area_root, 'academicClassification', externalId="01", code="01", name="01")
         academic_classification_string = etree.tostring(academic_classification_root, pretty_print=True,
                                                         xml_declaration=True, encoding='UTF-8',
                                                         doctype="%s" % academic_classification_doc_type)
