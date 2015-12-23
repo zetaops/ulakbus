@@ -139,7 +139,7 @@ class Donem(Model):
 
 class Program(Model):
     yoksis_no = field.String("YOKSIS ID", index=True)
-    bolum = field.String("Bölüm", index=True)
+    bolum_adi = field.String("Bölüm", index=True)
     ucret = field.Integer("Ücret", index=True)
     yil = field.String("Yıl", index=True)
     adi = field.String("Adı", index=True)
@@ -153,7 +153,8 @@ class Program(Model):
                                  reverse_name='ects_koordinator_program')
     akademik_kordinator = Role(verbose_name='Akademik Koordinator',
                                reverse_name='akademik_koordinator_program')
-    birim = Unit()
+    birim = Unit(reverse_name="yoksis_program_program", verbose_name="YÖKSİS Program")
+    bolum = Unit(reverse_name="bolum_program", verbose_name="Bölüm")
 
     class Donemler(ListNode):
         donem = Donem()
