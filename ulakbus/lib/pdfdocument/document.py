@@ -218,7 +218,7 @@ class PDFDocument(object):
         self.doc.PDFDocument = self
         self.story = []
 
-        self.font_name = kwargs.get('font_name', 'AndikaNewBasic')
+        self.font_name = kwargs.get('font_name', 'Vera')
         self.font_size = kwargs.get('font_size', 9)
 
     def page_index_string(self, current_page, total_pages):
@@ -467,7 +467,7 @@ class PDFDocument(object):
     def table(self, data, style=None):
         table= Table(data, hAlign='LEFT', colWidths=(100*mm, None))
         table.setStyle(TableStyle([
-            ('FONT', (0, 0), (-1, 0), 'AndikaNewBasic'),
+            ('FONT', (0, 0), (-1, 0), 'Vera'),
             ('ALIGN', (10, 0), (-1, 0), 'CENTER'),
             ('ALIGN', (0, 0), (0, -1), 'LEFT'),
             ('INNERGRID', (0, 0), (-1, -1), 0.50, colors.black),

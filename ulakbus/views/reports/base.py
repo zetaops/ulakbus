@@ -67,11 +67,7 @@ class Reporter(BaseView):
         pass
 
     def __init__(self, current):
-        register_fonts_from_paths('AndikaNewBasic.ttf',
-                                  'AndikaNewBasic-I.ttf',
-                                  'AndikaNewBasic-B.ttf',
-                                  'AndikaNewBasic-BI.ttf',
-                                  'AndikaNewBasic')
+
         super(Reporter, self).__init__(current)
         self.cmd = current.input.get('cmd', 'show')
         # print("CMD", self.cmd)
@@ -106,11 +102,16 @@ class Reporter(BaseView):
         ))
 
     def printout(self):
+        register_fonts_from_paths('Vera.ttf',
+                                  'VeraIt.ttf',
+                                  'VeraBd.ttf',
+                                  'VeraBI.ttf',
+                                  'Vera')
         headers = self.get_headers()
         objects = self.get_objects()
         self.set_headers()
         f = BytesIO()
-        pdf = PDFDocument(f, font_name='AndikaNewBasic', font_size=14)
+        pdf = PDFDocument(f, font_size=14)
         pdf.init_report()
         pdf.h1(self.tr2ascii(self.get_title()))
 
