@@ -82,17 +82,18 @@ class Reporter(BaseView):
     def show(self):
         headers = self.get_headers()
         objects = self.get_objects()
-        self.set_client_cmd('form')
+        self.set_client_cmd('form', 'show')
         self.output['forms'] = self.ReportForm(current=self.current,
                                                title=self.get_title()).serialize()
         self.output['forms']['constraints'] = {}
         self.output['forms']['grouping'] = {}
         self.output['meta'] = {}
-        self.output['objects'] = [headers]
-        for obj in objects:
-            self.output['objects'].append(
-                    {'fields': obj, 'key': None, 'actions': []},
-            )
+        if len(objects[0]) == 2:
+            self.kv_list(headers, objects)
+
+    def kv_list(self, headers, objects):
+        # self.output['objects'] = [headers]
+        self.output['object']=dict(objects)
 
     def set_headers(self, as_attachment=True):
         self.current.response.set_header('Content-Type', 'application/pdf')
