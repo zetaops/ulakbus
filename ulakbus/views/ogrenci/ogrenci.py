@@ -88,18 +88,19 @@ def ogrenci_bilgileri(current):
     current.output['client_cmd'] = ['show', ]
     ogrenci = Ogrenci.objects.get(user_id=current.user_id)
 
-    kimlik_bilgileri = OrderedDict({
-        'Ad Soyad': "%s %s" % (ogrenci.ad, ogrenci.soyad),
-        'Cinsiyet': ogrenci.cinsiyet,
-        'Kimlik No': ogrenci.tckn,
-        'Uyruk': ogrenci.tckn,
-        'Doğum Tarihi': '{:%d.%m.%Y}'.format(ogrenci.dogum_tarihi),
-        'Doğum Yeri': ogrenci.dogum_yeri,
-        'Baba Adı': ogrenci.baba_adi,
-        'Anne Adı': ogrenci.ana_adi,
-        'Medeni Hali': ogrenci.medeni_hali
-    })
+    # ordered tablo ornegi
+    kimlik_bilgileri = OrderedDict({})
+    kimlik_bilgileri.update({'Ad Soyad': "%s %s" % (ogrenci.ad, ogrenci.soyad)})
+    kimlik_bilgileri.update({'Cinsiyet': ogrenci.cinsiyet})
+    kimlik_bilgileri.update({'Kimlik No': ogrenci.tckn})
+    kimlik_bilgileri.update({'Uyruk': ogrenci.tckn})
+    kimlik_bilgileri.update({'Doğum Tarihi': '{:%d.%m.%Y}'.format(ogrenci.dogum_tarihi)})
+    kimlik_bilgileri.update({'Doğum Yeri': ogrenci.dogum_yeri})
+    kimlik_bilgileri.update({'Baba Adı': ogrenci.baba_adi})
+    kimlik_bilgileri.update({'Anne Adı': ogrenci.ana_adi})
+    kimlik_bilgileri.update({'Medeni Hali': ogrenci.medeni_hali})
 
+    # unordered tablo ornegi
     iletisim_bilgileri = {
         'Eposta': ogrenci.e_posta,
         'Telefon': ogrenci.tel_no,
