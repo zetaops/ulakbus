@@ -4,8 +4,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
-
+from pyoko.lib.utils import lazy_property
 from .personel import Personel
 from pyoko import Model, field, ListNode
 from .auth import Role, User
@@ -73,20 +72,15 @@ class HariciOkutman(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
-    def update_okutman(self):
-        try:
-            okutman = Okutman.objects.get(harici_okutman=self)
-        except:
-            okutman = Okutman()
-        okutman.harici_okutman = self
-        okutman.ad = self.ad
-        okutman.soyad = self.soyad
-        okutman.unvan = self.unvan
-        okutman.save()
-
-    def save(self):
-        super(HariciOkutman, self).save()
-        self.update_okutman()
+    def post_save(self):
+        okutman_qs = Okutman.objects.filter(harici_okutman=self)
+        if okutman_qs:
+            okutman = okutman_qs[0]
+            okutman.harici_okutman = self
+            okutman.ad = self.ad
+            okutman.soyad = self.soyad
+            okutman.unvan = self.unvan
+            okutman.save()
 
 
 class Okutman(Model):
@@ -103,27 +97,27 @@ class Okutman(Model):
         verbose_name_plural = "Okutmanlar"
         search_fields = ['unvan', 'personel']
 
-    @property
+    @lazy_property
     def okutman(self):
         # self.personel layz model dondurdugu icin self.personel.key seklinde kontrol etmeliyiz.
         return self.personel if self.personel.key else self.harici_okutman
 
     def __unicode__(self):
-        return '%s %s' % (self.okutman.ad, self.okutman.soyad)
+        return '%s %s' % (self.ad, self.soyad)
 
-    def check_uniqueness(self):
-        p = len(self.objects.filter(personel=self.personel)) if self.okutman.key else 0
-        return False if p > 0 else True
+    def is_not_unique(self):
+        if self.personel.key:
+            return len(self.objects.filter(personel=self.personel))
+        elif self.harici_okutman.key:
+            return len(self.objects.filter(harici_okutman=self.harici_okutman))
 
-    def save(self):
-        self.ad = self.okutman.ad
-        self.soyad = self.okutman.soyad
-        self.unvan = self.okutman.unvan
-
-        if self.is_in_db() or self.check_uniqueness():
-            super(Okutman, self).save()
-        else:
-            raise Exception("Okutman must be unique %s")
+    def pre_save(self):
+        if self.okutman.key:
+            self.ad = self.okutman.ad
+            self.soyad = self.okutman.soyad
+            self.unvan = self.okutman.unvan
+        if not self.is_in_db() and self.is_not_unique():
+            raise Exception("Okutman %s must be unique" % self.okutman)
 
 
 class Donem(Model):

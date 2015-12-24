@@ -228,9 +228,8 @@ class Role(Model):
         else:
             return "Role #%s" % self.key if self.is_in_db() else ''
 
-    def save(self):
+    def pre_save(self):
         self.name = self._make_name()
-        super(Role, self).save()
 
 
 class LimitedPermissions(Model):
