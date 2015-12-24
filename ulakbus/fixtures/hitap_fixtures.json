@@ -1317,14 +1317,32 @@
       "en": ""
     }
   },
-  "cinsiyet": {
+  "okul_adi":{
     "1": {
-      "tr": "Bay",
-      "en": "Male"
+      "tr":"Boğaziçi Üniversitesi",
+      "en":"Boğaziçi Üniversitesi"
     },
-    "2": {
-      "tr": "Bayan",
-      "en": "Female"
+    "2":{
+      "tr":"İnönü Üniversitesi",
+      "en":"İnönü Üniversitesi"
+    },
+    "3":{
+      "tr":"Mardin Artuklu Üniversitesi",
+      "en":"Mardin Artuklu Üniversitesi"
+    }
+  },
+  "bolum_adi": {
+    "1":{
+      "tr":"Alman Dili ve Edebiyati",
+      "en":"Alman Dili ve Edebiyati"
+    },
+    "2":{
+      "tr":"Antropoloji",
+      "en":"Antropoloji"
+    },
+    "3":{
+      "tr":"Bahce Bitkileri",
+      "en":"Bahce Bitkileri"
     }
   }
 }
