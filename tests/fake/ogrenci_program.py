@@ -243,40 +243,38 @@ def yeni_borc(ogrenci, donem):
     return b
 
 
-def fake_data():
-    personel_list = [yeni_personel() for p in range(random.randint(5,15))]
+def fake_data(personel_say=20, okutman_say=10, program_say=5, ders_say=5, sube_say=3, sinav_say=2, ogrenci_say=10):
+    personel_list = [yeni_personel() for p in range(personel_say)]
 
     # okutman olmayan personellerden okutman olustur
     okutman_list = []
-    for prs in random.sample(personel_list, random.randint(1, len(personel_list))):
+    for prs in random.sample(personel_list, okutman_say):
         okutman = yeni_okutman(prs)
         if okutman:
             okutman_list.append(okutman)
 
     # yoksis uzerindeki program birimleri
-    yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), random.randint(5,25))
+    yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), program_say)
 
     # yoksis program listesinden program olustur
     for yoksis_program in yoksis_program_list:
         program = yeni_program(yoksis_program)
 
         # programa ait dersler
-        ders_count = random.randint(5,25)
-        for dc in range(ders_count):
+        for dc in range(ders_say):
             personel = random.choice(personel_list)
             ders = yeni_ders(program, personel)
 
             # derse ait subeler
-            sube_count = random.randint(1,3)
-            for sc in range(sube_count):
+            for sc in range(sube_say):
                 okutman = random.choice(okutman_list)
                 sube = yeni_sube(ders, okutman)
 
                 # subeye ait sinavlar
-                sinav_liste = [yeni_sinav(sube) for snv in range(random.randint(2,3))]
+                sinav_liste = [yeni_sinav(sube) for snv in range(sinav_say)]
 
                 # subeye ait ogrenciler
-                ogrenci_liste = [yeni_ogrenci() for og in range(random.randint(3,10))]
+                ogrenci_liste = [yeni_ogrenci() for og in range(ogrenci_say)]
                 for ogrenci in ogrenci_liste:
                     personel = random.choice(personel_list)
 
