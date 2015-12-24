@@ -152,8 +152,8 @@ class HizmetBirlestirme(Model):
         app = 'Personel'
         verbose_name = "Birleştirme"
         verbose_name_plural = "Birleştirmeler"
-        list_fields = ['sgk_sicil_no', 'baslama_tarihi', 'bitis_tarihi', 'kamuIsyeri_ad']
-        search_fields = ['kayit_no', 'sgk_sicil_no', 'kamuIsyeri_ad']
+        list_fields = ['sgk_sicil_no', 'baslama_tarihi', 'bitis_tarihi', 'kamu_isyeri_ad']
+        search_fields = ['kayit_no', 'sgk_sicil_no', 'kamu_isyeri_ad']
 
     def __unicode__(self):
         return '%s %s' % (self.kayit_no, self.sgk_nevi)
