@@ -8,12 +8,11 @@
 # (GPLv3).  See LICENSE.txt for details.
 import six
 
-from ulakbus.models import Personel
+from ulakbus.models import *
 from ulakbus.views.reports.base import Reporter
 
 
 class PersonelByGender(Reporter):
-    HEADERS = ['', '']
     TITLE = 'Cinsiyete göre personel sayıları'
 
     def get_objects(self):
@@ -28,16 +27,29 @@ class PersonelByGender(Reporter):
         return result
 
 class PersonelByAkademikIdari(Reporter):
-    HEADERS = ['', '']
     TITLE = 'Akademik / İdari Personel Sayısı'
 
     def get_objects(self):
-        genders = self.convert_choices(Personel().get_choices_for('personel_turu'))
+        choices = self.convert_choices(Personel().get_choices_for('personel_turu'))
         result = []
         for val, num in Personel.objects.distinct_values_of('personel_turu').items():
             try:
                 val = int(val)
             except:
                 pass
-            result.append((genders.get(val, val), num))
+            result.append((choices.get(val, val), num))
+        return result
+
+class Kadrolar(Reporter):
+    TITLE = 'Genel Kadro Durumları'
+
+    def get_objects(self):
+        choices = self.convert_choices(Kadro().get_choices_for('durum'))
+        result = []
+        for val, num in Kadro.objects.distinct_values_of('durum').items():
+            try:
+                val = int(val)
+            except:
+                pass
+            result.append((choices.get(val, val), num))
         return result

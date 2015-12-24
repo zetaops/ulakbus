@@ -8,7 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from collections import defaultdict
 
-from ulakbus.models import Ogrenci
+from ulakbus.models import *
 from ulakbus.views.reports.base import Reporter
 from zengine.lib.utils import *
 
@@ -44,5 +44,16 @@ class OgrenciByBrithDate(Reporter):
     def get_objects(self):
         dates = defaultdict(lambda: 0)
         for val, num in Ogrenci.objects.distinct_values_of('dogum_tarihi').items():
+            dates[solr_to_year(val)] += int(num)
+        return dates.items()
+
+
+class OgrenciHarc(Reporter):
+    HEADERS = ['', '']
+    TITLE = 'Doğum tarihine göre öğrenci sayıları'
+
+    def get_objects(self):
+        dates = defaultdict(lambda: 0)
+        for val, num in Borc.objects.distinct_values_of('dogum_tarihi').items():
             dates[solr_to_year(val)] += int(num)
         return dates.items()
