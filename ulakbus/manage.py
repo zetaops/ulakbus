@@ -208,12 +208,17 @@ class ExportRoomsToXml(Command):
                     if building.building.room_set:
 
                         for room in building.building.room_set:
-                            etree.SubElement(buildingelement, 'room', externalId="%s" % room.room.key, \
+                            roomelement = etree.SubElement(buildingelement, 'room', externalId="%s" % room.room.key, \
                                              locationX="%s" % building.building.coordinate_x, \
                                              locationY="%s" % building.building.coordinate_y, \
                                              roomNumber="%s" % room.room.code, \
                                              roomClassification="%s" % room.room.room_type.type, \
                                              capacity="%s" % room.room.capacity, instructional="True")
+
+                            if room.room.RoomDepartments:
+                                roommdepartments = etree.SubElement(roomelement, 'roomDepartments')
+                                for department in room.room.RoomDepartments:
+                                    etree.SubElement(roommdepartments, 'assigned', departmentNumber="%s" % department.unit.yoksis_no, percent="100")
 
         # pretty string
 
@@ -321,7 +326,7 @@ class ExportAcademicSubjectsToXML(Command):
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        units = Program.objects.filter()
+        units = Unit.objects.filter(unit_type='Bölüm')
         campuses = Campus.objects.filter()
         sessions = Donem.objects.filter()
         doc_type = '<!DOCTYPE subjectAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/SubjectArea.dtd">'
@@ -332,11 +337,11 @@ class ExportAcademicSubjectsToXML(Command):
                 root = etree.Element('subjectAreas', campus="%s" % uni, term="%s" % term.ad,
                                      year="%s" % term.baslangic_tarihi.year)
             for unit in units:
-                parent_unit = Unit.objects.filter(yoksis_no=unit.yoksis_no)[0].parent_unit_no
-                #	<subjectArea externalId="19O0S71C0WD4X1GODPVN" abbreviation="A&amp;AE" title="Aeronautics And Astronautics Engineering" schedBookOnly="false" pseudoSubjArea="false" department="1282"/>
-                etree.SubElement(root, 'subjectArea', externalId="%s" % unit.key,
-                                 abbreviation="%s" % unit.yoksis_no, title="%s" % unit.adi,
-                                 department="%s" % parent_unit)
+                subunits = Unit.objects.filter(parent_unit_no=unit.yoksis_no)
+                for subunit in subunits:
+                    etree.SubElement(root, 'subjectArea', externalId="%s" % subunit.key,
+                                    abbreviation="%s" % subunit.yoksis_no, title="%s" % subunit.name,
+                                    department="%s" % subunit.parent_unit_no)
         # pretty string
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
         current_date = datetime.datetime.now()
