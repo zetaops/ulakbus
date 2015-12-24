@@ -8,28 +8,28 @@
 # (GPLv3).  See LICENSE.txt for details.
 from collections import defaultdict
 
+from ulakbus.lib.convert import tl_curreny
 from ulakbus.models import *
 from ulakbus.views.reports.base import Reporter
 from zengine.lib.utils import *
 
+
 class OgrenciByGender(Reporter):
-    HEADERS = ['', '']
     TITLE = 'Cinsiyete göre öğrenci sayıları'
 
     def get_objects(self):
-        genders = self.convert_choices(Ogrenci().get_choices_for('cinsiyet'))
+        choices = self.convert_choices(Ogrenci().get_choices_for('cinsiyet'))
         result = []
         for val, num in Ogrenci.objects.distinct_values_of('cinsiyet').items():
             try:
                 val = int(val)
             except:
                 pass
-            result.append((genders.get(val, val), num))
+            result.append((choices.get(val, val), num))
         return result
 
 
 class OgrenciByBrithPlace(Reporter):
-    HEADERS = ['', '']
     TITLE = 'Doğum yerine göre öğrenci sayıları'
 
     def get_objects(self):
@@ -38,7 +38,6 @@ class OgrenciByBrithPlace(Reporter):
 
 
 class OgrenciByBrithDate(Reporter):
-    HEADERS = ['', '']
     TITLE = 'Doğum tarihine göre öğrenci sayıları'
 
     def get_objects(self):
@@ -49,11 +48,13 @@ class OgrenciByBrithDate(Reporter):
 
 
 class OgrenciHarc(Reporter):
-    HEADERS = ['', '']
-    TITLE = 'Doğum tarihine göre öğrenci sayıları'
+    TITLE = 'Harc Bilgileri'
 
     def get_objects(self):
-        dates = defaultdict(lambda: 0)
-        for val, num in Borc.objects.distinct_values_of('dogum_tarihi').items():
-            dates[solr_to_year(val)] += int(num)
-        return dates.items()
+        # choices = self.convert_choices(Borc().get_choices_for('sebep'))
+        result = defaultdict(lambda: 0)
+        for b in Borc.objects.filter():
+            result["%s %s" % (b.get_sebep_display(), 'Borç')] += int(b.miktar or 0)
+            result["%s %s" % (b.get_sebep_display(), 'Ödenen')] += int(b.odenen_miktar or 0)
+
+        return [(k, tl_curreny(v)) for k,v in result.items()]

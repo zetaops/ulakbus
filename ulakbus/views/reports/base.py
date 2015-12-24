@@ -84,14 +84,20 @@ class Reporter(BaseView):
     def show(self):
         headers = self.get_headers()
         objects = self.get_objects()
+        frm = self.ReportForm(current=self.current, title=self.get_title())
+        if objects:
+            frm.help_text = ''
+            if len(objects[0]) == 2:
+                self.kv_list(headers, objects)
+        else:
+            frm.help_text = 'Kayıt bulunamadı'
+            self.output['object'] = {}
+
         self.set_client_cmd('form', 'show')
-        self.output['forms'] = self.ReportForm(current=self.current,
-                                               title=self.get_title()).serialize()
+        self.output['forms'] = frm.serialize()
         self.output['forms']['constraints'] = {}
         self.output['forms']['grouping'] = {}
         self.output['meta'] = {}
-        if len(objects[0]) == 2:
-            self.kv_list(headers, objects)
 
     def kv_list(self, headers, objects):
         # self.output['objects'] = [headers]

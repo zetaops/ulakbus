@@ -53,3 +53,16 @@ class Kadrolar(Reporter):
                 pass
             result.append((choices.get(val, val), num))
         return result
+
+# class Izinler(Reporter):
+#     TITLE = 'Personel İzin Durumu'
+#
+#     def get_objects(self):
+#         result = []
+#         for val, num in Izin.objects.filter():
+#             try:
+#                 val = int(val)
+#             except:
+#                 pass
+#             result.append((choices.get(val, val), num))
+#         return result
