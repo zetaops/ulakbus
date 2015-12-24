@@ -593,9 +593,11 @@ class ExportCurriculaToXML(Command):
         for program in program_list:
             ders_list = Ders.objects.filter(program=program).count()
             if ders_list:
+                parent_yoksis_no = Unit.objects.filter(yoksis_no=program.yoksis_no)[0].parent_unit_no
+                #bolum = Unit.objects.filter(yoksis_no=parent_yoksis_no,unit_type='Bölüm')[0]
                 curriculum = etree.SubElement(root, 'curriculum')
                 etree.SubElement(curriculum, 'academicArea', abbreviation='A')
-                etree.SubElement(curriculum, 'department', code="%s" % program.yoksis_no)
+                etree.SubElement(curriculum, 'department', code="%s" % parent_yoksis_no)
                 etree.SubElement(curriculum, 'major', code="M1")
                 classification = etree.SubElement(curriculum, 'classification', name="01", enrollment='2')
                 etree.SubElement(classification, 'academicClassification', code="01")
