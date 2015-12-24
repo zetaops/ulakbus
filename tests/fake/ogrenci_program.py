@@ -173,7 +173,7 @@ def fake_data():
                 okutman = random.choice(okutman_list)
                 sube = yeni_sube(ders, okutman)
 
-                ogrenci_liste = [yeni_ogrenci().user.username for og in range(random.randint(3,10))]
+                ogrenci_liste = [yeni_ogrenci() for og in range(random.randint(3,10))]
                 for ogrenci in ogrenci_liste:
                     personel = random.choice(personel_list)
 
