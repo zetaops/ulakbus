@@ -8,13 +8,76 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models.auth import Unit
-from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav, OgrenciProgram, OgrenciDersi, DersKatilimi
+from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav,\
+    OgrenciProgram, OgrenciDersi, DersKatilimi, Borc, DegerlendirmeNot
 from ulakbus.models.personel import Personel
 from .general import ints, gender, marital_status, blood_type, driver_license_class, id_card_serial, birth_date
 from .general import fake
 from user import new_user
 import random
 import datetime
+
+
+def yeni_personel(personel_turu=1):
+    p = Personel()
+    p.tckn = ints(length=11)
+    p.ad = fake.first_name()
+    p.soyad = fake.last_name()
+    p.cinsiyet = gender()
+    p.uyruk = fake.country()
+    p.medeni_hali = marital_status(student=False)
+    p.ikamet_adresi = fake.address()
+    p.ikamet_il = fake.state()
+    p.ikamet_ilce = fake.state()
+    p.adres_2 = fake.address()
+    p.adres_2_posta_kodu = fake.postcode()
+    p.oda_no = fake.classroom_code()
+    p.oda_tel_no = fake.phone_number()
+    p.cep_telefonu = fake.phone_number()
+    p.e_posta = fake.email()
+    p.e_posta_2 = fake.email()
+    p.e_posta_3 = fake.email()
+    p.web_sitesi = "http://%s" % fake.domain_name()
+    p.yayinlar = '\n'.join(fake.paragraphs())
+    p.projeler = '\n'.join(fake.paragraphs())
+    p.kan_grubu = blood_type()
+    p.ehliyet = driver_license_class()
+    p.verdigi_dersler = '\n'.join([fake.lecture() for _ in range(3)])
+    p.unvan = random.choice(range(1, 5))
+    p.biyografi = '\n'.join(fake.paragraphs(5))
+    p.notlar = '\n'.join(fake.paragraphs(1))
+    p.personel_turu = personel_turu
+    p.cuzdan_seri = id_card_serial()
+    p.cuzdan_seri_no = ints(length=10)
+    p.baba_adi = fake.first_name_male()
+    p.ana_adi = fake.first_name_female()
+    p.dogum_tarihi = birth_date(student=False)
+    p.dogum_yeri = fake.state()
+    p.medeni_hali = random.choice(['1', '2'])
+    p.hizmet_sinifi = random.choice(range(1,30))
+
+    username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
+    user = new_user(username=username)
+    p.user = user
+
+    p.save()
+    return p
+
+
+def yeni_okutman(personel):
+    o = Okutman()
+    o.ad = fake.first_name()
+    o.soyad = fake.last_name()
+    o.unvan = personel.unvan
+    o.birim_no = personel.birim.yoksis_no
+    o.personel = personel
+
+    # duplicate data check
+    try:
+        o.save()
+        return o
+    except:
+        return None
 
 
 def yeni_ogrenci():
@@ -28,13 +91,7 @@ def yeni_ogrenci():
     o.ikamet_adresi = fake.address()
     o.ikamet_il = fake.state()
     o.ikamet_ilce = fake.state()
-    # o.adres_2 = fake.address()
-    # o.adres_2_posta_kodu = fake.postcode()
-    # o.oda_no = fake.classroom_code()
     o.e_posta = fake.email()
-    # o.web_sitesi = "http://%s" % fake.domain_name()
-    # o.yayinlar = '\n'.join(fake.paragraphs())
-    # o.projeler = '\n'.join(fake.paragraphs())
     o.kan_grubu = blood_type()
     o.ehliyet = driver_license_class()
     o.cuzdan_seri = id_card_serial()
@@ -55,7 +112,7 @@ def yeni_ogrenci():
 
 def yeni_donem():
     d = Donem()
-    d.ad = fake.month_name()
+    d.ad = random.choice(["Güz", "Güz", "Bahar", "Bahar", "Yaz"])
     d.baslangic_tarihi = datetime.datetime(random.randint(2015, 2017),
                                            random.randint(1, 12),
                                            random.randint(1, 15))
@@ -84,8 +141,9 @@ def yeni_program(yoksis_program):
 
 def yeni_ders(program, personel):
     d = Ders()
-    d.ad = "DERS_" + str(random.randint(1000, 9999))
-    d.kod = ints(length=11)
+    d.ad = fake.lecture()
+    d.ders_dili = random.choice(["Turkce", "Turkce", "Turkce", "Ingilizce"])
+    d.kod = ints(length=3)
     d.program = program
     d.donem = random.choice(Donem.objects.filter(guncel=True))
     d.personel = personel
@@ -96,7 +154,7 @@ def yeni_ders(program, personel):
 
 def yeni_sube(ders, okutman):
     s = Sube()
-    s.ad = "SUBE_" + str(random.randint(1000, 9999))
+    s.ad = fake.classroom_code()
     s.kontenjan = random.randint(1, 500)
     s.dis_kontenjan = random.randint(1, 500)
     s.okutman = okutman
@@ -146,7 +204,7 @@ def yeni_ogrenci_dersi(sube, ogrenci_program):
 
 def yeni_ders_katilimi(sube, ogrenci, okutman):
     dk = DersKatilimi()
-    dk.katilim_durumu = random.uniform(1, 10)
+    dk.katilim_durumu = float(random.randint(50, 100))
     dk.ders = sube
     dk.ogrenci = ogrenci
     dk.okutman = okutman
@@ -155,34 +213,79 @@ def yeni_ders_katilimi(sube, ogrenci, okutman):
     return dk
 
 
-def fake_data():
-    personel_list = Personel.objects.filter(unvan=1)
-    okutman_list = Okutman.objects.filter()
-    yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), random.randint(3,10))
+def yeni_degerlendirme_notu(sinav, ogrenci):
+    dn = DegerlendirmeNot()
+    dn.puan = random.randint(0, 100)
+    dn.yil = str(sinav.tarih.year)
+    dn.donem = sinav.ders.donem.ad
+    dn.ogretim_elemani = sinav.sube.okutman.ad
+    dn.sinav = sinav
+    dn.ogrenci = ogrenci
+    dn.ders = sinav.ders
 
+    dn.save()
+    return dn
+
+
+def yeni_borc(ogrenci, donem):
+    b = Borc()
+    b.miktar = random.randint(100, 999)
+    b.para_birimi = random.choice([1, 1, 1, 2, 3])
+    b.sebep = random.choice([1, 1, 1, 2, 3])
+    b.son_odeme_tarihi = donem.baslangic_tarihi
+    b.odeme_sekli = random.choice([1, 2])
+    b.odeme_tarihi = donem.baslangic_tarihi - datetime.timedelta(random.randint(0, 30))
+    b.odenen_miktar = b.miktar
+    b.ogrenci = ogrenci
+    b.donem = donem
+
+    b.save()
+    return b
+
+
+def fake_data():
+    personel_list = [yeni_personel() for p in range(random.randint(5,15))]
+
+    # okutman olmayan personellerden okutman olustur
+    okutman_list = []
+    for prs in random.sample(personel_list, random.randint(1, len(personel_list))):
+        okutman = yeni_okutman(prs)
+        if okutman:
+            okutman_list.append(okutman)
+
+    # yoksis uzerindeki program birimleri
+    yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), random.randint(5,25))
+
+    # yoksis program listesinden program olustur
     for yoksis_program in yoksis_program_list:
         program = yeni_program(yoksis_program)
 
-        ders_count = random.randint(3,10)
+        # programa ait dersler
+        ders_count = random.randint(5,25)
         for dc in range(ders_count):
             personel = random.choice(personel_list)
             ders = yeni_ders(program, personel)
 
+            # derse ait subeler
             sube_count = random.randint(1,3)
             for sc in range(sube_count):
                 okutman = random.choice(okutman_list)
                 sube = yeni_sube(ders, okutman)
 
+                # subeye ait sinavlar
+                sinav_liste = [yeni_sinav(sube) for snv in range(random.randint(2,3))]
+
+                # subeye ait ogrenciler
                 ogrenci_liste = [yeni_ogrenci() for og in range(random.randint(3,10))]
                 for ogrenci in ogrenci_liste:
                     personel = random.choice(personel_list)
 
+                    # ogrencinin program, ders, devamsizlik, borc bilgileri
                     ogrenci_program = yeni_ogrenci_program(ogrenci, program, personel)
-                    ogrenci_dersi = yeni_ogrenci_dersi(sube, ogrenci_program)
-                    ders_katilimi = yeni_ders_katilimi(sube, ogrenci, okutman)
+                    yeni_ogrenci_dersi(sube, ogrenci_program)
+                    yeni_ders_katilimi(sube, ogrenci, okutman)
+                    yeni_borc(ogrenci, ders.donem)
 
-                sinav_count = random.randint(2,3)
-                for scnt in range(sinav_count):
-                    sinav = yeni_sinav(sube)
-
-
+                    # ogrenci not bilgisi
+                    for sinav in sinav_liste:
+                        yeni_degerlendirme_notu(sinav, ogrenci)
