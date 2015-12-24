@@ -130,6 +130,9 @@ class IzinIslemleri(CrudView):
         yillik_izinler = dict()
         mazeret_izinler = dict()
 
+        if self.ilk_izin_hakedis > date.today():
+            return {'yillik': None, 'mazeret': None}
+
         for yil in range(self.ilk_izin_hakedis.year, date.today().year + 1):
             yillik_izinler[yil] = 20
             mazeret_izinler[yil] = 10
