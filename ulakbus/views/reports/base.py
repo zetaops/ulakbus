@@ -9,14 +9,14 @@
 from io import BytesIO
 
 import six
-from reportlab.platypus import Table
-
 from pyoko import form
 from zengine.lib.forms import JsonForm
 from zengine.views.base import BaseView
 import re
-from ulakbus.lib.pdfdocument.document import PDFDocument, register_fonts_from_paths
-
+try:
+    from ulakbus.lib.pdfdocument.document import PDFDocument, register_fonts_from_paths
+except:
+    print("Warning: Reportlab module not found")
 
 class ReporterRegistry(type):
     registry = {}
