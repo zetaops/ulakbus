@@ -28,19 +28,24 @@ def yeni_bina():
         b.coordinate_y = campus.coordinate_y
         b.campus = campus
         b.save()
+        yeni_derslik(building=b,parent_unit_no=faculty.yoksis_no,count=random.choice(range(1, 10)))
 
-    print("Fake bina tanımlaması başarılı")
+
+    print("Fake bina ve oda tanımlaması başarılı")
 
 
-def yeni_derslik(count=1):
+def yeni_derslik(building,parent_unit_no,count=1):
+    unit_list = Unit.objects.filter(parent_unit_no=parent_unit_no,unit_type="Bölüm")
     for i in range(1, count):
         room = Room(
                 code=fake.classroom_code(),
                 name=fake.classroom(),
-                building=random.choice(Building.objects.filter()),
+                building=building,
                 room_type=random.choice(RoomType.objects.filter()),
                 floor=ints(2),
                 capacity=random.choice(range(30, 100)),
                 is_active=True
         )
+        for unit in unit_list:
+            room.RoomDepartments(unit=unit)
         room.save()
