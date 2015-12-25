@@ -6,7 +6,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from pyoko import field, Model
+from pyoko import field, Model, ListNode
+from ulakbus.models import Unit
 
 __author__ = 'Ali Riza Keles'
 
@@ -82,6 +83,9 @@ class Room(Model):
         return "%s" % self.building.name
 
     building_display.title = 'Bina'
+
+    class RoomDepartments(ListNode):
+        unit = Unit()
 
     def __unicode__(self):
         return '%s %s %s' % (self.code, self.name, self.capacity)
