@@ -7,8 +7,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 import time
-
-from pyoko.model import model_registry
 from .base_test_case import BaseTestCase
 
 
