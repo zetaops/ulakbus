@@ -62,7 +62,6 @@ FILENAME_RE = re.compile(r'[^A-Za-z0-9\-\.]+')
 
 @six.add_metaclass(ReporterRegistry)
 class Reporter(BaseView):
-    HEADERS = ['', '']
     TITLE = ''
 
     class Meta:
@@ -82,13 +81,15 @@ class Reporter(BaseView):
         printout = form.Button("Yazdır", cmd="printout")
 
     def show(self):
-        headers = self.get_headers()
         objects = self.get_objects()
         frm = self.ReportForm(current=self.current, title=self.get_title())
         if objects:
             frm.help_text = ''
-            if len(objects[0]) == 2:
-                self.kv_list(headers, objects)
+            if isinstance(objects[0], dict):
+                self.output['object'] = {'fields': objects, 'type': 'table-multiRow'}
+            else:
+                self.output['object'] = dict(objects)
+
         else:
             frm.help_text = 'Kayıt bulunamadı'
             self.output['object'] = {}
@@ -99,9 +100,6 @@ class Reporter(BaseView):
         self.output['forms']['grouping'] = {}
         self.output['meta'] = {}
 
-    def kv_list(self, headers, objects):
-        # self.output['objects'] = [headers]
-        self.output['object']=dict(objects)
 
     def set_headers(self, as_attachment=True):
         self.current.response.set_header('Content-Type', 'application/pdf')
@@ -116,7 +114,6 @@ class Reporter(BaseView):
                                   'VeraBd.ttf',
                                   'VeraBI.ttf',
                                   'Vera')
-        headers = self.get_headers()
         objects = self.get_objects()
         self.set_headers()
         f = BytesIO()
@@ -125,13 +122,16 @@ class Reporter(BaseView):
         pdf.h1(self.tr2ascii(self.get_title()))
 
         # pdf.story.append(Table(objects))
-        if len(objects[0]) == 2:
-            ascii_objects = []
+        ascii_objects = []
+        if isinstance(objects[0], dict):
+            headers = objects[0].keys()
+            ascii_objects.append([self.tr2ascii(h) for h in headers])
+            for obj in objects:
+                ascii_objects.append([self.tr2ascii(k) for k in obj.values()])
+        else:
             for o in objects:
                 ascii_objects.append((self.tr2ascii(o[0]), self.tr2ascii(o[1])))
-            pdf.table(ascii_objects)
-        else:
-            pdf.table(objects)
+        pdf.table(ascii_objects)
         #     else:
         #         pdf.table(o)
         pdf.generate()

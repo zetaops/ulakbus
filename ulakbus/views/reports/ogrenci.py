@@ -57,10 +57,13 @@ class OgrenciHarc(Reporter):
             result["%s %s" % (b.get_sebep_display(), 'Borç')] += int(b.miktar or 0)
             result["%s %s" % (b.get_sebep_display(), 'Ödenen')] += int(b.odenen_miktar or 0)
 
-        return [(k, tl_curreny(v)) for k,v in result.items()]
+        return [(k, tl_curreny(v)) for k, v in result.items()]
+
 
 class RoomCapacities(Reporter):
     TITLE = 'Kapasitesine Göre Mekanlar'
 
     def get_objects(self):
-        return Room.objects.distinct_values_of('capacity').items()
+        return [{'Kapasite': k, 'Oda Sayısı': v} for k, v in
+                     Room.objects.distinct_values_of('capacity').items()]
+        # return Room.objects.distinct_values_of('capacity').items()
