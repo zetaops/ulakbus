@@ -216,6 +216,7 @@ class HizmetAcikSure(Model):
     durum = field.Integer("Durum", index=True)
     hizmet_durum = field.Integer("Hizmet Durumu", index=True, choices="hizmet_durumu")
     husus = field.Integer("Husus", index=True, choices="husus")
+    husus_aciklama = field.String("Husus Açıklaması", index=True)
     aciga_alinma_tarih = field.Date("Açığa Alınma Tarihi", index=True, format="%d.%m.%Y")
     goreve_son_tarih = field.Date("Göreve Son Tarih", index=True, format="%d.%m.%Y")
     goreve_iade_istem_tarih = field.Date("Göreve İade İstem Tarihi", index=True, format="%d.%m.%Y")
