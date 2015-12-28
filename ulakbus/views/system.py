@@ -9,15 +9,18 @@
 import random
 from uuid import uuid4
 
+from pyoko.modelmeta import model_registry
 from pyoko.conf import settings
-from pyoko.lib.utils import lazy_property, get_object_from_path
 
 from ulakbus.views.reports import ReporterRegistry
 from zengine.views.base import BaseView
 from ulakbus.models import Personel, Ogrenci
 from zengine.views.menu import Menu
 
+
 class Search(BaseView):
+    SEARCH_ON = None
+
     def __init__(self, *args, **kwargs):
         self.query = kwargs.pop('query')
         super(Search, self).__init__(*args)
@@ -28,7 +31,7 @@ class Search(BaseView):
         try:
             tckn = int(self.query.strip())
             objects = self.SEARCH_ON.objects.filter(tckn__startswith=tckn)
-        except:
+        except ValueError:
             q = self.query.replace(' ', '\ ')
             # objects = self.SEARCH_ON.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
             objects = self.SEARCH_ON.objects.search_on('ad', 'soyad', contains=q)
@@ -87,12 +90,23 @@ class GetCurrentUser(BaseView):
         }
         self.output['current_user'] = currentUser
 
+
 class UlakbusMenu(Menu):
     def __init__(self, current):
         super(UlakbusMenu, self).__init__(current)
         self.add_reporters()
         self.add_user_data()
         self.add_settings()
+        self.add_admin_crud()
+
+    def add_admin_crud(self):
+        if self.current.user.superuser:
+            for mdl in model_registry.get_base_models():
+                self.output['other'].append({
+                    "text": mdl.Meta.verbose_name_plural,
+                    "wf": 'crud',
+                    "model": mdl.__name__,
+                    "kategori": 'Admin'})
 
     def add_settings(self):
         self.output['settings'] = {
@@ -111,7 +125,8 @@ class UlakbusMenu(Menu):
             "avatar": usr.get_avatar_url(),
             "is_staff": role.is_staff,
             "is_student": role.is_student,
-            "roles": [{"role": roleset.role.__unicode__()} for roleset in self.current.user.role_set]
+            "roles": [{"role": roleset.role.__unicode__()} for roleset in
+                      self.current.user.role_set]
         }
         if role.is_student:
             # insert student specific data here
@@ -128,5 +143,3 @@ class UlakbusMenu(Menu):
             perm = "report.%s" % mdl['model']
             if self.current.has_permission(perm):
                 self.output['other'].append(mdl)
-
-
