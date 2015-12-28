@@ -7,30 +7,28 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-import random
 from collections import OrderedDict
-
-from pyoko import form
-from zengine.lib.forms import JsonForm
+from zengine.forms import fields
+from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 from ulakbus.models.ogrenci import Ogrenci
 
 
-class KimlikBilgileriForm(JsonForm):
+class KimlikBilgileriForm(forms.JsonForm):
     class Meta:
-        include = ['tckn', "ad", "soyad", "cinsiyet", "dogum_tarihi", "dogum_yeri", "uyruk", "medeni_hali", "baba_adi",
-                   "ana_adi",
+        include = ['tckn', "ad", "soyad", "cinsiyet", "dogum_tarihi", "dogum_yeri", "uyruk",
+                   "medeni_hali", "baba_adi", "ana_adi",
                    "cuzdan_seri", "cuzdan_seri_no", "kayitli_oldugu_il", "kayitli_oldugu_ilce",
                    "kayitli_oldugu_mahalle_koy",
-                   "kayitli_oldugu_cilt_no", "kayitli_oldugu_aile_sıra_no", "kayitli_oldugu_sira_no",
-                   "kimlik_cuzdani_verildigi_yer",
+                   "kayitli_oldugu_cilt_no", "kayitli_oldugu_aile_sıra_no",
+                   "kayitli_oldugu_sira_no", "kimlik_cuzdani_verildigi_yer",
                    "kimlik_cuzdani_verilis_nedeni", "kimlik_cuzdani_kayit_no",
                    "kimlik_cuzdani_verilis_tarihi"]
 
-    kaydet = form.Button("Kaydet", cmd="save")
-    mernis_sorgula = form.Button("Mernis Sorgula", cmd="mernis_sorgula")
+    kaydet = fields.Button("Kaydet", cmd="save")
+    mernis_sorgula = fields.Button("Mernis Sorgula", cmd="mernis_sorgula")
 
 
 class KimlikBilgileri(CrudView):
@@ -47,12 +45,12 @@ class KimlikBilgileri(CrudView):
         self.object.save()
 
 
-class IletisimBilgileriForm(JsonForm):
+class IletisimBilgileriForm(forms.JsonForm):
     class Meta:
         include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi", "posta_kodu", "eposta", "tel_no"]
 
-    kaydet = form.Button("Kaydet", cmd="save")
-    kps_sorgula = form.Button("KPS Sorgula", cmd="kps_sorgula")
+    kaydet = fields.Button("Kaydet", cmd="save")
+    kps_sorgula = fields.Button("KPS Sorgula", cmd="kps_sorgula")
 
 
 class IletisimBilgileri(CrudView):
@@ -69,11 +67,11 @@ class IletisimBilgileri(CrudView):
         self.object.save()
 
 
-class OncekiEgitimBilgileriForm(JsonForm):
+class OncekiEgitimBilgileriForm(forms.JsonForm):
     class Meta:
         include = ["okul_adi", "diploma_notu", "mezuniyet_yili"]
 
-    kaydet = form.Button("Kaydet", cmd="save")
+    kaydet = fields.Button("Kaydet", cmd="save")
 
 
 class OncekiEgitimBilgileri(CrudView):

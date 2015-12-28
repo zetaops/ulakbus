@@ -16,15 +16,16 @@
 # 5- KPS Adres Sorgulama
 # 6- Iletisim Bilgileri Kaydet
 #
-# Bu WF, CrudView extend edilerek isletilmektedir. Adimlar arasi dispatch manuel sekilde yurutulmektedir.
+# Bu WF, CrudView extend edilerek isletilmektedir.
+# Adimlar arasi dispatch manuel sekilde yurutulmektedir.
 # Her adim basina kullanilan metodlar su sekildedir:
 #
-from zengine.lib.forms import JsonForm
+from zengine.forms import JsonForm
+from zengine.forms import fields
 
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from pyoko import form
 
 
 class KimlikBilgileriForm(JsonForm):
@@ -39,8 +40,8 @@ class KimlikBilgileriForm(JsonForm):
                    'kimlik_cuzdani_kayit_no',
                    'kimlik_cuzdani_verilis_tarihi']
 
-    kaydet = form.Button("Kaydet", cmd="save")
-    mernis = form.Button("Mernis'ten Kimlik Bilgileri Getir", cmd="mernis_kimlik_sorgula")
+    kaydet = fields.Button("Kaydet", cmd="save")
+    mernis = fields.Button("Mernis'ten Kimlik Bilgileri Getir", cmd="mernis_kimlik_sorgula")
 
 
 class IletisimBilgileriForm(JsonForm):
@@ -49,8 +50,8 @@ class IletisimBilgileriForm(JsonForm):
                    'oda_no', 'oda_tel_no', 'cep_telefonu', 'e_posta', 'e_posta_2', 'e_posta_3',
                    'web_sitesi']
 
-    kaydet = form.Button("Kaydet", cmd="save")
-    kps = form.Button("KPS'den Adres Bilgileri Getir", cmd="kps_adres_sorgula")
+    kaydet = fields.Button("Kaydet", cmd="save")
+    kps = fields.Button("KPS'den Adres Bilgileri Getir", cmd="kps_adres_sorgula")
 
 
 class DigerBilgilerForm(JsonForm):
@@ -59,7 +60,7 @@ class DigerBilgilerForm(JsonForm):
                    'unvan', 'biyografi', 'notlar', 'engelli_durumu', 'engel_grubu',
                    'engel_derecesi', 'engel_orani', 'personel_turu']
 
-    kaydet = form.Button("Kaydet", cmd="save")
+    kaydet = fields.Button("Kaydet", cmd="save")
 
 
 class KimlikIletisim(CrudView):

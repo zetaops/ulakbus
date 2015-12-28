@@ -110,6 +110,7 @@ class GenerateRandomPersonel(Command):
         for x in range(0, length):
             yeni_personel()
 
+
 class GenerateRandomOkutman(Command):
     CMD_NAME = 'random_okutman'
     HELP = 'Generates Random Okutman From Personel Objects'
@@ -125,6 +126,7 @@ class GenerateRandomOkutman(Command):
         for x in range(0, length):
             yeni_okutman()
 
+
 class GenerateRandomHariciOkutman(Command):
     CMD_NAME = 'random_harici_okutman'
     HELP = 'Generates Random Okutman From Personel Objects'
@@ -139,6 +141,7 @@ class GenerateRandomHariciOkutman(Command):
         length = int(self.manager.args.length)
         for x in range(0, length):
             yeni_harici_okutman()
+
 
 class GenerateRandomOogrenci(Command):
     CMD_NAME = 'random_ogrenci'
@@ -205,12 +208,17 @@ class ExportRoomsToXml(Command):
                     if building.building.room_set:
 
                         for room in building.building.room_set:
-                            etree.SubElement(buildingelement, 'room', externalId="%s" % room.room.key, \
+                            roomelement = etree.SubElement(buildingelement, 'room', externalId="%s" % room.room.key, \
                                              locationX="%s" % building.building.coordinate_x, \
                                              locationY="%s" % building.building.coordinate_y, \
                                              roomNumber="%s" % room.room.code, \
                                              roomClassification="%s" % room.room.room_type.type, \
                                              capacity="%s" % room.room.capacity, instructional="True")
+
+                            if room.room.RoomDepartments:
+                                roommdepartments = etree.SubElement(roomelement, 'roomDepartments')
+                                for department in room.room.RoomDepartments:
+                                    etree.SubElement(roommdepartments, 'assigned', departmentNumber="%s" % department.unit.yoksis_no, percent="100")
 
         # pretty string
 
@@ -279,7 +287,7 @@ class ExportDepartmentsToXML(Command):
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        units = Unit.objects.filter()
+        units = Unit.objects.filter(unit_type='Bölüm')
         campuses = Campus.objects.filter()
         sessions = Donem.objects.filter()
         doc_type = '<!DOCTYPE departments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Department.dtd">'
@@ -305,6 +313,47 @@ class ExportDepartmentsToXML(Command):
         print("Dosya %s dizini altina kayit edilmistir" % export_directory)
 
 
+class ExportAcademicSubjectsToXML(Command):
+    CMD_NAME = 'export_academic_subjects'
+    HELP = 'Generates Unitime XML import file for academic subjects'
+    PARAMS = []
+
+    def run(self):
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import Donem, Campus, Program, Unit
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        term = Donem.objects.filter(guncel=True)[0]
+        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+        units = Unit.objects.filter(unit_type='Bölüm')
+        campuses = Campus.objects.filter()
+        sessions = Donem.objects.filter()
+        doc_type = '<!DOCTYPE subjectAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/SubjectArea.dtd">'
+
+        # create XML
+        for campus in campuses:
+            if campus:
+                root = etree.Element('subjectAreas', campus="%s" % uni, term="%s" % term.ad,
+                                     year="%s" % term.baslangic_tarihi.year)
+            for unit in units:
+                subunits = Unit.objects.filter(parent_unit_no=unit.yoksis_no)
+                for subunit in subunits:
+                    etree.SubElement(root, 'subjectArea', externalId="%s" % subunit.key,
+                                    abbreviation="%s" % subunit.yoksis_no, title="%s" % subunit.name,
+                                    department="%s" % subunit.parent_unit_no)
+        # pretty string
+        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
+        current_date = datetime.datetime.now()
+        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+        if not os.path.exists(export_directory):
+            os.makedirs(export_directory)
+        out_file = open(export_directory + '/subjectAreaImport.xml', 'w+')
+        out_file.write("%s" % s)
+        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+
 class ExportStaffToXML(Command):
     CMD_NAME = 'export_staff'
     HELP = 'Generates Unitime XML import file for staff'
@@ -314,14 +363,14 @@ class ExportStaffToXML(Command):
         import os
         import datetime
         from lxml import etree
-        from ulakbus.models import Donem, Unit, Campus, Personel
+        from ulakbus.models import Donem, Unit, Campus, Okutman
         root_directory = os.path.dirname(os.path.abspath(__file__))
         term = Donem.objects.filter(guncel=True)[0]
         uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
         units = Unit.objects.filter()
         campuses = Campus.objects.filter()
         sessions = Donem.objects.filter()
-        stafflist = Personel.objects.filter()
+        stafflist = Okutman.objects.filter()
         doc_type = '<!DOCTYPE staff PUBLIC "-//UniTime//UniTime Staff Import DTD/EN" "http://www.unitime.org/interface/Staff.dtd">'
 
         for campus in campuses:
@@ -333,7 +382,7 @@ class ExportStaffToXML(Command):
 
                 etree.SubElement(root, 'staffMember', externalId="%s" % staffmember.key, \
                                  firstName="%s" % staffmember.ad, lastName="%s" % staffmember.soyad, \
-                                 department="%s" % staffmember.birim.yoksis_no, acadTitle="%s" % unvan[0], \
+                                 department="%s" % staffmember.birim_no, acadTitle="%s" % unvan[0], \
                                  positionType="%s" % unvan[1])
         # pretty string
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
@@ -357,7 +406,214 @@ class ExportStaffToXML(Command):
         elif title == 4:
             return ["Lecturer", "Lect."]
         else:
-            return ""
+            return ["", ""]
+
+
+class ExportStudentInfoToXML(Command):
+    CMD_NAME = 'export_student_info'
+    HELP = 'Generates Unitime XML import file for student info'
+    PARAMS = [
+
+        {'name': 'batch_size', 'type': int, 'default': 1000,
+         'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
+
+    ]
+
+    def run(self):
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import Donem, Ogrenci, Unit
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        term = Donem.objects.filter(guncel=True)[0]
+        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+        doc_type = '<!DOCTYPE students PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Student.dtd">'
+
+        # FIX for default row size in pyoko filter
+        batch_size = int(self.manager.args.batch_size)
+        count = Ogrenci.objects.count()
+        rounds = int(count / batch_size) + 1
+
+        root = etree.Element('students', campus="%s" % uni, term="%s" % term.ad, year="%s" % term.baslangic_tarihi.year)
+        # FIX for default row size in pyoko filter
+        for i in range(rounds):
+            for student in Ogrenci.objects.set_params(rows=1000, start=i * batch_size).filter():
+                # for student in students:
+                etree.SubElement(root, 'student', externalId="%s" % student.key, firstName="%s" % student.ad,
+                                 lastName="%s" % student.soyad,
+                                 email="%s" % student.e_posta)
+        # pretty string
+        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
+
+        if len(s):
+
+            current_date = datetime.datetime.now()
+            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+            if not os.path.exists(export_directory):
+                os.makedirs(export_directory)
+            out_file = open(export_directory + '/studentInfoImport.xml', 'w+')
+            out_file.write("%s" % s)
+            print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+        else:
+            print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+
+
+class ExportCourseCatalogToXML(Command):
+    CMD_NAME = 'export_course_catalog'
+    HELP = 'Generates Unitime XML import file for course catalog'
+    PARAMS = [
+
+        {'name': 'batch_size', 'type': int, 'default': 1000,
+         'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
+
+    ]
+
+    def run(self):
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import Donem, Ogrenci, Unit, Ders
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        term = Donem.objects.filter(guncel=True)[0]
+        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+        doc_type = '<!DOCTYPE courseCatalog PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseCatalog.dtd">'
+
+        batch_size = int(self.manager.args.batch_size)
+        count = Ders.objects.count()
+        rounds = int(count / batch_size) + 1
+
+        root = etree.Element('courseCatalog', campus="%s" % uni, term="%s" % term.ad,
+                             year="%s" % term.baslangic_tarihi.year)
+        # FIX for default row size in pyoko filter
+        for i in range(rounds):
+            for ders in Ders.objects.set_params(rows=1000, start=i * batch_size).filter():
+                # for student in students:
+                derselement = etree.SubElement(root, 'course', externalId="%s" % ders.key, courseNumber="%s" % ders.kod,
+                                               subject="%s" % ders.program.yoksis_no,
+                                               title="%s" % ders.ad)
+                etree.SubElement(derselement, 'courseCredit', creditType="collegiate", creditUnitType="semesterHours",
+                                 creditFormat="fixedUnit", fixedCredit="%s" % ders.yerel_kredisi)
+        # pretty string
+        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
+
+        if len(s):
+
+            current_date = datetime.datetime.now()
+            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+            if not os.path.exists(export_directory):
+                os.makedirs(export_directory)
+            out_file = open(export_directory + '/courseCatalogImport.xml', 'w+')
+            out_file.write("%s" % s)
+            print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+        else:
+            print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+
+
+class ExportCurriculaToXML(Command):
+    CMD_NAME = 'export_curricula'
+    HELP = 'Generates Unitime XML import file for curricula'
+    PARAMS = []
+
+    def run(self):
+
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import Donem, Ogrenci, Unit, Ders, Program
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        term = Donem.objects.filter(guncel=True)[0]
+        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+        program_list = Program.objects.filter()
+
+        '''
+        academicAreas Import File
+        '''
+
+        academic_area_doc_type = '<!DOCTYPE academicAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicArea.dtd">'
+        academic_classification_doc_type = '<!DOCTYPE academicClassifications PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicClassification.dtd">'
+        pos_major_doc_type = '<!DOCTYPE posMajors PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/PosMajor.dtd">'
+        doc_type = '<!DOCTYPE curricula PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Curricula_3_2.dtd">'
+
+        current_date = datetime.datetime.now()
+        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+        if not os.path.exists(export_directory):
+            os.makedirs(export_directory)
+
+        academic_area_root = etree.Element('academicAreas', campus="%s" % uni, term="%s" % term.ad,
+                                           year="%s" % term.baslangic_tarihi.year)
+        etree.SubElement(academic_area_root, 'academicArea', abbreviation='A', externalId='A', title="%s" % uni+' - '+term.ad)
+
+        academic_area_string = etree.tostring(academic_area_root, pretty_print=True, xml_declaration=True,
+                                              encoding='UTF-8', doctype="%s" % academic_area_doc_type)
+        out_file = open(export_directory + '/academicAreaImport.xml', 'w+')
+        out_file.write("%s" % academic_area_string)
+        print("Academic Area Import dosyası %s dizini altina kayit edilmistir" % export_directory)
+
+        '''
+        academicClassifications Import File
+        '''
+
+        academic_classification_root = etree.Element('academicClassifications', campus="%s" % uni, term="%s" % term.ad,
+                                                     year="%s" % term.baslangic_tarihi.year)
+        etree.SubElement(academic_classification_root, 'academicClassification', externalId="01", code="01", name="01")
+        academic_classification_string = etree.tostring(academic_classification_root, pretty_print=True,
+                                                        xml_declaration=True, encoding='UTF-8',
+                                                        doctype="%s" % academic_classification_doc_type)
+        out_file = open(export_directory + '/academicClassificationImport.xml', 'w+')
+        out_file.write("%s" % academic_classification_string)
+        print("Academic Classification Import dosyası %s dizini altina kayit edilmistir" % export_directory)
+
+
+        '''
+        posMajors Import File
+        '''
+        pos_major_root = etree.Element('posMajors', campus="%s" % uni, term="%s" % term.ad,
+                                                     year="%s" % term.baslangic_tarihi.year)
+        etree.SubElement(pos_major_root, 'posMajor', externalId="M1", code="M1",
+                         name="%s Major 1" % term.baslangic_tarihi.year, academicArea="A")
+        pos_major_string = etree.tostring(pos_major_root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                                                        doctype="%s" % academic_classification_doc_type)
+        out_file = open(export_directory + '/posMajorImport.xml', 'w+')
+        out_file.write("%s" % pos_major_string)
+        print("Pos Major Import dosyası %s dizini altina kayit edilmistir" % export_directory)
+
+
+        '''
+        curricula Import File
+        '''
+
+        root = etree.Element('curricula', campus="%s" % uni, term="%s" % term.ad,
+                             year="%s" % term.baslangic_tarihi.year)
+        # major = etree.SubElement(curriculum, 'major', code='M3')
+        for program in program_list:
+            ders_list = Ders.objects.filter(program=program).count()
+            if ders_list:
+                parent_yoksis_no = Unit.objects.filter(yoksis_no=program.yoksis_no)[0].parent_unit_no
+                #bolum = Unit.objects.filter(yoksis_no=parent_yoksis_no,unit_type='Bölüm')[0]
+                curriculum = etree.SubElement(root, 'curriculum')
+                etree.SubElement(curriculum, 'academicArea', abbreviation='A')
+                etree.SubElement(curriculum, 'department', code="%s" % parent_yoksis_no)
+                etree.SubElement(curriculum, 'major', code="M1")
+                classification = etree.SubElement(curriculum, 'classification', name="01", enrollment='2')
+                etree.SubElement(classification, 'academicClassification', code="01")
+                for program_ders in Ders.objects.filter(program=program):
+                    etree.SubElement(classification, 'course', subject="%s" % program.yoksis_no,
+                                     courseNbr="%s" % program_ders.kod)
+        # pretty string
+        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
+
+        if len(s):
+            out_file = open(export_directory + '/curricula.xml', 'w+')
+            out_file.write("%s" % s)
+            print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+        else:
+            print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
 
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'

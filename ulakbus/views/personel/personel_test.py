@@ -7,8 +7,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 import random
-from pyoko import form
-from zengine.lib.forms import JsonForm
+from zengine.forms import JsonForm
+from zengine.forms import fields
 from zengine.views.base import SimpleView, BaseView
 from zengine.views.crud import CrudView
 
@@ -17,9 +17,9 @@ class TCKNForm(JsonForm):
     class Meta:
         title = 'Yeni Personel'
 
-    tcno = form.String("TC No")
-    goto_hata = form.Button("Ekleme")
-    ekle = form.Button("Ekle")
+    tcno = fields.String("TC No")
+    goto_hata = fields.Button("Ekleme")
+    ekle = fields.Button("Ekle")
 
 
 class YeniPersonelEkle(BaseView):
@@ -54,8 +54,8 @@ class AtamaYap(CrudView):
         model = 'Kadro'
 
     class ObjectForm(JsonForm):
-        save_list = form.Button("Kaydet", cmd="save::list", flow="goto_service")
-        save_edit = form.Button("Kaydet ve Devam Et", cmd="save::devam_et", flow="goto_service")
+        save_list = fields.Button("Kaydet", cmd="save::list", flow="goto_service")
+        save_edit = fields.Button("Kaydet ve Devam Et", cmd="save::devam_et", flow="goto_service")
 
 
 class HataIncele(JsonForm):
@@ -65,8 +65,8 @@ class HataIncele(JsonForm):
                     "aklsjsd haskljdhasklj dhaskldh akdhaksj dajskh dgasjkhdg ajshgdasj dgas" \
                     "aslkd haskldhaskdhaskldhaskl dhaklsd"
 
-    restart = form.Button("Tekrar Dene", flow="hata_to_tcno")
-    cancel = form.Button("İşlemi İptal Et", flow="iptal_hata")
+    restart = fields.Button("Tekrar Dene", flow="hata_to_tcno")
+    cancel = fields.Button("İşlemi İptal Et", flow="iptal_hata")
 
 
 # class Iptal(JsonForm):

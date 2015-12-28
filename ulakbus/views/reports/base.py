@@ -9,8 +9,8 @@
 from io import BytesIO
 
 import six
-from pyoko import form
-from zengine.lib.forms import JsonForm
+from zengine.forms import JsonForm
+from zengine.forms import fields
 from zengine.views.base import BaseView
 import re
 try:
@@ -78,7 +78,7 @@ class Reporter(BaseView):
             self.printout()
 
     class ReportForm(JsonForm):
-        printout = form.Button("Yazdır", cmd="printout")
+        printout = fields.Button("Yazdır", cmd="printout")
 
     def show(self):
         objects = self.get_objects()

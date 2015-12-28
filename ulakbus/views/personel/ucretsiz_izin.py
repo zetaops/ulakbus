@@ -1,9 +1,8 @@
 # -*-  coding: utf-8 -*-
 
 from zengine.views.crud import CrudView, obj_filter
-from pyoko import form
-
-from zengine.lib.forms import JsonForm
+from zengine.forms import JsonForm
+from zengine.forms import fields
 from ulakbus.models.personel import Personel, UcretsizIzin
 from ulakbus.models.hitap import HizmetKayitlari
 from datetime import timedelta, date
@@ -22,20 +21,20 @@ class UcretsizIzinIslemleri(CrudView):
         ]
 
     class ListForm(JsonForm):
-        btn = form.Button("Ücretsiz İzine Ayır", next="izine_ayir", cmd="save")  # default
+        btn = fields.Button("Ücretsiz İzine Ayır", next="izine_ayir", cmd="save")  # default
 
     class IzinForm(JsonForm):
         class Meta:
             include = ['tip', 'baslangic_tarihi', 'bitis_tarihi', 'onay_tarihi', 'personel']
             title = "İzine Ayır"
 
-        kaydet = form.Button("Kaydet", next="izine_ayir", cmd="izine_ayir")
+        kaydet = fields.Button("Kaydet", next="izine_ayir", cmd="izine_ayir")
 
     class DonusForm(JsonForm):
         class Meta:
             include = ['donus_tarihi', 'donus_tip']
 
-        kaydet = form.Button("Kaydet", next="izin_donus", cmd="izin_donus")
+        kaydet = fields.Button("Kaydet", next="izin_donus", cmd="izin_donus")
 
     def goster(self):
         if 'id' in self.input:
@@ -51,10 +50,10 @@ class UcretsizIzinIslemleri(CrudView):
                     break
 
             if ucretsiz_izinde:
-                self.ListForm.btn = form.Button("Ücretsiz İzin Dönüşü", cmd="izin_donus",
+                self.ListForm.btn = fields.Button("Ücretsiz İzin Dönüşü", cmd="izin_donus",
                                                 object_id=self.current.task_data['izin_id'])
             else:
-                self.ListForm.btn = form.Button("Ücretsiz İzine Ayır", cmd="izine_ayir")
+                self.ListForm.btn = fields.Button("Ücretsiz İzine Ayır", cmd="izine_ayir")
         else:
             pass
 

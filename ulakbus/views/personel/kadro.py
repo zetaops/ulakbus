@@ -52,11 +52,10 @@
 #
 
 
-from pyoko import form
 from zengine.views.crud import CrudView, obj_filter
 
-from zengine.lib.forms import JsonForm
-
+from zengine.forms import JsonForm
+from zengine.forms import fields
 
 class KadroIslemleri(CrudView):
     SAKLI = 1
@@ -111,7 +110,7 @@ class KadroIslemleri(CrudView):
                 }
             ]
 
-        save_edit = form.Button("Kaydet")
+        save_edit = fields.Button("Kaydet")
 
     #
     # ObjectForm birden cok view da farklilasiyorsa metod icinde bu sekilde kullanilmali.

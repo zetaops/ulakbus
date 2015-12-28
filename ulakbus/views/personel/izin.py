@@ -1,9 +1,6 @@
 # -*-  coding: utf-8 -*-
 
-from zengine.views.crud import CrudView, obj_filter
-from pyoko import form
-
-from zengine.lib.forms import JsonForm
+from zengine.views.crud import CrudView
 from ulakbus.models.personel import Personel
 from ulakbus.models.hitap import HizmetKayitlari, HizmetBirlestirme
 from datetime import timedelta, date
