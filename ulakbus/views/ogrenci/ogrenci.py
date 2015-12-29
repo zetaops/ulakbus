@@ -13,7 +13,7 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from ulakbus.models.ogrenci import Ogrenci
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -117,3 +117,16 @@ def ogrenci_bilgileri(current):
             "fields": iletisim_bilgileri
         }
     ]
+
+class BelgeForm(JsonForm):
+    class Meta:
+        include = ["Belgeler"]
+
+    kaydet = form.Button("Kaydet", cmd="save")
+
+class KayitBelgeler(CrudView):
+    class Meta:
+        model = "OgrenciProgram"
+
+    def belge_form(self):
+        self.form_out(BelgeForm(self.object, current = self.current))
