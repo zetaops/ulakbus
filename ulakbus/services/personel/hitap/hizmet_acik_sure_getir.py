@@ -61,7 +61,7 @@ class HizmetAcikSureGetir(HITAPService):
         try:
             husus_kodu = int(husus[0])
         except ValueError:
-            self.logger.info("Husus Kodu gecersiz.")
+            self.logger.info("Husus Kodu tam sayi olmali.")
             return 0, ""
 
         # sadece husus kodu icerenler

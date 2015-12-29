@@ -17,10 +17,26 @@ H_PASS = os.environ["HITAP_PASS"]
 
 
 class HITAPService(Service):
+    """
+    HITAP Zato Servisi
+    """
+
     def __init__(self):
-        self.service_dict = {}
+        """
+        :param service_name: HITAP servisi adi
+        :type service_name: str
+
+        :param bean_name: HITAP servisi bean adi
+        :type bean_name: str
+
+        :param service_dict: HITAP servisinden gelen veriler icin sozluk. Servisten gelen alanlarla modeldeki alanlarin
+        eslendigi sozlugu, tarih filtresi ve diger filtrelerin uygulanacacagi alanlari tutan listeleri icerir.
+        :type service_dict: dict
+        """
+
         self.service_name = ''
         self.bean_name = ''
+        self.service_dict = {}
         super(HITAPService, self).__init__()
 
     def handle(self):
@@ -30,8 +46,15 @@ class HITAPService(Service):
         self.request_json(tckn, conn)
 
     def request_json(self, tckn, conn):
-        # connects with soap client to the HITAP
+        """
+        :param tckn: Turkiye Cumhuriyeti Kimlik Numarasi
+        :param conn: HITAP connection with soap
+
+        :return: Servisten gelen verileri iceren JSON nesnesi
+        """
+
         try:
+            # soap client ile HITAP a baglanma
             with conn.client() as client:
                 hitap_service = getattr(client.service, self.service_name)(H_USER, H_PASS, tckn)
                 service_bean = getattr(hitap_service, self.bean_name)
@@ -40,6 +63,7 @@ class HITAPService(Service):
 
                 hitap_dict = self.create_hitap_dict(service_bean)
 
+                # veri bicimi duzenlenmesi gereken alanlara filtre uygulanmasi
                 if 'date_filter' in self.service_dict:
                     self.check_filter(hitap_dict)
                 self.custom_filter(hitap_dict)
@@ -55,7 +79,12 @@ class HITAPService(Service):
             self.logger.info("No internet connection!")
 
     def create_hitap_dict(self, service_bean):
-        # matching fields and HITAP service values
+        """
+        Modeldeki alanlarla HITAP servisinden donen verilerin eslenmesi
+
+        :param service_bean: HITAP servis bean
+        :return: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
+        """
         hitap_dict = []
 
         for record in service_bean:
@@ -67,10 +96,19 @@ class HITAPService(Service):
         return hitap_dict
 
     def date_filter(self, hitap_dict):
+        """
+        Sozlukteki (hitap_dict) tarih alanlarinin uygun bicime getirilmesi
+
+        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
+        :return: hitap_dict in tarih alanlarinin uygun bicimde guncellenmis surumu
+        """
         date_filter_fields = self.service_dict['date_filter_fields']
 
         for field in date_filter_fields:
             hitap_dict[field] = '01.01.1900' if hitap_dict[field] == "01.01.0001" else hitap_dict[field]
 
     def custom_filter(self, hitap_dict):
+        """
+        Sozluge (hitap_dict) uygulanacak ek bicimlendirmelerin gerceklestirimi
+        """
         pass
