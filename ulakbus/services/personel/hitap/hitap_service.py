@@ -61,7 +61,7 @@ class HITAPService(Service):
 
                 self.logger.info("%s started to work." % (self.service_dict['service']))
 
-                hitap_dict = self.create_hitap_dict(service_bean)
+                hitap_dict = self.create_hitap_dict(service_bean, self.service_dict['fields'])
 
                 # veri bicimi duzenlenmesi gereken alanlara filtre uygulanmasi
                 if 'date_filter' in self.service_dict:
@@ -78,19 +78,17 @@ class HITAPService(Service):
         except urllib2.URLError:
             self.logger.info("No internet connection!")
 
-    def create_hitap_dict(self, service_bean):
+    def create_hitap_dict(self, service_bean, fields):
         """
         Modeldeki alanlarla HITAP servisinden donen verilerin eslenmesi
 
         :param service_bean: HITAP servis bean
+        :param fields: Modeldeki alanlarin HITAP taki karsiliklarini tutan map
+
         :return: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
         """
-        hitap_dict = []
 
-        for record in service_bean:
-            hitap_dict.append({
-                k: getattr(record, v) for k, v in iteritems(self.service_dict['fields'])
-                })
+        hitap_dict = [{k: getattr(record, v) for k, v in iteritems(fields)} for record in service_bean]
 
         self.logger.info("hitap_dict created.")
         return hitap_dict

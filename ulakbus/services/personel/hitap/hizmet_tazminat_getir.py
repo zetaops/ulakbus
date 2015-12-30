@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from hitap_service import HITAPService
+from ulakbus.services.personel.hitap.hitap_service import HITAPService
 
 
 class HizmetTazminatGetir(HITAPService):
