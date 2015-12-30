@@ -29,8 +29,8 @@ class HITAPService(Service):
         :param bean_name: HITAP servisi bean adi
         :type bean_name: str
 
-        :param service_dict: HITAP servisinden gelen veriler icin sozluk. Servisten gelen alanlarla modeldeki alanlarin
-        eslendigi sozlugu, tarih filtresi ve diger filtrelerin uygulanacacagi alanlari tutan listeleri icerir.
+        :param service_dict: HITAP servisinden gelen veriler icin sozluk. Servisten gelen alanlarla
+        modeldeki alanlarin eslendigi sozlugu ve tarih filtresi uygulanacak alanlarin listesini icerir.
         :type service_dict: dict
         """
 

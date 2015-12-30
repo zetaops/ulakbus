@@ -1,86 +1,51 @@
-# -*- coding: utf-8 -*-
+# -*-  coding: utf-8 -*-
 
 # Copyright (C) 2015 ZetaOps Inc.
+#
+# This file is licensed under the GNU General Public License v3
+# (GPLv3).  See LICENSE.txt for details.
 
-__author__ = 'Ozgur Firat Cinar'
-
-from zato.server.service import Service
-import os
-import urllib2
-from json import dumps
-
-# os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
-# from ulakbus.models.hitap import HizmetKayitlari
-
-H_USER = os.environ["HITAP_USER"]
-H_PASS = os.environ["HITAP_PASS"]
+from ulakbus.services.personel.hitap.hitap_service import HITAPService
 
 
-class HizmetCetveliGetir(Service):
+class HizmetCetveliGetir(HITAPService):
     """
     HITAP HizmetCetveliGetir Zato Servisi
     """
 
     def handle(self):
-        tckn = self.request.payload['tckn']
-        conn = self.outgoing.soap['HITAP'].conn
+        self.service_name = 'HizmetCetvelSorgula'
+        self.bean_name = 'HizmetCetveliServisBean'
+        self.service_dict = {
+            'fields': {
+                'baslama_tarihi': 'baslamaTarihi',
+                'bitis_tarihi': 'bitisTarihi',
+                'emekli_derece': 'emekliDerece',
+                'emekli_kademe': 'emekliKademe',
+                'gorev': 'gorev',
+                'unvan_kod': 'unvanKod',
+                'hizmet_sinifi': 'hizmetSinifi',
+                'kayit_no': 'kayitNo',
+                'kazanilmis_hak_ayligi_derece': 'kazanilmisHakAyligiDerece',
+                'kazanilmis_hak_ayligi_kademe': 'kazanilmisHakAyligiKademe',
+                'odeme_derece': 'odemeDerece',
+                'odeme_kademe': 'odemeKademe',
+                'emekli_ek_gosterge': 'emekliEkGosterge',
+                'kadro_derece': 'kadroDerece',
+                'kazanilmis_hak_ayligi_ekgosterge': 'kazanilmisHakAyligiEkGosterge',
+                'odeme_ekgosterge': 'odemeEkGosterge',
+                'sebep_kod': 'sebepKod',
+                'tkcn': 'tckn',
+                'ucret':'ucret',
+                'yevmiye': 'yevmiye',
+                'kurum_onay_tarihi': 'kurumOnayTarihi'
+            },
+            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi']
+        }
+        super(HizmetCetveliGetir, self).handle()
 
-        # connects with soap client to the HITAP
-        try:
-            with conn.client() as client:
-                service_bean = client.service.HizmetCetvelSorgula(H_USER, H_PASS,
-                                                                  tckn).HizmetCetveliServisBean
-                self.logger.info("HizmetCetveliGetir started to work.")
-
-                hitap_dict = {}
-                for record in range(0, len(service_bean)):
-                    hitap_dict[service_bean[record].kayitNo] = {
-                        'baslama_tarihi': '01.01.1900' if
-                        service_bean[record].baslamaTarihi == "01.01.0001" else
-                        service_bean[record].baslamaTarihi,
-                        'bitis_tarihi': '01.01.1900' if
-                        service_bean[record].bitisTarihi == "01.01.0001" else
-                        service_bean[record].bitisTarihi,
-                        'emekli_derece': service_bean[record].emekliDerece,
-                        'emekli_kademe': service_bean[record].emekliKademe,
-                        'gorev': service_bean[record].gorev,
-                        'unvan_kod': service_bean[record].unvanKod,
-                        'hizmet_sinifi': self.hizmet_sinifi_int_kontrol(service_bean[record].hizmetSinifi),
-                        'kayit_no': service_bean[record].kayitNo,
-                        'kazanilmis_hak_ayligi_derece': service_bean[
-                            record].kazanilmisHakAyligiDerece,
-                        'kazanilmis_hak_ayligi_kademe': service_bean[
-                            record].kazanilmisHakAyligiKademe,
-                        'odeme_derece': service_bean[record].odemeDerece,
-                        'odeme_kademe': service_bean[record].odemeKademe,
-                        'emekli_ek_gosterge': service_bean[record].emekliEkGosterge,
-                        'kadro_derece': service_bean[record].kadroDerece,
-                        'kazanilmis_hak_ayligi_ekgosterge': service_bean[
-                            record].kazanilmisHakAyligiEkGosterge,
-                        'odeme_ekgosterge': service_bean[record].odemeEkGosterge,
-                        'sebep_kod': service_bean[record].sebepKod,
-                        'tckn': service_bean[record].tckn,
-                        'ucret': service_bean[record].ucret,
-                        'yevmiye': service_bean[record].yevmiye,
-                        'kurum_onay_tarihi': '01.01.1900' if
-                        service_bean[record].kurumOnayTarihi == "01.01.0001" else service_bean[
-                            record].kurumOnayTarihi
-                    }
-                self.logger.info("hitap_dict created.")
-
-            response_json = dumps(hitap_dict)
-            return_dict = {"status": "ok", "result": response_json}
-            # self.response.payload = dumps(return_dict)
-            self.response.payload = {"status": "ok", "result": response_json}
-            # self.response.payload["status"] = "ok"
-            # self.response.payload["result"] = response_json
-
-        except AttributeError:
-            self.response.payload["status"] = "error"
-            self.response.payload["result"] = "TCKN may be wrong!"
-            self.logger.info("TCKN may be wrong!")
-        except urllib2.URLError:
-            self.logger.info("No internet connection!")
+    def custom_filter(self, hitap_dict):
+        hitap_dict['hizmet_sinifi'] = self.hizmet_sinifi_int_kontrol(hitap_dict['hizmet_sinifi'])
 
     def hizmet_sinifi_int_kontrol(self, hs):
         """
