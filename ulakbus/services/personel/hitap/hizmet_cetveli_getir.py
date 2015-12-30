@@ -88,6 +88,7 @@ class HizmetCetveliGetir(HITAPService):
             "ÖY": 28,
             "SÖZ": 29
         }
+
         if type(hs) is str:
             return hizmet_siniflari[hs.strip()]
         elif type(hs) is int and hs in range(1, 30):
