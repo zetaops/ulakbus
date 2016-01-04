@@ -7,7 +7,9 @@ from selenium.webdriver.common.by import By
 
 class Logging(object):
     driver = webdriver.Firefox()
-    driver.get('http://nightly.ulakbus.net/#/dashboard')
+    # driver.get('http://nightly.ulakbus.net/#/dashboard')
+    # driver.get('http://dev.zetaops.io:18180/#/dashboard')
+    driver.get('http://ulakbus.net/#/dashboard')
     driver.implicitly_wait(10)
 
     def do_login(self):

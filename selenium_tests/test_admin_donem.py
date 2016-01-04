@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from test_settings import Settings
+import time
 
 
 class TestCase(Settings):
@@ -8,6 +9,7 @@ class TestCase(Settings):
         self.do_settings()
         # Admin'e tikliyor.
         self.driver.find_element_by_css_selector('li.ng-binding:nth-child(4) > a:nth-child(1)').click()
+        time.sleep(5)
         # Donem'e tikliyor.
         self.driver.find_element_by_css_selector('li.ng-scope:nth-child(9) > a:nth-child(1)').click()
         # Backend ayarlari degistirildigi icin tekrar kullanicinin login olmasini bekliyor.
