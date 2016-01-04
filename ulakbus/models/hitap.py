@@ -35,6 +35,8 @@ class NufusKayitlari(Model):
 
     # personel = Personel()
 
+    # TODO: Personele gore unique olmali
+
     class Meta:
         app = 'Personel'
         verbose_name = "Nüfus Bilgileri"
@@ -47,8 +49,8 @@ class HizmetKurs(Model):
     kurs_ogrenim_suresi = field.Integer("Kurs Öğrenim Süresi", index=True)
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
     kurs_nevi = field.Integer("Kurs Nevi", index=True, choices="kurs_nevi")
-    bolum_ad = field.Integer("Bölüm Adı", index=True, choices="bolum_adi")
-    okul_ad = field.Integer("Okul Adı", index=True, choices="okul_adi")
+    bolum_ad = field.Integer("Bölüm Adı", index=True, choices="bolum_adi")  # TODO: serviste karsiligi yok
+    okul_ad = field.Integer("Okul Adı", index=True, choices="okul_adi")  # TODO: servisten gelen string
     ogrenim_yeri = field.String("Öğrenim Yeri", index=True)
     denklik_tarihi = field.Date("Denklik Tarihi", index=True, format="%d.%m.%Y")
     denklik_okulu = field.String("Denklik Okulu", index=True)
@@ -141,9 +143,10 @@ class HizmetBirlestirme(Model):
     bag_kur_meslek = field.String("Bağ-Kur Meslek", index=True)
     ulke_kod = field.Integer("Ülke Kodu", index=True)
     banka_sandik_kod = field.Integer("Banka Sandık Kodu", index=True, choices="banka_kod")
-    kidem_tazminat_odeme_durumu = field.String("Kıdem Tazminat Ödeme Durumu", index=True)
-    ayrilma_nedeni = field.Integer("Ayrılma Nedeni", index=True)
-    kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
+    kidem_tazminat_odeme_durumu = field.String("Kıdem Tazminat Ödeme Durumu", index=True,
+                                               choices="kidem_tazminat_odeme_durumu")
+    ayrilma_nedeni = field.Integer("Ayrılma Nedeni", index=True)  # TODO: servisten str geliyor
+    kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")  # TODO: servisten str geliyor
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     sync = field.Integer("Senkronize", index=True)
     personel = Personel()

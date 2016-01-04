@@ -1344,5 +1344,19 @@
       "tr":"Bahce Bitkileri",
       "en":"Bahce Bitkileri"
     }
+  },
+  "kidem_tazminat_odeme_durumu": {
+    "0": {
+      "tr": "HAYIR",
+      "en": ""
+    },
+    "1": {
+      "tr": "EVET",
+      "en": ""
+    },
+    "2": {
+      "tr": "BELİRLENEMEDİ",
+      "en": ""
+    }
   }
 }
