@@ -312,7 +312,7 @@ class Ogrenci(Model):
     anne_meslek = field.String("Annenizin Mesleği", index=True)
     anne_aylik_kazanc = field.Integer("Annenizin Aylık Kazancı", index=True)
     masraf_sponsor = field.Integer("Masraflarınız Kim Tarafından Karşılanacak", index=True, choices="masraf_sponsorlar")
-    emeklilik_durumu = field.Integer("Velinizin Emeklilik Durumu", index=True, choices="emeklilik_durumu")
+    emeklilik_durumu = field.String("Velinizin Emeklilik Durumu", index=True)
     kiz_kardes_sayisi = field.Integer("Kız Kardeş Sayısı", index=True)
     erkek_kardes_sayisi = field.Integer("Erkek Kardeş Sayısı", index=True)
     ogrenim_goren_kardes_sayisi = field.Integer("Öğrenim Gören Kardeş Sayısı", index=True)

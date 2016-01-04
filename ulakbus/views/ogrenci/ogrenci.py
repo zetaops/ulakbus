@@ -118,11 +118,11 @@ def ogrenci_bilgileri(current):
         }
     ]
 
-class BelgeForm(JsonForm):
+class BelgeForm(forms.JsonForm):
     class Meta:
         include = ["Belgeler"]
 
-    kaydet = form.Button("Kaydet", cmd="save")
+    kaydet = fields.Button("Kaydet", cmd="save")
 
 class KayitBelgeler(CrudView):
     class Meta:

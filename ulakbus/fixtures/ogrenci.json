@@ -64,7 +64,7 @@
 		},
 		"4" : {
 			"tr" : "Devamsızlıktan Kaldı",
-			"en"
+			"en" : ""
 		},
 		"5" : {
 			"tr" : "Muaf",
@@ -137,7 +137,7 @@
 		},
 		"9" : {
 			"tr" : "Öğrenme Güçlüğü",
-			"en"
+			"en" : ""
 		},
 		"10" : {
 			"tr" : "Kronik Sağlık Sorunları",
@@ -153,7 +153,7 @@
 		},
 		"13" : {
 			"tr" : "Diğer",
-			"en"
+			"en" : ""
 		}
 	},
 	"evet_hayir" : {
@@ -173,7 +173,7 @@
 		},
 		"2" : {
 			"tr" : "Özel Yurt",
-			"en"
+			"en" : ""
 		},
 		"3" : {
 			"tr" : "Öğrenci Evi",
@@ -203,7 +203,7 @@
 		},
 		"5" : {
 			"tr" : "YGS 5",
-			"en"
+			"en" : ""
 		},
 		"6" : {
 			"tr" : "YGS 6",
