@@ -379,10 +379,13 @@ class ExportStaffToXML(Command):
                                      year="%s" % term.baslangic_tarihi.year)
             for staffmember in stafflist:
                 unvan = self.acadTitle(title=staffmember.unvan)
+                staff_dep = staffmember.birim_no
+                if staffmember.birim_no:
+                    staff_dep = Unit.objects.filter(yoksis_no=staffmember.birim_no)[0].parent_unit_no
 
                 etree.SubElement(root, 'staffMember', externalId="%s" % staffmember.key, \
                                  firstName="%s" % staffmember.ad, lastName="%s" % staffmember.soyad, \
-                                 department="%s" % staffmember.birim_no, acadTitle="%s" % unvan[0], \
+                                 department="%s" % staff_dep, acadTitle="%s" % unvan[0], \
                                  positionType="%s" % unvan[1])
         # pretty string
         s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
