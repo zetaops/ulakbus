@@ -177,6 +177,6 @@ class DersSubelendirme(CrudView):
     def bilgi_ver(self):
         sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
         okutmanlar = [s.okutman.__unicode__() for s in sbs]
-        self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Mesaj Iletildi',
-            "msg": 'Şubelendirme Bilgileri şu hocalara iletildi: %s' % ", ".join(okutmanlar)}
+        self.current.set_message(type='info', title='Mesaj Iletildi',
+                                 msg='Şubelendirme Bilgileri şu hocalara iletildi: %s' % ", ".join(
+                                     okutmanlar))
