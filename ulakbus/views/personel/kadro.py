@@ -57,6 +57,55 @@ from zengine.views.crud import CrudView, obj_filter
 from zengine.forms import JsonForm
 from zengine.forms import fields
 
+
+class KadroObjectForm(JsonForm):
+    class Meta:
+        # durum alanini formdan cikar. kadrolar sadece sakli olarak kaydedilebilir.
+        exclude = ['durum', ]
+
+        grouping = [
+            {
+                "layout": "4",
+                "groups": [
+                    {
+                        "group_title": "Ünvan ve Derece",
+                        "items": ['unvan', 'derece', 'unvan_kod'],
+                        "collapse": True,
+                    }
+                ]
+            },
+            {
+                "layout": "4",
+                "groups": [
+                    {
+                        "group_title": "Diğer",
+                        "items": ['kadro_no', 'aciklama', 'birim_id']
+                    }
+                ]
+            },
+            {
+                "layout": "7",
+                "groups": [
+                    {
+                        "items": ['kaydet']
+                    }
+                ]
+            }
+        ]
+        constraints = [
+            {
+                'cons': [{'id': 'unvan_kod', 'cond': 'exists'}],
+                'do': 'change_fields', 'fields': [{'unvan': None}]
+            },
+            {
+                'cons': [{'id': 'unvan', 'cond': 'exists'}],
+                'do': 'change_fields', 'fields': [{'unvan_kod': None}]
+            }
+        ]
+
+    save_edit = fields.Button("Kaydet")
+
+
 class KadroIslemleri(CrudView):
     SAKLI = 1
     IZINLI = 2
@@ -72,45 +121,9 @@ class KadroIslemleri(CrudView):
         object_actions = [
             # {'fields': [0, ], 'cmd': 'show', 'mode': 'normal', 'show_as': 'link'},
         ]
-
-    class ObjectForm(JsonForm):
-        class Meta:
-            # durum alanini formdan cikar. kadrolar sadece sakli olarak kaydedilebilir.
-            exclude = ['durum', ]
-
-            grouping = [
-                {
-                    "layout": "4",
-                    "groups": [
-                        {
-                            "group_title": "Ünvan ve Derece",
-                            "items": ['unvan', 'derece', 'unvan_kod'],
-                            "collapse": True,
-                        }
-                    ]
-                },
-                {
-                    "layout": "4",
-                    "groups": [
-                        {
-                            "group_title": "Diğer",
-                            "items": ['kadro_no', 'aciklama', 'birim_id']
-                        }
-                    ]
-                }
-            ]
-            constraints = [
-                {
-                    'cons': [{'id': 'unvan_kod', 'cond': 'exists'}],
-                    'do': 'change_fields', 'fields': [{'unvan': None}]
-                },
-                {
-                    'cons': [{'id': 'unvan', 'cond': 'exists'}],
-                    'do': 'change_fields', 'fields': [{'unvan_kod': None}]
-                }
-            ]
-
-        save_edit = fields.Button("Kaydet")
+    def __init__(self, current):
+        self.ObjectForm = KadroObjectForm
+        super(KadroIslemleri, self).__init__(current)
 
     #
     # ObjectForm birden cok view da farklilasiyorsa metod icinde bu sekilde kullanilmali.
@@ -135,7 +148,7 @@ class KadroIslemleri(CrudView):
 
     def kadro_sil(self):
         # sadece sakli kadrolar silinebilir
-        assert self.object.durum != self.SAKLI, "attack detected, should be logged/banned"
+        assert self.object.durum == self.SAKLI, "attack detected, should be logged/banned"
         self.delete()
 
     def sakli_izinli_degistir(self):
@@ -180,7 +193,7 @@ class KadroIslemleri(CrudView):
         if obj.durum == self.IZINLI:
             result['actions'].append(
                     {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
-        return result
+        # return result
 
     @obj_filter
     def duzenlenebilir_veya_silinebilir_kadro(self, obj, result):
