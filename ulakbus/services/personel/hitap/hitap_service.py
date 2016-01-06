@@ -59,19 +59,20 @@ class HITAPService(Service):
                 hitap_service = getattr(client.service, self.service_name)(H_USER, H_PASS, tckn)
                 service_bean = getattr(hitap_service, self.bean_name)
 
-                self.logger.info("%s started to work." % (self.service_dict['service']))
+                self.logger.info("%s started to work." % self.service_name)
 
                 hitap_dict = self.create_hitap_dict(service_bean, self.service_dict['fields'])
 
                 # veri bicimi duzenlenmesi gereken alanlara filtre uygulanmasi
                 if 'date_filter' in self.service_dict:
-                    self.check_filter(hitap_dict)
+                    self.date_filter(hitap_dict)
                 self.custom_filter(hitap_dict)
 
             response_json = dumps(hitap_dict)
             self.response.payload = {"status": "ok", "result": response_json}
 
-        except AttributeError:
+        except AttributeError as e:
+            self.logger.info("AttributeError: %s" % e)
             self.response.payload["status"] = "error"
             self.response.payload["result"] = "TCKN may be wrong!"
             self.logger.info("TCKN may be wrong!")
@@ -100,10 +101,10 @@ class HITAPService(Service):
         :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
         :return: hitap_dict in tarih alanlarinin uygun bicimde guncellenmis surumu
         """
-        date_filter_fields = self.service_dict['date_filter_fields']
 
-        for field in date_filter_fields:
-            hitap_dict[field] = '01.01.1900' if hitap_dict[field] == "01.01.0001" else hitap_dict[field]
+        for record in hitap_dict:
+            for field in self.service_dict['date_filter']:
+                record[field] = '01.01.1900' if record[field] == "01.01.0001" else record[field]
 
     def custom_filter(self, hitap_dict):
         """

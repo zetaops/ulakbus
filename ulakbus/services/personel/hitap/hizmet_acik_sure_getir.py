@@ -18,6 +18,7 @@ class HizmetAcikSureGetir(HITAPService):
         self.bean_name = 'HizmetAcikSureServisBean'
         self.service_dict = {
             'fields': {
+                'tckn': 'Tckn',
                 'kayit_no': 'kayitNo',
                 'acik_sekil': 'acikSekil',
                 'durum': 'durum',
@@ -43,8 +44,9 @@ class HizmetAcikSureGetir(HITAPService):
         super(HizmetAcikSureGetir, self).handle()
 
     def custom_filter(self, hitap_dict):
-        husus = hitap_dict['husus']
-        hitap_dict['husus'], hitap_dict['husus_aciklama'] = self.husus_aciklama_kontrol(husus)
+        for record in hitap_dict:
+            husus = record['husus']
+            record['husus'], record['husus_aciklama'] = self.husus_aciklama_kontrol(husus)
 
     def husus_aciklama_kontrol(self, husus):
         """

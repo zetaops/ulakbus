@@ -18,6 +18,7 @@ class HizmetBirlestirmeGetir(HITAPService):
         self.bean_name = 'HizmetBirlestirmeServisBean'
         self.service_dict = {
             'fields': {
+                'tckn': 'Tckn',
                 'kayit_no': 'kayitNo',
                 'sgk_nevi': 'sgkNevi',
                 'sgk_sicil_no': 'sgkSicilNo',
@@ -39,7 +40,8 @@ class HizmetBirlestirmeGetir(HITAPService):
         super(HizmetBirlestirmeGetir, self).handle()
 
     def custom_filter(self, hitap_dict):
-        hitap_dict['kidem_tazminat_odeme_durumu'] = self.kidem_durum_kontrol(hitap_dict['kidem_tazminat_odeme_durumu'])
+        for record in hitap_dict:
+            record['kidem_tazminat_odeme_durumu'] = self.kidem_durum_kontrol(record['kidem_tazminat_odeme_durumu'])
 
     def kidem_durum_kontrol(self, kidem_durum):
         """

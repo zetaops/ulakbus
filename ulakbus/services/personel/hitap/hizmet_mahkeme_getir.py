@@ -18,6 +18,7 @@ class HizmetMahkemeGetir(HITAPService):
         self.bean_name = 'HizmetMahkemeServisBean'
         self.service_dict = {
             'fields': {
+                'tckn': 'Tckn',
                 'kayit_no': 'kayitNo',
                 'mahkeme_ad': 'mahkemeAd',
                 'sebep': 'sebep',  # TODO: (bkz:Açıklamalar-9.madde)

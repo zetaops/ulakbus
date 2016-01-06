@@ -18,6 +18,7 @@ class HizmetCetveliGetir(HITAPService):
         self.bean_name = 'HizmetCetveliServisBean'
         self.service_dict = {
             'fields': {
+                'tckn': 'Tckn',
                 'baslama_tarihi': 'baslamaTarihi',
                 'bitis_tarihi': 'bitisTarihi',
                 'emekli_derece': 'emekliDerece',
@@ -35,7 +36,6 @@ class HizmetCetveliGetir(HITAPService):
                 'kazanilmis_hak_ayligi_ekgosterge': 'kazanilmisHakAyligiEkGosterge',
                 'odeme_ekgosterge': 'odemeEkGosterge',
                 'sebep_kod': 'sebepKod',
-                'tkcn': 'tckn',
                 'ucret':'ucret',
                 'yevmiye': 'yevmiye',
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
@@ -45,11 +45,12 @@ class HizmetCetveliGetir(HITAPService):
         super(HizmetCetveliGetir, self).handle()
 
     def custom_filter(self, hitap_dict):
-        hitap_dict['hizmet_sinifi'] = self.hizmet_sinifi_int_kontrol(hitap_dict['hizmet_sinifi'])
+        for record in hitap_dict:
+            record['hizmet_sinifi'] = self.hizmet_sinifi_int_kontrol(record['hizmet_sinifi'])
 
     def hizmet_sinifi_int_kontrol(self, hs):
         """
-        Bu metod ilgili HITAP servisinin hizmet_sinifi alaninin, hem 1, 2, 3 ... 29 gibi integer degerler hem de
+        Bu metot ilgili HITAP servisinin hizmet_sinifi alaninin, hem 1, 2, 3 ... 29 gibi integer degerler hem de
         GIH, MIAH, ... SOZ gibi string almasi problemini duzeltmek icindir.
 
         :param hs: hitaptan donen hizmet sinifi
@@ -57,42 +58,49 @@ class HizmetCetveliGetir(HITAPService):
         :return int: hitap sinifi int or 0
 
         """
+
+        # TODO: key'lerin unicode olarak tutulmasi uygun mu
         hizmet_siniflari = {
-            "GİH": 1,
-            "MİAH": 2,
-            "SH": 3,
-            "TH": 4,
-            "EÖH": 5,
-            "AH": 6,
-            "EH": 7,
-            "DH": 8,
-            "YH": 9,
-            "MİT": 10,
-            "AHS": 11,
-            "BB": 12,
-            "CU": 13,
-            "CUM": 14,
-            "DE": 15,
-            "DVS": 16,
-            "HS": 17,
-            "MB": 18,
-            "MV": 19,
-            "ÖÜ": 20,
-            "SAY": 21,
-            "TBM": 22,
-            "TRT": 23,
-            "TSK": 24,
-            "YÖK": 25,
-            "YSH": 26,
-            "ÖGO": 27,
-            "ÖY": 28,
-            "SÖZ": 29
+            u"GİH": 1,
+            u"MİAH": 2,
+            u"SH": 3,
+            u"TH": 4,
+            u"EÖH": 5,
+            u"AH": 6,
+            u"EH": 7,
+            u"DH": 8,
+            u"YH": 9,
+            u"MİT": 10,
+            u"AHS": 11,
+            u"BB": 12,
+            u"CU": 13,
+            u"CUM": 14,
+            u"DE": 15,
+            u"DVS": 16,
+            u"HS": 17,
+            u"MB": 18,
+            u"MV": 19,
+            u"ÖÜ": 20,
+            u"SAY": 21,
+            u"TBM": 22,
+            u"TRT": 23,
+            u"TSK": 24,
+            u"YÖK": 25,
+            u"YSH": 26,
+            u"ÖGO": 27,
+            u"ÖY": 28,
+            u"SÖZ": 29
         }
 
-        if type(hs) is str:
-            return hizmet_siniflari[hs.strip()]
-        elif type(hs) is int and hs in range(1, 30):
-            return hs
-        else:
-            self.logger.info("HIZMET SINIFINI KONTROL EDIN")
-            return 0
+        try:
+            # eger int olabiliyorsa dogrudan dondur
+            return int(hs)
+
+        except ValueError:
+            # int degilse  class 'suds.sax.text.Text' tipinde sozlukten karsiligini bul
+            try:
+                return hizmet_siniflari[hs.strip()]
+            except KeyError:
+                # TODO: admin'e bildirim gitmesi lazim
+                self.logger.info("Hizmet Sinifini (%s) Kontrol Edin!", hs)
+                return 0
