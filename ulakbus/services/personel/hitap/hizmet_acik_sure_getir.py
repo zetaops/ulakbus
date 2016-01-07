@@ -18,7 +18,7 @@ class HizmetAcikSureGetir(HITAPService):
         self.bean_name = 'HizmetAcikSureServisBean'
         self.service_dict = {
             'fields': {
-                'tckn': 'Tckn',
+                'tckn': 'tckn',
                 'kayit_no': 'kayitNo',
                 'acik_sekil': 'acikSekil',
                 'durum': 'durum',

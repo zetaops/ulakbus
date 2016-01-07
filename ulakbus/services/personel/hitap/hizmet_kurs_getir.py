@@ -18,11 +18,12 @@ class HizmetKursGetir(HITAPService):
         self.bean_name = 'HizmetEgitimKursServisBean'
         self.service_dict = {
             'fields': {
-                'tckn': 'Tckn',
+                'tckn': 'tckn',
                 'kayit_no': 'kayitNo',
                 'kurs_ogrenim_suresi': 'kursOgrenimSuresi',
                 'mezuniyet_tarihi': 'mezuniyetTarihi',
                 'kurs_nevi': 'kursNevi',
+                'bolum_ad': 'bolumAd',
                 'okul_ad': 'okulAd',
                 'ogrenim_yeri': 'ogrenimYeri',
                 'denklik_tarihi': 'denklikTarihi',

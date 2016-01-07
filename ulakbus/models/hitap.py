@@ -145,8 +145,8 @@ class HizmetBirlestirme(Model):
     banka_sandik_kod = field.Integer("Banka Sandık Kodu", index=True, choices="banka_kod")
     kidem_tazminat_odeme_durumu = field.String("Kıdem Tazminat Ödeme Durumu", index=True,
                                                choices="kidem_tazminat_odeme_durumu")
-    ayrilma_nedeni = field.Integer("Ayrılma Nedeni", index=True)  # TODO: servisten str geliyor
-    kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")  # TODO: servisten str geliyor
+    ayrilma_nedeni = field.String("Ayrılma Nedeni", index=True)
+    kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     sync = field.Integer("Senkronize", index=True)
     personel = Personel()

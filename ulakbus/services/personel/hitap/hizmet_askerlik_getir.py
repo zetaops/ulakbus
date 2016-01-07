@@ -18,7 +18,7 @@ class HizmetAskerlikGetir(HITAPService):
         self.bean_name = 'HizmetAskerlikServisBean'
         self.service_dict = {
             'fields': {
-                'tckn': 'Tckn',
+                'tckn': 'tckn',
                 'kayit_no': 'kayitNo',
                 'askerlik_nevi': 'askerlikNevi',
                 'baslama_tarihi': 'baslamaTarihi',
@@ -28,8 +28,8 @@ class HizmetAskerlikGetir(HITAPService):
                 'astegmen_nasp_tarihi': 'astegmenNaspTarihi',
                 'tegmen_nasp_tarihi': 'tegmenNaspTarihi',
                 'sinif_okulu_sicil': 'sinifOkuluSicil',
-                'muafiyet_neden': 'muafiyetNedeni',
-                'gorev_yeri': 'yedekSubayErOgrenimYer',
+                'muafiyet_neden': 'muafiyetNeden',
+                'gorev_yeri': 'gorevYeri',
                 'subayliktan_erlige_gecis_tarihi': 'subayliktanErligeGecisTarihi',
                 'kita_baslama_tarihi': 'kitaBaslamaTarihi',
                 'kita_bitis_tarihi': 'kitaBitisTarihi',

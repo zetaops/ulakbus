@@ -60,6 +60,7 @@ class HITAPService(Service):
                 service_bean = getattr(hitap_service, self.bean_name)
 
                 self.logger.info("%s started to work." % self.service_name)
+                self.logger.info("service bean: %s" % service_bean)
 
                 hitap_dict = self.create_hitap_dict(service_bean, self.service_dict['fields'])
 
@@ -73,9 +74,7 @@ class HITAPService(Service):
 
         except AttributeError as e:
             self.logger.info("AttributeError: %s" % e)
-            self.response.payload["status"] = "error"
-            self.response.payload["result"] = "TCKN may be wrong!"
-            self.logger.info("TCKN may be wrong!")
+            self.response.payload = {"status": "error", "result": "TCKN may be wrong!"}
         except urllib2.URLError:
             self.logger.info("No internet connection!")
 

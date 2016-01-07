@@ -18,7 +18,7 @@ class HizmetCetveliGetir(HITAPService):
         self.bean_name = 'HizmetCetveliServisBean'
         self.service_dict = {
             'fields': {
-                'tckn': 'Tckn',
+                'tckn': 'tckn',
                 'baslama_tarihi': 'baslamaTarihi',
                 'bitis_tarihi': 'bitisTarihi',
                 'emekli_derece': 'emekliDerece',
@@ -59,7 +59,6 @@ class HizmetCetveliGetir(HITAPService):
 
         """
 
-        # TODO: key'lerin unicode olarak tutulmasi uygun mu
         hizmet_siniflari = {
             u"GİH": 1,
             u"MİAH": 2,

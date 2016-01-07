@@ -18,9 +18,8 @@ class HizmetTazminatGetir(HITAPService):
         self.bean_name = 'HizmetTazminatServisBean'
         self.service_dict = {
             'fields': {
-                'tckn': 'Tckn',
+                'tckn': 'tckn',
                 'kayit_no': 'kayitNo',
-                'mahkeme_ad': 'mahkemeAd',
                 'unvan_kod': 'unvanKod',
                 'makam': 'makam',
                 'gorev': 'gorev',

@@ -18,7 +18,7 @@ class HizmetOkulGetir(HITAPService):
         self.bean_name = 'HizmetEgitimOkulServisBean'
         self.service_dict = {
             'fields': {
-                'tckn': 'Tckn',
+                'tckn': 'tckn',
                 'kayit_no': 'kayitNo',
                 'ogrenim_durumu': 'ogrenimDurumu',
                 'mezuniyet_tarihi': 'mezuniyetTarihi',
