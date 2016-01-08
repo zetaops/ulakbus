@@ -14,7 +14,7 @@ class HizmetIstisnaiIlgiGetir(HITAPService):
     """
 
     def handle(self):
-        self.service_name = 'HizmetIstisnaiIlgiBean'
+        self.service_name = 'hizmetIstisnaiIlgiSorgu'
         self.bean_name = 'HizmetIstisnaiIlgiServisBean'
         self.service_dict = {
             'fields': {
@@ -23,7 +23,7 @@ class HizmetIstisnaiIlgiGetir(HITAPService):
                 'baslama_tarihi': 'baslamaTarihi',
                 'bitis_tarihi': 'bitisTarihi',
                 'gun_sayisi': 'gunSayisi',
-                'istisnai_ilgi_nevi': 'istisnaiilgiNevi',
+                'istisnai_ilgi_nevi': 'istisnaiIlgiNevi',
                 'kha_durum': 'khaDurum',
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },

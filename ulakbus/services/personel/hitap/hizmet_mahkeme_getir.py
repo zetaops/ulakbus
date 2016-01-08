@@ -21,7 +21,7 @@ class HizmetMahkemeGetir(HITAPService):
                 'tckn': 'tckn',
                 'kayit_no': 'kayitNo',
                 'mahkeme_ad': 'mahkemeAd',
-                'sebep': 'sebep',  # TODO: (bkz:Açıklamalar-9.madde)
+                'sebep': 'sebep',
                 'karar_tarihi': 'kararTarihi',
                 'karar_sayisi': 'kararSayisi',
                 'kesinlesme_tarihi': 'kesinlesmeTarihi',

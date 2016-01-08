@@ -19,7 +19,7 @@ class HizmetIHSGetir(HITAPService):
         self.service_dict = {
             'fields': {
                 'tckn': 'tckn',
-                'kayit_no': 'kayitNo',
+                'kayit_no': 'kayitNo',  # TODO: ihzID mi olacak?
                 'baslama_tarihi': 'baslamaTarihi',
                 'bitis_tarihi': 'bitisTarihi',
                 'ihz_nevi': 'ihzNevi'

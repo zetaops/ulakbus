@@ -216,7 +216,7 @@ class HizmetAcikSure(Model):
     tckn = field.String("TC Kimlik No", index=True)
     kayit_no = field.String("Kayıt No", index=True)
     acik_sekil = field.Integer("Açığa Alınma Şekli", index=True, choices="acik_sekli")
-    durum = field.Integer("Durum", index=True)
+    iade_sekil = field.Integer("İade Şekil", index=True)
     hizmet_durum = field.Integer("Hizmet Durumu", index=True, choices="hizmet_durumu")
     husus = field.Integer("Husus", index=True, choices="husus")
     husus_aciklama = field.String("Husus Açıklaması", index=True)
@@ -245,7 +245,7 @@ class HizmetAcikSure(Model):
         search_fields = ['hizmet_durum', 'acik_sekil', 'aciga_alinma_tarih']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.durum, self.kayit_no, self.aciga_alinma_tarih)
+        return '%s %s %s' % (self.iade_sekil, self.kayit_no, self.aciga_alinma_tarih)
 
 
 class HizmetBorclanma(Model):

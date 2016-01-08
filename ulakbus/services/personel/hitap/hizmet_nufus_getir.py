@@ -26,15 +26,15 @@ class HizmetNufusGetir(HITAPService):
                 'cinsiyet': 'cinsiyet',
                 'emekli_sicil_no': 'emekliSicilNo',
                 'memuriyet_baslama_tarihi': 'memuriyetBaslamaTarihi',
-                'kurum_sicil': 'kurumSicil',
-                'maluliyet_kod': 'maluliyet',
-                'yetki_seviyesi': '',
+                'kurum_sicil': 'kurumSicili',
+                'maluliyet_kod': 'maluliyetKod',
+                'yetki_seviyesi': 'yetkiSeviyesi',
                 'aciklama': 'aciklama',
                 'kuruma_baslama_tarihi': 'kurumaBaslamaTarihi',
-                'gorev_tarihi_6495': '',
-                'emekli_sicil_6495': '',
-                'durum': '',
-                'sebep': '',
+                'gorev_tarihi_6495': 'gorevTarihi6495',
+                'emekli_sicil_6495': 'emekliSicil6495',
+                'durum': 'durum',
+                'sebep': 'sebep'
             },
             'date_filter': ['dogum_tarihi', 'memuriyet_baslama_tarihi', 'kuruma_baslama_tarihi']
         }
