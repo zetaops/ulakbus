@@ -5,10 +5,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.personel.hitap.hitap_service import HITAPService
+from ulakbus.services.personel.hitap.hitap_sorgula_service import HITAPSorgulaService
 
 
-class HizmetOkulGetir(HITAPService):
+class HizmetOkulGetir(HITAPSorgulaService):
     """
     HITAP HizmetOkulGetir Zato Servisi
     """

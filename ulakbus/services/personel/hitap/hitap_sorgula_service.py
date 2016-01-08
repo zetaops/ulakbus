@@ -16,9 +16,9 @@ H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPService(Service):
+class HITAPSorgulaService(Service):
     """
-    HITAP Zato Servisi
+    HITAP Sorgula Zato Servisi
     """
 
     def __init__(self):
@@ -37,9 +37,10 @@ class HITAPService(Service):
         self.service_name = ''
         self.bean_name = ''
         self.service_dict = {}
-        super(HITAPService, self).__init__()
+        super(HITAPSorgulaService, self).__init__()
 
     def handle(self):
+        self.logger.info("zato service started to work.")
         tckn = self.request.payload['tckn']
         conn = self.outgoing.soap['HITAP'].conn
 
