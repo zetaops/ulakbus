@@ -74,6 +74,7 @@ class HariciOkutman(Model):
     verdigi_dersler = field.String("Verdiği Dersler", index=True, required=False)
     unvan = field.Integer("Unvan", index=True, choices="akademik_unvan", required=False)
     aktif = field.Boolean("Aktif", index=True, required=False)
+    user = User(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
