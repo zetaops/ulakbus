@@ -358,6 +358,7 @@ class Sinav(Model):
     aciklama = field.String("Açıklama", index=True)
     sube = Sube()
     ders = Ders()
+    degerlendirme = field.Boolean("Değerlendirme Durumu", index=True, default=False)
 
     class Meta:
         app = 'Ogrenci'
