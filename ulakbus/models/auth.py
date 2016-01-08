@@ -26,12 +26,12 @@ except ImportError:
 
 
 class User(Model):
-    username = field.String("Kullanıcı Adı", index=True)
-    password = field.String("Şifre")
-    avatar = field.File("Profil Resmi", random_name=True)
-    name = field.String("Ad", index=True)
-    surname = field.String("Soyad", index=True)
-    superuser = field.Boolean("Süper Kullanıcı", default=False)
+    username = field.String("Username", index=True)
+    password = field.String("Password")
+    avatar = field.File("Profile Photo", random_name=True, required=False)
+    name = field.String("First Name", index=True)
+    surname = field.String("Surname", index=True)
+    superuser = field.Boolean("Super user", default=False)
 
     class Meta:
         app = 'Sistem'
