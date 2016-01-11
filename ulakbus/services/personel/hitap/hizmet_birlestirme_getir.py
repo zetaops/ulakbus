@@ -1,14 +1,14 @@
-## -*-  coding: utf-8 -*-
+# -*-  coding: utf-8 -*-
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.personel.hitap.hitap_sorgula_service import HITAPSorgulaService
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
-class HizmetBirlestirmeGetir(HITAPSorgulaService):
+class HizmetBirlestirmeGetir(HITAPSorgula):
     """
     HITAP HizmetBirlestirmeGetir Zato Servisi
     """
@@ -40,6 +40,13 @@ class HizmetBirlestirmeGetir(HITAPSorgulaService):
         super(HizmetBirlestirmeGetir, self).handle()
 
     def custom_filter(self, hitap_dict):
+        """
+        Sozluge (hitap_dict) uygulanacak ek filtrelerin gerceklestirimi
+
+        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
+        :type hitap_dict: List[dict]
+        """
+
         for record in hitap_dict:
             record['kidem_tazminat_odeme_durumu'] = self.kidem_durum_kontrol(record['kidem_tazminat_odeme_durumu'])
             record['kha_durum'] = self.kha_durum_kontrol(record['kha_durum'])
@@ -55,6 +62,7 @@ class HizmetBirlestirmeGetir(HITAPSorgulaService):
 
         :param kidem_durum: hitaptan donen kıdem durumu
         :type kidem_durum: str
+
         :return int: kıdem durumu
         """
 
@@ -76,6 +84,7 @@ class HizmetBirlestirmeGetir(HITAPSorgulaService):
 
         :param kha_durum: hitaptan donen kha durum
         :type kha_durum: str
+
         :return int: kha durum
         """
 

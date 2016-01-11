@@ -16,7 +16,7 @@ H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPSorgulaService(Service):
+class HITAPSorgula(Service):
     """
     HITAP Sorgula Zato Servisi
     """
@@ -37,7 +37,7 @@ class HITAPSorgulaService(Service):
         self.service_name = ''
         self.bean_name = ''
         self.service_dict = {}
-        super(HITAPSorgulaService, self).__init__()
+        super(HITAPSorgula, self).__init__()
 
     def handle(self):
         self.logger.info("zato service started to work.")
@@ -49,6 +49,8 @@ class HITAPSorgulaService(Service):
     def request_json(self, tckn, conn):
         """
         :param tckn: Turkiye Cumhuriyeti Kimlik Numarasi
+        :type tckn: str
+
         :param conn: HITAP connection with soap
 
         :return: Servisten gelen verileri iceren JSON nesnesi
@@ -85,7 +87,9 @@ class HITAPSorgulaService(Service):
         Modeldeki alanlarla HITAP servisinden donen verilerin eslenmesi
 
         :param service_bean: HITAP servis bean
+
         :param fields: Modeldeki alanlarin HITAP taki karsiliklarini tutan map
+        :type fields: dict
 
         :return: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
         """
@@ -100,6 +104,8 @@ class HITAPSorgulaService(Service):
         Sozlukteki (hitap_dict) tarih alanlarinin uygun bicime getirilmesi
 
         :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
+        :type hitap_dict: List[dict]
+
         :return: hitap_dict in tarih alanlarinin uygun bicimde guncellenmis surumu
         """
 
@@ -109,6 +115,9 @@ class HITAPSorgulaService(Service):
 
     def custom_filter(self, hitap_dict):
         """
-        Sozluge (hitap_dict) uygulanacak ek bicimlendirmelerin gerceklestirimi
+        Sozluge (hitap_dict) uygulanacak ek filtrelerin gerceklestirimi
+
+        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
+        :type hitap_dict: List[dict]
         """
         pass

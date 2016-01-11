@@ -5,10 +5,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.personel.hitap.hitap_sorgula_service import HITAPSorgulaService
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
-class HizmetAcikSureGetir(HITAPSorgulaService):
+class HizmetAcikSureGetir(HITAPSorgula):
     """
     HITAP HizmetAcikSureGetir Zato Servisi
     """
@@ -44,6 +44,13 @@ class HizmetAcikSureGetir(HITAPSorgulaService):
         super(HizmetAcikSureGetir, self).handle()
 
     def custom_filter(self, hitap_dict):
+        """
+        Sozluge (hitap_dict) uygulanacak ek filtrelerin gerceklestirimi
+
+        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
+        :type hitap_dict: List[dict]
+        """
+
         for record in hitap_dict:
             husus = record['husus']
             record['husus'], record['husus_aciklama'] = self.husus_aciklama_kontrol(husus)
@@ -55,6 +62,7 @@ class HizmetAcikSureGetir(HITAPSorgulaService):
 
         :param husus: hitaptan donen husus bilgisi
         :type husus: str
+
         :return tuple: husus kodu (int) ve aciklamasi (string)
         """
 
