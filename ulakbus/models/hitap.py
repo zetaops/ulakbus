@@ -35,6 +35,8 @@ class NufusKayitlari(Model):
 
     # personel = Personel()
 
+    # TODO: Personele gore unique olmali
+
     class Meta:
         app = 'Personel'
         verbose_name = "Nüfus Bilgileri"
@@ -47,8 +49,8 @@ class HizmetKurs(Model):
     kurs_ogrenim_suresi = field.Integer("Kurs Öğrenim Süresi", index=True)
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
     kurs_nevi = field.Integer("Kurs Nevi", index=True, choices="kurs_nevi")
-    bolum_ad = field.Integer("Bölüm Adı", index=True, choices="bolum_adi")
-    okul_ad = field.Integer("Okul Adı", index=True, choices="okul_adi")
+    bolum_ad = field.Integer("Bölüm Adı", index=True, choices="bolum_adi")  # TODO: serviste karsiligi yok
+    okul_ad = field.Integer("Okul Adı", index=True, choices="okul_adi")  # TODO: servisten gelen string
     ogrenim_yeri = field.String("Öğrenim Yeri", index=True)
     denklik_tarihi = field.Date("Denklik Tarihi", index=True, format="%d.%m.%Y")
     denklik_okulu = field.String("Denklik Okulu", index=True)
@@ -141,8 +143,9 @@ class HizmetBirlestirme(Model):
     bag_kur_meslek = field.String("Bağ-Kur Meslek", index=True)
     ulke_kod = field.Integer("Ülke Kodu", index=True)
     banka_sandik_kod = field.Integer("Banka Sandık Kodu", index=True, choices="banka_kod")
-    kidem_tazminat_odeme_durumu = field.String("Kıdem Tazminat Ödeme Durumu", index=True)
-    ayrilma_nedeni = field.Integer("Ayrılma Nedeni", index=True)
+    kidem_tazminat_odeme_durumu = field.String("Kıdem Tazminat Ödeme Durumu", index=True,
+                                               choices="kidem_tazminat_odeme_durumu")
+    ayrilma_nedeni = field.String("Ayrılma Nedeni", index=True)
     kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     sync = field.Integer("Senkronize", index=True)
@@ -213,9 +216,10 @@ class HizmetAcikSure(Model):
     tckn = field.String("TC Kimlik No", index=True)
     kayit_no = field.String("Kayıt No", index=True)
     acik_sekil = field.Integer("Açığa Alınma Şekli", index=True, choices="acik_sekli")
-    durum = field.Integer("Durum", index=True)
+    iade_sekil = field.Integer("İade Şekil", index=True)
     hizmet_durum = field.Integer("Hizmet Durumu", index=True, choices="hizmet_durumu")
     husus = field.Integer("Husus", index=True, choices="husus")
+    husus_aciklama = field.String("Husus Açıklaması", index=True)
     aciga_alinma_tarih = field.Date("Açığa Alınma Tarihi", index=True, format="%d.%m.%Y")
     goreve_son_tarih = field.Date("Göreve Son Tarih", index=True, format="%d.%m.%Y")
     goreve_iade_istem_tarih = field.Date("Göreve İade İstem Tarihi", index=True, format="%d.%m.%Y")
@@ -241,7 +245,7 @@ class HizmetAcikSure(Model):
         search_fields = ['hizmet_durum', 'acik_sekil', 'aciga_alinma_tarih']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.durum, self.kayit_no, self.aciga_alinma_tarih)
+        return '%s %s %s' % (self.iade_sekil, self.kayit_no, self.aciga_alinma_tarih)
 
 
 class HizmetBorclanma(Model):
