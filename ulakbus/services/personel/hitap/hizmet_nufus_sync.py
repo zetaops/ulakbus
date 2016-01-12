@@ -12,6 +12,9 @@ from ulakbus.models.hitap import NufusKayitlari
 class HizmetNufusSync(HITAPSync):
     """
     HITAP HizmetNufusSync Zato Servisi
+
+    Bu servis, sorgulama servisindeki hatadan dolayi calismamaktadir.
+    Aciklama icin ilgili birimlere basvuruldu, yanit bekleniyor.
     """
 
     def handle(self):

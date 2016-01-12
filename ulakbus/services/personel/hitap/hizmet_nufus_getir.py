@@ -11,6 +11,9 @@ from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 class HizmetNufusGetir(HITAPSorgula):
     """
     HITAP HizmetNufusGetir Zato Servisi
+
+    Bu servis, service ve bean isimlerindeki hatadan dolayi calismamaktadir.
+    Aciklama icin ilgili birimlere basvuruldu, yanit bekleniyor.
     """
 
     def handle(self):

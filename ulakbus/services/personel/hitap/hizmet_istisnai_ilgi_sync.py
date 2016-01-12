@@ -12,6 +12,9 @@ from ulakbus.models.hitap import HizmetIstisnaiIlgi
 class HizmetIstisnaiIlgiSync(HITAPSync):
     """
     HITAP HizmetIstisnaiIlgiSync Zato Servisi
+
+    Bu servis, sorgulama servisindeki hatadan dolayi calismamaktadir.
+    Aciklama icin ilgili birimlere basvuruldu, yanit bekleniyor.
     """
 
     def handle(self):
