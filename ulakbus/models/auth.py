@@ -113,7 +113,7 @@ class AbstractRole(Model):
 
 class Unit(Model):
     name = field.String("İsim", index=True)
-    long_name = field.String("İsim", index=True)
+    long_name = field.String("Uzun İsim", index=True)
     yoksis_no = field.Integer("Yoksis ID", index=True)
     unit_type = field.String("Birim Tipi", index=True)
     parent_unit_no = field.Integer("Üst Birim ID", index=True)

@@ -93,7 +93,7 @@ class AdresBilgileri(Model):
     adres = field.String("Adres", index=True)
     ilce = field.String("İlçe", index=True)
     il = field.String("İl", index=True)
-    personel = Personel(one_to_one=True)
+    personel = Personel()
 
     class Meta:
         verbose_name = "Adres Bilgisi"
