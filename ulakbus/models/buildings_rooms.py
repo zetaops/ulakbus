@@ -13,10 +13,10 @@ __author__ = 'Ali Riza Keles'
 
 
 class Campus(Model):
-    code = field.String("Code", index=True)
-    name = field.String("Name", index=True)
-    coordinate_x = field.String("Coordinate X", index=True)
-    coordinate_y = field.String("Coordinate Y", index=True)
+    code = field.String("Kod", index=True)
+    name = field.String("İsim", index=True)
+    coordinate_x = field.String("X Koordinatı", index=True)
+    coordinate_y = field.String("Y Koordinatı", index=True)
 
     class Meta:
         verbose_name = "Yerleşke"
@@ -32,10 +32,10 @@ class Campus(Model):
 
 
 class Building(Model):
-    code = field.String("Code", index=True)
-    name = field.String("Name", index=True)
-    coordinate_x = field.String("Coordinate X", index=True)
-    coordinate_y = field.String("Coordinate Y", index=True)
+    code = field.String("Kod", index=True)
+    name = field.String("İsim", index=True)
+    coordinate_x = field.String("X Koordinatı", index=True)
+    coordinate_y = field.String("Y Koordinatı", index=True)
     campus = Campus()
 
     class Meta:
@@ -57,21 +57,21 @@ class Building(Model):
 
 
 class RoomType(Model):
-    type = field.String("Room Type", index=True)
-    notes = field.Text("Notes", index=True)
+    type = field.String("Oda Tipi", index=True)
+    notes = field.Text("Notlar", index=True)
 
     def __unicode__(self):
         return '%s' % (self.type)
 
 
 class Room(Model):
-    code = field.String("Code", index=True)
-    name = field.String("Name", index=True)
-    room_type = RoomType("Room Type", index=True)
-    floor = field.String("Floor", index=True)
-    capacity = field.Integer("Capacity", index=True)
+    code = field.String("Kod", index=True)
+    name = field.String("İsim", index=True)
+    room_type = RoomType("Oda Tipi", index=True)
+    floor = field.String("Kat", index=True)
+    capacity = field.Integer("Kapasite", index=True)
     building = Building()
-    is_active = field.Boolean("Active", index=True)
+    is_active = field.Boolean("Aktif", index=True)
 
     class Meta:
         verbose_name = "Oda"

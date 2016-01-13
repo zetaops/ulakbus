@@ -21,8 +21,8 @@ class HariciOkutman(Model):
     uyruk = field.String("Uyruk", index=True)
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali", required=False)
     ikamet_adresi = field.String("İkamet Adresi", index=True, required=False)
-    ikamet_il = field.String("İkamet Il", index=True, required=False)
-    ikamet_ilce = field.String("İkamet Ilce", index=True, required=False)
+    ikamet_il = field.String("İkamet İl", index=True, required=False)
+    ikamet_ilce = field.String("İkamet İlçe", index=True, required=False)
     adres_2 = field.String("Adres 2", index=True, required=False)
     adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True, required=False)
     telefon_no = field.String("Telefon Numarası", index=True, required=True)
@@ -48,16 +48,16 @@ class HariciOkutman(Model):
     ana_adi = field.String("Baba Adi", index=True)
     dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     dogum_yeri = field.String("Doğum Yeri", index=True)
-    kayitli_oldugu_il = field.String("Il", index=True)
-    kayitli_oldugu_ilce = field.String("Ilce", index=True)
+    kayitli_oldugu_il = field.String("İl", index=True)
+    kayitli_oldugu_ilce = field.String("İlçe", index=True)
     kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
     kayitli_oldugu_cilt_no = field.String("Cilt No")
-    kayitli_oldugu_aile_sira_no = field.String("Aile Sira No")
-    kayitli_oldugu_sira_no = field.String("Sira No")
-    kimlik_cuzdani_verildigi_yer = field.String("Cuzdanin Verildigi Yer")
-    kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
-    kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
-    kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
+    kayitli_oldugu_aile_sira_no = field.String("Aile Sıra No")
+    kayitli_oldugu_sira_no = field.String("Sıra No")
+    kimlik_cuzdani_verildigi_yer = field.String("Cüzdanin Verildiği Yer")
+    kimlik_cuzdani_verilis_nedeni = field.String("Cüzdanin Veriliş Nedeni")
+    kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
+    kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
     akademik_yayinlari = field.String("Akademik Yayınları", index=True, required=False)
     verdigi_dersler = field.String("Verdiği Dersler", index=True, required=False)
     unvan = field.Integer("Unvan", index=True, choices="akademik_unvan", required=False)
@@ -148,7 +148,7 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
-    bolum_baskani = Role(verbose_name='Bolum Başkanı', reverse_name='bolum_baskani_program')
+    bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
     ects_bolum_kordinator = Role(verbose_name='ECTS Bölüm Koordinator',
                                  reverse_name='ects_koordinator_program')
     akademik_kordinator = Role(verbose_name='Akademik Koordinator',
@@ -218,7 +218,7 @@ class Ders(Model):
 class Sube(Model):
     ad = field.String("Ad", index=True)
     kontenjan = field.Integer("Kontenjan", index=True)
-    dis_kontenjan = field.Integer("Dis Kontenjan", index=True)
+    dis_kontenjan = field.Integer("Dış Kontenjan", index=True)
     okutman = Okutman()
     ders = Ders()
     donem = Donem()
@@ -228,8 +228,8 @@ class Sube(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Sube"
-        verbose_name_plural = "Subeler"
+        verbose_name = "Şube"
+        verbose_name_plural = "Şubeler"
         list_fields = ['ad', 'kontenjan']
         search_fields = ['ad', 'kontenjan']
 
@@ -247,8 +247,8 @@ class Sinav(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Sinav"
-        verbose_name_plural = "Sinavlar"
+        verbose_name = "Sınav"
+        verbose_name_plural = "Sınavlar"
         list_fields = ['tarih', 'yapilacagi_yer']
         search_fields = ['aciklama', 'tarih']
 
@@ -282,13 +282,13 @@ class Ogrenci(Model):
     cuzdan_seri_no = field.String("Seri No", index=True)
     kayitli_oldugu_il = field.String("İl", index=True)
     kayitli_oldugu_ilce = field.String("İlçe", index=True)
-    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
+    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Köy")
     kayitli_oldugu_cilt_no = field.String("Cilt No")
     kayitli_oldugu_aile_sira_no = field.String("Aile Sıra No")
     kayitli_oldugu_sira_no = field.String("Sıra No")
-    kimlik_cuzdani_verildigi_yer = field.String("Nüfus Cuzdanı Verildigi Yer")
-    kimlik_cuzdani_verilis_nedeni = field.String("Nufus Cuzdanı Verilis Nedeni")
-    kimlik_cuzdani_kayit_no = field.String("Nüfus Cuzdanı Kayit No")
+    kimlik_cuzdani_verildigi_yer = field.String("Nüfus Cüzdanı Verildiği Yer")
+    kimlik_cuzdani_verilis_nedeni = field.String("Nüfus Cüzdanı Veriliş Nedeni")
+    kimlik_cuzdani_kayit_no = field.String("Nüfus Cüzdanı Kayıt No")
     kimlik_cuzdani_verilis_tarihi = field.Date("Nüfus Cüzdanı Veriliş Tarihi", index=True, format="%d.%m.%Y")
     baba_adi = field.String("Ana Adı", index=True)
     ana_adi = field.String("Baba Adı", index=True)
@@ -308,8 +308,8 @@ class Ogrenci(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ogrenci"
-        verbose_name_plural = "Ogrenciler"
+        verbose_name = "Ögrenci"
+        verbose_name_plural = "Ögrenciler"
         list_fields = ['ad', 'soyad']
         search_fields = ['ad', 'soyad']
 
@@ -330,6 +330,9 @@ class OncekiEgitimBilgisi(Model):
         list_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
         search_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
 
+    def __unicode__(self):
+        return '%s %s %s' % (self.okul_adi, self.mezuniyet_yili, self.ogrenci.ad)
+
 
 class OgrenciProgram(Model):
     ogrenci_no = field.String("Öğrenci Numarası", index=True)
@@ -344,8 +347,8 @@ class OgrenciProgram(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Öğrenci Program"
-        verbose_name_plural = "Öğrenci Program"
+        verbose_name = "Öğrenci Programı"
+        verbose_name_plural = "Öğrenci Programları"
 
     def __unicode__(self):
         return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad, self.program.adi, self.program.yil)
@@ -358,8 +361,8 @@ class OgrenciDersi(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ogrenci Dersi"
-        verbose_name_plural = "Ogrenci Dersleri"
+        verbose_name = "Ögrenci Dersi"
+        verbose_name_plural = "Öğrenci Dersleri"
         list_fields = ['sube_dersi', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
 
@@ -381,8 +384,8 @@ class DersKatilimi(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ders Devamsizligi"
-        verbose_name_plural = "Ders Devamsizliklari"
+        verbose_name = "Ders Devamsızlığı"
+        verbose_name_plural = "Ders Devamsızlıklari"
         list_fields = ['katilim_durumu', 'sube_dersi']
         search_fields = ['sube_dersi', 'katilim_durumu']
 
@@ -410,8 +413,8 @@ class Borc(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Borc"
-        verbose_name_plural = "Borclar"
+        verbose_name = "Borç"
+        verbose_name_plural = "Borçlar"
         list_fields = ['miktar', 'son_odeme_tarihi']
         search_fields = ['miktar', 'odeme_tarihi']
 
@@ -501,7 +504,7 @@ AKADEMIK_TAKVIM_ETKINLIKLERI = [
 
 class AkademikTakvim(Model):
     birim = Unit("Birim", index=True)
-    yil = field.Date("Yil", index=True)
+    yil = field.Date("Yıl", index=True)
 
     class Takvim(ListNode):
         etkinlik = field.Integer("Etkinlik", index=True, choices=AKADEMIK_TAKVIM_ETKINLIKLERI)
@@ -511,12 +514,13 @@ class AkademikTakvim(Model):
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Akademik Takvim"
-        verbose_name_plural = "Akademik Takvim"
+        verbose_name_plural = "Akademik Takvimler"
         list_fields = ['_birim', 'yil']
         # search_fields = ['yil']
 
     def _birim(self):
         return "%s" % self.birim
+
     _birim.title = 'Birim'
 
     def __unicode__(self):

@@ -26,12 +26,12 @@ except ImportError:
 
 
 class User(Model):
-    username = field.String("Username", index=True)
-    password = field.String("Password")
-    avatar = field.File("Profile Photo", random_name=True)
-    name = field.String("First Name", index=True)
-    surname = field.String("Surname", index=True)
-    superuser = field.Boolean("Super user", default=False)
+    username = field.String("Kullanıcı Adı", index=True)
+    password = field.String("Şifre")
+    avatar = field.File("Profil Resmi", random_name=True)
+    name = field.String("Ad", index=True)
+    surname = field.String("Soyad", index=True)
+    superuser = field.Boolean("Süper Kullanıcı", default=False)
 
     class Meta:
         app = 'Sistem'
@@ -77,7 +77,7 @@ class Permission(Model):
 
 class AbstractRole(Model):
     id = field.Integer("ID No", index=True)
-    name = field.String("Name", index=True)
+    name = field.String("İsim", index=True)
 
     class Meta:
         app = 'Sistem'
@@ -112,25 +112,25 @@ class AbstractRole(Model):
 
 
 class Unit(Model):
-    name = field.String("Name", index=True)
-    long_name = field.String("Name", index=True)
+    name = field.String("İsim", index=True)
+    long_name = field.String("İsim", index=True)
     yoksis_no = field.Integer("Yoksis ID", index=True)
-    unit_type = field.String("Unit Type", index=True)
-    parent_unit_no = field.Integer("Parent Unit ID", index=True)
-    current_situation = field.String("Current Situation", index=True)
-    language = field.String("Learning Language", index=True)
-    learning_type = field.String("Learning Type", index=True)
-    osym_code = field.String("ÖSYM Code", index=True)
-    opening_date = field.Date("Opening Date", index=True)
-    learning_duration = field.Integer("Learning Duration", index=True)
-    english_name = field.String("Unit Name in English", index=True)
-    quota = field.Integer("Unit Quota", index=True)
-    city_code = field.Integer("City Code", index=True)
-    district_code = field.Integer("District Code", index=True)
-    unit_group = field.Integer("Unit Group", index=True)
-    foet_code = field.Integer("FOET Code", index=True)  # yoksis KILAVUZ_KODU mu?
-    is_academic = field.Boolean("Is Academic")
-    is_active = field.Boolean("Is Active")
+    unit_type = field.String("Birim Tipi", index=True)
+    parent_unit_no = field.Integer("Üst Birim ID", index=True)
+    current_situation = field.String("Guncel Durum", index=True)
+    language = field.String("Öğrenim Dili", index=True)
+    learning_type = field.String("Öğrenme Tipi", index=True)
+    osym_code = field.String("ÖSYM Kodu", index=True)
+    opening_date = field.Date("Açılış Tarihi", index=True)
+    learning_duration = field.Integer("Öğrenme Süresi", index=True)
+    english_name = field.String("İngilizce Birim Adı.", index=True)
+    quota = field.Integer("Birim Kontenjan", index=True)
+    city_code = field.Integer("Şehir Kodu", index=True)
+    district_code = field.Integer("Semt Kodu", index=True)
+    unit_group = field.Integer("Birim Grup", index=True)
+    foet_code = field.Integer("FOET Kodu", index=True)  # yoksis KILAVUZ_KODU mu?
+    is_academic = field.Boolean("Akademik")
+    is_active = field.Boolean("Aktif")
     uid = field.Integer(index=True)
     parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
 
@@ -163,7 +163,7 @@ class Role(Model):
     abstract_role = AbstractRole()
     user = User()
     unit = Unit()
-    typ = field.Integer("Rol tipi", choices=ROL_TIPI)
+    typ = field.Integer("Rol Tipi", choices=ROL_TIPI)
     name = field.String("Rol Adı", hidden=True)
 
     class Meta:
@@ -233,9 +233,9 @@ class Role(Model):
 
 
 class LimitedPermissions(Model):
-    restrictive = field.Boolean(default=False)
-    time_start = field.String("Start Time", index=True)
-    time_end = field.String("End Time", index=True)
+    restrictive = field.Boolean("Sınırlandırıcı",default=False)
+    time_start = field.String("Başlama Tarihi", index=True)
+    time_end = field.String("Bitiş Tarihi", index=True)
 
     class Meta:
         app = 'Sistem'

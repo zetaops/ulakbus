@@ -12,19 +12,19 @@ from .auth import Role
 
 class NufusKayitlari(Model):
     tckn = field.String("Sigortalının TC Kimlik No", index=True)
-    ad = field.String("Adi", index=True)
-    soyad = field.String("Soyadi", index=True)
+    ad = field.String("Adı", index=True)
+    soyad = field.String("Soyadı", index=True)
     ilk_soy_ad = field.String("Memuriyete Girişteki İlk Soyadı", index=True)
-    dogum_tarihi = field.Date("Dogum Tarihi", index=True, format="%d.%m.%Y")
+    dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     cinsiyet = field.String("Cinsiyet", index=True)
     emekli_sicil_no = field.Integer("Emekli Sicil No", index=True)
-    memuriyet_baslama_tarihi = field.Date("Memuriyete Ilk Baslama Tarihi", index=True,
+    memuriyet_baslama_tarihi = field.Date("Memuriyete İlk Başlama Tarihi", index=True,
                                           format="%d.%m.%Y")
     kurum_sicil = field.String("Kurum Sicili", index=True)
     maluliyet_kod = field.Integer("Malul Kod", index=True, choices="maluliyet_kod")
     yetki_seviyesi = field.String("Yetki Seviyesi", index=True)
-    aciklama = field.String("Aciklama", index=True)
-    kuruma_baslama_tarihi = field.Date("Kuruma Baslama Tarihi", index=True, format="%d.%m.%Y")
+    aciklama = field.String("Açıklama", index=True)
+    kuruma_baslama_tarihi = field.Date("Kuruma Başlama Tarihi", index=True, format="%d.%m.%Y")
     gorev_tarihi_6495 = field.Date("Emeklilik Sonrası Göreve Başlama Tarihi", index=True,
                                    format="%d.%m.%Y")
     emekli_sicil_6495 = field.Integer("2. Emekli Sicil No", index=True)
@@ -33,14 +33,16 @@ class NufusKayitlari(Model):
     sync = field.Integer("Senkronize", index=True)
     personel = Personel(one_to_one=True)
 
-    # personel = Personel()
 
     # TODO: Personele gore unique olmali
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Nüfus Bilgileri"
+        verbose_name = "Nüfus Bilgisi"
         verbose_name_plural = "Nüfus Bilgileri"
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.ad, self.soyad, self.emekli_sicil_no)
 
 
 class HizmetKurs(Model):
@@ -100,7 +102,7 @@ class HizmetOkul(Model):
 
 class HizmetMahkeme(Model):
     tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("kayıt No", index=True)
+    kayit_no = field.String("Kayıt No", index=True)
     mahkeme_ad = field.String("Mahkeme Adı", index=True)
     sebep = field.Integer("Mahkeme Sebebi", index=True, choices="mahkeme_sebep")
     karar_tarihi = field.Date("Mahkeme Karar Tarihi", index=True, format="%d.%m.%Y")
@@ -226,9 +228,9 @@ class HizmetAcikSure(Model):
     goreve_iade_tarih = field.Date("Göreve İade Tarihi", index=True, format="%d.%m.%Y")
     acik_aylik_bas_tarih = field.Date("Açık Aylık Başlama Tarihi", index=True, format="%d.%m.%Y")
     acik_aylik_bit_tarih = field.Date("Açık Aylık Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    goreve_son_aylik_bas_tarih = field.Date("Göreve sonlandırma aylık başlangıç tarihi", index=True,
+    goreve_son_aylik_bas_tarih = field.Date("Göreve Sonlandırma Aylık Başlangıç Tarihi", index=True,
                                             format="%d.%m.%Y")
-    goreve_son_aylik_bit_tarih = field.Date("Göreve sonlandırma aylık bitiş tarihi", index=True,
+    goreve_son_aylik_bit_tarih = field.Date("Göreve Sonlandırma Aylık Bitiş Tarihi", index=True,
                                             format="%d.%m.%Y")
     s_yonetim_kald_tarih = field.Date("Sıkı Yönetim Kaldırıldığı Tarih", index=True,
                                       format="%d.%m.%Y")

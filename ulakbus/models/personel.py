@@ -23,8 +23,8 @@ class Personel(Model):
     cinsiyet = field.Integer("Cinsiyet", index=True, choices='cinsiyet')
     uyruk = field.String("Uyruk", index=True)
     ikamet_adresi = field.String("İkamet Adresi", index=True)
-    ikamet_il = field.String("İkamet Il", index=True)
-    ikamet_ilce = field.String("İkamet Ilce", index=True)
+    ikamet_il = field.String("İkamet İl", index=True)
+    ikamet_ilce = field.String("İkamet İlçe", index=True)
     adres_2 = field.String("Adres 2", index=True)
     adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True)
     oda_no = field.String("Oda Numarası", index=True)
@@ -39,31 +39,31 @@ class Personel(Model):
     kan_grubu = field.String("Kan Grubu", index=True)
     ehliyet = field.String("Ehliyet", index=True)
     verdigi_dersler = field.String("Verdiği Dersler", index=True)
-    unvan = field.Integer("Unvan", index=True, choices="akademik_unvan")
+    unvan = field.Integer("Ünvan", index=True, choices="akademik_unvan")
     biyografi = field.Text("Biyografi")
     notlar = field.Text("Notlar")
     engelli_durumu = field.String("Engellilik", index=True)
     engel_grubu = field.String("Engel Grubu", index=True)
     engel_derecesi = field.String("Engel Derecesi")
-    engel_orani = field.Integer("Engellilik Orani")
+    engel_orani = field.Integer("Engellilik Oranı")
     personel_turu = field.Integer("Personel Türü", choices=PERSONEL_TURU, index=True)
     cuzdan_seri = field.String("Seri", index=True)
     cuzdan_seri_no = field.String("Seri No", index=True)
-    baba_adi = field.String("Ana Adi", index=True)
-    ana_adi = field.String("Baba Adi", index=True)
+    baba_adi = field.String("Ana Adı", index=True)
+    ana_adi = field.String("Baba Adı", index=True)
     dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     dogum_yeri = field.String("Doğum Yeri", index=True)
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
-    kayitli_oldugu_il = field.String("Il", index=True)
-    kayitli_oldugu_ilce = field.String("Ilce", index=True)
-    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
+    kayitli_oldugu_il = field.String("İl", index=True)
+    kayitli_oldugu_ilce = field.String("İlçe", index=True)
+    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Köy")
     kayitli_oldugu_cilt_no = field.String("Cilt No")
-    kayitli_oldugu_aile_sira_no = field.String("Aile Sira No")
-    kayitli_oldugu_sira_no = field.String("Sira No")
-    kimlik_cuzdani_verildigi_yer = field.String("Cuzdanin Verildigi Yer")
-    kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
-    kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
-    kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
+    kayitli_oldugu_aile_sira_no = field.String("Aile Sıra No")
+    kayitli_oldugu_sira_no = field.String("Sıra No")
+    kimlik_cuzdani_verildigi_yer = field.String("Cüzdanın Verildiği Yer")
+    kimlik_cuzdani_verilis_nedeni = field.String("Cüzdanın Veriliş Nedeni")
+    kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
+    kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
     user = User(one_to_one=True)
@@ -93,7 +93,7 @@ class AdresBilgileri(Model):
     adres = field.String("Adres", index=True)
     ilce = field.String("İlçe", index=True)
     il = field.String("İl", index=True)
-    personel = Personel()
+    personel = Personel(one_to_one=True)
 
     class Meta:
         verbose_name = "Adres Bilgisi"
@@ -105,12 +105,12 @@ class AdresBilgileri(Model):
 
 class KurumIciGorevlendirmeBilgileri(Model):
     gorev_tipi = field.String("Görev Tipi", index=True, choices="gorev_tipi")
-    kurum_ici_gorev_baslama_tarihi = field.Date("Baslama Tarihi", index=True, format="%d.%m.%Y")
+    kurum_ici_gorev_baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     kurum_ici_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     birim = Unit()
-    aciklama = field.String("Aciklama")
-    resmi_yazi_sayi = field.String("Resmi Yazi Sayi")
-    resmi_yazi_tarih = field.Date("Resmi Yazi Tarihi", index=True, format="%d.%m.%Y")
+    aciklama = field.String("Açıklama")
+    resmi_yazi_sayi = field.String("Resmi Yazı Sayı")
+    resmi_yazi_tarih = field.Date("Resmi Yazı Tarihi", index=True, format="%d.%m.%Y")
     personel = Personel()
 
     def __unicode__(self):
@@ -138,23 +138,23 @@ class KurumIciGorevlendirmeBilgileri(Model):
 
 class KurumDisiGorevlendirmeBilgileri(Model):
     gorev_tipi = field.Integer("Görev Tipi", index=True)
-    kurum_disi_gorev_baslama_tarihi = field.Date("Baslama Tarihi", index=True, format="%d.%m.%Y")
+    kurum_disi_gorev_baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     kurum_disi_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    aciklama = field.Text("Aciklama", index=True)
-    resmi_yazi_sayi = field.String("Resmi Yazi Sayi")
-    resmi_yazi_tarih = field.Date("Resmi Yazi Tarihi", index=True, format="%d.%m.%Y")
-    maas = field.Boolean("Maas")
+    aciklama = field.Text("Açıklama", index=True)
+    resmi_yazi_sayi = field.String("Resmi Yazı Sayı")
+    resmi_yazi_tarih = field.Date("Resmi Yazı Tarihi", index=True, format="%d.%m.%Y")
+    maas = field.Boolean("Maaş")
     yevmiye = field.Boolean("Yevmiye", default=False)
     yolluk = field.Boolean("Yolluk", default=False)
-    ulke = field.Integer("Ulke", default="90", choices="ulke", index=True)
+    ulke = field.Integer("Ülke", default="90", choices="ulke", index=True)
     personel = Personel()
 
     def __unicode__(self):
         return "%s %s %s" % (self.gorev_tipi, self.aciklama, self.ulke)
 
     class Meta:
-        verbose_name = "Kurum Disi Gorevlendirme"
-        verbose_name_plural = "Kurum Disi Gorevlendirmeler"
+        verbose_name = "Kurum Dışı Görevlendirme"
+        verbose_name_plural = "Kurum Dışı Görevlendirmeler"
         # list_search = ["aciklama"]
         list_fields = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
         list_filters = ["ulke", "gorev_tipi", "kurum_disi_gorev_baslama_tarihi"]
