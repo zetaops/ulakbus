@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""buildings_rooms module
+"""Bina ve Oda Modülü
 
 Bu modül Ulakbus uygulaması için üniversite yerleşim modellerini içerir. Modellerin
 amacı Üniversitelere ait yerleşke, bina ve oda bilgilerinin ilişkileri ile birlikte saklanmasıdır.
@@ -26,7 +26,6 @@ class Campus(Model):
 
     Kampüs koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle Unitime ile
     ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında kullanılmaktadır.
-
 
     """
     code = field.String("Kod", index=True)
