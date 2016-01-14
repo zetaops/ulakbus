@@ -45,9 +45,6 @@ class User(Model):
     def __unicode__(self):
         return "User %s" % self.username
 
-    def __repr__(self):
-        return "User_%s" % self.key
-
     def set_password(self, raw_password):
         self.password = pbkdf2_sha512.encrypt(raw_password, rounds=10000,
                                               salt_size=10)
