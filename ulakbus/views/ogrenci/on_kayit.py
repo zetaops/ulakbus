@@ -31,7 +31,9 @@ class OncekiEgitimBilgileri(CrudView):
         model = "OncekiEgitimBilgisi"
 
     def onceki_egitim_bilgileri(self):
-        self.form_out(OncekiEgitimBilgileriForm(self.object, current=self.current))
+        ogrenci = Ogrenci.objects.get(user = self.current.user)
+        onceki_egitim_bilgisi = OncekiEgitimBilgisi.objects.filter(ogrenci = ogrenci)
+        self.form_out(OncekiEgitimBilgileriForm(onceki_egitim_bilgisi[0], current=self.current))
 
     def kaydet(self):
         ogrenci = Ogrenci.objects.get(user = self.current.user)
