@@ -1,11 +1,21 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+""" Personel Modülü
+
+Bu modül Ulakbüs uygulaması için personele ait modelleri içerir. Modellerin amacı personele ait
+
+personel, adres bilgileri, kurum içi görevlendirme, kurum dışı görevlendirme, kadro, izin, ücretsiz izin
+
+ve atama bilgilerinin ilişkileriyle birlikte saklanmasıdır.
+
+
+Personel,AdresBilgileri,KurumIciGorevlendirmeBilgileri,KurumDisiGorevlendirmeBilgileri,Izin,Kadro,UcretsizIzin,
+
+Atama modellerinden oluşmaktadır.
+"""
 
 from pyoko import Model, field
 from .auth import Unit, User
@@ -15,8 +25,14 @@ PERSONEL_TURU = [
     (2, 'İdari')
 ]
 
-
 class Personel(Model):
+    """Personel Modeli
+
+    Personelin özlük,ikametgah,iletişim adresi,ehliyet,web_sitesi,unvan,engel grubu ve yayınlar vs bilgisini içerir.
+
+    Her personel bir birim ile ilişkilendirilmiştir.Bir personel ise bir kullanıcı ile ilişkilendirilmiştir.
+
+    """
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)
@@ -64,8 +80,10 @@ class Personel(Model):
     kimlik_cuzdani_verilis_nedeni = field.String("Cüzdanın Veriliş Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
+    #: İlişki[model]: Unit Model'ine, bire çok ilişki tipi
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+    #: İlişki[model]: User Model'ine, bire bir ilişki tipi
     user = User(one_to_one=True)
 
     class Meta:
@@ -80,7 +98,12 @@ class Personel(Model):
 
     durum.title = "Durum"
 
+    # TODO: metod adi cok genel. daha anlasilir bir ad secip, refactor edelim.
     def kadro(self):
+        """ Kadro
+
+        Personelin atama bilgilerinden kadro değerini döndürür.
+        """
         atama = Atama.objects.get(personel=self)
         return atama.kadro
 
@@ -89,10 +112,18 @@ class Personel(Model):
 
 
 class AdresBilgileri(Model):
+    """Adres Bilgileri Modeli
+
+    Personele ait adres ve personeş bilgilerini içerir. Personelin birden fazla adresi olabilir.
+
+    Her adres bir personel ile ilişkilendirilmiştir.
+
+    """
     ad = field.String("Adres Adı", index=True)
     adres = field.String("Adres", index=True)
     ilce = field.String("İlçe", index=True)
     il = field.String("İl", index=True)
+    #: İlişki[model]: Personel Model'ine,bire çok ilişki tipi
     personel = Personel()
 
     class Meta:
@@ -104,39 +135,78 @@ class AdresBilgileri(Model):
 
 
 class KurumIciGorevlendirmeBilgileri(Model):
+    """ Kurum İçi Görevlendirme Bilgileri Modeli
+
+    Personele ait Kurum İçi Görevlendirme veri modelidir.Personelin görev tipi,göreve başlama tarihi,görevin bitiş tarihi,
+
+    birim,açıklama vs bilgisini içerir.
+
+    Her kurum içi görevlendirme bir birim ve bir personel ile ilişkilendirilmiştir.
+
+    """
     gorev_tipi = field.String("Görev Tipi", index=True, choices="gorev_tipi")
     kurum_ici_gorev_baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     kurum_ici_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
+    #: İlişki[model]: Unit Model'ine, one to many
     birim = Unit()
     aciklama = field.String("Açıklama")
     resmi_yazi_sayi = field.String("Resmi Yazı Sayı")
     resmi_yazi_tarih = field.Date("Resmi Yazı Tarihi", index=True, format="%d.%m.%Y")
+    #: İlişki[model]: Personel Model'ine, bire çok ilişki tipi
     personel = Personel()
 
     def __unicode__(self):
         return "%s %s" % (self.gorev_tipi, self.aciklama)
 
     class Meta:
+        """
+        Layout değerlerine göre formun yerleşim planı yapılır.Gruplar grup başlığı,öğeler ve collapsedan oluşur.
+
+        Grup başlığı, layout değerine göre yerleşim yapılan form grubunun başlığını belirtir. Öğeler,grup başlığının
+
+        altındaki kavramlardır. Collapse'a atanan boolean değer, öğeye tıklandığında  açılır kapanır özelliği katıyor.
+        """
         verbose_name = "Kurum İçi Görevlendirme"
         verbose_name_plural = "Kurum İçi Görevlendirmeler"
         form_grouping = [
             {
-                "group_title": "Gorev",
-                "items": ["gorev_tipi", "kurum_ici_gorev_baslama_tarihi", "kurum_ici_gorev_bitis_tarihi", "birim",
-                          "aciklama"],
                 "layout": "4",
-                "collapse": False
+                "groups": [
+                    {
+                        "group_title": "Gorev",
+                        "items": ["gorev_tipi", "kurum_ici_gorev_baslama_tarihi", "kurum_ici_gorev_bitis_tarihi",
+                                  "birim","aciklama"],
+                        "collapse": False
+                    }
+                ]
+
             },
             {
-                "group_title": "Resmi Yazi",
-                "items": ["resmi_yazi_sayi", "resmi_yazi_tarih"],
                 "layout": "2",
-                "collapse": False
-            }
+                "groups": [
+                    {
+                        "group_title": "Resmi Yazi",
+                        "items": ["resmi_yazi_sayi", "resmi_yazi_tarih"],
+                        "collapse": False
+                    }
+                ]
+
+            },
         ]
 
 
+
+
 class KurumDisiGorevlendirmeBilgileri(Model):
+    """Kurum Dışı Görevlendirme Bilgileri Modeli
+
+    Personele ait Kurum Dışı Görevlendirme veri modelidir.Personelin görev tipi,göreve başlama tarihi,görevin bitiş tarihi,
+
+    birim,açıklama vs bilgisini içerir.
+
+    Her kurum dışı görevlendirme bir birim ve bir personel ile ilişkilendirilmiştir.
+
+    """
     gorev_tipi = field.Integer("Görev Tipi", index=True)
     kurum_disi_gorev_baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     kurum_disi_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
@@ -147,12 +217,20 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     yevmiye = field.Boolean("Yevmiye", default=False)
     yolluk = field.Boolean("Yolluk", default=False)
     ulke = field.Integer("Ülke", default="90", choices="ulke", index=True)
+    #: İlişki[model]: Personel Model'ine, bire çok ilişki tipi
     personel = Personel()
 
     def __unicode__(self):
         return "%s %s %s" % (self.gorev_tipi, self.aciklama, self.ulke)
 
     class Meta:
+        """
+        Layout değerlerine göre formun yerleşim planı yapılır.Gruplar grup başlığı,öğeler ve collapsedan oluşur.
+
+        Grup başlığı, layout değerine göre yerleşim yapılan form grubunun başlığını belirtir. Öğeler,grup başlığının
+
+        altındaki kavramlardır. Collapse'a atanan boolean değer, öğeye tıklandığında  açılır kapanır özelliği katıyor.
+        """
         verbose_name = "Kurum Dışı Görevlendirme"
         verbose_name_plural = "Kurum Dışı Görevlendirmeler"
         # list_search = ["aciklama"]
@@ -192,10 +270,17 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
 
 class Kadro(Model):
+    """ Kadro Modeli
+
+    Birime ait kadro veri modelidir.Kadro no,unvan,derece,durum,birim,açıklama ve ünvan kod bilgisini içerir.
+
+    Her kadro bir birim ile ilişkilendirilmiştir.
+    """
     kadro_no = field.Integer("Kadro No", required=False)
     unvan = field.Integer("Akademik Unvan", index=True, choices="akademik_unvan", required=False)
     derece = field.Integer("Derece", index=True, required=False)
     durum = field.Integer("Durum", index=True, choices="kadro_durumlari", required=False)
+    #: İlişki[model]: Unit Model'ine, one to many
     birim = Unit("Birim", required=False)
     aciklama = field.String("Açıklama", index=True, required=False)
     unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
@@ -225,13 +310,22 @@ class Kadro(Model):
 #         return "%s %s" % (self.personel, self.kadro)
 
 class Izin(Model):
+    """İzin Modeli
+
+    Personele ait izin veri modelidir.Tip,başlangıç ve bitiş tarihi,onay,adres,telefon ve personel bilgilerini içerir.
+
+    Her izin bir personel ile ilişkilendirilmiştir.
+
+    """
     tip = field.Integer("Tip", index=True, choices="izin")
     baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
     bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
     onay = field.Date("Onay", index=True, format="%d.%m.%Y")
     adres = field.String("Geçireği Adres", index=True)
     telefon = field.String("Telefon", index=True)
+    #: İlişki[model]: Personel Model'ine, bire çok ilişki tipi
     personel = Personel()
+    #: İlişki[model]: Personel Model'ine, bire çok ilişki tipi
     vekil = Personel()
 
     class Meta:
@@ -246,12 +340,20 @@ class Izin(Model):
 
 
 class UcretsizIzin(Model):
+    """Ücretsiz izin Modeli
+
+    Personele ait ücretsiz izin veri modelidir.Tip,başlangıç ve bitiş tarihi,onay,adres,telefon ve personel bilgilerini içerir.
+
+    Her ücretsiz izin bir personel ile ilişkilendirilmiştir.
+
+    """
     tip = field.Integer("Tip", index=True, choices="ucretsiz_izin")
     baslangic_tarihi = field.Date("İzin Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("İzin Bitiş Tarihi", index=True, format="%d.%m.%Y")
     donus_tarihi = field.Date("Dönüş Tarihi", index=True, format="%d.%m.%Y")
     donus_tip = field.Integer("Dönüş Tip", index=True)
     onay_tarihi = field.Date("Onay Tarihi", index=True, format="%d.%m.%Y")
+    #: İlişki[model]: Personel Model'ine, bire çok ilişki tipi
     personel = Personel()
 
     class Meta:
@@ -266,6 +368,13 @@ class UcretsizIzin(Model):
 
 
 class Atama(Model):
+    """Atama Modeli
+
+    Personele ve kadroya ait atama veri modelidir.Kurum sicil no,personel tipi,hizmet sınıfı statü,ibraz tarihi vs bilgilerini içerir.
+
+    Her atama bir kadro ve bir personel ile ilişkilendirilmiştir.
+
+    """
     kurum_sicil_no = field.String("Kurum Sicil No", index=True)
     personel_tip = field.Integer("Personel Tipi", index=True)
     hizmet_sinif = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
@@ -281,7 +390,9 @@ class Atama(Model):
     goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
     kadro_unvan = field.Integer("Kadro Unvan", index=True)
     kadro_derece = field.Integer("Kadro Derece", index=True)
+    #: İlişki[model]: Kadro Model'ine, bire çok ilişki tipi
     kadro = Kadro()
+    #: İlişki[model]: Personel Model'ine, bire çok ilişki tipi
     personel = Personel()
 
     class Meta:
