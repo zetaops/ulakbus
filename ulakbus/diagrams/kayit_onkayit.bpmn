@@ -62,7 +62,7 @@
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="onayla_reddet" targetRef="ExclusiveGateway_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ManualTask_3" targetRef="onayla_reddet"/>
-    <bpmn2:userTask id="on_kayit_form_goster" camunda:assignee="ogrenci.on_kayit.OnKayit.onkayit_form" name="On Kayit Formunu Goster">
+    <bpmn2:userTask id="on_kayit_form_goster" camunda:assignee="ogrenci.on_kayit.OnKayit.on_kayit_form" name="On Kayit Formunu Goster">
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
     </bpmn2:userTask>

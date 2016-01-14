@@ -53,7 +53,7 @@ class OnKayit(CrudView):
     class Meta:
         model = "Ogrenci"
 
-    def onkayit_form(self):
+    def on_kayit_form(self):
         ogrenci = Ogrenci.objects.get(user = self.current.user)
         self.form_out(OnKayitForm(ogrenci, current = self.current))
 
@@ -63,3 +63,6 @@ class OnKayit(CrudView):
         ogrenci_program.durum = 2
         ogrenci_program.save()
         self.object.save()
+
+    def onayla_reddet(self):
+        pass
