@@ -7,45 +7,41 @@
 
 
 from zato.server.service import Service
-from ulakbus.models.ogrenci import OgrenciProgram, Borc
+from ulakbus.models.ogrenci import Banka, BankaAuth
 
 
-class BankaBorcService(Service):
+class AuthException(Exception):
+    pass
+
+
+def authenticate(f):
+    def auth(self):
+        try:
+            banka = Banka.object.get(kod=self.banka_kodu)
+            BankaAuth.object.get(username=self.bank_username, password=self.bank_password, banka=banka)
+            self.logger.info("Authentication completed successfully.")
+        except:
+            raise AuthException("Authentication failed.")
+        return f(self)
+
+    return auth
+
+
+class BankaService(Service):
     """
-    Banka Borc Sorgulama Zato Servisi
+    Banka Zato Servisi
     """
 
     class SimpleIO:
-        input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
-                          'ogrenci_no')
-        output_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
-                           'ogrenci_no', 'ad_soyad', 'ucret_turu', 'tahakkuk_referans_no', 'son_odeme_tarihi',
-                           'borc', 'borc_ack')
+        input_required = ('banka_kodu', 'bank_username', 'bank_password')
+        output_required = ()
 
     def handle(self):
-        self.get_data()
+        try:
+            self.get_data()
+        except AuthException as e:
+            self.logger.info(e.message)
 
+    @authenticate
     def get_data(self):
-        ogrenci_no = self.request.input.ogrenci_no
-
-        ogr = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no).ogrenci
-
-        borclar = Borc.objects.filter(ogrenci=ogr)
-
-        for borc in borclar:
-            borc_sorgu = {
-                'banka_kodu': self.request.input.banka_kodu,
-                'sube_kodu': self.request.input.sube_kodu,
-                'kanal_kodu': self.request.input.kanal_kodu,
-                'mesaj_no': self.request.input.mesaj_no,
-                'bank_username': self.request.input.bank_username,
-                'bank_password': self.request.input.bank_password,
-                'ogrenci_no': self.request.input.ogrenci_no,
-                'ad_soyad': ogr.ad + ogr.soyad,
-                'ucret_turu': borc.sebep,
-                'tahakkuk_referans_no': borc.tahakkuk_referans_no,
-                'son_odeme_tarihi': borc.son_odeme_tarihi,
-                'borc': borc.miktar,
-                'borc_ack': borc.aciklama
-            }
-            self.response.payload.append(borc_sorgu)
+        pass
