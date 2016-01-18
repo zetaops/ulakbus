@@ -33,7 +33,7 @@ class BankaBorcService(BankaService):
 
         borclar = Borc.objects.filter(ogrenci=ogr)
         for borc in borclar:
-            borc_sorgu = {
+            borc_response = {
                 'banka_kodu': self.request.input.banka_kodu,
                 'sube_kodu': self.request.input.sube_kodu,
                 'kanal_kodu': self.request.input.kanal_kodu,
@@ -48,4 +48,4 @@ class BankaBorcService(BankaService):
                 'borc': borc.miktar,
                 'borc_ack': borc.aciklama
             }
-            self.response.payload.append(borc_sorgu)
+            self.response.payload.append(borc_response)
