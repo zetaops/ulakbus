@@ -138,8 +138,11 @@ class Okutman(Model):
         """
         Personel veya Harici Okutman sayısını bulur.
 
-        :return (int): personel veya harici okutman sayısı
+        Returns:
+            personel veya harici okutman sayısı
+
         """
+
         if self.personel.key:
             return len(self.objects.filter(personel=self.personel))
         elif self.harici_okutman.key:
@@ -463,7 +466,6 @@ class OgrenciProgram(Model):
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
     aktif_donem = field.String("Dönem", index=True)
     basari_durumu = field.String("Başarı Durumu", index=True)
-    #: İlişki[model]: Ders Programı Model'ine, bire çok ilişki tipi
     ders_programi = DersProgrami()
     danisman = Personel()
     program = Program()
@@ -501,8 +503,14 @@ class OgrenciDersi(Model):
         search_fields = ['alis_bicimi', ]
 
     def sube_dersi(self):
-        # return '%s - %s' % (self.ders.ders.kod, self.ders.ders)
-        return six.text_type(self.ders)
+        """
+        Şubenin bağlı olduğu ders adı.
+
+        Returns:
+            Şubenin bağlı olduğu ders örneğinin adını döndürür.
+
+        """
+        return six.text_type(self.ders.ders)
 
     sube_dersi.title = 'Ders'
 
@@ -524,8 +532,6 @@ class DersKatilimi(Model):
     """
     # TODO: Neden float, soralım?
     katilim_durumu = field.Float("Katılım Durumu", index=True)
-
-    #: İlişki[model]:Şube Model'ine, bire çok ilişki tipi
     ders = Sube()
     ogrenci = Ogrenci()
     okutman = Okutman()
@@ -538,8 +544,15 @@ class DersKatilimi(Model):
         search_fields = ['sube_dersi', 'katilim_durumu']
 
     def sube_dersi(self):
-        # return '%s - %s' % (self.ders.ders.kod, self.ders.ders)
-        return six.text_type(self.ders)
+        """
+        Şubenin bağlı olduğu ders adı.
+
+        Returns:
+            Şubenin bağlı olduğu ders örneğinin adını döndürür.
+
+        """
+
+        return six.text_type(self.ders.ders)
 
     sube_dersi.title = 'Ders'
 
