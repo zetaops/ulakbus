@@ -1,5 +1,4 @@
 # -*-  coding: utf-8 -*-
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -7,7 +6,7 @@
 
 """Öğrenci Modülü
 
-Bu modül Ulakbüs uygulaması için öğrenci ve öğrenciyle ilişkili modelleri içerir.
+Bu modül Ulakbüs uygulaması için öğrenci ve öğrenciyle ilişkili data modellerini içerir.
 
 """
 from pyoko.lib.utils import lazy_property
@@ -84,6 +83,14 @@ class HariciOkutman(Model):
         return '%s %s' % (self.ad, self.soyad)
 
     def post_save(self):
+        """
+        Okutman modelinden bu modele one-to-one bir bağlantı mevcuttur. Bu sebeple
+        modelimizden de karşılıklı bir bağ oluşmuştur.
+
+        Bu modelde yapılan değişiklik, bu metod sayesinde Okutman modeline yansıtılır.
+
+        """
+
         if self.okutman.exist:
             self.okutman.ad = self.ad
             self.okutman.soyad = self.soyad
@@ -129,8 +136,9 @@ class Okutman(Model):
 
     def is_not_unique(self):
         """
+        Personel veya Harici Okutman sayısını bulur.
 
-        :return:
+        :return (int): personel veya harici okutman sayısı
         """
         if self.personel.key:
             return len(self.objects.filter(personel=self.personel))
@@ -139,8 +147,12 @@ class Okutman(Model):
 
     def pre_save(self):
         """
+        Okutman özelligi ile erişilen personel veya harici okutman kaydi tekil olmalıdır.
 
-        :return:
+        Aynı personel veya aynı harici okutmanın birden fazla Okutman kaydı bulunamaz.
+
+        Bu kontrol, save metodundan hemen önce çalışan pre_save metodu ile yapılır.
+
         """
         if self.okutman.key:
             self.ad = self.okutman.ad
@@ -267,7 +279,13 @@ class Ders(Model):
 class Sube(Model):
     """Şube Modeli
 
-    Şubelere bölünen derslerin bilgilerinin saklandığı bölümdür.
+    Ders şubelerine ait bilgilerin saklandığı modeldir.
+
+    Şube, bir dersin, bir dönem içerisinde okutmanı ile birlikte tanımlanmasıyla ortaya çıkar.
+
+    Her şubenin önceden belirlenmiş bir kontenjanı vardır.
+
+    Dış kontenjan ise, o şubeyi dersin ait olduğu bölümün dışından seçebilecek öğrenci sayısını ifade eder.
 
     """
     ad = field.String("Ad", index=True)
@@ -294,18 +312,21 @@ class Sube(Model):
 class Sinav(Model):
     """Sınav Modeli
 
-    Derse ait sınav(ara sınav,genel sınav,bütünleme,tek ders,mazaret,muafiyet)  bilgilerinin saklandığı modeldir.
+    Derse ait sınav(ara sınav, genel sınav, bütünleme, tek ders)
+    bilgilerinin saklandığı modeldir.
 
-    Temel ilişki Ders modeli ile kurulmuştur.
+    Sınavlar şubeler için ders dolayısı ile otomatik açılırlar. Bu sebeple temel bağ Şube
+    modelidir.
+
+    Ders arama kolaylığı için eklenmiştir.
+
 
     """
     tarih = field.Date("Sınav Tarihi", index=True)
     yapilacagi_yer = field.String("Yapılacağı Yer", index=True)
     tur = field.Integer("Sınav Türü", index=True, choices="sinav_turleri")
     aciklama = field.String("Açıklama", index=True)
-    #: İlişki[model]: Şube Model'ine, bire çok ilişki tipi
     sube = Sube()
-    #: İlişki[model]: Ders Model'ine, bire çok ilişki tipi
     ders = Ders()
 
     class Meta:
@@ -322,7 +343,7 @@ class Sinav(Model):
 class DersProgrami(Model):
     """Ders Programı Modeli
 
-    Dersin işlenecegi gün,saat,şube ve derslik bilgilerini saklayan modeldir.
+    Dersin işlenecegi gün, saat, şube ve derslik bilgilerini saklayan modeldir.
 
     """
     gun = field.String("Ders Günü", index=True)
@@ -467,8 +488,8 @@ class OgrenciDersi(Model):
 
 
     """
+
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
-    #: İlişki[model]:Şube Model'ine, bire çok ilişki tipi
     ders = Sube()
     ogrenci_program = OgrenciProgram()
 
@@ -700,11 +721,14 @@ AKADEMIK_TAKVIM_ETKINLIKLERI = [
 class AkademikTakvim(Model):
     """Akademik Takvim Modeli
 
-    Ders kaydı, üniversitenin ne zaman açılacağı, ders ekleme-bırakma, vize ve final tarihleri,
+    Akademik Takvim etkinlikleri bilgileri modeldir. AKADEMIK_TAKVIM_ETKINLIKLERI ile
+    tanımlanmış her bir etkinlik için tarih veya tarih aralığı bigisi saklanır.
 
-    üniversitenin açılış kapanış tarihlerini gösteren dönemlik ve yıllık bilgileri içeren modeldir.
+    Universiteye ait bir takvim zorunlu olarak varolmakla birlikte
+    istenirse etkinlikler birimlere göre farklılık gösterebilirler.
 
     """
+
     birim = Unit("Birim", index=True)
     yil = field.Date("Yıl", index=True)
 
