@@ -58,8 +58,6 @@ class Building(Model):
     Universite kampuslerindeki binalara ait data modeli. Bina kod ve adının yanısıra
     koordinat bilgilerini içerir.
 
-    Her bina bir kampüs ile ilişkilendirilmiştir.
-
     Bina koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle Unitime ile
     ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında kullanılmaktadır.
 
@@ -68,8 +66,6 @@ class Building(Model):
     name = field.String("İsim", index=True)
     coordinate_x = field.String("X Koordinatı", index=True)
     coordinate_y = field.String("Y Koordinatı", index=True)
-
-    #: Relation[model]: Kampus Modeline, one to many
     campus = Campus()
 
     class Meta:
@@ -114,6 +110,7 @@ class Room(Model):
     """Oda modeli
 
     Üniversitenin sahip olduğu odalara (sınıf, lab, amfi) ait data modelidir. Her odanın
+
     bir kodu bulunur.
 
     Odalar, binalara ve binalar aracılığıyla kampüslere bağlanır.
@@ -121,15 +118,11 @@ class Room(Model):
     """
     code = field.String("Kod", index=True)
     name = field.String("İsim", index=True)
-
-    #: Relation[model]: Oda Tipleri Modeline, one to many
     room_type = RoomType("Oda Tipi", index=True)
 
     #: Bina içerisindeki kat bilgisi
     floor = field.String("Kat", index=True)
     capacity = field.Integer("Kapasite", index=True)
-
-    #: Relation[model]: Bina Modeline, one to many
     building = Building()
 
     is_active = field.Boolean("Aktif", index=True)
@@ -146,7 +139,6 @@ class Room(Model):
         Bu odayı kullanabilecek birimler.
 
         """
-        #: Relation[model]: Birim Modeline, list node sebebiyle many to many
         unit = Unit()
 
     def __unicode__(self):
