@@ -420,6 +420,18 @@ class Borc(Model):
         return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
 
 
+class Banka(Model):
+    ad = field.String("Banka Adi", index=True)
+    kod = field.String("Banka Kodu", index=True)
+
+    class Meta:
+        verbose_name = "Banka"
+        verbose_name_plural = "Bankalar"
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.kod)
+
+
 class Odeme(Model):
     miktar = field.Float("Borç Miktarı", index=True)
     para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
@@ -445,21 +457,9 @@ class Odeme(Model):
         return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
 
 
-class Banka(Model):
-    ad = field.String("Banka Adi", index=True)
-    kod = field.String("Banka Kodu", index=True)
-
-    class Meta:
-        verbose_name = "Banka"
-        verbose_name_plural = "Bankalar"
-
-    def __unicode__(self):
-        return '%s %s' % (self.ad, self.kod)
-
-
 class BankaAuth(Model):
-    username = field.String("Username")
-    password = field.String("Password")
+    username = field.String("Username", index=True)
+    password = field.String("Password", index=True)
     banka = Banka()
 
     class Meta:
