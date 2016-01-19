@@ -117,16 +117,3 @@ def ogrenci_bilgileri(current):
             "fields": iletisim_bilgileri
         }
     ]
-
-class BelgeForm(forms.JsonForm):
-    class Meta:
-        include = ["Belgeler"]
-
-    kaydet = fields.Button("Kaydet", cmd="save")
-
-class KayitBelgeler(CrudView):
-    class Meta:
-        model = "OgrenciProgram"
-
-    def belge_form(self):
-        self.form_out(BelgeForm(self.object, current = self.current))

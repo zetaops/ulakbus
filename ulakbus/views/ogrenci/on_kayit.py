@@ -59,12 +59,21 @@ class OnKayit(CrudView):
         ogrenci = Ogrenci.objects.get(user = self.current.user)
         self.form_out(OnKayitForm(ogrenci, current = self.current))
 
-    def kaydet(self):
-        self.set_form_data_to_object()
-        ogrenci_program = OgrenciProgram.objects.get(ogrenci = self.object, durum = 1)
-        ogrenci_program.durum = 2
-        ogrenci_program.save()
-        self.object.save()
-
-    def onayla_reddet(self):
+    def onayla(self):
         pass
+
+class BelgeForm(forms.JsonForm):
+    class Meta:
+        include = ["Belgeler"]
+
+    kaydet = fields.Button("Kaydet", cmd="save")
+    onayla = fields.Button("Ön Kayıt Onayla", cmd="onayla")
+
+class KayitBelgeler(CrudView):
+    class Meta:
+        model = "OgrenciProgram"
+
+    def belge_form(self):
+        ogrenci = Ogrenci.objects.get(user=self.current.user)
+        ogrenci_program = OgrenciProgram.objects.get(ogrenci = ogrenci)
+        self.form_out(BelgeForm(ogrenci_program, current = self.current))
