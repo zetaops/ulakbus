@@ -406,9 +406,6 @@ class Borc(Model):
     son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
     tahakkuk_referans_no = field.String("Tahakkuk Referans No")
     aciklama = field.String("Borç Açıklaması", index=True)
-    odeme_sekli = field.Integer("Ödeme Şekli", index=True, choices="odeme_sekli")
-    odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
-    odenen_miktar = field.String("Ödenen Miktar", index=True)
     ogrenci = Ogrenci()
     donem = Donem()
 
