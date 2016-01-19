@@ -57,8 +57,8 @@ class BankaBorcOdeme(BankaService):
                           'ogrenci_no', 'ucret_turu', 'tahakkuk_referans_no', 'tahsilat_referans_no', 'odeme_timestamp',
                           'odeme_tutari')
         output_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
-                           'mesaj_statusu', 'ogrenci_no', 'ucret_turu', 'tahakkuk_referans_no', 'tahsilat_referans_no',
-                           'odeme_timestamp', 'odeme_tutari', 'hata_mesaj')
+                           'ogrenci_no', 'ucret_turu', 'tahakkuk_referans_no', 'tahsilat_referans_no',
+                           'odeme_timestamp', 'odeme_tutari', 'mesaj_statusu','hata_mesaj')
 
     def handle(self):
         super(BankaBorcOdeme, self).handle()
@@ -96,17 +96,17 @@ class BankaBorcOdeme(BankaService):
             odeme.donem = borc.donem
 
             odeme.save()
-            mesaj_statusu = "K"
+            mesaj_statusu = "K"  # Kabul edildi
             hata_mesaj = None
 
         except ObjectDoesNotExist:
             self.logger.info('Ogrenci numarasi bulunamadi.')
-            mesaj_statusu = "R"
+            mesaj_statusu = "R"  # Reddedildi
             hata_mesaj = "Ogrenci numarasi bulunamadi!"
 
         except Exception as e:
             self.logger.info("Odeme kaydedilirken hata olustu: %s" % e)
-            mesaj_statusu = "R"
+            mesaj_statusu = "R"  # Reddedildi
             hata_mesaj = "Odeme kaydedilirken hata olustu!"
 
         finally:

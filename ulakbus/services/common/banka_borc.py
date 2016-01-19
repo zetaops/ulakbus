@@ -40,7 +40,8 @@ class BankaBorcGetir(BankaService):
                           'ogrenci_no')
         output_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
                            'ogrenci_no', 'ad_soyad', 'ucret_turu', 'tahakkuk_referans_no', 'son_odeme_tarihi',
-                           'borc', 'borc_ack')
+                           'borc', 'borc_ack', 'mesaj_statusu','hata_mesaj')
+        output_optional = ('mesaj_statusu','hata_mesaj')
 
     def handle(self):
         super(BankaBorcGetir, self).handle()
@@ -73,14 +74,19 @@ class BankaBorcGetir(BankaService):
                     'tahakkuk_referans_no': borc.tahakkuk_referans_no,
                     'son_odeme_tarihi': date.strftime(borc.son_odeme_tarihi, format='%d%m%Y'),
                     'borc': borc.miktar,
-                    'borc_ack': borc.aciklama
+                    'borc_ack': borc.aciklama,
+                    'mesaj_statusu': 'K', # Kabul edildi
+                    'hata_mesaj': None
                 }
 
                 self.logger.info("Borc bilgisi: %s" % json.dumps(borc_response))
                 self.response.payload.append(borc_response)
 
         except ObjectDoesNotExist:
-            self.logger.info('Ogrenci numarasi bulunamadi.')
+            self.logger.info("Ogrenci numarasi bulunamadi.")
+            self.response.payload['mesaj_statusu'] = "R"  # Reddedildi
+            self.response.payload['hata_mesaj'] = "Ogrenci numarasi bulunamadi!"
         except Exception as e:
             self.logger.info("Borc sorgulama sirasinda hata olustu: %s" % e)
+            self.response.payload['hata_mesaj'] = "Borc sorgulama hatasi!"
 
