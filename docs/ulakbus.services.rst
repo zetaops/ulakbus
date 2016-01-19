@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     ulakbus.services.common
+    ulakbus.services.personel
 
 Submodules
 ----------
