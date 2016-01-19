@@ -404,7 +404,7 @@ class Borc(Model):
     para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
     sebep = field.Integer("Borç Sebebi", index=True, choices="ogrenci_borc_sebepleri")
     son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
-    tahakkuk_referans_no = field.String("Tahakkuk Referans No")
+    tahakkuk_referans_no = field.String("Tahakkuk Referans No", index=True)
     aciklama = field.String("Borç Açıklaması", index=True)
     ogrenci = Ogrenci()
     donem = Donem()
@@ -441,9 +441,9 @@ class Odeme(Model):
     borc = Borc()
     ogrenci = Ogrenci()
     banka = Banka()
-    banka_sube_kodu = field.String("Banka Sube Kodu")
-    banka_kanal_kodu = field.String("Kanal Kodu")
-    tahsilat_referans_no = field.String("Tahsilat Referans No")
+    banka_sube_kodu = field.String("Banka Sube Kodu", index=True)
+    banka_kanal_kodu = field.String("Kanal Kodu", index=True)
+    tahsilat_referans_no = field.String("Tahsilat Referans No", index=True)
     donem = Donem()
 
     class Meta:
