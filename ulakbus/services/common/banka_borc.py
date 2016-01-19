@@ -8,12 +8,16 @@
 
 from ulakbus.services.common.banka import BankaService
 from ulakbus.models.ogrenci import OgrenciProgram, Borc
+import json
 
 
 class BankaBorcService(BankaService):
     """
     Banka Borc Sorgulama Zato Servisi
     """
+    
+    def __init__(self):
+        super(BankaBorcService, self).__init__()
 
     class SimpleIO:
         input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
@@ -41,11 +45,15 @@ class BankaBorcService(BankaService):
                 'bank_username': self.request.input.bank_username,
                 'bank_password': self.request.input.bank_password,
                 'ogrenci_no': self.request.input.ogrenci_no,
-                'ad_soyad': ogr.ad + ogr.soyad,
+                'ad_soyad': ogr.ad + " " + ogr.soyad,
                 'ucret_turu': borc.sebep,
                 'tahakkuk_referans_no': borc.tahakkuk_referans_no,
                 'son_odeme_tarihi': borc.son_odeme_tarihi,
                 'borc': borc.miktar,
                 'borc_ack': borc.aciklama
             }
+
+            self.logger.info("Borc bilgisi: %s" % json.dumps(borc_response))
+
+            self.logger.info(borc)
             self.response.payload.append(borc_response)
