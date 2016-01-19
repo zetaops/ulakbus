@@ -50,6 +50,7 @@ class BankaOdemeService(BankaService):
         odeme.ogrenci = ogr
         odeme.banka = banka
         odeme.banka_sube_kodu = self.request.input.sube_kodu
+        odeme.banka = self.banka
         odeme.banka_kanal_kodu = self.request.input.kanal_kodu
         odeme.tahsilat_referans_no = self.request.input.tahsilat_referans_no
 

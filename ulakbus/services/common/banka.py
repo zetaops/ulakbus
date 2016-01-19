@@ -17,8 +17,8 @@ class AuthException(Exception):
 def authenticate(f):
     def auth(self):
         try:
-            banka = Banka.object.get(kod=self.banka_kodu)
-            BankaAuth.object.get(username=self.bank_username, password=self.bank_password, banka=banka)
+            self.banka = Banka.object.get(kod=str(self.banka_kodu))
+            BankaAuth.object.get(username=self.bank_username, password=self.bank_password, banka=self.banka)
             self.logger.info("Authentication completed successfully.")
         except:
             raise AuthException("Authentication failed.")
@@ -31,6 +31,9 @@ class BankaService(Service):
     """
     Banka Zato Servisi
     """
+
+    def __init__(self):
+        self.banka = None
 
     class SimpleIO:
         input_required = ('banka_kodu', 'bank_username', 'bank_password')
