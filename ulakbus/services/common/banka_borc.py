@@ -11,7 +11,7 @@ from ulakbus.models.ogrenci import OgrenciProgram, Borc
 import json
 
 
-class BankaBorcService(BankaService):
+class BankaBorcGetir(BankaService):
     """
     Banka Borc Sorgulama Zato Servisi
 
@@ -31,9 +31,9 @@ class BankaBorcService(BankaService):
     """
     
     def __init__(self):
-        super(BankaBorcService, self).__init__()
+        super(BankaBorcGetir, self).__init__()
 
-    class SimpleIO:
+    class SimpleIO(BankaService.SimpleIO):
         input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
                           'ogrenci_no')
         output_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
@@ -41,7 +41,7 @@ class BankaBorcService(BankaService):
                            'borc', 'borc_ack')
 
     def handle(self):
-        super(BankaBorcService, self).handle()
+        super(BankaBorcGetir, self).handle()
 
     def get_data(self):
         """
@@ -50,7 +50,7 @@ class BankaBorcService(BankaService):
         :return: Borc bilgilerini liste halinde iceren JSON nesnesi
         """
 
-        super(BankaBorcService, self).get_data()
+        super(BankaBorcGetir, self).get_data()
 
         ogrenci_no = self.request.input.ogrenci_no
         ogr = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no).ogrenci
@@ -74,6 +74,4 @@ class BankaBorcService(BankaService):
             }
 
             self.logger.info("Borc bilgisi: %s" % json.dumps(borc_response))
-
-            self.logger.info(borc)
             self.response.payload.append(borc_response)

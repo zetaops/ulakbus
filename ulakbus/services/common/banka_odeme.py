@@ -11,7 +11,7 @@ from ulakbus.models.ogrenci import OgrenciProgram, Borc, Odeme
 import json
 
 
-class BankaOdemeService(BankaService):
+class BankaBorcOdeme(BankaService):
     """
     Banka Borc Odeme Zato Servisi
 
@@ -49,9 +49,9 @@ class BankaOdemeService(BankaService):
     """
 
     def __init__(self):
-        super(BankaOdemeService, self).__init__()
+        super(BankaBorcOdeme, self).__init__()
 
-    class SimpleIO:
+    class SimpleIO(BankaService.SimpleIO):
         input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
                           'ogrenci_no', 'ucret_turu', 'tahakkuk_referans_no', 'tahsilat_referans_no', 'odeme_timestamp',
                           'odeme_tutari')
@@ -60,7 +60,7 @@ class BankaOdemeService(BankaService):
                            'odeme_timestamp', 'odeme_tutari', 'hata_mesaj')
 
     def handle(self):
-        super(BankaOdemeService, self).handle()
+        super(BankaBorcOdeme, self).handle()
 
     def get_data(self):
         """
@@ -69,7 +69,7 @@ class BankaOdemeService(BankaService):
         :return: Odeme bilgisini iceren JSON nesnesi
         """
 
-        super(BankaOdemeService, self).get_data()
+        super(BankaBorcOdeme, self).get_data()
 
         ogrenci_no = self.request.input.ogrenci_no
         ogr = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no).ogrenci
