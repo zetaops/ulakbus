@@ -9,6 +9,11 @@
   <bpmn2:process id="kayit_onkayit" name="Ön Kayıt" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="Ogrenci" name="Ogrenci">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property value="[ulakbus.models.ogrenci.Ogrenci]" name="owners"/>
+          </camunda:properties>
+        </bpmn2:extensionElements>
         <bpmn2:flowNodeRef>on_kayit_form_goster</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>yerlestirme_bilgileri</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>yerlestirme_bilgileri_kaydet</bpmn2:flowNodeRef>
@@ -18,6 +23,12 @@
         <bpmn2:flowNodeRef>on_kayit_kaydet</bpmn2:flowNodeRef>
       </bpmn2:lane>
       <bpmn2:lane id="Memur" name="Memur">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property value="[ulakbus.models.ogrenci.Personel]" name="owners"/>
+            <camunda:property name="relations"/>
+          </camunda:properties>
+        </bpmn2:extensionElements>
         <bpmn2:flowNodeRef>ManualTask_2</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ManualTask_3</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>belge_kaydet</bpmn2:flowNodeRef>
