@@ -1,11 +1,19 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+
+"""
+Kimlik, İletişim ve Önceki Eğitim Bilgileri işlemleri için kullanacağımız temel model ``Öğrenci`` modelidir.
+Meta.model bu amaçla kullanılmıştır.
+
+İş akışlarında, ``CrudView`` extend edilerek isletilmektedir.Adimlar arasi geçiş dispatch manuel şekilde
+yürütülmektedir.
+
+
+"""
 
 from collections import OrderedDict
 from zengine.forms import fields
@@ -17,7 +25,13 @@ from ulakbus.models.ogrenci import Ogrenci
 
 
 class KimlikBilgileriForm(forms.JsonForm):
+    """
+        KadroBilgileri için object form olarak kullanılacaktır.Form, include listesindeki
+        alanlara sahiptir.
+
+    """
     class Meta:
+
         include = ['tckn', "ad", "soyad", "cinsiyet", "dogum_tarihi", "dogum_yeri", "uyruk",
                    "medeni_hali", "baba_adi", "ana_adi",
                    "cuzdan_seri", "cuzdan_seri_no", "kayitli_oldugu_il", "kayitli_oldugu_ilce",
@@ -32,6 +46,29 @@ class KimlikBilgileriForm(forms.JsonForm):
 
 
 class KimlikBilgileri(CrudView):
+    """
+    Kimlik Bilgileri iş akışı 3 adımdan olusmaktadır.
+
+    * Kimlik Bilgileri Formu
+    * Mernis Kimlik Sorgulama
+    * Kimlik Bilgileri Kaydet
+
+    Her adım başına kullanılan metotlar şu şekildedir:
+
+    Kimlik Bilgilerini Listele:
+        CrudView list metodu kullanılmıştır.Kimlik Bilgileri formunu listeler.
+
+    Mernis'ten Kimlik Bilgilerini Getir:
+        MERNİS, merkezi nüfus idare sisteminin kısa proje adıdır. Bu sistem ile nüfus kayıtları bilgisayar ortamına
+        aktarılarak veritabanları  oluşturulmuştur. Bu metot ile öğrenciye ait kimlik bilgilerine kamu kurumları
+        tarafından MERNIS'ten erişilir.
+
+    Kaydet:
+        MERNİS'ten gelen bilgileri ve yetkili kişinin öğrenciyle girdiği bilgileri kaydeder. İş akışı bu metottan
+        sonra sona eriyor.
+
+    """
+
     class Meta:
         model = "Ogrenci"
 
@@ -46,6 +83,11 @@ class KimlikBilgileri(CrudView):
 
 
 class IletisimBilgileriForm(forms.JsonForm):
+    """
+    İletişimBilgileri için object form olarak kullanılacaktır. Form, include listesindeki
+    alanlara sahiptir.
+
+    """
     class Meta:
         include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi", "posta_kodu", "eposta", "tel_no"]
 
@@ -54,6 +96,27 @@ class IletisimBilgileriForm(forms.JsonForm):
 
 
 class IletisimBilgileri(CrudView):
+    """
+   İletişim Bilgileri iş akışı 3 adımdan oluşmaktadır.
+
+   * İletisim Bilgileri Formu
+   * KPS Adres Sorgulama
+   * Iletisim Bilgileri Kaydet
+
+   Her adım başına kullanılan metotlar şu şekildedir.
+
+   İletişim Bilgilerini Listele:
+     CrudView list metodu kullanılmıştır.İletişim Bilgileri formunu listeler.
+
+   Kaydet:
+     KPS'ten gelen bilgileri ya da yetkili kişinin öğrenciyle ilgili girdiği bilgileri kaydeder.
+
+   KPS Adres Bilgilerini Getir:
+     Bu metot ile, Nüfus ve Vatandaşlık İşleri Genel Müdürlüğü tarafından tutulan kişiye ait nüfus
+     ve yerleşim yeri bilgilerine (merkezi veritabanında tutulan verilere) kamu kurumları tarafından erişilir.
+
+    """
+
     class Meta:
         model = "Ogrenci"
 
@@ -68,6 +131,11 @@ class IletisimBilgileri(CrudView):
 
 
 class OncekiEgitimBilgileriForm(forms.JsonForm):
+    """
+    OncekiEgitimBilgileri için object form olarak kullanılacaktır. Form, include listesindeki
+    alanlara sahiptir.
+    
+    """
     class Meta:
         include = ["okul_adi", "diploma_notu", "mezuniyet_yili"]
 
@@ -75,6 +143,19 @@ class OncekiEgitimBilgileriForm(forms.JsonForm):
 
 
 class OncekiEgitimBilgileri(CrudView):
+    """
+   Önceki Eğitim Bilgileri iş akışı 2 adımdan oluşmaktadır.
+
+   * Önceki Eğitim Bilgileri Formu
+   * Önceki Eğitim Bilgilerini Kaydet
+
+   Her adım başına kullanılan metot şu şekildedir:
+
+   Kaydet:
+     Girilen önceki eğitim bilgilerini kaydeder.
+
+    """
+
     class Meta:
         model = "OncekiEgitimBilgisi"
 
