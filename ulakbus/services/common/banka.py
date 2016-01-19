@@ -15,6 +15,10 @@ class AuthException(Exception):
 
 
 def authenticate(f):
+    """
+    Banka yetkilendirme kontrolu
+    """
+
     def auth(self):
         try:
             self.banka = Banka.object.get(kod=str(self.banka_kodu))
@@ -30,6 +34,15 @@ def authenticate(f):
 class BankaService(Service):
     """
     Banka Zato Servisi
+
+    :param banka_kodu: Universite tarafindan bankaya verilen kod
+    :type banka_kodu: int -> str
+
+    :param bank_username: Universite tarafindan bankaya verilen kullanici kodu
+    :type bank_username: str
+
+    :param bank_password: Universite tarafindan bankaya verilen kullanici sifresi
+    :type bank_username: str
     """
 
     def __init__(self):

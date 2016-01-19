@@ -13,7 +13,39 @@ import json
 
 class BankaOdemeService(BankaService):
     """
-    Banka Odeme Zato Servisi
+    Banka Borc Odeme Zato Servisi
+
+    :param banka_kodu: Universite tarafindan bankaya verilen kod
+    :type banka_kodu: int -> str
+
+    :param bank_username: Universite tarafindan bankaya verilen kullanici kodu
+    :type bank_username: str
+
+    :param bank_password: Universite tarafindan bankaya verilen kullanici sifresi
+    :type bank_username: str
+
+    :param ogrenci_no: Borclari sorgulanan ogrencinin kayitli oldugu programa ait ogrenci numarasi
+    :type sube_kodu: str
+
+    :param sube_kodu: Bankalarin subeleri icin hali hazirda kullandiklari kodlar
+    :type sube_kodu: int -> str
+
+    :param kanal_kodu: G: Gise, I: Internet, A: ATM, T: AloBanka vb.
+    :type kanal_kodu: str
+
+    :param tahakkuk_referans_no: Universite tarafindan her tahakkuka verilen referans numarasi
+    :type tahakkuk_referans_no: str
+
+    :param tahsilat_referans_no: Banka tarafindan verilen tahsilata ait referans no (makbuz no olabilir)
+    :type tahsilat_referans_no: str
+
+    :param odeme_timestamp: DDMMYYYYHHMMSS formatinda odeme tarihidir
+    :type odeme_timestamp: str
+
+    :param odeme_tutari: Banka tarafindan tahsil edilen miktar
+    :type odeme_tutari: float
+
+    :return Odeme bilgisini iceren JSON nesnesi
     """
 
     def __init__(self):
@@ -31,6 +63,12 @@ class BankaOdemeService(BankaService):
         super(BankaOdemeService, self).handle()
 
     def get_data(self):
+        """
+        Ogrencinin borc odeme bilgilerinin kaydedilmesi
+
+        :return: Odeme bilgisini iceren JSON nesnesi
+        """
+
         super(BankaOdemeService, self).get_data()
 
         ogrenci_no = self.request.input.ogrenci_no

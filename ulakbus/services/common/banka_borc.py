@@ -14,6 +14,20 @@ import json
 class BankaBorcService(BankaService):
     """
     Banka Borc Sorgulama Zato Servisi
+
+    :param banka_kodu: Universite tarafindan bankaya verilen kod
+    :type banka_kodu: int -> str
+
+    :param bank_username: Universite tarafindan bankaya verilen kullanici kodu
+    :type bank_username: str
+
+    :param bank_password: Universite tarafindan bankaya verilen kullanici sifresi
+    :type bank_username: str
+
+    :param ogrenci_no: Borclari sorgulanan ogrencinin kayitli oldugu programa ait ogrenci numarasi
+    :type sube_kodu: str
+
+    :return Borc bilgilerini liste halinde iceren JSON nesnesi
     """
     
     def __init__(self):
@@ -30,6 +44,12 @@ class BankaBorcService(BankaService):
         super(BankaBorcService, self).handle()
 
     def get_data(self):
+        """
+        Ogrencinin borc bilgilerinin dondurulmesi
+
+        :return: Borc bilgilerini liste halinde iceren JSON nesnesi
+        """
+
         super(BankaBorcService, self).get_data()
 
         ogrenci_no = self.request.input.ogrenci_no
