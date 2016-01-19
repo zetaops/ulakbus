@@ -8,7 +8,9 @@
 
 from ulakbus.services.common.banka import BankaService
 from ulakbus.models.ogrenci import OgrenciProgram, Borc
+from pyoko.exceptions import ObjectDoesNotExist
 import json
+from datetime import date
 
 
 class BankaBorcGetir(BankaService):
@@ -29,11 +31,11 @@ class BankaBorcGetir(BankaService):
 
     :return Borc bilgilerini liste halinde iceren JSON nesnesi
     """
-    
+
     def __init__(self):
         super(BankaBorcGetir, self).__init__()
 
-    class SimpleIO(BankaService.SimpleIO):
+    class SimpleIO():
         input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
                           'ogrenci_no')
         output_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
@@ -52,26 +54,33 @@ class BankaBorcGetir(BankaService):
 
         super(BankaBorcGetir, self).get_data()
 
-        ogrenci_no = self.request.input.ogrenci_no
-        ogr = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no).ogrenci
+        try:
+            ogrenci_no = self.request.input.ogrenci_no
+            ogrenci = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no).ogrenci
 
-        borclar = Borc.objects.filter(ogrenci=ogr)
-        for borc in borclar:
-            borc_response = {
-                'banka_kodu': self.request.input.banka_kodu,
-                'sube_kodu': self.request.input.sube_kodu,
-                'kanal_kodu': self.request.input.kanal_kodu,
-                'mesaj_no': self.request.input.mesaj_no,
-                'bank_username': self.request.input.bank_username,
-                'bank_password': self.request.input.bank_password,
-                'ogrenci_no': self.request.input.ogrenci_no,
-                'ad_soyad': ogr.ad + " " + ogr.soyad,
-                'ucret_turu': borc.sebep,
-                'tahakkuk_referans_no': borc.tahakkuk_referans_no,
-                'son_odeme_tarihi': borc.son_odeme_tarihi,
-                'borc': borc.miktar,
-                'borc_ack': borc.aciklama
-            }
+            borclar = Borc.objects.filter(ogrenci=ogrenci)
+            for borc in borclar:
+                borc_response = {
+                    'banka_kodu': self.request.input.banka_kodu,
+                    'sube_kodu': self.request.input.sube_kodu,
+                    'kanal_kodu': self.request.input.kanal_kodu,
+                    'mesaj_no': self.request.input.mesaj_no,
+                    'bank_username': self.request.input.bank_username,
+                    'bank_password': self.request.input.bank_password,
+                    'ogrenci_no': self.request.input.ogrenci_no,
+                    'ad_soyad': ogrenci.ad + " " + ogrenci.soyad,
+                    'ucret_turu': borc.sebep,
+                    'tahakkuk_referans_no': borc.tahakkuk_referans_no,
+                    'son_odeme_tarihi': date.strftime(borc.son_odeme_tarihi, format='%d%m%Y'),
+                    'borc': borc.miktar,
+                    'borc_ack': borc.aciklama
+                }
 
-            self.logger.info("Borc bilgisi: %s" % json.dumps(borc_response))
-            self.response.payload.append(borc_response)
+                self.logger.info("Borc bilgisi: %s" % json.dumps(borc_response))
+                self.response.payload.append(borc_response)
+
+        except ObjectDoesNotExist:
+            self.logger.info('Ogrenci numarasi bulunamadi.')
+        except Exception as e:
+            self.logger.info("Borc sorgulama sirasinda hata olustu: %s" % e)
+

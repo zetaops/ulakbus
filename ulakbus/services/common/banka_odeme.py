@@ -8,6 +8,7 @@
 
 from ulakbus.services.common.banka import BankaService
 from ulakbus.models.ogrenci import OgrenciProgram, Borc, Odeme
+from pyoko.exceptions import ObjectDoesNotExist
 import json
 
 
@@ -51,7 +52,7 @@ class BankaBorcOdeme(BankaService):
     def __init__(self):
         super(BankaBorcOdeme, self).__init__()
 
-    class SimpleIO(BankaService.SimpleIO):
+    class SimpleIO():
         input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
                           'ogrenci_no', 'ucret_turu', 'tahakkuk_referans_no', 'tahsilat_referans_no', 'odeme_timestamp',
                           'odeme_tutari')
@@ -71,51 +72,60 @@ class BankaBorcOdeme(BankaService):
 
         super(BankaBorcOdeme, self).get_data()
 
-        ogrenci_no = self.request.input.ogrenci_no
-        ogr = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no).ogrenci
-
-        # her borcun referans numarasi olarak 'tahakkuk_referans_no' kullanilir
-        tahakkuk_referans_no = self.request.input.tahakkuk_referans_no
-        borc = Borc.objects.filter(ogrenci=ogr, tahakkuk_referans_no=tahakkuk_referans_no)
-
-        odeme = Odeme()
-        odeme.miktar = self.request.input.odeme_tutari
-        odeme.para_birimi = 1  # TL
-        odeme.aciklama =  borc.aciklama
-        odeme.odeme_sekli = 3  # Banka
-        odeme.odeme_tarihi = self.request.input.odeme_timestamp
-        odeme.borc = borc
-        odeme.ogrenci = ogr
-        odeme.banka = self.banka
-        odeme.banka_sube_kodu = str(self.request.input.sube_kodu)
-        odeme.banka_kanal_kodu = self.request.input.kanal_kodu
-        odeme.tahsilat_referans_no = self.request.input.tahsilat_referans_no
-        odeme.donem = borc.donem
-
         try:
+            ogrenci_no = self.request.input.ogrenci_no
+            ogrenci = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no).ogrenci
+
+            # her borcun referans numarasi olarak 'tahakkuk_referans_no' kullanilir
+            tahakkuk_referans_no = self.request.input.tahakkuk_referans_no
+            borc = Borc.objects.filter(ogrenci=ogrenci, tahakkuk_referans_no=tahakkuk_referans_no)[0]
+
+            odeme = Odeme()
+            odeme.miktar = self.request.input.odeme_tutari
+            odeme.para_birimi = 1  # TL
+            odeme.aciklama =  borc.aciklama
+            odeme.odeme_sekli = 3  # Banka
+            odeme.odeme_tarihi = self.request.input.odeme_timestamp
+            odeme.borc = borc
+            odeme.ogrenci = ogrenci
+            odeme.banka = self.banka
+            odeme.banka_sube_kodu = str(self.request.input.sube_kodu)
+            odeme.banka_kanal_kodu = self.request.input.kanal_kodu
+            odeme.banka_kanal_kodu = self.request.input.kanal_kodu
+            odeme.tahsilat_referans_no = self.request.input.tahsilat_referans_no
+            odeme.donem = borc.donem
+
             odeme.save()
             mesaj_statusu = "K"
             hata_mesaj = None
-        except:
+
+        except ObjectDoesNotExist:
+            self.logger.info('Ogrenci numarasi bulunamadi.')
+            mesaj_statusu = "R"
+            hata_mesaj = "Ogrenci numarasi bulunamadi!"
+
+        except Exception as e:
+            self.logger.info("Odeme kaydedilirken hata olustu: %s" % e)
             mesaj_statusu = "R"
             hata_mesaj = "Odeme kaydedilirken hata olustu!"
 
-        odeme_response = {
-            'banka_kodu': self.request.input.banka_kodu,
-            'sube_kodu': self.request.input.sube_kodu,
-            'kanal_kodu': self.request.input.kanal_kodu,
-            'mesaj_no': self.request.input.mesaj_no,
-            'bank_username': self.request.input.bank_username,
-            'bank_password': self.request.input.bank_password,
-            'mesaj_statusu': mesaj_statusu,
-            'ogrenci_no': self.request.input.ogrenci_no,
-            'ucret_turu': self.request.input.sebep,
-            'tahakkuk_referans_no': self.request.input.tahakkuk_referans_no,
-            'tahsilat_referans_no': self.request.input.tahsilat_referans_no,
-            'odeme_timestamp': self.request.input.odeme_timestamp,
-            'odeme_tutari': self.request.input.odeme_tutari,
-            'hata_mesaj': hata_mesaj
-        }
+        finally:
+            odeme_response = {
+                'banka_kodu': self.request.input.banka_kodu,
+                'sube_kodu': self.request.input.sube_kodu,
+                'kanal_kodu': self.request.input.kanal_kodu,
+                'mesaj_no': self.request.input.mesaj_no,
+                'bank_username': self.request.input.bank_username,
+                'bank_password': self.request.input.bank_password,
+                'mesaj_statusu': mesaj_statusu,
+                'ogrenci_no': self.request.input.ogrenci_no,
+                'ucret_turu': self.request.input.ucret_turu,
+                'tahakkuk_referans_no': self.request.input.tahakkuk_referans_no,
+                'tahsilat_referans_no': self.request.input.tahsilat_referans_no,
+                'odeme_timestamp': self.request.input.odeme_timestamp,
+                'odeme_tutari': self.request.input.odeme_tutari,
+                'hata_mesaj': hata_mesaj
+            }
 
-        self.logger.info("Odeme bilgisi: %s" % json.dumps(odeme_response))
-        self.response.payload.append(odeme_response)
+            self.logger.info("Odeme bilgisi: %s" % json.dumps(odeme_response))
+            self.response.payload.append(odeme_response)

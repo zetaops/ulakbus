@@ -21,11 +21,13 @@ def authenticate(f):
 
     def auth(self):
         try:
-            self.banka = Banka.objects.get(kod=str(self.banka_kodu))
-            BankaAuth.objects.get(username=self.bank_username, password=self.bank_password, banka=self.banka)
+            self.banka = Banka.objects.get(kod=str(self.request.input.banka_kodu))
+            BankaAuth.objects.get(username=self.request.input.bank_username,
+                                      password=self.request.input.bank_password,
+                                      banka=self.banka)
             self.logger.info("Authentication completed successfully.")
-        except:
-            raise AuthException("Authentication failed.")
+        except Exception as e:
+            raise AuthException("Authentication failed. %s" % e)
         return f(self)
 
     return auth
@@ -57,7 +59,7 @@ class BankaService(Service):
         try:
             self.get_data()
         except AuthException as e:
-            self.logger.info(e.message)
+            self.logger.info(e)
 
     @authenticate
     def get_data(self):
