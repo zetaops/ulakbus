@@ -1,25 +1,19 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-#
-# Kimlik ve Iletisim Bilgileri WF adimlarini yurutur. WF 6 adimdan olusmaktadir.
-#
-# 1- Kimlik Bilgileri Formu
-# 2- Mernis Kimlik Sorgulama
-# 3- Kimlik Bilgileri Kaydet
-# 4- Ileitisim Bilgileri Formu
-# 5- KPS Adres Sorgulama
-# 6- Iletisim Bilgileri Kaydet
-#
-# Bu WF, CrudView extend edilerek isletilmektedir.
-# Adimlar arasi dispatch manuel sekilde yurutulmektedir.
-# Her adim basina kullanilan metodlar su sekildedir:
-#
+
+"""
+Kimlik ve  İletişim Bilgileri işlemleri için kullanacağımız temel model ``Personel`` modelidir.
+Meta.model bu amaçla kullanılmıştır.
+
+İş akışında, ``CrudView`` genişletilerek (extend) işletilmektedir. Adımlar arası geçiş manuel sekilde
+yürütülmektedir.
+
+
+
+"""
 from zengine.forms import JsonForm
 from zengine.forms import fields
 
@@ -29,6 +23,11 @@ from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 
 
 class KimlikBilgileriForm(JsonForm):
+    """
+    Kimlikİletişim için object form olarak kullanılacaktır. Form, include listesindeki
+    alanlara sahiptir.
+
+    """
     class Meta:
         include = ['tckn', 'ad', 'soyad', 'cinsiyet', 'uyruk', 'medeni_hali', 'cuzdan_seri',
                    'cuzdan_seri_no', 'baba_adi', 'ana_adi', 'dogum_tarihi', 'dogum_tarihi',
@@ -45,6 +44,11 @@ class KimlikBilgileriForm(JsonForm):
 
 
 class IletisimBilgileriForm(JsonForm):
+    """
+    Kimlikİletişim için object form olarak kullanılacaktır. Form, include listesindeki
+    alanlara sahiptir.
+
+    """
     class Meta:
         include = ['ikamet_adresi', 'ikamet_il', 'ikamet_ilce', 'adres_2', 'adres_2_posta_kodu',
                    'oda_no', 'oda_tel_no', 'cep_telefonu', 'e_posta', 'e_posta_2', 'e_posta_3',
@@ -55,6 +59,11 @@ class IletisimBilgileriForm(JsonForm):
 
 
 class DigerBilgilerForm(JsonForm):
+    """
+    Kimlikİletişim için object form olarak kullanılacaktır. Form, include listesindeki
+    alanlara sahiptir.
+
+    """
     class Meta:
         include = ['yayinlar', 'projeler', 'verdigi_dersler', 'kan_grubu', 'ehliyet',
                    'unvan', 'biyografi', 'notlar', 'engelli_durumu', 'engel_grubu',
@@ -64,6 +73,37 @@ class DigerBilgilerForm(JsonForm):
 
 
 class KimlikIletisim(CrudView):
+    """
+    Kimlik ve İletişim Bilgileri, aşağıda tanımlı iş akışı adımlarını yürütür.
+
+    - Kimlik Bilgileri Formu
+    - Mernis Kimlik Sorgulama
+    - Kimlik Bilgileri Kaydet
+    - İletişim Bilgileri Formu
+    - KPS Adres Sorgulama
+    - Iletişim Bilgileri Kaydet
+
+    Bu iş akışında kullanılan metotlar şu şekildedir:
+
+    Kimlik ve İletişim Bilgilerini Listele:
+       CrudView list metodu kullanılmıştır. Kimlik Bilgileri formunu listeler.
+
+    Mernis'ten Kimlik Bilgileri Getir:
+       MERNİS, merkezi nüfus idare sisteminin kısa proje adıdır. Bu sistem ile nüfus kayıtları bilgisayar ortamına
+       aktarılarak veritabanları  oluşturulmuştur. Bu metot ile personele ait kimlik bilgilerine kamu kurumları
+       tarafından MERNIS'ten erişilir.
+
+
+    KPS'den Adres Bilgileri Getir:
+       Bu metot ile, Nüfus ve Vatandaşlık İşleri Genel Müdürlüğü tarafından kaydı tutulan kişiye ait nüfus
+       ve yerleşim yeri bilgilerine (merkezi veritabanında tutulan verilere) kamu kurumları tarafından erişilir.
+
+
+    Kaydet:
+       MERNİS'ten, KPS'ten gelen bilgileri ve yetkili kişinin girdiği bilgileri kaydeder. İş akışı bu metottan
+       sonra sona eriyor.
+
+    """
     class Meta:
         model = 'Personel'
 
