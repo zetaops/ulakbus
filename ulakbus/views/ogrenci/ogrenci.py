@@ -6,10 +6,10 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 """
-Kimlik, İletişim ve Önceki Eğitim Bilgileri işlemleri için kullanacağımız temel model ``Öğrenci`` modelidir.
+Kimlik, İletişim ve Önceki Eğitim Bilgileri işlemleri için kullanılacak  temel model ``Öğrenci`` modelidir.
 Meta.model bu amaçla kullanılmıştır.
 
-İş akışlarında, ``CrudView`` extend edilerek isletilmektedir.Adimlar arasi geçiş dispatch manuel şekilde
+İş akışlarında, ``CrudView`` extend edilerek isletilmektedir.Adimlar arasi geçiş  manuel şekilde
 yürütülmektedir.
 
 
@@ -26,8 +26,8 @@ from ulakbus.models.ogrenci import Ogrenci
 
 class KimlikBilgileriForm(forms.JsonForm):
     """
-        KadroBilgileri için object form olarak kullanılacaktır.Form, include listesindeki
-        alanlara sahiptir.
+    KadroBilgileri için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
+    alanlara sahiptir.
 
     """
     class Meta:
@@ -53,7 +53,7 @@ class KimlikBilgileri(CrudView):
     * Mernis Kimlik Sorgulama
     * Kimlik Bilgileri Kaydet
 
-    Her adım başına kullanılan metotlar şu şekildedir:
+    Bu iş akışımda kullanılan metotlar şu şekildedir:
 
     Kimlik Bilgilerini Listele:
         CrudView list metodu kullanılmıştır.Kimlik Bilgileri formunu listeler.
@@ -61,7 +61,8 @@ class KimlikBilgileri(CrudView):
     Mernis'ten Kimlik Bilgilerini Getir:
         MERNİS, merkezi nüfus idare sisteminin kısa proje adıdır. Bu sistem ile nüfus kayıtları bilgisayar ortamına
         aktarılarak veritabanları  oluşturulmuştur. Bu metot ile öğrenciye ait kimlik bilgilerine kamu kurumları
-        tarafından MERNIS'ten erişilir.
+        tarafından MERNİS'ten erişilir ve KimlikBilgileriForm'undaki alanlar MERNİS'ten gelen bilgiler doğrultusunda
+        doldurulur.
 
     Kaydet:
         MERNİS'ten gelen bilgileri ve yetkili kişinin öğrenciyle girdiği bilgileri kaydeder. İş akışı bu metottan
@@ -84,7 +85,7 @@ class KimlikBilgileri(CrudView):
 
 class IletisimBilgileriForm(forms.JsonForm):
     """
-    İletişimBilgileri için object form olarak kullanılacaktır. Form, include listesindeki
+    İletişimBilgileri için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
     alanlara sahiptir.
 
     """
@@ -103,18 +104,18 @@ class IletisimBilgileri(CrudView):
    * KPS Adres Sorgulama
    * Iletisim Bilgileri Kaydet
 
-   Her adım başına kullanılan metotlar şu şekildedir.
+   Bu iş akışında kullanılan metotlar şu şekildedir.
 
    İletişim Bilgilerini Listele:
      CrudView list metodu kullanılmıştır.İletişim Bilgileri formunu listeler.
 
-   Kaydet:
-     KPS'ten gelen bilgileri ya da yetkili kişinin öğrenciyle ilgili girdiği bilgileri kaydeder.
-
    KPS Adres Bilgilerini Getir:
-     Bu metot ile, Nüfus ve Vatandaşlık İşleri Genel Müdürlüğü tarafından tutulan kişiye ait nüfus
-     ve yerleşim yeri bilgilerine (merkezi veritabanında tutulan verilere) kamu kurumları tarafından erişilir.
+     Bu metot ile, Nüfus ve Vatandaşlık İşleri Genel Müdürlüğü tarafından tutulan kişiye ait yerleşim yeri bilgilerine
+     (merkezi veritabanında tutulan verilere) kamu kurumları tarafından erişilir ve IletişimBilgileriForm'undaki alanlar
+     KPS'ten gelen bilgiler doğrultusunda doldurulur.
 
+    Kaydet:
+     KPS'ten gelen bilgileri ya da yetkili kişinin öğrenciyle ilgili girdiği bilgileri kaydeder.
     """
 
     class Meta:
@@ -132,9 +133,9 @@ class IletisimBilgileri(CrudView):
 
 class OncekiEgitimBilgileriForm(forms.JsonForm):
     """
-    OncekiEgitimBilgileri için object form olarak kullanılacaktır. Form, include listesindeki
+    OncekiEgitimBilgileri için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
     alanlara sahiptir.
-    
+
     """
     class Meta:
         include = ["okul_adi", "diploma_notu", "mezuniyet_yili"]
@@ -149,10 +150,13 @@ class OncekiEgitimBilgileri(CrudView):
    * Önceki Eğitim Bilgileri Formu
    * Önceki Eğitim Bilgilerini Kaydet
 
-   Her adım başına kullanılan metot şu şekildedir:
+   Bu iş akışında  kullanılan metotlar şu şekildedir:
+
+   Önceki Eğitim Bilgileri Formunu Listele:
+     CrudView list metodu kullanılmıştır. Önceki Eğitim Bilgileri formunu listeler.
 
    Kaydet:
-     Girilen önceki eğitim bilgilerini kaydeder.
+     Girilen önceki eğitim bilgilerini kaydeder. Bu adımdan sonra iş akışı sona erer.
 
     """
 
