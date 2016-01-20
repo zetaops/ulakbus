@@ -102,17 +102,17 @@ class BankaBorcOdeme(BankaService):
             odeme.donem = borc.donem
 
             odeme.save()
-            mesaj_statusu = "K"  # Kabul edildi
+            mesaj_statusu = "K"
             hata_mesaj = None
 
         except ObjectDoesNotExist:
             self.logger.info('Ogrenci numarasi bulunamadi.')
-            mesaj_statusu = "R"  # Reddedildi
+            mesaj_statusu = "R"
             hata_mesaj = "Ogrenci numarasi bulunamadi!"
 
         except Exception as e:
             self.logger.info("Odeme kaydedilirken hata olustu: %s" % e)
-            mesaj_statusu = "R"  # Reddedildi
+            mesaj_statusu = "R"
             hata_mesaj = "Odeme kaydedilirken hata olustu!"
 
         finally:

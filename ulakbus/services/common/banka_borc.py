@@ -5,6 +5,24 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""Banka Borç Sorgulama
+
+Banka tarafından öğrencinin borçlarını sorgulamak için kullanılan Zato Servisi.
+
+Yetkilendirme için banka bilgileri,
+öğrenci borç bilgilerine erişim için öğrenci numarası alınır.
+
+Elde edilen bilgilerle öğrencinin tüm borç bilgileri (mevcutsa) listelenir.
+
+Example:
+    Servise JSON nesnesi kullanılarak istek gönderilmesi::
+
+        $ curl http://localhost:11223/banka-borc-getir -d
+            '{"banka_kodu": "kod", "bank_username": "user", "bank_password": "pass",
+            "ogrenci_no":"ogr_no", "sube_kodu":"sube", "kanal_kodu":"kanal", "mesaj_no":"mesaj"}'
+
+
+"""
 
 from ulakbus.services.common.banka import BankaService
 from ulakbus.models.ogrenci import OgrenciProgram, Borc
@@ -15,21 +33,8 @@ from datetime import date
 
 class BankaBorcGetir(BankaService):
     """
-    Banka Borc Sorgulama Zato Servisi
+    Banka servisinden kalıtılarak gerçekleştirilen Banka Borç Sorgulama servisi.
 
-    :param banka_kodu: Universite tarafindan bankaya verilen kod
-    :type banka_kodu: int -> str
-
-    :param bank_username: Universite tarafindan bankaya verilen kullanici kodu
-    :type bank_username: str
-
-    :param bank_password: Universite tarafindan bankaya verilen kullanici sifresi
-    :type bank_username: str
-
-    :param ogrenci_no: Borclari sorgulanan ogrencinin kayitli oldugu programa ait ogrenci numarasi
-    :type sube_kodu: str
-
-    :return Borc bilgilerini liste halinde iceren JSON nesnesi
     """
 
     def __init__(self):
@@ -37,13 +42,30 @@ class BankaBorcGetir(BankaService):
 
     class SimpleIO():
         """
-        Servisin ihtiyac duydugu girdi ve cikti degiskenlerinin listesi.
+        Servis girdilerinin ve çıktılarının belirlendiği yapı.
 
-        Servisten geri donmesi gereken degerler:
-            mesaj_statusu (K: Kabul, R:Ret)
-            hata_mesaji (mesaj icerigi veya null)
+        Attributes:
+            borc_request (str): Servise gelen istek yapısının kök elemanının ismi
+            borc_response (str): Servisten dönen veriyi içeren (payload) yapının
+                                kök elemanının ismi
 
-        Kalan degerler servisin calismasinin basarili olmasi durumuna gore istege bagli olarak dondurulmektedir.
+            banka_kodu (str): Üniversite tarafından bankaya verilen kod
+            bank_username (str): Üniversite tarafından bankaya verilen kullanıcı adı
+            bank_password (str): Üniversite tarafından bankaya verilen şifre
+            sube_kodu (str): Bankaların şubeleri için hali hazırda kullandıkları kodlar
+            kanal_kodu (str): G (Gişe), İ (İnternet), A (ATM), T (AloBanka) vb.
+            mesaj_no (str): Banka tarafından üretilen kod.
+            ogrenci_no (str): Borçları sorgulanan öğrencinin numarası
+
+            mesaj_statusu (str): K (Kabul), R (Ret)
+            hata_mesaji (str): Hata mesajı içeriği veya null
+            ad_soyad (str): Öğrenci adı soyadı
+            ucret_turu (int): Borcun ne için ödeneceği
+            tahakkuk_referans_no (str): Her tahakkuka verilen referans numarası
+            son_odeme_tarihi (str): Borcun son ödeme tarihi (DDMMYY formatında)
+            borc (float): Borcun miktarı
+            borc_ack (str): Borç açıklaması
+
         """
 
         request_elem = 'borc_request'
@@ -56,13 +78,29 @@ class BankaBorcGetir(BankaService):
                            'borc', 'borc_ack')
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Yetkilendirme işleminin sonucuna göre servis çalışmaya devam eder.
+
+        """
+
         super(BankaBorcGetir, self).handle()
 
     def get_data(self):
         """
-        Ogrencinin borc bilgilerinin dondurulmesi
+        Öğrencinin bilgilerine göre tüm borç bilgilerini döndürür.
 
-        :return: Borc bilgilerini liste halinde iceren JSON nesnesi
+        Öğrenci numarasına göre, öğrencinin dahil olduğu programdan bilgileri alınır ve
+        öğrenciye ait (varsa) borçlara erişilir. Borçlar bir liste halinde geriye döndürülür.
+
+        Öğrenci sistemde bulunamadıysa veya beklenmeyen bir hatayla karşılaşıldıysa
+        cevap olarak hata mesajı döndürülür.
+
+        Raises:
+            ObjectDoesNotExist: Öğrenci numarası sistemde kayıtlı değildir.
+            Exception: Öğrencinin borçları sorgulanırken hatayla karşılaşılmıştır.
+
         """
 
         super(BankaBorcGetir, self).get_data()
@@ -87,7 +125,7 @@ class BankaBorcGetir(BankaService):
                     'son_odeme_tarihi': date.strftime(borc.son_odeme_tarihi, format='%d%m%Y'),
                     'borc': borc.miktar,
                     'borc_ack': borc.aciklama,
-                    'mesaj_statusu': 'K', # Kabul edildi
+                    'mesaj_statusu': 'K',
                     'hata_mesaj': None
                 }
 
@@ -96,10 +134,10 @@ class BankaBorcGetir(BankaService):
 
         except ObjectDoesNotExist:
             self.logger.info("Ogrenci numarasi bulunamadi.")
-            self.response.payload['mesaj_statusu'] = "R"  # Reddedildi
+            self.response.payload['mesaj_statusu'] = "R"
             self.response.payload['hata_mesaj'] = "Ogrenci numarasi bulunamadi!"
         except Exception as e:
             self.logger.info("Borc sorgulama sirasinda hata olustu: %s" % e)
-            self.response.payload['mesaj_statusu'] = "R"  # Reddedildi
+            self.response.payload['mesaj_statusu'] = "R"
             self.response.payload['hata_mesaj'] = "Borc sorgulama hatasi!"
 
