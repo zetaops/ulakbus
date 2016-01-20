@@ -5,13 +5,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""
-Kimlik, İletişim ve Önceki Eğitim Bilgileri işlemleri için kullanılacak  temel model ``Öğrenci`` modelidir.
-Meta.model bu amaçla kullanılmıştır.
+"""Öğrencilerin Genel Bilgileri ile ilgili İş Akışlarına ait
+sınıf ve metodları içeren modüldür.
 
-İş akışlarında, ``CrudView`` extend edilerek isletilmektedir.Adimlar arasi geçiş  manuel şekilde
-yürütülmektedir.
-
+Kimlik Bilgileri, İletişim Bilgileri ve Önceki Eğitim Bilgileri gibi
+iş akışlarının yürütülmesini sağlar.
 
 """
 
@@ -26,12 +24,12 @@ from ulakbus.models.ogrenci import Ogrenci
 
 class KimlikBilgileriForm(forms.JsonForm):
     """
-    KadroBilgileri için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    KimlikBilgileri sınıfı için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
-    class Meta:
 
+    class Meta:
         include = ['tckn', "ad", "soyad", "cinsiyet", "dogum_tarihi", "dogum_yeri", "uyruk",
                    "medeni_hali", "baba_adi", "ana_adi",
                    "cuzdan_seri", "cuzdan_seri_no", "kayitli_oldugu_il", "kayitli_oldugu_ilce",
@@ -46,7 +44,8 @@ class KimlikBilgileriForm(forms.JsonForm):
 
 
 class KimlikBilgileri(CrudView):
-    """
+    """Kimlik Bilgileri İş Akışı
+
     Kimlik Bilgileri iş akışı 3 adımdan olusmaktadır.
 
     * Kimlik Bilgileri Formu
@@ -56,17 +55,23 @@ class KimlikBilgileri(CrudView):
     Bu iş akışımda kullanılan metotlar şu şekildedir:
 
     Kimlik Bilgilerini Listele:
-        CrudView list metodu kullanılmıştır.Kimlik Bilgileri formunu listeler.
+        CrudView list metodu kullanılmıştır.Kimlik Bilgileri formunu
+        listeler.
 
     Mernis'ten Kimlik Bilgilerini Getir:
-        MERNİS, merkezi nüfus idare sisteminin kısa proje adıdır. Bu sistem ile nüfus kayıtları bilgisayar ortamına
-        aktarılarak veritabanları  oluşturulmuştur. Bu metot ile öğrenciye ait kimlik bilgilerine kamu kurumları
-        tarafından MERNİS'ten erişilir ve KimlikBilgileriForm'undaki alanlar MERNİS'ten gelen bilgiler doğrultusunda
-        doldurulur.
+        MERNİS, merkezi nüfus idare sisteminin kısa proje adıdır. Bu metot sayesinde
+        öğrenciye ait kimlik bilgilerine MERNİS'ten erişilir. KimlikBilgileriForm'undaki
+        alanlar MERNİS'ten gelen bilgiler doğrultusunda doldurulur.
 
     Kaydet:
-        MERNİS'ten gelen bilgileri ve yetkili kişinin öğrenciyle girdiği bilgileri kaydeder. İş akışı bu metottan
-        sonra sona eriyor.
+        MERNİS'ten gelen bilgileri ve yetkili kişinin öğrenciyle girdiği bilgileri
+        kaydeder. Bu adım ``CrudView.save()`` metodunu kullanır. İş akışı bu adımdan
+        sonra sona erer.
+
+    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Öğrenci``
+    modelidir. Meta.model bu amaçla kullanılmıştır.
+
+    Adımlar arası geçiş manuel yürütülmektedir.
 
     """
 
@@ -89,6 +94,7 @@ class IletisimBilgileriForm(forms.JsonForm):
     alanlara sahiptir.
 
     """
+
     class Meta:
         include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi", "posta_kodu", "eposta", "tel_no"]
 
@@ -137,6 +143,7 @@ class OncekiEgitimBilgileriForm(forms.JsonForm):
     alanlara sahiptir.
 
     """
+
     class Meta:
         include = ["okul_adi", "diploma_notu", "mezuniyet_yili"]
 
