@@ -41,9 +41,14 @@ class DersBilgileriForm(forms.JsonForm):
                    'verilis_bicimi', 'donem',
                    'ders_koordinatoru']
 
-    kaydet = fields.Button("Kaydet", cmd="kaydet", flow="end")
-    kaydet_yeni_kayit = fields.Button("Kaydet/Yeni Kayıt Ekle", cmd="kaydet", flow="start")
+    kaydet = fields.Button("Kaydet", cmd="kaydet")
 
+class DersDegerlendirmeForm(forms.JsonForm):
+    class Meta:
+        include = ['Degerlendirme']
+
+    kaydet = fields.Button("Kaydet", cmd="degerlendirme_kaydet", flow="end")
+    kaydet_yeni_kayit = fields.Button("Kaydet/Yeni Kayıt Ekle", cmd="kaydet", flow="start")
 
 class DersEkle(CrudView):
     class Meta:
@@ -53,10 +58,15 @@ class DersEkle(CrudView):
         self.set_form_data_to_object()
         self.current.task_data['program_id'] = self.object.program.key
 
+    def degerlendirme_form(self):
+        ders = Ders.objects.get(self.current.task_data['ders_id'])
+        self.form_out(DersDegerlendirmeForm(ders, current=self.current))
+
     def kaydet(self):
         self.set_form_data_to_object()
         self.object.program = Program.objects.get(self.current.task_data['program_id'])
         self.save_object()
+        self.current.task_data['ders_id'] = self.object.key
         # self.current.task_data['next'] = self.current.input['next']
 
     def ders_bilgileri(self):
