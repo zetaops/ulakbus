@@ -688,6 +688,7 @@ class DegerlendirmeNot(Model):
     yil = field.String("Yıl", index=True)
     donem = field.String("Dönem", index=True)
     ogretim_elemani = field.String("Öğretim Elemanı", index=True)
+    ogrenci_no = field.String("Öğrenci No", index=True)
     ders = Ders()
 
     class Meta:
