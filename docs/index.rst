@@ -2,6 +2,18 @@ Ulakbüs
 =======
 
 .. toctree::
-   :maxdepth: 4
 
-   ulakbus
+    ulakbus.lib
+    ulakbus.models
+    ulakbus.services
+    ulakbus.tasks
+    ulakbus.views
+
+Submodules
+----------
+
+.. toctree::
+
+   ulakbus.manage
+   ulakbus.settings
+

@@ -191,7 +191,6 @@ html_static_path = ['_static']
 # Sphinx supports the following languages:
 #   'da', 'de', 'en', 'es', 'fi', 'fr', 'h', 'it', 'ja'
 #   'nl', 'no', 'pt', 'ro', 'r', 'sv', 'tr'
-
 # html_search_language = 'en'
 
 # A dictionary with options for the search language support, empty by default.
