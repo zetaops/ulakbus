@@ -1,12 +1,11 @@
 # -*-  coding: utf-8 -*-
-"""Ders Ekleme ve Okutman Not Giriş workflowlarına ait adımlarla ilişkili methodları barındırır.
-
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+"""Ders Ekleme ve Okutman Not Giriş workflowlarına ait adımlarla ilişkili methodları barındırır.
+
+"""
 
 from pyoko import ListNode
 from zengine import forms
@@ -27,6 +26,12 @@ def okutman_choices():
 
 
 class ProgramBilgisiForm(forms.JsonForm):
+    """
+    DersEkle için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
+    alanlara sahiptir.
+
+    """
+
     class Meta:
         include = ['program']
 
@@ -34,6 +39,12 @@ class ProgramBilgisiForm(forms.JsonForm):
 
 
 class DersBilgileriForm(forms.JsonForm):
+    """
+    DersEkle için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
+    alanlara sahiptir.
+
+    """
+
     class Meta:
         include = ['ad', 'kod', 'tanim', 'aciklama', 'onkosul', 'uygulama_saati', 'teori_saati',
                    'ects_kredisi',
@@ -48,6 +59,32 @@ class DersBilgileriForm(forms.JsonForm):
 
 
 class DersEkle(CrudView):
+    """
+    Ders Ekle, aşağıda tanımlı iş akışı adımlarını yürütür.
+
+    - Program Formunu Listele
+    - Program Seç
+    - Ders Bilgilerini Gir
+    - Kaydet
+    - Kaydet/Yeni Kayıt Ekle
+
+     Bu iş akışında kullanılan metotlar şu şekildedir:
+
+     Program Formunu Listele:
+        CrudView list metodu kullanılmıştır. Bu metot default olarak tanımlanmıştır. ProgramBilgisiForm'unu listeler.
+
+     Program Seç:
+        Kayıtlı programlardan birini seçer.
+
+     Ders Bilgilerini Gir:
+          DersBilgileriFormu'nu alanlar doldurulur.
+
+     Kaydet/Yeni Kayıt Ekle:
+        Seçilen programı için  girilen ders bilgilerini kaydeder. Bu adımdan sonra iş akışı sona erer.
+
+
+    """
+
     class Meta:
         model = "Ders"
 
@@ -73,10 +110,19 @@ class SecimForm(forms.JsonForm):
 
 
 class ProgramForm(forms.JsonForm):
+    """
+    DersSubelendirme için object form olarak kullanılacaktır.
+
+    """
     sec = fields.Button("Sec", cmd="ders_sec")
 
 
 class SubelendirmeForm(forms.JsonForm):
+    """
+    DersSubelendirme için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
+    alanlara sahiptir.
+
+    """
     kaydet_ders = fields.Button("Kaydet ve Ders Seçim Ekranına Dön", cmd="subelendirme_kaydet",
                                 flow="ders_okutman_formu")
     program_sec = fields.Button("Kaydet ve Program Seçim Ekranına Dön", cmd="subelendirme_kaydet",
@@ -101,6 +147,44 @@ class NotGirisForm(forms.JsonForm):
 
 
 class DersSubelendirme(CrudView):
+    """
+     Ders Şubelendirme, aşağıda tanımlı iş akışı adımlarını yürütür.
+
+     - Program Formunu Listele
+     - Program Seç
+     - Ders Şubelendir
+     - Şube Formunu Listele
+     - Kaydet ve Ders Seçim Ekranına Dön
+     - Kaydet ve Program Seçim Ekranına Dön
+     - Tamamla ve Hocaları Bilgilendir
+
+    Bu iş akışında kullanılan metotlar şu şekildedir:
+
+    Program  Formunu Listele:
+        CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır. Program formunu listeler.
+
+    Seç:
+        Kayıtlı programlardan birini seçer. Seçilen program kayıtlı dersleri döndürür.
+
+    Şubelendir:
+        Şubelendirelecek ders seçilir.
+
+    Şube Formunu Listele:
+        Şubelenmiş dersin şube detaylarını gösterir ya da seçilen dersi şubelendirir.
+
+    Kaydet ve Ders Seçim Ekranına Dön:
+        Şubelendirilmiş dersi kaydeder ve ders seçim ekranına geri döner.
+
+    Kaydet ve Program Seçim Ekranına Dön:
+        Şubelendirilmiş dersi kaydeder ve program seçim  ekranına geri döner. İş akışı Program formundan
+        devam eder.
+
+    Tamamla ve Hocaları Bilgilendir:
+         Şubelendirilmiş dersin hocalarına, şube bilgileri aktarılır. Bu adımdan sonra iş akışı sona eriyor.
+
+
+    """
+
     class Meta:
         model = "Sube"
 
@@ -126,13 +210,13 @@ class DersSubelendirme(CrudView):
             sube = []
             for s in subeler:
                 sube.append(
-                        {
-                            "sube_ad": s.ad,
-                            "okutman_ad": s.okutman.ad,
-                            "okutman_soyad": s.okutman.soyad,
-                            "okutman_unvan": s.okutman.unvan,
-                            "kontenjan": s.kontenjan,
-                        }
+                    {
+                        "sube_ad": s.ad,
+                        "okutman_ad": s.okutman.ad,
+                        "okutman_soyad": s.okutman.soyad,
+                        "okutman_unvan": s.okutman.unvan,
+                        "kontenjan": s.kontenjan,
+                    }
                 )
 
             ders_subeleri = ["{okutman_unvan} {okutman_ad}"
