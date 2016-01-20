@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 """
-Kimlik ve  İletişim Bilgileri işlemleri için kullanacağımız temel model ``Personel`` modelidir.
+Kimlik ve  İletişim Bilgileri işlemleri için kullanılacak temel model ``Personel`` modelidir.
 Meta.model bu amaçla kullanılmıştır.
 
 İş akışında, ``CrudView`` genişletilerek (extend) işletilmektedir. Adımlar arası geçiş manuel sekilde
@@ -24,7 +24,7 @@ from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 
 class KimlikBilgileriForm(JsonForm):
     """
-    Kimlikİletişim için object form olarak kullanılacaktır. Form, include listesindeki
+    KimlikIletişim için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
     alanlara sahiptir.
 
     """
@@ -45,7 +45,7 @@ class KimlikBilgileriForm(JsonForm):
 
 class IletisimBilgileriForm(JsonForm):
     """
-    Kimlikİletişim için object form olarak kullanılacaktır. Form, include listesindeki
+    KimlikIletisim için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
     alanlara sahiptir.
 
     """
@@ -60,7 +60,7 @@ class IletisimBilgileriForm(JsonForm):
 
 class DigerBilgilerForm(JsonForm):
     """
-    Kimlikİletişim için object form olarak kullanılacaktır. Form, include listesindeki
+    KimlikIletisim için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
     alanlara sahiptir.
 
     """
@@ -82,22 +82,36 @@ class KimlikIletisim(CrudView):
     - İletişim Bilgileri Formu
     - KPS Adres Sorgulama
     - Iletişim Bilgileri Kaydet
+    - Diğer Bilgiler Formu
+    - Diğer Bilgileri Kaydet
 
     Bu iş akışında kullanılan metotlar şu şekildedir:
 
-    Kimlik ve İletişim Bilgilerini Listele:
-       CrudView list metodu kullanılmıştır. Kimlik Bilgileri formunu listeler.
+    Kimlik Bilgilerini Formunu Listele:
+       CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır. KimlikBilgileriForm'unu listeler.
 
     Mernis'ten Kimlik Bilgileri Getir:
        MERNİS, merkezi nüfus idare sisteminin kısa proje adıdır. Bu sistem ile nüfus kayıtları bilgisayar ortamına
        aktarılarak veritabanları  oluşturulmuştur. Bu metot ile personele ait kimlik bilgilerine kamu kurumları
-       tarafından MERNIS'ten erişilir.
+       tarafından MERNİS'ten erişilir ve KimlikBilgileriFormu'ndaki alanlar MERNİS'ten gelen bilgiler doğrultusunda
+       doldurulur.
 
+    Kaydet:
+       MERNİS'ten gelen bilgileri ve yetkili kişinin girdiği bilgileri kaydeder.
+
+    İletişim Bilgilerini Formunu Listele:
+       CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır. IletisimBilgileriForm'unu listeler.
 
     KPS'den Adres Bilgileri Getir:
-       Bu metot ile, Nüfus ve Vatandaşlık İşleri Genel Müdürlüğü tarafından kaydı tutulan kişiye ait nüfus
-       ve yerleşim yeri bilgilerine (merkezi veritabanında tutulan verilere) kamu kurumları tarafından erişilir.
+       Bu metot ile, Nüfus ve Vatandaşlık İşleri Genel Müdürlüğü tarafından kaydı tutulan kişiye ait nüfus ve yerleşim
+       yeri bilgilerine (merkezi veritabanında tutulan verilere) kamu kurumları tarafından erişilir ve
+       IletişimBilgileriForm'undaki alanlar KPS'ten gelen bilgiler doğrultusunda doldurulur.
 
+    Kaydet:
+       KPS'ten gelen bilgileri ve yetkili kişinin girdiği bilgileri kaydeder.
+
+    Diğer Bilgiler Formu:
+       CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır. DigerBilgilerForm'unu listeler.
 
     Kaydet:
        MERNİS'ten, KPS'ten gelen bilgileri ve yetkili kişinin girdiği bilgileri kaydeder. İş akışı bu metottan
