@@ -6,9 +6,10 @@
 
 """Öğrenci Modülü
 
-Bu modül Ulakbüs uygulaması için öğrenci ve öğrenciyle ilişkili data modellerini içerir.
+Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
 
 """
+
 from pyoko.lib.utils import lazy_property
 from .personel import Personel
 from pyoko import Model, field, ListNode
@@ -24,6 +25,7 @@ class HariciOkutman(Model):
     Harici okutmanın özlük ve iletişim bilgilerini içerir.
 
     """
+
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)
@@ -101,6 +103,8 @@ class HariciOkutman(Model):
 class Okutman(Model):
     """Okutman Modeli
 
+    Okutman bilgileri için data modelidir.
+
     Okutman, ders veren tüm öğretim elemanlarının (öğretim üyesi, öğretim elemanı,
     okutman ve harici okutman) genel adıdır.
 
@@ -128,15 +132,25 @@ class Okutman(Model):
 
     @lazy_property
     def okutman(self):
-        # self.personel layz model dondurdugu icin self.personel.key seklinde kontrol etmeliyiz.
-        return self.personel if self.personel.key else self.harici_okutman
+        """Okutmanın bağlı olduğu personel veya harici okutmanı döndürür.
+
+        Example:
+            Okutman örneği (instance) üzerinden erişilebilir. Aşağıdaki örnek ilgili okutmanın
+            eposta bilgisine erişim sağlar. Okutman personel ise Personel modeli eposta alanı,
+            harici okutman ise HariciOkutman modeli eposta alanı kullanılır::
+
+                ders_okutman = Okutman.objects.get(ad="Yeter", soyad="Demir")
+                eposta = ders_okutman.okutman.eposta
+
+        """
+
+        return self.personel if self.personel.exist else self.harici_okutman
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
     def is_not_unique(self):
-        """
-        Personel veya Harici Okutman sayısını bulur.
+        """Personel veya Harici Okutman sayısını bulur.
 
         Returns:
             personel veya harici okutman sayısı
@@ -149,12 +163,19 @@ class Okutman(Model):
             return len(self.objects.filter(harici_okutman=self.harici_okutman))
 
     def pre_save(self):
-        """
-        Okutman özelligi ile erişilen personel veya harici okutman kaydi tekil olmalıdır.
+        """Bu metot nesne kayıt edilmeden hemen önce çalışır.
 
-        Aynı personel veya aynı harici okutmanın birden fazla Okutman kaydı bulunamaz.
+        Okutmanın bağlı olduğu personel veya harici okutman kaydı tekil olmalıdır. Bir okutmanın
+        ya personel ya da harici okutman kaydı bulunabilir.
 
-        Bu kontrol, save metodundan hemen önce çalışan pre_save metodu ile yapılır.
+        Ayrıca aynı personel veya aynı harici okutmanın birden fazla Okutman kaydı bulunamaz.
+
+        Bu metot ilgili kontrolleri yapıp, nesneyi kaydetmeye hazır hale getirir.
+
+
+        Raises:
+            Exception: Eğer kaydedilen nesne, veritabanında varsa ve tekil değilse
+
 
         """
         if self.okutman.key:
@@ -166,14 +187,14 @@ class Okutman(Model):
 
 
 class Donem(Model):
-    """ Dönem Modeli
+    """Dönem Modeli
 
     Güz, bahar ve yaz akademik dönemlerinin bilgilerine ait modeldir.
 
     Güncel alanı, içerisinde bulunulan akademik dönemi işaret eder.
 
-
     """
+
     ad = field.String("Ad", index=True)
     baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
@@ -193,9 +214,11 @@ class Donem(Model):
 class Program(Model):
     """Program Modeli
 
-     Bir bölümün tüm öğrenim programı (ders ve uygulamalardan oluşan) bilgilerinin saklandığı modeldir.
+     Bir bölümün öğrenim programı (ders ve uygulamalardan oluşan) bilgilerinin
+     saklandığı modeldir.
 
     """
+
     yoksis_no = field.String("YOKSIS ID", index=True)
     bolum_adi = field.String("Bölüm", index=True)
     ucret = field.Integer("Ücret", index=True)
@@ -235,6 +258,7 @@ class Ders(Model):
     Program dahilinde açılan derslerin bilgilerinin saklandığı modeldir.
 
     """
+
     ad = field.String("Ad", index=True)
     kod = field.String("Kod", index=True)
     tanim = field.String("Tanım", index=True)
@@ -288,9 +312,11 @@ class Sube(Model):
 
     Her şubenin önceden belirlenmiş bir kontenjanı vardır.
 
-    Dış kontenjan ise, o şubeyi dersin ait olduğu bölümün dışından seçebilecek öğrenci sayısını ifade eder.
+    Dış kontenjan ise, o şubeyi, dersin ait olduğu bölüm dışından seçebilecek
+    öğrenci sayısını ifade eder.
 
     """
+
     ad = field.String("Ad", index=True)
     kontenjan = field.Integer("Kontenjan", index=True)
     dis_kontenjan = field.Integer("Dış Kontenjan", index=True)
@@ -315,7 +341,7 @@ class Sube(Model):
 class Sinav(Model):
     """Sınav Modeli
 
-    Derse ait sınav(ara sınav, genel sınav, bütünleme, tek ders)
+    Derse ait sınav(ara sınav, genel sınav, bütünleme, tek ders, muafiyet)
     bilgilerinin saklandığı modeldir.
 
     Sınavlar şubeler için ders dolayısı ile otomatik açılırlar. Bu sebeple temel bağ Şube
@@ -323,8 +349,8 @@ class Sinav(Model):
 
     Ders arama kolaylığı için eklenmiştir.
 
-
     """
+
     tarih = field.Date("Sınav Tarihi", index=True)
     yapilacagi_yer = field.String("Yapılacağı Yer", index=True)
     tur = field.Integer("Sınav Türü", index=True, choices="sinav_turleri")
@@ -349,6 +375,7 @@ class DersProgrami(Model):
     Dersin işlenecegi gün, saat, şube ve derslik bilgilerini saklayan modeldir.
 
     """
+
     gun = field.String("Ders Günü", index=True)
     saat = field.Integer("Ders Saati", index=True)
     sube = Sube()
@@ -370,11 +397,11 @@ class Ogrenci(Model):
 
     Öğrencinin özlük ve iletişim bilgilerinin saklandığı modeldir.
 
-    Öğrenci sisteme giriş yapmaya ve yetkileri doğrultusunda workflowlar
-    
+    Öğrenciler, sisteme giriş yapar ve yetkileri doğrultusunda iş akışları
     çalıştırır. Bu amaçla User bağlantısı kurulmuştur.
 
     """
+
     ad = field.String("Ad", index=True)
     soyad = field.String("Soyad", index=True)
     cinsiyet = field.Integer("Cinsiyet", index=True, choices="cinsiyet")
@@ -429,7 +456,6 @@ class OncekiEgitimBilgisi(Model):
     okul_adi = field.String("Mezun Olduğu Okul", index=True)
     diploma_notu = field.Float("Diploma Notu", index=True)
     mezuniyet_yili = field.String("Mezuniyet Yılı", index=True)
-    #: İlişki[model]: Öğrenci Model'ine, bire çok ilişki tipi
     ogrenci = Ogrenci()
 
     class Meta:
@@ -459,8 +485,8 @@ class OgrenciProgram(Model):
 
     Öğrencinin ilgili programdaki danışman bilgisi de burada saklanır.
 
-
     """
+
     ogrenci_no = field.String("Öğrenci Numarası", index=True)
     giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
@@ -487,7 +513,6 @@ class OgrenciDersi(Model):
 
     Ders alanı Şube modeli ile ilişkilendirilmiştir. Bunun sebebi öğrencilerin ders seçiminin,
     ders ve okutmanın birleştiği şube seçimi olmasıdır. Detaylı bilgiler Şube modelinde bulunabilir.
-
 
     """
 
@@ -530,6 +555,7 @@ class DersKatilimi(Model):
         Okutman arama kolaylığı amacıyla saklanmıştır.
 
     """
+
     # TODO: Neden float, soralım?
     katilim_durumu = field.Float("Katılım Durumu", index=True)
     ders = Sube()
@@ -567,6 +593,7 @@ class Borc(Model):
     bilgilerinin saklandığı modeldir.
 
     """
+
     miktar = field.Float("Borç Miktarı", index=True)
     para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
     sebep = field.Integer("Borç Sebebi", index=True, choices="ogrenci_borc_sebepleri")

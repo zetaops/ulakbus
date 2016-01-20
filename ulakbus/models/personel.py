@@ -24,6 +24,7 @@ class Personel(Model):
     Personelin özlük ve iletişim bilgilerini içerir.
 
     """
+
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)
@@ -89,7 +90,7 @@ class Personel(Model):
 
     # TODO: metod adi cok genel. daha anlasilir bir ad secip, refactor edelim.
     def kadro(self):
-        """ Kadro
+        """Kadro
 
         Personelin atama bilgilerinden kadrosuna erişir.
 
@@ -113,6 +114,7 @@ class AdresBilgileri(Model):
     Personelin birden fazla adresi olabilir.
 
     """
+
     ad = field.String("Adres Adı", index=True)
     adres = field.String("Adres", index=True)
     ilce = field.String("İlçe", index=True)
@@ -135,6 +137,7 @@ class KurumIciGorevlendirmeBilgileri(Model):
     Görevlendirme bir birim ile ilişkili olmalıdır.
 
     """
+
     gorev_tipi = field.String("Görev Tipi", index=True, choices="gorev_tipi")
     kurum_ici_gorev_baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     kurum_ici_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
@@ -145,17 +148,17 @@ class KurumIciGorevlendirmeBilgileri(Model):
     personel = Personel()
 
     class Meta:
-        """
-        ```form_grouping``` kullanıcı arayüzeyinde formun temel yerleşim planını belirler.
+        """``form_grouping`` kullanıcı arayüzeyinde formun temel yerleşim planını belirler.
 
         Layout grid (toplam 12 sütun) içerisindeki değerdir.
 
-        Her bir ```layout``` içinde birden fazla form grubu yer alabilir: ```groups```
+        Her bir ``layout`` içinde birden fazla form grubu yer alabilir: ``groups``
 
-        Her bir grup, grup başlığı ```group_title```, form öğeleri ```items``` ve bu grubun açılır kapanır
-        olup olmadığını belirten boolen bir değerden ```collapse``` oluşur.
+        Her bir grup, grup başlığı ``group_title``, form öğeleri ``items`` ve bu grubun
+        açılır kapanır olup olmadığını belirten boolen bir değerden ``collapse`` oluşur.
 
         """
+
         verbose_name = "Kurum İçi Görevlendirme"
         verbose_name_plural = "Kurum İçi Görevlendirmeler"
         form_grouping = [
@@ -194,6 +197,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     Personelin bağlı olduğu kurumun dışındaki görev bilgilerine ait modeldir.
 
     """
+
     gorev_tipi = field.Integer("Görev Tipi", index=True)
     kurum_disi_gorev_baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     kurum_disi_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
@@ -248,22 +252,19 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
 
 class Kadro(Model):
-    """ Kadro Modeli
+    """Kadro Modeli
 
     Kurum için ayrılmış Kadro bilgilerine modeldir.
 
     Kadrolar 4 halde bulunabilirler: SAKLI, IZINLI, DOLU ve BOŞ
 
-    SAKLI: Saklı kadro, atama yapılmaya müsadesi olmayan, etkinlik onayı alınmamış
-    fakat kurum için ayrılmış potansiyel kadroyu tanımlar.
+        * SAKLI: Saklı kadro, atama yapılmaya müsadesi olmayan, etkinlik onayı alınmamış
+          fakat kurum için ayrılmış potansiyel kadroyu tanımlar.
+        * IZINLI: Henüz atama yapılmamış, fakat etkinlik onayı alınmış kadroyu tanımlar.
+        * DOLU: Bir personel tarafından işgal edilmiş bir kadroyu tanımlar. Ataması yapılmıştır.
+        * BOŞ: Çeşitli sebepler ile DOLU iken boşaltılmış kadroyu tanınmlar.
 
-    IZINLI: Henüz atama yapılmamış, fakat etkinlik onayı alınmış kadroyu tanımlar.
-
-    DOLU: Bir personel tarafından işgal edilmiş bir kadroyu tanımlar. Ataması yapılmıştır.
-
-    BOŞ: Çeşitli sebepler ile DOLU iken boşaltılmış kadroyu tanınmlar.
-
-    ```unvan``` ve ```unvan_kod``` karşıt alanlardır. Birisi varken diğeri mevcut olamaz.
+    ``unvan`` ve ``unvan_kod`` karşıt alanlardır. Birisi varken diğeri mevcut olamaz.
 
     """
 
@@ -290,9 +291,10 @@ class Kadro(Model):
 class Izin(Model):
     """İzin Modeli
 
-    Personelin, ücretli izin bilgilerini içeren modeldir.
+    Personelin ücretli izin bilgilerini içeren modeldir.
 
     """
+
     tip = field.Integer("Tip", index=True, choices="izin")
     baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
     bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
@@ -316,9 +318,10 @@ class Izin(Model):
 class UcretsizIzin(Model):
     """Ücretsiz izin Modeli
 
-    Personelin, ücretsiz izin bilgilerini içeren modeldir.
+    Personelin ücretsiz izin bilgilerini içeren modeldir.
 
     """
+
     tip = field.Integer("Tip", index=True, choices="ucretsiz_izin")
     baslangic_tarihi = field.Date("İzin Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("İzin Bitiş Tarihi", index=True, format="%d.%m.%Y")
@@ -344,6 +347,7 @@ class Atama(Model):
     Personelin atama bilgilerini içeren modeldir.
 
     """
+
     kurum_sicil_no = field.String("Kurum Sicil No", index=True)
     personel_tip = field.Integer("Personel Tipi", index=True)
     hizmet_sinif = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
