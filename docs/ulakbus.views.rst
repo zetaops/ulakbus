@@ -1,6 +1,11 @@
 ulakbus.views package
 =====================
 
+.. automodule:: ulakbus.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
@@ -15,27 +20,8 @@ Subpackages
 Submodules
 ----------
 
-ulakbus.views.dashboard module
-------------------------------
+.. toctree::
 
-.. automodule:: ulakbus.views.dashboard
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   ulakbus.views.dashboard
+   ulakbus.views.system
 
-ulakbus.views.system module
----------------------------
-
-.. automodule:: ulakbus.views.system
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: ulakbus.views
-    :members:
-    :undoc-members:
-    :show-inheritance:

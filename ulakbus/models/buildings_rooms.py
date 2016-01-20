@@ -22,12 +22,14 @@ __author__ = 'Ali Riza Keles'
 class Campus(Model):
     """Kampüs Modeli
 
-    Universite kampuslerine ait data modeli. Kampus adı ve koordinat bilgilerini içerir.
+    Üniversite kampüslerine ait data modeli. Kampus adı ve koordinat bilgilerini içerir.
 
-    Kampüs koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle Unitime ile
-    ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında kullanılmaktadır.
+    Kampüs koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle
+    Unitime ile ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında
+    kullanılmaktadır.
 
     """
+
     code = field.String("Kod", index=True)
     name = field.String("İsim", index=True)
     coordinate_x = field.String("X Koordinatı", index=True)
@@ -43,10 +45,10 @@ class Campus(Model):
         return '%s %s %s' % (self.code, self.name, self.coordinates())
 
     def coordinates(self):
-        """"Koordinatlar
+        """Koordinatlar
 
         Returns:
-            x ve y koordınatlarını birlikte döndürür.
+            x ve y koordinatlarını birlikte döndürür.
 
         """
         return '%s %s' % (self.coordinate_x, self.coordinate_y)
@@ -58,18 +60,16 @@ class Building(Model):
     Universite kampuslerindeki binalara ait data modeli. Bina kod ve adının yanısıra
     koordinat bilgilerini içerir.
 
-    Her bina bir kampüs ile ilişkilendirilmiştir.
-
-    Bina koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle Unitime ile
-    ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında kullanılmaktadır.
+    Bina koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle
+    Unitime ile ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında
+    kullanılmaktadır.
 
     """
+
     code = field.String("Kod", index=True)
     name = field.String("İsim", index=True)
     coordinate_x = field.String("X Koordinatı", index=True)
     coordinate_y = field.String("Y Koordinatı", index=True)
-
-    #: Relation[model]: Kampus Modeline, one to many
     campus = Campus()
 
     class Meta:
@@ -97,6 +97,7 @@ class RoomType(Model):
     birlikte bu tipler RoomType modelinde tanimlanir.
 
     """
+
     type = field.String("Oda Tipi", index=True)
     notes = field.Text("Notlar", index=True)
 
@@ -119,17 +120,14 @@ class Room(Model):
     Odalar, binalara ve binalar aracılığıyla kampüslere bağlanır.
 
     """
+
     code = field.String("Kod", index=True)
     name = field.String("İsim", index=True)
-
-    #: Relation[model]: Oda Tipleri Modeline, one to many
     room_type = RoomType("Oda Tipi", index=True)
 
     #: Bina içerisindeki kat bilgisi
     floor = field.String("Kat", index=True)
     capacity = field.Integer("Kapasite", index=True)
-
-    #: Relation[model]: Bina Modeline, one to many
     building = Building()
 
     is_active = field.Boolean("Aktif", index=True)
@@ -143,10 +141,10 @@ class Room(Model):
     class RoomDepartments(ListNode):
         """Oda Departman ListNode
 
-        Bu odayı kullanabilecek birimler.
+        Bu odayı kullanabilecek birimlerin listesi saklanır.
 
         """
-        #: Relation[model]: Birim Modeline, list node sebebiyle many to many
+
         unit = Unit()
 
     def __unicode__(self):

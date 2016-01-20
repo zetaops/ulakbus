@@ -1,37 +1,24 @@
 ulakbus.services package
 ========================
 
+.. automodule:: ulakbus.services
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
 .. toctree::
 
     ulakbus.services.common
+    ulakbus.services.personel
 
 Submodules
 ----------
 
-ulakbus.services.authentication module
---------------------------------------
+.. toctree::
 
-.. automodule:: ulakbus.services.authentication
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   ulakbus.services.authentication
+   ulakbus.services.zato_wrapper
 
-ulakbus.services.zato_wrapper module
-------------------------------------
-
-.. automodule:: ulakbus.services.zato_wrapper
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: ulakbus.services
-    :members:
-    :undoc-members:
-    :show-inheritance:
