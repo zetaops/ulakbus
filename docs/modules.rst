@@ -1,5 +1,5 @@
-Ulakbus
-=======
+Ulakbüs
+========
 
 .. toctree::
    :maxdepth: 4

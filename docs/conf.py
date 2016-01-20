@@ -15,7 +15,7 @@
 import sys
 import os
 import shlex
-sys.IN_SPHINX = True
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -50,7 +50,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'ulakbus'
 
 # General information about the project.
 project = u'Ulakbus API Documentation'
@@ -71,7 +71,7 @@ release = '0.6.6'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'tr'
+language = None
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -108,7 +108,7 @@ pygments_style = 'sphinx'
 #keep_warnings = False
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True
+todo_include_todos = False
 
 
 # -- Options for HTML output ----------------------------------------------
@@ -194,8 +194,8 @@ html_static_path = ['_static']
 
 # Language to be used for generating the HTML full-text search index.
 # Sphinx supports the following languages:
-#   'da', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'ja'
-#   'nl', 'no', 'pt', 'ro', 'ru', 'sv', 'tr'
+#   'da', 'de', 'en', 'es', 'fi', 'fr', 'h', 'it', 'ja'
+#   'nl', 'no', 'pt', 'ro', 'r', 'sv', 'tr'
 #html_search_language = 'en'
 
 # A dictionary with options for the search language support, empty by default.
@@ -289,39 +289,5 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
-from pprint import pformat
-def autodoc_process_signature(app, what, name, obj, options, signature, return_annotation):
 
-
-    if name.endswith("registry") and isinstance(obj, dict):
-        # print(obj.__class__.__name__)
-        return_annotation = ''
-        signature = ' [{}]'
-
-    if name.endswith("PARAMS"):
-        return_annotation = ''
-        signature = ' [{}]'
-        # signature = pformat(obj, compact=True)
-        # print(name, return_annotation, signature)
-    #     signature = "``` % s```" % pformat(dict(signature))
-        # return_annotation = "aaa" #"aaa```%s````" % pformat(dict(return_annotation))
-    return (signature, return_annotation)
-    # return (signature, return_annotation)
-
-# def autodoc_skip_member(app, what, name, obj, skip, options):
-#     return True
-#     exclusions = ('PARAMS',)
-#     exclude = name in exclusions
-#     if exclude:
-#         print(what, name, obj, skip)
-#
-#     return True
-#
-#
-
-def setup(app):
-    # app.connect('autodoc-skip-member', autodoc_skip_member)
-    app.connect('autodoc-process-signature', autodoc_process_signature)
-
-# Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}

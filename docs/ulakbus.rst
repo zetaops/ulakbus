@@ -1,6 +1,11 @@
 ulakbus package
 ===============
 
+.. automodule:: ulakbus
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
@@ -15,27 +20,8 @@ Subpackages
 Submodules
 ----------
 
-ulakbus.manage module
----------------------
+.. toctree::
 
-.. automodule:: ulakbus.manage
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   ulakbus.manage
+   ulakbus.settings
 
-ulakbus.settings module
------------------------
-
-.. automodule:: ulakbus.settings
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: ulakbus
-    :members:
-    :undoc-members:
-    :show-inheritance:

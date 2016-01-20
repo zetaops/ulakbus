@@ -1,6 +1,11 @@
 ulakbus.lib package
 ===================
 
+.. automodule:: ulakbus.lib
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
@@ -11,35 +16,9 @@ Subpackages
 Submodules
 ----------
 
-ulakbus.lib.cache module
-------------------------
+.. toctree::
 
-.. automodule:: ulakbus.lib.cache
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   ulakbus.lib.cache
+   ulakbus.lib.convert
+   ulakbus.lib.s3_file_manager
 
-ulakbus.lib.convert module
---------------------------
-
-.. automodule:: ulakbus.lib.convert
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ulakbus.lib.s3_file_manager module
-----------------------------------
-
-.. automodule:: ulakbus.lib.s3_file_manager
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: ulakbus.lib
-    :members:
-    :undoc-members:
-    :show-inheritance:
