@@ -22,12 +22,14 @@ __author__ = 'Ali Riza Keles'
 class Campus(Model):
     """Kampüs Modeli
 
-    Universite kampuslerine ait data modeli. Kampus adı ve koordinat bilgilerini içerir.
+    Üniversite kampüslerine ait data modeli. Kampus adı ve koordinat bilgilerini içerir.
 
-    Kampüs koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle Unitime ile
-    ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında kullanılmaktadır.
+    Kampüs koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle
+    Unitime ile ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında
+    kullanılmaktadır.
 
     """
+
     code = field.String("Kod", index=True)
     name = field.String("İsim", index=True)
     coordinate_x = field.String("X Koordinatı", index=True)
@@ -43,10 +45,10 @@ class Campus(Model):
         return '%s %s %s' % (self.code, self.name, self.coordinates())
 
     def coordinates(self):
-        """"Koordinatlar
+        """Koordinatlar
 
         Returns:
-            x ve y koordınatlarını birlikte döndürür.
+            x ve y koordinatlarını birlikte döndürür.
 
         """
         return '%s %s' % (self.coordinate_x, self.coordinate_y)
@@ -58,10 +60,12 @@ class Building(Model):
     Universite kampuslerindeki binalara ait data modeli. Bina kod ve adının yanısıra
     koordinat bilgilerini içerir.
 
-    Bina koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle Unitime ile
-    ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında kullanılmaktadır.
+    Bina koordinatları lokasyon bazlı hesaplamalar için kullanılacaktır. Özellikle
+    Unitime ile ders programı hazırlarken farklı lokasyonlar arası zaman hesaplamalarında
+    kullanılmaktadır.
 
     """
+
     code = field.String("Kod", index=True)
     name = field.String("İsim", index=True)
     coordinate_x = field.String("X Koordinatı", index=True)
@@ -93,6 +97,7 @@ class RoomType(Model):
     birlikte bu tipler RoomType modelinde tanimlanir.
 
     """
+
     type = field.String("Oda Tipi", index=True)
     notes = field.Text("Notlar", index=True)
 
@@ -110,12 +115,12 @@ class Room(Model):
     """Oda modeli
 
     Üniversitenin sahip olduğu odalara (sınıf, lab, amfi) ait data modelidir. Her odanın
-
     bir kodu bulunur.
 
     Odalar, binalara ve binalar aracılığıyla kampüslere bağlanır.
 
     """
+
     code = field.String("Kod", index=True)
     name = field.String("İsim", index=True)
     room_type = RoomType("Oda Tipi", index=True)
@@ -136,9 +141,10 @@ class Room(Model):
     class RoomDepartments(ListNode):
         """Oda Departman ListNode
 
-        Bu odayı kullanabilecek birimler.
+        Bu odayı kullanabilecek birimlerin listesi saklanır.
 
         """
+
         unit = Unit()
 
     def __unicode__(self):
