@@ -36,12 +36,24 @@ class BankaBorcGetir(BankaService):
         super(BankaBorcGetir, self).__init__()
 
     class SimpleIO():
+        """
+        Servisin ihtiyac duydugu girdi ve cikti degiskenlerinin listesi.
+
+        Servisten geri donmesi gereken degerler:
+            mesaj_statusu (K: Kabul, R:Ret)
+            hata_mesaji (mesaj icerigi veya null)
+
+        Kalan degerler servisin calismasinin basarili olmasi durumuna gore istege bagli olarak dondurulmektedir.
+        """
+
+        request_elem = 'borc_request'
+        response_elem = 'borc_response'
         input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
                           'ogrenci_no')
-        output_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
+        output_required = ('mesaj_statusu','hata_mesaj')
+        output_optional = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
                            'ogrenci_no', 'ad_soyad', 'ucret_turu', 'tahakkuk_referans_no', 'son_odeme_tarihi',
-                           'borc', 'borc_ack', 'mesaj_statusu','hata_mesaj')
-        output_optional = ('mesaj_statusu','hata_mesaj')
+                           'borc', 'borc_ack')
 
     def handle(self):
         super(BankaBorcGetir, self).handle()
@@ -88,5 +100,6 @@ class BankaBorcGetir(BankaService):
             self.response.payload['hata_mesaj'] = "Ogrenci numarasi bulunamadi!"
         except Exception as e:
             self.logger.info("Borc sorgulama sirasinda hata olustu: %s" % e)
+            self.response.payload['mesaj_statusu'] = "R"  # Reddedildi
             self.response.payload['hata_mesaj'] = "Borc sorgulama hatasi!"
 

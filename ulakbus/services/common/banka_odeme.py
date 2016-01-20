@@ -53,6 +53,12 @@ class BankaBorcOdeme(BankaService):
         super(BankaBorcOdeme, self).__init__()
 
     class SimpleIO():
+        """
+        Servisin ihtiyac duydugu girdi ve cikti degiskenlerinin listesi.
+        """
+
+        request_elem = 'borc_response'
+        response_elem = 'odeme_response'
         input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
                           'ogrenci_no', 'ucret_turu', 'tahakkuk_referans_no', 'tahsilat_referans_no', 'odeme_timestamp',
                           'odeme_tutari')
