@@ -426,8 +426,8 @@ class NotGirisi(CrudView):
                 ogr_not.ogrenci = ogr_data.ogrenci
                 ogr_not.save()
 
-            except ObjectDoesNotExist:
-                raise ObjectDoesNotExistError("Ogrenci Bulunamadı %s" % ogrenci_not['ogrenci_no'])
+            except:
+                pass
 
         # Okutman notları onayladığını (teslim ettiğini) bildirmişse
 
