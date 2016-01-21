@@ -3,7 +3,10 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-"""Ders Ekleme ve Okutman Not Giriş workflowlarına ait adımlarla ilişkili methodları barındırır.
+"""Ders ile İlgili İş Akışlarına ait sınıf ve metotları
+   içeren modüldür.
+
+Ders Ekle ve Ders Şubelendirme  iş akışlarının yürütülmesini sağlar.
 
 """
 
@@ -27,8 +30,8 @@ def okutman_choices():
 
 class ProgramBilgisiForm(forms.JsonForm):
     """
-    DersEkle için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    ``DersEkle`` sınıfı için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
 
@@ -40,8 +43,8 @@ class ProgramBilgisiForm(forms.JsonForm):
 
 class DersBilgileriForm(forms.JsonForm):
     """
-    DersEkle için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    ``DersEkle`` sınıfı için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
 
@@ -71,17 +74,23 @@ class DersEkle(CrudView):
      Bu iş akışında kullanılan metotlar şu şekildedir:
 
      Program Formunu Listele:
-        CrudView list metodu kullanılmıştır. Bu metot default olarak tanımlanmıştır. ProgramBilgisiForm'unu listeler.
+        CrudView list metodu kullanılmıştır. Bu metot default olarak tanımlanmıştır.
+        Program Bilgisi formunu listeler.
 
      Program Seç:
         Kayıtlı programlardan birini seçer.
 
      Ders Bilgilerini Gir:
-          DersBilgileriFormu'nu alanlar doldurulur.
+          Ders Bilgileri formundaki alanlar doldurulur.
 
      Kaydet/Yeni Kayıt Ekle:
-        Seçilen programı için  girilen ders bilgilerini kaydeder. Bu adımdan sonra iş akışı sona erer.
+        Seçilen programı için  girilen ders bilgilerini kaydeder.
+        Bu adımdan sonra iş akışı sona erer.
 
+     Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Ders``
+     modelidir. Meta.model bu amaçla kullanılmıştır.
+
+     Adımlar arası geçiş manuel yürütülmektedir.
 
     """
 
@@ -111,18 +120,20 @@ class SecimForm(forms.JsonForm):
 
 class ProgramForm(forms.JsonForm):
     """
-    DersSubelendirme için object form olarak kullanılacaktır.
+    ``DersSubelendirme`` sınıfı için object form olarak kullanılacaktır.
 
     """
+
     sec = fields.Button("Sec", cmd="ders_sec")
 
 
 class SubelendirmeForm(forms.JsonForm):
     """
-    DersSubelendirme için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    ``DersSubelendirme`` sınıfı için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
+
     kaydet_ders = fields.Button("Kaydet ve Ders Seçim Ekranına Dön", cmd="subelendirme_kaydet",
                                 flow="ders_okutman_formu")
     program_sec = fields.Button("Kaydet ve Program Seçim Ekranına Dön", cmd="subelendirme_kaydet",
@@ -161,7 +172,8 @@ class DersSubelendirme(CrudView):
     Bu iş akışında kullanılan metotlar şu şekildedir:
 
     Program  Formunu Listele:
-        CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır. Program formunu listeler.
+        CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır.
+        Program formunu listeler.
 
     Seç:
         Kayıtlı programlardan birini seçer. Seçilen program kayıtlı dersleri döndürür.
@@ -173,15 +185,22 @@ class DersSubelendirme(CrudView):
         Şubelenmiş dersin şube detaylarını gösterir ya da seçilen dersi şubelendirir.
 
     Kaydet ve Ders Seçim Ekranına Dön:
-        Şubelendirilmiş dersi kaydeder ve ders seçim ekranına geri döner.
+        Şubelendirilmiş dersi kaydeder ve ders seçim ekranından geri döner.
+        İş akışına ders seçim ekranından devam eder.
 
     Kaydet ve Program Seçim Ekranına Dön:
-        Şubelendirilmiş dersi kaydeder ve program seçim  ekranına geri döner. İş akışı Program formundan
-        devam eder.
+        Şubelendirilmiş dersi kaydeder ve program seçim  ekranına geri döner.
+        İş akışı Program formundan devam eder.
 
     Tamamla ve Hocaları Bilgilendir:
-         Şubelendirilmiş dersin hocalarına, şube bilgileri aktarılır. Bu adımdan sonra iş akışı sona eriyor.
+         Şubelendirilmiş dersin hocalarına, şube ve ders bilgileri aktarılır.
+         Bu adımdan sonra iş akışı sona eriyor.
 
+
+    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Sube``
+    modelidir. Meta.model bu amaçla kullanılmıştır.
+
+    Adımlar arası geçiş manuel yürütülmektedir.
 
     """
 
