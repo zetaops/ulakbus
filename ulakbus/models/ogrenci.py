@@ -74,6 +74,7 @@ class HariciOkutman(Model):
     verdigi_dersler = field.String("Verdiği Dersler", index=True, required=False)
     unvan = field.Integer("Unvan", index=True, choices="akademik_unvan", required=False)
     aktif = field.Boolean("Aktif", index=True, required=False)
+    user = User(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -357,6 +358,7 @@ class Sinav(Model):
     aciklama = field.String("Açıklama", index=True)
     sube = Sube()
     ders = Ders()
+    degerlendirme = field.Boolean("Değerlendirme Durumu", index=True, default=False)
 
     class Meta:
         app = 'Ogrenci'
@@ -638,6 +640,7 @@ class DegerlendirmeNot(Model):
     yil = field.String("Yıl", index=True)
     donem = field.String("Dönem", index=True)
     ogretim_elemani = field.String("Öğretim Elemanı", index=True)
+    ogrenci_no = field.String("Öğrenci No", index=True)
     ders = Ders()
 
     class Meta:
