@@ -61,12 +61,13 @@ class BankaService(Service):
     Banka servisleri bu servisle yetkilendirme işleminden geçip
     gerekli girdileri elde eder ve çıktıları geri döndürürler.
 
-    Attributes:
-        request (zato.server.service.Request):
+    Note:
+        self.request (zato.server.service.Request):
             Servise gelen isteği tutan Zato nesnesi.
-        response (zato.server.service.Response):
+            Girdileri elde etmek için `self.request.input` kullanılır.
+        self.response (zato.server.service.Response):
             Servisten dönecek olan cevabı tutan Zato nesnesi.
-
+            Çıktı parametrelerini saklamak için `self.response.payload` kullanılır.
     """
 
     def __init__(self):
@@ -90,7 +91,10 @@ class BankaService(Service):
             - output_required: Zorunlu olarak döndürülerek çıktıların listesi
             - output_optional: İsteğe bağlı olarak döndürülecek çıktıların listesi
 
-        Attributes:
+        Note:
+            SimpleIO sınıfında belirlenen özellikler,
+                doğrudan yer aldığı servisin özellikleri olmaktadır.
+
             banka_kodu (str): Üniversite tarafından bankaya verilen kod
             bank_username (str): Üniversite tarafından bankaya verilen kullanıcı adı
             bank_password (str): Üniversite tarafından bankaya verilen şifre

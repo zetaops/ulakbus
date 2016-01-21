@@ -143,7 +143,10 @@ class BankaBorcOdeme(BankaService):
         """
         Servis girdilerinin ve çıktılarının belirlendiği yapı.
 
-        Attributes:
+        Note:
+            SimpleIO sınıfında belirlenen özellikler,
+                doğrudan yer aldığı servisin özellikleri olmaktadır.
+
             odeme_request (str): Servise gelen isteğin (JSON, XML) ismi
             odeme_response (str): Servisten dönen veriyi içeren (payload)
                                 cevabın (JSON, XML) ismi

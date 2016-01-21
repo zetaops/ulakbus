@@ -140,7 +140,10 @@ class BankaBorcGetir(BankaService):
         """
         Servis girdilerinin ve çıktılarının belirlendiği yapı.
 
-        Attributes:
+        Note:
+            SimpleIO sınıfında belirlenen özellikler,
+                doğrudan yer aldığı servisin özellikleri olmaktadır.
+
             borc_request (str): Servise gelen isteğin (JSON, XML) ismi
             borc_response (str): Servisten dönen veriyi içeren (payload)
                                 cevabın (JSON, XML) ismi
