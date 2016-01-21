@@ -24,7 +24,7 @@ from ulakbus.models.ogrenci import Ogrenci
 
 class KimlikBilgileriForm(forms.JsonForm):
     """
-    ``KimlikBilgileri`` sınıfı için object form olarak kullanılacaktır. Form,
+    ``KimlikBilgileri`` sınıfı için form olarak kullanılacaktır. Form,
     include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
@@ -79,9 +79,18 @@ class KimlikBilgileri(CrudView):
         model = "Ogrenci"
 
     def kimlik_bilgileri(self):
+        """Kimlik Bilgileri Formu"""
+
         self.form_out(KimlikBilgileriForm(self.object, current=self.current))
 
     def mernis_sorgula(self):
+        """Mernis Sorgulama
+
+        Zato wrapper metodlarıyla Mernis servisine bağlanır, servisten dönen
+        değerlerle nesneyi doldurup kaydeder.
+
+        """
+
         servis = MernisKimlikBilgileriGetir(tckn=self.object.tckn)
         kimlik_bilgisi = servis.zato_request()
         self.object(**kimlik_bilgisi)
@@ -90,7 +99,7 @@ class KimlikBilgileri(CrudView):
 
 class IletisimBilgileriForm(forms.JsonForm):
     """
-    ``İletişimBilgileri`` sınıfı için object form olarak kullanılacaktır. Form,
+    ``İletişimBilgileri`` sınıfı için form olarak kullanılacaktır. Form,
     include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
@@ -103,7 +112,6 @@ class IletisimBilgileriForm(forms.JsonForm):
 
 
 class IletisimBilgileri(CrudView):
-
     """İletişim Bilgileri İş Akışı
 
    İletişim Bilgileri iş akışı 3 adımdan oluşmaktadır.
@@ -119,9 +127,11 @@ class IletisimBilgileri(CrudView):
       listeler.
 
    KPS Adres Bilgilerini Getir:
-      Bu metot sayesinde  öğrenciye ait yerleşim yeri bilgilerine kamu kurumları
-      tarafından erişilir. IletişimBilgileriForm'undaki alanlar
-      KPS'ten gelen bilgiler doğrultusunda doldurulur.
+      Bu metot sayesinde öğrenciye ait yerleşim yeri bilgilerine merkezi
+      Kimlik Paylaşım Sistemi üzerinden erişilir.
+
+      Iletişim Bilgileri formundaki alanlar KPS'ten gelen bilgiler
+      doğrultusunda doldurulur.
 
     Kaydet:
       KPS'ten gelen bilgileri ya da yetkili kişinin öğrenciyle ilgili girdiği
@@ -139,9 +149,17 @@ class IletisimBilgileri(CrudView):
         model = "Ogrenci"
 
     def iletisim_bilgileri(self):
+        """İletişim Bilgileri Formu"""
+
         self.form_out(IletisimBilgileriForm(self.object, current=self.current))
 
     def kps_sorgula(self):
+        """KPS Sorgulama
+
+        Zato wrapper metodlarıyla KPS servisine bağlanır, servisten dönen
+        değerlerle nesneyi doldurup kaydeder.
+
+        """
         servis = KPSAdresBilgileriGetir(tckn=self.object.tckn)
         iletisim_bilgisi = servis.zato_request()
         self.object(**iletisim_bilgisi)
@@ -162,7 +180,6 @@ class OncekiEgitimBilgileriForm(forms.JsonForm):
 
 
 class OncekiEgitimBilgileri(CrudView):
-
     """Önceki Eğitim Bilgileri İş Akışı
 
    Önceki Eğitim Bilgileri iş akışı 2 adımdan oluşmaktadır.
@@ -176,7 +193,7 @@ class OncekiEgitimBilgileri(CrudView):
       CrudView list metodu kullanılmıştır. Önceki Eğitim Bilgileri formunu listeler.
 
    Kaydet:
-      Girilen önceki eğitim bilgilerini kaydeder.Bu adım ``CrudView.save()`` metodunu kullanır.
+      Girilen önceki eğitim bilgilerini kaydeder. Bu adım ``CrudView.save()`` metodunu kullanır.
       İş akışı bu adımdan sonra sona erer.
 
    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``OncekiEgitimBilgisi``
@@ -190,14 +207,25 @@ class OncekiEgitimBilgileri(CrudView):
         model = "OncekiEgitimBilgisi"
 
     def onceki_egitim_bilgileri(self):
+        """Önceki Eğitim Bilgileri Formu"""
+
         self.form_out(OncekiEgitimBilgileriForm(self.object, current=self.current))
 
 
 def ogrenci_bilgileri(current):
+    """Öğrenci Genel Bilgileri
+
+    Öğrenci Genel Bilgileri, öğrencilerin kendi bilgilerini görüntüledikleri
+    tek adımlık bir iş akışıdır.
+
+    Bu metod tek adımlık bilgi ekranı hazırlar.
+
+    """
+
     current.output['client_cmd'] = ['show', ]
     ogrenci = Ogrenci.objects.get(user_id=current.user_id)
 
-    # ordered tablo ornegi
+    # ordered tablo için OrderedDict kullanılmıştır.
     kimlik_bilgileri = OrderedDict({})
     kimlik_bilgileri.update({'Ad Soyad': "%s %s" % (ogrenci.ad, ogrenci.soyad)})
     kimlik_bilgileri.update({'Cinsiyet': ogrenci.cinsiyet})
@@ -209,7 +237,6 @@ def ogrenci_bilgileri(current):
     kimlik_bilgileri.update({'Anne Adı': ogrenci.ana_adi})
     kimlik_bilgileri.update({'Medeni Hali': ogrenci.medeni_hali})
 
-    # unordered tablo ornegi
     iletisim_bilgileri = {
         'Eposta': ogrenci.e_posta,
         'Telefon': ogrenci.tel_no,

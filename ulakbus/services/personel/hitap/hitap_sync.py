@@ -46,7 +46,6 @@ import socket
 from json import loads, dumps
 from six import iteritems
 
-
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 

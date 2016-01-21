@@ -21,7 +21,7 @@ from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 
 class KimlikBilgileriForm(JsonForm):
     """
-    ``KimlikIletişim`` sınıfı  için object form olarak kullanılacaktır. Form,
+    ``KimlikIletişim`` sınıfı için form olarak kullanılacaktır. Form,
     include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
@@ -43,7 +43,7 @@ class KimlikBilgileriForm(JsonForm):
 
 class IletisimBilgileriForm(JsonForm):
     """
-    ``KimlikIletisim`` sınıfı için object form olarak kullanılacaktır. Form,
+    ``KimlikIletisim`` sınıfı için form olarak kullanılacaktır. Form,
     include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
@@ -59,7 +59,7 @@ class IletisimBilgileriForm(JsonForm):
 
 class DigerBilgilerForm(JsonForm):
     """
-    ``KimlikIletisim`` sınıfı  için object form olarak kullanılacaktır. Form,
+    ``KimlikIletisim`` sınıfı için form olarak kullanılacaktır. Form,
     include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
@@ -75,16 +75,16 @@ class DigerBilgilerForm(JsonForm):
 class KimlikIletisim(CrudView):
     """Kimlik ve İletişim Bilgileri İş Akışı
 
-    Kimlik ve İletişim Bilgileri, aşağıda tanımlı iş akışı adımlarını yürütür.
+    Kimlik ve İletişim Bilgileri, aşağıda tanımlı iş akışı adımlarını yürütür:
 
-    - Kimlik Bilgileri Formu
-    - Mernis Kimlik Sorgulama
-    - Kimlik Bilgileri Kaydet
-    - İletişim Bilgileri Formu
-    - KPS Adres Sorgulama
-    - Iletişim Bilgileri Kaydet
-    - Diğer Bilgiler Formu
-    - Diğer Bilgileri Kaydet
+        - Kimlik Bilgileri Formu
+        - Mernis Kimlik Sorgulama
+        - Kimlik Bilgileri Kaydet
+        - İletişim Bilgileri Formu
+        - KPS Adres Sorgulama
+        - Iletişim Bilgileri Kaydet
+        - Diğer Bilgiler Formu
+        - Diğer Bilgileri Kaydet
 
     Bu iş akışında kullanılan metotlar şu şekildedir:
 
@@ -114,7 +114,6 @@ class KimlikIletisim(CrudView):
        KPS'ten gelen bilgileri ya da yetkili kişinin personelle ilgili girdiği
        bilgileri kaydeder. Bu adım ``CrudView.save()`` metodunu kullanır.
 
-
     Diğer Bilgiler Formu:
        CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır.
        Diğer Bilgiler formunu listeler.
@@ -122,7 +121,6 @@ class KimlikIletisim(CrudView):
     Kaydet:
        Yetkili kişinin personelle ilgili girdiği bilgileri kaydeder.
        İş akışı adımdan sonra sona eriyor.
-
 
     Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Personel``
     modelidir. Meta.model bu amaçla kullanılmıştır.
@@ -135,22 +133,42 @@ class KimlikIletisim(CrudView):
         model = 'Personel'
 
     def mernis_kimlik_sorgula(self):
+        """Mernis Sorgulama
+
+        Zato wrapper metodlarıyla Mernis servisine bağlanır, servisten dönen
+        değerlerle nesneyi doldurup kaydeder.
+
+        """
+
         zs = MernisKimlikBilgileriGetir(tckn=self.object.tckn)
         response = zs.zato_request()
         self.object(**response)
         self.object.save()
 
     def kps_adres_sorgula(self):
+        """KPS Sorgulama
+
+        Zato wrapper metodlarıyla KPS servisine bağlanır, servisten dönen
+        değerlerle nesneyi doldurup kaydeder.
+
+        """
+
         zs = KPSAdresBilgileriGetir(tckn=self.object.tckn)
         response = zs.zato_request()
         self.object(**response)
         self.object.save()
 
     def kimlik_bilgileri(self):
+        """Kimlik Bilgileri Formu"""
+
         self.form_out(KimlikBilgileriForm(self.object, current=self.current))
 
     def iletisim_bilgileri(self):
+        """İletişim Bilgileri Formu"""
+
         self.form_out(IletisimBilgileriForm(self.object, current=self.current))
 
     def diger_bilgiler(self):
+        """Diğer Bilgiler Formu"""
+
         self.form_out(DigerBilgilerForm(self.object, current=self.current))

@@ -1,7 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -10,48 +7,52 @@
 
 """Kadro İşlemleri
 
-Kadro İşlemleri İş Akışı 5 adimdan olusmaktadir.
+Kadro İşlemleri İş Akışı 5 adimdan olusmaktadir:
 
-* Kadro Listele
-* Saklı Kadro Ekle
-* Kaydet
-* Kadro durumunu Saklı veya İzinli yap
-* Kadro Sil
+    * Kadro Listele
+    * Saklı Kadro Ekle
+    * Kaydet
+    * Kadro durumunu Saklı veya İzinli yap
+    * Kadro Sil
 
-Bu iş akışı, CrudView nesnesi genişletilerek(extend) işletilmektedir. Adımlar
-arası geçiş CrudView'ın aksine otomatik değil, manuel olarak yapılmaktadır.
+Bu iş akışı, CrudView nesnesi genişletilerek(extend) işletilmektedir.
+Adımlar arası geçiş CrudView'ın aksine otomatik değil, manuel olarak
+yapılmaktadır.
 
 Her adım başına kullanılan metodlar şu şekildedir:
 
 Kadro Listele:
-   CrudView list metodu kullanılmıştır. Liste ekranında CrudView standart filtreleme
-   ve arama özellikleri kullanılmaktadır. Listenin her bir öğesi için object_actions
-   filtreleri @obj_filter dekoratörleri yardımıyla özelleştirilmiştir.
+   CrudView list metodu kullanılmıştır. Liste ekranında CrudView
+   standart filtreleme ve arama özellikleri kullanılmaktadır.
+   Listenin her bir öğesi için object_actions filtreleri @obj_filter
+   dekoratörleri yardımıyla özelleştirilmiştir.
 
-   Kadro işlemleri kurallarına göre sadece saklı kadrolar eklenebilmekte veya
-   silinebilmektedir. Bu sebeple 'sil' eylemi sadece bu türdeki kadrolar icin aktifdir.
+   Kadro işlemleri kurallarına göre sadece saklı kadrolar eklenebilmekte
+   veya silinebilmektedir. Bu sebeple 'sil' eylemi sadece bu türdeki
+   kadrolar icin aktifdir.
 
-   Sakli / Izinli Yap butonu ise sadece saklı veya izinli kadrolar icin goörünürdür.
+   Saklı / İzinli Yap butonu ise sadece saklı veya izinli kadrolar için
+   görünürdür.
 
 Saklı Kadro Ekle:
-   Kadrolar sadece ve sadece saklı olarak sisteme eklenebilirler. Bu amaçla iş akışı
-   adımlarına CrudView add_edit_form metodunun çağrıldığı adımın hemen ardından
-   kaydet metodu konulmuştur. Bu metod durum alanını SAKLI olmaya zorlayarak nesneyi
-   kaydeder.
+   Kadrolar sadece ve sadece saklı olarak sisteme eklenebilirler. Bu
+   amaçla iş akışı adımlarına CrudView add_edit_form metodunun
+   çağrıldığı adımın hemen ardından kaydet metodu konulmuştur. Bu metod
+   durum alanını SAKLI olmaya zorlayarak nesneyi kaydeder.
 
 Kaydet:
-   WF'nin 2. adımından gelen data CrudView'in set_form_data_to_object metoduyla bir
-   Kadro instance oluşturularak aktarılır.
+   WF'nin 2. adımından gelen data CrudView'in set_form_data_to_object
+   metoduyla bir Kadro instance oluşturularak aktarılır.
 
    Durum alanı saklı (1) olarak sabitlenip kaydedilir.
 
-Kadro Durumunu Sakli veya Izinli yap
-   Bunun icin özel bir metod eklenmistir: sakli_izinli_degistir. Bu üzerinde işlem yapılan
-   kadronun durumu arasında geçis yapar.
+Kadro Durumunu Sakli veya Izinli yap:
+   Bunun icin özel bir metod eklenmistir: sakli_izinli_degistir. Bu
+   üzerinde işlem yapılan kadronun durumu arasında geçis yapar.
 
 Kadro Sil
-   Sadece durumu sakli (1) olan kadrolar silinebilir. Bunun için kadro sil metodunda
-   bu kontrol yapilir ve delete metodu çalıştırılır.
+   Sadece durumu sakli (1) olan kadrolar silinebilir. Bunun için kadro
+   sil metodunda bu kontrol yapilir ve delete metodu çalıştırılır.
 
 """
 
@@ -62,8 +63,7 @@ from zengine.forms import fields
 
 
 class KadroObjectForm(JsonForm):
-    """
-    KadoIslemleri için object form olarak kullanılacaktır.
+    """KadoIslemleri için object form olarak kullanılacaktır.
 
     Meta değiştirilerek, formlardan durum alanı çıkarılmış, ve form alanları iki gruba
     ayrılmıştır.
@@ -152,20 +152,17 @@ class KadroIslemleri(CrudView):
         ]
 
     def __init__(self, current):
-        """
-        Standart ObjectForm nesnesini değil, hemen yukarıda tanımladığımız
+        """Standart ObjectForm nesnesini değil, hemen yukarıda tanımladığımız
         KadroObjectForm nesnesini kullan. Bu atamayı yapıp, üst sınıfın init
         metodu çağrılır.
 
-        :param current:
-        :return:
         """
+
         self.ObjectForm = KadroObjectForm
         super(KadroIslemleri, self).__init__(current)
 
     def kadro_kaydet(self):
-        """
-        Formdan gelen dataları Kadro örneğine doldurur ve kaydeder.
+        """Formdan gelen dataları Kadro örneğine doldurur ve kaydeder.
 
         Kadrolar yanlızca SAKLI olarak kayıt edilebilecekleri için kaydetmeden
         önce durum alanı SAKLI yapılır.
@@ -206,14 +203,15 @@ class KadroIslemleri(CrudView):
 
     @obj_filter
     def sakli_kadro(self, obj, result):
-        """
-        Saklı Kadro Filtresi
+        """Saklı Kadro Filtresi
 
         Saklı kadro listesinde yer alan her bir öğeye İzinli Yap butonu ekler.
 
-        :param obj: Kadro instance
-        :param result: Liste öğesi satırı
+        Args:
+            obj: Kadro instance
+
         """
+
         if obj.durum == self.SAKLI:
             result['actions'].extend([
                 {'name': 'Sil', 'cmd': 'delete', 'show_as': 'button'},
@@ -221,27 +219,32 @@ class KadroIslemleri(CrudView):
 
     @obj_filter
     def izinli_kadro(self, obj, result):
-        """
-        İzinli Kadro Filtresi
+        """İzinli Kadro Filtresi
 
-        İzinli Kadro listesinde yer alan her bir öğeye Saklı Yap butonu ekler.
+        İzinli Kadro listesinde yer alan her bir öğeye Saklı Yap butonu
+        ekler.
 
-        :param obj: Kadro instance
-        :param result: Liste öğesi satırı
+        Args:
+            obj: Kadro instance
+
         """
+
         if obj.durum == self.IZINLI:
             result['actions'].append(
                     {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
 
     @obj_filter
     def duzenlenebilir_veya_silinebilir_kadro(self, obj, result):
-        """
-        Düzenlenebilir ve Silinebilir Kadro Filtresi
-        Düzenlenebilir Kadro listesinde yer alan saklı veya izinli her bir öğeye Sil ve Düzenle butonu ekler.
+        """Düzenlenebilir ve Silinebilir Kadro Filtresi
 
-        :param obj: Kadro instance
-        :param result: Liste öğesi satırı
+        Düzenlenebilir Kadro listesinde yer alan saklı veya izinli
+        her bir öğeye Sil ve Düzenle butonu ekler.
+
+        Args:
+            obj: Kadro instance
+
         """
+
         if obj.durum in [self.SAKLI, self.IZINLI]:
             result['actions'].extend([
                 {'name': 'Düzenle', 'cmd': 'add_edit_form', 'show_as': 'button'},
