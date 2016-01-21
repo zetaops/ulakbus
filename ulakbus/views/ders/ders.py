@@ -3,10 +3,12 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-"""Ders ile İlgili İş Akışlarına ait sınıf ve metotları
-   içeren modüldür.
+#
+"""Ders Modülü
 
-Ders Ekle ve Ders Şubelendirme  iş akışlarının yürütülmesini sağlar.
+İlgili İş Akışlarına ait sınıf ve metotları içeren modüldür.
+
+Ders Ekle ve Ders Şubelendirme iş akışlarının yürütülmesini sağlar.
 
 """
 
@@ -16,22 +18,41 @@ from zengine.forms import fields
 from zengine.views.crud import CrudView, form_modifier
 from ulakbus.models.ogrenci import Program, Okutman, DegerlendirmeNot, Ders, Sube, Sinav, OgrenciDersi, Donem
 from ulakbus.models.ogrenci import DegerlendirmeNot, Ogrenci, OgrenciProgram
-from pyoko.exceptions import ObjectDoesNotExist
 from collections import OrderedDict
 
 
 def prepare_choices_for_model(model, **kwargs):
+    """Model için Seçenekler Hazırla
+
+    Args:
+        model: Model
+        **kwargs: Keyword argümanları
+
+    Returns:
+        Keyword argümanlara göre filtrelenmiş modelin,
+        key ve __unicode__ method değerlerini
+
+    """
+
     return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
 
 
 def okutman_choices():
+    """Okutman Seçenekleri
+
+    Returns:
+        prepare_choices_for_model methodundan dönen değerleri dictionary
+        formatında
+
+    """
+
     return [{'name': name, 'value': value} for value, name in prepare_choices_for_model(Okutman)]
 
 
 class ProgramBilgisiForm(forms.JsonForm):
     """
-    ``DersEkle`` sınıfı için object form olarak kullanılacaktır. Form,
-    include listesinde, aşağıda tanımlı alanlara sahiptir.
+    ``DersEkle`` sınıfı için form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alana sahiptir.
 
     """
 
@@ -43,7 +64,7 @@ class ProgramBilgisiForm(forms.JsonForm):
 
 class DersBilgileriForm(forms.JsonForm):
     """
-    ``DersEkle`` sınıfı için object form olarak kullanılacaktır. Form,
+    ``DersEkle`` sınıfı için form olarak kullanılacaktır. Form,
     include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
@@ -62,7 +83,8 @@ class DersBilgileriForm(forms.JsonForm):
 
 
 class DersEkle(CrudView):
-    """
+    """Ders Ekle İş Akışı
+
     Ders Ekle, aşağıda tanımlı iş akışı adımlarını yürütür.
 
     - Program Formunu Listele
@@ -74,21 +96,21 @@ class DersEkle(CrudView):
      Bu iş akışında kullanılan metotlar şu şekildedir:
 
      Program Formunu Listele:
-        CrudView list metodu kullanılmıştır. Bu metot default olarak tanımlanmıştır.
-        Program Bilgisi formunu listeler.
+        CrudView list metodu kullanılmıştır. Bu metot default olarak
+        tanımlanmıştır. Program Bilgisi formunu listeler.
 
-     Program Seç:
+     Seç:
         Kayıtlı programlardan birini seçer.
 
      Ders Bilgilerini Gir:
-          Ders Bilgileri formundaki alanlar doldurulur.
+        Ders Bilgileri formundaki alanlar doldurulur.
 
      Kaydet/Yeni Kayıt Ekle:
         Seçilen programı için  girilen ders bilgilerini kaydeder.
         Bu adımdan sonra iş akışı sona erer.
 
-     Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Ders``
-     modelidir. Meta.model bu amaçla kullanılmıştır.
+     Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model
+     ``Ders`` modelidir. Meta.model bu amaçla kullanılmıştır.
 
      Adımlar arası geçiş manuel yürütülmektedir.
 
@@ -98,6 +120,8 @@ class DersEkle(CrudView):
         model = "Ders"
 
     def program_sec(self):
+        """Program Seçimi"""
+
         self.set_form_data_to_object()
         self.current.task_data['program_id'] = self.object.program.key
 
@@ -108,19 +132,29 @@ class DersEkle(CrudView):
         # self.current.task_data['next'] = self.current.input['next']
 
     def ders_bilgileri(self):
+        """Ders Bilgileri Formu"""
+
         self.form_out(DersBilgileriForm(self.object, current=self.current))
 
     def program_bilgisi(self):
+        """Program Bilgisi Formu"""
+
         self.form_out(ProgramBilgisiForm(self.object, current=self.current))
 
 
 class SecimForm(forms.JsonForm):
+    """
+
+    ``DersSubelendirme`` sınıfı için form olarak kullanılacaktır.
+
+    """
+
     sec = fields.Button("Sec", cmd="ders_sec")
 
 
 class ProgramForm(forms.JsonForm):
     """
-    ``DersSubelendirme`` sınıfı için object form olarak kullanılacaktır.
+    ``DersSubelendirme`` sınıfı için form olarak kullanılacaktır.
 
     """
 
@@ -129,9 +163,7 @@ class ProgramForm(forms.JsonForm):
 
 class SubelendirmeForm(forms.JsonForm):
     """
-    ``DersSubelendirme`` sınıfı için object form olarak kullanılacaktır. Form,
-    include listesinde, aşağıda tanımlı alanlara sahiptir.
-
+    ``DersSubelendirme`` sınıfı için form olarak kullanılacaktır.
     """
 
     kaydet_ders = fields.Button("Kaydet ve Ders Seçim Ekranına Dön", cmd="subelendirme_kaydet",
@@ -158,7 +190,8 @@ class NotGirisForm(forms.JsonForm):
 
 
 class DersSubelendirme(CrudView):
-    """
+    """Ders Şubelendirme İş Akışı
+
      Ders Şubelendirme, aşağıda tanımlı iş akışı adımlarını yürütür.
 
      - Program Formunu Listele
@@ -172,33 +205,34 @@ class DersSubelendirme(CrudView):
     Bu iş akışında kullanılan metotlar şu şekildedir:
 
     Program  Formunu Listele:
-        CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır.
-        Program formunu listeler.
+        CrudView list metodu kullanılmıştır.Bu metot default olarak
+        tanımlanmıştır. Program formunu listeler.
 
     Seç:
-        Kayıtlı programlardan birini seçer. Seçilen program kayıtlı dersleri döndürür.
+        Kayıtlı programlardan birini seçer. Seçilen program kayıtlı
+        dersleri döndürür.
 
     Şubelendir:
         Şubelendirelecek ders seçilir.
 
     Şube Formunu Listele:
-        Şubelenmiş dersin şube detaylarını gösterir ya da seçilen dersi şubelendirir.
+        Şubelenmiş dersin şube detaylarını gösterir, seçilen dersi
+        şubelendirir.
 
     Kaydet ve Ders Seçim Ekranına Dön:
-        Şubelendirilmiş dersi kaydeder ve ders seçim ekranından geri döner.
-        İş akışına ders seçim ekranından devam eder.
+        Şubelendirilmiş dersi kaydeder ve ders seçim ekranından geri
+        döner. İş akışına ders seçim ekranından devam eder.
 
     Kaydet ve Program Seçim Ekranına Dön:
-        Şubelendirilmiş dersi kaydeder ve program seçim  ekranına geri döner.
-        İş akışı Program formundan devam eder.
+        Şubelendirilmiş dersi kaydeder ve program seçim  ekranına geri
+        döner. İş akışı Program formundan devam eder.
 
     Tamamla ve Hocaları Bilgilendir:
-         Şubelendirilmiş dersin hocalarına, şube ve ders bilgileri aktarılır.
-         Bu adımdan sonra iş akışı sona eriyor.
+         Şubelendirilmiş dersin hocalarına, şube ve ders bilgileri
+         aktarılır. Bu adımdan sonra iş akışı sona eriyor.
 
-
-    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Sube``
-    modelidir. Meta.model bu amaçla kullanılmıştır.
+    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model
+    ``Sube`` modelidir. Meta.model bu amaçla kullanılmıştır.
 
     Adımlar arası geçiş manuel yürütülmektedir.
 
@@ -208,12 +242,23 @@ class DersSubelendirme(CrudView):
         model = "Sube"
 
     def program_sec(self):
+        """Program Seç
+
+        Kayıtlı olan programları Program forma yansıtır.
+
+        """
+
         _form = ProgramForm(current=self.current)
         choices = prepare_choices_for_model(Program)
         _form.program = fields.Integer(choices=choices)
         self.form_out(_form)
 
     def ders_sec(self):
+        """Ders Seç
+
+
+        """
+
         self.set_client_cmd('form')
         self.output['objects'] = [['Dersler'], ]
 
@@ -253,6 +298,12 @@ class DersSubelendirme(CrudView):
             self.output['objects'].append(item)
 
     def ders_okutman_formu(self):
+        """Ders Okutman Formu
+
+        Şubelendirme için seçilen dersin, şube bilgileri formunu oluşturur.
+
+        """
+
         # subelendirme icin secilen dersi getir
         ders = Ders.objects.get(key=self.current.input['sube'])
         # sonraki adimlar icin task data icine koy
@@ -272,6 +323,15 @@ class DersSubelendirme(CrudView):
         self.form_out(subelendirme_form)
 
     def subelendirme_kaydet(self):
+        """Şubelendirme Kaydet
+
+        Şubelendirme için seçilen dersin ders ve okutman bilgisi
+        mevcut şubelerde bulunuyorsa mevcut şubelerden çıkarılıyor.
+        Mevcut şubelerde bulunmuyorsa yeni şube oluşturuluyor,
+        kaydediliyor.
+
+        """
+
         sb = self.input['form']['Subeler']
         ders = self.current.task_data['ders_key']
         mevcut_subeler = Sube.objects.filter(ders_id=ders)
@@ -289,6 +349,13 @@ class DersSubelendirme(CrudView):
             s.delete()
 
     def bilgi_ver(self):
+        """Bilgi ver
+
+        Şubelendirme  bilgilerini okutmanlar listesinde tanımlı
+        okutmanlara iletiliyor.
+
+        """
+
         sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
         okutmanlar = [s.okutman.__unicode__() for s in sbs]
 
@@ -298,8 +365,10 @@ class DersSubelendirme(CrudView):
 
 
 class NotGirisi(CrudView):
-    """Okutmanların Sınavlara ait öğrenci notlarını sisteme girebilmesini sağlayan workflowa ait metdodları barındıran
-    class.
+    """Okutman Not Girişi
+
+    Okutmanların Sınavlara ait öğrenci notlarını sisteme girebilmesini
+    sağlayan workflowa ait metdodları barındıran sınıftır.
 
     """
 
@@ -307,9 +376,12 @@ class NotGirisi(CrudView):
         model = "DegerlendirmeNot"
 
     def ders_secim(self):
-        """Okutmanın kendisine ait şubelerin listelendiği seçim adımına ait olan method.
-        Bu method seçilen şubeyi bir sonraki workflow adımı olan ve ``sinav_sec`` methodu ile elde edilen sınav seçim
-        adımına aktarmaktadır.
+        """Okutmanın kendisine ait şubelerin listelendiği seçim adımına
+        ait olan metot.
+
+        Bu method seçilen şubeyi bir sonraki workflow adımı olan ve
+        ``sinav_sec`` methodu ile elde edilen sınav seçim adımına
+        aktarmaktadır.
 
         """
 
@@ -322,15 +394,20 @@ class NotGirisi(CrudView):
         self.form_out(_form)
 
     def sinav_sec(self):
-        """Okutmanın, seçilen şubeye ait sınavları görebildiği ve sınav seçimi yapabildiği adıma ait olan method.
-        Seçilen şube, ``ders_secim`` methodu içinde tanımlanmış olan ``JsonForm`` tarafından iletilmekte ve bu method
-        içerisinde aşağıdaki şekilde elde edilmektedir::
+        """Okutmanın, seçilen şubeye ait sınavları görebildiği ve sınav
+        seçimi yapabildiği adıma ait olan method.
+
+        Seçilen şube, ``ders_secim`` methodu içinde tanımlanmış olan
+        ``JsonForm`` tarafından iletilmekte ve bu method içerisinde
+        aşağıdaki şekilde elde edilmektedir::
 
             sube_key = self.current.input['form']['sube']
 
-        Sinavlar, bir önceki şube seçim adımında seçilmiş olan şubeye ait olacak şekilde filtrelenmektedir::
+        Sinavlar, bir önceki şube seçim adımında seçilmiş olan şubeye
+        ait olacak şekilde filtrelenmektedir::
 
-            _form.sinav=fields.Integer("Sınav Seçiniz", choices=prepare_choices_for_model(Sinav, sube_id=sube_key))
+            _form.sinav=fields.Integer("Sınav Seçiniz",
+              choices=prepare_choices_for_model(Sinav, sube_id=sube_key))
 
         """
 
@@ -347,14 +424,18 @@ class NotGirisi(CrudView):
         self.form_out(_form)
 
     def sinav_kontrol(self):
-        """Seçilen sınava ait notların onaylanmış (teslim edilmiş) olup olmadığını kontrol eden method.
-        Bu method ile task_data içerisine seçili sınavın onay durumu aşağıdaki şekilde tanımlanmaktadır::
+        """Seçilen sınava ait notların onaylanmış (teslim edilmiş) olup
+        olmadığını kontrol eden method.
+
+        Bu method ile task_data içerisine seçili sınavın onay durumu
+        aşağıdaki şekilde tanımlanmaktadır::
 
             self.current.task_data['sinav_degerlendirme'] = sinav.degerlendirme
 
-        Bu tanımlama ile, BMPN dosyası üzerinde tanımladığmız XOR kapı sayesinde notları onaylanmış (teslim edilmiş)
-        sınavlara ait notlar bir önizleme ekranında görüntülenrek, tekrar işlenmesi ve değiştirilmesi
-        engellenmektedir.
+        Bu tanımlama ile, BMPN dosyası üzerinde tanımladığmız XOR kapısı
+        sayesinde notları onaylanmış (teslim edilmiş) sınavlara ait
+        notlar bir önizleme ekranında görüntülenrek, tekrar işlenmesi
+        ve değiştirilmesi engellenmektedir.
         
         """
 
@@ -365,17 +446,26 @@ class NotGirisi(CrudView):
 
     def not_girisi(self):
         """Seçilen sınava ait notların sisteme girilmesini sağlayan method.
-        Bu method hem ``sinav_kontrol`` hem de ``not_kontrol`` methodu üzerinden gelen yönlendirmeleri karşılamaktadır.
-        ``not_kontrol`` methodu (not kontrol adımı), okutmanın girdiği notları değiştirme ihtiyacı göz önünde
-        bulundurularak geliştirilmiştir.
+        Bu method hem ``sinav_kontrol`` hem de ``not_kontrol`` methodu
+        üzerinden gelen yönlendirmeleri karşılamaktadır.
 
-        Not kontrol adımı üzerinden gelen yönlendirmelerde güncel not verisini elde edebilmek için ``task_data`` altında
-        notlar tanımına bakılmaktadır. Bu tanım ``not_kontrol`` methodu içerisinde yapıldığı, için bu veriyi barındıran
-        bütün yönlendirmelerin bu adımdan yapıldığı bilinmektedir.
-        Bu tanımın bulunmadığı yönlendirmelerde ise, notlar veritabanı üzerinden sorgulanarak listelenmektedir.
+        ``not_kontrol`` methodu (not kontrol adımı), okutmanın girdiği
+        notları değiştirme ihtiyacı göz önünde bulundurularak
+        geliştirilmiştir.
 
-        Bu methodun barındırdığı ``NotGirisForm`` adlı form ise ``not_form_inline_edit`` adlı form modifier ile
-        ``degerlendirme`` ve ``aciklama`` alanlarına inline edit özelliği kazandırılmaktadır.
+        Not kontrol adımı üzerinden gelen yönlendirmelerde güncel not
+        verisini elde edebilmek için ``task_data`` altında notlar
+        tanımına bakılmaktadır. Bu tanım ``not_kontrol`` methodu
+        içerisinde yapıldığı, için bu veriyi barındıran bütün
+        yönlendirmelerin bu adımdan yapıldığı bilinmektedir.
+
+        Bu tanımın bulunmadığı yönlendirmelerde ise, notlar
+        veritabanı üzerinden sorgulanarak listelenmektedir.
+
+        Bu methodun barındırdığı ``NotGirisForm`` adlı form ise
+        ``not_form_inline_edit`` adlı form modifier ile
+        ``degerlendirme`` ve ``aciklama`` alanlarına inline edit
+        özelliği kazandırılmaktadır.
         
         """
 
@@ -414,16 +504,23 @@ class NotGirisi(CrudView):
         self.current.output["meta"]["allow_actions"] = False
 
     def not_kontrol(self):
-        """Okutmanların girmiş olduğu öğrenci notlarının listelenmesini sağlayan method.
-        Bu method hem ``sinav_kontrol`` methodu hem de ``not_girisi`` methodları üzerinden yapılan yönlendirmeleri
-        karşılar. Eğer seçilen sınava ait notlar onaylanmış (teslim edilmiş) ise ``not_giris`` methoduna başlı olan not
-        giriş adımı atlanarak bu adıma yönlendirme yapılmaktadır. Bu durumda notlar, veritabanı üzerinden alınarak
-        listelenirken, ``not_girisi`` adımından gelen yönlendirmelerde form ile birlikte gönderilen veriler
+        """Okutmanların girmiş olduğu öğrenci notlarının listelenmesini
+        sağlayan method.
+
+        Bu method hem ``sinav_kontrol`` methodu hem de ``not_girisi``
+        methodları üzerinden yapılan yönlendirmeleri karşılar. Eğer
+        seçilen sınava ait notlar onaylanmış (teslim edilmiş) ise
+        ``not_giris`` methoduna başlı olan not giriş adımı atlanarak bu
+        adıma yönlendirme yapılmaktadır. Bu durumda notlar, veritabanı
+        üzerinden alınarak listelenirken, ``not_girisi`` adımından gelen
+        yönlendirmelerde form ile birlikte gönderilen veriler
         listelenmektedir.
 
-        ``sinav_kontrol`` methodu ile yapılan yönlendirmelerde notlar üzerinde herhangi bir güncelleme, değişiklik
-        yapılamayacağı için bu operasyonlara ait form düğmeleri gösterilmemekte ve okutmana bu dersler üzerinde bir
-        değişiklik yapamayacağını bildiren bir mesaj kutusu gösterilmektedir.
+        ``sinav_kontrol`` methodu ile yapılan yönlendirmelerde notlar
+        üzerinde herhangi bir güncelleme, değişiklik yapılamayacağı için
+        bu operasyonlara ait form düğmeleri gösterilmemekte ve okutmana
+        bu dersler üzerinde bir değişiklik yapamayacağını bildiren bir
+        mesaj kutusu gösterilmektedir.
 
         """
 
@@ -496,11 +593,15 @@ class NotGirisi(CrudView):
         self.form_out(_form)
 
     def not_kaydet(self):
-        """Okutmanın girmiş olduğu notların veritabanına kaydedilmesini sağlayan method.
-        Bu method, önceden girilmiş olan notları veritabanı üzerinde güncellerken, key verisi olmayan not girişleri için
-        veritabanı üzerinde yeni bir kayıt açmaktadır.
+        """Okutmanın girmiş olduğu notların veritabanına kaydedilmesini
+        sağlayan method.
+
+        Bu method, önceden girilmiş olan notları veritabanı üzerinde
+        güncellerken, key verisi olmayan not girişleri için veritabanı
+        üzerinde yeni bir kayıt açmaktadır.
 
         """
+
         term = Donem.objects.filter(guncel=True)[0]
         sinav_key = self.current.task_data["sinav_key"]
         sube_key = self.current.task_data["sube"]
