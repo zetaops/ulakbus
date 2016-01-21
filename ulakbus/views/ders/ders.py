@@ -1,5 +1,6 @@
 # -*-  coding: utf-8 -*-
-"""
+"""Ders Ekleme ve Okutman Not Giriş workflowlarına ait adımlarla ilişkili methodları barındırır.
+
 """
 
 # Copyright (C) 2015 ZetaOps Inc.
@@ -194,10 +195,21 @@ class DersSubelendirme(CrudView):
 
 
 class NotGirisi(CrudView):
+    """Okutmanların Sınavlara ait öğrenci notlarını sisteme girebilmesini sağlayan workflowa ait metdodları barındıran
+    class.
+
+    """
+
     class Meta:
         model = "DegerlendirmeNot"
 
     def ders_secim(self):
+        """Okutmanın kendisine ait şubelerin listelendiği seçim adımına ait olan method.
+        Bu method seçilen şubeyi bir sonraki workflow adımı olan ve ``sinav_sec`` methodu ile elde edilen sınav seçim
+        adımına aktarmaktadır.
+
+        """
+
         _form = forms.JsonForm(current=self.current, title="Ders Seçim Formu")
         user = self.current.user
         subeler = Sube.objects.filter(okutman_id=self.get_okutman_key)
@@ -207,6 +219,18 @@ class NotGirisi(CrudView):
         self.form_out(_form)
 
     def sinav_sec(self):
+        """Okutmanın, seçilen şubeye ait sınavları görebildiği ve sınav seçimi yapabildiği adıma ait olan method.
+        Seçilen şube, ``ders_secim`` methodu içinde tanımlanmış olan ``JsonForm`` tarafından iletilmekte ve bu method
+        içerisinde aşağıdaki şekilde elde edilmektedir::
+
+            sube_key = self.current.input['form']['sube']
+
+        Sinavlar, bir önceki şube seçim adımında seçilmiş olan şubeye ait olacak şekilde filtrelenmektedir::
+
+            _form.sinav=fields.Integer("Sınav Seçiniz", choices=prepare_choices_for_model(Sinav, sube_id=sube_key))
+
+        """
+
         _form = forms.JsonForm(current=self.current, title="Sınav Seçim Formu")
 
         try:
@@ -220,12 +244,38 @@ class NotGirisi(CrudView):
         self.form_out(_form)
 
     def sinav_kontrol(self):
+        """Seçilen sınava ait notların onaylanmış (teslim edilmiş) olup olmadığını kontrol eden method.
+        Bu method ile task_data içerisine seçili sınavın onay durumu aşağıdaki şekilde tanımlanmaktadır::
+
+            self.current.task_data['sinav_degerlendirme'] = sinav.degerlendirme
+
+        Bu tanımlama ile, BMPN dosyası üzerinde tanımladığmız XOR kapı sayesinde notları onaylanmış (teslim edilmiş)
+        sınavlara ait notlar bir önizleme ekranında görüntülenrek, tekrar işlenmesi ve değiştirilmesi
+        engellenmektedir.
+        
+        """
+
         sinav_key = self.current.input['form']['sinav']
         self.current.task_data['sinav_key'] = sinav_key
         sinav = Sinav.objects.get(sinav_key)
         self.current.task_data['sinav_degerlendirme'] = sinav.degerlendirme
 
     def not_girisi(self):
+        """Seçilen sınava ait notların sisteme girilmesini sağlayan method.
+        Bu method hem ``sinav_kontrol`` hem de ``not_kontrol`` methodu üzerinden gelen yönlendirmeleri karşılamaktadır.
+        ``not_kontrol`` methodu (not kontrol adımı), okutmanın girdiği notları değiştirme ihtiyacı göz önünde
+        bulundurularak geliştirilmiştir.
+
+        Not kontrol adımı üzerinden gelen yönlendirmelerde güncel not verisini elde edebilmek için ``task_data`` altında
+        notlar tanımına bakılmaktadır. Bu tanım ``not_kontrol`` methodu içerisinde yapıldığı, için bu veriyi barındıran
+        bütün yönlendirmelerin bu adımdan yapıldığı bilinmektedir.
+        Bu tanımın bulunmadığı yönlendirmelerde ise, notlar veritabanı üzerinden sorgulanarak listelenmektedir.
+
+        Bu methodun barındırdığı ``NotGirisForm`` adlı form ise ``not_form_inline_edit`` adlı form modifier ile
+        ``degerlendirme`` ve ``aciklama`` alanlarına inline edit özelliği kazandırılmaktadır.
+        
+        """
+
         _form = NotGirisForm(current=self.current, title="Not Giriş Formu")
         sinav_key = self.current.task_data['sinav_key']
         sube_key = self.current.task_data["sube"]
@@ -242,7 +292,7 @@ class NotGirisi(CrudView):
             ogrenciler = OgrenciDersi.objects.filter(ders_id=sube_key)
 
             for ogr in ogrenciler:
-                try:
+                try: # Öğrencinin bu sınava ait daha önceden kayıtlı notu var mı?
                     degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav, ogrenci=ogr.ogrenci_program.ogrenci)
                     puan = degerlendirme.puan
                     aciklama = degerlendirme.aciklama
@@ -261,9 +311,22 @@ class NotGirisi(CrudView):
         self.current.output["meta"]["allow_actions"] = False
 
     def not_kontrol(self):
+        """Okutmanların girmiş olduğu öğrenci notlarının listelenmesini sağlayan method.
+        Bu method hem ``sinav_kontrol`` methodu hem de ``not_girisi`` methodları üzerinden yapılan yönlendirmeleri
+        karşılar. Eğer seçilen sınava ait notlar onaylanmış (teslim edilmiş) ise ``not_giris`` methoduna başlı olan not
+        giriş adımı atlanarak bu adıma yönlendirme yapılmaktadır. Bu durumda notlar, veritabanı üzerinden alınarak
+        listelenirken, ``not_girisi`` adımından gelen yönlendirmelerde form ile birlikte gönderilen veriler
+        listelenmektedir.
+
+        ``sinav_kontrol`` methodu ile yapılan yönlendirmelerde notlar üzerinde herhangi bir güncelleme, değişiklik
+        yapılamayacağı için bu operasyonlara ait form düğmeleri gösterilmemekte ve okutmana bu dersler üzerinde bir
+        değişiklik yapamayacağını bildiren bir mesaj kutusu gösterilmektedir.
+
+        """
+
         _form = forms.JsonForm(current=self.current, title="Not Önizleme Ekranı")
 
-        try:  # Eğer not_kontrol aşamasından geri dönülmemişse öğrenci notlarını için formdan gelen veriyi kullan
+        try:  # Eğer istek sinav_kontrol aşamasından yönlendirilmemişse öğrenci notları için formdan gelen veriyi kullan
             ogrenci_notlar = self.current.input['form']['Ogrenciler']
             self.current.task_data["notlar"] = ogrenci_notlar
 
@@ -276,7 +339,7 @@ class NotGirisi(CrudView):
                 ogrnot['Açıklama'] = ogr['aciklama']
                 notlar.append(ogrnot)
 
-        except:  # Eğer not_kontrol aşamasından geri dönülmüşse task_data'dan gelen not verilerini kullan
+        except:  # Eğer istek sinav_kontrol aşamasından yönlendirilmişse notlar için veritabanı kayıtlarını kullan
             sinav_key = self.current.task_data['sinav_key']
             sube_key = self.current.task_data["sube"]
             sinav = Sinav.objects.get(sinav_key)
@@ -284,7 +347,7 @@ class NotGirisi(CrudView):
             notlar = []
 
             for ogr in ogrenciler:
-                try:  # Öğrenciye ait notlar daha önceden girilmiş mi?
+                try:  # Öğrencinin bu sınava ait daha önceden kayıtlı notu var mı?
                     degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav, ogrenci=ogr.ogrenci_program.ogrenci)
                     puan = degerlendirme.puan
                     aciklama = degerlendirme.aciklama
@@ -300,7 +363,6 @@ class NotGirisi(CrudView):
                 notlar.append(ogrnot)
 
         # Eğer notlar okutman tarından onaylanmışsa (teslim edilmişse) uyarı göster
-
         if self.current.task_data['sinav_degerlendirme']:
             self.current.output['msgbox'] = {
 
@@ -308,10 +370,14 @@ class NotGirisi(CrudView):
                 "msg": 'Bu derse ait notlar onaylanmış olduğu için içeriği değiştirilemez.'
 
             }
+            _form.ders_secim = fields.Button("Ders Seçim Ekranına Dön", cmd="ders_sec",
+                                                     flow="ders_secim_adimina_don")
+            _form.sinav_secim = fields.Button("Sınav Seçim Ekranına Dön", cmd="sinav_sec",
+                                                      flow="sinav_secim_adimina_don")
 
         else:  # Eğer notlar hala onaylanmamışsa (teslim edilmemişse) form düğmelerini göster
 
-            _form.not_onay = fields.Boolean("Sınav Notlarını Onaylıyorum (Bu işlem geri alınmaz!)")
+            _form.not_onay = fields.Boolean("Sınav Notlarını Onaylıyorum (Bu işlem geri alınamaz!)")
             _form.not_duzenle = fields.Button("Notları Düzenle", cmd="not_girisi", flow="not_giris_formuna_don")
             _form.kaydet = fields.Button("Kaydet", cmd="not_kaydet", flow="end")
             _form.kaydet_ve_ders_sec = fields.Button("Kaydet ve Ders Seçim Ekranına Dön", cmd="ders_sec",
@@ -327,6 +393,11 @@ class NotGirisi(CrudView):
         self.form_out(_form)
 
     def not_kaydet(self):
+        """Okutmanın girmiş olduğu notların veritabanına kaydedilmesini sağlayan method.
+        Bu method, önceden girilmiş olan notları veritabanı üzerinde güncellerken, key verisi olmayan not girişleri için
+        veritabanı üzerinde yeni bir kayıt açmaktadır.
+
+        """
         term = Donem.objects.filter(guncel=True)[0]
         sinav_key = self.current.task_data["sinav_key"]
         sube_key = self.current.task_data["sube"]
@@ -339,7 +410,7 @@ class NotGirisi(CrudView):
             try:
                 ogr_data = OgrenciProgram.objects.get(ogrenci_no=ogrenci_not['ogrenci_no'])
 
-                if ogrenci_not['key']:
+                if ogrenci_not['key']: # Önceden girilmiş bir kayıt mı?
                     ogr_not = DegerlendirmeNot.objects.get(ogrenci_not['key'])
                 else:
                     ogr_not = DegerlendirmeNot()
@@ -376,25 +447,22 @@ class NotGirisi(CrudView):
 
     @property
     def get_okutman_key(self):
-
-        '''
-        Harici okutman ve okutman kayıt key'lerinin ayrımı için
-        '''
+        """Harici okutman ve okutman kayıt key'lerinin ayrımını sağlayan method.
+        """
         return self.current.user.personel.okutman.key if self.current.user.personel.key else self.current.user.harici_okutman.okutman.key
 
     @property
     def get_okutman_name_surname(self):
-        '''
-        Harici okutman ve okutman ad,soyad ayrımı için
-        '''
+        """Harici okutman ve okutman ad,soyad ayrımını sağlayan method.
+        """
         return "%s %s" % (self.current.user.personel.okutman.ad,
                           self.current.user.personel.okutman.soyad) if self.current.user.personel.key else "%s %s" % (
             self.current.user.harici_okutman.ad, self.current.user.harici_okutman.soyad)
 
     @form_modifier
     def not_form_inline_edit(self, serialized_form):
-        '''
-        NotGirisForm'da inline edit elde etmek için
-        '''
+        """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
+
+        """
         if 'Ogrenciler' in serialized_form['schema']['properties']:
             serialized_form['inline_edit'] = ['degerlendirme', 'aciklama']
