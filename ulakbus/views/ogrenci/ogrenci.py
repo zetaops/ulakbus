@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 """Öğrencilerin Genel Bilgileri ile ilgili İş Akışlarına ait
-sınıf ve metodları içeren modüldür.
+sınıf ve metotları içeren modüldür.
 
 Kimlik Bilgileri, İletişim Bilgileri ve Önceki Eğitim Bilgileri gibi
 iş akışlarının yürütülmesini sağlar.
@@ -24,7 +24,7 @@ from ulakbus.models.ogrenci import Ogrenci
 
 class KimlikBilgileriForm(forms.JsonForm):
     """
-    KimlikBilgileri sınıfı için object form olarak kullanılacaktır. Form,
+    ``KimlikBilgileri`` sınıfı için object form olarak kullanılacaktır. Form,
     include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
@@ -68,7 +68,7 @@ class KimlikBilgileri(CrudView):
         kaydeder. Bu adım ``CrudView.save()`` metodunu kullanır. İş akışı bu adımdan
         sonra sona erer.
 
-    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Öğrenci``
+    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Ogrenci``
     modelidir. Meta.model bu amaçla kullanılmıştır.
 
     Adımlar arası geçiş manuel yürütülmektedir.
@@ -90,8 +90,8 @@ class KimlikBilgileri(CrudView):
 
 class IletisimBilgileriForm(forms.JsonForm):
     """
-    İletişimBilgileri için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    ``İletişimBilgileri`` sınıfı için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
 
@@ -103,7 +103,9 @@ class IletisimBilgileriForm(forms.JsonForm):
 
 
 class IletisimBilgileri(CrudView):
-    """
+
+    """İletişim Bilgileri İş Akışı
+
    İletişim Bilgileri iş akışı 3 adımdan oluşmaktadır.
 
    * İletisim Bilgileri Formu
@@ -113,15 +115,24 @@ class IletisimBilgileri(CrudView):
    Bu iş akışında kullanılan metotlar şu şekildedir.
 
    İletişim Bilgilerini Listele:
-     CrudView list metodu kullanılmıştır.İletişim Bilgileri formunu listeler.
+      CrudView list metodu kullanılmıştır. İletişim Bilgileri formunu
+      listeler.
 
    KPS Adres Bilgilerini Getir:
-     Bu metot ile, Nüfus ve Vatandaşlık İşleri Genel Müdürlüğü tarafından tutulan kişiye ait yerleşim yeri bilgilerine
-     (merkezi veritabanında tutulan verilere) kamu kurumları tarafından erişilir ve IletişimBilgileriForm'undaki alanlar
-     KPS'ten gelen bilgiler doğrultusunda doldurulur.
+      Bu metot sayesinde  öğrenciye ait yerleşim yeri bilgilerine kamu kurumları
+      tarafından erişilir. IletişimBilgileriForm'undaki alanlar
+      KPS'ten gelen bilgiler doğrultusunda doldurulur.
 
     Kaydet:
-     KPS'ten gelen bilgileri ya da yetkili kişinin öğrenciyle ilgili girdiği bilgileri kaydeder.
+      KPS'ten gelen bilgileri ya da yetkili kişinin öğrenciyle ilgili girdiği
+      bilgileri kaydeder. Bu adım ``CrudView.save()`` metodunu kullanır.
+      İş akışı bu adımdan sonra sona erer.
+
+    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Ogrenci``
+    modelidir. Meta.model bu amaçla kullanılmıştır.
+
+    Adımlar arası geçiş manuel yürütülmektedir.
+
     """
 
     class Meta:
@@ -139,8 +150,8 @@ class IletisimBilgileri(CrudView):
 
 class OncekiEgitimBilgileriForm(forms.JsonForm):
     """
-    OncekiEgitimBilgileri için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    ``OncekiEgitimBilgileri`` sınıfı  için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
 
@@ -151,7 +162,9 @@ class OncekiEgitimBilgileriForm(forms.JsonForm):
 
 
 class OncekiEgitimBilgileri(CrudView):
-    """
+
+    """Önceki Eğitim Bilgileri İş Akışı
+
    Önceki Eğitim Bilgileri iş akışı 2 adımdan oluşmaktadır.
 
    * Önceki Eğitim Bilgileri Formu
@@ -160,10 +173,16 @@ class OncekiEgitimBilgileri(CrudView):
    Bu iş akışında  kullanılan metotlar şu şekildedir:
 
    Önceki Eğitim Bilgileri Formunu Listele:
-     CrudView list metodu kullanılmıştır. Önceki Eğitim Bilgileri formunu listeler.
+      CrudView list metodu kullanılmıştır. Önceki Eğitim Bilgileri formunu listeler.
 
    Kaydet:
-     Girilen önceki eğitim bilgilerini kaydeder. Bu adımdan sonra iş akışı sona erer.
+      Girilen önceki eğitim bilgilerini kaydeder.Bu adım ``CrudView.save()`` metodunu kullanır.
+      İş akışı bu adımdan sonra sona erer.
+
+   Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``OncekiEgitimBilgisi``
+   modelidir. Meta.model bu amaçla kullanılmıştır.
+
+   Adımlar arası geçiş manuel yürütülmektedir.
 
     """
 
