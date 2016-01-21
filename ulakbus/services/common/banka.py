@@ -78,6 +78,18 @@ class BankaService(Service):
         """
         Servis girdilerinin ve çıktılarının belirlendiği yapı.
 
+        Servis çağrısı yapılırken:
+            - request_elem: Servise gelen isteğin (JSON, XML) ismi
+            - input_required: Zorunlu olarak sağalanacak girdilerin listesi
+            - input_optional: İsteğe bağlı olarak sağlanacak girdilerin listesi
+            - default_value: İsteğe bağlı girdilerin değerlerinin, servis çağrılırken
+                            verilmemesi durumunda kullanılacak varsayılan değer
+        Servisin döneceği cevap belirlenirken:
+            - response_elem: Servisten dönen veriyi içeren (payload)
+                            cevabın (JSON, XML) ismi
+            - output_required: Zorunlu olarak döndürülerek çıktıların listesi
+            - output_optional: İsteğe bağlı olarak döndürülecek çıktıların listesi
+
         Attributes:
             banka_kodu (str): Üniversite tarafından bankaya verilen kod
             bank_username (str): Üniversite tarafından bankaya verilen kullanıcı adı
@@ -104,10 +116,10 @@ class BankaService(Service):
     @authenticate
     def get_data(self):
         """
-        Servise gelen girdileri alan ve bu girdilere göre gerekli bilgileri elde edip
-        cevap olarak döndüren metod.
+        Servise gelen girdileri alan ve bu girdilere göre gerekli bilgileri
+        elde edip cevap olarak döndüren metod.
 
-        Gerçekleştirimi bu servisten kalıtılacak servisler tarafından yapılmaktadır.
+        Gerçekleştirimi bu servisten kalıtılan servisler tarafından yapılmaktadır.
 
         """
         pass

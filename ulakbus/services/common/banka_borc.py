@@ -10,17 +10,113 @@
 Banka tarafından öğrencinin borçlarını sorgulamak için kullanılan Zato Servisi.
 
 Yetkilendirme için banka bilgileri,
-öğrenci borç bilgilerine erişim için öğrenci numarası alınır.
+öğrenci borç bilgilerine erişim için öğrenci numarası verilir.
 
 Elde edilen bilgilerle öğrencinin tüm borç bilgileri (mevcutsa) listelenir.
 
 Example:
-    Servise JSON nesnesi kullanılarak istek gönderilmesi::
 
-        $ curl http://localhost:11223/banka-borc-getir -d
-            '{"banka_kodu": "kod", "bank_username": "user", "bank_password": "pass",
-            "ogrenci_no":"ogr_no", "sube_kodu":"sube", "kanal_kodu":"kanal", "mesaj_no":"mesaj"}'
+    Servise JSON nesnesi kullanılarak istek gönderilmesi:
 
+        .. code-block:: json
+
+        $ curl http://localhost:11223/banka-borc-getir -d '{
+            "banka_kodu": "kod",
+            "bank_username": "user",
+            "bank_password": "pass",
+            "ogrenci_no":"1234567890",
+            "sube_kodu":"sube",
+            "kanal_kodu":"kanal",
+            "mesaj_no":"mesaj"
+            }'
+
+
+    İsteğe dönen cevap:
+
+        .. code-block:: json
+
+        $ {"borc_response": [{
+            "tahakkuk_referans_no": "tahakkuk",
+            "ucret_turu": 1,
+            "ad_soyad": "Ad Soyad",
+            "bank_password": "pass",
+            "bank_username": "user",
+            "mesaj_no": "mesaj",
+            "sube_kodu": "sube",
+            "hata_mesaj": null,
+            "borc_ack": "aciklama",
+            "son_odeme_tarihi": "07122015",
+            "ogrenci_no": "1234567890",
+            "banka_kodu": "kod",
+            "borc": 214.0,
+            "kanal_kodu": "kanal",
+            "mesaj_statusu": "K"
+            },
+            ...
+        ]}
+
+
+    Servise XML kullanılarak istek gönderilmesi:
+
+        .. code-block:: xml
+
+        $ curl http://localhost:11223/banka-borc.banka-borc-getir \
+            -H "SOAPAction:banka-borc.banka-borc-getir" \
+            -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                xmlns:zato="https://zato.io/ns/20130518">
+                    <soapenv:Body>
+                        <zato:borc_request>
+                            <zato:banka_kodu>kod</zato:banka_kodu>
+                            <zato:bank_username>user</zato:bank_username>
+                            <zato:bank_password>pass</zato:bank_password>
+                            <zato:ogrenci_no>1234567890</zato:ogrenci_no>
+                            <zato:sube_kodu>sube</zato:sube_kodu>
+                            <zato:kanal_kodu>kanal</zato:kanal_kodu>
+                            <zato:mesaj_no>mesaj</zato:mesaj_no>
+                        </zato:borc_request>
+                    </soapenv:Body>
+                </soapenv:Envelope>'
+
+
+    İsteğe dönen cevap:
+
+        .. code-block:: xml
+
+        $ <?xml version='1.0' encoding='UTF-8'?>
+            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns="https://zato.io/ns/20130518">
+            <soap:Body>
+                <borc_response>
+                    <zato_env>
+                        <cid>K068TA34MK4E0KPWMW1EK5HS9TB8</cid>
+                        <result>ZATO_OK</result>
+                    </zato_env>
+                    <item_list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <item>
+                            <mesaj_statusu>K</mesaj_statusu>
+                            <hata_mesaj xsi:nil="true"/>
+                            <banka_kodu>kod</banka_kodu>
+                            <sube_kodu>sube</sube_kodu>
+                            <kanal_kodu>kanal</kanal_kodu>
+                            <mesaj_no>mesaj</mesaj_no>
+                            <bank_username>user</bank_username>
+                            <bank_password>pass</bank_password>
+                            <ogrenci_no>1234567890</ogrenci_no>
+                            <ad_soyad>Ad Soyad</ad_soyad>
+                            <ucret_turu>1</ucret_turu>
+                            <tahakkuk_referans_no>tahakkuk</tahakkuk_referans_no>
+                            <son_odeme_tarihi>07122015</son_odeme_tarihi>
+                            <borc>214.0</borc>
+                            <borc_ack>aciklama</borc_ack>
+                        </item>
+                        <item>
+                            ...
+                        </item>
+                        ...
+                    </item_list>
+                </borc_response>
+            </soap:Body>
+        </soap:Envelope>
 
 """
 
@@ -45,9 +141,9 @@ class BankaBorcGetir(BankaService):
         Servis girdilerinin ve çıktılarının belirlendiği yapı.
 
         Attributes:
-            borc_request (str): Servise gelen istek yapısının kök elemanının ismi
-            borc_response (str): Servisten dönen veriyi içeren (payload) yapının
-                                kök elemanının ismi
+            borc_request (str): Servise gelen isteğin (JSON, XML) ismi
+            borc_response (str): Servisten dönen veriyi içeren (payload)
+                                cevabın (JSON, XML) ismi
 
             banka_kodu (str): Üniversite tarafından bankaya verilen kod
             bank_username (str): Üniversite tarafından bankaya verilen kullanıcı adı
@@ -70,12 +166,12 @@ class BankaBorcGetir(BankaService):
 
         request_elem = 'borc_request'
         response_elem = 'borc_response'
-        input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
-                          'ogrenci_no')
+        input_required = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username',
+                          'bank_password', 'ogrenci_no')
         output_required = ('mesaj_statusu','hata_mesaj')
-        output_optional = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username', 'bank_password',
-                           'ogrenci_no', 'ad_soyad', 'ucret_turu', 'tahakkuk_referans_no', 'son_odeme_tarihi',
-                           'borc', 'borc_ack')
+        output_optional = ('banka_kodu', 'sube_kodu', 'kanal_kodu', 'mesaj_no', 'bank_username',
+                           'bank_password', 'ogrenci_no', 'ad_soyad', 'ucret_turu',
+                           'tahakkuk_referans_no', 'son_odeme_tarihi', 'borc', 'borc_ack')
 
     def handle(self):
         """
@@ -105,20 +201,21 @@ class BankaBorcGetir(BankaService):
 
         super(BankaBorcGetir, self).get_data()
 
+        inp = self.request.input
+
         try:
-            ogrenci_no = self.request.input.ogrenci_no
-            ogrenci = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no).ogrenci
+            ogrenci = OgrenciProgram.objects.get(ogrenci_no=inp.ogrenci_no).ogrenci
 
             borclar = Borc.objects.filter(ogrenci=ogrenci)
             for borc in borclar:
                 borc_response = {
-                    'banka_kodu': self.request.input.banka_kodu,
-                    'sube_kodu': self.request.input.sube_kodu,
-                    'kanal_kodu': self.request.input.kanal_kodu,
-                    'mesaj_no': self.request.input.mesaj_no,
-                    'bank_username': self.request.input.bank_username,
-                    'bank_password': self.request.input.bank_password,
-                    'ogrenci_no': self.request.input.ogrenci_no,
+                    'banka_kodu': inp.banka_kodu,
+                    'sube_kodu': inp.sube_kodu,
+                    'kanal_kodu': inp.kanal_kodu,
+                    'mesaj_no': inp.mesaj_no,
+                    'bank_username': inp.bank_username,
+                    'bank_password': inp.bank_password,
+                    'ogrenci_no': inp.ogrenci_no,
                     'ad_soyad': ogrenci.ad + " " + ogrenci.soyad,
                     'ucret_turu': borc.sebep,
                     'tahakkuk_referans_no': borc.tahakkuk_referans_no,
