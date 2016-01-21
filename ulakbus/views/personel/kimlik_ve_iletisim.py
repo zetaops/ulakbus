@@ -4,16 +4,13 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""
-Kimlik ve  İletişim Bilgileri işlemleri için kullanılacak temel model ``Personel`` modelidir.
-Meta.model bu amaçla kullanılmıştır.
+"""Personellerin  Kimlik ve İletişim  Bilgileri  İş Akışına ait
+sınıf ve metotları içeren modüldür.
 
-İş akışında, ``CrudView`` genişletilerek (extend) işletilmektedir. Adımlar arası geçiş manuel sekilde
-yürütülmektedir.
-
-
+Kimlik ve İletişim Bilgileri iş akışının yürütülmesini sağlar.
 
 """
+
 from zengine.forms import JsonForm
 from zengine.forms import fields
 
@@ -24,10 +21,11 @@ from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 
 class KimlikBilgileriForm(JsonForm):
     """
-    KimlikIletişim için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    ``KimlikIletişim`` sınıfı  için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
+
     class Meta:
         include = ['tckn', 'ad', 'soyad', 'cinsiyet', 'uyruk', 'medeni_hali', 'cuzdan_seri',
                    'cuzdan_seri_no', 'baba_adi', 'ana_adi', 'dogum_tarihi', 'dogum_tarihi',
@@ -45,10 +43,11 @@ class KimlikBilgileriForm(JsonForm):
 
 class IletisimBilgileriForm(JsonForm):
     """
-    KimlikIletisim için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    ``KimlikIletisim`` sınıfı için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
+
     class Meta:
         include = ['ikamet_adresi', 'ikamet_il', 'ikamet_ilce', 'adres_2', 'adres_2_posta_kodu',
                    'oda_no', 'oda_tel_no', 'cep_telefonu', 'e_posta', 'e_posta_2', 'e_posta_3',
@@ -60,10 +59,11 @@ class IletisimBilgileriForm(JsonForm):
 
 class DigerBilgilerForm(JsonForm):
     """
-    KimlikIletisim için object form olarak kullanılacaktır. Form, include listesinde, aşağıda tanımlı
-    alanlara sahiptir.
+    ``KimlikIletisim`` sınıfı  için object form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
 
     """
+
     class Meta:
         include = ['yayinlar', 'projeler', 'verdigi_dersler', 'kan_grubu', 'ehliyet',
                    'unvan', 'biyografi', 'notlar', 'engelli_durumu', 'engel_grubu',
@@ -73,7 +73,8 @@ class DigerBilgilerForm(JsonForm):
 
 
 class KimlikIletisim(CrudView):
-    """
+    """Kimlik ve İletişim Bilgileri İş Akışı
+
     Kimlik ve İletişim Bilgileri, aşağıda tanımlı iş akışı adımlarını yürütür.
 
     - Kimlik Bilgileri Formu
@@ -88,36 +89,48 @@ class KimlikIletisim(CrudView):
     Bu iş akışında kullanılan metotlar şu şekildedir:
 
     Kimlik Bilgilerini Formunu Listele:
-       CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır. KimlikBilgileriForm'unu listeler.
+       CrudView list metodu kullanılmıştır. Bu metot default olarak tanımlanmıştır.
+       Kimlik Bilgileri formunu listeler.
 
     Mernis'ten Kimlik Bilgileri Getir:
-       MERNİS, merkezi nüfus idare sisteminin kısa proje adıdır. Bu sistem ile nüfus kayıtları bilgisayar ortamına
-       aktarılarak veritabanları  oluşturulmuştur. Bu metot ile personele ait kimlik bilgilerine kamu kurumları
-       tarafından MERNİS'ten erişilir ve KimlikBilgileriFormu'ndaki alanlar MERNİS'ten gelen bilgiler doğrultusunda
-       doldurulur.
+       MERNİS, merkezi nüfus idare sisteminin kısa proje adıdır. Bu metot sayesinde
+       personele ait kimlik bilgilerine MERNİS'ten erişilir. Kimlik Bilgileri formundaki
+       alanlar MERNİS'ten gelen bilgiler doğrultusunda doldurulur.
 
     Kaydet:
-       MERNİS'ten gelen bilgileri ve yetkili kişinin girdiği bilgileri kaydeder.
+       MERNİS'ten gelen bilgileri ve yetkili kişinin personelle girdiği bilgileri
+       kaydeder. Bu adım ``CrudView.save()`` metodunu kullanır.
 
     İletişim Bilgilerini Formunu Listele:
-       CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır. IletisimBilgileriForm'unu listeler.
+       CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır.
+       İletişim Bilgileri formunu listeler.
 
     KPS'den Adres Bilgileri Getir:
-       Bu metot ile, Nüfus ve Vatandaşlık İşleri Genel Müdürlüğü tarafından kaydı tutulan kişiye ait nüfus ve yerleşim
-       yeri bilgilerine (merkezi veritabanında tutulan verilere) kamu kurumları tarafından erişilir ve
-       IletişimBilgileriForm'undaki alanlar KPS'ten gelen bilgiler doğrultusunda doldurulur.
+       Bu metot sayesinde personele ait yerleşim yeri bilgilerine kamu kurumları
+       tarafından erişilir. İletişim Bilgileri formundaki alanlar
+       KPS'ten gelen bilgiler doğrultusunda doldurulur.
 
     Kaydet:
-       KPS'ten gelen bilgileri ve yetkili kişinin girdiği bilgileri kaydeder.
+       KPS'ten gelen bilgileri ya da yetkili kişinin personelle ilgili girdiği
+       bilgileri kaydeder. Bu adım ``CrudView.save()`` metodunu kullanır.
+
 
     Diğer Bilgiler Formu:
-       CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır. DigerBilgilerForm'unu listeler.
+       CrudView list metodu kullanılmıştır.Bu metot default olarak tanımlanmıştır.
+       Diğer Bilgiler formunu listeler.
 
     Kaydet:
-       MERNİS'ten, KPS'ten gelen bilgileri ve yetkili kişinin girdiği bilgileri kaydeder. İş akışı bu metottan
-       sonra sona eriyor.
+       Yetkili kişinin personelle ilgili girdiği bilgileri kaydeder.
+       İş akışı adımdan sonra sona eriyor.
+
+
+    Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model ``Personel``
+    modelidir. Meta.model bu amaçla kullanılmıştır.
+
+    Adımlar arası geçiş manuel yürütülmektedir.
 
     """
+
     class Meta:
         model = 'Personel'
 
