@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""HITAP Sorgula Service
+"""HITAP Sorgu Servisi
 
 Hitap sorgulama servislerinin kalıtılacağı abstract HITAP Sorgula servisini içeren modül.
 
@@ -68,7 +68,7 @@ class HITAPSorgula(Service):
 
     Attributes:
         service_name (str): İlgili Hitap sorgu servisinin adı
-        bean_name (str): İlgili Hitap sorgu servisinin bean adı
+        bean_name (str): Hitap'tan gelen bean nesnesinin adı
         service_dict (dict): Hitap servisinden gelen cevap için sözlük.
             Cevabın içerdiği alanlarla modeldeki alanların eşlendiği sözlüğü
             ve tarih filtresi uygulanacak alanların listesini içerir.
@@ -161,7 +161,8 @@ class HITAPSorgula(Service):
 
         """
 
-        hitap_dict = [{k: getattr(record, v) for k, v in iteritems(fields)} for record in service_bean]
+        hitap_dict = [{k: getattr(record, v) for k, v in iteritems(fields)}
+                      for record in service_bean]
 
         self.logger.info("hitap_dict created.")
         return hitap_dict

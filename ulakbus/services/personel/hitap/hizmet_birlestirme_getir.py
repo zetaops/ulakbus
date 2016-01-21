@@ -5,15 +5,34 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Birleştirme Sorgula
+
+Hitap üzerinden personelin hizmet birleştirme bilgilerinin sorgulamasını yapar.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetBirlestirmeGetir(HITAPSorgula):
     """
-    HITAP HizmetBirlestirmeGetir Zato Servisi
+    HITAP Sorgulama servisinden kalıtılmış Hizmet Birleştirme Bilgisi Sorgulama servisi
+
     """
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Attributes:
+            service_name (str): İlgili Hitap sorgu servisinin adı
+            bean_name (str): Hitap'tan gelen bean nesnesinin adı
+            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
+                    ``HizmetBirlestirme`` modelinin alanlarıyla eşlenmektedir.
+                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+
+        """
+
         self.service_name = 'HizmetBirlestirmeSorgula'
         self.bean_name = 'HizmetBirlestirmeServisBean'
         self.service_dict = {
@@ -48,7 +67,8 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
         """
 
         for record in hitap_dict:
-            record['kidem_tazminat_odeme_durumu'] = self.kidem_durum_kontrol(record['kidem_tazminat_odeme_durumu'])
+            record['kidem_tazminat_odeme_durumu'] = \
+                self.kidem_durum_kontrol(record['kidem_tazminat_odeme_durumu'])
             record['kha_durum'] = self.kha_durum_kontrol(record['kha_durum'])
 
     def kidem_durum_kontrol(self, kidem_durum):

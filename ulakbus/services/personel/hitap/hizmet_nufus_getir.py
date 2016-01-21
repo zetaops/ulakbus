@@ -5,18 +5,38 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Nüfus Sorgula
+
+Hitap üzerinden personelin nüfus bilgilerinin sorgulamasını yapar.
+
+Note:
+    Bu servis, service ve bean isimlerindeki hatadan dolayı çalışmamaktadır.
+    Açıklama için ilgili birimlere basvuruldu, yanıt bekleniyor.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetNufusGetir(HITAPSorgula):
     """
-    HITAP HizmetNufusGetir Zato Servisi
+    HITAP Sorgulama servisinden kalıtılmış Nüfus Bilgisi Sorgulama servisi
 
-    Bu servis, service ve bean isimlerindeki hatadan dolayi calismamaktadir.
-    Aciklama icin ilgili birimlere basvuruldu, yanit bekleniyor.
     """
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Attributes:
+            service_name (str): İlgili Hitap sorgu servisinin adı
+            bean_name (str): Hitap'tan gelen bean nesnesinin adı
+            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
+                    ``NufusKayitlari`` modelinin alanlarıyla eşlenmektedir.
+                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+
+        """
+
         self.service_name = 'HizmetNufusSorgula'
         self.bean_name = 'HizmetNufusServisBean'
         self.service_dict = {

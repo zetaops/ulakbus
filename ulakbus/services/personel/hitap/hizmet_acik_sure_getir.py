@@ -5,15 +5,34 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Açık Süre Sorgula
+
+Hitap üzerinden personelin açık süre bilgilerinin sorgulamasını yapar.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetAcikSureGetir(HITAPSorgula):
     """
-    HITAP HizmetAcikSureGetir Zato Servisi
+    HITAP Sorgulama servisinden kalıtılmış Açık Süre Bilgisi Sorgulama servisi
+
     """
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Attributes:
+            service_name (str): İlgili Hitap sorgu servisinin adı
+            bean_name (str): Hitap'tan gelen bean nesnesinin adı
+            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
+                    ``HizmetAcikSure`` modelinin alanlarıyla eşlenmektedir.
+                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+
+        """
+
         self.service_name = 'HizmetAcikSureSorgula'
         self.bean_name = 'HizmetAcikSureServisBean'
         self.service_dict = {

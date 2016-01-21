@@ -5,15 +5,34 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Ünvan Sorgula
+
+Hitap üzerinden personelin ünvan bilgilerinin sorgulamasını yapar.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetUnvanGetir(HITAPSorgula):
     """
-    HITAP HizmetUnvanGetir Zato Servisi
+    HITAP Sorgulama servisinden kalıtılmış Ünvan Bilgisi Sorgulama servisi
+
     """
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Attributes:
+            service_name (str): İlgili Hitap sorgu servisinin adı
+            bean_name (str): Hitap'tan gelen bean nesnesinin adı
+            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
+                    ``HizmetUnvan`` modelinin alanlarıyla eşlenmektedir.
+                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+
+        """
+
         self.service_name = 'HizmetUnvanSorgula'
         self.bean_name = 'HizmetUnvanServisBean'
         self.service_dict = {
