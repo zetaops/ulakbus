@@ -5,25 +5,36 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP İstisnai İlgi Senkronizasyon
+
+Personelin Hitap'taki istisnai ilgi bilgilerinin
+yereldeki kayıtlarla senkronizasyonunu yapar.
+
+Note:
+    Bu servis, sorgulama servisindeki hatadan dolayı çalışmamaktadır.
+    Açıklama için ilgili birimlere başvuruldu, yanıt bekleniyor.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sync import HITAPSync
 from ulakbus.models.hitap import HizmetIstisnaiIlgi
 
 
 class HizmetIstisnaiIlgiSync(HITAPSync):
     """
-    HITAP HizmetIstisnaiIlgiSync Zato Servisi
+    HITAP Sync servisinden kalıtılmış İstisnai İlgi Bilgisi Senkronizasyon servisi
 
-    Bu servis, sorgulama servisindeki hatadan dolayi calismamaktadir.
-    Aciklama icin ilgili birimlere basvuruldu, yanit bekleniyor.
     """
 
     def handle(self):
         """
-        :param sorgula_service: HITAP servisi adi
-        :type sorgula_service: str
+        Servis çağrıldığında tetiklenen metod.
 
-        :param model: HITAP verisinin model karsiligi
-        :type model: Model
+        Attributes:
+            sorgula_service (str): İlgili Hitap sorgu servisinin adı
+            model (Model): Hitap'taki kaydın yereldeki karşılığı olan
+                        ``HizmetIstisnaiIlgi`` modeli
+
         """
 
         self.sorgula_service = 'hizmet-istisnai-ilgi-getir.hizmet-istisnai-ilgi-getir'
