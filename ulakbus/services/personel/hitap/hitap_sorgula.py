@@ -121,6 +121,9 @@ class HITAPSorgula(Service):
 
         """
 
+        status = "error"
+        hitap_dict = []
+
         try:
             # connection for hitap
             with conn.client() as client:
@@ -137,13 +140,19 @@ class HITAPSorgula(Service):
                     self.date_filter(hitap_dict)
                 self.custom_filter(hitap_dict)
 
+            status = "ok"
 
         except AttributeError as e:
             self.logger.info("AttributeError: %s" % e)
-            self.response.payload = {'status': 'error', 'result': {}}
+            status = "error"
+
         except urllib2.URLError:
             self.logger.info("No internet connection!")
-            self.response.payload = {'status': 'error', 'result': {}}
+            status = "error"
+
+        finally:
+            self.response.payload = {'status': status, 'result': dumps(hitap_dict)}
+
 
     def create_hitap_dict(self, service_bean, fields):
         """

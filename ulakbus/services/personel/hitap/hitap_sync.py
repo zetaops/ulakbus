@@ -103,9 +103,10 @@ class HITAPSync(Service):
         response = self.invoke(self.sorgula_service, dumps({'tckn': tckn}),
                                data_format=DATA_FORMAT.JSON, as_bunch=True)
 
-        hitap_dict = loads(response["result"]) if status == 'ok' else []
+        has_error = True if response["status"] == 'error' else False
+        hitap_dict = loads(response["result"])
 
-        return hitap_dict
+        return hitap_dict, has_error
 
     def save_hitap_data_db(self, hitap_data):
         """
@@ -164,35 +165,38 @@ class HITAPSync(Service):
         """
 
         # get hitap data
-        hitap_dict = self.get_hitap_dict(tckn)
+        hitap_dict, has_error = self.get_hitap_dict(tckn)
 
-        try:
-            # get kayit no list from db
-            kayit_no_list = [record.kayit_no for record in self.model.objects.filter(tckn=tckn)]
-            self.logger.info("yereldeki kayit sayisi: " + str(len(kayit_no_list)))
-            self.logger.info("hitaptan gelen kayit sayisi: " + str(len(hitap_dict)))
+        if has_error:
+            self.logger.info("Hitap kaydi sorgulama hatasi.")
+        else:
+            try:
+                # get kayit no list from db
+                kayit_no_list = [record.kayit_no for record in
+                                 self.model.objects.filter(tckn=tckn)]
+                self.logger.info("yereldeki kayit sayisi: " + str(len(kayit_no_list)))
+                self.logger.info("hitaptan gelen kayit sayisi: " + str(len(hitap_dict)))
 
-            # compare hitap data with db
-            for hitap_record in hitap_dict:
-                hitap_kayit_no = hitap_record['kayit_no']
+                # compare hitap data with db
+                for hitap_record in hitap_dict:
+                    hitap_kayit_no = hitap_record['kayit_no']
 
-                # if hitap data is not in db, create an object and save to db.
-                if hitap_kayit_no not in kayit_no_list:
-                    self.save_hitap_data_db(hitap_record)
-                # if in db, don't touch.
-                else:
-                    kayit_no_list.remove(hitap_kayit_no)
+                    # if hitap data is not in db, create an object and save to db.
+                    if hitap_kayit_no not in kayit_no_list:
+                        self.save_hitap_data_db(hitap_record)
+                    # if in db, don't touch.
+                    else:
+                        kayit_no_list.remove(hitap_kayit_no)
 
-            # if there are still some in sync records which are not in hitap data, delete them.
-            for model_kayit_no in kayit_no_list:
-                self.delete_hitap_data_db(model_kayit_no)
+                # if there are still some in sync records which are not in hitap, delete them.
+                for model_kayit_no in kayit_no_list:
+                    self.delete_hitap_data_db(model_kayit_no)
 
-        # check for more exception
-        except AttributeError as e:
-            self.logger.info("AttributeError: %s" % e)
-        except socket.error:
-            self.logger.info("Riak connection refused!")
-        except urllib2.URLError:
-            self.logger.info("No internet connection!")
-        except Exception as e:
-            self.logger.info("Unexpected error: %s", e)
+            except AttributeError as e:
+                self.logger.info("AttributeError: %s" % e)
+            except socket.error:
+                self.logger.info("Riak connection refused!")
+            except urllib2.URLError:
+                self.logger.info("No internet connection!")
+            except Exception as e:
+                self.logger.info("Unexpected error: %s", e)
