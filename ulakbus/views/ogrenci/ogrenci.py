@@ -265,7 +265,6 @@ def ogrenci_bilgileri(current):
         }
     ]
 
-
 class ProgramSecimForm(forms.JsonForm):
     """
     ``DanismanAtama`` sınıfı için form olarak kullanılacaktır.
