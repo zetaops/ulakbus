@@ -11,7 +11,7 @@ Hitap üzerinden personelin istisnai ilgi bilgilerinin sorgulamasını yapar.
 
 Note:
     Bu servis, service ve bean isimlerindeki hatadan dolayı çalışmamaktadır.
-    Açıklama için ilgili birimlere basvuruldu, yanıt bekleniyor.
+    Açıklama için ilgili birimlere başvuruldu, yanıt bekleniyor.
 
 """
 
@@ -56,10 +56,11 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
 
     def custom_filter(self, hitap_dict):
         """
-        Sozluge (hitap_dict) uygulanacak ek filtrelerin gerceklestirimi
+        Hitap sözlüğüne uygulanacak ek filtreleri gerçekleştirir.
 
-        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
-        :type hitap_dict: List[dict]
+        Args:
+            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
+
         """
 
         for record in hitap_dict:
@@ -67,14 +68,22 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
 
     def kha_durum_kontrol(self, kha_durum):
         """
-        KHA Durum hitap servisinden aşağıdaki gibi gelmektedir.
+        Hitap İstisnai İlgi servisinin,
+        "0" veya "1" olarak gelen Kazanılmış Hak Aylığı durum bilgisi değeri,
+        tam sayı olarak elde edilmektedir.
 
         "0" : "Değerlendirilmedi"
         "1" : "Değerlendirildi"
 
-        :param kha_durum: hitaptan donen kha durum
-        :type kha_durum: str
-        :return int: kha durum
+        Args:
+            kha_durum (str): İstisnai İlgi KHA durum değeri.
+
+        Returns:
+            int: KHA durum tam sayı değeri.
+
+        Raises:
+            ValueError: Geçersiz KHA durum kodu.
+
         """
 
         try:

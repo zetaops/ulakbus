@@ -64,10 +64,11 @@ class HizmetAcikSureGetir(HITAPSorgula):
 
     def custom_filter(self, hitap_dict):
         """
-        Sozluge (hitap_dict) uygulanacak ek filtrelerin gerceklestirimi
+        Hitap sözlüğüne uygulanacak ek filtreleri gerçekleştirir.
 
-        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
-        :type hitap_dict: List[dict]
+        Args:
+            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
+
         """
 
         for record in hitap_dict:
@@ -76,13 +77,28 @@ class HizmetAcikSureGetir(HITAPSorgula):
 
     def husus_aciklama_kontrol(self, husus):
         """
-        Acik Sure HITAP servisinin husus alaninin, husus kodu ve
-        husus aciklamasi (tarih, mahkeme detayi vb.) seklinde elde edilmesi.
+        Hitap Açık Süre servisinin,
+        husus bilgisi tek başına husus kodunu veya
+        husus kodu ve açıklamasını veya
+        husus kodu ve birkaç tarih bilgisini birlikte içerebilmektedir.
 
-        :param husus: hitaptan donen husus bilgisi
-        :type husus: str
+        Bu amaçla husus kodu ve açıklama (mahkeme detayı, tarih bilgileri vs.)
+        kısımları ayrı ayrı elde edilmektedir.
 
-        :return tuple: husus kodu (int) ve aciklamasi (string)
+        Args:
+            husus (str): Açık Süre husus bilgisi.
+                Gelen veri 1, 2, 3, 4, 5, 6, 7, 10, 11, 14 değerlerinden biriyse,
+                sadece husus kodunu içermektedir. Doğrudan husus kodu olarak elde edilir.
+                Gelen veri 8, 9, 12, 13, 15, 16, 17, 18 değerleriyle birlikte
+                açıklama (mahkeme detayı, tarih bilgileri vs.) kısmını da içeriyorsa,
+                husus kodu ve açıklama olacak şekilde iki parçalı olarak elde edilir.
+
+        Returns:
+            (int, str): Husus kodu ve açıklaması.
+
+        Raises:
+            IndexError: Husus açıklaması eksik.
+
         """
 
         husus = husus.split(' ', 1)
@@ -92,10 +108,10 @@ class HizmetAcikSureGetir(HITAPSorgula):
             self.logger.info("Husus Kodu tam sayi olmali.")
             return 0, ""
 
-        # sadece husus kodu icerenler
+        # only code
         if husus_kodu in [1, 2, 3, 4, 5, 6, 7, 10, 11, 14]:
             return husus_kodu, ""
-        # husus kodu ve aciklamasini icerenler
+        # code and explanation
         elif husus_kodu in [8, 9, 12, 13, 15, 16, 17, 18]:
             try:
                 aciklama = husus[1]

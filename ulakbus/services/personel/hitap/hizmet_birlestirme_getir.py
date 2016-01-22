@@ -60,10 +60,11 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
 
     def custom_filter(self, hitap_dict):
         """
-        Sozluge (hitap_dict) uygulanacak ek filtrelerin gerceklestirimi
+        Hitap sözlüğüne uygulanacak ek filtreleri gerçekleştirir.
 
-        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
-        :type hitap_dict: List[dict]
+        Args:
+            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
+
         """
 
         for record in hitap_dict:
@@ -73,17 +74,24 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
 
     def kidem_durum_kontrol(self, kidem_durum):
         """
-        Kıdem Tazminat ödeme durumu hitap servisinden aşağıdaki gibi gelmektedir.
-        0: HAYIR
-        1: EVET
-        “”(BOŞ KARAKTER): BELİRLENEMEDİ
+        Hitap Hizmet Birleştirme servisinin,
+        "0" veya "1" olarak gelen Kıdem Tazminatı Ödeme Durumu değeri,
+        tam sayı olarak elde edilmektedir.
 
-        Ulakbus kaydederken BELİRLENEMEDİ = 2 yapılacaktır
+        "0": "HAYIR"
+        "1": "EVET"
+        "": "BELİRLENEMEDİ"
 
-        :param kidem_durum: hitaptan donen kıdem durumu
-        :type kidem_durum: str
+        Args:
+            kidem_durum (str): Hizmet Birleştirme Kıdem Tazminatı Ödeme Durumu değeri.
 
-        :return int: kıdem durumu
+        Returns:
+            int: Kıdem Tazminatı Ödeme Durumu tam sayı değeri.
+
+        Raises:
+            ValueError: Geçersiz Kıdem Tazminatı Ödeme Durumu kodu.
+                Varsayılan olarak 2 değeri verilmektedir.
+
         """
 
         try:
@@ -93,19 +101,26 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
 
     def kha_durum_kontrol(self, kha_durum):
         """
-        KHA Durum hitap servisinden aşağıdaki gibi gelmektedir.
+        Hitap Hizmet Birleştirme servisinin,
+        "0", "1", "2", "3", "4", "5" olarak gelen Kazanılmış Hak Aylığı
+        durum bilgisi değerleri, tam sayı olarak elde edilmektedir.
 
-        0: Değerlendirilmedi
-        1: Prim gün sayısının 2/3 oranında değerlendirildi
-        2: Prim gün sayısının 3/4 oranında değerlendirildi
-        3: Prim gün sayısının 4/4 oranında değerlendirildi
-        4: Belirlenemedi
-        5: İki tarih arasının tamamı değerlendirildi
+        "0": "Değerlendirilmedi"
+        "1": "Prim gün sayısının 2/3 oranında değerlendirildi"
+        "2": "Prim gün sayısının 3/4 oranında değerlendirildi"
+        "3": "Prim gün sayısının 4/4 oranında değerlendirildi"
+        "4": "Belirlenemedi"
+        "5": "İki tarih arasının tamamı değerlendirildi"
 
-        :param kha_durum: hitaptan donen kha durum
-        :type kha_durum: str
+        Args:
+            kha_durum (str): Hizmet Birleştirme KHA durum değeri.
 
-        :return int: kha durum
+        Returns:
+            int: KHA durum tam sayı değeri.
+
+        Raises:
+            ValueError: Geçersiz KHA durum kodu.
+
         """
 
         try:

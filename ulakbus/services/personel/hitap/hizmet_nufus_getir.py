@@ -11,7 +11,7 @@ Hitap üzerinden personelin nüfus bilgilerinin sorgulamasını yapar.
 
 Note:
     Bu servis, service ve bean isimlerindeki hatadan dolayı çalışmamaktadır.
-    Açıklama için ilgili birimlere basvuruldu, yanıt bekleniyor.
+    Açıklama için ilgili birimlere başvuruldu, yanıt bekleniyor.
 
 """
 
