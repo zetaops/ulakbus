@@ -344,6 +344,7 @@ class DanismanAtama(CrudView):
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Danışman Ataması Yapıldı',
             "msg": '%s adlı öğrenciye %s adlı personel danışman olarak atandı' % (ogrenci, personel)
+<<<<<<< HEAD
         }
 
 
@@ -404,3 +405,6 @@ class OgrenciMezuniyet(CrudView):
                 'type': 'warning', "title": 'Bir Hata Oluştu',
                 "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
             }
+=======
+        }
+>>>>>>> ADD, rref #5056
