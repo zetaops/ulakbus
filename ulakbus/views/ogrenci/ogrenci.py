@@ -117,3 +117,18 @@ def ogrenci_bilgileri(current):
             "fields": iletisim_bilgileri
         }
     ]
+
+class ProgramBilgisiForm(forms.JsonForm):
+    class Meta:
+        include = ['program']
+
+    sec = fields.Button("Seç", cmd="program_sec")
+
+class BasariDurum(CrudView):
+    class Meta:
+        model = "OgrenciProgram"
+
+    def program_sec_form(self):
+        ogreci = Ogrenci.objects.get(user = self.current.user)
+        ogrenci_programlar = OgrenciProgram.objects.filter(ogrenci = ogrenci)
+        self.form_out(ProgramBilgisiForm(ogrenci_programlar, current = self.current))
