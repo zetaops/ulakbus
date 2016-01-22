@@ -102,11 +102,22 @@
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="belge_kaydet" targetRef="belge_form"/>
     <bpmn2:sequenceFlow id="SequenceFlow_17" name="" sourceRef="belge_form" targetRef="ManualTask_2"/>
-    <bpmn2:serviceTask id="onayla" camunda:class="ogrenci.ogrenci.OnKayit.onayla" name="Onayla">
+    <bpmn2:serviceTask id="onayla" camunda:class="ogrenci.on_kayit.KayitBelgeler.onayla" name="Onayla">
       <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:endEvent id="EndEvent_5">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="client_message">
+            <camunda:map>
+              <camunda:entry key="title">Başarılı</camunda:entry>
+              <camunda:entry key="body">İşlem Tamamlandı</camunda:entry>
+              <camunda:entry key="type">info</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="onayla" targetRef="EndEvent_5"/>

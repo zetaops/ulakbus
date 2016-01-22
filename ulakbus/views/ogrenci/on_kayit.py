@@ -59,9 +59,6 @@ class OnKayit(CrudView):
         ogrenci = Ogrenci.objects.get(user = self.current.user)
         self.form_out(OnKayitForm(ogrenci, current = self.current))
 
-    def onayla(self):
-        pass
-
 class BelgeForm(forms.JsonForm):
     class Meta:
         include = ["Belgeler"]
@@ -77,3 +74,10 @@ class KayitBelgeler(CrudView):
         ogrenci = Ogrenci.objects.get(user=self.current.user)
         ogrenci_program = OgrenciProgram.objects.get(ogrenci = ogrenci)
         self.form_out(BelgeForm(ogrenci_program, current = self.current))
+
+    def onayla(self):
+        ogrenci = Ogrenci.objects.get(user = self.current.user)
+        ogrenci_program = OgrenciProgram.objects.get(ogrenci = ogrenci, durum = 1)
+        ogrenci_program.durum = 2
+        ogrenci_program.save()
+        print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
