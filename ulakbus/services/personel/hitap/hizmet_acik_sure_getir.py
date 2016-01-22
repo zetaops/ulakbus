@@ -105,7 +105,7 @@ class HizmetAcikSureGetir(HITAPSorgula):
         try:
             husus_kodu = int(husus[0])
         except ValueError:
-            self.logger.info("Husus Kodu tam sayi olmali.")
+            self.logger.exception("Husus Kodu tam sayi olmali.")
             return 0, ""
 
         # only code
@@ -117,7 +117,7 @@ class HizmetAcikSureGetir(HITAPSorgula):
                 aciklama = husus[1]
                 return husus_kodu, aciklama
             except IndexError:
-                self.logger.info("Husus aciklamasi yok.")
+                self.logger.exception("Husus aciklamasi yok.")
                 return husus_kodu, ""
         else:
             self.logger.info('Husus Kodu gecersiz.')

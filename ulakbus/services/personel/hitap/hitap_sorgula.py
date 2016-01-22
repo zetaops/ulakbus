@@ -142,12 +142,12 @@ class HITAPSorgula(Service):
 
             status = "ok"
 
-        except AttributeError as e:
-            self.logger.info("AttributeError: %s" % e)
+        except AttributeError:
+            self.logger.exception("AttributeError")
             status = "error"
 
         except urllib2.URLError:
-            self.logger.info("No internet connection!")
+            self.logger.exception("No internet connection!")
             status = "error"
 
         finally:

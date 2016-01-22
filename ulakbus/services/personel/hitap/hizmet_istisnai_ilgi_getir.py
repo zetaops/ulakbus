@@ -89,5 +89,5 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
         try:
             return int(kha_durum)
         except ValueError:
-            self.logger.info("KHA Durum kodu gecersiz: %s" % kha_durum)
+            self.logger.exception("KHA Durum kodu gecersiz: %s" % kha_durum)
             return 0

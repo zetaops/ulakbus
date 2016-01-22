@@ -192,11 +192,11 @@ class HITAPSync(Service):
                 for model_kayit_no in kayit_no_list:
                     self.delete_hitap_data_db(model_kayit_no)
 
-            except AttributeError as e:
-                self.logger.info("AttributeError: %s" % e)
+            except AttributeError:
+                self.logger.exception("AttributeError")
             except socket.error:
-                self.logger.info("Riak connection refused!")
+                self.logger.exception("Riak connection refused!")
             except urllib2.URLError:
-                self.logger.info("No internet connection!")
-            except Exception as e:
-                self.logger.info("Unexpected error: %s", e)
+                self.logger.exception("No internet connection!")
+            except Exception:
+                self.logger.exception("Unexpected error")

@@ -135,5 +135,5 @@ class HizmetCetveliGetir(HITAPSorgula):
                 return hizmet_siniflari[hizmet_sinifi.strip()]
             except KeyError:
                 # TODO: admin'e bildirim gitmesi lazim
-                self.logger.info("Hizmet Sinifini (%s) Kontrol Edin!", hizmet_sinifi)
+                self.logger.exception("Hizmet Sinifini (%s) Kontrol Edin!", hizmet_sinifi)
                 return 0
