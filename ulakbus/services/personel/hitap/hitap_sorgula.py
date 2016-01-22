@@ -7,7 +7,9 @@
 
 """HITAP Sorgu Servisi
 
-Hitap sorgulama servislerinin kalıtılacağı abstract HITAP Sorgula servisini içeren modül.
+Hitap sorgulama servislerinin kalıtılacağı
+abstract HITAP Sorgula servisini içeren modül.
+
 
 Attributes:
     H_USER (str): Hitap kullanıcı adı
@@ -63,8 +65,8 @@ class HITAPSorgula(Service):
     """
     Hitap Sorgulama servislerinin kalıtılacağı abstract Zato servisi.
 
-    Sorgulama servisleri bu servisle gerekli girdileri Hitap'a yollayıp
-    dönecek cevabı elde edebilecekledir.
+    Sorgulama servisleri gerekli girdileri (Hitap username, Hitap password, tckn)
+    Hitap'a yollayıp dönecek cevabı elde edebilmektedirler.
 
     Attributes:
         service_name (str): İlgili Hitap sorgu servisinin adı
@@ -86,8 +88,9 @@ class HITAPSorgula(Service):
         Servis çağrıldığında tetiklenen metod.
 
         Servise gelen istekten kimlik numarası (tckn) bilgisini alır ve
-        soap outgoing bağlantısını oluşturur. Hitap'a gidecek isteği hazırlayacak
-        ve gelen cevabı elde edecek olan request_json fonksiyonunu çağırır.
+        soap outgoing bağlantısını oluşturur. Bu bilgilerle
+        Hitap'a gidecek isteği hazırlayacak ve gelen cevabı elde edecek olan
+        request_json fonksiyonunu çağırır.
 
         """
 
@@ -114,28 +117,26 @@ class HITAPSorgula(Service):
 
         Raises:
             AttributeError: İlgili servis veya bean Hitap'ta bulunmayabilir.
-            urllib2.URLError: Bağlantısı hatası.
+            urllib2.URLError: Bağlantı hatası.
 
         """
 
         try:
-            # soap client ile HITAP a baglanma
+            # connection for hitap
             with conn.client() as client:
-                # hitap servisinden dönen cevap
+                # hitap response
                 hitap_service = getattr(client.service, self.service_name)(H_USER, H_PASS, tckn)
-                # servis cevabından bean nesnesinin elde edilmesi
+                # get bean object
                 service_bean = getattr(hitap_service, self.bean_name)
 
                 self.logger.info("%s started to work." % self.service_name)
                 hitap_dict = self.create_hitap_dict(service_bean, self.service_dict['fields'])
 
-                # veri bicimi duzenlenmesi gereken alanlara filtre uygulanmasi
+                # filtering for some fields
                 if 'date_filter' in self.service_dict:
                     self.date_filter(hitap_dict)
                 self.custom_filter(hitap_dict)
 
-            response_json = dumps(hitap_dict)
-            self.response.payload = {'status': 'ok', 'result': response_json}
 
         except AttributeError as e:
             self.logger.info("AttributeError: %s" % e)

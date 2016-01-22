@@ -5,6 +5,38 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Senkronizasyon Servisi
+
+Hitap senkronizasyon servislerinin kalıtılacağı
+abstract HITAP Sorgula servisini içeren modül.
+
+Bu servis şu işlemleri gerçekleştirir:
+
+    * Hitap'taki kayıt yerelde yoksa, yerele kaydedilir.
+    * Yereldeki kayıt Hitap'ta yoksa ve sync değeri 1 (senkronize) görünüyorsa,
+    Hitap'ta bu kayıt silinmiş demektir ve yerelde de silinir.
+
+``sync`` alanı şu değerlerde bulunabilir:
+
+       * 1: Kayıt Hitap ile senkronize
+       * 2: Yerel kayıt güncellendi, Hitap güncellenecek
+       * 3: Yerel kayıt silindi, Hitap kaydı silinecek
+       * 4: Yeni bir yerel kayıt oluşturuldu, Hitap'a gönderilecek.
+
+
+Attributes:
+    H_USER (str): Hitap kullanıcı adı
+    H_PASS (str): Hitap kullanıcı şifresi
+
+
+Example:
+    Servise JSON nesnesi kullanılarak istek gönderilmesi:
+
+        .. code-block:: json
+
+        $ curl http://localhost:11223/hizmet-okul-sync -d '{"tckn": "tckn"}'
+
+"""
 
 from zato.server.service import Service
 from zato.common import DATA_FORMAT
@@ -21,29 +53,33 @@ H_PASS = os.environ["HITAP_PASS"]
 
 class HITAPSync(Service):
     """
-    HITAP Synchronisation Zato Servisi
+    Hitap Sync servislerinin kalıtılacağı abstract Zato servisi.
 
-    sync field su degerlerde bulunabilir:
-        1: all is good
-        2: updated locally, will be updated on hitap
-        3: deleted locally, will be deleted from hitap
-        4: created locally, will be sent to hitap
+    Senkronizasyon servisleri gerekli girdileri (Hitap username, Hitap password, tckn)
+    Hitap sorgulama servislerine gönderip dönecek cevaba göre
+    yereldeki kayıtları güncelleyebilmektedirler.
+
+    Attributes:
+        sorgula_service (str): İlgili Hitap sorgu servisinin adı
+        model (Model): Hitap'taki kaydın karşılığı olan Model
+
     """
 
     def __init__(self):
-        """
-        :param sorgula_service: HITAP servisi adi
-        :type sorgula_service: str
-
-        :param model: HITAP verisinin model karsiligi
-        :type model: Model
-        """
-
         self.sorgula_service = ''
         self.model = None
         super(HITAPSync, self).__init__()
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Servise gelen istekten kimlik numarası (tckn) bilgisini alır ve
+        Hitap sorgulama servisine gidecek isteği hazırlayacak
+        ve gelen cevabı elde edecek olan sync_hitap_data fonksiyonunu çağırır.
+
+        """
+
         self.logger.info("zato service started to work.")
         tckn = self.request.payload['tckn']
 
@@ -51,14 +87,21 @@ class HITAPSync(Service):
 
     def get_hitap_dict(self, tckn):
         """
-        Ilgili servise ait HITAP verisinin getirilmesi
+        İlgili servise ait sorgulama servisini çağırarak
+        gerekli Hitap verisini elde eder.
 
-        :param tckn: Turkiye Cumhuriyeti Kimlik Numarasi
-        :return: HITAP servisinden gelen verileri iceren JSON nesnesi
+        Args:
+            tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
+        Returns:
+            (List[dict], Bool):
+                Hitap verisini yerele uygun biçimde tutan sözlük listesi ve
+                Sorgu sonucunda hata olup olmadığı bilgisi
+
         """
 
-        response = self.invoke(self.sorgula_service, dumps({'tckn': tckn}), data_format=DATA_FORMAT.JSON, as_bunch=True)
-        status = response["status"]
+        response = self.invoke(self.sorgula_service, dumps({'tckn': tckn}),
+                               data_format=DATA_FORMAT.JSON, as_bunch=True)
 
         hitap_dict = loads(response["result"]) if status == 'ok' else []
 
@@ -66,10 +109,12 @@ class HITAPSync(Service):
 
     def save_hitap_data_db(self, hitap_data):
         """
-        HITAP servisinden gelen verinin veritabanina kaydedilmesi
+        Hitap servisinden gelen kayıt yerelde yoksa, sync değeri 1 (senkronize)
+        olacak şekilde kaydı veritabanına kaydeder.
 
-        :param hitap_data: HITAP verisinin model alanlarina uygun sekli
-        :type hitap_data: dict
+        Args:
+            hitap_data (dict): Hitap verisini yerele uygun biçimde tutan sözlük
+
         """
 
         obj = self.model()
@@ -78,32 +123,44 @@ class HITAPSync(Service):
 
         obj.sync = 1
         obj.save()
-        self.logger.info("hitaptan gelen kayit yerelde yok, kaydedildi. kayit no => " + str(obj.kayit_no))
+        self.logger.info("hitaptaki kayit yerele kaydedildi. kayit no => "
+                         + str(obj.kayit_no))
 
     def delete_hitap_data_db(self, kayit_no):
         """
-        HITAP'ta olmayan verinin veritabanindan silinmesi
+        Yereldeki kayıt Hitap'ta yoksa ve sync değeri 1 (senkronize) görünüyorsa,
+        Hitap'ta bu kayıt silinmiş demektir ve yerelde de silinir.
 
-        :param kayit_no: HITAP verisinin kayit numarasi
-        :type kayit_no: str
+        Args:
+            kayit_no (str): Hitap kaydının kayıt numarası
+
         """
 
         obj = self.model.objects.get(kayit_no=kayit_no)
 
         if obj.sync == 1:
             obj.delete()
-            self.logger.info("yereldeki sync data, hitapta yok, kayit no degismis olabilir, kayit silindi."
+            self.logger.info("yereldeki sync kayit hitapta yok, kayit silindi."
                              "kayit no => " + str(obj.kayit_no))
 
     def sync_hitap_data(self, tckn):
         """
-        HITAP servisinden gelen kayitlarin yereldeki kayitlarla senkronize edilmesi su durumlara gore gerceklesir:
+        Yereldeki kayıtları Hitap servisinden gelen kayıtlara göre senkronize eder.
+        tckn bilgisine göre Hitap kayıtları ve yereldeki kayıtları getirilir ve:
 
-        - Servisten gelen kayit veritabaninda yoksa kaydedilir.
-        - Veritabaninda olup senkronize olarak gozuken kayitlar HITAP'ta yoksa, veritabanindan da silinir.
+            * Hitap'taki kayıt yerelde yoksa, yerele kaydedilir.
+            * Yereldeki kayıt Hitap'ta yoksa ve sync değeri 1 (senkronize) görünüyorsa,
+            Hitap'ta bu kayıt silinmiş demektir ve yerelde de silinir.
 
-        :param tckn: Turkiye Cumhuriyeti Kimlik Numarasi
-        :type tckn: str
+        Args:
+            tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
+        Raises:
+            AttributeError: İlgili servis veya bean Hitap'ta bulunmayabilir.
+            urllib2.URLError: Bağlantı hatası.
+            socket.error: Riak bağlantı hatası.
+            Exception: Beklenmeyen hata.
+
         """
 
         # get hitap data
