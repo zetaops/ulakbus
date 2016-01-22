@@ -114,8 +114,8 @@ class BankaService(Service):
 
         try:
             self.get_data()
-        except AuthException as e:
-            self.logger.info(e)
+        except AuthException:
+            self.logger.exception("Authentication failed.")
 
     @authenticate
     def get_data(self):

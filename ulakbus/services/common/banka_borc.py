@@ -233,11 +233,11 @@ class BankaBorcGetir(BankaService):
                 self.response.payload.append(borc_response)
 
         except ObjectDoesNotExist:
-            self.logger.info("Ogrenci numarasi bulunamadi.")
+            self.logger.exception("Ogrenci numarasi bulunamadi.")
             self.response.payload['mesaj_statusu'] = "R"
             self.response.payload['hata_mesaj'] = "Ogrenci numarasi bulunamadi!"
-        except Exception as e:
-            self.logger.info("Borc sorgulama sirasinda hata olustu: %s" % e)
+        except Exception:
+            self.logger.exception("Borc sorgulama sirasinda hata olustu.")
             self.response.payload['mesaj_statusu'] = "R"
             self.response.payload['hata_mesaj'] = "Borc sorgulama hatasi!"
 

@@ -240,12 +240,12 @@ class BankaBorcOdeme(BankaService):
             hata_mesaj = None
 
         except ObjectDoesNotExist:
-            self.logger.info('Ogrenci numarasi bulunamadi.')
+            self.logger.exception('Ogrenci numarasi bulunamadi.')
             mesaj_statusu = "R"
             hata_mesaj = "Ogrenci numarasi bulunamadi!"
 
-        except Exception as e:
-            self.logger.info("Odeme kaydedilirken hata olustu: %s" % e)
+        except Exception:
+            self.logger.exception("Odeme kaydedilirken hata olustu.")
             mesaj_statusu = "R"
             hata_mesaj = "Odeme kaydedilirken hata olustu!"
 
