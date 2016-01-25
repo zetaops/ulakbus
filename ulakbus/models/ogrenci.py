@@ -591,8 +591,12 @@ class DersKatilimi(Model):
 class Borc(Model):
     """Borç modeli
 
-    Öğrencilerin ödemesi gereken ücret (harc, belge, belgeler, kimlik ücretleri vb.)
-    bilgilerinin saklandığı modeldir.
+    Öğrencilerin ödemesi gereken ücret (harc, belge, belgeler, kimlik
+    ücretleri vb.) bilgilerinin saklandığı modeldir.
+
+    ``tahakkuk_referans_no`` sistem tarafından üretilen ve
+    3. taraflara (banka veya ilgili diğer kurumlar) iletilen tekil
+    takip koddur.
 
     """
 
@@ -617,6 +621,12 @@ class Borc(Model):
 
 
 class Banka(Model):
+    """Banka Modeli
+
+    Basitçe banka adı ve tekil bir banka kodu ile saklanır.
+
+    """
+
     ad = field.String("Banka Adi", index=True)
     kod = field.String("Banka Kodu", index=True)
 
@@ -629,6 +639,13 @@ class Banka(Model):
 
 
 class Odeme(Model):
+    """Ödeme Modeli
+
+    Öğrencilerin borçlarına karşılık, banka veya diğer yollar ile tahsil
+    edilen ödemelerin saklandığı data modelidir.
+
+    """
+
     miktar = field.Float("Borç Miktarı", index=True)
     para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
     aciklama = field.String("Borç Açıklaması", index=True)
@@ -654,6 +671,13 @@ class Odeme(Model):
 
 
 class BankaAuth(Model):
+    """Banka Doğrulama Modeli
+
+    Banka kullanıcılarının doğrulanması için gereken bilgilerin
+    tutulduğu data modelidir.
+
+    """
+
     username = field.String("Username", index=True)
     password = field.String("Password", index=True)
     banka = Banka()
