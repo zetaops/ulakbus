@@ -591,8 +591,12 @@ class DersKatilimi(Model):
 class Borc(Model):
     """Borç modeli
 
-    Öğrencilerin ödemesi gereken ücret (harc, belge, belgeler, kimlik ücretleri vb.)
-    bilgilerinin saklandığı modeldir.
+    Öğrencilerin ödemesi gereken ücret (harc, belge, belgeler, kimlik
+    ücretleri vb.) bilgilerinin saklandığı modeldir.
+
+    ``tahakkuk_referans_no`` sistem tarafından üretilen ve
+    3. taraflara (banka veya ilgili diğer kurumlar) iletilen tekil
+    takip koddur.
 
     """
 
@@ -600,10 +604,8 @@ class Borc(Model):
     para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
     sebep = field.Integer("Borç Sebebi", index=True, choices="ogrenci_borc_sebepleri")
     son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
+    tahakkuk_referans_no = field.String("Tahakkuk Referans No", index=True)
     aciklama = field.String("Borç Açıklaması", index=True)
-    odeme_sekli = field.Integer("Ödeme Şekli", index=True, choices="odeme_sekli")
-    odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
-    odenen_miktar = field.String("Ödenen Miktar", index=True)
     ogrenci = Ogrenci()
     donem = Donem()
 
@@ -616,6 +618,76 @@ class Borc(Model):
 
     def __unicode__(self):
         return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
+
+
+class Banka(Model):
+    """Banka Modeli
+
+    Basitçe banka adı ve tekil bir banka kodu ile saklanır.
+
+    """
+
+    ad = field.String("Banka Adi", index=True)
+    kod = field.String("Banka Kodu", index=True)
+
+    class Meta:
+        verbose_name = "Banka"
+        verbose_name_plural = "Bankalar"
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.kod)
+
+
+class Odeme(Model):
+    """Ödeme Modeli
+
+    Öğrencilerin borçlarına karşılık, banka veya diğer yollar ile tahsil
+    edilen ödemelerin saklandığı data modelidir.
+
+    """
+
+    miktar = field.Float("Borç Miktarı", index=True)
+    para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
+    aciklama = field.String("Borç Açıklaması", index=True)
+    odeme_sekli = field.Integer("Ödeme Şekli", index=True, choices="odeme_sekli")
+    odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
+    borc = Borc()
+    ogrenci = Ogrenci()
+    banka = Banka()
+    banka_sube_kodu = field.String("Banka Sube Kodu", index=True)
+    banka_kanal_kodu = field.String("Kanal Kodu", index=True)
+    tahsilat_referans_no = field.String("Tahsilat Referans No", index=True)
+    donem = Donem()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Borc"
+        verbose_name_plural = "Borclar"
+        list_fields = ['miktar', 'son_odeme_tarihi']
+        search_fields = ['miktar', 'odeme_tarihi']
+
+    def __unicode__(self):
+        return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
+
+
+class BankaAuth(Model):
+    """Banka Doğrulama Modeli
+
+    Banka kullanıcılarının doğrulanması için gereken bilgilerin
+    tutulduğu data modelidir.
+
+    """
+
+    username = field.String("Username", index=True)
+    password = field.String("Password", index=True)
+    banka = Banka()
+
+    class Meta:
+        verbose_name = "Banka Kullanicisi"
+        verbose_name_plural = "Banka Kullanicilari"
+
+    def __unicode__(self):
+        return '%s %s' % (self.username, self.banka.ad)
 
 
 class DegerlendirmeNot(Model):

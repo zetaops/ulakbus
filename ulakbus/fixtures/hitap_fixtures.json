@@ -171,6 +171,10 @@
     "2": {
       "tr": "Kredi Kartı",
       "en": "Credit Card"
+    },
+    "3": {
+      "tr": "Banka",
+      "en": "Bank"
     }
   },
   "ogrenci_borc_sebepleri": {
