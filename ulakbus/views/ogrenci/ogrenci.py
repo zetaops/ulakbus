@@ -19,10 +19,14 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
+<<<<<<< HEAD
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman
 from ulakbus.models.ogrenci import DegerlendirmeNot
 from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
+=======
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, DegerlendirmeNot
+>>>>>>> CHANGE, rref #5056 wf de düzenleme
 
 
 class KimlikBilgileriForm(forms.JsonForm):
