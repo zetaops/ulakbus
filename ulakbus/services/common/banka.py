@@ -22,6 +22,7 @@ class AuthException(Exception):
     uyuşmaması durumunda fırlatılan Yetkilendirme Hatası
 
     """
+
     pass
 
 
@@ -68,6 +69,7 @@ class BankaService(Service):
         self.response (zato.server.service.Response):
             Servisten dönecek olan cevabı tutan Zato nesnesi.
             Çıktı parametrelerini saklamak için `self.response.payload` kullanılır.
+
     """
 
     def __init__(self):
@@ -126,4 +128,5 @@ class BankaService(Service):
         Gerçekleştirimi bu servisten kalıtılan servisler tarafından yapılmaktadır.
 
         """
+
         pass
