@@ -78,9 +78,9 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
         "0" veya "1" olarak gelen Kıdem Tazminatı Ödeme Durumu değeri,
         tam sayı olarak elde edilmektedir.
 
-        "0": "HAYIR"
-        "1": "EVET"
-        "": "BELİRLENEMEDİ"
+        - "0": "HAYIR"
+        - "1": "EVET"
+        - "": "BELİRLENEMEDİ"
 
         Args:
             kidem_durum (str): Hizmet Birleştirme Kıdem Tazminatı Ödeme Durumu değeri.
@@ -105,12 +105,12 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
         "0", "1", "2", "3", "4", "5" olarak gelen Kazanılmış Hak Aylığı
         durum bilgisi değerleri, tam sayı olarak elde edilmektedir.
 
-        "0": "Değerlendirilmedi"
-        "1": "Prim gün sayısının 2/3 oranında değerlendirildi"
-        "2": "Prim gün sayısının 3/4 oranında değerlendirildi"
-        "3": "Prim gün sayısının 4/4 oranında değerlendirildi"
-        "4": "Belirlenemedi"
-        "5": "İki tarih arasının tamamı değerlendirildi"
+        - "0": "Değerlendirilmedi"
+        - "1": "Prim gün sayısının 2/3 oranında değerlendirildi"
+        - "2": "Prim gün sayısının 3/4 oranında değerlendirildi"
+        - "3": "Prim gün sayısının 4/4 oranında değerlendirildi"
+        - "4": "Belirlenemedi"
+        - "5": "İki tarih arasının tamamı değerlendirildi"
 
         Args:
             kha_durum (str): Hizmet Birleştirme KHA durum değeri.

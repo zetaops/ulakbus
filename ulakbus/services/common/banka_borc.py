@@ -18,7 +18,7 @@ Example:
 
     Servise JSON nesnesi kullanılarak istek gönderilmesi:
 
-        .. code-block:: json
+    .. code-block:: json
 
         $ curl http://localhost:11223/banka-borc-getir -d '{
             "banka_kodu": "kod",
@@ -33,7 +33,7 @@ Example:
 
     İsteğe dönen cevap:
 
-        .. code-block:: json
+    .. code-block:: json
 
         $ {"borc_response": [{
             "tahakkuk_referans_no": "tahakkuk",
@@ -58,10 +58,10 @@ Example:
 
     Servise XML kullanılarak istek gönderilmesi:
 
-        .. code-block:: xml
+    .. code-block:: xml
 
-        $ curl http://localhost:11223/banka-borc.banka-borc-getir \
-            -H "SOAPAction:banka-borc.banka-borc-getir" \
+        $ curl http://localhost:11223/banka-borc.banka-borc-getir
+            -H "SOAPAction:banka-borc.banka-borc-getir"
             -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                 xmlns:zato="https://zato.io/ns/20130518">
                     <soapenv:Body>
@@ -80,7 +80,7 @@ Example:
 
     İsteğe dönen cevap:
 
-        .. code-block:: xml
+    .. code-block:: xml
 
         $ <?xml version='1.0' encoding='UTF-8'?>
             <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
@@ -142,28 +142,26 @@ class BankaBorcGetir(BankaService):
 
         Note:
             SimpleIO sınıfında belirlenen özellikler,
-                doğrudan yer aldığı servisin özellikleri olmaktadır.
+            doğrudan yer aldığı servisin özellikleri olmaktadır.
 
-            borc_request (str): Servise gelen isteğin (JSON, XML) ismi
-            borc_response (str): Servisten dönen veriyi içeren (payload)
-                                cevabın (JSON, XML) ismi
-
-            banka_kodu (str): Üniversite tarafından bankaya verilen kod
-            bank_username (str): Üniversite tarafından bankaya verilen kullanıcı adı
-            bank_password (str): Üniversite tarafından bankaya verilen şifre
-            sube_kodu (str): Bankaların şubeleri için hali hazırda kullandıkları kodlar
-            kanal_kodu (str): G (Gişe), İ (İnternet), A (ATM), T (AloBanka) vb.
-            mesaj_no (str): Banka tarafından üretilen kod.
-            ogrenci_no (str): Borçları sorgulanan öğrencinin numarası
-
-            mesaj_statusu (str): K (Kabul), R (Ret)
-            hata_mesaji (str): Hata mesajı içeriği veya null
-            ad_soyad (str): Öğrenci adı soyadı
-            ucret_turu (int): Borcun ne için ödeneceği
-            tahakkuk_referans_no (str): Her tahakkuka verilen referans numarası
-            son_odeme_tarihi (str): Borcun son ödeme tarihi (DDMMYY formatında)
-            borc (float): Borcun miktarı
-            borc_ack (str): Borç açıklaması
+            - borc_request (str): Servise gelen isteğin (JSON, XML) ismi
+            - borc_response (str): Servisten dönen veriyi içeren (payload)
+              cevabın (JSON, XML) ismi
+            - banka_kodu (str): Üniversite tarafından bankaya verilen kod
+            - bank_username (str): Üniversite tarafından bankaya verilen kullanıcı adı
+            - bank_password (str): Üniversite tarafından bankaya verilen şifre
+            - sube_kodu (str): Bankaların şubeleri için hali hazırda kullandıkları kodlar
+            - kanal_kodu (str): G (Gişe), İ (İnternet), A (ATM), T (AloBanka) vb.
+            - mesaj_no (str): Banka tarafından üretilen kod.
+            - ogrenci_no (str): Borçları sorgulanan öğrencinin numarası
+            - mesaj_statusu (str): K (Kabul), R (Ret)
+            - hata_mesaji (str): Hata mesajı içeriği veya null
+            - ad_soyad (str): Öğrenci adı soyadı
+            - ucret_turu (int): Borcun ne için ödeneceği
+            - tahakkuk_referans_no (str): Her tahakkuka verilen referans numarası
+            - son_odeme_tarihi (str): Borcun son ödeme tarihi (DDMMYY formatında)
+            - borc (float): Borcun miktarı
+            - borc_ack (str): Borç açıklaması
 
         """
 

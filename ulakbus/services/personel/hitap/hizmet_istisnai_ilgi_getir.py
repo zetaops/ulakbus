@@ -72,8 +72,8 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
         "0" veya "1" olarak gelen Kazanılmış Hak Aylığı durum bilgisi değeri,
         tam sayı olarak elde edilmektedir.
 
-        "0" : "Değerlendirilmedi"
-        "1" : "Değerlendirildi"
+        - "0" : "Değerlendirilmedi"
+        - "1" : "Değerlendirildi"
 
         Args:
             kha_durum (str): İstisnai İlgi KHA durum değeri.

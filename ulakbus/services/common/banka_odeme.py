@@ -18,7 +18,7 @@ Example:
 
     Servise JSON nesnesi kullanılarak istek gönderilmesi:
 
-        .. code-block:: json
+    .. code-block:: json
 
         $ curl http://localhost:11223/banka-borc-getir -d '{
             "banka_kodu": "kod",
@@ -38,7 +38,7 @@ Example:
 
     İsteğe dönen cevap:
 
-        .. code-block:: json
+    .. code-block:: json
 
         $ {"odeme_response": [{
             "tahakkuk_referans_no": "tahakkuk",
@@ -61,10 +61,10 @@ Example:
 
     Servise XML kullanılarak istek gönderilmesi:
 
-        .. code-block:: xml
+    .. code-block:: xml
 
-        $ curl http://localhost:11223/banka-odeme.banka-borc-odeme \
-            -H "SOAPAction:banka-odeme.banka-borc-odeme" \
+        $ curl http://localhost:11223/banka-odeme.banka-borc-odeme
+            -H "SOAPAction:banka-odeme.banka-borc-odeme"
             -d '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                 xmlns:zato="https://zato.io/ns/20130518">
                     <soapenv:Body>
@@ -90,36 +90,36 @@ Example:
 
     .. code-block:: xml
 
-    $ <?xml version='1.0' encoding='UTF-8'?>
-        <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
-        xmlns="https://zato.io/ns/20130518">
-        <soap:Body>
-            <odeme_response>
-                <zato_env>
-                    <cid>K07C4A0D30PHBMBGX18BYAZBZRH7</cid>
-                    <result>ZATO_OK</result>
-                </zato_env>
-                <item_list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                    <item>
-                        <mesaj_statusu>K</mesaj_statusu>
-                        <hata_mesaj xsi:nil="true"/>
-                        <banka_kodu>kod</banka_kodu>
-                        <sube_kodu>sube</sube_kodu>
-                        <kanal_kodu>kanal</kanal_kodu>
-                        <mesaj_no>mesaj</mesaj_no>
-                        <bank_username>user</bank_username>
-                        <bank_password>pass</bank_password>
-                        <ogrenci_no>1234567890</ogrenci_no>
-                        <ucret_turu>1</ucret_turu>
-                        <tahakkuk_referans_no>tahakkuk</tahakkuk_referans_no>
-                        <tahsilat_referans_no>tahsilat</tahsilat_referans_no>
-                        <odeme_timestamp>07122015123456</odeme_timestamp>
-                        <odeme_tutari>214.0</odeme_tutari>
-                    </item>
-                </item_list>
-            </odeme_response>
-        </soap:Body>
-    </soap:Envelope>
+        $ <?xml version='1.0' encoding='UTF-8'?>
+            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns="https://zato.io/ns/20130518">
+            <soap:Body>
+                <odeme_response>
+                    <zato_env>
+                        <cid>K07C4A0D30PHBMBGX18BYAZBZRH7</cid>
+                        <result>ZATO_OK</result>
+                    </zato_env>
+                    <item_list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <item>
+                            <mesaj_statusu>K</mesaj_statusu>
+                            <hata_mesaj xsi:nil="true"/>
+                            <banka_kodu>kod</banka_kodu>
+                            <sube_kodu>sube</sube_kodu>
+                            <kanal_kodu>kanal</kanal_kodu>
+                            <mesaj_no>mesaj</mesaj_no>
+                            <bank_username>user</bank_username>
+                            <bank_password>pass</bank_password>
+                            <ogrenci_no>1234567890</ogrenci_no>
+                            <ucret_turu>1</ucret_turu>
+                            <tahakkuk_referans_no>tahakkuk</tahakkuk_referans_no>
+                            <tahsilat_referans_no>tahsilat</tahsilat_referans_no>
+                            <odeme_timestamp>07122015123456</odeme_timestamp>
+                            <odeme_tutari>214.0</odeme_tutari>
+                        </item>
+                    </item_list>
+                </odeme_response>
+            </soap:Body>
+        </soap:Envelope>
 
 """
 
@@ -145,27 +145,25 @@ class BankaBorcOdeme(BankaService):
 
         Note:
             SimpleIO sınıfında belirlenen özellikler,
-                doğrudan yer aldığı servisin özellikleri olmaktadır.
+            doğrudan yer aldığı servisin özellikleri olmaktadır.
 
-            odeme_request (str): Servise gelen isteğin (JSON, XML) ismi
-            odeme_response (str): Servisten dönen veriyi içeren (payload)
-                                cevabın (JSON, XML) ismi
-
-            mesaj_statusu (str): K (Kabul), R (Ret)
-            hata_mesaji (str): Hata mesajı içeriği veya null
-
-            banka_kodu (str): Üniversite tarafından bankaya verilen kod
-            bank_username (str): Üniversite tarafından bankaya verilen kullanıcı adı
-            bank_password (str): Üniversite tarafından bankaya verilen şifre
-            sube_kodu (str): Bankaların şubeleri için hali hazırda kullandıkları kodlar
-            kanal_kodu (str): G (Gişe), İ (İnternet), A (ATM), T (AloBanka) vb.
-            mesaj_no (str): Banka tarafından üretilen kod.
-            ogrenci_no (str): Borçları sorgulanan öğrencinin numarası
-            ucret_turu (int): Borcun ne için ödeneceği
-            tahakkuk_referans_no (str): Her tahakkuka verilen referans numarası
-            tahsilat_referans_no (str): Banka tarafından verilen tahsilata ait referans no
-            odeme_timestamp (str): DDMMYYYYHHMMSS formatında ödeme tarihi
-            odeme_tutari (float): Banka tarafından tahsil edilen tutar
+            - odeme_request (str): Servise gelen isteğin (JSON, XML) ismi
+            - odeme_response (str): Servisten dönen veriyi içeren (payload)
+              cevabın (JSON, XML) ismi
+            - mesaj_statusu (str): K (Kabul), R (Ret)
+            - hata_mesaji (str): Hata mesajı içeriği veya null
+            - banka_kodu (str): Üniversite tarafından bankaya verilen kod
+            - bank_username (str): Üniversite tarafından bankaya verilen kullanıcı adı
+            - bank_password (str): Üniversite tarafından bankaya verilen şifre
+            - sube_kodu (str): Bankaların şubeleri için hali hazırda kullandıkları kodlar
+            - kanal_kodu (str): G (Gişe), İ (İnternet), A (ATM), T (AloBanka) vb.
+            - mesaj_no (str): Banka tarafından üretilen kod.
+            - ogrenci_no (str): Borçları sorgulanan öğrencinin numarası
+            - ucret_turu (int): Borcun ne için ödeneceği
+            - tahakkuk_referans_no (str): Her tahakkuka verilen referans numarası
+            - tahsilat_referans_no (str): Banka tarafından verilen tahsilata ait referans no
+            - odeme_timestamp (str): DDMMYYYYHHMMSS formatında ödeme tarihi
+            - odeme_tutari (float): Banka tarafından tahsil edilen tutar
 
         """
 

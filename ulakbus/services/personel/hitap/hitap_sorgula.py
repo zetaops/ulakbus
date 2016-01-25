@@ -19,14 +19,14 @@ Attributes:
 Example:
     Servise JSON nesnesi kullanılarak istek gönderilmesi:
 
-        .. code-block:: json
+    .. code-block:: json
 
         $ curl http://localhost:11223/hizmet-okul-getir -d '{"tckn": "tckn"}'
 
 
     İsteğe dönen cevap:
 
-        .. code-block:: json
+    .. code-block:: json
 
         $ {
             'status': 'ok',
