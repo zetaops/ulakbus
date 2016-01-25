@@ -5,22 +5,32 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Okul Senkronizasyon
+
+Personelin Hitap'taki okul bilgilerinin
+yereldeki kayıtlarla senkronizasyonunu yapar.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sync import HITAPSync
 from ulakbus.models.hitap import HizmetOkul
 
 
 class HizmetOkulSync(HITAPSync):
     """
-    HITAP HizmetOkulSync Zato Servisi
+    HITAP Sync servisinden kalıtılmış Okul Bilgisi Senkronizasyon servisi
+
     """
 
     def handle(self):
         """
-        :param sorgula_service: HITAP servisi adi
-        :type sorgula_service: str
+        Servis çağrıldığında tetiklenen metod.
 
-        :param model: HITAP verisinin model karsiligi
-        :type model: Model
+        Attributes:
+            sorgula_service (str): İlgili Hitap sorgu servisinin adı
+            model (Model): Hitap'taki kaydın yereldeki karşılığı olan
+                        ``HizmetOkul`` modeli
+
         """
 
         self.sorgula_service = 'hizmet-okul-getir.hizmet-okul-getir'

@@ -5,15 +5,34 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Mahkeme Sorgula
+
+Hitap üzerinden personelin mahkeme bilgilerinin sorgulamasını yapar.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetMahkemeGetir(HITAPSorgula):
     """
-    HITAP HizmetMahkemeGetir Zato Servisi
+    HITAP Sorgulama servisinden kalıtılmış Mahkeme Bilgisi Sorgulama servisi
+
     """
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Attributes:
+            service_name (str): İlgili Hitap sorgu servisinin adı
+            bean_name (str): Hitap'tan gelen bean nesnesinin adı
+            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
+                    ``HizmetMahkeme`` modelinin alanlarıyla eşlenmektedir.
+                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+
+        """
+
         self.service_name = 'HizmetMahkemeSorgula'
         self.bean_name = 'HizmetMahkemeServisBean'
         self.service_dict = {

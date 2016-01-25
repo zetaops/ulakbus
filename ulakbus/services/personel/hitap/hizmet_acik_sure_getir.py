@@ -5,15 +5,34 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Açık Süre Sorgula
+
+Hitap üzerinden personelin açık süre bilgilerinin sorgulamasını yapar.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetAcikSureGetir(HITAPSorgula):
     """
-    HITAP HizmetAcikSureGetir Zato Servisi
+    HITAP Sorgulama servisinden kalıtılmış Açık Süre Bilgisi Sorgulama servisi
+
     """
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Attributes:
+            service_name (str): İlgili Hitap sorgu servisinin adı
+            bean_name (str): Hitap'tan gelen bean nesnesinin adı
+            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
+                    ``HizmetAcikSure`` modelinin alanlarıyla eşlenmektedir.
+                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+
+        """
+
         self.service_name = 'HizmetAcikSureSorgula'
         self.bean_name = 'HizmetAcikSureServisBean'
         self.service_dict = {
@@ -45,10 +64,11 @@ class HizmetAcikSureGetir(HITAPSorgula):
 
     def custom_filter(self, hitap_dict):
         """
-        Sozluge (hitap_dict) uygulanacak ek filtrelerin gerceklestirimi
+        Hitap sözlüğüne uygulanacak ek filtreleri gerçekleştirir.
 
-        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
-        :type hitap_dict: List[dict]
+        Args:
+            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
+
         """
 
         for record in hitap_dict:
@@ -57,32 +77,47 @@ class HizmetAcikSureGetir(HITAPSorgula):
 
     def husus_aciklama_kontrol(self, husus):
         """
-        Acik Sure HITAP servisinin husus alaninin, husus kodu ve
-        husus aciklamasi (tarih, mahkeme detayi vb.) seklinde elde edilmesi.
+        Hitap Açık Süre servisinin,
+        husus bilgisi tek başına husus kodunu veya
+        husus kodu ve açıklamasını veya
+        husus kodu ve birkaç tarih bilgisini birlikte içerebilmektedir.
 
-        :param husus: hitaptan donen husus bilgisi
-        :type husus: str
+        Bu amaçla husus kodu ve açıklama (mahkeme detayı, tarih bilgileri vs.)
+        kısımları ayrı ayrı elde edilmektedir.
 
-        :return tuple: husus kodu (int) ve aciklamasi (string)
+        Args:
+            husus (str): Açık Süre husus bilgisi.
+                Gelen veri 1, 2, 3, 4, 5, 6, 7, 10, 11, 14 değerlerinden biriyse,
+                sadece husus kodunu içermektedir. Doğrudan husus kodu olarak elde edilir.
+                Gelen veri 8, 9, 12, 13, 15, 16, 17, 18 değerleriyle birlikte
+                açıklama (mahkeme detayı, tarih bilgileri vs.) kısmını da içeriyorsa,
+                husus kodu ve açıklama olacak şekilde iki parçalı olarak elde edilir.
+
+        Returns:
+            (int, str): Husus kodu ve açıklaması.
+
+        Raises:
+            IndexError: Husus açıklaması eksik.
+
         """
 
         husus = husus.split(' ', 1)
         try:
             husus_kodu = int(husus[0])
         except ValueError:
-            self.logger.info("Husus Kodu tam sayi olmali.")
+            self.logger.exception("Husus Kodu tam sayi olmali.")
             return 0, ""
 
-        # sadece husus kodu icerenler
+        # only code
         if husus_kodu in [1, 2, 3, 4, 5, 6, 7, 10, 11, 14]:
             return husus_kodu, ""
-        # husus kodu ve aciklamasini icerenler
+        # code and explanation
         elif husus_kodu in [8, 9, 12, 13, 15, 16, 17, 18]:
             try:
                 aciklama = husus[1]
                 return husus_kodu, aciklama
             except IndexError:
-                self.logger.info("Husus aciklamasi yok.")
+                self.logger.exception("Husus aciklamasi yok.")
                 return husus_kodu, ""
         else:
             self.logger.info('Husus Kodu gecersiz.')

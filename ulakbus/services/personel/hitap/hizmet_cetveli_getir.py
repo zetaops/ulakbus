@@ -5,15 +5,34 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""HITAP Hizmet Cetveli Sorgula
+
+Hitap üzerinden personelin hizmet kaydı bilgilerinin sorgulamasını yapar.
+
+"""
+
 from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetCetveliGetir(HITAPSorgula):
     """
-    HITAP HizmetCetveliGetir Zato Servisi
+    HITAP Sorgulama servisinden kalıtılmış Hizmet Kaydı Bilgisi Sorgulama servisi
+
     """
 
     def handle(self):
+        """
+        Servis çağrıldığında tetiklenen metod.
+
+        Attributes:
+            service_name (str): İlgili Hitap sorgu servisinin adı
+            bean_name (str): Hitap'tan gelen bean nesnesinin adı
+            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
+                    ``HizmetKayitlari`` modelinin alanlarıyla eşlenmektedir.
+                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+
+        """
+
         self.service_name = 'HizmetCetvelSorgula'
         self.bean_name = 'HizmetCetveliServisBean'
         self.service_dict = {
@@ -46,23 +65,31 @@ class HizmetCetveliGetir(HITAPSorgula):
 
     def custom_filter(self, hitap_dict):
         """
-        Sozluge (hitap_dict) uygulanacak ek filtrelerin gerceklestirimi
+        Hitap sözlüğüne uygulanacak ek filtreleri gerçekleştirir.
 
-        :param hitap_dict: HITAP verisini modeldeki alanlara uygun bicimde tutan sozluk
-        :type hitap_dict: List[dict]
+        Args:
+            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
+
         """
 
         for record in hitap_dict:
             record['hizmet_sinifi'] = self.hizmet_sinifi_int_kontrol(record['hizmet_sinifi'])
 
-    def hizmet_sinifi_int_kontrol(self, hs):
+    def hizmet_sinifi_int_kontrol(self, hizmet_sinifi):
         """
-        Bu metot ilgili HITAP servisinin hizmet_sinifi alaninin, hem 1, 2, 3 ... 29 gibi integer degerler hem de
-        GIH, MIAH, ... SOZ gibi string almasi problemini duzeltmek icindir.
+        Hitap Hizmet Cetveli sorgulama servisinin,
+        hem 1, 2, 3 ... 29 gibi tam sayı (servisten string olarak geliyor) değerleri
+        hem de GİH, MİAH, ... SÖZ gibi string değerleri alabilen,
+        hizmetSinifi alanının, her koşulda tam sayı olarak elde edilmesini sağlar.
 
-        :param hs: hitaptan donen hizmet sinifi
-        :type hs: str
-        :return int: hitap sinifi int or 0
+        Args:
+            hizmet_sinifi (str): Hizmet Cetveli hizmet sınıfı bilgisi
+
+        Returns:
+            int: Hizmet sınıfı tam sayı değeri.
+
+        Raises:
+            ValueError: Geçersiz hizmet sınıfı değeri.
 
         """
 
@@ -99,14 +126,14 @@ class HizmetCetveliGetir(HITAPSorgula):
         }
 
         try:
-            # eger int olabiliyorsa dogrudan dondur
-            return int(hs)
+            # return if it is int
+            return int(hizmet_sinifi)
 
         except ValueError:
-            # int degilse  class 'suds.sax.text.Text' tipinde sozlukten karsiligini bul
+            # if not, find its value (int) in dict (key type is 'suds.sax.text.Text')
             try:
-                return hizmet_siniflari[hs.strip()]
+                return hizmet_siniflari[hizmet_sinifi.strip()]
             except KeyError:
                 # TODO: admin'e bildirim gitmesi lazim
-                self.logger.info("Hizmet Sinifini (%s) Kontrol Edin!", hs)
+                self.logger.exception("Hizmet Sinifini (%s) Kontrol Edin!", hizmet_sinifi)
                 return 0
