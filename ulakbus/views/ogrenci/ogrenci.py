@@ -19,7 +19,7 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from ulakbus.models.ogrenci import Ogrenci
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, DegerlendirmeNot
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -256,17 +256,16 @@ def ogrenci_bilgileri(current):
         }
     ]
 
-class ProgramBilgisiForm(forms.JsonForm):
-    class Meta:
-        include = ['program']
-
-    sec = fields.Button("Seç", cmd="program_sec")
-
 class BasariDurum(CrudView):
     class Meta:
         model = "OgrenciProgram"
 
-    def program_sec_form(self):
-        ogreci = Ogrenci.objects.get(user = self.current.user)
-        ogrenci_programlar = OgrenciProgram.objects.filter(ogrenci = ogrenci)
-        self.form_out(ProgramBilgisiForm(ogrenci_programlar, current = self.current))
+    def program_ata(self):
+        ogrenci = Ogrenci.objects.get(user = self.current.user)
+        ogrenci_program = OgrenciProgram.objects.filter(ogrenci = ogrenci)
+        self.current.ogrenci_program = ogrenci_program[0]
+
+    def not_durum(self):
+        self.current.output['object'] = []
+        ogrenci = Ogrenci.objects.get(user = self.current.user)
+        donem = Donem.objects.get(guncel = True)
