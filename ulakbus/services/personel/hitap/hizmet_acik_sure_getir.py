@@ -7,7 +7,8 @@
 
 """HITAP Açık Süre Sorgula
 
-Hitap üzerinden personelin açık süre bilgilerinin sorgulamasını yapar.
+Hitap üzerinden personelin
+açık süre hizmet bilgilerinin sorgulamasını yapar.
 
 """
 
@@ -16,7 +17,8 @@ from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 class HizmetAcikSureGetir(HITAPSorgula):
     """
-    HITAP Sorgulama servisinden kalıtılmış Açık Süre Bilgisi Sorgulama servisi
+    HITAP Sorgulama servisinden kalıtılmış
+    Açık Süre Hizmet Bilgisi Sorgulama servisi
 
     """
 

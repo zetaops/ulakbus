@@ -14,15 +14,18 @@ import json
 
 class ZatoService(object):
     """
+    Simple zato service wrapper class.
+    You can write your zato services extending this class.
 
-    Simple zato service wrapper class. You can write your zato services extending this class.
+    This class simply needs some parameter to be set
+    as you see in init payload and service uri.
 
-    This class simply needs some parameter to be set as you see in init payload and service uri.
-    Defaults are an empty dict for payload, string "ping" for service_uri.
+    Ping service returns just 'ok' which can be used as an health check
+    to determine zato servers is alive or not.
 
-    Ping service returns just 'ok' which can be used as an health check to determine zato servers is alive or not.
+    ``service_uri`` and ``payload`` parameters especially is
+    set by extending class' __init__.
 
-    ``service_uri`` and ``payload`` parameters especially is set by extending class' __init__.
 
     """
 
@@ -32,33 +35,79 @@ class ZatoService(object):
 
     def get_uri(self):
         """
+        Simply returns full uri of zato service object.
+        It uses ``ZATO_SERVER`` from settings module.
 
-        Simply returns full uri of zato service object. It uses ``ZATO_SERVER`` from settings module.
-
-        The ``ZATO_SERVER`` can be set as environment variable as below:
-        ::
+        The ``ZATO_SERVER`` can be set as environment variable as below::
 
             export ZATO_SERVER='http://127.0.0.1/'
 
 
         :return: unique identification string of service on zato services including
                  join of zato server url (generally a load balancer url) and service name on zato.
-
-
         """
 
         return '/'.join([settings.ZATO_SERVER, self.service_uri])
 
+    def zato_request(self):
+        """
+        Makes zato requests. Zato expects payloads as json over POST method
+        and sends back json. Return json contains two parts
+        one is status and the other is result.
+
+        Status part is can be ``ok`` or ``error`` depends on
+        what happens in zato servers while running. Result part is
+        the data part which is expected by consumer.
+
+        Returns:
+            str: if requests fails, returns ``None``
+            or simply string of zato service response payload
+
+        """
+
+        uri = self.get_uri()
+        payload = json.loads(self.payload)
+        r = requests.post(uri, data=json.dumps(payload))
+        if r.status_code == 200:
+            response = r.json()
+            r.close()
+            try:
+                if response['status'] == 'ok':
+                    return response['result']
+                else:
+                    # all zato internal errors will be handled here,
+                    # riak error, connection error etc..
+                    raise Exception("your service request failed with error %s"
+                                    % response['result'])
+            except KeyError:
+                raise Exception("your service response contains no status code, "
+                                "check your zato service package")
+
+        if r.status_code == 404:
+            raise Exception("Service called '%s' is not defined on zato "
+                            "servers or service_uri changed" % self.service_uri)
+        # other than 404 errors will be handled here,
+        # such as unauthorized requests, permission denied or etc..
+        else:
+            raise Exception("Status code is something different 200 or 404 which is %s, "
+                            "this means something really went bad, check zato server logs"
+                            % r.status_code)
+
+
+
+class TcknService(ZatoService):
+
     @staticmethod
     def check_turkish_identity_number(tckn):
         """
+        Türkiye Cumhuriyeti Kimlik Numarası geçerlilik kontrolü.
+        11 karakter uzunluğunda karakter dizisi olmalı.
 
-        Checks Turkish ID Number, if empty, not a string or different than 11 length
+        Args:
+            tckn (str): 11 karakter uzunluğunda TCKN.
 
-        :param tckn: string, 11 length
-        :type tckn: str
-
-        :return: string tckn or raises exception
+        Returns:
+            str: TCKN
 
         """
 
@@ -73,120 +122,616 @@ class ZatoService(object):
 
         return tckn
 
-    def zato_request(self):
-        """
 
-        Makes zato requests. Zato expects payloads as json over POST method and sends back json. Return json cotains
-        two parts one is status and the other is result.
-
-        Status part is can be ``ok`` or ``error`` depends on what happens in zato servers while running. Result part is
-        the data part which is expected by consumer.
-
-        :return: if requests fails, returns ``None``, or simply string of zato service response payload
-
-
-        """
-
-        uri = self.get_uri()
-        payload = json.loads(self.payload)
-        r = requests.post(uri, data=json.dumps(payload))
-        if r.status_code == 200:
-            response = r.json()
-            r.close()
-            try:
-                if response['status'] == 'ok':
-                    return response['result']
-                else:
-                    # all zato internal errors will be handled here, riak error, connection error etc..
-                    raise Exception("your service request failed with error %s" % response['result'])
-            except KeyError:
-                raise Exception("your service response contains no status code, check your zato service package")
-
-        if r.status_code == 404:
-            raise Exception("Service called '%s' is not defined on zato "
-                            "servers or service_uri changed" % self.service_uri)
-        # other than 404 errors will be handled here, such as unauthorized requests, permission denied or etc..
-        else:
-            raise Exception("Status code is something different 200 or 404 which is %s, "
-                            "this means something really went bad, check zato server logs" % r.status_code)
-
-
-class HitapService(ZatoService):
-    HITAP_USER = ''
+class HitapService(TcknService):
+    pass
 
 
 class HitapServiceError(Exception):
     pass
 
 
-class HitapHizmetCetvelGetir(HitapService):
+class HitapAcikSureGetir(HitapService):
+    """
+    Hitap üzerinden, personelin açık süre hizmet bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
     """
 
-    This service takes tckn as string, consume "hizmet cetveli getir" of hitap which syncs local data on riak.
+    def __init__(self, service_uri='hizmet-acik-sure-getir', tckn=""):
+        super(HitapAcikSureGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
-    Example
-    ::
 
-        from zato_wrapper_class import HitapHizmetCetvelGetir
-        zs = HitapHizmetCetvelGetir(tckn="12345678900")
-        response = zs.zato_request()
+class HitapAcikSureSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki açık süre hizmet bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
 
-        response: list, with lines of hizmet_cetveli
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-acik-sure-sync', tckn=""):
+
+        super(HitapAcikSureSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapAcikSureEkle(HitapService):
+    pass
+
+
+class HitapAcikSureGuncelle(HitapService):
+    pass
+
+
+class HitapAcikSureSil(HitapService):
+    pass
+
+
+class HitapAskerlikGetir(HitapService):
+    """
+    Hitap üzerinden, personelin askerlik bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-askerlik-getir', tckn=""):
+        super(HitapAskerlikGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapAskerlikSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki askerlik bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-askerlik-sync', tckn=""):
+
+        super(HitapAskerlikSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapAskerlikEkle(HitapService):
+    pass
+
+
+class HitapAskerlikGuncelle(HitapService):
+    pass
+
+
+class HitapAskerlikSil(HitapService):
+    pass
+
+
+class HitapBirlestirmeGetir(HitapService):
+    """
+    Hitap üzerinden, personelin hizmet birleştirme bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-birlestirme-getir', tckn=""):
+        super(HitapBirlestirmeGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapBirlestirmeSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki hizmet birleştirme bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-birlestirme-sync', tckn=""):
+
+        super(HitapBirlestirmeSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapBirlestirmeEkle(HitapService):
+    pass
+
+
+class HitapBirlestirmeGuncelle(HitapService):
+    pass
+
+
+class HitapBirlestirmeSil(HitapService):
+    pass
+
+
+class HitapBorclanmaGetir(HitapService):
+    """
+    Hitap üzerinden, personelin borçlanma bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-borclanma-getir', tckn=""):
+        super(HitapBorclanmaGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapBorclanmaSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki hizmet borçlanma bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-borclanma-sync', tckn=""):
+
+        super(HitapBorclanmaSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapBorclanmaEkle(HitapService):
+    pass
+
+
+class HitapBorclanmaGuncelle(HitapService):
+    pass
+
+
+class HitapBorclanmaSil(HitapService):
+    pass
+
+
+class HitapHizmetCetveliGetir(HitapService):
+    """
+    Hitap üzerinden, personelin hizmet kaydı bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
 
     """
 
     def __init__(self, service_uri='hizmet-cetveli-getir', tckn=""):
-        """
-
-        :param service_uri: string, default hizmet-cetveli-getir
-        :type service_uri: str
-
-        :param tckn: string, of 11 byte length, can not be empty
-        :type tckn: str
-
-        """
-
-        super(HitapHizmetCetvelGetir, self).__init__()
+        super(HitapHizmetCetveliGetir, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
 class HitapHizmetCetveliSenkronizeEt(HitapService):
     """
+    Personelin Hitap'taki hizmet kaydı bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
 
-    This service takes tckn as string, consume "hizmet cetvel senkronize et" of hitap, sync local data on riak.
-
-    Example
-    ::
-
-        from zato_wrapper_class import HitapHizmetCetveliSenkronizeEt
-        zs = HitapHizmetCetveliSenkronizeEt(tckn="12345678900")
-        response = zs.zato_request()
-
-        response: string, 'ok' for successful sync data of existent person
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-cetveli-senkronize-et', tckn=""):
-        """
-
-        Takes two parameters service_uri and tckn
-
-        :param service_uri: service name on zato, default is hizmet-cetveli-senkronize-et
-        :type service_uri: str
-
-        :param tckn: 11 byte length tckn number, can not be empty
-        :type tckn: str
-
-
-        """
+    def __init__(self, service_uri='hizmet-cetveli-sync', tckn=""):
 
         super(HitapHizmetCetveliSenkronizeEt, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
-class MernisKimlikBilgileriGetir(ZatoService):
+class HitapHizmetCetveliEkle(HitapService):
+    pass
+
+
+class HitapHizmetCetveliGuncelle(HitapService):
+    pass
+
+
+class HitapHizmetCetveliSil(HitapService):
+    pass
+
+
+class HitapIHSGetir(HitapService):
+    """
+    Hitap üzerinden, personelin itibari hizmet süresi zammı
+    bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-ihs-getir', tckn=""):
+        super(HitapIHSGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapIHSSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki itibari hizmet süresi zammı bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-ihs-sync', tckn=""):
+
+        super(HitapIHSSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapIHSEkle(HitapService):
+    pass
+
+
+class HitapIHSGuncelle(HitapService):
+    pass
+
+
+class HitapIHSSil(HitapService):
+    pass
+
+
+class HitapIstisnaiIlgiGetir(HitapService):
+    """
+    Hitap üzerinden, personelin istisnai ilgi
+    bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-istisnai-ilgi-getir', tckn=""):
+        super(HitapIstisnaiIlgiGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapIstisnaiIlgiSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki istisnai ilgi bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-istisnai-ilgi-sync', tckn=""):
+
+        super(HitapIstisnaiIlgiSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapIstisnaiIlgiEkle(HitapService):
+    pass
+
+
+class HitapIstisnaiIlgiGuncelle(HitapService):
+    pass
+
+
+class HitapIstisnaiIlgiSil(HitapService):
+    pass
+
+
+class HitapKursGetir(HitapService):
+    """
+    Hitap üzerinden, personelin kurs bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-kurs-getir', tckn=""):
+        super(HitapKursGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapKursSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki kurs bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-kurs-sync', tckn=""):
+
+        super(HitapKursSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapKursEkle(HitapService):
+    pass
+
+
+class HitapKursGuncelle(HitapService):
+    pass
+
+
+class HitapKursSil(HitapService):
+    pass
+
+
+class HitapMahkemeGetir(HitapService):
+    """
+    Hitap üzerinden, personelin mahkeme bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-mahkeme-getir', tckn=""):
+        super(HitapMahkemeGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapMahkemeSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki mahkeme bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-mahkeme-sync', tckn=""):
+
+        super(HitapMahkemeSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapMahkemeGuncelle(HitapService):
+    pass
+
+
+class HitapMahkemeEkle(HitapService):
+    pass
+
+
+class HitapMahkemeSil(HitapService):
+    pass
+
+
+class HitapNüfusGetir(HitapService):
+    """
+    Hitap üzerinden, personelin nüfus bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-nüfus-getir', tckn=""):
+        super(HitapNüfusGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapNüfusSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki nüfus bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-nüfus-sync', tckn=""):
+
+        super(HitapNüfusSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapNüfusEkle(HitapService):
+    pass
+
+
+class HitapNüfusGuncelle(HitapService):
+    pass
+
+
+class HitapNüfusSil(HitapService):
+    pass
+
+
+class HitapOkulGetir(HitapService):
+    """
+    Hitap üzerinden, personelin okul bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-okul-getir', tckn=""):
+        super(HitapOkulGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapOkulSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki okul bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-okul-sync', tckn=""):
+
+        super(HitapOkulSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapOkulEkle(HitapService):
+    pass
+
+
+class HitapOkulGuncelle(HitapService):
+    pass
+
+
+class HitapOkulSil(HitapService):
+    pass
+
+
+class HitapTazminatGetir(HitapService):
+    """
+    Hitap üzerinden, personelin tazminat bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-tazminat-getir', tckn=""):
+        super(HitapTazminatGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapTazminatSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki tazminat bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-tazminat-sync', tckn=""):
+
+        super(HitapTazminatSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapTazminatEkle(HitapService):
+    pass
+
+
+class HitapTazminatGuncelle(HitapService):
+    pass
+
+
+class HitapTazminatSil(HitapService):
+    pass
+
+
+class HitapUnvanGetir(HitapService):
+    """
+    Hitap üzerinden, personelin ünvan bilgilerini sorgular.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-unvan-getir', tckn=""):
+        super(HitapUnvanGetir, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapUnvanSenkronizeEt(HitapService):
+    """
+    Personelin Hitap'taki ünvan bilgilerinin,
+    yereldeki kayıtlarla senkronizasyonunu yapar.
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_uri='hizmet-unvan-sync', tckn=""):
+
+        super(HitapUnvanSenkronizeEt, self).__init__()
+        self.service_uri = service_uri
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+
+class HitapUnvanEkle(HitapService):
+    pass
+
+
+class HitapUnvanGuncelle(HitapService):
+    pass
+
+
+class HitapUnvanSil(HitapService):
+    pass
+
+
+class MernisKimlikBilgileriGetir(TcknService):
     """
 
     This service takes tckn as string, consume "mernis kimlik bilgileri getir" of hitap services
@@ -220,7 +765,7 @@ class MernisKimlikBilgileriGetir(ZatoService):
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
-class KPSAdresBilgileriGetir(ZatoService):
+class KPSAdresBilgileriGetir(TcknService):
     """
 
     This service takes tckn as string, consume "mernis kimlik bilgileri getir" of hitap services
@@ -253,109 +798,3 @@ class KPSAdresBilgileriGetir(ZatoService):
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
-
-class HitapMahkemeBilgileriGuncelle(HitapService):
-    def __init__(self, service_uri='hitap-mahkeme-bilgileri-guncelle', kayit=None):
-        """
-
-        Takes two parameters service_uri, tckn and payload
-
-        :param service_uri: service name on zato, default is hizmet-cetvel
-        :type service_uri: str
-
-        :param kayit: object, can not be empty
-        :type tckn: object
-        """
-
-        super(HitapMahkemeBilgileriGuncelle, self).__init__()
-        self.service_uri = service_uri
-
-        if kayit:
-            data = {
-                "tckn": kayit.tckn,
-                "kayit_no": kayit.kayit_no,
-                "mahkeme_ad": kayit.mahkeme_ad,
-                "sebep": kayit.sebep,
-                "karar_tarihi": kayit.karar_tarihi,
-                "karar_sayisi": kayit.karar_sayisi,
-                "kesinlesme_tarihi": kayit.kesinlesme_tarihi,
-                "asil_dogum_tarihi": kayit.asil_dogum_tarihi,
-                "tashih_dogum_tarihi": kayit.tashih_dogum_tarihi,
-                "asil_ad": kayit.asil_ad,
-                "tashih_ad": kayit.tashih_ad,
-                "asil_soyad": kayit.asil_soyad,
-                "tashih_soyad": kayit.tashih_soyad,
-                "gecerli_dogum_tarihi": kayit.gecerli_dogum_tarihi,
-                "aciklama": kayit.aciklama,
-                "gun_sayisi": kayit.gun_sayisi,
-                "kurum_onay_tarihi": kayit.kurum_onay_tarihi
-            }
-            self.payload = '{"tckn":"%s", "kayit_no":"%s", "data":"%s"}' % (
-                self.check_turkish_identity_number(kayit.tckn), kayit.kayit_no, data)
-        else:
-            raise Exception("'kayit_no' can not be empty")
-
-
-class HitapMahkemeBilgileriEkle(HitapService):
-    def __init__(self, service_uri='hitap-mahkeme-bilgileri-guncelle', kayit=None):
-        """
-
-        Takes two parameters service_uri, and kayit
-
-        :param service_uri: service name on zato, default is hizmet-cetvel
-        :type service_uri: str
-
-        :param kayit: object, can not be empty
-        :type tckn: object
-
-        """
-        super(HitapMahkemeBilgileriEkle, self).__init__()
-        self.service_uri = service_uri
-
-        if kayit:
-            data = {
-                "tckn": kayit.tckn,
-                # "kayit_no": kayit.kayit_no,
-                "mahkeme_ad": kayit.mahkeme_ad,
-                "sebep": kayit.sebep,
-                "karar_tarihi": kayit.karar_tarihi,
-                "karar_sayisi": kayit.karar_sayisi,
-                "kesinlesme_tarihi": kayit.kesinlesme_tarihi,
-                "asil_dogum_tarihi": kayit.asil_dogum_tarihi,
-                "tashih_dogum_tarihi": kayit.tashih_dogum_tarihi,
-                "asil_ad": kayit.asil_ad,
-                "tashih_ad": kayit.tashih_ad,
-                "asil_soyad": kayit.asil_soyad,
-                "tashih_soyad": kayit.tashih_soyad,
-                "gecerli_dogum_tarihi": kayit.gecerli_dogum_tarihi,
-                "aciklama": kayit.aciklama,
-                "gun_sayisi": kayit.gun_sayisi,
-                "kurum_onay_tarihi": kayit.kurum_onay_tarihi
-            }
-
-            self.payload = '{"tckn":"%s",  "data":"%s"}' % (
-                self.check_turkish_identity_number(kayit.tckn), data)
-        else:
-            raise Exception("be sure that all 'data' and 'tckn' are not empty")
-
-
-class HitapMahkemeBilgileriSil(HitapService):
-    def __init__(self, service_uri='hitap-mahkeme-bilgileri-sil', kayit=None):
-        """
-
-        Takes two parameters service_uri, tckn and payload
-
-        :param service_uri: service name on zato, default is hizmet-cetvel
-        :type service_uri: str
-
-        :param kayit: object, can not be empty and instance of ulakbus.models.hitap.HizmetMahkeme
-        :type kayit: object
-
-        """
-        super(HitapMahkemeBilgileriSil, self).__init__()
-        self.service_uri = service_uri
-        if kayit:
-            self.payload = '{"tckn":"%s", "kayit_no":"%s"}' % (
-                self.check_turkish_identity_number(kayit.tckn), kayit.kayit_no)
-        else:
-            raise Exception("be sure that 'kayit' can not be empty and must be instance of HizmetMahkeme")

@@ -16,7 +16,8 @@ from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 class HizmetCetveliGetir(HITAPSorgula):
     """
-    HITAP Sorgulama servisinden kalıtılmış Hizmet Kaydı Bilgisi Sorgulama servisi
+    HITAP Sorgulama servisinden kalıtılmış
+    Hizmet Kaydı Bilgisi Sorgulama servisi
 
     """
 

@@ -7,7 +7,7 @@
 
 """HITAP Açık Süre Senkronizasyon
 
-Personelin Hitap'taki açık süre bilgilerinin
+Personelin Hitap'taki açık süre hizmet bilgilerinin
 yereldeki kayıtlarla senkronizasyonunu yapar.
 
 """
@@ -18,7 +18,8 @@ from ulakbus.models.hitap import HizmetAcikSure
 
 class HizmetAcikSureSync(HITAPSync):
     """
-    HITAP Sync servisinden kalıtılmış Açık Süre Bilgisi Senkronizasyon servisi
+    HITAP Sync servisinden kalıtılmış
+    Açık Süre Hizmet Bilgisi Senkronizasyon servisi
 
     """
 

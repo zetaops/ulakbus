@@ -20,7 +20,8 @@ from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 class HizmetIstisnaiIlgiGetir(HITAPSorgula):
     """
-    HITAP Sorgulama servisinden kalıtılmış İstisnai İlgi Bilgisi Sorgulama servisi
+    HITAP Sorgulama servisinden kalıtılmış
+    İstisnai İlgi Bilgisi Sorgulama servisi
 
     """
 
