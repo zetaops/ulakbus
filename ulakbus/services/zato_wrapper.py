@@ -48,7 +48,7 @@ class ZatoService(object):
     ``service_uri`` and ``payload`` parameters especially is
     set by extending class' __init__.
 
-    Args:
+    Attributes:
         payload (str): an empty dict as default
         service_uri (str): "ping" as default
 
@@ -574,7 +574,7 @@ class HitapMahkemeSil(HitapService):
     pass
 
 
-class HitapNüfusGetir(HitapService):
+class HitapNufusGetir(HitapService):
     """
     Hitap üzerinden, personelin nüfus bilgilerini sorgular.
 
@@ -584,13 +584,13 @@ class HitapNüfusGetir(HitapService):
 
     """
 
-    def __init__(self, service_uri='hizmet-nüfus-getir', tckn=""):
-        super(HitapNüfusGetir, self).__init__()
+    def __init__(self, service_uri='hizmet-nufus-getir', tckn=""):
+        super(HitapNufusGetir, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
-class HitapNüfusSenkronizeEt(HitapService):
+class HitapNufusSenkronizeEt(HitapService):
     """
     Personelin Hitap'taki nüfus bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
@@ -601,22 +601,22 @@ class HitapNüfusSenkronizeEt(HitapService):
 
     """
 
-    def __init__(self, service_uri='hizmet-nüfus-sync', tckn=""):
+    def __init__(self, service_uri='hizmet-nufus-sync', tckn=""):
 
-        super(HitapNüfusSenkronizeEt, self).__init__()
+        super(HitapNufusSenkronizeEt, self).__init__()
         self.service_uri = service_uri
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
-class HitapNüfusEkle(HitapService):
+class HitapNufusEkle(HitapService):
     pass
 
 
-class HitapNüfusGuncelle(HitapService):
+class HitapNufusGuncelle(HitapService):
     pass
 
 
-class HitapNüfusSil(HitapService):
+class HitapNufusSil(HitapService):
     pass
 
 
