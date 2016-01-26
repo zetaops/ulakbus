@@ -158,7 +158,7 @@ class HITAPSync(Service):
 
         Raises:
             AttributeError: İlgili servis veya bean Hitap'ta bulunmayabilir.
-            urllib2.URLError: Bağlantı hatası.
+            urllib2.URLError: Servis yanıt vermiyor.
             socket.error: Riak bağlantı hatası.
             Exception: Beklenmeyen hata.
 
@@ -169,6 +169,8 @@ class HITAPSync(Service):
 
         if has_error:
             self.logger.info("Hitap kaydi sorgulama hatasi.")
+            status = "error"
+            result = "Service unavailable!"
         else:
             try:
                 # get kayit no list from db
@@ -192,11 +194,25 @@ class HITAPSync(Service):
                 for model_kayit_no in kayit_no_list:
                     self.delete_hitap_data_db(model_kayit_no)
 
+                status = "ok"
+                result = "Synchronisation completed successfully."
+
             except AttributeError:
                 self.logger.exception("AttributeError")
+                status = "error"
+                result = "AttributeError"
             except socket.error:
                 self.logger.exception("Riak connection refused!")
+                status = "error"
+                result = "Riak connection refused!"
             except urllib2.URLError:
-                self.logger.exception("No internet connection!")
+                self.logger.exception("Service unavailable!")
+                status = "error"
+                result = "Service unavailable!"
             except Exception:
-                self.logger.exception("Unexpected error")
+                self.logger.exception("Unexpected error!")
+                status = "error"
+                result = "Unexpected error!"
+
+        self.logger.info(result)
+        self.response.payload = {'status': status, 'result': result}

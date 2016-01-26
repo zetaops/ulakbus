@@ -117,7 +117,7 @@ class HITAPSorgula(Service):
 
         Raises:
             AttributeError: İlgili servis veya bean Hitap'ta bulunmayabilir.
-            urllib2.URLError: Bağlantı hatası.
+            urllib2.URLError: Servis yanıt vermiyor.
 
         """
 
@@ -147,7 +147,7 @@ class HITAPSorgula(Service):
             status = "error"
 
         except urllib2.URLError:
-            self.logger.exception("No internet connection!")
+            self.logger.exception("Service unavailable!")
             status = "error"
 
         finally:
