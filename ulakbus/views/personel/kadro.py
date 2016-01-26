@@ -65,13 +65,14 @@ from zengine.forms import fields
 class KadroObjectForm(JsonForm):
     """KadoIslemleri için object form olarak kullanılacaktır.
 
-    Meta değiştirilerek, formlardan durum alanı çıkarılmış, ve form alanları iki gruba
-    ayrılmıştır.
+    Meta değiştirilerek, formlardan durum alanı çıkarılmış, ve form
+    alanları iki gruba ayrılmıştır.
 
-    Formda bulunan iki alan unvan ve unvan_kod karşıt alanlardır. İkisi aynı kayıtta bulunamazlar.
-    Bu sebeple Meta'ya constraints eklenmiştir. Bu sayede UI tarafında forma kontroller eklenecek,
-    biri seçildiğinde diğerinin değeri boşaltılacaktır. Benzer şekilde, arka uçta aynı kontrol bu
-    ifadeler kullanılarak yapılacaktr.
+    Formda bulunan iki alan unvan ve unvan_kod karşıt alanlardır. İkisi
+    aynı kayıtta bulunamazlar. Bu sebeple Meta'ya constraints
+    eklenmiştir. Bu sayede UI tarafında forma kontroller eklenecek, biri
+    seçildiğinde diğerinin değeri boşaltılacaktır. Benzer şekilde, arka
+    uçta aynı kontrol bu ifadeler kullanılarak yapılacaktr.
 
     Formun sadece bir kaydet butonu mevcuttur.
 
@@ -126,10 +127,10 @@ class KadroObjectForm(JsonForm):
 class KadroIslemleri(CrudView):
     """Kadro İşlemleri
 
-    Kado işlemleri için kullanacağımız temel model Kadro modelidir. Meta.model
-    bu amaçla kullanılmıştır. Aynı şekilde Meta içerisinde yer alan
-    object_actions iş akışı boyunca özel olarak doldurulacağı için burada
-    boşaltılmıştır.
+    Kado işlemleri için kullanacağımız temel model Kadro modelidir.
+    Meta.model bu amaçla kullanılmıştır. Aynı şekilde Meta içerisinde
+    yer alan object_actions iş akışı boyunca özel olarak doldurulacağı
+    için burada boşaltılmıştır.
 
     """
 
