@@ -1,11 +1,33 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+
+"""HITAP Zato Service Wrapper
+
+Includes Zato Service Wrapper and wrapper functions for services
+such as Hitap, Mernis, KPS etc.
+
+
+Example:
+
+    .. code-block:: python
+
+        from zato_wrapper_class import HitapHizmetCetveliGetir
+        zs = HitapHizmetCetvelGetir(tckn="12345678900")
+        response = zs.zato_request()  # list, with lines of hizmet cetveli
+
+
+    .. code-block:: python
+
+        from zato_wrapper_class import HitapHizmetCetveliSenkronizeEt
+        zs = HitapHizmetCetveliSenkronizeEt(tckn="12345678900")
+        response = zs.zato_request()  # 'ok' or 'error'
+
+"""
+
 
 from ulakbus import settings
 import requests
@@ -26,6 +48,9 @@ class ZatoService(object):
     ``service_uri`` and ``payload`` parameters especially is
     set by extending class' __init__.
 
+    Args:
+        payload (str): an empty dict as default
+        service_uri (str): "ping" as default
 
     """
 
@@ -42,9 +67,11 @@ class ZatoService(object):
 
             export ZATO_SERVER='http://127.0.0.1/'
 
+        Returns:
+            (str): unique identification string of service on zato services
+            including join of zato server url (generally a load balancer url)
+            and service name on zato.
 
-        :return: unique identification string of service on zato services including
-                 join of zato server url (generally a load balancer url) and service name on zato.
         """
 
         return '/'.join([settings.ZATO_SERVER, self.service_uri])
