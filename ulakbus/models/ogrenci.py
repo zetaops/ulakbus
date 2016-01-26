@@ -520,6 +520,7 @@ class OgrenciDersi(Model):
 
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
     ders = Sube()
+    donem = Donem()
     ogrenci_program = OgrenciProgram()
 
     class Meta:

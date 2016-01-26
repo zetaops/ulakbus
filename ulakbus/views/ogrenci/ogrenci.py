@@ -256,16 +256,11 @@ def ogrenci_bilgileri(current):
         }
     ]
 
+def program_ata(self):
+    ogrenci = Ogrenci.objects.get(user = self.current.user)
+    ogrenci_program = OgrenciProgram.objects.filter(ogrenci = ogrenci)
+    current.task_data["ogrenci_program_key"] = ogrenci_program[0].key
+
 class BasariDurum(CrudView):
     class Meta:
-        model = "OgrenciProgram"
-
-    def program_ata(self):
-        ogrenci = Ogrenci.objects.get(user = self.current.user)
-        ogrenci_program = OgrenciProgram.objects.filter(ogrenci = ogrenci)
-        self.current.ogrenci_program = ogrenci_program[0]
-
-    def not_durum(self):
-        self.current.output['object'] = []
-        ogrenci = Ogrenci.objects.get(user = self.current.user)
-        donem = Donem.objects.get(guncel = True)
+        model = "OgrenciProgram"        
