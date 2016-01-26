@@ -72,7 +72,7 @@ class CrudHitap(CrudView):
     def save(self):
         """Crud Hitap Kaydet
 
-        Nesneyi kaydeder. Eğer kayıt yeni ise ``sync``alanını 4,
+        Nesneyi kaydeder. Eğer kayıt yeni ise ``sync`` alanını 4,
         mevcut kayıt güncellemesi ise 2 olarak işaretler.
 
         Hemen ardından zato servisi ile değişikliği bildirir.
@@ -101,7 +101,7 @@ class CrudHitap(CrudView):
     def delete(self):
         """Crud Hitap Sil
 
-        Nesneyi kaydeder. ``sync``alanını 3 olarak işaretler.
+        Nesneyi kaydeder. ``sync`` alanını 3 olarak işaretler.
 
         Hemen ardından zato servisi ile değişikliği bildirir.
 

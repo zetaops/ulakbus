@@ -242,9 +242,10 @@ class DersSubelendirme(CrudView):
         model = "Sube"
 
     def program_sec(self):
-        """Program Seç
+        """Program Seçim Adımı
 
-        Kayıtlı olan programları Program forma yansıtır.
+        Programlar veritabanından çekilip, açılır menu içine
+        doldurulur.
 
         """
 
@@ -254,8 +255,20 @@ class DersSubelendirme(CrudView):
         self.form_out(_form)
 
     def ders_sec(self):
-        """Ders Seç
+        """Ders Seç Adımı
 
+        Seçilen programa bağlı dersler, eğer daha önce şubelendirme
+        yapıldıysa şube listesiyle birlikte ekrana getirilir.
+
+        Formun herbir satırı ders ve şubeleri ile birlikte, ilgili
+        ders için şubelendirme formuna bağlı bir butondan oluşur.
+
+        Şubelendirme butonunun ``object_key`` i ``sube`` olarak
+        tanımlanmıştır. Sonraki adımda bu key yardımıyla şube formu,
+        ekrana getirilir. ``ders_okutman_formu`` metodu içinde şu
+        şekilde kullanılmıştır::
+
+            ders = Ders.objects.get(key=self.current.input['sube'])
 
         """
 
@@ -325,10 +338,7 @@ class DersSubelendirme(CrudView):
     def subelendirme_kaydet(self):
         """Şubelendirme Kaydet
 
-        Şubelendirme için seçilen dersin ders ve okutman bilgisi
-        mevcut şubelerde bulunuyorsa mevcut şubelerden çıkarılıyor.
-        Mevcut şubelerde bulunmuyorsa yeni şube oluşturuluyor,
-        kaydediliyor.
+        Şubelendirme formundan gelen dataları kaydeder.
 
         """
 
@@ -351,8 +361,7 @@ class DersSubelendirme(CrudView):
     def bilgi_ver(self):
         """Bilgi ver
 
-        Şubelendirme  bilgilerini okutmanlar listesinde tanımlı
-        okutmanlara iletiliyor.
+        Şubelendirme bilgileri ilgili okutmanlara iletilir.
 
         """
 
@@ -376,7 +385,9 @@ class NotGirisi(CrudView):
         model = "DegerlendirmeNot"
 
     def ders_secim(self):
-        """Okutmanın kendisine ait şubelerin listelendiği seçim adımına
+        """Not Girişi Ders Seçimi
+
+        Okutmanın kendisine ait şubelerin listelendiği seçim adımına
         ait olan metot.
 
         Bu method seçilen şubeyi bir sonraki workflow adımı olan ve
@@ -394,7 +405,9 @@ class NotGirisi(CrudView):
         self.form_out(_form)
 
     def sinav_sec(self):
-        """Okutmanın, seçilen şubeye ait sınavları görebildiği ve sınav
+        """Not Girişi Sınav Seç
+
+        Okutmanın, seçilen şubeye ait sınavları görebildiği ve sınav
         seçimi yapabildiği adıma ait olan method.
 
         Seçilen şube, ``ders_secim`` methodu içinde tanımlanmış olan

@@ -14,14 +14,14 @@ Bu servis şu işlemleri gerçekleştirir:
 
     * Hitap'taki kayıt yerelde yoksa, yerele kaydedilir.
     * Yereldeki kayıt Hitap'ta yoksa ve sync değeri 1 (senkronize) görünüyorsa,
-    Hitap'ta bu kayıt silinmiş demektir ve yerelde de silinir.
+      Hitap'ta bu kayıt silinmiş demektir ve yerelde de silinir.
 
 ``sync`` alanı şu değerlerde bulunabilir:
 
-       * 1: Kayıt Hitap ile senkronize
-       * 2: Yerel kayıt güncellendi, Hitap güncellenecek
-       * 3: Yerel kayıt silindi, Hitap kaydı silinecek
-       * 4: Yeni bir yerel kayıt oluşturuldu, Hitap'a gönderilecek.
+    * 1: Kayıt Hitap ile senkronize
+    * 2: Yerel kayıt güncellendi, Hitap güncellenecek
+    * 3: Yerel kayıt silindi, Hitap kaydı silinecek
+    * 4: Yeni bir yerel kayıt oluşturuldu, Hitap'a gönderilecek.
 
 
 Attributes:
@@ -45,6 +45,7 @@ import urllib2
 import socket
 from json import loads, dumps
 from six import iteritems
+
 
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
@@ -150,7 +151,7 @@ class HITAPSync(Service):
 
             * Hitap'taki kayıt yerelde yoksa, yerele kaydedilir.
             * Yereldeki kayıt Hitap'ta yoksa ve sync değeri 1 (senkronize) görünüyorsa,
-            Hitap'ta bu kayıt silinmiş demektir ve yerelde de silinir.
+              Hitap'ta bu kayıt silinmiş demektir ve yerelde de silinir.
 
         Args:
             tckn (str): Türkiye Cumhuriyeti Kimlik Numarası

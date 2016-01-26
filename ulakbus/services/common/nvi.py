@@ -10,8 +10,6 @@ import json
 import uuid
 import httplib
 import os
-import xml.etree.ElementTree as ET
-
 
 __author__ = 'Ali Riza Keles'
 
@@ -131,43 +129,6 @@ class KisiSorgulaTCKimlikNo(NVIService):
                   </ns1:ListeleCoklu>
             </env:Body>""" % tckn
         super(KisiSorgulaTCKimlikNo, self).handle()
-
-    def xml_to_json(self, response_xml):
-        """
-        KisiBilgisi
-            DurumBilgisi
-                MedeniHal
-                    Aciklama
-                    Kod
-            KayitYeriBilgisi
-                AileSiraNo
-                BireySiraNo
-                Cilt
-                    Aciklama
-                    Kod
-                Il
-                    Aciklama
-                    Kod
-                Ilce
-                    Aciklama
-                    Kod
-            TCKimlikNo
-            TemelBilgisi
-                Ad
-                AnneAd
-                BabaAd
-                Cinsiyet
-                    Aciklama
-                    Kod
-                DogumTarih
-                    Ay
-                    Gun
-                    Yil
-                DogumYer
-                Soyad
-
-
-        """
 
 
 class CuzdanSorgulaTCKimlikNo(NVIService):
