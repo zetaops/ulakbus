@@ -21,6 +21,7 @@ from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, DegerlendirmeNot
 from ulakbus.models.ogrenci import Donem, OgrenciDersi, Sinav
+from pyoko.exceptions import ObjectDoesNotExist
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -283,29 +284,32 @@ class BasariDurum(CrudView):
 
     def not_durum(self):
         self.current.output['client_cmd'] = ['show', ]
-        donem = Donem.objects.get(guncel = True)
+        donemler = Donem.objects.set_params(sort='baslangic_tarihi desc').filter()
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_key"])
-        ogrenci_dersler = OgrenciDersi.objects.filter(
-                    ogrenci_program = ogrenci_program,
-                    donem = donem
-                    )
-        dersler = []
-        for ogrenci_ders in ogrenci_dersler:
-            ders = OrderedDict({})
-            ders["Ders"] = ogrenci_ders.ders.ders.ad
-            ders["Ects Kredisi"] = ogrenci_ders.ders.ders.ects_kredisi
-            ders["Yerel Kredisi"] = ogrenci_ders.ders.ders.yerel_kredisi
-            sinavlar = Sinav.objects.filter(ders = ogrenci_ders.ders.ders)
-            for sinav in sinavlar:
-                degerlendirme = DegerlendirmeNot.objects.filter(sinav = sinav)
-                if degerlendirme.count() > 0:
-                    ders[sinav.get_tur_display()] = degerlendirme[0].puan
-                else:
-                    ders[sinav.get_tur_display()] = "Sonuçlandırılmadı"
-            dersler.append(ders)
+        output_array = []
+        for donem in donemler:
+            ogrenci_dersler = OgrenciDersi.objects.filter(
+                        ogrenci_program = ogrenci_program,
+                        donem = donem
+                        )
+            for ogrenci_ders in ogrenci_dersler:
+                tablo = []
+                ders_sinav = {}
+                sinavlar = Sinav.objects.filter(ders = ogrenci_ders.ders.ders)
+                ders_sinav["Ders"] = ogrenci_ders.ders.ders.ad
+                ders_sinav["Ects Kredisi"] = ogrenci_ders.ders.ders.ects_kredisi
+                ders_sinav["Yerel Kredisi"] = ogrenci_ders.ders.ders.yerel_kredisi
+                for sinav in sinavlar:
+                    try:
+                        degerlendirme = DegerlendirmeNot.objects.get(sinav = sinav)
+                        ders_sinav[sinav.get_tur_display()] = degerlendirme.puan
+                    except ObjectDoesNotExist:
+                        ders_sinav[sinav.get_tur_display()] = "Sonuçlandırılmadı"
+                tablo.append(ders_sinav)
+            output_array.append({
+                    "title"  : "%s Başarı Durumu"%donem.ad,
+                    "type"   : "table-multiRow",
+                    "fields" : tablo
+                })            
 
-        self.output["object"] = {
-            "title"  : "%s Başarı Durumu"%donem.ad,
-            "type"   : "table-multiRow",
-            "fields" : dersler
-        }
+        self.output["object"] = output_array
