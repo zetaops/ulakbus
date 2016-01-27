@@ -698,8 +698,8 @@ class ExportClassesToXML(Command):
     def run(self):
 
         import os
-        import datetime
         from lxml import etree
+        import datetime
         from ulakbus.models import Donem, Ogrenci, Unit, Sube
         root_directory = os.path.dirname(os.path.abspath(__file__))
         student_enrollments_doc_type = '<!DOCTYPE timetable PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseTimetable.dtd">'
@@ -737,6 +737,65 @@ class ExportClassesToXML(Command):
 
             if len(s):
                 out_file = open(export_directory + '/courseTimetableImport.xml', 'w+')
+                out_file.write("%s" % s)
+                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+            else:
+                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+        except Exception as e:
+            print e.message
+
+class ExportCorseOfferingsToXML(Command):
+    CMD_NAME = 'export_course_offerings'
+    HELP = 'Generates Unitime XML import file for timetable'
+    PARAMS = [
+
+        {'name': 'batch_size', 'type': int, 'default': 1000,
+         'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
+
+    ]
+    def run(self):
+
+        import os
+        from lxml import etree
+        import datetime
+        from ulakbus.models import Donem, Ogrenci, Unit, Sube
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        course_offerings_doc_type = '<!DOCTYPE offerings PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseOfferingExport.dtd">'
+
+        """
+        offerings Import File
+
+        """
+
+        try:
+            term = Donem.objects.filter(guncel=True)[0]
+            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+            batch_size = int(self.manager.args.batch_size)
+            count = Sube.objects.filter(donem=term).count()
+            rounds = int(count / batch_size) + 1
+            root = etree.Element('offerings', campus="%s" % uni, term="%s" % term.ad,
+                                 year="%s" % term.baslangic_tarihi.year, action="insert", incremental="true",
+                                 timeFormat="HHmm", dateFormat="yyyy/M/d")
+            for i in range(rounds):
+                for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(donem=term):
+                    lecture = sube.ders
+                    offering_elem = etree.SubElement(root, 'offering', id="%s" % sube.ad, offered="true")
+                    course_elem = etree.SubElement(offering_elem, 'course', courseNbr="%s" % lecture.kod,
+                                     subject="%s" % lecture.program.yoksis_no, controlling="true")
+                    etree.SubElement(course_elem, 'class', name="%s" % sube.ad, suffix="1", limit="%s" % sube.kontenjan,type="Rec")
+
+            # pretty string
+            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                               doctype="%s" % course_offerings_doc_type)
+            current_date = datetime.datetime.now()
+            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+
+            if not os.path.exists(export_directory):
+                os.makedirs(export_directory)
+
+            if len(s):
+                out_file = open(export_directory + '/courseOfferingsImport.xml', 'w+')
                 out_file.write("%s" % s)
                 print("Dosya %s dizini altina kayit edilmistir" % export_directory)
             else:
