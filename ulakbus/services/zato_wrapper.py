@@ -32,6 +32,7 @@ Example:
 from ulakbus import settings
 import requests
 import json
+from zato_url_paths import service_url_paths
 
 
 class ZatoService(object):
@@ -121,7 +122,6 @@ class ZatoService(object):
                             % r.status_code)
 
 
-
 class TcknService(ZatoService):
 
     @staticmethod
@@ -162,15 +162,18 @@ class HitapAcikSureGetir(HitapService):
     """
     Hitap üzerinden, personelin açık süre hizmet bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-acik-sure-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapAcikSureGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -179,16 +182,19 @@ class HitapAcikSureSenkronizeEt(HitapService):
     Personelin Hitap'taki açık süre hizmet bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-acik-sure-sync', tckn=""):
+    def __init__(self, tckn=""):
 
         super(HitapAcikSureSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -208,15 +214,18 @@ class HitapAskerlikGetir(HitapService):
     """
     Hitap üzerinden, personelin askerlik bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-askerlik-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapAskerlikGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -225,16 +234,18 @@ class HitapAskerlikSenkronizeEt(HitapService):
     Personelin Hitap'taki askerlik bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-askerlik-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapAskerlikSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -254,15 +265,18 @@ class HitapBirlestirmeGetir(HitapService):
     """
     Hitap üzerinden, personelin hizmet birleştirme bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-birlestirme-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapBirlestirmeGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -271,16 +285,18 @@ class HitapBirlestirmeSenkronizeEt(HitapService):
     Personelin Hitap'taki hizmet birleştirme bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-birlestirme-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapBirlestirmeSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -300,15 +316,18 @@ class HitapBorclanmaGetir(HitapService):
     """
     Hitap üzerinden, personelin borçlanma bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-borclanma-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapBorclanmaGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -317,16 +336,18 @@ class HitapBorclanmaSenkronizeEt(HitapService):
     Personelin Hitap'taki hizmet borçlanma bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-borclanma-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapBorclanmaSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -346,15 +367,18 @@ class HitapHizmetCetveliGetir(HitapService):
     """
     Hitap üzerinden, personelin hizmet kaydı bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-cetveli-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapHizmetCetveliGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -363,16 +387,18 @@ class HitapHizmetCetveliSenkronizeEt(HitapService):
     Personelin Hitap'taki hizmet kaydı bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-cetveli-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapHizmetCetveliSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -393,15 +419,18 @@ class HitapIHSGetir(HitapService):
     Hitap üzerinden, personelin itibari hizmet süresi zammı
     bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-ihs-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapIHSGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -410,16 +439,18 @@ class HitapIHSSenkronizeEt(HitapService):
     Personelin Hitap'taki itibari hizmet süresi zammı bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-ihs-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapIHSSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -440,15 +471,18 @@ class HitapIstisnaiIlgiGetir(HitapService):
     Hitap üzerinden, personelin istisnai ilgi
     bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-istisnai-ilgi-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapIstisnaiIlgiGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -457,16 +491,18 @@ class HitapIstisnaiIlgiSenkronizeEt(HitapService):
     Personelin Hitap'taki istisnai ilgi bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-istisnai-ilgi-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapIstisnaiIlgiSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -486,15 +522,18 @@ class HitapKursGetir(HitapService):
     """
     Hitap üzerinden, personelin kurs bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-kurs-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapKursGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -503,16 +542,18 @@ class HitapKursSenkronizeEt(HitapService):
     Personelin Hitap'taki kurs bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-kurs-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapKursSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -532,15 +573,18 @@ class HitapMahkemeGetir(HitapService):
     """
     Hitap üzerinden, personelin mahkeme bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-mahkeme-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapMahkemeGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -549,16 +593,18 @@ class HitapMahkemeSenkronizeEt(HitapService):
     Personelin Hitap'taki mahkeme bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-mahkeme-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapMahkemeSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -578,15 +624,18 @@ class HitapNufusGetir(HitapService):
     """
     Hitap üzerinden, personelin nüfus bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-nufus-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapNufusGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -595,16 +644,18 @@ class HitapNufusSenkronizeEt(HitapService):
     Personelin Hitap'taki nüfus bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-nufus-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapNufusSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -624,15 +675,18 @@ class HitapOkulGetir(HitapService):
     """
     Hitap üzerinden, personelin okul bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-okul-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapOkulGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -641,16 +695,18 @@ class HitapOkulSenkronizeEt(HitapService):
     Personelin Hitap'taki okul bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-okul-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapOkulSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -670,15 +726,18 @@ class HitapTazminatGetir(HitapService):
     """
     Hitap üzerinden, personelin tazminat bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-tazminat-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapTazminatGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -687,16 +746,18 @@ class HitapTazminatSenkronizeEt(HitapService):
     Personelin Hitap'taki tazminat bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-tazminat-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapTazminatSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -716,15 +777,18 @@ class HitapUnvanGetir(HitapService):
     """
     Hitap üzerinden, personelin ünvan bilgilerini sorgular.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-unvan-getir', tckn=""):
+    def __init__(self, tckn=""):
         super(HitapUnvanGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -733,16 +797,18 @@ class HitapUnvanSenkronizeEt(HitapService):
     Personelin Hitap'taki ünvan bilgilerinin,
     yereldeki kayıtlarla senkronizasyonunu yapar.
 
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
     Attributes:
         service_uri (str): İlgili Hitap servisinin adı
         payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='hizmet-unvan-sync', tckn=""):
-
+    def __init__(self, tckn=""):
         super(HitapUnvanSenkronizeEt, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
@@ -760,68 +826,37 @@ class HitapUnvanSil(HitapService):
 
 class MernisKimlikBilgileriGetir(TcknService):
     """
+    Personelin Mernis Kimlik bilgilerini sorgular.
 
-    This service takes tckn as string, consume "mernis kimlik bilgileri getir" of hitap services
-    and sync local data on riak.
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
 
-    Example
-    ::
-
-        from zato_wrapper_class import MernisKimlikBilgileriGetir
-        zs = MernisKimlikBilgileriGetir(tckn="12345678900")
-        response = zs.zato_request()
-
-        response: dict containing identity information as key value pairs
+    Attributes:
+        service_uri (str): İlgili servisin adı
+        payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='mernis-kimlik-bilgileri-getir-tckn', tckn=""):
-        """
-
-        Takes two parameters service_uri and tckn
-
-        :param service_uri: service name on zato, default is hizmet-cetvel
-        :type service_uri: str
-
-        :param tckn: string of 11 byte length, can not be empty
-        :type tckn: str
-
-        """
+    def __init__(self, tckn=""):
         super(MernisKimlikBilgileriGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
 class KPSAdresBilgileriGetir(TcknService):
     """
+    Personelin KPS Adres bilgilerini sorgular.
 
-    This service takes tckn as string, consume "mernis kimlik bilgileri getir" of hitap services
-    and sync local data on riak.
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
 
-    Example
-    ::
-
-        from zato_wrapper_class import MernisKimlikBilgileriGetir
-        zs = MernisKimlikBilgileriGetir(tckn="12345678900")
-        response = zs.zato_request()
-
-        response: dict containing identity information as key value pairs
+    Attributes:
+        service_uri (str): İlgili servisin adı
+        payload (str): Servis verisi
 
     """
 
-    def __init__(self, service_uri='kps-adres-bilgileri-getir-tckn', tckn=""):
-        """
-
-        Takes two parameters service_uri and tckn
-
-        :param service_uri: service name on zato, default is hizmet-cetvel
-        :type service_uri: str
-
-        :param tckn: string of 11 byte length, can not be empty
-        :type tckn: str
-
-        """
+    def __init__(self, tckn=""):
         super(KPSAdresBilgileriGetir, self).__init__()
-        self.service_uri = service_uri
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
-
