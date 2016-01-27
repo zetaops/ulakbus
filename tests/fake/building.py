@@ -1,7 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -16,6 +13,11 @@ __author__ = 'Halil İbrahim Yılmaz'
 
 
 def yeni_bina():
+    """
+    Rastgele verileri kullanarak yeni bina kaydı oluşturup kaydeder.
+
+    """
+
     uni = Unit.objects.filter(parent_unit_no=0)[0]
     campus = Campus.objects.filter()[0]
     faculty_list = Unit.objects.filter(parent_unit_no=uni.yoksis_no)
@@ -35,6 +37,17 @@ def yeni_bina():
 
 
 def yeni_derslik(building,parent_unit_no,count=1):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri kullanarak
+    yeni derslik kaydı oluştururup kaydeder.
+
+    Args:
+        building (Building): Bina
+        parent_unit_no (int): Birim no
+        count (int): Oluşturulacak dersliğin sayısı
+
+    """
+
     unit_list = Unit.objects.filter(parent_unit_no=parent_unit_no,unit_type="Bölüm")
     for i in range(1, count):
         room = Room(
