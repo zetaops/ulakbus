@@ -1,14 +1,12 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
+#
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models.auth import Unit
-from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav,\
+from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav, \
     OgrenciProgram, OgrenciDersi, DersKatilimi, Borc, DegerlendirmeNot
 from ulakbus.models.personel import Personel
 from .general import ints, gender, marital_status, blood_type, driver_license_class, id_card_serial, birth_date
@@ -19,6 +17,18 @@ import datetime
 
 
 def yeni_personel(personel_turu=1):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri kullanarak
+    yeni personel kaydı oluştururup kaydeder.
+
+    Args:
+        personel_turu (Personel): Personel türü
+
+    Returns:
+        Personel: Yeni personel kaydını
+
+    """
+
     p = Personel()
     p.tckn = ints(length=11)
     p.ad = fake.first_name()
@@ -54,7 +64,7 @@ def yeni_personel(personel_turu=1):
     p.dogum_tarihi = birth_date(student=False)
     p.dogum_yeri = fake.state()
     p.medeni_hali = random.choice(['1', '2'])
-    p.hizmet_sinifi = random.choice(range(1,30))
+    p.hizmet_sinifi = random.choice(range(1, 30))
 
     username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
     user = new_user(username=username)
@@ -65,6 +75,18 @@ def yeni_personel(personel_turu=1):
 
 
 def yeni_okutman(personel):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri kullanarak
+    yeni okutman kaydı oluştururup kaydeder.
+
+    Args:
+        personel (Personel): Personel
+
+    Returns:
+        Okutman: Yeni okutman kaydını
+
+    """
+
     o = Okutman()
     o.ad = fake.first_name()
     o.soyad = fake.last_name()
@@ -81,6 +103,14 @@ def yeni_okutman(personel):
 
 
 def yeni_ogrenci():
+    """
+    Rastgele veriler kullanarak yeni öğrenci kaydı oluştururup kaydeder.
+
+    Returns:
+        Ogrenci: Yeni öğrenci kaydını
+
+    """
+
     o = Ogrenci()
     o.tckn = ints(length=11)
     o.ad = fake.first_name()
@@ -111,6 +141,14 @@ def yeni_ogrenci():
 
 
 def yeni_donem():
+    """
+    Rastgele veriler kullanarak yeni dönem kaydı oluştururup kaydeder.
+
+    Returns:
+        Donem: Yeni dönem kaydını
+
+    """
+
     d = Donem()
     d.ad = random.choice(["Güz", "Güz", "Bahar", "Bahar", "Yaz"])
     d.baslangic_tarihi = datetime.datetime(random.randint(2015, 2017),
@@ -124,6 +162,18 @@ def yeni_donem():
 
 
 def yeni_program(yoksis_program):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri
+    kullanarak yeni program kaydı oluşturur ve kaydeder.
+
+    Args:
+        yoksis_program (Unit): Yöksis programı
+
+    Returns:
+        Program: Yeni program kaydını
+
+    """
+
     bolum = Unit.objects.filter(yoksis_no=yoksis_program.parent_unit_no)[0]
 
     p = Program()
@@ -140,6 +190,19 @@ def yeni_program(yoksis_program):
 
 
 def yeni_ders(program, personel):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri
+    kullanarak yeni ders kaydı oluştururup kaydeder.
+
+    Args:
+        program (Program): Program
+        personel (Personel): Personel
+
+    Returns:
+        Ders: Yeni ders kaydını
+
+    """
+
     d = Ders()
     d.ad = fake.lecture()
     d.ders_dili = random.choice(["Turkce", "Turkce", "Turkce", "Ingilizce"])
@@ -153,6 +216,19 @@ def yeni_ders(program, personel):
 
 
 def yeni_sube(ders, okutman):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri
+    kullanarak yeni şube kaydı oluştururup kaydeder.
+
+    Args:
+        ders (Ders): Ders
+        okutman (Okutman): Okutman
+
+    Returns:
+        Sube: Yeni şube kaydını
+
+    """
+
     s = Sube()
     s.ad = fake.classroom_code()
     s.kontenjan = random.randint(1, 500)
@@ -166,11 +242,23 @@ def yeni_sube(ders, okutman):
 
 
 def yeni_sinav(sube):
+    """
+    Rastgele verileri ve parametre olarak verilen veriyi
+    kullanarak yeni sınav kaydı oluştururup kaydeder.
+
+    Args:
+        sube (Sube): Şube
+
+    Returns:
+        Sinav: Yeni sınavı kaydını
+
+    """
+
     s = Sinav()
     d = sube.donem
     s.tarih = d.baslangic_tarihi + \
               datetime.timedelta(
-                      random.randint(1, (d.bitis_tarihi - d.baslangic_tarihi).days))
+                  random.randint(1, (d.bitis_tarihi - d.baslangic_tarihi).days))
     s.yapilacagi_yer = sube.ad
     s.tur = random.randint(1, 7)
     s.sube = sube
@@ -181,6 +269,20 @@ def yeni_sinav(sube):
 
 
 def yeni_ogrenci_program(ogrenci, program, personel):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri
+    kullanarak yeni öğrenci programı kaydı oluştururup kaydeder.
+
+    Args:
+        ogrenci (Ogrenci): Öğrenci
+        personel (Personel): Personel
+        program (Program): Program
+
+    Returns:
+        OgrenciProgram: Yeni öğrenci program kaydını
+
+    """
+
     op = OgrenciProgram()
     op.ogrenci_no = str(ints(11))
     op.giris_tarihi = datetime.datetime(int(program.yil), 10, 1)
@@ -193,6 +295,19 @@ def yeni_ogrenci_program(ogrenci, program, personel):
 
 
 def yeni_ogrenci_dersi(sube, ogrenci_program):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri
+    kullanarak öğrenci ders kaydı oluştururup kaydeder.
+
+    Args:
+        sube (Sube): Şube
+        ogrenci_program (OgrenciProgram): Öğrenci Programı
+
+    Returns:
+        OgrenciDersi: Yeni öğrenci ders kaydını
+
+    """
+
     od = OgrenciDersi()
     od.alis_bicimi = random.choice([1, 2])
     od.ders = sube
@@ -203,6 +318,20 @@ def yeni_ogrenci_dersi(sube, ogrenci_program):
 
 
 def yeni_ders_katilimi(sube, ogrenci, okutman):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri
+    kullanarak yeni ders katılım kaydı oluştururup kaydeder.
+
+    Args:
+        sube (Sube): Şube
+        ogrenci (Ogrenci): Öğrenci
+        okutman (Okutman): Okutman
+
+    Returns:
+        DersKatilimi: Yeni ders katılım kaydını
+
+    """
+
     dk = DersKatilimi()
     dk.katilim_durumu = float(random.randint(50, 100))
     dk.ders = sube
@@ -214,6 +343,19 @@ def yeni_ders_katilimi(sube, ogrenci, okutman):
 
 
 def yeni_degerlendirme_notu(sinav, ogrenci):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri
+    kullanarak yeni değerlendirme notu kaydı oluşturup kaydeder.
+
+    Args:
+        sinav (Sinav): Sınav
+        ogrenci (Ogrenci): Öğrenci
+
+    Returns:
+        DegerlendirmeNot: Yeni değerlendirme notu kaydını
+
+    """
+
     dn = DegerlendirmeNot()
     dn.puan = random.randint(0, 100)
     dn.yil = str(sinav.tarih.year)
@@ -228,6 +370,19 @@ def yeni_degerlendirme_notu(sinav, ogrenci):
 
 
 def yeni_borc(ogrenci, donem):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri
+    kullanarak yeni borç kaydı oluştururup kaydeder.
+
+    Args:
+        ogrenci (Ogrenci): Öğrenci
+        donem (Donem): Dönem
+
+    Returns:
+        Borc: Yeni borç kaydını
+
+    """
+
     b = Borc()
     b.miktar = random.randint(100, 999)
     b.para_birimi = random.choice([1, 1, 1, 2, 3])
@@ -244,9 +399,25 @@ def yeni_borc(ogrenci, donem):
 
 
 def fake_data(personel_say=20, okutman_say=10, program_say=5, ders_say=5, sube_say=3, sinav_say=2, ogrenci_say=10):
+    """
+    Rastgele verileri ve parametre olarak verilen verileri kullanarak
+    yeni okutman, program, ders, şube, sınav, borc ve ders katılımı kayıtları
+    oluştururup kaydeder.
+
+    Args:
+        personel_say (int): Personel sayısı
+        okutman_say (int): Okutman sayısı
+        program_say (int): Program sayısı
+        ders_say (int): Ders sayısı
+        sube_say (int): Şube sayısı
+        sinav_say (int): Sınav sayısı
+        ogrenci_say (int): Öğrenci sayısı
+
+    """
+
     personel_list = [yeni_personel() for p in range(personel_say)]
 
-    # okutman olmayan personellerden okutman olustur
+    # okutman olmayan personellerden okutman olustur.
     okutman_list = []
     for prs in random.sample(personel_list, okutman_say):
         okutman = yeni_okutman(prs)
