@@ -1,7 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -17,6 +14,11 @@ __author__ = 'Halil İbrahim Yılmaz'
 
 
 def yeni_personel():
+    """
+    Rastgele verileri kullanarak yeni personel kaydı oluştururup kaydeder.
+
+    """
+
     p = Personel()
     p.tckn = ints(length=11)
     p.ad = fake.first_name()
