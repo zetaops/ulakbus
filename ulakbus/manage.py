@@ -802,6 +802,64 @@ class ExportCorseOfferingsToXML(Command):
                 print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
         except Exception as e:
             print e.message
+            
+class ExportClassesToXML(Command):
+    CMD_NAME = 'export_classes'
+    HELP = 'Generates Unitime XML import file for timetable'
+    PARAMS = [
+
+        {'name': 'batch_size', 'type': int, 'default': 1000,
+         'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
+
+    ]
+    def run(self):
+
+        import os
+        import datetime
+        from lxml import etree
+        from ulakbus.models import Donem, Ogrenci, Unit, Sube
+        root_directory = os.path.dirname(os.path.abspath(__file__))
+        student_enrollments_doc_type = '<!DOCTYPE timetable PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseTimetable.dtd">'
+
+        """
+        courseTimetableImport Import File
+
+        """
+
+        try:
+            term = Donem.objects.filter(guncel=True)[0]
+            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+            batch_size = int(self.manager.args.batch_size)
+            count = Sube.objects.filter(donem=term).count()
+            rounds = int(count / batch_size) + 1
+            root = etree.Element('timetable', campus="%s" % uni, term="%s" % term.ad,
+                                 year="%s" % term.baslangic_tarihi.year, action="insert", instructors="false",
+                                 notes="false", prefer="id", timeFormat="HHmm", dateFormat="yyyy/M/d")
+
+            for i in range(rounds):
+                for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(donem=term):
+                    lecture = sube.ders
+                    etree.SubElement(root, 'class', name="%s" % sube.ad,
+                                     courseNbr="%s" % lecture.kod, subject="%s" % lecture.program.yoksis_no,
+                                     type="Lec")
+            # pretty string
+            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                               doctype="%s" % student_enrollments_doc_type)
+            current_date = datetime.datetime.now()
+            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
+            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
+
+            if not os.path.exists(export_directory):
+                os.makedirs(export_directory)
+
+            if len(s):
+                out_file = open(export_directory + '/courseTimetableImport.xml', 'w+')
+                out_file.write("%s" % s)
+                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+            else:
+                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+        except Exception as e:
+            print e.message
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
