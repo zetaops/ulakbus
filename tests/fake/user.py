@@ -11,7 +11,6 @@ from .general import fake
 
 __author__ = 'Ali Riza Keles'
 
-
 def new_user(username=None, password=None, superuser=False):
     user = User(
             username=username or fake.user_name(),
