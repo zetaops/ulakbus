@@ -20,6 +20,7 @@ from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, DegerlendirmeNot
+from ulakbus.models.ogrenci import Donem, OgrenciDersi, Sinav
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -256,11 +257,55 @@ def ogrenci_bilgileri(current):
         }
     ]
 
-def program_ata(self):
-    ogrenci = Ogrenci.objects.get(user = self.current.user)
-    ogrenci_program = OgrenciProgram.objects.filter(ogrenci = ogrenci)
-    current.task_data["ogrenci_program_key"] = ogrenci_program[0].key
+def prepare_choices_for_model(model, **kwargs):
+    """Model için Seçenekler Hazırla
+
+    Args:
+        model: Model
+        **kwargs: Keyword argümanları
+
+    Returns:
+        Keyword argümanlara göre filtrelenmiş modelin,
+        key ve __unicode__ method değerlerini
+
+    """
+
+    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
 
 class BasariDurum(CrudView):
     class Meta:
-        model = "OgrenciProgram"        
+        model = "OgrenciProgram"
+
+    def program_ata(self):
+        ogrenci = Ogrenci.objects.get(user = self.current.user)
+        ogrenci_program = OgrenciProgram.objects.filter(ogrenci = ogrenci)
+        self.current.task_data["ogrenci_program_key"] = ogrenci_program[0].key
+
+    def not_durum(self):
+        self.current.output['client_cmd'] = ['show', ]
+        donem = Donem.objects.get(guncel = True)
+        ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_key"])
+        ogrenci_dersler = OgrenciDersi.objects.filter(
+                    ogrenci_program = ogrenci_program,
+                    donem = donem
+                    )
+        dersler = []
+        for ogrenci_ders in ogrenci_dersler:
+            ders = OrderedDict({})
+            ders["Ders"] = ogrenci_ders.ders.ders.ad
+            ders["Ects Kredisi"] = ogrenci_ders.ders.ders.ects_kredisi
+            ders["Yerel Kredisi"] = ogrenci_ders.ders.ders.yerel_kredisi
+            sinavlar = Sinav.objects.filter(ders = ogrenci_ders.ders.ders)
+            for sinav in sinavlar:
+                degerlendirme = DegerlendirmeNot.objects.filter(sinav = sinav)
+                if degerlendirme.count() > 0:
+                    ders[sinav.get_tur_display()] = degerlendirme[0].puan
+                else:
+                    ders[sinav.get_tur_display()] = "Sonuçlandırılmadı"
+            dersler.append(ders)
+
+        self.output["object"] = {
+            "title"  : "%s Başarı Durumu"%donem.ad,
+            "type"   : "table-multiRow",
+            "fields" : dersler
+        }
