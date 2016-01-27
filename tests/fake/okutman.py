@@ -1,7 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -19,6 +16,11 @@ __author__ = 'Halil İbrahim Yılmaz'
 
 
 def yeni_okutman():
+    """
+    Rastgele verileri kullanarak yeni okutman kaydı oluşturup ve kaydeder.
+
+    """
+
     personel_list = Personel.objects.filter(unvan=1)
     random_personel = personel_list[randint(0, len(personel_list) - 1)]
     program_list = Unit.objects.filter(unit_type='Program')
