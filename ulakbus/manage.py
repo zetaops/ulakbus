@@ -685,7 +685,7 @@ class ExportStudentEnrollmentsToXML(Command):
                 print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
         except Exception as e:
             print e.message
-            
+
 class ExportClassesToXML(Command):
     CMD_NAME = 'export_classes'
     HELP = 'Generates Unitime XML import file for timetable'
