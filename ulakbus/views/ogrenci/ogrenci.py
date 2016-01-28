@@ -258,20 +258,6 @@ def ogrenci_bilgileri(current):
         }
     ]
 
-def prepare_choices_for_model(model, **kwargs):
-    """Model için Seçenekler Hazırla
-
-    Args:
-        model: Model
-        **kwargs: Keyword argümanları
-
-    Returns:
-        Keyword argümanlara göre filtrelenmiş modelin,
-        key ve __unicode__ method değerlerini
-
-    """
-
-    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
 
 class BasariDurum(CrudView):
     class Meta:
@@ -313,3 +299,11 @@ class BasariDurum(CrudView):
                 })            
 
         self.output["object"] = output_array
+=======
+        self.current.ogrenci_program = ogrenci_program[0]
+
+    def not_durum(self):
+        self.current.output['object'] = []
+        ogrenci = Ogrenci.objects.get(user = self.current.user)
+        donem = Donem.objects.get(guncel = True)
+>>>>>>> a22d0eab819737a793048abb1af663885cdf9e0a
