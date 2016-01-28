@@ -16,7 +16,7 @@ class TestCase(BaseTestCase):
 
     def test_list_add_delete_with_employee_model(self):
         """
-        Personel  modelini listele,ekleme ve silme işlemleri ile test eder.
+        Personel  modelini listele, ekleme ve silme işlemleri ile test eder.
 
         """
 

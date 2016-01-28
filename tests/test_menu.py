@@ -20,8 +20,8 @@ class TestCase(BaseTestCase):
 
     def test_authorized_in_menu(self):
         """
-        Yetkili kullanıcının menu'ye erişiminin doğru bi şekilde olup olmadığını
-        test eder.
+        Yetkili kullanıcının menuye erişiminin doğru bir şekilde olup
+        olmadığını test eder.
 
         """
 
@@ -36,24 +36,30 @@ class TestCase(BaseTestCase):
         # Kullanıcının izin değişikliklerini görmesi için çıkış yaptırılır.
         self.client.set_path('/logout')
         self.client.post()
+
         # Yeni kullanıcı yaratmadan, varolan kullanıcıya direkt login yaptırılır.
         self.prepare_client('/menu', login=True)
         resp = self.client.post()
         resp.raw()
         lst = ['other', 'personel', 'ogrenci', 'quick_menu', 'current_user']
+
         # lst elemanlarını, sunucudan dönen cevapta var olup olmadığını test eder.
         assert set(lst).issubset(resp.json.keys())
+
         for key in lst:
             for value in resp.json[key]:
                 try:
                     assert set(value.keys()).issubset(
-                        {'kategori', 'param', 'text', 'url', 'wf', 'model'})
+                            {'kategori', 'param', 'text', 'url', 'wf', 'model'})
                 except AttributeError:
-                    assert value in ['username', 'surname', 'name', 'roles', 'is_staff', 'role', 'avatar',
+                    assert value in ['username', 'surname', 'name', 'roles', 'is_staff', 'role',
+                                     'avatar',
                                      'is_student'], 'The %s is not in the given list ' % value
         # Kullanıcı adı baz alınarak veritabanından kullanıcı seçilir.
         usr = User.objects.get(username=username)
-        # Kullanıcının bilgilerini, sunucudan dönen kullanıcı bilgileriyle eşleşip eşleşmediğini test eder.
+
+        # Kullanıcının bilgilerini, sunucudan dönen kullanıcı bilgileriyle
+        # eşleşip eşleşmediğini test eder.
         assert resp.json['current_user']['name'] == usr.name
         assert resp.json['current_user']['surname'] == usr.surname
         assert resp.json['current_user']['username'] == usr.username
@@ -63,10 +69,13 @@ class TestCase(BaseTestCase):
         Yetkili olmayan kullanıcının menu'ye erişememe durumunu test eder.
 
         """
+
         # Kullanıcıya çıkış yaptırılır.
         self.client.set_path('/logout')
         self.client.post()
-        # Yetkili olmayan kişi menu'ye erişmek istediğinde beklenen HTTPUnauthorized hatasını yükseltir.
+
+        # Yetkili olmayan kişi menu'ye erişmek istediğinde beklenen
+        # HTTPUnauthorized hatasını yükseltir.
         with pytest.raises(falcon.errors.HTTPUnauthorized):
             self.prepare_client('/menu')
             self.client.post()
