@@ -21,7 +21,7 @@ def ints(length=1):
 
 
     Returns:
-        int: Rastgele üretilen sayıyı
+        int: Rastgele üretilen sayı
 
     """
 
@@ -34,7 +34,7 @@ def ints(length=1):
 def gender():
     """
     Returns:
-        int: Cinsiyeti
+        int: Cinsiyet
 
     """
 
@@ -49,7 +49,7 @@ def marital_status(student=False):
 
 
     Returns:
-        int: Medeni hali
+        int: Öğrencinin medeni hali
 
 
     """
@@ -65,7 +65,7 @@ def marital_status(student=False):
 def blood_type():
     """
     Returns:
-        str: Kan grubunu
+        str: Kan grubu
 
     """
 
@@ -76,7 +76,7 @@ def blood_type():
 def driver_license_class():
     """
     Returns:
-        str: Sürücü belgesi sınıfını
+        str: Sürücü belgesi sınıfı
 
     """
 
@@ -87,7 +87,7 @@ def driver_license_class():
 def id_card_serial():
     """
     Returns:
-        int: Rastgele oluşturulmuş T.C kimlik no'yu
+        int: Rastgele oluşturulmuş T.C kimlik no
 
     """
 
@@ -102,7 +102,7 @@ def birth_date(student=False):
 
 
     Returns:
-        datetime: Doğum tarihini
+        datetime: Doğum tarihi
 
     """
 
@@ -115,7 +115,7 @@ def create_fake_geo_data():
     # TODO generate lat,long that releated with fake.city() / fake.state() methods
     """
     Returns:
-        float: Rastgele oluşturulmuş konum bilgilerini
+        float: Rastgele oluşturulmuş konum bilgileri
 
     """
 
