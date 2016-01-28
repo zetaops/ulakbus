@@ -55,6 +55,7 @@ class TestCase(BaseTestCase):
                     assert value in ['username', 'surname', 'name', 'roles', 'is_staff', 'role',
                                      'avatar',
                                      'is_student'], 'The %s is not in the given list ' % value
+
         # Kullanıcı adı baz alınarak veritabanından kullanıcı seçilir.
         usr = User.objects.get(username=username)
 
