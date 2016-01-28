@@ -299,11 +299,4 @@ class BasariDurum(CrudView):
                 })            
 
         self.output["object"] = output_array
-=======
         self.current.ogrenci_program = ogrenci_program[0]
-
-    def not_durum(self):
-        self.current.output['object'] = []
-        ogrenci = Ogrenci.objects.get(user = self.current.user)
-        donem = Donem.objects.get(guncel = True)
->>>>>>> a22d0eab819737a793048abb1af663885cdf9e0a
