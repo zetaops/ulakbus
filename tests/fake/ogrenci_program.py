@@ -18,14 +18,14 @@ import datetime
 
 def yeni_personel(personel_turu=1):
     """
-    Rastgele verileri ve parametre olarak verilen verileri kullanarak
+    Rastgele verileri ve parametre olarak verilen veriyi kullanarak
     yeni personel kaydı oluştururup kaydeder.
 
     Args:
         personel_turu (Personel): Personel türü
 
     Returns:
-        Personel: Yeni personel kaydını
+        Personel: Yeni personel kaydı
 
     """
 
@@ -76,14 +76,14 @@ def yeni_personel(personel_turu=1):
 
 def yeni_okutman(personel):
     """
-    Rastgele verileri ve parametre olarak verilen verileri kullanarak
+    Rastgele verileri ve parametre olarak verilen veriyi kullanarak
     yeni okutman kaydı oluştururup kaydeder.
 
     Args:
-        personel (Personel): Personel
+        personel (Personel): Personel nesnesi
 
     Returns:
-        Okutman: Yeni okutman kaydını
+        Okutman: Yeni okutman kaydı
 
     """
 
@@ -107,7 +107,7 @@ def yeni_ogrenci():
     Rastgele veriler kullanarak yeni öğrenci kaydı oluştururup kaydeder.
 
     Returns:
-        Ogrenci: Yeni öğrenci kaydını
+        Ogrenci: Yeni öğrenci kaydı
 
     """
 
@@ -145,7 +145,7 @@ def yeni_donem():
     Rastgele veriler kullanarak yeni dönem kaydı oluştururup kaydeder.
 
     Returns:
-        Donem: Yeni dönem kaydını
+        Donem: Yeni dönem kaydı
 
     """
 
@@ -163,14 +163,14 @@ def yeni_donem():
 
 def yeni_program(yoksis_program):
     """
-    Rastgele verileri ve parametre olarak verilen verileri
+    Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni program kaydı oluşturur ve kaydeder.
 
     Args:
         yoksis_program (Unit): Yöksis programı
 
     Returns:
-        Program: Yeni program kaydını
+        Program: Yeni program kaydı
 
     """
 
@@ -191,15 +191,15 @@ def yeni_program(yoksis_program):
 
 def yeni_ders(program, personel):
     """
-    Rastgele verileri ve parametre olarak verilen verileri
+    Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni ders kaydı oluştururup kaydeder.
 
     Args:
-        program (Program): Program
-        personel (Personel): Personel
+        program (Program): Program nesnesi
+        personel (Personel): Personel nesnesi
 
     Returns:
-        Ders: Yeni ders kaydını
+        Ders: Yeni ders kaydı
 
     """
 
@@ -217,15 +217,15 @@ def yeni_ders(program, personel):
 
 def yeni_sube(ders, okutman):
     """
-    Rastgele verileri ve parametre olarak verilen verileri
+    Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni şube kaydı oluştururup kaydeder.
 
     Args:
-        ders (Ders): Ders
-        okutman (Okutman): Okutman
+        ders (Ders): Ders nesnesi
+        okutman (Okutman): Okutman nesnesi
 
     Returns:
-        Sube: Yeni şube kaydını
+        Sube: Yeni şube kaydı
 
     """
 
@@ -247,10 +247,10 @@ def yeni_sinav(sube):
     kullanarak yeni sınav kaydı oluştururup kaydeder.
 
     Args:
-        sube (Sube): Şube
+        sube (Sube): Şube nesnesi
 
     Returns:
-        Sinav: Yeni sınavı kaydını
+        Sinav: Yeni sınavı kaydı nesnesi
 
     """
 
@@ -274,12 +274,12 @@ def yeni_ogrenci_program(ogrenci, program, personel):
     kullanarak yeni öğrenci programı kaydı oluştururup kaydeder.
 
     Args:
-        ogrenci (Ogrenci): Öğrenci
-        personel (Personel): Personel
-        program (Program): Program
+        ogrenci (Ogrenci): Öğrenci nesnesi
+        personel (Personel): Personel nesnesi
+        program (Program): Program nesnesi
 
     Returns:
-        OgrenciProgram: Yeni öğrenci program kaydını
+        OgrenciProgram: Yeni öğrenci program kaydı
 
     """
 
@@ -300,11 +300,11 @@ def yeni_ogrenci_dersi(sube, ogrenci_program):
     kullanarak öğrenci ders kaydı oluştururup kaydeder.
 
     Args:
-        sube (Sube): Şube
-        ogrenci_program (OgrenciProgram): Öğrenci Programı
+        sube (Sube): Şube nesnesi
+        ogrenci_program (OgrenciProgram): Öğrenci Programı nesnesi
 
     Returns:
-        OgrenciDersi: Yeni öğrenci ders kaydını
+        OgrenciDersi: Yeni öğrenci ders kaydı
 
     """
 
@@ -324,11 +324,11 @@ def yeni_ders_katilimi(sube, ogrenci, okutman):
 
     Args:
         sube (Sube): Şube
-        ogrenci (Ogrenci): Öğrenci
-        okutman (Okutman): Okutman
+        ogrenci (Ogrenci): Öğrenci nesnesi
+        okutman (Okutman): Okutman nesnesi
 
     Returns:
-        DersKatilimi: Yeni ders katılım kaydını
+        DersKatilimi: Yeni ders katılım kaydı
 
     """
 
@@ -348,11 +348,11 @@ def yeni_degerlendirme_notu(sinav, ogrenci):
     kullanarak yeni değerlendirme notu kaydı oluşturup kaydeder.
 
     Args:
-        sinav (Sinav): Sınav
-        ogrenci (Ogrenci): Öğrenci
+        sinav (Sinav): Sınav nesnesi
+        ogrenci (Ogrenci): Öğrenci nesnesi
 
     Returns:
-        DegerlendirmeNot: Yeni değerlendirme notu kaydını
+        DegerlendirmeNot: Yeni değerlendirme notu kaydı
 
     """
 
@@ -375,11 +375,11 @@ def yeni_borc(ogrenci, donem):
     kullanarak yeni borç kaydı oluştururup kaydeder.
 
     Args:
-        ogrenci (Ogrenci): Öğrenci
-        donem (Donem): Dönem
+        ogrenci (Ogrenci): Öğrenci nesnesi
+        donem (Donem): Dönem nesnesi
 
     Returns:
-        Borc: Yeni borç kaydını
+        Borc: Yeni borç kaydı
 
     """
 
