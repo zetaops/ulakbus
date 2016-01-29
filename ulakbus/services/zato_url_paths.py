@@ -5,6 +5,13 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+"""Zato Servis URL Paths
+
+Zato servislerine erişmek için kullanacağımız url pathlerden
+oluşan sözlük.
+
+"""
+
 service_url_paths = {
     "HitapAcikSureGetir": {"url": "hizmet-acik-sure-getir"},
     "HitapAcikSureSenkronizeEt": {"url": "hizmet-acik-sure-sync"},
