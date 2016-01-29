@@ -51,7 +51,7 @@ master_doc = 'ulakbus'
 
 # General information about the project.
 project = u'Ulakbus API Documentation'
-copyright = u'2016, Zetaops'
+copyright = u'2015-2016, Tübitak Ulakbim'
 author = u'Zetaops'
 
 # The version info for the project you're documenting, acts as replacement for
