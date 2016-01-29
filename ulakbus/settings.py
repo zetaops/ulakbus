@@ -163,3 +163,7 @@ QUICK_MENU = [
 MAX_NUM_DROPDOWN_LINKED_MODELS = 20
 
 PERMISSION_PROVIDER = 'ulakbus.models.auth.ulakbus_permissions'
+
+
+ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabilir." \
+                    "Şimdi bunlardan birini görüyorsunuz. Lütfen daha sonra tekrar deneyiniz"
