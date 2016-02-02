@@ -714,7 +714,7 @@ class ExportStudentEnrollmentsToXML(Command):
             else:
                 print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
         except Exception as e:
-            print e.message
+            print(e.message)
 
 
 class ExportClassesToXML(Command):
@@ -778,7 +778,7 @@ class ExportClassesToXML(Command):
             else:
                 print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
         except Exception as e:
-            print e.message
+            print(e.message)
 
 
 class ExportCorseOfferingsToXML(Command):
@@ -845,7 +845,7 @@ class ExportCorseOfferingsToXML(Command):
             else:
                 print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
         except Exception as e:
-            print e.message
+            print(e.message)
 
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
