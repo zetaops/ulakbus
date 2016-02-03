@@ -48,9 +48,9 @@ class OnKayitForm(forms.JsonForm):
                    'emeklilik_durumu', 'kiz_kardes_sayisi', 'erkek_kardes_sayisi',
                    'ogrenim_goren_kardes_sayisi', 'burs_kredi_no', 'aile_tel', 'aile_gsm',
                    'aile_adres', 'ozur_durumu', 'ozur_oran']
-    
+
     kaydet_buton = fields.Button("Kaydet", cmd="kaydet")
-    
+
 class OnKayit(CrudView):
     class Meta:
         model = "Ogrenci"
@@ -80,4 +80,3 @@ class KayitBelgeler(CrudView):
         ogrenci_program = OgrenciProgram.objects.get(ogrenci = ogrenci, durum = 1)
         ogrenci_program.durum = 2
         ogrenci_program.save()
-        print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

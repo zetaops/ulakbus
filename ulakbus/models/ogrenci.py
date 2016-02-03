@@ -371,11 +371,9 @@ class OgrenciProgram(Model):
         verbose_name_plural = "Öğrenci Programları"
 
     class Belgeler(ListNode):
-        diploma = field.Boolean("Mezun olunan ortaöğretim kurumundan alınan diplomanın aslı veya yeni tarihli mezuniyet belgesi", index=True)
-        fotograf = field.Boolean("Son 6 ay içinde önden çekilmiş 12 adet 4,5 cm X 6 cm boyutunda vesikalık fotoğraf",index=True)
-        dekont = field.Boolean("Harcın ödendiğini gösteren banka dekontu (2. Öğretim Öğrencileri İçin)", index=True)
-        form_cikti = field.Boolean("Ön Kayıt Sisteminden  doldurulacak 'Öğrenci Bilgi Formu' çıktısı", index=True)
-        barkodlu_cikti = field.Boolean("Online kayıt yapan öğrencilerin kayıt yaptırdıklarına dair sistemden aldıkları barkodlu çıktı", index=True)
+        tip = field.Integer("Belge Tipi", choices="belge_tip", index=True)
+        aciklama = field.String("Ek Açıklama", index=True, default="-", required=False)
+        tamam = field.Boolean("Belge kontrol edildi", index=True, required=True)
 
     def __unicode__(self):
         return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad, self.program.adi, self.program.yil)
