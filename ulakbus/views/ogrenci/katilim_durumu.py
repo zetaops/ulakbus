@@ -17,7 +17,7 @@ from zengine.forms import fields
 from ulakbus.views.ders.ders import prepare_choices_for_model
 
 from zengine import forms
-from zengine.views.crud import CrudView
+from zengine.views.crud import CrudView, form_modifier
 
 __author__ = 'Ali Riza Keles'
 
@@ -26,7 +26,8 @@ class DevamsizlikForm(forms.JsonForm):
     class Ogrenciler(ListNode):
         ogrenci_no = fields.String('No')
         ad_soyad = fields.String('Ad Soyad')
-        katilim_durumu = fields.Integer('Not')
+        katilim_durumu = fields.Integer('Katılım Durumu')
+        aciklama = fields.String('Açıklama')
         ogrenci_key = fields.String('ogrenci_key', hidden=True)
         ders_key = fields.String('ders_key', hidden=True)
 
@@ -39,9 +40,13 @@ class KatilimDurumu(CrudView):
 
     """
 
+    class Meta:
+        model = "DersKatilimi"
+
     def sube_sec(self):
         """Sube seçim adımına karşılık gelen metod."""
         _form = forms.JsonForm(current=self.current, title="Ders Seçim Formu")
+        okutman = self.get_okutman_key
         _form.sube = fields.Integer("Sube Seçiniz",
                                     choices=prepare_choices_for_model(Sube,
                                                                       okutman_id=self.get_okutman_key))
@@ -53,7 +58,13 @@ class KatilimDurumu(CrudView):
         ile öğrenci devamsızlıkları girilir."""
 
         _form = DevamsizlikForm(current=self.current, title="Not Giriş Formu")
-        self.current.task_data["sube_key"] = sube_key = self.current.input['form']['sube']
+
+        try:
+            sube_key = self.current.input['form']['sube']
+            self.current.task_data["sube_key"] = sube_key
+        except KeyError:
+            sube_key = self.current.task_data["sube_key"]
+
         ogrenciler = OgrenciDersi.objects.filter(ders_id=sube_key)
 
         for ogr in ogrenciler:
@@ -78,7 +89,7 @@ class KatilimDurumu(CrudView):
         getirir."""
 
         ogrenci_katilim_durumlari = self.current.input['form']['Ogrenciler']
-        self.current.task_data["ogrenci_katilim_durumlari"] = ogrenci_katilim_durumlari
+        self.current.task_data["katilim_durumlari"] = ogrenci_katilim_durumlari
 
         katilim_durumlari = []
         for ogr in ogrenci_katilim_durumlari:
@@ -107,8 +118,8 @@ class KatilimDurumu(CrudView):
     def kaydet(self):
         """Doğruluğu onaylanan bilgileri kaydeder."""
         for katilim in self.current.task_data['katilim_durumlari']:
-            ders_katilimi = DersKatilimi.objects.get_or_create(ogrenci_id=katilim['ogrenci_key'],
-                                                               ders_id=katilim['ders_key'])
+            ders_katilimi, is_new = DersKatilimi.objects.get_or_create(
+                    ogrenci_id=katilim['ogrenci_key'], ders_id=katilim['ders_key'])
             ders_katilimi.katilim_durumu = katilim['katilim_durumu']
             ders_katilimi.save()
 
@@ -118,4 +129,26 @@ class KatilimDurumu(CrudView):
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Devamsızlıklar Kaydedildi',
-            "msg": '%s dersine ait tarihli sınav notları kaydedildi' % sube.ders.ad}
+            "msg": '%s dersine ait ogrenci notlari kaydedildi' % sube.ders.ad}
+
+    @property
+    def get_okutman_key(self):
+        """Harici okutman ve okutman kayıt key'lerinin ayrımını sağlayan method.
+        """
+        return self.current.user.personel.okutman.key if self.current.user.personel.key else self.current.user.harici_okutman.okutman.key
+
+    @form_modifier
+    def form_inline_edit(self, serialized_form):
+        """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
+
+        """
+        if 'Ogrenciler' in serialized_form['schema']['properties']:
+            serialized_form['inline_edit'] = ['katilim_durumu', 'aciklama']
+
+    @form_modifier
+    def hide_ders_ogrenci_key(self, serialized_form):
+        """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
+
+        """
+        serialized_form['schema']['properties']['Ogrenciler']['schema']
+            serialized_form['inline_edit'] = ['katilim_durumu', 'aciklama']
