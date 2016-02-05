@@ -79,42 +79,41 @@ class ExportSessionsToXml(Command):
     PARAMS = []
 
     def run(self):
-        import os
-        import datetime
-        from lxml import etree
-        from ulakbus.models import Donem, Unit, Campus
-        root_directory = os.path.dirname(os.path.abspath(__file__))
-        term = Donem.objects.filter(guncel=True)[0]
-        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        campuses = Campus.objects.filter()
-        sessions = Donem.objects.filter()
+
+        export_directory = create_unitime_export_directory()
         doc_type = '<!DOCTYPE session PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Session.dtd">'
 
-        # create XML
-        for campus in campuses:
-            if campus:
+        try:
 
-                root = etree.Element('session', campus="%s" % uni, term="%s" % term.ad,
-                                     year="%s" % term.baslangic_tarihi.year, dateFormat="M/d/y")
-                for session in sessions:
-                    start_date = session.baslangic_tarihi.strftime("%m/%d/%Y")
-                    end_date = session.bitis_tarihi.strftime("%m/%d/%Y")
-                    etree.SubElement(root, 'sessionDates', beginDate="%s" % start_date,
-                                     endDate="%s" % end_date,
-                                     classesEnd="%s" % end_date, examBegin="%s" % start_date,
-                                     eventBegin="%s" % start_date, eventEnd="%s" % end_date)
-        # pretty string
-        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                           doctype="%s" % doc_type)
-        current_date = datetime.datetime.now()
-        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-        if not os.path.exists(export_directory):
-            os.makedirs(export_directory)
-        out_file = open(export_directory + '/sessionImport.xml', 'w+')
-        out_file.write("%s" % s)
-        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+            term = Donem.objects.filter(guncel=True)[0]
+            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+            campuses = Campus.objects.filter()
+            sessions = Donem.objects.filter()
 
+            # create XML
+            for campus in campuses:
+                if campus:
+
+                    root = etree.Element('session', campus="%s" % uni, term="%s" % term.ad,
+                                         year="%s" % term.baslangic_tarihi.year, dateFormat="M/d/y")
+                    for session in sessions:
+                        start_date = session.baslangic_tarihi.strftime("%m/%d/%Y")
+                        end_date = session.bitis_tarihi.strftime("%m/%d/%Y")
+                        etree.SubElement(root, 'sessionDates', beginDate="%s" % start_date,
+                                         endDate="%s" % end_date,
+                                         classesEnd="%s" % end_date, examBegin="%s" % start_date,
+                                         eventBegin="%s" % start_date, eventEnd="%s" % end_date)
+            # pretty string
+            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
+            if len(s):
+                out_file = open(export_directory + '/sessionImport.xml', 'w+')
+                out_file.write("%s" % s)
+                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+            else:
+                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+
+        except Exception as e:
+            print(e.message)
 
 class ExportDepartmentsToXML(Command):
     CMD_NAME = 'export_departments'
