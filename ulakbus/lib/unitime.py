@@ -11,7 +11,7 @@ import os
 from zengine.management_commands import *
 from lxml import etree
 from ulakbus.lib.directory import create_unitime_export_directory
-from ulakbus.models import Donem, Ogrenci, Unit, Sube
+from ulakbus.models import Donem, Ogrenci, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi
 
 
 class ExportRoomsToXml(Command):
@@ -615,11 +615,8 @@ class ExportStudentEnrollmentsToXML(Command):
 
     def run(self):
 
-        import os
-        import datetime
-        from lxml import etree
-        from ulakbus.models import Donem, Ogrenci, Unit, Ders, Program, OgrenciProgram, OgrenciDersi
-        root_directory = os.path.dirname(os.path.abspath(__file__))
+
+        export_directory = create_unitime_export_directory()
         student_enrollments_doc_type = '<!DOCTYPE studentEnrollments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/StudentEnrollment.dtd">'
 
         batch_size = int(self.manager.args.batch_size)
@@ -655,12 +652,6 @@ class ExportStudentEnrollmentsToXML(Command):
             # pretty string
             s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                                doctype="%s" % student_enrollments_doc_type)
-            current_date = datetime.datetime.now()
-            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-
-            if not os.path.exists(export_directory):
-                os.makedirs(export_directory)
 
             if len(s):
                 out_file = open(export_directory + '/StudentEnrollments.xml', 'w+')
@@ -684,11 +675,7 @@ class ExportClassesToXML(Command):
 
     def run(self):
 
-        import os
-        from lxml import etree
-        import datetime
-        from ulakbus.models import Donem, Ogrenci, Unit, Sube
-        root_directory = os.path.dirname(os.path.abspath(__file__))
+        export_directory = create_unitime_export_directory()
         student_enrollments_doc_type = '<!DOCTYPE timetable PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseTimetable.dtd">'
 
         """
@@ -719,12 +706,6 @@ class ExportClassesToXML(Command):
             # pretty string
             s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                                doctype="%s" % student_enrollments_doc_type)
-            current_date = datetime.datetime.now()
-            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-
-            if not os.path.exists(export_directory):
-                os.makedirs(export_directory)
 
             if len(s):
                 out_file = open(export_directory + '/courseTimetableImport.xml', 'w+')
@@ -747,6 +728,7 @@ class ExportCorseOfferingsToXML(Command):
     ]
 
     def run(self):
+
         export_directory = create_unitime_export_directory()
         course_offerings_doc_type = '<!DOCTYPE offerings PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseOfferingExport.dtd">'
 
