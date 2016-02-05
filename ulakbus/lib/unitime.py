@@ -13,6 +13,7 @@ from lxml import etree
 from ulakbus.lib.directory import create_unitime_export_directory
 from ulakbus.models import Donem, Ogrenci, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Campus
 
+
 class ExportRoomsToXml(Command):
     CMD_NAME = 'export_rooms'
     HELP = 'Generates Unitime XML import file for rooms'
@@ -20,58 +21,60 @@ class ExportRoomsToXml(Command):
 
     def run(self):
 
-        from ulakbus.models import Donem, Unit, Campus
-        root_directory = os.path.dirname(os.path.abspath(__file__))
-        term = Donem.objects.filter(guncel=True)[0]
-        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-        campuses = Campus.objects.filter()
+        export_directory = create_unitime_export_directory()
         doc_type = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
 
-        # create XML
-        for campus in campuses:
-            if campus.building_set:
-                root = etree.Element('buildingsRooms', campus="%s" % uni, term="%s" % term.ad,
-                                     year="%s" % term.baslangic_tarihi.year)
-                for building in campus.building_set:
+        try:
 
-                    buildingelement = etree.SubElement(root, 'building',
-                                                       externalId="%s" % building.building.key,
-                                                       abbreviation="%s" % building.building.code,
-                                                       locationX="%s" % building.building.coordinate_x,
-                                                       locationY="%s" % building.building.coordinate_y,
-                                                       name="%s" % building.building.name)
-                    if building.building.room_set:
+            term = Donem.objects.filter(guncel=True)[0]
+            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+            campuses = Campus.objects.filter()
 
-                        for room in building.building.room_set:
-                            roomelement = etree.SubElement(buildingelement, 'room',
-                                                           externalId="%s" % room.room.key,
+            # create XML
+            for campus in campuses:
+                if campus.building_set:
+                    root = etree.Element('buildingsRooms', campus="%s" % uni, term="%s" % term.ad,
+                                         year="%s" % term.baslangic_tarihi.year)
+                    for building in campus.building_set:
+
+                        buildingelement = etree.SubElement(root, 'building',
+                                                           externalId="%s" % building.building.key,
+                                                           abbreviation="%s" % building.building.code,
                                                            locationX="%s" % building.building.coordinate_x,
                                                            locationY="%s" % building.building.coordinate_y,
-                                                           roomNumber="%s" % room.room.code,
-                                                           roomClassification="%s" % room.room.room_type.type,
-                                                           capacity="%s" % room.room.capacity,
-                                                           instructional="True")
+                                                           name="%s" % building.building.name)
+                        if building.building.room_set:
 
-                            if room.room.RoomDepartments:
-                                roommdepartments = etree.SubElement(roomelement, 'roomDepartments')
-                                for department in room.room.RoomDepartments:
-                                    etree.SubElement(roommdepartments, 'assigned',
-                                                     departmentNumber="%s" % department.unit.yoksis_no,
-                                                     percent="100")
+                            for room in building.building.room_set:
+                                roomelement = etree.SubElement(buildingelement, 'room',
+                                                               externalId="%s" % room.room.key,
+                                                               locationX="%s" % building.building.coordinate_x,
+                                                               locationY="%s" % building.building.coordinate_y,
+                                                               roomNumber="%s" % room.room.code,
+                                                               roomClassification="%s" % room.room.room_type.type,
+                                                               capacity="%s" % room.room.capacity,
+                                                               instructional="True")
 
-        # pretty string
+                                if room.room.RoomDepartments:
+                                    roommdepartments = etree.SubElement(roomelement, 'roomDepartments')
+                                    for department in room.room.RoomDepartments:
+                                        etree.SubElement(roommdepartments, 'assigned',
+                                                         departmentNumber="%s" % department.unit.yoksis_no,
+                                                         percent="100")
 
-        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                           doctype="%s" % doc_type)
-        current_date = datetime.datetime.now()
-        directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-        export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-        if not os.path.exists(export_directory):
-            os.makedirs(export_directory)
-        out_file = open(export_directory + '/buildingRoomImport.xml', 'w+')
-        out_file.write("%s" % s)
-        print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+            # pretty string
+            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8', doctype="%s" % doc_type)
 
+            if len(s):
+                out_file = open(export_directory + '/buildingRoomImport.xml', 'w+')
+                out_file.write("%s" % s)
+                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+            else:
+                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+
+        except Exception as e:
+            print(e.message)
 
 class ExportSessionsToXml(Command):
     CMD_NAME = 'export_sessions'
@@ -109,6 +112,7 @@ class ExportSessionsToXml(Command):
                 out_file = open(export_directory + '/sessionImport.xml', 'w+')
                 out_file.write("%s" % s)
                 print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
             else:
                 print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
 
