@@ -323,49 +323,45 @@ class ExportCourseCatalogToXML(Command):
     ]
 
     def run(self):
-        import os
-        import datetime
-        from lxml import etree
-        from ulakbus.models import Donem, Ogrenci, Unit, Ders
-        root_directory = os.path.dirname(os.path.abspath(__file__))
-        term = Donem.objects.filter(guncel=True)[0]
-        uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
+
+        export_directory = create_unitime_export_directory()
         doc_type = '<!DOCTYPE courseCatalog PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseCatalog.dtd">'
 
-        batch_size = int(self.manager.args.batch_size)
-        count = Ders.objects.count()
-        rounds = int(count / batch_size) + 1
+        try:
 
-        root = etree.Element('courseCatalog', campus="%s" % uni, term="%s" % term.ad,
-                             year="%s" % term.baslangic_tarihi.year)
-        # FIX for default row size in pyoko filter
-        for i in range(rounds):
-            for ders in Ders.objects.set_params(rows=1000, start=i * batch_size).filter():
-                # for student in students:
-                derselement = etree.SubElement(root, 'course', externalId="%s" % ders.key,
-                                               courseNumber="%s" % ders.kod,
-                                               subject="%s" % ders.program.yoksis_no,
-                                               title="%s" % ders.ad)
-                etree.SubElement(derselement, 'courseCredit', creditType="collegiate",
-                                 creditUnitType="semesterHours",
-                                 creditFormat="fixedUnit", fixedCredit="%s" % ders.yerel_kredisi)
-        # pretty string
-        s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                           doctype="%s" % doc_type)
+            term = Donem.objects.filter(guncel=True)[0]
+            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
 
-        if len(s):
+            batch_size = int(self.manager.args.batch_size)
+            count = Ders.objects.count()
+            rounds = int(count / batch_size) + 1
 
-            current_date = datetime.datetime.now()
-            directory_name = current_date.strftime('%d_%m_%Y_%H_%M_%S')
-            export_directory = root_directory + '/bin/dphs/data_exchange/' + directory_name
-            if not os.path.exists(export_directory):
-                os.makedirs(export_directory)
-            out_file = open(export_directory + '/courseCatalogImport.xml', 'w+')
-            out_file.write("%s" % s)
-            print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+            root = etree.Element('courseCatalog', campus="%s" % uni, term="%s" % term.ad,
+                                 year="%s" % term.baslangic_tarihi.year)
+            # FIX for default row size in pyoko filter
+            for i in range(rounds):
+                for ders in Ders.objects.set_params(rows=1000, start=i * batch_size).filter():
+                    derselement = etree.SubElement(root, 'course', externalId="%s" % ders.key,
+                                                   courseNumber="%s" % ders.kod,
+                                                   subject="%s" % ders.program.yoksis_no,
+                                                   title="%s" % ders.ad)
+                    etree.SubElement(derselement, 'courseCredit', creditType="collegiate",
+                                     creditUnitType="semesterHours",
+                                     creditFormat="fixedUnit", fixedCredit="%s" % ders.yerel_kredisi)
+            # pretty string
+            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                               doctype="%s" % doc_type)
 
-        else:
-            print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+            if len(s):
+                out_file = open(export_directory + '/courseCatalogImport.xml', 'w+')
+                out_file.write("%s" % s)
+                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+
+            else:
+                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+
+        except Exception as e:
+            print(e.message)
 
 
 class ExportCurriculaToXML(Command):
@@ -391,8 +387,6 @@ class ExportCurriculaToXML(Command):
             academicAreas Import File
 
             """
-
-
 
             academic_area_root = etree.Element('academicAreas', campus="%s" % uni, term="%s" % term.ad,
                                                year="%s" % term.baslangic_tarihi.year)
@@ -478,7 +472,6 @@ class ExportCurriculaToXML(Command):
 
         except Exception as e:
             print(e.message)
-
 
 
 class ExportStudentCourseDemandsToXML(Command):
