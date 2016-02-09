@@ -43,6 +43,7 @@ class OncekiEgitimBilgileri(CrudView):
 
 class OnKayitForm(forms.JsonForm):
     class Meta:
+        title = "Kişisel Bilgiler"
         include = ['kan_grubu', 'baba_aylik_kazanc', 'baba_ogrenim_durumu', 'baba_meslek',
                    'anne_ogrenim_durumu', 'anne_meslek', 'anne_aylik_kazanc', 'masraf_sponsor',
                    'emeklilik_durumu', 'kiz_kardes_sayisi', 'erkek_kardes_sayisi',
