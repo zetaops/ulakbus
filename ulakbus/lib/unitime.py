@@ -237,10 +237,10 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
                     if staffmember.birim_no:
                         try:
                             staff_dep = Unit.objects.filter(yoksis_no=staffmember.birim_no)[0].parent_unit_no
-                            etree.SubElement(root, 'staffMember', externalId="%s" % staffmember.key, \
+                            etree.SubElement(root, 'staffMember', externalId="%s" % staffmember.key,
                                              firstName="%s" % staffmember.ad,
-                                             lastName="%s" % staffmember.soyad, \
-                                             department="%s" % staff_dep, acadTitle="%s" % unvan[0], \
+                                             lastName="%s" % staffmember.soyad,
+                                             department="%s" % staff_dep, acadTitle="%s" % unvan[0],
                                              positionType="%s" % unvan[1])
                         except:
                             pass
