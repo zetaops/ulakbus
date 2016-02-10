@@ -377,7 +377,7 @@ class ExportCurriculaToXML(UnitimeEntityXMLExport):
 
 class ExportAcademicAreaToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_academic_area'
-    HELP = 'Generates Unitime XML import file for curricula'
+    HELP = 'Generates Unitime XML import file for Academic Areas'
     PARAMS = []
     FILE_NAME = 'academicAreaImport.xml'
     DOC_TYPE = '<!DOCTYPE academicAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicArea.dtd">'
@@ -393,6 +393,29 @@ class ExportAcademicAreaToXML(UnitimeEntityXMLExport):
         etree.SubElement(root, 'academicArea', abbreviation='A', externalId='A',
                          title="%s" % self.uni + ' - ' + self.term.ad)
 
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % self.DOC_TYPE)
+
+
+class ExportAcademicClassificationsToXML(UnitimeEntityXMLExport):
+    CMD_NAME = 'export_academic_class'
+    HELP = 'Generates Unitime XML import file for Academic Classifications'
+    PARAMS = []
+    FILE_NAME = 'academicClassificationImport.xml'
+    DOC_TYPE = '<!DOCTYPE academicClassifications PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicClassification.dtd">'
+
+    def prepare_data(self):
+        """
+        academicClassifications Import File
+
+        """
+
+        root = etree.Element('academicClassifications', campus="%s" % self.uni, term="%s" % self.term.ad,
+                             year="%s" % self.term.baslangic_tarihi.year)
+
+        etree.SubElement(root, 'academicClassification',
+                         externalId="01",
+                         code="01", name="01")
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
 
