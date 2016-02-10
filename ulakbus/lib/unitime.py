@@ -552,65 +552,6 @@ class ExportStudentCoursesToXML(UnitimeEntityXMLExport):
         else:
             print("Program Bulunamadi")
 
-class ExportStudentEnrollmentsToXML(Command):
-    CMD_NAME = 'export_student_enrollments'
-    HELP = 'Generates Unitime XML import file for student enrollments'
-    PARAMS = [
-
-        {'name': 'batch_size', 'type': int, 'default': 1000,
-         'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
-
-    ]
-
-    def run(self):
-
-        export_directory = create_unitime_export_directory()
-        student_enrollments_doc_type = '<!DOCTYPE studentEnrollments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/StudentEnrollment.dtd">'
-
-        batch_size = int(self.manager.args.batch_size)
-        count = Ogrenci.objects.count()
-        rounds = int(count / batch_size) + 1
-
-        """
-        StudentEnrollments Import File
-
-        """
-
-        try:
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-            root = etree.Element('studentEnrollments', campus="%s" % uni, term="%s" % term.ad,
-                                 year="%s" % term.baslangic_tarihi.year)
-            for i in range(rounds):
-                for student in Ogrenci.objects.set_params(rows=1000, start=i * batch_size).filter():
-                    student_element = etree.SubElement(root, 'student',
-                                                       externalId="%s" % student.key,
-                                                       firstName="%s" % student.ad,
-                                                       lastName="%s" % student.soyad,
-                                                       email="%s" % student.e_posta)
-                    student_program_list = OgrenciProgram.objects.filter(ogrenci=student)
-                    for program in student_program_list:
-                        for ders in OgrenciDersi.objects.filter(ogrenci_program=program):
-                            lecture = ders.ders
-                            etree.SubElement(student_element, 'class', courseId="%s" % lecture.key,
-                                             courseNumber="%s" % lecture.ders.kod,
-                                             subject="%s" % lecture.ders.program.yoksis_no,
-                                             type="Lec")
-
-            # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % student_enrollments_doc_type)
-
-            if len(s):
-                out_file = open(export_directory + '/StudentEnrollments.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-        except Exception as e:
-            print(e.message)
-
-
 class ExportClassesToXML(Command):
     CMD_NAME = 'export_classes'
     HELP = 'Generates Unitime XML import file for timetable'
