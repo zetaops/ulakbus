@@ -375,6 +375,27 @@ class ExportCurriculaToXML(UnitimeEntityXMLExport):
             print("Program Bulunmadi")
 
 
+class ExportAcademicAreaToXML(UnitimeEntityXMLExport):
+    CMD_NAME = 'export_academic_area'
+    HELP = 'Generates Unitime XML import file for curricula'
+    PARAMS = []
+    FILE_NAME = 'academicAreaImport.xml'
+    DOC_TYPE = '<!DOCTYPE academicAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicArea.dtd">'
+
+    def prepare_data(self):
+        """
+        academicAreas Import File
+
+        """
+
+        root = etree.Element('academicAreas', campus="%s" % self.uni, term="%s" % self.term.ad,
+                             year="%s" % self.term.baslangic_tarihi.year)
+        etree.SubElement(root, 'academicArea', abbreviation='A', externalId='A',
+                         title="%s" % self.uni + ' - ' + self.term.ad)
+
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % self.DOC_TYPE)
+
 class ExportStudentCourseDemandsToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_student_course_demands'
     HELP = 'Generates Unitime XML import file for student course demands'
