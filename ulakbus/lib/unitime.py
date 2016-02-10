@@ -498,7 +498,7 @@ class ExportStudentCourseDemandsToXML(UnitimeEntityXMLExport):
             print("Program Bulunamadi")
 
 
-class ExportStudentCoursesToXML(Command):
+class ExportStudentCoursesToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_student_courses'
     HELP = 'Generates Unitime XML import file for student courses'
     PARAMS = [
@@ -507,24 +507,20 @@ class ExportStudentCoursesToXML(Command):
          'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
 
     ]
+    FILE_NAME = 'studentEnrollments.xml'
+    DOC_TYPE = '<!DOCTYPE studentEnrollments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/StudentEnrollment.dtd">'
 
-    def run(self):
+    def prepare_data(self):
+        program_list = Program.objects.filter()
 
-        export_directory = create_unitime_export_directory()
-        doc_type = '<!DOCTYPE studentEnrollments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/StudentEnrollment.dtd">'
-
-        try:
-
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-            program_list = Program.objects.filter()
+        if len(program_list) > 0:
 
             '''
             studentEnrollments Import File
             '''
 
-            root = etree.Element('studentEnrollments', campus="%s" % uni, term="%s" % term.ad,
-                                 year="%s" % term.baslangic_tarihi.year)
+            root = etree.Element('studentEnrollments', campus="%s" % self.uni, term="%s" % self.term.ad,
+                                 year="%s" % self.term.baslangic_tarihi.year)
 
             batch_size = int(self.manager.args.batch_size)
             count = Ogrenci.objects.count()
@@ -533,37 +529,28 @@ class ExportStudentCoursesToXML(Command):
             for i in range(rounds):
                 for student in Ogrenci.objects.set_params(rows=1000, start=i * batch_size).filter():
                     student_department_list = OgrenciProgram.objects.filter(ogrenci=student)
-                    if (student_department_list):
-                        student_element = etree.SubElement(root, "student",
-                                                           externalId="%s" % student.key,
+                    if len(student_department_list) > 0:
+                        student_element = etree.SubElement(root, "student", externalId="%s" % student.key,
                                                            firstName="%s" % student.ad,
                                                            lastName="%s" % student.soyad,
                                                            email="%s" % student.e_posta)
                         for department in student_department_list:
-                            for ogrenci_ders in OgrenciDersi.objects.filter(
-                                    ogrenci_program=department):
-                                if (ogrenci_ders):
-                                    ders = ogrenci_ders.ders.ders
-                                    etree.SubElement(student_element, 'class',
-                                                     externalId="%s" % ders.key,
-                                                     courseNbr="%s" % ders.kod,
-                                                     subject="%s" % ders.program.yoksis_no,
-                                                     type="Lec", suffix="1")
+                            try:
+                                for ogrenci_ders in OgrenciDersi.objects.filter(ogrenci_program=department):
+                                    if (ogrenci_ders):
+                                        ders = ogrenci_ders.ders.ders
+                                        etree.SubElement(student_element, 'class',
+                                                         externalId="%s" % ders.key,
+                                                         courseNbr="%s" % ders.kod,
+                                                         subject="%s" % ders.program.yoksis_no,
+                                                         type="Lec", suffix="1")
+                            except:
+                                pass
             # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % doc_type)
-
-            if len(s):
-
-                out_file = open(export_directory + '/studentEnrollments.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-
-        except Exception as e:
-            print (e.message)
-
+            return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                                  doctype="%s" % self.DOC_TYPE)
+        else:
+            print("Program Bulunamadi")
 
 class ExportStudentEnrollmentsToXML(Command):
     CMD_NAME = 'export_student_enrollments'
