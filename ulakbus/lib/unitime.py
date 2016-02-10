@@ -145,62 +145,46 @@ class ExportSessionsToXml(UnitimeEntityXMLExport):
     DOC_TYPE = '<!DOCTYPE session PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Session.dtd">'
 
     def prepare_data(self):
-            root=''
-            # create XML
-            for campus in self.campuses:
+        root=''
+        # create XML
+        for campus in self.campuses:
 
-                root = etree.Element('session', campus="%s" % self.uni, term="%s" % self.term.ad,
-                                     year="%s" % self.term.baslangic_tarihi.year, dateFormat="M/d/y")
-                for session in self.sessions:
-                    start_date = session.baslangic_tarihi.strftime("%m/%d/%Y")
-                    end_date = session.bitis_tarihi.strftime("%m/%d/%Y")
-                    etree.SubElement(root, 'sessionDates', beginDate="%s" % start_date,
-                                     endDate="%s" % end_date,
-                                     classesEnd="%s" % end_date, examBegin="%s" % start_date,
-                                     eventBegin="%s" % start_date, eventEnd="%s" % end_date)
-            # pretty string
-            return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % self.DOC_TYPE)
+            root = etree.Element('session', campus="%s" % self.uni, term="%s" % self.term.ad,
+                                 year="%s" % self.term.baslangic_tarihi.year, dateFormat="M/d/y")
+            for session in self.sessions:
+                start_date = session.baslangic_tarihi.strftime("%m/%d/%Y")
+                end_date = session.bitis_tarihi.strftime("%m/%d/%Y")
+                etree.SubElement(root, 'sessionDates', beginDate="%s" % start_date,
+                                 endDate="%s" % end_date,
+                                 classesEnd="%s" % end_date, examBegin="%s" % start_date,
+                                 eventBegin="%s" % start_date, eventEnd="%s" % end_date)
+        # pretty string
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                           doctype="%s" % self.DOC_TYPE)
 
 
 
-class ExportDepartmentsToXML(Command):
+class ExportDepartmentsToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_departments'
     HELP = 'Generates Unitime XML import file for academic departments'
     PARAMS = []
+    FILE_NAME = 'departmentImport.xml'
     DOC_TYPE = '<!DOCTYPE departments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Department.dtd">'
-    def run(self):
 
-        try:
+    def prepare_data(self):
 
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-            units = Unit.objects.filter(unit_type='Bölüm')
-            campuses = Campus.objects.filter()
-            sessions = Donem.objects.filter()
+        # create XML
+        for campus in self.campuses:
 
-            # create XML
-            for campus in campuses:
-                if campus:
-                    root = etree.Element('departments', campus="%s" % uni, term="%s" % term.ad,
-                                         year="%s" % term.baslangic_tarihi.year)
-                for unit in units:
-                    etree.SubElement(root, 'department', externalId="%s" % unit.key,
-                                     abbreviation="%s" % unit.yoksis_no, name="%s" % unit.name,
-                                     deptCode="%s" % unit.yoksis_no, allowEvents="true")
-            # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % doc_type)
-            if len(s):
-                out_file = open(export_directory + '/departmentImport.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-
-        except Exception as e:
-            print(e.message)
+            root = etree.Element('departments', campus="%s" % self.uni, term="%s" % self.term.ad,
+                                     year="%s" % self.term.baslangic_tarihi.year)
+            for unit in self.bolumler:
+                etree.SubElement(root, 'department', externalId="%s" % unit.key,
+                                 abbreviation="%s" % unit.yoksis_no, name="%s" % unit.name,
+                                 deptCode="%s" % unit.yoksis_no, allowEvents="true")
+        # pretty string
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                           doctype="%s" % self.DOC_TYPE)
 
 
 class ExportAcademicSubjectsToXML(Command):
