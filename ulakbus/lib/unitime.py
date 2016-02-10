@@ -331,122 +331,48 @@ class ExportCourseCatalogToXML(UnitimeEntityXMLExport):
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
 
-class ExportCurriculaToXML(Command):
+
+class ExportCurriculaToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_curricula'
     HELP = 'Generates Unitime XML import file for curricula'
     PARAMS = []
+    FILE_NAME = 'curricula.xml'
+    DOC_TYPE = '<!DOCTYPE curricula PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Curricula_3_2.dtd">'
 
-    def run(self):
+    def prepare_data(self):
 
-        export_directory = create_unitime_export_directory()
-        academic_area_doc_type = '<!DOCTYPE academicAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicArea.dtd">'
-        academic_classification_doc_type = '<!DOCTYPE academicClassifications PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/AcademicClassification.dtd">'
-        pos_major_doc_type = '<!DOCTYPE posMajors PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/PosMajor.dtd">'
-        doc_type = '<!DOCTYPE curricula PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Curricula_3_2.dtd">'
+        program_list = Program.objects.filter()
 
-        try:
-
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-            program_list = Program.objects.filter()
-
-            """
-            academicAreas Import File
-
-            """
-
-            academic_area_root = etree.Element('academicAreas', campus="%s" % uni,
-                                               term="%s" % term.ad,
-                                               year="%s" % term.baslangic_tarihi.year)
-            etree.SubElement(academic_area_root, 'academicArea', abbreviation='A', externalId='A',
-                             title="%s" % uni + ' - ' + term.ad)
-
-            academic_area_string = etree.tostring(academic_area_root, pretty_print=True,
-                                                  xml_declaration=True,
-                                                  encoding='UTF-8',
-                                                  doctype="%s" % academic_area_doc_type)
-            out_file = open(export_directory + '/academicAreaImport.xml', 'w+')
-            out_file.write("%s" % academic_area_string)
-
-            print(
-                "Academic Area Import dosyası %s dizini altina kayit edilmistir" % export_directory)
-
-            """
-            academicClassifications Import File
-
-            """
-
-            academic_classification_root = etree.Element('academicClassifications',
-                                                         campus="%s" % uni,
-                                                         term="%s" % term.ad,
-                                                         year="%s" % term.baslangic_tarihi.year)
-            etree.SubElement(academic_classification_root, 'academicClassification',
-                             externalId="01",
-                             code="01", name="01")
-            academic_classification_string = etree.tostring(academic_classification_root,
-                                                            pretty_print=True,
-                                                            xml_declaration=True, encoding='UTF-8',
-                                                            doctype="%s" % academic_classification_doc_type)
-            out_file = open(export_directory + '/academicClassificationImport.xml', 'w+')
-            out_file.write("%s" % academic_classification_string)
-
-            print(
-                "Academic Classification Import dosyası %s dizini altina kayit edilmistir" % export_directory)
-
-            """
-            posMajors Import File
-
-            """
-
-            pos_major_root = etree.Element('posMajors', campus="%s" % uni, term="%s" % term.ad,
-                                           year="%s" % term.baslangic_tarihi.year)
-            etree.SubElement(pos_major_root, 'posMajor', externalId="M1", code="M1",
-                             name="%s Major 1" % term.baslangic_tarihi.year, academicArea="A")
-            pos_major_string = etree.tostring(pos_major_root, pretty_print=True,
-                                              xml_declaration=True,
-                                              encoding='UTF-8',
-                                              doctype="%s" % academic_classification_doc_type)
-            out_file = open(export_directory + '/posMajorImport.xml', 'w+')
-            out_file.write("%s" % pos_major_string)
-
-            print("Pos Major Import dosyası %s dizini altina kayit edilmistir" % export_directory)
+        if len(program_list) > 0:
 
             """
             curricula Import File
 
             """
 
-            root = etree.Element('curricula', campus="%s" % uni, term="%s" % term.ad,
-                                 year="%s" % term.baslangic_tarihi.year)
+            root = etree.Element('curricula', campus="%s" % self.uni, term="%s" % self.term.ad,
+                                 year="%s" % self.term.baslangic_tarihi.year)
             for program in program_list:
                 ders_list = Ders.objects.filter(program=program).count()
-                if ders_list:
-                    parent_yoksis_no = Unit.objects.filter(yoksis_no=program.yoksis_no)[
-                        0].parent_unit_no
+                try:
+                    parent_yoksis_no = Unit.objects.filter(yoksis_no=program.yoksis_no)[0].parent_unit_no
                     curriculum = etree.SubElement(root, 'curriculum')
                     etree.SubElement(curriculum, 'academicArea', abbreviation='A')
                     etree.SubElement(curriculum, 'department', code="%s" % parent_yoksis_no)
                     etree.SubElement(curriculum, 'major', code="M1")
-                    classification = etree.SubElement(curriculum, 'classification', name="01",
-                                                      enrollment='2')
+                    classification = etree.SubElement(curriculum, 'classification', name="01", enrollment='2')
                     etree.SubElement(classification, 'academicClassification', code="01")
                     for program_ders in Ders.objects.filter(program=program):
                         etree.SubElement(classification, 'course', subject="%s" % program.yoksis_no,
                                          courseNbr="%s" % program_ders.kod)
+                except:
+                    pass
+
             # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % doc_type)
-
-            if len(s):
-                out_file = open(export_directory + '/curricula.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-
-        except Exception as e:
-            print(e.message)
+            return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                                  doctype="%s" % self.DOC_TYPE)
+        else:
+            print("Program Bulunmadi")
 
 
 class ExportStudentCourseDemandsToXML(UnitimeEntityXMLExport):
