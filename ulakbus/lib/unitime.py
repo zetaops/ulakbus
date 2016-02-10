@@ -230,7 +230,7 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
         if len(stafflist) > 0:
             for campus in self.campuses:
                 root = etree.Element('staff', campus="%s" % self.uni, term="%s" % self.term.ad,
-                                         year="%s" % self.term.baslangic_tarihi.year)
+                                     year="%s" % self.term.baslangic_tarihi.year)
                 for staffmember in stafflist:
                     unvan = self.acadTitle(title=staffmember.unvan)
                     staff_dep = staffmember.birim_no
@@ -250,7 +250,6 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
         else:
             print("Okutman Bulunamadi")
 
-
     @staticmethod
     def acadTitle(title):
         if title == 1:
@@ -265,7 +264,7 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
             return ["", ""]
 
 
-class ExportStudentInfoToXML(Command):
+class ExportStudentInfoToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_student_info'
     HELP = 'Generates Unitime XML import file for student info'
     PARAMS = [
@@ -274,47 +273,27 @@ class ExportStudentInfoToXML(Command):
          'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
 
     ]
+    FILE_NAME = 'studentInfoImport.xml'
+    DOC_TYPE = '<!DOCTYPE students PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Student.dtd">'
 
-    def run(self):
+    def prepare_data(self):
+        # FIX for default row size in pyoko filter
+        batch_size = int(self.manager.args.batch_size)
+        count = Ogrenci.objects.count()
+        rounds = int(count / batch_size) + 1
 
-        export_directory = create_unitime_export_directory()
-        doc_type = '<!DOCTYPE students PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Student.dtd">'
-
-        try:
-
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-
-            # FIX for default row size in pyoko filter
-            batch_size = int(self.manager.args.batch_size)
-            count = Ogrenci.objects.count()
-            rounds = int(count / batch_size) + 1
-
-            root = etree.Element('students', campus="%s" % uni, term="%s" % term.ad,
-                                 year="%s" % term.baslangic_tarihi.year)
-            # FIX for default row size in pyoko filter
-            for i in range(rounds):
-                for student in Ogrenci.objects.set_params(rows=1000, start=i * batch_size).filter():
-                    etree.SubElement(root, 'student', externalId="%s" % student.key,
-                                     firstName="%s" % student.ad,
-                                     lastName="%s" % student.soyad,
-                                     email="%s" % student.e_posta)
-            # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % doc_type)
-
-            if len(s):
-
-                out_file = open(export_directory + '/studentInfoImport.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-
-        except Exception as e:
-            print(e.message)
-
+        root = etree.Element('students', campus="%s" % self.uni, term="%s" % self.term.ad,
+                             year="%s" % self.term.baslangic_tarihi.year)
+        # FIX for default row size in pyoko filter
+        for i in range(rounds):
+            for student in Ogrenci.objects.set_params(rows=1000, start=i * batch_size).filter():
+                etree.SubElement(root, 'student', externalId="%s" % student.key,
+                                 firstName="%s" % student.ad,
+                                 lastName="%s" % student.soyad,
+                                 email="%s" % student.e_posta)
+        # pretty string
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % self.DOC_TYPE)
 
 class ExportCourseCatalogToXML(Command):
     CMD_NAME = 'export_course_catalog'
