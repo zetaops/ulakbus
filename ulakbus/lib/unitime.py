@@ -295,7 +295,8 @@ class ExportStudentInfoToXML(UnitimeEntityXMLExport):
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
 
-class ExportCourseCatalogToXML(Command):
+
+class ExportCourseCatalogToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_course_catalog'
     HELP = 'Generates Unitime XML import file for course catalog'
     PARAMS = [
@@ -304,49 +305,31 @@ class ExportCourseCatalogToXML(Command):
          'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
 
     ]
+    FILE_NAME = 'courseCatalogImport.xml'
+    DOC_TYPE = '<!DOCTYPE courseCatalog PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseCatalog.dtd">'
 
-    def run(self):
+    def prepare_data(self):
+        # FIX for default row size in pyoko filter
+        batch_size = int(self.manager.args.batch_size)
+        count = Ders.objects.count()
+        rounds = int(count / batch_size) + 1
 
-        export_directory = create_unitime_export_directory()
-        doc_type = '<!DOCTYPE courseCatalog PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseCatalog.dtd">'
-
-        try:
-
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-
-            batch_size = int(self.manager.args.batch_size)
-            count = Ders.objects.count()
-            rounds = int(count / batch_size) + 1
-
-            root = etree.Element('courseCatalog', campus="%s" % uni, term="%s" % term.ad,
-                                 year="%s" % term.baslangic_tarihi.year)
-            # FIX for default row size in pyoko filter
-            for i in range(rounds):
-                for ders in Ders.objects.set_params(rows=1000, start=i * batch_size).filter():
-                    derselement = etree.SubElement(root, 'course', externalId="%s" % ders.key,
-                                                   courseNumber="%s" % ders.kod,
-                                                   subject="%s" % ders.program.yoksis_no,
-                                                   title="%s" % ders.ad)
-                    etree.SubElement(derselement, 'courseCredit', creditType="collegiate",
-                                     creditUnitType="semesterHours",
-                                     creditFormat="fixedUnit",
-                                     fixedCredit="%s" % ders.yerel_kredisi)
-            # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % doc_type)
-
-            if len(s):
-                out_file = open(export_directory + '/courseCatalogImport.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-
-        except Exception as e:
-            print(e.message)
-
+        root = etree.Element('courseCatalog', campus="%s" % self.uni, term="%s" % self.term.ad,
+                             year="%s" % self.term.baslangic_tarihi.year)
+        # FIX for default row size in pyoko filter
+        for i in range(rounds):
+            for ders in Ders.objects.set_params(rows=1000, start=i * batch_size).filter():
+                derselement = etree.SubElement(root, 'course', externalId="%s" % ders.key,
+                                               courseNumber="%s" % ders.kod,
+                                               subject="%s" % ders.program.yoksis_no,
+                                               title="%s" % ders.ad)
+                etree.SubElement(derselement, 'courseCredit', creditType="collegiate",
+                                 creditUnitType="semesterHours",
+                                 creditFormat="fixedUnit",
+                                 fixedCredit="%s" % ders.yerel_kredisi)
+        # pretty string
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % self.DOC_TYPE)
 
 class ExportCurriculaToXML(Command):
     CMD_NAME = 'export_curricula'
