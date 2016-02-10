@@ -20,12 +20,16 @@ class UnitimeEntityXMLExport(Command):
     EXPORT_DIR = 'bin/dphs/data_exchange/'
     FILE_NAME = ''
     DOC_TYPE = ''
+    CMD_NAME = ''
+    HELP = ''
+    PARAMS = []
 
     def write_file(self, data):
-        out_file = open(self.create_dir() + '/' + self.FILE_NAME, 'w+')
+        out_dir = self.create_dir()
+        out_file = open( out_dir + '/' + self.FILE_NAME, 'w+')
         out_file.write("%s" % data)
         print("Veriler %s dizini altinda %s adlı dosyaya kayit edilmiştir" % (
-            self.EXPORT_DIR, self.FILE_NAME))
+            self.EXPORT_DIR+out_dir, self.FILE_NAME))
 
     def run(self):
         data = self.prepare_data()
