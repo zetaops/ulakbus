@@ -412,12 +412,33 @@ class ExportAcademicClassificationsToXML(UnitimeEntityXMLExport):
 
         root = etree.Element('academicClassifications', campus="%s" % self.uni, term="%s" % self.term.ad,
                              year="%s" % self.term.baslangic_tarihi.year)
-
         etree.SubElement(root, 'academicClassification',
                          externalId="01",
                          code="01", name="01")
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
+
+
+class ExportPosMajorsToXML(UnitimeEntityXMLExport):
+    CMD_NAME = 'export_posmajors'
+    HELP = 'Generates Unitime XML import file for Pos Majors'
+    PARAMS = []
+    FILE_NAME = 'posMajorImport.xml'
+    DOC_TYPE = '<!DOCTYPE posMajors PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/PosMajor.dtd">'
+
+    def prepare_data(self):
+        """
+        posMajors Import File
+
+        """
+
+        root = etree.Element('posMajors', campus="%s" % self.uni, term="%s" % self.term.ad,
+                             year="%s" % self.term.baslangic_tarihi.year)
+        etree.SubElement(root, 'posMajor', externalId="M1", code="M1", name="%s Major 1" % self.term.baslangic_tarihi.year,
+                         academicArea="A")
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % self.DOC_TYPE)
+
 
 class ExportStudentCourseDemandsToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_student_course_demands'
