@@ -63,6 +63,14 @@ class UnitimeEntityXMLExport(Command):
             print("Guncel donem tanimlanmamis")
             sys.exit(1)
 
+    @property
+    def campuses(self):
+        c = Campus.objects.filter()
+        if len(c) > 0:
+            return c
+        else:
+            print("Kampus Bulunamadı")
+            sys.exit(1)
 
 class ExportRooms(UnitimeEntityXMLExport):
     CMD_NAME = 'export_rooms'
@@ -72,11 +80,9 @@ class ExportRooms(UnitimeEntityXMLExport):
     DOC_TYPE = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
 
     def prepare_data(self):
-        campuses = Campus.objects.filter()
-        if len(campuses) > 0:
             # create XML
             root = ''
-            for campus in campuses:
+            for campus in self.campuses:
                 if campus.building_set:
                     root = etree.Element('buildingsRooms', campus="%s" % self.uni,
                                          term="%s" % self.term.ad,
@@ -112,9 +118,6 @@ class ExportRooms(UnitimeEntityXMLExport):
             # pretty string
             return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                                   doctype="%s" % self.DOC_TYPE)
-        else:
-            print("Kampus tanimlanmamis.")
-
 
 class ExportSessionsToXml(UnitimeEntityXMLExport):
     CMD_NAME = 'export_sessions'
