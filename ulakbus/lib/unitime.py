@@ -593,7 +593,7 @@ class ExportClassesToXML(UnitimeEntityXMLExport):
                               doctype="%s" % self.DOC_TYPE)
 
 
-class ExportCorseOfferingsToXML(Command):
+class ExportCorseOfferingsToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_course_offerings'
     HELP = 'Generates Unitime XML import file for timetable'
     PARAMS = [
@@ -602,55 +602,38 @@ class ExportCorseOfferingsToXML(Command):
          'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
 
     ]
+    FILE_NAME = 'courseOfferingsImport.xml'
+    DOC_TYPE = '<!DOCTYPE offerings PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseOfferingExport.dtd">'
 
-    def run(self):
-
-        export_directory = create_unitime_export_directory()
-        course_offerings_doc_type = '<!DOCTYPE offerings PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/CourseOfferingExport.dtd">'
+    def prepare_data(self):
 
         """
         offerings Import File
 
         """
 
-        try:
+        batch_size = int(self.manager.args.batch_size)
+        count = Sube.objects.filter(donem=self.term).count()
+        rounds = int(count / batch_size) + 1
+        root = etree.Element('offerings', campus="%s" % self.uni, term="%s" % self.term.ad,
+                             year="%s" % self.term.baslangic_tarihi.year, action="insert",
+                             incremental="true",
+                             timeFormat="HHmm", dateFormat="yyyy/M/d")
 
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-            batch_size = int(self.manager.args.batch_size)
-            count = Sube.objects.filter(donem=term).count()
-            rounds = int(count / batch_size) + 1
-            root = etree.Element('offerings', campus="%s" % uni, term="%s" % term.ad,
-                                 year="%s" % term.baslangic_tarihi.year, action="insert",
-                                 incremental="true",
-                                 timeFormat="HHmm", dateFormat="yyyy/M/d")
-            for i in range(rounds):
+        for i in range(rounds):
+            for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(donem=self.term):
 
-                for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(
-                        donem=term):
+                try:
                     lecture = sube.ders
-                    offering_elem = etree.SubElement(root, 'offering', id="%s" % sube.ad,
-                                                     offered="true")
-                    course_elem = etree.SubElement(offering_elem, 'course',
-                                                   courseNbr="%s" % lecture.kod,
+                    offering_elem = etree.SubElement(root, 'offering', id="%s" % sube.ad, offered="true")
+                    course_elem = etree.SubElement(offering_elem, 'course', courseNbr="%s" % lecture.kod,
                                                    subject="%s" % lecture.program.yoksis_no,
                                                    controlling="true")
-                    etree.SubElement(course_elem, 'class', name="%s" % sube.ad, suffix="1",
-                                     imit="%s" % sube.kontenjan,
+                    etree.SubElement(course_elem, 'class', name="%s" % sube.ad, suffix="1", limit="%s" % sube.kontenjan,
                                      type="Rec")
+                except:
+                    pass
 
-            # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % course_offerings_doc_type)
-            if len(s):
-
-                out_file = open(export_directory + '/courseOfferingsImport.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-
-        except Exception as e:
-
-            print(e.message)
+        # pretty string
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % course_offerings_doc_type)
