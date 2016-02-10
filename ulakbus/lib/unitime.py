@@ -636,4 +636,4 @@ class ExportCorseOfferingsToXML(UnitimeEntityXMLExport):
 
         # pretty string
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                              doctype="%s" % course_offerings_doc_type)
+                              doctype="%s" % self.DOC_TYPE)
