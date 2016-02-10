@@ -69,7 +69,7 @@ class UnitimeEntityXMLExport(Command):
         if len(c) > 0:
             return c
         else:
-            print("Kampus Bulunamadı")
+            print("Kampus Bulunamadi")
             sys.exit(1)
 
     @property
@@ -78,7 +78,16 @@ class UnitimeEntityXMLExport(Command):
         if len(s) > 0:
             return s
         else:
-            print("Dönem Bulunamadı")
+            print("Donem Bulunamadi")
+            sys.exit(1)
+
+    @property
+    def bolumler(self):
+        b = Unit.objects.filter(unit_type='Bölüm')
+        if len(b) > 0:
+            return b
+        else:
+            print("Bolum Bulunamadi")
             sys.exit(1)
 
 class ExportRooms(UnitimeEntityXMLExport):
@@ -159,11 +168,8 @@ class ExportDepartmentsToXML(Command):
     CMD_NAME = 'export_departments'
     HELP = 'Generates Unitime XML import file for academic departments'
     PARAMS = []
-
+    DOC_TYPE = '<!DOCTYPE departments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Department.dtd">'
     def run(self):
-
-        export_directory = create_unitime_export_directory()
-        doc_type = '<!DOCTYPE departments PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Department.dtd">'
 
         try:
 
