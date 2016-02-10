@@ -200,7 +200,7 @@ class ExportAcademicSubjectsToXML(UnitimeEntityXMLExport):
         for campus in self.campuses:
 
             root = etree.Element('subjectAreas', campus="%s" % self.uni, term="%s" % self.term.ad,
-                                     year="%s" % self.term.baslangic_tarihi.year)
+                                 year="%s" % self.term.baslangic_tarihi.year)
             for unit in self.bolumler:
                 try:
                     subunits = Unit.objects.filter(parent_unit_no=unit.yoksis_no)
@@ -214,41 +214,29 @@ class ExportAcademicSubjectsToXML(UnitimeEntityXMLExport):
 
         # pretty string
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                           doctype="%s" % self.DOC_TYPE)
+                              doctype="%s" % self.DOC_TYPE)
 
 
 
-class ExportStaffToXML(Command):
+class ExportStaffToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_staff'
     HELP = 'Generates Unitime XML import file for staff'
     PARAMS = []
+    FILE_NAME = 'staffImport.xml'
+    DOC_TYPE = '<!DOCTYPE staff PUBLIC "-//UniTime//UniTime Staff Import DTD/EN" "http://www.unitime.org/interface/Staff.dtd">'
 
-    def run(self):
-
-        export_directory = create_unitime_export_directory()
-        doc_type = '<!DOCTYPE staff PUBLIC "-//UniTime//UniTime Staff Import DTD/EN" "http://www.unitime.org/interface/Staff.dtd">'
-
-        try:
-
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-            units = Unit.objects.filter()
-            campuses = Campus.objects.filter()
-            sessions = Donem.objects.filter()
-            stafflist = Okutman.objects.filter()
-
-            for campus in campuses:
-                if campus:
-                    root = etree.Element('staff', campus="%s" % uni, term="%s" % term.ad,
-                                         year="%s" % term.baslangic_tarihi.year)
+    def prepare_data(self):
+        stafflist = Okutman.objects.filter()
+        if len(stafflist) > 0:
+            for campus in self.campuses:
+                root = etree.Element('staff', campus="%s" % self.uni, term="%s" % self.term.ad,
+                                         year="%s" % self.term.baslangic_tarihi.year)
                 for staffmember in stafflist:
                     unvan = self.acadTitle(title=staffmember.unvan)
                     staff_dep = staffmember.birim_no
                     if staffmember.birim_no:
                         try:
-
-                            staff_dep = Unit.objects.filter(yoksis_no=staffmember.birim_no)[
-                                0].parent_unit_no
+                            staff_dep = Unit.objects.filter(yoksis_no=staffmember.birim_no)[0].parent_unit_no
                             etree.SubElement(root, 'staffMember', externalId="%s" % staffmember.key, \
                                              firstName="%s" % staffmember.ad,
                                              lastName="%s" % staffmember.soyad, \
@@ -257,19 +245,11 @@ class ExportStaffToXML(Command):
                         except:
                             pass
             # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % doc_type)
-            if len(s):
+            return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                                  doctype="%s" % self.DOC_TYPE)
+        else:
+            print("Okutman Bulunamadi")
 
-                out_file = open(export_directory + '/staffImport.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-
-        except Exception as e:
-            print(e.message)
 
     @staticmethod
     def acadTitle(title):
