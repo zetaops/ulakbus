@@ -368,6 +368,17 @@ class ExportCurriculaToXML(UnitimeEntityXMLExport):
                 except:
                     pass
 
+            # export curricula-releated xml files
+
+            export_academic_areas = ExportAcademicAreaToXML(self)
+            export_academic_areas.run()
+
+            export_academic_class = ExportAcademicClassificationsToXML(self)
+            export_academic_class.run()
+
+            export_posmjors = ExportPosMajorsToXML(self)
+            export_posmjors.run()
+
             # pretty string
             return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                                   doctype="%s" % self.DOC_TYPE)
