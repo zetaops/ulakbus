@@ -187,49 +187,35 @@ class ExportDepartmentsToXML(UnitimeEntityXMLExport):
                            doctype="%s" % self.DOC_TYPE)
 
 
-class ExportAcademicSubjectsToXML(Command):
+class ExportAcademicSubjectsToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_academic_subjects'
     HELP = 'Generates Unitime XML import file for academic subjects'
     PARAMS = []
+    FILE_NAME = 'subjectAreaImport.xml'
+    DOC_TYPE = '<!DOCTYPE subjectAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/SubjectArea.dtd">'
 
-    def run(self):
+    def prepare_data(self):
 
-        export_directory = create_unitime_export_directory()
-        doc_type = '<!DOCTYPE subjectAreas PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/SubjectArea.dtd">'
+        # create XML
+        for campus in self.campuses:
 
-        try:
-
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-            units = Unit.objects.filter(unit_type='Bölüm')
-            campuses = Campus.objects.filter()
-            sessions = Donem.objects.filter()
-
-            # create XML
-            for campus in campuses:
-                if campus:
-                    root = etree.Element('subjectAreas', campus="%s" % uni, term="%s" % term.ad,
-                                         year="%s" % term.baslangic_tarihi.year)
-                for unit in units:
+            root = etree.Element('subjectAreas', campus="%s" % self.uni, term="%s" % self.term.ad,
+                                     year="%s" % self.term.baslangic_tarihi.year)
+            for unit in self.bolumler:
+                try:
                     subunits = Unit.objects.filter(parent_unit_no=unit.yoksis_no)
                     for subunit in subunits:
                         etree.SubElement(root, 'subjectArea', externalId="%s" % subunit.key,
                                          abbreviation="%s" % subunit.yoksis_no,
                                          title="%s" % subunit.name,
                                          department="%s" % subunit.parent_unit_no)
-            # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % doc_type)
-            if len(s):
-                out_file = open(export_directory + '/subjectAreaImport.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
+                except:
+                    pass
 
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
+        # pretty string
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                           doctype="%s" % self.DOC_TYPE)
 
-        except Exception as e:
-            print(e.message)
 
 
 class ExportStaffToXML(Command):
