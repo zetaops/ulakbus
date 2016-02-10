@@ -449,7 +449,7 @@ class ExportCurriculaToXML(Command):
             print(e.message)
 
 
-class ExportStudentCourseDemandsToXML(Command):
+class ExportStudentCourseDemandsToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_student_course_demands'
     HELP = 'Generates Unitime XML import file for student course demands'
     PARAMS = [
@@ -458,24 +458,19 @@ class ExportStudentCourseDemandsToXML(Command):
          'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'},
 
     ]
+    FILE_NAME = 'studentCrsDemandImport.xml'
+    DOC_TYPE = '<!DOCTYPE lastLikeCourseDemand PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/StudentCourse.dtd">'
 
-    def run(self):
+    def prepare_data(self):
 
-        export_directory = create_unitime_export_directory()
-        doc_type = '<!DOCTYPE lastLikeCourseDemand PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/StudentCourse.dtd">'
+        program_list = Program.objects.filter()
 
-        try:
-
-            term = Donem.objects.filter(guncel=True)[0]
-            uni = Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
-            program_list = Program.objects.filter()
-
+        if len(program_list) > 0:
             '''
             lastLikeCourseDemand Import File
             '''
-
-            root = etree.Element('lastLikeCourseDemand', campus="%s" % uni, term="%s" % term.ad,
-                                 year="%s" % term.baslangic_tarihi.year)
+            root = etree.Element('lastLikeCourseDemand', campus="%s" % self.uni, term="%s" % self.term.ad,
+                                 year="%s" % self.term.baslangic_tarihi.year)
 
             batch_size = int(self.manager.args.batch_size)
             count = Ogrenci.objects.count()
@@ -488,28 +483,19 @@ class ExportStudentCourseDemandsToXML(Command):
                         student_element = etree.SubElement(root, "student",
                                                            externalId="%s" % student.key)
                         for department in student_department_list:
-                            for ogrenci_ders in OgrenciDersi.objects.filter(
-                                    ogrenci_program=department):
-                                if (ogrenci_ders):
+                            try:
+                                for ogrenci_ders in OgrenciDersi.objects.filter(ogrenci_program=department):
                                     ders = ogrenci_ders.ders.ders
-                                    etree.SubElement(student_element, 'studentCourse',
-                                                     externalId="%s" % ders.key,
+                                    etree.SubElement(student_element, 'studentCourse', externalId="%s" % ders.key,
                                                      courseNumber="%s" % ders.kod,
                                                      subject="%s" % ders.program.yoksis_no)
+                            except:
+                                pass
             # pretty string
-            s = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                               doctype="%s" % doc_type)
-            if len(s):
-
-                out_file = open(export_directory + '/studentCrsDemandImport.xml', 'w+')
-                out_file.write("%s" % s)
-                print("Dosya %s dizini altina kayit edilmistir" % export_directory)
-
-            else:
-                print("Bir Hata Oluştu ve XML Dosyası Yaratılamadı")
-
-        except Exception as e:
-            print(e.message)
+            return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                                  doctype="%s" % self.DOC_TYPE)
+        else:
+            print("Program Bulunamadi")
 
 
 class ExportStudentCoursesToXML(Command):
