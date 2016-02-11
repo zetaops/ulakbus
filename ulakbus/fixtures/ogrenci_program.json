@@ -1,0 +1,28 @@
+{
+  "belge_tip": {
+    "1": {
+      "tr": "Diploma: Mezun olunan ortaöğretim kurumundan alınan diplomanın aslı veya yeni tarihli mezuniyet belgesi",
+      "en": ""
+    },
+    "2": {
+      "tr": "Fotoğraf: Son 6 ay içinde önden çekilmiş 12 adet 4,5 cm X 6 cm boyutunda vesikalık fotoğraf",
+      "en": ""
+    },
+    "3": {
+      "tr": "Dekont: Harcın ödendiğini gösteren banka dekontu (2. Öğretim Öğrencileri İçin)",
+      "en": ""
+    },
+    "4": {
+      "tr": "Bilgi Formu: Ön Kayıt Sisteminden  doldurulacak 'Öğrenci Bilgi Formu' çıktısı",
+      "en": ""
+    },
+    "5": {
+      "tr": "Barkod: Online kayıt yapan öğrencilerin kayıt yaptırdıklarına dair sistemden aldıkları barkodlu çıktı",
+      "en": ""
+    },
+    "6": {
+      "tr": "Diğer",
+      "en": ""
+    }
+  }
+}

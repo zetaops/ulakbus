@@ -19,7 +19,7 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from ulakbus.models.ogrenci import Ogrenci
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program
 
 
 class KimlikBilgileriForm(forms.JsonForm):

@@ -419,7 +419,8 @@ class Ogrenci(Model):
     kimlik_cuzdani_verildigi_yer = field.String("Nüfus Cüzdanı Verildiği Yer")
     kimlik_cuzdani_verilis_nedeni = field.String("Nüfus Cüzdanı Veriliş Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Nüfus Cüzdanı Kayıt No")
-    kimlik_cuzdani_verilis_tarihi = field.Date("Nüfus Cüzdanı Veriliş Tarihi", index=True, format="%d.%m.%Y")
+    kimlik_cuzdani_verilis_tarihi = field.Date("Nüfus Cüzdanı Veriliş Tarihi", index=True,
+                                               format="%d.%m.%Y")
     baba_adi = field.String("Ana Adı", index=True)
     ana_adi = field.String("Baba Adı", index=True)
     ikamet_il = field.String("İkamet İl", index=True)
@@ -435,9 +436,29 @@ class Ogrenci(Model):
     e_posta = field.String("E-Posta", index=True)
     e_posta2 = field.String("2.E-Posta", index=True)
     tel_no = field.String("Telefon Numarası", index=True)
-    gsm = field.String("Gsm",index=True)
+    gsm = field.String("Cep Tel", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
-    #: İlişki[model]: Kullanıcı Model'ine, bire bir ilişki tipi
+    baba_aylik_kazanc = field.Integer("Babanızın Aylık Kazancı", index=True)
+    baba_ogrenim_durumu = field.Integer("Babanızın Öğrenim Durumu", index=True,
+                                        choices="ogrenim_durumu")
+    baba_meslek = field.String("Babanızın Mesleği", index=True)
+    anne_ogrenim_durumu = field.Integer("Annenizin Öğrenim Durumu", index=True,
+                                        choices="ogrenim_durumu")
+    anne_meslek = field.String("Annenizin Mesleği", index=True)
+    anne_aylik_kazanc = field.Integer("Annenizin Aylık Kazancı", index=True)
+    masraf_sponsor = field.Integer("Masraflarınız Kim Tarafından Karşılanacak", index=True,
+                                   choices="masraf_sponsorlar")
+    emeklilik_durumu = field.String("Velinizin Emeklilik Durumu", index=True)
+    kiz_kardes_sayisi = field.Integer("Kız Kardeş Sayısı", index=True)
+    erkek_kardes_sayisi = field.Integer("Erkek Kardeş Sayısı", index=True)
+    ogrenim_goren_kardes_sayisi = field.Integer("Öğrenim Gören Kardeş Sayısı", index=True)
+    burs_kredi_no = field.String("Kredi ve Yurtlar Kurumundan Aldığınız Kredi ve Burs No",
+                                 index=True)
+    aile_tel = field.String("Ailenizin Ev Tel", index=True)
+    aile_gsm = field.String("Ailenizin Cep Tel", index=True)
+    aile_adres = field.String("Ailenizin Daimi İkamet Ettiği Adres", index=True)
+    ozur_durumu = field.Integer("Varsa Özür Durumunuz", index=True, choices="ozur_durumu")
+    ozur_oran = field.Integer("Varsa Özür Oranınız %", index=True)
     user = User(one_to_one=True)
 
     class Meta:
@@ -495,7 +516,10 @@ class OgrenciProgram(Model):
     ogrenci_no = field.String("Öğrenci Numarası", index=True)
     giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
+    giris_puan_turu = field.Integer("Puan Türü", index=True, choices="giris_puan_turleri")
+    giris_puani = field.Float("Giriş Puani", index=True)
     aktif_donem = field.String("Dönem", index=True)
+    durum = field.Integer("Durum", index=True, choices="ogrenci_program_durumlar")
     basari_durumu = field.String("Başarı Durumu", index=True)
     ders_programi = DersProgrami()
     danisman = Personel()
@@ -507,8 +531,14 @@ class OgrenciProgram(Model):
         verbose_name = "Öğrenci Programı"
         verbose_name_plural = "Öğrenci Programları"
 
+    class Belgeler(ListNode):
+        tip = field.Integer("Belge Tipi", choices="belge_tip", index=True)
+        aciklama = field.String("Ek Açıklama", index=True, default="-", required=False)
+        tamam = field.Boolean("Belge kontrol edildi", index=True, required=True)
+
     def __unicode__(self):
-        return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad, self.program.adi, self.program.yil)
+        return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad,
+                                    self.program.adi, self.program.yil)
 
 
 class OgrenciDersi(Model):
@@ -696,13 +726,15 @@ class BankaAuth(Model):
 class DegerlendirmeNot(Model):
     """Değerlendirme Notu Modeli
 
-    Ders değerlendirmeleri (sınavlar, sunum, proje, odev vb.) için okutmanlar tarafından verilen
-    notların saklandığı data modelidir.
+    Ders değerlendirmeleri (sınavlar, sunum, proje, odev vb.) için okutmanlar
+    tarafından verilen notların saklandığı data modelidir.
 
-    Temel ilişki Sınav ve Öğrenci modeli ile kurulmuştur. Değerlendirme bilgisi puan alanında saklanır.
+    Temel ilişki Sınav ve Öğrenci modeli ile kurulmuştur. Değerlendirme
+    bilgisi puan alanında saklanır.
 
     Note:
-        Ders, öğretim elemeanı, yıl ve donem, alanları arama kolaylığı açısından saklanmaktadır.
+        Ders, öğretim elemeanı, yıl ve donem, alanları arama kolaylığı
+        açısından saklanmaktadır.
 
     """
 
