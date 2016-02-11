@@ -1,7 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -18,6 +15,11 @@ __author__ = 'Halil İbrahim Yılmaz'
 
 
 def yeni_ogrenci():
+    """
+    Rastgele verileri kullanarak yeni öğrenci kaydı oluştururup kaydeder.
+
+    """
+
     o = Ogrenci()
     o.tckn = ints(length=11)
     o.ad = fake.first_name()

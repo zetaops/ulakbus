@@ -33,36 +33,52 @@ def zato_service_selector(model, action):
 
 
 class CrudHitap(CrudView):
+    """CrudHitap İş Akışı
+
+    CrudHitap, standart CrudView'a ait save, delete gibi metotların
+    Hitap senkronizasyonunu ilgilendiren işlevsellikler ile
+    genişletilerek elde edilmiştir.
+
+    Bu iş akışı için senkronizasyon şu şekilde çalışmaktadır:
+
+        - Yerel kayıtlarda yapılan her değişiklik anında Hitap
+          ile eşlenecektir.
+
+        - Silinen kayıtlar, ancak Hitap'tan silinme onayı geldikten
+          sonra silinecektir. İlgili kayıt öncelikle ``silinecek``
+          şeklinde işaretlenir. Hitap'tan silme işlemi ile ilgili olumlu
+          sonuç geldikten sonra silinme işlemi gerçekleşir. Kayit
+          senkronize olarak işaretlenir.
+
+        - Yeni eklenen kayıtlar, gönderilecek şeklinde işaretlenir.
+          Hitap'a gonderilir. Hitap'tan dönen kayıt no ile ilgili
+          kayda eklenir ve senkronize şeklinde işaretlenir.
+
+        - Güncellenen kayıtlar ise, güncelleniyor şeklinde işaretlenir.
+          Guncellenen kayıt Hitap'a gönderilir. Hitap yeni bir kayıt no
+          üretir ve eski kaydı siler. Bu işlem soncunda Hitap yeni bir
+          ``kayıt no`` gönderir. Yereldeki kayıt yeni ``kayıt no`` ile
+          güncellenir ve senkronize olarak işaretlenir.
+
+    Buna gore ``sync`` field şu değerlerde bulunabilir:
+
+        * 1: Kayıt Hitap ile senkronize
+        * 2: Yerel kayıt güncellendi, Hitap güncellenecek
+        * 3: Yerel kayıt silindi, Hitap kaydı silinecek
+        * 4: Yeni bir yerel kayıt oluşturuldu, Hitap'a gönderilecek.
+
     """
-    CrudHitap, standart CrudView save, delete gibi hitap senkrizasyonunu ilgilendiren metodlari degistirilerek
-    extend edilmistir.
-
-    Sync mekanizmasi su sekilde calisamaktadir:
-        - Yerel kayitlarda yapilan her degisiklik aninda Hitap ile eslenecektir.
-
-        - Silinen kayitlar, ancak Hitap tan silinme onayi geldikten sonra silinecektir. Ilgili kayit oncelikle
-        silinecek seklinde isaretlenir. Hitaptan silme islemi ile ilgili olumlu sonuc geldikten sonra
-        silinme islemi gerceklesir. Kayit senkronize olarak isaretlenir.
-
-        - Yeni eklenen kayitlar, gonderilecek seklinde isaretlenir. Hitap a gonderilir. Hitaptan donen kayit no ilgili
-        kayda eklenir ve senkronize seklinde isaretlenir.
-
-        - Guncellenen kayitlar ise, guncelleniyor seklinde isaretlenir. Guncellenen kayit Hitap a gonderilir. Hitap
-        yeni bir kayit no uretir ve eski kaydi siler. Bu islem soncunda Hitap yeni kayit no gonderir. Yereldeki kayitda
-        kayit no guncellenir ve senkronize olarak isaretlenir.
-
-    Buna gore sync field su degerlerde bulunabilir:
-        1: all is good
-        2: updated locally, update on hitap
-        3: deleted locally, delete from hitap
-        4: created locally, send to hitap
-
-    """
-
-    # class Meta:
-    # Kullanilacak temel Model WF baslatilinca verilecek. Bu sebeple Model vermiyoruz.
 
     def save(self):
+        """Crud Hitap Kaydet
+
+        Nesneyi kaydeder. Eğer kayıt yeni ise ``sync`` alanını 4,
+        mevcut kayıt güncellemesi ise 2 olarak işaretler.
+
+        Hemen ardından zato servisi ile değişikliği bildirir.
+
+        """
+
         self.set_form_data_to_object()
         obj_is_new = not self.object.is_in_db()
         action, self.object.sync = ('add', 4) if obj_is_new else ('update', 2)
@@ -83,6 +99,14 @@ class CrudHitap(CrudView):
             self.current.task_data['added_obj'] = self.object.key
 
     def delete(self):
+        """Crud Hitap Sil
+
+        Nesneyi kaydeder. ``sync`` alanını 3 olarak işaretler.
+
+        Hemen ardından zato servisi ile değişikliği bildirir.
+
+        """
+
         self.current.task_data['deleted_obj'] = self.object.key
         if 'object_id' in self.current.task_data:
             del self.current.task_data['object_id']

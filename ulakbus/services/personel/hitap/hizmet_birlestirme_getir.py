@@ -1,90 +1,131 @@
-# -*- coding: utf-8 -*-
+# -*-  coding: utf-8 -*-
 
 # Copyright (C) 2015 ZetaOps Inc.
+#
+# This file is licensed under the GNU General Public License v3
+# (GPLv3).  See LICENSE.txt for details.
 
-from zato.server.service import Service
-import os
-import urllib2
-from json import dumps
+"""HITAP Birleştirme Sorgula
 
-# os.environ["PYOKO_SETTINGS"] = 'ulakbus.settings'
-# from ulakbus.models.hitap import HizmetKayitlari
+Hitap üzerinden personelin hizmet birleştirme bilgilerinin sorgulamasını yapar.
 
-H_USER = os.environ["HITAP_USER"]
-H_PASS = os.environ["HITAP_PASS"]
+"""
+
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
-class HizmetBirlestirmeGetir(Service):
+class HizmetBirlestirmeGetir(HITAPSorgula):
     """
-    HITAP HizmetBirlestirmeGetir Zato Servisi
+    HITAP Sorgulama servisinden kalıtılmış
+    Hizmet Birleştirme Bilgisi Sorgulama servisi
+
     """
 
     def handle(self):
-        tckn = self.request.payload['tckn']
-        conn = self.outgoing.soap['HITAP'].conn
+        """
+        Servis çağrıldığında tetiklenen metod.
 
-        # connects with soap client to the HITAP
+        Attributes:
+            service_name (str): İlgili Hitap sorgu servisinin adı
+            bean_name (str): Hitap'tan gelen bean nesnesinin adı
+            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
+                    ``HizmetBirlestirme`` modelinin alanlarıyla eşlenmektedir.
+                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+
+        """
+
+        self.service_name = 'HizmetBirlestirmeSorgula'
+        self.bean_name = 'HizmetBirlestirmeServisBean'
+        self.service_dict = {
+            'fields': {
+                'tckn': 'tckn',
+                'kayit_no': 'kayitNo',
+                'sgk_nevi': 'sgkNevi',
+                'sgk_sicil_no': 'sgkSicilNo',
+                'baslama_tarihi': 'baslamaTarihi',
+                'bitis_tarihi': 'bitisTarihi',
+                'sure': 'sure',
+                'kamu_isyeri_ad': 'kamuIsyeriAd',
+                'ozel_isyeri_ad': 'ozelIsyeriAd',
+                'bag_kur_meslek': 'bagKurMeslek',
+                'ulke_kod': 'ulkeKod',
+                'banka_sandik_kod': 'bankaSandikKod',
+                'kidem_tazminat_odeme_durumu': 'kidemTazminatOdemeDurumu',
+                'ayrilma_nedeni': 'ayrilmaNedeni',
+                'kha_durum': 'khaDurum',
+                'kurum_onay_tarihi': 'kurumOnayTarihi'
+            },
+            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi']
+        }
+        super(HizmetBirlestirmeGetir, self).handle()
+
+    def custom_filter(self, hitap_dict):
+        """
+        Hitap sözlüğüne uygulanacak ek filtreleri gerçekleştirir.
+
+        Args:
+            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
+
+        """
+
+        for record in hitap_dict:
+            record['kidem_tazminat_odeme_durumu'] = \
+                self.kidem_durum_kontrol(record['kidem_tazminat_odeme_durumu'])
+            record['kha_durum'] = self.kha_durum_kontrol(record['kha_durum'])
+
+    def kidem_durum_kontrol(self, kidem_durum):
+        """
+        Hitap Hizmet Birleştirme servisinin,
+        "0" veya "1" olarak gelen Kıdem Tazminatı Ödeme Durumu değeri,
+        tam sayı olarak elde edilmektedir.
+
+        - "0": "HAYIR"
+        - "1": "EVET"
+        - "": "BELİRLENEMEDİ"
+
+        Args:
+            kidem_durum (str): Hizmet Birleştirme Kıdem Tazminatı Ödeme Durumu değeri.
+
+        Returns:
+            int: Kıdem Tazminatı Ödeme Durumu tam sayı değeri.
+
+        Raises:
+            ValueError: Geçersiz Kıdem Tazminatı Ödeme Durumu kodu.
+                Varsayılan olarak 2 değeri verilmektedir.
+
+        """
+
         try:
-            with conn.client() as client:
-                service_bean = client.service.HizmetBirlestirmeSorgula(H_USER, H_PASS,
-                                                                  tckn).HizmetBirlestirmeServisBean
-                self.logger.info("HizmetBirlestirmeGetir started to work.")
+            return int(kidem_durum)
+        except ValueError:
+            return 2
 
-                hitap_dict = {}
-                for record in range(0, len(service_bean)):
-                    hitap_dict[service_bean[record].kayitNo] = {
-                        'kayit_no': service_bean[record].kayitNo,
-                        'baslama_tarihi': '01.01.1900' if
-                        service_bean[record].baslamaTarihi == "01.01.0001" else
-                        service_bean[record].baslamaTarihi,
-                        'bitis_tarihi': '01.01.1900' if
-                        service_bean[record].bitisTarihi == "01.01.0001" else
-                        service_bean[record].bitisTarihi,
-                        'sgkNevi': service_bean[record].sgkNevi,
-                        'sgkSicilNo': service_bean[record].sgkSicilNo,
-                        'sure':service_bean[record].sure,
-                        'kamuIsyeriAd':service_bean[record].kamuIsyeriAd,
-                        'ozelIsyeriAd':service_bean[record].ozelIsyeriAd,
-                        'bagKurMeslek': service_bean[record].bagKurMeslek,
-                        'ulkeKod': service_bean[record].ulkeKod,
-                        'bankaSandikKod': service_bean[record].bankaSandikKod,
-                        'kidemTazminatOdemeDurumu': service_bean[record].kidemTazminatOdemeDurumu,
-                        'ayrilmaNedeni': service_bean[record].ayrilmaNedeni,
-                        'khaDurum': service_bean[record].khaDurum,
-                        'kurumOnayTarihi': service_bean[record].kurumOnayTarihi,
-                        'tckn': service_bean[record].tckn
-                    }
-                self.logger.info("hitap_dict created.")
-
-            response_json = dumps(hitap_dict)
-            return_dict = {"status": "ok", "result": response_json}
-            # self.response.payload = dumps(return_dict)
-            self.response.payload = {"status": "ok", "result": response_json}
-            # self.response.payload["status"] = "ok"
-            # self.response.payload["result"] = response_json
-
-        except AttributeError:
-            self.response.payload["status"] = "error"
-            self.response.payload["result"] = "TCKN may be wrong!"
-            self.logger.info("TCKN may be wrong!")
-        except urllib2.URLError:
-            self.logger.info("No internet connection!")
-
-    def kidem_tazminat_odeme_durumu(self, kidem_durum):
+    def kha_durum_kontrol(self, kha_durum):
         """
-        Kıdem Tazminat ödeme durumu hitap servisinden aşağıdaki gibi gelmektedir.
-        0: HAYIR
-        1: EVET
-        “”(BOŞ KARAKTER): BELİRLENEMEDİ
+        Hitap Hizmet Birleştirme servisinin,
+        "0", "1", "2", "3", "4", "5" olarak gelen Kazanılmış Hak Aylığı
+        durum bilgisi değerleri, tam sayı olarak elde edilmektedir.
 
-        Ulakbus kaydederken BELİRLENEMEDİ = 2 yapılacaktır
+        - "0": "Değerlendirilmedi"
+        - "1": "Prim gün sayısının 2/3 oranında değerlendirildi"
+        - "2": "Prim gün sayısının 3/4 oranında değerlendirildi"
+        - "3": "Prim gün sayısının 4/4 oranında değerlendirildi"
+        - "4": "Belirlenemedi"
+        - "5": "İki tarih arasının tamamı değerlendirildi"
 
-        :param hs: hitaptan donen kıdem durumu
-        :type hs: str
-        :return str: kıdem durumu
+        Args:
+            kha_durum (str): Hizmet Birleştirme KHA durum değeri.
+
+        Returns:
+            int: KHA durum tam sayı değeri.
+
+        Raises:
+            ValueError: Geçersiz KHA durum kodu.
 
         """
-        if kidem_durum == "":
-            return "2"
-        else:
-            return str(kidem_durum)
+
+        try:
+            return int(kha_durum)
+        except ValueError:
+            self.logger.exception("KHA Durum kodu gecersiz: %s" % kha_durum)
+            return 0

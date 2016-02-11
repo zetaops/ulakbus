@@ -1,9 +1,15 @@
 # -*-  coding: utf-8 -*-
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+
+"""Öğrenci Modülü
+
+Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
+
+"""
+
 from pyoko.lib.utils import lazy_property
 from .personel import Personel
 from pyoko import Model, field, ListNode
@@ -14,6 +20,12 @@ import six
 
 
 class HariciOkutman(Model):
+    """Harici Okutman Modeli
+
+    Harici okutmanın özlük ve iletişim bilgilerini içerir.
+
+    """
+
     tckn = field.String("TC No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)
@@ -21,8 +33,8 @@ class HariciOkutman(Model):
     uyruk = field.String("Uyruk", index=True)
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali", required=False)
     ikamet_adresi = field.String("İkamet Adresi", index=True, required=False)
-    ikamet_il = field.String("İkamet Il", index=True, required=False)
-    ikamet_ilce = field.String("İkamet Ilce", index=True, required=False)
+    ikamet_il = field.String("İkamet İl", index=True, required=False)
+    ikamet_ilce = field.String("İkamet İlçe", index=True, required=False)
     adres_2 = field.String("Adres 2", index=True, required=False)
     adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True, required=False)
     telefon_no = field.String("Telefon Numarası", index=True, required=True)
@@ -48,20 +60,21 @@ class HariciOkutman(Model):
     ana_adi = field.String("Baba Adi", index=True)
     dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     dogum_yeri = field.String("Doğum Yeri", index=True)
-    kayitli_oldugu_il = field.String("Il", index=True)
-    kayitli_oldugu_ilce = field.String("Ilce", index=True)
+    kayitli_oldugu_il = field.String("İl", index=True)
+    kayitli_oldugu_ilce = field.String("İlçe", index=True)
     kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
     kayitli_oldugu_cilt_no = field.String("Cilt No")
-    kayitli_oldugu_aile_sira_no = field.String("Aile Sira No")
-    kayitli_oldugu_sira_no = field.String("Sira No")
-    kimlik_cuzdani_verildigi_yer = field.String("Cuzdanin Verildigi Yer")
-    kimlik_cuzdani_verilis_nedeni = field.String("Cuzdanin Verilis Nedeni")
-    kimlik_cuzdani_kayit_no = field.String("Cuzdan Kayit No")
-    kimlik_cuzdani_verilis_tarihi = field.String("Cuzdan Kayit Tarihi")
+    kayitli_oldugu_aile_sira_no = field.String("Aile Sıra No")
+    kayitli_oldugu_sira_no = field.String("Sıra No")
+    kimlik_cuzdani_verildigi_yer = field.String("Cüzdanin Verildiği Yer")
+    kimlik_cuzdani_verilis_nedeni = field.String("Cüzdanin Veriliş Nedeni")
+    kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
+    kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
     akademik_yayinlari = field.String("Akademik Yayınları", index=True, required=False)
     verdigi_dersler = field.String("Verdiği Dersler", index=True, required=False)
     unvan = field.Integer("Unvan", index=True, choices="akademik_unvan", required=False)
     aktif = field.Boolean("Aktif", index=True, required=False)
+    user = User(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -73,23 +86,44 @@ class HariciOkutman(Model):
         return '%s %s' % (self.ad, self.soyad)
 
     def post_save(self):
-        okutman_qs = Okutman.objects.filter(harici_okutman=self)
-        if okutman_qs:
-            okutman = okutman_qs[0]
-            okutman.harici_okutman = self
-            okutman.ad = self.ad
-            okutman.soyad = self.soyad
-            okutman.unvan = self.unvan
-            okutman.save()
+        """
+        Okutman modelinden bu modele one-to-one bir bağlantı mevcuttur. Bu sebeple
+        modelimizden de karşılıklı bir bağ oluşmuştur.
+
+        Bu modelde yapılan değişiklik, bu metod sayesinde Okutman modeline yansıtılır.
+
+        """
+
+        if self.okutman.exist:
+            self.okutman.ad = self.ad
+            self.okutman.soyad = self.soyad
+            self.okutman.unvan = self.unvan
+            self.okutman.save()
 
 
 class Okutman(Model):
+    """Okutman Modeli
+
+    Okutman bilgileri için data modelidir.
+
+    Okutman, ders veren tüm öğretim elemanlarının (öğretim üyesi, öğretim elemanı,
+    okutman ve harici okutman) genel adıdır.
+
+    Bu model, aynı amaçla iki ayrı modele bağlıdır: Personel veya Harici Okutman.
+    Ancak herbir kaydın sadece bir tanesine bağı olabilir. Okutman universite personeli
+    veya dışarıdan harici bir personel olabilir. Aynı anda ikisi birden olamaz.
+
+    Birim alanı okutmanın bağlı olduğu bölümü ifade eder. Harici okutmanlar da bu bölümlerin
+    yetkisi altındadır.
+
+    """
+
     ad = field.String("Ad", index=True, required=False)
     soyad = field.String("Soyad", index=True, required=False)
     unvan = field.String("Unvan", index=True, required=False)
     birim_no = field.String("Birim ID", index=True, required=False)
-    personel = Personel()
-    harici_okutman = HariciOkutman()
+    personel = Personel(one_to_one=True)
+    harici_okutman = HariciOkutman(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -99,19 +133,52 @@ class Okutman(Model):
 
     @lazy_property
     def okutman(self):
-        # self.personel layz model dondurdugu icin self.personel.key seklinde kontrol etmeliyiz.
-        return self.personel if self.personel.key else self.harici_okutman
+        """Okutmanın bağlı olduğu personel veya harici okutmanı döndürür.
+
+        Example:
+            Okutman örneği (instance) üzerinden erişilebilir. Aşağıdaki örnek ilgili okutmanın
+            eposta bilgisine erişim sağlar. Okutman personel ise Personel modeli eposta alanı,
+            harici okutman ise HariciOkutman modeli eposta alanı kullanılır::
+
+                ders_okutman = Okutman.objects.get(ad="Yeter", soyad="Demir")
+                eposta = ders_okutman.okutman.eposta
+
+        """
+
+        return self.personel if self.personel.exist else self.harici_okutman
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
 
     def is_not_unique(self):
+        """Personel veya Harici Okutman sayısını bulur.
+
+        Returns:
+            personel veya harici okutman sayısı
+
+        """
+
         if self.personel.key:
             return len(self.objects.filter(personel=self.personel))
         elif self.harici_okutman.key:
             return len(self.objects.filter(harici_okutman=self.harici_okutman))
 
     def pre_save(self):
+        """Bu metot nesne kayıt edilmeden hemen önce çalışır.
+
+        Okutmanın bağlı olduğu personel veya harici okutman kaydı tekil olmalıdır. Bir okutmanın
+        ya personel ya da harici okutman kaydı bulunabilir.
+
+        Ayrıca aynı personel veya aynı harici okutmanın birden fazla Okutman kaydı bulunamaz.
+
+        Bu metot ilgili kontrolleri yapıp, nesneyi kaydetmeye hazır hale getirir.
+
+
+        Raises:
+            Exception: Eğer kaydedilen nesne, veritabanında varsa ve tekil değilse
+
+
+        """
         if self.okutman.key:
             self.ad = self.okutman.ad
             self.soyad = self.okutman.soyad
@@ -121,6 +188,14 @@ class Okutman(Model):
 
 
 class Donem(Model):
+    """Dönem Modeli
+
+    Güz, bahar ve yaz akademik dönemlerinin bilgilerine ait modeldir.
+
+    Güncel alanı, içerisinde bulunulan akademik dönemi işaret eder.
+
+    """
+
     ad = field.String("Ad", index=True)
     baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
@@ -138,6 +213,13 @@ class Donem(Model):
 
 
 class Program(Model):
+    """Program Modeli
+
+     Bir bölümün öğrenim programı (ders ve uygulamalardan oluşan) bilgilerinin
+     saklandığı modeldir.
+
+    """
+
     yoksis_no = field.String("YOKSIS ID", index=True)
     bolum_adi = field.String("Bölüm", index=True)
     ucret = field.Integer("Ücret", index=True)
@@ -148,12 +230,13 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
-    bolum_baskani = Role(verbose_name='Bolum Başkanı', reverse_name='bolum_baskani_program')
+    bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
     ects_bolum_kordinator = Role(verbose_name='ECTS Bölüm Koordinator',
                                  reverse_name='ects_koordinator_program')
     akademik_kordinator = Role(verbose_name='Akademik Koordinator',
                                reverse_name='akademik_koordinator_program')
     birim = Unit(reverse_name="yoksis_program_program", verbose_name="YÖKSİS Program")
+
     bolum = Unit(reverse_name="bolum_program", verbose_name="Bölüm")
 
     class Donemler(ListNode):
@@ -171,6 +254,12 @@ class Program(Model):
 
 
 class Ders(Model):
+    """Ders Modeli
+
+    Program dahilinde açılan derslerin bilgilerinin saklandığı modeldir.
+
+    """
+
     ad = field.String("Ad", index=True)
     kod = field.String("Kod", index=True)
     tanim = field.String("Tanım", index=True)
@@ -187,7 +276,7 @@ class Ders(Model):
     ogrenme_ciktilari = field.String("Öğrenme Çıktıları", index=True)
     ders_icerigi = field.String("Ders İçeriği", index=True)
     ders_kategorisi = field.Integer("Ders Kategorisi", index=True, choices="ders_kategorileri")
-    ders_kaynaklari = field.String("Ders kaynakları", index=True)
+    ders_kaynaklari = field.String("Ders Kaynakları", index=True)
     ders_mufredati = field.String("Ders Müfredatı", index=True)
     verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
     program = Program()
@@ -216,9 +305,22 @@ class Ders(Model):
 
 
 class Sube(Model):
+    """Şube Modeli
+
+    Ders şubelerine ait bilgilerin saklandığı modeldir.
+
+    Şube, bir dersin, bir dönem içerisinde okutmanı ile birlikte tanımlanmasıyla ortaya çıkar.
+
+    Her şubenin önceden belirlenmiş bir kontenjanı vardır.
+
+    Dış kontenjan ise, o şubeyi, dersin ait olduğu bölüm dışından seçebilecek
+    öğrenci sayısını ifade eder.
+
+    """
+
     ad = field.String("Ad", index=True)
     kontenjan = field.Integer("Kontenjan", index=True)
-    dis_kontenjan = field.Integer("Dis Kontenjan", index=True)
+    dis_kontenjan = field.Integer("Dış Kontenjan", index=True)
     okutman = Okutman()
     ders = Ders()
     donem = Donem()
@@ -228,8 +330,8 @@ class Sube(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Sube"
-        verbose_name_plural = "Subeler"
+        verbose_name = "Şube"
+        verbose_name_plural = "Şubeler"
         list_fields = ['ad', 'kontenjan']
         search_fields = ['ad', 'kontenjan']
 
@@ -238,17 +340,30 @@ class Sube(Model):
 
 
 class Sinav(Model):
+    """Sınav Modeli
+
+    Derse ait sınav(ara sınav, genel sınav, bütünleme, tek ders, muafiyet)
+    bilgilerinin saklandığı modeldir.
+
+    Sınavlar şubeler için ders dolayısı ile otomatik açılırlar. Bu sebeple temel bağ Şube
+    modelidir.
+
+    Ders arama kolaylığı için eklenmiştir.
+
+    """
+
     tarih = field.Date("Sınav Tarihi", index=True)
     yapilacagi_yer = field.String("Yapılacağı Yer", index=True)
     tur = field.Integer("Sınav Türü", index=True, choices="sinav_turleri")
     aciklama = field.String("Açıklama", index=True)
     sube = Sube()
     ders = Ders()
+    degerlendirme = field.Boolean("Değerlendirme Durumu", index=True, default=False)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Sinav"
-        verbose_name_plural = "Sinavlar"
+        verbose_name = "Sınav"
+        verbose_name_plural = "Sınavlar"
         list_fields = ['tarih', 'yapilacagi_yer']
         search_fields = ['aciklama', 'tarih']
 
@@ -257,6 +372,12 @@ class Sinav(Model):
 
 
 class DersProgrami(Model):
+    """Ders Programı Modeli
+
+    Dersin işlenecegi gün, saat, şube ve derslik bilgilerini saklayan modeldir.
+
+    """
+
     gun = field.String("Ders Günü", index=True)
     saat = field.Integer("Ders Saati", index=True)
     sube = Sube()
@@ -264,8 +385,8 @@ class DersProgrami(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ders Programi"
-        verbose_name_plural = "Ders Programlari"
+        verbose_name = "Ders Programı"
+        verbose_name_plural = "Ders Programları"
         list_fields = ['gun', 'saat']
         search_fields = ['gun', 'saat']
 
@@ -274,6 +395,15 @@ class DersProgrami(Model):
 
 
 class Ogrenci(Model):
+    """Öğrenci Modeli
+
+    Öğrencinin özlük ve iletişim bilgilerinin saklandığı modeldir.
+
+    Öğrenciler, sisteme giriş yapar ve yetkileri doğrultusunda iş akışları
+    çalıştırır. Bu amaçla User bağlantısı kurulmuştur.
+
+    """
+
     ad = field.String("Ad", index=True)
     soyad = field.String("Soyad", index=True)
     cinsiyet = field.Integer("Cinsiyet", index=True, choices="cinsiyet")
@@ -282,19 +412,21 @@ class Ogrenci(Model):
     cuzdan_seri_no = field.String("Seri No", index=True)
     kayitli_oldugu_il = field.String("İl", index=True)
     kayitli_oldugu_ilce = field.String("İlçe", index=True)
-    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
+    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Köy")
     kayitli_oldugu_cilt_no = field.String("Cilt No")
     kayitli_oldugu_aile_sira_no = field.String("Aile Sıra No")
     kayitli_oldugu_sira_no = field.String("Sıra No")
-    kimlik_cuzdani_verildigi_yer = field.String("Nüfus Cuzdanı Verildigi Yer")
-    kimlik_cuzdani_verilis_nedeni = field.String("Nufus Cuzdanı Verilis Nedeni")
-    kimlik_cuzdani_kayit_no = field.String("Nüfus Cuzdanı Kayit No")
-    kimlik_cuzdani_verilis_tarihi = field.Date("Nüfus Cüzdanı Veriliş Tarihi", index=True, format="%d.%m.%Y")
+    kimlik_cuzdani_verildigi_yer = field.String("Nüfus Cüzdanı Verildiği Yer")
+    kimlik_cuzdani_verilis_nedeni = field.String("Nüfus Cüzdanı Veriliş Nedeni")
+    kimlik_cuzdani_kayit_no = field.String("Nüfus Cüzdanı Kayıt No")
+    kimlik_cuzdani_verilis_tarihi = field.Date("Nüfus Cüzdanı Veriliş Tarihi", index=True,
+                                               format="%d.%m.%Y")
     baba_adi = field.String("Ana Adı", index=True)
     ana_adi = field.String("Baba Adı", index=True)
     ikamet_il = field.String("İkamet İl", index=True)
     ikamet_ilce = field.String("İkamet İlçe", index=True)
     ikamet_adresi = field.String("İkametgah Adresi", index=True)
+    adres2 = field.String("2.Adres", index=True)
     posta_kodu = field.String("Posta Kodu", index=True)
     dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
     dogum_yeri = field.String("Doğum Yeri", index=True)
@@ -302,14 +434,37 @@ class Ogrenci(Model):
     medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
     ehliyet = field.String("Ehliyet", index=True)
     e_posta = field.String("E-Posta", index=True)
+    e_posta2 = field.String("2.E-Posta", index=True)
     tel_no = field.String("Telefon Numarası", index=True)
+    gsm = field.String("Cep Tel", index=True)
     kan_grubu = field.String("Kan Grubu", index=True)
+    baba_aylik_kazanc = field.Integer("Babanızın Aylık Kazancı", index=True)
+    baba_ogrenim_durumu = field.Integer("Babanızın Öğrenim Durumu", index=True,
+                                        choices="ogrenim_durumu")
+    baba_meslek = field.String("Babanızın Mesleği", index=True)
+    anne_ogrenim_durumu = field.Integer("Annenizin Öğrenim Durumu", index=True,
+                                        choices="ogrenim_durumu")
+    anne_meslek = field.String("Annenizin Mesleği", index=True)
+    anne_aylik_kazanc = field.Integer("Annenizin Aylık Kazancı", index=True)
+    masraf_sponsor = field.Integer("Masraflarınız Kim Tarafından Karşılanacak", index=True,
+                                   choices="masraf_sponsorlar")
+    emeklilik_durumu = field.String("Velinizin Emeklilik Durumu", index=True)
+    kiz_kardes_sayisi = field.Integer("Kız Kardeş Sayısı", index=True)
+    erkek_kardes_sayisi = field.Integer("Erkek Kardeş Sayısı", index=True)
+    ogrenim_goren_kardes_sayisi = field.Integer("Öğrenim Gören Kardeş Sayısı", index=True)
+    burs_kredi_no = field.String("Kredi ve Yurtlar Kurumundan Aldığınız Kredi ve Burs No",
+                                 index=True)
+    aile_tel = field.String("Ailenizin Ev Tel", index=True)
+    aile_gsm = field.String("Ailenizin Cep Tel", index=True)
+    aile_adres = field.String("Ailenizin Daimi İkamet Ettiği Adres", index=True)
+    ozur_durumu = field.Integer("Varsa Özür Durumunuz", index=True, choices="ozur_durumu")
+    ozur_oran = field.Integer("Varsa Özür Oranınız %", index=True)
     user = User(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ogrenci"
-        verbose_name_plural = "Ogrenciler"
+        verbose_name = "Ögrenci"
+        verbose_name_plural = "Ögrenciler"
         list_fields = ['ad', 'soyad']
         search_fields = ['ad', 'soyad']
 
@@ -318,6 +473,12 @@ class Ogrenci(Model):
 
 
 class OncekiEgitimBilgisi(Model):
+    """Öncekı Eğitim Bilgisi Modeli
+
+    Öğrenciye ait önceki eğitim bilgisi modelidir.
+
+    """
+
     okul_adi = field.String("Mezun Olduğu Okul", index=True)
     diploma_notu = field.Float("Diploma Notu", index=True)
     mezuniyet_yili = field.String("Mezuniyet Yılı", index=True)
@@ -330,12 +491,35 @@ class OncekiEgitimBilgisi(Model):
         list_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
         search_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
 
+    def __unicode__(self):
+        return '%s %s %s' % (self.okul_adi, self.mezuniyet_yili, self.ogrenci.ad)
+
 
 class OgrenciProgram(Model):
+    """Öğrenci Program Modeli
+
+    Öğrencilerin kayıt yaptırdığı programların saklandığı modeldir.
+
+    Öğrenciler birden fazla programa kayıt yaptırabilirler. Herbir program için ayrı bir öğrenci
+    numarası alırlar.
+
+    Aktif dönem öğrencinin ilgili programda geldiği aşamayı ifade eder. Buna göre ilgili program
+    derslerinden faydalanabilir.
+
+    Başarı durumu, Genel Ağırlıklı Not Ortalamasını ifade eder:
+    http://www.ulakbus.org/wiki/standart_fakulteler_icin_yazilim_ihtiyac_analizi_belgesi.html#basari-hesaplama
+
+    Öğrencinin ilgili programdaki danışman bilgisi de burada saklanır.
+
+    """
+
     ogrenci_no = field.String("Öğrenci Numarası", index=True)
     giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
+    giris_puan_turu = field.Integer("Puan Türü", index=True, choices="giris_puan_turleri")
+    giris_puani = field.Float("Giriş Puani", index=True)
     aktif_donem = field.String("Dönem", index=True)
+    durum = field.Integer("Durum", index=True, choices="ogrenci_program_durumlar")
     basari_durumu = field.String("Başarı Durumu", index=True)
     ders_programi = DersProgrami()
     danisman = Personel()
@@ -344,28 +528,49 @@ class OgrenciProgram(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Öğrenci Program"
-        verbose_name_plural = "Öğrenci Program"
+        verbose_name = "Öğrenci Programı"
+        verbose_name_plural = "Öğrenci Programları"
+
+    class Belgeler(ListNode):
+        tip = field.Integer("Belge Tipi", choices="belge_tip", index=True)
+        aciklama = field.String("Ek Açıklama", index=True, default="-", required=False)
+        tamam = field.Boolean("Belge kontrol edildi", index=True, required=True)
 
     def __unicode__(self):
-        return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad, self.program.adi, self.program.yil)
+        return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad,
+                                    self.program.adi, self.program.yil)
 
 
 class OgrenciDersi(Model):
+    """Öğrenci Dersi Modeli
+
+    Öğrencilerin ders seçimlerinin saklandığı modeldir.
+
+    Ders alanı Şube modeli ile ilişkilendirilmiştir. Bunun sebebi öğrencilerin ders seçiminin,
+    ders ve okutmanın birleştiği şube seçimi olmasıdır. Detaylı bilgiler Şube modelinde bulunabilir.
+
+    """
+
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
     ders = Sube()
     ogrenci_program = OgrenciProgram()
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ogrenci Dersi"
-        verbose_name_plural = "Ogrenci Dersleri"
+        verbose_name = "Ögrenci Dersi"
+        verbose_name_plural = "Öğrenci Dersleri"
         list_fields = ['sube_dersi', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
 
     def sube_dersi(self):
-        # return '%s - %s' % (self.ders.ders.kod, self.ders.ders)
-        return six.text_type(self.ders)
+        """
+        Şubenin bağlı olduğu ders adı.
+
+        Returns:
+            Şubenin bağlı olduğu ders örneğinin adını döndürür.
+
+        """
+        return six.text_type(self.ders.ders)
 
     sube_dersi.title = 'Ders'
 
@@ -374,6 +579,19 @@ class OgrenciDersi(Model):
 
 
 class DersKatilimi(Model):
+    """Ders Katılımı Modeli
+
+    Öğrencilerin devam durumları hakkında bilgilerin saklandığı modeldir. Okutman tarafından
+    verilecek yüzdelik bir ifadeyle katılım durumu alanında saklanır.
+
+    Temel ilişki Ogrenci ve Ders modelleri ile kurulmuştur.
+
+    Note:
+        Okutman arama kolaylığı amacıyla saklanmıştır.
+
+    """
+
+    # TODO: Neden float, soralım?
     katilim_durumu = field.Float("Katılım Durumu", index=True)
     ders = Sube()
     ogrenci = Ogrenci()
@@ -381,14 +599,21 @@ class DersKatilimi(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ders Devamsizligi"
-        verbose_name_plural = "Ders Devamsizliklari"
+        verbose_name = "Ders Devamsızlığı"
+        verbose_name_plural = "Ders Devamsızlıklari"
         list_fields = ['katilim_durumu', 'sube_dersi']
         search_fields = ['sube_dersi', 'katilim_durumu']
 
     def sube_dersi(self):
-        # return '%s - %s' % (self.ders.ders.kod, self.ders.ders)
-        return six.text_type(self.ders)
+        """
+        Şubenin bağlı olduğu ders adı.
+
+        Returns:
+            Şubenin bağlı olduğu ders örneğinin adını döndürür.
+
+        """
+
+        return six.text_type(self.ders.ders)
 
     sube_dersi.title = 'Ders'
 
@@ -397,15 +622,74 @@ class DersKatilimi(Model):
 
 
 class Borc(Model):
+    """Borç modeli
+
+    Öğrencilerin ödemesi gereken ücret (harc, belge, belgeler, kimlik
+    ücretleri vb.) bilgilerinin saklandığı modeldir.
+
+    ``tahakkuk_referans_no`` sistem tarafından üretilen ve
+    3. taraflara (banka veya ilgili diğer kurumlar) iletilen tekil
+    takip koddur.
+
+    """
+
     miktar = field.Float("Borç Miktarı", index=True)
     para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
     sebep = field.Integer("Borç Sebebi", index=True, choices="ogrenci_borc_sebepleri")
     son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
+    tahakkuk_referans_no = field.String("Tahakkuk Referans No", index=True)
+    aciklama = field.String("Borç Açıklaması", index=True)
+    ogrenci = Ogrenci()
+    donem = Donem()
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Borç"
+        verbose_name_plural = "Borçlar"
+        list_fields = ['miktar', 'son_odeme_tarihi']
+        search_fields = ['miktar', 'odeme_tarihi']
+
+    def __unicode__(self):
+        return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
+
+
+class Banka(Model):
+    """Banka Modeli
+
+    Basitçe banka adı ve tekil bir banka kodu ile saklanır.
+
+    """
+
+    ad = field.String("Banka Adi", index=True)
+    kod = field.String("Banka Kodu", index=True)
+
+    class Meta:
+        verbose_name = "Banka"
+        verbose_name_plural = "Bankalar"
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.kod)
+
+
+class Odeme(Model):
+    """Ödeme Modeli
+
+    Öğrencilerin borçlarına karşılık, banka veya diğer yollar ile tahsil
+    edilen ödemelerin saklandığı data modelidir.
+
+    """
+
+    miktar = field.Float("Borç Miktarı", index=True)
+    para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
     aciklama = field.String("Borç Açıklaması", index=True)
     odeme_sekli = field.Integer("Ödeme Şekli", index=True, choices="odeme_sekli")
     odeme_tarihi = field.Date("Ödeme Tarihi", index=True)
-    odenen_miktar = field.String("Ödenen Miktar", index=True)
+    borc = Borc()
     ogrenci = Ogrenci()
+    banka = Banka()
+    banka_sube_kodu = field.String("Banka Sube Kodu", index=True)
+    banka_kanal_kodu = field.String("Kanal Kodu", index=True)
+    tahsilat_referans_no = field.String("Tahsilat Referans No", index=True)
     donem = Donem()
 
     class Meta:
@@ -419,14 +703,51 @@ class Borc(Model):
         return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
 
 
+class BankaAuth(Model):
+    """Banka Doğrulama Modeli
+
+    Banka kullanıcılarının doğrulanması için gereken bilgilerin
+    tutulduğu data modelidir.
+
+    """
+
+    username = field.String("Username", index=True)
+    password = field.String("Password", index=True)
+    banka = Banka()
+
+    class Meta:
+        verbose_name = "Banka Kullanicisi"
+        verbose_name_plural = "Banka Kullanicilari"
+
+    def __unicode__(self):
+        return '%s %s' % (self.username, self.banka.ad)
+
+
 class DegerlendirmeNot(Model):
+    """Değerlendirme Notu Modeli
+
+    Ders değerlendirmeleri (sınavlar, sunum, proje, odev vb.) için okutmanlar
+    tarafından verilen notların saklandığı data modelidir.
+
+    Temel ilişki Sınav ve Öğrenci modeli ile kurulmuştur. Değerlendirme
+    bilgisi puan alanında saklanır.
+
+    Note:
+        Ders, öğretim elemeanı, yıl ve donem, alanları arama kolaylığı
+        açısından saklanmaktadır.
+
+    """
+
     puan = field.Integer("Puan", index=True)
-    aciklama = field.String("Puan Açıklaması", index=True)
+    sinav = Sinav()
+    ogrenci = Ogrenci()
+    aciklama = field.String("Puan Açıklaması", index=True, required=False)
+
+    # Arama amacli alanlar.
     yil = field.String("Yıl", index=True)
     donem = field.String("Dönem", index=True)
     ogretim_elemani = field.String("Öğretim Elemanı", index=True)
-    sinav = Sinav()
-    ogrenci = Ogrenci()
+    ogrenci_no = field.String("Öğrenci No", index=True)
     ders = Ders()
 
     class Meta:
@@ -500,8 +821,18 @@ AKADEMIK_TAKVIM_ETKINLIKLERI = [
 
 
 class AkademikTakvim(Model):
+    """Akademik Takvim Modeli
+
+    Akademik Takvim etkinlikleri bilgileri modeldir. AKADEMIK_TAKVIM_ETKINLIKLERI ile
+    tanımlanmış her bir etkinlik için tarih veya tarih aralığı bigisi saklanır.
+
+    Universiteye ait bir takvim zorunlu olarak varolmakla birlikte
+    istenirse etkinlikler birimlere göre farklılık gösterebilirler.
+
+    """
+
     birim = Unit("Birim", index=True)
-    yil = field.Date("Yil", index=True)
+    yil = field.Date("Yıl", index=True)
 
     class Takvim(ListNode):
         etkinlik = field.Integer("Etkinlik", index=True, choices=AKADEMIK_TAKVIM_ETKINLIKLERI)
@@ -511,12 +842,13 @@ class AkademikTakvim(Model):
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Akademik Takvim"
-        verbose_name_plural = "Akademik Takvim"
+        verbose_name_plural = "Akademik Takvimler"
         list_fields = ['_birim', 'yil']
         # search_fields = ['yil']
 
     def _birim(self):
         return "%s" % self.birim
+
     _birim.title = 'Birim'
 
     def __unicode__(self):

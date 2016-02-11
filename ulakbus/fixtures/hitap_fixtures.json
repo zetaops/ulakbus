@@ -171,6 +171,10 @@
     "2": {
       "tr": "Kredi Kartı",
       "en": "Credit Card"
+    },
+    "3": {
+      "tr": "Banka",
+      "en": "Bank"
     }
   },
   "ogrenci_borc_sebepleri": {
@@ -1194,40 +1198,40 @@
     }
   },
   "borc_nevi": {
-    "1": {
-      "tr": "22:Personel Mevzuatına Göre Aylıksız İzin Süreleri(4c)",
+    "22": {
+      "tr": "Personel Mevzuatına Göre Aylıksız İzin Süreleri(4c)",
       "en": ""
     },
-    "2": {
-      "tr": "28:5434 SK geçici 209 borçlanması",
+    "28": {
+      "tr": "5434 SK geçici 209 borçlanması",
       "en": ""
     },
-    "3": {
-      "tr": "30:5510 S.K. Geç. 4. MD. 17. Fıkra Borç.(5525 S.K.)",
+    "30": {
+      "tr": "5510 S.K. Geç. 4. MD. 17. Fıkra Borç.(5525 S.K.)",
       "en": ""
     },
-    "4": {
-      "tr": "31:5510 S.K. Geç. 36. MD. Borç.(1402)",
+    "31": {
+      "tr": "5510 S.K. Geç. 36. MD. Borç.(1402)",
       "en": ""
     },
-    "5": {
-      "tr": "32:5510 S.K. Geç. 43. MD. Borç.(1416)",
+    "32": {
+      "tr": "5510 S.K. Geç. 43. MD. Borç.(1416)",
       "en": ""
     },
-    "6": {
-      "tr": "33:5510 S.K. Geç. 44. MD. Borç.(5525 S.K.)",
+    "33": {
+      "tr": "5510 S.K. Geç. 44. MD. Borç.(5525 S.K.)",
       "en": ""
     },
-    "7": {
-      "tr": "34:5510 S.K. Geç. 51. MD. Borç.(5525 S.K.)",
+    "34": {
+      "tr": "5510 S.K. Geç. 51. MD. Borç.(5525 S.K.)",
       "en": ""
     },
-    "8": {
-      "tr": "35:5510 S.K. 41 MD. (4/C STATÜLÜ DOĞUM BORÇLANMASI)",
+    "35": {
+      "tr": "5510 S.K. 41 MD. (4/C STATÜLÜ DOĞUM BORÇLANMASI)",
       "en": ""
     },
-    "9": {
-      "tr": "36:5510 S.K. Geç. 56. MD. Borç.(5525 S.K.)",
+    "36": {
+      "tr": "5510 S.K. Geç. 56. MD. Borç.(5525 S.K.)",
       "en": ""
     }
   },
@@ -1343,6 +1347,20 @@
     "3":{
       "tr":"Bahce Bitkileri",
       "en":"Bahce Bitkileri"
+    }
+  },
+  "kidem_tazminat_odeme_durumu": {
+    "0": {
+      "tr": "HAYIR",
+      "en": ""
+    },
+    "1": {
+      "tr": "EVET",
+      "en": ""
+    },
+    "2": {
+      "tr": "BELİRLENEMEDİ",
+      "en": ""
     }
   }
 }

@@ -1,5 +1,8 @@
 # -*-  coding: utf-8 -*-
-"""
+"""Auth Modülü
+
+Bu modül Ulakbüs uygulaması için authorization ile ilişkili data modellerini içerir.
+
 """
 
 # Copyright (C) 2015 ZetaOps Inc.
@@ -26,9 +29,16 @@ except ImportError:
 
 
 class User(Model):
+    """User modeli
+
+    User modeli Ulakbus temel kullanıcı modelidir. Temel kullanıcı
+    bilgilerini içerir. Ulakbus'de işlem yapan/yapılan her kullanıcıya
+    ait bir ve tek kullanıcı olması zorunludur.
+
+    """
     username = field.String("Username", index=True)
     password = field.String("Password")
-    avatar = field.File("Profile Photo", random_name=True)
+    avatar = field.File("Profile Photo", random_name=True, required=False)
     name = field.String("First Name", index=True)
     surname = field.String("Surname", index=True)
     superuser = field.Boolean("Super user", default=False)
@@ -40,26 +50,61 @@ class User(Model):
         search_fields = ['username', 'name', 'surname']
 
     def get_avatar_url(self):
+        """
+        Bu metot kullanıcıya ait avatar url'ini üretir.
+
+        Returns:
+            str: kullanıcı avatar url
+        """
         return "%s%s" % (settings.S3_PUBLIC_URL, self.avatar)
 
     def __unicode__(self):
         return "User %s" % self.username
 
-    def __repr__(self):
-        return "User_%s" % self.key
-
     def set_password(self, raw_password):
+        """
+        Kullanıcı şifresini encrypt ederek set eder.
+
+        Args:
+            raw_password (str)
+        """
         self.password = pbkdf2_sha512.encrypt(raw_password, rounds=10000,
                                               salt_size=10)
 
     def check_password(self, raw_password):
+        """
+        Verilen encrypt edilmemiş şifreyle kullanıcıya ait encrypt
+        edilmiş şifreyi karşılaştırır.
+
+        Args:
+            raw_password (str)
+
+        Returns:
+             bool: Değerler aynı olması halinde True, değilse False
+                döner.
+        """
         return pbkdf2_sha512.verify(raw_password, self.password)
 
     def get_role(self, role_id):
+        """
+        Kullanıcıya ait Role nesnesini getirir.
+
+        Args:
+            role_id (int)
+
+        Returns:
+            dict: Role nesnesi
+
+        """
         return self.role_set.node_dict[role_id]
 
 
 class Permission(Model):
+    """Permission modeli
+
+    Kullanıcı yetkilerinin tanımlandığı bilgilerin bulunguğu modeldir.
+
+    """
     name = field.String("İsim", index=True)
     code = field.String("Kod Adı", index=True)
     description = field.String("Tanım", index=True)
@@ -76,8 +121,13 @@ class Permission(Model):
 
 
 class AbstractRole(Model):
+    """AbstractRole Modeli
+
+    Soyut Rol modeli yetkilerin gruplandığı temel role modelidir.
+
+    """
     id = field.Integer("ID No", index=True)
-    name = field.String("Name", index=True)
+    name = field.String("İsim", index=True)
 
     class Meta:
         app = 'Sistem'
@@ -89,14 +139,43 @@ class AbstractRole(Model):
         return "%s" % self.name
 
     def get_permissions(self):
+        """
+        Soyut role ait Permission nesnelerini bulur ve code değerlerini
+        döner.
+
+        Returns:
+            list: Permission code değerleri
+
+        """
         return [p.permission.code for p in self.Permissions]
 
     def add_permission(self, perm):
+        """
+        Soyut Role Permission nesnesi tanımlamayı sağlar.
+
+        Args:
+            perm (object):
+
+        """
         self.Permissions(permission=perm)
         PermissionCache.flush()
         self.save()
 
     def add_permission_by_name(self, code, save=False):
+        """
+        Soyut role Permission eklemek veya eklenebilecek Permission
+        nesnelerini verilen ``code`` parametresine göre listelemek olmak
+        üzere iki şekilde kullanılır.
+
+        Args:
+            code (str): Permission nesnelerini filtre etmekte kullanılır
+            save (bool): True ise Permission ekler, False ise Permission
+                listesi döner.
+
+        Returns:
+            list: ``save`` False ise Permission listesi döner.
+
+        """
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
                     Permission.objects.filter(code__contains=code)]
@@ -112,25 +191,32 @@ class AbstractRole(Model):
 
 
 class Unit(Model):
-    name = field.String("Name", index=True)
-    long_name = field.String("Name", index=True)
+    """Unit modeli
+
+    Kullanıcılara rol tanımlarken kullanılan, kullanıcının hangı birimde
+    olduğunu taşıyan modeldir.
+    Akademik ve idari birimlerin özelliklerini taşır.
+
+    """
+    name = field.String("İsim", index=True)
+    long_name = field.String("Uzun İsim", index=True)
     yoksis_no = field.Integer("Yoksis ID", index=True)
-    unit_type = field.String("Unit Type", index=True)
-    parent_unit_no = field.Integer("Parent Unit ID", index=True)
-    current_situation = field.String("Current Situation", index=True)
-    language = field.String("Learning Language", index=True)
-    learning_type = field.String("Learning Type", index=True)
-    osym_code = field.String("ÖSYM Code", index=True)
-    opening_date = field.Date("Opening Date", index=True)
-    learning_duration = field.Integer("Learning Duration", index=True)
-    english_name = field.String("Unit Name in English", index=True)
-    quota = field.Integer("Unit Quota", index=True)
-    city_code = field.Integer("City Code", index=True)
-    district_code = field.Integer("District Code", index=True)
-    unit_group = field.Integer("Unit Group", index=True)
-    foet_code = field.Integer("FOET Code", index=True)  # yoksis KILAVUZ_KODU mu?
-    is_academic = field.Boolean("Is Academic")
-    is_active = field.Boolean("Is Active")
+    unit_type = field.String("Birim Tipi", index=True)
+    parent_unit_no = field.Integer("Üst Birim ID", index=True)
+    current_situation = field.String("Guncel Durum", index=True)
+    language = field.String("Öğrenim Dili", index=True)
+    learning_type = field.String("Öğrenme Tipi", index=True)
+    osym_code = field.String("ÖSYM Kodu", index=True)
+    opening_date = field.Date("Açılış Tarihi", index=True)
+    learning_duration = field.Integer("Öğrenme Süresi", index=True)
+    english_name = field.String("İngilizce Birim Adı.", index=True)
+    quota = field.Integer("Birim Kontenjan", index=True)
+    city_code = field.Integer("Şehir Kodu", index=True)
+    district_code = field.Integer("Semt Kodu", index=True)
+    unit_group = field.Integer("Birim Grup", index=True)
+    foet_code = field.Integer("FOET Kodu", index=True)  # yoksis KILAVUZ_KODU mu?
+    is_academic = field.Boolean("Akademik")
+    is_active = field.Boolean("Aktif")
     uid = field.Integer(index=True)
     parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
 
@@ -153,6 +239,10 @@ ROL_TIPI = [
 
 
 class PermissionCache(Cache):
+    """PermissionCache sınıfı Kullanıcıya Permission nesnelerinin
+    kontrolünü hızlandırmak için yetkileri cache bellekte saklamak ve
+    gerektiğinde okumak için oluşturulmuştur.
+    """
     PREFIX = 'PRM'
 
     def __init__(self, role_id):
@@ -160,10 +250,17 @@ class PermissionCache(Cache):
 
 
 class Role(Model):
+    """Role modeli
+    Kullanıcıların rol ile ilişkilendiği modeldir. Kullanıcıların birden
+    fazla rolü olabilir. Kullanıcıya atanmış Rol (Role) ve rolde
+    tanımlanmış Soyut Rol (AbstractRole) nesnelerindeki yetkiler bir
+    araya getirilerek kullanıcının yetkileri belirlenir.
+
+    """
     abstract_role = AbstractRole()
     user = User()
     unit = Unit()
-    typ = field.Integer("Rol tipi", choices=ROL_TIPI)
+    typ = field.Integer("Rol Tipi", choices=ROL_TIPI)
     name = field.String("Rol Adı", hidden=True)
 
     class Meta:
@@ -182,6 +279,10 @@ class Role(Model):
         return self.typ == 2
 
     def get_user(self):
+        """
+        Returns:
+            object: user nesnesi
+        """
         return self.user
 
     def __unicode__(self):
@@ -194,24 +295,65 @@ class Role(Model):
             return "%s" % self.permission
 
     def get_db_permissions(self):
+        """
+        Role nesnesinin AbstractRole özelliğine ait yetkileri getirir.
+
+        Returns:
+            list: yetki listesi
+
+        """
         return [p.permission.code for p in self.Permissions] + (
             self.abstract_role.get_permissions() if self.abstract_role.key else [])
 
     def _cache_permisisons(self, pcache):
+        """
+        Cache belleğe yetkileri yazar ve bu yetkileri döner.
+        Args:
+            pcache: PermissionCache nesnesi
+
+        Returns:
+            list: yetki listesi
+
+        """
         perms = self.get_db_permissions()
         pcache.set(perms)
         return perms
 
     def get_permissions(self):
+        """Bellekteki Permission nesnelerini döner.
+        Returns:
+            object:
+        """
         pcache = PermissionCache(self.key)
         return pcache.get() or self._cache_permisisons(pcache)
 
     def add_permission(self, perm):
+        """Yeni Permission ekler ve bellekteki Role nesnesine ait
+        Permission nesnelerini siler.
+
+        Args:
+            perm: Permission nesnesi
+
+        """
         self.Permissions(permission=perm)
         PermissionCache(self.key).delete()
         self.save()
 
     def add_permission_by_name(self, code, save=False):
+        """
+        Role nesnesine Permission eklemek veya eklenebilecek Permission
+        nesnelerini verilen ``code`` parametresine göre listelemek olmak
+        üzere iki şekilde kullanılır.
+
+        Args:
+            code (str): Permission nesnelerini filtre etmekte kullanılır.
+            save (bool): True ise Permission ekler, False ise Permission
+                listesi döner.
+
+        Returns:
+            list: ``save`` False ise Permission listesi döner.
+
+        """
         if not save:
             return ["%s | %s" % (p.name, p.code) for p in
                     Permission.objects.filter(code__contains=code)]
@@ -223,19 +365,43 @@ class Role(Model):
             self.save()
 
     def _make_name(self):
+        """
+        Nesnenin soyut rolü veya bir kullanıcısı varsa soyut rol ismi ve
+        kullanıcı username'ini birleştirerek bir name stringi oluşturur.
+        Bu iki özellik yok ise Role key'ini kullanarak bir string değer
+        üretir.
+        Returns:
+            str:
+
+        """
         if self.abstract_role.key or self.user.key:
             return "%s | %s" % (self.abstract_role.name, self.user.username)
         else:
             return "Role #%s" % self.key if self.is_in_db() else ''
 
     def pre_save(self):
+        """
+        Kayıt edilmeden önce nesnenin adını ``_make_name()`` metodunu
+        çağırarak oluşturur.
+        """
         self.name = self._make_name()
 
 
 class LimitedPermissions(Model):
-    restrictive = field.Boolean(default=False)
-    time_start = field.String("Start Time", index=True)
-    time_end = field.String("End Time", index=True)
+    """LimitedPermissions modeli
+    Bu modelde tutulan bilgilerle mevcut yetkilere sınırlandırmalar
+    getirilir.
+
+    - Başlangıç ve bitiş tarihine göre sınırlandırma uygulanan yetkiler
+    o tarih aralığında geçerli olur.
+
+    - Verilen IPList özelliğine göre bu IPList listesi içindeki
+    ip'lerden gelen requestlere cevap verecek şekilde kısıtlanır.
+
+    """
+    restrictive = field.Boolean("Sınırlandırıcı",default=False)
+    time_start = field.String("Başlama Tarihi", index=True)
+    time_end = field.String("Bitiş Tarihi", index=True)
 
     class Meta:
         app = 'Sistem'
@@ -259,20 +425,45 @@ class LimitedPermissions(Model):
 
 
 class AuthBackend(object):
+    """AuthBackend sınıfı Auth modulüne ait işlemleri gerçekleştirmek
+    için kullanılan bir dizi metodu içerir.
+
+    """
     def __init__(self, current):
         self.session = current.session
         self.current = current
         self.perm_cache = None
 
     def get_permissions(self):
+        """Bellekteki Permission nesnelerini döner.
+        Returns:
+            object:
+        """
         perm_cache = PermissionCache(self.session['role_id'])
         return perm_cache.get() or self.get_role().get_permissions()
 
     def has_permission(self, perm):
+        """Verilen ``perm`` Permission nesnesinin rolde bulunup
+        bulunmadığını döner.
+
+        Args:
+            perm:
+
+        Returns:
+            bool:
+
+        """
         # return True
         return perm in self.get_permissions()
 
     def get_user(self):
+        """Session'da bir kullanıcı varsa sesion'daki kullanıcıyı yoksa
+        boş bir kullanıcı nesnesi döner.
+
+        Returns:
+            object: User nesnesi
+
+        """
         # if 'user_data' in self.session:
         #     user = User()
         #     user.set_data(self.session['user_data'], from_db=True)
@@ -286,9 +477,13 @@ class AuthBackend(object):
 
     def set_user(self, user):
         """
-        insert current user's data to session
+        Kullanıcı datasını session'a yazar.
 
-        :param User user: logged in user
+        Args:
+            user: User nesnesi
+
+        Returns:
+
         """
         user = user
         self.session['user_id'] = user.key
@@ -303,6 +498,15 @@ class AuthBackend(object):
         self.session['permissions'] = default_role.get_permissions()
 
     def get_role(self):
+        """session'da bir role_id varsa bu id'deki Role nesnesini döner.
+        Yoksa session objesini siler ve PermissionDenied hatası verir.
+
+        Returns:
+            object: Role nesnesi
+        Raises:
+            PermissionDenied:
+
+        """
         # if 'role_data' in self.session:
         #     role = Role()
         #     role.set_data(self.session['role_data'])
@@ -317,6 +521,17 @@ class AuthBackend(object):
             raise PermissionDenied("Your don't have a \"Role\" in this system")
 
     def authenticate(self, username, password):
+        """Kullanıcı adı ve şifresini kontrol eder ve eğer doğruysa
+        kullanıcı datasını session'a yazar.
+
+        Args:
+            username:
+            password:
+
+        Returns:
+            bool:
+
+        """
         user = User.objects.filter(username=username).get()
         is_login_ok = user.check_password(password)
         if is_login_ok:
@@ -332,12 +547,29 @@ class AuthBackend(object):
 # invalidate permission cache on crud updates on Role and AbstractRole models
 @receiver(crud_post_save)
 def clear_perm_cache(sender, *args, **kwargs):
+    """Verilen sender nesnesine bağlı Permission nesnelerini cache
+    bellekten siler.
+
+    Eğer sender nesnesi bir AbstractRole ise PermissionCache'i temizler.
+
+    Args:
+        sender:
+        *args:
+        **kwargs:
+
+    """
     if sender.model_class.__name__ == 'Role':
         PermissionCache(kwargs['object'].key).delete()
     elif sender.model_class.__name__ == 'AbstractRole':
         PermissionCache.flush()
 
 def ulakbus_permissions():
+    """Bu metot Ulakbus'e ait tüm yetkileri birleştirerek döner.
+
+    Returns:
+        list: Ulakbus'e ait tüm yetkiler
+
+    """
     default_perms = get_all_permissions()
     from ulakbus.views.reports import ReporterRegistry
     report_perms = ReporterRegistry.get_permissions()

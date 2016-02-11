@@ -1,7 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -16,6 +13,11 @@ __author__ = 'Halil İbrahim Yılmaz'
 
 
 def yeni_program():
+    """
+    Rastgele verileri kullanarak yeni program kaydı oluşturup kaydeder.
+
+    """
+
     program_list = Unit.objects.filter(unit_type='Program')
     term = Donem.objects.filter(guncel=True)[0]
     program_year = term.baslangic_tarihi.year

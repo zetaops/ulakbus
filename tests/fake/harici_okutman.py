@@ -1,7 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -18,6 +15,11 @@ __author__ = 'Halil İbrahim Yılmaz'
 
 
 def yeni_harici_okutman():
+    """
+    Rastgele verileri kullanarak yeni harici okutman kaydı oluştururup kaydeder.
+
+    """
+
     ho = HariciOkutman()
     ho.tckn = ints(length=11)
     ho.ad = fake.first_name()

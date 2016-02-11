@@ -1,0 +1,2 @@
+# install this package if your env has lack of zato to fake zato imports
+git+https://github.com/zetaops/fake_zato

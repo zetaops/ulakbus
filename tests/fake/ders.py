@@ -1,7 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
@@ -16,6 +13,11 @@ __author__ = 'Halil İbrahim Yılmaz'
 
 
 def yeni_ders():
+    """
+    Rastgele verileri kullanarak yeni ders kaydı oluştururup kaydeder.
+
+    """
+
     program_list = Program.objects.filter()
     term = Donem.objects.filter(guncel=True)[0]
     personel_list = Personel.objects.filter(unvan=1)
