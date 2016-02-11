@@ -5,7 +5,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-import time
 from .base_test_case import BaseTestCase
 from ulakbus.models import AkademikTakvim
 
@@ -44,17 +43,18 @@ class TestCase(BaseTestCase):
         objct = AkademikTakvim.objects.get(object_key)
         assert objct.birim.name in resp.json['object_name']
 
-        # 0 değeri ise queryset alanına girilen değere ait herhangi bir kayıt bulunamadığını gösterir.
+        # Queryset alanına rastgele girilir.
         resp = self.client.post(model='Unit',
                                 cmd='select_list',
-                                query='Bilgisiyar Mühendisliği')
+                                query='jsghgahfsghfaghfhga')
 
+        # 0 değeri ise queryset alanına girilen değere ait herhangi bir kayıt bulunamadığını gösterir.
         assert resp.json['objects'][0] == 0
 
-        # -1 değeri ise queryset alanına herhangi bir değer girilmediğini gösterir.
         resp = self.client.post(model='Unit',
                                 cmd='select_list')
 
+        # -1 değeri ise queryset alanına herhangi bir değer girilmediğini gösterir.
         assert resp.json['objects'][0] == -1
 
         resp = self.client.post(model='Unit',
