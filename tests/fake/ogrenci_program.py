@@ -355,34 +355,29 @@ def yeni_sinav(sube, sinav_say=1):
         sinav_list.append(s)
     return sinav_list
 
-def yeni_ogrenci_program(ogrenci, program, personel, program_say=1):
+def yeni_ogrenci_program(ogrenci, program, personel):
     """
     Rastgele verileri ve parametre olarak verilen verileri
     kullanarak yeni öğrenci programı kaydı oluştururup kaydeder.
-    Oluşturulan kayıtları liste olarak döndürür.
 
     Args:
         ogrenci (Ogrenci): Öğrenci nesnesi
         personel (Personel): Personel nesnesi
         program (Program): Program nesnesi
-        program_say : Oluşturulacak program sayısı
 
     Returns:
         OgrenciProgram: Yeni öğrenci program kaydı listesi
 
     """
 
-    op_list = []
-    for i in range(program_say):
-        op = OgrenciProgram()
-        op.ogrenci_no = str(ints(11))
-        op.giris_tarihi = datetime.datetime(int(program.yil), 10, 1)
-        op.danisman = personel
-        op.program = program
-        op.ogrenci = ogrenci
-        op.save()
-        op_list.append(op)
-    return op_list
+    op = OgrenciProgram()
+    op.ogrenci_no = str(ints(11))
+    op.giris_tarihi = datetime.datetime(int(program.yil), 10, 1)
+    op.danisman = personel
+    op.program = program
+    op.ogrenci = ogrenci
+    op.save()
+    return op
 
 
 def yeni_ogrenci_dersi(sube, ogrenci_program):
