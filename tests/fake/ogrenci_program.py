@@ -161,32 +161,37 @@ def yeni_donem():
     return d
 
 
-def yeni_program(yoksis_program):
+def yeni_program(yoksis_program, program_say=1):
     """
     Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni program kaydı oluşturur ve kaydeder.
+    Oluşturulan kayıtları liste olarak döndürür.
 
     Args:
         yoksis_program (Unit): Yöksis programı
+        program_say : Oluşturulacak program sayısı
 
     Returns:
-        Program: Yeni program kaydı
+        Program: Yeni program listesi
 
     """
 
     bolum = Unit.objects.filter(yoksis_no=yoksis_program.parent_unit_no)[0]
+    program_list=[]
 
-    p = Program()
-    p.yoksis_no = yoksis_program.yoksis_no
-    p.bolum_adi = bolum.name
-    p.ucret = random.randint(100, 999)
-    p.yil = str(random.randint(2014, 2016))
-    p.adi = yoksis_program.name
-    p.birim = yoksis_program
-    p.bolum = bolum
+    for i in range(program_say):
+        p = Program()
+        p.yoksis_no = yoksis_program.yoksis_no
+        p.bolum_adi = bolum.name
+        p.ucret = random.randint(100, 999)
+        p.yil = str(random.randint(2014, 2016))
+        p.adi = yoksis_program.name
+        p.birim = yoksis_program
+        p.bolum = bolum
 
-    p.save()
-    return p
+        p.save()
+        program_list.append(p)
+    return program_list
 
 
 def yeni_ders(program, personel, ders_say=1):
