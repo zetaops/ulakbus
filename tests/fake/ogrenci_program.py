@@ -7,7 +7,7 @@
 
 from ulakbus.models.auth import Unit
 from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav, \
-    OgrenciProgram, OgrenciDersi, DersKatilimi, Borc, DegerlendirmeNot
+    OgrenciProgram, OgrenciDersi, DersKatilimi, Borc, DegerlendirmeNot, HariciOkutman
 from ulakbus.models.personel import Personel
 from .general import ints, gender, marital_status, blood_type, driver_license_class, id_card_serial, birth_date
 from .general import fake
@@ -146,7 +146,7 @@ def yeni_harici_okutman(harici_okutman_say=1):
         ho.kan_grubu = blood_type()
         ho.ehliyet = driver_license_class()
         ho.verdigi_dersler = '\n'.join([fake.lecture() for _ in range(3)])
-        ho.unvan = randint(1, 5)
+        ho.unvan = random.randint(1, 5)
         ho.biyografi = '\n'.join(fake.paragraphs(5))
         ho.notlar = '\n'.join(fake.paragraphs(1))
         ho.cuzdan_seri = id_card_serial()
