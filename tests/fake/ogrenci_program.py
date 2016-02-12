@@ -356,17 +356,22 @@ def yeni_degerlendirme_notu(sinav, ogrenci):
 
     """
 
-    dn = DegerlendirmeNot()
-    dn.puan = random.randint(0, 100)
-    dn.yil = str(sinav.tarih.year)
-    dn.donem = sinav.ders.donem.ad
-    dn.ogretim_elemani = sinav.sube.okutman.ad
-    dn.sinav = sinav
-    dn.ogrenci = ogrenci
-    dn.ders = sinav.ders
-
-    dn.save()
-    return dn
+    try:
+        sinav_program = sinav.ders.program
+        ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci,program=sinav_program)[0]
+        dn = DegerlendirmeNot()
+        dn.puan = random.randint(0, 100)
+        dn.yil = str(sinav.tarih.year)
+        dn.donem = sinav.ders.donem.ad
+        dn.ogretim_elemani = sinav.sube.okutman.ad
+        dn.sinav = sinav
+        dn.ogrenci_no = ogrenci_program.ogrenci_no
+        dn.ogrenci = ogrenci
+        dn.ders = sinav.ders
+        dn.save()
+        return dn
+    except:
+        print("Ogrenci Programi Bulunamadi")
 
 
 def yeni_borc(ogrenci, donem):
