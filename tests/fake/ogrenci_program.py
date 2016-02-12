@@ -189,45 +189,53 @@ def yeni_program(yoksis_program):
     return p
 
 
-def yeni_ders(program, personel):
+def yeni_ders(program, personel, ders_say=1):
     """
     Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni ders kaydı oluştururup kaydeder.
+    Oluşturulan kayıtları liste olarak döndürür.
 
     Args:
         program (Program): Program nesnesi
         personel (Personel): Personel nesnesi
+        ders_say : Oluşturulacak Ders sayısı
 
     Returns:
-        Ders: Yeni ders kaydı
+        Ders: Yeni ders listesi
 
     """
 
-    d = Ders()
-    d.ad = fake.lecture()
-    d.ders_dili = random.choice(["Turkce", "Turkce", "Turkce", "Ingilizce"])
-    d.kod = ints(length=3)
-    d.program = program
-    d.donem = random.choice(Donem.objects.filter(guncel=True))
-    d.personel = personel
+    ders_list = []
+    for i in range(ders_say):
+        d = Ders()
+        d.ad = fake.lecture()
+        d.ders_dili = random.choice(["Turkce", "Turkce", "Turkce", "Ingilizce"])
+        d.kod = ints(length=3)
+        d.program = program
+        d.donem = random.choice(Donem.objects.filter(guncel=True))
+        d.personel = personel
 
-    d.save()
-    return d
+        d.save()
+        ders_list.append(d)
+    return ders_list
 
 
 def yeni_sube(ders, okutman, sube_say=1):
     """
     Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni şube kaydı oluştururup kaydeder.
+    Oluşturulan kayıtları liste olarak döndürür.
 
     Args:
         ders (Ders): Ders nesnesi
         okutman (Okutman): Okutman nesnesi
+        sube_say : Oluşturulacak sube sayısı
 
     Returns:
         Sube: Yeni şube listesi
 
     """
+
     sube_list = []
     for i in range(sube_say):
         s = Sube()
@@ -246,14 +254,17 @@ def yeni_sinav(sube, sinav_say=1):
     """
     Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni sınav kaydı oluştururup kaydeder.
+    Oluşturulan kayıtları liste olarak döndürür.
 
     Args:
         sube (Sube): Şube nesnesi
+        sinav_say : Oluşturulacak sınav sayısı
 
     Returns:
         Sinav: Sinav nesne listesi
 
     """
+
     sinav_list = []
     for i in range(sinav_say):
         s = Sinav()
@@ -273,16 +284,19 @@ def yeni_ogrenci_program(ogrenci, program, personel, program_say=1):
     """
     Rastgele verileri ve parametre olarak verilen verileri
     kullanarak yeni öğrenci programı kaydı oluştururup kaydeder.
+    Oluşturulan kayıtları liste olarak döndürür.
 
     Args:
         ogrenci (Ogrenci): Öğrenci nesnesi
         personel (Personel): Personel nesnesi
         program (Program): Program nesnesi
+        program_say : Oluşturulacak program sayısı
 
     Returns:
         OgrenciProgram: Yeni öğrenci program kaydı listesi
 
     """
+
     op_list = []
     for i in range(program_say):
         op = OgrenciProgram()
