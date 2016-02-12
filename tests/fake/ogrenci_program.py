@@ -102,42 +102,48 @@ def yeni_okutman(personel):
         return None
 
 
-def yeni_ogrenci():
+def yeni_ogrenci(ogrenci_say=1):
     """
     Rastgele veriler kullanarak yeni öğrenci kaydı oluştururup kaydeder.
+    Oluşturulan kayıtları liste olarak döndürür.
+
+    Args:
+        ogrenci_say : Oluşturulacak ogrenci sayısı
 
     Returns:
         Ogrenci: Yeni öğrenci kaydı
 
     """
+    ogrenci_list = []
+    for i in range(ogrenci_say):
+        o = Ogrenci()
+        o.tckn = ints(length=11)
+        o.ad = fake.first_name()
+        o.soyad = fake.last_name()
+        o.cinsiyet = gender()
+        o.uyruk = fake.country()
+        o.medeni_hali = marital_status(student=True)
+        o.ikamet_adresi = fake.address()
+        o.ikamet_il = fake.state()
+        o.ikamet_ilce = fake.state()
+        o.e_posta = fake.email()
+        o.kan_grubu = blood_type()
+        o.ehliyet = driver_license_class()
+        o.cuzdan_seri = id_card_serial()
+        o.cuzdan_seri_no = ints(length=10)
+        o.baba_adi = fake.first_name_male()
+        o.ana_adi = fake.first_name_female()
+        o.dogum_tarihi = birth_date(student=True)
+        o.dogum_yeri = fake.state()
+        o.tel_no = fake.phone_number()
 
-    o = Ogrenci()
-    o.tckn = ints(length=11)
-    o.ad = fake.first_name()
-    o.soyad = fake.last_name()
-    o.cinsiyet = gender()
-    o.uyruk = fake.country()
-    o.medeni_hali = marital_status(student=True)
-    o.ikamet_adresi = fake.address()
-    o.ikamet_il = fake.state()
-    o.ikamet_ilce = fake.state()
-    o.e_posta = fake.email()
-    o.kan_grubu = blood_type()
-    o.ehliyet = driver_license_class()
-    o.cuzdan_seri = id_card_serial()
-    o.cuzdan_seri_no = ints(length=10)
-    o.baba_adi = fake.first_name_male()
-    o.ana_adi = fake.first_name_female()
-    o.dogum_tarihi = birth_date(student=True)
-    o.dogum_yeri = fake.state()
-    o.tel_no = fake.phone_number()
+        username = fake.slug(u'%s-%s' % (o.ad, o.soyad))
+        user = new_user(username=username)
+        o.user = user
 
-    username = fake.slug(u'%s-%s' % (o.ad, o.soyad))
-    user = new_user(username=username)
-    o.user = user
-
-    o.save()
-    return o
+        o.save()
+        ogrenci_list.append(o)
+    return ogrenci_list
 
 
 def yeni_donem(donem_say=1):
