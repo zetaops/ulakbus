@@ -140,25 +140,32 @@ def yeni_ogrenci():
     return o
 
 
-def yeni_donem():
+def yeni_donem(donem_say=1):
     """
     Rastgele veriler kullanarak yeni dönem kaydı oluştururup kaydeder.
+    Oluşturulan kayıtları liste olarak döndürür.
+
+    Args:
+        donem_say : Oluşturulacak donem sayısı
 
     Returns:
-        Donem: Yeni dönem kaydı
+        Donem: Yeni dönem listesi
 
     """
+    donem_list=[]
 
-    d = Donem()
-    d.ad = random.choice(["Güz", "Güz", "Bahar", "Bahar", "Yaz"])
-    d.baslangic_tarihi = datetime.datetime(random.randint(2015, 2017),
-                                           random.randint(1, 12),
-                                           random.randint(1, 15))
-    d.bitis_tarihi = d.baslangic_tarihi + datetime.timedelta(random.randint(30, 180))
-    d.guncel = random.choice(True)
+    for i in range(donem_say):
+        d = Donem()
+        d.ad = random.choice(["Güz", "Güz", "Bahar", "Bahar", "Yaz"])
+        d.baslangic_tarihi = datetime.datetime(random.randint(2015, 2017),
+                                               random.randint(1, 12),
+                                               random.randint(1, 15))
+        d.bitis_tarihi = d.baslangic_tarihi + datetime.timedelta(random.randint(30, 180))
+        d.guncel = random.choice(True)
 
-    d.save()
-    return d
+        d.save()
+        donem_list.append(d)
+    return donem_list
 
 
 def yeni_program(yoksis_program, program_say=1):
