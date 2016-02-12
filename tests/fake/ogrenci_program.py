@@ -16,62 +16,67 @@ import random
 import datetime
 
 
-def yeni_personel(personel_turu=1):
+def yeni_personel(personel_turu=1, personel_say=1):
     """
     Rastgele verileri ve parametre olarak verilen veriyi kullanarak
-    yeni personel kaydı oluştururup kaydeder.
+    yeni personel kaydı oluştururup kaydeder. Oluşturulan kayıtları liste olarak döndürür.
 
     Args:
         personel_turu (Personel): Personel türü
+        personel_say : Oluşturulacak personel sayısı
 
     Returns:
         Personel: Yeni personel kaydı
 
     """
 
-    p = Personel()
-    p.tckn = ints(length=11)
-    p.ad = fake.first_name()
-    p.soyad = fake.last_name()
-    p.cinsiyet = gender()
-    p.uyruk = fake.country()
-    p.medeni_hali = marital_status(student=False)
-    p.ikamet_adresi = fake.address()
-    p.ikamet_il = fake.state()
-    p.ikamet_ilce = fake.state()
-    p.adres_2 = fake.address()
-    p.adres_2_posta_kodu = fake.postcode()
-    p.oda_no = fake.classroom_code()
-    p.oda_tel_no = fake.phone_number()
-    p.cep_telefonu = fake.phone_number()
-    p.e_posta = fake.email()
-    p.e_posta_2 = fake.email()
-    p.e_posta_3 = fake.email()
-    p.web_sitesi = "http://%s" % fake.domain_name()
-    p.yayinlar = '\n'.join(fake.paragraphs())
-    p.projeler = '\n'.join(fake.paragraphs())
-    p.kan_grubu = blood_type()
-    p.ehliyet = driver_license_class()
-    p.verdigi_dersler = '\n'.join([fake.lecture() for _ in range(3)])
-    p.unvan = random.choice(range(1, 5))
-    p.biyografi = '\n'.join(fake.paragraphs(5))
-    p.notlar = '\n'.join(fake.paragraphs(1))
-    p.personel_turu = personel_turu
-    p.cuzdan_seri = id_card_serial()
-    p.cuzdan_seri_no = ints(length=10)
-    p.baba_adi = fake.first_name_male()
-    p.ana_adi = fake.first_name_female()
-    p.dogum_tarihi = birth_date(student=False)
-    p.dogum_yeri = fake.state()
-    p.medeni_hali = random.choice(['1', '2'])
-    p.hizmet_sinifi = random.choice(range(1, 30))
+    personel_list = []
 
-    username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
-    user = new_user(username=username)
-    p.user = user
+    for i in range(personel_say):
+        p = Personel()
+        p.tckn = ints(length=11)
+        p.ad = fake.first_name()
+        p.soyad = fake.last_name()
+        p.cinsiyet = gender()
+        p.uyruk = fake.country()
+        p.medeni_hali = marital_status(student=False)
+        p.ikamet_adresi = fake.address()
+        p.ikamet_il = fake.state()
+        p.ikamet_ilce = fake.state()
+        p.adres_2 = fake.address()
+        p.adres_2_posta_kodu = fake.postcode()
+        p.oda_no = fake.classroom_code()
+        p.oda_tel_no = fake.phone_number()
+        p.cep_telefonu = fake.phone_number()
+        p.e_posta = fake.email()
+        p.e_posta_2 = fake.email()
+        p.e_posta_3 = fake.email()
+        p.web_sitesi = "http://%s" % fake.domain_name()
+        p.yayinlar = '\n'.join(fake.paragraphs())
+        p.projeler = '\n'.join(fake.paragraphs())
+        p.kan_grubu = blood_type()
+        p.ehliyet = driver_license_class()
+        p.verdigi_dersler = '\n'.join([fake.lecture() for _ in range(3)])
+        p.unvan = random.choice(range(1, 5))
+        p.biyografi = '\n'.join(fake.paragraphs(5))
+        p.notlar = '\n'.join(fake.paragraphs(1))
+        p.personel_turu = personel_turu
+        p.cuzdan_seri = id_card_serial()
+        p.cuzdan_seri_no = ints(length=10)
+        p.baba_adi = fake.first_name_male()
+        p.ana_adi = fake.first_name_female()
+        p.dogum_tarihi = birth_date(student=False)
+        p.dogum_yeri = fake.state()
+        p.medeni_hali = random.choice(['1', '2'])
+        p.hizmet_sinifi = random.choice(range(1, 30))
 
-    p.save()
-    return p
+        username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
+        user = new_user(username=username)
+        p.user = user
+
+        p.save()
+        personel_list.append(p)
+    return personel_list
 
 
 def yeni_okutman(personel):
@@ -158,7 +163,7 @@ def yeni_donem(donem_say=1):
         Donem: Yeni dönem listesi
 
     """
-    donem_list=[]
+    donem_list = []
 
     for i in range(donem_say):
         d = Donem()
