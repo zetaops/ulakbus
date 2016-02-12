@@ -215,7 +215,7 @@ def yeni_ders(program, personel):
     return d
 
 
-def yeni_sube(ders, okutman):
+def yeni_sube(ders, okutman, sube_say=1):
     """
     Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni şube kaydı oluştururup kaydeder.
@@ -225,20 +225,21 @@ def yeni_sube(ders, okutman):
         okutman (Okutman): Okutman nesnesi
 
     Returns:
-        Sube: Yeni şube kaydı
+        Sube: Yeni şube listesi
 
     """
-
-    s = Sube()
-    s.ad = fake.classroom_code()
-    s.kontenjan = random.randint(1, 500)
-    s.dis_kontenjan = random.randint(1, 500)
-    s.okutman = okutman
-    s.ders = ders
-    s.donem = ders.donem
-
-    s.save()
-    return s
+    sube_list = []
+    for i in range(sube_say):
+        s = Sube()
+        s.ad = fake.classroom_code()
+        s.kontenjan = random.randint(1, 500)
+        s.dis_kontenjan = random.randint(1, 500)
+        s.okutman = okutman
+        s.ders = ders
+        s.donem = ders.donem
+        s.save()
+        sube_list.append(s)
+    return sube_list
 
 
 def yeni_sinav(sube, sinav_say=1):
