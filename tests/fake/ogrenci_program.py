@@ -366,7 +366,7 @@ def yeni_ogrenci_program(ogrenci, program, personel):
         program (Program): Program nesnesi
 
     Returns:
-        OgrenciProgram: Yeni öğrenci program kaydı listesi
+        OgrenciProgram: Yeni öğrenci program kaydı
 
     """
 
@@ -376,7 +376,7 @@ def yeni_ogrenci_program(ogrenci, program, personel):
     op.danisman = personel
     op.program = program
     op.ogrenci = ogrenci
-    
+
     op.save()
     return op
 
