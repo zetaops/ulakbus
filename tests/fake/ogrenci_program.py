@@ -241,7 +241,7 @@ def yeni_sube(ders, okutman):
     return s
 
 
-def yeni_sinav(sube):
+def yeni_sinav(sube, sinav_say=1):
     """
     Rastgele verileri ve parametre olarak verilen veriyi
     kullanarak yeni sınav kaydı oluştururup kaydeder.
@@ -250,23 +250,23 @@ def yeni_sinav(sube):
         sube (Sube): Şube nesnesi
 
     Returns:
-        Sinav: Yeni sınavı kaydı nesnesi
+        Sinav: Sinav nesne listesi
 
     """
-
-    s = Sinav()
-    d = sube.donem
-    s.tarih = d.baslangic_tarihi + \
-              datetime.timedelta(
-                  random.randint(1, (d.bitis_tarihi - d.baslangic_tarihi).days))
-    s.yapilacagi_yer = sube.ad
-    s.tur = random.randint(1, 7)
-    s.sube = sube
-    s.ders = sube.ders
-
-    s.save()
-    return s
-
+    sinav_list = []
+    for i in range(sinav_say):
+        s = Sinav()
+        d = sube.donem
+        s.tarih = d.baslangic_tarihi + \
+                  datetime.timedelta(
+                      random.randint(1, (d.bitis_tarihi - d.baslangic_tarihi).days))
+        s.yapilacagi_yer = sube.ad
+        s.tur = random.randint(1, 7)
+        s.sube = sube
+        s.ders = sube.ders
+        s.save()
+        sinav_list.append(s)
+    return sinav_list
 
 def yeni_ogrenci_program(ogrenci, program, personel, program_say=1):
     """
