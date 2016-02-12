@@ -100,31 +100,27 @@ class GenerateRandomPersonel(Command):
     HELP = 'Generates Random Personel'
     PARAMS = [
 
-        {'name': 'length', 'required': True, 'help': 'Amount of random personel'},
+        {'name': 'length', 'required': False, 'help': 'Amount of random personel', 'default': 1},
 
     ]
 
     def run(self):
-        from tests.fake.personel import yeni_personel
+        from tests.fake.ogrenci_program import yeni_personel
         length = int(self.manager.args.length)
-        for x in range(0, length):
-            yeni_personel()
+        yeni_personel(personel_say=length)
 
 
 class GenerateRandomOkutman(Command):
     CMD_NAME = 'random_okutman'
     HELP = 'Generates Random Okutman From Personel Objects'
     PARAMS = [
-
-        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
-
+        {'name': 'personel', 'required': True, 'help': 'Personel object'},
     ]
 
     def run(self):
-        from tests.fake.okutman import yeni_okutman
-        length = int(self.manager.args.length)
-        for x in range(0, length):
-            yeni_okutman()
+        from tests.fake.ogrenci_program import yeni_okutman
+        personel = self.manager.args.personel
+        yeni_okutman(personel=personel)
 
 
 class GenerateRandomHariciOkutman(Command):
@@ -132,49 +128,59 @@ class GenerateRandomHariciOkutman(Command):
     HELP = 'Generates Random Okutman From Personel Objects'
     PARAMS = [
 
-        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+        {'name': 'length', 'required': True, 'help': 'Amount of random harici okutman', 'default': 1},
 
     ]
 
     def run(self):
-        from tests.fake.harici_okutman import yeni_harici_okutman
+        from tests.fake.ogrenci_program import yeni_harici_okutman
         length = int(self.manager.args.length)
-        for x in range(0, length):
-            yeni_harici_okutman()
+        yeni_harici_okutman(harici_okutman_say=length)
 
 
-class GenerateRandomOogrenci(Command):
+class GenerateRandomOgrenci(Command):
     CMD_NAME = 'random_ogrenci'
     HELP = 'Generates Random Ogrenci Model Objects'
     PARAMS = [
-        {'name': 'length', 'required': True, 'help': 'Amount of random ogrenci'},
+        {'name': 'length', 'required': False, 'help': 'Amount of random ogrenci', 'default': 1},
     ]
 
     def run(self):
-        from tests.fake.ogrenci import yeni_ogrenci
+        from tests.fake.ogrenci_program import yeni_ogrenci
         length = int(self.manager.args.length)
-        for x in range(0, length):
-            yeni_ogrenci()
+        yeni_ogrenci(ogrenci_say=length)
 
 
 class GenerateProgramList(Command):
     CMD_NAME = 'generate_programs'
-    HELP = 'Generates Programs From Unit Model'
-    PARAMS = []
+    HELP = 'Generates Program Records From Unit Object'
+    PARAMS = [
+        {'name': 'length', 'required': False, 'help': 'Amount of random program', 'default': 1},
+        {'name': 'yoksis_program', 'required': True, 'help': 'Unit object'},
+    ]
 
     def run(self):
-        from tests.fake.program import yeni_program
-        yeni_program()
+        from tests.fake.ogrenci_program import yeni_program
+        length = int(self.manager.args.length)
+        yoksis_program = self.manager.args.yoksis_program
+        yeni_program(yoksis_program=yoksis_program, program_say=length)
 
 
 class GenerateDersList(Command):
     CMD_NAME = 'generate_ders'
     HELP = 'Generates fake Ders model objects'
-    PARAMS = []
+    PARAMS = [
+        {'name': 'length', 'required': False, 'help': 'Amount of random program', 'default': 1},
+        {'name': 'program', 'required': True, 'help': 'Program object'},
+        {'name': 'personel', 'required': True, 'help': 'Personel object'},
+    ]
 
     def run(self):
-        from tests.fake.ders import yeni_ders
-        yeni_ders()
+        from tests.fake.ogrenci_program import yeni_ders
+        length = int(self.manager.args.length)
+        personel = self.manager.args.personel
+        program = self.manager.args.program
+        yeni_ders(program=program, personel=personel, ders_say=length)
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
