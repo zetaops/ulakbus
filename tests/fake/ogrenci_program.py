@@ -26,7 +26,7 @@ def yeni_personel(personel_turu=1, personel_say=1):
         personel_say : Oluşturulacak personel sayısı
 
     Returns:
-        Personel: Yeni personel kaydı
+        Personel: Yeni personel listesi
 
     """
 
