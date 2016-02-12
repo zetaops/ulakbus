@@ -384,13 +384,12 @@ def yeni_borc(ogrenci, donem):
     """
 
     b = Borc()
-    b.miktar = random.randint(100, 999)
+    b.miktar = float(random.randint(100, 999))
     b.para_birimi = random.choice([1, 1, 1, 2, 3])
     b.sebep = random.choice([1, 1, 1, 2, 3])
     b.son_odeme_tarihi = donem.baslangic_tarihi
-    b.odeme_sekli = random.choice([1, 2])
-    b.odeme_tarihi = donem.baslangic_tarihi - datetime.timedelta(random.randint(0, 30))
-    b.odenen_miktar = b.miktar
+    b.tahakkuk_referans_no = str(ints(11))
+    b.aciklama = '\n'.join(fake.paragraphs(1))
     b.ogrenci = ogrenci
     b.donem = donem
 
