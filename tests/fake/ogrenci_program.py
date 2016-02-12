@@ -288,7 +288,7 @@ def yeni_ders(program, personel, ders_say=1):
         d.kod = ints(length=3)
         d.program = program
         d.donem = random.choice(Donem.objects.filter(guncel=True))
-        d.personel = personel
+        d.ders_koordinatoru = personel
 
         d.save()
         ders_list.append(d)
