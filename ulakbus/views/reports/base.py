@@ -97,7 +97,7 @@ class Reporter(BaseView):
         self.set_client_cmd('form', 'show')
         self.output['forms'] = frm.serialize()
         self.output['forms']['constraints'] = {}
-        self.output['forms']['grouping'] = {}
+        self.output['forms']['grouping'] = []
         self.output['meta'] = {}
 
 
