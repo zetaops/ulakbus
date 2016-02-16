@@ -12,7 +12,6 @@ from ulakbus.models.personel import Personel
 from .general import ints, gender, marital_status, blood_type, driver_license_class, id_card_serial, birth_date
 from .general import fake
 from user import new_user
-from building import yeni_bina, yeni_derslik
 import random
 import datetime
 
