@@ -16,7 +16,59 @@ from building import yeni_bina, yeni_derslik
 import random
 import datetime
 
+__author__ = 'Halil İbrahim Yılmaz'
+
 class FakeDataGenerator():
+
+    def yeni_bina(self):
+        """
+        Rastgele verileri kullanarak yeni bina kaydı oluşturup kaydeder.
+
+        """
+        building_list=[]
+        uni = Unit.objects.filter(parent_unit_no=0)[0]
+        campus = Campus.objects.filter()[0]
+        faculty_list = Unit.objects.filter(parent_unit_no=uni.yoksis_no)
+
+        for faculty in faculty_list:
+            b = Building()
+            b.code = faculty.yoksis_no
+            b.name = faculty.name
+            b.coordinate_x = campus.coordinate_x
+            b.coordinate_y = campus.coordinate_y
+            b.campus = campus
+            b.save()
+            building_list.append(b)
+            yeni_derslik(building=b, parent_unit_no=faculty.yoksis_no, count=random.choice(range(1, 10)))
+
+        return building_list
+
+    def yeni_derslik(self, building, parent_unit_no, count=1):
+        """
+        Rastgele verileri ve parametre olarak verilen verileri kullanarak
+        yeni derslik kaydı oluştururup kaydeder.
+
+        Args:
+            building (Building): Bina
+            parent_unit_no (int): Birim no
+            count (int): Oluşturulacak dersliğin sayısı
+
+        """
+
+        unit_list = Unit.objects.filter(parent_unit_no=parent_unit_no, unit_type="Bölüm")
+        for i in range(1, count):
+            room = Room(
+                code=fake.classroom_code(),
+                name=fake.classroom(),
+                building=building,
+                room_type=random.choice(RoomType.objects.filter()),
+                floor=ints(2),
+                capacity=random.choice(range(30, 100)),
+                is_active=True
+            )
+            for unit in unit_list:
+                room.RoomDepartments(unit=unit)
+            room.save()
 
     def yeni_personel(self, personel_turu=1, personel_say=1):
         """
