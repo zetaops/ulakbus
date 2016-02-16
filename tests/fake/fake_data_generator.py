@@ -9,6 +9,7 @@ from ulakbus.models.auth import Unit
 from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav, \
     OgrenciProgram, OgrenciDersi, DersKatilimi, Borc, DegerlendirmeNot, HariciOkutman
 from ulakbus.models.personel import Personel
+from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
 from .general import ints, gender, marital_status, blood_type, driver_license_class, id_card_serial, birth_date
 from .general import fake
 from user import new_user
@@ -25,6 +26,7 @@ class FakeDataGenerator():
 
         """
         building_list=[]
+        room_list = []
         uni = Unit.objects.filter(parent_unit_no=0)[0]
         campus = Campus.objects.filter()[0]
         faculty_list = Unit.objects.filter(parent_unit_no=uni.yoksis_no)
@@ -36,11 +38,16 @@ class FakeDataGenerator():
             b.coordinate_x = campus.coordinate_x
             b.coordinate_y = campus.coordinate_y
             b.campus = campus
-            b.save()
-            building_list.append(b)
-            yeni_derslik(building=b, parent_unit_no=faculty.yoksis_no, count=random.choice(range(1, 10)))
+            try:
+                b.save()
+                building_list.append(b)
+                new_room = self.yeni_derslik(building=b, parent_unit_no=faculty.yoksis_no,
+                                             count=random.choice(range(1, 10)))
+                room_list.append(new_room)
+            except:
+                pass
 
-        return building_list
+        return building_list, room_list
 
     def yeni_derslik(self, building, parent_unit_no, count=1):
         """
@@ -53,7 +60,7 @@ class FakeDataGenerator():
             count (int): Oluşturulacak dersliğin sayısı
 
         """
-
+        room_list=[]
         unit_list = Unit.objects.filter(parent_unit_no=parent_unit_no, unit_type="Bölüm")
         for i in range(1, count):
             room = Room(
@@ -68,6 +75,8 @@ class FakeDataGenerator():
             for unit in unit_list:
                 room.RoomDepartments(unit=unit)
             room.save()
+            room_list.append(room)
+        return room_list
 
     def yeni_personel(self, personel_turu=1, personel_say=1):
         """
@@ -301,8 +310,11 @@ class FakeDataGenerator():
             Program: Yeni program listesi
 
         """
+        try:
+            bolum = Unit.objects.filter(yoksis_no=yoksis_program.parent_unit_no)[0]
+        except Exception as e:
+            print(e.message)
 
-        bolum = Unit.objects.filter(yoksis_no=yoksis_program.parent_unit_no)[0]
         program_list=[]
 
         for i in range(program_say):
@@ -425,16 +437,18 @@ class FakeDataGenerator():
             OgrenciProgram: Yeni öğrenci program kaydı
 
         """
+        try:
+            op = OgrenciProgram()
+            op.ogrenci_no = str(ints(11))
+            op.giris_tarihi = datetime.datetime(int(program.yil), 10, 1)
+            op.danisman = personel
+            op.program = program
+            op.ogrenci = ogrenci
 
-        op = OgrenciProgram()
-        op.ogrenci_no = str(ints(11))
-        op.giris_tarihi = datetime.datetime(int(program.yil), 10, 1)
-        op.danisman = personel
-        op.program = program
-        op.ogrenci = ogrenci
-
-        op.save()
-        return op
+            op.save()
+            return op
+        except Exception as e:
+            print(e.message)
 
 
     def yeni_ogrenci_dersi(self, sube, ogrenci_program):
@@ -450,14 +464,16 @@ class FakeDataGenerator():
             OgrenciDersi: Yeni öğrenci ders kaydı
 
         """
+        try:
+            od = OgrenciDersi()
+            od.alis_bicimi = random.choice([1, 2])
+            od.ders = sube
+            od.ogrenci_program = ogrenci_program
 
-        od = OgrenciDersi()
-        od.alis_bicimi = random.choice([1, 2])
-        od.ders = sube
-        od.ogrenci_program = ogrenci_program
-
-        od.save()
-        return od
+            od.save()
+            return od
+        except Exception as e:
+            print(e.message)
 
 
     def yeni_ders_katilimi(self, sube, ogrenci, okutman):
@@ -474,15 +490,17 @@ class FakeDataGenerator():
             DersKatilimi: Yeni ders katılım kaydı
 
         """
+        try:
+            dk = DersKatilimi()
+            dk.katilim_durumu = float(random.randint(50, 100))
+            dk.ders = sube
+            dk.ogrenci = ogrenci
+            dk.okutman = okutman
 
-        dk = DersKatilimi()
-        dk.katilim_durumu = float(random.randint(50, 100))
-        dk.ders = sube
-        dk.ogrenci = ogrenci
-        dk.okutman = okutman
-
-        dk.save()
-        return dk
+            dk.save()
+            return dk
+        except Exception as e:
+            print(e.message)
 
 
     def yeni_degerlendirme_notu(self, sinav, ogrenci_program):
