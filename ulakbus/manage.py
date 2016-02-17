@@ -11,6 +11,7 @@
 
 from zengine.management_commands import *
 from ulakbus.lib.unitime import *
+from ulakbus.lib.fake import *
 
 class CreateUser(Command):
     CMD_NAME = 'create_user'
@@ -91,40 +92,40 @@ class GenerateBuildingList(Command):
     PARAMS = []
 
     def run(self):
-        from tests.fake.building import yeni_bina
-        yeni_bina()
-
+        from tests.fake.fake_data_generator import FakeDataGenerator
+        fake = FakeDataGenerator()
+        bina_list, room_list = fake.yeni_bina()
+        print("%s adet bina oluşturuldu, oluşturulan binalar: %s\n" % (len(bina_list), bina_list))
+        print("%s adet oda oluşturuldu, oluşturulan odalar: %s\n" % (len(room_list), room_list))
 
 class GenerateRandomPersonel(Command):
     CMD_NAME = 'random_personel'
     HELP = 'Generates Random Personel'
     PARAMS = [
 
-        {'name': 'length', 'required': True, 'help': 'Amount of random personel'},
+        {'name': 'length', 'required': False, 'help': 'Amount of random personel', 'default': 1},
 
     ]
 
     def run(self):
-        from tests.fake.personel import yeni_personel
+        from tests.fake.fake_data_generator import FakeDataGenerator
         length = int(self.manager.args.length)
-        for x in range(0, length):
-            yeni_personel()
+        fake = FakeDataGenerator()
+        fake.yeni_personel(personel_say=length)
 
 
 class GenerateRandomOkutman(Command):
     CMD_NAME = 'random_okutman'
     HELP = 'Generates Random Okutman From Personel Objects'
     PARAMS = [
-
-        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
-
+        {'name': 'personel', 'required': True, 'help': 'Personel object'},
     ]
 
     def run(self):
-        from tests.fake.okutman import yeni_okutman
-        length = int(self.manager.args.length)
-        for x in range(0, length):
-            yeni_okutman()
+        from tests.fake.fake_data_generator import FakeDataGenerator
+        personel = self.manager.args.personel
+        fake = FakeDataGenerator()
+        fake.yeni_okutman(personel=personel)
 
 
 class GenerateRandomHariciOkutman(Command):
@@ -132,49 +133,64 @@ class GenerateRandomHariciOkutman(Command):
     HELP = 'Generates Random Okutman From Personel Objects'
     PARAMS = [
 
-        {'name': 'length', 'required': True, 'help': 'Amount of random okutman'},
+        {'name': 'length', 'required': True, 'help': 'Amount of random harici okutman', 'default': 1},
 
     ]
 
     def run(self):
-        from tests.fake.harici_okutman import yeni_harici_okutman
+        from tests.fake.fake_data_generator import FakeDataGenerator
         length = int(self.manager.args.length)
-        for x in range(0, length):
-            yeni_harici_okutman()
+        fake = FakeDataGenerator()
+        fake.yeni_harici_okutman(harici_okutman_say=length)
 
 
-class GenerateRandomOogrenci(Command):
+class GenerateRandomOgrenci(Command):
     CMD_NAME = 'random_ogrenci'
     HELP = 'Generates Random Ogrenci Model Objects'
     PARAMS = [
-        {'name': 'length', 'required': True, 'help': 'Amount of random ogrenci'},
+        {'name': 'length', 'required': False, 'help': 'Amount of random ogrenci', 'default': 1},
     ]
 
     def run(self):
-        from tests.fake.ogrenci import yeni_ogrenci
+        from tests.fake.fake_data_generator import FakeDataGenerator
         length = int(self.manager.args.length)
-        for x in range(0, length):
-            yeni_ogrenci()
+        fake = FakeDataGenerator()
+        ogrenci_list = fake.yeni_ogrenci(ogrenci_say=length)
+        print("Toplam %s adet ogrenci oluşturuldu, oluşturulan öğrenci listesi : %s" % (length, ogrenci_list))
 
 
 class GenerateProgramList(Command):
     CMD_NAME = 'generate_programs'
-    HELP = 'Generates Programs From Unit Model'
-    PARAMS = []
+    HELP = 'Generates Program Records From Unit Object'
+    PARAMS = [
+        {'name': 'length', 'required': False, 'help': 'Amount of random program', 'default': 1},
+        {'name': 'yoksis_program', 'required': True, 'help': 'Unit object'},
+    ]
 
     def run(self):
-        from tests.fake.program import yeni_program
-        yeni_program()
+        from tests.fake.fake_data_generator import FakeDataGenerator
+        length = int(self.manager.args.length)
+        yoksis_program = self.manager.args.yoksis_program
+        fake = FakeDataGenerator()
+        fake.yeni_program(yoksis_program=yoksis_program, program_say=length)
 
 
 class GenerateDersList(Command):
     CMD_NAME = 'generate_ders'
     HELP = 'Generates fake Ders model objects'
-    PARAMS = []
+    PARAMS = [
+        {'name': 'length', 'required': False, 'help': 'Amount of random program', 'default': 1},
+        {'name': 'program', 'required': True, 'help': 'Program object'},
+        {'name': 'personel', 'required': True, 'help': 'Personel object'},
+    ]
 
     def run(self):
-        from tests.fake.ders import yeni_ders
-        yeni_ders()
+        from tests.fake.fake_data_generator import FakeDataGenerator
+        length = int(self.manager.args.length)
+        personel = self.manager.args.personel
+        program = self.manager.args.program
+        fake = FakeDataGenerator()
+        fake.yeni_ders(program=program, personel=personel, ders_say=length)
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'
