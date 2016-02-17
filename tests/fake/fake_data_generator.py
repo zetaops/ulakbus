@@ -331,7 +331,6 @@ class FakeDataGenerator():
             program_list.append(p)
         return program_list
 
-
     def yeni_ders(self, program, personel, ders_say=1):
         """
         Rastgele verileri ve parametre olarak verilen veriyi
@@ -347,6 +346,7 @@ class FakeDataGenerator():
             Ders: Yeni ders listesi
 
         """
+        yerel_kredi = random.choice([2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 6, 6, 6, 8, 8])
 
         ders_list = []
         for i in range(ders_say):
@@ -354,10 +354,13 @@ class FakeDataGenerator():
             d.ad = fake.lecture()
             d.ders_dili = random.choice(["Turkce", "Turkce", "Turkce", "Ingilizce"])
             d.kod = ints(length=3)
+            d.ects_kredisi = random.choice([1, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 6, 6, 6, 8, 8])
+            d.yerel_kredisi = yerel_kredi
+            d.uygulama_saati = yerel_kredi / 2
+            d.teori_saati = yerel_kredi / 2
             d.program = program
             d.donem = random.choice(Donem.objects.filter(guncel=True))
             d.ders_koordinatoru = personel
-
             d.save()
             ders_list.append(d)
         return ders_list
