@@ -11,6 +11,7 @@
 
 from zengine.management_commands import *
 from ulakbus.lib.unitime import *
+from ulakbus.lib.fake import *
 
 class CreateUser(Command):
     CMD_NAME = 'create_user'
