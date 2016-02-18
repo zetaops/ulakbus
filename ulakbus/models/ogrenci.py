@@ -863,7 +863,6 @@ class DonemDanismanlari(Model):
     """
 
     donem = Donem()
-    program = Program()
     okutman = Okutman()
     bolum = Unit()
     aciklama = field.String("Açıklama", index=True, required=False)
@@ -876,4 +875,4 @@ class DonemDanismanlari(Model):
         search_fields = ['aciklama']
 
     def __unicode__(self):
-        return '%s %s %s %s' % (self.donem, self.bolum, self.program, self.okutman)
+        return '%s %s' % (self.program, self.okutman)

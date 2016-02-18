@@ -19,7 +19,9 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanismanlari
+from ulakbus.models.personel import Personel
+from ulakbus.views.ders.ders import prepare_choices_for_model
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -105,7 +107,8 @@ class IletisimBilgileriForm(forms.JsonForm):
     """
 
     class Meta:
-        include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi","adres2", "posta_kodu", "e_posta","e_posta2", "tel_no","gsm"]
+        include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi", "adres2", "posta_kodu", "e_posta", "e_posta2", "tel_no",
+                   "gsm"]
 
     kaydet = fields.Button("Kaydet", cmd="save")
     kps_sorgula = fields.Button("KPS Sorgula", cmd="kps_sorgula")
@@ -255,3 +258,87 @@ def ogrenci_bilgileri(current):
             "fields": iletisim_bilgileri
         }
     ]
+
+
+class ProgramSecimForm(forms.JsonForm):
+    """
+    ``DanismanAtama`` sınıfı için form olarak kullanılacaktır.
+
+    """
+
+    sec = fields.Button("Seç")
+
+
+class DanismanSecimForm(forms.JsonForm):
+    """
+    ``DanismanAtama`` sınıfı için form olarak kullanılacaktır.
+
+    """
+
+    sec = fields.Button("Kaydet")
+
+
+class DanismanAtama(CrudView):
+    """Danışman Atama
+
+    Öğrencilere danışman atamalarının yapılmasını sağlayan workflowa ait
+    metdodları barındıran sınıftır.
+
+    """
+
+    class Meta:
+        model = "OgrenciProgram"
+
+    def program_sec(self):
+        """Program Seçim Adımı
+
+        Programlar veritabanından çekilip, açılır menu içine
+        doldurulur.
+
+        """
+        guncel_donem = Donem.objects.filter(guncel=True)[0]
+        ogrenci_id = self.current.input['id']
+        self.current.task_data['ogrenci_id'] = ogrenci_id
+        self.current.task_data['donem_id'] = guncel_donem.key
+
+        _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
+        _form.program = fields.Integer(choices=_choices)
+        self.form_out(_form)
+
+    def danisman_sec(self):
+        program_id = self.current.input['form']['program']
+        donem_id = self.current.task_data['donem_id']
+        self.current.task_data['program_id'] = program_id
+
+        program = OgrenciProgram.objects.get(program_id)
+
+        _form = DanismanSecimForm(current=self.current, title="Danışman Seçiniz")
+        _choices = prepare_choices_for_model(DonemDanismanlari, donem_id=donem_id, bolum_id=program.program.bolum.key)
+        _form.donem_danisman = fields.Integer(choices=_choices)
+        self.form_out(_form)
+
+    def danisman_kaydet(self):
+        program_id = self.current.task_data['program_id']
+        donem_danisman_id = self.input['form']['donem_danisman']
+
+        o = DonemDanismanlari.objects.get(donem_danisman_id)
+        personel = o.okutman.personel
+
+        self.current.task_data['personel_id'] = personel.key
+
+        ogrenci_program = OgrenciProgram.objects.get(program_id)
+        ogrenci_program.danisman = personel
+        ogrenci_program.save()
+
+    def kayit_bilgisi_ver(self):
+        ogrenci_id = self.current.task_data['ogrenci_id']
+        personel_id = self.current.task_data['personel_id']
+
+        ogrenci = Ogrenci.objects.get(ogrenci_id)
+        personel = Personel.objects.get(personel_id)
+
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'Danışman Ataması Yapıldı',
+            "msg": '%s adlı öğrenciye %s adlı personel danışman olarak atandı' % (ogrenci, personel)
+        }
