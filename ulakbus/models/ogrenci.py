@@ -863,7 +863,6 @@ class DonemDanismanlari(Model):
     """
 
     donem = Donem()
-    program = Program()
     okutman = Okutman()
     bolum = Unit()
     aciklama = field.String("Açıklama", index=True, required=False)
