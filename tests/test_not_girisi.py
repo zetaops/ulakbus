@@ -8,6 +8,7 @@
 from pyoko.manage import FlushDB, LoadData
 from zengine.lib.test_utils import *
 import os
+import time
 
 
 class TestCase(BaseTestCase):
@@ -25,9 +26,12 @@ class TestCase(BaseTestCase):
         # Bütün kayıtlar db'den silinir.
         FlushDB(model='all').run()
         # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/dump.csv')).run()
+        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/okutman_not_girisi.csv')).run()
+
         # Okutman kullanıcısı seçilir.
         usr = User(super_context).objects.get('Bkhc7dupquiIFPmOSKuO0kXJC8q')
+        time.sleep(2)
+
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/okutman_not_girisi', user=usr)
         self.client.post()
@@ -50,14 +54,15 @@ class TestCase(BaseTestCase):
                          flow='ders_secim_adimina_don')
         # Ders şubesi seçilir.
         self.client.post(cmd='Ders Şubesi Seçin',
-                         form=dict(sube='CHx6zuRnmmbxmMm9WkmbKnVe8fN', sec=1))
+                         form=dict(sube='PRGgozMfVXSrAqyO2aMnjS6aBQo', sec=1))
         # Sınav seçilir.
         resp = self.client.post(cmd='Sınav Seçin',
-                                form=dict(sinav='4RtmyCRCt4yyEyYdQGX4eJs8Q8Y', sec=1))
+                                form=dict(sinav='IvXH1cqyYoHznv0iRV4FjLvXWwz', sec=1))
 
         # Dersler okutman tarafından onaylanmamışsa;
-
-        assert 'inline_edit' in resp.json['forms']  # Kayıtlar önizlenir.
+        assert 'inline_edit' in resp.json['forms']
+        
+        # Kayıtlar önizlenir.
         self.client.post(cmd='not_kontrol',
                          form=dict(Ogrenciler=resp.json['forms']['model']['Ogrenciler'], kaydet=1))
         # Sınav notları onaylanıp kaydedilir.
