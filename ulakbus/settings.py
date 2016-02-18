@@ -102,6 +102,8 @@ OBJECT_MENU = {
          'verbose_name': 'İletişim Bilgileri'},
         {'name': 'OncekiEgitimBilgisi', 'verbose_name': 'Önceki Eğitim Bilgileri',
          'field': 'ogrenci_id'},
+        {'name': 'OgrenciProgram', 'field': 'ogrenci_id', 'wf': 'danisman_atama',
+         'verbose_name': 'Danışman Atama'},
     ],
 }
 
