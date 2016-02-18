@@ -853,3 +853,27 @@ class AkademikTakvim(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.birim, self.yil)
+
+class DonemDanismanlari(Model):
+    """Dönem Danışmanları Modeli
+
+    Dönem, Bölüm ve Program bazlı olarak öğrencilere danışman atanabilecek olan öğretim elemanlarının
+    saklandığı data modelidir.
+
+    """
+
+    donem = Donem()
+    program = Program()
+    okutman = Okutman()
+    bolum = Unit()
+    aciklama = field.String("Açıklama", index=True, required=False)
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Dönem Danışman"
+        verbose_name_plural = "Dönem Danışmanları"
+        list_fields = ['program', 'okutman', 'bolum', 'donem']
+        search_fields = ['aciklama']
+
+    def __unicode__(self):
+        return '%s %s %s %s' % (self.donem, self.bolum, self.program, self.okutman)
