@@ -875,4 +875,4 @@ class DonemDanismanlari(Model):
         search_fields = ['aciklama']
 
     def __unicode__(self):
-        return '%s %s' % (self.program, self.okutman)
+        return '%s %s' % (self.bolum, self.okutman)
