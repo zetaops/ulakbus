@@ -8,7 +8,7 @@
 from ulakbus.models.auth import Unit
 from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav
 from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
-from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman
+from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanismanlari
 from ulakbus.models.personel import Personel
 from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
 from .general import ints, gender, marital_status, blood_type, create_fake_geo_data
@@ -153,13 +153,13 @@ class FakeDataGenerator():
         unit_list = Unit.objects.filter(parent_unit_no=parent_unit_no, unit_type="Bölüm")
         for i in range(1, count):
             room = Room(
-                    code=fake.classroom_code(),
-                    name=fake.classroom(),
-                    building=building,
-                    room_type=random.choice(RoomType.objects.filter()),
-                    floor=ints(2),
-                    capacity=random.choice(range(30, 100)),
-                    is_active=True
+                code=fake.classroom_code(),
+                name=fake.classroom(),
+                building=building,
+                room_type=random.choice(RoomType.objects.filter()),
+                floor=ints(2),
+                capacity=random.choice(range(30, 100)),
+                is_active=True
             )
             for unit in unit_list:
                 room.RoomDepartments(unit=unit)
@@ -448,7 +448,7 @@ class FakeDataGenerator():
             d.ders_dili = random.choice(["Turkce", "Turkce", "Turkce", "Ingilizce"])
             d.kod = ints(length=3)
             d.ects_kredisi = random.choice(
-                    [1, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 6, 6, 6, 8, 8])
+                [1, 2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 6, 6, 6, 8, 8])
             d.yerel_kredisi = yerel_kredi
             d.uygulama_saati = yerel_kredi / 2
             d.teori_saati = yerel_kredi / 2
@@ -510,7 +510,7 @@ class FakeDataGenerator():
             s = Sinav()
             d = sube.donem
             s.tarih = d.baslangic_tarihi + datetime.timedelta(
-                    random.randint(1, (d.bitis_tarihi - d.baslangic_tarihi).days))
+                random.randint(1, (d.bitis_tarihi - d.baslangic_tarihi).days))
             s.yapilacagi_yer = sube.ad
             s.tur = random.randint(1, 7)
             s.sube = sube
@@ -659,6 +659,30 @@ class FakeDataGenerator():
         b.save()
         return b
 
+    @staticmethod
+    def yeni_donem_danismani(donem, okutman, bolum):
+        """
+        Parametre olarak verilen verileri
+        kullanarak ilgili döneme danışman kaydı oluştururup kaydeder.
+
+        Args:
+            donem (Donem): Dönem nesnesi
+            okutman (Okutman): Okutman nesnesi
+            bolum (Unitime): Unitime nesnesi
+
+        Returns:
+            DonemDanismanlari: Yeni dönem danışman kaydı
+
+        """
+
+        d = DonemDanismanlari()
+        d.donem = donem
+        d.okutman = okutman
+        d.bolum = bolum
+
+        d.save()
+        return d
+
     def fake_data(self, donem_say=1, kampus_say=2, personel_say=50, okutman_say=30, program_say=3,
                   ders_say=24, sube_say=40, sinav_say=2, ogrenci_say=20):
         """
@@ -741,6 +765,11 @@ class FakeDataGenerator():
                         print("%s adlı öğrenci için yeni ders katılım kaydı yapıldı.\n" % ogrenci)
                         self.yeni_borc(ogrenci, ders[0].donem)
                         print("%s adlı öğrenci için yeni borç kaydı yapıldı.\n" % ogrenci)
+
+                        # donem ici danismanlik yapacak ogretim gorevlisi kaydı
+                        self.yeni_donem_danismani(ders[0].donem, okutman, okutman.personel.birim)
+                        print("%s adlı okutman %s dönemi için %s danışmanları arasına eklendi.\n" % (
+                        okutman, ders[0].donem, okutman.personel.birim))
 
                         # ogrenci not bilgisi
                         for sinav in sinav_liste:
