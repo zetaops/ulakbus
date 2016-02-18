@@ -259,13 +259,13 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
     @staticmethod
     def acadTitle(title):
         if title == 1:
-            return ["Professor", "Prof"]
+            return ["Professor", "PROF"]
         elif title == 2:
-            return ["Associate Professor", "Ass. Prof"]
+            return ["Associate Professor", "ASSOC_PROF"]
         elif title == 3:
-            return ["Research Assistant", "Res. Assist."]
+            return ["Research Assistant", "INSTRUCTOR"]
         elif title == 4:
-            return ["Lecturer", "Lect."]
+            return ["Lecturer", "INSTRUCTOR"]
         else:
             return ["", ""]
 
