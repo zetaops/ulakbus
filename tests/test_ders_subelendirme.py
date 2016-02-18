@@ -9,6 +9,7 @@ from pyoko.manage import FlushDB, LoadData
 from zengine.lib.test_utils import *
 from ulakbus.models import Ders
 import os
+import time
 
 
 class TestCase(BaseTestCase):
@@ -26,10 +27,11 @@ class TestCase(BaseTestCase):
         # Bütün kayıtları veritabanından siler.
         FlushDB(model='all').run()
         # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/dump.csv')).run()
+        LoadData(path=os.path.join(os.path.expanduser('~'), '/app/ulakbus/tests/fixtures/ders_subelendirme.csv')).run()
 
         # Bölüm başkanı kullanıcısı seçilir.
-        usr = User.objects.get('6ACwlRypUk3wpCtOoMb58lLKK5O')
+        usr = User.objects.get('H7aSNdoPlTeTpJsIuLTEkqCqOar')
+        time.sleep(2)
 
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/ders_hoca_sube_atama', user=usr)
