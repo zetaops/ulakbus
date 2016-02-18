@@ -231,7 +231,7 @@ class FakeDataGenerator():
         return personel_list
 
     @staticmethod
-    def yeni_okutman(personel):
+    def yeni_okutman(personel, birim_no=''):
         """
         Rastgele verileri ve parametre olarak verilen veriyi kullanarak
         yeni okutman kaydı oluştururup kaydeder.
@@ -250,7 +250,7 @@ class FakeDataGenerator():
             o.ad = fake.first_name()
             o.soyad = fake.last_name()
             o.unvan = person.unvan
-            o.birim_no = person.birim.yoksis_no
+            o.birim_no = birim_no
             o.personel = person
 
             # duplicate data check
@@ -659,8 +659,8 @@ class FakeDataGenerator():
         b.save()
         return b
 
-    def fake_data(self, donem_say=1, kampus_say=2, personel_say=20, okutman_say=10, program_say=5,
-                  ders_say=5, sube_say=3, sinav_say=2, ogrenci_say=10):
+    def fake_data(self, donem_say=1, kampus_say=2, personel_say=50, okutman_say=30, program_say=3,
+                  ders_say=24, sube_say=40, sinav_say=2, ogrenci_say=20):
         """
         Rastgele verileri ve parametre olarak verilen verileri kullanarak
         yeni okutman, program, ders, şube, sınav, borc ve ders katılımı kayıtları
@@ -692,15 +692,6 @@ class FakeDataGenerator():
         print("Oluşturulan bina listesi : %s\n" % buildings)
         print("Oluşturulan oda listesi : %s\n" % rooms)
 
-        personel_list = self.yeni_personel(personel_say=personel_say)
-        print("Oluşturulan personel listesi : %s\n" % personel_list)
-
-        random_personel_list = random.sample(personel_list, okutman_say)
-        # okutman olmayan personellerden okutman olustur.
-
-        okutman_list = self.yeni_okutman(random_personel_list)
-        print("Oluşturulan okutman listesi : %s\n" % okutman_list)
-
         # yoksis uzerindeki program birimleri
         yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), program_say)
 
@@ -708,6 +699,16 @@ class FakeDataGenerator():
         for yoksis_program in yoksis_program_list:
             program = self.yeni_program(yoksis_program=yoksis_program)
             print("Oluşturulan program : %s\n" % program)
+
+            personel_list = self.yeni_personel(personel_say=personel_say)
+            print("Oluşturulan personel listesi : %s\n" % personel_list)
+
+            random_personel_list = random.sample(personel_list, okutman_say)
+            # okutman olmayan personellerden okutman olustur.
+
+            okutman_list = self.yeni_okutman(random_personel_list,
+                                             birim_no=yoksis_program.parent_unit_no)
+            print("Oluşturulan okutman listesi : %s\n" % okutman_list)
 
             # programa ait dersler
             for dc in range(ders_say):
