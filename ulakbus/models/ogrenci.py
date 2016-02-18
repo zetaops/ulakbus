@@ -854,7 +854,7 @@ class AkademikTakvim(Model):
     def __unicode__(self):
         return '%s %s' % (self.birim, self.yil)
 
-class DonemDanismanlari(Model):
+class DonemDanisman(Model):
     """Dönem Danışmanları Modeli
 
     Dönem, Bölüm ve Program bazlı olarak öğrencilere danışman atanabilecek olan öğretim elemanlarının

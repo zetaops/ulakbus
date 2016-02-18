@@ -19,7 +19,7 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanismanlari
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman
 from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
 
@@ -314,7 +314,7 @@ class DanismanAtama(CrudView):
         program = OgrenciProgram.objects.get(program_id)
 
         _form = DanismanSecimForm(current=self.current, title="Danışman Seçiniz")
-        _choices = prepare_choices_for_model(DonemDanismanlari, donem_id=donem_id, bolum_id=program.program.bolum.key)
+        _choices = prepare_choices_for_model(DonemDanisman, donem_id=donem_id, bolum_id=program.program.bolum.key)
         _form.donem_danisman = fields.Integer(choices=_choices)
         self.form_out(_form)
 
@@ -322,7 +322,7 @@ class DanismanAtama(CrudView):
         program_id = self.current.task_data['program_id']
         donem_danisman_id = self.input['form']['donem_danisman']
 
-        o = DonemDanismanlari.objects.get(donem_danisman_id)
+        o = DonemDanisman.objects.get(donem_danisman_id)
         personel = o.okutman.personel
 
         self.current.task_data['personel_id'] = personel.key
