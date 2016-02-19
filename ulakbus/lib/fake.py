@@ -48,5 +48,6 @@ class GenerateFakeData(Command):
         sinav_say = int(self.manager.args.sinav_sayisi)
         ogrenci_say = int(self.manager.args.ogrenci_sayisi)
         fake = FakeDataGenerator()
-        fake.fake_data(kampus_say, personel_say, okutman_say, program_say, ders_say, sube_say,
-                       sinav_say, ogrenci_say)
+        fake.fake_data(donem_say=donem_say, kampus_say=kampus_say, personel_say=personel_say, okutman_say=okutman_say,
+                       program_say=program_say,ders_say=ders_say, sinav_say=sinav_say, sube_say=sube_say,
+                       ogrenci_say=ogrenci_say)

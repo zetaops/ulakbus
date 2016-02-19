@@ -314,7 +314,7 @@ class DanismanAtama(CrudView):
         program = OgrenciProgram.objects.get(program_id)
 
         _form = DanismanSecimForm(current=self.current, title="Danışman Seçiniz")
-        _choices = prepare_choices_for_model(DonemDanisman, donem_id=donem_id, bolum_id=program.program.bolum.key)
+        _choices = prepare_choices_for_model(DonemDanisman, donem_id=donem_id, bolum=program.program.birim)
         _form.donem_danisman = fields.Integer(choices=_choices)
         self.form_out(_form)
 
