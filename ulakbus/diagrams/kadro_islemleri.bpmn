@@ -2,9 +2,9 @@
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_TNFPUGBkEeWiWJUlA5rr9A" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
   <bpmn2:collaboration id="_Collaboration_3" name="Kadro İşlemleri">
     <bpmn2:extensionElements>
-      <camunda:properties>
-        <camunda:property value="Kadro Islemleri" name="menu_category"/>
-      </camunda:properties>
+      <camunda:properties><![CDATA[
+        ]]><camunda:property value="Kadro Islemleri" name="menu_category"/><![CDATA[
+      ]]></camunda:properties>
     </bpmn2:extensionElements>
     <bpmn2:participant id="_Participant_3" name="Kadro İşlemleri" processRef="kadro_islemleri"/>
   </bpmn2:collaboration>
@@ -34,14 +34,16 @@
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:incoming>listele</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_22" name="" sourceRef="kadro_listele" targetRef="ExclusiveGateway_2"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_2">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" default="listele">
       <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
+      <bpmn2:outgoing>listele</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_2" targetRef="kadro_sil">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'kadro_sil'</bpmn2:conditionExpression>
@@ -70,6 +72,7 @@
     <bpmn2:endEvent id="EndEvent_1">
       <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
     </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="listele" name="" sourceRef="ExclusiveGateway_2" targetRef="kadro_listele"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
@@ -175,6 +178,15 @@
         <di:waypoint xsi:type="dc:Point" x="1008.0" y="247.0"/>
         <bpmndi:BPMNLabel>
           <dc:Bounds height="6.0" width="6.0" x="989.0" y="247.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="listele" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_ServiceTask_22">
+        <di:waypoint xsi:type="dc:Point" x="615.0" y="271.0"/>
+        <di:waypoint xsi:type="dc:Point" x="601.0" y="304.0"/>
+        <di:waypoint xsi:type="dc:Point" x="572.0" y="304.0"/>
+        <di:waypoint xsi:type="dc:Point" x="544.0" y="283.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="601.0" y="297.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
