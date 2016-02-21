@@ -22,26 +22,27 @@ class TestCase(BaseTestCase):
         """
         Ders şubelendirme test edilmden önce aşağıda tanımlı
         ön hazırlıklar yapılır.
+
         """
 
         # Bütün kayıtları veritabanından siler.
         FlushDB(model='all').run()
         # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'), '/app/ulakbus/tests/fixtures/ders_subelendirme.csv')).run()
-
-        # Bölüm başkanı kullanıcısı seçilir.
-        usr = User.objects.get('H7aSNdoPlTeTpJsIuLTEkqCqOar')
-        time.sleep(2)
-
-        # Kullanıcıya login yaptırılır.
-        self.prepare_client('/ders_hoca_sube_atama', user=usr)
-        self.client.post()
+        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/ders_subelendirme.csv')).run()
 
     def test_ders_subelendirme(self):
         """
         Ders şubelendirme iş akışını test eder.
 
         """
+
+        # Bölüm başkanı kullanıcısı seçilir.
+        usr = User.objects.get('Re8CNZ8uG93zJhW4V9aX8h5MVlf')
+        time.sleep(2)
+
+        # Kullanıcıya login yaptırılır.
+        self.prepare_client('/ders_hoca_sube_atama', user=usr)
+        self.client.post()
 
         # Program seçer.
         resp = self.client.post(cmd='ders_sec',
@@ -72,6 +73,7 @@ class TestCase(BaseTestCase):
 
         # Şubelendirme formu doldurulur.
         sube = [{'okutman': "6jBwqQChhUEwuwRBXTCIxar7kn9", 'kontenjan': 30, 'dis_kontenjan': 5, 'ad': "Sube 2"}]
+
         # Hocalara bilgilendirme mesajı gönderilir.
         # İş akışı bu adımdan sonra sona erer.
         resp = self.client.post(cmd='subelendirme_kaydet',
