@@ -28,6 +28,12 @@ class TestCase(BaseTestCase):
         # Belirtilen dosyadaki kayıtları ekler.
         LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/okutman_not_girisi.csv')).run()
 
+    def test_okutman_not_girisi(self):
+        """
+        Okutman not girişi iş akışını test eder.
+
+        """
+
         # Okutman kullanıcısı seçilir.
         usr = User(super_context).objects.get('Bkhc7dupquiIFPmOSKuO0kXJC8q')
         time.sleep(2)
@@ -35,12 +41,6 @@ class TestCase(BaseTestCase):
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/okutman_not_girisi', user=usr)
         self.client.post()
-
-    def test_okutman_not_girisi(self):
-        """
-        Okutman not girişi iş akışını test eder.
-
-        """
 
         # Ders şubesi seçilir.
         self.client.post(cmd='Ders Şubesi Seçin',
@@ -61,10 +61,11 @@ class TestCase(BaseTestCase):
 
         # Dersler okutman tarafından onaylanmamışsa;
         assert 'inline_edit' in resp.json['forms']
-        
+
         # Kayıtlar önizlenir.
         self.client.post(cmd='not_kontrol',
                          form=dict(Ogrenciler=resp.json['forms']['model']['Ogrenciler'], kaydet=1))
+
         # Sınav notları onaylanıp kaydedilir.
         # İş akışı bu adımdan sonra sona erer.
         resp = self.client.post(cmd='not_kaydet',
