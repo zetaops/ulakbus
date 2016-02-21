@@ -21,6 +21,7 @@ class TestCase(BaseTestCase):
         """
         Okutman not girişi iş akışı test edilmeden önce aşağıda
         tanımlı ön hazırlıklar yapılır.
+
         """
 
         # Bütün kayıtlar db'den silinir.
