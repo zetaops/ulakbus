@@ -29,6 +29,7 @@ class TestCase(BaseTestCase):
         # Belirtilen dosyadaki kayıtları ekler.
         LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/okutman_not_girisi.csv')).run()
 
+
     def test_okutman_not_girisi(self):
         """
         Okutman not girişi iş akışını test eder.
