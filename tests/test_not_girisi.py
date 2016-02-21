@@ -29,12 +29,21 @@ class TestCase(BaseTestCase):
         # Belirtilen dosyadaki kayıtları ekler.
         LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/okutman_not_girisi.csv')).run()
 
+
     def test_okutman_not_girisi(self):
         """
         Okutman not girişi iş akışını test eder.
 
         """
-        
+
+        # Okutman kullanıcısı seçilir.
+        usr = User(super_context).objects.get('Bkhc7dupquiIFPmOSKuO0kXJC8q')
+        time.sleep(2)
+
+        # Kullanıcıya login yaptırılır.
+        self.prepare_client('/okutman_not_girisi', user=usr)
+        self.client.post()
+
         # Ders şubesi seçilir.
         self.client.post(cmd='Ders Şubesi Seçin',
                          form=dict(sube='S7z8bvdNCBFSd9iCvQrb7O1pQ75', sec=1))
