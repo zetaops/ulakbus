@@ -29,6 +29,7 @@ class TestCase(BaseTestCase):
         if '-k-nosetup' in sys.argv:
             return
 
+        # Bütün kayıtları veritabanından siler.
         FlushDB(model='all').run()
         # Belirtilen dosyadaki kayıtları ekler.
         LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/kadro_islemleri.csv')).run()
@@ -38,11 +39,12 @@ class TestCase(BaseTestCase):
         Kadro işlemleri iş akışını test eder.
 
         """
+
         # Veritabanından kullanıcı kaydı seçer.
         usr = User(super_context).objects.get('H7FtslSEbJZAKVvSfU1tZ1nxCfc')
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/kadro_islemleri', user=usr)
-        resp = self.client.post()
+        self.client.post()
 
         # Veritabanından kadro kaydı seçer.
         kadro = Kadro.objects.get('ZRcoPhWHe4u6Rh3BYu1dL9jkTfR')
@@ -63,6 +65,7 @@ class TestCase(BaseTestCase):
 
         # Kadronun son durumu.
         last_state = kadro.get_durum_display()
+        # Saklı izinli değiştir komutundan sonra kadronun durumunu kontrol eder.
         assert beginning_state != last_state
 
         # İş akışının başlangıç token değeridir.
@@ -85,10 +88,24 @@ class TestCase(BaseTestCase):
         self.client.post(cmd='add_edit_form',
                          form=dict(add=1))
 
-        kadro_data = {'unvan': 3, 'unvan_kod': 22464, 'derece': 3, 'birim_id': 'PANU2Pqi45aZD9lrmaFhBV3Zk0e',
+        # Yeni bir iş akışı başlatılacağı için token değeri sıfırlanır.
+        self.client.token = ''
+
+        # Crud iş akışı başlatılır.
+        self.client.set_path('/crud')
+        resp = self.client.post(model='Unit',
+                                cmd='select_list',
+                                query='Halkla')
+
+        birim_no = resp.json['objects'][0]['key']
+
+        # Kadro ekle formu doldurulur.
+        kadro_data = {'unvan': 3, 'unvan_kod': 22464, 'derece': 3, 'birim_id': birim_no,
                       'kadro_no': 4, 'save_edit': 1,
                       'aciklama': 'kadro'}
 
+        self.client.set_path('/kadro_islemleri', token=form_token)
+        # Kadro kaydını kaydeder.
         resp = self.client.post(form=kadro_data)
         assert 'reset' in resp.json['client_cmd']
 
