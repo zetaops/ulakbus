@@ -734,7 +734,7 @@ class FakeDataGenerator():
             # okutman olmayan personellerden okutman olustur.
 
             okutman_list = self.yeni_okutman(random_personel_list,
-                                             birim_no=yoksis_program.parent_unit_no)
+                                             birim_no=yoksis_program.yoksis_no)
             print("Oluşturulan okutman listesi : %s\n" % okutman_list)
 
             donem = random.choice(Donem.objects.filter(guncel=True))
