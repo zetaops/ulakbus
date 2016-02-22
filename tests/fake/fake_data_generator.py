@@ -718,7 +718,7 @@ class FakeDataGenerator():
         buildings, rooms = self.yeni_bina()
         print("Oluşturulan bina listesi : %s\n" % buildings)
         print("Oluşturulan oda listesi : %s\n" % rooms)
-        
+
         # yoksis uzerindeki program birimleri
         yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), program_say)
 
