@@ -7,19 +7,19 @@
     <bpmn2:startEvent id="StartEvent_1">
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:startEvent>
-    <bpmn2:userTask id="UserTask_2" camunda:assignee="ders.danisman.DonemDanisman.bolum_sec" name="Bolum Sec">
+    <bpmn2:userTask id="UserTask_2" camunda:assignee="ders.danisman.DonemDanismanAtama.bolum_sec" name="Bolum Sec">
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:userTask id="UserTask_3" camunda:assignee="ders.danisman.DonemDanisman.danisman_sec" name="Danisman Sec">
+    <bpmn2:userTask id="UserTask_3" camunda:assignee="ders.danisman.DonemDanismanAtama.danisman_sec" name="Danisman Sec">
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:serviceTask id="ServiceTask_1" camunda:class="ders.danisman.DonemDanisman.danisman_kaydet" name="Danismanlari Kaydet">
+    <bpmn2:serviceTask id="ServiceTask_1" camunda:class="ders.danisman.DonemDanismanAtama.danisman_kaydet" name="Danismanlari Kaydet">
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:userTask id="UserTask_4" camunda:assignee="ders.danisman.DonemDanisman.kayit_bilgisi_ver" name="Kayıt Bilgisi Ver">
+    <bpmn2:userTask id="UserTask_4" camunda:assignee="ders.danisman.DonemDanismanAtama.kayit_bilgisi_ver" name="Kayıt Bilgisi Ver">
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
     </bpmn2:userTask>
