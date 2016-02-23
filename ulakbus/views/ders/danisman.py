@@ -47,7 +47,6 @@ class DonemDanismanAtama(CrudView):
 
     Dönem Danışman Atama, aşağıda tanımlı iş akışı adımlarını yürütür.
 
-
     - Bölüm Seç
     - Öğretim Elemanlarını Seç
     - Kaydet
