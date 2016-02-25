@@ -310,9 +310,9 @@ class DersSubelendirme(CrudView):
 
             ders_subeleri = ["""* **%s %s %s**
                                 Sube: %s - Kontenjan: %s""" % (
-            sb['okutman_unvan'], sb['okutman_ad'],
-            sb['okutman_soyad'], sb['sube_ad'],
-            sb['kontenjan']) for sb in subeler]
+                sb['okutman_unvan'], sb['okutman_ad'],
+                sb['okutman_soyad'], sb['sube_ad'],
+                sb['kontenjan']) for sb in subeler]
             item = {
                 "fields": ["%s\n%s" % (ders, "\n".join(ders_subeleri)), ],
                 "actions": [
