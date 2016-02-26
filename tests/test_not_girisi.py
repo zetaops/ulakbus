@@ -32,7 +32,8 @@ class TestCase(BaseTestCase):
         # Bütün kayıtlar db'den silinir.
         FlushDB(model='all').run()
         # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/okutman_not_girisi.csv')).run()
+        LoadData(path=os.path.join(os.path.expanduser('~'),
+                                   'ulakbus/tests/fixtures/okutman_not_girisi.csv')).run()
 
     def test_okutman_not_girisi(self):
         """
@@ -132,7 +133,8 @@ class TestCase(BaseTestCase):
         # İş akışı bu adımdan sonra sona erer.
         resp = self.client.post(cmd='not_kaydet',
                                 flow='end',
-                                form=dict(kaydet_ve_sinav_sec='null', kaydet=1, kaydet_ve_ders_sec='null',
+                                form=dict(kaydet_ve_sinav_sec='null', kaydet=1,
+                                          kaydet_ve_ders_sec='null',
                                           not_duzenle='null', not_onay='null'))
 
         assert resp.json['msgbox']['title'] == 'Notlar Kaydedildi'
