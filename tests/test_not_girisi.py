@@ -1,0 +1,155 @@
+# -*-  coding: utf-8 -*-
+#
+# Copyright (C) 2015 ZetaOps Inc.
+#
+# This file is licensed under the GNU General Public License v3
+# (GPLv3).  See LICENSE.txt for details.
+
+import time
+
+from pyoko.manage import FlushDB, LoadData
+from ulakbus.models import OgrenciDersi
+from zengine.lib.test_utils import *
+
+
+class TestCase(BaseTestCase):
+    """
+    Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
+
+    """
+
+    def test_setup(self):
+        """
+        Okutman not girişi iş akışı test edilmeden önce veritabanı boşaltılır,
+        belirtilen dosyadaki veriler veritabanına yüklenir.
+
+        """
+
+        import sys
+        if '-k-nosetup' in sys.argv:
+            return
+
+        # Bütün kayıtlar db'den silinir.
+        FlushDB(model='all').run()
+        # Belirtilen dosyadaki kayıtları ekler.
+        LoadData(path=os.path.join(os.path.expanduser('~'),
+                                   'ulakbus/tests/fixtures/okutman_not_girisi.csv')).run()
+
+    def test_okutman_not_girisi(self):
+        """
+        Okutman not girişi iş akışının ilk iki adımında ders şubesi ve sınav seçilir.
+
+        Seçilen ders ve seçilen sınav ait notlar okutman tarafından onaylanmışsa;
+
+        Dönen cevapta ``Notlar Onaylandı`` başlığı olup olmadığını test eder.
+
+
+        ``Notlar Onaylandı`` başlığı var ise;
+
+        Seçilen ders şubesine ait derslere kayıtlı öğrencilerin ad, soyad bilgisi ile
+        sunucudan dönen öğrenci kayıt listesinin ad, soyad bilgisinin eşitliği test edilir.
+
+        Kullanıcı, ders seçim ya da sınav seçim ekranına dönerek sınav ve ders
+        seçebilir.
+
+
+        ``Önizleme`` başlığı var ise;
+
+        Seçilen ders ve seçilen sınav ait notlar okutman tarafından onaylanmamıştır.
+
+        Seçilen ders şubesine ait derslere kayıtlı öğrencilerin ad, soyad bilgisi ile
+        sunucudan dönen öğrenci kayıt listesinin ad, soyad bilgisinin  eşitliği test edilir.
+
+        Notlar düzenlenebilir, onaylanabilir, ders seçim ekranına ya da sınav seçim
+        ekranına dönülebilir.
+
+        Notlar onaylandıktan sonra dönen cevapta hocalara bilgilendirme mesajı içeren
+        ``Notlar Kaydedildi`` olup olmadığını test eder.
+
+        Ders onaylanmadan önceki öğrenci sayısı ile ders onaylandıktan sonraki
+        öğrenci sayısının eşitliği test edilir.
+
+        İş akışı tekrar başlatılıp onaylanan ders  ve onaylanan sınav tekrardan seçilir
+        ve gelen mesaj başlığında `Notlar Kaydedildi`` olup olmadığını test eder.
+
+        """
+
+        # Okutman kullanıcısı seçilir.
+        usr = User(super_context).objects.get('Bkhc7dupquiIFPmOSKuO0kXJC8q')
+        time.sleep(1)
+
+        # Kullanıcıya login yaptırılır.
+        self.prepare_client('/okutman_not_girisi', user=usr)
+        self.client.post()
+
+        # Ders şubesi seçilir.
+        self.client.post(cmd='Ders Şubesi Seçin',
+                         form=dict(sube='S7z8bvdNCBFSd9iCvQrb7O1pQ75', sec=1))
+        # Seçilen şubeye ait sınav seçilir.
+        resp = self.client.post(cmd='Sınav Seçin',
+                                form=dict(sinav='7isfBEsi96AVDZdp2o33mQoWemJ', sec=1))
+
+        assert resp.json['msgbox']['title'] == 'Notlar Onaylandı'
+
+        # Veritabanından çekilen öğrenci bilgisi ile sıunucudan gelen öğrenci bilgisi
+        # karşılaştırılarak test edilir.
+        for i in range(0, len(resp.json['object']['fields'])):
+            ogrenci_ders = OgrenciDersi.objects.filter(ders_id='S7z8bvdNCBFSd9iCvQrb7O1pQ75')
+            ogrenci_ad = ogrenci_ders[i].ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders[
+                i].ogrenci_program.ogrenci.soyad
+            assert ogrenci_ad == resp.json['object']['fields'][i][u'Adı Soyadı']
+
+        # Ders seçim ekranına geri döner
+        self.client.post(cmd='ders_sec',
+                         form=dict(sinav_secim='null', ders_secim=1),
+                         flow='ders_secim_adimina_don')
+        # Ders şubesi seçilir.
+        self.client.post(cmd='Ders Şubesi Seçin',
+                         form=dict(sube='PRGgozMfVXSrAqyO2aMnjS6aBQo', sec=1))
+        # Sınav seçilir.
+        resp = self.client.post(cmd='Sınav Seçin',
+                                form=dict(sinav='IvXH1cqyYoHznv0iRV4FjLvXWwz', sec=1))
+
+        # Dersler okutman tarafından onaylanmamışsa;
+        assert resp.json['forms']['schema']['properties']['kaydet']['title'] == 'Önizleme'
+        assert 'inline_edit' in resp.json['forms']
+
+        # Veritabanından çekilen öğrenci bilgisi ile sıunucudan gelen öğrenci bilgisi
+        # karşılaştırılarak test edilir.
+        for i in range(0, len(resp.json['forms']['model']['Ogrenciler'])):
+            ogrenci_ders = OgrenciDersi.objects.filter(ders_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')
+            ogrenci_ad = ogrenci_ders[i].ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders[
+                i].ogrenci_program.ogrenci.soyad
+            assert ogrenci_ad == resp.json['forms']['model']['Ogrenciler'][i][u'ad_soyad']
+
+        # Öğrencilerin sayısı.
+        num_of_ogrenci = len(resp.json['forms']['model']['Ogrenciler'])
+
+        # Kayıtlar önizlenir.
+        self.client.post(cmd='not_kontrol',
+                         form=dict(Ogrenciler=resp.json['forms']['model']['Ogrenciler'], kaydet=1))
+
+        # Sınav notları onaylanıp kaydedilir.
+        # İş akışı bu adımdan sonra sona erer.
+        resp = self.client.post(cmd='not_kaydet',
+                                flow='end',
+                                form=dict(kaydet_ve_sinav_sec='null', kaydet=1,
+                                          kaydet_ve_ders_sec='null',
+                                          not_duzenle='null', not_onay='null'))
+
+        assert resp.json['msgbox']['title'] == 'Notlar Kaydedildi'
+
+        # İş akışı tekrardan başlatılır.
+        resp = self.client.set_path('/okutman_not_girisi')
+        self.client.post()
+
+        # Ders şubesi seçilir.
+        self.client.post(cmd='Ders Şubesi Seçin',
+                         form=dict(sube='PRGgozMfVXSrAqyO2aMnjS6aBQo', sec=1))
+
+        # Sınav seçilir.
+        resp = self.client.post(cmd='Sınav Seçin',
+                                form=dict(sinav='IvXH1cqyYoHznv0iRV4FjLvXWwz', sec=1))
+
+        assert num_of_ogrenci == len(resp.json['object']['fields'])
+        assert resp.json['msgbox']['title'] == 'Notlar Onaylandı'
