@@ -536,6 +536,9 @@ class OgrenciProgram(Model):
         aciklama = field.String("Ek Açıklama", index=True, default="-", required=False)
         tamam = field.Boolean("Belge kontrol edildi", index=True, required=True)
 
+    class OgrenciDonem(ListNode):
+        donem = Donem()
+
     def __unicode__(self):
         return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad,
                                     self.program.adi, self.program.yil)
@@ -555,7 +558,12 @@ class OgrenciDersi(Model):
     ders = Sube()
     donem = Donem()
     ogrenci_program = OgrenciProgram()
+<<<<<<< HEAD
     ogrenci = Ogrenci()
+=======
+    ortalama = field.Float("Ortalama", index=True)
+    harf = field.String("Harf", index=True)
+>>>>>>> CHANGE #5056 öğrenci dersi modeline ortalama ve harf alanları eklendi
 
     class Meta:
         app = 'Ogrenci'

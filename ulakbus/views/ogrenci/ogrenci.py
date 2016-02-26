@@ -19,19 +19,11 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-<<<<<<< HEAD
-<<<<<<< HEAD
-from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman
-from ulakbus.models.ogrenci import DegerlendirmeNot
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman, DegerlendirmeNot
 from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
-=======
-from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, DegerlendirmeNot
->>>>>>> CHANGE, rref #5056 wf de düzenleme
-=======
-from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, DegerlendirmeNot
->>>>>>> CHANGE, rref #5056 wf de düzenleme
-
+from ulakbus.models.ogrenci import OgrenciDersi, Sinav
+from pyoko.exceptions import ObjectDoesNotExist
 
 class KimlikBilgileriForm(forms.JsonForm):
     """
@@ -295,6 +287,103 @@ class DanismanAtama(CrudView):
 
     """
 
+def prepare_choices_for_model(model, **kwargs):
+    """Model için Seçenekler Hazırla
+
+    Args:
+        model: Model
+        **kwargs: Keyword argümanları
+
+    Returns:
+        Keyword argümanlara göre filtrelenmiş modelin,
+        key ve __unicode__ method değerlerini
+
+    """
+
+    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
+
+    class Meta:
+        model = "OgrenciProgram"
+
+    def program_sec(self):
+        """Program Seçim Adımı
+
+        Programlar veritabanından çekilip, açılır menu içine
+        doldurulur.
+
+        """
+        guncel_donem = Donem.objects.filter(guncel=True)[0]
+        ogrenci_id = self.current.input['id']
+        self.current.task_data['ogrenci_id'] = ogrenci_id
+        self.current.task_data['donem_id'] = guncel_donem.key
+
+        _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
+        _form.program = fields.Integer(choices=_choices)
+        self.form_out(_form)
+
+    def danisman_sec(self):
+        program_id = self.current.input['form']['program']
+        donem_id = self.current.task_data['donem_id']
+        self.current.task_data['program_id'] = program_id
+
+        program = OgrenciProgram.objects.get(program_id)
+
+        _form = DanismanSecimForm(current=self.current, title="Danışman Seçiniz")
+        _choices = prepare_choices_for_model(DonemDanisman, donem_id=donem_id, bolum=program.program.birim)
+        _form.donem_danisman = fields.Integer(choices=_choices)
+        self.form_out(_form)
+
+    def danisman_kaydet(self):
+        program_id = self.current.task_data['program_id']
+        donem_danisman_id = self.input['form']['donem_danisman']
+
+        o = DonemDanisman.objects.get(donem_danisman_id)
+        personel = o.okutman.personel
+
+        self.current.task_data['personel_id'] = personel.key
+
+        ogrenci_program = OgrenciProgram.objects.get(program_id)
+        ogrenci_program.danisman = personel
+        ogrenci_program.save()
+
+    def kayit_bilgisi_ver(self):
+        ogrenci_id = self.current.task_data['ogrenci_id']
+        personel_id = self.current.task_data['personel_id']
+
+        ogrenci = Ogrenci.objects.get(ogrenci_id)
+        personel = Personel.objects.get(personel_id)
+
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'Danışman Ataması Yapıldı',
+            "msg": '%s adlı öğrenciye %s adlı personel danışman olarak atandı' % (ogrenci, personel)
+
+class ProgramSecimForm(forms.JsonForm):
+    """
+    ``DanismanAtama`` sınıfı için form olarak kullanılacaktır.
+
+    """
+
+    sec = fields.Button("Seç")
+
+
+class DanismanSecimForm(forms.JsonForm):
+    """
+    ``DanismanAtama`` sınıfı için form olarak kullanılacaktır.
+
+    """
+
+    sec = fields.Button("Kaydet")
+
+
+class DanismanAtama(CrudView):
+    """Danışman Atama
+
+    Öğrencilere danışman atamalarının yapılmasını sağlayan workflowa ait
+    metdodları barındıran sınıftır.
+
+    """
+
     class Meta:
         model = "OgrenciProgram"
 
@@ -351,7 +440,6 @@ class DanismanAtama(CrudView):
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Danışman Ataması Yapıldı',
             "msg": '%s adlı öğrenciye %s adlı personel danışman olarak atandı' % (ogrenci, personel)
-<<<<<<< HEAD
         }
 
 
@@ -412,6 +500,46 @@ class OgrenciMezuniyet(CrudView):
                 'type': 'warning', "title": 'Bir Hata Oluştu',
                 "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
             }
-=======
         }
->>>>>>> ADD, rref #5056
+
+class BasariDurum(CrudView):
+    class Meta:
+        model = "OgrenciProgram"
+
+    def program_ata(self):
+        ogrenci = Ogrenci.objects.get(user = self.current.user)
+        ogrenci_program = OgrenciProgram.objects.filter(ogrenci = ogrenci)
+        self.current.task_data["ogrenci_program_key"] = ogrenci_program[0].key
+
+    def not_durum(self):
+        self.current.output['client_cmd'] = ['show', ]
+        donemler = Donem.objects.set_params(sort='baslangic_tarihi desc').filter()
+        ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_key"])
+        output_array = []
+        for donem in donemler:
+            ogrenci_dersler = OgrenciDersi.objects.filter(
+                        ogrenci_program = ogrenci_program,
+                        donem = donem
+                        )
+            for ogrenci_ders in ogrenci_dersler:
+                tablo = []
+                ders_sinav = {}
+                sinavlar = Sinav.objects.filter(ders = ogrenci_ders.ders.ders)
+                ders_sinav["Ders"] = ogrenci_ders.ders.ders.ad
+                ders_sinav["Ects Kredisi"] = ogrenci_ders.ders.ders.ects_kredisi
+                ders_sinav["Yerel Kredisi"] = ogrenci_ders.ders.ders.yerel_kredisi
+                for sinav in sinavlar:
+                    try:
+                        degerlendirme = DegerlendirmeNot.objects.get(sinav = sinav)
+                        ders_sinav[sinav.get_tur_display()] = degerlendirme.puan
+                    except ObjectDoesNotExist:
+                        ders_sinav[sinav.get_tur_display()] = "Sonuçlandırılmadı"
+                tablo.append(ders_sinav)
+            output_array.append({
+                    "title"  : "%s Başarı Durumu"%donem.ad,
+                    "type"   : "table-multiRow",
+                    "fields" : tablo
+                })            
+
+        self.output["object"] = output_array
+        self.current.ogrenci_program = ogrenci_program[0]
