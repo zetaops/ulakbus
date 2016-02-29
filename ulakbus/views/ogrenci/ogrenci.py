@@ -19,6 +19,10 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
+<<<<<<< HEAD
+=======
+from pyoko import LinkProxy
+>>>>>>> CHANGE #5056, öğrenci başarı durumuna dönem ağırlıklı ortalama hesabı eklendi
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman, DegerlendirmeNot
 from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
@@ -512,10 +516,63 @@ class BasariDurum(CrudView):
         self.current.task_data["ogrenci_program_key"] = ogrenci_program[0].key
 
     def not_durum(self):
+        harflendirme = {
+            "AA" : {
+                "baslangic" : 90,
+                "bitis" : 100,
+                "dortluk" : 4.00
+            },
+            "BA" : {
+                "baslangic" : 85,
+                "bitis" : 89,
+                "dortluk" : 3.50
+            },
+            "BB" : {
+                "baslangic" : 75,
+                "bitis" : 84,
+                "dortluk" : 3.00
+            },
+            "CB" : {
+                "baslangic" : 70,
+                "bitis" : 74,
+                "dortluk" : 2.50
+            },
+            "CC" : {
+                "baslangic" : 60,
+                "bitis" : 69,
+                "dortluk" : 2.00
+            },
+            "DC" : {
+                "baslangic" : 55,
+                "bitis" : 59,
+                "dortluk" : 1.50
+            },
+            "DD" : {
+                "baslangic" : 50,
+                "bitis" : 54,
+                "dortluk" : 1.00
+            },
+            "FD" : {
+                "baslangic" : 40,
+                "bitis" : 49,
+                "dortluk" : 0.50
+            },
+            "FF" : {
+                "baslangic" : 0,
+                "bitis" : 39,
+                "dortluk" : 0.00
+            },
+            "F" : {
+                "baslangic" : "devamsiz",
+                "bitis" : "devamsiz",
+                "dortluk" : 0.00
+            }
+        }
         self.current.output['client_cmd'] = ['show', ]
         donemler = Donem.objects.set_params(sort='baslangic_tarihi desc').filter()
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_key"])
         output_array = []
+        genel_toplam = 0.0
         for donem in donemler:
             ogrenci_dersler = OgrenciDersi.objects.filter(
                         ogrenci_program = ogrenci_program,
@@ -534,6 +591,17 @@ class BasariDurum(CrudView):
                         ders_sinav[sinav.get_tur_display()] = degerlendirme.puan
                     except ObjectDoesNotExist:
                         ders_sinav[sinav.get_tur_display()] = "Sonuçlandırılmadı"
+
+                if type(ogrenci_ders.ortalama) is float:
+                    ders_sinav["Ortalama"] = ogrenci_ders.ortalama
+                    kredi_toplam += ogrenci_ders.ders.ders.yerel_kredisi
+                    agirlikli_not_toplam += ogrenci_ders.ders.ders.yerel_kredisi * harflendirme[ogrenci_ders.harf]["dortluk"]
+                else:
+                    ders_sinav["Ortalama"] = "Sonuçlandırılmadı"
+                if type(ogrenci_ders.harf) is str:
+                    ders_sinav["Harf"] = ogrenci_ders.harf
+                else:
+                    ders_sinav["Harf"] = "Sonuçlandırılmadı"
                 tablo.append(ders_sinav)
             output_array.append({
                     "title"  : "%s Başarı Durumu"%donem.ad,
@@ -541,5 +609,15 @@ class BasariDurum(CrudView):
                     "fields" : tablo
                 })            
 
+
         self.output["object"] = output_array
         self.current.ogrenci_program = ogrenci_program[0]
+            output_array.append({
+                    "title" : "",
+                    "type" : "table",
+                    "fields" : {
+                        "Dönem Ağırlıklı Not Ortalaması" : agirlikli_not_toplam / kredi_toplam
+                    }
+                })
+        ogrenci_dersler = OgrenciDersi.objects.filter(ogrenci_program = ogrenci_program)
+        self.output["object"] = output_array

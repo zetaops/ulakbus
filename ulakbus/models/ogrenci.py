@@ -282,6 +282,7 @@ class Ders(Model):
     program = Program()
     donem = Donem()
     ders_koordinatoru = Personel()
+    yerine_ders = LinkProxy("Ders", verbose_name= "Yerine Açılan Ders", reverse_name= "")
 
     class Degerlendirme(ListNode):
         tur = field.String("Değerlendirme Türü", index=True)
