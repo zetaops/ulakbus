@@ -32,16 +32,15 @@ H_PASS = os.environ["HITAP_PASS"]
 
 class HITAPEkle(Service):
     """
-    Hitap Sorgulama servislerinin kalıtılacağı abstract Zato servisi.
+    Hitap Ekleme servislerinin kalıtılacağı abstract Zato servisi.
 
-    Sorgulama servisleri gerekli girdileri (Hitap username, Hitap password, tckn)
+    Ekleme servisleri gerekli girdileri (Hitap dict, Hitap username, Hitap password)
     Hitap'a yollayıp dönecek cevabı elde edebilmektedirler.
 
     Attributes:
         service_name (str): İlgili Hitap sorgu servisinin adı
-        bean_name (str): Hitap'tan gelen bean nesnesinin adı
-        service_dict (dict): Hitap servisinden gelen cevap için sözlük.
-            Cevabın içerdiği alanlarla modeldeki alanların eşlendiği sözlüğü
+        service_dict (dict): Hitap servisine yollanacak datayı hazırlamak için sözlük.
+            Servise gönderilecek verinin alanlarına ait sözlüğü
             ve tarih filtresi uygulanacak alanların listesini içerir.
 
     """
@@ -127,8 +126,8 @@ class HITAPEkle(Service):
                                      'result': self.create_hitap_json(hitap_service)}
 
     def create_hitap_json(self, hitap_service):
-        """Converts SOAP call result object into JSON
-        The result of SOAP call is not JSON serializable
+        """Ekleme servisinden dönen veriyi JSON formatına döndürür.
+        Converts SOAP call result object into JSON
 
         """
         dict_result = dict((name, getattr(hitap_service, name)) for name in dir(hitap_service)
@@ -173,36 +172,10 @@ class HITAPEkle(Service):
 
     def service_mapper(self, service_name):
 
-        """
-            HizmetAcikSureInsert
-            HizmetAskerlikInsert
-            HizmetBirlestirmeInsert
-            HizmetBorclanmaInsert
-            HizmetCetvelInsert
-            HizmetIHSInsert
-            HizmetKursInsert
-            HizmetMahkemeInsert
-            HizmetNufusInsert
-            HizmetOkulInsert
-            HizmetTazminatInsert
-            HizmetUnvanInsert
-            hizmetIstisnaiIlgiInsert
-            ------------------------
-            ns1:HizmetAcikSureServisBean
-            ns1:HizmetAskerlikServisBean
-            ns1:HizmetBirlestirmeServisBean
-            ns1:HizmetBorclanmaServisBean
-            ns1:HizmetCetveliServisBean
-            ns1:HizmetEgitimKursServisBean
-            ns1:HizmetEgitimOkulServisBean
-            ns1:HizmetIHSServisBean
-            ns1:HizmetIstisnaiIlgiServisBean
-            ns1:HizmetMahkemeServisBean
-            ns1:HizmetNufusServisBean
-            ns1:HizmetTazminatServisBean
-            ns1:HizmetUnvanServisBean
-        """
+        """Hitap'a yapılacak olan Ekleme çağrılarında gerekli datanın oluşmasını sağlam için Servis
+        ve ServisBean'lerini eşleyen method.
 
+        """
         services_dict = {"HizmetAcikSureInsert": "ns1:HizmetAcikSureServisBean",
                          "HizmetAskerlikInsert": "ns1:HizmetAskerlikServisBean",
                          "HizmetBirlestirmeInsert": "ns1:HizmetBirlestirmeServisBean",
