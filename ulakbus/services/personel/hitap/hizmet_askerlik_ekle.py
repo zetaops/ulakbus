@@ -7,9 +7,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""HITAP Açık Süre Ekle
+"""HITAP Askerlik Ekle
 
-Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
+Hitap'a personelin askerlik bilgilerinin eklenmesini yapar.
 
 """
 
