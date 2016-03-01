@@ -64,11 +64,11 @@ class HITAPEkle(Service):
         self.logger.info("zato service started to work.")
         conn = self.outgoing.soap['HITAP'].conn
 
-        self.request_json(tckn, conn)
+        self.request_json(conn)
 
     def request_json(self, conn):
         """
-        Kimlik numarası ve kullanıcı bilgileriyle birlikte Hitap'ın ilgili servisine
+        Connection bilgisi cve gerekli veriler ile Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
 
         Hitap'tan gelen verilerin sisteme uygun şekilde elde edilmesi için, gerekli
@@ -132,6 +132,8 @@ class HITAPEkle(Service):
         """
         dict_result = dict((name, getattr(hitap_service, name)) for name in dir(hitap_service)
                            if not name.startswith('__'))
+
+        self.logger.info("hitap_service json created.")
 
         return dumps(dict_result)
 
