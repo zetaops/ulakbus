@@ -30,7 +30,7 @@ class HizmetAcikSureEkle(HITAPEkle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetAcikSure'' servisinden gelen kayıtların alanları,
+            service_dict (dict): ''HizmetAcikSure'' modelinden gelen kayıtların alanları,
                     HizmetAcikSureInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """

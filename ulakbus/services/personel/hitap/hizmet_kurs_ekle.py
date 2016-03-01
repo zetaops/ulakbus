@@ -30,7 +30,7 @@ class HizmetKursEkle(HITAPEkle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetKurs'' servisinden gelen kayıtların alanları,
+            service_dict (dict): ''HizmetKurs'' modelinden gelen kayıtların alanları,
                     HizmetKursInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
