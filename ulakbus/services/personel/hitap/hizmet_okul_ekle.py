@@ -7,7 +7,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""HITAP Nufus Ekle
+"""HITAP Okul Ekle
 
 Hitap'a personelin Okul bilgilerinin eklenmesini yapar.
 
