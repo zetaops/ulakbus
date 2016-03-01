@@ -40,7 +40,6 @@ class HizmetMahkemeEkle(HITAPEkle):
         hizmet_mahkeme = HizmetMahkeme.objects.get(key)
         self.service_dict = {
             'fields': {
-
                 'tckn': hizmet_mahkeme.tckn,
                 'mahkemeAd': hizmet_mahkeme.mahkeme_ad,
                 'sebep': hizmet_mahkeme.sebep,
