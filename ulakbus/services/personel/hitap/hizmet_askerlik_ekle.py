@@ -37,7 +37,7 @@ class HizmetAskerlikEkle(HITAPEkle):
         key = self.request.payload['key']
 
         self.service_name = 'HizmetAskerlikInsert'
-        hizmet_acik_sure = AskerlikKayitlari.objects.get(key)
+        hizmet_askerlik = AskerlikKayitlari.objects.get(key)
         self.service_dict = {
             'fields': {
                 'askerlikNevi': hizmet_askerlik.askerlik_nevi,
