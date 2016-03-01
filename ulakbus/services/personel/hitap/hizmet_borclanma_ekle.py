@@ -37,7 +37,7 @@ class HizmetBorclanmaEkle(HITAPEkle):
         key = self.request.payload['key']
 
         self.service_name = 'HizmetBorclanmaInsert'
-        hizmet_Borclanma = HizmetBorclanma.objects.get(key)
+        hizmet_borclanma = HizmetBorclanma.objects.get(key)
         self.service_dict = {
             'fields': {
                 'tckn': hizmet_borclanma.tckn,
