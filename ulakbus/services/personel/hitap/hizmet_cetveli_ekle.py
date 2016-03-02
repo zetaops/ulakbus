@@ -16,7 +16,7 @@ Hitap'a personelin Hizmet Cetvel  Kayit bilgilerinin eklenmesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap import HizmetOkul
+from ulakbus.models.hitap import HizmetKayitlari
 
 
 class HizmetCetveliEkle(HITAPEkle):
