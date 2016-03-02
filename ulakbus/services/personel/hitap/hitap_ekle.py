@@ -98,7 +98,12 @@ class HITAPEkle(Service):
 
                 if service_call_name:
                     request_data = client.factory.create(service_call_name)
-                    del request_data.kayitNo
+
+                    if hasattr(request_data, 'kayitNo'):
+                        del request_data.kayitNo
+                    elif hasattr(request_data, 'ihzID'):
+                        del request_data.ihzID
+
                     # filtering for some fields
                     if 'date_filter' in self.service_dict:
                         self.date_filter(hitap_dict)
