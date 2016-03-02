@@ -54,8 +54,6 @@ class HITAPEkle(Service):
         """
         Servis çağrıldığında tetiklenen metod.
 
-        Servise gelen istekten kimlik numarası (tckn) bilgisini alır ve
-        soap outgoing bağlantısını oluşturur. Bu bilgilerle
         Hitap'a gidecek isteği hazırlayacak ve gelen cevabı elde edecek olan
         request_json fonksiyonunu çağırır.
 
@@ -68,7 +66,7 @@ class HITAPEkle(Service):
 
     def request_json(self, conn):
         """
-        Connection bilgisi cve gerekli veriler ile Hitap'ın ilgili servisine
+        Connection bilgisi ve gerekli veriler ile Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
 
         Hitap'tan gelen verilerin sisteme uygun şekilde elde edilmesi için, gerekli
@@ -78,7 +76,6 @@ class HITAPEkle(Service):
         Veriler uygun şekilde elde edildikten sonra servis cevabı (payload) oluşturulur.
 
         Args:
-            tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
             conn (zato.outgoing.soap.conn): Zato soap outgoing bağlantısı
 
         Raises:
@@ -179,8 +176,8 @@ class HITAPEkle(Service):
 
     def service_mapper(self, service_name):
 
-        """Hitap'a yapılacak olan Ekleme çağrılarında gerekli datanın oluşmasını sağlam için Servis
-        ve ServisBean'lerini eşleyen method.
+        """Hitap'a yapılacak olan Ekleme çağrılarında gerekli datanın oluşmasını sağlamak için
+        Servis ve ServisBean'lerini eşleyen method.
 
         """
         services_dict = {"HizmetAcikSureInsert": "ns1:HizmetAcikSureServisBean",
