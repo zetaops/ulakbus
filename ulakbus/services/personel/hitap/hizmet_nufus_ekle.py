@@ -37,7 +37,7 @@ class HizmetNufusEkle(HITAPEkle):
         key = self.request.payload['key']
 
         self.service_name = 'HizmetNufusInsert'
-        hizmet_Nufus = NufusKayitlari.objects.get(key)
+        hizmet_nufus = NufusKayitlari.objects.get(key)
         self.service_dict = {
             'fields': {
                 'ad': hizmet_nufus.ad,
