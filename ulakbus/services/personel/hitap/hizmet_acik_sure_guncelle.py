@@ -60,7 +60,7 @@ class HizmetAcikSureGuncelle(HITAPGuncelle):
                             'goreveIadeTarih', 'acikAylikBasTarihi', 'acikAylikBitTarihi',
                             'gorevSonAylikBasTarihi', 'gorevSonAylikBitTarihi', 'SYonetimKaldTarih',
                             'aciktanAtanmaTarih', 'kurumOnayTarihi'],
-            'required_fields': ['tckn', 'acikSekil', 'durum', 'hizmetDurum', 'husus',
+            'required_fields': ['kayitNo', 'tckn', 'acikSekil', 'durum', 'hizmetDurum', 'husus',
                                 'kurumOnayTarihi']
         }
         super(HizmetAcikSureGuncelle, self).handle()
