@@ -48,4 +48,4 @@ class HizmetIhsGuncelle(HITAPGuncelle):
             'date_filter': ['baslamaTarihi', 'bitisTarihi'],
             'required_fields': ['tckn', 'ihzID', 'baslamaTarihi', 'bitisTarihi', 'ihzNevi']
         }
-        super(HizmetIhsUpdate, self).handle()
+        super(HizmetIhsGuncelle, self).handle()
