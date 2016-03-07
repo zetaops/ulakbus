@@ -30,15 +30,14 @@ class HizmetBorclanmaSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetBorclanma'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetBorclanmaDelete servisinin alanlarıyla eşlenmektedir.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetBorclanmaDelete'
-        hizmet_borclanma = HizmetBorclanma.objects.get(key)
 
         self.service_dict['fields']['tckn'] = hizmet_borclanma.tckn
         self.service_dict['fields']['kayitNo'] = hizmet_borclanma.kayit_no
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetBorclanmaSil, self).handle()
