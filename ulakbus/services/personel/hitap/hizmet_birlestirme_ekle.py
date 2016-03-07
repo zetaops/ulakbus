@@ -16,7 +16,6 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap import HizmetBirlestirme
 
 
 class HizmetBirlestirmeEkle(HITAPEkle):
@@ -30,32 +29,34 @@ class HizmetBirlestirmeEkle(HITAPEkle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetBirlestirme'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetBirlestirmeInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
         key = self.request.payload['key']
 
         self.service_name = 'HizmetBirlestirmeInsert'
-        hizmet_birlestirme = HizmetBirlestirme.objects.get(key)
+
         self.service_dict = {
             'fields': {
-                'tckn': hizmet_birlestirme.tckn,
-                'sgkNevi': hizmet_birlestirme.sgk_nevi,
-                'sgkSicilNo': hizmet_birlestirme.sgk_sicil_no,
-                'baslamaTarihi': hizmet_birlestirme.baslama_tarihi,
-                'bitisTarihi': hizmet_birlestirme.bitis_tarihi,
-                'kamuIsyeriAd': hizmet_birlestirme.kamu_isyeri_ad,
-                'ozelIsyeriAd': hizmet_birlestirme.ozel_isyeri_ad,
-                'bagKurMeslek': hizmet_birlestirme.bag_kur_meslek,
-                'ulkeKod': hizmet_birlestirme.ulke_kod,
-                'bankaSandikKod': hizmet_birlestirme.banka_sandik_kod,
-                'kidemTazminatOdemeDurumu': hizmet_birlestirme.kidem_tazminat_odeme_durumu,
-                'ayrilmaNedeni': hizmet_birlestirme.ayrilma_nedeni,
-                'sure': hizmet_birlestirme.sure,
-                'khaDurum': hizmet_birlestirme.kha_durum,
-                'kurumOnayTarihi': hizmet_birlestirme.kurum_onay_tarihi
+                'tckn': self.request.payload['tckn'],
+                'sgkNevi': self.request.payload['sgk_nevi'],
+                'sgkSicilNo': self.request.payload['sgk_sicil_no'],
+                'baslamaTarihi': self.request.payload['baslama_tarihi'],
+                'bitisTarihi': self.request.payload['bitis_tarihi'],
+                'kamuIsyeriAd': self.request.payload['kamu_isyeri_ad'],
+                'ozelIsyeriAd': self.request.payload['ozel_isyeri_ad'],
+                'bagKurMeslek': self.request.payload['bag_kur_meslek'],
+                'ulkeKod': self.request.payload['ulke_kod'],
+                'bankaSandikKod': self.request.payload['banka_sandik_kod'],
+                'kidemTazminatOdemeDurumu': self.request.payload['kidem_tazminat_odeme_durumu'],
+                'ayrilmaNedeni': self.request.payload['ayrilma_nedeni'],
+                'sure': self.request.payload['sure'],
+                'khaDurum': self.request.payload['kha_durum'],
+                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
-            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi']
+            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+            'required_fields': ['kayitNo', 'tckn', 'sgkNevi', 'sgkSicilNo', 'baslamaTarihi',
+                                'bitisTarihi', 'sure', 'kurumOnayTarihi']
         }
         super(HizmetBirlestirmeEkle, self).handle()
