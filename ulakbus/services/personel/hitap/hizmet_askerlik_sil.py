@@ -16,8 +16,6 @@ Hitap'da personelin askerlik bilgilerinin silinmesi sağlayan class.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
-from ulakbus.models.hitap import AskerlikKayitlari
-
 
 class HizmetAskerlikSil(HITAPSil):
     """
@@ -33,13 +31,11 @@ class HizmetAskerlikSil(HITAPSil):
             service_dict (dict): ''AskerlikKayitlari'' modelinden gelen kayıtların alanları,
                     HizmetAskerlikDelete servisinin alanlarıyla eşlenmektedir.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetAskerlikDelete'
-        hizmet_askerlik = AskerlikKayitlari.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_askerlik.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_askerlik.kayit_no
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
         self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetAskerlikSil, self).handle()
