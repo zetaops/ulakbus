@@ -40,5 +40,6 @@ class HizmetAskerlikSil(HITAPSil):
 
         self.service_dict['fields']['tckn'] = hizmet_askerlik.tckn
         self.service_dict['fields']['kayitNo'] = hizmet_askerlik.kayit_no
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetAskerlikSil, self).handle()
