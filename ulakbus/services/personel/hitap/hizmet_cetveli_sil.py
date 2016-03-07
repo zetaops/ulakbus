@@ -33,12 +33,11 @@ class HizmetCetvelSil(HITAPSil):
             service_dict (dict): ''HizmetBorclanma'' modelinden gelen kayıtların alanları,
                     HizmetBorclanmaDelete servisinin alanlarıyla eşlenmektedir.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetCetvelDelete'
-        hizmet_kayit = HizmetKayitlari.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_kayit.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_kayit.kayit_no
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetCetvelSil, self).handle()
