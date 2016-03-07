@@ -34,7 +34,6 @@ class HizmetBorclanmaGuncelle(HITAPGuncelle):
         """
 
         self.service_name = 'HizmetBorclanmaUpdate'
-        hizmet_borclanma = HizmetBorclanma.objects.get(key)
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload['kayit_no'],
