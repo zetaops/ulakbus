@@ -58,9 +58,10 @@ class HizmetAcikSureGetir(HITAPSorgula):
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },
             'date_filter': ['aciga_alinma_tarih', 'goreve_son_tarih', 'goreve_iade_istem_tarih',
-                           'goreve_iade_tarih', 'acik_aylik_bas_tarih', 'acik_aylik_bit_tarih',
-                           'goreve_son_aylik_bas_tarih', 'goreve_son_aylik_bit_tarih',
-                           's_yonetim_kald_tarih', 'aciktan_atanma_tarih', 'kurum_onay_tarihi'],
+                            'goreve_iade_tarih', 'acik_aylik_bas_tarih', 'acik_aylik_bit_tarih',
+                            'goreve_son_aylik_bas_tarih', 'goreve_son_aylik_bit_tarih',
+                            's_yonetim_kald_tarih', 'aciktan_atanma_tarih', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetAcikSureGetir, self).handle()
 
