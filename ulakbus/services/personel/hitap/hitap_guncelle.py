@@ -21,6 +21,7 @@ Attributes:
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from zato.server.service import Service
+from hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
@@ -103,6 +104,10 @@ class HITAPGuncelle(Service):
 
                 for dict_element in self.service_dict['fields']:
                     request_data[dict_element] = self.service_dict[dict_element]
+
+                if 'required_fields' in self.service_dict:
+                    required_field_check = HitapHelper()
+                    required_field_check.check_required_data(self.service_dict)
 
                 service_name = self.service_name
                 hitap_service = getattr(client.service, self.service_name)(request_data,

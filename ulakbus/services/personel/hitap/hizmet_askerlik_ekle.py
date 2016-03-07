@@ -31,7 +31,7 @@ class HizmetAskerlikEkle(HITAPEkle):
             service_name (str): İlgili Hitap sorgu servisinin adı
             service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetAskerlikInsert servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
         key = self.request.payload['key']
 

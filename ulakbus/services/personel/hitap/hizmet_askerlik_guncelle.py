@@ -16,7 +16,6 @@ Hitap'a personelin askerlik bilgilerinin eklenmesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
-from ulakbus.models.hitap import AskerlikKayitlari
 
 
 class HizmetAskerlikGuncelle(HITAPGuncelle):
@@ -30,35 +29,35 @@ class HizmetAskerlikGuncelle(HITAPGuncelle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''AskerlikKayitlari'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetAskerlikUpdate servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetAskerlikUpdate'
-        hizmet_askerlik = AskerlikKayitlari.objects.get(key)
         self.service_dict = {
             'fields': {
-                'kayitNo': hizmet_askerlik.kayit_no,
-                'askerlikNevi': hizmet_askerlik.askerlik_nevi,
-                'baslamaTarihi': hizmet_askerlik.baslama_tarihi,
-                'bitisTarihi': hizmet_askerlik.bitis_tarihi,
-                'kitaBaslamaTarihi': hizmet_askerlik.kita_baslama_tarihi,
-                'kitaBitisTarihi': hizmet_askerlik.kita_bitis_tarihi,
-                'muafiyetNeden': hizmet_askerlik.muafiyet_neden,
-                'sayilmayanGunSayisi': hizmet_askerlik.sayilmayan_gun_sayisi,
-                'sinifOkuluSicil': hizmet_askerlik.sinif_okulu_sicil,
-                'subayliktanErligeGecisTarihi': hizmet_askerlik.subayliktan_erlige_gecis_tarihi,
-                'subayOkuluGirisTarihi': hizmet_askerlik.subay_okulu_giris_tarihi,
-                'tckn': hizmet_askerlik.tckn,
-                'tegmenNaspTarihi': hizmet_askerlik.tegmen_nasp_tarihi,
-                'gorevYeri': hizmet_askerlik.gorev_yeri,
-                'kurumOnayTarihi': hizmet_askerlik.kurum_onay_tarihi,
-                'astegmenNaspTarihi': hizmet_askerlik.astegmen_nasp_tarihi
+                'kayitNo': self.request.payload['kayit_no'],
+                'askerlikNevi': self.request.payload['askerlik_nevi'],
+                'baslamaTarihi': self.request.payload['baslama_tarihi'],
+                'bitisTarihi': self.request.payload['bitis_tarihi'],
+                'kitaBaslamaTarihi': self.request.payload['kita_baslama_tarihi'],
+                'kitaBitisTarihi': self.request.payload['kita_bitis_tarihi'],
+                'muafiyetNeden': self.request.payload['muafiyet_neden'],
+                'sayilmayanGunSayisi': self.request.payload['sayilmayan_gun_sayisi'],
+                'sinifOkuluSicil': self.request.payload['sinif_okulu_sicil'],
+                'subayliktanErligeGecisTarihi': self.request.payload[
+                    'subayliktan_erlige_gecis_tarihi'],
+                'subayOkuluGirisTarihi': self.request.payload['subay_okulu_giris_tarihi'],
+                'tckn': self.request.payload['tckn'],
+                'tegmenNaspTarihi': self.request.payload['tegmen_nasp_tarihi'],
+                'gorevYeri': self.request.payload['gorev_yeri'],
+                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi'],
+                'astegmenNaspTarihi': self.request.payload['astegmen_nasp_tarihi']
             },
             'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kitaBaslamaTarihi', 'kitaBitisTarihi',
                             'subayliktanErligeGecisTarihi', 'subayOkuluGirisTarihi',
-                            'tegmenNaspTarihi', 'kurumOnayTarihi', 'astegmenNaspTarihi']
+                            'tegmenNaspTarihi', 'kurumOnayTarihi', 'astegmenNaspTarihi'],
+            'required_fields': ['kayitNo', 'tckn', 'askerlikNevi', 'kurumOnayTarihi']
         }
         super(HizmetAskerlikGuncelle, self).handle()

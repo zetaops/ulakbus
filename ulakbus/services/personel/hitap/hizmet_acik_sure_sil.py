@@ -16,7 +16,6 @@ Hitap'da personelin açık süre bilgilerinin silinmesi sağlayan class.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
-from ulakbus.models.hitap import HizmetAcikSure
 
 
 class HizmetAcikSureSil(HITAPSil):
@@ -33,12 +32,9 @@ class HizmetAcikSureSil(HITAPSil):
             service_dict (dict): ''HizmetAcikSure'' modelinden gelen kayıtların alanları,
                     HizmetAcikSureDelete servisinin alanlarıyla eşlenmektedir.
         """
-        key = self.request.payload['key']
-
         self.service_name = 'HizmetAcikSureDelete'
-        hizmet_acik_sure = HizmetAcikSure.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_acik_sure.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_acik_sure.kayit_no
-
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['required_fields'] = ['tckn', 'kayit_no']
         super(HizmetAcikSureSil, self).handle()
