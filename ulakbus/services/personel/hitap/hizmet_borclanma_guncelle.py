@@ -16,8 +16,6 @@ Hitap'a personelin hizmet borclanma bilgilerinin eklenmesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
-from ulakbus.models.hitap import HizmetBorclanma
-
 
 class HizmetBorclanmaGuncelle(HITAPGuncelle):
     """
@@ -30,38 +28,41 @@ class HizmetBorclanmaGuncelle(HITAPGuncelle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetBorclanma'' modelinden gelen kayıtların alanları,
+            service_dict (dict): 'Request yoluyla kayıtlar,
                     HizmetBorclanmaUpdate servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetBorclanmaUpdate'
         hizmet_borclanma = HizmetBorclanma.objects.get(key)
         self.service_dict = {
             'fields': {
-                'kayitNo': hizmet_borclanma.kayit_no,
-                'tckn': hizmet_borclanma.tckn,
-                'ad': hizmet_borclanma.ad,
-                'soyad': hizmet_borclanma.soyad,
-                'baslamaTarihi': hizmet_borclanma.baslama_tarihi,
-                'bitisTarihi': hizmet_borclanma.bitis_tarihi,
-                'gunSayisi': hizmet_borclanma.gun_sayisi,
-                'odenenMiktar': hizmet_borclanma.odenen_miktar,
-                'toplamTutar': hizmet_borclanma.toplam_tutar,
-                'kanunKod': hizmet_borclanma.kanun_kod,
-                'borcNevi': hizmet_borclanma.borc_nevi,
-                'borclanmaTarihi': hizmet_borclanma.borclanma_tarihi,
-                'odemeTarihi': hizmet_borclanma.odeme_tarihi,
-                'derece': hizmet_borclanma.derece,
-                'kademe': hizmet_borclanma.kademe,
-                'ekgosterge': hizmet_borclanma.ekgosterge,
-                'emekliSicil': hizmet_borclanma.emekli_sicil,
-                'calistigiKurum': hizmet_borclanma.calistigi_kurum,
-                'isyeriIl': hizmet_borclanma.isyeri_il,
-                'isyeriIlce': hizmet_borclanma.isyeri_ilce,
-                'kurumOnayTarihi': hizmet_borclanma.kurum_onay_tarihi
+                'kayitNo': self.request.payload['kayit_no'],
+                'tckn': self.request.payload['tckn'],
+                'ad': self.request.payload['ad'],
+                'soyad': self.request.payload['soyad'],
+                'baslamaTarihi': self.request.payload['baslama_tarihi'],
+                'bitisTarihi': self.request.payload['bitis_tarihi'],
+                'gunSayisi': self.request.payload['gun_sayisi'],
+                'odenenMiktar': self.request.payload['odenen_miktar'],
+                'toplamTutar': self.request.payload['toplam_tutar'],
+                'kanunKod': self.request.payload['kanun_kod'],
+                'borcNevi': self.request.payload['borc_nevi'],
+                'borclanmaTarihi': self.request.payload['borclanma_tarihi'],
+                'odemeTarihi': self.request.payload['odeme_tarihi'],
+                'derece': self.request.payload['derece'],
+                'kademe': self.request.payload['kademe'],
+                'ekgosterge': self.request.payload['ekgosterge'],
+                'emekliSicil': self.request.payload['emekli_sicil'],
+                'calistigiKurum': self.request.payload['calistigi_kurum'],
+                'isyeriIl': self.request.payload['isyeri_il'],
+                'isyeriIlce': self.request.payload['isyeri_ilce'],
+                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
-            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'borclanmaTarihi', 'kurumOnayTarihi']
+            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'borclanmaTarihi', 'kurumOnayTarihi'],
+            'required_fields': ['tckn', 'kayitNo', 'ad', 'soyad', 'emekliSicil', 'derece', 'kademe',
+                                'ekgosterge', 'baslamaTarihi', 'bitisTarihi', 'gunSayisi',
+                                'kanunKod', 'borcNevi', 'toplamTutar', 'calistigiKurum', 'isyeriIl',
+                                'isyeriIlce', 'kurumOnayTarihi']
         }
         super(HizmetBorclanmaGuncelle, self).handle()
