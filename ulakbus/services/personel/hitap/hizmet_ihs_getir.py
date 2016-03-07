@@ -43,6 +43,7 @@ class HizmetIHSGetir(HITAPSorgula):
                 'bitis_tarihi': 'bitisTarihi',
                 'ihz_nevi': 'ihzNevi'
             },
-            'date_filter': ['baslama_tarihi', 'bitis_tarihi']
+            'date_filter': ['baslama_tarihi', 'bitis_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetIHSGetir, self).handle()
