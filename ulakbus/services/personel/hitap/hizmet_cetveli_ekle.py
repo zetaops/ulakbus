@@ -16,7 +16,6 @@ Hitap'a personelin Hizmet Cetvel  Kayit bilgilerinin eklenmesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap import HizmetKayitlari
 
 
 class HizmetCetveliEkle(HITAPEkle):
@@ -30,37 +29,41 @@ class HizmetCetveliEkle(HITAPEkle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetKayitlari'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetCetvelInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetCetvelInsert'
-        hizmet_cetvel = HizmetKayitlari.objects.get(key)
         self.service_dict = {
             'fields': {
-                'baslamaTarihi': hizmet_cetvel.baslama_tarihi,
-                'bitisTarihi': hizmet_cetvel.bitis_tarihi,
-                'emekliDerece': hizmet_cetvel.emekli_derece,
-                'emekliKademe': hizmet_cetvel.emekli_kademe,
-                'gorev': hizmet_cetvel.gorev,
-                'unvanKod': hizmet_cetvel.unvan_kod,
-                'hizmetSinifi': hizmet_cetvel.hizmet_sinifi,
-                'kazanilmisHakAyligiDerece': hizmet_cetvel.kazanilmis_hak_ayligi_derece,
-                'kazanilmisHakAyligiKademe': hizmet_cetvel.kazanilmis_hak_ayligi_kademe,
-                'odemeDerece': hizmet_cetvel.odeme_derece,
-                'odemeKademe': hizmet_cetvel.odeme_kademe,
-                'emekliEkGosterge': hizmet_cetvel.emekli_ekgosterge,
-                'kadroDerece': hizmet_cetvel.kadro_derece,
-                'kazanilmisHakAyligiEkGosterge': hizmet_cetvel.kazanilmis_hak_ayligi_ekgosterge,
-                'odemeEkGosterge': hizmet_cetvel.odeme_ekgosterge,
-                'sebepKod': hizmet_cetvel.sebep_kod,
-                'tckn': hizmet_cetvel.tckn,
-                'ucret': hizmet_cetvel.ucret,
-                'yevmiye': hizmet_cetvel.yevmiye,
-                'kurumOnayTarihi': hizmet_cetvel.kurum_onay_tarihi
+                'baslamaTarihi': self.request.payload['baslama_tarihi'],
+                'bitisTarihi': self.request.payload['bitis_tarihi'],
+                'emekliDerece': self.request.payload['emekli_derece'],
+                'emekliKademe': self.request.payload['emekli_kademe'],
+                'gorev': self.request.payload['gorev'],
+                'unvanKod': self.request.payload['unvan_kod'],
+                'hizmetSinifi': self.request.payload['hizmet_sinifi'],
+                'kazanilmisHakAyligiDerece': self.request.payload['kazanilmis_hak_ayligi_derece'],
+                'kazanilmisHakAyligiKademe': self.request.payload['kazanilmis_hak_ayligi_kademe'],
+                'odemeDerece': self.request.payload['odeme_derece'],
+                'odemeKademe': self.request.payload['odeme_kademe'],
+                'emekliEkGosterge': self.request.payload['emekli_ekgosterge'],
+                'kadroDerece': self.request.payload['kadro_derece'],
+                'kazanilmisHakAyligiEkGosterge': self.request.payload[
+                    'kazanilmis_hak_ayligi_ekgosterge'],
+                'odemeEkGosterge': self.request.payload['odeme_ekgosterge'],
+                'sebepKod': self.request.payload['sebep_kod'],
+                'tckn': self.request.payload['tckn'],
+                'ucret': self.request.payload['ucret'],
+                'yevmiye': self.request.payload['yevmiye'],
+                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
-            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi']
+            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+            'required_fields': ['tckn', 'gorev', 'unvanKod', 'hizmetSinifi', 'kadroDerece',
+                                'odemeDerece', 'odemeKademe', 'odemeKademe', 'odemeEkGosterge',
+                                'kazanilmisHakAyligiDerece', 'kazanilmisHakAyligiKademe',
+                                'kazanilmisHakAyligiEkGosterge', 'emekliDerece', 'emekliKademe',
+                                'emekliEkGosterge', 'sebepKod', 'kurumOnayTarihi']
         }
         super(HizmetCetveliEkle, self).handle()
