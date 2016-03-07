@@ -21,6 +21,7 @@ Attributes:
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from zato.server.service import Service
+from hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
@@ -105,6 +106,10 @@ class HITAPEkle(Service):
                     if 'date_filter' in self.service_dict:
                         self.date_filter(hitap_dict)
                     self.custom_filter(hitap_dict)
+
+                    if 'required_fields' in self.service_dict:
+                        required_field_check = HitapHelper()
+                        required_field_check.check_required_data(self.service_dict)
 
                     for dict_element in self.service_dict['fields']:
                         request_data[dict_element] = self.service_dict[dict_element]
