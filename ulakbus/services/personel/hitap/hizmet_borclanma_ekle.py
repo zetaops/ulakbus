@@ -60,10 +60,9 @@ class HizmetBorclanmaEkle(HITAPEkle):
                 'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
             'date_filter': ['baslamaTarihi', 'bitisTarihi', 'borclanmaTarihi', 'kurumOnayTarihi'],
-            'required_fields': ['tckn', 'kayitNo', 'ad', 'soyad', 'emekliSicil', 'derece', 'kademe',
+            'required_fields': ['tckn', 'ad', 'soyad', 'emekliSicil', 'derece', 'kademe',
                                 'ekgosterge', 'baslamaTarihi', 'bitisTarihi', 'gunSayisi',
                                 'kanunKod', 'borcNevi', 'toplamTutar', 'calistigiKurum', 'isyeriIl',
-                                'isyeriIlce',
-                                'kurumOnayTarihi']
+                                'isyeriIlce', 'kurumOnayTarihi']
         }
         super(HizmetBorclanmaEkle, self).handle()
