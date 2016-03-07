@@ -19,7 +19,7 @@ from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 from ulakbus.models.hitap import HizmetIHS
 
 
-class HizmetIhsUpdate(HITAPGuncelle):
+class HizmetIhsGuncelle(HITAPGuncelle):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet IHS Bilgisi Guncelleme servisi
 
