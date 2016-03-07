@@ -32,7 +32,6 @@ class HizmetBirlestirmeSil(HITAPSil):
             service_dict (dict): ''HizmetBirlestirme'' modelinden gelen kayıtların alanları,
                     HizmetBirlestirmeDelete servisinin alanlarıyla eşlenmektedir.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetBirlestirmeDelete'
 
