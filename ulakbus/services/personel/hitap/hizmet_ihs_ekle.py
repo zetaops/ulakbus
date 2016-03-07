@@ -16,7 +16,6 @@ Hitap'a personelin IHS bilgilerinin eklenmesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap import HizmetIHS
 
 
 class HizmetIhsEkle(HITAPEkle):
@@ -30,7 +29,7 @@ class HizmetIhsEkle(HITAPEkle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetIHS'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetIHSInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
@@ -40,11 +39,12 @@ class HizmetIhsEkle(HITAPEkle):
         hizmet_ihs = HizmetIHS.objects.get(key)
         self.service_dict = {
             'fields': {
-                'tckn': hizmet_ihs.tckn,
-                'baslamaTarihi': hizmet_ihs.baslama_tarihi,
-                'bitisTarihi': hizmet_ihs.bitis_tarihi,
-                'ihzNevi': hizmet_ihs.ihz_nevi,
+                'tckn': self.request.payload['tckn'],
+                'baslamaTarihi': self.request.payload['baslama_tarihi'],
+                'bitisTarihi': self.request.payload['bitis_tarihi'],
+                'ihzNevi': self.request.payload['ihz_nevi'],
             },
-            'date_filter': ['baslamaTarihi', 'bitisTarihi']
+            'date_filter': ['baslamaTarihi', 'bitisTarihi'],
+            'required_fields': ['tckn', 'baslama_tarihi', 'bitis_tarihi', 'ihzNevi']
         }
         super(HizmetIhsEkle, self).handle()
