@@ -30,7 +30,7 @@ class HizmetCetvelSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetBorclanma'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetBorclanmaDelete servisinin alanlarıyla eşlenmektedir.
         """
 
