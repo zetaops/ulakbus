@@ -33,12 +33,11 @@ class HizmetIstisnaiIlgiSil(HITAPSil):
             service_dict (dict): ''HizmetIstisnaiIlgi'' modelinden gelen kayıtların alanları,
                     hizmetIstisnaiIlgiDelete servisinin alanlarıyla eşlenmektedir.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'hizmetIstisnaiIlgiDelete'
-        hizmet_ilgi = HizmetIstisnaiIlgi.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_ilgi.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_ilgi.kayit_no
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetIstisnaiIlgiSil, self).handle()
