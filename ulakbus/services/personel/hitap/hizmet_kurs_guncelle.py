@@ -16,7 +16,6 @@ Hitap'a personelin Kurs bilgilerinin guncellemesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
-from ulakbus.models.hitap import HizmetKurs
 
 
 class HizmetKursGuncelle(HITAPGuncelle):
@@ -30,29 +29,31 @@ class HizmetKursGuncelle(HITAPGuncelle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetKurs'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     hizmetKursUpdate servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
+                    alanlar listede tutulmaktadır.
+
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetKursUpdate'
-        hizmet_kurs = HizmetKurs.objects.get(key)
         self.service_dict = {
             'fields': {
-                'kayitNo': hizmet_kurs.kayit_no,
-                'tckn': hizmet_kurs.tckn,
-                'kursOgrenimSuresi': hizmet_kurs.kurs_ogrenim_suresi,
-                'mezuniyetTarihi': hizmet_kurs.mezuniyet_tarihi,
-                'kursNevi': hizmet_kurs.kurs_nevi,
-                'bolumAd': hizmet_kurs.bolum_ad,
-                'okulAd': hizmet_kurs.okul_ad,
-                'ogrenimYeri': hizmet_kurs.ogrenim_yeri,
-                'denklikTarihi': hizmet_kurs.denklik_tarihi,
-                'denklikOkul': hizmet_kurs.denklik_okulu,
-                'denklikBolum': hizmet_kurs.denklik_bolum,
-                'kurumOnayTarihi': hizmet_kurs.kurum_onay_tarihi
+                'kayitNo': self.request.payload['kayit_no'],
+                'tckn': self.request.payload['tckn'],
+                'kursOgrenimSuresi': self.request.payload['kurs_ogrenim_suresi'],
+                'mezuniyetTarihi': self.request.payload['mezuniyet_tarihi'],
+                'kursNevi': self.request.payload['kurs_nevi'],
+                'bolumAd': self.request.payload['bolum_ad'],
+                'okulAd': self.request.payload['okul_ad'],
+                'ogrenimYeri': self.request.payload['ogrenim_yeri'],
+                'denklikTarihi': self.request.payload['denklik_tarihi'],
+                'denklikOkul': self.request.payload['denklik_okulu'],
+                'denklikBolum': self.request.payload['denklik_bolum'],
+                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
-            'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi']
+            'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
+            'required_fields': ['tckn', 'kayitNo', 'kursOgrenimSuresi', 'mezuniyetTarihi',
+                                'kursNevi', 'okulAd', 'kurumOnayTarihi']
         }
         super(HizmetKursGuncelle, self).handle()
