@@ -64,3 +64,4 @@ class HizmetNufusGetir(HITAPSorgula):
             'required_fields': ['tckn']
         }
         super(HizmetNufusGetir, self).handle()
+
