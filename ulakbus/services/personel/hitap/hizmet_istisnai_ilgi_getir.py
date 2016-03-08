@@ -34,7 +34,8 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
             bean_name (str): Hitap'tan gelen bean nesnesinin adı
             service_dict (dict): Hitap servisinden gelen kayıtların alanları,
                     ``HizmetIstisnaiIlgi`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları servis tarafında gerekli olan
+                    alanlar listede tutulmaktadır.
 
         """
 
@@ -51,7 +52,8 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
                 'kha_durum': 'khaDurum',
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },
-            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi']
+            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetIstisnaiIlgiGetir, self).handle()
 
