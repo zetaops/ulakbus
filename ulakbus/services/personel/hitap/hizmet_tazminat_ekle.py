@@ -16,7 +16,6 @@ Hitap'a personelin Tazminat bilgilerinin eklenmesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap import HizmetTazminat
 
 
 class HizmetTazminatEkle(HITAPEkle):
@@ -30,26 +29,25 @@ class HizmetTazminatEkle(HITAPEkle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetTazminat'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtların alanları,
                     HizmetTazminatInsert servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
+                    alanlar listede tutulmaktadır.
         """
-        key = self.request.payload['key']
-
         self.service_name = 'HizmetTazminatInsert'
-        hizmet_tazminat = HizmetTazminat.objects.get(key)
         self.service_dict = {
             'fields': {
-                'gorev': hizmet_tazminat.gorev,
-                'kadrosuzluk': hizmet_tazminat.kadrosuzluk,
-                'makam': hizmet_tazminat.makam,
-                'tckn': hizmet_tazminat.tckn,
-                'temsil': hizmet_tazminat.temsil,
-                'unvanKod': hizmet_tazminat.unvan_kod,
-                'tazminatTarihi': hizmet_tazminat.tazminat_tarihi,
-                'tazminatBitisTarihi': hizmet_tazminat.tazminat_bitis_tarihi,
-                'kurumOnayTarihi': hizmet_tazminat.kurum_onay_tarihi
+                'gorev': self.request.payload['gorev'],
+                'kadrosuzluk': self.request.payload['kadrosuzluk'],
+                'makam': self.request.payload['makam'],
+                'tckn': self.request.payload['tckn'],
+                'temsil': self.request.payload['temsil'],
+                'unvanKod': self.request.payload['unvan_kod'],
+                'tazminatTarihi': self.request.payload['tazminat_tarihi'],
+                'tazminatBitisTarihi': self.request.payload['tazminat_bitis_tarihi'],
+                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
-            'date_filter': ['tazminatTarihi', 'tazminatBitisTarihi', 'kurumOnayTarihi']
+            'date_filter': ['tazminatTarihi', 'tazminatBitisTarihi', 'kurumOnayTarihi'],
+            'required_fields': ['tckn', 'unvanKod', 'tazminatTarihi', 'kurumOnayTarihi']
         }
         super(HizmetTazminatEkle, self).handle()
