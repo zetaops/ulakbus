@@ -30,6 +30,7 @@ class HizmetKursGetir(HITAPSorgula):
             service_dict (dict): Hitap servisinden gelen kayıtların alanları,
                     ``HizmetKurs`` modelinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
 
         """
 

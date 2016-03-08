@@ -34,6 +34,7 @@ class HizmetNufusGetir(HITAPSorgula):
             service_dict (dict): Hitap servisinden gelen kayıtların alanları,
                     ``NufusKayitlari`` modelinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
 
         """
 
@@ -59,7 +60,7 @@ class HizmetNufusGetir(HITAPSorgula):
                 'durum': 'durum',
                 'sebep': 'sebep'
             },
-            'date_filter': ['dogum_tarihi', 'memuriyet_baslama_tarihi', 'kuruma_baslama_tarihi']
+            'date_filter': ['dogum_tarihi', 'memuriyet_baslama_tarihi', 'kuruma_baslama_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetNufusGetir, self).handle()
-
