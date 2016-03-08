@@ -16,7 +16,6 @@ Hitap'a personelin Istisnai Ilgi bilgilerinin eklenmesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap import HizmetIstisnaiIlgi
 
 
 class HizmetIstisnaiIlgiEkle(HITAPEkle):
@@ -30,24 +29,27 @@ class HizmetIstisnaiIlgiEkle(HITAPEkle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetIstisnaiIlgi'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtların alanları,
                     hizmetIstisnaiIlgiInsert servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
+                    alanlar listede tutulmaktadır.
+
         """
-        key = self.request.payload['key']
 
         self.service_name = 'hizmetIstisnaiIlgiInsert'
         hizmet_is_ilgi = HizmetIstisnaiIlgi.objects.get(key)
         self.service_dict = {
             'fields': {
-                'tckn': hizmet_is_ilgi.tckn,
-                'istisnaiIlgiNevi': hizmet_is_ilgi.istisnai_ilgi_nevi,
-                'baslamaTarihi': hizmet_is_ilgi.baslama_tarihi,
-                'bitisTarihi': hizmet_is_ilgi.bitis_tarihi,
-                'gunSayisi': hizmet_is_ilgi.gun_sayisi,
-                'khaDurum': hizmet_is_ilgi.kha_durum,
-                'kurumOnayTarihi': hizmet_is_ilgi.kurum_onay_tarihi
+                'tckn': self.request.payload['tckn'],
+                'istisnaiIlgiNevi': self.request.payload['istisnai_ilgi_nevi'],
+                'baslamaTarihi': self.request.payload['baslama_tarihi'],
+                'bitisTarihi': self.request.payload['bitis_tarihi'],
+                'gunSayisi': self.request.payload['gun_sayisi'],
+                'khaDurum': self.request.payload['kha_durum'],
+                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
-            'date_filter': ['baslamaTarihi', 'bitisTarihi','kurumOnayTarihi']
+            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+            'required_fields': ['tckn', 'istisnaiIlgiNevi', 'baslamaTarihi', 'bitisTarihi',
+                                'gunSayisi', 'khaDurum', 'kurumOnayTarihi']
         }
         super(HizmetIstisnaiIlgiEkle, self).handle()
