@@ -16,8 +16,6 @@ Hitap'da personelin Hizmet Istisnai Ilgi bilgilerinin silinmesi sağlayan class.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
-from ulakbus.models.hitap import HizmetIstisnaiIlgi
-
 
 class HizmetIstisnaiIlgiSil(HITAPSil):
     """
@@ -30,8 +28,9 @@ class HizmetIstisnaiIlgiSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetIstisnaiIlgi'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yolula gelen kayıtlar,
                     hizmetIstisnaiIlgiDelete servisinin alanlarıyla eşlenmektedir.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
 
         self.service_name = 'hizmetIstisnaiIlgiDelete'
