@@ -11,9 +11,22 @@ __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 
 class HitapHelper():
+    """Hitap Helper
+    Zato bazlı HITAP servisleri arasında paylaşımlı olarak kullanılan metodları barındıran classtır.
 
+    """
 
     def check_required_data(self, hitap_dict):
+        """Gelen ``hitap_dict` içindeki ``required_fields`` sözlük listesi içinde belirtilen servis
+        tarafında servis tarafında gerekli olarak tanımlanmış alanların hem ``fields`` sözlüğü
+        içinde tanımlı olup olmadığını hem de bu alanların değerinin null olmadığını kontrol
+        eder.
+
+        Args:
+            hitap_dict (dict) : HITAP servisine gönderilmek üzere hazırlanmış sözlük listesi.
+
+        """
+
         for required_field in hitap_dict['required_fields']:
             try:
                 if hitap_dict['fields'][required_field]:
