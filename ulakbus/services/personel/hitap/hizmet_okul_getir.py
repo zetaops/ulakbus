@@ -29,7 +29,7 @@ class HizmetOkulGetir(HITAPSorgula):
             bean_name (str): Hitap'tan gelen bean nesnesinin adı
             service_dict (dict): Hitap servisinden gelen kayıtların alanları,
                     ``HizmetOkul`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
 
         """
 
