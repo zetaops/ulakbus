@@ -51,6 +51,7 @@ class HizmetOkulGetir(HITAPSorgula):
                 'hazirlik': 'hazirlik',
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },
-            'date_filter': ['mezuniyet_tarihi', 'denklik_tarihi', 'kurum_onay_tarihi']
+            'date_filter': ['mezuniyet_tarihi', 'denklik_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetOkulGetir, self).handle()
