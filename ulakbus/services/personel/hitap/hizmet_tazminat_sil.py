@@ -16,7 +16,6 @@ Hitap'da personelin Hizmet Tazminat bilgilerinin silinmesi sağlayan class.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
-from ulakbus.models.hitap import HizmetTazminat
 
 
 class HizmetTazminatSil(HITAPSil):
@@ -33,12 +32,11 @@ class HizmetTazminatSil(HITAPSil):
             service_dict (dict): ''HizmetTazminat'' modelinden gelen kayıtların alanları,
                     HizmetTazminatDelete servisinin alanlarıyla eşlenmektedir.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetTazminatDelete'
-        hizmet_tazminat = HizmetTazminat.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_tazminat.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_tazminat.kayit_no
+        self.service_dict['fields']['tckn'] =self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetTazminatSil, self).handle()
