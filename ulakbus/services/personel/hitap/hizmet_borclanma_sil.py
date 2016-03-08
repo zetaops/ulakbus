@@ -16,8 +16,6 @@ Hitap'da personelin Hizmet Borçlanma bilgilerinin silinmesi sağlayan class.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
-from ulakbus.models.hitap import HizmetBorclanma
-
 
 class HizmetBorclanmaSil(HITAPSil):
     """
@@ -36,8 +34,8 @@ class HizmetBorclanmaSil(HITAPSil):
 
         self.service_name = 'HizmetBorclanmaDelete'
 
-        self.service_dict['fields']['tckn'] = hizmet_borclanma.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_borclanma.kayit_no
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
         self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetBorclanmaSil, self).handle()
