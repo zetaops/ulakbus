@@ -102,12 +102,12 @@ class HITAPGuncelle(Service):
                     self.date_filter(hitap_dict)
                 self.custom_filter(hitap_dict)
 
-                for dict_element in self.service_dict['fields']:
-                    request_data[dict_element] = self.service_dict[dict_element]
-
                 if 'required_fields' in self.service_dict:
                     required_field_check = HitapHelper()
                     required_field_check.check_required_data(self.service_dict)
+
+                for dict_element in self.service_dict['fields']:
+                    request_data[dict_element] = self.service_dict[dict_element]
 
                 service_name = self.service_name
                 hitap_service = getattr(client.service, self.service_name)(request_data,
