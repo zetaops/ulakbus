@@ -16,8 +16,6 @@ Hitap'da personelin Hizmet Kurs bilgilerinin silinmesi sağlayan class.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
-from ulakbus.models.hitap import HizmetKurs
-
 
 class HizmetKursSil(HITAPSil):
     """
@@ -30,15 +28,15 @@ class HizmetKursSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetKurs'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetKursDelete servisinin alanlarıyla eşlenmektedir.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetKursDelete'
-        hizmet_kurs = HizmetKurs.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_kurs.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_kurs.kayit_no
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetKursSil, self).handle()
