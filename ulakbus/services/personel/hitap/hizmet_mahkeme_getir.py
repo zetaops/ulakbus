@@ -29,7 +29,8 @@ class HizmetMahkemeGetir(HITAPSorgula):
             bean_name (str): Hitap'tan gelen bean nesnesinin adı
             service_dict (dict): Hitap servisinden gelen kayıtların alanları,
                     ``HizmetMahkeme`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
+                    alanlar listede tutulmaktadır.
 
         """
 
@@ -56,6 +57,7 @@ class HizmetMahkemeGetir(HITAPSorgula):
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },
             'date_filter': ['karar_tarihi', 'kesinlesme_tarihi', 'asil_dogum_tarihi',
-                           'tashih_dogum_tarihi', 'gecerli_dogum_tarihi', 'kurum_onay_tarihi']
+                            'tashih_dogum_tarihi', 'gecerli_dogum_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetMahkemeGetir, self).handle()
