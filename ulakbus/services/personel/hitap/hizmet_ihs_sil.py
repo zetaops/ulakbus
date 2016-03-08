@@ -33,12 +33,11 @@ class HizmetIHSSil(HITAPSil):
             service_dict (dict): ''HizmetIHS'' modelinden gelen kayıtların alanları,
                     HizmetIHSDelete servisinin alanlarıyla eşlenmektedir.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetIHSDelete'
-        hizmet_ihs = HizmetIHS.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_ihs.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_ihs.kayit_no
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetIHSSil, self).handle()
