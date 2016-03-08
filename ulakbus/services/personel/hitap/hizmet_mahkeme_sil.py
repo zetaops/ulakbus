@@ -16,7 +16,6 @@ Hitap'da personelin Hizmet Mahkeme bilgilerinin silinmesi sağlayan class.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
-from ulakbus.models.hitap import HizmetMahkeme
 
 
 class HizmetMahkemeSil(HITAPSil):
@@ -32,13 +31,13 @@ class HizmetMahkemeSil(HITAPSil):
             service_name (str): İlgili Hitap sorgu servisinin adı
             service_dict (dict): ''HizmetMahkeme'' modelinden gelen kayıtların alanları,
                     HizmetMahkemeDelete servisinin alanlarıyla eşlenmektedir.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetMahkemeDelete'
-        hizmet_mahkeme = HizmetMahkeme.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_mahkeme.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_mahkeme.kayit_no
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetMahkemeSil, self).handle()
