@@ -42,7 +42,8 @@ class HITAPGuncelle(Service):
         service_name (str): İlgili Hitap sorgu servisinin adı
         service_dict (dict): Hitap servisine yollanacak datayı hazırlamak için sözlük.
             Servise gönderilecek verinin alanlarına ait sözlüğü
-            ve tarih filtresi uygulanacak alanların listesini içerir.
+            ve tarih filtresi uygulanacak ve servis tarafında gerekli olan alanların
+            listesini içerir.
 
     """
 
