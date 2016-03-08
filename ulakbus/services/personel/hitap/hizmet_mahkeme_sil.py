@@ -29,7 +29,7 @@ class HizmetMahkemeSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetMahkeme'' modelinden gelen kayıtların alanları,
+            service_dict (dict):  Request yoluyla gelen kayıtlar,
                     HizmetMahkemeDelete servisinin alanlarıyla eşlenmektedir.
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
