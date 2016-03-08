@@ -31,6 +31,7 @@ class HizmetAcikSureSil(HITAPSil):
             service_name (str): İlgili Hitap sorgu servisinin adı
             service_dict (dict): ''HizmetAcikSure'' modelinden gelen kayıtların alanları,
                     HizmetAcikSureDelete servisinin alanlarıyla eşlenmektedir.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
         self.service_name = 'HizmetAcikSureDelete'
 

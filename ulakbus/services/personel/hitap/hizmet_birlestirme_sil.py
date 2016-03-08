@@ -31,6 +31,7 @@ class HizmetBirlestirmeSil(HITAPSil):
             service_name (str): İlgili Hitap sorgu servisinin adı
             service_dict (dict): ''HizmetBirlestirme'' modelinden gelen kayıtların alanları,
                     HizmetBirlestirmeDelete servisinin alanlarıyla eşlenmektedir.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
 
         self.service_name = 'HizmetBirlestirmeDelete'
