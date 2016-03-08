@@ -48,7 +48,7 @@ class HITAPEkle(Service):
 
     def __init__(self):
         self.service_name = ''
-        self.service_dict = {}
+        self.service_dict = {'fields': {}}
         super(HITAPEkle, self).__init__()
 
     def handle(self):
