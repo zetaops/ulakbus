@@ -22,8 +22,8 @@ class Search(BaseView):
     SEARCH_ON = None
 
     def __init__(self, *args, **kwargs):
-        self.query = kwargs.pop('query')
-        super(Search, self).__init__(*args)
+        super(Search, self).__init__(*args, **kwargs)
+        self.query = self.current.input['query']
         self.output['results'] = []
         self.do_search()
 
