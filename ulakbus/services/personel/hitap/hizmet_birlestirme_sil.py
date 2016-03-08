@@ -29,7 +29,7 @@ class HizmetBirlestirmeSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetBirlestirme'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yolula gelen kayıtlar,
                     HizmetBirlestirmeDelete servisinin alanlarıyla eşlenmektedir.
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """

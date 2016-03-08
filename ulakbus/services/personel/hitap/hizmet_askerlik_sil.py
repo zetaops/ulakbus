@@ -28,7 +28,7 @@ class HizmetAskerlikSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''AskerlikKayitlari'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yolula gelen kayıtlar,
                     HizmetAskerlikDelete servisinin alanlarıyla eşlenmektedir.
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """

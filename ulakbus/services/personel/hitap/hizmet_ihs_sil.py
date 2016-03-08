@@ -30,7 +30,7 @@ class HizmetIHSSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetIHS'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yolula gelen kayıtlar,
                     HizmetIHSDelete servisinin alanlarıyla eşlenmektedir.
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
 
