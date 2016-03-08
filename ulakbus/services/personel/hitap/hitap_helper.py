@@ -29,9 +29,7 @@ class HitapHelper():
 
         for required_field in hitap_dict['required_fields']:
             try:
-                if hitap_dict['fields'][required_field]:
-                    pass
-                else:
+                if not hitap_dict['fields'][required_field]:
                     raise ValueError("required %s field's value is null" % (required_field))
             except KeyError:
                 raise KeyError("required field %s not found in hitap service dict" % (
