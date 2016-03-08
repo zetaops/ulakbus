@@ -30,15 +30,15 @@ class HizmetOkulSil(HITAPSil):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetOkul'' modelinden gelen kayıtların alanları,
+            service_dict (dict):  Request yoluyla gelen kayıtlar,
                     HizmetOkulDelete servisinin alanlarıyla eşlenmektedir.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetOkulDelete'
-        hizmet_okul = HizmetOkul.objects.get(key)
 
-        self.service_dict['fields']['tckn'] = hizmet_okul.tckn
-        self.service_dict['fields']['kayitNo'] = hizmet_okul.kayit_no
+        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
+        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetOkulSil, self).handle()
