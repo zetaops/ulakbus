@@ -48,6 +48,7 @@ class HizmetUnvanGetir(HITAPSorgula):
                 'fhz_orani': 'fhzOrani',
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },
-            'date_filter': ['unvan_tarihi', 'unvan_bitis_tarihi', 'kurum_onay_tarihi']
+            'date_filter': ['unvan_tarihi', 'unvan_bitis_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetUnvanGetir, self).handle()
