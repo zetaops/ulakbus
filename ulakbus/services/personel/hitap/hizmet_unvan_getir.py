@@ -29,7 +29,8 @@ class HizmetUnvanGetir(HITAPSorgula):
             bean_name (str): Hitap'tan gelen bean nesnesinin adı
             service_dict (dict): Hitap servisinden gelen kayıtların alanları,
                     ``HizmetUnvan`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
+                    alanlar listede tutulmaktadır.
 
         """
 
