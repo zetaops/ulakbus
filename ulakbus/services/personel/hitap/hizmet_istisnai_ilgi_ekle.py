@@ -7,9 +7,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""HITAP Kurs Ekle
+"""HITAP Istisnai Ilgi Ekle
 
-Hitap'a personelin kurs bilgilerinin eklenmesini yapar.
+Hitap'a personelin Istisnai Ilgi bilgilerinin eklemesini yapar.
 
 """
 
@@ -18,9 +18,9 @@ __author__ = 'H.İbrahim Yılmaz (drlinux)'
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
-class HizmetKursEkle(HITAPEkle):
+class HizmetIstisnaiIlgiEkle(HITAPEkle):
     """
-    HITAP Ekleme servisinden kalıtılmış Kurs Bilgisi Ekleme servisi
+    HITAP Ekleme servisinden kalıtılmış Hizmet Istisnai Bilgi Ekleme servisi
 
     """
 
@@ -30,28 +30,25 @@ class HizmetKursEkle(HITAPEkle):
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
             service_dict (dict): Request yoluyla gelen kayıtlar,
-                    HizmetKursInsert servisinin alanlarıyla eşlenmektedir.
+                    hizmetIstisnaiIlgiUpdate servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
                     alanlar listede tutulmaktadır.
         """
 
-        self.service_name = 'HizmetKursInsert'
+        self.service_name = 'hizmetIstisnaiIlgiInsert'
         self.service_dict = {
             'fields': {
+                'kayitNo': self.request.payload['kayit_no'],
                 'tckn': self.request.payload['tckn'],
-                'kursOgrenimSuresi': self.request.payload['kurs_ogrenim_suresi'],
-                'mezuniyetTarihi': self.request.payload['mezuniyet_tarihi'],
-                'kursNevi': self.request.payload['kurs_nevi'],
-                'bolumAd': self.request.payload['bolum_ad'],
-                'okulAd': self.request.payload['okul_ad'],
-                'ogrenimYeri': self.request.payload['ogrenim_yeri'],
-                'denklikTarihi': self.request.payload['denklik_tarihi'],
-                'denklikOkul': self.request.payload['denklik_okulu'],
-                'denklikBolum': self.request.payload['denklik_bolum'],
+                'istisnaiIlgiNevi': self.request.payload['istisnai_ilgi_nevi'],
+                'baslamaTarihi': self.request.payload['baslama_tarihi'],
+                'bitisTarihi': self.request.payload['bitis_tarihi'],
+                'gunSayisi': self.request.payload['gun_sayisi'],
+                'khaDurum': self.request.payload['kha_durum'],
                 'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
-            'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
-            'required_fields': ['tckn', 'kursOgrenimSuresi', 'mezuniyetTarihi', 'kursNevi',
-                                'okulAd', 'kurumOnayTarihi']
+            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+            'required_fields': ['tckn', 'istisnaiIlgiNevi', 'baslamaTarihi',
+                                'bitisTarihi', 'gunSayisi', 'khaDurum', 'kurumOnayTarihi']
         }
-        super(HizmetKursEkle, self).handle()
+        super(HizmetIstisnaiIlgiEkle, self).handle()
