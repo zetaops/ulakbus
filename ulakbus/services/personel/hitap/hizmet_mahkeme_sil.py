@@ -32,6 +32,7 @@ class HizmetMahkemeSil(HITAPSil):
             service_dict (dict):  Request yoluyla gelen kayıtlar,
                     HizmetMahkemeDelete servisinin alanlarıyla eşlenmektedir.
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
+                    
         """
 
         self.service_name = 'HizmetMahkemeDelete'
