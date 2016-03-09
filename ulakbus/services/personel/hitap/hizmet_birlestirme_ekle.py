@@ -33,8 +33,6 @@ class HizmetBirlestirmeEkle(HITAPEkle):
                     HizmetBirlestirmeInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
-        key = self.request.payload['key']
-
         self.service_name = 'HizmetBirlestirmeInsert'
 
         self.service_dict = {
@@ -56,7 +54,7 @@ class HizmetBirlestirmeEkle(HITAPEkle):
                 'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
             'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
-            'required_fields': ['kayitNo', 'tckn', 'sgkNevi', 'sgkSicilNo', 'baslamaTarihi',
+            'required_fields': ['tckn', 'sgkNevi', 'sgkSicilNo', 'baslamaTarihi',
                                 'bitisTarihi', 'sure', 'kurumOnayTarihi']
         }
         super(HizmetBirlestirmeEkle, self).handle()

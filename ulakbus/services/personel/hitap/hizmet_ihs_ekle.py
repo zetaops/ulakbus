@@ -33,10 +33,7 @@ class HizmetIhsEkle(HITAPEkle):
                     HizmetIHSInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
-        key = self.request.payload['key']
-
         self.service_name = 'HizmetIHSInsert'
-        hizmet_ihs = HizmetIHS.objects.get(key)
         self.service_dict = {
             'fields': {
                 'tckn': self.request.payload['tckn'],
@@ -45,6 +42,6 @@ class HizmetIhsEkle(HITAPEkle):
                 'ihzNevi': self.request.payload['ihz_nevi'],
             },
             'date_filter': ['baslamaTarihi', 'bitisTarihi'],
-            'required_fields': ['tckn', 'baslama_tarihi', 'bitis_tarihi', 'ihzNevi']
+            'required_fields': ['tckn', 'baslamaTarihi', 'bitisTarihi', 'ihzNevi']
         }
         super(HizmetIhsEkle, self).handle()

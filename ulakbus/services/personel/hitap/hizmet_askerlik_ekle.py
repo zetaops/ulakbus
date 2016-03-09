@@ -33,7 +33,6 @@ class HizmetAskerlikEkle(HITAPEkle):
                     HizmetAskerlikInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetAskerlikInsert'
         self.service_dict = {
