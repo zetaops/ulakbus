@@ -16,12 +16,10 @@ Hitap'a personelin Mahkeme bilgilerinin guncellemesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
-from ulakbus.models.hitap import HizmetMahkeme
 
 
 class HizmetMahkemeGuncelle(HITAPGuncelle):
-    """
-    HITAP Guncelleme servisinden kalıtılmış Hizmet Mahkeme Bilgi Guncelleme servisi
+    """HITAP Guncelleme servisinden kalıtılmış Hizmet Mahkeme Bilgi Guncelleme servisi
 
     """
 
@@ -30,35 +28,38 @@ class HizmetMahkemeGuncelle(HITAPGuncelle):
 
         Attributes:
             service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): ''HizmetMahkeme'' modelinden gelen kayıtların alanları,
+            service_dict (dict): Request yoluyla gelen kayıtlar,
                     HizmetMahkemeUpdate servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
+                    alanlar listede tutulmaktadır.
+
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetMahkemeUpdate'
-        hizmet_mahkeme = HizmetMahkeme.objects.get(key)
         self.service_dict = {
             'fields': {
-                'kayitNo': hizmet_mahkeme.kayit_no,
-                'tckn': hizmet_mahkeme.tckn,
-                'mahkemeAd': hizmet_mahkeme.mahkeme_ad,
-                'sebep': hizmet_mahkeme.sebep,
-                'kararTarihi': hizmet_mahkeme.karar_tarihi,
-                'kararSayisi': hizmet_mahkeme.karar_sayisi,
-                'kesinlesmeTarihi': hizmet_mahkeme.kesinlesme_tarihi,
-                'asilDogumTarihi': hizmet_mahkeme.asil_dogum_tarihi,
-                'tashihDogumTarihi': hizmet_mahkeme.tashih_dogum_tarihi,
-                'gecerliDogumTarihi': hizmet_mahkeme.gecerli_dogum_tarihi,
-                'asilAd': hizmet_mahkeme.asil_ad,
-                'tashihAd': hizmet_mahkeme.tashih_ad,
-                'asilSoyad': hizmet_mahkeme.asil_soyad,
-                'tashihSoyad': hizmet_mahkeme.tashih_soyad,
-                'aciklama': hizmet_mahkeme.aciklama,
-                'gunSayisi': hizmet_mahkeme.gun_sayisi,
-                'kurumOnayTarihi': hizmet_mahkeme.kurum_onay_tarihi
+                'kayitNo': self.request.payload['kayit_no'],
+                'tckn': self.request.payload['tckn'],
+                'mahkemeAd': self.request.payload['mahkeme_ad'],
+                'sebep': self.request.payload['sebep'],
+                'kararTarihi': self.request.payload['karar_tarihi'],
+                'kararSayisi': self.request.payload['karar_sayisi'],
+                'kesinlesmeTarihi': self.request.payload['kesinlesme_tarihi'],
+                'asilDogumTarihi': self.request.payload['asil_dogum_tarihi'],
+                'tashihDogumTarihi': self.request.payload['tashih_dogum_tarihi'],
+                'gecerliDogumTarihi': self.request.payload['gecerli_dogum_tarihi'],
+                'asilAd': self.request.payload['asil_ad'],
+                'tashihAd': self.request.payload['tashih_ad'],
+                'asilSoyad': self.request.payload['asil_soyad'],
+                'tashihSoyad': self.request.payload['tashih_soyad'],
+                'aciklama': self.request.payload['aciklama'],
+                'gunSayisi': self.request.payload['gun_sayisi'],
+                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
             },
             'date_filter': ['kesinlesmeTarihi', 'asilDogumTarihi', 'tashihDogumTarihi',
-                            'gecerliDogumTarihi', 'kurumOnayTarihi']
+                            'gecerliDogumTarihi', 'kurumOnayTarihi'],
+            'required_fields': ['kayitNo', 'tckn', 'mahkemeAd', 'sebep', 'kararTarihi', 'kararSayisi',
+                                'kurumOnayTarihi']
+
         }
         super(HizmetMahkemeGuncelle, self).handle()
