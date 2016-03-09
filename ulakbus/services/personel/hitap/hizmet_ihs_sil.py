@@ -16,8 +16,6 @@ Hitap'da personelin IHS bilgilerinin silinmesi sağlayan class.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
-from ulakbus.models.hitap import HizmetIHS
-
 
 class HizmetIHSSil(HITAPSil):
     """
