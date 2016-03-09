@@ -60,6 +60,7 @@ class HizmetBorclanmaGetir(HITAPSorgula):
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },
             'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'borclanma_tarihi',
-                            'odeme_tarihi', 'kurum_onay_tarihi']
+                            'odeme_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetBorclanmaGetir, self).handle()
