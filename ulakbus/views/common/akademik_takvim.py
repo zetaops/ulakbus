@@ -16,11 +16,9 @@ birime ait akademik takvim gösterilir. Eğer birime özel bir akademik takvim b
 
 from collections import OrderedDict
 
-from ulakbus.models import Unit
-from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI
-from ulakbus.models.ogrenci import AkademikTakvim
-from ulakbus.settings import UID
+from ulakbus.models.ogrenci import AkademikTakvim, Unit
+from zengine.views.crud import CrudView
 
 __author__ = 'Ali Riza Keles'
 
@@ -64,17 +62,17 @@ class AkademikTakvimView(CrudView):
         Kayıtların herbiri bu öğeler için belirli bir tarih veya tarih aralığına denk gelmektedir.
 
         """
-
-        # role = self.current.role
-        # unit = role.unit
-        # akademik_takvim = AkademikTakvim.objects.filter(birim=unit)[0]
-
         self.current.output['client_cmd'] = ['show', ]
 
-        unit = Unit.objects.get(yoksis_no=UID)
-        akademik_takvim = AkademikTakvim.objects.filter(birim=unit)[0]
-
         etkinlikler = []
+
+        def get_akademik_takvim(unit):
+            try:
+                return AkademikTakvim.objects.get(birim_id=unit.key)
+            except ObjectDoesNotExist:
+                get_akademik_takvim(Unit.objects.get(yoksis_no=unit.parent_unit_no))
+
+        akademik_takvim = get_akademik_takvim(self.current.role.unit)
         for e in akademik_takvim.Takvim:
             etkinlik = OrderedDict({})
             etkinlik['Etkinlik'] = dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(e.etkinlik), '')
