@@ -37,27 +37,29 @@ class HizmetCetveliEkle(HITAPEkle):
         self.service_name = 'HizmetCetvelInsert'
         self.service_dict = {
             'fields': {
-                'baslamaTarihi': self.request.payload['baslama_tarihi'],
-                'bitisTarihi': self.request.payload['bitis_tarihi'],
-                'emekliDerece': self.request.payload['emekli_derece'],
-                'emekliKademe': self.request.payload['emekli_kademe'],
-                'gorev': self.request.payload['gorev'],
-                'unvanKod': self.request.payload['unvan_kod'],
-                'hizmetSinifi': self.request.payload['hizmet_sinifi'],
-                'kazanilmisHakAyligiDerece': self.request.payload['kazanilmis_hak_ayligi_derece'],
-                'kazanilmisHakAyligiKademe': self.request.payload['kazanilmis_hak_ayligi_kademe'],
-                'odemeDerece': self.request.payload['odeme_derece'],
-                'odemeKademe': self.request.payload['odeme_kademe'],
-                'emekliEkGosterge': self.request.payload['emekli_ekgosterge'],
-                'kadroDerece': self.request.payload['kadro_derece'],
-                'kazanilmisHakAyligiEkGosterge': self.request.payload[
-                    'kazanilmis_hak_ayligi_ekgosterge'],
-                'odemeEkGosterge': self.request.payload['odeme_ekgosterge'],
-                'sebepKod': self.request.payload['sebep_kod'],
-                'tckn': self.request.payload['tckn'],
-                'ucret': self.request.payload['ucret'],
-                'yevmiye': self.request.payload['yevmiye'],
-                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
+                'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),
+                'bitisTarihi': self.request.payload.get('bitis_tarihi', ''),
+                'emekliDerece': self.request.payload.get('emekli_derece', ''),
+                'emekliKademe': self.request.payload.get('emekli_kademe', ''),
+                'gorev': self.request.payload.get('gorev', ''),
+                'unvanKod': self.request.payload.get('unvan_kod', ''),
+                'hizmetSinifi': self.request.payload.get('hizmet_sinifi', ''),
+                'kazanilmisHakAyligiDerece': self.request.payload.get(
+                    'kazanilmis_hak_ayligi_derece', ''),
+                'kazanilmisHakAyligiKademe': self.request.payload.get(
+                    'kazanilmis_hak_ayligi_kademe', ''),
+                'odemeDerece': self.request.payload.get('odeme_derece', ''),
+                'odemeKademe': self.request.payload.get('odeme_kademe', ''),
+                'emekliEkGosterge': self.request.payload.get('emekli_ekgosterge', ''),
+                'kadroDerece': self.request.payload.get('kadro_derece', ''),
+                'kazanilmisHakAyligiEkGosterge': self.request.payload.get(
+                    'kazanilmis_hak_ayligi_ekgosterge', ''),
+                'odemeEkGosterge': self.request.payload.get('odeme_ekgosterge', ''),
+                'sebepKod': self.request.payload.get('sebep_kod', ''),
+                'tckn': self.request.payload.get('tckn', ''),
+                'ucret': self.request.payload.get('ucret', ''),
+                'yevmiye': self.request.payload.get('yevmiye', ''),
+                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
             },
             'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
             'required_fields': ['tckn', 'gorev', 'unvanKod', 'hizmetSinifi', 'kadroDerece',

@@ -39,15 +39,15 @@ class HizmetUnvanEkle(HITAPEkle):
         self.service_name = 'HizmetUnvanInsert'
         self.service_dict = {
             'fields': {
-                'asilVekil': self.request.payload['asil_vekil'],
-                'atamaSekli': self.request.payload['atama_sekli'],
-                'hizmetSinifi': self.request.payload['hizmet_sinifi'],
-                'tckn': self.request.payload['tckn'],
-                'unvanKod': self.request.payload['unvan_kod'],
-                'unvanTarihi': self.request.payload['unvan_tarihi'],
-                'unvanBitisTarihi': self.request.payload['unvan_bitis_tarihi'],
-                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi'],
-                'fhzOrani': self.request.payload['fhz_orani']
+                'asilVekil': self.request.payload.get('asil_vekil', ''),
+                'atamaSekli': self.request.payload.get('atama_sekli', ''),
+                'hizmetSinifi': self.request.payload.get('hizmet_sinifi', ''),
+                'tckn': self.request.payload.get('tckn', ''),
+                'unvanKod': self.request.payload.get('unvan_kod', ''),
+                'unvanTarihi': self.request.payload.get('unvan_tarihi', ''),
+                'unvanBitisTarihi': self.request.payload.get('unvan_bitis_tarihi', ''),
+                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', ''),
+                'fhzOrani': self.request.payload.get('fhz_orani', '')
             },
             'date_filter': ['unvanTarihi', 'unvanBitisTarihi', 'kurumOnayTarihi'],
             'required_fields': ['tckn', 'unvanKod', 'unvanTarihi', 'hizmetSinifi', 'asilVekil',

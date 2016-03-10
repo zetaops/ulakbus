@@ -35,8 +35,8 @@ class HizmetTazminatSil(HITAPSil):
 
         self.service_name = 'HizmetTazminatDelete'
 
-        self.service_dict['fields']['tckn'] =self.request.payload['tckn']
-        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
+        self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')
         self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetTazminatSil, self).handle()

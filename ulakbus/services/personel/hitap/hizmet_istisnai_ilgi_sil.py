@@ -17,6 +17,7 @@ __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
 
+
 class HizmetIstisnaiIlgiSil(HITAPSil):
     """
     HITAP Silme servisinden kalıtılmış Hizmet Cetveli Bilgisi Silme servisi
@@ -35,8 +36,8 @@ class HizmetIstisnaiIlgiSil(HITAPSil):
 
         self.service_name = 'hizmetIstisnaiIlgiDelete'
 
-        self.service_dict['fields']['tckn'] = self.request.payload['tckn']
-        self.service_dict['fields']['kayitNo'] = self.request.payload['kayit_no']
+        self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
+        self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')
         self.service_dict['required_fields'] = ['tckn', 'kayitNo']
 
         super(HizmetIstisnaiIlgiSil, self).handle()

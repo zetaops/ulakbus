@@ -26,11 +26,11 @@ class HitapHelper():
             hitap_dict (dict) : HITAP servisine gönderilmek üzere hazırlanmış sözlük listesi.
 
         """
-
-        for required_field in hitap_dict['required_fields']:
-            try:
-                if not hitap_dict['fields'][required_field]:
-                    raise ValueError("required %s field's value is null" % (required_field))
-            except KeyError:
-                raise KeyError("required field %s not found in hitap service dict" % (
-                    required_field))
+        if hitap_dict['required_fields']:
+            for required_field in hitap_dict['required_fields']:
+                try:
+                    if not hitap_dict['fields'][required_field]:
+                        raise ValueError("required %s field's value is null" % (required_field))
+                except KeyError:
+                    raise KeyError("required field %s not found in hitap service dict" % (
+                        required_field))

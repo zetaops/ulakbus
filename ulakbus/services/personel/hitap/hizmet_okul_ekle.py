@@ -39,19 +39,19 @@ class HizmetOkulEkle(HITAPEkle):
         self.service_name = 'HizmetOkulInsert'
         self.service_dict = {
             'fields': {
-                'bolum': self.request.payload['bolum'],
-                'kayitNo': self.request.payload['kayit_no'],
-                'mezuniyetTarihi': self.request.payload['mezuniyet_tarihi'],
-                'ogrenimDurumu': self.request.payload['ogrenim_durumu'],
-                'ogrenimSuresi': self.request.payload['ogrenim_suresi'],
-                'okulAd': self.request.payload['okul_ad'],
-                'tckn': self.request.payload['tckn'],
-                'denklikTarihi': self.request.payload['denklik_tarihi'],
-                'ogrenimYer': self.request.payload['ogrenim_yeri'],
-                'denklikBolum': self.request.payload['denklik_bolum'],
-                'denklikOkul': self.request.payload['denklik_okul'],
-                'hazirlik': self.request.payload['hazirlik'],
-                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
+                'bolum': self.request.payload.get('bolum', ''),
+                'kayitNo': self.request.payload.get('kayit_no', ''),
+                'mezuniyetTarihi': self.request.payload.get('mezuniyet_tarihi', ''),
+                'ogrenimDurumu': self.request.payload.get('ogrenim_durumu', ''),
+                'ogrenimSuresi': self.request.payload.get('ogrenim_suresi', ''),
+                'okulAd': self.request.payload.get('okul_ad', ''),
+                'tckn': self.request.payload.get('tckn', ''),
+                'denklikTarihi': self.request.payload.get('denklik_tarihi', ''),
+                'ogrenimYer': self.request.payload.get('ogrenim_yeri', ''),
+                'denklikBolum': self.request.payload.get('denklik_bolum', ''),
+                'denklikOkul': self.request.payload.get('denklik_okul', ''),
+                'hazirlik': self.request.payload.get('hazirlik', ''),
+                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
             },
             'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
             'required_fields': ['tckn', 'ogrenimDurumu', 'mezuniyetTarihi', 'ogrenimSuresi',

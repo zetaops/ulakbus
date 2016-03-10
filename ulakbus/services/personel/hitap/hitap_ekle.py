@@ -48,7 +48,7 @@ class HITAPEkle(Service):
 
     def __init__(self):
         self.service_name = ''
-        self.service_dict = {'fields': {}}
+        self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
         super(HITAPEkle, self).__init__()
 
     def handle(self):
@@ -158,14 +158,15 @@ class HITAPEkle(Service):
             hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
 
         """
-        from datetime import datetime
-        for record in hitap_dict:
-            for field in self.service_dict['date_filter']:
-                if record[field] == "01.01.1900":
-                    record[field] = '0001-01-01'
-                else:
-                    date_format = datetime.strptime(record[field], "%d.%m.%Y")
-                    record[field] = date_format.strftime("%Y-%m-%d")
+        if hitap_dict['date_filter']:
+            from datetime import datetime
+            for record in hitap_dict:
+                for field in hitap_dict['date_filter']:
+                    if record[field] == "01.01.1900":
+                        record[field] = '0001-01-01'
+                    else:
+                        date_format = datetime.strptime(record[field], "%d.%m.%Y")
+                        record[field] = date_format.strftime("%Y-%m-%d")
 
     def custom_filter(self, hitap_dict):
         """

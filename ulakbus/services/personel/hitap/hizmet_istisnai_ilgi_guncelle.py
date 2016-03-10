@@ -33,23 +33,23 @@ class HizmetIstisnaiIlgiGuncelle(HITAPGuncelle):
                     hizmetIstisnaiIlgiUpdate servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
                     alanlar listede tutulmaktadır.
+
         """
 
         self.service_name = 'hizmetIstisnaiIlgiUpdate'
         self.service_dict = {
             'fields': {
-                'kayitNo': self.request.payload['kayit_no'],
-                'tckn': self.request.payload['tckn'],
-                'istisnaiIlgiNevi': self.request.payload['istisnai_ilgi_nevi'],
-                'baslamaTarihi': self.request.payload['baslama_tarihi'],
-                'bitisTarihi': self.request.payload['bitis_tarihi'],
-                'gunSayisi': self.request.payload['gun_sayisi'],
-                'khaDurum': self.request.payload['kha_durum'],
-                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
+                'kayitNo': self.request.payload.get('kayit_no', ''),
+                'tckn': self.request.payload.get('tckn', ''),
+                'istisnaiIlgiNevi': self.request.payload.get('istisnai_ilgi_nevi', ''),
+                'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),
+                'bitisTarihi': self.request.payload.get('bitis_tarihi', ''),
+                'gunSayisi': self.request.payload.get('gun_sayisi', ''),
+                'khaDurum': self.request.payload.get('kha_durum', ''),
+                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
             },
             'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
             'required_fields': ['kayitNo', 'tckn', 'istisnaiIlgiNevi', 'baslamaTarihi',
-                                'bitisTarihi',
-                                'gunSayisi', 'khaDurum', 'kurumOnayTarihi']
+                                'bitisTarihi', 'gunSayisi', 'khaDurum', 'kurumOnayTarihi']
         }
         super(HizmetIstisnaiIlgiGuncelle, self).handle()

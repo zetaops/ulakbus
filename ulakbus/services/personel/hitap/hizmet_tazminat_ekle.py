@@ -33,19 +33,20 @@ class HizmetTazminatEkle(HITAPEkle):
                     HizmetTazminatInsert servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
                     alanlar listede tutulmaktadır.
+
         """
         self.service_name = 'HizmetTazminatInsert'
         self.service_dict = {
             'fields': {
-                'gorev': self.request.payload['gorev'],
-                'kadrosuzluk': self.request.payload['kadrosuzluk'],
-                'makam': self.request.payload['makam'],
-                'tckn': self.request.payload['tckn'],
-                'temsil': self.request.payload['temsil'],
-                'unvanKod': self.request.payload['unvan_kod'],
-                'tazminatTarihi': self.request.payload['tazminat_tarihi'],
-                'tazminatBitisTarihi': self.request.payload['tazminat_bitis_tarihi'],
-                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi']
+                'gorev': self.request.payload.get('gorev', ''),
+                'kadrosuzluk': self.request.payload.get('kadrosuzluk', ''),
+                'makam': self.request.payload.get('makam', ''),
+                'tckn': self.request.payload.get('tckn', ''),
+                'temsil': self.request.payload.get('temsil', ''),
+                'unvanKod': self.request.payload.get('unvan_kod', ''),
+                'tazminatTarihi': self.request.payload.get('tazminat_tarihi', ''),
+                'tazminatBitisTarihi': self.request.payload.get('tazminat_bitis_tarihi', ''),
+                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
             },
             'date_filter': ['tazminatTarihi', 'tazminatBitisTarihi', 'kurumOnayTarihi'],
             'required_fields': ['tckn', 'unvanKod', 'tazminatTarihi', 'kurumOnayTarihi']

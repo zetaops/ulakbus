@@ -17,6 +17,7 @@ __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
+
 class HizmetNufusGuncelle(HITAPGuncelle):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Nufus Bilgi Guncelleme servisi
@@ -38,23 +39,23 @@ class HizmetNufusGuncelle(HITAPGuncelle):
         self.service_name = 'HizmetNufusUpdate'
         self.service_dict = {
             'fields': {
-                'ad': self.request.payload['ad'],
-                'cinsiyet': self.request.payload['cinsiyet'],
-                'dogumTarihi': self.request.payload['dogum_tarihi'],
-                'durum': self.request.payload['durum'],
-                'emekliSicilNo': self.request.payload['emekli_sicil_no'],
-                'ilkSoyad': self.request.payload['ilk_soy_ad'],
-                'kurumSicili': self.request.payload['kurum_sicil'],
-                'maluliyetKod': self.request.payload['maluliyet_kod'],
-                'memuriyetBaslamaTarihi': self.request.payload['memuriyet_baslama_tarihi'],
-                'sebep': self.request.payload['sebep'],
-                'soyad': self.request.payload['soyad'],
-                'tckn': self.request.payload['tckn'],
-                'aciklama': self.request.payload['aciklama'],
-                'yetkiSeviyesi': self.request.payload['yetki_seviyesi'],
-                'kurumaBaslamaTarihi': self.request.payload['kuruma_baslama_tarihi'],
-                'gorevTarihi6495': self.request.payload['gorev_tarihi_6495'],
-                'emekliSicil6495': self.request.payload['emekli_sicil_6495']
+                'ad': self.request.payload.get('ad', ''),
+                'cinsiyet': self.request.payload.get('cinsiyet', ''),
+                'dogumTarihi': self.request.payload.get('dogum_tarihi', ''),
+                'durum': self.request.payload.get('durum', ''),
+                'emekliSicilNo': self.request.payload.get('emekli_sicil_no', ''),
+                'ilkSoyad': self.request.payload.get('ilk_soy_ad', ''),
+                'kurumSicili': self.request.payload.get('kurum_sicil', ''),
+                'maluliyetKod': self.request.payload.get('maluliyet_kod', ''),
+                'memuriyetBaslamaTarihi': self.request.payload.get('memuriyet_baslama_tarihi', ''),
+                'sebep': self.request.payload.get('sebep', ''),
+                'soyad': self.request.payload.get('soyad', ''),
+                'tckn': self.request.payload.get('tckn', ''),
+                'aciklama': self.request.payload.get('aciklama', ''),
+                'yetkiSeviyesi': self.request.payload.get('yetki_seviyesi', ''),
+                'kurumaBaslamaTarihi': self.request.payload.get('kuruma_baslama_tarihi', ''),
+                'gorevTarihi6495': self.request.payload.get('gorev_tarihi_6495', ''),
+                'emekliSicil6495': self.request.payload.get('emekli_sicil_6495', '')
             },
             'date_filter': ['dogumTarihi', 'memuriyetBaslamaTarihi', 'kurumaBaslamaTarihi'],
             'required_fields': ['tckn', 'ad', 'soyad', 'dogumTarihi', 'cinsiyet', 'emekliSicilNo',

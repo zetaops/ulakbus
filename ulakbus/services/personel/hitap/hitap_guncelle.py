@@ -49,7 +49,7 @@ class HITAPGuncelle(Service):
 
     def __init__(self):
         self.service_name = ''
-        self.service_dict = {'fields': {}}
+        self.service_dict = {'fields': {},'date_filter':[],'required_fields':[]}
         super(HITAPGuncelle, self).__init__()
 
     def handle(self):
@@ -87,7 +87,8 @@ class HITAPGuncelle(Service):
         """
 
         status = "error"
-        hitap_dict = []
+        hitap_response = False
+        request_data = {}
 
         try:
             # connection for hitap
@@ -100,8 +101,8 @@ class HITAPGuncelle(Service):
 
                 # filtering for some fields
                 if 'date_filter' in self.service_dict:
-                    self.date_filter(hitap_dict)
-                self.custom_filter(hitap_dict)
+                    self.date_filter(self.service_dict)
+                self.custom_filter(self.service_dict)
 
                 if 'required_fields' in self.service_dict:
                     required_field_check = HitapHelper()
@@ -110,10 +111,14 @@ class HITAPGuncelle(Service):
                 for dict_element in self.service_dict['fields']:
                     request_data[dict_element] = self.service_dict[dict_element]
 
-                service_name = self.service_name
-                hitap_service = getattr(client.service, self.service_name)(request_data,
-                                                                           kullaniciAd=H_USER,
-                                                                           sifre=H_PASS)
+                self.logger.info("%s started to work." % self.service_name)
+
+                hitap_response = getattr(client.service, self.service_name)(request_data,
+                                                                            kullaniciAd=H_USER,
+                                                                            sifre=H_PASS)
+                if hitap_response:
+                    hitap_response = self.create_hitap_json(hitap_response)
+
             status = "ok"
 
         except AttributeError:
@@ -125,8 +130,7 @@ class HITAPGuncelle(Service):
             status = "error"
 
         finally:
-            self.response.payload = {'status': status,
-                                     'result': self.create_hitap_json(hitap_service)}
+            self.response.payload = {'status': status, 'result': hitap_response}
 
     def create_hitap_json(self, hitap_service):
         """Güncelleme servisinden dönen veriyi JSON formatına döndürür.
@@ -154,14 +158,15 @@ class HITAPGuncelle(Service):
             hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
 
         """
-        from datetime import datetime
-        for record in hitap_dict:
-            for field in self.service_dict['date_filter']:
-                if record[field] == "01.01.1900":
-                    record[field] = '0001-01-01'
-                else:
-                    date_format = datetime.strptime(record[field], "%d.%m.%Y")
-                    record[field] = date_format.strftime("%Y-%m-%d")
+        if hitap_dict['date_filter']:
+            from datetime import datetime
+            for record in hitap_dict:
+                for field in hitap_dict['date_filter']:
+                    if record[field] == "01.01.1900":
+                        record[field] = '0001-01-01'
+                    else:
+                        date_format = datetime.strptime(record[field], "%d.%m.%Y")
+                        record[field] = date_format.strftime("%Y-%m-%d")
 
     def custom_filter(self, hitap_dict):
         """

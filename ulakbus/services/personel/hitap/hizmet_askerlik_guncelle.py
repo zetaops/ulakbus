@@ -37,23 +37,23 @@ class HizmetAskerlikGuncelle(HITAPGuncelle):
         self.service_name = 'HizmetAskerlikUpdate'
         self.service_dict = {
             'fields': {
-                'kayitNo': self.request.payload['kayit_no'],
-                'askerlikNevi': self.request.payload['askerlik_nevi'],
-                'baslamaTarihi': self.request.payload['baslama_tarihi'],
-                'bitisTarihi': self.request.payload['bitis_tarihi'],
-                'kitaBaslamaTarihi': self.request.payload['kita_baslama_tarihi'],
-                'kitaBitisTarihi': self.request.payload['kita_bitis_tarihi'],
-                'muafiyetNeden': self.request.payload['muafiyet_neden'],
-                'sayilmayanGunSayisi': self.request.payload['sayilmayan_gun_sayisi'],
-                'sinifOkuluSicil': self.request.payload['sinif_okulu_sicil'],
-                'subayliktanErligeGecisTarihi': self.request.payload[
-                    'subayliktan_erlige_gecis_tarihi'],
-                'subayOkuluGirisTarihi': self.request.payload['subay_okulu_giris_tarihi'],
-                'tckn': self.request.payload['tckn'],
-                'tegmenNaspTarihi': self.request.payload['tegmen_nasp_tarihi'],
-                'gorevYeri': self.request.payload['gorev_yeri'],
-                'kurumOnayTarihi': self.request.payload['kurum_onay_tarihi'],
-                'astegmenNaspTarihi': self.request.payload['astegmen_nasp_tarihi']
+                'kayitNo': self.request.payload.get('kayit_no', ''),
+                'askerlikNevi': self.request.payload.get('askerlik_nevi', ''),
+                'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),
+                'bitisTarihi': self.request.payload.get('bitis_tarihi', ''),
+                'kitaBaslamaTarihi': self.request.payload.get('kita_baslama_tarihi', ''),
+                'kitaBitisTarihi': self.request.payload.get('kita_bitis_tarihi', ''),
+                'muafiyetNeden': self.request.payload.get('muafiyet_neden', ''),
+                'sayilmayanGunSayisi': self.request.payload.get('sayilmayan_gun_sayisi', ''),
+                'sinifOkuluSicil': self.request.payload.get('sinif_okulu_sicil', ''),
+                'subayliktanErligeGecisTarihi': self.request.payload.get(
+                    'subayliktan_erlige_gecis_tarihi', ''),
+                'subayOkuluGirisTarihi': self.request.payload.get('subay_okulu_giris_tarihi', ''),
+                'tckn': self.request.payload.get('tckn', ''),
+                'tegmenNaspTarihi': self.request.payload.get('tegmen_nasp_tarihi', ''),
+                'gorevYeri': self.request.payload.get('gorev_yeri', ''),
+                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', ''),
+                'astegmenNaspTarihi': self.request.payload.get('astegmen_nasp_tarihi', '')
             },
             'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kitaBaslamaTarihi', 'kitaBitisTarihi',
                             'subayliktanErligeGecisTarihi', 'subayOkuluGirisTarihi',

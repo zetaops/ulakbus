@@ -33,17 +33,17 @@ class HizmetIhsGuncelle(HITAPGuncelle):
             service_dict (dict): ''HizmetIHS'' modelinden gelen kayıtların alanları,
                     HizmetIHSUpdate servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
+
         """
-        key = self.request.payload['key']
 
         self.service_name = 'HizmetIHSUpdate'
         self.service_dict = {
             'fields': {
-                'ihzID':self.request.payload['kayit_no'],
-                'tckn': self.request.payload['tckn'],
-                'baslamaTarihi': self.request.payload['baslama_tarihi'],
-                'bitisTarihi': self.request.payload['bitis_tarihi'],
-                'ihzNevi': self.request.payload['ihz_nevi'],
+                'ihzID': self.request.payload.get('kayit_no', ''),
+                'tckn': self.request.payload.get('tckn', ''),
+                'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),
+                'bitisTarihi': self.request.payload.get('bitis_tarihi', ''),
+                'ihzNevi': self.request.payload.get('ihz_nevi', '')
             },
             'date_filter': ['baslamaTarihi', 'bitisTarihi'],
             'required_fields': ['tckn', 'ihzID', 'baslamaTarihi', 'bitisTarihi', 'ihzNevi']
