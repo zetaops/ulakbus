@@ -16,6 +16,7 @@ birime ait akademik takvim gösterilir. Eğer birime özel bir akademik takvim b
 
 from collections import OrderedDict
 
+
 from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI
 from ulakbus.models.ogrenci import AkademikTakvim, Unit
