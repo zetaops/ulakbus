@@ -119,17 +119,17 @@ class KatilimDurumu(CrudView):
         """Doğruluğu onaylanan bilgileri kaydeder."""
         for katilim in self.current.task_data['katilim_durumlari']:
             ders_katilimi, is_new = DersKatilimi.objects.get_or_create(
-                    ogrenci_id=katilim['ogrenci_key'], ders_id=katilim['ders_key'])
+                ogrenci_id=katilim['ogrenci_key'], ders_id=katilim['ders_key'])
             ders_katilimi.katilim_durumu = katilim['katilim_durumu']
             ders_katilimi.save()
 
     def bilgi_ver(self):
         """Yapılan işlem hakkında bilgi verir."""
-        sube = DersKatilimi.objects.get(ders_id=self.current.task_data['sube_key'])
+        sube = Sube.objects.get(self.current.task_data['sube_key'])
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Devamsızlıklar Kaydedildi',
-            "msg": '%s dersine ait ogrenci notlari kaydedildi' % sube.ders.ad}
+            "msg": '%s dersine ait ogrenci katilim bilgileri  kaydedildi' % sube.ders.ad}
 
     @property
     def get_okutman_key(self):
@@ -144,11 +144,3 @@ class KatilimDurumu(CrudView):
         """
         if 'Ogrenciler' in serialized_form['schema']['properties']:
             serialized_form['inline_edit'] = ['katilim_durumu', 'aciklama']
-
-    # @form_modifier
-    # def hide_ders_ogrenci_key(self, serialized_form):
-    #     """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
-    #
-    #     """
-    #     serialized_form['schema']['properties']['Ogrenciler']['schema']
-    #         serialized_form['inline_edit'] = ['katilim_durumu', 'aciklama']
