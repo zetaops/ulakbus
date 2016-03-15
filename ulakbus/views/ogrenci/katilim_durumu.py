@@ -145,10 +145,10 @@ class KatilimDurumu(CrudView):
         if 'Ogrenciler' in serialized_form['schema']['properties']:
             serialized_form['inline_edit'] = ['katilim_durumu', 'aciklama']
 
-    @form_modifier
-    def hide_ders_ogrenci_key(self, serialized_form):
-        """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
-
-        """
-        serialized_form['schema']['properties']['Ogrenciler']['schema']
-            serialized_form['inline_edit'] = ['katilim_durumu', 'aciklama']
+    # @form_modifier
+    # def hide_ders_ogrenci_key(self, serialized_form):
+    #     """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
+    #
+    #     """
+    #     serialized_form['schema']['properties']['Ogrenciler']['schema']
+    #         serialized_form['inline_edit'] = ['katilim_durumu', 'aciklama']
