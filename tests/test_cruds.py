@@ -19,7 +19,7 @@ class TestCase(BaseTestCase):
 
     def test_setup(self):
         """
-        Okutman not girişi iş akışı test edilmeden önce veritabanı boşaltılır,
+        Crud iş akışı test edilmeden önce veritabanı boşaltılır,
         belirtilen dosyadaki veriler veritabanına yüklenir.
 
         """
