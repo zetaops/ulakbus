@@ -94,6 +94,8 @@ OBJECT_MENU = {
     'ogrenci': [
         {'name': 'DersKatilimi', 'verbose_name': 'Devam Durumu', 'field': 'ogrenci_id'},
         {'name': 'Borc', 'verbose_name': 'Harç Bilgileri', 'field': 'ogrenci_id'},
+        {'name': 'OgrenciProgram', 'verbose_name': 'Oğrenci Mezuniyet', 'wf': 'ogrenci_mezuniyet',
+         'field': 'ogrenci_id'},
         {'name': 'DegerlendirmeNot', 'field': 'ogrenci_id'},
         {'name': 'OgrenciDersi', 'field': 'ogrenci_id'},
         {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri',
@@ -165,7 +167,6 @@ QUICK_MENU = [
 MAX_NUM_DROPDOWN_LINKED_MODELS = 20
 
 PERMISSION_PROVIDER = 'ulakbus.models.auth.ulakbus_permissions'
-
 
 ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabilir." \
                     "Şimdi bunlardan birini görüyorsunuz. Lütfen daha sonra tekrar deneyiniz"
