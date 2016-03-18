@@ -21,7 +21,7 @@ class OgrenciHelper():
     def diploma_notu_uret(self, ogrenci_no):
         try:
             ogrenci_program = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no)
-            return ("%s-%s-%s" % (ogrenci_program.giris_tarihi,
-                                  ogrenci_program.program.yoksis_no, ogrenci_program.ogrenci_no))
+            return "%s-%s-%s" % (ogrenci_program.giris_tarihi,
+                                  ogrenci_program.program.yoksis_no, ogrenci_program.ogrenci_no)
         except ObjectDoesNotExist:
             return "Öğrenci Bulunamadı"
