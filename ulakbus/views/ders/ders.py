@@ -441,7 +441,8 @@ class NotGirisi(CrudView):
         except:
             sube_key = self.current.task_data["sube"]
 
-        _form.sinav = fields.Integer("Sınav Seçiniz", choices=prepare_choices_for_model(Sinav, sube_id=sube_key))
+        _form.sinav = fields.Integer("Sınav Seçiniz",
+                                     choices=prepare_choices_for_model(Sinav, sube_id=sube_key))
         self.current.task_data["sube"] = sube_key
         _form.sec = fields.Button("Seç", cmd="Sınav Seçin")
         self.form_out(_form)
@@ -651,6 +652,7 @@ class NotGirisi(CrudView):
                 ogr_not.ders = ders
                 ogr_not.sinav = sinav
                 ogr_not.ogrenci = ogr_data.ogrenci
+                ogr_not.sinav_tarihi = sinav.tarih
                 ogr_not.save()
 
             except:
