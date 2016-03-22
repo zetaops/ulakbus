@@ -78,17 +78,9 @@ class DonemDanismanAtama(CrudView):
     class Meta:
         model = "DonemDanisman"
 
-    def bolum_sec(self):
-
-        _unit = self.current.role.unit
-        _form = DonemDanismanForm(current=self, title="Bölüm Seçiniz")
-        _choices = prepare_choices_for_model(Unit, yoksis_no=_unit.yoksis_no)
-        _form.program = fields.Integer(choices=_choices)
-        self.form_out(_form)
-
     def danisman_sec(self):
 
-        unit = Unit.objects.get(self.current.input['form']['program'])
+        unit = self.current.role.unit
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
         okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
         donem = Donem.objects.get(guncel=True)
