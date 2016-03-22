@@ -19,22 +19,12 @@ from zengine import forms
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 from pyoko import LinkProxy
->>>>>>> CHANGE #5056, öğrenci başarı durumuna dönem ağırlıklı ortalama hesabı eklendi
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman, DegerlendirmeNot
 from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from ulakbus.models.ogrenci import OgrenciDersi, Sinav
 from pyoko.exceptions import ObjectDoesNotExist
-=======
-from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, DegerlendirmeNot
-from ulakbus.models.ogrenci import Donem, OgrenciDersi, Sinav
-from pyoko.exceptions import ObjectDoesNotExist
-
->>>>>>> b4fba96a3e03d38c83418fa1c65cf7ad27dfb6d4
 
 class KimlikBilgileriForm(forms.JsonForm):
     """
@@ -272,7 +262,7 @@ def ogrenci_bilgileri(current):
         }
     ]
 
-<<<<<<< HEAD
+
 class ProgramSecimForm(forms.JsonForm):
     """
     ``DanismanAtama`` sınıfı için form olarak kullanılacaktır.
