@@ -414,7 +414,7 @@ class OgrenciMezuniyet(CrudView):
             ogrenci_adi = '%s %s' % (ogrenci_program.ogrenci.ad, ogrenci_program.ogrenci.soyad)
 
             self.current.output['msgbox'] = {
-                'type': 'info', "title": 'Bir Hata Oluştu',
+                'type': 'info', "title": 'Öğrenci Mezuniyet Kaydı Başarılı',
                 "msg": '%s numaralı %s adlı öğrenci %s adlı bölümden %s diploma numarası ile mezun \
                 edilmiştir' % (ogrenci_no, ogrenci_adi, bolum_adi, diploma_no)
             }
