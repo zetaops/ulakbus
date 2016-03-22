@@ -109,14 +109,14 @@ OBJECT_MENU = {
     ],
 }
 
-VIEW_URLS = [
+VIEW_URLS.update({
     # ('falcon URI template', 'python path to view method/class')
-    ('ogrenci_ara', 'ulakbus.views.system.SearchStudent'),
-    ('personel_ara', 'ulakbus.views.system.SearchPerson'),
-    ('notify', 'ulakbus.views.system.Notification'),
-    ('get_current_user', 'ulakbus.views.system.GetCurrentUser'),
-    ('menu', 'ulakbus.views.system.UlakbusMenu'),
-]
+    'ogrenci_ara': 'ulakbus.views.system.SearchStudent',
+    'personel_ara': 'ulakbus.views.system.SearchPerson',
+    'notify': 'ulakbus.views.system.Notification',
+    'get_current_user': 'ulakbus.views.system.GetCurrentUser',
+    'menu': 'ulakbus.views.system.UlakbusMenu',
+})
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
