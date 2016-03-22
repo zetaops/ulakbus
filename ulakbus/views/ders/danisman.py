@@ -11,6 +11,7 @@
 Dönem bazlı danışman atanmasını sağlayan iş akışını yönetir.
 
 """
+from pyoko.exceptions import ObjectDoesNotExist
 
 from pyoko import ListNode
 from zengine import forms
@@ -82,20 +83,18 @@ class DonemDanismanAtama(CrudView):
 
         unit = self.current.role.unit
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
-        okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
+        okutmanlar = Okutman.objects.set_params(sort='ad asc, soyad asc').filter(birim_no=unit.yoksis_no)
         donem = Donem.objects.get(guncel=True)
         _form = DonemDanismanListForm(current=self, title="Okutman Seçiniz")
 
         for okt in okutmanlar:
+            donem_danismani =_form.Okutmanlar(ad_soyad='%s %s' % (okt.ad, okt.soyad),
+                                     key=okt.key)
             try:
-                if DonemDanisman.objects.filter(donem=donem, okutman=okt, bolum=unit):
-                    _form.Okutmanlar(secim=True, ad_soyad='%s %s' % (okt.ad, okt.soyad),
-                                     key=okt.key)
-                else:
-                    _form.Okutmanlar(secim=False, ad_soyad='%s %s' % (okt.ad, okt.soyad),
-                                     key=okt.key)
-            except:
-                pass
+                DonemDanisman.objects.get(donem=donem, okutman=okt, bolum=unit)
+                donem_danismani.secim = True
+            except ObjectDoesNotExist:
+                donem_danismani.secim = False
 
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
