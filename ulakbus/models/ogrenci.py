@@ -230,6 +230,7 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
+    farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme", default= False, index= True)
     bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
     ects_bolum_kordinator = Role(verbose_name='ECTS Bölüm Koordinator',
                                  reverse_name='ects_koordinator_program')
@@ -279,6 +280,7 @@ class Ders(Model):
     ders_kaynaklari = field.String("Ders Kaynakları", index=True)
     ders_mufredati = field.String("Ders Müfredatı", index=True)
     verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
+    katilim_sarti = field.Integer("Katılım Şartı", index=True)
     program = Program()
     donem = Donem()
     ders_koordinatoru = Personel()
@@ -552,6 +554,8 @@ class OgrenciDersi(Model):
 
     Ders alanı Şube modeli ile ilişkilendirilmiştir. Bunun sebebi öğrencilerin ders seçiminin,
     ders ve okutmanın birleştiği şube seçimi olmasıdır. Detaylı bilgiler Şube modelinde bulunabilir.
+    Bir öğrencinin devamsızlıktan kalıp kalmadığı devamsizliktan_kalma alanı ile kontrol edilir. Bu alan
+    True olduğu zaman öğrenci devamsızlıktan kalır.
 
     """
 
@@ -563,8 +567,12 @@ class OgrenciDersi(Model):
     ogrenci = Ogrenci()
 =======
     ortalama = field.Float("Ortalama", index=True)
+<<<<<<< HEAD
     harf = field.String("Harf", index=True)
 >>>>>>> CHANGE #5056 öğrenci dersi modeline ortalama ve harf alanları eklendi
+=======
+    katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default= False, index=True)
+>>>>>>> CHANGE rref #5056, Öğrenci başarı durumunda düzenleme
 
     class Meta:
         app = 'Ogrenci'
@@ -603,7 +611,7 @@ class DersKatilimi(Model):
     """
 
     # TODO: Neden float, soralım?
-    katilim_durumu = field.Float("Katılım Durumu", index=True)
+    katilim_durumu = field.Integer("Katılım Durumu", index=True)
     ders = Sube()
     ogrenci = Ogrenci()
     okutman = Okutman()
@@ -733,6 +741,12 @@ class BankaAuth(Model):
     def __unicode__(self):
         return '%s %s' % (self.username, self.banka.ad)
 
+class Harf(Model):
+    harf = field.String("Harf", index=True)
+    baslangic = field.Float("Başlangıç", index=True)
+    bitis = field.Float("Bitis", index=True)
+    durum = field.Boolean("Durum", default=False, index=True)
+    fakulte = Unit()
 
 class DegerlendirmeNot(Model):
     """Değerlendirme Notu Modeli

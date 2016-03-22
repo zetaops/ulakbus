@@ -561,16 +561,19 @@ class BasariDurum(CrudView):
                 "baslangic" : 0,
                 "bitis" : 39,
                 "dortluk" : 0.00
-            },
-            "F" : {
-                "baslangic" : "devamsiz",
-                "bitis" : "devamsiz",
-                "dortluk" : 0.00
             }
         }
         self.current.output['client_cmd'] = ['show', ]
         donemler = Donem.objects.set_params(sort='baslangic_tarihi desc').filter()
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_key"])
+        donemler = ogrenci_program.OgrenciDonem
+        donem_sayi = len(donemler)
+        for x in range(donem_sayi):
+            for y in range(x):
+                if donemler[y].donem.baslangic_tarihi > donemler[x].donem.baslangic_tarihi:
+                    donem_buffer = donemler[y]
+                    donemler[y] = donemler[x]
+                    donemler[x] = donem_buffer
         output_array = []
         genel_toplam = 0.0
         for donem in donemler:
@@ -596,12 +599,19 @@ class BasariDurum(CrudView):
                     ders_sinav["Ortalama"] = ogrenci_ders.ortalama
                     kredi_toplam += ogrenci_ders.ders.ders.yerel_kredisi
                     agirlikli_not_toplam += ogrenci_ders.ders.ders.yerel_kredisi * harflendirme[ogrenci_ders.harf]["dortluk"]
+                if ogrenci_ders.devamsizliktan_kalma:
+                    ders_sinav["Harf"] = "F"
                 else:
-                    ders_sinav["Ortalama"] = "Sonuçlandırılmadı"
-                if type(ogrenci_ders.harf) is str:
-                    ders_sinav["Harf"] = ogrenci_ders.harf
-                else:
-                    ders_sinav["Harf"] = "Sonuçlandırılmadı"
+                    if type(ogrenci_ders.ortalama) is float:
+                        ders_sinav["Ortalama"] = ogrenci_ders.ortalama
+                        for key, value in harflendirme.iteritems():
+                            if (ogrenci_ders.ortalama >= value["baslangic"]) & (ogrenci_ders.ortalama <= value["bitis"]):
+                                ders_sinav["Harf"] = key
+                        kredi_toplam += ogrenci_ders.ders.ders.yerel_kredisi
+                        agirlikli_not_toplam += ogrenci_ders.ders.ders.yerel_kredisi * harflendirme[ogrenci_ders.harf]["dortluk"]
+                    else:
+                        ders_sinav["Ortalama"] = "Sonuçlandırılmadı"
+                        ders_sinav["Harf"] = "Sonuçlandırılmadı"                    
                 tablo.append(ders_sinav)
             output_array.append({
                     "title"  : "%s Başarı Durumu"%donem.ad,
@@ -620,4 +630,5 @@ class BasariDurum(CrudView):
                     }
                 })
         ogrenci_dersler = OgrenciDersi.objects.filter(ogrenci_program = ogrenci_program)
+
         self.output["object"] = output_array
