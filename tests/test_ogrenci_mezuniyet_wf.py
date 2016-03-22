@@ -55,6 +55,9 @@ class TestCase(BaseTestCase):
         Öğrencinin en son girdiği sınavın tarihi ile ``OgrenciProgram`` modelinden dönen mezuniyet
         tarihinin aynı olması beklenir.
 
+        test_user adlı kullanıcıya çıkış yaptırılır.
+
         """
 
         #ogrenci_mezuniyet/OgrenciProgram/do/form?ogrenci_id=RnKyAoVDT9Hc89KEZecz0kSRXRF
+
