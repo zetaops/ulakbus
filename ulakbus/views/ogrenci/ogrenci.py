@@ -513,8 +513,6 @@ class OgrenciMezuniyet(CrudView):
                 "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
             }
         }
-=======
->>>>>>> b4fba96a3e03d38c83418fa1c65cf7ad27dfb6d4
 
 class BasariDurum(CrudView):
     class Meta:
@@ -526,7 +524,6 @@ class BasariDurum(CrudView):
         self.current.task_data["ogrenci_program_key"] = ogrenci_program[0].key
 
     def not_durum(self):
-<<<<<<< HEAD
         harflendirme = {
             "AA" : {
                 "baslangic" : 90,
