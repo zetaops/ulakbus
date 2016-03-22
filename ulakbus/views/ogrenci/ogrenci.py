@@ -20,6 +20,7 @@ from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 from pyoko import LinkProxy
 >>>>>>> CHANGE #5056, öğrenci başarı durumuna dönem ağırlıklı ortalama hesabı eklendi
@@ -28,6 +29,12 @@ from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from ulakbus.models.ogrenci import OgrenciDersi, Sinav
 from pyoko.exceptions import ObjectDoesNotExist
+=======
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, DegerlendirmeNot
+from ulakbus.models.ogrenci import Donem, OgrenciDersi, Sinav
+from pyoko.exceptions import ObjectDoesNotExist
+
+>>>>>>> b4fba96a3e03d38c83418fa1c65cf7ad27dfb6d4
 
 class KimlikBilgileriForm(forms.JsonForm):
     """
@@ -265,6 +272,7 @@ def ogrenci_bilgileri(current):
         }
     ]
 
+<<<<<<< HEAD
 class ProgramSecimForm(forms.JsonForm):
     """
     ``DanismanAtama`` sınıfı için form olarak kullanılacaktır.
@@ -505,6 +513,8 @@ class OgrenciMezuniyet(CrudView):
                 "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
             }
         }
+=======
+>>>>>>> b4fba96a3e03d38c83418fa1c65cf7ad27dfb6d4
 
 class BasariDurum(CrudView):
     class Meta:
@@ -516,6 +526,7 @@ class BasariDurum(CrudView):
         self.current.task_data["ogrenci_program_key"] = ogrenci_program[0].key
 
     def not_durum(self):
+<<<<<<< HEAD
         harflendirme = {
             "AA" : {
                 "baslangic" : 90,
@@ -576,6 +587,10 @@ class BasariDurum(CrudView):
                     donemler[x] = donem_buffer
         output_array = []
         genel_toplam = 0.0
+        self.current.output['client_cmd'] = ['show', ]
+        donemler = Donem.objects.set_params(sort='baslangic_tarihi desc').filter()
+        ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_key"])
+        output_array = []
         for donem in donemler:
             ogrenci_dersler = OgrenciDersi.objects.filter(
                         ogrenci_program = ogrenci_program,
@@ -618,7 +633,6 @@ class BasariDurum(CrudView):
                     "type"   : "table-multiRow",
                     "fields" : tablo
                 })            
-
 
         self.output["object"] = output_array
         self.current.ogrenci_program = ogrenci_program[0]
