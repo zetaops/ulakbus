@@ -14,13 +14,14 @@ iş akışlarının yürütülmesini sağlar.
 """
 
 from collections import OrderedDict
+from pyoko.exceptions import ObjectDoesNotExist
 from zengine.forms import fields
 from zengine import forms
-from zengine.views.crud import CrudView
+from zengine.views.crud import CrudView, form_modifier
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman
-from ulakbus.models.ogrenci import DegerlendirmeNot
+from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
 from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
 
@@ -280,6 +281,21 @@ class DanismanSecimForm(forms.JsonForm):
     sec = fields.Button("Kaydet")
 
 
+class KayitDondurmaForm(forms.JsonForm):
+    """
+    ``KayitDondurma`` sınıfı için form olarak kullanılacaktır.
+
+    """
+
+    class Donemler(ListNode):
+        secim = fields.Boolean(type="checkbox")
+        donem = fields.String('Donem')
+        key = fields.String('Key', hidden=True)
+        aciklama = fields.String('Aciklama')
+
+    sec = fields.Button("Kaydet")
+
+
 class DanismanAtama(CrudView):
     """Danışman Atama
 
@@ -404,3 +420,117 @@ class OgrenciMezuniyet(CrudView):
                 'type': 'warning', "title": 'Bir Hata Oluştu',
                 "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
             }
+
+
+class KayıtDondurma(CrudView):
+    """Öğrenci Kayıt Dondurma
+
+    Öğrencilerin kayıt donduruma işlemlerinin yapılmasını sağlayan workflowa ait
+    metdodları barındıran sınıftır.
+
+    """
+
+    class Meta:
+        model = "OgrenciProgram"
+
+    def program_sec(self):
+        """Program Seçim Adımı
+
+        Programlar veritabanından çekilip, açılır menu içine
+        doldurulur.
+
+        """
+        ogrenci_id = self.current.input['id']
+        self.current.task_data['ogrenci_id'] = ogrenci_id
+
+        _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
+        _form.program = fields.Integer(choices=_choices)
+        self.form_out(_form)
+
+    def donem_sec(self):
+        try:
+            ogrenci_program = OgrenciProgram.objects.get(self.input['form']['program'])
+            self.current.task_data['ogrenci_program_id'] = ogrenci_program
+
+            # Öğrenci en fazla 2 dönem için kaydını dondurabilir
+            donemler = Donem.objects.set_params(sort='baslangic_tarihi desc', rows='2').filter()
+            ogrenci_adi = '%s %s' % (ogrenci_program.ogrenci.ad, ogrenci_program.ogrenci.soyad)
+
+            _form = KayitDondurmaForm(current=self.current, title="Lütfen Dönem Seçiniz")
+
+            baslangic_tarihi = False
+            for donem in donemler:
+                try:
+                    dk = DondurulmusKayit.objects.get(ogrenci_program=ogrenci_program, donem=donem)
+                    secim_durum = True
+                    aciklama_metin = dk.aciklama
+                    baslangic_tarihi = dk.baslangic_tarihi
+                except ObjectDoesNotExist:
+                    secim_durum = False
+                    aciklama_metin = ""
+                except Exception as e:
+                    self.current.output['msgbox'] = {
+                        'type': 'warning', "title": 'Bir Hata Oluştu',
+                        "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
+                    }
+
+                _form.Donemler(secim=secim_durum, donem=donem, key=donem.key,
+                               aciklama=aciklama_metin)
+
+            if baslangic_tarihi:
+                _form.baslangic_tarihi = fields.Date(baslangic_tarihi)
+            else:
+                _form.baslangic_tarihi = fields.Date()
+
+            self.form_out(_form)
+
+        except Exception as e:
+            self.current.output['msgbox'] = {
+                'type': 'warning', "title": 'Bir Hata Oluştu',
+                "msg": 'Hata Kodu : %s' % (e.message)
+            }
+
+    def ogrenci_kayit_dondur(self):
+        """Öğrenci kayıt dondurma ef son aşamasıdır.
+
+        ``DondurulmusKayit`` modelinde, seçilen her donem başına bir kayıt yaratılır.
+        Öğrencinin ilgili program kaydında kayıt_dondurma alanı True olarak değiştirilir,
+        Öğrencinin "Öğrenci" olan rolü, "Dondurulmuş Ogrenci" olarak değiştirilir.
+        Öğrencinin danışmanına bilgi verilir.
+
+        """
+        ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['ogrenci_program_id'])
+        donemler = self.current.input['form']['Donemler']
+        baslangic_tarihi = self.input['form']['baslangic_tarihi']
+
+        for donem in donemler:
+            donem_kayit = Donem.objects.get(donem.key)
+            try:
+
+                dk = DondurulmusKayit.objects.get(ogrenci_program=ogrenci_program, donem=donem)
+                dk.aciklama = donem.aciklama
+                dk.baslangic_tarihi = baslangic_tarihi
+
+            except ObjectDoesNotExist:
+                dk = KayıtDondurma()
+                dk.ogrenci_program = ogrenci_program
+                dk.donem = donem_kayit
+                dk.aciklama = donem.aciklama
+                dk.baslangic_tarihi = baslangic_tarihi
+                dk.save()
+
+            except Exception as e:
+                self.current.output['msgbox'] = {
+                    'type': 'warning', "title": 'Bir Hata Oluştu',
+                    "msg": 'Hata Kodu : %s' % (e.message)
+                }
+
+
+@form_modifier
+def kayit_dondurma_list_form_inline_edit(self, serialized_form):
+    """KayitDondurmaForm'da seçim ve açıklama alanlarına inline edit özelliği sağlayan method.
+
+    """
+    if 'Donemler' in serialized_form['schema']['properties']:
+        serialized_form['inline_edit'] = ['secim', 'aciklama']
