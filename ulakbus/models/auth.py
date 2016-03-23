@@ -72,8 +72,8 @@ class User(Model):
                                               salt_size=10)
     def pre_save(self):
         """ encrypt password if not already encrypted """
-        if not self.password.startswith('pbkdf2'):
-            self.password = self.set_password(self.password)
+        if self.password and not self.password.startswith('$pbkdf2'):
+            self.set_password(self.password)
 
     def check_password(self, raw_password):
         """
