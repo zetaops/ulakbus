@@ -878,3 +878,25 @@ class DonemDanisman(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.bolum, self.okutman)
+
+class DondurulmusKayit(Model):
+    """Dondurulmuş Kayıt Modeli
+
+    Dondurulmuş öğrenci kayıtlarının saklandığı data modelidir.
+
+    """
+
+    donem = Donem()
+    ogrenci_program = OgrenciProgram()
+    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True)
+    aciklama = field.String("Açıklama", index=True, required=False)
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Dondurulmuş Kayıt"
+        verbose_name_plural = "Dondurulmuş Kayıtlar"
+        list_fields = ['ogrenci_program', 'baslangic_tarihi', 'aciklama', 'donem']
+        search_fields = ['aciklama', 'baslangic_tarihi']
+
+    def __unicode__(self):
+        return '%s %s' % (self.ogrenci_program, self.donem)
