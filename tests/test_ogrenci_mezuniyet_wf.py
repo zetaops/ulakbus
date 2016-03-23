@@ -34,8 +34,7 @@ class TestCase(BaseTestCase):
         # Bütün kayıtlar db'den silinir.
         FlushDB(model='all').run()
         # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'),
-                                   'ulakbus/tests/fixtures/ogrenci_mezuniyet.csv')).run()
+        LoadData(path=os.path.dirname(os.path.realpath(__file__))+'/fixtures/ogrenci_mezuniyet.csv').run()
         time.sleep(1)
 
 
@@ -60,4 +59,7 @@ class TestCase(BaseTestCase):
         """
 
         #ogrenci_mezuniyet/OgrenciProgram/do/form?ogrenci_id=RnKyAoVDT9Hc89KEZecz0kSRXRF
+
+
+        pass
 
