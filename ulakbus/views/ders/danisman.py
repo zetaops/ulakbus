@@ -11,16 +11,13 @@
 Dönem bazlı danışman atanmasını sağlayan iş akışını yönetir.
 
 """
-from pyoko.exceptions import ObjectDoesNotExist
-
 from pyoko import ListNode
+from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.models.auth import Unit
+from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView, form_modifier
-from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
-from ulakbus.models.auth import Unit
-from collections import OrderedDict
-from ulakbus.views.ders.ders import prepare_choices_for_model
 
 
 class DonemDanismanForm(forms.JsonForm):
@@ -45,18 +42,11 @@ class DonemDanismanAtama(CrudView):
 
     Dönem Danışman Atama, aşağıda tanımlı iş akışı adımlarını yürütür.
 
-    - Bölüm Seç
     - Öğretim Elemanlarını Seç
     - Kaydet
     - Kayıt Bilgisi Göster
 
      Bu iş akışında kullanılan metotlar şu şekildedir:
-
-     Dönem Formunu Listele:
-        Kayıtlı dönemleri listeler
-
-     Bölüm Seç:
-        Kullanıcının bölüm başkanı olduğu bölümleri listeler
 
      Öğretim Elemanlarını Seç:
         Seçilen bölümdeki öğretim elemanları listelenir.
