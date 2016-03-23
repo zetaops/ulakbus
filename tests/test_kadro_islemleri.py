@@ -8,8 +8,9 @@
 import time
 
 from pyoko.manage import FlushDB, LoadData
-from ulakbus.models import Kadro
-from zengine.lib.test_utils import *
+from pyoko.model import super_context
+from ulakbus.models import Kadro, User
+from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):
@@ -18,21 +19,17 @@ class TestCase(BaseTestCase):
 
     """
 
-    def test_setup(self):
+    def fixture(self):
         """
         Kadro işlemleri iş akışı test edilmeden önce veritabanı boşaltılır,
         belirtilen dosyadaki veriler tekrardan yüklenir.
 
         """
 
-        import sys
-        if '-k-nosetup' in sys.argv:
-            return
-
         # Bütün kayıtları veritabanından siler.
         FlushDB(model='all').run()
         # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/kadro_islemleri.csv')).run()
+        LoadData(path='fixtures/kadro_islemleri.csv').run()
 
     def test_kadro_islemleri(self):
         """
