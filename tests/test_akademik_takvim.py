@@ -48,7 +48,6 @@ class TestCase(BaseTestCase):
 
         """
 
-        # Veritabınından test_user adlı kullanıcı seçilir.
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/akademik_takvim', username='test_user')
         resp = self.client.post()
@@ -69,20 +68,19 @@ class TestCase(BaseTestCase):
                resp.json['object']['fields'][etkinlik - 1][
                    'Etkinlik']
         assert takvim.baslangic.strftime('%d.%m.%Y') == resp.json['object']['fields'][etkinlik - 1][
-            u'Başlangıç']
+            'Başlangıç']
         assert takvim.bitis.strftime('%d.%m.%Y') == resp.json['object']['fields'][etkinlik - 1][
-            u'Bitiş']
+            'Bitiş']
 
         # Kullanıcıya çıkış yaptırılır.
         self.client.set_path('/logout')
         self.client.post()
 
         # Veritabınından onur adlı kullanıcı seçilir.
-
+        usr = User.objects.get(username='onur')
         time.sleep(1)
 
         # Kullanıcıya login yaptırılır.
-        usr = User.objects.get(username='onur')
         self.prepare_client('/akademik_takvim', user=usr)
         response = self.client.post()
 
@@ -104,6 +102,6 @@ class TestCase(BaseTestCase):
         assert response.json['object']['fields'][0]['Etkinlik'] == dict(
             AKADEMIK_TAKVIM_ETKINLIKLERI).get(
             str(etkinlik), '')
-        assert response.json['object']['fields'][0][u'Başlangıç'] == takvim.baslangic.strftime(
+        assert response.json['object']['fields'][0]['Başlangıç'] == takvim.baslangic.strftime(
             '%d.%m.%Y')
-        assert response.json['object']['fields'][0][u'Bitiş'] == takvim.bitis.strftime('%d.%m.%Y')
+        assert response.json['object']['fields'][0]['Bitiş'] == takvim.bitis.strftime('%d.%m.%Y')
