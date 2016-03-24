@@ -7,9 +7,9 @@
 
 import time
 
-from pyoko.manage import FlushDB, LoadData
 from ulakbus.models import OgrenciDersi
-from zengine.lib.test_utils import *
+from zengine.lib.test_utils import BaseTestCase
+from ulakbus.models import User
 
 
 class TestCase(BaseTestCase):
@@ -17,23 +17,6 @@ class TestCase(BaseTestCase):
     Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
 
     """
-
-    def test_setup(self):
-        """
-        Okutman not girişi iş akışı test edilmeden önce veritabanı boşaltılır,
-        belirtilen dosyadaki veriler veritabanına yüklenir.
-
-        """
-
-        import sys
-        if '-k-nosetup' in sys.argv:
-            return
-
-        # Bütün kayıtlar db'den silinir.
-        FlushDB(model='all').run()
-        # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'),
-                                   'ulakbus/tests/fixtures/okutman_not_girisi.csv')).run()
 
     def test_okutman_not_girisi(self):
         """
@@ -75,7 +58,7 @@ class TestCase(BaseTestCase):
         """
 
         # Okutman kullanıcısı seçilir.
-        usr = User(super_context).objects.get('Bkhc7dupquiIFPmOSKuO0kXJC8q')
+        usr = User.objects.get('Bkhc7dupquiIFPmOSKuO0kXJC8q')
         time.sleep(1)
 
         # Kullanıcıya login yaptırılır.
@@ -97,7 +80,7 @@ class TestCase(BaseTestCase):
             ogrenci_ders = OgrenciDersi.objects.filter(ders_id='S7z8bvdNCBFSd9iCvQrb7O1pQ75')
             ogrenci_ad = ogrenci_ders[i].ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders[
                 i].ogrenci_program.ogrenci.soyad
-            assert ogrenci_ad == resp.json['object']['fields'][i][u'Adı Soyadı']
+            assert ogrenci_ad == resp.json['object']['fields'][i]['Adı Soyadı']
 
         # Ders seçim ekranına geri döner
         self.client.post(cmd='ders_sec',
@@ -120,7 +103,7 @@ class TestCase(BaseTestCase):
             ogrenci_ders = OgrenciDersi.objects.filter(ders_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')
             ogrenci_ad = ogrenci_ders[i].ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders[
                 i].ogrenci_program.ogrenci.soyad
-            assert ogrenci_ad == resp.json['forms']['model']['Ogrenciler'][i][u'ad_soyad']
+            assert ogrenci_ad == resp.json['forms']['model']['Ogrenciler'][i]['ad_soyad']
 
         # Öğrencilerin sayısı.
         num_of_ogrenci = len(resp.json['forms']['model']['Ogrenciler'])
