@@ -4,8 +4,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 import time
-import os
-from pyoko.manage import FlushDB, LoadData
 from ulakbus.models import AkademikTakvim, Personel, Unit, User
 from .base_test_case import BaseTestCase
 
@@ -16,23 +14,6 @@ class TestCase(BaseTestCase):
     Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
 
     """
-
-    def test_setup(self):
-        """
-        Crud iş akışı test edilmeden önce veritabanı boşaltılır,
-        belirtilen dosyadaki veriler veritabanına yüklenir.
-
-        """
-
-        import sys
-        if '-k-nosetup' in sys.argv:
-            return
-
-        # Bütün kayıtlar db'den silinir.
-        FlushDB(model='all').run()
-        # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'),
-                                   'ulakbus/tests/fixtures/crud_wf.csv')).run()
 
     def test_list_add_delete_edit_with_models(self):
         """
