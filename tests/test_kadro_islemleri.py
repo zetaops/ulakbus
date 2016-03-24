@@ -19,17 +19,7 @@ class TestCase(BaseTestCase):
 
     """
 
-    def fixture(self):
-        """
-        Kadro işlemleri iş akışı test edilmeden önce veritabanı boşaltılır,
-        belirtilen dosyadaki veriler tekrardan yüklenir.
 
-        """
-
-        # Bütün kayıtları veritabanından siler.
-        FlushDB(model='all').run()
-        # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path='fixtures/kadro_islemleri.csv').run()
 
     def test_kadro_islemleri(self):
         """
