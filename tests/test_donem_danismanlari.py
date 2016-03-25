@@ -22,16 +22,18 @@ class TestCase(BaseTestCase):
         """
         Dönem danışmanları iş akışı başlattıktan sonra;
 
-        İş akışının ilk adımında bölüm seçilir.
+        İş akışının ilk adımında bölüm giris yapan kullanıcının
+        rolunden bulunur.
 
-        Bölüm seçildikten sonra sunucudan dönen dönem danışmanlarının sayısı ile veritabanından
-        çekilen dönem danışmanlarının sayısı karşılaştırılıp test edilir.
+        Sunucudan dönen bölüme ait dönem danışmanlarının sayısı ile
+        veritabanından çekilen dönem danışmanlarının sayısı
+        karşılaştırılıp test edilir.
 
-        İş akışının ikinci adımında  seçilen danışmanlar kaydedilir.
+        İş akışının ikinci adımında seçilen danışmanlar kaydedilir.
 
         Seçilen danışmanlarının  veritabanına kaydedilip edilmediğini kontrol edilir ve
-        seçilenen danışmanlar kaydedildikten sonra, sunucudan dönen cevapta danışman kayıt sayılarında
-        degişiklik olup olmadığı test edilir.
+        seçilenen danışmanlar kaydedildikten sonra, sunucudan dönen cevapta danışman
+        kayıt sayılarında degişiklik olup olmadığı test edilir.
 
         """
 
@@ -56,21 +58,22 @@ class TestCase(BaseTestCase):
             if okutman['secim']:
                 num_of_danisman += 1
 
-        # Sunucudan dönen danışman kayıtlarının sayısı ile veritabanından çekilen danışman kayıtlarının
-        # sayısının eşitliği karşılşatılırıp test edilir.
+        # Sunucudan dönen danışman kayıtlarının sayısı ile veritabanından çekilen
+        # danışman kayıtlarının sayısının eşitliği karşılşatılırıp test edilir.
         assert num_of_danisman == count_of_danisman
 
         # 3 tane daha danışman seçilir.
-        okutmanlar = [{'ad_soyad': "Yalın Seven", 'secim': "true", 'key': "Bf1CPIKs6txfhvlBQ7jqhy0iwv"},
-                      {'ad_soyad': "Meşhur Ertaş", 'secim': "true", 'key': "O88eWBlnA579TqHs1oYuZITeHsg"},
-                      {'ad_soyad': "Mengi Bilgin", 'secim': "true", 'key': "180kVRsM8JR7Aql8xVRC9L0L4HW"},
-                      {'ad_soyad': "Sevla Demirel", 'secim': "", 'key': "8oS60wq2nhZLuZ4Dqsn4YtofPSF"},
-                      {'ad_soyad': "Uluğbey Bilgin", 'secim': "", 'key': "YhkwdYaGFnVzWMpULy6unvuON1A"},
-                      {'ad_soyad': "Anka Çorlu", 'secim': "", 'key': "O7M6ndhCp4FhAZiYQHr52IasJSG"},
-                      {'ad_soyad': "Övün Alemdar", 'secim': "", 'key': "4O7Nxt64EQumUzettWGyPHU9r3C"},
-                      {'ad_soyad': "Safura Kısakürek", 'secim': "", 'key': "9YivWjZb4iPp2O6eQq1X4bqkfIW"},
-                      {'ad_soyad': "Veis Güçlü", 'secim': 'true', 'key': "JdH5RzwbmhIBTAU4ec6J4fgNu4z"},
-                      {'ad_soyad': "Öge Fırat", 'secim': "", 'key': "22Y0VMB98avgMjSbbH1KXkZrdLL"}]
+        okutmanlar = [
+            {'ad_soyad': "Yalın Seven", 'secim': "true", 'key': "Bf1CPIKs6txfhvlBQ7jqhy0iwv"},
+            {'ad_soyad': "Meşhur Ertaş", 'secim': "true", 'key': "O88eWBlnA579TqHs1oYuZITeHsg"},
+            {'ad_soyad': "Mengi Bilgin", 'secim': "true", 'key': "180kVRsM8JR7Aql8xVRC9L0L4HW"},
+            {'ad_soyad': "Sevla Demirel", 'secim': "", 'key': "8oS60wq2nhZLuZ4Dqsn4YtofPSF"},
+            {'ad_soyad': "Uluğbey Bilgin", 'secim': "", 'key': "YhkwdYaGFnVzWMpULy6unvuON1A"},
+            {'ad_soyad': "Anka Çorlu", 'secim': "", 'key': "O7M6ndhCp4FhAZiYQHr52IasJSG"},
+            {'ad_soyad': "Övün Alemdar", 'secim': "", 'key': "4O7Nxt64EQumUzettWGyPHU9r3C"},
+            {'ad_soyad': "Safura Kısakürek", 'secim': "", 'key': "9YivWjZb4iPp2O6eQq1X4bqkfIW"},
+            {'ad_soyad': "Veis Güçlü", 'secim': 'true', 'key': "JdH5RzwbmhIBTAU4ec6J4fgNu4z"},
+            {'ad_soyad': "Öge Fırat", 'secim': "", 'key': "22Y0VMB98avgMjSbbH1KXkZrdLL"}]
 
         # Seçilen dönem danışmanları kaydedilir.
         self.client.post(form={'kaydet': 1, 'Okutmanlar': okutmanlar})
