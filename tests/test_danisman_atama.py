@@ -5,10 +5,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-import time
 
 from ulakbus.models import OgrenciProgram, Donem, DonemDanisman, Ogrenci
-from ulakbus.models.auth import User
 from zengine.lib.test_utils import BaseTestCase
 
 
@@ -43,7 +41,8 @@ class TestCase(BaseTestCase):
                                 model="OgrenciProgram",
                                 param="ogrenci_id",
                                 wf="danisman_atama",
-                                filters={'ogrenci_id': {'values': ["KhFizqvCaZGtTloAZoPH1Uy98Pw"], 'type': "check"}})
+                                filters={'ogrenci_id': {'values': ["KhFizqvCaZGtTloAZoPH1Uy98Pw"],
+                                                        'type': "check"}})
 
         # Öğrenciye ait programlar db'den seçilir.
         op = OgrenciProgram.objects.filter(ogrenci_id='RnKyAoVDT9Hc89KEZecz0kSRXRF')
@@ -60,7 +59,8 @@ class TestCase(BaseTestCase):
         # Öğrencinin kayıtlı olduğu öğrenci programlarından biri seçilir.
         program = op[0]
         # Döneme ve birime kayıtlı olan danışmanların listesini tutar.
-        donem_danisman = DonemDanisman.objects.filter(donem=guncel_donem, bolum=program.program.birim)
+        donem_danisman = DonemDanisman.objects.filter(donem=guncel_donem,
+                                                      bolum=program.program.birim)
 
         # Veritabanından dönen dönem danışmanların sayısı ile sunucudan dönen dönem  danışmanlarının
         # sayısının eşitliğini karşılaştırıp test eder.
