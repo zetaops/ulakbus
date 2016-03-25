@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 import time
 from ulakbus.models import AkademikTakvim, Personel, Unit, User
-from .base_test_case import BaseTestCase
+from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):
