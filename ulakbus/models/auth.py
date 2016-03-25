@@ -70,6 +70,10 @@ class User(Model):
         """
         self.password = pbkdf2_sha512.encrypt(raw_password, rounds=10000,
                                               salt_size=10)
+    def pre_save(self):
+        """ encrypt password if not already encrypted """
+        if self.password and not self.password.startswith('$pbkdf2'):
+            self.set_password(self.password)
 
     def check_password(self, raw_password):
         """

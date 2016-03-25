@@ -52,6 +52,7 @@ Example:
 """
 
 from zato.server.service import Service
+from hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
@@ -127,6 +128,11 @@ class HITAPSorgula(Service):
         try:
             # connection for hitap
             with conn.client() as client:
+
+                if 'required_fields' in self.service_dict:
+                    required_field_check = HitapHelper()
+                    required_field_check.check_required_data(self.service_dict)
+
                 # hitap response
                 hitap_service = getattr(client.service, self.service_name)(H_USER, H_PASS, tckn)
                 # get bean object

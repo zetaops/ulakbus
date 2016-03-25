@@ -19,20 +19,20 @@ class GenerateFakeData(Command):
          'help': 'Üretilecek dönem sayısı, varsayılan 1'},
         {'name': 'kampus_sayisi', 'type': int, 'default': 2,
          'help': 'Üretilecek kampüs sayısı, varsayılan 2'},
-        {'name': 'personel_sayisi', 'type': int, 'default': 20,
-         'help': 'Üretilecek personel sayısı, varsayılan 20'},
-        {'name': 'okutman_sayisi', 'type': int, 'default': 10,
-         'help': 'Üretilecek okutman sayısı, varsayılan 10'},
-        {'name': 'program_sayisi', 'type': int, 'default': 5,
-         'help': 'Üretilecek program sayısı, varsayılan 5'},
-        {'name': 'ders_sayisi', 'type': int, 'default': 5,
-         'help': 'Üretilecek ders sayısı, varsayılan 5'},
+        {'name': 'personel_sayisi', 'type': int, 'default': 30,
+         'help': 'Üretilecek personel sayısı, varsayılan 30'},
+        {'name': 'okutman_sayisi', 'type': int, 'default': 20,
+         'help': 'Üretilecek okutman sayısı, varsayılan 20'},
+        {'name': 'program_sayisi', 'type': int, 'default': 1,
+         'help': 'Üretilecek program sayısı, varsayılan 1'},
+        {'name': 'ders_sayisi', 'type': int, 'default': 40,
+         'help': 'Üretilecek ders sayısı, varsayılan 40'},
         {'name': 'sube_sayisi', 'type': int, 'default': 3,
          'help': 'Üretilecek şube sayısı, varsayılan 3'},
-        {'name': 'sinav_sayisi', 'type': int, 'default': 2,
-         'help': 'Üretilecek sınav sayısı, varsayılan 2'},
-        {'name': 'ogrenci_sayisi', 'type': int, 'default': 10,
-         'help': 'Üretilecek öğrenci sayısı, varsayılan 10'}
+        {'name': 'sinav_sayisi', 'type': int, 'default': 3,
+         'help': 'Üretilecek sınav sayısı, varsayılan 3'},
+        {'name': 'ogrenci_sayisi', 'type': int, 'default': 30,
+         'help': 'Üretilecek öğrenci sayısı, varsayılan 30'}
 
     ]
 
@@ -48,6 +48,8 @@ class GenerateFakeData(Command):
         sinav_say = int(self.manager.args.sinav_sayisi)
         ogrenci_say = int(self.manager.args.ogrenci_sayisi)
         fake = FakeDataGenerator()
-        fake.fake_data(donem_say=donem_say, kampus_say=kampus_say, personel_say=personel_say, okutman_say=okutman_say,
-                       program_say=program_say,ders_say=ders_say, sinav_say=sinav_say, sube_say=sube_say,
+        fake.fake_data(donem_say=donem_say, kampus_say=kampus_say, personel_say=personel_say,
+                       okutman_say=okutman_say,
+                       program_say=program_say, ders_say=ders_say, sinav_say=sinav_say,
+                       sube_say=sube_say,
                        ogrenci_say=ogrenci_say)

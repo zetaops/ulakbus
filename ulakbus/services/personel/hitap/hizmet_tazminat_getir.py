@@ -29,7 +29,7 @@ class HizmetTazminatGetir(HITAPSorgula):
             bean_name (str): Hitap'tan gelen bean nesnesinin adı
             service_dict (dict): Hitap servisinden gelen kayıtların alanları,
                     ``HizmetTazminat`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
 
         """
 
@@ -48,6 +48,7 @@ class HizmetTazminatGetir(HITAPSorgula):
                 'kadrosuzluk': 'kadrosuzluk',
                 'kurum_onay_tarihi': 'kurumOnayTarihi',
             },
-            'date_filter': ['tazminat_tarihi', 'tazminat_bitis_tarihi', 'kurum_onay_tarihi']
+            'date_filter': ['tazminat_tarihi', 'tazminat_bitis_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetTazminatGetir, self).handle()

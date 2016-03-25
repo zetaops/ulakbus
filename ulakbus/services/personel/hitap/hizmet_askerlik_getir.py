@@ -57,6 +57,7 @@ class HizmetAskerlikGetir(HITAPSorgula):
             'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'subay_okulu_giris_tarihi',
                             'astegmen_nasp_tarihi', 'tegmen_nasp_tarihi',
                             'subayliktan_erlige_gecis_tarihi', 'kita_baslama_tarihi',
-                            'kita_bitis_tarihi', 'kurum_onay_tarihi']
+                            'kita_bitis_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetAskerlikGetir, self).handle()

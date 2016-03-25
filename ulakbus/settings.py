@@ -32,7 +32,7 @@ ROLE_MODEL = 'ulakbus.models.auth.Role'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # diagrams that does not require logged in user
-ANONYMOUS_WORKFLOWS = ['login', 'logout']
+ANONYMOUS_WORKFLOWS.extend(['login', 'logout'])
 
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
@@ -94,6 +94,8 @@ OBJECT_MENU = {
     'ogrenci': [
         {'name': 'DersKatilimi', 'verbose_name': 'Devam Durumu', 'field': 'ogrenci_id'},
         {'name': 'Borc', 'verbose_name': 'Harç Bilgileri', 'field': 'ogrenci_id'},
+        {'name': 'OgrenciProgram', 'verbose_name': 'Oğrenci Mezuniyet', 'wf': 'ogrenci_mezuniyet',
+         'field': 'ogrenci_id'},
         {'name': 'DegerlendirmeNot', 'field': 'ogrenci_id'},
         {'name': 'OgrenciDersi', 'field': 'ogrenci_id'},
         {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri',
@@ -107,14 +109,14 @@ OBJECT_MENU = {
     ],
 }
 
-VIEW_URLS = [
+VIEW_URLS.update({
     # ('falcon URI template', 'python path to view method/class')
-    ('/ara/ogrenci/{query}', 'ulakbus.views.system.SearchStudent'),
-    ('/ara/personel/{query}', 'ulakbus.views.system.SearchPerson'),
-    ('/notify/', 'ulakbus.views.system.Notification'),
-    ('/get_current_user/', 'ulakbus.views.system.GetCurrentUser'),
-    ('/menu', 'ulakbus.views.system.UlakbusMenu'),
-]
+    'ogrenci_ara': 'ulakbus.views.system.SearchStudent',
+    'personel_ara': 'ulakbus.views.system.SearchPerson',
+    'notify': 'ulakbus.views.system.Notification',
+    'get_current_user': 'ulakbus.views.system.GetCurrentUser',
+    'menu': 'ulakbus.views.system.UlakbusMenu',
+})
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
@@ -165,7 +167,6 @@ QUICK_MENU = [
 MAX_NUM_DROPDOWN_LINKED_MODELS = 20
 
 PERMISSION_PROVIDER = 'ulakbus.models.auth.ulakbus_permissions'
-
 
 ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabilir." \
                     "Şimdi bunlardan birini görüyorsunuz. Lütfen daha sonra tekrar deneyiniz"

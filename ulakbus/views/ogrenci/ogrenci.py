@@ -20,6 +20,7 @@ from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman
+from ulakbus.models.ogrenci import DegerlendirmeNot
 from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
 
@@ -107,7 +108,8 @@ class IletisimBilgileriForm(forms.JsonForm):
     """
 
     class Meta:
-        include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi", "adres2", "posta_kodu", "e_posta", "e_posta2", "tel_no",
+        include = ["ikamet_il", "ikamet_ilce", "ikamet_adresi", "adres2", "posta_kodu", "e_posta",
+                   "e_posta2", "tel_no",
                    "gsm"]
 
     kaydet = fields.Button("Kaydet", cmd="save")
@@ -314,7 +316,8 @@ class DanismanAtama(CrudView):
         program = OgrenciProgram.objects.get(program_id)
 
         _form = DanismanSecimForm(current=self.current, title="Danışman Seçiniz")
-        _choices = prepare_choices_for_model(DonemDanisman, donem_id=donem_id, bolum=program.program.birim)
+        _choices = prepare_choices_for_model(DonemDanisman, donem_id=donem_id,
+                                             bolum=program.program.birim)
         _form.donem_danisman = fields.Integer(choices=_choices)
         self.form_out(_form)
 
@@ -342,3 +345,62 @@ class DanismanAtama(CrudView):
             'type': 'info', "title": 'Danışman Ataması Yapıldı',
             "msg": '%s adlı öğrenciye %s adlı personel danışman olarak atandı' % (ogrenci, personel)
         }
+
+
+class OgrenciMezuniyet(CrudView):
+    """Öğrenci Mezuniyet
+
+    Öğrencilerin mezuniyet işlemlerinin yapılmasını sağlayan workflowa ait
+    metdodları barındıran sınıftır.
+
+    """
+
+    class Meta:
+        model = "OgrenciProgram"
+
+    def program_sec(self):
+        """Program Seçim Adımı
+
+        Programlar veritabanından çekilip, açılır menu içine
+        doldurulur.
+
+        """
+        guncel_donem = Donem.objects.filter(guncel=True)[0]
+        ogrenci_id = self.current.input['id']
+        self.current.task_data['ogrenci_id'] = ogrenci_id
+        self.current.task_data['donem_id'] = guncel_donem.key
+
+        _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
+        _form.program = fields.Integer(choices=_choices)
+        self.form_out(_form)
+
+    def mezuniyet_kaydet(self):
+        from ulakbus.lib.ogrenci import OgrenciHelper
+        try:
+
+            mn = OgrenciHelper()
+            ogrenci_program = OgrenciProgram.objects.get(self.input['form']['program'])
+            ogrenci_sinav_list = DegerlendirmeNot.objects.set_params(
+                rows=1, sort='sinav_tarihi desc').filter(ogrenci=ogrenci_program.ogrenci)
+            ogrenci_son_sinav = ogrenci_sinav_list[0]
+            diploma_no = mn.diploma_notu_uret(ogrenci_program.ogrenci_no)
+            ogrenci_program.diploma_no = diploma_no
+            ogrenci_program.mezuniyet_tarihi = ogrenci_son_sinav.sinav.tarih
+            ogrenci_program.save()
+
+            bolum_adi = ogrenci_program.program.bolum_adi
+            ogrenci_no = ogrenci_program.ogrenci_no
+            ogrenci_adi = '%s %s' % (ogrenci_program.ogrenci.ad, ogrenci_program.ogrenci.soyad)
+
+            self.current.output['msgbox'] = {
+                'type': 'info', "title": 'Bir Hata Oluştu',
+                "msg": '%s numaralı %s adlı öğrenci %s adlı bölümden %s diploma numarası ile mezun \
+                edilmiştir' % (ogrenci_no, ogrenci_adi, bolum_adi, diploma_no)
+            }
+
+        except Exception as e:
+            self.current.output['msgbox'] = {
+                'type': 'warning', "title": 'Bir Hata Oluştu',
+                "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
+            }
