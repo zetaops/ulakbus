@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 import time
-from pyoko.manage import FlushDB, LoadData
+
 from ulakbus.models import OgrenciProgram, Donem, DonemDanisman, Ogrenci
 from ulakbus.models.auth import User
 from zengine.lib.test_utils import BaseTestCase
@@ -16,22 +16,6 @@ class TestCase(BaseTestCase):
     """
     Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
     """
-
-    def test_setup(self):
-        """
-        Danışman atama iş akışı test edilmeden önce veritabanı boşaltılır,
-        belirtilen dosyadaki veriler veritabanına yüklenir.
-        """
-
-        import sys
-        if '-k-nosetup' in sys.argv:
-            return
-
-        # Bütün kayıtlar db'den silinir.
-        FlushDB(model='all').run()
-        # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path='fixtures/danisman_atama.csv').run()
-        time.sleep(1)
 
     def test_danisman_atama(self):
         """
@@ -52,12 +36,9 @@ class TestCase(BaseTestCase):
 
         """
 
-        # Öğrenciye danışman atama izinlerine sahip bölüm başkanı kullanıcısı seçilir.
-        usr = User.objects.get(username='zeynep')
-        time.sleep(1)
-
         # Kullanıcıya login yaptırılır.
-        self.prepare_client('/danisman_atama', user=usr)
+        self.prepare_client('/danisman_atama', username='zeynep')
+
         resp = self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
                                 model="OgrenciProgram",
                                 param="ogrenci_id",
