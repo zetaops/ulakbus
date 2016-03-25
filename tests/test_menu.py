@@ -4,13 +4,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from time import sleep
-from zengine.lib.test_utils import username
-from ulakbus.models import User
-import falcon
-from .base_test_case import BaseTestCase
-import os
-from pyoko.manage import FlushDB, LoadData
+
 import pytest
+from ulakbus.models import User
+from zengine.lib.test_utils import BaseTestCase
+from zengine.lib.exceptions import HTTPError
 
 
 class TestCase(BaseTestCase):
@@ -18,18 +16,6 @@ class TestCase(BaseTestCase):
     Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
 
     """
-
-    def test_setup(self):
-        """
-        Menu'ye erişim test edilmeden önce veritabanını boşaltılır, belirtilen dosyadaki
-        kayıtlar veritabanına yüklenir.
-
-        """
-
-        # Bütün kayıtları veritabanından siler.
-        FlushDB(model='all').run()
-        # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/menu.csv')).run()
 
     def test_authorized_in_menu(self):
         """
@@ -45,9 +31,9 @@ class TestCase(BaseTestCase):
         sunucudan dönen kullanıcı bilgileri karşılaştırılır.
 
         """
-
+        usr = User.objects.get(username='test_user')
         # '/menu' yolunu çağırır.
-        self.prepare_client('/menu')
+        self.prepare_client('/menu', user=usr)
         resp = self.client.post()
         resp.raw()
         # Kullanıcıya izinler ekler.
@@ -59,7 +45,7 @@ class TestCase(BaseTestCase):
         self.client.post()
 
         # Yeni kullanıcı yaratmadan, varolan kullanıcıya direkt login yaptırılır.
-        self.prepare_client('/menu', login=True)
+        self.prepare_client('/menu', user=usr, login=True)
         resp = self.client.post()
         resp.raw()
         lst = ['other', 'personel', 'ogrenci', 'quick_menu', 'current_user']
@@ -101,6 +87,6 @@ class TestCase(BaseTestCase):
 
         # Yetkili olmayan kişi menu'ye erişmek istediğinde beklenen
         # HTTPUnauthorized hatasını yükseltir.
-        with pytest.raises(falcon.errors.HTTPUnauthorized):
+        with pytest.raises(HTTPError):
             self.prepare_client('/menu')
             self.client.post()
