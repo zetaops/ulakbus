@@ -7,7 +7,6 @@
 
 import time
 
-from pyoko.manage import FlushDB, LoadData
 from ulakbus.models import DonemDanisman, Donem
 from ulakbus.models.auth import User
 from zengine.lib.test_utils import BaseTestCase
@@ -19,29 +18,9 @@ class TestCase(BaseTestCase):
 
     """
 
-    def test_setup(self):
-        """
-        Dönem danışmanları iş akışı test edilmeden önce veritabanı boşaltılır,
-        belirtilen dosyadaki veriler veritabanına yüklenir.
-
-        """
-
-        import sys
-        if '-k-nosetup' in sys.argv:
-            return
-
-        # Bütün kayıtlar db'den silinir.
-        FlushDB(model='all').run()
-        # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path='fixtures/donem_danismanlari.csv').run()
-        time.sleep(1)
-
     def test_donem_danismanlari(self):
         """
         Dönem danışmanları iş akışı başlattıktan sonra;
-
-        Veritabanından çekilen program adının, sunucudan dönen cevapta olup olmadığı
-        karşılaştırılıp test edilir.
 
         İş akışının ilk adımında bölüm seçilir.
 
