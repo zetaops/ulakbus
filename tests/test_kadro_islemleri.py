@@ -6,8 +6,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 import time
-
-from pyoko.manage import FlushDB, LoadData
 from pyoko.model import super_context
 from ulakbus.models import Kadro, User
 from zengine.lib.test_utils import BaseTestCase
@@ -18,8 +16,6 @@ class TestCase(BaseTestCase):
     Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
 
     """
-
-
 
     def test_kadro_islemleri(self):
         """
