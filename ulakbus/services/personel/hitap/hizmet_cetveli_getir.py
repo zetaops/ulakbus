@@ -60,7 +60,8 @@ class HizmetCetveliGetir(HITAPSorgula):
                 'yevmiye': 'yevmiye',
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },
-            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi']
+            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetCetveliGetir, self).handle()
 

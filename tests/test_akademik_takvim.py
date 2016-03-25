@@ -5,8 +5,12 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from .base_test_case import BaseTestCase
-from ulakbus.models import AkademikTakvim
+
+import time
+from ulakbus.models.auth import User
+from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI
+from ulakbus.models.ogrenci import AkademikTakvim
+from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):
@@ -15,51 +19,91 @@ class TestCase(BaseTestCase):
 
     """
 
-    def test_edit_with_Akademik_Takvim_model(self):
+    def test_academic_calendar(self):
         """
-        Akademik Takvim modelini düzenleme işlemi ile test eder.
+        Adalet Meslek Yüksekokulu Öğrencisi rolüne sahip test_user adlı kullanıcı giriş yaptığında,
+        xxxxxxxxxxxxxx keyine sahip rektörlüğe ait akademik takvimi görmesi beklenir.
+        Çünkü bölümüne veya fakültesine ait bir akademik takvim tanımlanmamıştır.
+
+        Bu iş akışı ilk adımda rektörlüğe ait akademik takvim kayıtlarını listeler.
+
+        Veritabanından çekilen akademik takvim kayıtlarının sayısı ile sunucudan dönen akademik takvim
+        kayıtlarının sayısı karşılastırılıp test edilir.
+
+        Akademik takvim kaydının nesnelerinden biri seçilir, seçilen nesnenin etkinliği, başlangıcı ve
+        bitişi sunucudan dönen etkinlik, başlangıç ve bitiş kayıtlarıyla karşılaştırılıp test edilir.
+
+        test_user adlı kullanıcıya çıkış yaptırılır.
+
+        Kamu Hukuku Bölümü öğrencisi rolüne sahip onur adlı kullanıcı giriş yaptığında, xxxxxxxxxx keyine sahip
+        Kamu Hukuku Bölümü akademik takvimi görmesi beklenir.Çünkü kendi bölümüne ait tanımlı akademik takvim vardır.
+
+        Bu iş akışı ilk adımda eğitim fakültesine ait akademik takvim kayıtlarını listeler.
+
+        Veritabanından çekilen akademik takvim kayıtlarının sayısı ile sunucudan dönen akademik takvim
+        kayıtlarının sayısı karşılastırılıp test edilir.
+
+        Akademik takvim kaydının nesnelerinden biri seçilir, seçilen nesnenin etkinliği, başlangıcı ve
+        bitişi sunucudan dönen etkinlik, başlangıç ve bitiş kayıtlarıyla karşılaştırılır.
 
         """
 
-        # crud iş akışı başlatılır.
-        self.prepare_client('/crud')
+        # Veritabınından test_user adlı kullanıcı seçilir.
+        # Kullanıcıya login yaptırılır.
+        self.prepare_client('/akademik_takvim', username='test_user')
+        resp = self.client.post()
 
-        # AkademikTakvim modeli ve varsayılan komut 'list' ile sunucuya request yapılır.
-        resp = self.client.post(model='AkademikTakvim')
-        assert 'objects' in resp.json
+        # Birimin kayıtlı olduğu akademik takvim kayıtını getirir.
+        akademik_takvim = AkademikTakvim.objects.get(birim_id='CcKtz93YvvBBfEAfNpRn9Aazrzz')
 
-        # İlk kaydı düzenlemek için seçer.
-        response = self.client.post(model='AkademikTakvim',
-                                    cmd='add_edit_form',
-                                    object_id=resp.json['objects'][1]['key'])
+        # Sunucudan dönen akademik takvim kayıtları ile veritabanından çekilen akademik kayıtları
+        # karşılaştırılıp test edilir
+        assert len(akademik_takvim.Takvim) == len(resp.json['object']['fields'])
 
-        object_key = response.json['forms']['model']['object_key']
-        unit_id = response.json['forms']['model']['birim_id']
+        # Akademik takvim kaydının nesnelerinden biri seçilir.
+        takvim = akademik_takvim.Takvim[3]
+        # Takvim kaydının etkinliğini getirir.
+        etkinlik = takvim.etkinlik
 
-        resp = self.client.post(model='Unit',
-                                cmd='object_name',
-                                object_id=unit_id)
+        assert dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(etkinlik), '') == \
+               resp.json['object']['fields'][etkinlik - 1][
+                   'Etkinlik']
+        assert takvim.baslangic.strftime('%d.%m.%Y') == resp.json['object']['fields'][etkinlik - 1][
+            u'Başlangıç']
+        assert takvim.bitis.strftime('%d.%m.%Y') == resp.json['object']['fields'][etkinlik - 1][
+            u'Bitiş']
 
-        objct = AkademikTakvim.objects.get(object_key)
-        assert objct.birim.name in resp.json['object_name']
+        # Kullanıcıya çıkış yaptırılır.
+        self.client.set_path('/logout')
+        self.client.post()
 
-        # Queryset alanına rastgele girilir.
-        resp = self.client.post(model='Unit',
-                                cmd='select_list',
-                                query='jsghgahfsghfaghfhga')
+        # Veritabınından onur adlı kullanıcı seçilir.
 
-        # 0 değeri ise queryset alanına girilen değere ait herhangi bir kayıt bulunamadığını gösterir.
-        assert resp.json['objects'][0] == 0
+        time.sleep(1)
 
-        resp = self.client.post(model='Unit',
-                                cmd='select_list')
+        # Kullanıcıya login yaptırılır.
+        usr = User.objects.get(username='onur')
+        self.prepare_client('/akademik_takvim', user=usr)
+        response = self.client.post()
 
-        # -1 değeri ise queryset alanına herhangi bir değer girilmediğini gösterir.
-        assert resp.json['objects'][0] == -1
+        # Rol'ün kayıtlı olduğu birim getirilir.
+        unit = usr.role_set[0].role.unit
 
-        resp = self.client.post(model='Unit',
-                                cmd='select_list',
-                                query='Bilgisayar')
+        # Birimin kayıtlı olduğu akademik takvim kayıtını getirir.
+        akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)
 
-        # Queryset alanına girilen değere ait bir ya da birden fazla kayıt bulunduğunu gösterir.
-        assert resp.json['objects'][0] != 0
+        # Sunucudan dönen akademik takvim kayıtları ile veritabanından çekilen akademik kayıtları
+        # karşılaştırılıp test edilir.
+        assert len(akademik_takvim.Takvim) == len(response.json['object']['fields'])
+
+        # Akademik takvim kaydının nesnelerinden biri seçilir.
+        takvim = akademik_takvim.Takvim[0]
+        # Takvim kaydının etkinliğini getirir.
+        etkinlik = takvim.etkinlik
+
+        assert response.json['object']['fields'][0]['Etkinlik'] == dict(
+            AKADEMIK_TAKVIM_ETKINLIKLERI).get(
+            str(etkinlik), '')
+        assert response.json['object']['fields'][0][u'Başlangıç'] == takvim.baslangic.strftime(
+            '%d.%m.%Y')
+        assert response.json['object']['fields'][0][u'Bitiş'] == takvim.bitis.strftime('%d.%m.%Y')

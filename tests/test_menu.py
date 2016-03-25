@@ -6,22 +6,43 @@
 from time import sleep
 from zengine.lib.test_utils import username
 from ulakbus.models import User
-from .base_test_case import BaseTestCase
-import pytest
 import falcon
+from .base_test_case import BaseTestCase
+import os
+from pyoko.manage import FlushDB, LoadData
+import pytest
 
 
 class TestCase(BaseTestCase):
-    """Test Durumu
-
+    """
     Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
 
     """
+
+    def test_setup(self):
+        """
+        Menu'ye erişim test edilmeden önce veritabanını boşaltılır, belirtilen dosyadaki
+        kayıtlar veritabanına yüklenir.
+
+        """
+
+        # Bütün kayıtları veritabanından siler.
+        FlushDB(model='all').run()
+        # Belirtilen dosyadaki kayıtları ekler.
+        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/menu.csv')).run()
 
     def test_authorized_in_menu(self):
         """
         Yetkili kullanıcının menuye erişiminin doğru bir şekilde olup
         olmadığını test eder.
+
+        Sunucuya yapılan request neticesinde
+        dönen cevapta `` other, personel, ogrenci, quick_menu, current_user``
+        elemanlarının olup olamadığı test edilir ve bu elemanlara ait başka
+        elemanlarını olup olmadığı test edilir.
+
+        Veritabanından çekilen kullanıcı bilgileri ile request neticesinde
+        sunucudan dönen kullanıcı bilgileri karşılaştırılır.
 
         """
 
@@ -50,14 +71,14 @@ class TestCase(BaseTestCase):
             for value in resp.json[key]:
                 try:
                     assert set(value.keys()).issubset(
-                            {'kategori', 'param', 'text', 'url', 'wf', 'model'})
+                        {'kategori', 'param', 'text', 'url', 'wf', 'model'})
                 except AttributeError:
                     assert value in ['username', 'surname', 'name', 'roles', 'is_staff', 'role',
                                      'avatar',
                                      'is_student'], 'The %s is not in the given list ' % value
 
         # Kullanıcı adı baz alınarak veritabanından kullanıcı seçilir.
-        usr = User.objects.get(username=username)
+        usr = User.objects.get(username='test_user')
 
         # Kullanıcının bilgilerini, sunucudan dönen kullanıcı bilgileriyle
         # eşleşip eşleşmediğini test eder.
@@ -68,11 +89,14 @@ class TestCase(BaseTestCase):
     def test_unauthorized_in_menu(self):
         """
         Yetkili olmayan kullanıcının menu'ye erişememe durumunu test eder.
+        Yetkili olmayan kişi menu'ye erişmek istediğinde beklenen
+        HTTPUnauthorized hatasını yükseltir.
 
         """
 
         # Kullanıcıya çıkış yaptırılır.
         self.client.set_path('/logout')
+        # Sunucuya request yapılır.
         self.client.post()
 
         # Yetkili olmayan kişi menu'ye erişmek istediğinde beklenen

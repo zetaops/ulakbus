@@ -29,7 +29,8 @@ class HizmetUnvanGetir(HITAPSorgula):
             bean_name (str): Hitap'tan gelen bean nesnesinin adı
             service_dict (dict): Hitap servisinden gelen kayıtların alanları,
                     ``HizmetUnvan`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
+                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
+                    alanlar listede tutulmaktadır.
 
         """
 
@@ -48,6 +49,7 @@ class HizmetUnvanGetir(HITAPSorgula):
                 'fhz_orani': 'fhzOrani',
                 'kurum_onay_tarihi': 'kurumOnayTarihi'
             },
-            'date_filter': ['unvan_tarihi', 'unvan_bitis_tarihi', 'kurum_onay_tarihi']
+            'date_filter': ['unvan_tarihi', 'unvan_bitis_tarihi', 'kurum_onay_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetUnvanGetir, self).handle()
