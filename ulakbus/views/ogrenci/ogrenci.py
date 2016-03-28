@@ -487,6 +487,8 @@ class KayitDondurma(CrudView):
                 _form.baslangic_tarihi = fields.Date('Başlangıç Tarihi')
 
             self.form_out(_form)
+            self.current.output["meta"]["allow_actions"] = False
+            self.current.output["meta"]["allow_selection"] = False
 
         except Exception as e:
             self.current.output['msgbox'] = {
