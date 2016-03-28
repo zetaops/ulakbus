@@ -19,6 +19,7 @@ from pyoko import ListNode
 from zengine.forms import fields
 from zengine import forms
 from zengine.views.crud import CrudView, form_modifier
+from zengine.notifications import Notify
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman
@@ -288,6 +289,7 @@ class KayitDondurmaForm(forms.JsonForm):
     ``KayitDondurma`` sınıfı için form olarak kullanılacaktır.
 
     """
+    baslangic_tarihi = fields.Date('Kayıt Dondurma Başlangıç Tarihi')
 
     class Donemler(ListNode):
         secim = fields.Boolean(type="checkbox")
@@ -480,9 +482,9 @@ class KayitDondurma(CrudView):
                                aciklama=aciklama_metin)
 
             if baslangic_tarihi:
-                _form.baslangic_tarihi = fields.Date(baslangic_tarihi)
+                _form.baslangic_tarihi = baslangic_tarihi
             else:
-                _form.baslangic_tarihi = fields.Date()
+                _form.baslangic_tarihi = fields.Date('Başlangıç Tarihi')
 
             self.form_out(_form)
 
@@ -498,7 +500,7 @@ class KayitDondurma(CrudView):
         ``DondurulmusKayit`` modelinde, seçilen her donem başına bir kayıt yaratılır.
         Öğrencinin ilgili program kaydında kayıt_dondurma alanı True olarak değiştirilir,
         Öğrencinin "Öğrenci" olan rolü, "Dondurulmuş Ogrenci" olarak değiştirilir.
-        TODO : Öğrencinin danışmanına bilgi verilir.
+        Öğrencinin danışmanına bilgi verilir.
 
         """
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['ogrenci_program_id'])
@@ -532,19 +534,36 @@ class KayitDondurma(CrudView):
                 }
 
             try:
-
                 abstract_role = AbstractRole.objects.get(name="dondurulmus_kayit")
                 user = ogrenci.user
                 unit = Unit.objects.get(yoksis_no=ogrenci_program.program.yoksis_no)
                 current_role = Role.objects.get(user=user, unit=unit)
                 current_role.abstract_role = abstract_role
                 current_role.save()
-
+                ogrenci_ad_soyad = "%s %s" % (ogrenci.ad, ogrenci.soyad)
+                notify_message = '%s numaralı, %s adlı öğrencinin %s programındaki kaydı ' \
+                                 'dondurulmuştur' % (ogrenci_program.ogrenci_no, ogrenci_ad_soyad,
+                                                     ogrenci_program.program.adi)
             except Exception as e:
 
                 self.current.output['msgbox'] = {
                     'type': 'warning', "title": 'Bir Hata Oluştu',
                     "msg": 'Öğrenci Rol Değişim Kaydı Başarısız. Hata Kodu : %s' % (e.message)
+                }
+
+            # öğrencinin danışmanına bilgilendirme geçilir
+            try:
+                danisman_key = ogrenci_program.danisman.user.key
+                Notify(danisman_key).set_message(title="Öğrenci Kaydı Donduruldu",
+                                                 msg=notify_message, typ=Notify.Message)
+                self.current.output['msgbox'] = {
+                    'type': 'info', "title": 'Öğrenci Kayıt Dondurma Başarılı',
+                    "msg": '%s' % (notify_message)
+                }
+            except Exception as e:
+                self.current.output['msgbox'] = {
+                    'type': 'warning', "title": 'Bir Hata Oluştu',
+                    "msg": 'Öğrenci Danışmanı Bilgilendirme Başarısız. Hata Kodu : %s' % (e.message)
                 }
 
     @form_modifier
