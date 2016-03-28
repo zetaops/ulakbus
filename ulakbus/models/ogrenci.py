@@ -254,6 +254,26 @@ class Program(Model):
     class Donemler(ListNode):
         donem = Donem()
 
+    class Version(ListNode):
+        id = field.String("Version id", index=True)
+        senato_karar_no = field.String("Senato Karar Numarası", index=True)
+        tarih = field.Date("İşlemin Yapıldığı Tarih")
+
+    class EctsBolumKoorsinator(ListNode):
+        id = field.String("Koordinator id", index=True)
+        role = Role(verbose_name="ECTS Bölüm Koordinator",
+                    reverse_name="ects_koordinator_program")
+        personel = Personel()
+
+    class AkademikKoordinator(ListNode):
+        id = field.String("Koordinator id", index=True)
+        role = Role(verbose_name="Akademik Koordinator",
+                    reverse_name="akademik_koordinator_program")
+        personel = Personel()
+
+    class MezuniyetKosullari(ListNode):
+        kosul = field.String("Koşul", index=True)
+
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Program"
