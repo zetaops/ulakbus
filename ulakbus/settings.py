@@ -106,6 +106,8 @@ OBJECT_MENU = {
          'field': 'ogrenci_id'},
         {'name': 'OgrenciProgram', 'field': 'ogrenci_id', 'wf': 'danisman_atama',
          'verbose_name': 'Danışman Atama'},
+        {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
+         'field': 'ogrenci_id'},
     ],
 }
 
