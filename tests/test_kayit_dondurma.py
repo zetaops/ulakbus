@@ -78,14 +78,13 @@ class TestCase(BaseTestCase):
                "\xc3\x96\xc4\x9frenci Kay\xc4\xb1t Dondurma Ba\xc5\x9far\xc4\xb1l\xc4\xb1"
 
 
-
+        time.sleep(3)
         # Veritabanından ogrencinin kaydının dondurulmuş olup olmadığı doğrulanır
         d_kayit = DondurulmusKayit.objects.filter(ogrenci_program=op[0])
-        assert len(d_kayit)
+        assert len(d_kayit)>0
 
         # Öğrencinin rolü değiştirilmiş mi?
         arole = AbstractRole.objects.get(name='dondurulmus_kayit')
         role = Role.objects.get(user=ogrenci.user)
 
-        assert len(DondurulmusKayit.objects.filter(ogrenci_program=op[0]))
         assert role.abstract_role.key == arole.key
