@@ -23,6 +23,8 @@ from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, Done
 from ulakbus.models.ogrenci import DegerlendirmeNot
 from ulakbus.models.personel import Personel
 from ulakbus.views.ders.ders import prepare_choices_for_model
+from ulakbus.models.ogrenci import OgrenciDersi, Sinav
+from pyoko.exceptions import ObjectDoesNotExist
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -404,3 +406,257 @@ class OgrenciMezuniyet(CrudView):
                 'type': 'warning', "title": 'Bir Hata Oluştu',
                 "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
             }
+
+
+class BasariDurum(CrudView):
+    class Meta:
+        model = "OgrenciProgram"
+
+    def program_ata(self):
+        ogrenci = Ogrenci.objects.get(user=self.current.user)
+        ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
+        self.current.task_data["ogrenci_program_key"] = ogrenci_program[0].key
+
+    def not_durum(self):
+        harflendirme = {
+            "AA": {
+                "baslangic": 90,
+                "bitis": 100,
+                "dortluk": 4.00
+            },
+            "BA": {
+                "baslangic": 85,
+                "bitis": 89,
+                "dortluk": 3.50
+            },
+            "BB": {
+                "baslangic": 75,
+                "bitis": 84,
+                "dortluk": 3.00
+            },
+            "CB": {
+                "baslangic": 70,
+                "bitis": 74,
+                "dortluk": 2.50
+            },
+            "CC": {
+                "baslangic": 60,
+                "bitis": 69,
+                "dortluk": 2.00
+            },
+            "DC": {
+                "baslangic": 55,
+                "bitis": 59,
+                "dortluk": 1.50
+            },
+            "DD": {
+                "baslangic": 50,
+                "bitis": 54,
+                "dortluk": 1.00
+            },
+            "FD": {
+                "baslangic": 40,
+                "bitis": 49,
+                "dortluk": 0.50
+            },
+            "FF": {
+                "baslangic": 0,
+                "bitis": 39,
+                "dortluk": 0.00
+            }
+        }
+
+        unit = self.current.role.unit
+        program = Program.objects.get(birim=unit)
+
+        ogrenci = self.current.role.get_user().ogrenci
+        ogrenci_program = OgrenciProgram.objects.get(program=program,
+                                                     ogrenci=ogrenci)
+        donemler = [d.donem for d in ogrenci_program.OgrenciDonem]
+        donemler = sorted(donemler, key=lambda donem: donem.baslangic_tarihi)
+
+        donem_tablosu = []
+
+        for donem in donemler:
+            donem_basari_durumu = [
+             ['Ders Kodu', 'Ders Adi', 'Sinav Notlari', 'Ortalama', 'Not', 'Durum']
+            ]
+            ogrenci_dersler = OgrenciDersi.objects.filter(donem = donem, ogrenci_program = ogrenci_program)
+            dersler = []
+            for ders in ogrenci_dersler:
+                dersler.append(ders.sube_ders_adi())
+                dersler.append(ders.kod)
+                degerlendirmeler = DegerlendirmeNot.objects.filter(ogrenci_no=ogrenci_program.ogrenci_no, donem=donem, ders=ders)
+                notlar = [(d.sinav.tur, d.puan) for d in degerlendirmeler]
+                dersler.append(" - ".join(["%s: %s" % (sinav, puan) for sinav, puan in notlar]))
+                notlar = list(zip(*notlar)[1])
+                ortalama = sum(notlar)/len(notlar)
+                dersler.append("{0:.2f}".format(ortalama))
+                dersler.append('Gecti' if ortalama>50 else 'Kaldi')
+                donem_basari_durumu.append(dersler)
+            donem_tablosu.append(
+                {
+                    "key": donem.ad,
+                    "objects": donem_basari_durumu
+                }
+            )
+
+            self.output['objects'] = donem_tablosu
+#
+#
+#
+#
+#
+# akademik_takvim = get_akademik_takvim(self.current.role.unit)
+# for e in akademik_takvim.Takvim:
+#     etkinlik = OrderedDict({})
+#     etkinlik['Etkinlik'] = dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(e.etkinlik), '')
+#     etkinlik['Başlangıç'] = '{:%d.%m.%Y}'.format(e.baslangic)
+#     etkinlik['Bitiş'] = '{:%d.%m.%Y}'.format(e.bitis)
+#     etkinlikler.append(etkinlik)
+#
+# # cikti multirow table seklindedir.
+# self.output['object'] = {
+#     "type": "table-multiRow",
+#     "fields": etkinlikler
+# }
+#
+#
+#
+# {
+# 	"objects": [
+# 		{
+# 			"key": "x donemi",
+# 			"objects": [[sube, ders_adi, sinav], [1, tr, 100]] // normalde listeleme icin gonderilen objects buraya ayni key ismiyle eklenecek
+# 		},
+# 		{
+# 			"key": "y donemi",
+# 			"objects": []
+# 		}
+# 	],
+# 	"meta": {
+# 		"selective_listing": true // yukaridaki sablonun kullanilabilmesi icin bunun eklenmesi gerekli
+# 	}
+# }
+#
+#
+#     puan = field.Integer("Puan", index=True)
+#     sinav = Sinav()
+#     ogrenci = Ogrenci()
+#     aciklama = field.String("Puan Açıklaması", index=True, required=False)
+#
+#     # Arama amacli alanlar.
+#     yil = field.String("Yıl", index=True)
+#     donem = field.String("Dönem", index=True)
+#     ogretim_elemani = field.String("Öğretim Elemanı", index=True)
+#     ogrenci_no = field.String("Öğrenci No", index=True)
+#     sinav_tarihi = field.Date("Sınav Tarihi", index=True)
+#     ders = Ders()
+#
+#     class Meta:
+#         app = 'Ogrenci'
+#         verbose_name = "Not"
+#         verbose_name_plural = "Notlar"
+#         list_fields = ['puan', 'ders']
+#         search_fields = ['aciklama', 'puan']
+#
+#
+#
+#     # Arama amacli alanlar.
+#     yil = field.String("Yıl", index=True)
+#     donem = field.String("Dönem", index=True)
+#     ogretim_elemani = field.String("Öğretim Elemanı", index=True)
+#     ogrenci_no = field.String("Öğrenci No", index=True)
+#     sinav_tarihi = field.Date("Sınav Tarihi", index=True)
+#     ders = Ders()
+#
+#
+#         for donem in ogrenci_donemler:
+#             ogrenci_dersler = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program,
+#                                                           donem=donem)
+#             for ogrenci_ders in ogrenci_dersler:
+#                 ders = ogrenci_ders.sube_dersi()
+#                 sinavlar = Sinav.objects.filter(ders=ders)
+#                 for sinav in sinavlar:
+#                     try:
+#                         degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav, ogrenci=ogrenci)
+#                     except ObjectDoesNotExist:
+#                         pass
+#
+#         self.current.output['client_cmd'] = ['show', ]
+#
+#         donemler = Donem.objects.set_params(sort='baslangic_tarihi desc').filter()
+#         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_key"])
+#         donemler = ogrenci_program.OgrenciDonem
+#         donem_sayi = len(donemler)
+#         for x in range(donem_sayi):
+#             for y in range(x):
+#                 if donemler[y].donem.baslangic_tarihi > donemler[x].donem.baslangic_tarihi:
+#                     donem_buffer = donemler[y]
+#                     donemler[y] = donemler[x]
+#                     donemler[x] = donem_buffer
+#         output_array = []
+#         genel_toplam = 0.0
+#
+#         donemler = Donem.objects.set_params(sort='baslangic_tarihi desc').filter()
+#         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_key"])
+#         output_array = []
+#         for donem in donemler:
+#             ogrenci_dersler = OgrenciDersi.objects.filter(
+#                 ogrenci_program=ogrenci_program,
+#                 donem=donem
+#             )
+#             for ogrenci_ders in ogrenci_dersler:
+#                 tablo = []
+#                 ders_sinav = {}
+#                 sinavlar = Sinav.objects.filter(ders=ogrenci_ders.ders.ders)
+#                 ders_sinav["Ders"] = ogrenci_ders.ders.ders.ad
+#                 ders_sinav["Ects Kredisi"] = ogrenci_ders.ders.ders.ects_kredisi
+#                 ders_sinav["Yerel Kredisi"] = ogrenci_ders.ders.ders.yerel_kredisi
+#                 for sinav in sinavlar:
+#                     try:
+#                         degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav)
+#                         ders_sinav[sinav.get_tur_display()] = degerlendirme.puan
+#                     except ObjectDoesNotExist:
+#                         ders_sinav[sinav.get_tur_display()] = "Sonuçlandırılmadı"
+#
+#                 if type(ogrenci_ders.ortalama) is float:
+#                     ders_sinav["Ortalama"] = ogrenci_ders.ortalama
+#                     kredi_toplam += ogrenci_ders.ders.ders.yerel_kredisi
+#                     agirlikli_not_toplam += ogrenci_ders.ders.ders.yerel_kredisi * \
+#                                             harflendirme[ogrenci_ders.harf]["dortluk"]
+#                 if ogrenci_ders.devamsizliktan_kalma:
+#                     ders_sinav["Harf"] = "F"
+#                 else:
+#                     if type(ogrenci_ders.ortalama) is float:
+#                         ders_sinav["Ortalama"] = ogrenci_ders.ortalama
+#                         for key, value in harflendirme.iteritems():
+#                             if (ogrenci_ders.ortalama >= value["baslangic"]) & (
+#                                         ogrenci_ders.ortalama <= value["bitis"]):
+#                                 ders_sinav["Harf"] = key
+#                         kredi_toplam += ogrenci_ders.ders.ders.yerel_kredisi
+#                         agirlikli_not_toplam += ogrenci_ders.ders.ders.yerel_kredisi * \
+#                                                 harflendirme[ogrenci_ders.harf]["dortluk"]
+#                     else:
+#                         ders_sinav["Ortalama"] = "Sonuçlandırılmadı"
+#                         ders_sinav["Harf"] = "Sonuçlandırılmadı"
+#                 tablo.append(ders_sinav)
+#             output_array.append({
+#                 "title": "%s Başarı Durumu" % donem.ad,
+#                 "type": "table-multiRow",
+#                 "fields": tablo
+#             })
+#
+#         self.output["object"] = output_array
+#         self.current.ogrenci_program = ogrenci_program[0]
+#         output_array.append({
+#             "title": "",
+#             "type": "table",
+#             "fields": {
+#                 "Dönem Ağırlıklı Not Ortalaması": agirlikli_not_toplam / kredi_toplam
+#             }
+#         })
+#
+#     ogrenci_dersler = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program)
+#
+#     self.output["object"] = output_array
