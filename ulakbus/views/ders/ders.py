@@ -12,13 +12,14 @@ Ders Ekle ve Ders Şubelendirme iş akışlarının yürütülmesini sağlar.
 
 """
 
+from collections import OrderedDict
+
 from pyoko import ListNode
+from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
+from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciDersi, Donem
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView, form_modifier
-from ulakbus.models.ogrenci import Program, Okutman, DegerlendirmeNot, Ders, Sube, Sinav, OgrenciDersi, Donem
-from ulakbus.models.ogrenci import DegerlendirmeNot, Ogrenci, OgrenciProgram
-from collections import OrderedDict
 
 
 def prepare_choices_for_model(model, **kwargs):
@@ -291,27 +292,38 @@ class DersSubelendirme(CrudView):
         p = Program.objects.get(key=self.current.task_data['program'])
         dersler = Ders.objects.filter(program=p)
         # dersler = Ders.objects.filter()
+        just_created = self.current.task_data.get('just_created', [])
+        just_deleted = self.current.task_data.get('just_deleted', [])
         for d in dersler:
-            ders = "{} - {} ({} ECTS)".format(d.kod, d.ad, d.ects_kredisi)
-            subeler = Sube.objects.filter(ders=d)
-            sube = []
-            for s in subeler:
-                sube.append(
-                    {
-                        "sube_ad": s.ad,
-                        "okutman_ad": s.okutman.ad,
-                        "okutman_soyad": s.okutman.soyad,
-                        "okutman_unvan": s.okutman.unvan,
-                        "kontenjan": s.kontenjan,
-                    }
-                )
+            ders = "%s - %s (%s ECTS)" % (d.kod, d.ad, d.ects_kredisi)
+            ders_subeleri = Sube.objects.filter(ders=d)
+            subeler = []
 
-            ders_subeleri = ["{okutman_unvan} {okutman_ad}"
-                             "{okutman_soyad}, Sube:{sube_ad} Kontenjan{kontenjan} \n".format(**sb)
-                             for sb in sube]
+            def sube_append(sube):
+                if sube.key not in just_deleted:
+                    subeler.append(
+                        {
+                            "sube_ad": sube.ad,
+                            "okutman_ad": sube.okutman.ad,
+                            "okutman_soyad": sube.okutman.soyad,
+                            "okutman_unvan": sube.okutman.okutman.get_unvan_display(),
+                            "kontenjan": sube.kontenjan,
+                        }
+                    )
+
+            for sube in ders_subeleri:
+                sube_append(sube)
+            for ders_key, sube_key in just_created:
+                if ders_key == d.key:
+                    sube_append(Sube.objects.get(sube_key))
+
+            ders_subeleri = ["""* **%s %s %s**
+                                Sube: %s - Kontenjan: %s""" % (sb['okutman_unvan'], sb['okutman_ad'],
+                                                               sb['okutman_soyad'], sb['sube_ad'],
+                                                               sb['kontenjan']) for sb in subeler]
 
             item = {
-                "fields": ["{} \n {}".format(ders, ders_subeleri), ],
+                "fields": ["%s\n%s" % (ders, "\n".join(ders_subeleri)), ],
                 "actions": [
                     {'name': 'Subelendir', 'cmd': 'ders_okutman_formu', 'show_as': 'button',
                      'object_key': 'sube'},
@@ -355,6 +367,7 @@ class DersSubelendirme(CrudView):
         sb = self.input['form']['Subeler']
         ders = self.current.task_data['ders_key']
         mevcut_subeler = Sube.objects.filter(ders_id=ders)
+        self.current.task_data['just_created'] = []
         for s in sb:
             okutman = s['okutman']
             sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders)
@@ -364,8 +377,12 @@ class DersSubelendirme(CrudView):
             sube.dis_kontenjan = s['dis_kontenjan']
             sube.ad = s['ad']
             sube.save()
+            if is_new:
+                self.current.task_data['just_created'].append((ders, sube.key))
         # mevcut subelerde kalanlari sil
+        self.current.task_data['just_deleted'] = []
         for s in mevcut_subeler:
+            self.current.task_data['just_deleted'].append(s.key)
             s.delete()
 
     def bilgi_ver(self):
@@ -375,8 +392,29 @@ class DersSubelendirme(CrudView):
 
         """
 
+        from zengine.notifications import Notify
+
+        just_created = self.current.task_data.get('just_created', [])
+        just_deleted = self.current.task_data.get('just_deleted', [])
+        ders_key = self.current.task_data['ders_key']
+
+        title = "Şubelendirme"
+        bolum_baskani = "%s %s" % (self.current.user.personel.ad, self.current.user.personel.soyad)
+        msg = "Bölum Başkanı %s tarafından şubelerinizde degisiklikler yapilmistir." % bolum_baskani
+        okutmanlar = []
+
+        def notify(okutman):
+            Notify(okutman.okutman.user.key).set_message(title=title, msg=msg, typ=Notify.Message)
+            okutmanlar.append(okutman.__unicode__())
+
+        for ders, sube_key in just_created:
+            if ders == ders_key:
+                notify(Sube.objects.get(sube_key).okutman)
+
         sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
-        okutmanlar = [s.okutman.__unicode__() for s in sbs]
+        for s in sbs:
+            if s.key not in just_deleted:
+                notify(s.okutman)
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Mesaj Iletildi',
@@ -665,7 +703,6 @@ class NotGirisi(CrudView):
             sinav.save()
 
     def kayit_bilgisi_ver(self):
-        import datetime
         sinav_key = self.current.task_data["sinav_key"]
         sinav = Sinav.objects.get(sinav_key)
         sinav_tarihi = sinav.tarih.strftime("%d/%m/%Y")
