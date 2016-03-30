@@ -13,7 +13,7 @@
         <bpmn2:flowNodeRef>not_gir</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ExclusiveGateway_2</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ServiceTask_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kayıt_bilgisi_ver</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>kayit_bilgisi_ver</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ServiceTask_1</bpmn2:flowNodeRef>
@@ -64,11 +64,11 @@
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="ServiceTask_2" targetRef="ExclusiveGateway_2"/>
-    <bpmn2:userTask id="kayıt_bilgisi_ver" camunda:assignee="ders.ders.NotGirisi.kayit_bilgisi_ver" name="Kayıt Bilgisi Ver">
+    <bpmn2:userTask id="kayit_bilgisi_ver" camunda:assignee="ders.ders.NotGirisi.kayit_bilgisi_ver" name="Kayıt Bilgisi Ver">
       <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="kayıt_bilgisi_ver" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="kayit_bilgisi_ver" targetRef="EndEvent_1"/>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_10">
       <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
@@ -85,7 +85,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_1" targetRef="ders_secim">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "ders_adimina_don"]]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_1" targetRef="kayıt_bilgisi_ver"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_1" targetRef="kayit_bilgisi_ver"/>
     <bpmn2:endEvent id="EndEvent_1">
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
     </bpmn2:endEvent>
@@ -226,7 +226,7 @@
           <dc:Bounds height="6.0" width="6.0" x="869.0" y="269.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_18" bpmnElement="kayıt_bilgisi_ver">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_18" bpmnElement="kayit_bilgisi_ver">
         <dc:Bounds height="85.0" width="109.0" x="1488.0" y="228.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_UserTask_18" targetElement="_BPMNShape_EndEvent_11">
