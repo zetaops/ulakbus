@@ -497,7 +497,8 @@ class AuthBackend(object):
         default_role = user.role_set[0].role
         # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
-        self.current.user_id = default_role.key
+        self.current.role_id = default_role.key
+        self.current.user_id = user.key
         self.perm_cache = PermissionCache(default_role.key)
         self.session['permissions'] = default_role.get_permissions()
 
@@ -536,7 +537,7 @@ class AuthBackend(object):
             bool:
 
         """
-        user = User.objects.filter(username=username).get()
+        user = User.objects.get(username=username)
         is_login_ok = user.check_password(password)
         if is_login_ok:
             self.set_user(user)
