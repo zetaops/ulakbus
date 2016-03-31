@@ -376,7 +376,9 @@ class DersSubelendirme(CrudView):
             sube.kontenjan = s['kontenjan']
             sube.dis_kontenjan = s['dis_kontenjan']
             sube.ad = s['ad']
+            sube.donem = Donem.guncel_donem()
             sube.save()
+            sube.sube_sinavlarini_olustur()
             if is_new:
                 self.current.task_data['just_created'].append((ders, sube.key))
         # mevcut subelerde kalanlari sil

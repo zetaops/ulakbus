@@ -201,6 +201,16 @@ class Donem(Model):
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     guncel = field.Boolean(index=True)
 
+    @classmethod
+    def guncel_donem(cls):
+        return cls.objects.get(guncel=True)
+
+    def pre_save(self):
+        if self.guncel:
+            old = self.guncel_donem()
+            old.guncel = False
+            old.save()
+
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Dönem"
@@ -288,7 +298,7 @@ class Ders(Model):
     yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")
 
     class Degerlendirme(ListNode):
-        tur = field.String("Değerlendirme Türü", index=True)
+        tur = field.Integer("Değerlendirme Türü", choices="sinav_turleri", index=True)
         toplam_puana_etki_yuzdesi = field.Integer("Toplam Puana Etki Yüzdesi", index=True)
 
     class DersYardimcilari(ListNode):
@@ -358,6 +368,12 @@ class Sube(Model):
         list_fields = ['ad', 'kontenjan']
         search_fields = ['ad', 'kontenjan']
 
+    def sube_sinavlarini_olustur(self):
+        for dg in self.ders.Degerlendirme:
+            sinav = Sinav(tur=dg.tur, sube=self, ders=self.ders)
+            sinav.save()
+
+
     def __unicode__(self):
         return '%s %s' % (self.ad, self.kontenjan)
 
@@ -391,7 +407,7 @@ class Sinav(Model):
         search_fields = ['aciklama', 'tarih']
 
     def __unicode__(self):
-        return '%s %s' % (self.tarih, self.yapilacagi_yer)
+        return '%s %s %s' % (self.get_tur_display(), self.ders, self.sube)
 
 
 class DersProgrami(Model):
@@ -602,6 +618,10 @@ class OgrenciDersi(Model):
         verbose_name_plural = "Öğrenci Dersleri"
         list_fields = ['sube_dersi', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
+
+    def pre_save(self):
+        self.donem = self.ders.donem
+
 
     def sube_dersi(self):
         """

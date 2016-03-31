@@ -537,7 +537,7 @@ class KayitDondurma(CrudView):
 
                 self.current.output['msgbox'] = {
                     'type': 'warning', "title": 'Bir Hata Oluştu',
-                    "msg": 'Hata Kodu : %s' % (e.message)
+                    "msg": 'Hata Kodu : %s' % e.message
                 }
 
             try:
@@ -555,7 +555,7 @@ class KayitDondurma(CrudView):
 
                 self.current.output['msgbox'] = {
                     'type': 'warning', "title": 'Bir Hata Oluştu',
-                    "msg": 'Öğrenci Rol Değişim Kaydı Başarısız. Hata Kodu : %s' % (e.message)
+                    "msg": 'Öğrenci Rol Değişim Kaydı Başarısız. Hata Kodu : %s' % e.message
                 }
 
             # öğrencinin danışmanına bilgilendirme geçilir
@@ -600,8 +600,9 @@ class BasariDurum(CrudView):
                                                      ogrenci=ogrenci)
         donemler = [d.donem for d in ogrenci_program.OgrenciDonem]
         donemler = sorted(donemler, key=lambda donem: donem.baslangic_tarihi)
+        # donemler = ogrenci_program.tarih_sirasiyla_donemler()
 
-        donem_tablosu = []
+        donem_tablosu = list()
 
         for donem in donemler:
             donem_basari_durumu = [
@@ -609,8 +610,9 @@ class BasariDurum(CrudView):
             ]
             ogrenci_dersler = OgrenciDersi.objects.filter(donem=donem,
                                                           ogrenci_program=ogrenci_program)
-            dersler = []
+            dersler = list()
             for d in ogrenci_dersler:
+                dersler = list()
                 dersler.append(d.ders.ders.kod)
                 dersler.append(d.sube_ders_adi())
                 degerlendirmeler = DegerlendirmeNot.objects.filter(
@@ -631,10 +633,12 @@ class BasariDurum(CrudView):
             donem_tablosu.append(
                 {
                     "key": donem.ad,
+                    "selected": donem.guncel,
                     "objects": donem_basari_durumu
                 }
             )
 
             self.output['objects'] = donem_tablosu
             self.output['meta']['selective_listing'] = True
+            self.output['meta']['selective_listing_title'] = "Dönem Seçiniz"
             self.output['meta']['allow_actions'] = False
