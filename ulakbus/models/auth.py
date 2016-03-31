@@ -102,6 +102,9 @@ class User(Model):
         """
         return self.role_set.node_dict[role_id]
 
+    def send_message(self, title, message):
+        from zengine.notifications import Notify
+        Notify(self.key).set_message(title, message, typ=Notify.Message)
 
 class Permission(Model):
     """Permission modeli
