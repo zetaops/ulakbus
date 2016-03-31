@@ -12,7 +12,7 @@ Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili 
 
 from pyoko.lib.utils import lazy_property
 from .personel import Personel
-from pyoko import Model, field, ListNode
+from pyoko import Model, field, ListNode, LinkProxy
 from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room
@@ -230,6 +230,8 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
+    farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme",
+                                                     default=False, index=True)
     bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
     ects_bolum_kordinator = Role(verbose_name='ECTS Bölüm Koordinator',
                                  reverse_name='ects_koordinator_program')
@@ -279,9 +281,11 @@ class Ders(Model):
     ders_kaynaklari = field.String("Ders Kaynakları", index=True)
     ders_mufredati = field.String("Ders Müfredatı", index=True)
     verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
+    katilim_sarti = field.Integer("Katılım Şartı", index=True)
     program = Program()
     donem = Donem()
     ders_koordinatoru = Personel()
+    yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")
 
     class Degerlendirme(ListNode):
         tur = field.String("Değerlendirme Türü", index=True)
@@ -324,6 +328,25 @@ class Sube(Model):
     okutman = Okutman()
     ders = Ders()
     donem = Donem()
+
+    class NotDonusumTablosu(ListNode):
+        """Not Donusum Tablosu
+
+        Bu tablo, settings seklinde universite geneli icin tanimlanmistir.
+        Eger okutman baska bir not donusum tablosu kullanmak isterse,
+        harflendirme wf da bu tabloyu duzenlerse, tablo bir list node
+        olarak bu modelde saklanir.
+
+        """
+
+        harf = field.String("Harf", index=True, choices="harf_notlari")
+        dortluk_katsayi = field.Float("", choices="dortluk_katsayilari")
+        yuzluk_not_baslangic = field.Float("Başlangıç", index=True)
+        yuzluk_not_bitis = field.Float("Bitis", index=True)
+
+        def __unicode__(self):
+            return '%s %s %s %s' % (
+                self.harf, self.yuzluk_not_baslangic, self.yuzluk_not_bitis, self.dortluk_katsayi)
 
     class Programlar(ListNode):
         programlar = Program()
@@ -536,9 +559,19 @@ class OgrenciProgram(Model):
         aciklama = field.String("Ek Açıklama", index=True, default="-", required=False)
         tamam = field.Boolean("Belge kontrol edildi", index=True, required=True)
 
+    class OgrenciDonem(ListNode):
+        donem = Donem()
+
     def __unicode__(self):
         return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad,
                                     self.program.adi, self.program.yil)
+
+    def tarih_sirasiyla_donemler(self):
+        r = []
+        for ogd in self.OgrenciDonem:
+            r.append((ogd.donem.ad, ogd.donem.baslangic_tarihi))
+        r.sort(key=lambda tup: tup[1])
+        return r
 
 
 class OgrenciDersi(Model):
@@ -549,12 +582,19 @@ class OgrenciDersi(Model):
     Ders alanı Şube modeli ile ilişkilendirilmiştir. Bunun sebebi öğrencilerin ders seçiminin,
     ders ve okutmanın birleştiği şube seçimi olmasıdır. Detaylı bilgiler Şube modelinde bulunabilir.
 
+    Bir öğrencinin devamsızlıktan kalıp kalmadığı devamsizliktan_kalma alanı ile kontrol edilir.
+    Bu alan False olduğu zaman öğrenci devamsızlıktan kalır.
+
     """
 
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
     ders = Sube()
+    donem = Donem()
     ogrenci_program = OgrenciProgram()
     ogrenci = Ogrenci()
+    basari_ortalamasi = field.Float("Ortalama", index=True)
+    harflendirilmis_not = field.String("Harf", index=True)
+    katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -565,6 +605,18 @@ class OgrenciDersi(Model):
 
     def sube_dersi(self):
         """
+        Şubenin bağlı olduğu ders.
+
+        Returns:
+            Şubenin bağlı olduğu ders nesnesini döndürür.
+
+        """
+        return "%s" % self.ders.ders
+
+    sube_dersi.title = 'Ders'
+
+    def sube_ders_adi(self):
+        """
         Şubenin bağlı olduğu ders adı.
 
         Returns:
@@ -573,7 +625,7 @@ class OgrenciDersi(Model):
         """
         return six.text_type(self.ders.ders)
 
-    sube_dersi.title = 'Ders'
+    sube_ders_adi.title = 'Ders'
 
     def __unicode__(self):
         return '%s %s %s' % (self.ders.ders.kod, self.ders.ders.ad, self.alis_bicimi)
@@ -593,7 +645,7 @@ class DersKatilimi(Model):
     """
 
     # TODO: Neden float, soralım?
-    katilim_durumu = field.Float("Katılım Durumu", index=True)
+    katilim_durumu = field.Integer("Katılım Durumu", index=True)
     ders = Sube()
     ogrenci = Ogrenci()
     okutman = Okutman()
@@ -756,8 +808,14 @@ class DegerlendirmeNot(Model):
         app = 'Ogrenci'
         verbose_name = "Not"
         verbose_name_plural = "Notlar"
-        list_fields = ['puan', 'ders']
-        search_fields = ['aciklama', 'puan']
+        list_fields = ['puan', 'ders_adi']
+        search_fields = ['aciklama', 'puan', 'ogrenci_no']
+        list_filters = ['donem', ]
+
+    def ders_adi(self):
+        return "%s" % self.ders.ad
+
+    ders_adi.title = "Ders"
 
     def __unicode__(self):
         return '%s %s' % (self.puan, self.sinav)
@@ -856,11 +914,12 @@ class AkademikTakvim(Model):
     def __unicode__(self):
         return '%s %s' % (self.birim, self.yil)
 
+
 class DonemDanisman(Model):
     """Dönem Danışmanları Modeli
 
-    Dönem, Bölüm ve Program bazlı olarak öğrencilere danışman atanabilecek olan öğretim elemanlarının
-    saklandığı data modelidir.
+    Dönem, Bölüm ve Program bazlı olarak öğrencilere danışman
+    atanabilecek olan öğretim elemanlarının saklandığı data modelidir.
 
     """
 
@@ -878,6 +937,7 @@ class DonemDanisman(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.bolum, self.okutman)
+
 
 class DondurulmusKayit(Model):
     """Dondurulmuş Kayıt Modeli

@@ -27,6 +27,8 @@ from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
 from ulakbus.models.personel import Personel
 from ulakbus.models.auth import Role, AbstractRole, Unit
 from ulakbus.views.ders.ders import prepare_choices_for_model
+from ulakbus.models.ogrenci import OgrenciDersi, Sinav
+from pyoko.exceptions import ObjectDoesNotExist
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -229,6 +231,9 @@ def ogrenci_bilgileri(current):
 
     Bu metod tek adımlık bilgi ekranı hazırlar.
 
+    Args:
+        current: wf current nesnesi
+
     """
 
     current.output['client_cmd'] = ['show', ]
@@ -422,7 +427,7 @@ class OgrenciMezuniyet(CrudView):
         except Exception as e:
             self.current.output['msgbox'] = {
                 'type': 'warning', "title": 'Bir Hata Oluştu',
-                "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % (e.message)
+                "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % e.message
             }
 
 
@@ -493,7 +498,7 @@ class KayitDondurma(CrudView):
         except Exception as e:
             self.current.output['msgbox'] = {
                 'type': 'warning', "title": 'Bir Hata Oluştu',
-                "msg": 'Hata Kodu : %s' % (e.message)
+                "msg": 'Hata Kodu : %s' % e.message
             }
 
     def ogrenci_kayit_dondur(self):
@@ -570,8 +575,66 @@ class KayitDondurma(CrudView):
 
     @form_modifier
     def kayit_dondurma_list_form_inline_edit(self, serialized_form):
-        """KayitDondurmaForm'da seçim ve açıklama alanlarına inline edit özelliği sağlayan method.
+        """KayitDondurmaForm'da seçim ve açıklama alanlarına inline
+        edit özelliği sağlayan method.
+
+        Args:
+            serialized_form: serialized form
 
         """
         if 'Donemler' in serialized_form['schema']['properties']:
             serialized_form['inline_edit'] = ['secim', 'aciklama']
+
+
+class BasariDurum(CrudView):
+    class Meta:
+        model = "OgrenciProgram"
+
+    def doneme_bazli_not_tablosu(self):
+
+        unit = self.current.role.unit
+        program = Program.objects.get(birim=unit)
+
+        ogrenci = self.current.role.get_user().ogrenci
+        ogrenci_program = OgrenciProgram.objects.get(program=program,
+                                                     ogrenci=ogrenci)
+        donemler = [d.donem for d in ogrenci_program.OgrenciDonem]
+        donemler = sorted(donemler, key=lambda donem: donem.baslangic_tarihi)
+
+        donem_tablosu = []
+
+        for donem in donemler:
+            donem_basari_durumu = [
+                ['Ders Kodu', 'Ders Adi', 'Sinav Notlari', 'Ortalama', 'Durum']
+            ]
+            ogrenci_dersler = OgrenciDersi.objects.filter(donem=donem,
+                                                          ogrenci_program=ogrenci_program)
+            dersler = []
+            for d in ogrenci_dersler:
+                dersler.append(d.ders.ders.kod)
+                dersler.append(d.sube_ders_adi())
+                degerlendirmeler = DegerlendirmeNot.objects.filter(
+                    ogrenci_no=ogrenci_program.ogrenci_no, donem=donem.ad, ders=d.ders.ders)
+                notlar = [(d.sinav.get_tur_display(), d.puan) for d in degerlendirmeler]
+                if len(notlar) > 0:
+                    dersler.append(
+                        " - ".join(["**%s:** %s" % (sinav, puan) for sinav, puan in notlar]))
+                    notlar = list(zip(*notlar)[1])
+                    ortalama = sum(notlar) / len(notlar)
+                    dersler.append("{0:.2f}".format(ortalama))
+                    dersler.append('Gecti' if ortalama > 50 else 'Kaldi')
+                else:
+                    dersler.append('')
+                    dersler.append('')
+                    dersler.append('')
+                donem_basari_durumu.append({"fields": dersler})
+            donem_tablosu.append(
+                {
+                    "key": donem.ad,
+                    "objects": donem_basari_durumu
+                }
+            )
+
+            self.output['objects'] = donem_tablosu
+            self.output['meta']['selective_listing'] = True
+            self.output['meta']['allow_actions'] = False

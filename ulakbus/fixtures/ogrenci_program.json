@@ -24,5 +24,25 @@
       "tr": "Diğer",
       "en": ""
     }
+  },
+  "giris_puan_turleri": {
+    "1": {
+      "tr": "Matematik",
+      "en": "Math"
+    },
+    "2": {
+      "tr": "Sosyal",
+      "en": "Sosyal"
+    }
+  },
+  "ogrenci_program_durumlar": {
+    "1": {
+      "tr": "Aktif",
+      "en": "Active"
+    },
+    "2": {
+      "tr": "Dondurulmus",
+      "en": "Postponed"
+    }
   }
 }
