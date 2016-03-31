@@ -612,7 +612,7 @@ class OgrenciDersi(Model):
             Şubenin bağlı olduğu ders nesnesini döndürür.
 
         """
-        return self.ders.ders
+        return "%s" % self.ders.ders
 
     sube_dersi.title = 'Ders'
 
@@ -809,8 +809,14 @@ class DegerlendirmeNot(Model):
         app = 'Ogrenci'
         verbose_name = "Not"
         verbose_name_plural = "Notlar"
-        list_fields = ['puan', 'ders']
-        search_fields = ['aciklama', 'puan']
+        list_fields = ['puan', 'ders_adi']
+        search_fields = ['aciklama', 'puan', 'ogrenci_no']
+        list_filters = ['donem',]
+
+    def ders_adi(self):
+        return "%s" % self.ders.ad
+
+    ders_adi.title = "Ders"
 
     def __unicode__(self):
         return '%s %s' % (self.puan, self.sinav)

@@ -427,19 +427,19 @@ class BasariDurum(CrudView):
 
         for donem in donemler:
             donem_basari_durumu = [
-                ['Ders Kodu', 'Ders Adi', 'Sinav Notlari', 'Ortalama', 'Not', 'Durum']
+                ['Ders Kodu', 'Ders Adi', 'Sinav Notlari', 'Ortalama', 'Durum']
             ]
             ogrenci_dersler = OgrenciDersi.objects.filter(donem=donem,
                                                           ogrenci_program=ogrenci_program)
             dersler = []
             for d in ogrenci_dersler:
-                dersler.append(d.sube_ders_adi())
                 dersler.append(d.ders.ders.kod)
+                dersler.append(d.sube_ders_adi())
                 degerlendirmeler = DegerlendirmeNot.objects.filter(
-                    ogrenci_no=ogrenci_program.ogrenci_no, donem=donem, ders=d)
-                notlar = [(d.sinav.tur, d.puan) for d in degerlendirmeler]
+                    ogrenci_no=ogrenci_program.ogrenci_no, donem=donem.ad, ders=d.ders.ders)
+                notlar = [(d.sinav.get_tur_display(), d.puan) for d in degerlendirmeler]
                 if len(notlar) > 0:
-                    dersler.append(" - ".join(["%s: %s" % (sinav, puan) for sinav, puan in notlar]))
+                    dersler.append(" - ".join(["**%s:** %s" % (sinav, puan) for sinav, puan in notlar]))
                     notlar = list(zip(*notlar)[1])
                     ortalama = sum(notlar) / len(notlar)
                     dersler.append("{0:.2f}".format(ortalama))
@@ -448,7 +448,7 @@ class BasariDurum(CrudView):
                     dersler.append('')
                     dersler.append('')
                     dersler.append('')
-                donem_basari_durumu.append(dersler)
+                donem_basari_durumu.append({"fields": dersler})
             donem_tablosu.append(
                 {
                     "key": donem.ad,
@@ -457,20 +457,5 @@ class BasariDurum(CrudView):
             )
 
             self.output['objects'] = donem_tablosu
-
-            # {
-            # 	"objects": [
-            # 		{
-            # 			"key": "x donemi",
-            # 			"objects": [[sube, ders_adi, sinav], [1, tr, 100]] // normalde listeleme icin gonderilen objects buraya ayni key ismiyle eklenecek
-            # 		},
-            # 		{
-            # 			"key": "y donemi",
-            # 			"objects": []
-            # 		}
-            # 	],
-            # 	"meta": {
-            # 		"selective_listing": true // yukaridaki sablonun kullanilabilmesi icin bunun eklenmesi gerekli
-            # 	}
-            # }
-            #
+            self.output['meta']['selective_listing'] = True
+            self.output['meta']['allow_actions'] = False
