@@ -63,16 +63,19 @@ class Notification(BaseView):
     def __init__(self, current):
         super(Notification, self).__init__(current)
 
-        if 'read' in current.input:
-            self.mark_as_read()
+        # if 'read' in current.input:
+        #     self.mark_as_read()
 
         notifies = self.current.msg_cache.get_all()
         self.output['notifications'] = list(notifies)
+        self.output['cmd'] = 'notification'
+        for n in notifies:
+            self.current.msg_cache.remove_item(n)
 
-    def mark_as_read(self):
-        read_messages = self.current.input['read']
-        for msg in read_messages:
-            self.current.msg_cache.remove_item(msg)
+    # def mark_as_read(self):
+    #     read_messages = self.current.input['read']
+    #     for msg in read_messages:
+    #         self.current.msg_cache.remove_item(msg)
 
 
 class GetCurrentUser(BaseView):
