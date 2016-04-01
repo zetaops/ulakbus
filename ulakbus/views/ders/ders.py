@@ -378,7 +378,6 @@ class DersSubelendirme(CrudView):
             sube.ad = s['ad']
             sube.donem = Donem.guncel_donem()
             sube.save()
-            sube.sube_sinavlarini_olustur()
             if is_new:
                 self.current.task_data['just_created'].append((ders, sube.key))
         # mevcut subelerde kalanlari sil
@@ -401,12 +400,12 @@ class DersSubelendirme(CrudView):
         ders_key = self.current.task_data['ders_key']
 
         title = "Şubelendirme"
-        bolum_baskani = "%s %s" % (self.current.user.personel.ad, self.current.user.personel.soyad)
+        bolum_baskani = "%s %s" % (self.current.user.name, self.current.user.surname)
         msg = "Bölum Başkanı %s tarafından şubelerinizde degisiklikler yapilmistir." % bolum_baskani
         okutmanlar = []
 
         def notify(okutman):
-            Notify(okutman.okutman.user.key).set_message(title=title, msg=msg, typ=Notify.Message)
+            Notify(okutman.okutman.user.key).set_message(title=title, msg=msg, typ=Notify.TaskInfo)
             okutmanlar.append(okutman.__unicode__())
 
         for ders, sube_key in just_created:

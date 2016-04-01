@@ -640,5 +640,5 @@ class BasariDurum(CrudView):
 
             self.output['objects'] = donem_tablosu
             self.output['meta']['selective_listing'] = True
-            self.output['meta']['selective_listing_title'] = "Dönem Seçiniz"
+            self.output['meta']['selective_listing_label'] = "Dönem Seçiniz"
             self.output['meta']['allow_actions'] = False
