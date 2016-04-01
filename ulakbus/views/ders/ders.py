@@ -565,6 +565,7 @@ class NotGirisi(CrudView):
         _form.kaydet = fields.Button("Önizleme", cmd="not_kontrol")
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def not_kontrol(self):
         """Okutmanların girmiş olduğu öğrenci notlarının listelenmesini
