@@ -118,6 +118,7 @@ VIEW_URLS.update({
     'notify': 'ulakbus.views.system.Notification',
     'get_current_user': 'ulakbus.views.system.GetCurrentUser',
     'dashboard': 'ulakbus.views.system.UlakbusMenu',
+    'menu': 'ulakbus.views.system.UlakbusMenu',
 })
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')

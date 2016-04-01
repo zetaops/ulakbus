@@ -70,6 +70,7 @@ class User(Model):
         """
         self.password = pbkdf2_sha512.encrypt(raw_password, rounds=10000,
                                               salt_size=10)
+
     def pre_save(self):
         """ encrypt password if not already encrypted """
         if self.password and not self.password.startswith('$pbkdf2'):
@@ -105,6 +106,7 @@ class User(Model):
     def send_message(self, title, message):
         from zengine.notifications import Notify
         Notify(self.key).set_message(title, message, typ=Notify.Message)
+
 
 class Permission(Model):
     """Permission modeli
@@ -406,7 +408,7 @@ class LimitedPermissions(Model):
     ip'lerden gelen requestlere cevap verecek şekilde kısıtlanır.
 
     """
-    restrictive = field.Boolean("Sınırlandırıcı",default=False)
+    restrictive = field.Boolean("Sınırlandırıcı", default=False)
     time_start = field.String("Başlama Tarihi", index=True)
     time_end = field.String("Bitiş Tarihi", index=True)
 
@@ -436,6 +438,7 @@ class AuthBackend(object):
     için kullanılan bir dizi metodu içerir.
 
     """
+
     def __init__(self, current):
         self.session = current.session
         self.current = current
@@ -571,6 +574,7 @@ def clear_perm_cache(sender, *args, **kwargs):
     elif sender.model_class.__name__ == 'AbstractRole':
         PermissionCache.flush()
 
+
 def ulakbus_permissions():
     """Bu metot Ulakbus'e ait tüm yetkileri birleştirerek döner.
 
@@ -582,3 +586,4 @@ def ulakbus_permissions():
     from ulakbus.views.reports import ReporterRegistry
     report_perms = ReporterRegistry.get_permissions()
     return default_perms + report_perms
+
