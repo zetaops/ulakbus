@@ -373,6 +373,12 @@ class Sube(Model):
             sinav = Sinav(tur=dg.tur, sube=self, ders=self.ders)
             sinav.save()
 
+    def pre_save(self):
+        self.just_created = self.exist
+
+    def post_save(self):
+        if self.just_created:
+            self.sube_sinavlarini_olustur()
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.kontenjan)
@@ -621,7 +627,6 @@ class OgrenciDersi(Model):
 
     def pre_save(self):
         self.donem = self.ders.donem
-
 
     def sube_dersi(self):
         """
