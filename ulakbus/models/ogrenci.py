@@ -381,7 +381,7 @@ class Sube(Model):
             self.sube_sinavlarini_olustur()
 
     def __unicode__(self):
-        return '%s %s' % (self.ad, self.kontenjan)
+        return '%s - %s %s' % (self.ders.ad, self.ad, self.kontenjan)
 
 
 class Sinav(Model):
