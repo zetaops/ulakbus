@@ -46,13 +46,13 @@
       <bpmn2:incoming>SequenceFlow_47</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_43">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_49">
       <bpmn2:incoming>SequenceFlow_38</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_43</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_49</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_43" name="" sourceRef="ExclusiveGateway_1" targetRef="ders_duzenle_form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">flow</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "ders_duzenle_form"]]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_49" name="" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_1"/>
     <bpmn2:endEvent id="EndEvent_1">
