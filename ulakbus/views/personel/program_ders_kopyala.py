@@ -32,14 +32,14 @@ class ProgramKopyalama(CrudView):
         Programlar veritabanından çekilip, açılır menu içine
         doldurulur.
         """
-        guncel_donem = Donem.objects.filter(guncel=True)[0]
-        ogrenci_id = self.current.input['id']
-        self.current.task_data['ogrenci_id'] = ogrenci_id
-        self.current.task_data['donem_id'] = guncel_donem.key
+        guncel_donem = Program.objects.filter()
+        #ogrenci_id = self.current.input['id']
+        #self.current.task_data['ogrenci_id'] = ogrenci_id
+        #self.current.task_data['donem_id'] = guncel_donem.key
 
         _form = ProgramSecimForm(current=self.current, title="Kopyalanacak Programı Seçiniz")
-        _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
-        _form.program = fields.Integer(choices=_choices)
+        #_choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
+        #_form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
 
     def senato_no_gir(self):
