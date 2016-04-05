@@ -22,27 +22,27 @@
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="program_sec_form"/>
-    <bpmn2:userTask id="program_sec_form" camunda:assignee="personel.ProgramKopyalama.program_sec" name="Program Seç Form">
+    <bpmn2:userTask id="program_sec_form" camunda:assignee="personel.program_ders_kopyala.ProgramKopyalama.program_sec" name="Program Seç Form">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:userTask id="program_version_bilgi_giris" name="Senato Numarasi Gir">
+    <bpmn2:userTask id="program_version_bilgi_giris" camunda:assignee="personel.program_ders_kopyala.ProgramKopyalama.senato_no_gir" name="Senato Numarasi Gir">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_47</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_47" name="" sourceRef="program_version_bilgi_giris" targetRef="program_version_kaydet"/>
-    <bpmn2:userTask id="ders_tablo" name="Ders Tablo">
+    <bpmn2:userTask id="ders_tablo" camunda:assignee="personel.program_ders_kopyala.ProgramKopyalama.ders_tablo" name="Ders Tablo">
       <bpmn2:incoming>SequenceFlow_34</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_37</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_38</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_38" name="" sourceRef="ders_tablo" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:serviceTask id="ders_kopyala" name="Ders Kopyala">
+    <bpmn2:serviceTask id="ders_kopyala" camunda:class="personel.program_ders_kopyala.ProgramKopyalama.ders_kopyala" name="Ders Kopyala">
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_34</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_34" name="" sourceRef="ders_kopyala" targetRef="ders_tablo"/>
-    <bpmn2:serviceTask id="program_version_kaydet" name="Senato Numarasi Kaydet">
+    <bpmn2:serviceTask id="program_version_kaydet" camunda:class="personel.program_ders_kopyala.ProgramKopyalama.senato_no_kaydet" name="Senato Numarasi Kaydet">
       <bpmn2:incoming>SequenceFlow_47</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:serviceTask>
@@ -56,12 +56,12 @@
     <bpmn2:endEvent id="EndEvent_1">
       <bpmn2:incoming>SequenceFlow_49</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="ders_duzenle_form" name="Ders Düzenle Form">
+    <bpmn2:userTask id="ders_duzenle_form" camunda:assignee="personel.program_ders_kopyala.ProgramKopyalama.ders_duzenle_form" name="Ders Düzenle Form">
       <bpmn2:incoming>SequenceFlow_43</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_36</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_36" name="" sourceRef="ders_duzenle_form" targetRef="ders_duzenle"/>
-    <bpmn2:serviceTask id="ders_duzenle" name="Ders Düzenle">
+    <bpmn2:serviceTask id="ders_duzenle" camunda:class="personel.program_ders_kopyala.ProgramKopyalama.ders_duzenle" name="Ders Düzenle">
       <bpmn2:incoming>SequenceFlow_36</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_37</bpmn2:outgoing>
     </bpmn2:serviceTask>
