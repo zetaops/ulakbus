@@ -60,4 +60,3 @@ class ProgramKopyalama(CrudView):
     def ders_duzenle(self):
         pass
 
-    
