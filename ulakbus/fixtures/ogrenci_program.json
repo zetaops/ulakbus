@@ -37,12 +37,134 @@
   },
   "ogrenci_program_durumlar": {
     "1": {
-      "tr": "Aktif",
-      "en": "Active"
+      "tr": "Aktif Öğrenci",
+      "en": "Active Student"
     },
     "2": {
-      "tr": "Dondurulmus",
+      "tr": "İzinli/Kayıt Dondurma",
       "en": "Postponed"
+    },
+    "3": {
+      "tr": "Cezalı",
+      "en": ""
+    },
+    "7": {
+      "tr": "Beklemeli",
+      "en": ""
+    },
+    "10": {
+      "tr": "Pasif Öğrenciler(Kayıt Yenilememiş)",
+      "en": ""
+    },
+    "11": {
+      "tr": "Aktif Öğrenci-Farabi(Giden)",
+      "en": ""
+    },
+    "12": {
+      "tr": "Aktif Öğrenci-Farabi(Gelen)",
+      "en": ""
+    },
+    "13": {
+      "tr": "Aktif Öğrenci-Mevlana(Giden)",
+      "en": ""
+    },
+    "14": {
+      "tr": "Aktif Öğrenci-Mevlana(Gelen)",
+      "en": ""
+    },
+    "15": {
+      "tr": "Aktif Öğrenci-Erasmus(Giden)",
+      "en": ""
+    },
+    "16": {
+      "tr": "Aktif Öğrenci-Erasmus(Gelen)",
+      "en": ""
+    },
+    "17": {
+      "tr": "Aktif Özel Öğrenci(Giden)",
+      "en": ""
+    },
+    "18": {
+      "tr": "Aktif Özel Öğrenci(Gelen)",
+      "en": ""
+    },
+    "19": {
+      "tr": "Aktif Öğrenci-Diğer değişimler-Yurtdışı(Giden)",
+      "en": ""
+    },
+    "20": {
+      "tr": "Aktif Öğrenci-Diğer değişimler-Yurtdışı(Gelen)",
+      "en": ""
+    },
+    "21": {
+      "tr": "Kaydı silinmiştir.",
+      "en": ""
     }
-  }
+  },
+    "ayrilma_nedeni": {
+      "4": {
+        "tr": "Disiplin cezası",
+        "en": ""
+      },
+      "5": {
+        "tr": "Kendi isteği",
+        "en": ""
+      },
+      "6": {
+        "tr": "Diğer",
+        "en": ""
+      },
+      "8": {
+        "tr": "Vefat",
+        "en": ""
+      },
+      "9": {
+        "tr": "Mezuniyet",
+        "en": ""
+      },
+      "11": {
+        "tr": "Yatay Geçiş-Üniversite İçi",
+        "en": ""
+      },
+      "12": {
+        "tr": "Yatay Geçiş-Üniversite Dışı",
+        "en": ""
+      },
+      "13": {
+        "tr": "Yabancı Dil Hazırlık Sınıfında Başarısızlık",
+        "en": ""
+      },
+      "14": {
+        "tr": "Lisans Programından Önlisans Diploması Alarak Mezuniyet",
+        "en": ""
+      },
+      "15": {
+        "tr": "Zorunlu Yabancı Dil Hazırlık Sınıflarında Başarısız olan Öğrencilerin Türkçe Öğretim Yapan Yükseköğretim Programlarına Yerleştirilmeleri nedeniyle ayrılanlar",
+        "en": ""
+      },
+      "16": {
+        "tr": "Farabi",
+        "en": ""
+      },
+      "17": {
+        "tr": "Mevlana",
+        "en": ""
+      },
+      "18": {
+        "tr": "Erasmus",
+        "en": ""
+      },
+      "19": {
+        "tr": "Özel Öğrenci",
+        "en": ""
+      },
+      "20": {
+        "tr": "Diğer Değişimler, Yurtdışı",
+        "en": ""
+      },
+      "21": {
+        "tr": "Denklik Lisans tamamlanması sona eren",
+        "en": ""
+      }
+    }
 }
