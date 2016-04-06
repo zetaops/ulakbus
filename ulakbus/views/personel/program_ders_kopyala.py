@@ -7,16 +7,17 @@
 
 from zengine.views.crud import CrudView
 from zengine.forms import fields
-from zengine import forms
+from zengine.forms import JsonForm
 from ulakbus.views.ders.ders import prepare_choices_for_model
-from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program,Donem
+from ulakbus.models.ogrenci import Program
 
-class ProgramSecimForm(forms.JsonForm):
+class ProgramSecimForm(JsonForm):
     """
     ``DanismanAtama`` sınıfı için form olarak kullanılacaktır.
     """
 
     sec = fields.Button("Seç")
+
 
 class ProgramKopyalama(CrudView):
     """Danışman Atama
@@ -25,22 +26,19 @@ class ProgramKopyalama(CrudView):
     """
 
     class Meta:
-        model = "OgrenciProgram"
+        model = "Program"
 
     def program_sec(self):
         """Program Seçim Adımı
         Programlar veritabanından çekilip, açılır menu içine
         doldurulur.
         """
-        guncel_donem = Program.objects.filter()
-        #ogrenci_id = self.current.input['id']
-        #self.current.task_data['ogrenci_id'] = ogrenci_id
-        #self.current.task_data['donem_id'] = guncel_donem.key
-
         _form = ProgramSecimForm(current=self.current, title="Kopyalanacak Programı Seçiniz")
-        #_choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
+        #_choices = prepare_choices_for_model(Program)
         #_form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
+
+
 
     def senato_no_gir(self):
         pass
