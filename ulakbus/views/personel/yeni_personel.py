@@ -8,11 +8,12 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 # Yeni Personel Ekle WF adimlarini icerir.
-from ulakbus.views.ders.ders import prepare_choices_for_model
-from zengine.views.crud import CrudView
+from ulakbus.lib.view_helpers import prepare_titlemap_for_model, prepare_choices_for_model
+from zengine.views.crud import CrudView, form_modifier
 
 from zengine.forms import JsonForm, fields
 from ulakbus.models.personel import Kadro
+from collections import OrderedDict
 
 
 # Views
@@ -122,18 +123,57 @@ class Atama(CrudView):
                                title= "%s %s için Atama Yapılacak Kadroyu Seçin" %
                                       (self.current.task_data['kimlik_bilgileri']['ad'],
                                        self.current.task_data['kimlik_bilgileri']['soyad']))
-        _form.Meta.help_text = 'Atanacak Kadro Seçiniz'
-        _form.kadro = fields.Integer("Atanacak Kadro Seçiniz",
-                                    choices=prepare_choices_for_model(Kadro, durum=2), type='typeahead')
-        _form.kadro.solr_type = 'typeahaead'
+        _form.kadro = fields.Integer("Atanacak Kadro Seçiniz", type='typeahead')
+        self.choices = prepare_titlemap_for_model(Kadro, durum=2)
 
-        _form.sec = fields.Button("Seç", cmd="sec")
-        _form.atama_yapma = fields.Boolean("Atama Yapmadan Kaydet", cmd="atama_yapma", type='confirm', confirm_message='Atama yapmadan kaydetmek istediğinize eminmisiniz?')
+        _form.sec = fields.Button("Seç", flow="sec", cmd="sec")
+        _form.atama_yapma = fields.Boolean("Atama Yapmadan Kaydet", flow="atama_yapmadan_gec", cmd="atama_yapmadan_gec", type='confirm', confirm_message='Atama yapmadan kaydetmek istediğinize eminmisiniz?')
         self.form_out(_form)
 
+    @form_modifier
+    def change_form_elements(self, serialized_form):
+        """
+        This function edits form elements as can be understood from the name of its decorator
+        :param serialized_form:
+        """
+        if 'kadro' in serialized_form['schema']['properties']:
+            serialized_form['schema']['properties']['kadro']['titleMap'] = self.choices
 
-    def show_view(self):
-        pass
+
+
+    def yeni_ekle_kontrol(self):
+
+        _form = JsonForm(current=self.current, title="Bilgi Kontrol Ekranı")
+        _form.Meta.help_text = 'Form Bilgilerini Kontrol Ediniz'
+
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'Personel Kayıt Uyarısı',
+            "msg": 'Lütfen Personel bilgilerinin doğruluğunu kontrol ediniz. Kayıt işlemi geri döndürülemez.'
+        }
+        _form.kaydet = fields.Button("Kaydet (Bu işlem geri alınamaz!)",cmd="kaydet",btn='success')
+        _form.iptal = fields.Button("İptal", cmd="iptal", flow="iptal")
+
+
+        kimlik_bilgileri = """**Adı**: {ad}
+        **Soyad**: {soyad}
+        **Doğum Tarihi**: {dogum_tarihi}
+        """.format(**self.current.task_data['kimlik_bilgileri'])
+
+        adres_bilgileri = """**İl**: {il}
+        **İlçe**: {ilce}
+        **Adres**: {adres}
+        """.format(**self.current.task_data['adres_bilgileri'])
+
+        output = [{'Kişi Bilgileri':kimlik_bilgileri, 'Adres Bilgileri':adres_bilgileri}]
+
+        self.current.output['object'] = {
+            "type": "table-multiRow",
+            "title":"Kişi Bilgileri",
+            "fields": output,
+            "actions": False
+        }
+        self.form_out(_form)
+
 
     def do_view(self):
         pass
