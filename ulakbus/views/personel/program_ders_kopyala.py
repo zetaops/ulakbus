@@ -9,7 +9,7 @@ from zengine.views.crud import CrudView
 from zengine.forms import fields
 from zengine.forms import JsonForm
 from ulakbus.views.ders.ders import prepare_choices_for_model
-from ulakbus.models.ogrenci import Program
+from ulakbus.models.ogrenci import Program, Sube
 
 class ProgramSecimForm(JsonForm):
     """
@@ -26,7 +26,7 @@ class ProgramKopyalama(CrudView):
     """
 
     class Meta:
-        model = "Program"
+        model = "OgrenciProgram"
 
     def program_sec(self):
         """Program Seçim Adımı
@@ -34,13 +34,14 @@ class ProgramKopyalama(CrudView):
         doldurulur.
         """
         _form = ProgramSecimForm(current=self.current, title="Kopyalanacak Programı Seçiniz")
-        #_choices = prepare_choices_for_model(Program)
-        #_form.program = fields.Integer(choices=_choices)
+        _choices = prepare_choices_for_model(Sube)
+        _form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
 
 
 
     def senato_no_gir(self):
+         _form = ProgramSecimForm(current=self.current, title="Kopyalanacak Programı Seçiniz")
         pass
 
     def senato_no_kaydet(self):
