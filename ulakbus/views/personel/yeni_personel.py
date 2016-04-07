@@ -14,95 +14,131 @@ from zengine.views.crud import CrudView, form_modifier
 from zengine.forms import JsonForm, fields
 from ulakbus.models.personel import Kadro
 from collections import OrderedDict
+from ulakbus.models.personel import Personel
 
 
 # Views
 class YeniPersonelEkle(CrudView):
-
     class Meta:
-        model='Personel'
+        model = 'Personel'
 
     def yeni_personel_form(self):
-        _form =  YeniPersonelTcknForm(current=self.current)
+        _form = YeniPersonelTcknForm(current=self.current)
         self.form_out(_form)
 
     def hitap_bilgileri_getir(self):
         tckn = str(self.current.input['form']['tckn'])
         # mernis servisi henuz hazir degil
-#        from ulakbus.services.zato_wrapper import HitapHizmetCetveliGetir
-#        hizmet_cetveli = HitapHizmetCetveliGetir(tckn=tckn)
-#        response = hizmet_cetveli.zato_request()
+        #        from ulakbus.services.zato_wrapper import HitapHizmetCetveliGetir
+        #        hizmet_cetveli = HitapHizmetCetveliGetir(tckn=tckn)
+        #        response = hizmet_cetveli.zato_request()
         # bu sebeple response elle olusturuyoruz.
 
-        #response = {"ad": "Kamil", "soyad": "Soylu", "tckn": "12345678900", "dogum_yeri": "Afyon",
+        # response = {"ad": "Kamil", "soyad": "Soylu", "tckn": "12345678900", "dogum_yeri": "Afyon",
         #            "dogum_tarihi": "10.10.1940"}
         self.current.task_data['hitap_tamam'] = True
-        self.current.task_data['hizmet_cetveli'] = {}#response
+        self.current.task_data['hizmet_cetveli'] = {}  # response
         self.current.task_data['tckn'] = tckn
 
         self.current.set_message(title='%s TC no için Hitap servisi başlatıldı' % tckn,
-                            msg='', typ=1, url="/wftoken/%s" % self.current.token)
+                                 msg='', typ=1, url="/wftoken/%s" % self.current.token)
 
     def mernis_kimlik_bilgileri_getir(self):
         tckn = self.current.input['form']['tckn']
-        # mernis servisi henuz hazir degil
-        # from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
-        # mernis_bilgileri = MernisKimlikBilgileriGetir(tckn=tckn)
-        # response = mernis_bilgileri.zato_request()
-        # bu sebeple response elle olusturuyoruz.
 
-        response = {"ad": "Kamil", "soyad": "Soylu", "tckn": "12345678900", "dogum_yeri": "Afyon",
-                    "dogum_tarihi": "10.10.1940"}
-        self.current.task_data['mernis_tamam'] = True
-        self.current.task_data['kimlik_bilgileri'] = response
+        # Personelin daha önce bulunup bulunmadığını kontrol et
+        try:
+            Personel.objects.get(tckn=tckn)
+            self.current.task_data['mernis_tamam'] = False
+            self.current.task_data['hata_msg'] = "Personel Daha Önce Kaydedilmiş"
+        except:
+            from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir, MernisCuzdanBilgileriGetir
+            mernis_bilgileri = MernisKimlikBilgileriGetir(tckn=str(tckn))
+            response = mernis_bilgileri.zato_request()
+            self.current.task_data['mernis_tamam'] = True
+            self.current.task_data['kimlik_bilgileri'] = response
+            mernis_bilgileri = MernisCuzdanBilgileriGetir(tckn=str(tckn))
+            response = mernis_bilgileri.zato_request()
+            self.current.task_data['cuzdan_tamam'] = True
+            self.current.task_data['cuzdan_bilgileri'] = response
+            self.current.task_data['tckn'] = tckn
 
-        self.current.set_message(title='%s TC no için Mernis servisi başlatıldı' % tckn,
-                            msg='', typ=1, url="/wftoken/%s" % self.current.token)
+            self.current.set_message(title='%s TC no için Mernis servisi başlatıldı' % tckn,
+                                     msg='', typ=1, url="/wftoken/%s" % self.current.token)
 
-
-    def mernis_adres_bilgileri_getir(self,tckn=None):
-        if tckn:
+    def mernis_adres_bilgileri_getir(self, tckn=None):
+        if not tckn:
             tckn = self.current.input['form']['tckn']
         # mernis servisi henuz hazir degil
-        # from ulakbus.services.zato_wrapper import MernisAdresBilgileriGetir
-        # mernis_bilgileri = MernisAdresBilgileriGetir(tckn=tckn)
-        # response = mernis_bilgileri.zato_request()
+        from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
+        mernis_bilgileri = KPSAdresBilgileriGetir(tckn=str(tckn))
+        response = mernis_bilgileri.zato_request()
         # bu sebeple response elle olusturuyoruz.
-        response = {"il": "Konya", "ilce": "Meram", "adres": "Meram Caddesi No4 Meram Konya"}
+        # response = {"il": "Konya", "ilce": "Meram", "adres": "Meram Caddesi No4 Meram Konya"}
 
         self.current.task_data['adres_tamam'] = True
         self.current.task_data['adres_bilgileri'] = response
 
         return response
 
+    def yeni_ekle_kontrol(self):
+        _form = JsonForm(current=self.current, title="Bilgi Kontrol Ekranı")
 
-class KimlikBilgileri(CrudView):
-    def show_view(self):
-        form = KimlikBilgileriForm(current=self.current)
-        form.ad = self.current.input['kimlik_bilgileri']['ad']
-        form.ad = self.current.input['kimlik_bilgileri']['soyad']
-        form.ad = self.current.input['kimlik_bilgileri']['tckn']
-        form.ad = self.current.input['kimlik_bilgileri']['dogum_yeri']
-        form.ad = self.current.input['kimlik_bilgileri']['dogum_tarihi']
-        self.current.output['forms'] = form.serialize()
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'Personel Kayıt Uyarısı',
+            "msg": 'Lütfen Personel bilgilerinin doğruluğunu kontrol ediniz. Kayıt işlemi geri döndürülemez.'
+        }
+        _form.kaydet = fields.Button("Kaydet (Bu işlem geri alınamaz!)", cmd="kaydet", btn='success')
+        _form.iptal = fields.Button("İptal", cmd="iptal", flow="iptal")
 
-    def do_view(self):
-        from ulakbus.models.personel import Personel
+        kimlik_bilgileri = """**Adı**: {ad}
+        **Soyad**: {soyad}
+        **Doğum Tarihi**: {dogum_tarihi}
+        """.format(**self.current.task_data['kimlik_bilgileri'])
+
+        adres_bilgileri = """**İl**: {ikamet_il}
+        **İlçe**: {ikamet_ilce}
+        **Adres**: {ikamet_adresi}
+        """.format(**self.current.task_data['adres_bilgileri'])
+
+        output = [{'Kişi Bilgileri': kimlik_bilgileri, 'Adres Bilgileri': adres_bilgileri}]
+
+        self.current.output['object'] = {
+            "type": "table-multiRow",
+            "title": "Kişi Bilgileri",
+            "fields": output,
+            "actions": False
+        }
+        self.form_out(_form)
+
+    def kaydet(self):
         yeni_personel = Personel()
-        yeni_personel.tckn = self.current.input['form']['tckn']
+        yeni_personel.tckn = self.current.task_data['tckn']
 
-        nufus_kayitlari = yeni_personel.NufusKayitlari()
-        nufus_kayitlari.ad = self.current.input['form']['ad']
-        nufus_kayitlari.soyad = self.current.input['form']['soyad']
-        nufus_kayitlari.dogum_tarihi = self.current.input['form']['dogum_tarihi']
+        # Task data içinde gelen bilgiler birleştirilecek
+        personel_data = {}
+        personel_data.update(self.current.task_data['kimlik_bilgileri'])
+        personel_data.update(self.current.task_data['cuzdan_bilgileri'])
+        personel_data.update(self.current.task_data['adres_bilgileri'])
+
+        for key in personel_data:
+            setattr(yeni_personel, key, personel_data[key])
+
         yeni_personel.save()
 
-        self.current['task_data']['tckn'] = self.current.input['form']['tckn']
-
+    def hata_goster(self):
+        if self.current.task_data['hata_msg']:
+            msg = self.current.task_data['hata_msg']
+        else:
+            msg = "Bilinmeyen bir hata oluştu :( sebebini biliyorsanız bizede söyleyinde düzeltelim"
+        self.current.output['msgbox'] = {
+            'type': 'error', "title": 'İşlem Başarısız',
+            "msg": msg
+        }
 
 class IletisimveEngelliDurumBilgileri(CrudView):
     def show_view(self):
-        mernis_adres = ""#mernis_adres_bilgileri_getir(self.current.input['tckn'])
+        mernis_adres = ""  # mernis_adres_bilgileri_getir(self.current.input['tckn'])
         form = IletisimveEngelliDurumBilgileriForm()
         form.ikamet_adresi = mernis_adres['adres']
         form.il = mernis_adres['il']
@@ -114,20 +150,21 @@ class IletisimveEngelliDurumBilgileri(CrudView):
 
 
 class Atama(CrudView):
-
     class Meta:
-        model='Atama'
+        model = 'Atama'
 
     def kadro_sec_form(self):
         _form = JsonForm(current=self.current,
-                               title= "%s %s için Atama Yapılacak Kadroyu Seçin" %
-                                      (self.current.task_data['kimlik_bilgileri']['ad'],
-                                       self.current.task_data['kimlik_bilgileri']['soyad']))
+                         title="%s %s için Atama Yapılacak Kadroyu Seçin" %
+                               (self.current.task_data['kimlik_bilgileri']['ad'],
+                                self.current.task_data['kimlik_bilgileri']['soyad']))
         _form.kadro = fields.Integer("Atanacak Kadro Seçiniz", type='typeahead')
         self.choices = prepare_titlemap_for_model(Kadro, durum=2)
 
         _form.sec = fields.Button("Seç", flow="sec", cmd="sec")
-        _form.atama_yapma = fields.Boolean("Atama Yapmadan Kaydet", flow="atama_yapmadan_gec", cmd="atama_yapmadan_gec", type='confirm', confirm_message='Atama yapmadan kaydetmek istediğinize eminmisiniz?')
+        _form.atama_yapma = fields.Boolean("Atama Yapmadan Kaydet", flow="atama_yapmadan_gec", cmd="atama_yapmadan_gec",
+                                           type='confirm',
+                                           confirm_message='Atama yapmadan kaydetmek istediğinize eminmisiniz?')
         self.form_out(_form)
 
     @form_modifier
@@ -139,44 +176,12 @@ class Atama(CrudView):
         if 'kadro' in serialized_form['schema']['properties']:
             serialized_form['schema']['properties']['kadro']['titleMap'] = self.choices
 
-
-
-    def yeni_ekle_kontrol(self):
-
-        _form = JsonForm(current=self.current, title="Bilgi Kontrol Ekranı")
-        _form.Meta.help_text = 'Form Bilgilerini Kontrol Ediniz'
-
+    def iptal(self):
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Personel Kayıt Uyarısı',
-            "msg": 'Lütfen Personel bilgilerinin doğruluğunu kontrol ediniz. Kayıt işlemi geri döndürülemez.'
+            'type': 'info', "title": 'Atama İptal Edildi',
+            "msg": 'Yeni personel atama işlemi İptal edildi.'
         }
-        _form.kaydet = fields.Button("Kaydet (Bu işlem geri alınamaz!)",cmd="kaydet",btn='success')
-        _form.iptal = fields.Button("İptal", cmd="iptal", flow="iptal")
 
-
-        kimlik_bilgileri = """**Adı**: {ad}
-        **Soyad**: {soyad}
-        **Doğum Tarihi**: {dogum_tarihi}
-        """.format(**self.current.task_data['kimlik_bilgileri'])
-
-        adres_bilgileri = """**İl**: {il}
-        **İlçe**: {ilce}
-        **Adres**: {adres}
-        """.format(**self.current.task_data['adres_bilgileri'])
-
-        output = [{'Kişi Bilgileri':kimlik_bilgileri, 'Adres Bilgileri':adres_bilgileri}]
-
-        self.current.output['object'] = {
-            "type": "table-multiRow",
-            "title":"Kişi Bilgileri",
-            "fields": output,
-            "actions": False
-        }
-        self.form_out(_form)
-
-
-    def do_view(self):
-        pass
 
 # Formlar
 class YeniPersonelTcknForm(JsonForm):
