@@ -170,6 +170,7 @@ class CuzdanSorgulaTCKimlikNo(NVIService):
                     </ns1:kriterListesi>
                 </ns1:ListeleCoklu>
             </env:Body>""" % tckn
+        super(CuzdanSorgulaTCKimlikNo, self).handle()
 
 
 class YabanciKisiSorgula(NVIService):
