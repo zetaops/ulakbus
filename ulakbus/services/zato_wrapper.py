@@ -100,16 +100,16 @@ class ZatoService(object):
             response = r.json()
             r.close()
             try:
-                if response['status'] == 'ok':
-                    return response['result']
+                if response['status'] == 200:
+                    return self.rebuild_response(response['result'])
                 else:
                     # all zato internal errors will be handled here,
                     # riak error, connection error etc..
                     raise Exception("your service request failed with error %s"
                                     % response['result'])
-            except KeyError:
+            except KeyError, k:
                 raise Exception("your service response contains no status code, "
-                                "check your zato service package")
+                                "check your zato service package %s" % k)
 
         if r.status_code == 404:
             raise Exception("Service called '%s' is not defined on zato "
@@ -120,6 +120,9 @@ class ZatoService(object):
             raise Exception("Status code is something different 200 or 404 which is %s, "
                             "this means something really went bad, check zato server logs"
                             % r.status_code)
+
+    def rebuild_response(self, response_data):
+        return response_data
 
 
 class TcknService(ZatoService):
@@ -1405,6 +1408,21 @@ class MernisKimlikBilgileriGetir(TcknService):
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
+    def rebuild_response(self, response_data):
+        ret = {}
+        try:
+            kb = response_data['KisiBilgisi']
+
+            ret['ad'] = kb['TemelBilgisi']['Ad']
+            ret['soyad'] = kb['TemelBilgisi']['Soyad']
+            ret['dogum_tarihi'] = '%s.%s.%s' % (
+                kb['TemelBilgisi']['DogumTarih']['Gun'], kb['TemelBilgisi']['DogumTarih']['Ay'],
+                kb['TemelBilgisi']['DogumTarih']['Yil'])
+        except:
+            ret['hata'] = True
+
+        return ret
+
 
 class KPSAdresBilgileriGetir(TcknService):
     """
@@ -1423,3 +1441,15 @@ class KPSAdresBilgileriGetir(TcknService):
         super(KPSAdresBilgileriGetir, self).__init__()
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+    def rebuild_response(self, response_data):
+        ret = {}
+        try:
+            kb = response_data['KimlikNoileKisiAdresBilgileri']['YerlesimYeriAdresi']
+            ret['adres'] = kb['AcikAdres']
+            ret['il'] = kb['IlIlceMerkezAdresi']['Il']
+            ret['ilce'] = kb['IlIlceMerkezAdresi']['Ilce']
+        except:
+            ret['hata'] = True
+
+        return ret
