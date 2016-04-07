@@ -1417,7 +1417,7 @@ class MernisKimlikBilgileriGetir(TcknService):
             ret['tckn'] = kb['TCKimlikNo']
             ret['ad'] = kb['TemelBilgisi']['Ad']
             ret['soyad'] = kb['TemelBilgisi']['Soyad']
-            ret['cinsiyet'] = kb['TemelBilgisi']['Ad']['Kod']
+            ret['cinsiyet'] = kb['TemelBilgisi']['Cinsiyet']['Kod']
             ret['dogum_tarihi'] = '%s.%s.%s' % (
                 kb['TemelBilgisi']['DogumTarih']['Gun'], kb['TemelBilgisi']['DogumTarih']['Ay'],
                 kb['TemelBilgisi']['DogumTarih']['Yil'])
@@ -1462,12 +1462,12 @@ class MernisCuzdanBilgileriGetir(TcknService):
             ret['tckn'] = kb['TCKimlikNo']
             ret['cuzdan_seri'] = kb['SeriNo'][0:3]
             ret['cuzdan_seri_no'] = kb['SeriNo'][3:]
-            ret['kimlik_cuzdani_verildigi_yer'] = kb['VerildigiIlce']['Aciklama']
-            ret['kimlik_cuzdani_verilis_nedeni'] = kb['CuzdanVerilmeNeden']['Aciklama']
+            ret['kimlik_cuzdani_verildigi_yer'] = kb['VerildigiIlce']['b:Aciklama']
+            ret['kimlik_cuzdani_verilis_nedeni'] = kb['CuzdanVerilmeNeden']['b:Aciklama']
             ret['kimlik_cuzdani_kayit_no'] = kb['KayitNo']
             ret['kimlik_cuzdani_verilis_tarihi'] = '%s.%s.%s' % (
-                kb['VerilmeTarih']['Gun'], kb['VerilmeTarih']['Ay'],
-                kb['VerilmeTarih']['Yil'])
+                kb['VerilmeTarih']['b:Gun'], kb['VerilmeTarih']['b:Ay'],
+                kb['VerilmeTarih']['b:Yil'])
         except:
             ret['hata'] = True
 
@@ -1493,7 +1493,6 @@ class KPSAdresBilgileriGetir(TcknService):
 
     def rebuild_response(self, response_data):
         ret = {}
-        raise Exception('%s' % response_data)
         try:
             kb = response_data['KimlikNoileKisiAdresBilgileri']['YerlesimYeriAdresi']
             ret['ikamet_adresi'] = kb['AcikAdres']
