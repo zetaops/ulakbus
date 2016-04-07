@@ -1410,19 +1410,68 @@ class MernisKimlikBilgileriGetir(TcknService):
 
     def rebuild_response(self, response_data):
         ret = {}
+
         try:
             kb = response_data['KisiBilgisi']
 
+            ret['tckn'] = kb['TCKimlikNo']
             ret['ad'] = kb['TemelBilgisi']['Ad']
             ret['soyad'] = kb['TemelBilgisi']['Soyad']
+            ret['cinsiyet'] = kb['TemelBilgisi']['Ad']['Kod']
             ret['dogum_tarihi'] = '%s.%s.%s' % (
                 kb['TemelBilgisi']['DogumTarih']['Gun'], kb['TemelBilgisi']['DogumTarih']['Ay'],
                 kb['TemelBilgisi']['DogumTarih']['Yil'])
+            ret['dogum_yeri'] = kb['TemelBilgisi']['DogumYer']
+            ret['baba_adi'] = kb['TemelBilgisi']['BabaAd']
+            ret['ana_adi'] = kb['TemelBilgisi']['AnneAd']
+            ret['medeni_hali'] = kb['DurumBilgisi']['MedeniHal']['Kod']
+            ret['kayitli_oldugu_il'] = kb['KayitYeriBilgisi']['Il']['Aciklama']
+            ret['kayitli_oldugu_ilce'] = kb['KayitYeriBilgisi']['Ilce']['Aciklama']
+            ret['kayitli_oldugu_mahalle_koy'] = kb['KayitYeriBilgisi']['Cilt']['Aciklama']
+            ret['kayitli_oldugu_cilt_no'] = kb['KayitYeriBilgisi']['Cilt']['Kod']
+            ret['kayitli_oldugu_aile_sira_no'] = kb['KayitYeriBilgisi']['AileSiraNo']
+            ret['kayitli_oldugu_sira_no'] = kb['KayitYeriBilgisi']['BireySiraNo']
         except:
             ret['hata'] = True
 
         return ret
 
+class MernisCuzdanBilgileriGetir(TcknService):
+    """
+    Personelin Mernis üzerinden nüfus cüzdanı bilgilerini sorgular.
+
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
+    Attributes:
+        service_uri (str): İlgili servisin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, tckn=""):
+        super(MernisCuzdanBilgileriGetir, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+    def rebuild_response(self, response_data):
+        ret = {}
+
+        try:
+            kb = response_data['CuzdanBilgisi']
+            ret['tckn'] = kb['TCKimlikNo']
+            ret['cuzdan_seri'] = kb['SeriNo'][0:3]
+            ret['cuzdan_seri_no'] = kb['SeriNo'][3:]
+            ret['kimlik_cuzdani_verildigi_yer'] = kb['VerildigiIlce']['Aciklama']
+            ret['kimlik_cuzdani_verilis_nedeni'] = kb['CuzdanVerilmeNeden']['Aciklama']
+            ret['kimlik_cuzdani_kayit_no'] = kb['KayitNo']
+            ret['kimlik_cuzdani_verilis_tarihi'] = '%s.%s.%s' % (
+                kb['VerilmeTarih']['Gun'], kb['VerilmeTarih']['Ay'],
+                kb['VerilmeTarih']['Yil'])
+        except:
+            ret['hata'] = True
+
+        return ret
 
 class KPSAdresBilgileriGetir(TcknService):
     """
@@ -1444,11 +1493,12 @@ class KPSAdresBilgileriGetir(TcknService):
 
     def rebuild_response(self, response_data):
         ret = {}
+        raise Exception('%s' % response_data)
         try:
             kb = response_data['KimlikNoileKisiAdresBilgileri']['YerlesimYeriAdresi']
-            ret['adres'] = kb['AcikAdres']
-            ret['il'] = kb['IlIlceMerkezAdresi']['Il']
-            ret['ilce'] = kb['IlIlceMerkezAdresi']['Ilce']
+            ret['ikamet_adresi'] = kb['AcikAdres']
+            ret['ikamet_il'] = kb['IlIlceMerkezAdresi']['Il']
+            ret['ikamet_ilce'] = kb['IlIlceMerkezAdresi']['Ilce']
         except:
             ret['hata'] = True
 
