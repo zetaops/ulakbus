@@ -238,7 +238,7 @@ class Program(Model):
     tanim = field.String("Tanım", index=True)
     yeterlilik_kosullari_aciklamasi = field.String("Yeterlilik Koşulları Açıklaması", index=True)
     program_ciktilari = field.String("Program Çıktıları", index=True)
-    mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
+    #mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
     farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme",
                                                      default=False, index=True)

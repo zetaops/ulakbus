@@ -26,7 +26,7 @@
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:userTask id="program_version_bilgi_giris" camunda:assignee="personel.program_ders_kopyala.ProgramKopyalama.senato_no_gir" name="Senato Numarasi Gir">
+    <bpmn2:userTask id="program_version_bilgi_giris" camunda:assignee="personel.program_ders_kopyala.SenatoNumara.senato_no_gir" name="Senato Numarasi Gir">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_47</bpmn2:outgoing>
     </bpmn2:userTask>
@@ -42,7 +42,7 @@
       <bpmn2:outgoing>SequenceFlow_34</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_34" name="" sourceRef="ders_kopyala" targetRef="ders_tablo"/>
-    <bpmn2:serviceTask id="program_version_kaydet" camunda:class="personel.program_ders_kopyala.ProgramKopyalama.senato_no_kaydet" name="Senato Numarasi Kaydet">
+    <bpmn2:serviceTask id="program_version_kaydet" camunda:class="personel.program_ders_kopyala.ProgramKopyalama.save" name="Senato Numarasi Kaydet">
       <bpmn2:incoming>SequenceFlow_47</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:serviceTask>
