@@ -657,7 +657,11 @@ class OgrenciDersi(Model):
         list_fields = ['ders', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
 
-    def post_creation(self):
+    def pre_save(self):
+        self.donem = self.ders.donem
+        self.ogrenci = self.ogrenci_program.ogrenci
+
+    def sube_dersi(self):
         """
         Yeni bir ``OgrenciDers``'i ilk defa yaratılınca ``donem`` ve ``ders`` alanları,
         bağlı şubeden atanır.
