@@ -653,9 +653,36 @@ class MazeretliDersKaydi(CrudView):
     class Meta:
         model = "Ogrenci"
 
-    def karar_no_gir(self):
+    def program_sec(self):
+        ogrenci_id = self.current.input['id']
+        ogrenci = Ogrenci.objects.get(ogrenci_id)
         _form = forms.JsonForm(current=self.current,
-                               title="Fakülte Yönetim Kurulu Karar Numarasını Giriniz")
-        _form.karar_no = fields.String()
+                               title="Öğrenci Programı Seçiniz")
+        _form.program = fields.Integer("Sube Seçiniz",
+                                       choices=prepare_choices_for_model(OgrenciProgram,
+                                                                         ogrenci=ogrenci))
         _form.sec = fields.Button("İleri")
         self.form_out(_form)
+
+    def karar_no_gir(self):
+
+        aktif_ogrenci_status_list = [1,12,14,16,18,20]
+
+        self.current.task_data['program'] = self.current.input['form']['program']
+        ogrenci_program = OgrenciProgram.objects.get(self.current.input['form']['program'])
+
+        if ogrenci_program.ogrencilik_statusu in aktif_ogrenci_status_list:
+            _form = forms.JsonForm(current=self.current,
+                                   title="Fakülte Yönetim Kurulu Karar No Giriniz")
+            _form.karar_no = fields.String(title="Fakülte Yönetim Kurulu Karar No")
+            _form.sec = fields.Button("İleri")
+            self.form_out(_form)
+        else:
+            self.current.output['msgbox'] = {
+                'type': 'warning', "title": 'Öğrenci Ders Kaydı Yapamaz',
+                "msg": 'Öğrenci Durum Kodu Ders Seçimi İçin Uygun Değil'
+            }
+
+    def kaydet(self):
+
+        ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['program'])
