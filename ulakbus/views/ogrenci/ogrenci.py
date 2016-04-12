@@ -642,3 +642,20 @@ class BasariDurum(CrudView):
             self.output['meta']['selective_listing'] = True
             self.output['meta']['selective_listing_label'] = "Dönem Seçiniz"
             self.output['meta']['allow_actions'] = False
+
+
+class MazeretliDersKaydi(CrudView):
+    """Mazeretli ders kaydı yapabilecek öğrencilerin düzenlendiği workflowa ait methodları
+    barındıran sınıftır.
+
+    """
+
+    class Meta:
+        model = "Ogrenci"
+
+    def karar_no_gir(self):
+        _form = forms.JsonForm(current=self.current,
+                               title="Fakülte Yönetim Kurulu Karar Numarasını Giriniz")
+        _form.karar_no = fields.String()
+        _form.sec = fields.Button("İleri")
+        self.form_out(_form)
