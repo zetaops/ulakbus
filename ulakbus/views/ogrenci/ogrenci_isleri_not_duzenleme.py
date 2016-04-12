@@ -24,8 +24,15 @@ class NotDuzenleme(CrudView):
     class Meta:
         model = 'DegerlendirmeNot'
 
-    def program_sec(self):
+    def fakulte_yonetim_karari(self):
+        # TODO: Fakülte yönetim kurulunun kararı loglanacak.
         self.current.task_data['ogrenci_id'] = self.current.input['id']
+        _form = forms.JsonForm(current=self.current, title='Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.')
+        _form.karar = fields.String('Karar No', index=True)
+        _form.kaydet = fields.Button('Kaydet')
+        self.form_out(_form)
+
+    def program_sec(self):
         _form = forms.JsonForm(current=self.current, title='Program Seçiniz.')
         _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=self.current.task_data['ogrenci_id'])
         _form.program = fields.Integer(choices=_choices)
@@ -34,29 +41,25 @@ class NotDuzenleme(CrudView):
 
     def ders_sec(self):
         program_id = self.current.input['form']['program']
-        self.current.task_data['program_id'] = program_id
         _form = forms.JsonForm(current=self.current, title='Ders Seçiniz.')
-        _choices = prepare_choices_for_model(OgrenciDersi, ogrenci_program_id=program_id,
-                                             ogrenci_id=self.current.task_data['ogrenci_id'])
+        _choices = prepare_choices_for_model(OgrenciDersi, ogrenci_program_id=program_id)
         _form.ders = fields.Integer(choices=_choices)
         _form.onayla = fields.Button('Seç')
         self.form_out(_form)
 
     def sinav_sec(self):
-        ders_id = self.current.input['form']['ders']
-        self.current.task_data['ders_id'] = ders_id
-        ders = OgrenciDersi.objects.get(ders_id)
-        _form = forms.JsonForm(current=self.current, title='Sınav Seçiniz')
+        self.current.task_data['ders_id'] = self.current.input['form']['ders']
+        ders = OgrenciDersi.objects.get(self.current.task_data['ders_id'])
+        _form = forms.JsonForm(current=self.current, title='Sınav Seçiniz.')
         _choices = prepare_choices_for_model(Sinav, sube_id=ders.ders.key)
         _form.sinav = fields.Integer(choices=_choices)
-        _form.onayla = fields.Button('Kaydet')
+        _form.onayla = fields.Button('Seç')
         self.form_out(_form)
 
     def not_duzenle(self):
         sinav_id = self.current.input['form']['sinav']
-        # ders_id = self.current.task_data['ders_id']
-        # ogrenci_id = self.current.task_data['ogrenci_id']
-        degerlendirme_not = DegerlendirmeNot.objects.filter(sinav_id=sinav_id)[0]
+        ogrenci_id = self.current.task_data['ogrenci_id']
+        degerlendirme_not = DegerlendirmeNot.objects.filter(sinav_id=sinav_id, ogrenci_id=ogrenci_id)[0]
         title = '%s adlı öğrencinin % sınava ait notunu düzenleyiniz.' % (
             degerlendirme_not.ogrenci, degerlendirme_not.sinav)
         _form = NotDuzenlemeForm(degerlendirme_not, current=self.current, title=title)
