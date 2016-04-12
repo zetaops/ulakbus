@@ -110,6 +110,8 @@ OBJECT_MENU = {
          'verbose_name': 'Danışman Atama'},
         {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
          'field': 'ogrenci_id'},
+        {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci', 'wf': 'mazeretli_ders_kaydi',
+         'field': 'ogrenci_id'},
     ],
 }
 
