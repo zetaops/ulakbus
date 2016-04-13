@@ -61,9 +61,12 @@ Kadro Sil Onay
 """
 
 from zengine.views.crud import CrudView, obj_filter
+from collections import OrderedDict
 
 from zengine.forms import JsonForm
 from zengine.forms import fields
+from ulakbus.models import Personel
+import datetime
 
 
 class KadroObjectForm(JsonForm):
@@ -290,3 +293,31 @@ class KadroIslemleri(CrudView):
             result['actions'].extend([
                 {'name': 'Düzenle', 'cmd': 'add_edit_form', 'show_as': 'button'},
             ])
+
+class TerfiListe(CrudView):
+    class Meta:
+        model = "Personel"
+        
+    def terfisi_gelen_personel_liste(self):
+        self.current.output['client_cmd'] = ['show', ]
+        simdi = datetime.date.today()
+        kontrol = simdi + datetime.timedelta(days = 90)
+        personel_liste = Personel.objects.filter(
+            terfi_tarihi__lte = kontrol
+            )
+        tablo = []
+        for personel in personel_liste:
+            satir = OrderedDict({})
+            satir["T.C. No"] = personel.tckn
+            satir["İsim"] = personel.ad
+            satir["Soyad"] = personel.soyad
+            satir["Ünvan"] = personel.get_unvan_display()
+            tablo.append(satir)
+
+        self.current.output['object'] = {
+            "type" : "table-multiRow",
+            "fields" : tablo,
+            "actions" : False
+        }
+        
+        
