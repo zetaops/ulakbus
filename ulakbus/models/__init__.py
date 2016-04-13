@@ -12,4 +12,4 @@ from .auth import *
 from .ogrenci import *
 from .hitap import *
 from .buildings_rooms import *
-
+from .form import *
