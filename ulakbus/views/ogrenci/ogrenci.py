@@ -651,22 +651,31 @@ class MazeretliDersKaydi(CrudView):
     """
 
     class Meta:
-        model = "Ogrenci"
+        model = "OgrenciProgram"
 
     def program_sec(self):
+        """Workflow'un ilk aşamasıdır. Seçilen öğrenciye ait programlar listelenir.
+
+        """
         ogrenci_id = self.current.input['id']
         ogrenci = Ogrenci.objects.get(ogrenci_id)
         _form = forms.JsonForm(current=self.current,
                                title="Öğrenci Programı Seçiniz")
-        _form.program = fields.Integer("Sube Seçiniz",
+        _form.program = fields.Integer("Öğrenci Programı Seçiniz",
                                        choices=prepare_choices_for_model(OgrenciProgram,
                                                                          ogrenci=ogrenci))
         _form.sec = fields.Button("İleri")
         self.form_out(_form)
 
     def karar_no_gir(self):
+        """Mazeretli öğrenci kaydı, fakülte yönetim kurulu kararıyla yapılmaktadır. Bu adımda
+        kullanıcıdan ilgili karar numarasını girmesi beklenir.
+        Bu method seçilen öğrencinin ilgili programdaki durumunun ders kaydı yapabilir olup
+        olmadığını kontrol eder. Ders kaydı yapabilir durumdaki öğrenciler aktif veya gelen öğrenci
+        statüsüne sahip olmalıdırlar.
 
-        aktif_ogrenci_status_list = [1,12,14,16,18,20]
+        """
+        aktif_ogrenci_status_list = [1, 12, 14, 16, 18, 20]
 
         self.current.task_data['program'] = self.current.input['form']['program']
         ogrenci_program = OgrenciProgram.objects.get(self.current.input['form']['program'])
@@ -675,14 +684,38 @@ class MazeretliDersKaydi(CrudView):
             _form = forms.JsonForm(current=self.current,
                                    title="Fakülte Yönetim Kurulu Karar No Giriniz")
             _form.karar_no = fields.String(title="Fakülte Yönetim Kurulu Karar No")
-            _form.sec = fields.Button("İleri")
+            _form.sec = fields.Button("Kaydet")
             self.form_out(_form)
         else:
             self.current.output['msgbox'] = {
                 'type': 'warning', "title": 'Öğrenci Ders Kaydı Yapamaz',
-                "msg": 'Öğrenci Durum Kodu Ders Seçimi İçin Uygun Değil'
+                "msg": 'Öğrenci Durum Kodu Ders Kaydı İçin Uygun Değil'
             }
 
     def kaydet(self):
+        """Öğrenci Programında ogrenci_ders_kayit_status field'ı mazeretli olarak günceleyen method.
+        TODO: Fakülte Yönetim Kurulu Karar No Loglanacak
+        """
+        try:
+            ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['program'])
+            ogrenci_program.ogrenci_ders_kayit_status = 1
+            ogrenci_program.save()
+        except Exception as e:
+            self.current.output['msgbox'] = {
+                'type': 'warning', "title": 'Bir Hata Oluştu',
+                "msg": 'Öğrenci Ders Kayıt Durumu Değiştirme Başarısız. Hata Kodu : %s' % (
+                    e.message)
+            }
 
+    def kayit_bilgisi_ver(self):
+        """Workflow'n son aşamasıdır. Bu method ile başarılı işlem sonucu kullanıcıya gösterilir.
+
+        """
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['program'])
+        ogrenci = ogrenci_program.ogrenci
+        ogrenci_ad_soyad = ogrenci.ad + " " + ogrenci.soyad
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'Öğrenci Ders Kayıt Durumu Değiştirme Başarılı',
+            "msg": '%s nolu %s adlı Öğrencinin %s Programına Ait Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi' % (
+                ogrenci_program.ogrenci_no, ogrenci_ad_soyad, ogrenci_program.program.adi)
+        }
