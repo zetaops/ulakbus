@@ -565,6 +565,7 @@ class OgrenciProgram(Model):
     giris_puani = field.Float("Giriş Puani", index=True)
     aktif_donem = field.String("Dönem", index=True)
     ogrencilik_statusu = field.Integer('Öğrencilik Statüsü', index=True, choices="ogrenci_program_durumlar")
+    ogrenci_ders_kayit_status = field.Integer('Öğrencilik Ders KAyıt Statüsü', index=True, choices="ogrenci_ders_kayit_durum")
     ayrilma_nedeni = field.Integer('Ayrılma Nedeni', index=True, choices='ayrilma_nedeni')
     basari_durumu = field.String("Başarı Durumu", index=True)
     ders_programi = DersProgrami()

@@ -101,6 +101,16 @@
       "en": ""
     }
   },
+  "ogrenci_ders_kayit_durum": {
+    "0":{
+      "tr": "Normal Kayıt",
+      "en": "Normal"
+    },
+    "1":{
+      "tr": "Mazeretli Kayit",
+      "en": "Excused"
+    }
+  },
   "ayrilma_nedeni": {
     "4": {
       "tr": "Disiplin cezası",
