@@ -75,6 +75,7 @@ class Personel(Model):
     kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+    terfi_tarihi = field.Date("Terfi Tarihi", index=True, format="%d.%m.%Y")
     user = User(one_to_one=True)
 
     class Meta:
