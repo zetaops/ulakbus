@@ -296,8 +296,8 @@ class Ders(Model):
     ders_mufredati = field.String("Ders Müfredatı", index=True)
     verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
     katilim_sarti = field.Integer("Katılım Şartı", index=True)
-    ontanimli_kontenjan = field.Integer('Kontenjan', default=20)
-    ontanimli_dis_kontenjan = field.Integer('Dış Kontenjan', default=35)
+    ontanimli_kontenjan = field.Integer('Öntanımlı Kontenjan', default=20)
+    ontanimli_dis_kontenjan = field.Integer('ÖnTanımlı Dış Kontenjan', default=35)
     program = Program()
     donem = Donem()
     ders_koordinatoru = Personel()
@@ -324,7 +324,14 @@ class Ders(Model):
         return '%s %s %s' % (self.ad, self.kod, self.ders_dili)
 
     def ontanimli_sube_olustur(self):
+        """
+        Yeni bir ders yaratıldığında, dersin bağlı olacağı default şube yaratılır.
+
+        """
+
         sube = Sube()
+        sube.kontenjan = self.ontanimli_kontenjan
+        sube.dis_kontenjan = self.ontanimli_dis_kontenjan
         sube.ad = 'Varsayılan Şube'
         sube.ders = self
         sube.save()
