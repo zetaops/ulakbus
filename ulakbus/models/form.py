@@ -24,7 +24,8 @@ class Form(Model):
 
     """
     ad = field.String("Form Adı", index=True)
-    file = field.File("File", index=True, random_name=True)  # form eger PDF olarak yulendiyse bu alan kullanilir.
+    file = field.File("File", index=True,
+                      random_name=True)  # form eger PDF olarak yulendiyse bu alan kullanilir.
     permissions = Permission()
     date = field.Date("Form Tarihi", index=True, format="%d.%m.%Y")
 
@@ -33,7 +34,7 @@ class Form(Model):
         verbose_name = "Form"
         verbose_name_plural = "Formlar"
         list_fields = ['ad', 'date']
-        search_fields = ['ad','file']
+        search_fields = ['ad', 'file']
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.date)
