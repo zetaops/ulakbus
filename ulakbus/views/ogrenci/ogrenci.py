@@ -693,7 +693,7 @@ class MazeretliDersKaydi(CrudView):
             }
 
     def kaydet(self):
-        """Öğrenci Programında ogrenci_ders_kayit_status field'ı mazeretli olarak günceleyen method.
+        """Öğrenci Programında ogrenci_ders_kayit_status field'ı mazeretli olarak güncelleyen method.
         TODO: Fakülte Yönetim Kurulu Karar No Loglanacak
         """
         try:
