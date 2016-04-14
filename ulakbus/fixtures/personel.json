@@ -64,5 +64,27 @@
       "tr": "Bakanlık Personeli",
       "en": ""
     }
+  },
+  "izin_turleri": {
+    "1": {
+      "tr": "Yıllık İzin",
+      "en": "Annual Vacation"
+    },
+    "2": {
+      "tr": "Mazeret İzni",
+      "en": "Compassionate Leave"
+    },
+    "3": {
+      "tr": "Refakat İzni",
+      "en": "Accompanimental Leave"
+    },
+    "4": {
+      "tr": "Fazla Mesai İzni",
+      "en": "Overtime Leave"
+    },
+    "5": {
+      "tr": "Ücretsiz İzin",
+      "en": "Unpaid Vacation"
+    }
   }
 }
