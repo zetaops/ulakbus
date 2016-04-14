@@ -36,9 +36,11 @@ class TestCase(BaseTestCase):
                                                         'type': "check"}})
         # Ayrılma nedenlerini tutan list.
         lst = OgrenciProgram().get_choices_for('ayrilma_nedeni')
+
         # Sunucudan dönen ayrılma nedenleri sayısı ile veritabanından dönen ayrılma nedenlerinin sayısının
         # eşitliği karşılaştırılır.
         assert len(resp.json['forms']['form'][1]['titleMap']) == len(lst)
+
         # Kaydı silinecek öğrencinin ayrılma nedeni seçilir ve açıklama yazılır.
         resp = self.client.post(form=dict(ayrilma_nedeni=11, sec=1, aciklama='Yatay Geçiş'))
 
