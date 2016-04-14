@@ -1,6 +1,8 @@
 # -*-  coding: utf-8 -*-
 
-from zengine.views.crud import CrudView
+from zengine.forms import fields
+from zengine import forms
+from zengine.views.crud import CrudView, form_modifier
 from ulakbus.models.personel import Personel
 from ulakbus.models.hitap import HizmetKayitlari, HizmetBirlestirme
 from datetime import timedelta, date
@@ -146,3 +148,28 @@ class IzinIslemleri(CrudView):
                 mazeret_izinler[yil] -= (izin.bitis - izin.baslangic).days
 
         return {'yillik': yillik_izinler, 'mazeret': mazeret_izinler}
+
+
+class IzinBasvuru(CrudView):
+    """Izin basvuru workflowuna ait methodları barındıran sınıftır.
+
+    """
+
+    class IzinBasvuruForm(forms.JsonForm):
+        from datetime import date
+        izin_turleri = [(1, "Yıllık İzin"), (2, "Mazeret İzni"), (3, "Refakat İzni"),
+                        (4, "Fazla Mesai İzni"), (5, "Ücretsiz İzin")]
+        gecerli_yil = date.today().year
+        yillar = [(gecerli_yil - 1, gecerli_yil - 1), (gecerli_yil, gecerli_yil)]
+
+        izin_turu = fields.Integer("İzin Türü Seçiniz", choices=izin_turleri)
+        izin_ait_yil = fields.Integer("Ait Olduğu Yıl", choices=yillar)
+        izin_baslangic = fields.Date("İzin Başlangıç Tarihi")
+        izin_bitis = fields.Date("İzin Bitiş Tarihi")
+        izin_adres = fields.Text("İzindeki Adres")
+
+        ileri = fields.Button("İleri")
+
+    def izin_basvuru_formu_goster(self):
+        _form = self.IzinBasvuruForm(current=self.current, title="İzin Talep Formu")
+        self.form_out(_form)
