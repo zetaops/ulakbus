@@ -93,6 +93,8 @@ OBJECT_MENU = {
         {'name': 'AskerlikKayitlari', 'verbose_name': 'Askerlik Kayıtları',
          'field': 'personel_id'},
         {'name': 'Atama', 'field': 'personel_id'},
+        {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
+         'field': 'personel_id'},
         # {'name': 'Kadro'        , 'field': 'personel_id'},
     ],
     'ogrenci': [
