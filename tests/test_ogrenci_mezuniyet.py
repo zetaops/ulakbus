@@ -13,7 +13,7 @@ __author__ = 'H.İbrahim Yılmaz (drlinux)'
 import time
 from pyoko.manage import FlushDB, LoadData
 from ulakbus.models import Ogrenci, OgrenciProgram, User, Program, DegerlendirmeNot
-from .base_test_case import BaseTestCase
+from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):
