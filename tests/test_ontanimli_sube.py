@@ -8,20 +8,32 @@ from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import Ders, Sube
 import time
 
+
 class TestCase(BaseTestCase):
     """
-    Bu sınıf
+    Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
+
     """
+
     def test_ontanimli_sube(self):
+        """
+        Yeni bir ders kaydı yaratılılıp kaydedildiğinde derse default olarak şube atanır.
+        Kaydedilmeden önce pre_save metotu ile ders nesnenin var olup olmadığı belirlenir.
+        Kaydedildikten sonra post_save metotu ile ontanimli_sube_olustur metotu çağrılır.
+        Bu metot içerisinde yeni şube oluşturulur.Ders modelinde tanımlı ontanimli_kontenjan,
+        ontanimli_dis_kontenjan fieldlarının değerleri yeni yaratılan şubenin kontenjan ve
+        dış kontenjan fieldlarına atanır. Ders nesnesi yaratıldığında ontanimli_kontenjan,
+        ontanimli_dis_kontenjan fieldlarına herhengi bi değer atanmamışsa field içinde tanımlı
+        default değeri atanır.
+
+        """
         ders = Ders()
         ders.ad = 'Havacılık'
         ders.kod = '555'
         ders.save()
-        time.sleep(2)
+        time.sleep(1)
         assert ders.just_created
-        sube = Sube.objects.get(ders=ders)
+        sube = Sube.objects.get(ders_id=ders.key)
         assert sube.ad == 'Varsayılan Şube'
-        # sube için tanımlı default değerine ulaşamıyorum. Sıfır dönüyor
-        print  sube.kontenjan
-
-
+        assert sube.kontenjan == 30
+        assert sube.dis_kontenjan == 10
