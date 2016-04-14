@@ -91,6 +91,8 @@ OBJECT_MENU = {
         {'name': 'AskerlikKayitlari', 'verbose_name': 'Askerlik Kayıtları',
          'field': 'personel_id'},
         {'name': 'Atama', 'field': 'personel_id'},
+        {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
+         'field': 'personel_id'},
         # {'name': 'Kadro'        , 'field': 'personel_id'},
     ],
     'ogrenci': [
@@ -110,7 +112,8 @@ OBJECT_MENU = {
          'verbose_name': 'Danışman Atama'},
         {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
          'field': 'ogrenci_id'},
-        {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci', 'wf': 'mazeretli_ders_kaydi',
+        {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci',
+         'wf': 'mazeretli_ders_kaydi',
          'field': 'ogrenci_id'},
     ],
 }
