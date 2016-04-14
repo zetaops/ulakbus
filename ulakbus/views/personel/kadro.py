@@ -303,7 +303,7 @@ class TerfiListe(CrudView):
         simdi = datetime.date.today()
         kontrol = simdi + datetime.timedelta(days = 90)
         personel_liste = Personel.objects.filter(
-            terfi_tarihi__lte = kontrol
+            sonraki_terfi_tarihi__lte = kontrol
             )
         tablo = []
         for personel in personel_liste:
@@ -312,6 +312,7 @@ class TerfiListe(CrudView):
             satir["İsim"] = personel.ad
             satir["Soyad"] = personel.soyad
             satir["Ünvan"] = personel.get_unvan_display()
+            
             tablo.append(satir)
 
         self.current.output['object'] = {
