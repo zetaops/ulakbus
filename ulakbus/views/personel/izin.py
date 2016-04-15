@@ -4,8 +4,12 @@ from zengine.forms import fields
 from zengine import forms
 from zengine.views.crud import CrudView, form_modifier
 from ulakbus.models.personel import Personel
+from ulakbus.models.auth import User
 from ulakbus.models.hitap import HizmetKayitlari, HizmetBirlestirme
-from datetime import timedelta, date
+from ulakbus.models.form import Form, FormData
+from datetime import timedelta, date, datetime
+
+import json
 
 
 class IzinIslemleri(CrudView):
@@ -173,3 +177,81 @@ class IzinBasvuru(CrudView):
     def izin_basvuru_formu_goster(self):
         _form = self.IzinBasvuruForm(current=self.current, title="İzin Talep Formu")
         self.form_out(_form)
+
+    def izin_basvuru_kaydet(self):
+        try:
+
+            izin_form_data = self.input['form']
+            # gereksiz form alanlarını sil
+            del izin_form_data['ileri']
+            self.current.task_data['izin_form_data'] = izin_form_data
+            izin_form = Form.objects.get(ad="İzin Formu")
+            form_data = FormData()
+            form_data.form = izin_form
+            form_data.user = self.current.user
+            form_data.data = json.dumps(izin_form_data)
+            form_data.date = date.today()
+            form_data.save()
+            self.current.task_data['izin_form_data_key'] = form_data.key
+        except Exception as e:
+
+            self.current.output['msgbox'] = {
+                'type': 'warning', "title": 'Bir Hata Oluştu',
+                "msg": 'İzin Başvuru Kaydı Başarısız. Hata Kodu : %s' % e.message
+            }
+
+    def izin_basvuru_kayit_bilgi_goster(self):
+        izin_basvuru = self.current.task_data['izin_form_data']
+        izin_baslangic = izin_basvuru['izin_baslangic']
+        izin_bitis = izin_basvuru['izin_bitis']
+        _form = forms.JsonForm(current=self.current, title=" ")
+        _form.ileri = fields.Button("İleri")
+        self.form_out(_form)
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'İzin Başvurusu Yapıldı',
+            "msg": '%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.' % (
+                izin_baslangic, izin_bitis)
+        }
+
+    def izin_basvuru_goster(self):
+        form_data = FormData.objects.get(self.current.task_data['izin_form_data_key'])
+        basvuru_data = json.loads(form_data.data)
+
+        _form = self.IzinBasvuruForm(current=self.current, title="İzin Talep Önizleme Formu")
+        _form.personel_ad_soyad = fields.String("İzin Talep Eden")
+        _form.yol_izni = fields.Boolean("Yol İzni")
+        _form.kalan_izin = fields.Integer("Toplam Kalan İzin Süresi(Gün)")
+        _form.toplam_izin_gun = fields.Integer("Kullanacağı İzin Süresi(Gün)")
+        _form.toplam_kalan_izin = fields.Integer("Kalan İzin Süresi(Gün)")
+
+        _form.ileri = fields.Button("Onayla")
+        self.form_out(_form)
+
+    @form_modifier
+    def basvuru_form_inline_edit(self, serialized_form):
+        """izin_basvuru_goster aşamasında personelin `IzinBasvuruForm` seçimlerini populate etmek
+        için kullanılan methoddur.
+
+        """
+        if 'izin_turu' in serialized_form['schema'][
+            'properties'] and self.current.task_data.has_key('izin_form_data_key'):
+            # FormData modelindeki kayıtlar alınır
+            form_data = FormData.objects.get(self.current.task_data['izin_form_data_key'])
+            basvuru_data = json.loads(form_data.data)
+
+            # İznin başlangıç ve bitiş tarihleri arasındaki gün sayısı hesaplanır
+            # TODO: Formda tarih değişince js ile tekrar hesaplatmak lazım
+            date_format = "%d.%m.%Y"
+            a = datetime.strptime(basvuru_data['izin_baslangic'], date_format)
+            b = datetime.strptime(basvuru_data['izin_bitis'], date_format)
+            delta = b - a
+
+            # formun verileri doldurulur
+            serialized_form['model']['izin_turu'] = basvuru_data['izin_turu']
+            serialized_form['model']['izin_ait_yil'] = basvuru_data['izin_ait_yil']
+            serialized_form['model']['izin_baslangic'] = basvuru_data['izin_baslangic']
+            serialized_form['model']['izin_bitis'] = basvuru_data['izin_bitis']
+            serialized_form['model']['izin_adres'] = basvuru_data['izin_adres']
+            serialized_form['model']['toplam_izin_gun'] = delta.days
+            serialized_form['model']['personel_ad_soyad'] = "%s %s" % (
+            form_data.user.personel.ad, form_data.user.personel.soyad)
