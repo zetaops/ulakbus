@@ -9,7 +9,7 @@
 Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
 
 """
-
+from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
 from .personel import Personel
 from pyoko import Model, field, ListNode, LinkProxy
@@ -207,9 +207,13 @@ class Donem(Model):
 
     def pre_save(self):
         if self.guncel:
-            old = self.guncel_donem()
-            old.guncel = False
-            old.save()
+            try:
+                old = self.guncel_donem()
+                old.guncel = False
+                old.save()
+            except ObjectDoesNotExist:
+                pass
+                # todo: hic guncel donemin olmadigi durumlar sistem yoneticine bildirilmeli.
 
     class Meta:
         app = 'Ogrenci'
