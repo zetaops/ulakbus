@@ -167,7 +167,8 @@ class KurumIciGorevlendirmeBilgileri(Model):
                 "groups": [
                     {
                         "group_title": "Gorev",
-                        "items": ["gorev_tipi", "kurum_ici_gorev_baslama_tarihi", "kurum_ici_gorev_bitis_tarihi",
+                        "items": ["gorev_tipi", "kurum_ici_gorev_baslama_tarihi",
+                                  "kurum_ici_gorev_bitis_tarihi",
                                   "birim", "aciklama"],
                         "collapse": False
                     }
@@ -222,7 +223,8 @@ class KurumDisiGorevlendirmeBilgileri(Model):
                 "groups": [
                     {
                         "group_title": "Gorev",
-                        "items": ["gorev_tipi", "kurum_disi_gorev_baslama_tarihi", "kurum_disi_gorev_bitis_tarihi",
+                        "items": ["gorev_tipi", "kurum_disi_gorev_baslama_tarihi",
+                                  "kurum_disi_gorev_bitis_tarihi",
                                   "ulke",
                                   "aciklama"],
                         "collapse": False
@@ -275,6 +277,7 @@ class Kadro(Model):
     birim = Unit("Birim", required=False)
     aciklama = field.String("Açıklama", index=True, required=False)
     unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
+    unvan_aciklama = field.String("Unvan Aciklama", index=True, required=False)
 
     class Meta:
         app = 'Personel'
@@ -286,6 +289,9 @@ class Kadro(Model):
 
     def __unicode__(self):
         return "%s %s %s" % (self.unvan, self.derece, self.durum)
+
+
+-
 
 
 class Izin(Model):
@@ -364,13 +370,14 @@ class Atama(Model):
     kadro_unvan = field.Integer("Kadro Unvan", index=True)
     kadro_derece = field.Integer("Kadro Derece", index=True)
     kadro = Kadro()
-    personel = Personel(one_to_one=True)
+    personel = Personel()
 
     class Meta:
         app = 'Personel'
         verbose_name = "Atama"
         verbose_name_plural = "Atamalar"
-        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi', 'durum']
+        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi',
+                       'durum']
         search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
 
     def __unicode__(self):
@@ -386,4 +393,5 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[0]
+        return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[
+            0]
