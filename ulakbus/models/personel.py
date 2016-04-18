@@ -384,6 +384,9 @@ class Kadro(Model):
         return "%s - %s %s. derece" % (self.kadro_no, self.get_unvan_display(), self.derece)
 
 
+-
+
+
 class Izin(Model):
     """İzin Modeli
 
