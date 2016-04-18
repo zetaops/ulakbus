@@ -175,10 +175,19 @@ class IzinBasvuru(CrudView):
         ileri = fields.Button("İleri")
 
     def izin_basvuru_formu_goster(self):
+        """İzin başvurusu yapacak olan personele izin başvuru formunu gösteren method.
+
+        """
         _form = self.IzinBasvuruForm(current=self.current, title="İzin Talep Formu")
         self.form_out(_form)
 
     def izin_basvuru_kaydet(self):
+        """Personelin `IzinBasvuruForm` aracılığı ile yapmış olduğu başvuruyu kaydeden methoddur.
+        Başvuruya ait veriler `Form` ve `FormData` modellerine kaydedilir. Form verileri, `FormData`
+        modelinde `data` field'ıne kaydedilirken JSON tipine çevrilir.
+        TODO: İzni onaylayacak olan personellere notifikasyon göndermek gerekli.
+
+        """
         try:
 
             izin_form_data = self.input['form']
@@ -201,6 +210,9 @@ class IzinBasvuru(CrudView):
             }
 
     def izin_basvuru_kayit_bilgi_goster(self):
+        """Personele izin başvuru kayıt sonucu bilgisini gösteren methoddur.
+
+        """
         izin_basvuru = self.current.task_data['izin_form_data']
         izin_baslangic = izin_basvuru['izin_baslangic']
         izin_bitis = izin_basvuru['izin_bitis']
@@ -214,6 +226,13 @@ class IzinBasvuru(CrudView):
         }
 
     def izin_basvuru_goster(self):
+        """Personel İşleri Dairesinde bulunan yetkili personele daha önce yapılmış olan izin
+        başvurusunu gösteren methoddur. `IzinBasvuruForm` temel alınarak üretilen formda önceki
+        veriler `FormData` modeli üzerinden alınır. `FormData` modelinde `data` field'ı üzerinden
+        JSON olarak kayıt edilmiş veriler Python nesnesine dönüştürülereki form içinde ilgili
+        alanlara basılır.
+
+        """
         form_data = FormData.objects.get(self.current.task_data['izin_form_data_key'])
         basvuru_data = json.loads(form_data.data)
 
@@ -226,6 +245,14 @@ class IzinBasvuru(CrudView):
 
         _form.ileri = fields.Button("Onayla")
         self.form_out(_form)
+
+    def izin_basvuru_sonuc_kaydet(self):
+        """Onay verilen izin başvuru sonucu kaydını gerçekleştiren methoddur.
+        TODO : İzin başvurusu yapan personele notifikasyon gönderilmeli.
+
+        """
+
+        pass
 
     @form_modifier
     def basvuru_form_inline_edit(self, serialized_form):
@@ -254,4 +281,4 @@ class IzinBasvuru(CrudView):
             serialized_form['model']['izin_adres'] = basvuru_data['izin_adres']
             serialized_form['model']['toplam_izin_gun'] = delta.days
             serialized_form['model']['personel_ad_soyad'] = "%s %s" % (
-            form_data.user.personel.ad, form_data.user.personel.soyad)
+                form_data.user.personel.ad, form_data.user.personel.soyad)
