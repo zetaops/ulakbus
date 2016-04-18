@@ -319,6 +319,9 @@ class Kadro(Model):
         return "%s %s %s" % (self.unvan, self.derece, self.durum)
 
 
+-
+
+
 class Izin(Model):
     """İzin Modeli
 
