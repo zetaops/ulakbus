@@ -319,3 +319,4 @@ class IzinBasvuru(CrudView):
             serialized_form['model']['toplam_izin_gun'] = delta.days
             serialized_form['model']['personel_ad_soyad'] = "%s %s" % (
                 form_personel.ad, form_personel.soyad)
+            
