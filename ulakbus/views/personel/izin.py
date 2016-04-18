@@ -3,7 +3,7 @@
 from zengine.forms import fields
 from zengine import forms
 from zengine.views.crud import CrudView, form_modifier
-from ulakbus.models.personel import Personel
+from ulakbus.models.personel import Personel, Atama, Izin
 from ulakbus.models.auth import User
 from ulakbus.models.hitap import HizmetKayitlari, HizmetBirlestirme
 from ulakbus.models.form import Form, FormData
@@ -159,6 +159,11 @@ class IzinBasvuru(CrudView):
 
     """
 
+    class Meta:
+
+        # CrudViev icin kullanilacak temel Model
+        model = 'Izin'
+
     class IzinBasvuruForm(forms.JsonForm):
         from datetime import date
         izin_turleri = [(1, "Yıllık İzin"), (2, "Mazeret İzni"), (3, "Refakat İzni"),
@@ -188,26 +193,21 @@ class IzinBasvuru(CrudView):
         TODO: İzni onaylayacak olan personellere notifikasyon göndermek gerekli.
 
         """
-        try:
 
-            izin_form_data = self.input['form']
-            # gereksiz form alanlarını sil
+        izin_form_data = self.input['form']
+        # gereksiz form alanlarını sil
+        if 'ileri' in izin_form_data:
             del izin_form_data['ileri']
-            self.current.task_data['izin_form_data'] = izin_form_data
-            izin_form = Form.objects.get(ad="İzin Formu")
-            form_data = FormData()
-            form_data.form = izin_form
-            form_data.user = self.current.user
-            form_data.data = json.dumps(izin_form_data)
-            form_data.date = date.today()
-            form_data.save()
-            self.current.task_data['izin_form_data_key'] = form_data.key
-        except Exception as e:
 
-            self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Bir Hata Oluştu',
-                "msg": 'İzin Başvuru Kaydı Başarısız. Hata Kodu : %s' % e.message
-            }
+        self.current.task_data['izin_form_data'] = izin_form_data
+        izin_form = Form.objects.get(ad="İzin Formu")
+        form_data = FormData()
+        form_data.form = izin_form
+        form_data.user = self.current.user
+        form_data.data = json.dumps(izin_form_data)
+        form_data.date = date.today()
+        form_data.save()
+        self.current.task_data['izin_form_data_key'] = form_data.key
 
     def izin_basvuru_kayit_bilgi_goster(self):
         """Personele izin başvuru kayıt sonucu bilgisini gösteren methoddur.
@@ -238,6 +238,9 @@ class IzinBasvuru(CrudView):
 
         _form = self.IzinBasvuruForm(current=self.current, title="İzin Talep Önizleme Formu")
         _form.personel_ad_soyad = fields.String("İzin Talep Eden")
+        _form.personel_gorev = fields.String("Görevi")
+        _form.personel_sicil_no = fields.String("Sicil no")
+        _form.personel_birim = fields.String("Birimi")
         _form.yol_izni = fields.Boolean("Yol İzni")
         _form.kalan_izin = fields.Integer("Toplam Kalan İzin Süresi(Gün)")
         _form.toplam_izin_gun = fields.Integer("Kullanacağı İzin Süresi(Gün)")
@@ -249,10 +252,30 @@ class IzinBasvuru(CrudView):
     def izin_basvuru_sonuc_kaydet(self):
         """Onay verilen izin başvuru sonucu kaydını gerçekleştiren methoddur.
         TODO : İzin başvurusu yapan personele notifikasyon gönderilmeli.
+        TODO : Personele vekalet edecek kişinin seçimi yapılmalı
 
         """
+        from datetime import date
 
-        pass
+        try:
+
+            personel = Personel.objects.get(self.current.task_data['izin_personel_key'])
+            form = self.input['form']
+            izin = Izin()
+            izin.tip = form['izin_turu']
+            izin.baslangic = form['izin_baslangic']
+            izin.bitis = form['izin_bitis']
+            izin.onay = date.today()
+            izin.adres = form['izin_adres']
+            izin.personel = personel
+            izin.save()
+
+        except Exception as e:
+
+            self.current.output['msgbox'] = {
+                'type': 'warning', "title": 'Bir Hata Oluştu',
+                "msg": 'İzin Kaydı Başarısız. Hata Kodu : %s' % e.message
+            }
 
     @form_modifier
     def basvuru_form_inline_edit(self, serialized_form):
@@ -265,6 +288,34 @@ class IzinBasvuru(CrudView):
             # FormData modelindeki kayıtlar alınır
             form_data = FormData.objects.get(self.current.task_data['izin_form_data_key'])
             basvuru_data = json.loads(form_data.data)
+
+            # izin başvurusu yapan personeli ve kadro özelliklerini bul
+            form_personel = form_data.user.personel
+            self.current.task_data['izin_personel_key'] = form_personel.key
+
+            personel_atama = Atama.objects.get(personel=form_personel)
+
+            # forma personelin görevi eklenir
+            try:
+                x = dict(personel_atama.kadro.get_choices_for("unvan_kod"))
+                personel_gorev = x[personel_atama.kadro.unvan_kod]
+                serialized_form['model']['personel_gorev'] = personel_gorev
+            except Exception as e:
+                pass
+
+            # forma personelin sicil nosu eklenir
+            try:
+                personel_sicil_no = personel_atama.kurum_sicil_no
+                serialized_form['model']['personel_sicil_no'] = personel_sicil_no
+            except Exception as e:
+                pass
+
+            # forma personelin birim adı işlenir
+            try:
+                personel_birim = form_personel.birim.name
+                serialized_form['model']['personel_birim'] = personel_birim
+            except Exception as e:
+                pass
 
             # İznin başlangıç ve bitiş tarihleri arasındaki gün sayısı hesaplanır
             # TODO: Formda tarih değişince js ile tekrar hesaplatmak lazım
@@ -281,4 +332,4 @@ class IzinBasvuru(CrudView):
             serialized_form['model']['izin_adres'] = basvuru_data['izin_adres']
             serialized_form['model']['toplam_izin_gun'] = delta.days
             serialized_form['model']['personel_ad_soyad'] = "%s %s" % (
-                form_data.user.personel.ad, form_data.user.personel.soyad)
+                form_personel.ad, form_personel.soyad)
