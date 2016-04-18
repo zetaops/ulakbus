@@ -364,7 +364,7 @@ class Atama(Model):
     kadro_unvan = field.Integer("Kadro Unvan", index=True)
     kadro_derece = field.Integer("Kadro Derece", index=True)
     kadro = Kadro()
-    personel = Personel()
+    personel = Personel(one_to_one=True)
 
     class Meta:
         app = 'Personel'
