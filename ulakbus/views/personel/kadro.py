@@ -66,6 +66,7 @@ from collections import OrderedDict
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from ulakbus.models import Personel
+from pyoko import ListNode
 import datetime
 
 
@@ -294,6 +295,15 @@ class KadroIslemleri(CrudView):
                 {'name': 'Düzenle', 'cmd': 'add_edit_form', 'show_as': 'button'},
             ])
 
+class TerfiForm(JsonForm):
+    class Personel(ListNode):
+        key = fields.String(hidden=True)
+        sec = fields.Boolean(type="checkbox")
+        tckn = fields.String("T.C. No")
+        isim = fields.String("İsim")
+        soyisim = fields.String("Soyisim")
+    terfi = fields.Button("Terfi Ettir", cmd="terfi")
+
 class TerfiListe(CrudView):
     class Meta:
         model = "Personel"
@@ -305,20 +315,33 @@ class TerfiListe(CrudView):
         personel_liste = Personel.objects.filter(
             sonraki_terfi_tarihi__lte = kontrol
             )
-        tablo = []
+        form = TerfiForm(current = self.current, title = "Terfi İşlemi")
         for personel in personel_liste:
-            satir = OrderedDict({})
-            satir["T.C. No"] = personel.tckn
-            satir["İsim"] = personel.ad
-            satir["Soyad"] = personel.soyad
-            satir["Ünvan"] = personel.get_unvan_display()
-            
-            tablo.append(satir)
+            form.Personel(
+                key = personel.key,
+                sec = False, 
+                tckn = personel.tckn,
+                isim = personel.ad,
+                soyisim = personel.soyad
+                )
 
-        self.current.output['object'] = {
-            "type" : "table-multiRow",
-            "fields" : tablo,
-            "actions" : False
-        }
-        
-        
+        self.form_out(form)
+        self.current.output["meta"]["allow_actions"] = True
+
+    def terfi_ettir(self):
+        personel_liste = self.current.input["form"]["Personel"]
+        for personel in personel_liste:
+            g_ayligi = personel.guncel_gorev_ayligi_derece
+            k_hak = personel.guncel_kazanilmis_hak_derece
+            e_muktesebat = personel.guncel_emekli_muktesebat_derece
+            if personel.kadro.derece != personel.guncel_gorev_ayligi_derece:
+                personel.guncel_gorev_ayligi_kademe += 1
+                if (g_ayligi == k_hak) & (g_ayligi == e_muktesebat):
+                    personel.guncel_kazanilmis_hak_kademe += 1
+                    personel.guncel_emekli_muktesebat_kademe +=1
+                if personel.guncel_gorev_ayligi_kademe == 4:
+                    personel.guncel_gorev_ayligi_derece -= 1
+                if personel.guncel_kazanilmis_hak_kademe == 4:
+                    personel.guncel_kazanilmis_hak_derece -= 1
+                if personel.guncel_emekli_muktesebat_kademe == 4:
+                    personel.guncel_emekli_muktesebat_derece -= 1
