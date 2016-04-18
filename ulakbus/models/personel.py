@@ -302,6 +302,7 @@ class Kadro(Model):
     birim = Unit("Birim", required=False)
     aciklama = field.String("Açıklama", index=True, required=False)
     unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
+    unvan_aciklama = field.String("Unvan Aciklama", index=True, required=False)
 
     class Meta:
         app = 'Personel'
@@ -391,7 +392,7 @@ class Atama(Model):
     kadro_unvan = field.Integer("Kadro Unvan", index=True)
     kadro_derece = field.Integer("Kadro Derece", index=True)
     kadro = Kadro()
-    personel = Personel(one_to_one=True)
+    personel = Personel()
 
     class Meta:
         app = 'Personel'
@@ -403,3 +404,16 @@ class Atama(Model):
 
     def __unicode__(self):
         return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
+
+    @classmethod
+    def personel_guncel_atama(cls, personel):
+        """
+        Personelin goreve_baslama_tarihi ne göre son atama kaydını döndürür.
+
+        Returns:
+            Atama örneği (instance)
+
+        """
+
+        return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[
+            0]
