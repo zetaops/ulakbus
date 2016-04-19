@@ -99,7 +99,7 @@ class Personel(Model):
             Atama örneği (instance)
 
         """
-        return Atama.personel_guncel_atama(personel=self)
+        return Atama.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=self)[0]
 
     @lazy_property
     def kadro(self):
@@ -121,7 +121,7 @@ class Personel(Model):
         Personelin atama bilgilerinden sicil numarasina erişir.
 
         Returns:
-            Sicil No (instance)
+            Sicil No (str)
 
         """
 
@@ -403,16 +403,3 @@ class Atama(Model):
 
     def __unicode__(self):
         return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
-
-    @classmethod
-    def personel_guncel_atama(cls, personel):
-        """
-        Personelin goreve_baslama_tarihi ne göre son atama kaydını döndürür.
-
-        Returns:
-            Atama örneği (instance)
-
-        """
-
-        return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[
-            0]
