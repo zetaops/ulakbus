@@ -13,6 +13,7 @@ from pyoko.modelmeta import model_registry
 from pyoko.conf import settings
 
 from ulakbus.views.reports import ReporterRegistry
+#from zengine.views import basic_view
 from zengine.views.base import BaseView
 from ulakbus.models import Personel, Ogrenci
 from zengine.views.menu import Menu
@@ -38,7 +39,7 @@ class Search(BaseView):
         for o in objects:
             self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
 
-
+# @basic_view('ogrenci_ara')
 class SearchStudent(Search):
     SEARCH_ON = Ogrenci
 
