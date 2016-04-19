@@ -256,26 +256,16 @@ class IzinBasvuru(CrudView):
 
         """
         from datetime import date
-
-        try:
-
-            personel = Personel.objects.get(self.current.task_data['izin_personel_key'])
-            form = self.input['form']
-            izin = Izin()
-            izin.tip = form['izin_turu']
-            izin.baslangic = form['izin_baslangic']
-            izin.bitis = form['izin_bitis']
-            izin.onay = date.today()
-            izin.adres = form['izin_adres']
-            izin.personel = personel
-            izin.save()
-
-        except Exception as e:
-
-            self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Bir Hata Oluştu',
-                "msg": 'İzin Kaydı Başarısız. Hata Kodu : %s' % e.message
-            }
+        personel = Personel.objects.get(self.current.task_data['izin_personel_key'])
+        form = self.input['form']
+        izin = Izin()
+        izin.tip = form['izin_turu']
+        izin.baslangic = form['izin_baslangic']
+        izin.bitis = form['izin_bitis']
+        izin.onay = date.today()
+        izin.adres = form['izin_adres']
+        izin.personel = personel
+        izin.save()
 
     @form_modifier
     def basvuru_form_inline_edit(self, serialized_form):
