@@ -8,6 +8,7 @@
 Bu modül Ulakbüs uygulaması için personel modelini ve  personel ile ilişkili modelleri içerir.
 
 """
+from pyoko.lib.utils import lazy_property
 
 from pyoko import Model, field
 from .auth import Unit, User
@@ -88,7 +89,19 @@ class Personel(Model):
 
     durum.title = "Durum"
 
-    # TODO: metod adi cok genel. daha anlasilir bir ad secip, refactor edelim.
+    @lazy_property
+    def atama(self):
+        """atama
+
+        Personelin atama bilgilerini iceren atama nesnesini getirir.
+
+        Returns:
+            Atama örneği (instance)
+
+        """
+        return Atama.personel_guncel_atama(personel=self)
+
+    @lazy_property
     def kadro(self):
         """Kadro
 
@@ -99,8 +112,20 @@ class Personel(Model):
 
         """
 
-        atama = Atama.personel_guncel_atama(self)
-        return atama.kadro
+        return self.atama.kadro
+
+    @lazy_property
+    def sicil_no(self):
+        """Kadro
+
+        Personelin atama bilgilerinden sicil numarasina erişir.
+
+        Returns:
+            Sicil No (instance)
+
+        """
+
+        return self.atama.kurum_sicil_no
 
     def __unicode__(self):
         return "%s %s" % (self.ad, self.soyad)
@@ -167,7 +192,8 @@ class KurumIciGorevlendirmeBilgileri(Model):
                 "groups": [
                     {
                         "group_title": "Gorev",
-                        "items": ["gorev_tipi", "kurum_ici_gorev_baslama_tarihi", "kurum_ici_gorev_bitis_tarihi",
+                        "items": ["gorev_tipi", "kurum_ici_gorev_baslama_tarihi",
+                                  "kurum_ici_gorev_bitis_tarihi",
                                   "birim", "aciklama"],
                         "collapse": False
                     }
@@ -222,7 +248,8 @@ class KurumDisiGorevlendirmeBilgileri(Model):
                 "groups": [
                     {
                         "group_title": "Gorev",
-                        "items": ["gorev_tipi", "kurum_disi_gorev_baslama_tarihi", "kurum_disi_gorev_bitis_tarihi",
+                        "items": ["gorev_tipi", "kurum_disi_gorev_baslama_tarihi",
+                                  "kurum_disi_gorev_bitis_tarihi",
                                   "ulke",
                                   "aciklama"],
                         "collapse": False
@@ -370,7 +397,8 @@ class Atama(Model):
         app = 'Personel'
         verbose_name = "Atama"
         verbose_name_plural = "Atamalar"
-        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi', 'durum']
+        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi',
+                       'durum']
         search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
 
     def __unicode__(self):
@@ -386,4 +414,5 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[0]
+        return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[
+            0]
