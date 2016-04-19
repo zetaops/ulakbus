@@ -128,6 +128,39 @@ class Permission(Model):
     def __unicode__(self):
         return "%s %s" % (self.name, self.code)
 
+    def get_permitted_users(self):
+        """
+        Get users which has this permission
+
+        Returns:
+            User list
+        """
+        users = set()
+        for ars in self.abstract_role_set:
+            for r in ars.abstract_role.role_set:
+                users.add(r.role.user)
+        for r in self.role_set:
+            users.add(r.user)
+
+        return users
+
+
+    def get_permitted_roles(self):
+        """
+        Get roles which has this permission
+
+        Returns:
+            Role list
+        """
+        roles = set()
+        for ars in self.abstract_role_set:
+            for r in ars.abstract_role.role_set:
+                roles.add(r.role)
+        for r in self.role_set:
+            roles.add(r)
+        return roles
+
+
 
 class AbstractRole(Model):
     """AbstractRole Modeli
