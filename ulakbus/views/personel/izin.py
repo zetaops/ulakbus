@@ -216,9 +216,6 @@ class IzinBasvuru(CrudView):
         izin_basvuru = self.current.task_data['izin_form_data']
         izin_baslangic = izin_basvuru['izin_baslangic']
         izin_bitis = izin_basvuru['izin_bitis']
-        _form = forms.JsonForm(current=self.current, title=" ")
-        _form.ileri = fields.Button("İleri")
-        self.form_out(_form)
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'İzin Başvurusu Yapıldı',
             "msg": '%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.' % (
