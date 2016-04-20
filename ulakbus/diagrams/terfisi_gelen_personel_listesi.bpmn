@@ -28,7 +28,7 @@
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="UserTask_1" targetRef="ExclusiveGateway_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ExclusiveGateway_1" targetRef="terfi_islemi">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd=='terfi'</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd=='terfi_ettir'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:serviceTask id="terfi_islemi" camunda:class="personel.kadro.TerfiListe.terfi_ettir" name="Terfi İşlemi">
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
