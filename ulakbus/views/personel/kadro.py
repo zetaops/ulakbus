@@ -67,6 +67,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from ulakbus.models import Personel
 from pyoko import ListNode
+from dateutil.relativedelta import relativedelta
 import datetime
 
 
@@ -305,7 +306,8 @@ class TerfiForm(JsonForm):
         gorev_ayligi = fields.String("Görev Aylığı")
         kazanilmis_hak = fields.String("Kazanılmış Hak")
         emekli_muktesebat = fields.String("Emekli Müktesebat")
-    terfi = fields.Button("Terfi Ettir", cmd="terfi_ettir")
+    terfi_et_listele = fields.Button("Terfi Ettir ve listele", cmd="terfi_ettir", flow="liste")
+    terfi_et_end = fields.Button("Terfi Ettir", cmd="terfi_ettir", flow="end")
 
 class TerfiListe(CrudView):
     class Meta:
@@ -342,22 +344,27 @@ class TerfiListe(CrudView):
 
     def terfi_ettir(self):
         personel_liste = self.current.input["form"]["Personel"]
+        simdi = datetime.date.today()
         for personel_data in personel_liste:
-            personel = Personel.objects.get(personel_data["key"])
-            g_ayligi = personel.guncel_gorev_ayligi_derece
-            k_hak = personel.guncel_kazanilmis_hak_derece
-            e_muktesebat = personel.guncel_emekli_muktesebat_derece
-            if personel.kadro.derece != personel.guncel_gorev_ayligi_derece:
-                personel.sonraki_terfi_tarihi += simdi + datetime.timedelta(years = 1)
-                personel.guncel_gorev_ayligi_kademe += 1
-                if (g_ayligi == k_hak) & (g_ayligi == e_muktesebat):
-                    personel.guncel_kazanilmis_hak_kademe += 1
-                    personel.guncel_emekli_muktesebat_kademe +=1
-                if personel.guncel_gorev_ayligi_kademe == 4:
-                    personel.guncel_gorev_ayligi_derece -= 1
-                if personel.guncel_kazanilmis_hak_kademe == 4:
-                    personel.guncel_kazanilmis_hak_derece -= 1
-                if personel.guncel_emekli_muktesebat_kademe == 4:
-                    personel.guncel_emekli_muktesebat_derece -= 1
-
-            personel.save()
+            if personel_data["sec"]:
+                personel = Personel.objects.get(personel_data["key"])
+                g_ayligi = personel.guncel_gorev_ayligi_derece
+                k_hak = personel.guncel_kazanilmis_hak_derece
+                e_muktesebat = personel.guncel_emekli_muktesebat_derece
+                if personel.guncel_kadro.derece != personel.guncel_gorev_ayligi_derece:
+                    personel.sonraki_terfi_tarihi = simdi + relativedelta(years= 1)
+                    personel.guncel_gorev_ayligi_kademe += 1
+                    if (g_ayligi == k_hak) & (g_ayligi == e_muktesebat):
+                        personel.guncel_kazanilmis_hak_kademe += 1
+                        personel.guncel_emekli_muktesebat_kademe +=1
+                    if personel.guncel_gorev_ayligi_kademe == 4:
+                        personel.guncel_gorev_ayligi_derece -= 1
+                        personel.guncel_gorev_ayligi_kademe = 1
+                    if personel.guncel_kazanilmis_hak_kademe == 4:
+                        personel.guncel_kazanilmis_hak_derece -= 1
+                        personel.guncel_kazanilmis_hak_kademe = 1
+                    if personel.guncel_emekli_muktesebat_kademe == 4:
+                        personel.guncel_emekli_muktesebat_derece -= 1
+                        personel.guncel_emekli_muktesebat_kademe = 1                
+                
+                personel.save()

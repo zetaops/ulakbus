@@ -120,7 +120,7 @@ class Personel(Model):
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
     sonraki_terfi_tarihi = field.Date("Sonraki Terfi Tarihi", index=True, format="%d.%m.%Y")
     user = User(one_to_one=True)
-    kadro = Kadro(one_to_one=True)
+    guncel_kadro = Kadro(one_to_one=True)
 
     class Meta:
         app = 'Personel'
