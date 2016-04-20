@@ -617,13 +617,15 @@ class OgrenciDersi(Model):
 
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
     sube = Sube()
-    donem = Donem()
     ogrenci_program = OgrenciProgram()
     ogrenci = Ogrenci()
     basari_ortalamasi = field.Float("Ortalama", index=True)
     harflendirilmis_not = field.String("Harf", index=True)
     katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
+    # arama amaçlı alan
     ders = Ders()
+    # arama amaçlı alan
+    donem = Donem()
 
     class Meta:
         app = 'Ogrenci'
@@ -632,8 +634,9 @@ class OgrenciDersi(Model):
         list_fields = ['ders', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
 
-    def pre_save(self):
+    def post_creation(self):
         self.donem = self.sube.donem
+        self.ders = self.sube.ders
 
     def ders_adi(self):
         """
