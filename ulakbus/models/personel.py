@@ -19,6 +19,43 @@ PERSONEL_TURU = [
 ]
 
 
+class Kadro(Model):
+    """Kadro Modeli
+
+    Kurum için ayrılmış Kadro bilgilerine modeldir.
+
+    Kadrolar 4 halde bulunabilirler: SAKLI, IZINLI, DOLU ve BOŞ
+
+        * SAKLI: Saklı kadro, atama yapılmaya müsadesi olmayan, etkinlik onayı alınmamış
+          fakat kurum için ayrılmış potansiyel kadroyu tanımlar.
+        * IZINLI: Henüz atama yapılmamış, fakat etkinlik onayı alınmış kadroyu tanımlar.
+        * DOLU: Bir personel tarafından işgal edilmiş bir kadroyu tanımlar. Ataması yapılmıştır.
+        * BOŞ: Çeşitli sebepler ile DOLU iken boşaltılmış kadroyu tanınmlar.
+
+    ``unvan`` ve ``unvan_kod`` karşıt alanlardır. Birisi varken diğeri mevcut olamaz.
+
+    """
+
+    kadro_no = field.Integer("Kadro No", required=False)
+    unvan = field.Integer("Akademik Unvan", index=True, choices="akademik_unvan", required=False)
+    derece = field.Integer("Derece", index=True, required=False)
+    durum = field.Integer("Durum", index=True, choices="kadro_durumlari", required=False)
+    birim = Unit("Birim", required=False)
+    aciklama = field.String("Açıklama", index=True, required=False)
+    unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = "Kadro"
+        verbose_name_plural = "Kadrolar"
+        list_fields = ['durum', 'unvan', 'aciklama']
+        search_fields = ['unvan', 'derece']
+        list_filters = ['durum']
+
+    def __unicode__(self):
+        return "%s %s %s" % (self.unvan, self.derece, self.durum)
+
+
 class Personel(Model):
     """Personel Modeli
 
@@ -73,6 +110,12 @@ class Personel(Model):
     kimlik_cuzdani_verilis_nedeni = field.String("Cüzdanın Veriliş Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
+    guncel_kazanilmis_hak_derece = field.Integer("Güncel Kazanılmış Hak Derece", index=True)
+    guncel_kazanilmis_hak_kademe = field.Integer("Güncel Kazanılmış Hak Kademe", index=True)
+    guncel_gorev_ayligi_derece = field.Integer("Güncel Görev Aylığı Derece", index=True)
+    guncel_gorev_ayligi_kademe = field.Integer("Güncel Görev Aylığı Kademe", index=True)
+    guncel_emekli_muktesebat_derece = field.Integer("Güncel Emekli Müktesebat Derece", index=True)
+    guncel_emekli_muktesebat_kademe = field.Integer("Güncel Emekli Müktesebat Kademe", index=True)
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
     sonraki_terfi_tarihi = field.Date("Sonraki Terfi Tarihi", index=True, format="%d.%m.%Y")
@@ -134,7 +177,6 @@ class Personel(Model):
 
     def __unicode__(self):
         return "%s %s" % (self.ad, self.soyad)
-
 
 
 class AdresBilgileri(Model):
@@ -282,44 +324,6 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
     def __unicode__(self):
         return "%s %s %s" % (self.gorev_tipi, self.aciklama, self.ulke)
-
-
-class Kadro(Model):
-    """Kadro Modeli
-
-    Kurum için ayrılmış Kadro bilgilerine modeldir.
-
-    Kadrolar 4 halde bulunabilirler: SAKLI, IZINLI, DOLU ve BOŞ
-
-        * SAKLI: Saklı kadro, atama yapılmaya müsadesi olmayan, etkinlik onayı alınmamış
-          fakat kurum için ayrılmış potansiyel kadroyu tanımlar.
-        * IZINLI: Henüz atama yapılmamış, fakat etkinlik onayı alınmış kadroyu tanımlar.
-        * DOLU: Bir personel tarafından işgal edilmiş bir kadroyu tanımlar. Ataması yapılmıştır.
-        * BOŞ: Çeşitli sebepler ile DOLU iken boşaltılmış kadroyu tanınmlar.
-
-    ``unvan`` ve ``unvan_kod`` karşıt alanlardır. Birisi varken diğeri mevcut olamaz.
-
-    """
-
-    kadro_no = field.Integer("Kadro No", required=False)
-    unvan = field.Integer("Akademik Unvan", index=True, choices="akademik_unvan", required=False)
-    derece = field.Integer("Derece", index=True, required=False)
-    durum = field.Integer("Durum", index=True, choices="kadro_durumlari", required=False)
-    birim = Unit("Birim", required=False)
-    aciklama = field.String("Açıklama", index=True, required=False)
-    unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
-    unvan_aciklama = field.String("Unvan Aciklama", index=True, required=False)
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Kadro"
-        verbose_name_plural = "Kadrolar"
-        list_fields = ['durum', 'unvan', 'aciklama']
-        search_fields = ['unvan', 'derece']
-        list_filters = ['durum']
-
-    def __unicode__(self):
-        return "%s %s %s" % (self.unvan, self.derece, self.durum)
 
 
 class Izin(Model):

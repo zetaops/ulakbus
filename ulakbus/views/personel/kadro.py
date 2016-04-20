@@ -60,7 +60,7 @@ Kadro Sil Onay
 
 """
 
-from zengine.views.crud import CrudView, obj_filter
+from zengine.views.crud import CrudView, obj_filter, form_modifier
 from collections import OrderedDict
 
 from zengine.forms import JsonForm
@@ -297,12 +297,15 @@ class KadroIslemleri(CrudView):
 
 class TerfiForm(JsonForm):
     class Personel(ListNode):
-        key = fields.String(hidden=True)
-        sec = fields.Boolean(type="checkbox")
+        key = fields.String("Key", hidden=True)
+        sec = fields.Boolean("Seç", type="checkbox")
         tckn = fields.String("T.C. No")
         isim = fields.String("İsim")
         soyisim = fields.String("Soyisim")
-    terfi = fields.Button("Terfi Ettir", cmd="terfi")
+        gorev_ayligi = fields.String("Görev Aylığı")
+        kazanilmis_hak = fields.String("Kazanılmış Hak")
+        emekli_muktesebat = fields.String("Emekli Müktesebat")
+    terfi = fields.Button("Terfi Ettir", cmd="terfi_ettir")
 
 class TerfiListe(CrudView):
     class Meta:
@@ -322,19 +325,29 @@ class TerfiListe(CrudView):
                 sec = False, 
                 tckn = personel.tckn,
                 isim = personel.ad,
-                soyisim = personel.soyad
+                soyisim = personel.soyad,
+                gorev_ayligi = "%i/%i"%(personel.guncel_gorev_ayligi_derece, personel.guncel_gorev_ayligi_kademe),
+                kazanilmis_hak = "%i/%i"%(personel.guncel_kazanilmis_hak_derece, personel.guncel_kazanilmis_hak_kademe),
+                emekli_muktesebat = "%i/%i"%(personel.guncel_emekli_muktesebat_derece, personel.guncel_emekli_muktesebat_kademe)
                 )
 
         self.form_out(form)
-        self.current.output["meta"]["allow_actions"] = True
+        self.current.output["meta"]["allow_actions"] = False
+
+    @form_modifier
+    def terfi_form_inline_edit(self, serialized_form):
+        if 'Personel' in serialized_form["schema"]["properties"]:
+            serialized_form["inline_edit"] = ["sec"] 
 
     def terfi_ettir(self):
         personel_liste = self.current.input["form"]["Personel"]
-        for personel in personel_liste:
+        for personel_data in personel_liste:
+            personel = Personel.objects.get(personel_data["key"])
             g_ayligi = personel.guncel_gorev_ayligi_derece
             k_hak = personel.guncel_kazanilmis_hak_derece
             e_muktesebat = personel.guncel_emekli_muktesebat_derece
             if personel.kadro.derece != personel.guncel_gorev_ayligi_derece:
+                personel.sonraki_terfi_tarihi += simdi + datetime.timedelta(years = 1)
                 personel.guncel_gorev_ayligi_kademe += 1
                 if (g_ayligi == k_hak) & (g_ayligi == e_muktesebat):
                     personel.guncel_kazanilmis_hak_kademe += 1
@@ -345,3 +358,5 @@ class TerfiListe(CrudView):
                     personel.guncel_kazanilmis_hak_derece -= 1
                 if personel.guncel_emekli_muktesebat_kademe == 4:
                     personel.guncel_emekli_muktesebat_derece -= 1
+
+            personel.save()
