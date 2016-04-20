@@ -264,6 +264,11 @@ class IzinBasvuru(CrudView):
         izin.personel = personel
         izin.save()
 
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'İzin Başvurusu Onaylandı',
+            "msg": 'İzin talebi başarıyla onaylanmıştır.'
+        }
+
     @form_modifier
     def basvuru_form_inline_edit(self, serialized_form):
         """izin_basvuru_goster aşamasında personelin `IzinBasvuruForm` seçimlerini populate etmek
