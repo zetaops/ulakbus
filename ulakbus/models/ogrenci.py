@@ -629,25 +629,13 @@ class OgrenciDersi(Model):
         app = 'Ogrenci'
         verbose_name = "Ögrenci Dersi"
         verbose_name_plural = "Öğrenci Dersleri"
-        list_fields = ['sube_dersi', 'alis_bicimi']
+        list_fields = ['ders', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
 
     def pre_save(self):
         self.donem = self.sube.donem
 
-    def sube_dersi(self):
-        """
-        Şubenin bağlı olduğu ders.
-
-        Returns:
-            Şubenin bağlı olduğu ders nesnesini döndürür.
-
-        """
-        return "%s" % self.ders
-
-    sube_dersi.title = 'Ders'
-
-    def sube_ders_adi(self):
+    def ders_adi(self):
         """
         Şubenin bağlı olduğu ders adı.
 
@@ -657,7 +645,7 @@ class OgrenciDersi(Model):
         """
         return six.text_type(self.ders.ad)
 
-    sube_ders_adi.title = 'Ders'
+    ders_adi.title = 'Ders'
 
     def __unicode__(self):
         return '%s %s %s' % (self.ders.kod, self.ders.ad, self.alis_bicimi)
