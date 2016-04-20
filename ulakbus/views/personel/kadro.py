@@ -333,6 +333,7 @@ class TerfiListe(CrudView):
 
         self.form_out(form)
         self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     @form_modifier
     def terfi_form_inline_edit(self, serialized_form):
