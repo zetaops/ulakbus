@@ -200,7 +200,7 @@ class HITAPEkle(Service):
                          "HizmetUnvanInsert": "ns1:HizmetUnvanServisBean",
                          "hizmetIstisnaiIlgiInsert": "ns1:HizmetIstisnaiIlgiServisBean"}
 
-        if services_dict.has_key(service_name):
+        if service_name in services_dict:
             return services_dict[service_name]
         else:
             return False

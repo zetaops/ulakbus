@@ -49,7 +49,7 @@ class HITAPGuncelle(Service):
 
     def __init__(self):
         self.service_name = ''
-        self.service_dict = {'fields': {},'date_filter':[],'required_fields':[]}
+        self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
         super(HITAPGuncelle, self).__init__()
 
     def handle(self):
@@ -200,7 +200,7 @@ class HITAPGuncelle(Service):
                          "HizmetUnvanUpdate": "ns1:HizmetUnvanServisBean",
                          "hizmetIstisnaiIlgiUpdate": "ns1:HizmetIstisnaiIlgiServisBean"}
 
-        if services_dict.has_key(service_name):
+        if service_name in services_dict:
             return services_dict[service_name]
         else:
             return False

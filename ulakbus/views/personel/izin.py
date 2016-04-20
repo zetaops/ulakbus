@@ -276,7 +276,7 @@ class IzinBasvuru(CrudView):
 
         """
         if 'izin_turu' in serialized_form['schema'][
-            'properties'] and self.current.task_data.has_key('izin_form_data_key'):
+            'properties'] and 'izin_form_data_key' in self.current.task_data:
             # FormData modelindeki kayıtlar alınır
             form_data = FormData.objects.get(self.current.task_data['izin_form_data_key'])
             basvuru_data = json.loads(form_data.data)
