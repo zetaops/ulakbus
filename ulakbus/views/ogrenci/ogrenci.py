@@ -514,7 +514,10 @@ class KayitDondurma(CrudView):
         ogrenci = ogrenci_program.ogrenci
         donemler = self.current.input['form']['Donemler']
         baslangic_tarihi = self.current.input['form']['baslangic_tarihi']
-
+        ogrenci_ad_soyad = "%s %s" % (ogrenci.ad, ogrenci.soyad)
+        notify_message = '%s numaralı, %s adlı öğrencinin %s programındaki kaydı ' \
+                         'dondurulmuştur' % (ogrenci_program.ogrenci_no, ogrenci_ad_soyad,
+                                             ogrenci_program.program.adi)
         for donem in donemler:
             donem_kayit = Donem.objects.get(donem['key'])
             try:
@@ -547,10 +550,6 @@ class KayitDondurma(CrudView):
                 current_role = Role.objects.get(user=user, unit=unit)
                 current_role.abstract_role = abstract_role
                 current_role.save()
-                ogrenci_ad_soyad = "%s %s" % (ogrenci.ad, ogrenci.soyad)
-                notify_message = '%s numaralı, %s adlı öğrencinin %s programındaki kaydı ' \
-                                 'dondurulmuştur' % (ogrenci_program.ogrenci_no, ogrenci_ad_soyad,
-                                                     ogrenci_program.program.adi)
             except Exception as e:
 
                 self.current.output['msgbox'] = {
