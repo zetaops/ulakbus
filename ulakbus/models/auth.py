@@ -140,7 +140,7 @@ class Permission(Model):
             for r in ars.abstract_role.role_set:
                 users.add(r.role.user)
         for r in self.role_set:
-            users.add(r.user)
+            users.add(r.role.user)
 
         return users
 
