@@ -612,10 +612,10 @@ class BasariDurum(CrudView):
             dersler = list()
             for d in ogrenci_dersler:
                 dersler = list()
-                dersler.append(d.sube.ders.kod)
+                dersler.append(d.ders.kod)
                 dersler.append(d.sube_ders_adi())
                 degerlendirmeler = DegerlendirmeNot.objects.filter(
-                    ogrenci_no=ogrenci_program.ogrenci_no, donem=donem.ad, ders=d.sube.ders)
+                    ogrenci_no=ogrenci_program.ogrenci_no, donem=donem.ad, ders=d.ders)
                 notlar = [(d.sinav.get_tur_display(), d.puan) for d in degerlendirmeler]
                 if len(notlar) > 0:
                     dersler.append(

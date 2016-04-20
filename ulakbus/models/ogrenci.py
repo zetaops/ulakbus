@@ -643,7 +643,7 @@ class OgrenciDersi(Model):
             Şubenin bağlı olduğu ders nesnesini döndürür.
 
         """
-        return "%s" % self.sube.ders
+        return "%s" % self.ders
 
     sube_dersi.title = 'Ders'
 
@@ -655,12 +655,12 @@ class OgrenciDersi(Model):
             Şubenin bağlı olduğu ders örneğinin adını döndürür.
 
         """
-        return six.text_type(self.sube.ders)
+        return six.text_type(self.ders.ad)
 
     sube_ders_adi.title = 'Ders'
 
     def __unicode__(self):
-        return '%s %s %s' % (self.sube.ders.kod, self.sube.ders.ad, self.alis_bicimi)
+        return '%s %s %s' % (self.ders.kod, self.ders.ad, self.alis_bicimi)
 
 
 class DersKatilimi(Model):
