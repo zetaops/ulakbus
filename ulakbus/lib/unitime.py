@@ -11,8 +11,7 @@ import os
 import sys
 from zengine.management_commands import *
 from lxml import etree
-from ulakbus.models import Donem, Ogrenci, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, \
-    Okutman, Campus
+from ulakbus.models import Donem, Ogrenci, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Campus
 import datetime
 
 
@@ -488,7 +487,7 @@ class ExportStudentCourseDemandsToXML(UnitimeEntityXMLExport):
                             try:
                                 for ogrenci_ders in OgrenciDersi.objects.filter(
                                         ogrenci_program=department):
-                                    ders = ogrenci_ders.ders.ders
+                                    ders = ogrenci_ders.sube.ders
                                     etree.SubElement(student_element, 'studentCourse',
                                                      externalId="%s" % ders.key,
                                                      courseNumber="%s" % ders.kod,
@@ -545,7 +544,7 @@ class ExportStudentCoursesToXML(UnitimeEntityXMLExport):
                                 for ogrenci_ders in OgrenciDersi.objects.filter(
                                         ogrenci_program=department):
                                     if (ogrenci_ders):
-                                        ders = ogrenci_ders.ders.ders
+                                        ders = ogrenci_ders.sube.ders
                                         etree.SubElement(student_element, 'class',
                                                          externalId="%s" % ders.key,
                                                          courseNbr="%s" % ders.kod,

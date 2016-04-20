@@ -568,7 +568,7 @@ class FakeDataGenerator:
         try:
             od = OgrenciDersi()
             od.alis_bicimi = random.choice([1, 2])
-            od.ders = sube
+            od.sube = sube
             od.ogrenci_program = ogrenci_program
             od.ogrenci = ogrenci_program.ogrenci
             if donem:

@@ -616,13 +616,14 @@ class OgrenciDersi(Model):
     """
 
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
-    ders = Sube()
+    sube = Sube()
     donem = Donem()
     ogrenci_program = OgrenciProgram()
     ogrenci = Ogrenci()
     basari_ortalamasi = field.Float("Ortalama", index=True)
     harflendirilmis_not = field.String("Harf", index=True)
     katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
+    ders = Ders()
 
     class Meta:
         app = 'Ogrenci'
@@ -632,7 +633,7 @@ class OgrenciDersi(Model):
         search_fields = ['alis_bicimi', ]
 
     def pre_save(self):
-        self.donem = self.ders.donem
+        self.donem = self.sube.donem
 
     def sube_dersi(self):
         """
@@ -642,7 +643,7 @@ class OgrenciDersi(Model):
             Şubenin bağlı olduğu ders nesnesini döndürür.
 
         """
-        return "%s" % self.ders.ders
+        return "%s" % self.sube.ders
 
     sube_dersi.title = 'Ders'
 
@@ -654,12 +655,12 @@ class OgrenciDersi(Model):
             Şubenin bağlı olduğu ders örneğinin adını döndürür.
 
         """
-        return six.text_type(self.ders.ders)
+        return six.text_type(self.sube.ders)
 
     sube_ders_adi.title = 'Ders'
 
     def __unicode__(self):
-        return '%s %s %s' % (self.ders.ders.kod, self.ders.ders.ad, self.alis_bicimi)
+        return '%s %s %s' % (self.sube.ders.kod, self.sube.ders.ad, self.alis_bicimi)
 
 
 class DersKatilimi(Model):
