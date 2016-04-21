@@ -68,7 +68,7 @@ class TestCase(BaseTestCase):
         ders = OgrenciDersi.objects.get('3QSRTg42S9LtnUtbwbTwom7vyD')
 
         # Şubeye kayıtlı olan sınavlar
-        sinav = Sinav.objects.filter(sube_id=ders.ders.key)
+        sinav = Sinav.objects.filter(sube_id=ders.sube.key)
         # Sunucudan dönen sınav sayısı ile veritabanından çekilen sınav sayısı karşılaştırılıp
         # test edilir.
         assert len(sinav) == len(resp.json['forms']['form'][1]['titleMap'])

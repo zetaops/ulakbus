@@ -51,7 +51,7 @@ class NotDuzenleme(CrudView):
         self.current.task_data['ders_id'] = self.current.input['form']['ders']
         ders = OgrenciDersi.objects.get(self.current.task_data['ders_id'])
         _form = forms.JsonForm(current=self.current, title='Sınav Seçiniz.')
-        _choices = prepare_choices_for_model(Sinav, sube_id=ders.ders.key)
+        _choices = prepare_choices_for_model(Sinav, sube_id=ders.sube.key)
         _form.sinav = fields.Integer(choices=_choices)
         _form.onayla = fields.Button('Seç')
         self.form_out(_form)
