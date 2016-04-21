@@ -9,6 +9,7 @@
 Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
 
 """
+from pyoko.exceptions import ObjectDoesNotExist
 
 from pyoko.lib.utils import lazy_property
 from .personel import Personel
@@ -207,9 +208,12 @@ class Donem(Model):
 
     def pre_save(self):
         if self.guncel:
-            old = self.guncel_donem()
-            old.guncel = False
-            old.save()
+            try:
+                old = self.guncel_donem()
+                old.guncel = False
+                old.save()
+            except ObjectDoesNotExist:
+                pass
 
     class Meta:
         app = 'Ogrenci'
@@ -565,6 +569,7 @@ class OgrenciProgram(Model):
     giris_puani = field.Float("Giriş Puani", index=True)
     aktif_donem = field.String("Dönem", index=True)
     ogrencilik_statusu = field.Integer('Öğrencilik Statüsü', index=True, choices="ogrenci_program_durumlar")
+    ogrenci_ders_kayit_status = field.Integer('Öğrencilik Ders KAyıt Statüsü', index=True, choices="ogrenci_ders_kayit_durum")
     ayrilma_nedeni = field.Integer('Ayrılma Nedeni', index=True, choices='ayrilma_nedeni')
     basari_durumu = field.String("Başarı Durumu", index=True)
     ders_programi = DersProgrami()
@@ -611,37 +616,34 @@ class OgrenciDersi(Model):
     """
 
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
-    ders = Sube()
-    donem = Donem()
+    sube = Sube()
     ogrenci_program = OgrenciProgram()
     ogrenci = Ogrenci()
     basari_ortalamasi = field.Float("Ortalama", index=True)
     harflendirilmis_not = field.String("Harf", index=True)
     katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
 
+    # arama amaçlı alanlar
+    ders = Ders()
+    donem = Donem()
+
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Ögrenci Dersi"
         verbose_name_plural = "Öğrenci Dersleri"
-        list_fields = ['sube_dersi', 'alis_bicimi']
+        list_fields = ['ders', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
 
-    def pre_save(self):
-        self.donem = self.ders.donem
-
-    def sube_dersi(self):
+    def post_creation(self):
         """
-        Şubenin bağlı olduğu ders.
-
-        Returns:
-            Şubenin bağlı olduğu ders nesnesini döndürür.
+        Yeni bir ``OgrenciDers``'i ilk defa yaratılınca ``donem`` ve ``ders`` alanları,
+        bağlı şubeden atanır.
 
         """
-        return "%s" % self.ders.ders
+        self.donem = self.sube.donem
+        self.ders = self.sube.ders
 
-    sube_dersi.title = 'Ders'
-
-    def sube_ders_adi(self):
+    def ders_adi(self):
         """
         Şubenin bağlı olduğu ders adı.
 
@@ -649,12 +651,12 @@ class OgrenciDersi(Model):
             Şubenin bağlı olduğu ders örneğinin adını döndürür.
 
         """
-        return six.text_type(self.ders.ders)
+        return six.text_type(self.ders.ad)
 
-    sube_ders_adi.title = 'Ders'
+    ders_adi.title = 'Ders'
 
     def __unicode__(self):
-        return '%s %s %s' % (self.ders.ders.kod, self.ders.ders.ad, self.alis_bicimi)
+        return '%s %s %s' % (self.ders.kod, self.ders.ad, self.alis_bicimi)
 
 
 class DersKatilimi(Model):
