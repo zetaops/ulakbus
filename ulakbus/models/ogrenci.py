@@ -622,9 +622,9 @@ class OgrenciDersi(Model):
     basari_ortalamasi = field.Float("Ortalama", index=True)
     harflendirilmis_not = field.String("Harf", index=True)
     katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
-    # arama amaçlı alan
+
+    # arama amaçlı alanlar
     ders = Ders()
-    # arama amaçlı alan
     donem = Donem()
 
     class Meta:
@@ -635,6 +635,11 @@ class OgrenciDersi(Model):
         search_fields = ['alis_bicimi', ]
 
     def post_creation(self):
+        """
+        Yeni bir ``OgrenciDers``'i ilk defa yaratılınca ``donem`` ve ``ders`` alanları,
+        bağlı şubeden atanır.
+
+        """
         self.donem = self.sube.donem
         self.ders = self.sube.ders
 
