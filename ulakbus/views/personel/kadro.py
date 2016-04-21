@@ -353,10 +353,10 @@ class TerfiListe(CrudView):
                 e_muktesebat = personel.guncel_emekli_muktesebat_derece
                 if personel.guncel_kadro.derece != personel.guncel_gorev_ayligi_derece:
                     personel.sonraki_terfi_tarihi = simdi + relativedelta(years= 1)
-                    personel.guncel_gorev_ayligi_kademe += 1
+                    personel.guncel_kazanilmis_hak_kademe += 1
+                    personel.guncel_emekli_muktesebat_kademe +=1                    
                     if (g_ayligi == k_hak) & (g_ayligi == e_muktesebat):
-                        personel.guncel_kazanilmis_hak_kademe += 1
-                        personel.guncel_emekli_muktesebat_kademe +=1
+                        personel.guncel_gorev_ayligi_kademe += 1
                     if personel.guncel_gorev_ayligi_kademe == 4:
                         personel.guncel_gorev_ayligi_derece -= 1
                         personel.guncel_gorev_ayligi_kademe = 1
