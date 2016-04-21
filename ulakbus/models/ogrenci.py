@@ -406,8 +406,11 @@ class Sinav(Model):
     tur = field.Integer("Sınav Türü", index=True, choices="sinav_turleri")
     aciklama = field.String("Açıklama", index=True)
     sube = Sube()
-    ders = Ders()
     degerlendirme = field.Boolean("Değerlendirme Durumu", index=True, default=False)
+
+    # arama amacli
+    ders = Ders()
+    puan = field.Integer("Puan", index=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -568,8 +571,10 @@ class OgrenciProgram(Model):
     giris_puan_turu = field.Integer("Puan Türü", index=True, choices="giris_puan_turleri")
     giris_puani = field.Float("Giriş Puani", index=True)
     aktif_donem = field.String("Dönem", index=True)
-    ogrencilik_statusu = field.Integer('Öğrencilik Statüsü', index=True, choices="ogrenci_program_durumlar")
-    ogrenci_ders_kayit_status = field.Integer('Öğrencilik Ders KAyıt Statüsü', index=True, choices="ogrenci_ders_kayit_durum")
+    ogrencilik_statusu = field.Integer('Öğrencilik Statüsü', index=True,
+                                       choices="ogrenci_program_durumlar")
+    ogrenci_ders_kayit_status = field.Integer('Öğrencilik Ders KAyıt Statüsü', index=True,
+                                              choices="ogrenci_ders_kayit_durum")
     ayrilma_nedeni = field.Integer('Ayrılma Nedeni', index=True, choices='ayrilma_nedeni')
     basari_durumu = field.String("Başarı Durumu", index=True)
     ders_programi = DersProgrami()
@@ -839,6 +844,11 @@ class DegerlendirmeNot(Model):
         list_fields = ['puan', 'ders_adi']
         search_fields = ['aciklama', 'puan', 'ogrenci_no']
         list_filters = ['donem', ]
+
+    def post_save(self):
+        self.sinav.degerlendirme = True
+        self.sinav.puan = self.puan
+        self.sinav.save()
 
     def ders_adi(self):
         return "%s" % self.ders.ad
