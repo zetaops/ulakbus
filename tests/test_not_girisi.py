@@ -74,7 +74,7 @@ class TestCase(BaseTestCase):
 
         assert resp.json['msgbox']['title'] == 'Notlar Onaylandı'
 
-        # Veritabanından çekilen öğrenci bilgisi ile sıunucudan gelen öğrenci bilgisi
+        # Veritabanından çekilen öğrenci bilgisi ile sunucudan gelen öğrenci bilgisi
         # karşılaştırılarak test edilir.
         for i in range(0, len(resp.json['object']['fields'])):
             ogrenci_ders = OgrenciDersi.objects.filter(sube_id='S7z8bvdNCBFSd9iCvQrb7O1pQ75')
