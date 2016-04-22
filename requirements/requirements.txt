@@ -12,7 +12,6 @@ enum34
 Werkzeug
 celery
 requests
-lxml
 boto
 reportlab
 six
