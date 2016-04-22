@@ -724,6 +724,14 @@ class FakeDataGenerator:
         print("Oluşturulan donem listesi : %s\n" % donem_list)
         time.sleep(3)
 
+        kampus_list = self.yeni_kampus(kampus_say=kampus_say)
+        print("Oluşturulan kampus listesi : %s\n" % kampus_list)
+        time.sleep(3)
+
+        buildings, rooms = self.yeni_bina()
+        print("Oluşturulan bina listesi : %s\n" % buildings)
+        print("Oluşturulan oda listesi : %s\n" % rooms)
+
         # yoksis uzerindeki program birimleri
         yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), program_say)
         print(

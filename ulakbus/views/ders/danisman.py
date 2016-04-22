@@ -11,14 +11,15 @@
 Dönem bazlı danışman atanmasını sağlayan iş akışını yönetir.
 
 """
+
 from pyoko import ListNode
-from pyoko.exceptions import ObjectDoesNotExist
-from ulakbus.models.auth import Unit
-from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView, form_modifier
-
+from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
+from ulakbus.models.auth import Unit
+from collections import OrderedDict
+from ulakbus.views.ders.ders import prepare_choices_for_model
 
 class DonemDanismanForm(forms.JsonForm):
     """``DonemDanismanAtama`` sınıfı için form olarak kullanılacaktır.
@@ -42,12 +43,25 @@ class DonemDanismanAtama(CrudView):
 
     Dönem Danışman Atama, aşağıda tanımlı iş akışı adımlarını yürütür.
 
+<<<<<<< HEAD
+=======
+    - Bölüm Seç
+>>>>>>> 7a522d31d3c9a8d07e7bff042876ef3f11134ac7
     - Öğretim Elemanlarını Seç
     - Kaydet
     - Kayıt Bilgisi Göster
 
      Bu iş akışında kullanılan metotlar şu şekildedir:
 
+<<<<<<< HEAD
+=======
+     Dönem Formunu Listele:
+        Kayıtlı dönemleri listeler
+
+     Bölüm Seç:
+        Kullanıcının bölüm başkanı olduğu bölümleri listeler
+
+>>>>>>> 7a522d31d3c9a8d07e7bff042876ef3f11134ac7
      Öğretim Elemanlarını Seç:
         Seçilen bölümdeki öğretim elemanları listelenir.
 
@@ -69,22 +83,32 @@ class DonemDanismanAtama(CrudView):
     class Meta:
         model = "DonemDanisman"
 
+    def bolum_sec(self):
+
+        _unit = self.current.role.unit
+        _form = DonemDanismanForm(current=self, title="Bölüm Seçiniz")
+        _choices = prepare_choices_for_model(Unit, yoksis_no=_unit.yoksis_no)
+        _form.program = fields.Integer(choices=_choices)
+        self.form_out(_form)
+
     def danisman_sec(self):
 
-        unit = self.current.role.unit
+        unit = Unit.objects.get(self.current.input['form']['program'])
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
-        okutmanlar = Okutman.objects.set_params(sort='ad asc, soyad asc').filter(birim_no=unit.yoksis_no)
+        okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
         donem = Donem.objects.get(guncel=True)
         _form = DonemDanismanListForm(current=self, title="Okutman Seçiniz")
 
         for okt in okutmanlar:
-            donem_danismani =_form.Okutmanlar(ad_soyad='%s %s' % (okt.ad, okt.soyad),
-                                     key=okt.key)
             try:
-                DonemDanisman.objects.get(donem=donem, okutman=okt, bolum=unit)
-                donem_danismani.secim = True
-            except ObjectDoesNotExist:
-                donem_danismani.secim = False
+                if DonemDanisman.objects.filter(donem=donem, okutman=okt, bolum=unit):
+                    _form.Okutmanlar(secim=True, ad_soyad='%s %s' % (okt.ad, okt.soyad),
+                                     key=okt.key)
+                else:
+                    _form.Okutmanlar(secim=False, ad_soyad='%s %s' % (okt.ad, okt.soyad),
+                                     key=okt.key)
+            except:
+                pass
 
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False

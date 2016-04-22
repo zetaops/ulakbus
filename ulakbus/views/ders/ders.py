@@ -21,7 +21,6 @@ from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView, form_modifier
 
-
 def prepare_choices_for_model(model, **kwargs):
     """Model için Seçenekler Hazırla
 
