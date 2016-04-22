@@ -21,7 +21,6 @@ from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView, form_modifier
 
-
 def prepare_choices_for_model(model, **kwargs):
     """Model için Seçenekler Hazırla
 
@@ -321,7 +320,6 @@ class DersSubelendirme(CrudView):
                                 Sube: %s - Kontenjan: %s""" % (sb['okutman_unvan'], sb['okutman_ad'],
                                                                sb['okutman_soyad'], sb['sube_ad'],
                                                                sb['kontenjan']) for sb in subeler]
-
             item = {
                 "fields": ["%s\n%s" % (ders, "\n".join(ders_subeleri)), ],
                 "actions": [
@@ -545,7 +543,7 @@ class NotGirisi(CrudView):
                                  aciklama=ogr['aciklama'],
                                  key=ogr['key'])
         except:
-            ogrenciler = OgrenciDersi.objects.filter(ders_id=sube_key)
+            ogrenciler = OgrenciDersi.objects.filter(sube_id=sube_key)
 
             for ogr in ogrenciler:
                 try: # Öğrencinin bu sınava ait daha önceden kayıtlı notu var mı?
@@ -607,7 +605,7 @@ class NotGirisi(CrudView):
             sinav_key = self.current.task_data['sinav_key']
             sube_key = self.current.task_data["sube"]
             sinav = Sinav.objects.get(sinav_key)
-            ogrenciler = OgrenciDersi.objects.filter(ders_id=sube_key)
+            ogrenciler = OgrenciDersi.objects.filter(sube_id=sube_key)
             notlar = []
 
             for ogr in ogrenciler:

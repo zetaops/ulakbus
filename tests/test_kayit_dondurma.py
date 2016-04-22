@@ -7,12 +7,12 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-import time
-from ulakbus.models import OgrenciProgram, Donem, Ogrenci, User, DondurulmusKayit
+from ulakbus.models import OgrenciProgram, Ogrenci, User, DondurulmusKayit
 from ulakbus.models.auth import Role, AbstractRole
 from zengine.lib.test_utils import BaseTestCase
+import time
+
+__author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 
 class TestCase(BaseTestCase):
@@ -63,7 +63,7 @@ class TestCase(BaseTestCase):
 
         # ogrencinin kayıtlı olduğu program yollanır
         program = {'program': "UEGET7qn9CDj9VEj4n0nbQ7m89d", 'sec': 1}
-        resp = self.client.post(model="DondurulmusKayit", wf="kayit_dondur", form=program)
+        self.client.post(model="DondurulmusKayit", wf="kayit_dondur", form=program)
 
         # kayıt dondurulacak olan donem yollanır
         donemler = {'baslangic_tarihi': "06.03.2016", 'sec': 1,
@@ -74,14 +74,12 @@ class TestCase(BaseTestCase):
 
         resp = self.client.post(model="DondurulmusKayit", wf="kayit_dondur", form=donemler)
         # sonucu doğrula
-        assert resp.json['msgbox']['title'] == \
-               "\xc3\x96\xc4\x9frenci Kay\xc4\xb1t Dondurma Ba\xc5\x9far\xc4\xb1l\xc4\xb1"
-
+        assert resp.json['msgbox']['title'] == "Öğrenci Kayıt Dondurma Başarılı"
 
         time.sleep(3)
         # Veritabanından ogrencinin kaydının dondurulmuş olup olmadığı doğrulanır
         d_kayit = DondurulmusKayit.objects.filter(ogrenci_program=op[0])
-        assert len(d_kayit)>0
+        assert len(d_kayit) > 0
 
         # Öğrencinin rolü değiştirilmiş mi?
         arole = AbstractRole.objects.get(name='dondurulmus_kayit')

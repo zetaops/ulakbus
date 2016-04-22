@@ -568,7 +568,7 @@ class FakeDataGenerator:
         try:
             od = OgrenciDersi()
             od.alis_bicimi = random.choice([1, 2])
-            od.ders = sube
+            od.sube = sube
             od.ogrenci_program = ogrenci_program
             od.ogrenci = ogrenci_program.ogrenci
             if donem:
@@ -723,6 +723,14 @@ class FakeDataGenerator:
         donem_list = self.yeni_donem(donem_say=donem_say, guncel=True)
         print("Oluşturulan donem listesi : %s\n" % donem_list)
         time.sleep(3)
+
+        kampus_list = self.yeni_kampus(kampus_say=kampus_say)
+        print("Oluşturulan kampus listesi : %s\n" % kampus_list)
+        time.sleep(3)
+
+        buildings, rooms = self.yeni_bina()
+        print("Oluşturulan bina listesi : %s\n" % buildings)
+        print("Oluşturulan oda listesi : %s\n" % rooms)
 
         # yoksis uzerindeki program birimleri
         yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), program_say)

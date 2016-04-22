@@ -8,12 +8,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
 import time
-from pyoko.manage import FlushDB, LoadData
 from ulakbus.models import Ogrenci, OgrenciProgram, User, Program, DegerlendirmeNot
-from .base_test_case import BaseTestCase
+from zengine.lib.test_utils import BaseTestCase
+
+__author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 
 class TestCase(BaseTestCase):
@@ -43,8 +42,8 @@ class TestCase(BaseTestCase):
         ogrenci_id = "RnKyAoVDT9Hc89KEZecz0kSRXRF"
         ogrenci_program_id = "UEGET7qn9CDj9VEj4n0nbQ7m89d"
         program_id = "7GPhFaFbPqysh7mnkkd9Bq3cmCh"
-        # veritabanından test_user seçilir
 
+        # veritabanından test_user seçilir
         usr = User.objects.get(username='test_user')
         ogrenci = Ogrenci.objects.get(ogrenci_id)
         ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
@@ -52,11 +51,11 @@ class TestCase(BaseTestCase):
 
         self.prepare_client('/ogrenci_mezuniyet', user=usr)
 
-        resp = self.client.post(id=ogrenci_id, model="OgrenciProgram", param="ogrenci_id",
-                                wf="ogrenci_mezuniyet")
+        self.client.post(id=ogrenci_id, model="OgrenciProgram", param="ogrenci_id",
+                         wf="ogrenci_mezuniyet")
 
         program = {'program': ogrenci_program_id, 'sec': 1}
-        resp = self.client.post(model="OgrenciProgram", wf="ogrenci_mezuniyet", form=program)
+        self.client.post(model="OgrenciProgram", wf="ogrenci_mezuniyet", form=program)
 
         time.sleep(3)
 

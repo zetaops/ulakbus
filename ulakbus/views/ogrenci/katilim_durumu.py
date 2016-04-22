@@ -65,7 +65,7 @@ class KatilimDurumu(CrudView):
         except KeyError:
             sube_key = self.current.task_data["sube_key"]
 
-        ogrenciler = OgrenciDersi.objects.filter(ders_id=sube_key)
+        ogrenciler = OgrenciDersi.objects.filter(sube_id=sube_key)
 
         for ogr in ogrenciler:
             try:
@@ -77,7 +77,7 @@ class KatilimDurumu(CrudView):
             _form.Ogrenciler(ad_soyad='%s %s' % (ogr.ogrenci.ad, ogr.ogrenci.soyad),
                              ogrenci_no=ogr.ogrenci_program.ogrenci_no,
                              katilim_durumu=katilim_durumu, ogrenci_key=ogr.ogrenci.key,
-                             ders_key=ogr.ders.key)
+                             ders_key=ogr.sube.key)
 
         _form.kaydet = fields.Button("Önizleme", cmd="kontrol")
         self.form_out(_form)
