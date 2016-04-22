@@ -6,7 +6,6 @@
   <bpmn2:process id="Process_1" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="Lane_1" name="Izin Basvuru">
-        <bpmn2:flowNodeRef>UserTask_2</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>StartEvent_2</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>UserTask_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ServiceTask_3</bpmn2:flowNodeRef>
@@ -22,11 +21,6 @@
         <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
-    <bpmn2:userTask id="UserTask_2" camunda:assignee="personel.izin.IzinBasvuru.izin_basvuru_kayit_bilgi_goster" name="kayit bilgisi goster">
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="UserTask_2" targetRef="UserTask_3"/>
     <bpmn2:startEvent id="StartEvent_2">
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
     </bpmn2:startEvent>
@@ -38,22 +32,22 @@
     <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="UserTask_1" targetRef="ServiceTask_3"/>
     <bpmn2:serviceTask id="ServiceTask_3" camunda:class="personel.izin.IzinBasvuru.izin_basvuru_kaydet" name="izin basvuru kaydet">
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="ServiceTask_3" targetRef="UserTask_2"/>
     <bpmn2:serviceTask id="ServiceTask_2" camunda:class="personel.izin.IzinBasvuru.izin_basvuru_sonuc_kaydet" name="izin basvuru sonuc kaydet">
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="ServiceTask_2" targetRef="EndEvent_1"/>
     <bpmn2:userTask id="UserTask_3" camunda:assignee="personel.izin.IzinBasvuru.izin_basvuru_goster" name="izin istegi goruntule">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="UserTask_3" targetRef="ServiceTask_2"/>
     <bpmn2:endEvent id="EndEvent_1">
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
     </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="ServiceTask_3" targetRef="UserTask_3"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_4">
@@ -66,21 +60,9 @@
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_21" bpmnElement="UserTask_1">
         <dc:Bounds height="80.0" width="100.0" x="204.0" y="81.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_22" bpmnElement="UserTask_2">
-        <dc:Bounds height="80.0" width="100.0" x="564.0" y="81.0"/>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_23" bpmnElement="UserTask_3">
         <dc:Bounds height="80.0" width="100.0" x="744.0" y="317.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="_BPMNShape_UserTask_22" targetElement="_BPMNShape_UserTask_23">
-        <di:waypoint xsi:type="dc:Point" x="664.0" y="121.0"/>
-        <di:waypoint xsi:type="dc:Point" x="704.0" y="121.0"/>
-        <di:waypoint xsi:type="dc:Point" x="704.0" y="357.0"/>
-        <di:waypoint xsi:type="dc:Point" x="744.0" y="357.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="686.0" y="191.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_EndEvent_4" bpmnElement="EndEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="1080.0" y="339.0"/>
         <bpmndi:BPMNLabel>
@@ -127,16 +109,15 @@
           <dc:Bounds height="6.0" width="6.0" x="341.0" y="191.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="_BPMNShape_ServiceTask_7" targetElement="_BPMNShape_UserTask_22">
-        <di:waypoint xsi:type="dc:Point" x="484.0" y="121.0"/>
-        <di:waypoint xsi:type="dc:Point" x="564.0" y="121.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="524.0" y="191.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_Lane_6" bpmnElement="Lane_3" isHorizontal="true">
         <dc:Bounds height="238.0" width="1123.0" x="30.0" y="237.0"/>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_ServiceTask_7" targetElement="_BPMNShape_UserTask_23">
+        <di:waypoint xsi:type="dc:Point" x="484.0" y="121.0"/>
+        <di:waypoint xsi:type="dc:Point" x="614.0" y="121.0"/>
+        <di:waypoint xsi:type="dc:Point" x="614.0" y="357.0"/>
+        <di:waypoint xsi:type="dc:Point" x="744.0" y="357.0"/>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>

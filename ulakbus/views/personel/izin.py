@@ -183,6 +183,7 @@ class IzinBasvuru(CrudView):
         """İzin başvurusu yapacak olan personele izin başvuru formunu gösteren method.
 
         """
+        self.current.task_data['personel_id'] = self.current.input['id']
         _form = self.IzinBasvuruForm(current=self.current, title="İzin Talep Formu")
         self.form_out(_form)
 
@@ -200,27 +201,21 @@ class IzinBasvuru(CrudView):
             del izin_form_data['ileri']
 
         self.current.task_data['izin_form_data'] = izin_form_data
+        form_personel = Personel.objects.get(self.current.task_data['personel_id'])
         izin_form = Form.objects.get(ad="İzin Formu")
         form_data = FormData()
         form_data.form = izin_form
-        form_data.user = self.current.user
+        form_data.user = form_personel.user
         form_data.data = json.dumps(izin_form_data)
         form_data.date = date.today()
         form_data.save()
         self.current.task_data['izin_form_data_key'] = form_data.key
 
-    def izin_basvuru_kayit_bilgi_goster(self):
-        """Personele izin başvuru kayıt sonucu bilgisini gösteren methoddur.
-
-        """
-        izin_basvuru = self.current.task_data['izin_form_data']
-        izin_baslangic = izin_basvuru['izin_baslangic']
-        izin_bitis = izin_basvuru['izin_bitis']
-        self.current.output['msgbox'] = {
-            'type': 'info', "title": 'İzin Başvurusu Yapıldı',
-            "msg": '%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.' % (
-                izin_baslangic, izin_bitis)
-        }
+        msg = {"title": 'İzin Başvurusu Yapıldı',
+               "body": '%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.' % (
+                   self.input['form']['izin_baslangic'], self.input['form']['izin_bitis'])}
+        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def izin_basvuru_goster(self):
         """Personel İşleri Dairesinde bulunan yetkili personele daha önce yapılmış olan izin
@@ -263,7 +258,6 @@ class IzinBasvuru(CrudView):
         izin.adres = form['izin_adres']
         izin.personel = personel
         izin.save()
-
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'İzin Başvurusu Onaylandı',
             "msg": 'İzin talebi başarıyla onaylanmıştır.'
