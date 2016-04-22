@@ -5,9 +5,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from pyoko.manage import FlushDB, LoadData
 from zengine.lib.test_utils import *
-from ulakbus.models import Ders
+from ulakbus.models import Ders, User
 import os
 import time
 
@@ -18,18 +17,6 @@ class TestCase(BaseTestCase):
 
     """
 
-    def test_setup(self):
-        """
-        Ders şubelendirme test edilmden önce aşağıda tanımlı
-        ön hazırlıklar yapılır.
-
-        """
-
-        # Bütün kayıtları veritabanından siler.
-        FlushDB(model='all').run()
-        # Belirtilen dosyadaki kayıtları ekler.
-        LoadData(path=os.path.join(os.path.expanduser('~'), 'ulakbus/tests/fixtures/ders_subelendirme.csv')).run()
-
     def test_ders_subelendirme(self):
         """
         Ders şubelendirme iş akışını test eder.
@@ -37,7 +24,7 @@ class TestCase(BaseTestCase):
         """
 
         # Bölüm başkanı kullanıcısı seçilir.
-        usr = User.objects.get('Re8CNZ8uG93zJhW4V9aX8h5MVlf')
+        usr = User.objects.get('RIy95nnzpqfQKTjRVxfwR5yzWSx')
         time.sleep(2)
 
         # Kullanıcıya login yaptırılır.
@@ -46,16 +33,16 @@ class TestCase(BaseTestCase):
 
         # Program seçer.
         resp = self.client.post(cmd='ders_sec',
-                                form=dict(program='AMjLphcEwNOrwdVpj9SDQ5b392Y', sec=1))
+                                form=dict(program='HUqZl1XUBlFcI3G1iAegLtmlL65', sec=1))
         assert 'objects' in resp.json
 
         # Şubelenilecek ders seçilir.
         self.client.post(cmd='ders_okutman_formu',
-                         sube='IVfbjLhMZcEMyMU3RKmcmUdaHTX',
+                         sube='XERlRTgNiNwwm3P00sMoLv48hLh',
                          filter=dict())
 
         # Şubelendirme formu doldurulur.
-        sube = [{'okutman': "51cPM9srNErJCYuomfeRpkmqwq8", 'kontenjan': 34, 'dis_kontenjan': 45, 'ad': "Sube 1"}]
+        sube = [{'okutman': "Gqd3E8FbKYTf2olEcrPSfrlUjJT", 'kontenjan': 34, 'dis_kontenjan': 45, 'ad': "Sube 1"}]
         # Formu kaydedip ders seçim ekranına döner.
         self.client.post(cmd='subelendirme_kaydet',
                          flow='ders_okutman_formu',
@@ -63,16 +50,16 @@ class TestCase(BaseTestCase):
 
         # Şubelenilecek ders seçilir.
         resp = self.client.post(cmd='ders_okutman_formu',
-                                sube='OZxwjWmyfbxU1WnIZ5zYl3tCbKM',
+                                sube='X6Gr2FLbIXcdwNpKZZmvPNzeA23',
                                 filter=dict())
 
         # Dersin ismi veritabanından çekilir.
-        ders = Ders.objects.get('OZxwjWmyfbxU1WnIZ5zYl3tCbKM')
+        ders = Ders.objects.get('X6Gr2FLbIXcdwNpKZZmvPNzeA23')
 
         assert ders.ad in resp.json['forms']['schema']['title']
 
         # Şubelendirme formu doldurulur.
-        sube = [{'okutman': "6jBwqQChhUEwuwRBXTCIxar7kn9", 'kontenjan': 30, 'dis_kontenjan': 5, 'ad': "Sube 2"}]
+        sube = [{'okutman': "AtxxhSfiw5xk2voeVkarxAtyYvm", 'kontenjan': 30, 'dis_kontenjan': 5, 'ad': "Sube 2"}]
 
         # Hocalara bilgilendirme mesajı gönderilir.
         # İş akışı bu adımdan sonra sona erer.
