@@ -66,12 +66,15 @@ class Notification(BaseView):
 
         # if 'read' in current.input:
         #     self.mark_as_read()
-
-        notifies = self.current.msg_cache.get_all()
-        self.output['notifications'] = list(notifies)
+        self.output['notifications'] = []
+        msg_id_to_delete = current.input.get('id')
+        notifies = list(self.current.msg_cache.get_all())
+        for ntf in notifies:
+            if ntf['id'] == msg_id_to_delete:
+                self.current.msg_cache.remove_item(ntf)
+            else:
+                self.output['notifications'].append(ntf)
         self.output['cmd'] = 'notification'
-        for n in notifies:
-            self.current.msg_cache.remove_item(n)
 
     # def mark_as_read(self):
     #     read_messages = self.current.input['read']
