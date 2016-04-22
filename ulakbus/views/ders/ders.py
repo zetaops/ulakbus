@@ -21,7 +21,6 @@ from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView, form_modifier
 
-
 def prepare_choices_for_model(model, **kwargs):
     """Model için Seçenekler Hazırla
 
@@ -321,7 +320,6 @@ class DersSubelendirme(CrudView):
                                 Sube: %s - Kontenjan: %s""" % (sb['okutman_unvan'], sb['okutman_ad'],
                                                                sb['okutman_soyad'], sb['sube_ad'],
                                                                sb['kontenjan']) for sb in subeler]
-
             item = {
                 "fields": ["%s\n%s" % (ders, "\n".join(ders_subeleri)), ],
                 "actions": [
