@@ -263,6 +263,7 @@ class Program(Model):
         senato_karar_no = field.String("Senato Karar Numarası", index=True)
         tarih = field.Date("İşlemin Yapıldığı Tarih")
 
+
     class EctsBolumKoorsinator(ListNode):
         id = field.String("Koordinator id", index=True)
         role = Role(verbose_name="ECTS Bölüm Koordinator",
@@ -318,8 +319,10 @@ class Ders(Model):
     katilim_sarti = field.Integer("Katılım Şartı", index=True)
     program = Program()
     donem = Donem()
+    yil = field.Date("Yıl", index=True)
     ders_koordinatoru = Personel()
     yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")
+    program_versiyon = field.String()
 
     class Degerlendirme(ListNode):
         tur = field.Integer("Değerlendirme Türü", choices="sinav_turleri", index=True)

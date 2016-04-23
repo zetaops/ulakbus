@@ -248,11 +248,13 @@ class FakeDataGenerator:
             p.dogum_yeri = fake.state()
             p.medeni_hali = random.choice(['1', '2'])
             p.hizmet_sinifi = random.choice(range(1, 30))
-            p.birim = unit
+            # p.birim = unit
 
             username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
             user = new_user(username=username)
             p.user = user
+
+            #p.prnt()
 
             p.save()
             personel_list.append(p)
@@ -735,6 +737,7 @@ class FakeDataGenerator:
         for yoksis_program in yoksis_program_list:
             program = self.yeni_program(yoksis_program=yoksis_program)[0]
             print("Oluşturulan program : %s\n" % program)
+            print("Oluşturulan yoksis program : %s - %s\n" % (yoksis_program, yoksis_program.key))
 
             personel_list = self.yeni_personel(unit=yoksis_program, personel_say=personel_say)
             print("Oluşturulan personel listesi : %s\n" % personel_list)
@@ -778,7 +781,7 @@ class FakeDataGenerator:
 
                     n = dc / (ders_say / 4) + 1
 
-                    for ogrenci in random.sample(ogrenci_liste[0:75 * n], 70 * n):
+                    for ogrenci in random.sample(ogrenci_liste[0:30 * n], 20 * n):
                         personel = okutman.personel
 
                         # ogrencinin program, ders, devamsizlik, borc bilgileri
