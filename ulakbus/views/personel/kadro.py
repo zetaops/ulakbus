@@ -185,6 +185,24 @@ class KadroIslemleri(CrudView):
         # İş akışını yenile
         self.reset()
 
+    def kadro_sil_onay_form(self):
+
+        derece = self.object.derece
+        unvan = self.object.get_unvan_display()
+        birim = self.object.birim
+
+        self.current.output['msgbox'] = {
+            'type': 'warning',
+            'title': 'Uyarı',
+            'msg': '**%s** derecesinde, **%s** unvaniyla, **%s** birimine ait sakli kadroyu silmek uzeresiniz, '
+                   'devam etmek istiyor musunuz?' % (derece, unvan, birim)
+        }
+
+        _form = JsonForm(title=" ")
+        _form.evet = fields.Button("Evet", cmd="kadro_sil")
+        _form.hayir = fields.Button("Hayır")
+        self.form_out(_form)
+
     def kadro_sil(self):
         # sadece sakli kadrolar silinebilir
         assert self.object.durum == self.SAKLI, "attack detected, should be logged/banned"
@@ -215,7 +233,7 @@ class KadroIslemleri(CrudView):
 
         if obj.durum == self.SAKLI:
             result['actions'].extend([
-                {'name': 'Sil', 'cmd': 'delete', 'show_as': 'button'},
+                {'name': 'Sil', 'cmd': 'kadro_sil_onay_form', 'show_as': 'button'},
                 {'name': 'İzinli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'}])
 
     @obj_filter
@@ -227,6 +245,7 @@ class KadroIslemleri(CrudView):
 
         Args:
             obj: Kadro instance
+            result: list
 
         """
 
