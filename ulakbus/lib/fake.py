@@ -55,13 +55,14 @@ class GenerateFakeData(Command):
                        ogrenci_say=ogrenci_say)
 
 
-class generate_abstract_roles(Command):
+class GenerateAbstractRoles(Command):
     CMD_NAME = 'generate_abstract_roles'
     HELP = 'Generates abstract roles'
     ROLE_LIST = [
         "Lisans Programı Öğrencisi - Aktif",
         "Lisans Programı Öğrencisi - Kayıt Dondurmuş",
         "Lisans Programı Öğrencisi - Kayıt Silinmiş",
+
         "Ön Lisans Programı Öğrencisi - Aktif",
         "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
         "Ön Lisans Programı Öğrencisi - Kayıt Silinmiş",
@@ -86,6 +87,7 @@ class generate_abstract_roles(Command):
         "Fakülte Etik Kurulu Üyesi",
         "Fakülte Öğrenci İşleri Şefi",
         "Fakülte Öğrenci İşleri Personeli",
+
         "Tıp Fakültesi Baş Koordinatörü",
         "Tıp Fakültesi Baş Koordinatör Yardımcısı",
         "Tıp Fakültesi Dönem Koordinatörü",
@@ -128,23 +130,20 @@ class generate_abstract_roles(Command):
         "Enstitü Muhasebe İşleri Şefi",
         "Enstitü Muhasebe İşleri Personeli",
 
-        "Öğretim Üyesi (Yrd Doc, Doc, Prof)",
-        "Öğretim Görevlisi",
-        "Araştırma Görevlisi",
-        "Okutman",
-        "Uzman",
-        "Çevirici",
-        "Eğitim-öğretim Planlamacısı",
+        "Öğretim Elemanı",
+        # "Öğretim Üyesi",
+        # "Öğretim Görevlisi",
+        # "Araştırma Görevlisi",
+        # "Okutman",
+        # "Uzman",
+        # "Çevirici",
+        # "Eğitim-öğretim Planlamacısı",
 
-        "Personel İşleri Daire Başkanı",
-        "Personel İşleri Şube Müdürü",
-        "Personel İşleri Şefi",
-        "Personel İşleri Personeli",
+        "Daire Başkanı",
+        "Daire Şube Müdürü",
+        "Şube Şefı",
+        "Daire Personeli",
 
-        "Öğrenci İşleri Daire Başkanı",
-        "Öğrenci İşleri Şube Müdürü",
-        "Öğrenci İşleri Şefi",
-        "Öğrenci İşleri Personeli"
     ]
 
     def run(self):
