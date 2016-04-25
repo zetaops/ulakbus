@@ -199,6 +199,7 @@ class Personel(Model):
         return "%s %s" % (self.ad, self.soyad)
 
 
+
 class AdresBilgileri(Model):
     """Adres Bilgileri Modeli
 
