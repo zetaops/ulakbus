@@ -5,17 +5,18 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 from zengine.lib.forms import JsonForm
-from zengine.forms import fields
-from zengine.views.crud import CrudView
+
 from ulakbus.models import OgrenciProgram, Ogrenci, Role, AbstractRole
+from zengine.forms import fields
 from zengine.notifications import Notify
+from zengine.views.crud import CrudView
 
 
 class KayitSil(CrudView):
     """ Kayıt Silme İş Akışı
 
-    Kayıt silme iş akışı 3 adımdan oluşmaktadır.
-
+    Kayıt silme iş akışı 4 adımdan oluşmaktadır.
+    * Fakülte Karar No
     * Ayrılma nedenini seç
     * Öğrenci programı seç
     * Bilgi ver
@@ -25,6 +26,9 @@ class KayitSil(CrudView):
     statüsü field'larına değerler atanır.
 
     Bu iş akışında kullanılan metotlar şu şekildedir.
+
+    Fakülte Karar No
+    Fakülte Yönetim Kurulu tarafından belirlenen karar no girilir.
 
     Ayrılma nedeni seç:
     Öğrencinin ayrılma nedeni seçilir.
@@ -47,6 +51,20 @@ class KayitSil(CrudView):
     class Meta:
         model = 'OgrenciProgram'
 
+    def fakulte_yonetim_karari(self):
+        """
+        Fakülte Yönetim Kurulu tarafından belirlenen karar no girilir.
+
+        """
+
+        # TODO: Fakülte yönetim kurulunun kararı loglanacak.
+        self.current.task_data['ogrenci_id'] = self.current.input['id']
+        _form = JsonForm(current=self.current,
+                         title='Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.')
+        _form.karar = fields.String('Karar No', index=True)
+        _form.kaydet = fields.Button('Kaydet')
+        self.form_out(_form)
+
     def ayrilma_nedeni_sec(self):
         """
         Ayrılma nedenlerini form içinde listelenir. Listelenen ayrılma nedenlerinden biri
@@ -54,7 +72,6 @@ class KayitSil(CrudView):
 
         """
 
-        self.current.task_data['ogrenci_id'] = self.current.input['id']
         _form = JsonForm(current=self.current, title='Öğrencinin Ayrılma Nedenini Seçiniz')
         _form.ayrilma_nedeni = fields.Integer(choices=self.object.get_choices_for('ayrilma_nedeni'))
         _form.aciklama = fields.Text("Açıklama Yazınız", required=True)

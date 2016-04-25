@@ -6,8 +6,8 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
-from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import OgrenciProgram, Ogrenci, Role
+from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):
@@ -36,10 +36,13 @@ class TestCase(BaseTestCase):
 
         # Öğrenci İşleri personeline login yaptırılır.
         self.prepare_client('/kayit_sil', username='meshur-ertas')
-        resp = self.client.post(id="T8PMMytvrHwhlRnQpBq8B5eB7Ut",
-                                param="ogrenci_id",
-                                filters={'ogrenci_id': {'values': ["T8PMMytvrHwhlRnQpBq8B5eB7Ut"],
+        self.client.post(id="T8PMMytvrHwhlRnQpBq8B5eB7Ut",
+                         param="ogrenci_id",
+                         filters={'ogrenci_id': {'values': ["T8PMMytvrHwhlRnQpBq8B5eB7Ut"],
                                                         'type': "check"}})
+        # Fakülte kara no girilir.
+        resp = self.client.post(form={'karar': "455", 'kaydet': 1})
+
         # Ayrılma nedenlerini tutan list.
         lst = OgrenciProgram().get_choices_for('ayrilma_nedeni')
 
