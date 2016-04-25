@@ -4,8 +4,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from ulakbus.models import User, OgrenciProgram, OgrenciDersi, Sinav, DegerlendirmeNot
 from zengine.lib.test_utils import BaseTestCase
-from ulakbus.models import User, OgrenciProgram, OgrenciDersi, Sinav
 
 
 class TestCase(BaseTestCase):
@@ -30,8 +30,14 @@ class TestCase(BaseTestCase):
         Sunucudan dönen sınav sayısı ile veritabanından çekilen sınav sayısı karşılaştırılıp
         test edilir.
 
-        Son adımda ise seçilen sınavın notu düzenlenir.
+        Beşinci adımda  ise seçilen sınavın notu düzenlenir.
         Sunucudan dönen cevapta 'puan' field'ının olup olmadığını test eder.
+
+
+        Son adımda ise ekrana bilgilendirme mesajı basılır.
+        Puanı değiştirilen sınavın değerlendirme notu, veritabanından çekilerek
+        puanın değiştirilip degiştirilmediği test edilir.
+
 
         """
         
@@ -79,6 +85,12 @@ class TestCase(BaseTestCase):
         # Sunucudam dönen cevapta 'puan' field'nın olup olmadığını test eder.
         assert 'puan' in resp.json['forms']['model']
 
+        # Not düzenlenir.
+        resp = self.client.post(form={'puan': 30, 'kaydet': 1, 'object_key': "5o4qlnqbBo1ByQDpGC48PyJz31n"})
 
+        assert 'msgbox' in resp.json
 
-
+        # Veritabanından notu düzenlenen sınavın değerlendirme notu çekilir.
+        degerlendirme_not = DegerlendirmeNot.objects.get(ogrenci_id='T8PMMytvrHwhlRnQpBq8B5eB7Ut',
+                                                         sinav_id='RoFKPHZNuvXcgOUtxuwEKxHgj95')
+        assert degerlendirme_not.puan == 30
