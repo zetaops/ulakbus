@@ -1,9 +1,15 @@
 # -*-  coding: utf-8 -*-
 
-from zengine.views.crud import CrudView
-from ulakbus.models.personel import Personel
+from zengine.forms import fields
+from zengine import forms
+from zengine.views.crud import CrudView, form_modifier
+from ulakbus.models.personel import Personel, Atama, Izin
+from ulakbus.models.auth import User
 from ulakbus.models.hitap import HizmetKayitlari, HizmetBirlestirme
-from datetime import timedelta, date
+from ulakbus.models.form import Form, FormData
+from datetime import timedelta, date, datetime
+
+import json
 
 
 class IzinIslemleri(CrudView):
@@ -146,3 +152,170 @@ class IzinIslemleri(CrudView):
                 mazeret_izinler[yil] -= (izin.bitis - izin.baslangic).days
 
         return {'yillik': yillik_izinler, 'mazeret': mazeret_izinler}
+
+
+class IzinBasvuru(CrudView):
+    """Izin basvuru workflowuna ait methodları barındıran sınıftır.
+
+    """
+
+    class Meta:
+
+        # CrudViev icin kullanilacak temel Model
+        model = 'Izin'
+
+    class IzinBasvuruForm(forms.JsonForm):
+        from datetime import date
+        izin_turleri = [(1, "Yıllık İzin"), (2, "Mazeret İzni"), (3, "Refakat İzni"),
+                        (4, "Fazla Mesai İzni"), (5, "Ücretsiz İzin")]
+        gecerli_yil = date.today().year
+        yillar = [(gecerli_yil - 1, gecerli_yil - 1), (gecerli_yil, gecerli_yil)]
+
+        izin_turu = fields.Integer("İzin Türü Seçiniz", choices=izin_turleri)
+        izin_ait_yil = fields.Integer("Ait Olduğu Yıl", choices=yillar)
+        izin_baslangic = fields.Date("İzin Başlangıç Tarihi")
+        izin_bitis = fields.Date("İzin Bitiş Tarihi")
+        izin_adres = fields.Text("İzindeki Adres")
+
+        ileri = fields.Button("İleri")
+
+    def izin_basvuru_formu_goster(self):
+        """İzin başvurusu yapacak olan personele izin başvuru formunu gösteren method.
+
+        """
+        self.current.task_data['personel_id'] = self.current.input['id']
+        _form = self.IzinBasvuruForm(current=self.current, title="İzin Talep Formu")
+        self.form_out(_form)
+
+    def izin_basvuru_kaydet(self):
+        """Personelin `IzinBasvuruForm` aracılığı ile yapmış olduğu başvuruyu kaydeden methoddur.
+        Başvuruya ait veriler `Form` ve `FormData` modellerine kaydedilir. Form verileri, `FormData`
+        modelinde `data` field'ıne kaydedilirken JSON tipine çevrilir.
+        TODO: İzni onaylayacak olan personellere notifikasyon göndermek gerekli.
+
+        """
+
+        izin_form_data = self.input['form']
+        # gereksiz form alanlarını sil
+        if 'ileri' in izin_form_data:
+            del izin_form_data['ileri']
+
+        self.current.task_data['izin_form_data'] = izin_form_data
+        form_personel = Personel.objects.get(self.current.task_data['personel_id'])
+        izin_form = Form.objects.get(ad="İzin Formu")
+        form_data = FormData()
+        form_data.form = izin_form
+        form_data.user = form_personel.user
+        form_data.data = json.dumps(izin_form_data)
+        form_data.date = date.today()
+        form_data.save()
+        self.current.task_data['izin_form_data_key'] = form_data.key
+
+        msg = {"title": 'İzin Başvurusu Yapıldı',
+               "body": '%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.' % (
+                   self.input['form']['izin_baslangic'], self.input['form']['izin_bitis'])}
+        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+    def izin_basvuru_goster(self):
+        """Personel İşleri Dairesinde bulunan yetkili personele daha önce yapılmış olan izin
+        başvurusunu gösteren methoddur. `IzinBasvuruForm` temel alınarak üretilen formda önceki
+        veriler `FormData` modeli üzerinden alınır. `FormData` modelinde `data` field'ı üzerinden
+        JSON olarak kayıt edilmiş veriler Python nesnesine dönüştürülereki form içinde ilgili
+        alanlara basılır.
+
+        """
+        form_data = FormData.objects.get(self.current.task_data['izin_form_data_key'])
+        basvuru_data = json.loads(form_data.data)
+
+        _form = self.IzinBasvuruForm(current=self.current, title="İzin Talep Önizleme Formu")
+        _form.personel_ad_soyad = fields.String("İzin Talep Eden")
+        _form.personel_gorev = fields.String("Görevi")
+        _form.personel_sicil_no = fields.String("Sicil no")
+        _form.personel_birim = fields.String("Birimi")
+        _form.yol_izni = fields.Boolean("Yol İzni")
+        _form.kalan_izin = fields.Integer("Toplam Kalan İzin Süresi(Gün)")
+        _form.toplam_izin_gun = fields.Integer("Kullanacağı İzin Süresi(Gün)")
+        _form.toplam_kalan_izin = fields.Integer("Kalan İzin Süresi(Gün)")
+
+        _form.ileri = fields.Button("Onayla")
+        self.form_out(_form)
+
+    def izin_basvuru_sonuc_kaydet(self):
+        """Onay verilen izin başvuru sonucu kaydını gerçekleştiren methoddur.
+        TODO : İzin başvurusu yapan personele notifikasyon gönderilmeli.
+        TODO : Personele vekalet edecek kişinin seçimi yapılmalı
+
+        """
+        from datetime import date
+        personel = Personel.objects.get(self.current.task_data['izin_personel_key'])
+        form = self.input['form']
+        izin = Izin()
+        izin.tip = form['izin_turu']
+        izin.baslangic = form['izin_baslangic']
+        izin.bitis = form['izin_bitis']
+        izin.onay = date.today()
+        izin.adres = form['izin_adres']
+        izin.personel = personel
+        izin.save()
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'İzin Başvurusu Onaylandı',
+            "msg": 'İzin talebi başarıyla onaylanmıştır.'
+        }
+
+    @form_modifier
+    def basvuru_form_inline_edit(self, serialized_form):
+        """izin_basvuru_goster aşamasında personelin `IzinBasvuruForm` seçimlerini populate etmek
+        için kullanılan methoddur.
+
+        """
+        if 'izin_turu' in serialized_form['schema'][
+            'properties'] and 'izin_form_data_key' in self.current.task_data:
+            # FormData modelindeki kayıtlar alınır
+            form_data = FormData.objects.get(self.current.task_data['izin_form_data_key'])
+            basvuru_data = json.loads(form_data.data)
+
+            # izin başvurusu yapan personeli ve kadro özelliklerini bul
+            form_personel = form_data.user.personel
+            self.current.task_data['izin_personel_key'] = form_personel.key
+
+            personel_atama = Atama.objects.get(personel=form_personel)
+
+            # forma personelin görevi eklenir
+            try:
+                x = dict(personel_atama.kadro.get_choices_for("unvan_kod"))
+                personel_gorev = x[personel_atama.kadro.unvan_kod]
+                serialized_form['model']['personel_gorev'] = personel_gorev
+            except Exception as e:
+                pass
+
+            # forma personelin sicil nosu eklenir
+            try:
+                personel_sicil_no = personel_atama.kurum_sicil_no
+                serialized_form['model']['personel_sicil_no'] = personel_sicil_no
+            except Exception as e:
+                pass
+
+            # forma personelin birim adı işlenir
+            try:
+                personel_birim = form_personel.birim.name
+                serialized_form['model']['personel_birim'] = personel_birim
+            except Exception as e:
+                pass
+
+            # İznin başlangıç ve bitiş tarihleri arasındaki gün sayısı hesaplanır
+            # TODO: Formda tarih değişince js ile tekrar hesaplatmak lazım
+            date_format = "%d.%m.%Y"
+            a = datetime.strptime(basvuru_data['izin_baslangic'], date_format)
+            b = datetime.strptime(basvuru_data['izin_bitis'], date_format)
+            delta = b - a
+
+            # formun verileri doldurulur
+            serialized_form['model']['izin_turu'] = basvuru_data['izin_turu']
+            serialized_form['model']['izin_ait_yil'] = basvuru_data['izin_ait_yil']
+            serialized_form['model']['izin_baslangic'] = basvuru_data['izin_baslangic']
+            serialized_form['model']['izin_bitis'] = basvuru_data['izin_bitis']
+            serialized_form['model']['izin_adres'] = basvuru_data['izin_adres']
+            serialized_form['model']['toplam_izin_gun'] = delta.days
+            serialized_form['model']['personel_ad_soyad'] = "%s %s" % (
+                form_personel.ad, form_personel.soyad)

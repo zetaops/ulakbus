@@ -72,6 +72,8 @@ OBJECT_MENU = {
          'verbose_name': 'Kimlik ve Iletisim Bilgileri', 'field': 'personel_id'},
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id'},
         {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri', 'field': 'personel_id'},
+        {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
+         'field': 'personel_id'},
         {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri',
          'field': 'personel_id'},
         {'name': 'KurumDisiGorevlendirmeBilgileri', 'field': 'personel_id'},
@@ -110,7 +112,8 @@ OBJECT_MENU = {
          'verbose_name': 'Danışman Atama'},
         {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
          'field': 'ogrenci_id'},
-        {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci', 'wf': 'mazeretli_ders_kaydi',
+        {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci',
+         'wf': 'mazeretli_ders_kaydi',
          'field': 'ogrenci_id'},
     ],
 }
