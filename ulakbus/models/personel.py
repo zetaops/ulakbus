@@ -99,7 +99,9 @@ class Personel(Model):
             Atama örneği (instance)
 
         """
-        return Atama.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=self)[0]
+        # Mevcut pyoko API'i ile uyumlu olmasi icin, geriye bos bir Atama nesnesi dondurur.
+        atamalar = Atama.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=self)
+        return atamalar[0] if atamalar else Atama()
 
     @lazy_property
     def kadro(self):
@@ -129,6 +131,7 @@ class Personel(Model):
 
     def __unicode__(self):
         return "%s %s" % (self.ad, self.soyad)
+
 
 
 class AdresBilgileri(Model):
