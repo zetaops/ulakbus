@@ -647,6 +647,7 @@ class OgrenciDersi(Model):
         """
         self.donem = self.sube.donem
         self.ders = self.sube.ders
+        self.save()
 
     def ders_adi(self):
         """
