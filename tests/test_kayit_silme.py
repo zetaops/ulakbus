@@ -7,7 +7,7 @@
 
 
 from zengine.lib.test_utils import BaseTestCase
-from ulakbus.models import OgrenciProgram
+from ulakbus.models import OgrenciProgram, Ogrenci, Role
 
 
 class TestCase(BaseTestCase):
@@ -23,6 +23,12 @@ class TestCase(BaseTestCase):
 
         İş akışının ilk adımında ayrılma nedeni seçilir ve açıklama yazılır.
         Dönen cevapta msgbox'ın olup olmadığı test edilir.
+
+        Öğrencinin kayıtlı olduğu öğrenci programının ayrılma nedeni ve
+        ogrencilik statüsü alanlarına atanan değerlerin doğruluğu test edilir.
+
+        Rolü değiştirilen öğrencinin, değişikliğe sahip olup olmadığı test
+        edilir.
 
         İkinci adımda danışmana ve öğrenciye bilgi verilir.
 
@@ -45,3 +51,18 @@ class TestCase(BaseTestCase):
         resp = self.client.post(form=dict(ayrilma_nedeni=11, sec=1, aciklama='Yatay Geçiş'))
 
         assert 'msgbox' in resp.json
+
+        # Üçgül Seven adlı öğrenci veritabanından çekilir.
+        ogrenci = Ogrenci.objects.get('T8PMMytvrHwhlRnQpBq8B5eB7Ut')
+        # Öğrencinin kayıtlı olduğu program
+        ogrenci_program = OgrenciProgram.objects.get(ogrenci_id='T8PMMytvrHwhlRnQpBq8B5eB7Ut')
+        # Ayrılma nedenine atanan değerin doğruluğu test eder.
+        assert ogrenci_program.ayrilma_nedeni == 11
+        # Öğrencilik statüsüne atanan değerin doğruluğunu test eder.
+        assert ogrenci_program.ogrencilik_statusu == 21
+        # Rolü değiştirilen öğrencinin bu değişikliğe sahip olup olmadığı test eder.
+        role = Role.objects.get(user=ogrenci.user)
+        assert role.abstract_role.name == 'Silinmiş Öğrenci'
+
+
+

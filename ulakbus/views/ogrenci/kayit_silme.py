@@ -7,7 +7,7 @@
 from zengine.lib.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from ulakbus.models import OgrenciProgram, Ogrenci
+from ulakbus.models import OgrenciProgram, Ogrenci, Role, AbstractRole
 from zengine.notifications import Notify
 
 
@@ -78,6 +78,10 @@ class KayitSil(CrudView):
             # todo: elle vermek yerine daha iyi bir yol dusunelim
             program.ogrencilik_statusu = 21
             program.save()
+        abstract_role = AbstractRole.objects.get(name='Silinmiş Öğrenci')
+        role = Role.objects.get(user=ogrenci.user)
+        role.abstract_role = abstract_role
+        role.save()
 
     def bilgi_ver(self):
         """
