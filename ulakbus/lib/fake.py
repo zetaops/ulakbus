@@ -6,7 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
+from ulakbus.models import AbstractRole
 from zengine.management_commands import *
 
 
@@ -53,3 +53,100 @@ class GenerateFakeData(Command):
                        program_say=program_say, ders_say=ders_say, sinav_say=sinav_say,
                        sube_say=sube_say,
                        ogrenci_say=ogrenci_say)
+
+
+class generate_abstract_roles(Command):
+    CMD_NAME = 'generate_abstract_roles'
+    HELP = 'Generates abstract roles'
+    ROLE_LIST = [
+        "Lisans Programı Öğrencisi - Aktif",
+        "Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+        "Lisans Programı Öğrencisi - Kayıt Silinmiş",
+        "Ön Lisans Programı Öğrencisi - Aktif",
+        "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+        "Ön Lisans Programı Öğrencisi - Kayıt Silinmiş",
+
+        "Yüksek Lisans Programı Öğrencisi - Aktif",
+        "Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+        "Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş",
+
+        "Doktora Programı Öğrencisi - Aktif",
+        "Doktora Programı Öğrencisi - Kayıt Dondurmuş",
+        "Doktora Programı Öğrencisi - Kayıt Silinmiş",
+
+        "Fakülte Dekanı",
+        "Fakülte Dekan Sekreteri",
+        "Fakülte Dekan Yardımcısı",
+        "Fakülte Kurulu Başkanı (Dekan)",
+        "Fakülte Kurulu Üyesi",
+        "Fakülte Yönetim Kurulu Başkanı (Dekan)",
+        "Fakülte Yönetim Kurulu Üyesi",
+        "Fakülte Sekreteri",
+        "Fakülte Etik Kurulu Başkanı",
+        "Fakülte Etik Kurulu Üyesi",
+        "Fakülte Öğrenci İşleri Şefi",
+        "Fakülte Öğrenci İşleri Personeli",
+        "Tıp Fakültesi Baş Koordinatörü",
+        "Tıp Fakültesi Baş Koordinatör Yardımcısı",
+        "Tıp Fakültesi Dönem Koordinatörü",
+        "Tıp Fakültesi Eğitim Komisyonu Başkanı",
+        "Tıp Fakültesi Eğitim Komisyonu Üyesi",
+
+        "Yükselokul Müdürü",
+        "Yükselokul Müdür Yardımcısı",
+        "Yükselokul Kurulu Başkanı",
+        "Yükselokul Kurulu Üyesi",
+        "Yükselokul Yönetim Kurulu Başkanı",
+        "Yükselokul Yönetim Kurulu Üyesi",
+        "Yükselokul Sekreteri",
+        "Yükselokul Öğrenci İşleri Şefi",
+        "Yükselokul Öğrenci İşleri Personeli",
+        "Yükselokul Muhasebe İşleri Şefi",
+        "Yükselokul Muhasebe İşleri Personeli",
+        "Yükselokul Birim Koordinatörü",
+
+        "Bölüm Başkanı",
+        "Bölüm Kurulu Başkanı",
+        "Bölüm Kurulu Üyesi",
+        "Bölüm Sekreteri",
+
+        "Bilim Dalı Başkanı",
+        "Bilim Dalı Üyesi",
+
+        "Ana Bilim Dalı Başkanı",
+        "Ana Bilim Dalı Üyesi",
+
+        "Enstitü Müdürü",
+        "Enstitü Müdür Yardımcısı",
+        "Enstitü Kurulu Başkanı",
+        "Enstitü Kurulu Üyesi",
+        "Enstitü Yönetim Kurulu Başkanı",
+        "Enstitü Yönetim Kurulu Üyesi",
+        "Enstitü Sekreteri",
+        "Enstitü Öğrenci İşleri Şefi",
+        "Enstitü Öğrenci İşleri Personeli",
+        "Enstitü Muhasebe İşleri Şefi",
+        "Enstitü Muhasebe İşleri Personeli",
+
+        "Öğretim Üyesi (Yrd Doc, Doc, Prof)",
+        "Öğretim Görevlisi",
+        "Araştırma Görevlisi",
+        "Okutman",
+        "Uzman",
+        "Çevirici",
+        "Eğitim-öğretim Planlamacısı",
+
+        "Personel İşleri Daire Başkanı",
+        "Personel İşleri Şube Müdürü",
+        "Personel İşleri Şefi",
+        "Personel İşleri Personeli",
+
+        "Öğrenci İşleri Daire Başkanı",
+        "Öğrenci İşleri Şube Müdürü",
+        "Öğrenci İşleri Şefi",
+        "Öğrenci İşleri Personeli"
+    ]
+
+    def run(self):
+        for role in self.ROLE_LIST:
+            AbstractRole(name=role).save()
