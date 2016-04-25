@@ -5,9 +5,10 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-__author__ = 'Evren Esat Ozkan'
 from zengine.settings import *
 import os.path
+
+__author__ = 'Evren Esat Ozkan'
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -68,7 +69,7 @@ OBJECT_MENU = {
         {'name': 'OgrenciProgram', 'category': 'Genel'},
     ],
     'personel': [
-        {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
+        {'name': 'Personel', 'wf': 'kimlik_ve_iletisim_bilgileri',
          'verbose_name': 'Kimlik ve Iletisim Bilgileri', 'field': 'personel_id'},
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id'},
         {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri', 'field': 'personel_id'},
@@ -113,8 +114,10 @@ OBJECT_MENU = {
         {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
          'field': 'ogrenci_id'},
         {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci',
-         'wf': 'mazeretli_ders_kaydi',
-         'field': 'ogrenci_id'},
+         'wf': 'mazeretli_ders_kaydi'},
+        {'name': 'DegerlendirmeNot', 'verbose_name': 'Not Düzenleme',
+         'wf': 'ogrenci_isleri_not_duzenleme',
+         'field': 'ogrenci_id'}
     ],
 }
 
