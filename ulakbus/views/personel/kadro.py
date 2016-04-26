@@ -13,6 +13,7 @@ Kadro İşlemleri İş Akışı 5 adimdan olusmaktadir:
     * Saklı Kadro Ekle
     * Kaydet
     * Kadro durumunu Saklı veya İzinli yap
+    * Kadro Sil Onay
     * Kadro Sil
 
 Bu iş akışı, CrudView nesnesi genişletilerek(extend) işletilmektedir.
@@ -53,6 +54,9 @@ Kadro Durumunu Sakli veya Izinli yap:
 Kadro Sil
    Sadece durumu sakli (1) olan kadrolar silinebilir. Bunun için kadro
    sil metodunda bu kontrol yapilir ve delete metodu çalıştırılır.
+
+Kadro Sil Onay
+   Silme işlemi için onay adımıdır.
 
 """
 
@@ -190,6 +194,11 @@ class KadroIslemleri(CrudView):
         hayir = fields.Button("Hayır")
 
     def kadro_sil_onay_form(self):
+        """
+        Silme işlemi için onay adımı. Kadronun detaylı açıklaması listelenir ve
+        onay vermesi beklenir.
+
+        """
 
         unvan = self.object.get_unvan_display()
         aciklama = self.object.aciklama
@@ -204,14 +213,18 @@ class KadroIslemleri(CrudView):
         Unvan Kodu: **%s**
         Açıklaması: **%s**
 
-        bilgilerine sahip kadroyu silmek istiyor musunuz ?""" % (unvan, kadro_no, unvan_kod, aciklama)
+        bilgilerine sahip kadroyu silmek istiyor musunuz ?""" % (
+            unvan, kadro_no, unvan_kod, aciklama)
         self.form_out(_form)
 
     def kadro_sil(self):
-        # sadece sakli kadrolar silinebilir
+        """
+        Saklı kontolü yaparak, silme işlemini gerçekleştirir.
+
+        """
+        # TODO: Sakli kadronun silinme denemesi loglanacak.
         assert self.object.durum == self.SAKLI, "attack detected, should be logged/banned"
         self.delete()
-        self.current.task_data['object_id'] = None
 
     def sakli_izinli_degistir(self):
         """Saklı İzinli Değiştir
@@ -222,6 +235,7 @@ class KadroIslemleri(CrudView):
         izinliyse sakli yap 3 - IZINLI = SAKLI
 
         """
+
         self.object.durum = 3 - self.object.durum
         self.object.save()
 
@@ -233,6 +247,7 @@ class KadroIslemleri(CrudView):
 
         Args:
             obj: Kadro instance
+            result: dict
 
         """
 
@@ -250,7 +265,7 @@ class KadroIslemleri(CrudView):
 
         Args:
             obj: Kadro instance
-            result: list
+            result: dict
 
         """
 
@@ -267,6 +282,7 @@ class KadroIslemleri(CrudView):
 
         Args:
             obj: Kadro instance
+            result: dict
 
         """
 

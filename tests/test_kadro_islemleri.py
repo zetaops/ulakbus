@@ -52,10 +52,10 @@ class TestCase(BaseTestCase):
         def len_1(lst):
             """
             Args:
-                objects (list): Kadro nesneleri
+                lst (list): kadro nesneleri listesi
 
             Returns:
-                Kadro kayıtlarının sayısını
+                int: lst uzunlugunun 1 eksigi
 
             """
 
@@ -85,8 +85,7 @@ class TestCase(BaseTestCase):
         beginning_state = kadro.get_durum_display()
 
         # Kadronun durumunu değiştirir. Saklı ise İzinli, İzinli ise Saklı yapar.
-        resp = self.client.post(cmd='sakli_izinli_degistir',
-                                object_id='IEinP7MulDERqiP1cB4QDB2If45')
+        self.client.post(cmd='sakli_izinli_degistir', object_id='IEinP7MulDERqiP1cB4QDB2If45')
 
         # Veritabanından kadro kaydı seçer.
         kadro = Kadro.objects.get('IEinP7MulDERqiP1cB4QDB2If45')
@@ -101,9 +100,9 @@ class TestCase(BaseTestCase):
         # İş akışının başlangıç token değeridir.
         form_token = self.client.token
 
-        filter = {'durum': {'values': ["1"], 'type': 'check'}}
+        filtre = {'durum': {'values': ["1"], 'type': 'check'}}
         # Seçilen kadro durumuna göre filtreler.
-        resp = self.client.post(filters=filter)
+        resp = self.client.post(filters=filtre)
 
         # Filtreleme yapılırken token değiştiği için başlangıç token değeri atanır.
         self.client.token = form_token
@@ -118,7 +117,8 @@ class TestCase(BaseTestCase):
             assert kadro.get_durum_display() == 'Saklı'
             num_of_sakli += 1
 
-        # Veritabanından çekilen saklı kadro sayısı ile sunucudan dönen saklı kadro sayıları karşılaştırılır.
+        # Veritabanından çekilen saklı kadro sayısı ile sunucudan dönen saklı
+        # kadro sayıları karşılaştırılır.
         assert len(Kadro.objects.filter(durum=1)) == num_of_sakli
 
         # Yeni kadro kaydı ekler.
@@ -160,7 +160,7 @@ class TestCase(BaseTestCase):
 
         # Kadronun durumu saklı ise silinir, değilse silinmez.
         self.client.post(cmd='kadro_sil_onay_form',
-                                object_id='IEinP7MulDERqiP1cB4QDB2If45')
+                         object_id='IEinP7MulDERqiP1cB4QDB2If45')
         resp = self.client.post(cmd='kadro_sil', form={'evet': 1, 'hayir': 'null'})
         time.sleep(1)
 
