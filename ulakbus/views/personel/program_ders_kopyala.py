@@ -12,15 +12,71 @@ from zengine.forms import JsonForm
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from ulakbus.models.ogrenci import Program, Ders, Donem
 
+
+class SecilenDersForm(JsonForm):
+    class Meta:
+        # model = 'Ders'
+        include = ['ad', 'kod', 'tanim', 'aciklama','donem']
+        # , 'onkosul', 'uygulama_saati', 'teori_saati']
+        # 'ects_kredisi',
+        # 'yerel_kredisi', 'zorunlu', 'ders_dili', 'ders_turu', 'ders_amaci',
+        # 'ogrenme_ciktilari',
+        # 'ders_icerigi', 'ders_kategorisi', 'ders_kaynaklari', 'ders_mufredati',
+        # 'verilis_bicimi', 'donem',
+        # 'ders_koordinatoru']
+
+
+class DersDuzenle(CrudView):
+    class Meta:
+        model = "Ders"
+
+    def ders_bilgileri_duzenle(self):
+        try:
+            self.current.task_data["dersler"]
+
+        except:
+            self.current.task_data["dersler"] = self.current.input['form']['Dersler']
+            secilen_dersler = []
+            for secilen_ders in self.current.task_data["dersler"]:
+                if secilen_ders['secim'] == True:
+                    secilen_dersler.append(secilen_ders)
+            self.current.task_data["secilenler"] = secilen_dersler
+            self.current.task_data["control"] = True
+
+        if len(self.current.task_data["secilenler"]) != 0:
+            secilen_ders = self.current.task_data["secilenler"][0]
+            ders = Ders.objects.get(key=secilen_ders['key'])
+
+            _form = SecilenDersForm(ders, current=self.current, title="Degisikligi Yapiniz")
+            _form.kaydet = fields.Button("Kaydet", flow="ders_kaydet")
+            self.form_out(_form)
+            self.current.task_data["control"] = False
+
+        elif len(self.current.task_data["secilenler"]) == 0 and self.current.task_data["control"]:
+            _form = JsonForm(current=self.current, title="Degisiklik Yapmak Icin Ders Secmelisiniz!")
+            _form.tamamla = fields.Button("Ders Secme Ekranina Geri Don", flow="ders_tablo")
+            self.form_out(_form)
+            del self.current.task_data["dersler"]
+
+        else:
+            _form = JsonForm(current=self.current,
+                             title="Islemi bitirmek için 'Tamamla' butonuna basınız.")
+            _form.tamamla = fields.Button("Tamamla", flow="personel_bilgilendir")
+            self.form_out(_form)
+
+    def ders_kaydet(self):
+
+        self.set_form_data_to_object()
+        self.save()
+        del self.current.task_data["secilenler"][0]
+
+
 class ProgramDersForm(JsonForm):
     class Dersler(ListNode):
         secim = fields.Boolean(type="checkbox")
-        ders_adi = fields.String('Ders')
+        ad = fields.String("Ad", index=True)
+        kod = fields.String("Kod", index=True)
         key = fields.String('Key', hidden=True)
-        onkosul = fields.String("Önkoşul", index=True)
-        uygulama_saati = fields.Integer("Uygulama Saati", index=True)
-        aciklama = fields.String('Aciklama')
-        kod = fields.String('Kod')
 
 
 class ProgramKopyalama(CrudView):
@@ -41,43 +97,30 @@ class ProgramKopyalama(CrudView):
         _form.senato_karar_no = fields.String("Senato Karar Numarası", index=True)
         _form.kaydet = fields.Button("Kaydet")
         self.form_out(_form)
-        # self.current.output["meta"]["allow_actions"] = False
-        # self.current.output["meta"]["allow_selection"] = False
 
     def senato_no_kaydet_ders_kopyala(self):
 
         senato_karar_no = self.current.input['form']['senato_karar_no']
-
         program = Program.objects.get(self.current.task_data['program_id'])
         program.Version.add(senato_karar_no=senato_karar_no)
         program.save()
 
         for ders in Ders.objects.filter(program=program):
-            ders.donem = Donem.guncel_donem()
+
             ders.key = None
+            ders.donem = Donem.guncel_donem()
             ders.program_versiyon = senato_karar_no
             ders.save()
-
-    # def ders_kopyala(self):
-    #     program = Program.objects.get(self.current.task_data['program_id'])
-    #
-    #     for ders in Ders.objects.filter(program=program):
-    #         ders.donem = Donem.guncel_donem()
-    #         ders.key = None
-    #         ders.save()
 
     def ders_tablo(self):
 
         program = Program.objects.get(self.current.task_data['program_id'])
         try:
-            _form = ProgramDersForm(current=self.current, title="Degisiklik Yapilacak Dersleri Seçiniz")
-            program_dersleri = Ders.objects.filter(program=program, donem=Donem.guncel_donem())
-
+            _form = ProgramDersForm(current=self.current, title="Degisiklik Yapmak Istediginiz Dersleri Seçiniz")
+            program_dersleri = Ders.objects.filter(program=program,donem = Donem.guncel_donem())
             for ders in program_dersleri:
-                _form.Dersler(secim=False, kod=ders.kod, ders_adi=ders.ad)
-
-                # _form.kaydet = fields.Button("Tamamla", flow="personel_bilgilendir")
-            _form.duzenle = fields.Button("Onayla", flow="ders_duzenle")
+                _form.Dersler(secim=False, kod=ders.kod, ad=ders.ad, key=ders.key)
+            _form.duzenle = fields.Button("Onayla")
             self.form_out(_form)
 
             self.current.output["meta"]["allow_actions"] = False
@@ -89,50 +132,11 @@ class ProgramKopyalama(CrudView):
                 "msg": 'Program Dersleri Listeleme Başarısız. Hata Kodu : %s' % e.message
             }
 
-    def ders_duzenle(self):
-
-        if len(self.current.task_data["dersler"]) == 0: #tanimlanmamissa
-            self.current.task_data["dersler"] = self.current.input['form']['Dersler']
-            dict = []
-            for secim in self.current.task_data["dersler"]:
-                if secim['secim'] == True:
-                    dict.append(secim)
-            self.current.task_data["secilenler"] = dict
-
-        _form = ProgramDersForm(current=self.current, title="Duzeltmeyi Yapiniz")
-        if len(self.current.task_data["secilenler"]) != 0:
-            ders = self.current.task_data["secilenler"][0]
-            _form.Secilenler(Dersler=ders)
-            _form.duzenle = fields.Button("Degisiklikleri Kaydet", flow="ders_duzenle")
-            self.form_out()
-
-        else:
-            self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Onay Mesajı',
-                "msg": 'Degişikliklerinizi bitirdiniz, Tamamla diyerek tum degişikliklerinizi onaylayabilirsiniz.'
-            }
-            fields.Button("Tamamla", flow="personel_bilgilendir")
-
-    # degisiklik_ders = Ders.objects.get(key=ders['key'])
-    # if degisiklik_ders.aciklama != ders['aciklama']:
-    #   degisiklik_ders.aciklama = ders['aciklama']
-    #  degisiklik_ders.save()
-
-    def ders_kaydet(self):
-        ders = self.current.task_data["secilenler"][0]
-        degisiklik_ders = Ders.objects.get(key=ders['key'])
-        degisiklik_ders = ders
-        degisiklik_ders.save()
-        del self.current.task_data["secilenler"][0]
-        # if degisiklik_ders.aciklama != ders['aciklama']:
-        #   degisiklik_ders.aciklama = ders['aciklama']
-        #  degisiklik_ders.save()
-
     def personel_bilgilendir(self):
 
         self.current.output['msgbox'] = {
             'type': 'warning', "title": 'Onay Mesaji',
-            "msg": 'Program Dersleri Basariyla Kopyalandi'
+            "msg": 'Degisiklikler Kaydedildi ve Program Dersleri Basariyla Kopyalandi'
         }
 
     @form_modifier
@@ -145,4 +149,4 @@ class ProgramKopyalama(CrudView):
 
         """
         if 'Dersler' in serialized_form['schema']['properties']:
-            serialized_form['inline_edit'] = ['secim', 'aciklama', 'onkosul', 'uygulama_saati', 'kod']
+            serialized_form['inline_edit'] = ['secim']

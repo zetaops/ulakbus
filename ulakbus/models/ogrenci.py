@@ -322,7 +322,7 @@ class Ders(Model):
     yil = field.Date("Yıl", index=True)
     ders_koordinatoru = Personel()
     yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")
-    program_versiyon = field.String()
+    program_versiyon = field.String("Program Versiyonu", index=True)
 
     class Degerlendirme(ListNode):
         tur = field.Integer("Değerlendirme Türü", choices="sinav_turleri", index=True)
