@@ -19,7 +19,7 @@ from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
 from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciDersi, Donem
 from zengine import forms
 from zengine.forms import fields
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 
 
@@ -301,11 +301,12 @@ class DersSubelendirme(CrudView):
                         }
                     )
 
-            for sube in ders_subeleri:
-                sube_append(sube)
-            for ders_key, sube_key in just_created:
-                if ders_key == d.key:
-                    sube_append(Sube.objects.get(sube_key))
+            except KeyError:
+                pass
+
+            ders_subeleri = ["{okutman_unvan} {okutman_ad}"
+                             "{okutman_soyad}, Sube:{sube_ad} Kontenjan{kontenjan} \n".format(**sb)
+                             for sb in sube]
 
             ders_subeleri = ["""* **%s %s %s**
                                 Sube: %s - Kontenjan: %s""" % (
@@ -540,7 +541,8 @@ class NotGirisi(CrudView):
 
             for ogr in ogrenciler:
                 try:  # Öğrencinin bu sınava ait daha önceden kayıtlı notu var mı?
-                    degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav, ogrenci=ogr.ogrenci_program.ogrenci)
+                    degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav,
+                                                                 ogrenci=ogr.ogrenci_program.ogrenci)
                     puan = degerlendirme.puan
                     aciklama = degerlendirme.aciklama
                     degerlendirme_key = degerlendirme.key
@@ -725,11 +727,3 @@ class NotGirisi(CrudView):
         return "%s %s" % (self.current.user.personel.okutman.ad,
                           self.current.user.personel.okutman.soyad) if self.current.user.personel.key else "%s %s" % (
             self.current.user.harici_okutman.ad, self.current.user.harici_okutman.soyad)
-
-    @form_modifier
-    def not_form_inline_edit(self, serialized_form):
-        """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
-
-        """
-        if 'Ogrenciler' in serialized_form['schema']['properties']:
-            serialized_form['inline_edit'] = ['degerlendirme', 'aciklama']
