@@ -62,7 +62,7 @@ Kadro Sil Onay
 
 from zengine.views.crud import CrudView, obj_filter, form_modifier
 from collections import OrderedDict
-
+from pyoko.model import field
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from ulakbus.models import Personel
@@ -298,6 +298,7 @@ class KadroIslemleri(CrudView):
 
 class TerfiForm(JsonForm):
     class Personel(ListNode):
+        duzenle_buton = fields.String("Düzenle", type="button")
         key = fields.String("Key", hidden=True)
         sec = fields.Boolean("Seç", type="checkbox")
         tckn = fields.String("T.C. No")
@@ -306,35 +307,114 @@ class TerfiForm(JsonForm):
         gorev_ayligi = fields.String("Görev Aylığı")
         kazanilmis_hak = fields.String("Kazanılmış Hak")
         emekli_muktesebat = fields.String("Emekli Müktesebat")
-    terfi_et_listele = fields.Button("Terfi Ettir ve listele", cmd="terfi_ettir", flow="liste")
-    terfi_et_end = fields.Button("Terfi Ettir", cmd="terfi_ettir", flow="end")
+        yeni_gorev_ayligi = fields.String("Yeni Görev Aylığı")
+        yeni_kazanilmis_hak = fields.String("Yeni Kazanılmış Hak")
+        yeni_emekli_muktesebat = fields.String("Yeni Emekli Müktesebat")
+    kaydet = fields.Button("Kaydet", cmd="kaydet")
+
+class TerfiDuzenleForm(JsonForm):
+    key = fields.String("Key", hidden=True)
+    yeni_gorev_ayligi_derece = fields.String("Yeni Görev Aylığı Derece")
+    yeni_gorev_ayligi_kademe = fields.String("Yeni Görev Aylığı Kademe")
+    yeni_kazanilmis_hak_derece = fields.String("Yeni Kazanılmış Hak Derece")
+    yeni_kazanilmis_hak_kademe = fields.String("Yeni Kazanılmış Hak Kademe")
+    yeni_emekli_muktesebat_derece = fields.String("Yeni Emekli Müktesebat Derece")
+    yeni_emekli_muktesebat_kademe = fields.String("Yeni Emekli Müktesebat Kademe")
+    kaydet = fields.Button("Kaydet")
 
 class TerfiListe(CrudView):
     class Meta:
         model = "Personel"
-        
-    def terfisi_gelen_personel_liste(self):
-        self.current.output['client_cmd'] = ['show', ]
+
+    def liste_olustur(self):
         simdi = datetime.date.today()
         kontrol = simdi + datetime.timedelta(days = 90)
         personel_liste = Personel.objects.filter(
             sonraki_terfi_tarihi__lte = kontrol
             )
-        form = TerfiForm(current = self.current, title = "Terfi İşlemi")
+        personel_list = []
         for personel in personel_liste:
+            personel_satir = {}
+            personel_satir["key"] = personel.key
+            personel_satir["tckn"] = personel.tckn
+            personel_satir["ad"] = personel.ad
+            personel_satir["soyad"] = personel.soyad
+            personel_satir["guncel_gorev_ayligi_derece"] = personel.guncel_gorev_ayligi_derece
+            personel_satir["guncel_gorev_ayligi_kademe"] = personel.guncel_gorev_ayligi_kademe
+            personel_satir["guncel_kazanilmis_hak_derece"] = personel.guncel_kazanilmis_hak_derece
+            personel_satir["guncel_kazanilmis_hak_kademe"] = personel.guncel_kazanilmis_hak_kademe
+            personel_satir["guncel_emekli_muktesebat_derece"] = personel.guncel_emekli_muktesebat_derece
+            personel_satir["guncel_emekli_muktesebat_kademe"] = personel.guncel_emekli_muktesebat_kademe                        
+            personel_satir["gorev_ayligi_derece"] = personel.guncel_gorev_ayligi_derece
+            personel_satir["gorev_ayligi_kademe"] = personel.guncel_gorev_ayligi_kademe
+            personel_satir["kazanilmis_hak_derece"] = personel.guncel_kazanilmis_hak_derece
+            personel_satir["kazanilmis_hak_kademe"] = personel.guncel_kazanilmis_hak_kademe
+            personel_satir["emekli_muktesebat_derece"] = personel.guncel_emekli_muktesebat_derece
+            personel_satir["emekli_muktesebat_kademe"] = personel.guncel_emekli_muktesebat_kademe            
+            if personel_satir["gorev_ayligi_derece"] == personel_satir["kazanilmis_hak_derece"]:
+                if personel_satir["gorev_ayligi_derece"] == personel_satir["emekli_muktesebat_derece"]:                    
+                    personel_satir["gorev_ayligi_kademe"] += 1
+            personel_satir["kazanilmis_hak_kademe"] += 1
+            personel_satir["emekli_muktesebat_kademe"] += 1            
+            if personel.kadro.derece != personel.guncel_gorev_ayligi_derece:
+                if personel_satir["gorev_ayligi_kademe"] == 4:
+                    personel_satir["gorev_ayligi_derece"] -= 1
+                    personel_satir["gorev_ayligi_kademe"] = 1
+                if personel_satir["kazanilmis_hak_kademe"] == 4:
+                    personel_satir["kazanilmis_hak_derece"] -= 1
+                    personel_satir["kazanilmis_hak_kademe"] = 1
+                if personel_satir["emekli_muktesebat_kademe"] == 4:
+                    personel_satir["emekli_muktesebat_derece"] -=1
+                    personel_satir["emekli_muktesebat_kademe"] = 1
+
+            personel_list.append(personel_satir)
+
+        self.current.task_data["personeller"] = personel_list            
+
+    def terfi_duzenle_form(self):
+        yeni_gorev_ayligi_derece = self.current.input["form"]["yeni_gorev_ayligi"].split("/")[0]
+        yeni_gorev_ayligi_kademe = self.current.input["form"]["yeni_gorev_ayligi"].split("/")[1]
+        yeni_kazanilmis_hak_derece = self.current.input["form"]["yeni_kazanilmis_hak"].split("/")[0]
+        yeni_kazanilmis_hak_kademe = self.current.input["form"]["yeni_kazanilmis_hak"].split("/")[1]
+        yeni_emekli_muktesebat_derece = self.current.input["form"]["yeni_kazanilmis_hak"].split("/")[0]
+        yeni_emekli_muktesebat_kademe = self.current.input["form"]["yeni_kazanilmis_hak"].split("/")[1]
+        form = TerfiDuzenleForm(
+            current = self.current,
+            title = "Terfi Bilgileri Düzenle",
+            key = self.current.input["form"]["key"],
+            gorev_ayligi = self.current.input["form"]["gorev_ayligi"],
+            kazanilmis_hak = self.current.input["form"]["kazanilmis_hak"],
+            emekli_muktesebat = self.current.input["form"]["emekli_muktesebat"],
+            yeni_gorev_ayligi_derece = yeni_gorev_ayligi_derece,
+            yeni_gorev_ayligi_kademe = yeni_gorev_ayligi_kademe,
+            yeni_kazanilmis_hak_derece = yeni_kazanilmis_hak_derece,
+            yeni_kazanilmis_hak_kademe = yeni_kazanilmis_hak_kademe,
+            yeni_emekli_muktesebat_derece = yeni_kazanilmis_hak_derece,
+            yeni_emekli_muktesebat_kademe = yeni_kazanilmis_hak_kademe
+            )
+        self.form_out(form)
+
+    def terfisi_gelen_personel_liste(self):
+        self.current.output['client_cmd'] = ['show', ]
+        form = TerfiForm(current = self.current, title = "Terfi İşlemi")
+        for personel in self.current.task_data["personeller"]:
             form.Personel(
-                key = personel.key,
+                duzenle_buton = fields.String("Bilgileri Getir", type="button"),
+                key = personel["key"],
                 sec = False, 
-                tckn = personel.tckn,
-                isim = personel.ad,
-                soyisim = personel.soyad,
-                gorev_ayligi = "%i/%i"%(personel.guncel_gorev_ayligi_derece, personel.guncel_gorev_ayligi_kademe),
-                kazanilmis_hak = "%i/%i"%(personel.guncel_kazanilmis_hak_derece, personel.guncel_kazanilmis_hak_kademe),
-                emekli_muktesebat = "%i/%i"%(personel.guncel_emekli_muktesebat_derece, personel.guncel_emekli_muktesebat_kademe)
+                tckn = personel["tckn"],
+                isim = personel["ad"],
+                soyisim = personel["soyad"],
+                gorev_ayligi = "%i/%i"%(personel["guncel_gorev_ayligi_derece"], personel["guncel_gorev_ayligi_kademe"]),
+                kazanilmis_hak = "%i/%i"%(personel["guncel_kazanilmis_hak_derece"], personel["guncel_kazanilmis_hak_kademe"]),
+                emekli_muktesebat = "%i/%i"%(personel["guncel_emekli_muktesebat_derece"], personel["guncel_emekli_muktesebat_kademe"]),
+                yeni_gorev_ayligi = "%i/%i"%(personel["gorev_ayligi_derece"], personel["gorev_ayligi_kademe"]),
+                yeni_kazanilmis_hak = "%i/%i"%(personel["kazanilmis_hak_derece"], personel["kazanilmis_hak_kademe"]),
+                yeni_emekli_muktesebat = "%i/%i"%(personel["emekli_muktesebat_derece"], personel["emekli_muktesebat_kademe"])
                 )
 
         self.form_out(form)
-        self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_actions"] = True
         self.current.output["meta"]["allow_add_listnode"] = False
 
     @form_modifier
@@ -342,29 +422,18 @@ class TerfiListe(CrudView):
         if 'Personel' in serialized_form["schema"]["properties"]:
             serialized_form["inline_edit"] = ["sec"] 
 
-    def terfi_ettir(self):
+    def kaydet(self):
         personel_liste = self.current.input["form"]["Personel"]
         simdi = datetime.date.today()
+        sonraki_terfi_tarihi = simdi + relativedelta(years=1)
         for personel_data in personel_liste:
             if personel_data["sec"]:
                 personel = Personel.objects.get(personel_data["key"])
-                g_ayligi = personel.guncel_gorev_ayligi_derece
-                k_hak = personel.guncel_kazanilmis_hak_derece
-                e_muktesebat = personel.guncel_emekli_muktesebat_derece
-                if personel.guncel_kadro.derece != personel.guncel_gorev_ayligi_derece:
-                    personel.sonraki_terfi_tarihi = simdi + relativedelta(years= 1)
-                    personel.guncel_kazanilmis_hak_kademe += 1
-                    personel.guncel_emekli_muktesebat_kademe +=1                    
-                    if (g_ayligi == k_hak) & (g_ayligi == e_muktesebat):
-                        personel.guncel_gorev_ayligi_kademe += 1
-                    if personel.guncel_gorev_ayligi_kademe == 4:
-                        personel.guncel_gorev_ayligi_derece -= 1
-                        personel.guncel_gorev_ayligi_kademe = 1
-                    if personel.guncel_kazanilmis_hak_kademe == 4:
-                        personel.guncel_kazanilmis_hak_derece -= 1
-                        personel.guncel_kazanilmis_hak_kademe = 1
-                    if personel.guncel_emekli_muktesebat_kademe == 4:
-                        personel.guncel_emekli_muktesebat_derece -= 1
-                        personel.guncel_emekli_muktesebat_kademe = 1                
-                
+                personel.guncel_gorev_ayligi_derece = personel_data["yeni_gorev_ayligi_derece"]
+                personel.guncel_gorev_ayligi_kademe = personel_data["yeni_gorev_ayligi_kademe"]
+                personel.guncel_kazanilmis_hak_derece = personel_data["yeni_kazanilmis_hak_derece"]
+                personel.guncel_kazanilmis_hak_kademe = personel_data["yeni_kazanilmis_hak_kademe"]
+                personel.guncel_emekli_muktesebat_derece = personel_data["yeni_emekli_muktesebat_derece"]
+                personel.guncel_emekli_muktesebat_kademe = personel_data["yeni_emekli_muktesebat_kademe"]
+                personel.sonraki_terfi_tarihi = sonraki_terfi_tarihi
                 personel.save()
