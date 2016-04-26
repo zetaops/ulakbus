@@ -77,7 +77,7 @@ class TestCase(BaseTestCase):
         assert len(kadro_lst) == num_of_kadro
 
         # Veritabanından kadro kaydı seçer.
-        kadro = Kadro.objects.get('ZRcoPhWHe4u6Rh3BYu1dL9jkTfR')
+        kadro = Kadro.objects.get('IEinP7MulDERqiP1cB4QDB2If45')
         # Kadro kaydı seçme işleminin tamamlanmasını bekler.
         time.sleep(1)
 
@@ -86,10 +86,10 @@ class TestCase(BaseTestCase):
 
         # Kadronun durumunu değiştirir. Saklı ise İzinli, İzinli ise Saklı yapar.
         resp = self.client.post(cmd='sakli_izinli_degistir',
-                                object_id='ZRcoPhWHe4u6Rh3BYu1dL9jkTfR')
+                                object_id='IEinP7MulDERqiP1cB4QDB2If45')
 
         # Veritabanından kadro kaydı seçer.
-        kadro = Kadro.objects.get('ZRcoPhWHe4u6Rh3BYu1dL9jkTfR')
+        kadro = Kadro.objects.get('IEinP7MulDERqiP1cB4QDB2If45')
         # Kadro kaydı seçme işleminin tamamlanmasını bekler.
         time.sleep(1)
 
@@ -154,13 +154,15 @@ class TestCase(BaseTestCase):
         assert len(resp.json['objects']) == len(kadro_lst) + 1
 
         # Kadro nesnesi seçilir.
-        kadro_object = Kadro.objects.get('ZRcoPhWHe4u6Rh3BYu1dL9jkTfR')
+        kadro_object = Kadro.objects.get('IEinP7MulDERqiP1cB4QDB2If45')
         # Seçilen kadronun durumu.
         kadro_durum = kadro_object.durum
 
         # Kadronun durumu saklı ise silinir, değilse silinmez.
-        resp = self.client.post(cmd='delete',
-                                object_id='ZRcoPhWHe4u6Rh3BYu1dL9jkTfR')
+        self.client.post(cmd='kadro_sil_onay_form',
+                                object_id='IEinP7MulDERqiP1cB4QDB2If45')
+        resp = self.client.post(cmd='kadro_sil', form={'evet': 1, 'hayir': 'null'})
+        time.sleep(1)
 
         if kadro_durum == 1:
             # Yukarıda kadro eklendiği için ve silme islemi gerçekleştiği
