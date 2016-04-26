@@ -18,7 +18,7 @@ from pyoko.exceptions import ObjectDoesNotExist
 from pyoko import ListNode
 from zengine.forms import fields
 from zengine import forms
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 from zengine.notifications import Notify
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
@@ -294,6 +294,9 @@ class KayitDondurmaForm(forms.JsonForm):
     ``KayitDondurma`` sınıfı için form olarak kullanılacaktır.
 
     """
+    class Meta:
+        inline_edit = ['secim', 'aciklama']
+
     baslangic_tarihi = fields.Date('Kayıt Dondurma Başlangıç Tarihi')
 
     class Donemler(ListNode):
@@ -572,17 +575,6 @@ class KayitDondurma(CrudView):
                     "msg": 'Öğrenci Danışmanı Bilgilendirme Başarısız. Hata Kodu : %s' % (e.message)
                 }
 
-    @form_modifier
-    def kayit_dondurma_list_form_inline_edit(self, serialized_form):
-        """KayitDondurmaForm'da seçim ve açıklama alanlarına inline
-        edit özelliği sağlayan method.
-
-        Args:
-            serialized_form: serialized form
-
-        """
-        if 'Donemler' in serialized_form['schema']['properties']:
-            serialized_form['inline_edit'] = ['secim', 'aciklama']
 
 
 class BasariDurum(CrudView):

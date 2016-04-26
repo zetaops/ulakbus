@@ -17,12 +17,15 @@ from zengine.forms import fields
 from ulakbus.views.ders.ders import prepare_choices_for_model
 
 from zengine import forms
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 
 __author__ = 'Ali Riza Keles'
 
 
 class DevamsizlikForm(forms.JsonForm):
+    class Meta:
+        inline_edit = ['katilim_durumu', 'aciklama']
+
     class Ogrenciler(ListNode):
         ogrenci_no = fields.String('No')
         ad_soyad = fields.String('Ad Soyad')
@@ -57,7 +60,7 @@ class KatilimDurumu(CrudView):
         """Öğrencileri listesinden bir form oluşturur. Yerinde düzenleme
         ile öğrenci devamsızlıkları girilir."""
 
-        _form = DevamsizlikForm(current=self.current, title="Not Giriş Formu")
+        _form = DevamsizlikForm(current=self.current, title="Ders Katılımı Giriş Formu")
 
         try:
             sube_key = self.current.input['form']['sube']
@@ -136,11 +139,3 @@ class KatilimDurumu(CrudView):
         """Harici okutman ve okutman kayıt key'lerinin ayrımını sağlayan method.
         """
         return self.current.user.personel.okutman.key if self.current.user.personel.key else self.current.user.harici_okutman.okutman.key
-
-    @form_modifier
-    def form_inline_edit(self, serialized_form):
-        """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
-
-        """
-        if 'Ogrenciler' in serialized_form['schema']['properties']:
-            serialized_form['inline_edit'] = ['katilim_durumu', 'aciklama']

@@ -2,7 +2,7 @@
 
 from zengine.forms import fields
 from zengine import forms
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 from ulakbus.models.personel import Personel, Atama, Izin
 from ulakbus.models.auth import User
 from ulakbus.models.hitap import HizmetKayitlari, HizmetBirlestirme
