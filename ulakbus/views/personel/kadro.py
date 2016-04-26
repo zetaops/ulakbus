@@ -185,28 +185,33 @@ class KadroIslemleri(CrudView):
         # İş akışını yenile
         self.reset()
 
+    class SilOnayForm(JsonForm):
+        evet = fields.Button("Evet", cmd='kadro_sil')
+        hayir = fields.Button("Hayır")
+
     def kadro_sil_onay_form(self):
 
-        derece = self.object.derece
         unvan = self.object.get_unvan_display()
-        birim = self.object.birim
+        aciklama = self.object.aciklama
+        kadro_no = self.object.kadro_no
+        unvan_kod = self.object.get_unvan_kod_display()
 
-        self.current.output['msgbox'] = {
-            'type': 'warning',
-            'title': 'Uyarı',
-            'msg': '**%s** derecesinde, **%s** unvaniyla, **%s** birimine ait sakli kadroyu silmek uzeresiniz, '
-                   'devam etmek istiyor musunuz?' % (derece, unvan, birim)
-        }
+        self.current.task_data['object_id'] = self.object.key
 
-        _form = JsonForm(title=" ")
-        _form.evet = fields.Button("Evet", cmd="kadro_sil")
-        _form.hayir = fields.Button("Hayır")
+        _form = self.SilOnayForm(title=" ")
+        _form.help_text = """Akademik unvanı: **%s**
+        Kadro numarası: **%s**
+        Unvan Kodu: **%s**
+        Açıklaması: **%s**
+
+        bilgilerine sahip kadroyu silmek istiyor musunuz ?""" % (unvan, kadro_no, unvan_kod, aciklama)
         self.form_out(_form)
 
     def kadro_sil(self):
         # sadece sakli kadrolar silinebilir
         assert self.object.durum == self.SAKLI, "attack detected, should be logged/banned"
         self.delete()
+        self.current.task_data['object_id'] = None
 
     def sakli_izinli_degistir(self):
         """Saklı İzinli Değiştir
@@ -251,7 +256,7 @@ class KadroIslemleri(CrudView):
 
         if obj.durum == self.IZINLI:
             result['actions'].append(
-                    {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
+                {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
 
     @obj_filter
     def duzenlenebilir_veya_silinebilir_kadro(self, obj, result):

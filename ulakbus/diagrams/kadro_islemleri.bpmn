@@ -18,9 +18,9 @@
         <bpmn2:flowNodeRef>kaydet</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>sakli_izinli_yap</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kadro_sil</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>kadro_s</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ExclusiveGateway_0qd86ei</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kadro_sil_onay_form</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>kadro_sil_onay</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
     <bpmn2:userTask id="kadro_ekle" name="Sakli Kadro Ekle" camunda:assignee="personel.kadro.KadroIslemleri.add_edit_form" camunda:class="personel.kadro.KadroIslemleri.form">
@@ -62,14 +62,14 @@
     <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="kadro_ekle" targetRef="kaydet" />
     <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="basla" targetRef="kadro_listele" />
     <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="sakli_izinli_yap" targetRef="kadro_listele" />
-    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="kadro_sil" targetRef="kadro_listele" />
+    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="kadro_s" targetRef="kadro_listele" />
     <bpmn2:sequenceFlow id="listele" name="" sourceRef="ExclusiveGateway_2" targetRef="kadro_listele" />
     <bpmn2:sequenceFlow id="SequenceFlow_22" name="" sourceRef="kadro_listele" targetRef="ExclusiveGateway_2" />
     <bpmn2:sequenceFlow id="SequenceFlow_21" name="" sourceRef="ExclusiveGateway_2" targetRef="sakli_izinli_yap">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'sakli_izinli_degistir']]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="kaydet" targetRef="EndEvent_1" />
-    <bpmn2:serviceTask id="kadro_sil" name="Kadro Sil" camunda:class="personel.kadro.KadroIslemleri.kadro_sil">
+    <bpmn2:serviceTask id="kadro_s" name="Kadro Sil" camunda:class="personel.kadro.KadroIslemleri.kadro_sil">
       <bpmn2:incoming>SequenceFlow_005yzgl</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
     </bpmn2:serviceTask>
@@ -78,15 +78,15 @@
       <bpmn2:outgoing>SequenceFlow_005yzgl</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_1jnw700</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_07ujori" sourceRef="ExclusiveGateway_2" targetRef="kadro_sil_onay_form">
+    <bpmn2:sequenceFlow id="SequenceFlow_07ujori" sourceRef="ExclusiveGateway_2" targetRef="kadro_sil_onay">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'kadro_sil_onay_form']]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_03uku9c" sourceRef="kadro_sil_onay_form" targetRef="ExclusiveGateway_0qd86ei" />
-    <bpmn2:sequenceFlow id="SequenceFlow_005yzgl" sourceRef="ExclusiveGateway_0qd86ei" targetRef="kadro_sil">
+    <bpmn2:sequenceFlow id="SequenceFlow_03uku9c" sourceRef="kadro_sil_onay" targetRef="ExclusiveGateway_0qd86ei" />
+    <bpmn2:sequenceFlow id="SequenceFlow_005yzgl" sourceRef="ExclusiveGateway_0qd86ei" targetRef="kadro_s">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'kadro_sil']]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_1jnw700" sourceRef="ExclusiveGateway_0qd86ei" targetRef="kadro_listele" />
-    <bpmn2:userTask id="kadro_sil_onay_form" name="Kadro Sil Onay" camunda:assignee="personel.kadro.KadroIslemleri.kadro_sil_onay_form">
+    <bpmn2:userTask id="kadro_sil_onay" name="Kadro Sil Onay" camunda:assignee="personel.kadro.KadroIslemleri.kadro_sil_onay_form">
       <bpmn2:incoming>SequenceFlow_07ujori</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_03uku9c</bpmn2:outgoing>
     </bpmn2:userTask>
@@ -105,7 +105,7 @@
       <bpmndi:BPMNShape id="_BPMNShape_Lane_13" bpmnElement="personel" isHorizontal="true">
         <dc:Bounds x="294" y="48" width="798" height="523" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_19" bpmnElement="kadro_sil">
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_19" bpmnElement="kadro_s">
         <dc:Bounds x="303" y="360" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_3" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
@@ -233,7 +233,7 @@
           <dc:Bounds x="448" y="327.5" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_03umvqz_di" bpmnElement="kadro_sil_onay_form">
+      <bpmndi:BPMNShape id="UserTask_03umvqz_di" bpmnElement="kadro_sil_onay">
         <dc:Bounds x="574" y="360" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
