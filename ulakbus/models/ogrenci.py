@@ -259,7 +259,7 @@ class Program(Model):
         donem = Donem()
 
     class Version(ListNode):
-        id = field.String("Version id", index=True)
+        no = field.String("Version No", index=True)
         senato_karar_no = field.String("Senato Karar Numarası", index=True)
         tarih = field.Date("İşlemin Yapıldığı Tarih")
 
