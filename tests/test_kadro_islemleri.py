@@ -51,6 +51,8 @@ class TestCase(BaseTestCase):
 
         def len_1(lst):
             """
+            Response'dan gelen object nesnesinde bulunan fieldların açıklamasını çıkartıyoruz.
+
             Args:
                 lst (list): kadro nesneleri listesi
 
@@ -78,21 +80,17 @@ class TestCase(BaseTestCase):
 
         # Veritabanından kadro kaydı seçer.
         kadro = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
-        # Kadro kaydı seçme işleminin tamamlanmasını bekler.
-        time.sleep(1)
 
         # Seçilen kadronun ilk durumu.
         beginning_state = kadro.get_durum_display()
 
         # Kadronun durumunu değiştirir. Saklı ise İzinli, İzinli ise Saklı yapar.
 
-        resp = self.client.post(cmd='sakli_izinli_degistir',
-                                object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
+        self.client.post(cmd='sakli_izinli_degistir',
+                         object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
 
         # Veritabanından kadro kaydı seçer.
         kadro = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
-        # Kadro kaydı seçme işleminin tamamlanmasını bekler.
-        time.sleep(1)
 
         # Kadronun son durumu.
         last_state = kadro.get_durum_display()
@@ -145,12 +143,16 @@ class TestCase(BaseTestCase):
         resp = self.client.post(form=kadro_data)
         assert 'reset' in resp.json['client_cmd']
 
+        time.sleep(1)
+
         # İş akışı resetlendiği için token değeri sıfırlanıyor.
         self.client.set_path('/kadro_islemleri')
         resp = self.client.post()
         assert 'list_filters' in resp.json
 
-        assert len(resp.json['objects']) == len(kadro_lst) + 1
+        kadro_lst = Kadro.objects.filter()
+
+        assert len_1(resp.json['objects']) == len(kadro_lst)
 
         # Kadro nesnesi seçilir.
         kadro_object = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
@@ -163,11 +165,9 @@ class TestCase(BaseTestCase):
         resp = self.client.post(cmd='kadro_sil', form={'evet': 1, 'hayir': 'null'})
         time.sleep(1)
 
-        if kadro_durum == 1:
-            # Yukarıda kadro eklendiği için ve silme islemi gerçekleştiği
-            # için len(kadro_lst) değişmez.
-            assert len(kadro_lst) == len_1(resp.json['objects'])
-        elif kadro_durum in [2, 3, 4]:
-            assert len(resp.json['objects']) == len(kadro_lst) + 1
-        else:
+        kadro_lst = Kadro.objects.filter()
+
+        assert len_1(resp.json['objects']) == len(kadro_lst)
+
+        if kadro_durum not in [1, 2, 3, 4]:
             raise Exception('Geçersiz kadro durumu.')
