@@ -6,22 +6,23 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from pyoko import ListNode
-from zengine.views.crud import CrudView #form_modifier
+from zengine.views.crud import CrudView
 from zengine.forms import fields
 from zengine.forms import JsonForm
-from ulakbus.views.ders.ders import prepare_choices_for_model
+# from ulakbus.views.ders.ders import prepare_choices_for_model
 from ulakbus.models.ogrenci import Program, Ders, Donem
 
 
 class SecilenDersForm(JsonForm):
     class Meta:
         # model = 'Ders'
-        include = ['ad', 'kod','aciklama','onkosul', 'uygulama_saati','teori_saati']
+        include = ['ad', 'kod', 'aciklama', 'onkosul', 'uygulama_saati', 'teori_saati']
+
 
 class SecilenDersForm2(JsonForm):
     class Meta:
         # model = 'Ders'
-        include = ['ad','yerel_kredisi', 'zorunlu', 'ders_dili', 'ders_turu', 'ders_amaci']
+        include = ['ad', 'yerel_kredisi', 'zorunlu', 'ders_dili', 'ders_turu', 'ders_amaci']
         # , 'onkosul', 'uygulama_saati', 'teori_saati']
         # 'ects_kredisi',
         # 'yerel_kredisi', 'zorunlu', 'ders_dili', 'ders_turu', 'ders_amaci',
@@ -29,6 +30,7 @@ class SecilenDersForm2(JsonForm):
         # 'ders_icerigi', 'ders_kategorisi', 'ders_kaynaklari', 'ders_mufredati',
         # 'verilis_bicimi', 'donem',
         # 'ders_koordinatoru']
+
 
 class DersDuzenle(CrudView):
     class Meta:
@@ -38,11 +40,10 @@ class DersDuzenle(CrudView):
         secilen_ders = self.current.task_data["secilenler"][0]
         ders = Ders.objects.get(key=secilen_ders['key'])
         _form = SecilenDersForm(ders, current=self.current, title="Bu Ders İçin Gereken Değişiklikleri Yapınız")
-        _form.help_text = "Kalan Ders Sayisi: %d/%d" %((len(self.current.task_data["secilen_kontrol"])-
-                                            (len(self.current.task_data["secilenler"])-1))
-                                            ,len(self.current.task_data["secilen_kontrol"]))
-        self.current.task_data["form_control"]=False
-        _form.kaydet = fields.Button("Ikinci Sayfaya Gec")
+        _form.help_text = "Kalan Ders Sayisi: %d/%d" % ((len(self.current.task_data["secilen_kontrol"]) -
+                                                         (len(self.current.task_data["secilenler"]) - 1))
+                                                        , len(self.current.task_data["secilen_kontrol"]))
+        _form.kaydet = fields.Button("İkinci Sayfaya Geç")
         self.form_out(_form)
 
     def ders_bilgileri_duzenle_ilk_form_kaydet(self):
@@ -53,29 +54,29 @@ class DersDuzenle(CrudView):
         secilen_ders = self.current.task_data["secilenler"][0]
         ders = Ders.objects.get(key=secilen_ders['key'])
         _form = SecilenDersForm2(ders, current=self.current, title="Bu Ders İçin Gereken Değişiklikleri Yapınız")
-        _form.help_text = "Kalan Ders Sayisi: %d/%d" %((len(self.current.task_data["secilen_kontrol"])-
-                                            (len(self.current.task_data["secilenler"])-1))
-                                            ,len(self.current.task_data["secilen_kontrol"]))
-        self.current.task_data["control"] = False
-        self.current.task_data["form_control"]=True
+        _form.help_text = "Kalan Ders Sayisi: %d/%d" % ((len(self.current.task_data["secilen_kontrol"]) -
+                                                         (len(self.current.task_data["secilenler"]) - 1))
+                                                        , len(self.current.task_data["secilen_kontrol"]))
         _form.kaydet = fields.Button("Kaydet")
         self.form_out(_form)
-
 
     def ders_bilgileri_duzenle_ikinci_form_kaydet(self):
         self.set_form_data_to_object()
         self.save()
         del self.current.task_data["secilenler"][0]
-        #self.current.task_data["secilenler"]
+        self.current.task_data["ders_duzenle_ekranina_geri_don"] = False
+        if len(self.current.task_data["secilenler"]) > 0:
+            self.current.task_data["ders_duzenle_ekranina_geri_don"] = True
+
 
 def program_versiyon_no_uret(senato_karar_no):
-
-    senato_karar_no="SEN"+str(senato_karar_no)+"SEN"
+    senato_karar_no = "SEN" + str(senato_karar_no) + "SEN"
     """
     Girilen senato numarasının başına ve sonuna "SEN" eklenerek program versiyon numarası üretilir.
     """
 
     return senato_karar_no
+
 
 class ProgramDersForm(JsonForm):
     class Dersler(ListNode):
@@ -84,20 +85,21 @@ class ProgramDersForm(JsonForm):
         kod = fields.String("Kod", index=True)
         key = fields.String('Key', hidden=True)
 
+
 class ProgramKopyalama(CrudView):
     class Meta:
-        model = "Program"
+        model = "Ders"
 
     def program_sec(self):
 
         _form = JsonForm(current=self.current, title="Kopyalanacak Programı Seçiniz")
-        _choices = prepare_choices_for_model(Program)
-        _form.program = fields.Integer(choices=_choices)
+        # _choices = prepare_choices_for_model(Program)
+        # _form.program = fields.Integer(choices=_choices)
         _form.sec = fields.Button("Seç")
         self.form_out(_form)
 
     def senato_no_gir(self):
-        self.current.task_data['program_id'] = self.current.input['form']['program']
+        # self.current.task_data['program_id'] = self.current.input['form']['program']
         _form = JsonForm(current=self.current, title="Senato Numarasi Giriniz")
         _form.senato_karar_no = fields.String("Senato Karar Numarası", index=True)
         _form.kaydet = fields.Button("Kaydet")
@@ -108,7 +110,8 @@ class ProgramKopyalama(CrudView):
         senato_karar_no = self.current.input['form']['senato_karar_no']
         program_versiyon = program_versiyon_no_uret(senato_karar_no)
 
-        program = Program.objects.get(self.current.task_data['program_id'])
+        program = Program.objects.filter()[0]
+        # program = Program.objects.get(self.current.task_data['program_id'])
         program.Version.add(senato_karar_no=senato_karar_no, no=program_versiyon)
         program.save()
 
@@ -121,10 +124,12 @@ class ProgramKopyalama(CrudView):
 
     def ders_tablo(self):
 
-        program = Program.objects.get(self.current.task_data['program_id'])
+        program = Program.objects.filter()[0]
+        # program = Program.objects.get(self.current.task_data['program_id'])
         try:
             _form = ProgramDersForm(current=self.current, title="Değişiklik Yapmak İstediğiniz Dersleri Seçiniz")
             program_dersleri = Ders.objects.filter(program=program)
+
             for ders in program_dersleri:
                 _form.Dersler(secim=False, kod=ders.kod, ad=ders.ad, key=ders.key)
             _form.duzenle = fields.Button("Onayla")
@@ -146,16 +151,32 @@ class ProgramKopyalama(CrudView):
             if secilen_ders['secim'] == True:
                 secilen_dersler.append(secilen_ders)
 
-            self.current.task_data["secilenler"] = secilen_dersler
-            # self.current.task_data["secilen_kontrol"] =secilen_dersler
-            # self.current.task_data["control"] = True
-            # self.current.task_data["form_control"] = True
+        secilen_dersler.append(self.current.task_data["dersler"][0])
+        secilen_dersler.append(self.current.task_data["dersler"][1])
+        secilen_dersler.append(self.current.task_data["dersler"][2])
 
+        self.current.task_data["secilenler"] = secilen_dersler
+        self.current.task_data["secilen_kontrol"] = secilen_dersler
+        self.current.task_data["ders_duzenleme_ekranina_git"] = False
+
+        if len(self.current.task_data["secilenler"]) > 0:
+            self.current.task_data["ders_duzenleme_ekranina_git"] = True
 
     def degisiklik_bitirme_kontrol(self):
         _form = JsonForm(current=self.current, title="Uyarı Mesajı")
-        _form.help_text = "Değişiklik yapmak için ders seçmelisiniz! Değişiklik yapmadan " \
+
+        if self.current.task_data["ders_duzenleme_ekranina_git"] == False:
+            _form.help_text = "Değişiklik yapmak için ders seçmelisiniz! Değişiklik yapmadan " \
                               "devam etmek istiyorsanız 'Tamamla' butonuna tıklayınız."
+
+        elif self.current.task_data["ders_duzenle_ekranina_geri_don"] == False:
+            _form.help_text = "Değişiklikleriniz kaydedildi. " \
+                              "Ders seçme ekranına geri dönmek için 'Geri Dön' butonuna, işleminizi bitirmek için" \
+                              " 'Tamamla' butonuna tıklayınız."
+            _form.title = "Onay Mesajı"
+
+
+
         _form.geri_don = fields.Button("Ders Seçme Ekranına Geri Dön", flow="ders_tablo")
         _form.onayla = fields.Button("Tamamla", flow="personel_bilgilendir")
         self.form_out(_form)
@@ -168,14 +189,14 @@ class ProgramKopyalama(CrudView):
             "msg": ' Değişiklikleriniz kaydedildi ve program dersleri başarıyla kopyalandı.'
         }
 
-    # @form_modifier
-    # def program_ders_form_inline_edit(self, serialized_form):
-    #     """ProgramDersForm'da seçim ve açıklama alanlarına inline
-    #     edit özelliği sağlayan method.
-    #
-    #     Args:
-    #         serialized_form: serialized form
-    #
-    #     """
-    #     if 'Dersler' in serialized_form['schema']['properties']:
-    #         serialized_form['inline_edit'] = ['secim']
+        # @form_modifier
+        # def program_ders_form_inline_edit(self, serialized_form):
+        #     """ProgramDersForm'da seçim ve açıklama alanlarına inline
+        #     edit özelliği sağlayan method.
+        #
+        #     Args:
+        #         serialized_form: serialized form
+        #
+        #     """
+        #     if 'Dersler' in serialized_form['schema']['properties']:
+        #         serialized_form['inline_edit'] = ['secim']

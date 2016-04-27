@@ -83,7 +83,7 @@
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="ServiceTask_1" targetRef="ExclusiveGateway_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="ExclusiveGateway_1" targetRef="UserTask_1">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "secilenler"]]></bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">ders_duzenle_ekranina_geri_don==True</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:serviceTask id="senato_numarasi_kaydet" camunda:class="personel.program_ders_kopyala.ProgramKopyalama.senato_no_kaydet_ders_kopyala" name="Senato Numarasi Kaydet ve Ders Kopyala">
       <bpmn2:incoming>SequenceFlow_47</bpmn2:incoming>
@@ -101,19 +101,15 @@
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_17" name="" sourceRef="ServiceTask_2" targetRef="ExclusiveGateway_3"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ExclusiveGateway_1" targetRef="UserTask_4">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "degisiklik_bitirme_kontrol"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ExclusiveGateway_1" targetRef="UserTask_4"/>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_3" default="SequenceFlow_18">
       <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_3" targetRef="UserTask_4">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "degisiklik_bitirme_kontrol"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_3" targetRef="UserTask_4"/>
     <bpmn2:sequenceFlow id="SequenceFlow_19" name="" sourceRef="ExclusiveGateway_3" targetRef="UserTask_1">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "secilenler"]]></bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">ders_duzenleme_ekranina_git==True</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:userTask id="UserTask_1" camunda:assignee="personel.program_ders_kopyala.DersDuzenle.ders_bilgileri_duzenle_ilk_form" name="Ders Duzenle Form 1">
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
