@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from pyoko import ListNode
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView #form_modifier
 from zengine.forms import fields
 from zengine.forms import JsonForm
 from ulakbus.views.ders.ders import prepare_choices_for_model
@@ -168,14 +168,14 @@ class ProgramKopyalama(CrudView):
             "msg": ' Değişiklikleriniz kaydedildi ve program dersleri başarıyla kopyalandı.'
         }
 
-    @form_modifier
-    def program_ders_form_inline_edit(self, serialized_form):
-        """ProgramDersForm'da seçim ve açıklama alanlarına inline
-        edit özelliği sağlayan method.
-
-        Args:
-            serialized_form: serialized form
-
-        """
-        if 'Dersler' in serialized_form['schema']['properties']:
-            serialized_form['inline_edit'] = ['secim']
+    # @form_modifier
+    # def program_ders_form_inline_edit(self, serialized_form):
+    #     """ProgramDersForm'da seçim ve açıklama alanlarına inline
+    #     edit özelliği sağlayan method.
+    #
+    #     Args:
+    #         serialized_form: serialized form
+    #
+    #     """
+    #     if 'Dersler' in serialized_form['schema']['properties']:
+    #         serialized_form['inline_edit'] = ['secim']
