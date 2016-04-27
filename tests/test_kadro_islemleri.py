@@ -61,8 +61,8 @@ class TestCase(BaseTestCase):
 
             return len(lst) - 1
 
-        # Veritabanından kullanıcı kaydı seçer.
-        usr = User(super_context).objects.get('H7FtslSEbJZAKVvSfU1tZ1nxCfc')
+        # Veritabanından personel işleri kullanıcısı seçer.
+        usr = User(super_context).objects.get('RW5nDzjDSfSNLIeLiQySfABxBHU')
 
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/kadro_islemleri', user=usr)
@@ -77,7 +77,7 @@ class TestCase(BaseTestCase):
         assert len(kadro_lst) == num_of_kadro
 
         # Veritabanından kadro kaydı seçer.
-        kadro = Kadro.objects.get('IEinP7MulDERqiP1cB4QDB2If45')
+        kadro = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
         # Kadro kaydı seçme işleminin tamamlanmasını bekler.
         time.sleep(1)
 
@@ -85,10 +85,12 @@ class TestCase(BaseTestCase):
         beginning_state = kadro.get_durum_display()
 
         # Kadronun durumunu değiştirir. Saklı ise İzinli, İzinli ise Saklı yapar.
-        self.client.post(cmd='sakli_izinli_degistir', object_id='IEinP7MulDERqiP1cB4QDB2If45')
+
+        resp = self.client.post(cmd='sakli_izinli_degistir',
+                                object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
 
         # Veritabanından kadro kaydı seçer.
-        kadro = Kadro.objects.get('IEinP7MulDERqiP1cB4QDB2If45')
+        kadro = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
         # Kadro kaydı seçme işleminin tamamlanmasını bekler.
         time.sleep(1)
 
@@ -103,9 +105,6 @@ class TestCase(BaseTestCase):
         filtre = {'durum': {'values': ["1"], 'type': 'check'}}
         # Seçilen kadro durumuna göre filtreler.
         resp = self.client.post(filters=filtre)
-
-        # Filtreleme yapılırken token değiştiği için başlangıç token değeri atanır.
-        self.client.token = form_token
 
         # Sunucudan dönen saklı kadro kayıtlarının sayısını tutar.
         num_of_sakli = 0
@@ -154,13 +153,13 @@ class TestCase(BaseTestCase):
         assert len(resp.json['objects']) == len(kadro_lst) + 1
 
         # Kadro nesnesi seçilir.
-        kadro_object = Kadro.objects.get('IEinP7MulDERqiP1cB4QDB2If45')
+        kadro_object = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
         # Seçilen kadronun durumu.
         kadro_durum = kadro_object.durum
 
         # Kadronun durumu saklı ise silinir, değilse silinmez.
         self.client.post(cmd='kadro_sil_onay_form',
-                         object_id='IEinP7MulDERqiP1cB4QDB2If45')
+                         object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
         resp = self.client.post(cmd='kadro_sil', form={'evet': 1, 'hayir': 'null'})
         time.sleep(1)
 
