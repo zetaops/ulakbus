@@ -47,19 +47,25 @@ class DonemDanismanAtama(CrudView):
 
     Dönem Danışman Atama, aşağıda tanımlı iş akışı adımlarını yürütür.
 
+<<<<<<< HEAD
+=======
     - Bölüm Seç
+>>>>>>> 7a522d31d3c9a8d07e7bff042876ef3f11134ac7
     - Öğretim Elemanlarını Seç
     - Kaydet
     - Kayıt Bilgisi Göster
 
      Bu iş akışında kullanılan metotlar şu şekildedir:
 
+<<<<<<< HEAD
+=======
      Dönem Formunu Listele:
         Kayıtlı dönemleri listeler
 
      Bölüm Seç:
         Kullanıcının bölüm başkanı olduğu bölümleri listeler
 
+>>>>>>> 7a522d31d3c9a8d07e7bff042876ef3f11134ac7
      Öğretim Elemanlarını Seç:
         Seçilen bölümdeki öğretim elemanları listelenir.
 
