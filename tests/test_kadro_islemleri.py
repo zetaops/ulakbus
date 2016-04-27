@@ -87,7 +87,7 @@ class TestCase(BaseTestCase):
         # Kadronun durumunu değiştirir. Saklı ise İzinli, İzinli ise Saklı yapar.
 
         self.client.post(cmd='sakli_izinli_degistir',
-                         object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
+                                object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
 
         # Veritabanından kadro kaydı seçer.
         kadro = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
