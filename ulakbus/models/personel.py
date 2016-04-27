@@ -28,6 +28,7 @@ class Personel(Model):
     """
 
     tckn = field.String("TC No", index=True)
+    kurum_sicil_no = field.String("Kurum Sicil No", index=True)
     ad = field.String("Adı", index=True)
     soyad = field.String("Soyadı", index=True)
     cinsiyet = field.Integer("Cinsiyet", index=True, choices='cinsiyet')
@@ -409,7 +410,6 @@ class Atama(Model):
 
     """
 
-    kurum_sicil_no = field.String("Kurum Sicil No", index=True)
     personel_tip = field.Integer("Personel Tipi", index=True)
     hizmet_sinif = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
     statu = field.Integer("Statü", index=True)
