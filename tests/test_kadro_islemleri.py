@@ -51,7 +51,9 @@ class TestCase(BaseTestCase):
 
         def len_1(lst):
             """
-            Response'dan gelen object nesnesinde bulunan fieldların açıklamasını çıkartıyoruz.
+            ``response`` ile gelen ``object`` içerisinde field açıklamaları
+            satırı bulunmaktadır. Bu sebeple nesnelerin gerçek sayısını
+            bulmak için 1 eksiltiyoruz.
 
             Args:
                 lst (list): kadro nesneleri listesi
@@ -87,7 +89,7 @@ class TestCase(BaseTestCase):
         # Kadronun durumunu değiştirir. Saklı ise İzinli, İzinli ise Saklı yapar.
 
         self.client.post(cmd='sakli_izinli_degistir',
-                                object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
+                         object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
 
         # Veritabanından kadro kaydı seçer.
         kadro = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
