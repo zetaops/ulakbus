@@ -16,7 +16,7 @@ class RoleHelper():
 
     """
 
-    def get_abstract_role(self, role_key):
+    def get_abstract_role_name(self, role_key):
         """Verilen role keyine uygun değeri döndürür.
 
         :param role_key:
