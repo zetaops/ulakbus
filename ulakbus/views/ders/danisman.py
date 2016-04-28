@@ -17,7 +17,7 @@ from ulakbus.models.auth import Unit
 from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
 from zengine import forms
 from zengine.forms import fields
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 
 
 class DonemDanismanForm(forms.JsonForm):
@@ -126,7 +126,7 @@ class DonemDanismanAtama(CrudView):
             "msg": '%s dönemi için %s programına ait danışman listesi kaydedilmiştir' % (
                 donem, unit)}
 
-    @form_modifier
+
     def donem_danisman_list_form_inline_edit(self, serialized_form):
         """DonemDanismanListForm'da seçim alanına inline edit özelliği sağlayan method.
 

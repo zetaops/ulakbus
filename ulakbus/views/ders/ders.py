@@ -19,7 +19,7 @@ from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
 from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciDersi, Donem
 from zengine import forms
 from zengine.forms import fields
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 
 
 def prepare_choices_for_model(model, **kwargs):
@@ -727,7 +727,7 @@ class NotGirisi(CrudView):
                           self.current.user.personel.okutman.soyad) if self.current.user.personel.key else "%s %s" % (
             self.current.user.harici_okutman.ad, self.current.user.harici_okutman.soyad)
 
-    @form_modifier
+
     def not_form_inline_edit(self, serialized_form):
         """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
 

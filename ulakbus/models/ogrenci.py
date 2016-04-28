@@ -319,6 +319,7 @@ class Ders(Model):
     katilim_sarti = field.Integer("Katılım Şartı", index=True)
     program = Program()
     donem = Donem()
+    program_donemi = field.Integer("Katılım Şartı", index=True)
     yil = field.Date("Yıl", index=True)
     ders_koordinatoru = Personel()
     yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")

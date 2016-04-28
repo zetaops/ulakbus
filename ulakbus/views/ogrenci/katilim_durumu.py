@@ -17,7 +17,7 @@ from zengine.forms import fields
 from ulakbus.views.ders.ders import prepare_choices_for_model
 
 from zengine import forms
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 
 __author__ = 'Ali Riza Keles'
 
@@ -137,7 +137,7 @@ class KatilimDurumu(CrudView):
         """
         return self.current.user.personel.okutman.key if self.current.user.personel.key else self.current.user.harici_okutman.okutman.key
 
-    @form_modifier
+
     def form_inline_edit(self, serialized_form):
         """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
 

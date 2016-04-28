@@ -18,7 +18,7 @@ from pyoko.exceptions import ObjectDoesNotExist
 from pyoko import ListNode
 from zengine.forms import fields
 from zengine import forms
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 from zengine.notifications import Notify
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
@@ -573,7 +573,7 @@ class KayitDondurma(CrudView):
                     "msg": 'Öğrenci Danışmanı Bilgilendirme Başarısız. Hata Kodu : %s' % (e.message)
                 }
 
-    @form_modifier
+
     def kayit_dondurma_list_form_inline_edit(self, serialized_form):
         """KayitDondurmaForm'da seçim ve açıklama alanlarına inline
         edit özelliği sağlayan method.

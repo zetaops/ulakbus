@@ -9,7 +9,6 @@
         <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>program_sec_form</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>senato_numara_gir</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ServiceTask_3</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>UserTask_3</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ServiceTask_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
@@ -22,6 +21,7 @@
         <bpmn2:flowNodeRef>ServiceTask_2</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ExclusiveGateway_3</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>UserTask_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ServiceTask_3</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
     <bpmn2:startEvent id="StartEvent_1">
@@ -38,11 +38,6 @@
       <bpmn2:outgoing>SequenceFlow_47</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_47" name="" sourceRef="senato_numara_gir" targetRef="senato_numarasi_kaydet"/>
-    <bpmn2:serviceTask id="ServiceTask_3" camunda:class="personel.program_ders_kopyala.DersDuzenle.ders_bilgileri_duzenle_ilk_form_kaydet" name="Ders Kaydet 1">
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ServiceTask_3" targetRef="UserTask_3"/>
     <bpmn2:userTask id="UserTask_3" camunda:assignee="personel.program_ders_kopyala.DersDuzenle.ders_bilgileri_duzenle_ikinci_form" name="Ders Duzenle Form 2">
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
@@ -118,6 +113,11 @@
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="UserTask_1" targetRef="ServiceTask_3"/>
     <bpmn2:sequenceFlow id="SequenceFlow_21" name="" sourceRef="UserTask_4" targetRef="ExclusiveGateway_2"/>
+    <bpmn2:serviceTask id="ServiceTask_3" camunda:class="personel.program_ders_kopyala.DersDuzenle.ders_bilgileri_duzenle_ilk_form_kaydet" name="Ders Kaydet 1">
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ServiceTask_3" targetRef="UserTask_3"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
@@ -186,7 +186,7 @@
         <dc:Bounds height="80.0" width="100.0" x="624.0" y="233.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_44" bpmnElement="ServiceTask_3">
-        <dc:Bounds height="80.0" width="100.0" x="732.0" y="232.0"/>
+        <dc:Bounds height="80.0" width="100.0" x="744.0" y="232.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_21" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="1320.0" y="246.0"/>
@@ -227,16 +227,16 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_UserTask_27" targetElement="_BPMNShape_ServiceTask_44">
         <di:waypoint xsi:type="dc:Point" x="724.0" y="273.0"/>
-        <di:waypoint xsi:type="dc:Point" x="732.0" y="272.0"/>
+        <di:waypoint xsi:type="dc:Point" x="744.0" y="272.0"/>
         <bpmndi:BPMNLabel>
           <dc:Bounds height="6.0" width="6.0" x="725.0" y="273.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="_BPMNShape_ServiceTask_44" targetElement="_BPMNShape_UserTask_28">
-        <di:waypoint xsi:type="dc:Point" x="832.0" y="272.0"/>
+        <di:waypoint xsi:type="dc:Point" x="844.0" y="272.0"/>
         <di:waypoint xsi:type="dc:Point" x="864.0" y="273.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="839.0" y="272.0"/>
+          <dc:Bounds height="6.0" width="6.0" x="851.0" y="272.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="_BPMNShape_UserTask_28" targetElement="_BPMNShape_ServiceTask_45">
