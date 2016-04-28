@@ -1362,5 +1362,2937 @@
       "tr": "BELİRLENEMEDİ",
       "en": ""
     }
+  },
+  "sebep_kod_baslama": {
+    "1": {
+      "tr":"AÇIKTAN ATANMA (İLK DEFA)",
+      "en":""
+    },
+    "2": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR)",
+      "en":""
+      },
+    "3": {
+      "tr":"AÇIKTAN ATANMA (MAHKEME KARARI GEREĞİNCE)",
+      "en":""
+      },
+    "99": {
+      "tr":"MAHALLİ İDARELER SEÇİMLERİ SONRASI GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "101": {
+      "tr":"MİLLETVEKİLİ SEÇİMLERİ SONRASI GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "102": {
+      "tr":"MAHALLİ İDARELER SEÇİMLERİNE GİRMEDEN GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "103": {
+      "tr":"MİLLETVEKİLİ SEÇİMLERİNE GİRMEDEN GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "112": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "116": {
+      "tr":"657 S.K. GEREĞİ ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "124": {
+      "tr":"VEKİL OLARAK ATANMA",
+      "en":""
+      },
+    "125": {
+      "tr":"EMEKLİLİK ONAYI İPTAL GÖREVE İADE",
+      "en":""
+      },
+    "126": {
+      "tr":"657 S.K. 4/B SÖZLEŞMELİDEN İDARİ KADROYA GEÇİŞ",
+      "en":""
+      },
+    "127": {
+      "tr":"657 S.K. 4/B SÖZLEŞMELİDEN AKADEMİK KADROYA GEÇİŞ",
+      "en":""
+      },
+    "132": {
+      "tr":"AÇIK SÜRESİ SONUNDA (657/143. MD. GEREĞİ) GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "134": {
+      "tr":"MAHKEME KARARI GEREĞİNCE GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "137": {
+      "tr":"SAKINCASI KALDIRILDIĞINDAN GÖREVİNE İADE EDİLDİ",
+      "en":""
+      },
+    "138": {
+      "tr":"DANIŞTAY İÇTİHADLERİ BİR. KUR. 07.12.1989 TAR. KARARI GER. GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "139": {
+      "tr":"YÜKSEK DİSİPLİN KURULU KARARI İPTAL EDİLMESİ ÜZERİNE GÖREVİNE İADE EDİLDİ",
+      "en":""
+      },
+    "142": {
+      "tr":"SÖZLEŞMELİ OLARAK ATANMA (5434 TABİ)",
+      "en":""
+      },
+    "152": {
+      "tr":"GÖREV YAPTIĞI YERDE SIKIYÖNETİMİN KALDIRILMASI NEDENİYLE GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "214": {
+      "tr":"İLK ATAMA",
+      "en":""
+      },
+    "222": {
+      "tr":"GÖREVE İADE EDİLDİ (657 S.K. 143. MD. GEREĞİNCE)",
+      "en":""
+      },
+    "223": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE ASK. SÜRESİ İNTİBAKINDA DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "224": {
+      "tr":"GÖREVE İADE EDİLMEMESİNE İLİŞKİN İŞLEMİN MAH. KAR. İPTALİ ÜZERİNE GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "226": {
+      "tr":"MAHKEME KARARI GEREĞİNCE ATANMA",
+      "en":""
+      },
+    "232": {
+      "tr":"POLİS MEMURU YENİDEN TAYİNİ",
+      "en":""
+      },
+    "234": {
+      "tr":"MAHKEME KARARI GEREĞİNCE GÖREVE İADE EDİLDİ-NAKLEN TAYİN (KAMU İDARESİ İÇİ)",
+      "en":""
+      },
+    "243": {
+      "tr":"3817 S. AF KANUNUNA GÖRE GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "244": {
+      "tr":"4045 S. AF KANUNUNA GÖRE GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "245": {
+      "tr":"4455 S. AF KANUNUNA GÖRE GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "252": {
+      "tr":"AÇIKTAN ATANMA (657 S.K 92. MD. GEREĞİ YENİDEN ATANMA)",
+      "en":""
+      },
+    "257": {
+      "tr":"DEVREDİLEN KURUMLARDAN ATANMA",
+      "en":""
+      },
+    "262": {
+      "tr":"VEKİL OLARAK ATANMA (BOŞ KADROYA)",
+      "en":""
+      },
+    "263": {
+      "tr":"VEKİL OLARAK ATANMA (DOLU KADROYA)",
+      "en":""
+      },
+    "265": {
+      "tr":"AÇIKTAN ATANMA (657/DEĞİŞİK 53.MD ENGELLİ YÖNETMELİĞİNE GÖRE)",
+      "en":""
+      },
+    "272": {
+      "tr":"GÖREVE İADE EDİLDİ (GEÇİCİ OLARAK DEVLET MEMURLUĞUNDAN MEN SÜRESİ SONUNDA)",
+      "en":""
+      },
+    "304": {
+      "tr":"657 S.K. GEÇ. 37. MD. UYARINCA SÖZLEŞMELİ İKEN KADROYA ATANDI. (632 S.K.H.K.)",
+      "en":""
+      },
+    "306": {
+      "tr":"657 S.K. GEÇ. 37. MD. SÖZ. İKEN KADROYA ATANDI. SÖZ. SÜRE İNTİBAKINDA DEĞERLENDİRİLDİ (632 S.K.H.K.)",
+      "en":""
+      },
+    "307": {
+      "tr":"657 S.K. GEÇ. 37. MD. SÖZ. İKEN KADROYA ATANDI. SÖZ. SÜRE VE ASKERLİK HİZ. İNT. DEĞ. (632 S.K.H.K.)",
+      "en":""
+      },
+    "308": {
+      "tr":"657 S.K. GEÇ.37. MD. SÖZ. İKEN KADROYA ATANDI.SÖZ. SÜRE, ASK VE 5434 EK 18. İNT. DEĞ.(632 S.K.H.K.)",
+      "en":""
+      },
+    "309": {
+      "tr":"657 S.K. GEÇ.37. MD. SÖZ. İKEN KADROYA ATANDI.SÖZ. SÜRE, 5434 EK 18. MD. İNT. DEĞ.(632 S.K.H.K.)",
+      "en":""
+      },
+    "310": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 93. MD. UYARINCA EMEKLİLİK DÖNÜŞÜ)",
+      "en":""
+      },
+    "318": {
+      "tr":"ATANMA (6191 S.K. GEREĞİ)",
+      "en":""
+      },
+    "324": {
+      "tr":"ÜÇLÜ KARARNAME İLE ATANMA (AÇIKTAN)",
+      "en":""
+      },
+    "326": {
+      "tr":"657 S.K. 59. MD. GÖRE ATANMA (AÇIKTAN)",
+      "en":""
+      },
+    "332": {
+      "tr":"VEKİL ÖĞRETMEN  OLARAK ATANMA (BOŞ KADRO)",
+      "en":""
+      },
+    "333": {
+      "tr":"VEKİL ÖĞRETMEN  OLARAK ATANMA (DOLU  KADRO)",
+      "en":""
+      },
+    "346": {
+      "tr":"5434 S.K. GEÇ.191 MD. UYARINCA İLGİ DEVAMI SAĞLANDI",
+      "en":""
+      },
+    "347": {
+      "tr":"5434 S.K. GEÇ.191 MD. UYARINCA İLGİ DEVAMI SAĞLANDI. İNTİBAKI YAPILDI",
+      "en":""
+      },
+    "348": {
+      "tr":"399 S.K.H.K. GEÇ.1 MD. UYARINCA EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ",
+      "en":""
+      },
+    "349": {
+      "tr":"AÇIKTAN ATANMA (399 S.K.H.K. 12. MD. UYARINCA İLGİLENDİRİLDİ)",
+      "en":""
+      },
+    "350": {
+      "tr":"399 S.K.H.K. GEÇ.1 MD. UYARINCA EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ İNTİBAKI YAPILDI",
+      "en":""
+      },
+    "363": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE ASK. SÜRESİ İNTİBAKINDA DEĞER. MAHKEME KARARI UYGULANDI",
+      "en":""
+      },
+    "364": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE ASK. SÜRESİ İNTİBAKINDA DEĞER. 5289 S. K. UYA. 1 DERECE UYGULANDI",
+      "en":""
+      },
+    "365": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE ASK. SÜRESİ İNTİBAKINDA DEĞER. 2182 S. K. UYA. 1 DERECE UYGULANDI",
+      "en":""
+      },
+    "366": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE ASK. SÜRESİ İNT. DEĞER. 458 S.K.H. K. UYA. 1 DER. UYGULANDI",
+      "en":""
+      },
+    "367": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE HİZMET DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "368": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE 2182 S. K. UYA. 1 DERECE UYGULANDI",
+      "en":""
+      },
+    "369": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE 458 S.K.H.K. UYA. 1 DERECE UYGULANDI",
+      "en":""
+      },
+    "370": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE 5289 S. K. UYA. 1 DERECE UYGULANDI",
+      "en":""
+      },
+    "371": {
+      "tr":"390 S.K.H.K İLE EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ",
+      "en":""
+      },
+    "372": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE 64. MADDE UYGULANDI.",
+      "en":""
+      },
+    "374": {
+      "tr":"657 S.K. 77. MD. GEREĞİ AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "376": {
+      "tr":"AÇIKTAN ATANMA (5535 S.K. 2. MD./2547 GEÇ. 53. MD. GEREĞİ)",
+      "en":""
+      },
+    "401": {
+      "tr":"D CETVELİ",
+      "en":""
+      },
+    "411": {
+      "tr":"YEVMİYELİ KADRODAN SÖZLEŞMELİ KADROYA GEÇEREK EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ",
+      "en":""
+      },
+    "412": {
+      "tr":"TUTUKLULUK SONRASI GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "413": {
+      "tr":"HAPİS SONRASI GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "415": {
+      "tr":"399 S.K.H.K. 22. MD. GEREĞİ MAZERET (AYLIKSIZ) İZİN DÖNÜŞÜ GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "417": {
+      "tr":"AÇIKTAN ATANMA (İLK DEFA) 5510 TABİ OLMASI NED. 5434 S.K. 89. MD. GEREĞİ E.K.E.A. HİZMET DEĞ.",
+      "en":""
+      },
+    "418": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) 5510 TABİ OLMASI NED. 5434 S.K. 89. MD. GEREĞİ E.K.E.A. HİZMET DEĞ.",
+      "en":""
+      },
+    "422": {
+      "tr":"GREV BİTİMİ GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "434": {
+      "tr":"926 S.K. GEÇ. 32. MD.GEREĞİ YENİDEN ATANMA",
+      "en":""
+      },
+    "437": {
+      "tr":"92/3067 S. B.K.K. GEREĞİ YENİDEN YAPILANDIRILMA ( TÖBANK-HALKBANKASINA DEVRİ)",
+      "en":""
+      },
+    "439": {
+      "tr":"AÇIKTAN ATAMA (2547 S.K. GEREĞİ)",
+      "en":""
+      },
+    "440": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (2547 S.K. GEREĞİ)",
+      "en":""
+      },
+    "442": {
+      "tr":"AÇIKTAN ATANMA (1750 S.K. 22.MD. VE 1765 S.K. 2.MD. B FIKRASI GEREĞİ)",
+      "en":""
+      },
+    "443": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (1750 S.K.. 22.MD. VE 1765 S.K. 2.MD. B FIKRASI GEREĞİ)",
+      "en":""
+      },
+    "447": {
+      "tr":"4046 S.K. 22. VE GEÇ.9. MD. UYARINCA ATANMA VE EMEKLİ SANDIĞI İLE İLGİLENDİRİLME",
+      "en":""
+      },
+    "466": {
+      "tr":"2547 S.K. 39.MD. UYARINCA AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "471": {
+      "tr":"AÇIKTAN ATAMA (2547 S.KANUNA 6111 S.K. GEÇ.173 MD. EKLENEN GEÇ. 58. MAD GER.)",
+      "en":""
+      },
+    "474": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-6-B, VE A-9 FIK. GEREĞİ)",
+      "en":""
+      },
+    "475": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-9 FIK. GEREĞİ)",
+      "en":""
+      },
+    "476": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-6-B FIK. GEREĞİ)",
+      "en":""
+      },
+    "477": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-1 VE 6-B FIK. GEREĞİ)",
+      "en":""
+      },
+    "478": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-2 FIK. GEREĞİ)",
+      "en":""
+      },
+    "479": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-2, 6-B VE A-9 FIK. GEREĞİ)",
+      "en":""
+      },
+    "480": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-2 VE 6-B FIK. GEREĞİ)",
+      "en":""
+      },
+    "481": {
+      "tr":"AÇIKTAN ATANMA (5434 S.K. EK 18. MD. GEREĞİ HİZMET DEĞERLENDİRİLDİ)",
+      "en":""
+      },
+    "484": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 68. MD. B BENDİNE GÖRE)",
+      "en":""
+      },
+    "500": {
+      "tr":"MAHKEME KARARI GEREĞİ SÖZLEŞMELİDEN KADROYA GEÇİŞ",
+      "en":""
+      },
+    "502": {
+      "tr":"AÇIKTAN ATANMA (SHÇEK GÖRE)",
+      "en":""
+      },
+    "503": {
+      "tr":"3624 S.K. 13. MD. GEREĞİ EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ",
+      "en":""
+      },
+    "515": {
+      "tr":"AÇIKTAN ATANMA (2547/52. MD. GEREĞİ)",
+      "en":""
+      },
+    "516": {
+      "tr":"BELEDİYE BAŞKANI SEÇİLME (İLK DEFA)",
+      "en":""
+      },
+    "517": {
+      "tr":"BELEDİYE BAŞKANI SEÇİLME (TEKRAR)",
+      "en":""
+      },
+    "519": {
+      "tr":"BELEDİYE BAŞKANI SEÇİLME (BELEDİYE MECLİS ÜYELERİ ARASINDAN)",
+      "en":""
+      },
+    "520": {
+      "tr":"BELEDİYE BAŞKANI SEÇİLME (BELEDİYE BAŞKAN YARD. DAHA ÖNCE İLGİSİ SAĞLANMAMIŞ OLAN)",
+      "en":""
+      },
+    "522": {
+      "tr":"BELEDİYE BAŞKAN YARDIMCISI SEÇİLME (5393 S.K. İLGİLENDİRİLEN)",
+      "en":""
+      },
+    "523": {
+      "tr":"MİLLETVEKİLİ SEÇİLME (İLK DEFA)",
+      "en":""
+      },
+    "524": {
+      "tr":"MİLLETVEKİLİ SEÇİLME (TEKRAR)",
+      "en":""
+      },
+    "533": {
+      "tr":"ASKERLİK DÖN. GÖREVE BAŞLAMA VE 657/83 MD. ASKERLİK İNT. DEĞ. 36. MD. A BEND. 12-D FIK. İNTİBAKI",
+      "en":""
+      },
+    "534": {
+      "tr":"GÖREVE İADE EDİLDİ (657 S.K. 143. MD. GEREĞİNCE) VE KADRO UNVAN DEĞİŞİKLİĞİ",
+      "en":""
+      },
+    "557": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K. 60/A MD. GEREĞİ YENİDEN)",
+      "en":""
+      },
+    "558": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K. 60/B MD. GEREĞİ YENİDEN)",
+      "en":""
+      },
+    "559": {
+      "tr":"AÇIKTAN ATANMA (657/DEĞ. 53.MD ENGELLİ YÖNETMELİĞİNE GÖRE) VE 5434 EK 18. MD. İNT. YAPILDI",
+      "en":""
+      },
+    "584": {
+      "tr":"AÇIKTAN ATANMA (2595 S.K. GEÇ. 9. MD. UYARINCA İLGİLENDİRİLDİ İNTİBAKI YAPILDI)",
+      "en":""
+      },
+    "597": {
+      "tr":"AÇIKTAN ATANMA (RTÜK TEŞKİL. ÇALIŞMA ESAS VE USULLERİ HAKK. YÖNET.GEÇ 4.MD.)",
+      "en":""
+      },
+    "600": {
+      "tr":"AÇIKTAN ATANMA (3984 S.K. 6. MD.)",
+      "en":""
+      },
+    "603": {
+      "tr":"6112 S.K. 39 VE GEÇ 1.MD. UYARINCA İLGİLENDİRME",
+      "en":""
+      },
+    "609": {
+      "tr":"AÇIKTAN ATANMA (3239 S.K. 134. MD.)",
+      "en":""
+      },
+    "615": {
+      "tr":"AÇIKTAN ATANMA (2919 S.K. 12. MD. GEREĞİ)",
+      "en":""
+      },
+    "620": {
+      "tr":"SÖZLEŞME UZATIMI VE İNTİBAK (HİZMET DEĞER.) (MAHKEME KARARI GÖREVE BAŞL.)",
+      "en":""
+      },
+    "644": {
+      "tr":"AYİM KARARI İLE GÖREVE DÖNDÜ",
+      "en":""
+      },
+    "841": {
+      "tr":"GÖREVE İADE (TSK)",
+      "en":""
+      },
+    "853": {
+      "tr":"SUBAYLIĞA NASIP (926 S.K. 35. MD.)",
+      "en":""
+      },
+    "854": {
+      "tr":"ASTSUBAYLIĞA NASIP (926 S.K. 82. MD.)",
+      "en":""
+      },
+    "858": {
+      "tr":"HARP OKULU ÖĞRENCİSİ",
+      "en":""
+      },
+    "859": {
+      "tr":"ASTSUBAY MESLEK YÜKSEKOKULU ÖĞRENCİSİ",
+      "en":""
+      },
+    "860": {
+      "tr":"SÖZLEŞMELİ SUBAY ADAYI",
+      "en":""
+      },
+    "861": {
+      "tr":"SÖZLEŞMELİ ASTSUBAY ADAYI",
+      "en":""
+      },
+    "862": {
+      "tr":"SÖZLEŞMELİ ASKERİ HAKİM ADAYI",
+      "en":""
+      },
+    "876": {
+      "tr":"DEVRE KAYBI BİTİMİ BAŞLAMA",
+      "en":""
+      },
+    "880": {
+      "tr":"4456 S.K. UYGULAN. BAĞLI BUL. SOSYAL GÜVENLİK KURUMU DEĞİŞİKLİĞİ",
+      "en":""
+      },
+    "882": {
+      "tr":"4456 S.K. BAĞ.BUL.SOS.GÜV.KUR.DEĞ. VE MAHK.K.UY.1 DERECE",
+      "en":""
+      },
+    "883": {
+      "tr":"4456 S.K. BAĞ.BUL.SOS.GÜV.KUR.DEĞ. VE MAHK.K.UY.1.DERECE.VE 64.MADDE",
+      "en":""
+      },
+    "884": {
+      "tr":"4456 S.K. BAĞ.BUL.SOS.GÜV.KUR.DEĞMAHK.K.1.DERECE,64 MAD.VE SINIF DEĞİŞİKLİĞİ.",
+      "en":""
+      },
+    "885": {
+      "tr":"4456 S.K.BAĞ.BUL.SOS.GÜV.KUR.DEĞ VE YÖN.KUR.NUN 03.06.2004,391 S.KARAR İLE 1 DERECE UYGULANDI",
+      "en":""
+      },
+    "900": {
+      "tr":"AÇIKTAN ATANMA (5434 S.K. EK 71 İLGİLENDİRİLDİ-5434 S.K. 12 MD. TABİ  KURUMLARDA)",
+      "en":""
+      },
+    "906": {
+      "tr":"AÇIKTAN ATANMA (YÖNETİM KURULU ÜYELİĞİNE) (KADRO TAHSİSİ YAPILAN KURUMLAR)",
+      "en":""
+      },
+    "908": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE 657 S.K. 36. MD. A BEND. 12-D FIK. (ÖĞRENİM DEĞ.)",
+      "en":""
+      },
+    "916": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE NAKLEN TAYİN (KAMU İD. İÇİ)",
+      "en":""
+      },
+    "917": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE TERFİAN ATANMA",
+      "en":""
+      },
+    "920": {
+      "tr":"657 S.K. GEÇ. 37.MD. GR. KADROYA ATANDI.SÖZ.SÜRE, ASKERLİK VE 36/C-2 HİZ. DEĞ.(632 S.K.H.K.)",
+      "en":""
+      },
+    "921": {
+      "tr":"657 S.K. GEÇ. 37.MD. GR. KADROYA ATANDI. SÖZ.SÜRE VE 36/C-2 HİZ. DEĞ.(632 S.K.H.K.)",
+      "en":""
+      },
+    "922": {
+      "tr":"657 S.K. GEÇ. 37.MD. GR. KADROYA ATANDI. SÖZ.SÜRE, ASKERLİK VE 36/C-1 HİZ. DEĞ.(632 S.K.H.K.)",
+      "en":""
+      },
+    "923": {
+      "tr":"657 S.K. GEÇ. 37.MD. GR. KADROYA ATANDI. SÖZ.SÜRE VE 36/C-1 HİZ. DEĞ.(632 S.K.H.K.)",
+      "en":""
+      },
+    "927": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE ADAYLIK İLE ASK. SÜRESİ İNTİBAKINDA DEĞER.",
+      "en":""
+      },
+    "929": {
+      "tr":"VEKİL EBE / HEMŞİRE OLARAK ATANMA",
+      "en":""
+      },
+    "931": {
+      "tr":"VEKİL İMAM-HATİP OLARAK ATANMA",
+      "en":""
+      },
+    "933": {
+      "tr":"VEKİL MİMAR OLARAK ATANMA",
+      "en":""
+      },
+    "935": {
+      "tr":"VEKİL MÜHENDİS OLARAK ATANMA",
+      "en":""
+      },
+    "945": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 241 S.K.H.K. 15. MD.İLE EK. EK GEÇİCİ 58 MD. GEREĞİ İNTİBAKI YAPILDI)",
+      "en":""
+      },
+    "947": {
+      "tr":"AÇIKTAN ATANMA (548 S.K.H.K. GEREĞİ)",
+      "en":""
+      },
+    "968": {
+      "tr":"ATANMA (2802 S.K. GEREĞİ MESLEĞE KABUL)",
+      "en":""
+      },
+    "1017": {
+      "tr":"ATANMA (4958 S.K. GEÇ 1 MD. E BENDİ UYARINCA ATANMA VE İNTİBAK)  ",
+      "en":""
+      },
+    "1019": {
+      "tr":"ASTSUBAY SINIF OKULU ÖĞRENCİSİ BAŞLAMA",
+      "en":""
+      },
+    "1020": {
+      "tr":"VEKİL VETERİNER HEKİM OLARAK ATANMA",
+      "en":""
+      },
+    "1078": {
+      "tr":"GÖREVE İADE EDİLDİ (399 S.K.H.K. 56. MD. GEREĞİ)",
+      "en":""
+      },
+    "1079": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE 657 S.K. 36. MD. A BEND. 6-B VE A-9 FIKR. GEREĞİ",
+      "en":""
+      },
+    "1081": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE 657 S.K. 36. MD. A BEND. 1, 6-B VE A-9 FIKR. GEREĞİ",
+      "en":""
+      },
+    "1103": {
+      "tr":"AÇIKTAN ATANMA (SÖZLEŞMELİ İKEN KADROLU BİR GÖREVE ATANMA)",
+      "en":""
+      },
+    "1118": {
+      "tr":"4460 S.K. GEREĞİNCE ATANMA VE 1. MD. 2. FIK. GEREĞİ İNTİBAK",
+      "en":""
+      },
+    "1119": {
+      "tr":"4359 S.K. GEREĞİNCE ATANMA VE GEÇ 7. MD. UYARINCA İNTİBAK",
+      "en":""
+      },
+    "1121": {
+      "tr":"AÇIKTAN ATANMA (2954 S.K. 50/c MD. GÖRE)",
+      "en":""
+      },
+    "1125": {
+      "tr":"AÇIKTAN ATANMA (YENİDEN )(YÖNETİM KURULU ÜYELİĞİ)",
+      "en":""
+      },
+    "1144": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE ASK. SÜRESİ İLE 657 S.K. 36. MD. A-9 FIKR. İNT. DEĞER.",
+      "en":""
+      },
+    "1148": {
+      "tr":"4678 S.K. KAPSAMINDA SÖZLEŞMELİ SUBAYLIĞA NASIP",
+      "en":""
+      },
+    "1149": {
+      "tr":"AÇIKTAN ATANMA (3269 S.K. KAPSAMINDA UZMAN ERBAŞLIĞA)",
+      "en":""
+      },
+    "1158": {
+      "tr":"AÇIKTAN ATANMA (1416 S.K.UYARINCA)",
+      "en":""
+      },
+    "1161": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-9 VE 5434 S.K. EK 18. MD. UYA. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1162": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-6(b), A-9.MD. VE 5434 S.K. EK 18.MAD. UYA. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1163": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-6(b) VE 5434 S.K. EK 18.MD. UYA. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1164": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K. GÖRE) VE (657 S.K.36/A-9.MD. VE 657 S.K. 84.MD. UYA. ASK. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1165": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K. GÖRE) VE (657 S.K. 84.MD. UYA. ASK. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1166": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K. GÖRE) VE (657 S.K. 36/A-9.MD. VE 657 S.K. 84.MD. UYA. ASK. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1168": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (657 S.K. 36/A-9. MD. UYARINCA)",
+      "en":""
+      },
+    "1169": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (657 S.K. 36/A-6-(b). MD. UYARINCA)",
+      "en":""
+      },
+    "1170": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (5434 S.K.EK 18. MD. UYARINCA HİZ.DEĞ.)",
+      "en":""
+      },
+    "1171": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (657 S.K. 36/A-9. MD. UYARINCA)",
+      "en":""
+      },
+    "1172": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (657 S.K. 84. MD. UYARINCA ASKERLİK HİZ.DEĞ.)",
+      "en":""
+      },
+    "1173": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (657 S.K. 36/A-9. MD VE 84. MD. UYA. ASK. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1176": {
+      "tr":"AÇIKTAN ATANMA (5525 S. AF KANUNU GEREĞİ)",
+      "en":""
+      },
+    "1187": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. EK 29. MD. GEREĞİ)",
+      "en":""
+      },
+    "1188": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 40. MD.)",
+      "en":""
+      },
+    "1190": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 48. MD.)",
+      "en":""
+      },
+    "1195": {
+      "tr":"AÇIKTAN ATANMA (ADAY OLARAK ATANMA)",
+      "en":""
+      },
+    "1202": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 97. MD.)",
+      "en":""
+      },
+    "1205": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 224. MD. UYARINCA)",
+      "en":""
+      },
+    "1206": {
+      "tr":"İL DAİMİ ENCÜMEN ÜYELİĞİNE SEÇİLEREK İLGİLENDİRİLDİ",
+      "en":""
+      },
+    "1213": {
+      "tr":"DÖRTLÜ KARARNAMA İLE ATANMA (AÇIKTAN)",
+      "en":""
+      },
+    "1219": {
+      "tr":"ATANMA VE 657 S.K. EK GEÇİCİ 41. MD. İNTİBAKI YAPILDI",
+      "en":""
+      },
+    "1226": {
+      "tr":"AÇIKTAN ATANMA (3713 S.K. EK 1 MD. UYARINCA)",
+      "en":""
+      },
+    "1236": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-1 VE A-9 FIK. GEREĞİ)",
+      "en":""
+      },
+    "1240": {
+      "tr":"AÇIK SÜRESİ SONUNDA (657 S.K. 145. MD. GEREĞİ) GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "1244": {
+      "tr":"AÇIKTAN ATANMA VE ASKERLİK HİZMETİ İNTİBAKTA DEĞERLENDİRİLDİ (399 S.K.H.K. TABİ)",
+      "en":""
+      },
+    "1258": {
+      "tr":"AÇIKTAN ATANMA VE 457,458,459 S.K.H.K. UYARINCA 1 DERECE YÜKSELTİLMESİ",
+      "en":""
+      },
+    "1259": {
+      "tr":"AÇIKTAN ATANMA VE ASKERLİK HİZMETİ İNTİBAKTA DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "1268": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE UZMANLIK DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "1318": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 2182 S.K. UYARINCA 1 DERECE UYGULANDI",
+      "en":""
+      },
+    "1319": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 657 S.K. 36/A-9 FIK. (DOKTORA) DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "1320": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 657 S.K. 36. MD. A BEND. 12-D FIK. (ÖĞRENİM DEĞ.)",
+      "en":""
+      },
+    "1321": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE UZMANLIK DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "1322": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 657 S.K. 36/A-9 FIK. (YÜKSEK LİSANS) DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "1323": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR)VE 657 S.K. 36/A-6(b) İLE 36/A-9 FIK. (Y. LİSANS) DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "1324": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 657 S.K. 36/A-9 FIK. (Y.LİSANS) İLE 5434 SK.EK 18.MAD. UYA. HİZ. DEĞ.",
+      "en":""
+      },
+    "1325": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 657 S.K. 36/A-9 FIK. (DOKTORA) İLE 84.MD. UYA. ASKERLİK HİZ.DEĞ",
+      "en":""
+      },
+    "1326": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 657 S.K. 36/A-9 VE A-10 FIK. (DOKTORA VE DOÇENTLİK) DEĞ.",
+      "en":""
+      },
+    "1327": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 657 S.K. 36/A-9 FIK. (DOKTORA) İLE 5434 SK.EK 18.MAD. UYA. HİZ. DEĞ.",
+      "en":""
+      },
+    "1335": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-3 FIK. GEREĞİ)",
+      "en":""
+      },
+    "1337": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA NAKLEN TAYİN GELEN (KAMU İDARESİ DIŞI)",
+      "en":""
+      },
+    "1338": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA NAKLEN TAYİN GELEN (KAMU İDARESİ İÇİ) İLE ASALET TASDİKİ",
+      "en":""
+      },
+    "1339": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA NAKLEN TAYİN GELEN (KAMU İDARESİ İÇİ) İLE TERFİ (K.H.A. VE E.K.E.A.)",
+      "en":""
+      },
+    "1340": {
+      "tr":"SÖZLEŞMELİ SİGORTALI İKEN KADROYA GEÇEREK EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ (BANKACILIK KANUNU)",
+      "en":""
+      },
+    "1341": {
+      "tr":"SÖZLEŞMELİ OLARAK ÇALIŞMAKTA İKEN KADROYA GEÇEREK EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ (3239 SK MD-134)",
+      "en":""
+      },
+    "1342": {
+      "tr":"399 S.K.H.K. GEÇ.1. MD. UYA. EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ İNTİBAKI YAPILDI (MAHKEME KARARIYLA)",
+      "en":""
+      },
+    "1350": {
+      "tr":"AÇIKTAN ATANMA VE 657 S.K. 36/C-1 FIK. İNTİBAKI",
+      "en":""
+      },
+    "1406": {
+      "tr":"AÇIKTAN ATANMA (3065 S.K. 5. MD. 3. FIK)",
+      "en":""
+      },
+    "1418": {
+      "tr":"AÇIKTAN ATANMA (5442 S.K. 30. MD.)",
+      "en":""
+      },
+    "1422": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 225. MD.)",
+      "en":""
+      },
+    "1423": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. EK GEÇİCİ 9. MD.)",
+      "en":""
+      },
+    "1432": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-5,6-B, VE A-9 FIK. GEREĞİ)   ",
+      "en":""
+      },
+    "1433": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-1 FIK. GEREĞİ)",
+      "en":""
+      },
+    "1435": {
+      "tr":"UZMAN JANDARMALIĞA NASIP (3466 S.K. 5/A, 12., 22. MD.)",
+      "en":""
+      },
+    "1472": {
+      "tr":"SÖZLEŞMELİ ASTSUBAYLIĞA İLK NASIP (926 S.K. 82. MD.)",
+      "en":""
+      },
+    "1478": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-4 FIK. GEREĞİ)",
+      "en":""
+      },
+    "1479": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-4 VE 6-B FIK. GEREĞİ)",
+      "en":""
+      },
+    "1496": {
+      "tr":"AÇIKTAN ATANMA (6085 S.K. 17. MD. VE 2802 S.K. 9. MD. GEREĞİ)",
+      "en":""
+      },
+    "1502": {
+      "tr":"AÇIKTAN ATANMA (2828 S.K. GEÇ. 4. MD. )",
+      "en":""
+      },
+    "1503": {
+      "tr":"İLK ATANMA (5784 S.K. GEÇ. 2. MD. GER. SÖZ. İKEN KADROYA GEÇİŞ)",
+      "en":""
+      },
+    "1514": {
+      "tr":"AÇIKTAN ATANMA (MECBURİ HİZMETLİ OLARAK)",
+      "en":""
+      },
+    "1526": {
+      "tr":"AÇIKTAN ATANMA (YAN DAL UZMANLIĞI İÇİN)",
+      "en":""
+      },
+    "1530": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE KADRO DEĞİŞİKLİĞİ",
+      "en":""
+      },
+    "1531": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE KADRO DEĞİŞİKLİĞİ",
+      "en":""
+      },
+    "1532": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA, ASK. SÜRESİ İNT. DEĞER. VE KADRO DEĞİŞİKLİĞİ",
+      "en":""
+      },
+    "1533": {
+      "tr":"AÇIKTAN ATANMA (832 S.K. 9. MD. GEREĞİ)",
+      "en":""
+      },
+    "1550": {
+      "tr":"AÇIKTAN ATAMA(657 S.K. 36/A, 45. 48. VE 54. MD. GEREĞİ)",
+      "en":""
+      },
+    "1567": {
+      "tr":"657 S.K. 4/B VE 4/C MD. TABİ İKEN KADROYA GEÇİRİLMİŞTİR",
+      "en":""
+      },
+    "1582": {
+      "tr":"ASKERLİK DÖNÜŞÜ GÖREVE BAŞLAMA VE ASK. SÜRESİ İLE 657 S.K. 64. MD. 90 PUAN SİC. ORT. 1 KADEME)",
+      "en":""
+      },
+    "1588": {
+      "tr":"SÖZLEŞMELİ SİGORTALI İKEN KADROYA GEÇEREK EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ.(4572 S.K.)",
+      "en":""
+      },
+    "1589": {
+      "tr":"İLK ATANMA VE 2547 S.K. GEÇİCİ 17. MD. İNTİBAKI YAPILDI",
+      "en":""
+      },
+    "1590": {
+      "tr":"İLK ATANMA VE 2547 S.K. GEÇİCİ 19. MD. İNTIBAKI YAPILDI",
+      "en":""
+      },
+    "1599": {
+      "tr":"5449 S.K. 18. MD. (KALKINMA AJANSLARI) GEREĞİNCE GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "1600": {
+      "tr":"AÇIKTAN ATANMA (418 S.K.H.K.  15. MD.  EKLENEN 657 S.K. EK GEÇ. MD. İNTİBAKI YAPILDI)",
+      "en":""
+      },
+    "1612": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-5 2595 S.K. 45 MD)",
+      "en":""
+      },
+    "1613": {
+      "tr":"AÇIKTAN ATANMA (2577 S.K. 28. MD. GEREĞİ)",
+      "en":""
+      },
+    "1614": {
+      "tr":"AÇIKTAN ATANMA (2577 S.K. 52. MD. GEREĞİ)",
+      "en":""
+      },
+    "1615": {
+      "tr":"SÖZLEŞMELİ SİGORTALI İKEN KADROYA GEÇEREK EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ.(4924 S.K. 9. MD)",
+      "en":""
+      },
+    "1664": {
+      "tr":"AÇIKTAN ATANMA (2577 S.K. 28. MD. GEREĞİ) VE 657 S.K. 36. MD. A BEND. 9. FIK",
+      "en":""
+      },
+    "1670": {
+      "tr":"AÇIKTAN ATANMA (4924 S.K. GEREĞİ)",
+      "en":""
+      },
+    "1679": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-5)",
+      "en":""
+      },
+    "1680": {
+      "tr":"AÇIKTAN ATANMA (ÖZELLEŞTİRME)",
+      "en":""
+      },
+    "1691": {
+      "tr":"AÇIKTAN ATANMA (2547/50-d ARAŞTIRMA GÖREVLİSİ)",
+      "en":""
+      },
+    "1692": {
+      "tr":"AÇIKTAN ATANMA (2547/33. MD. ARAŞTIRMA GÖREVLİSİ)",
+      "en":""
+      },
+    "1696": {
+      "tr":"AÇIKTAN ATANMA (657 S.K 92. MD. GEREĞİ YENİDEN ATANMA VE 5434 EK 18. MD. İNT. YAPILDI)",
+      "en":""
+      },
+    "1698": {
+      "tr":"AÇIKTAN ATANMA (2914/15. VE17. MD. UYARINCA- SÖZLEŞMELİ SANATÇI)",
+      "en":""
+      },
+    "1705": {
+      "tr":"AÇIKTAN ATAMA (657 S.K. EK GEÇİCİ 16. MD. GEREĞİ)",
+      "en":""
+      },
+    "1710": {
+      "tr":"EMEKLİLİK ONAYI MAHKEME KARARI İLE İPTAL EDİLMESİ ÜZERİNE GÖREVE İADE",
+      "en":""
+      },
+    "1745": {
+      "tr":"5449 S.K. 18. MD. (KALKINMA AJANSLARI) GEREĞİNCE GÖREVE BAŞLAMA VE HİZMET DEĞER.",
+      "en":""
+      },
+    "1746": {
+      "tr":"YEVMİYELİ KADRODAN 657 S.K. TABİ KADROYA GEÇEREK EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ",
+      "en":""
+      },
+    "1756": {
+      "tr":"AÇIKTAN ATANMA (2547/33. MD. GEREĞİ ÖYP KAPSAMINDA) ",
+      "en":""
+      },
+    "1757": {
+      "tr":"AÇIKTAN ATANMA (2547/50.d MD. GEREĞİ TUS ÖĞRENCİSİ)  ",
+      "en":""
+      },
+    "1758": {
+      "tr":"AÇIKTAN ATANMA (2547/50.d MD GEREĞİ DUS ÖĞRENCİSİ) ",
+      "en":""
+      },
+    "1759": {
+      "tr":"AÇIKTAN ATANMA (2547/31. MD. GEREĞİ ) ",
+      "en":""
+      },
+    "1760": {
+      "tr":"AÇIKTAN ATANMA (2547/32 MD. GEREĞİ )",
+      "en":""
+      },
+    "1761": {
+      "tr":"AÇIKTAN ATANMA (2547/33-e MD. GEREĞİ ) ",
+      "en":""
+      },
+    "1762": {
+      "tr":"AÇIKTAN ATANMA (2547/23. MD. GEREĞİ ) ",
+      "en":""
+      },
+    "1763": {
+      "tr":"AÇIKTAN ATANMA (2547/25 MD. GEREĞİ )",
+      "en":""
+      },
+    "1764": {
+      "tr":"AÇIKTAN ATANMA (2547/26 MD. GEREĞİ ) ",
+      "en":""
+      },
+    "1792": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-5 VE A-9 FIK. GEREĞİ)",
+      "en":""
+      },
+    "1793": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-2 VE A-9 FIK. GEREĞİ)",
+      "en":""
+      },
+    "1794": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR)(657 S.K. 84. MD. ASKERLİK İLE 5434 S.K. EK 18. MD. GEREĞİ SİG. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1798": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) VE 657 S.K. 36/A-1 FIK. (AV. STAJI) DEĞERLENDİRİLDİ",
+      "en":""
+      },
+    "1816": {
+      "tr":"AÇIKTAN ATANMA (2547/33-A MD. GEREĞİ-ARAŞTIRMA GÖREVLİSİ ) ",
+      "en":""
+      },
+    "1817": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (2547/33-A MD. GEREĞİ ARAŞTIRMA GÖREVLİSİ - ÖYP)",
+      "en":""
+      },
+    "1826": {
+      "tr":"FYO ÖĞRENCİSİ (ASKERİ ÖĞRENCİ)",
+      "en":""
+      },
+    "1831": {
+      "tr":"ER ÖĞRETMEN OLARAK ASKERLİĞİNİ TAMAMLAYARAK TEKRAR GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "1833": {
+      "tr":"YEDEK SUBAY ÖĞRETMEN OLARAK ASKERLİĞİNİ TAMAMLAYARAK TEKRAR GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "1838": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-5 VE 6-B FIK. GEREĞİ)",
+      "en":""
+      },
+    "1841": {
+      "tr":"AÇIKTAN ATANMA (1750 S.K. 30. MD. UYARINCA)",
+      "en":""
+      },
+    "1846": {
+      "tr":"ATANMA (3269 S.K. 5.MD. UYARINCA SİVİL MEMURLUĞA)",
+      "en":""
+      },
+    "1849": {
+      "tr":"4046 S.K. 22. VE GEÇ. 9. MD. UYARINCA ATANMA İNTİBAK VE 5510 4/c BENDİ İLE İLGİLENDİRİLME",
+      "en":""
+      },
+    "1852": {
+      "tr":"SÖZLEŞMELİ OLARAK ATANMA (5510 S.K. 4/c BENDİNE TABİ)",
+      "en":""
+      },
+    "1855": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-6(b) VE 5434 S.K. EK 82.MAD. UYA. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1856": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-6(b), A-9.MD. VE 5434 S.K. EK 82 .MAD. UYA. HİZ.DEĞ)",
+      "en":""
+      },
+    "1857": {
+      "tr":"657 S.K. GEÇ. 41. MD.  SÖZ. İKEN KADROYA ATANDI. SÖZ. SÜRE İNTİBAKINDA DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1858": {
+      "tr":"657 S.K. GEÇ. 41. MD. UYARINCA SÖZLEŞMELİ İKEN KADROYA ATANDI. (6495 S.K.)",
+      "en":""
+      },
+    "1860": {
+      "tr":"657 S.K. GEÇ. 41. MD. SÖZ. İKEN KADROYA ATANDI. SÖZ. SÜRE VE ASK. HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1861": {
+      "tr":"657 S.K. GEÇ. 41. MD. SÖZ. İKEN KADROYA ATANDI.SÖZ. SÜRE, ASK VE 5434 EK 18. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1862": {
+      "tr":"657 S.K. GEÇ. 41. MD. SÖZ. İKEN KADROYA ATANDI.SÖZ. SÜRE, 5434 EK 18. MD. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1866": {
+      "tr":"657 S.K. GEÇ. 41.MD. GR. KADROYA ATANDI.SÖZ.SÜRE, ASKERLİK VE 36/C-2  HİZ. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1867": {
+      "tr":"657 S.K. GEÇ. 41.MD. GR. KADROYA ATANDI. SÖZ.SÜRE VE 36/C-2  HİZ. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1868": {
+      "tr":"657 S.K. GEÇ. 41.MD. GR. KADROYA ATANDI. SÖZ.SÜRE, ASKERLİK VE 36/C-1  HİZ. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1869": {
+      "tr":"657 S.K. GEÇ. 41.MD. GR. KADROYA ATANDI. SÖZ.SÜRE VE 36/C-1  HİZ. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1872": {
+      "tr":"663 S.K GEÇ. 18 MD. UYA. KADROYA ATANDI. (6495  S.K)",
+      "en":""
+      },
+    "1875": {
+      "tr":"AÇIKTAN ATANMA (657 S.K 71. VE 92. MD. GEREĞİ YENİDEN ATANMA)",
+      "en":""
+      },
+    "1876": {
+      "tr":" 657 S.K. GEÇ. 41.MD. GR. KADROYA ATANDI. SÖZ.SÜRE VE 657 S.K. 36. MD. A BEND. 9. FIK. (6495 S.K.)",
+      "en":""
+      },
+    "1877": {
+      "tr":"657 S.K.GEÇ. 41.MD.GR.KADROYA ATANDI.SÖZ.SÜRE, ASK.VE 657 S.K. 36.MD.A BEND.9.FIK.(6495 S.K.)",
+      "en":""
+      },
+    "1882": {
+      "tr":"657 S.K.GEÇ. 41.MD.GR.KADROYA ATANDI. SÖZ.SÜRE, ASK.VE 657 S.K. 36.MD.A BEND.6/B FIK. (6495 S.K.)",
+      "en":""
+      },
+    "1883": {
+      "tr":"657 S.K.GEÇ. 41.MD.GR.KADROYA ATANDI. SÖZ.SÜRE VE 657 S.K. 36.MD.A BEND.6/B FIK. (6495 S.K.)",
+      "en":""
+      },
+    "1884": {
+      "tr":"657 S.K. GEÇ. 41.MD. GR. KADROYA ATANDI. SÖZ.SÜRE VE 36/C-3 HİZ. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1885": {
+      "tr":"657 S.K. GEÇ. 41.MD. GR. KADROYA ATANDI. SÖZ.SÜRE, ASK. VE 36/C-3 HİZ. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1887": {
+      "tr":"657 S.K. GEÇ. 41. MD.  UYA. KAD. ATANDI. SÖZ. SÜRE VE 657 S.K. 36/A-1 İNTİBAKI YAPILDI (6495 S.K.)",
+      "en":""
+      },
+    "1888": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA. KADROYA ATANDI.SÖZ., ASK. VE 657 S.K. 36/A-1  HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1889": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA. KAD. ATANDI.SÖZ, ASK. 657 S.K. 36/A-1,A-6-b  HİZ. İNT. DEĞ.(6495 S.K.)",
+      "en":""
+      },
+    "1890": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA.  KAD. ATANDI.SÖZ , 657 S.K. 36/A-1 VE A-6-b   HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1891": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA. KAD.ATANDI.SÖZ, ASK. 657 S.K. 36/A-1, A-9, A-6-b HİZ. İNT. DEĞ.(6495 S.K.)",
+      "en":""
+      },
+    "1892": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA. KAD. ATANDI. SÖZ., 657 S.K. 36/A-9 VE A-6-b   HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1893": {
+      "tr":"657 S.K. GEÇ. 41.MD.UYA.  KAD. ATANDI. SÖZ, ASK, 657 S.K. 36/A-9, A-6-b  HİZ. İNT. DEĞ.(6495 S.K.)",
+      "en":""
+      },
+    "1894": {
+      "tr":"657 S.K.GEÇ. 41.MD. UYA. KAD. ATANDI. SÖZ., 657 S.K. 36/A-6-b  VE A-9 HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1895": {
+      "tr":"657 S.K.GEÇ. 41.MD. UYA. KAD. ATANDI. SÖZ., ASK. 657 S.K. 36/A-6-b VE A-9 HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1896": {
+      "tr":"657 S.K. GEÇ. 41. MD. UYA. KADROYA ATANDI. SÖZ. SÜRELERİ VE ÖNCEKİ HİZMETLERİ İNT. DEĞ.",
+      "en":""
+      },
+    "1897": {
+      "tr":"AÇIK SÜRESİ SONUNDA (657/144. MD. GEREĞİ) GÖREVE İADE EDİLDİ",
+      "en":""
+      },
+    "1901": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA. KAD.ATANDI.SÖZ SÜRE, 657 S.K. 36/A-1, A-9, A-6-b HİZ. İNT. DEĞ.(6495 S.K.)",
+      "en":""
+      },
+    "1902": {
+      "tr":"VEKİL ŞEHİR PLANCISI OLARAK ATANMA",
+      "en":""
+      },
+    "1904": {
+      "tr":"VEKİL KİMYAGER OLARAK ATANMA",
+      "en":""
+      },
+    "1906": {
+      "tr":"657 S.K. GEÇ. 41. MD. UYA. KAD. ATANDI. SÖZ. SÜRE VE 657 S.K. 36/A-2 FIK. HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1907": {
+      "tr":"657 S.K. GEÇ. 41. MD. UYA. KAD. ATANDI. SÖZ. SÜRE VE 657 S.K. 36/A-4 FIK. HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1908": {
+      "tr":"657 S.K. GEÇ. 41. MD. UYA. KAD. ATANDI. SÖZ. SÜRE VE 657 S.K. 36/A-5 FIK. HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1909": {
+      "tr":"657 S.K. GEÇ. 41. MD. UYA. KAD. ATANDI. SÖZ. SÜRE VE 657 S.K. 36/A-2, A-9 FIK. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1910": {
+      "tr":"657 S.K. GEÇ. 41. MD. UYA. KAD. ATANDI. SÖZ. SÜRE VE 657 S.K. 36/A-5, A-9 FIK. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1919": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)(657/84.MD. ASK. 5434/EK 18.MD. SİG. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1920": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)(657 36/A -6-B, 84.MD. ASK. 5434/EK 18.MD. SİG HİZ.DEĞ.)",
+      "en":""
+      },
+    "1921": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (2547 S.K.)(657/84.MD. ASK. 5434/EK 18.MD. SİG. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1922": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR)(657 36/A 6-B, 84.MD. ASK. 5434/EK 18.MD. SİG. HİZ. DEĞ.)",
+      "en":""
+      },
+    "1923": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K. ) 2914 S.K. 6. MD. DOKTORA DEĞ.",
+      "en":""
+      },
+    "1924": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.) 2914 S.K. 6. MD. Y. LİSANS DEĞ.",
+      "en":""
+      },
+    "1925": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (2547 S.K. GÖRE) VE 2914 S.K. 6. MD. DOKTORA DEĞ.",
+      "en":""
+      },
+    "1926": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (2547 S.K. GÖRE) VE 2914 S.K. 6. MD. Y.LİSANS DEĞ.",
+      "en":""
+      },
+    "1927": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)657/84.MD.ASK.HİZ. 5434/EK 18.MD. SİG.HİZ.2914/6. MD. DOKT. DEĞ.",
+      "en":""
+      },
+    "1928": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)657 36/A 6-B, 84.MD. ASK. 5434/EK 18.MD. SİG. HİZ. 2914/6.MD. DOKT. DEĞ.",
+      "en":""
+      },
+    "1929": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)657/84. MD. ASK. 5434/EK 18.MD. SİG. HİZ. 2914/6. MD. Y. LİS. DEĞ.",
+      "en":""
+      },
+    "1930": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)657 36/A 6-B, 84.MD. ASK. 5434/EK 18.MD. SİG. HİZ. 2914/6.MD. Y.LİS. DEĞ.",
+      "en":""
+      },
+    "1931": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)(657/93. MD. EMEK. DÖNÜŞÜ BAŞL. 5434/EK 18.MD. SİG. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1932": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)(657 S.K. 93. MD. UYARINCA EMEKLİLİK DÖNÜŞÜ)",
+      "en":""
+      },
+    "1933": {
+      "tr":"657 S.K. GEÇ. 41. MD. UYA. KAD. ATANDI. SÖZ. SÜRE, ASK. 657 S.K. 36/A-4 HİZ. İNT. DEĞ. (6495 S.K.)",
+      "en":""
+      },
+    "1935": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.) (5434 S.K. EK 18. MD. UYR. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1936": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (2547 S.K.)(5434 S.K. EK 18. MD. UYARINCA HİZ.DEĞ.)",
+      "en":""
+      },
+    "1937": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.) (2914 S.K. 6. MD. Y. LİSANS VE DOKT.- 5434 S.K. EK 18. MD. UYR. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1938": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.) (2914 S.K. 6. MD. Y. LİSANS VE 5434 S.K. EK 18. MD. UYR. HİZ.DEĞ)",
+      "en":""
+      },
+    "1939": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)(2914 S.K. 6. MD.DOKT. VE  5434 S.K. EK 18. MD. UYR. HİZ.DEĞ.)",
+      "en":""
+      },
+    "1940": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA. KAD. ATANDI.SÖZ, ASK. 657-36/A-6-b, C-1, 5434/EK 18. İNT. DEĞ.(6495 S.K.)",
+      "en":""
+      },
+    "1941": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA. KAD. ATANDI. SÖZ, ASK. 657-36/A-6-b VE C-1 İNT. DEĞ.(6495 S.K.)",
+      "en":""
+      },
+    "1946": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.) (2914 S.K. 6. MD. Y. LİSANS VE DOKTORA DEĞ.)",
+      "en":""
+      },
+    "1947": {
+      "tr":"AÇIKTAN ATANMA (6495 S.K. 43. MD. GEREĞİ DİSİPLİN CEZALARININ AFFI NEDENİYLE YENİDEN)",
+      "en":""
+      },
+    "1948": {
+      "tr":"AÇIKTAN ATANMA (2547/33. MD. GEREĞİ ÖYP KAPSAMINDA)  (2914 S.K. 6. MD. Y. LİSANS DEĞ)",
+      "en":""
+      },
+    "1958": {
+      "tr":"AÇIKTAN ATANMA (TEKRAR) (2547/50.d MD. GEREĞİ TUS ÖĞRENCİSİ)  ",
+      "en":""
+      },
+    "1994": {
+      "tr":"657 S.K. GEÇ. 41.MD. UYA. KAD.ATANDI. SÖZ SÜRE, 657 S.K. 36/A-1, A-9 HİZ. İNT. DEĞ.(6495 S.K.)",
+      "en":""
+      },
+    "2063": {
+      "tr":"AÇIKTAN ATANMA  VE 1416 S.K. 21. MD. YURTDIŞINDA LİSANSÜSTÜ EĞİTİMDE GEÇEN SÜRE İNT. DEĞ.",
+      "en":""
+      },
+    "2083": {
+      "tr":"399 S.K.H.K. GEÇ.1 MD. UYR. EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ (AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAYAN)",
+      "en":""
+      },
+    "2084": {
+      "tr":"399 S.K.H.K. GEÇ.1 MD. UYARINCA İLGİLENDİRİLDİ. (AYLIKSIZ İZİN DÖN. GÖREVE BAŞL.- TERFİAN ATANMA)",
+      "en":""
+      },
+    "2091": {
+      "tr":"AÇIKTAN ATANMA (5434 S.K. EK 82.MD. UYA. HİZ.DEĞ.)",
+      "en":""
+      },
+    "2098": {
+      "tr":"2813 S.K  8. MD. (3293 S.K. DEĞİŞİK) UYARINCA EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ",
+      "en":""
+      },
+    "2102": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.)(657 36/A -6-B FIKRA GEREĞİ)",
+      "en":""
+      },
+    "2115": {
+      "tr":"YENİDEN  ATANMA (MAHKEME KARARI GEREĞİ)",
+      "en":""
+      },
+    "2120": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA (399 S.K.H.K. GEÇ.1 MD. UYA. EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ)",
+      "en":""
+      },
+    "2121": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE TER. ATANMA(399 SKHK GEÇ.1 MD. EM. SAN. İLE İLGİLENDİRİLDİ)",
+      "en":""
+      },
+    "2134": {
+      "tr":"AÇIKTAN ATANMA (2828 S.K.)",
+      "en":""
+      },
+    "2144": {
+      "tr":"GATA ÖĞRENCİSİ BAŞLAMA",
+      "en":""
+      },
+    "2154": {
+      "tr":"AÇIKTAN ATANMA 3238 S.K. 8. MD. 3. FIK. GEREĞİ",
+      "en":""
+      },
+    "2159": {
+      "tr":"GÖREVE İADE EDİLDİ (MEMURİYETTEN SÜRELİ YOKSUN KILINMA/HAPİS SÜRESİ DOLDUĞUNDAN)",
+      "en":""
+      },
+    "2161": {
+      "tr":"4678/10 SAYILI KANUN KAPSAMINDA SÖZLEŞMELİ ASB. ADAYI",
+      "en":""
+      },
+    "2163": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.) (2914 S.K. 6. MD. Y. LİSANS/DOKTORA DEĞ. ve DOÇENT)",
+      "en":""
+      },
+    "2164": {
+      "tr":"AÇIKTAN ATANMA (2547 S.K.) 657 36/A 6-B, 2914/6.MD. Y.LİSANS DEĞ.",
+      "en":""
+      },
+    "2165": {
+      "tr":"4629 S.K. BAZI FON. TAS. HK. KANUN GEÇ 1. MD. B BEND b FIK. GR 4/B SÖZL.DEN KADROYA GEÇİŞ",
+      "en":""
+      },
+    "2181": {
+      "tr":"6356 S.K. 23. MD. GEREĞİNCE SENDİKAL GÖREVİN SONA ERMESİ NED. GÖREVE BAŞLAMA",
+      "en":""
+      },
+    "2185": {
+      "tr":"4628 S.K. 9. MD. 9. FIK. SON CÜMLESİ GER.2 YILLIK SÜRENİN BAŞLAMASI",
+      "en":""
+      },
+    "2187": {
+      "tr":"AÇIKTAN ATANMA (İÇİŞLERİ BAKANLIĞINCA İHDAS EDİLEN BELEDİYE BŞK. YRD. KADROSUNA)",
+      "en":""
+      },
+    "2195": {
+      "tr":"GÖREVE İADE EDİLDİ (5393 S.K. 47. MD. GEREĞİ)",
+      "en":""
+      },
+    "2207": {
+      "tr":"657 S.K. GEÇ.37. MD. KAD. ATANDI. 5510 TABİ. SİG. SÜRE 5434 S.K. 89. MD. GER. EKEA. DEĞ(632 S.K.H.K)",
+      "en":""
+      },
+    "2208": {
+      "tr":"657 S.K. GEÇ.41. MD. KAD. ATANDI. 5510 TABİ. SİG. SÜRE 5434 S.K. 89. MD. GER. EKEA. DEĞ(6495 S.K.)",
+      "en":""
+      },
+    "2214": {
+      "tr":"ASKERLİK DÖN. GÖREVE BAŞLAMA VE ASK. İNT. DEĞER. 3. DÖNEM TOPLU SÖZ. 28. MD. 1 DERECE UYGULANDI",
+      "en":""
+      },
+    "2223": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE 3. DÖNEM TOPLU SÖZ. 28. MD. UYA. 1 DERECE YÜK. (15.01.2016)",
+      "en":""
+      },
+    "2259": {
+      "tr":"AYLIKSIZ İZİN DÖNÜŞÜ GÖREVE BAŞLAMA VE 657 S.K. 36. MD. C BEND. 8. FIK. (108. MD. B .FIK.) DEĞ.",
+      "en":""
+      },
+    "2276": {
+      "tr":"POLİS AKD./FYO E.G.M. ADINA OKUYAN ÖĞRENCİ",
+      "en":""
+      },
+    "2279": {
+      "tr":"SENDİKA NED. AYLIKSIZ İZİNDE İKEN İŞVEREN UYGULAMA TEBLİĞİ GR. 15/11/2015 ZORUNLU UYGULAMASI",
+      "en":""
+      },
+    "2289": {
+      "tr":"AÇIKTAN ATANMA (657 S.K. 36/A-6-B FIK. HAZIRLIK SIN. VE TEKNİK OKUL MZ. MESLEĞE ATANMA NED.)",
+      "en":""
+      },
+    "2296": {
+      "tr":"EMEKLİ SANDIĞI YÖNETİM KURULUNUN 12.06.2003 TR. VE 425 S. KARARI GER. E.S. İLE İLGİLENDİRİLDİ",
+      "en":""
+      },
+    "2297": {
+      "tr":"MAHKEME KARARI GEREĞİNCE EMEKLİ SANDIĞI İLE İLGİLENDİRİLDİ",
+      "en":""
+      }
+  },
+  "sebep_kod_ayrilma": {
+    "49": {
+      "tr": "EMEKLİLİK (İSTEKLE)",
+      "en": ""
+    },
+    "50": {
+      "tr": "EMEKLİLİK (AÇIKTAN İSTEKLE)",
+      "en": ""
+    },
+    "51": {
+      "tr": "EMEKLİLİK (MALUL)",
+      "en": ""
+    },
+    "52": {
+      "tr": "EMEKLİLİK (AÇIKTAN MALUL)",
+      "en": ""
+    },
+    "53": {
+      "tr": "EMEKLİLİK (YAŞ HADDİNDEN)",
+      "en": ""
+    },
+    "54": {
+      "tr": "EMEKLİLİK (AÇIKTAN YAŞ HADDİNDEN)",
+      "en": ""
+    },
+    "55": {
+      "tr": "EMEKLİLİK (İSTEKLE YAŞ HADDİNDEN)",
+      "en": ""
+    },
+    "56": {
+      "tr": "EMEKLİLİK (AÇIKTAN İSTEKLE YAŞ HADDİNDEN)",
+      "en": ""
+    },
+    "57": {
+      "tr": "EMEKLİLİK (VAZİFE MALULÜ)",
+      "en": ""
+    },
+    "58": {
+      "tr": "EMEKLİLİK (RE'SEN)",
+      "en": ""
+    },
+    "59": {
+      "tr": "EMEKLİLİK (SİCİLEN)",
+      "en": ""
+    },
+    "60": {
+      "tr": "EMEKLİLİK",
+      "en": ""
+    },
+    "61": {
+      "tr": "EMEKLİLİK (5434 S.K. GÖRE SAKATLIK)",
+      "en": ""
+    },
+    "62": {
+      "tr": "EMEKLİLİK (5510 S.K. GÖRE SAKATLIK)",
+      "en": ""
+    },
+    "63": {
+      "tr": "VEFAT (ECELİYLE)",
+      "en": ""
+    },
+    "64": {
+      "tr": "VEFAT (ASKERDE İKEN)",
+      "en": ""
+    },
+    "65": {
+      "tr": "VEFAT (GÖREV ESNASINDA)",
+      "en": ""
+    },
+    "66": {
+      "tr": "VEFAT (GÖREV HARİCİ)",
+      "en": ""
+    },
+    "67": {
+      "tr": "VEFAT (İNTİHAR)",
+      "en": ""
+    },
+    "68": {
+      "tr": "EMEKLİLİK (5434 S.K. GEÇ. 192. MD. GÖRE İSTEKLE)",
+      "en": ""
+    },
+    "96": {
+      "tr": "İSTİFA",
+      "en": ""
+    },
+    "97": {
+      "tr": "MÜSTAFİ",
+      "en": ""
+    },
+    "98": {
+      "tr": "MAHALLİ İDARELER SEÇİMLERİ İÇİN İSTİFA",
+      "en": ""
+    },
+    "100": {
+      "tr": "MİLLETVEKİLİ SEÇİMLERİ İÇİN İSTİFA",
+      "en": ""
+    },
+    "104": {
+      "tr": "GÖREV SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "105": {
+      "tr": "SÖZLEŞME FESHİ",
+      "en": ""
+    },
+    "106": {
+      "tr": "657 S.K. 77. MD. GEREĞİ AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "107": {
+      "tr": "657 S.K. 78. MD. GEREĞİ AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "108": {
+      "tr": "657 S.K. 108. MD. GEREĞİ AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "109": {
+      "tr": "PERSONEL KANUNU GEREĞİ AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "110": {
+      "tr": "SENDİKA GÖREVİ NEDENİYLE AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "111": {
+      "tr": "BAŞKA KURUMDA GÖREVLENDİRME NEDENİYLE AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "113": {
+      "tr": "AYLIKSIZ İZİN DÖNÜŞÜ İSTİFA ETTİ",
+      "en": ""
+    },
+    "114": {
+      "tr": "AYLIKSIZ İZİN DÖNÜŞÜ MÜSTAFİ",
+      "en": ""
+    },
+    "115": {
+      "tr": "657 S.K. GEREĞİ SİLAH ALTINA ALINMA",
+      "en": ""
+    },
+    "131": {
+      "tr": "AÇIĞA ALINDI",
+      "en": ""
+    },
+    "133": {
+      "tr": "GÖREVİNE SON VERİLDİ",
+      "en": ""
+    },
+    "135": {
+      "tr": "YÜKSEK DİSİPLİN KURULU KARARI GEREĞİNCE GÖREVİNE SON VERİLDİ",
+      "en": ""
+    },
+    "136": {
+      "tr": "1402 S.K. GEREĞİNCE GÖREVİNE SON VERİLDİ",
+      "en": ""
+    },
+    "140": {
+      "tr": "GÖREV SÜRESİ UZATILMADIĞINDAN AYRILDI",
+      "en": ""
+    },
+    "141": {
+      "tr": "ASKERLİK DÖNÜŞÜ MÜSTAFİ",
+      "en": ""
+    },
+    "144": {
+      "tr": "HİZMET SÖZLEŞMESİ FESHEDİLDİ",
+      "en": ""
+    },
+    "145": {
+      "tr": "SÖZLEŞMELİDEN İSTİFA",
+      "en": ""
+    },
+    "148": {
+      "tr": "DEVLET MEMURLUĞUNDAN ÇIKARMA",
+      "en": ""
+    },
+    "149": {
+      "tr": "MEMURİYETTEN MEN",
+      "en": ""
+    },
+    "150": {
+      "tr": "MESLEKTEN ÇIKARMA",
+      "en": ""
+    },
+    "151": {
+      "tr": "KAMU GÖREVİNDEN ÇIKARILMA",
+      "en": ""
+    },
+    "153": {
+      "tr": "657 S.K. 48. VE 98. MD. GEREĞİNCE İLİŞİK KESME",
+      "en": ""
+    },
+    "196": {
+      "tr": "SAĞLIK NEDENİYLE İLİŞİK KESME",
+      "en": ""
+    },
+    "197": {
+      "tr": "657 S.K. 56. MD. UYARINCA ADAYLIKTAN İLİŞİK KESME",
+      "en": ""
+    },
+    "198": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME",
+      "en": ""
+    },
+    "199": {
+      "tr": "RE'SEN AYRILMA",
+      "en": ""
+    },
+    "200": {
+      "tr": "SİCİLEN AYRILMA",
+      "en": ""
+    },
+    "201": {
+      "tr": "MALULEN AYRILMA",
+      "en": ""
+    },
+    "202": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (AF KANUNU)",
+      "en": ""
+    },
+    "203": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (EMEKLİLİK İŞLEMİ)",
+      "en": ""
+    },
+    "204": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (DEVLET MEMURLUĞUNDAN ÇIKARMA)",
+      "en": ""
+    },
+    "205": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (MÜSTAFİ)",
+      "en": ""
+    },
+    "206": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (657 S.D.M.K. 48-98. MAD.)",
+      "en": ""
+    },
+    "207": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (İSTİFA)",
+      "en": ""
+    },
+    "208": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (RE'SEN AYRILMA)",
+      "en": ""
+    },
+    "209": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (657 S.K. 56-57. MD.)",
+      "en": ""
+    },
+    "210": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME ADAYLIKTAN İLİŞİK KESME)",
+      "en": ""
+    },
+    "211": {
+      "tr": "MAHKEME KARARI GEREĞİ İLİŞİK KESME (MESLEKTEN ÇIKARMA)",
+      "en": ""
+    },
+    "221": {
+      "tr": "GÖREVDEN UZAKLAŞTIRILDI",
+      "en": ""
+    },
+    "225": {
+      "tr": "İLİŞİĞİ KESİLDİ",
+      "en": ""
+    },
+    "229": {
+      "tr": "EMEKLİLİK (AÇIKTAN VAZİFE MALULÜ)",
+      "en": ""
+    },
+    "230": {
+      "tr": "EMEKLİLİK (ASKERDE İKEN VAZİFE MALULÜ)",
+      "en": ""
+    },
+    "231": {
+      "tr": "EMEKLİLİK (YAŞ HADDİNDEN VAZİFE MALULÜ)",
+      "en": ""
+    },
+    "235": {
+      "tr": "MAHKEME KARARI GEREĞİ İLK ATAMA ONAYI İPTALİ",
+      "en": ""
+    },
+    "236": {
+      "tr": "İSTEKLE EMEKLİ- MAHKEME KARARI GEREĞİ İADE İ MEMURİYET İPTALİ",
+      "en": ""
+    },
+    "237": {
+      "tr": "TUTUKLULUK",
+      "en": ""
+    },
+    "238": {
+      "tr": "HAPİS",
+      "en": ""
+    },
+    "254": {
+      "tr": "EMEKLİLİK (5434 S.K. 12. MD. İSTEĞE BAĞLI İŞTİRAKÇİ İKEN)",
+      "en": ""
+    },
+    "256": {
+      "tr": "GEÇİCİ OLARAK DEVLET MEMURLUĞUNDAN MEN",
+      "en": ""
+    },
+    "259": {
+      "tr": "657 S.K. 98/B FIK. GEREĞİNCE MEMURLUĞUN SONA ERMESİ",
+      "en": ""
+    },
+    "267": {
+      "tr": "657 S.K. 108. MD. 1. FIKRA AYLIKSIZ İZİNE AYRILDI (HASTALIK NEDENİYLE)",
+      "en": ""
+    },
+    "268": {
+      "tr": "657 S.K. 108. MD. 2. FIKRA AYLIKSIZ İZİNE AYRILDI (10 YILI TAMAMLAMA NED.)",
+      "en": ""
+    },
+    "269": {
+      "tr": "657 S.K. 108. MD. 3. FIKRA AYLIKSIZ İZİNE AYRILDI (DOĞUM NEDENİYLE)",
+      "en": ""
+    },
+    "270": {
+      "tr": "657 S.K. 108. MD. 4. FIKRA AYLIKSIZ İZİNE AYRILDI (GÖREVLİ ATAMA NED. EŞE)",
+      "en": ""
+    },
+    "271": {
+      "tr": "657 S.K. 108. MD. 5. FIKRA AYLIKSIZ İZİN BİTİMİ MÜSTAFİ",
+      "en": ""
+    },
+    "281": {
+      "tr": "657 S.K. 57.MD. ADAYLIK SÜRE SONUNDA BAŞARISIZLIK NED. İLİŞİK KESME",
+      "en": ""
+    },
+    "286": {
+      "tr": "657 S.K. 6111 DEĞ. 77. MD.  GEREĞİ AYLIKSIZ İZİNE AYRILDI.",
+      "en": ""
+    },
+    "289": {
+      "tr": "657 S.K. 91. MD. GEREĞİ ÇEKİLMİŞ SAYILMA",
+      "en": ""
+    },
+    "290": {
+      "tr": "657 S.K. 6111 DEĞ. 108. MD. (A) FIK. AYLIKSIZ İZİN",
+      "en": ""
+    },
+    "291": {
+      "tr": "657 S.K. 6111 DEĞ. 108. MD. (B) FIK. AYLIKSIZ İZİN",
+      "en": ""
+    },
+    "292": {
+      "tr": "657 S.K. 6111 DEĞ. 108. MD. (C) FIK.AYLIKSIZ İZİN",
+      "en": ""
+    },
+    "293": {
+      "tr": "657 S.K. 6111 DEĞ. 108. MD. (D) FIK.AYLIKSIZ İZİN",
+      "en": ""
+    },
+    "294": {
+      "tr": "657 S.K. 6111 DEĞ. 108. MD. (E) FIK.AYLIKSIZ İZİN",
+      "en": ""
+    },
+    "295": {
+      "tr": "657 S.K. 6111 DEĞ. 108. MD. (F) FIK.AYLIKSIZ İZİN BİTİMİ ÇEKİLMİŞ SAYILMA",
+      "en": ""
+    },
+    "296": {
+      "tr": "657 S.K. 6111 DEĞ. 108. MD. (G) FIK. AYLIKSIZ İZİN",
+      "en": ""
+    },
+    "299": {
+      "tr": "657 S.K. 108. MD. 6. FIKRA AYLIKSIZ İZİNE AYRILDI (ASKERLİK NEDENİYLE)",
+      "en": ""
+    },
+    "301": {
+      "tr": "EMEKLİLİK (ŞEHİT)",
+      "en": ""
+    },
+    "302": {
+      "tr": "EMEKLİLİK (ASKERDE İKEN ŞEHİT)",
+      "en": ""
+    },
+    "303": {
+      "tr": "GAİP",
+      "en": ""
+    },
+    "330": {
+      "tr": "EMEKLİLİK (İŞTİRAKÇİ İKEN ÖLÜM)",
+      "en": ""
+    },
+    "331": {
+      "tr": "EMEKLİLİK (AÇIKTA İKEN ÖLÜM)",
+      "en": ""
+    },
+    "334": {
+      "tr": "VEKİL ÖĞRETMENLİK SÜRESİNİN SONA ERMESİ              ",
+      "en": ""
+    },
+    "345": {
+      "tr": "233 S.K.H.K. UYARINCA SÖZLEŞMELİ STATÜYE GEÇTİ (506 S.K. TABİ OLDU)",
+      "en": ""
+    },
+    "352": {
+      "tr": "FİRAR",
+      "en": ""
+    },
+    "355": {
+      "tr": "1475 SAYILI İŞ KANUNA TABİ GÖREVE GEÇİŞ",
+      "en": ""
+    },
+    "357": {
+      "tr": "2547 S.K. GEÇ. 59 MD. UYARINCA AYLIKSIZ İZİNLİ.",
+      "en": ""
+    },
+    "373": {
+      "tr": "657 S.K. 77. MD. GEREĞİ AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "414": {
+      "tr": "399 S.K.H.K. 22. MD. GEREĞİ MAZERET (AYLIKSIZ) İZİNİNE AYRILDI",
+      "en": ""
+    },
+    "421": {
+      "tr": "GREV NEDENİYLE AYRILIŞ",
+      "en": ""
+    },
+    "465": {
+      "tr": "2547 S.K. 39.MD. UYARINCA AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "467": {
+      "tr": "BAŞARISIZ İLİŞİĞİ KESİLDİ (LİSANSÜSTÜ EĞİTİMDE)",
+      "en": ""
+    },
+    "468": {
+      "tr": "İLİŞİĞİ KESİLDİ (YÜKSEK LİSANS EĞİTİMİNİ BAŞARILI TAMAMLADI)",
+      "en": ""
+    },
+    "469": {
+      "tr": "İLİŞİĞİ KESİLDİ (DOKTORA EĞİTİMİNİ BAŞARILI TAMAMLADI)",
+      "en": ""
+    },
+    "470": {
+      "tr": "İLİŞİĞİ KESİLDİ (UZMANLIK EĞİTİMİNİ BAŞARILI TAMAMLADI)",
+      "en": ""
+    },
+    "488": {
+      "tr": "ATANMA ONAYININ İPTALİ",
+      "en": ""
+    },
+    "490": {
+      "tr": "İSTİFA (ASKERLİK NEDENİYLE)",
+      "en": ""
+    },
+    "495": {
+      "tr": "657 S.K. 72. MD. GEREĞİ AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "499": {
+      "tr": "EMEKLİLİK (İSTİFA)",
+      "en": ""
+    },
+    "526": {
+      "tr": "BELEDİYE BAŞKANLIĞI GÖREV SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "527": {
+      "tr": "MİLLETVEKİLLİĞİ GÖREV SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "540": {
+      "tr": "4502 S.K. İŞ MEVZUATINA GEÇTİ 506 S.K. TABİ OLDU",
+      "en": ""
+    },
+    "555": {
+      "tr": "657 S.K. 98/C FIK. GEREĞİNCE MEMURLUKTAN ÇEKİLME",
+      "en": ""
+    },
+    "619": {
+      "tr": "399 S.K.H.K. 18. MD. GEREĞİNCE SÖZLEŞMESİ FESH",
+      "en": ""
+    },
+    "628": {
+      "tr": "TC. MERKEZ BANKASI MEMUR YÖNET. GÖRE AYLIKSIZ İZİNE AYRILDI",
+      "en": ""
+    },
+    "697": {
+      "tr": "RÜTBE KIDEMİ ONANMADI (SÖZLEŞME YENİLENMEDİ) (4678 S.K. 12-13. MD.)",
+      "en": ""
+    },
+    "717": {
+      "tr": "YÜKSELEMEDİ (SÖZLEŞME YENİLENMEDİ) (4678 S.K. 12-13. MD)",
+      "en": ""
+    },
+    "746": {
+      "tr": "KADEME İLERLEMESİ YAPILAMADI (SÖZLEŞME YENİLENMEDİ)(4678 S.K. 12-13. MD.)",
+      "en": ""
+    },
+    "749": {
+      "tr": "657 S.K. 125-E (DEVLET MEMURLUĞUNDAN ÇIKARILMA)",
+      "en": ""
+    },
+    "750": {
+      "tr": "657 S.K. 57 (ADAYLIK SÜRESİ SONUNDA BAŞARISIZLIK)",
+      "en": ""
+    },
+    "751": {
+      "tr": "657 S.K. 94 (ÇEKİLME-25 YIL ÜSTÜ)",
+      "en": ""
+    },
+    "752": {
+      "tr": "EMEKLİLİK (AÇIKTAN MAHKEME KARARI TSK'DAN ÇIKARMA)(5434 39/E FIK.)",
+      "en": ""
+    },
+    "753": {
+      "tr": "EMEKLİLİK (AÇIKTAN RESEN)",
+      "en": ""
+    },
+    "755": {
+      "tr": "EMEKLİLİK (KADROSUZLUK TAZMİNATINA HAK KAZANAN) (TSK. PER. K. 8 VE 926 GEÇ 30. MD)",
+      "en": ""
+    },
+    "756": {
+      "tr": "EMEKLİLİK (KADROSUZLUK) (926 S.K. 50/A MD.)",
+      "en": ""
+    },
+    "757": {
+      "tr": "EMEKLİLİK (SEÇİM-MAHALLİ İDARELER) (926 S.K. 8. MD.)",
+      "en": ""
+    },
+    "758": {
+      "tr": "EMEKLİLİK (SEÇİM-MİLLETVEKİLİ) (926 S.K. 8. MD.)",
+      "en": ""
+    },
+    "759": {
+      "tr": "EMEKLİLİK (YETERSİZLİK) (926 S.K. 50/B VE 94/A FIK.)",
+      "en": ""
+    },
+    "760": {
+      "tr": "EMEKLİLİK (SEÇİM MAHALLİ İDARELER KADROSUZLUK) (926 S.K. 8. VE GEÇ. 30. MD.)",
+      "en": ""
+    },
+    "761": {
+      "tr": "EMEKLİLİK (SEÇİM MİLLETVEKİLİ KADROSUZLUK) (926 S.K. 8. VE GEÇ. 30. MD.)",
+      "en": ""
+    },
+    "762": {
+      "tr": "EMEKLİLİK YETERSİZLİK/HAKİM (926 S.K. 50/B FIK.)",
+      "en": ""
+    },
+    "763": {
+      "tr": "İSTİFA (25 YIL ÜSTÜ) (926 S.K. 116. MD.)",
+      "en": ""
+    },
+    "764": {
+      "tr": "İSTİFA (İSTEK) (926 S.K. 116. MD.)",
+      "en": ""
+    },
+    "765": {
+      "tr": "İSTİFA (DENEME SONU-926/14)",
+      "en": ""
+    },
+    "766": {
+      "tr": "İSTİFA (DENEME SONU 926/14 HAKİM)",
+      "en": ""
+    },
+    "767": {
+      "tr": "İSTİFA (DENEME SONU-926/68)",
+      "en": ""
+    },
+    "768": {
+      "tr": "İSTİFA (RESEN) (926 S.K. 68. MD.)",
+      "en": ""
+    },
+    "769": {
+      "tr": "İSTİFA (SEÇİM-MAHALLİ İDARELER 25 YIL ÜSTÜ) (926 S.K. 116. MD)",
+      "en": ""
+    },
+    "770": {
+      "tr": "İSTİFA (SEÇİM-MAHALLİ İDARELER) (926 S.K. 116. MD)",
+      "en": ""
+    },
+    "771": {
+      "tr": "İSTİFA (SEÇİM-MİLLETVEKİLİ 25 YIL ÜSTÜ) (926 S.K. 116. MD)",
+      "en": ""
+    },
+    "772": {
+      "tr": "İSTİFA (SEÇİM-MİLLETVEKİLİ) (926 S.K. 116. MD)",
+      "en": ""
+    },
+    "773": {
+      "tr": "İSTİFA (YABANCI UYRUKLU İLE EVLİLİK) (926 S.K. 112/A . FIK.)",
+      "en": ""
+    },
+    "774": {
+      "tr": "K.K.K. KARARI (DİSİPLİNSİZ/HAKİM) (926 S.K. 50/C FIK.)",
+      "en": ""
+    },
+    "775": {
+      "tr": "K.K.K. KARARI (DİSİPLİNSİZ) (926 S.K. 50/C FIK.)",
+      "en": ""
+    },
+    "776": {
+      "tr": "K.K.K. KARARI (FİRAR) (926 S.K. 50/C FIK.)",
+      "en": ""
+    },
+    "777": {
+      "tr": "MAHKEME KARARI (TSKDAN ÇIKARMA BELİRTİLMEMİŞ) (1632 S.K. 30. MD. VE 5510 44.MD 2. FIK)",
+      "en": ""
+    },
+    "778": {
+      "tr": "MAHKEME KARARI (TSKDAN ÇIKARMA BELİRTİLMEMİŞ/HAKİM)(1632 S.K. 30. MD. VE 5510 44.MD 2. FIK)",
+      "en": ""
+    },
+    "779": {
+      "tr": "MAHKEME KARARI (TSK'DAN ÇIKARMA BELİRTİLMİŞ)(1632 S.K. 30. MD. VE 5510 44.MD 2. FIK)",
+      "en": ""
+    },
+    "780": {
+      "tr": "MAHKEME KARARI (TSKDAN ÇIKARMA BELİRTİLMİŞ/HAKİM)(1632 S.K. 30. MD. VE 5510 44.MD 2. FIK)",
+      "en": ""
+    },
+    "781": {
+      "tr": "EMEKLİLİK (MALUL 5510 S.K VAZİFE 1'İNCİ DERECE SINIFI GÖREVİ YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "782": {
+      "tr": "MALUL (5510 S.K VAZİFE 1'İNCİ DERECE TSK'DA GÖREV YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "783": {
+      "tr": "MALUL (5510 S.K.VAZİFE 2'NCİ DERECE SINIFI GÖREVİ YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "784": {
+      "tr": "MALUL (5510 S.K.VAZİFE 2'NCİ DERECE TSK'DA GÖREV YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "785": {
+      "tr": "MALUL (5510 S.K.VAZİFE 3'ÜNCÜ DERECE SINIFI GÖREVİ YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "786": {
+      "tr": "MALUL (5510 S.K.VAZİFE 3'ÜNCÜ DERECE TSK'DA GÖREV YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "787": {
+      "tr": "MALUL (5510 S.K.VAZİFE 4'ÜNCÜ DERECE TSK'DA GÖREV YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "788": {
+      "tr": "MALUL (5510 S.K.VAZİFE 5'İNCİ DERECE TSK'DA GÖREV YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "789": {
+      "tr": "MALUL (5510 S.K.VAZİFE 6'NCI DERECE TSK'DA GÖREV YAPAMAZ) (5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "790": {
+      "tr": "MALUL (ASKERLİĞE ELVERİŞLİ DEĞİLDİR) (5434 S.K. 44. MD.)",
+      "en": ""
+    },
+    "791": {
+      "tr": "MALUL (HARP MALÜLÜ-TSK'DA GÖREV YAPAMAZ) (5434 S.K. 64. MD.)",
+      "en": ""
+    },
+    "792": {
+      "tr": "MALUL (SINIFI GÖREVİ YAPAMAZ) (5434 S.K. 44. MD.)",
+      "en": ""
+    },
+    "793": {
+      "tr": "MALUL (TSK'DA GÖREV YAPAMAZ) (5434 S.K. 44. MD.)",
+      "en": ""
+    },
+    "794": {
+      "tr": "MALUL (VAZİFE 1'İNCİ DERECE SINIFI GÖREVİ YAPAMAZ) (5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "795": {
+      "tr": "MALUL (VAZİFE 1'İNCİ DERECE TSK'DA GÖREV YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "796": {
+      "tr": "MALUL (VAZİFE 2'NCİ DERECE SINIFI GÖREVİ YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "797": {
+      "tr": "MALUL (VAZİFE 2'NCİ DERECE TSK'DA GÖREV YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "798": {
+      "tr": "MALUL (VAZİFE 3'ÜNCÜ DERECE SINIFI GÖREVİ YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "799": {
+      "tr": "MALUL (VAZİFE 3'ÜNCÜ DERECE TSK'DA GÖREV YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "800": {
+      "tr": "MALUL (VAZİFE 4'ÜNCÜ DERECE SINIFI GÖREVİ YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "801": {
+      "tr": "MALUL (VAZİFE 4'ÜNCÜ DERECE TSK'DA GÖREV YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "802": {
+      "tr": "MALUL (VAZİFE 5'İNCİ DERECE SINIFI GÖREVİ YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "803": {
+      "tr": "MALUL (VAZİFE 5'İNCİ DERECE TSK'DA GÖREV YAPAMAZ) (5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "804": {
+      "tr": "MALUL (VAZİFE 6'NCI DERECE SINIFI GÖREVİ YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "805": {
+      "tr": "MALUL (VAZİFE 6'NCI DERECE TSK'DA GÖREV YAPAMAZ)(5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "806": {
+      "tr": "MALUL (VAZİFE-ASKERLİĞE ELVERİŞLİ DEĞİLDİR) (5434 S.K. 45. MD.)",
+      "en": ""
+    },
+    "808": {
+      "tr": "SAĞLIK NEDENİYLE AYIRMA (TSK'DA GÖREV YAPAMAZ) (926 S.K. 128/C FIK.)",
+      "en": ""
+    },
+    "809": {
+      "tr": "SÖZLEŞME FESHİ (1 YILDA DİSİPLİN MAH.EN 30 GÜNDEN FAZLA CEZA)(4678 S.K. 13. MD. )",
+      "en": ""
+    },
+    "810": {
+      "tr": "SÖZLEŞME FESHİ (25 YIL ÜSTÜ) (4678 S.K. 12/2. FIK.)",
+      "en": ""
+    },
+    "811": {
+      "tr": "SÖZLEŞME FESHİ (DİSİPLİNSİZLİK) (926 S.K. 50/C FIK.VE 4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "812": {
+      "tr": "SÖZLEŞME FESHİ (MAH. KARARI-TSK'DAN ÇIKARMA)(1632S.K. 30.MD. VE 4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "813": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-1 YILDA 3 AYDAN FAZLA HAVA DEĞİŞİMİ) (4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "814": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-SINIFI GÖREVİ YAPAMAZ) (4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "815": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-TSK'DA GÖREV YAPAMAZ)(4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "816": {
+      "tr": "SÖZLEŞME FESHİ (SINIF OKULUNDA EĞİTİM VE ÖĞRETİMDE BAŞARISIZLIK)(4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "817": {
+      "tr": "SÖZLEŞME FESHİ (SÖZLEŞMELİ PERSONEL OLMA ŞARTINI KAYBETME)(4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "818": {
+      "tr": "SÖZLEŞME FESHİ (TSK'DAN ÇIKARILMAYI GEREKTİREN MAHKUMİYET)(4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "819": {
+      "tr": "SÖZLEŞME FESHİ (TÜRK VATANDAŞLIĞINDAN ÇIKARILMA/KAYBETME)(4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "820": {
+      "tr": "SÖZLEŞME FESHİ (YABANCI UYRUKLU İLE EVLİLİK)(4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "821": {
+      "tr": "SÖZLEŞME FESHİ (YAŞ HADDİ) (5434 S.K. 39/C, 40 VE 105. MD.)",
+      "en": ""
+    },
+    "822": {
+      "tr": "SÖZLEŞME FESHİ (YAŞ KARARI-DİSİPLİNSİZ) (926 S.K. 50/C FIK. VE 4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "823": {
+      "tr": "SÖZLEŞME FESHİ (YAŞ KARARI-FİRAR) (926 S.K. 50/C VE 94/B FIK. VE 4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "824": {
+      "tr": "SÖZLEŞME FESHİ (YAŞ KARARI-İRTİCA) (926 S.K. 50/C FIK. VE 4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "825": {
+      "tr": "SÖZLEŞME FESHİ (YAŞ KARARI-YIKICI/BÖLÜCÜ) (926 S.K. 50/C FIK. VE 4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "826": {
+      "tr": "SÖZLEŞME FESHİ (YENİLEMEME-İDARE) (4678 S.K. 12/2. FIK. VE 24738 S. YÖN. 14.MD.)",
+      "en": ""
+    },
+    "827": {
+      "tr": "SÖZLEŞME FESHİ (YENİLEMEME-ŞAHIS) (4678 S.K. 12/2. FIK. )",
+      "en": ""
+    },
+    "828": {
+      "tr": "SÖZLEŞME FESHİ (YETERSİZLİK) (4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "829": {
+      "tr": "SÖZLEŞME FESHİ (YIKICI/BÖLÜCÜ FAALİYET) (926 S.K. 50/C VE 94/B FIK. VE 4678 S.K. 13. MD.)",
+      "en": ""
+    },
+    "830": {
+      "tr": "VEFAT (3713 SAYILI KANUN)",
+      "en": ""
+    },
+    "831": {
+      "tr": "VEFAT (GAZİ)",
+      "en": ""
+    },
+    "832": {
+      "tr": "VEFAT (KAZA)",
+      "en": ""
+    },
+    "833": {
+      "tr": "VEFAT (TRAFİK KAZASI)",
+      "en": ""
+    },
+    "834": {
+      "tr": "YAŞ KARARI (DİSİPLİNSİZ) (926 50/C-94/B, 5434 S.K. 39/E FIK. VE 5510 44/2. FIK)",
+      "en": ""
+    },
+    "835": {
+      "tr": "YAŞ KARARI (FİRAR) (926 50/C-94/B, 5434 S.K. 39/E FIK. VE 5510 44/2. FIK)",
+      "en": ""
+    },
+    "836": {
+      "tr": "YAŞ KARARI (İRTİCA) (926 50/C-94/B, 5434 S.K. 39/E FIK. VE 5510 44/2. FIK)",
+      "en": ""
+    },
+    "837": {
+      "tr": "YAŞ KARARI (YIKICI/BÖLÜCÜ) (926 50/C-94/B, 5434 S.K. 39/E FIK. VE 5510 44/2. FIK)",
+      "en": ""
+    },
+    "838": {
+      "tr": "YAŞ KARARI (DİSİPLİNSİZ/HAKİM)(926 50/C-94/B, 5434 S.K. 39/E FIK. VE 5510 44/2. FIK)",
+      "en": ""
+    },
+    "839": {
+      "tr": "926 S.K. GEÇİCİ 32. MD.",
+      "en": ""
+    },
+    "840": {
+      "tr": "EMEKLİLİK (3269 S.K. 5. MD.)",
+      "en": ""
+    },
+    "842": {
+      "tr": "MALUL (3713 SAYILI KANUN)",
+      "en": ""
+    },
+    "843": {
+      "tr": "MALUL (5434/6741)",
+      "en": ""
+    },
+    "852": {
+      "tr": "NASIP İPTAL",
+      "en": ""
+    },
+    "870": {
+      "tr": "KENDİ İSTEĞİ İLE ASKERİ ÖĞRENCİLİKTEN AYRILMA",
+      "en": ""
+    },
+    "871": {
+      "tr": "SAĞLIK SEBEBİ İLE ASKERİ ÖĞRENCİLİKTEN AYIRMA",
+      "en": ""
+    },
+    "872": {
+      "tr": "AKADEMİK BAŞARISIZLIK SEBEBİ İLE ASKERİ ÖĞRENCİLİKTEN AYIRMA",
+      "en": ""
+    },
+    "873": {
+      "tr": "DİSİPLİNSİZLİK SEBEBİ İLE ASKERİ ÖĞRENCİLİKTEN AYIRMA",
+      "en": ""
+    },
+    "874": {
+      "tr": "MAHKEME KARARI İLE ASKERİ ÖĞRENCİLİKTEN AYIRMA",
+      "en": ""
+    },
+    "875": {
+      "tr": "DEVRE KAYBI NEDENİYLE AYRILIŞ",
+      "en": ""
+    },
+    "930": {
+      "tr": "VEKİL EBE / HEMŞİRELİK SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "932": {
+      "tr": "VEKİL İMAM-HATİPLİK SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "934": {
+      "tr": "VEKİL MİMARLIK SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "936": {
+      "tr": "VEKİL MÜHENDİSLİK SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "1021": {
+      "tr": "VEKİL VETERİNER HEKİM SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "1031": {
+      "tr": "4684 S.K. 2. MD. GEREĞİ AYRILIŞ (İSTİFA)",
+      "en": ""
+    },
+    "1032": {
+      "tr": "DİSİPLİN KURULU (4603 S.K. TABİ) KARARI GEREĞİNCE GÖREVİNE SON VERİLDİ",
+      "en": ""
+    },
+    "1033": {
+      "tr": "4857 S.K. 25. MD. 1. FIKR. GEREĞİ İŞ AKDİ FESH (TAZMİNATLI) (ÖZELLEŞTİRME KAP.)",
+      "en": ""
+    },
+    "1034": {
+      "tr": "4857 S.K. 25. MD. 2. FIKR. GEREĞİ İŞ AKDİ FESH (ÖZELLEŞTİRME KAP.)",
+      "en": ""
+    },
+    "1035": {
+      "tr": "1475 S.K. 14. MD. EVLİLİK NEDENİYLE İSTİFA (ÖZELLEŞTİRME KAP.)",
+      "en": ""
+    },
+    "1036": {
+      "tr": "1475 S.K. 14. MD. ASKERLİK NEDENİYLE İSTİFA (ÖZELLEŞTİRME KAP.)",
+      "en": ""
+    },
+    "1037": {
+      "tr": "4857 S.K. 22. MD. GEREĞİ İŞ AKDİ FESH (ÖZELLEŞTİRME KAP.)",
+      "en": ""
+    },
+    "1038": {
+      "tr": "SÖZLEŞME FESHİ TAZMİNATLI (ÖZELLEŞTİRME KAP. )",
+      "en": ""
+    },
+    "1039": {
+      "tr": "SÖZLEŞME FESHİ TAZMİNATSIZ (ÖZELLEŞTİRME KAP. )",
+      "en": ""
+    },
+    "1052": {
+      "tr": "ASKERİ ÖĞRENCİLİKTEN MEZUN",
+      "en": ""
+    },
+    "1077": {
+      "tr": "GÖREVDEN UZAKLAŞTIRILDI (399 S.K.H.K. 53. MD. GEREĞİ)",
+      "en": ""
+    },
+    "1130": {
+      "tr": "VEFAT",
+      "en": ""
+    },
+    "1140": {
+      "tr": "EMEKLİLİK (3774 S.K. GÖRE)",
+      "en": ""
+    },
+    "1191": {
+      "tr": "GÖREVDEN ÇEKİLMİŞ SAYILMA (657 S.K. 63. MD.)",
+      "en": ""
+    },
+    "1192": {
+      "tr": "657 S.K. 120. MD. (OLUMSUZ SİCİL) NEDENİYLE İLİŞİK KESİLMESİ",
+      "en": ""
+    },
+    "1193": {
+      "tr": "GÖREVDEN UZAKLAŞTIRILDI (657 S.K. 137. MD.)",
+      "en": ""
+    },
+    "1194": {
+      "tr": "GÖREVDEN UZAKLAŞTIRILDI (657 S.K. 140. MD.)",
+      "en": ""
+    },
+    "1201": {
+      "tr": "657 S.K. 94. MD. UYARINCA ÇEKİLME(İSTİFA)",
+      "en": ""
+    },
+    "1207": {
+      "tr": "İL DAİMİ ENCÜMEN ÜYELİĞİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "1247": {
+      "tr": "ASKERLİK NEDENİYLE AYLIKSIZ İZİNE AYRILDI (4857 S.K. GÖRE)",
+      "en": ""
+    },
+    "1248": {
+      "tr": "AYLIKSIZ İZİNE AYRILDI (4857 S.K. GÖRE)",
+      "en": ""
+    },
+    "1269": {
+      "tr": "İLİŞİĞİ KESİLDİ (MEZUN OLDUĞUNDAN)",
+      "en": ""
+    },
+    "1398": {
+      "tr": "2802 S.K. 51. MADDESİ UYARINCA ÇEKİLME",
+      "en": ""
+    },
+    "1430": {
+      "tr": "2659 S.K. UYGULAMA YÖNETMELİĞİNİN 22 MD.İLİŞİK KESME",
+      "en": ""
+    },
+    "1431": {
+      "tr": "MAHKEME KARARIYLA KADROLUDAN SÖZLEŞMELİYE (657 S.K. 4/B) GEÇİŞ",
+      "en": ""
+    },
+    "1465": {
+      "tr": "TSK'DEN İLİŞİK KESME (YETERSİZLİK)(3466 S.K. 13. MD. VE AT. VE SİC.YÖN. 68.  MD.)",
+      "en": ""
+    },
+    "1466": {
+      "tr": "TSK'DEN İLİŞİK KESME (YETERSİZLİK)(3466 S.K. 13. MD. VE AT. VE SİC.YÖN. 69.  MD.)",
+      "en": ""
+    },
+    "1467": {
+      "tr": "TSK'DEN İLİŞİK KESME (MAHKEME KARARI)  (3466 S.K. 16. MD.)",
+      "en": ""
+    },
+    "1468": {
+      "tr": "J.GN.K.KARARI (DİSİPLİNSİZLİK)  (3466 S.K. 15. MD. VE UZM.J.ATAMA VE SİC.YÖN.70,71. MD.)",
+      "en": ""
+    },
+    "1469": {
+      "tr": "J.GN.K.KARARI (AHLAKİ DURUM)  (3466 S.K. 15. MD. VE UZM.J.ATAMA VE SİC.YÖN.70,71. MD.)",
+      "en": ""
+    },
+    "1470": {
+      "tr": "J.GN.K.KARARI (FİRAR)",
+      "en": ""
+    },
+    "1471": {
+      "tr": "GÖREV BAŞI EĞİTİMİNDE BAŞARISIZLIK (3466 S.K.  16/A VE UZM.J.ATAMA VE SİC.YÖN.83. MD.)",
+      "en": ""
+    },
+    "1476": {
+      "tr": "JAN. GENEL KOMUTANLIĞI KARARI (DİSİPLİNSİZLİK)(926 S.K. 50/C FIK.)",
+      "en": ""
+    },
+    "1477": {
+      "tr": "JAN. GENEL KOMUTANLIĞI KARARI (FİRAR)(926 S.K. 50/C FIK.)",
+      "en": ""
+    },
+    "1521": {
+      "tr": "GÖREVDEN ÇEKİLMİŞ SAYMA (DİSİPLİN SORUŞTURMASI SONUCU)",
+      "en": ""
+    },
+    "1523": {
+      "tr": "İLİŞİK KESME (TIPTA UZMANLIK EĞTİMİNİ TAMAMLAYAMAMASI)",
+      "en": ""
+    },
+    "1543": {
+      "tr": "EMEKLİLİK (5510 S.K. GEÇ. 4. MD. GÖRE SAKATLIK)",
+      "en": ""
+    },
+    "1561": {
+      "tr": "MALİYE MESLEK LİSESİ YÖN. 6. MD. GEREĞİ MECBURİ HİZMETİN ERTELENMESİ",
+      "en": ""
+    },
+    "1562": {
+      "tr": "MECBURİ HİZMETİN ERTELENMESİ",
+      "en": ""
+    },
+    "1563": {
+      "tr": "HİZMET BİTİMİ GÖREVİNDEN AYRILMIŞTIR",
+      "en": ""
+    },
+    "1597": {
+      "tr": "1416 S.K. MECBURİ HİZMET YÜKÜMLÜLÜĞÜNÜN TÜBİTAK'A DEVRİ NED. İLİŞİĞİ KESİLMİŞTİR.",
+      "en": ""
+    },
+    "1598": {
+      "tr": "5449 S.K. 18. MD. (KALKINMA AJANSLARI) GEREĞİNCE GÖREVDEN AYRILIŞ",
+      "en": ""
+    },
+    "1616": {
+      "tr": "663 S.K.H.K. GEÇ 11. MD. GEREĞİ VEKİLLİKTEN 657 S.K. 4/B GEÇİŞ",
+      "en": ""
+    },
+    "1623": {
+      "tr": "3096 S.K. UYARINCA DEVİR  NEDENİYLE İLİŞİĞİ KESİLMİŞTİR (ÖZELLEŞTİRME)",
+      "en": ""
+    },
+    "1624": {
+      "tr": "4046 S.K. UYARINCA DEVİR NEDENİYLE İLİŞİĞİ KESİLMİŞTİR (ÖZELLEŞTİRME)   ",
+      "en": ""
+    },
+    "1662": {
+      "tr": "4924 S.K. 7. MD. GEREĞİ SÖZLEŞME FESHİ",
+      "en": ""
+    },
+    "1675": {
+      "tr": "USULÜNE UYGUN OLMAYAN İSTİFA",
+      "en": ""
+    },
+    "1690": {
+      "tr": "İLİŞİĞİ KESİLDİ (2547/50-d UYARINCA)",
+      "en": ""
+    },
+    "1724": {
+      "tr": "SÖZLEŞMESİ İPTAL EDİLDİ",
+      "en": ""
+    },
+    "1747": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-1 YILDA 3 AYDAN FAZLA HAVA DEĞ.)(3269 S.K. MD.10 VE UZ.ERB YNT. 17.MD.)  ",
+      "en": ""
+    },
+    "1748": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK)(3269 S.K.5.MD. VE UZ.ERBAŞ YNT.12.MD.) ",
+      "en": ""
+    },
+    "1749": {
+      "tr": "SÖZLEŞME FESHİ (YENİLEMEME-ŞAHIS)(3269 S.K.12.MD.(UZ.ERBAŞ YNT.13.MD.) ",
+      "en": ""
+    },
+    "1750": {
+      "tr": "SÖZLEŞME FESHİ (YENİLEMEME-İDARE)(3269 S.K.12.MD.(UZ.ERBAŞ YNT.13.MD.) ",
+      "en": ""
+    },
+    "1751": {
+      "tr": "SÖZLEŞME FESHİ (ŞAHIS-KADRO GÖREV YER KALD./SINIF DEĞ.)(3269 S.K.16.MD.UZ.ERBAŞ YNT.19.MD.)",
+      "en": ""
+    },
+    "1809": {
+      "tr": "SÖZLEŞME FESHİ (YAŞ HADDİ)(3269 S.K. 5. MD. VE UZ.ERBAŞ YNT. 12. MD.)",
+      "en": ""
+    },
+    "1815": {
+      "tr": "ÖĞRETİM ÜYESİ YETİŞTİRME PROGRAMINA İLİŞKİN USUL VE ESASLAR 7. MD. 5. BENDİ GEREĞİ İLİŞİK KESME",
+      "en": ""
+    },
+    "1824": {
+      "tr": "399 S.K.H.K. 13. MD. GEREĞİNCE GÖREVİNDEN ÇEKİLME",
+      "en": ""
+    },
+    "1830": {
+      "tr": "ER ÖĞRETMEN OLARAK ASKERLİĞİNİ YAPMAK ÜZERE GÖREVDEN AYRILIŞ",
+      "en": ""
+    },
+    "1832": {
+      "tr": "YEDEK SUBAY ÖĞRETMEN OLARAK ASKERLİĞİNİ YAPMAK ÜZERE GÖREVDEN AYRILIŞ",
+      "en": ""
+    },
+    "1848": {
+      "tr": "TIPTA VE DİŞ HEKİMLİĞİNDE UZMANLIK EĞİTİMİ YÖN. 27.MD. 3. FIK. UYA. AYLIKSIZ İZNE AYRILDI",
+      "en": ""
+    },
+    "1886": {
+      "tr": "ÖN SÖZLEŞME FESHİ (ASKERİ EĞİTİMİN 1/3ÜNE KATILMAMAK) (6191 S.K. 6. MD.)",
+      "en": ""
+    },
+    "1903": {
+      "tr": "VEKİL ŞEHİR PLANCISI SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "1905": {
+      "tr": "VEKİL KİMYAGERLİK SÜRESİNİN SONA ERMESİ",
+      "en": ""
+    },
+    "1934": {
+      "tr": "İLİŞİĞİ KESİLDİ (ÖYP USUL VE ESASLARIN 6. MD. 4. BENDİ GEREĞİ)",
+      "en": ""
+    },
+    "1969": {
+      "tr": "PTT A.Ş. İDARİ HİZMET SÖZ. PERSONEL STATÜSÜNE GEÇTİĞİNDEN. 5510 SK. 4/1-a SİGORTALILIĞINA GEÇEN",
+      "en": ""
+    },
+    "1971": {
+      "tr": "İLİŞİĞİ KESİLDİ (ÖYP) (YÖK KARARIYLA)",
+      "en": ""
+    },
+    "1974": {
+      "tr": "ÖN SÖZLEŞME FESHİ (ASKERÎ EĞİTİMDE BAŞARISIZ OLMA)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1975": {
+      "tr": "ÖN SÖZLEŞME FESHİ (ASKERÎ EĞİTİMDE DİSİPLİNSİZ OLMA)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1976": {
+      "tr": "ÖN SÖZLEŞME FESHİ (SAĞLIK-TSK'DA GÖREV YAPAMAZ)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1977": {
+      "tr": "ÖN SÖZLEŞME FESHİ (SAĞLIK-SINIFI GÖREVİNİ YAPAMAZ)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1978": {
+      "tr": "ÖN SÖZLEŞME FESHİ (SÖZLEŞMELİ ER ADAYI OLMA ŞARTINI KAYBETMEK)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1979": {
+      "tr": "ÖN SÖZLEŞME FESHİ (KENDİ İSTEĞİYLE AYRILMA)(6191 S.K.)",
+      "en": ""
+    },
+    "1980": {
+      "tr": "SÖZLEŞME FESHİ (DİSİPLİNSİZLİK VE AHLÂKİ DURUM)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1981": {
+      "tr": "SÖZLEŞME FESHİ (YETERSİZLİK VE GÖREVDE BAŞARISIZ OLMA)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1982": {
+      "tr": "SÖZLEŞME FESHİ (DİSİPLİNSİZLİK-DİSİPLİN CEZA SAYISI)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1983": {
+      "tr": "SÖZLEŞME FESHİ (YASA DIŞI SİYASİ,YIKICI VE BÖLÜCÜ FAALİYETLERDE BULUNMAK)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1984": {
+      "tr": "SÖZLEŞME FESHİ (SÖZLEŞMELİ ER OLMA ŞARTINI KAYBETMEK)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1985": {
+      "tr": "SÖZLEŞME FESHİ (TÜRK VATANDAŞLIĞINI KAYBETMEK)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1986": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-TSK'DA GÖREV YAPAMAZ)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1987": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-SINIFI GÖREVİNİ YAPAMAZ)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1988": {
+      "tr": "SÖZLEŞME FESHİ (90 GÜNDEN FAZLA TUTUKLU KALMAK)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1989": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-3 AYDAN FAZLA HAVA DEĞİŞİMİ)(6191 S.K. 6.MD.)",
+      "en": ""
+    },
+    "1990": {
+      "tr": "SÖZLEŞME FESHİ (SÖZLEŞME YENİLEMEME-KENDİ İSTEĞİYLE)(6191 S.K. 5.MD.)",
+      "en": ""
+    },
+    "1991": {
+      "tr": "SÖZLEŞME FESHİ (SÖZLEŞME YENİLEMEME-İDARE KARARIYLA)(6191 S.K.)",
+      "en": ""
+    },
+    "2030": {
+      "tr": "HV.K.K. KARARI (DİSİPLİNSİZ. 926 S.K. 50/C FIK.)",
+      "en": ""
+    },
+    "2039": {
+      "tr": "SÖZLEŞME FESHİ (DİSİPLİNSİZLİK) (3269 S.K. 12.MD. UZM.ERB.YNT:13.MD.)",
+      "en": ""
+    },
+    "2040": {
+      "tr": "SÖZLEŞME FESHİ (YETERSİZLİK) (3269 S.K. 12.MD.UZM.ERB.YNT:13.MD.)",
+      "en": ""
+    },
+    "2041": {
+      "tr": "SÖZLEŞME FESHİ (ŞAHIS - İLK 5 AYLIK DÖNEMDE KENDİ İSTEĞİ ) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2042": {
+      "tr": "SÖZLEŞME FESHİ (YABANCI UYRUKLU İLE EVLİLİK) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2043": {
+      "tr": "SÖZLEŞME FESHİ (VATANDAŞLIK HAKKINI KAYBETME/ÇIKARTILMA) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2044": {
+      "tr": "SÖZLEŞME FESHİ (DİSİPLİN -AHLÂKÎ NEDENLER) (3269 S.K. 16.MD.)",
+      "en": ""
+    },
+    "2045": {
+      "tr": "SÖZLEŞME FESHİ (1 YILDA MAHK. 30 GÜNDEN FAZLA CEZA) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2046": {
+      "tr": "SÖZLEŞME FESHİ (TAKSİRLİ SUÇ- MAHK. 6 AYDAN FAZLA CEZA) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2047": {
+      "tr": "SÖZLEŞME FESHİ (DİSİPLİNSİZLİK-DİSİPLİN CEZA SAYISI) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2048": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-SINIFI GÖREVİNİ YAPAMAZ) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2049": {
+      "tr": "SÖZLEŞME FESHİ (SAĞLIK-TSKDA GÖREV YAPAMAZ) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2050": {
+      "tr": "SÖZLEŞME FESHİ (UZM.ERB.OLMA ŞARTINI KAYBETME) (UZM.ERB.YNT.15.MD.)",
+      "en": ""
+    },
+    "2051": {
+      "tr": "SÖZLEŞME FESHİ (7 GÜN MAZERETSİZ GÖREVE GELMEME ) (UZM.ERB.YNT.13.MD.)",
+      "en": ""
+    },
+    "2052": {
+      "tr": "SÖZLEŞME FESHİ (KURS VE EĞİTİMDE BAŞARISIZ OLMA) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2053": {
+      "tr": "SÖZLEŞME FESHİ (İLK 5 AYLIK DÖNEMDE İNTİBAK EDEMEME) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2054": {
+      "tr": "SÖZLEŞME FESHİ (SİCİLE BAĞLI KADEME İLERLEMESİ YAPILAMAMASI) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2055": {
+      "tr": "SÖZLEŞME FESHİ (3 AY VE ÜSTÜ KURS VEYA EĞİTİMDE BAŞARISIZLIK) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2056": {
+      "tr": "SÖZLEŞME FESHİ (GÖREVDE BAŞARISIZ OLMA) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2057": {
+      "tr": "SÖZLEŞME FESHİ (KENDİLERİNDEN İSTİFADE EDİLEMEME) (3269 S.K. 12.MD.)",
+      "en": ""
+    },
+    "2078": {
+      "tr": "MALUL (5510 S.K. VAZİFE 4'ÜNCÜ DERECE SINIFI GÖREVİ YAPAMAZ)(5510 S.K. 47.MD.)",
+      "en": ""
+    },
+    "2079": {
+      "tr": "MALUL (5510 S.K. VAZİFE 5'İNCİ DERECE SINIFI GÖREVİ YAPAMAZ)(5510 S.K. 47.MD.)",
+      "en": ""
+    },
+    "2080": {
+      "tr": "MALUL (5510 S.K. VAZİFE 6'NCI DERECE SINIFI GÖREVİ YAPAMAZ)(5510 S.K. 47.MD.",
+      "en": ""
+    },
+    "2117": {
+      "tr": "657 S.K. 63. MD GEREĞİ GÖREVE BAŞLAMADIĞINDAN MÜSTAFİ",
+      "en": ""
+    },
+    "2139": {
+      "tr": "İLİŞİĞİ KESİLDİ (ÖYP USUL VE ESASLARIN 7. MD. 4. BENDİ GEREĞİ)",
+      "en": ""
+    },
+    "2140": {
+      "tr": "İLİŞİĞİ KESİLDİ (ÖYP USUL VE ESASLARIN 9. MD. 6. BENDİ GEREĞİ)",
+      "en": ""
+    },
+    "2155": {
+      "tr": "657 S.K. 94. MD. UYARINCA ÇEKİLME (MÜSTAFİ SAYILMA)",
+      "en": ""
+    },
+    "2158": {
+      "tr": "MEMURİYETTEN SÜRELİ YOKSUN KILINMA/HAPİS",
+      "en": ""
+    },
+    "2160": {
+      "tr": "İLİŞİĞİ KESİLDİ (2547/50-a UYARINCA)",
+      "en": ""
+    },
+    "2180": {
+      "tr": "6356 S.K. 23. MD. GEREĞİNCE SENDİKA GÖREVİ NED. İŞ SÖZLEŞMESİ ASKIYA ALINMA",
+      "en": ""
+    },
+    "2186": {
+      "tr": "4628 S.K. 9. MD. 9. FIK. SON CÜMLESİ GER.2 YILLIK SÜRENİN SONA ERMESİ",
+      "en": ""
+    },
+    "2193": {
+      "tr": "SÖZLEŞME FESHİ (KENDİ İSTEĞİYLE)(6191 S.K. 5.MD.)",
+      "en": ""
+    },
+    "2194": {
+      "tr": "GÖREVDEN UZAKLAŞTIRILDI (5393 S.K. 47. MD.)",
+      "en": ""
+    },
+    "2196": {
+      "tr": "BELEDİYE BAŞKANININ GÖREVİNE SON VERİLDİ (5393 S.K. 44. MD. a FIK.)",
+      "en": ""
+    },
+    "2197": {
+      "tr": "BELEDİYE BAŞKANININ GÖREVİNE SON VERİLDİ (5393 S.K. 44. MD. b FIK.)",
+      "en": ""
+    },
+    "2198": {
+      "tr": "BELEDİYE BAŞKANININ GÖREVİNE SON VERİLDİ (5393 S.K. 44. MD. c FIK.)",
+      "en": ""
+    },
+    "2199": {
+      "tr": "BELEDİYE BAŞKANININ GÖREVİNE SON VERİLDİ (5393 S.K. 44. MD. d FIK.)",
+      "en": ""
+    },
+    "2228": {
+      "tr": "MALUL (HARP MALULÜ - SINIFI GÖREVİ YAPAMAZ)(5434 S.K. 64.MD. VE 5510 S.K. 47 MD.)",
+      "en": ""
+    },
+    "2232": {
+      "tr": "İLİŞİĞİ KESİLDİ (2547 S.K. 35. MD. 3. FIKRA UYARINCA)",
+      "en": ""
+    },
+    "2234": {
+      "tr": "MALUL (HARP MALULÜ - TSK'DA GÖREV YAPAMAZ)(5434 S.K. 64.MD. VE 5510 S.K. 47. MD.)",
+      "en": ""
+    },
+    "2235": {
+      "tr": "K.K.K. KARARI (DİSİPLİNSİZ)(926-50/C-94/B, 5434-39/E 5510- 44/2 FIK. 6413 S.K. MD. 11,13,20,21)",
+      "en": ""
+    },
+    "2236": {
+      "tr": "MALUL (SINIFI GÖREVİNİ YAPAMAZ)(5434 S.K. 44.MD. VE 5510 S.K. 26 MD.)",
+      "en": ""
+    },
+    "2237": {
+      "tr": "MALUL (TSK'DA GÖREV YAPAMAZ)(5434 S.K. 44.MD. VE 5510 S.K. 26 MD.)",
+      "en": ""
+    },
+    "2238": {
+      "tr": "EMEKLİLİK (5510 SAYILI GEÇİCİ 4. MD.)",
+      "en": ""
+    },
+    "2239": {
+      "tr": "EMEKLİLİK (AÇIKTAN MAH. KARARI TSK'DAN ÇIK.)(5434 39/E FIK. 1632 S.K. 30.MD. VE 5510 S.K. MD. 44/2)",
+      "en": ""
+    },
+    "2240": {
+      "tr": "EMEKLİLİK (KADROSUZLUK)(926 S.K. 49. MD. VE 50/A FIK.)",
+      "en": ""
+    },
+    "2248": {
+      "tr": "657 S.K. 6111 DEĞ. 108. MD. (E) FIK.AYLIKSIZ İZİN (AYLIKSIZ İZİNDE İKEN FARKLI NED. İZİN UZATILMA)",
+      "en": ""
+    },
+    "2284": {
+      "tr": "KENDİ İSTEĞİ İLE POLİS AKD./FYO E.G.M. ADINA OKUYAN ÖĞRENCİKTEN AYRILMA",
+      "en": ""
+    },
+    "2285": {
+      "tr": "POLİS AKD./FYO E.G.M. ADINA OKUYAN ÖĞRENCİKTEN AYRILMA (KURUMCA)",
+      "en": ""
+    },
+    "2292": {
+      "tr": "POLİS AKADEMİSİ/F.Y.O. DA E.G.M. ADINA OKUYAN ÖĞRENCİLİKTEN MEZUN",
+      "en": ""
+    },
+    "2293": {
+      "tr": "ASKERİ ÖĞRENCİLİKTEN AYIRMA (GÜVENLİK SORUŞTURMASI)",
+      "en": ""
+    },
+    "2295": {
+      "tr": "HV.K.K.KARARI (FİRAR)",
+      "en": ""
+    }
   }
 }
