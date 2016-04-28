@@ -170,6 +170,7 @@ class AbstractRole(Model):
     """
     id = field.Integer("ID No", index=True)
     name = field.String("İsim", index=True)
+    read_only = field.Boolean("Read Only")
 
     class Meta:
         app = 'Sistem'
