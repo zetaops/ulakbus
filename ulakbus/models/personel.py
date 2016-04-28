@@ -11,6 +11,7 @@ Bu modül Ulakbüs uygulaması için personel modelini ve  personel ile ilişkil
 from pyoko.lib.utils import lazy_property
 
 from pyoko import Model, field
+from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
 
 PERSONEL_TURU = [
@@ -73,18 +74,16 @@ class Personel(Model):
     kimlik_cuzdani_verilis_nedeni = field.String("Cüzdanın Veriliş Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
-    guncel_kazanilmis_hak_derece = field.Integer("Güncel Kazanılmış Hak Derece", index=True)
-    guncel_kazanilmis_hak_kademe = field.Integer("Güncel Kazanılmış Hak Kademe", index=True)
-    gorunen_kazanilmis_hak_derece = field.Integer("Görünen Kazanılmış Hak Derece", index=True)
-    gorunen_kazanilmis_hak_kademe = field.Integer("Görünen Kazanılmış Hak Kademe", index=True)
-    guncel_gorev_ayligi_derece = field.Integer("Güncel Görev Aylığı Derece", index=True)
-    guncel_gorev_ayligi_kademe = field.Integer("Güncel Görev Aylığı Kademe", index=True)
-    gorunen_gorev_ayligi_derece = field.Integer("Görünen Görev Aylığı Derece", index=True)
-    gorunen_gorev_ayligi_kademe = field.Integer("Görünen Görev Aylığı Kademe", index=True)
-    guncel_emekli_muktesebat_derece = field.Integer("Güncel Emekli Müktesebat Derece", index=True)
-    guncel_emekli_muktesebat_kademe = field.Integer("Güncel Emekli Müktesebat Kademe", index=True)
-    gorunen_emekli_muktesebat_derece = field.Integer("Görünen Emekli Müktesebat Derece", index=True)
-    gorunen_emekli_muktesebat_kademe = field.Integer("Görünen Emekli Müktesebat Kademe", index=True)
+
+    kazanilmis_hak_derece = field.Integer("Güncel Kazanılmış Hak Derece", index=True)
+    kazanilmis_hak_kademe = field.Integer("Güncel Kazanılmış Hak Kademe", index=True)
+
+    gorev_ayligi_derece = field.Integer("Güncel Görev Aylığı Derece", index=True)
+    gorev_ayligi_kademe = field.Integer("Güncel Görev Aylığı Kademe", index=True)
+
+    emekli_muktesebat_derece = field.Integer("Güncel Emekli Müktesebat Derece", index=True)
+    emekli_muktesebat_kademe = field.Integer("Güncel Emekli Müktesebat Kademe", index=True)
+
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
     sonraki_terfi_tarihi = field.Date("Sonraki Terfi Tarihi", index=True, format="%d.%m.%Y")
@@ -102,6 +101,18 @@ class Personel(Model):
         return self.nufus_kayitlari.durum if self.nufus_kayitlari.key else None
 
     durum.title = "Durum"
+
+    @lazy_property
+    def gorunen_kazanilmis_hak_kademe(self):
+        gorunen_kademe_hesapla(int(self.kazanilmis_hak_derece), int(self.kazanilmis_hak_kademe))
+
+    @lazy_property
+    def gorunen_gorev_ayligi_kademe(self):
+        gorunen_kademe_hesapla(int(self.gorev_ayligi_derece), int(self.gorev_ayligi_kademe))
+
+    @lazy_property
+    def gorunen_emekli_muktesebat_kademe(self):
+        gorunen_kademe_hesapla(int(self.emekli_muktesebat_derece), int(self.emekli_muktesebat_kademe))
 
     @lazy_property
     def atama(self):
