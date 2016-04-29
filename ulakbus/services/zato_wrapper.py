@@ -100,7 +100,7 @@ class ZatoService(object):
             response = r.json()
             r.close()
             try:
-                if response['status'] == 200:
+                if response['status'] == 'ok':
                     return self.rebuild_response(response['result'])
                 else:
                     # all zato internal errors will be handled here,
