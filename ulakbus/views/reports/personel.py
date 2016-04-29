@@ -24,8 +24,9 @@ class PersonelByGender(Reporter):
                 val = int(val)
             except:
                 pass
-            result.append((genders.get(val, val) , num))
+            result.append((genders.get(val, val), num))
         return result
+
 
 class PersonelByAkademikIdari(Reporter):
     TITLE = 'Akademik / İdari Personel Sayısı'
@@ -41,6 +42,7 @@ class PersonelByAkademikIdari(Reporter):
             result.append((choices.get(val, val), num))
         return result
 
+
 class Kadrolar(Reporter):
     TITLE = 'Genel Kadro Durumları'
 
@@ -55,30 +57,37 @@ class Kadrolar(Reporter):
             result.append((choices.get(val, val), num))
         return result
 
+
 class TerfisiDuranPersonel(Reporter):
     TITLE = "Terfisi Duran Personel Listesi"
 
     def get_objects(self):
         personel_list = []
-        for personel in Personel.objects.filter():
-            if personel.kadro().derece == personel.gorev_ayligi_derece:
-                try:
-                    personel_record = OrderedDict({})
-                    personel_record["T.C. No"] = personel.tckn
-                    personel_record["İsim"] = personel.ad
-                    personel_record["Soyisim"] = personel.soyad
-                    personel_record["Personel Tür"] = "%i"%personel.personel_turu
-                    personel_record["Kadro Derece"] = "%i"%personel.kadro().derece
-                    personel_record["Görev Aylığı"] = "%i/%i"%(personel.gorev_ayligi_derece,personel.gorev_ayligi_kademe)
-                    personel_record["Kazanılmış Hak"] = "%i/%i"%(personel.kazanilmis_hak_derece, personel.kazanilmis_hak_kademe)
-                    personel_record["Emekli Müktesebat"] = "%i/%i"%(personel.emekli_muktesebat_derece, personel.emekli_muktesebat_kademe)
-                    personel_list.append(personel_record)
-                except:
-                    pass                    
-        return personel_list       
+        for p in Personel.objects.filter(gorev_ayligi_kademe__gte=3):
+            if p.kadro.derece == p.gorev_ayligi_derece:
+
+                personel_record = OrderedDict({})
+
+                personel_record["TCK No"] = p.tckn
+                personel_record["Ad"] = "%s %s" % (p.ad, p.soyad)
+                personel_record["Personel Tür"] = p.personel_turu
+
+                personel_record["Kadro Derece"] = p.kadro.derece
+
+                personel_record["Görev Aylığı"] = "%i/%i" % (
+                    p.gorev_ayligi_derece, p.gorev_ayligi_kademe)
+
+                personel_record["Kazanılmış Hak"] = "%i/%i" % (
+                    p.kazanilmis_hak_derece, p.kazanilmis_hak_kademe)
+
+                personel_record["Emekli Müktesebat"] = "%i/%i" % (
+                    p.emekli_muktesebat_derece, p.emekli_muktesebat_kademe)
+
+                personel_list.append(personel_record)
+        return personel_list
 
 # class Izinler(Reporter):
-#     TITLE = 'Personel İzin Durumu'
+# TITLE = 'Personel İzin Durumu'
 #
 #     def get_objects(self):
 #         result = []
