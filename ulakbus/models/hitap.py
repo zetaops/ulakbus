@@ -40,6 +40,7 @@ class NufusKayitlari(Model):
         app = 'Personel'
         verbose_name = "Nüfus Bilgisi"
         verbose_name_plural = "Nüfus Bilgileri"
+        hitap_service_prefix = "HitapNufus"
 
     def __unicode__(self):
         return '%s %s %s' % (self.ad, self.soyad, self.emekli_sicil_no)
@@ -67,6 +68,7 @@ class HizmetKurs(Model):
         verbose_name_plural = "Kurslar"
         list_fields = ['kayit_no', 'bolum_ad', 'okul_ad']
         search_fields = ['tckn', 'okul_ad', 'bolum_ad']
+        hitap_service_prefix = "HitapKurs"
 
     def __unicode__(self):
         return '%s %s %s' % (self.kurs_nevi, self.bolum_ad, self.okul_ad)
@@ -95,6 +97,7 @@ class HizmetOkul(Model):
         verbose_name_plural = "Okullar"
         list_fields = ['okul_ad', 'bolum', 'hazirlik', 'kayit_no']
         search_fields = ['okul_ad', 'bolum', 'tckn']
+        hitap_service_prefix = "HitapOkul"
 
     def __unicode__(self):
         return '%s %s %s' % (self.kayit_no, self.bolum, self.okul_ad)
@@ -127,6 +130,7 @@ class HizmetMahkeme(Model):
         verbose_name_plural = "Mahkemeler"
         list_fields = ['mahkeme_ad', 'karar_sayisi', 'aciklama', 'kurum_onay_tarihi']
         search_fields = ['kayit_no', 'mahkeme_ad', 'karar_sayisi']
+        hitap_service_prefix = "HitapMahkeme"
 
     def __unicode__(self):
         return '%s %s %s' % (self.mahkeme_ad, self.karar_tarihi, self.aciklama)
@@ -159,6 +163,7 @@ class HizmetBirlestirme(Model):
         verbose_name_plural = "Birleştirmeler"
         list_fields = ['sgk_sicil_no', 'baslama_tarihi', 'bitis_tarihi', 'kamu_isyeri_ad']
         search_fields = ['kayit_no', 'sgk_sicil_no', 'kamu_isyeri_ad']
+        hitap_service_prefix = "HitapBirlestirme"
 
     def __unicode__(self):
         return '%s %s' % (self.kayit_no, self.sgk_nevi)
@@ -184,6 +189,7 @@ class HizmetTazminat(Model):
         verbose_name_plural = "Tazminatlar"
         list_fields = ['unvan_kod', 'makam', 'gorev']
         search_fields = ['makam', 'gorev', 'temsil']
+        hitap_service_prefix = "HitapTazminat"
 
     def __unicode__(self):
         return '%s %s' % (self.gorev, self.tazminat_tarihi)
@@ -209,6 +215,7 @@ class HizmetUnvan(Model):
         verbose_name_plural = "Ünvanlar"
         list_fields = ['unvan_kod', 'hizmet_sinifi', 'kurum_onay_tarihi']
         search_fields = ['unvan_kod', 'hizmet_sinifi']
+        hitap_service_prefix = "HitapUnvan"
 
     def __unicode__(self):
         return '%s %s' % (self.unvan_kod, self.hizmet_sinifi)
@@ -245,6 +252,7 @@ class HizmetAcikSure(Model):
         verbose_name_plural = "Açığa Alınmalar"
         list_fields = ['acik_sekil', 'aciga_alinma_tarih', 'kurum_onay_tarihi']
         search_fields = ['hizmet_durum', 'acik_sekil', 'aciga_alinma_tarih']
+        hitap_service_prefix = "HitapAcikSure"
 
     def __unicode__(self):
         return '%s %s %s' % (self.iade_sekil, self.kayit_no, self.aciga_alinma_tarih)
@@ -282,6 +290,7 @@ class HizmetBorclanma(Model):
         verbose_name_plural = "Borçlanmalar"
         list_fields = ['ad', 'soyad', 'toplam_tutar', 'odenen_miktar', 'borclanma_tarihi']
         search_fields = ['tckn', 'ad', 'soyad']
+        hitap_service_prefix = "HitapBorclanma"
 
     def __unicode__(self):
         return '%s %s %s' % (self.borc_nevi, self.calistigi_kurum, self.gun_sayisi)
@@ -302,6 +311,7 @@ class HizmetIHS(Model):
         verbose_name_plural = "İtibari Hizmet Süreleri"
         list_fields = ['kayit_no', 'ihz_nevi']
         search_fields = ['tckn', 'ihz_nevi']
+        hitap_service_prefix = "HitapIHS"
 
     def __unicode__(self):
         return '%s %s' % (self.baslama_tarihi, self.ihz_nevi)
@@ -325,6 +335,7 @@ class HizmetIstisnaiIlgi(Model):
         verbose_name_plural = "İstisnai İlgiler"
         list_fields = ['baslama_tarihi', 'bitis_tarihi', 'istisnai_ilgi_nevi', 'kha_durum']
         search_fields = ['istisnai_ilgi_nevi', 'kha_durum']
+        hitap_service_prefix = "HitapIstisnaiIlgi"
 
     def __unicode__(self):
         return '%s %s %s' % (self.kayit_no, self.istisnai_ilgi_nevi, self.kha_durum)
@@ -362,6 +373,7 @@ class HizmetKayitlari(Model):
         verbose_name_plural = "Kayıtlar"
         list_fields = ['unvan_kod', 'gorev', 'yevmiye', 'ucret', 'hizmet_sinifi']
         search_fields = ['unvan_kod', 'gorev', 'yevmiye']
+        hitap_service_prefix = "HitapHizmetCetveli"
 
     def __unicode__(self):
         return '%s %s %s' % (self.unvan_kod, self.hizmet_sinifi, self.gorev)
@@ -394,6 +406,7 @@ class AskerlikKayitlari(Model):
         verbose_name_plural = "Kayıtlar"
         list_fields = ['askerlik_nevi', 'kita_baslama_tarihi', 'gorev_yeri']
         search_fields = ['askerlik_nevi', 'gorev_yeri', 'tckn']
+        hitap_service_prefix = "HitapAskerlik"
 
     def __unicode__(self):
         return '%s %s %s %s' % (
