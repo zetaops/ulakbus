@@ -122,7 +122,7 @@ class PersonelAtama(CrudView):
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Personel Atama Başarılı',
-            "msg": 'Atama İşlemi Başarılıyla gerçekleştirildi. ' + hitap_sonuc
+            "msg": 'Atama İşlemi Başarıyla gerçekleştirildi. ' + hitap_sonuc
         }
 
     def hitap_bilgi_getir(self):

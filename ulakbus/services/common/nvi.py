@@ -47,7 +47,7 @@ class NVIService(Service):
 
         response = self.requestx()
         response_xml = response.read()
-        self.response.payload = {"status": response.status, "result": self.xml_to_json(response_xml)}
+        self.response.payload = {"status": "ok" if response.status==200 else response.status, "result": self.xml_to_json(response_xml)}
 
     def invoke_sso_service(self):
         response = self.invoke('nvi-sts.sts-get-token')
