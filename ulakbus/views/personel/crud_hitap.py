@@ -7,29 +7,36 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-
-from zengine.views.crud import CrudView
-
-# Modellere karsilik gelen HitapServisleri listesi
-zato_service_list = {
-    'HizmetMahkeme': {
-        "add": "HitapMahkemeBilgileriEkle",
-        "update": "HitapMahkemeBilgileriGuncelle",
-        "delete": "HitapMahkemeBilgileriSil"
-    },
-    'HizmetKurs': {
-        "add": "HizmetKursEkle",
-        "update": "HizmetKursGuncelle",
-        "delete": "HizmetKursSil"
-    },
-}
+from zengine.forms import fields, JsonForm
+from zengine.views.crud import CrudView, view_method
 
 
 def zato_service_selector(model, action):
-    service_class_name = zato_service_list[model][action]
-    hitap_service = getattr(__import__('ulakbus.services.zato_wrapper', fromlist=[service_class_name]),
-                            service_class_name)
+    suffix = {"add": "Ekle",
+              "update": "Guncelle",
+              "delete": "Sil",
+              "get": "Getir",
+              "sync": "SenkronizeEt"}[action]
+
+    prefix = model.Meta.hitap_service_prefix
+    service_class_name = prefix + suffix
+
+    hitap_service = getattr(
+        __import__('ulakbus.services.zato_wrapper', fromlist=[service_class_name]),
+        service_class_name)
+
     return hitap_service
+
+
+class ListFormHitap(JsonForm):
+    """
+    Holds list view form elements.
+
+    Used by CrudMeta metaclass to create distinct
+    copies for each subclass of CrudView.
+    """
+    add = fields.Button("Ekle", cmd="add_edit_form")
+    sync = fields.Button("HITAP ile senkronize et", cmd="sync")
 
 
 class CrudHitap(CrudView):
@@ -68,6 +75,16 @@ class CrudHitap(CrudView):
         * 4: Yeni bir yerel kayıt oluşturuldu, Hitap'a gönderilecek.
 
     """
+
+    def __init__(self, current=None):
+        super(CrudHitap, self).__init__(current)
+        self.ListForm = ListFormHitap
+
+    @view_method
+    def sync(self):
+        hitap_service = zato_service_selector(self.Meta.Model, 'sync')
+        hs = hitap_service(tckn=self.object.tckn)
+        response = hs.zato_request()
 
     def save(self):
         """Crud Hitap Kaydet
