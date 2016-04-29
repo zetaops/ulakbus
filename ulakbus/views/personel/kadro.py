@@ -315,9 +315,6 @@ class TerfiForm(JsonForm):
         yeni_kazanilmis_hak = fields.String("Yeni KH")
         yeni_emekli_muktesebat = fields.String("Yeni EM")
 
-    kaydet = fields.Button("Onaya Gönder", cmd="onaya_gonder")
-    duzenle = fields.Button("Terfi Düzenle", cmd="terfi_liste_duzenle")
-
     def generate_form(self):
         """
         Generates form with given data ``personel_data``
@@ -423,6 +420,9 @@ class TerfiListe(CrudView):
             _form = TerfiForm(current=self.current, title="Terfi İşlemi")
             _form.generate_form()
 
+            _form.kaydet = fields.Button("Onaya Gönder", cmd="onaya_gonder")
+            _form.duzenle = fields.Button("Terfi Düzenle", cmd="terfi_liste_duzenle")
+
             self.form_out(_form)
             self.current.output["meta"]["allow_actions"] = False
             self.current.output["meta"]["allow_add_listnode"] = False
@@ -502,8 +502,9 @@ class TerfiListe(CrudView):
         _form = TerfiForm(current=self.current, title="Terfi İşlemi")
         _form.generate_form()
         _form.Meta.inline_edit = []
-        _form.kaydet = fields.Button("Onayla", cmd="terfi_yap")
-        _form.duzenle = fields.Button("Reddet", cmd="red_aciklamasi_yaz")
+
+        _form.kaydet = fields.Button(title="Onayla", cmd="terfi_yap")
+        _form.duzenle = fields.Button(title="Reddet", cmd="red_aciklamasi_yaz")
 
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
@@ -521,18 +522,18 @@ class TerfiListe(CrudView):
         self.current.task_data["red_aciklama"] = self.current.input['form']['red_aciklama']
 
     def terfi_yap(self):
-        for p in self.current.task_data['personeller']:
+        for key, p_data in self.current.task_data['personeller'].items():
             try:
-                personel = Personel.objects.get(p['key'])
+                personel = Personel.objects.get(key)
 
-                personel.gorev_ayligi_derece = p["terfi_sonrasi_gorev_ayligi_derece"]
-                personel.gorev_ayligi_kademe = p["terfi_sonrasi_gorev_ayligi_kademe"]
+                personel.gorev_ayligi_derece = p_data["terfi_sonrasi_gorev_ayligi_derece"]
+                personel.gorev_ayligi_kademe = p_data["terfi_sonrasi_gorev_ayligi_kademe"]
 
-                personel.kazanilmis_hak_derece = p["terfi_sonrasi_kazanilmis_hak_derece"]
-                personel.kazanilmis_hak_kademe = p["terfi_sonrasi_kazanilmis_hak_kademe"]
+                personel.kazanilmis_hak_derece = p_data["terfi_sonrasi_kazanilmis_hak_derece"]
+                personel.kazanilmis_hak_kademe = p_data["terfi_sonrasi_kazanilmis_hak_kademe"]
 
-                personel.emekli_muktesebat_derece = p["terfi_sonrasi_emekli_muktesebat_derece"]
-                personel.emekli_muktesebat_kademe = p["terfi_sonrasi_emekli_muktesebat_kademe"]
+                personel.emekli_muktesebat_derece = p_data["terfi_sonrasi_emekli_muktesebat_derece"]
+                personel.emekli_muktesebat_kademe = p_data["terfi_sonrasi_emekli_muktesebat_kademe"]
 
                 personel.sonraki_terfi_tarihi = personel.sonraki_terfi_tarihi + relativedelta(
                     years=1)
@@ -542,3 +543,13 @@ class TerfiListe(CrudView):
             except ObjectDoesNotExist:
                 # TODO: LOG for sysadmin. Artik olmayan bir personel uzerinde terfi islemi..
                 pass
+
+    def taraflari_bilgilendir(self):
+        pass
+
+    def onay_belgesi_uret(self):
+        self.current.output['msgbox'] = {
+            'type': 'info',
+            'title': 'Terfi İşlemleri',
+            'msg': 'Toplu terfi İşleminiz Onaylandı'
+        }

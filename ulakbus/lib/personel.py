@@ -46,6 +46,19 @@ def derece_ilerlet(pkd, der, kad):
 
 
 def suren_terfi_var_mi(p):
+    """
+    Mevcut wfler icinde arama yaparak personel hakkinda, devam eden terfi isleminin
+    olup olmadigi kontrol edilir.
+
+    Args:
+        p (str): personel key
+
+    Returns:
+        Devam eden islem varsa True, yoksa False
+
+    """
+
+    # TODO: wf ler icinde arama yap
     return False
 
 
@@ -76,7 +89,7 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
 
         suren_terfi = False
         if suren_terfi_kontrol:
-            suren_terfi = suren_terfi_var_mi(personel)
+            suren_terfi = suren_terfi_var_mi(personel.key)
 
         if not suren_terfi_kontrol or not suren_terfi:
             # personel temel bilgileri
