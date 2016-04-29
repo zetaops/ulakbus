@@ -10,6 +10,7 @@ import six
 
 from ulakbus.models import *
 from ulakbus.views.reports.base import Reporter
+from collections import OrderedDict
 
 
 class PersonelByGender(Reporter):
@@ -53,6 +54,28 @@ class Kadrolar(Reporter):
                 pass
             result.append((choices.get(val, val), num))
         return result
+
+class TerfisiDuranPersonel(Reporter):
+    TITLE = "Terfisi Duran Personel Listesi"
+
+    def get_objects(self):
+        personel_list = []
+        for personel in Personel.objects.filter():
+            if personel.kadro().derece == personel.gorev_ayligi_derece:
+                try:
+                    personel_record = OrderedDict({})
+                    personel_record["T.C. No"] = personel.tckn
+                    personel_record["İsim"] = personel.ad
+                    personel_record["Soyisim"] = personel.soyad
+                    personel_record["Personel Tür"] = "%i"%personel.personel_turu
+                    personel_record["Kadro Derece"] = "%i"%personel.kadro().derece
+                    personel_record["Görev Aylığı"] = "%i/%i"%(personel.gorev_ayligi_derece,personel.gorev_ayligi_kademe)
+                    personel_record["Kazanılmış Hak"] = "%i/%i"%(personel.kazanilmis_hak_derece, personel.kazanilmis_hak_kademe)
+                    personel_record["Emekli Müktesebat"] = "%i/%i"%(personel.emekli_muktesebat_derece, personel.emekli_muktesebat_kademe)
+                    personel_list.append(personel_record)
+                except:
+                    pass                    
+        return personel_list       
 
 # class Izinler(Reporter):
 #     TITLE = 'Personel İzin Durumu'
