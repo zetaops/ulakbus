@@ -88,7 +88,6 @@ class Personel(Model):
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
     sonraki_terfi_tarihi = field.Date("Sonraki Terfi Tarihi", index=True, format="%d.%m.%Y")
     user = User(one_to_one=True)
-    guncel_kadro = Kadro(one_to_one=True)
 
     class Meta:
         app = 'Personel'
@@ -104,15 +103,15 @@ class Personel(Model):
 
     @lazy_property
     def gorunen_kazanilmis_hak_kademe(self):
-        gorunen_kademe_hesapla(int(self.kazanilmis_hak_derece), int(self.kazanilmis_hak_kademe))
+        return gorunen_kademe_hesapla(int(self.kazanilmis_hak_derece), int(self.kazanilmis_hak_kademe))
 
     @lazy_property
     def gorunen_gorev_ayligi_kademe(self):
-        gorunen_kademe_hesapla(int(self.gorev_ayligi_derece), int(self.gorev_ayligi_kademe))
+        return gorunen_kademe_hesapla(int(self.gorev_ayligi_derece), int(self.gorev_ayligi_kademe))
 
     @lazy_property
     def gorunen_emekli_muktesebat_kademe(self):
-        gorunen_kademe_hesapla(int(self.emekli_muktesebat_derece), int(self.emekli_muktesebat_kademe))
+        return gorunen_kademe_hesapla(int(self.emekli_muktesebat_derece), int(self.emekli_muktesebat_kademe))
 
     @lazy_property
     def atama(self):
@@ -394,7 +393,6 @@ class UcretsizIzin(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.tip, self.onay_tarihi)
-
 
 class Atama(Model):
     """Atama Modeli

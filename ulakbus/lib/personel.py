@@ -1,14 +1,12 @@
 # -*-  coding: utf-8 -*-
 """
 """
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-import datetime
 
-from ulakbus.models import Personel
+import datetime
 
 __author__ = 'zops5'
 
@@ -62,6 +60,9 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
         personeller (dict): personel kademe derece bilgileri iceren sozluk
 
     """
+
+    from ulakbus.models.personel import Personel
+
     simdi = datetime.date.today()
     baslangic_tarihi = baslangic_tarihi or simdi
     bitis_tarihi = bitis_tarihi or simdi + datetime.timedelta(days=90)
@@ -79,8 +80,9 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
 
         if not suren_terfi_kontrol or not suren_terfi:
             # personel temel bilgileri
-            p_data = {"tckn": personel.tckn, "ad": personel.ad, "soyad": personel.soyad,
-                      "kadro_derece": personel.kadro.derece, "suren_terfi": suren_terfi}
+            p_data = {"key": personel.key, "tckn": personel.tckn, "ad": personel.ad,
+                      "soyad": personel.soyad, "kadro_derece": personel.kadro.derece,
+                      "suren_terfi": suren_terfi}
 
             # personel guncel derece ve kademeleri
             p_data.update(
@@ -134,4 +136,4 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
 
             personeller[personel.key] = p_data
 
-        return personeller
+    return personeller
