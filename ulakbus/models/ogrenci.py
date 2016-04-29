@@ -215,6 +215,21 @@ class Donem(Model):
                 pass
                 # todo: hic guncel donemin olmadigi durumlar sistem yoneticine bildirilmeli.
 
+    def sonraki_donem(self):
+        try:
+            return self.objects.set_params(sort='baslangic_tarihi asc').filter(baslangic_tarihi__gte=self.bitis_tarihi)[0]
+        except:
+            return None
+                # todo: bahar doneminde, sonraki donem yok.
+
+    def onceki_donem(self):
+        try:
+            return self.objects.set_params(sort='baslangic_tarihi desc').filter(bitis_tarihi__lte=self.baslangic_tarihi)[0]
+        except:
+            return None
+
+
+
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Dönem"
@@ -290,7 +305,7 @@ class Program(Model):
         return '%s %s' % (self.adi, self.yil)
 
 
-class Ders(Model):
+class   Ders(Model):
     """Ders Modeli
 
     Program dahilinde açılan derslerin bilgilerinin saklandığı modeldir.
@@ -319,8 +334,8 @@ class Ders(Model):
     katilim_sarti = field.Integer("Katılım Şartı", index=True)
     program = Program()
     donem = Donem()
-    program_donemi = field.Integer("Katılım Şartı", index=True)
-    yil = field.Date("Yıl", index=True)
+    program_donemi = field.Integer("Program Dönemi", index=True)
+    yil = field.String("Yıl", index=True)
     ders_koordinatoru = Personel()
     yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")
     program_versiyon = field.String("Program Versiyonu", index=True)
