@@ -303,21 +303,20 @@ class TerfiForm(JsonForm):
     class Personel(ListNode):
         key = fields.String("Key", hidden=True)
         sec = fields.Boolean("Seç", type="checkbox")
-        tckn = fields.String("T.C. No")
-        isim = fields.String("İsim")
-        soyisim = fields.String("Soyisim")
+        tckn = fields.String("TCK No")
+        ad_soyad = fields.String("Ad")
         kadro_derece = fields.String("Kadro Derece")
 
-        gorev_ayligi = fields.String("Görev Aylığı")
-        kazanilmis_hak = fields.String("Kazanılmış Hak")
-        emekli_muktesebat = fields.String("Emekli Müktesebat")
+        gorev_ayligi = fields.String("GA")
+        kazanilmis_hak = fields.String("KH")
+        emekli_muktesebat = fields.String("EM")
 
-        yeni_gorev_ayligi = fields.String("Yeni Görev Aylığı")
-        yeni_kazanilmis_hak = fields.String("Yeni Kazanılmış Hak")
-        yeni_emekli_muktesebat = fields.String("Yeni Emekli Müktesebat")
+        yeni_gorev_ayligi = fields.String("Yeni GA")
+        yeni_kazanilmis_hak = fields.String("Yeni KH")
+        yeni_emekli_muktesebat = fields.String("Yeni EM")
 
-    kaydet = fields.Button("Onaya Gönder", cmd="kaydet")
-    duzenle = fields.Button("Terfi Düzenle", cmd="duzenle")
+    kaydet = fields.Button("Onaya Gönder", cmd="onaya_gonder")
+    duzenle = fields.Button("Terfi Düzenle", cmd="terfi_liste_duzenle")
 
     def generate_form(self):
         """
@@ -328,39 +327,38 @@ class TerfiForm(JsonForm):
 
         """
 
-        for p_key, p_data in self.current.task_data["personeller"].items():
+        for p_key, p_data in self.context.task_data["personeller"].items():
             self.Personel(
                 key=p_key,
                 sec=False,
                 tckn=p_data["tckn"],
-                isim=p_data["ad"],
-                soyisim=p_data["soyad"],
+                ad_soyad="%s %s" % (p_data["ad"], p_data["soyad"]),
                 kadro_derece=p_data["kadro_derece"],
 
-                gorev_ayligi="%i/%i(%i)" % (
+                gorev_ayligi="%s/%s(%s)" % (
                     p_data["guncel_gorev_ayligi_derece"], p_data["guncel_gorev_ayligi_kademe"],
                     p_data["gorunen_gorev_ayligi_kademe"]),
 
-                kazanilmis_hak="%i/%i(%i)" % (
+                kazanilmis_hak="%s/%s(%s)" % (
                     p_data["guncel_kazanilmis_hak_derece"], p_data["guncel_kazanilmis_hak_kademe"],
                     p_data["gorunen_kazanilmis_hak_kademe"]),
 
-                emekli_muktesebat="%i/%i(%i)" % (
+                emekli_muktesebat="%s/%s(%s)" % (
                     p_data["guncel_emekli_muktesebat_derece"],
                     p_data["guncel_emekli_muktesebat_kademe"],
                     p_data["gorunen_emekli_muktesebat_kademe"]),
 
-                yeni_gorev_ayligi="%i/%i(%i)" % (
+                yeni_gorev_ayligi="%s/%s(%s)" % (
                     p_data["terfi_sonrasi_gorev_ayligi_derece"],
                     p_data["terfi_sonrasi_gorev_ayligi_kademe"],
                     p_data["terfi_sonrasi_gorunen_gorev_ayligi_kademe"]),
 
-                yeni_kazanilmis_hak="%i/%i(%i)" % (
+                yeni_kazanilmis_hak="%s/%s(%s)" % (
                     p_data["terfi_sonrasi_kazanilmis_hak_derece"],
                     p_data["terfi_sonrasi_kazanilmis_hak_kademe"],
                     p_data["terfi_sonrasi_gorunen_kazanilmis_hak_kademe"]),
 
-                yeni_emekli_muktesebat="%i/%i(%i)" % (
+                yeni_emekli_muktesebat="%s/%s(%s)" % (
                     p_data["terfi_sonrasi_emekli_muktesebat_derece"],
                     p_data["terfi_sonrasi_emekli_muktesebat_kademe"],
                     p_data["terfi_sonrasi_gorunen_emekli_muktesebat_kademe"])
@@ -421,34 +419,43 @@ class TerfiListe(CrudView):
         except KeyError:
             self.current.task_data["personeller"] = terfi_tarhine_gore_personel_listesi()
 
-        _form = TerfiForm(current=self.current, title="Terfi İşlemi")
-        _form.generate_form()
+        if self.current.task_data["personeller"]:
+            _form = TerfiForm(current=self.current, title="Terfi İşlemi")
+            _form.generate_form()
 
-        self.form_out(_form)
-        self.current.output["meta"]["allow_actions"] = False
-        self.current.output["meta"]["allow_add_listnode"] = False
+            self.form_out(_form)
+            self.current.output["meta"]["allow_actions"] = False
+            self.current.output["meta"]["allow_add_listnode"] = False
+        else:
+            datetime.datetime.today()
+            self.current.output['msgbox'] = {
+                'type': 'info', "title": 'Terfi Bekleyen Personel Bulunamadı',
+                "msg": '%s - %s tarih aralığında terfi bekleyen personel bulunamadı.' % (
+                    datetime.datetime.today(),
+                    datetime.datetime.today() + datetime.timedelta(days=15))
+            }
 
     def terfi_liste_duzenle(self):
         _form = TerfiDuzenleForm()
         for p in self.current.input['form']['Personel']:
             if p['sec']:
-                p_data = self.current.task_data['Personeller'][p['key']]
+                p_data = self.current.task_data['personeller'][p['key']]
                 _form.Personel(
                     key=p_data['key'],
                     tckn=p_data["tckn"],
                     ad_soyad="%s %s" % (p_data["ad"], p_data["soyad"]),
                     kadro_derece=p_data["kadro_derece"],
 
-                    gorev_ayligi="%i/%i(%i)" % (
+                    gorev_ayligi="%s/%s(%s)" % (
                         p_data["guncel_gorev_ayligi_derece"], p_data["guncel_gorev_ayligi_kademe"],
                         p_data["gorunen_gorev_ayligi_kademe"]),
 
-                    kazanilmis_hak="%i/%i(%i)" % (
+                    kazanilmis_hak="%s/%s(%s)" % (
                         p_data["guncel_kazanilmis_hak_derece"],
                         p_data["guncel_kazanilmis_hak_kademe"],
                         p_data["gorunen_kazanilmis_hak_kademe"]),
 
-                    emekli_muktesebat="%i/%i(%i)" % (
+                    emekli_muktesebat="%s/%s(%s)" % (
                         p_data["guncel_emekli_muktesebat_derece"],
                         p_data["guncel_emekli_muktesebat_kademe"],
                         p_data["gorunen_emekli_muktesebat_kademe"]),
@@ -473,7 +480,7 @@ class TerfiListe(CrudView):
 
     def terfi_duzenle_kaydet(self):
         for p in self.current.input['form']['Personel']:
-            p_data = self.current.task_data['Personeller'][p['key']]
+            p_data = self.current.task_data['personeller'][p['key']]
 
             p_data["terfi_sonrasi_gorev_ayligi_derece"] = p["yeni_gorev_ayligi_derece"]
             p_data["terfi_sonrasi_gorev_ayligi_kademe"] = p["yeni_gorev_ayligi_kademe"]
@@ -495,6 +502,8 @@ class TerfiListe(CrudView):
         _form = TerfiForm(current=self.current, title="Terfi İşlemi")
         _form.generate_form()
         _form.Meta.inline_edit = []
+        _form.kaydet = fields.Button("Onayla", cmd="terfi_yap")
+        _form.duzenle = fields.Button("Reddet", cmd="red_aciklamasi_yaz")
 
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
@@ -502,13 +511,17 @@ class TerfiListe(CrudView):
 
     def red_aciklamasi_yaz(self):
         _form = JsonForm(title="Terfi Islemi Reddedildi.")
-        _form.Meta.help_text = "Terfi işlemini onaylamadınız. İlgili personele bir açıklama yazmak ister misiniz?"
-        _form.aciklama = fields.String("Açıklama")
+        _form.Meta.help_text = """Terfi işlemini onaylamadınız. İlgili personele bir açıklama
+                                  yazmak ister misiniz?"""
+        _form.red_aciklama = fields.String("Açıklama")
         _form.devam = fields.Button("Devam Et")
         self.form_out(_form)
 
+    def red_aciklamasi_kaydet(self):
+        self.current.task_data["red_aciklama"] = self.current.input['form']['red_aciklama']
+
     def terfi_yap(self):
-        for p in self.current.task_data['Personeller']:
+        for p in self.current.task_data['personeller']:
             try:
                 personel = Personel.objects.get(p['key'])
 
@@ -521,7 +534,8 @@ class TerfiListe(CrudView):
                 personel.emekli_muktesebat_derece = p["terfi_sonrasi_emekli_muktesebat_derece"]
                 personel.emekli_muktesebat_kademe = p["terfi_sonrasi_emekli_muktesebat_kademe"]
 
-                personel.sonraki_terfi_tarihi = personel.sonraki_terfi_tarihi + relativedelta(years=1)
+                personel.sonraki_terfi_tarihi = personel.sonraki_terfi_tarihi + relativedelta(
+                    years=1)
 
                 personel.save()
 
