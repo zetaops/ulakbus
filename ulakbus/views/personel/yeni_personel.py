@@ -9,7 +9,7 @@
 #
 # Yeni Personel Ekle WF adimlarini icerir.
 from ulakbus.lib.view_helpers import prepare_titlemap_for_model, prepare_choices_for_model
-from zengine.views.crud import CrudView, form_modifier
+from zengine.views.crud import CrudView
 
 from zengine.forms import JsonForm, fields
 from collections import OrderedDict
