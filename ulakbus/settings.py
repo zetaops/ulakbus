@@ -8,8 +8,6 @@
 from zengine.settings import *
 import os.path
 
-__author__ = 'Evren Esat Ozkan'
-
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 DEFAULT_LANG = 'tr'

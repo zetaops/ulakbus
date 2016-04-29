@@ -37,4 +37,4 @@ def prepare_titlemap_for_model(model, **kwargs):
 
     """
 
-    return [{"value": m.key, "name": m.__unicode__()} for m in model.objects.filter(**kwargs)]
+    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
