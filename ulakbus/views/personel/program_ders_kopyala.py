@@ -17,14 +17,17 @@ from datetime import date
 class SecilenDersForm(JsonForm):
     class Meta:
         include = ['ad', 'kod', 'tanim', 'aciklama', 'onkosul', 'uygulama_saati', 'teori_saati',
-                   'ects_kredisi','yerel_kredisi', 'zorunlu', 'ders_dili', 'ders_turu', 'ders_amaci']
+                   'ects_kredisi', 'yerel_kredisi', 'zorunlu', 'ders_dili', 'ders_turu', 'ders_amaci']
 
         # read-only feature eklenmesi
+
+
 class SecilenDersForm2(JsonForm):
     class Meta:
-        include = ['ad','kod','ogrenme_ciktilari','ders_icerigi', 'ders_kategorisi',
+        include = ['ad', 'kod', 'ogrenme_ciktilari', 'ders_icerigi', 'ders_kategorisi',
                    'ders_kaynaklari', 'ders_mufredati', 'verilis_bicimi', 'katilim_sarti', 'yil',
-                   'ders_koordinatoru','yerine_ders','program_donemi']
+                   'ders_koordinatoru', 'yerine_ders', 'program_donemi']
+
 
 class DersDuzenle(CrudView):
     class Meta:
@@ -110,7 +113,6 @@ class ProgramKopyalama(CrudView):
         senato_karar_no = self.current.input['form']['senato_karar_no']
         program_versiyon = program_versiyon_no_uret(senato_karar_no)
 
-
         program = Program.objects.get(self.current.task_data['program_id'])
         program.Version.add(senato_karar_no=senato_karar_no, no=program_versiyon)
         program.save()
@@ -119,21 +121,15 @@ class ProgramKopyalama(CrudView):
         bir_onceki_yil = str(guncel_yil - 1)
         guncel_yil = str(guncel_yil)
 
-        # for dersler in Ders.objects.filter(program=program):
-        #     dersler.yil = bir_onceki_yil
-        #     dersler.save()
-
         # todo: ders kopyalama islemi tek sefer yapilmali, bu islem bir servis olarak yazilmali.
 
-        if len(Ders.objects.filter(program=program,yil=guncel_yil))==0:
-            for ders in Ders.objects.filter(program=program,yil=bir_onceki_yil):
-                    ders.key = None
-                    ders.donem = Donem.guncel_donem()
-                    ders.program_versiyon = program_versiyon
-                    ders.yil = guncel_yil
-                    ders.save()
-
-
+        if len(Ders.objects.filter(program=program, yil=guncel_yil)) == 0:
+            for ders in Ders.objects.filter(program=program, yil=bir_onceki_yil):
+                ders.key = None
+                ders.donem = Donem.guncel_donem()
+                ders.program_versiyon = program_versiyon
+                ders.yil = guncel_yil
+                ders.save()
 
     def ders_tablo(self):
 
@@ -143,7 +139,7 @@ class ProgramKopyalama(CrudView):
 
         try:
             _form = ProgramDersForm(current=self.current, title="Değişiklik Yapmak İstediğiniz Dersleri Seçiniz")
-            program_dersleri = Ders.objects.filter(program=program,yil=guncel_yil)
+            program_dersleri = Ders.objects.filter(program=program, yil=guncel_yil)
 
             for ders in program_dersleri:
                 _form.Dersler(secim=False, kod=ders.kod, ad=ders.ad, key=ders.key)
