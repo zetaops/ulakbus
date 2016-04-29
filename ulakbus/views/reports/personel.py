@@ -56,7 +56,6 @@ class Kadrolar(Reporter):
             result.append((choices.get(val, val), num))
         return result
 
-
 class TerfisiDuranPersonel(Reporter):
     TITLE = "Terfisi Duran Personel Listesi"
 
