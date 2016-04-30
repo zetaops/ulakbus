@@ -8,7 +8,8 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 from zengine.forms import fields, JsonForm
-from zengine.views.crud import CrudView, view_method
+from zengine.views.crud import CrudView, view_method, list_query
+from ulakbus.models.personel import Personel
 
 
 def zato_service_selector(model, action):
@@ -79,11 +80,14 @@ class CrudHitap(CrudView):
     def __init__(self, current=None):
         super(CrudHitap, self).__init__(current)
         self.ListForm = ListFormHitap
+        if 'id' in self.input:
+            self.current.task_data['personel_id'] = self.input['id']
+            self.current.task_data['personel_tckn'] = Personel.objects.get(self.input['id']).tckn
 
     @view_method
     def sync(self):
-        hitap_service = zato_service_selector(self.Meta.Model, 'sync')
-        hs = hitap_service(tckn=self.object.tckn)
+        hitap_service = zato_service_selector(self.model_class, 'sync')
+        hs = hitap_service(tckn=str(self.current.task_data['personel_tckn']))
         response = hs.zato_request()
 
     def save(self):
@@ -142,3 +146,7 @@ class CrudHitap(CrudView):
             pass
 
         self.set_client_cmd('reload')
+
+    @list_query
+    def list_by_personel_id(self, queryset):
+        return queryset.filter(personel_id=self.current.task_data['personel_id'])

@@ -21,7 +21,7 @@ Attributes:
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from zato.server.service import Service
-from hitap_helper import HitapHelper
+from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
