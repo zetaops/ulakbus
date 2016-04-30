@@ -6,16 +6,42 @@
 #
 from zengine.lib.forms import JsonForm
 
-from ulakbus.models import OgrenciProgram, Ogrenci, Role, AbstractRole
+from ulakbus.models import OgrenciProgram, Ogrenci, Role, User, AbstractRole
 from zengine.forms import fields
 from zengine.notifications import Notify
 from zengine.views.crud import CrudView
+
+ABSTRACT_ROLE_LIST = [
+    "Lisans Programı Öğrencisi - Aktif",
+    "Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+
+    "Ön Lisans Programı Öğrencisi - Aktif",
+    "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+
+    "Yüksek Lisans Programı Öğrencisi - Aktif",
+    "Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+
+    "Doktora Programı Öğrencisi - Aktif",
+    "Doktora Programı Öğrencisi - Kayıt Dondurmuş",
+
+]
+
+ABSTRACT_ROLE_LIST_SILINMIS = [
+    "Lisans Programı Öğrencisi - Kayıt Silinmiş",
+    "Ön Lisans Programı Öğrencisi - Kayıt Silinmiş",
+    "Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş",
+    "Doktora Programı Öğrencisi - Kayıt Silinmiş",
+]
 
 
 class KayitSil(CrudView):
     """ Kayıt Silme İş Akışı
 
-    Kayıt silme iş akışı 4 adımdan oluşmaktadır.
+    Kayıt silme iş akışı 8 adımdan oluşmaktadır.
+    * Kaydı Kontrol Et
+    * Kaydı Silinen Öğrenci
+    * Kayıt Silme İşlemini Onayla
+    * Kayıt Silme İşleminden Vazgeç
     * Fakülte Karar No
     * Ayrılma nedenini seç
     * Öğrenci programı seç
@@ -27,7 +53,20 @@ class KayitSil(CrudView):
 
     Bu iş akışında kullanılan metotlar şu şekildedir.
 
-    Fakülte Karar No
+    Kaydı Kontrol Et:
+    Öğrencinin kaydının silinip silinmediğini kontrol eder.
+
+    Kaydı Silinen Öğrenci:
+    Öğrencinin kaydı silinmişse kaydın silindiğine dair bilgi mesajı ekrana basılır.
+
+    Kayıt Silme İşlemini Onayla:
+    Personel kayıt silme işlemine devam etmek isteyip istemediği sorulur.
+
+    Kayıt Silme İşleminden Vazgeç:
+    Personelin kayıt silme işleminden vazgeçmesi durumunda ekrana silme
+    işlemin iptal edildiğine dair bilgi mesajı basılır.
+
+    Fakülte Karar No:
     Fakülte Yönetim Kurulu tarafından belirlenen karar no girilir.
 
     Ayrılma nedeni seç:
@@ -51,6 +90,68 @@ class KayitSil(CrudView):
     class Meta:
         model = 'OgrenciProgram'
 
+    def kontrol(self):
+        """
+        Öğrencinin kaydının silinip silinmediğini kontrol eder.
+
+        """
+
+        self.current.task_data['command'] = 'kaydi_silinen_ogrenci'
+        self.current.task_data['ogrenci_id'] = self.current.input['id']
+        ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
+        programlar = OgrenciProgram.objects.filter(ogrenci=ogrenci)
+        self.current.task_data['roles'] = []
+        for program in programlar:
+            roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
+            for role in roles:
+                self.current.task_data['roles'].append(role.abstract_role.name)
+                name = role.abstract_role.name
+                if name not in ABSTRACT_ROLE_LIST_SILINMIS and name in ABSTRACT_ROLE_LIST:
+                    self.current.task_data['command'] = 'kayit_silme_islemini_onayla'
+                    break
+
+    def kaydi_silinen_ogrenci(self):
+        """
+        Öğrencinin kaydı silinmiş ise öğrenci kaydının silindiğine dair bilgi
+        mesajı ekrana basılır.
+
+        """
+
+        ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
+        self.current.output['msgbox'] = {
+            'type': 'warning', "title": 'Kayıt Silme Başarılı',
+            "msg": ' %s adlı öğrencinin kaydı daha önceden silinmiştir.' % ogrenci
+
+        }
+
+    def kayit_silme_islemini_onayla(self):
+        """
+        Personele kayıt silme işlemine devam etmek isteyip istemediği sorulur.
+
+        """
+
+        ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
+        _form = JsonForm(current=self.current,
+                         title='Kayıt Silme İşlemini Onaylayınız.')
+        _form.help_text = '%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?' % (ogrenci, '-'.join(
+        name for name in self.current.task_data['roles']))
+        _form.kaydet = fields.Button('Onayla', flow='fakulte_yonetim_karari')
+        _form.vazgecme = fields.Button('Vazgeç', flow='kayit_silme_isleminden_vazgec')
+        self.form_out(_form)
+
+    def kayit_silme_isleminden_vazgec(self):
+        """
+        Personelin kayıt silme işleminden vazgeçmesi durumunda ekrana silme işleminin
+        iptal edildiğine dair bilgi mesajı basılır.
+
+        """
+
+        self.current.output['msgbox'] = {
+            'type': 'warning', "title": 'Kayıt Silme İşlemi',
+            "msg": 'Kayıt silme işlemi iptal edilmiştir.'
+
+        }
+
     def fakulte_yonetim_karari(self):
         """
         Fakülte Yönetim Kurulu tarafından belirlenen karar no girilir.
@@ -58,7 +159,6 @@ class KayitSil(CrudView):
         """
 
         # TODO: Fakülte yönetim kurulunun kararı loglanacak.
-        self.current.task_data['ogrenci_id'] = self.current.input['id']
         _form = JsonForm(current=self.current,
                          title='Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.')
         _form.karar = fields.String('Karar No', index=True)
@@ -86,19 +186,53 @@ class KayitSil(CrudView):
         Öğrencinin kayıtlı olduğu öğrenci programların öğrencilik statüsüne, ``Kaydı silinmiştir``
         statüsü eklenmiştir.
 
+        Öğrencinin rolü kayıtlı olduğu birimin tipine (program, lisans programı, doktora programı )
+        göre değiştirilir.
+
+        Eğer öğrencinin okulda başka bir rolü (kütüphane çalışanı,spor salonu çalışanı) var ise
+        admine bilgi mesajı yollanır.
+
         """
 
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
-        programlar = OgrenciProgram.objects.filter(ogrenci=ogrenci)
+        programlar = OgrenciProgram.objects.filter(ogrenci_id=self.current.task_data['ogrenci_id'])
         for program in programlar:
             program.ayrilma_nedeni = self.current.input['form']['ayrilma_nedeni']
             # todo: elle vermek yerine daha iyi bir yol dusunelim
             program.ogrencilik_statusu = 21
             program.save()
-        abstract_role = AbstractRole.objects.get(name='Silinmiş Öğrenci')
-        role = Role.objects.get(user=ogrenci.user)
-        role.abstract_role = abstract_role
-        role.save()
+            roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
+            for role in roles:
+                if role.abstract_role.name in ABSTRACT_ROLE_LIST:
+                    if role.unit.unit_type == 'Program':
+                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[0])
+                        role.abstract_role = abstract_role
+                        role.save()
+                    elif role.unit.unit_type == 'Yüksek Lisans Programı':
+                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[2])
+                        role.abstract_role = abstract_role
+                        role.save()
+                    elif role.unit.unit_type == 'Doktora Programı':
+                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[3])
+                        role.abstract_role = abstract_role
+                        role.save()
+                    else:
+                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[1])
+                        role.abstract_role = abstract_role
+                        role.save()
+
+        ogrenci_rolleri = Role.objects.filter(user=ogrenci.user)
+        for role in ogrenci_rolleri:
+            if role.abstract_role.name not in ABSTRACT_ROLE_LIST_SILINMIS:
+                title = 'Kayıt Silme'
+                msg = '%s adlı öğrencinin kaydı silinmiştir. Öğrenci farklı rollere sahiptir. ' % ogrenci
+
+                def notify(user):
+                    Notify(user.key).set_message(msg=msg, title=title, typ=Notify.TaskInfo)
+
+                usr = User.objects.get(username='test_user')
+                notify(usr)
+                break
 
     def bilgi_ver(self):
         """
@@ -106,9 +240,8 @@ class KayitSil(CrudView):
         Kayıt silme işleminin tamamlandığına dair ekrana çıktı verir.
 
         """
-
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
-        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
+        ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
         self.current.output['msgbox'] = {
             'type': 'warning', "title": 'Kayıt Silme',
             "msg": 'Öğrencinin kaydı %s nedeniyle silinmiştir.' % self.current.input['form']['aciklama']
@@ -118,6 +251,6 @@ class KayitSil(CrudView):
 
         def notify(person):
             Notify(person.user.key).set_message(msg=msg, title=title, typ=Notify.TaskInfo)
-
-        notify(ogrenci_program.danisman)
+        for program in ogrenci_program:
+            notify(program.danisman)
         notify(ogrenci)
