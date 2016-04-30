@@ -13,6 +13,18 @@ from ulakbus.models.personel import Personel
 
 
 def zato_service_selector(model, action):
+    """
+    Model ve actionlara uygun Hitap Servislerini import eder.
+
+    Args:
+        model (class): model class object
+        action (str): model uzerinde yapilacak eylem, sil, ekle, guncelle etc..
+
+    Returns:
+        hitap_service (class): Zato wrapperdan modulunden kritere uygun isi yapan class
+
+    """
+
     suffix = {"add": "Ekle",
               "update": "Guncelle",
               "delete": "Sil",
@@ -31,10 +43,7 @@ def zato_service_selector(model, action):
 
 class ListFormHitap(JsonForm):
     """
-    Holds list view form elements.
-
-    Used by CrudMeta metaclass to create distinct
-    copies for each subclass of CrudView.
+    HITAP Sync eklenmis list view formu.
     """
     add = fields.Button("Ekle", cmd="add_edit_form")
     sync = fields.Button("HITAP ile senkronize et", cmd="sync")
@@ -86,9 +95,15 @@ class CrudHitap(CrudView):
 
     @view_method
     def sync(self):
+        """Crud Hitap Sync
+
+        Personele ait kayitlari hitap ile sync eder. Zamanlanmis sync islemini
+        manuel olarak calistirir.
+
+        """
         hitap_service = zato_service_selector(self.model_class, 'sync')
         hs = hitap_service(tckn=str(self.current.task_data['personel_tckn']))
-        response = hs.zato_request()
+        hs.zato_request()
 
     def save(self):
         """Crud Hitap Kaydet
@@ -105,7 +120,7 @@ class CrudHitap(CrudView):
         action, self.object.sync = ('add', 4) if obj_is_new else ('update', 2)
         self.object.save()
 
-        hitap_service = zato_service_selector(self.Meta.Model, action)
+        hitap_service = zato_service_selector(self.model_class, action)
         hs = hitap_service(kayit=self.object)
         try:
             response = hs.zato_request()
@@ -133,7 +148,7 @@ class CrudHitap(CrudView):
             del self.current.task_data['object_id']
 
         self.object.sync = 3
-        hitap_service = zato_service_selector(self.Meta.Model, 'delete')
+        hitap_service = zato_service_selector(self.model_class, 'delete')
         hs = hitap_service(kayit=self.object)
 
         try:
