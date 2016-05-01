@@ -76,6 +76,8 @@ class Personel(Model):
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
     user = User(one_to_one=True)
+    # Arama için
+    kadro_derece = field.Integer()
 
     class Meta:
         app = 'Personel'
