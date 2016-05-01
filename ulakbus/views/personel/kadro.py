@@ -405,16 +405,42 @@ class TerfiDuzenleForm(JsonForm):
     devam = fields.Button("Devam Et", cmd="kaydet")
 
 
+class PersonelTerfiKriterleri(JsonForm):
+    baslangic_tarihi = fields.Date("Başlangıç Tarihi",
+                                   default=datetime.date.today().strftime('%Y-%m-%d'))
+
+    bitis_tarihi = fields.Date("Bitiş Tarihi", default=(
+        datetime.date.today() + datetime.timedelta(days=15)).strftime('%Y-%m-%d'))
+
+    personel_turu = fields.Integer("Personel Türü", choices=[(1, "Akademik"), (2, "Idari")],
+                                   default=2)
+
+    devam = fields.Button("Sorgula")
+
+
 class TerfiListe(CrudView):
     class Meta:
         model = "Personel"
+
+    def personel_kriterleri(self):
+        _form = PersonelTerfiKriterleri(current=self.current,
+                                        title="Terfisi Yapılacak Personel Kriterleri")
+        self.form_out(_form)
 
     def terfisi_gelen_personel_liste(self):
 
         try:
             self.current.task_data["personeller"]
         except KeyError:
-            self.current.task_data["personeller"] = terfi_tarhine_gore_personel_listesi()
+            personel_turu = self.current.input['form']['personel_turu']
+
+            baslangic_tarihi = datetime.datetime.strptime(
+                self.current.input['form']['baslangic_tarihi'], '%d.%m.%Y')
+            bitis_tarihi = datetime.datetime.strptime(
+                self.current.input['form']['bitis_tarihi'], '%d.%m.%Y')
+            self.current.task_data["personeller"] = terfi_tarhine_gore_personel_listesi(
+                baslangic_tarihi=baslangic_tarihi, bitis_tarihi=bitis_tarihi,
+                personel_turu=personel_turu)
 
         if self.current.task_data["personeller"]:
             _form = TerfiForm(current=self.current, title="Terfi İşlemi")
@@ -431,8 +457,8 @@ class TerfiListe(CrudView):
             self.current.output['msgbox'] = {
                 'type': 'info', "title": 'Terfi Bekleyen Personel Bulunamadı',
                 "msg": '%s - %s tarih aralığında terfi bekleyen personel bulunamadı.' % (
-                    datetime.datetime.today(),
-                    datetime.datetime.today() + datetime.timedelta(days=15))
+                    baslangic_tarihi.strftime('%d-%m-%Y'),
+                    bitis_tarihi.strftime('%d-%m-%Y'))
             }
 
     def terfi_liste_duzenle(self):
