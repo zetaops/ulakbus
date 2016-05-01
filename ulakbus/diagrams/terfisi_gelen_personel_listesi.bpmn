@@ -6,7 +6,6 @@
   <bpmn2:process id="terfisi_gelen_personel_listesi" name="Terfisi Gelen Personel Listesi" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="personel_lane" name="Sube Muduru">
-        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>terfi_onayina_gonder</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>terfi_duzenle</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>terfisi_gelen_personel_listes</bpmn2:flowNodeRef>
@@ -14,6 +13,8 @@
         <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>EndEvent_3</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>onay_belgesi_uret</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Personel_Kriterleri</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
       </bpmn2:lane>
       <bpmn2:lane id="Lane_2" name="Genel Sekreter veya Rektor Yardimcisi">
         <bpmn2:flowNodeRef>aciklama_yaz_ve_geri_gonder</bpmn2:flowNodeRef>
@@ -24,10 +25,6 @@
         <bpmn2:flowNodeRef>ServiceTask_2</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="StartEvent_1" targetRef="terfisi_gelen_personel_listes"/>
     <bpmn2:serviceTask id="terfi_onayina_gonder" camunda:class="personel.kadro.TerfiListe.onaya_gonder" name="Terfi Onayina Gonder">
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
@@ -40,8 +37,8 @@
     <bpmn2:sequenceFlow id="SequenceFlow_22" name="" sourceRef="terfi_duzenle" targetRef="terfi_duzenlemelerini_kaydet"/>
     <bpmn2:userTask id="terfisi_gelen_personel_listes" camunda:assignee="personel.kadro.TerfiListe.terfisi_gelen_personel_liste" name="Terfisi Gelen Personel Listesi">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="terfisi_gelen_personel_listes" targetRef="ExclusiveGateway_1"/>
@@ -105,6 +102,15 @@
       <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_25" name="" sourceRef="ServiceTask_2" targetRef="terfisi_gelen_personel_listes"/>
+    <bpmn2:userTask id="Personel_Kriterleri" camunda:assignee="personel.kadro.TerfiListe.personel_kriterleri" name="Personel Kriterleri Gir">
+      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="Personel_Kriterleri" targetRef="terfisi_gelen_personel_listes"/>
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="StartEvent_1" targetRef="Personel_Kriterleri"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="terfisi_gelen_personeller">
@@ -112,9 +118,9 @@
         <dc:Bounds height="793.0" width="1705.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="108.0" y="82.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="72.0" y="82.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="132.0" y="123.0"/>
+          <dc:Bounds height="0.0" width="0.0" x="96.0" y="123.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_2" bpmnElement="terfisi_gelen_personel_listes">
@@ -222,11 +228,11 @@
           <dc:Bounds height="6.0" width="6.0" x="734.0" y="654.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="_BPMNShape_StartEvent_2" targetElement="_BPMNShape_UserTask_2">
-        <di:waypoint xsi:type="dc:Point" x="144.0" y="100.0"/>
-        <di:waypoint xsi:type="dc:Point" x="300.0" y="100.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="_BPMNShape_StartEvent_2" targetElement="_BPMNShape_UserTask_27">
+        <di:waypoint xsi:type="dc:Point" x="108.0" y="100.0"/>
+        <di:waypoint xsi:type="dc:Point" x="154.0" y="100.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="262.0" y="120.0"/>
+          <dc:Bounds height="6.0" width="6.0" x="110.0" y="100.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_41" bpmnElement="terfi_islemlerini_kaydet">
@@ -283,6 +289,13 @@
         <di:waypoint xsi:type="dc:Point" x="974.0" y="19.0"/>
         <di:waypoint xsi:type="dc:Point" x="350.0" y="19.0"/>
         <di:waypoint xsi:type="dc:Point" x="350.0" y="60.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_27" bpmnElement="Personel_Kriterleri">
+        <dc:Bounds height="80.0" width="100.0" x="154.0" y="60.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="_BPMNShape_UserTask_27" targetElement="_BPMNShape_UserTask_2">
+        <di:waypoint xsi:type="dc:Point" x="254.0" y="100.0"/>
+        <di:waypoint xsi:type="dc:Point" x="300.0" y="100.0"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
