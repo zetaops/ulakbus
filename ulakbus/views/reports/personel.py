@@ -62,11 +62,19 @@ class TerfisiDuranPersonel(Reporter):
     TITLE = "Terfisi Duran Personel Listesi"
 
     def get_objects(self):
-        personel_list = []
+        """
+        Terfisi Duran Personel icin kriterlerimiz:
+            - gorev_ayligi_derecesi, kadro_derecesine esit olmali
+            - gorev_ayligi_kademesi 3 ten buyuk olmalidir.
 
-        for p in Personel.objects.raw("*:*",
-                            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)"):
-            # todo: pyoko bir metod sagladiginda, raw yazilan bu sorguyu duzeltecegiz.
+        """
+
+        personel_list = []
+        # todo: pyoko bir metod sagladiginda, raw yazilan bu sorguyu duzeltecegiz.
+        p_query = Personel.objects.raw("gorev_ayligi_kademe:[4 TO *] AND deleted: false",
+                            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)")
+
+        for p in p_query:
 
             personel_record = OrderedDict({})
             personel_record["TCK No"] = p.tckn
