@@ -26,6 +26,7 @@ class ReportWithSync(Reporter.ReportForm):
     printout = fields.Button("Yazdır", cmd="printout")
     sync = fields.Button("HITAP ile senkronize et", cmd="sync")
 
+
 class HizmetCetveli(Reporter):
     TITLE = "Hizmet Cetveli Listesi"
 
@@ -46,18 +47,24 @@ class HizmetCetveli(Reporter):
             self.current.task_data['personel_tckn'] = Personel.objects.get(self.input['id']).tckn
 
         hk_list = []
-        for hk in HizmetKayitlari.objects.filter(personel_id=self.current.task_data['personel_id']).order_by('order_date'):
-                hk_record = OrderedDict({})
-                hk_record['Görevleri'] = hk.gorev.title()
-                hk_record['H. Sınıf'] = hk.get_hizmet_sinifi_display()
-                hk_record['K. Der.'] = str(hk.kadro_derece)
-                hk_record['G. A.'] = "%i/%i" % (hk.odeme_derece,hk.odeme_kademe)
-                hk_record['K. H.'] = "%i/%i" % (hk.kazanilmis_hak_ayligi_derece,hk.kazanilmis_hak_ayligi_kademe)
-                hk_record['E. M.'] = "%i/%i" % (hk.emekli_derece,hk.emekli_kademe)
-                hk_record['Başlangıç Tar.'] = str(hk.baslama_tarihi) if hk.baslama_tarihi!=datetime.date(1900,1,1) else ''
-                hk_record['Bitiş Tar.'] = str(hk.bitis_tarihi) if hk.bitis_tarihi!=datetime.date(1900,1,1) else ''
-                hk_record['Sebep'] = str(hk.sebep_kod)
-                hk_list.append(hk_record)
+        for hk in HizmetKayitlari.objects.filter(
+                personel_id=self.current.task_data['personel_id']).order_by('order_date'):
+            hk_record = OrderedDict({})
+            hk_record['Görev'] = hk.gorev.title()
+            hk_record['H. Sınıf'] = hk.get_hizmet_sinifi_display()
+            hk_record['Kadro'] = str(hk.kadro_derece)
+            hk_record['GA'] = "%i/%i" % (hk.odeme_derece, hk.odeme_kademe)
+            hk_record['KH'] = "%i/%i" % (
+                hk.kazanilmis_hak_ayligi_derece, hk.kazanilmis_hak_ayligi_kademe)
+            hk_record['EM'] = "%i/%i" % (hk.emekli_derece, hk.emekli_kademe)
+            hk_record['Başlangıç'] = str(
+                hk.baslama_tarihi) if hk.baslama_tarihi != datetime.date(1900, 1, 1) else ''
+
+            hk_record['Bitiş'] = str(
+                hk.bitis_tarihi) if hk.bitis_tarihi != datetime.date(1900, 1, 1) else ''
+
+            hk_record['Sebep'] = str(hk.sebep_kod)
+            hk_list.append(hk_record)
         return hk_list
 
     def sync(self):
