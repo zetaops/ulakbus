@@ -10,6 +10,7 @@ import six
 
 from ulakbus.models import *
 from ulakbus.views.reports.base import Reporter
+from collections import OrderedDict
 
 
 class PersonelByGender(Reporter):
@@ -23,8 +24,9 @@ class PersonelByGender(Reporter):
                 val = int(val)
             except:
                 pass
-            result.append((genders.get(val, val) , num))
+            result.append((genders.get(val, val), num))
         return result
+
 
 class PersonelByAkademikIdari(Reporter):
     TITLE = 'Akademik / İdari Personel Sayısı'
@@ -40,6 +42,7 @@ class PersonelByAkademikIdari(Reporter):
             result.append((choices.get(val, val), num))
         return result
 
+
 class Kadrolar(Reporter):
     TITLE = 'Genel Kadro Durumları'
 
@@ -54,8 +57,38 @@ class Kadrolar(Reporter):
             result.append((choices.get(val, val), num))
         return result
 
+
+class TerfisiDuranPersonel(Reporter):
+    TITLE = "Terfisi Duran Personel Listesi"
+
+    def get_objects(self):
+        personel_list = []
+
+        for p in Personel.objects.raw("*:*",
+                            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)"):
+            # todo: pyoko bir metod sagladiginda, raw yazilan bu sorguyu duzeltecegiz.
+
+            personel_record = OrderedDict({})
+            personel_record["TCK No"] = p.tckn
+            personel_record["Ad"] = "%s %s" % (p.ad, p.soyad)
+            personel_record["Personel Tür"] = p.personel_turu
+            personel_record["Kadro Derece"] = p.kadro.derece
+
+            personel_record["Görev Aylığı"] = "%i/%i" % (
+                p.gorev_ayligi_derece, p.gorev_ayligi_kademe)
+
+            personel_record["Kazanılmış Hak"] = "%i/%i" % (
+                p.kazanilmis_hak_derece, p.kazanilmis_hak_kademe)
+
+            personel_record["Emekli Müktesebat"] = "%i/%i" % (
+                p.emekli_muktesebat_derece, p.emekli_muktesebat_kademe)
+
+            personel_list.append(personel_record)
+
+        return personel_list
+
 # class Izinler(Reporter):
-#     TITLE = 'Personel İzin Durumu'
+# TITLE = 'Personel İzin Durumu'
 #
 #     def get_objects(self):
 #         result = []
