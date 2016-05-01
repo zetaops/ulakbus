@@ -63,27 +63,28 @@ class TerfisiDuranPersonel(Reporter):
 
     def get_objects(self):
         personel_list = []
-        for p in Personel.objects.filter(gorev_ayligi_kademe__gte=3):
-            if p.kadro.derece == p.gorev_ayligi_derece:
 
-                personel_record = OrderedDict({})
+        for p in Personel.objects.raw("*:*",
+                            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)"):
+            # todo: pyoko bir metod sagladiginda, raw yazilan bu sorguyu duzeltecegiz.
 
-                personel_record["TCK No"] = p.tckn
-                personel_record["Ad"] = "%s %s" % (p.ad, p.soyad)
-                personel_record["Personel Tür"] = p.personel_turu
+            personel_record = OrderedDict({})
+            personel_record["TCK No"] = p.tckn
+            personel_record["Ad"] = "%s %s" % (p.ad, p.soyad)
+            personel_record["Personel Tür"] = p.personel_turu
+            personel_record["Kadro Derece"] = p.kadro.derece
 
-                personel_record["Kadro Derece"] = p.kadro.derece
+            personel_record["Görev Aylığı"] = "%i/%i" % (
+                p.gorev_ayligi_derece, p.gorev_ayligi_kademe)
 
-                personel_record["Görev Aylığı"] = "%i/%i" % (
-                    p.gorev_ayligi_derece, p.gorev_ayligi_kademe)
+            personel_record["Kazanılmış Hak"] = "%i/%i" % (
+                p.kazanilmis_hak_derece, p.kazanilmis_hak_kademe)
 
-                personel_record["Kazanılmış Hak"] = "%i/%i" % (
-                    p.kazanilmis_hak_derece, p.kazanilmis_hak_kademe)
+            personel_record["Emekli Müktesebat"] = "%i/%i" % (
+                p.emekli_muktesebat_derece, p.emekli_muktesebat_kademe)
 
-                personel_record["Emekli Müktesebat"] = "%i/%i" % (
-                    p.emekli_muktesebat_derece, p.emekli_muktesebat_kademe)
+            personel_list.append(personel_record)
 
-                personel_list.append(personel_record)
         return personel_list
 
 # class Izinler(Reporter):
