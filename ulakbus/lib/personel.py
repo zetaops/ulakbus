@@ -7,8 +7,9 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 import datetime
+from ulakbus.models.hitap import HizmetKayitlari
 
-__author__ = 'zops5'
+__author__ = 'Ali Riza Keles'
 
 
 def gorunen_kademe_hesapla(derece, kademe):
@@ -63,11 +64,14 @@ def suren_terfi_var_mi(p):
 
 
 def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None,
-                                        suren_terfi_kontrol=True):
+                                        personel_turu=None, suren_terfi_kontrol=True):
     """
     Args:
         baslangic_tarihi (date): baslangic_tarihi
         bitis_tarihi (date): bitis_tarihi
+        personel_turu (str): personel turu, 1 akademik, 2 idari
+        suren_terfi_kontrol (bool): personel listesi hazirlanirken suren baska terfi islemi varmi
+                                    kontrolunun yapilip yapilmayacagini kontrol eder.
 
     Returns:
         personeller (dict): personel kademe derece bilgileri iceren sozluk
@@ -81,6 +85,7 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
     bitis_tarihi = bitis_tarihi or simdi + datetime.timedelta(days=90)
 
     terfisi_gelen_personeller = Personel.objects.filter(
+        personel_turu=personel_turu,
         sonraki_terfi_tarihi__gte=baslangic_tarihi,
         sonraki_terfi_tarihi__lte=bitis_tarihi)
 
