@@ -21,7 +21,7 @@ from zengine.views.crud import view_method
 
 class ReportWithSync(Reporter.ReportForm):
     """
-    HITAP Sync eklenmis rapor formu.
+    ReportForm Sync eklenmis versiyonu
     """
     printout = fields.Button("Yazdır", cmd="printout")
     sync = fields.Button("HITAP ile senkronize et", cmd="sync")
@@ -37,6 +37,10 @@ class HizmetCetveli(Reporter):
             self.sync()
 
     def get_objects(self):
+        """
+        Personel id ile kayıtları filtreleyip sıralı bir şekilde listeler
+        :return:
+        """
         if 'id' in self.input:
             self.current.task_data['personel_id'] = self.input['id']
             self.current.task_data['personel_tckn'] = Personel.objects.get(self.input['id']).tckn
@@ -57,9 +61,17 @@ class HizmetCetveli(Reporter):
         return hk_list
 
     def sync(self):
+        """
+        HizmetKayıtları için Hitap sync fonksiyonunu çalıştırır
+        :return:
+        """
         hitap_service = zato_service_selector(HizmetKayitlari, 'sync')
         hs = hitap_service(tckn=str(self.current.task_data['personel_tckn']))
         hs.zato_request()
 
     def clear_cmd(self):
+        """
+        sync sonrası sonsuz döngüye girmesini engellemek için cmd show olarak değiştirildi
+        :return:
+        """
         self.current.input['cmd'] = 'show'
