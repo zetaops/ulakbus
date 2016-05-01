@@ -77,12 +77,15 @@ class Personel(Model):
 
     kazanilmis_hak_derece = field.Integer("Güncel Kazanılmış Hak Derece", index=True)
     kazanilmis_hak_kademe = field.Integer("Güncel Kazanılmış Hak Kademe", index=True)
+    kazanilmis_hak_ekgosterge = field.Integer("Kazanılmış Hak Ek Gösterge", index=True)
 
     gorev_ayligi_derece = field.Integer("Güncel Görev Aylığı Derece", index=True)
     gorev_ayligi_kademe = field.Integer("Güncel Görev Aylığı Kademe", index=True)
+    gorev_ayligi_ekgosterge = field.Integer("Görev Aylığı Ek Gösterge", index=True)
 
     emekli_muktesebat_derece = field.Integer("Güncel Emekli Müktesebat Derece", index=True)
     emekli_muktesebat_kademe = field.Integer("Güncel Emekli Müktesebat Kademe", index=True)
+    emekli_muktesebat_ekgosterge = field.Integer("Emekli Müktesebat Ek Gösterge", index=True)
 
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
