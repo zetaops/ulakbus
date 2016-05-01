@@ -77,17 +77,22 @@ class Personel(Model):
 
     kazanilmis_hak_derece = field.Integer("Güncel Kazanılmış Hak Derece", index=True)
     kazanilmis_hak_kademe = field.Integer("Güncel Kazanılmış Hak Kademe", index=True)
+    kazanilmis_hak_ekgosterge = field.Integer("Kazanılmış Hak Ek Gösterge", index=True)
 
     gorev_ayligi_derece = field.Integer("Güncel Görev Aylığı Derece", index=True)
     gorev_ayligi_kademe = field.Integer("Güncel Görev Aylığı Kademe", index=True)
+    gorev_ayligi_ekgosterge = field.Integer("Görev Aylığı Ek Gösterge", index=True)
 
     emekli_muktesebat_derece = field.Integer("Güncel Emekli Müktesebat Derece", index=True)
     emekli_muktesebat_kademe = field.Integer("Güncel Emekli Müktesebat Kademe", index=True)
+    emekli_muktesebat_ekgosterge = field.Integer("Emekli Müktesebat Ek Gösterge", index=True)
 
     birim = Unit("Birim")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
     sonraki_terfi_tarihi = field.Date("Sonraki Terfi Tarihi", index=True, format="%d.%m.%Y")
     user = User(one_to_one=True)
+    # Arama için
+    kadro_derece = field.Integer()
 
     class Meta:
         app = 'Personel'
@@ -103,7 +108,8 @@ class Personel(Model):
 
     @lazy_property
     def gorunen_kazanilmis_hak_kademe(self):
-        return gorunen_kademe_hesapla(int(self.kazanilmis_hak_derece), int(self.kazanilmis_hak_kademe))
+        return gorunen_kademe_hesapla(int(self.kazanilmis_hak_derece),
+                                      int(self.kazanilmis_hak_kademe))
 
     @lazy_property
     def gorunen_gorev_ayligi_kademe(self):
@@ -111,7 +117,8 @@ class Personel(Model):
 
     @lazy_property
     def gorunen_emekli_muktesebat_kademe(self):
-        return gorunen_kademe_hesapla(int(self.emekli_muktesebat_derece), int(self.emekli_muktesebat_kademe))
+        return gorunen_kademe_hesapla(int(self.emekli_muktesebat_derece),
+                                      int(self.emekli_muktesebat_kademe))
 
     @lazy_property
     def atama(self):
@@ -393,6 +400,7 @@ class UcretsizIzin(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.tip, self.onay_tarihi)
+
 
 class Atama(Model):
     """Atama Modeli

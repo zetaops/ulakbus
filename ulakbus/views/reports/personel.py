@@ -6,7 +6,6 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-import six
 
 from ulakbus.models import *
 from ulakbus.views.reports.base import Reporter
@@ -94,16 +93,3 @@ class TerfisiDuranPersonel(Reporter):
             personel_list.append(personel_record)
 
         return personel_list
-
-# class Izinler(Reporter):
-# TITLE = 'Personel İzin Durumu'
-#
-#     def get_objects(self):
-#         result = []
-#         for val, num in Izin.objects.filter():
-#             try:
-#                 val = int(val)
-#             except:
-#                 pass
-#             result.append((choices.get(val, val), num))
-#         return result

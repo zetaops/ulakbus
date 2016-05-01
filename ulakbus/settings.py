@@ -91,7 +91,7 @@ OBJECT_MENU = {
 
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'personel_hizmet_cetveli'},
 
         {'name': 'HizmetKurs', 'verbose_name': 'Kurs Bilgileri', 'field': 'personel_id',
          'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
