@@ -7,7 +7,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 import datetime
-from ulakbus.models.hitap import HizmetKayitlari
 
 __author__ = 'Ali Riza Keles'
 
