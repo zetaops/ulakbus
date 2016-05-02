@@ -522,6 +522,7 @@ class TerfiListe(CrudView):
             p_data["terfi_sonrasi_gorunen_emekli_muktesebat_kademe"] = p[
                 "yeni_emekli_muktesebat_gorunen"]
 
+    # todo: lane geicisi
     def onaya_gonder(self):
         pass
 
@@ -571,6 +572,7 @@ class TerfiListe(CrudView):
                 # TODO: LOG for sysadmin. Artik olmayan bir personel uzerinde terfi islemi..
                 pass
 
+    # todo: lane geicisi
     def taraflari_bilgilendir(self):
         pass
 
