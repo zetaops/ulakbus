@@ -75,6 +75,9 @@ class Personel(Model):
     kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
 
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+    kadro_derece = field.Integer()  # Arama amacli
+
     kazanilmis_hak_derece = field.Integer("Güncel Kazanılmış Hak Derece", index=True)
     kazanilmis_hak_kademe = field.Integer("Güncel Kazanılmış Hak Kademe", index=True)
     kazanilmis_hak_ekgosterge = field.Integer("Kazanılmış Hak Ek Gösterge", index=True)
@@ -87,12 +90,15 @@ class Personel(Model):
     emekli_muktesebat_kademe = field.Integer("Güncel Emekli Müktesebat Kademe", index=True)
     emekli_muktesebat_ekgosterge = field.Integer("Emekli Müktesebat Ek Gösterge", index=True)
 
+    kh_sonraki_terfi_tarihi = field.Date("Kazanılmış Hak Sonraki Terfi Tarihi", index=True,
+                                         format="%d.%m.%Y")
+    ga_sonraki_terfi_tarihi = field.Date("Görev Aylığı Sonraki Terfi Tarihi", index=True,
+                                         format="%d.%m.%Y")
+    em_sonraki_terfi_tarihi = field.Date("Emekli Müktesebat Sonraki Terfi Tarihi", index=True,
+                                         format="%d.%m.%Y")
+
     birim = Unit("Birim")
-    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
-    sonraki_terfi_tarihi = field.Date("Sonraki Terfi Tarihi", index=True, format="%d.%m.%Y")
     user = User(one_to_one=True)
-    # Arama için
-    kadro_derece = field.Integer()
 
     class Meta:
         app = 'Personel'

@@ -60,14 +60,13 @@ Kadro Sil Onay
 
 """
 from pyoko.exceptions import ObjectDoesNotExist
-from ulakbus.lib.personel import derece_ilerlet, terfi_tarhine_gore_personel_listesi
+from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi
 from zengine.views.crud import CrudView, obj_filter
 from zengine.forms import JsonForm
 from zengine.forms import fields
-from ulakbus.models import Personel, gorunen_kademe_hesapla
+from ulakbus.models import Personel
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
-from collections import OrderedDict
 import datetime
 
 
@@ -319,9 +318,6 @@ class TerfiForm(JsonForm):
     def generate_form(self):
         """
         Generates form with given data ``personel_data``
-
-        Args:
-            personel_data (dict): personel datasi
 
         """
 
