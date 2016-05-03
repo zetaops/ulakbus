@@ -16,7 +16,7 @@ Hitap'a personelin IHS bilgilerinin guncellemesini yapar.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
-from ulakbus.models.hitap import HizmetIHS
+from ulakbus.models.hitap.hitap import HizmetIHS
 
 
 class HizmetIhsGuncelle(HITAPGuncelle):
