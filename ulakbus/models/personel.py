@@ -83,7 +83,6 @@ class Personel(Model):
     emekli_muktesebat_ekgosterge = field.Integer("Emekli Müktesebat Ek Gösterge", index=True)
 
     kh_sonraki_terfi_tarihi = field.Date("Kazanılmış Hak Sonraki Terfi Tarihi", index=True,
-<<<<<<< bf8c48e2125b8aa4d292420c01ee63dfc02e0854
                                          format="%d.%m.%Y")
     ga_sonraki_terfi_tarihi = field.Date("Görev Aylığı Sonraki Terfi Tarihi", index=True,
                                          format="%d.%m.%Y")
@@ -198,7 +197,6 @@ class Personel(Model):
 
     def __unicode__(self):
         return "%s %s" % (self.ad, self.soyad)
-
 
 
 class AdresBilgileri(Model):
