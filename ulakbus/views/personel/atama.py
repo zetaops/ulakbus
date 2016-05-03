@@ -9,7 +9,7 @@
 #
 # Yeni Personel Ekle WF adimlarini icerir.
 from ulakbus.lib.view_helpers import prepare_titlemap_for_model, prepare_choices_for_model
-from ulakbus.models.hitap.hitap import HitapSebep
+from ulakbus.models.hitap.HitapSebep import HitapSebep
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from ulakbus.models.personel import Personel, Atama, Kadro
