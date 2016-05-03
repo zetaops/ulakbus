@@ -56,8 +56,8 @@ class Kadrolar(Reporter):
             result.append((choices.get(val, val), num))
         return result
 
-class TerfisiDuranPersonel(Reporter):
-    TITLE = "Terfisi Duran Personel Listesi"
+class TerfisiTikananPersonel(Reporter):
+    TITLE = "Terfisi Tıkanan Personel Listesi"
 
     def get_objects(self):
         """
