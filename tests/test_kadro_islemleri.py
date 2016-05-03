@@ -66,7 +66,7 @@ class TestCase(BaseTestCase):
             return len(lst) - 1
 
         # Veritabanından personel işleri kullanıcısı seçer.
-        usr = User(super_context).objects.get('RW5nDzjDSfSNLIeLiQySfABxBHU')
+        usr = User(super_context).objects.get('UuXR8pmKQNzfaPHB2K5wxhC7WDo')
 
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/kadro_islemleri', user=usr)
