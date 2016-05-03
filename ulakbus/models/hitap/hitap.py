@@ -5,10 +5,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from .personel import Personel
+from ..personel import Personel
 from pyoko import Model, field, Node
-from .auth import Role
-import datetime
+from ..auth import Role
 
 
 class NufusKayitlari(Model):
@@ -34,13 +33,13 @@ class NufusKayitlari(Model):
     sync = field.Integer("Senkronize")
     personel = Personel(one_to_one=True)
 
+
     # TODO: Personele gore unique olmali
 
     class Meta:
         app = 'Personel'
         verbose_name = "Nüfus Bilgisi"
         verbose_name_plural = "Nüfus Bilgileri"
-        hitap_service_prefix = "HitapNufus"
 
     def __unicode__(self):
         return '%s %s %s' % (self.ad, self.soyad, self.emekli_sicil_no)
@@ -68,7 +67,6 @@ class HizmetKurs(Model):
         verbose_name_plural = "Kurslar"
         list_fields = ['kayit_no', 'bolum_ad', 'okul_ad']
         search_fields = ['tckn', 'okul_ad', 'bolum_ad']
-        hitap_service_prefix = "HitapKurs"
 
     def __unicode__(self):
         return '%s %s %s' % (self.kurs_nevi, self.bolum_ad, self.okul_ad)
@@ -97,7 +95,6 @@ class HizmetOkul(Model):
         verbose_name_plural = "Okullar"
         list_fields = ['okul_ad', 'bolum', 'hazirlik', 'kayit_no']
         search_fields = ['okul_ad', 'bolum', 'tckn']
-        hitap_service_prefix = "HitapOkul"
 
     def __unicode__(self):
         return '%s %s %s' % (self.kayit_no, self.bolum, self.okul_ad)
@@ -130,7 +127,6 @@ class HizmetMahkeme(Model):
         verbose_name_plural = "Mahkemeler"
         list_fields = ['mahkeme_ad', 'karar_sayisi', 'aciklama', 'kurum_onay_tarihi']
         search_fields = ['kayit_no', 'mahkeme_ad', 'karar_sayisi']
-        hitap_service_prefix = "HitapMahkeme"
 
     def __unicode__(self):
         return '%s %s %s' % (self.mahkeme_ad, self.karar_tarihi, self.aciklama)
@@ -163,7 +159,6 @@ class HizmetBirlestirme(Model):
         verbose_name_plural = "Birleştirmeler"
         list_fields = ['sgk_sicil_no', 'baslama_tarihi', 'bitis_tarihi', 'kamu_isyeri_ad']
         search_fields = ['kayit_no', 'sgk_sicil_no', 'kamu_isyeri_ad']
-        hitap_service_prefix = "HitapBirlestirme"
 
     def __unicode__(self):
         return '%s %s' % (self.kayit_no, self.sgk_nevi)
@@ -189,7 +184,6 @@ class HizmetTazminat(Model):
         verbose_name_plural = "Tazminatlar"
         list_fields = ['unvan_kod', 'makam', 'gorev']
         search_fields = ['makam', 'gorev', 'temsil']
-        hitap_service_prefix = "HitapTazminat"
 
     def __unicode__(self):
         return '%s %s' % (self.gorev, self.tazminat_tarihi)
@@ -215,7 +209,6 @@ class HizmetUnvan(Model):
         verbose_name_plural = "Ünvanlar"
         list_fields = ['unvan_kod', 'hizmet_sinifi', 'kurum_onay_tarihi']
         search_fields = ['unvan_kod', 'hizmet_sinifi']
-        hitap_service_prefix = "HitapUnvan"
 
     def __unicode__(self):
         return '%s %s' % (self.unvan_kod, self.hizmet_sinifi)
@@ -252,7 +245,6 @@ class HizmetAcikSure(Model):
         verbose_name_plural = "Açığa Alınmalar"
         list_fields = ['acik_sekil', 'aciga_alinma_tarih', 'kurum_onay_tarihi']
         search_fields = ['hizmet_durum', 'acik_sekil', 'aciga_alinma_tarih']
-        hitap_service_prefix = "HitapAcikSure"
 
     def __unicode__(self):
         return '%s %s %s' % (self.iade_sekil, self.kayit_no, self.aciga_alinma_tarih)
@@ -290,7 +282,6 @@ class HizmetBorclanma(Model):
         verbose_name_plural = "Borçlanmalar"
         list_fields = ['ad', 'soyad', 'toplam_tutar', 'odenen_miktar', 'borclanma_tarihi']
         search_fields = ['tckn', 'ad', 'soyad']
-        hitap_service_prefix = "HitapBorclanma"
 
     def __unicode__(self):
         return '%s %s %s' % (self.borc_nevi, self.calistigi_kurum, self.gun_sayisi)
@@ -311,7 +302,6 @@ class HizmetIHS(Model):
         verbose_name_plural = "İtibari Hizmet Süreleri"
         list_fields = ['kayit_no', 'ihz_nevi']
         search_fields = ['tckn', 'ihz_nevi']
-        hitap_service_prefix = "HitapIHS"
 
     def __unicode__(self):
         return '%s %s' % (self.baslama_tarihi, self.ihz_nevi)
@@ -335,43 +325,36 @@ class HizmetIstisnaiIlgi(Model):
         verbose_name_plural = "İstisnai İlgiler"
         list_fields = ['baslama_tarihi', 'bitis_tarihi', 'istisnai_ilgi_nevi', 'kha_durum']
         search_fields = ['istisnai_ilgi_nevi', 'kha_durum']
-        hitap_service_prefix = "HitapIstisnaiIlgi"
 
     def __unicode__(self):
         return '%s %s %s' % (self.kayit_no, self.istisnai_ilgi_nevi, self.kha_durum)
 
 
 class HizmetKayitlari(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kayıt No", index=True)
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    gorev = field.String("Görev", index=True)  # birim + kadro unvanı
-    unvan_kod = field.Integer("Unvan Kod", index=True)  # kadro unvan kodu
-    yevmiye = field.String("Yevmiye", index=True)
-    ucret = field.String("Ücret", index=True)
-    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True,
-                                  choices="hizmet_sinifi")  # atama modelinden gelecek
-    kadro_derece = field.Integer("Kadro Derecesi", index=True)  # personelden gelecek
-    odeme_derece = field.Integer("Ödeme Derecesi", index=True)  # personelden gelecek
-    odeme_kademe = field.Integer("Ödeme Kademesi", index=True)  # personelden gelecek (gorunen)
-    odeme_ekgosterge = field.Integer("Ödeme Ek Göstergesi", index=True)  # personelden gelecek
-    kazanilmis_hak_ayligi_derece = field.Integer("Kazanılmış Hak Aylığı Derecesi",
-                                                 index=True)  # personelden gelecek
-    kazanilmis_hak_ayligi_kademe = field.Integer("Kazanılmış Hak Aylığı Kademesi",
-                                                 index=True)  # personelden gelecek (gorunen)
+    tckn = field.String("TC Kimlik No")
+    kayit_no = field.String("Kayıt No")
+    baslama_tarihi = field.Date("Başlama Tarihi", format="%d.%m.%Y")
+    bitis_tarihi = field.Date("Bitiş Tarihi", format="%d.%m.%Y")
+    gorev = field.String("Görev")
+    unvan_kod = field.Integer("Unvan Kod")
+    yevmiye = field.String("Yevmiye")
+    ucret = field.String("Ücret")
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", choices="hizmet_sinifi")
+    kadro_derece = field.Integer("Kadro Derecesi")
+    odeme_derece = field.Integer("Ödeme Derecesi")
+    odeme_kademe = field.Integer("Ödeme Kademesi")
+    odeme_ekgosterge = field.Integer("Ödeme Ek Göstergesi")
+    kazanilmis_hak_ayligi_derece = field.Integer("Kazanılmış Hak Aylığı Derecesi")
+    kazanilmis_hak_ayligi_kademe = field.Integer("Kazanılmış Hak Aylığı Kademesi")
     kazanilmis_hak_ayligi_ekgosterge = field.Integer("Kazanılmış Hak Aylığı Ek Göstergesi",
-                                                     index=True)  # personelden gelecek
-    emekli_derece = field.Integer("Emekli Derecesi", index=True)  # personelden gelecek
-    emekli_kademe = field.Integer("Emekli Kademe", index=True)  # personelden gelecek (gorunen)
-    emekli_ekgosterge = field.Integer("Emekli Ek Göstergesi", index=True)  # personelden gelecek
-    sebep_kod = field.Integer("Sebep Kodu", index=True)
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+                                                     index=True)
+    emekli_derece = field.Integer("Emekli Derecesi")
+    emekli_kademe = field.Integer("Emekli Kademe")
+    emekli_ekgosterge = field.Integer("Emekli Ek Göstergesi")
+    sebep_kod = field.Integer("Sebep Kodu") ## Elle doldurulamaz, birden çok fixture içinden seçilecek
+    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", format="%d.%m.%Y")
+    sync = field.Integer("Senkronize")
     personel = Personel()
-
-    # post save metodunda baslangic ya da bitis tarihinden set edilir.
-    order_date = field.DateTime()
 
     class Meta:
         app = 'Personel'
@@ -379,39 +362,6 @@ class HizmetKayitlari(Model):
         verbose_name_plural = "Kayıtlar"
         list_fields = ['unvan_kod', 'gorev', 'yevmiye', 'ucret', 'hizmet_sinifi']
         search_fields = ['unvan_kod', 'gorev', 'yevmiye']
-        hitap_service_prefix = "HitapHizmetCetveli"
-
-    def post_save(self):
-        """
-        Hizmet cetvelindeki kayıtların başlama veya bitiş tarihleri
-        geliyor. Her kaydın başlama ve bitiş tarihi beraber gelmiyor.
-        Bu yüzden kayıtların sıralanabilmesi için order_date alanı
-        eklendi. Bitiş tarihi başka bir kaydın başlangıç tarihi ise
-        önce bitiş tarihi olan kayıt gürüntülenmelidir. Bu yüzden
-        başlangıç tarihine +1 saat eklendi.
-        """
-        if self.baslama_tarihi != datetime.date(1900, 1, 1):
-            self.order_date = datetime.datetime.combine(self.baslama_tarihi, datetime.time(1))
-        else:
-            self.order_date = self.bitis_tarihi
-        self.save()
-
-    def post_creation(self):
-        if self.personel:
-            self.tckn = self.personel.tckn
-            self.gorev = "%s %s" % (self.personel.birim.name, self.personel.kadro.unvan)
-            self.unvan_kod = self.personel.kadro.unvan_kod
-            self.hizmet_sinifi = self.personel.atama.hizmet_sinif
-            self.kadro_derece = self.personel.kadro_derece
-            self.odeme_derece = self.personel.gorev_ayligi_derece
-            self.odeme_kademe = self.gorunen_gorev_ayligi_kademe
-            self.odeme_ekgosterge = self.personel.gorev_ayligi_ekgosterge
-            self.kazanilmis_hak_ayligi_derece = self.personel.kazanilmis_hak_derece
-            self.kazanilmis_hak_ayligi_kademe = self.personel.gorunen_kazanilmis_hak_kademe
-            self.kazanilmis_hak_ayligi_ekgosterge = self.personel.kazanilmis_hak_ekgosterge
-            self.emekli_derece = self.personel.emekli_muktesebat_derece
-            self.emekli_kademe = self.personel.gorunen_emekli_muktesebat_kademe
-            self.emekli_ekgosterge = self.personel.emekli_muktesebat_ekgosterge
 
     def __unicode__(self):
         return '%s %s %s' % (self.unvan_kod, self.hizmet_sinifi, self.gorev)
@@ -444,26 +394,7 @@ class AskerlikKayitlari(Model):
         verbose_name_plural = "Kayıtlar"
         list_fields = ['askerlik_nevi', 'kita_baslama_tarihi', 'gorev_yeri']
         search_fields = ['askerlik_nevi', 'gorev_yeri', 'tckn']
-        hitap_service_prefix = "HitapAskerlik"
 
     def __unicode__(self):
         return '%s %s %s %s' % (
             self.askerlik_nevi, self.kayit_no, self.kita_baslama_tarihi, self.gorev_yeri)
-
-
-## TODO : Sebep kodları fixture altına taşınacak, bkz; sepeb_kod_ayrilma, sebep_kod_baslama
-class HitapSebep(Model):
-    sebep_no = field.Integer("Sebep No")
-    ad = field.String("Sebep Adı")
-    nevi = field.Integer("Sebep Nevi")
-    zorunlu_alan = field.String("Zorunlu ALan")
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Hitap Sebep Kodu"
-        verbose_name_plural = "Hitap Sebep Kodları"
-        list_fields = ['sebep_no', 'ad', 'nevi', 'zorunlu_alan']
-        search_fields = ['sebep_no', 'ad']
-
-    def __unicode__(self):
-        return '%s - %s' % (self.sebep_no, self.ad)

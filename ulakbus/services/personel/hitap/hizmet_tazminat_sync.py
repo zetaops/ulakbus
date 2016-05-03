@@ -13,7 +13,7 @@ yereldeki kayıtlarla senkronizasyonunu yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_sync import HITAPSync
-from ulakbus.models.hitap import HizmetTazminat
+from ulakbus.models.hitap.hitap import HizmetTazminat
 
 
 class HizmetTazminatSync(HITAPSync):

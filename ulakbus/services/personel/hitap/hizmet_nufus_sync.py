@@ -17,7 +17,7 @@ Note:
 """
 
 from ulakbus.services.personel.hitap.hitap_sync import HITAPSync
-from ulakbus.models.hitap import NufusKayitlari
+from ulakbus.models.hitap.hitap import NufusKayitlari
 
 
 class HizmetNufusSync(HITAPSync):

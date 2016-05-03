@@ -9,6 +9,7 @@
 #
 # Yeni Personel Ekle WF adimlarini icerir.
 from ulakbus.lib.view_helpers import prepare_titlemap_for_model, prepare_choices_for_model
+from ulakbus.models.hitap.hitap import HitapSebep
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from ulakbus.models.personel import Personel, Atama, Kadro
@@ -37,8 +38,26 @@ class PersonelAtama(CrudView):
             _form.help_text = self.current.task_data['hata_msg']
 
         son_personel = Personel.objects.set_params(sort='kurum_sicil_no_int desc')[0]
-        _form.sicil_no = fields.Integer("Kurum Sicil No (Sıradaki Sicil No : KON-%s)" % str(son_personel.kurum_sicil_no_int+1), required=True)
-#        _form.sicil_no = son_personel.kurum_sicil_no_int+1
+        personel =  Personel.objects.get(self.current.task_data['personel_id'])
+
+        _form.sicil_no = fields.Integer("Kurum Sicil No (Sıradaki Sicil No : KON-%s)" %
+                                        str(son_personel.kurum_sicil_no_int+1),
+                                        required=True,default=son_personel.kurum_sicil_no_int+1)
+
+        _form.unvan = fields.Integer("Personel Unvan", choices="unvan_kod", required=False,default=personel.unvan)
+        _form.emekli_sicil_no = fields.String("Emekli Sicil No",default=personel.emekli_sicil_no)
+        _form.personel_tip = fields.Integer("Personel Tipi", choices="personel_tip",default=personel.personel_tip)
+        _form.hizmet_sinif = fields.Integer("Hizmet Sınıfı", choices="hizmet_sinifi",default=personel.hizmet_sinifi)
+        _form.statu = fields.Integer("Statü", choices="personel_statu",default=personel.statu)
+        _form.brans = fields.String("Branş",default=personel.brans)
+        _form.gorev_suresi_baslama = fields.Date("Görev Süresi Başlama", format="%d.%m.%Y",default=personel.gorev_suresi_baslama)
+        _form.gorev_suresi_bitis = fields.Date("Görev Süresi Bitiş", format="%d.%m.%Y",default=personel.gorev_suresi_bitis)
+        _form.goreve_baslama_tarihi = fields.Date("Göreve Başlama Tarihi", format="%d.%m.%Y",default=personel.goreve_baslama_tarihi)
+        _form.baslama_sebep = fields.String("Durum",personel.baslama_sebep)
+        _form.set_choices_of('baslama_sebep', choices=prepare_choices_for_model(HitapSebep, durum=1))
+        _form.mecburi_hizmet_suresi = fields.Date("Mecburi Hizmet Süresi", format="%d.%m.%Y",default=personel.mecburi_hizmet_suresi)
+        _form.emekli_giris_tarihi = fields.Date("Emekliliğe Giriş Tarihi", format="%d.%m.%Y",default=personel.emekli_giris_tarihi)
+
 
         self.form_out(_form)
 

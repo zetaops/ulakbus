@@ -8,6 +8,7 @@
 Bu modül Ulakbüs uygulaması için personel modelini ve  personel ile ilişkili modelleri içerir.
 
 """
+from .hitap.HitapSebep import HitapSebep
 from pyoko.lib.utils import lazy_property
 
 from pyoko import Model, field
@@ -89,8 +90,36 @@ class Personel(Model):
     emekli_muktesebat_kademe = field.Integer("Güncel Emekli Müktesebat Kademe", index=True)
     emekli_muktesebat_ekgosterge = field.Integer("Emekli Müktesebat Ek Gösterge", index=True)
 
+    kh_sonraki_terfi_tarihi = field.Date("Kazanılmış Hak Sonraki Terfi Tarihi", index=True,
+                                     format="%d.%m.%Y")
+    ga_sonraki_terfi_tarihi = field.Date("Görev Aylığı Sonraki Terfi Tarihi", index=True,
+                                     format="%d.%m.%Y")
+    em_sonraki_terfi_tarihi = field.Date("Emekli Müktesebat Sonraki Terfi Tarihi", index=True,
+                                     format="%d.%m.%Y")
     birim = Unit("Birim")
+
+    # Personelin Kendi Ünvanı,
+    unvan = field.Integer("Personel Unvan", index=True, choices="unvan_kod", required=False)
+    # Aşağıdaki bilgiler atama öncesi kontrol edilecek, Doldurulması istenecek
+    emekli_sicil_no = field.String("Emekli Sicil No", index=True)
+    personel_tip = field.Integer("Personel Tipi", choices="personel_tip")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", choices="hizmet_sinifi")
+    statu = field.Integer("Statü", choices="personel_statu")
+    brans = field.String("Branş", index=True)
+    gorev_suresi_baslama = field.Date("Görev Süresi Başlama", index=True, format="%d.%m.%Y")
+    gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", index=True, format="%d.%m.%Y")
+    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
+    baslama_sebep = HitapSebep()
+    baslama_sebep.title = "Durum"
+    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
+    emekli_giris_tarihi = field.Date("Emekliliğe Giriş Tarihi", index=True, format="%d.%m.%Y")
+    # Arama için kullanılacak Flaglar
+    aday_memur = field.Boolean()
+    arsiv = field.Boolean()
+
+    # Arama için eklenen parametreler
+    kadro_derece = field.Integer()
+
     user = User(one_to_one=True)
     # Arama için
     kadro_derece = field.Integer()
