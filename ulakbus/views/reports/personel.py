@@ -65,6 +65,15 @@ class TerfisiDuranPersonel(Reporter):
             - gorev_ayligi_derecesi, kadro_derecesine esit olmali
             - gorev_ayligi_kademesi 3 ten buyuk olmalidir.
 
+            Metodun amacı terfisi duran personelleri listelemektir. Burada
+            görev aylığı kademesi 3 den yukarı olan personel listelenir.
+            Sonrada bu personeller içerisinden kadro derecesi görev aylığı
+            derecesine eşit olanlar seçilir. Örneğin bir personelin
+            kadro derecesi ve görev aylığı derecesi 4 ise o personel 4/3 e
+            kadar yükselebilir. 3 e düşemez. 4/4, 4/5 ... şeklinde gider.
+            Bu yüzden personeller veritabanından çekilirken görev aylığı kademesi
+            3 den yukarı olanlara bakıyoruz.
+
         """
 
         personel_list = []
