@@ -20,7 +20,10 @@ class TestCase(BaseTestCase):
 		"""
 		user = User.objects.get(username="mithat")
 		self.prepare_client("general_reporter", user=user)
-		res = self.client.post(model="GorevSuresiDolanPersonel")
+		res = self.client.post(model="GorevSuresiBitenPersonel")
 		simdi = datetime.date.today()
-		atamalar = Atama.objects.filter(gorev_suresi_bitis__lte=simdi)
+		atamalar = Atama.objects.filter(
+			gorev_suresi_bitis__lte=simdi,
+			personel_tip = 1
+			)
 		assert len(res.json["object"]["fields"]) == len(atamalar)
