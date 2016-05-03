@@ -10,14 +10,16 @@
 __author__ = 'Mithat Raşit Özçıkrıkcı'
 
 from zengine.lib.test_utils import BaseTestCase
+from ulakbus.models import User
 
 class TestCase(BaseTestCase):
 
-	def test_terfisi_duran_personel(self):
+	def test_terfisi_tikanan_personel(self):
 		""" 
 			Terfisi duran personelin listelendiği bir rapordur.
 		"""
-		user = User.objects.get(username="test_user")
+		user = User.objects.get(username="mithat")
 		self.prepare_client("generic_reporter", user=user)
-		res = self.client.post(report="terfisi_duran_personel")
-		assert len(res)>0
+		res = self.client.post(model="TerfisiTikananPersonel")
+		assert "object" in res.json
+		assert len(res.json["object"]["fields"]) == 1
