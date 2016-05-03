@@ -14,12 +14,12 @@ from ulakbus.models import User, Atama
 import datetime
 
 class TestCase(BaseTestCase):
-	def gorev_suresi_dolan_personel(self):
+	def test_gorev_suresi_biten_personel(self):
 		""" 
 			Görev süresi dolan personel raporu sorgulanır.
 		"""
 		user = User.objects.get(username="mithat")
-		self.prepare_client("general_reporter", user=user)
+		self.prepare_client("generic_reporter", user=user)
 		res = self.client.post(model="GorevSuresiBitenPersonel")
 		simdi = datetime.date.today()
 		atamalar = Atama.objects.filter(
