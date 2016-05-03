@@ -443,21 +443,15 @@ class Atama(Model):
     Personelin atama bilgilerini içeren modeldir.
 
     """
-
-    personel_tip = field.Integer("Personel Tipi", choices="personel_tip")
-    hizmet_sinif = field.Integer("Hizmet Sınıfı", choices="hizmet_sinifi")
-    statu = field.Integer("Statü", choices="personel_statu")
-    gorev_suresi_baslama = field.Date("Görev Süresi Başlama", format="%d.%m.%Y")
-    gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", format="%d.%m.%Y")
-    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", format="%d.%m.%Y")
-    ibraz_tarihi = field.Date("İbraz Tarihi", format="%d.%m.%Y")
-    durum = field.Integer("Durum")
-    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", format="%d.%m.%Y")
-    nereden = field.Integer("Nereden")
-    atama_aciklama = field.String("Atama Açıklama")
-    goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama")
-    kadro_unvan = field.Integer("Kadro Unvan")
-    kadro_derece = field.Integer("Kadro Derece")
+    # Arama için eklendi, Orjinali personelde tutulacak
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+    ibraz_tarihi = field.Date("İbraz Tarihi", index=True, format="%d.%m.%Y")
+    durum = HitapSebep()
+    durum.title = "Durum"
+    nereden = field.Integer("Nereden", index=True)
+    atama_aciklama = field.String("Atama Açıklama", index=True)
+    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
+    goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
     kadro = Kadro()
     personel = Personel()
 
@@ -484,3 +478,17 @@ class Atama(Model):
 
         return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[
             0]
+
+    def post_save(self):
+        # Personel modeline arama için eklenen kadro_derece set edilecek
+        self.personel.kadro_derece = self.kadro.derece
+        self.personel.save()
+        # Atama sonrası kadro dolu durumuna çekilecek
+        self.kadro.durum = 4
+        self.hizmet_sinifi = self.personel.hizmet_sinifi
+        self.kadro.save()
+
+    def pre_save(self):
+        # Atama kaydetmeden önce kadro boş durumuna çekilecek
+        self.kadro.durum = 3
+        self.kadro.save()
