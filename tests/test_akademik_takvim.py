@@ -21,7 +21,7 @@ class TestCase(BaseTestCase):
 
     def test_academic_calendar(self):
         """
-        Adalet Meslek Yüksekokulu Öğrencisi rolüne sahip test_user adlı kullanıcı giriş yaptığında,
+        Adalet Meslek Yüksekokulu Öğrencisi rolüne sahip ogrenci_1 adlı kullanıcı giriş yaptığında,
         xxxxxxxxxxxxxx keyine sahip rektörlüğe ait akademik takvimi görmesi beklenir.
         Çünkü bölümüne veya fakültesine ait bir akademik takvim tanımlanmamıştır.
 
@@ -33,9 +33,9 @@ class TestCase(BaseTestCase):
         Akademik takvim kaydının nesnelerinden biri seçilir, seçilen nesnenin etkinliği, başlangıcı ve
         bitişi sunucudan dönen etkinlik, başlangıç ve bitiş kayıtlarıyla karşılaştırılıp test edilir.
 
-        test_user adlı kullanıcıya çıkış yaptırılır.
+        ogrenci_1 adlı kullanıcıya çıkış yaptırılır.
 
-        Kamu Hukuku Bölümü öğrencisi rolüne sahip onur adlı kullanıcı giriş yaptığında, xxxxxxxxxx keyine sahip
+        Kamu Hukuku Bölümü öğrencisi rolüne sahip ogrenci_2 adlı kullanıcı giriş yaptığında, xxxxxxxxxx keyine sahip
         Kamu Hukuku Bölümü akademik takvimi görmesi beklenir.Çünkü kendi bölümüne ait tanımlı akademik takvim vardır.
 
         Bu iş akışı ilk adımda eğitim fakültesine ait akademik takvim kayıtlarını listeler.
@@ -49,11 +49,17 @@ class TestCase(BaseTestCase):
         """
 
         # Kullanıcıya login yaptırılır.
-        self.prepare_client('/akademik_takvim', username='test_user')
+        self.prepare_client('/akademik_takvim', username='ogrenci_1')
         resp = self.client.post()
 
+        # Veritabınından ogrenci_1 adlı kullanıcı seçilir.
+        user = User.objects.get(username='ogrenci_1')
+
+        # Rol'ün kayıtlı olduğu birim getirilir.
+        unit = user.role_set[0].role.unit
+
         # Birimin kayıtlı olduğu akademik takvim kayıtını getirir.
-        akademik_takvim = AkademikTakvim.objects.get(birim_id='CcKtz93YvvBBfEAfNpRn9Aazrzz')
+        akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)
 
         # Sunucudan dönen akademik takvim kayıtları ile veritabanından çekilen akademik kayıtları
         # karşılaştırılıp test edilir
@@ -76,8 +82,8 @@ class TestCase(BaseTestCase):
         self.client.set_path('/logout')
         self.client.post()
 
-        # Veritabınından onur adlı kullanıcı seçilir.
-        usr = User.objects.get(username='onur')
+        # Veritabınından ogrenci_2 adlı kullanıcı seçilir.
+        usr = User.objects.get(username='ogrenci_2')
         time.sleep(1)
 
         # Kullanıcıya login yaptırılır.
