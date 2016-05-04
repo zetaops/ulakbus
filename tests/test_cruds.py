@@ -27,9 +27,8 @@ class TestCase(BaseTestCase):
         def len_1(lst):
             return len(lst) - 1
 
-        # Veritabanından test_user adlı kullanıcı seçilir.
-        usr = User.objects.get(username='test_user')
-        time.sleep(1)
+        # Veritabanından personel_isleri_1 adlı kullanıcı seçilir.
+        usr = User.objects.get(username='personel_isleri_1')
 
         # Crud iş akışını başlatır.
         self.prepare_client('/crud', user=usr)
@@ -53,7 +52,7 @@ class TestCase(BaseTestCase):
         # İlk kaydı siliyor, kayıtların listesini döndürür.
         resp = self.client.post(model='Personel',
                                 cmd='delete',
-                                object_id=resp.json['objects'][1]['key'])
+                                object_id=resp.json['objects'][4]['key'])
 
         # Mevcut kayıtların sayısının, başlangıçtaki kayıt sayısına eşit olup olmadığını test eder.
         assert 'reload' in resp.json['client_cmd']
@@ -87,8 +86,12 @@ class TestCase(BaseTestCase):
         AkademikTakvim modelini is select list işlemiyle test eder.
 
         """
+        # crud iş akışı tekrardan başlatılır.
+        self.client.set_path('/crud')
+        self.client.post(model='Personel', cmd='list')
+
         # Query değerine göre personel kayıtlarını filtreler.
-        resp = self.client.post(model='Personel', query="1234567")
+        resp = self.client.post(model='Personel', query="1234567", wf="crud")
 
         # Kayıtların sayısı 2'den küçük ise, yeni kayıtlar ekler.
         if len(resp.json['objects']) < 2:
@@ -97,11 +100,13 @@ class TestCase(BaseTestCase):
                 resp = self.client.post(model='Personel',
                                         cmd='save::add_edit_form',
                                         form=dict(ad="Per%s" % i, tckn="123456789%s" % i))
-            time.sleep(3)
+            time.sleep(1)
 
         resp = self.client.post(model='Personel', query="12345678")
         assert len(resp.json['objects']) - 1 == len(Personel.objects.filter(tckn__startswith='12345678'))
 
+        # crud iş akışı tekrardan başlatılır.
+        self.client.set_path('/crud')
         self.client.post(model='AkademikTakvim')
 
         # Queryset alanına rastgele girilir.
@@ -118,7 +123,7 @@ class TestCase(BaseTestCase):
                                 cmd='select_list')
 
         # -1 değeri ise queryset alanına herhangi bir değer girilmediğini gösterir.
-        assert len(resp.json['objects']) == Unit.objects.count()
+        assert resp.json['objects'][0] == -1
 
         num_of_kayit = Unit.objects.filter(name='MOLEKÜLER BİYOLOJİ VE GENETİK BÖLÜMÜ')
 
