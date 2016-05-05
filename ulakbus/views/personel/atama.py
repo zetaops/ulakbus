@@ -51,8 +51,8 @@ class PersonelAtama(CrudView):
                                                   required=True,
                                                   default=son_personel.kurum_sicil_no_int + 1)
 
-        _form.personel_tip = fields.Integer("Personel Tipi", choices="personel_tip",
-                                            default=personel.personel_tip)
+        _form.personel_turu = fields.Integer("Personel Tipi", choices="personel_turu",
+                                            default=personel.personel_turu)
         _form.unvan = fields.Integer("Personel Unvan", choices="unvan_kod", required=False,
                                      default=personel.unvan)
         _form.emekli_sicil_no = fields.String("Emekli Sicil No", default=personel.emekli_sicil_no)
@@ -111,7 +111,7 @@ class PersonelAtama(CrudView):
     def kadro_bilgileri_goster(self):
         genel_bilgiler = """**Adı**: {ad}
                            **Soyad**: {soyad}
-                           **Personel Tipi**: {personel_tip}""".format(
+                           **Personel Tipi**: {personel_turu}""".format(
             **self.current.task_data['personel'])
         atama = Atama.objects.get(self.current.task_data['guncel_atama'])
         atama_data = atama.clean_value()
@@ -275,7 +275,7 @@ class EksikBilgiForm(JsonForm):
                 "groups": [
                     {
                         "group_title": "Genel Bilgiler",
-                        "items": ['kurum_sicil_no_int', 'personel_tip', 'unvan',
+                        "items": ['kurum_sicil_no_int', 'personel_turu', 'unvan',
                                   'hizmet_sinif', 'statu', 'brans', 'emekli_sicil_no',
                                   'emekli_giris_tarihi'],
                         "collapse": True,
