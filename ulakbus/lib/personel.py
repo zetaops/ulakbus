@@ -22,8 +22,11 @@ def gorunen_kademe_hesapla(derece, kademe):
     """
     kademe_limitleri = {1: 4, 2: 6, 3: 8, 4: 9, 5: 9, 6: 9, 7: 9, 8: 9, 9: 9, 10: 9, 11: 9,
                         12: 9, 13: 9, 14: 9, 15: 9}
-    kademe = kademe_limitleri[derece] if kademe > kademe_limitleri[derece] else kademe
-    return kademe
+    try:
+        kademe = kademe_limitleri[derece] if kademe > kademe_limitleri[derece] else kademe
+        return kademe
+    except KeyError:
+        return 0
 
 
 def derece_ilerlet(pkd, der, kad):

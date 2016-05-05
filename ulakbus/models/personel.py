@@ -364,12 +364,11 @@ class Kadro(Model):
     """
 
     kadro_no = field.Integer("Kadro No", required=False)
-    unvan = field.Integer("Akademik Unvan", choices="akademik_unvan", required=False)
     derece = field.Integer("Derece", required=False)
     durum = field.Integer("Durum", choices="kadro_durumlari", required=False)
     birim = Unit("Birim", required=False)
     aciklama = field.String("Açıklama", index=True, required=False)
-    unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
+    unvan = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
     unvan_aciklama = field.String("Unvan Aciklama", index=True, required=False)
 
     class Meta:
@@ -490,5 +489,10 @@ class Atama(Model):
 
     def pre_save(self):
         # Atama kaydetmeden önce kadro boş durumuna çekilecek
-        self.kadro.durum = 3
+        self.kadro.durum = 2
+        self.kadro.save()
+
+    def post_delete(self):
+        # Atama silinirse kadro boş duşuma çekilece
+        self.kadro.durum = 2
         self.kadro.save()
