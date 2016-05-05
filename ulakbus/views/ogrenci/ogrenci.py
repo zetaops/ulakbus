@@ -26,7 +26,7 @@ from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, Done
 from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
 from ulakbus.models.personel import Personel
 from ulakbus.models.auth import Role, AbstractRole, Unit
-from ulakbus.views.ders.ders import prepare_choices_for_model
+from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models.ogrenci import OgrenciDersi, Sinav
 from pyoko.exceptions import ObjectDoesNotExist
 

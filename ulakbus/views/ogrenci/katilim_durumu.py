@@ -14,7 +14,7 @@ from pyoko import ListNode
 from ulakbus.models import Sube, OgrenciDersi, DersKatilimi
 
 from zengine.forms import fields
-from ulakbus.views.ders.ders import prepare_choices_for_model
+from ulakbus.lib.view_helpers import prepare_choices_for_model
 
 from zengine import forms
 from zengine.views.crud import CrudView

@@ -77,5 +77,8 @@ service_url_paths = {
     "HitapUnvanSenkronizeEt": {"url": "hizmet-unvan-sync"},
     "HitapUnvanEkle": {"url": "hizmet-unvan-ekle"},
     "HitapUnvanGuncelle": {"url": "hizmet-unvan-guncelle"},
-    "HitapUnvanSil": {"url": "hizmet-unvan-sil"}
+    "HitapUnvanSil": {"url": "hizmet-unvan-sil"},
+    "MernisKimlikBilgileriGetir": {"url": "nvi-kisi-sorgula"},
+    "MernisCuzdanBilgileriGetir": {"url": "nvi-cuzdan-sorgula"},
+    "KPSAdresBilgileriGetir": {"url": "nvi-adres-sorgula"}
 }

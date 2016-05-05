@@ -31,7 +31,6 @@ Example:
 from ulakbus import settings
 import requests
 import json
-# from zato_url_paths import service_url_paths
 from .zato_url_paths import service_url_paths
 
 
@@ -101,7 +100,7 @@ class ZatoService(object):
             r.close()
             try:
                 if response['status'] == 'ok':
-                    return response['result']
+                    return self.rebuild_response(response['result'])
                 else:
                     # all zato internal errors will be handled here,
                     # riak error, connection error etc..
@@ -120,6 +119,19 @@ class ZatoService(object):
             raise Exception("Status code is something different 200 or 404 which is %s, "
                             "this means something really went bad, check zato server logs"
                             % r.status_code)
+
+    def rebuild_response(self, response_data):
+        """
+        Rebuild response data
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
+        return response_data
 
 
 class TcknService(ZatoService):
@@ -1405,6 +1417,92 @@ class MernisKimlikBilgileriGetir(TcknService):
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
+    def rebuild_response(self, response_data):
+        """
+        Kimlik Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
+        ret = {}
+
+        try:
+            kb = response_data['KisiBilgisi']
+
+            ret['tckn'] = kb['TCKimlikNo']
+            ret['ad'] = kb['TemelBilgisi']['Ad']
+            ret['soyad'] = kb['TemelBilgisi']['Soyad']
+            ret['cinsiyet'] = kb['TemelBilgisi']['Cinsiyet']['Kod']
+            ret['dogum_tarihi'] = '%s.%s.%s' % (
+                kb['TemelBilgisi']['DogumTarih']['Gun'], kb['TemelBilgisi']['DogumTarih']['Ay'],
+                kb['TemelBilgisi']['DogumTarih']['Yil'])
+            ret['dogum_yeri'] = kb['TemelBilgisi']['DogumYer']
+            ret['baba_adi'] = kb['TemelBilgisi']['BabaAd']
+            ret['ana_adi'] = kb['TemelBilgisi']['AnneAd']
+            ret['medeni_hali'] = kb['DurumBilgisi']['MedeniHal']['Kod']
+            ret['kayitli_oldugu_il'] = kb['KayitYeriBilgisi']['Il']['Aciklama']
+            ret['kayitli_oldugu_ilce'] = kb['KayitYeriBilgisi']['Ilce']['Aciklama']
+            ret['kayitli_oldugu_mahalle_koy'] = kb['KayitYeriBilgisi']['Cilt']['Aciklama']
+            ret['kayitli_oldugu_cilt_no'] = kb['KayitYeriBilgisi']['Cilt']['Kod']
+            ret['kayitli_oldugu_aile_sira_no'] = kb['KayitYeriBilgisi']['AileSiraNo']
+            ret['kayitli_oldugu_sira_no'] = kb['KayitYeriBilgisi']['BireySiraNo']
+        except KeyError:
+            ret['hata'] = True
+
+        return ret
+
+
+class MernisCuzdanBilgileriGetir(TcknService):
+    """
+    Personelin Mernis üzerinden nüfus cüzdanı bilgilerini sorgular.
+
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
+    Attributes:
+        service_uri (str): İlgili servisin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, tckn=""):
+        super(MernisCuzdanBilgileriGetir, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+    def rebuild_response(self, response_data):
+        """
+        Mernis Cüzdan Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
+        ret = {}
+
+        try:
+            kb = response_data['CuzdanBilgisi']
+            ret['tckn'] = kb['TCKimlikNo']
+            ret['cuzdan_seri'] = kb['SeriNo'][0:3]
+            ret['cuzdan_seri_no'] = kb['SeriNo'][3:]
+            ret['kimlik_cuzdani_verildigi_yer'] = kb['VerildigiIlce']['b:Aciklama']
+            ret['kimlik_cuzdani_verilis_nedeni'] = kb['CuzdanVerilmeNeden']['b:Aciklama']
+            ret['kimlik_cuzdani_kayit_no'] = kb['KayitNo']
+            ret['kimlik_cuzdani_verilis_tarihi'] = '%s.%s.%s' % (
+                kb['VerilmeTarih']['b:Gun'], kb['VerilmeTarih']['b:Ay'],
+                kb['VerilmeTarih']['b:Yil'])
+        except KeyError:
+            ret['hata'] = True
+
+        return ret
+
 
 class KPSAdresBilgileriGetir(TcknService):
     """
@@ -1423,3 +1521,25 @@ class KPSAdresBilgileriGetir(TcknService):
         super(KPSAdresBilgileriGetir, self).__init__()
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+    def rebuild_response(self, response_data):
+        """
+        KPS Adres Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
+        ret = {}
+        try:
+            kb = response_data['KimlikNoileKisiAdresBilgileri']['YerlesimYeriAdresi']
+            ret['ikamet_adresi'] = kb['AcikAdres']
+            ret['ikamet_il'] = kb['IlIlceMerkezAdresi']['Il']
+            ret['ikamet_ilce'] = kb['IlIlceMerkezAdresi']['Ilce']
+        except KeyError:
+            ret['hata'] = True
+
+        return ret

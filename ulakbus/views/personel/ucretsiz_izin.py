@@ -4,7 +4,7 @@ from zengine.views.crud import CrudView, obj_filter
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from ulakbus.models.personel import Personel, UcretsizIzin
-from ulakbus.models.hitap import HizmetKayitlari
+from ulakbus.models.hitap.hitap import HizmetKayitlari
 from datetime import timedelta, date
 
 

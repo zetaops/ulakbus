@@ -20,22 +20,7 @@ from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciD
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-
-
-def prepare_choices_for_model(model, **kwargs):
-    """Model için Seçenekler Hazırla
-
-    Args:
-        model: Model
-        **kwargs: Keyword argümanları
-
-    Returns:
-        Keyword argümanlara göre filtrelenmiş modelin,
-        key ve __unicode__ method değerlerini
-
-    """
-
-    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
+from ulakbus.lib.view_helpers import prepare_choices_for_model
 
 
 def okutman_choices():

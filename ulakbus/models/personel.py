@@ -8,16 +8,13 @@
 Bu modül Ulakbüs uygulaması için personel modelini ve  personel ile ilişkili modelleri içerir.
 
 """
+from .hitap.hitap_sebep import HitapSebep
 from pyoko.lib.utils import lazy_property
 
 from pyoko import Model, field
 from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
-
-PERSONEL_TURU = [
-    (1, 'Akademik'),
-    (2, 'İdari')
-]
+from ulakbus.settings import SICIL_PREFIX
 
 
 class Personel(Model):
@@ -27,45 +24,43 @@ class Personel(Model):
 
     """
 
-    tckn = field.String("TC No", index=True)
-    ad = field.String("Adı", index=True)
-    soyad = field.String("Soyadı", index=True)
-    cinsiyet = field.Integer("Cinsiyet", index=True, choices='cinsiyet')
-    uyruk = field.String("Uyruk", index=True)
-    ikamet_adresi = field.String("İkamet Adresi", index=True)
-    ikamet_il = field.String("İkamet İl", index=True)
-    ikamet_ilce = field.String("İkamet İlçe", index=True)
-    adres_2 = field.String("Adres 2", index=True)
-    adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True)
-    oda_no = field.String("Oda Numarası", index=True)
-    oda_tel_no = field.String("Oda Telefon Numarası", index=True)
-    cep_telefonu = field.String("Cep Telefonu", index=True)
-    e_posta = field.String("E-Posta", index=True)
-    e_posta_2 = field.String("E-Posta 2", index=True)
-    e_posta_3 = field.String("E-Posta 3", index=True)
-    web_sitesi = field.String("Web Sitesi", index=True)
-    yayinlar = field.String("Yayınlar", index=True)
-    projeler = field.String("Projeler", index=True)
-    kan_grubu = field.String("Kan Grubu", index=True)
-    ehliyet = field.String("Ehliyet", index=True)
-    verdigi_dersler = field.String("Verdiği Dersler", index=True)
-    unvan = field.Integer("Ünvan", index=True, choices="akademik_unvan")
+    tckn = field.String("TC No")
+    kurum_sicil_no_int = field.Integer("Kurum Sicil No")
+    ad = field.String("Adı")
+    soyad = field.String("Soyadı")
+    cinsiyet = field.Integer("Cinsiyet", choices='cinsiyet')
+    uyruk = field.String("Uyruk")
+    ikamet_adresi = field.String("İkamet Adresi")
+    ikamet_il = field.String("İkamet İl")
+    ikamet_ilce = field.String("İkamet İlçe")
+    adres_2 = field.String("Adres 2")
+    oda_no = field.String("Oda Numarası")
+    oda_tel_no = field.String("Oda Telefon Numarası")
+    cep_telefonu = field.String("Cep Telefonu")
+    e_posta = field.String("E-Posta")
+    e_posta_2 = field.String("E-Posta 2")
+    e_posta_3 = field.String("E-Posta 3")
+    web_sitesi = field.String("Web Sitesi")
+    yayinlar = field.String("Yayınlar")
+    projeler = field.String("Projeler")
+    kan_grubu = field.String("Kan Grubu")
+    ehliyet = field.String("Ehliyet")
+    verdigi_dersler = field.String("Verdiği Dersler")
     biyografi = field.Text("Biyografi")
     notlar = field.Text("Notlar")
-    engelli_durumu = field.String("Engellilik", index=True)
-    engel_grubu = field.String("Engel Grubu", index=True)
+    engelli_durumu = field.String("Engellilik")
+    engel_grubu = field.String("Engel Grubu")
     engel_derecesi = field.String("Engel Derecesi")
     engel_orani = field.Integer("Engellilik Oranı")
-    personel_turu = field.Integer("Personel Türü", choices=PERSONEL_TURU, index=True)
-    cuzdan_seri = field.String("Seri", index=True)
-    cuzdan_seri_no = field.String("Seri No", index=True)
-    baba_adi = field.String("Ana Adı", index=True)
-    ana_adi = field.String("Baba Adı", index=True)
-    dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
-    dogum_yeri = field.String("Doğum Yeri", index=True)
-    medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
-    kayitli_oldugu_il = field.String("İl", index=True)
-    kayitli_oldugu_ilce = field.String("İlçe", index=True)
+    cuzdan_seri = field.String("Seri")
+    cuzdan_seri_no = field.String("Seri No")
+    baba_adi = field.String("Ana Adı")
+    ana_adi = field.String("Baba Adı")
+    dogum_tarihi = field.Date("Doğum Tarihi", format="%d.%m.%Y")
+    dogum_yeri = field.String("Doğum Yeri")
+    medeni_hali = field.Integer("Medeni Hali", choices="medeni_hali")
+    kayitli_oldugu_il = field.String("İl")
+    kayitli_oldugu_ilce = field.String("İlçe")
     kayitli_oldugu_mahalle_koy = field.String("Mahalle/Köy")
     kayitli_oldugu_cilt_no = field.String("Cilt No")
     kayitli_oldugu_aile_sira_no = field.String("Aile Sıra No")
@@ -74,9 +69,6 @@ class Personel(Model):
     kimlik_cuzdani_verilis_nedeni = field.String("Cüzdanın Veriliş Nedeni")
     kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
     kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
-
-    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
-    kadro_derece = field.Integer()  # Arama amacli
 
     kazanilmis_hak_derece = field.Integer("Güncel Kazanılmış Hak Derece", index=True)
     kazanilmis_hak_kademe = field.Integer("Güncel Kazanılmış Hak Kademe", index=True)
@@ -98,6 +90,39 @@ class Personel(Model):
                                          format="%d.%m.%Y")
 
     birim = Unit("Birim")
+
+    # Personelin Kendi Ünvanı
+    unvan = field.Integer("Personel Unvan", index=True, choices="unvan_kod", required=False)
+
+    # Aşağıdaki bilgiler atama öncesi kontrol edilecek, Doldurulması istenecek
+    emekli_sicil_no = field.String("Emekli Sicil No", index=True)
+    emekli_giris_tarihi = field.Date("Emekliliğe Giriş Tarihi", index=True, format="%d.%m.%Y")
+
+    personel_turu = field.Integer("Personel Türü", choices="personel_turu")
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", choices="hizmet_sinifi")
+    statu = field.Integer("Statü", choices="personel_statu")
+    brans = field.String("Branş", index=True)
+
+    # akademik personeller icin sozlesme sureleri
+    gorev_suresi_baslama = field.Date("Görev Süresi Başlama", index=True, format="%d.%m.%Y")
+    gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", index=True, format="%d.%m.%Y")
+
+    # todo: durum_degisikligi yonetimi
+    # kurumda ilk goreve baslama bilgileri, atama modelinden elde edilip
+    # edilemeyecegini soracagiz. mevcut otomasyonda ayrilmalar da burada tutuluyor.
+    # bunu tarih ve durum_degisikligi fieldlarindan olusan bir listnode seklinde tutabiliriz.
+    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
+    baslama_sebep = HitapSebep()
+    baslama_sebep.title = "Durum"
+
+    # aday ve idari memurlar icin mecburi hizmet suresi
+    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
+
+    # Arama için kullanılacak Flaglar
+    kadro_derece = field.Integer(default=0)
+    aday_memur = field.Boolean()
+    arsiv = field.Boolean()  # ayrilmis personeller icin gecerlidir.
+
     user = User(one_to_one=True)
 
     class Meta:
@@ -166,6 +191,10 @@ class Personel(Model):
 
         return self.atama.kurum_sicil_no
 
+    @property
+    def kurum_sicil_no(self):
+        return "%s-%s" % (SICIL_PREFIX, self.kurum_sicil_no_int)
+
     def __unicode__(self):
         return "%s %s" % (self.ad, self.soyad)
 
@@ -179,10 +208,10 @@ class AdresBilgileri(Model):
 
     """
 
-    ad = field.String("Adres Adı", index=True)
-    adres = field.String("Adres", index=True)
-    ilce = field.String("İlçe", index=True)
-    il = field.String("İl", index=True)
+    ad = field.String("Adres Adı")
+    adres = field.String("Adres")
+    ilce = field.String("İlçe")
+    il = field.String("İl")
     personel = Personel()
 
     class Meta:
@@ -202,13 +231,13 @@ class KurumIciGorevlendirmeBilgileri(Model):
 
     """
 
-    gorev_tipi = field.String("Görev Tipi", index=True, choices="gorev_tipi")
-    kurum_ici_gorev_baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    kurum_ici_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
+    gorev_tipi = field.String("Görev Tipi", choices="gorev_tipi")
+    kurum_ici_gorev_baslama_tarihi = field.Date("Başlama Tarihi", format="%d.%m.%Y")
+    kurum_ici_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", format="%d.%m.%Y")
     birim = Unit()
     aciklama = field.String("Açıklama")
     resmi_yazi_sayi = field.String("Resmi Yazı Sayı")
-    resmi_yazi_tarih = field.Date("Resmi Yazı Tarihi", index=True, format="%d.%m.%Y")
+    resmi_yazi_tarih = field.Date("Resmi Yazı Tarihi", format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -263,16 +292,16 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
     """
 
-    gorev_tipi = field.Integer("Görev Tipi", index=True)
-    kurum_disi_gorev_baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    kurum_disi_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    aciklama = field.Text("Açıklama", index=True)
+    gorev_tipi = field.Integer("Görev Tipi")
+    kurum_disi_gorev_baslama_tarihi = field.Date("Başlama Tarihi", format="%d.%m.%Y")
+    kurum_disi_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", format="%d.%m.%Y")
+    aciklama = field.Text("Açıklama")
     resmi_yazi_sayi = field.String("Resmi Yazı Sayı")
-    resmi_yazi_tarih = field.Date("Resmi Yazı Tarihi", index=True, format="%d.%m.%Y")
+    resmi_yazi_tarih = field.Date("Resmi Yazı Tarihi", format="%d.%m.%Y")
     maas = field.Boolean("Maaş")
     yevmiye = field.Boolean("Yevmiye", default=False)
     yolluk = field.Boolean("Yolluk", default=False)
-    ulke = field.Integer("Ülke", default="90", choices="ulke", index=True)
+    ulke = field.Integer("Ülke", default="90", choices="ulke")
     personel = Personel()
 
     class Meta:
@@ -335,12 +364,11 @@ class Kadro(Model):
     """
 
     kadro_no = field.Integer("Kadro No", required=False)
-    unvan = field.Integer("Akademik Unvan", index=True, choices="akademik_unvan", required=False)
-    derece = field.Integer("Derece", index=True, required=False)
-    durum = field.Integer("Durum", index=True, choices="kadro_durumlari", required=False)
+    derece = field.Integer("Derece", required=False)
+    durum = field.Integer("Durum", choices="kadro_durumlari", required=False)
     birim = Unit("Birim", required=False)
     aciklama = field.String("Açıklama", index=True, required=False)
-    unvan_kod = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
+    unvan = field.Integer("Unvan", index=True, choices="unvan_kod", required=False)
     unvan_aciklama = field.String("Unvan Aciklama", index=True, required=False)
 
     class Meta:
@@ -352,7 +380,7 @@ class Kadro(Model):
         list_filters = ['durum']
 
     def __unicode__(self):
-        return "%s %s %s" % (self.unvan, self.derece, self.durum)
+        return "%s - %s %s. derece" % (self.kadro_no, self.get_unvan_display(), self.derece)
 
 
 class Izin(Model):
@@ -362,12 +390,12 @@ class Izin(Model):
 
     """
 
-    tip = field.Integer("Tip", index=True, choices="izin")
-    baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
-    bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y")
-    onay = field.Date("Onay", index=True, format="%d.%m.%Y")
-    adres = field.String("Geçireği Adres", index=True)
-    telefon = field.String("Telefon", index=True)
+    tip = field.Integer("Tip", choices="izin")
+    baslangic = field.Date("Başlangıç", format="%d.%m.%Y")
+    bitis = field.Date("Bitiş", format="%d.%m.%Y")
+    onay = field.Date("Onay", format="%d.%m.%Y")
+    adres = field.String("Geçireği Adres")
+    telefon = field.String("Telefon")
     personel = Personel()
     vekil = Personel()
 
@@ -389,12 +417,12 @@ class UcretsizIzin(Model):
 
     """
 
-    tip = field.Integer("Tip", index=True, choices="ucretsiz_izin")
-    baslangic_tarihi = field.Date("İzin Başlangıç Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("İzin Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    donus_tarihi = field.Date("Dönüş Tarihi", index=True, format="%d.%m.%Y")
-    donus_tip = field.Integer("Dönüş Tip", index=True)
-    onay_tarihi = field.Date("Onay Tarihi", index=True, format="%d.%m.%Y")
+    tip = field.Integer("Tip", choices="ucretsiz_izin")
+    baslangic_tarihi = field.Date("İzin Başlangıç Tarihi", format="%d.%m.%Y")
+    bitis_tarihi = field.Date("İzin Bitiş Tarihi", format="%d.%m.%Y")
+    donus_tarihi = field.Date("Dönüş Tarihi", format="%d.%m.%Y")
+    donus_tip = field.Integer("Dönüş Tip")
+    onay_tarihi = field.Date("Onay Tarihi", format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -415,34 +443,29 @@ class Atama(Model):
 
     """
 
-    kurum_sicil_no = field.String("Kurum Sicil No", index=True)
-    personel_tip = field.Integer("Personel Tipi", index=True)
-    hizmet_sinif = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
-    statu = field.Integer("Statü", index=True)
-    gorev_suresi_baslama = field.Date("Görev Süresi Başlama", index=True, format="%d.%m.%Y")
-    gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", index=True, format="%d.%m.%Y")
-    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
     ibraz_tarihi = field.Date("İbraz Tarihi", index=True, format="%d.%m.%Y")
-    durum = field.Integer("Durum", index=True)
-    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
-    nereden = field.Integer("Nereden", index=True)
+    durum = HitapSebep()
+    durum.title = "Durum"
+    nereden = field.Integer("Nereden", index=True)  # modele baglanacak.
     atama_aciklama = field.String("Atama Açıklama", index=True)
+    goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
     goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
-    kadro_unvan = field.Integer("Kadro Unvan", index=True)
-    kadro_derece = field.Integer("Kadro Derece", index=True)
     kadro = Kadro()
     personel = Personel()
+    # Arama için eklendi, Orjinali personelde tutulacak
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
 
     class Meta:
         app = 'Personel'
         verbose_name = "Atama"
         verbose_name_plural = "Atamalar"
-        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi',
+        list_fields = ['hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi',
                        'durum']
-        search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
+        search_fields = ['hizmet_sinif', 'statu']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
+        return '%s %s %s' % (self.personel.kurum_sicil_no,
+                             self.gorev_suresi_baslama, self.ibraz_tarihi)
 
     @classmethod
     def personel_guncel_atama(cls, personel):
@@ -454,5 +477,42 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[
-            0]
+        return cls.objects.set_params(
+            sort='goreve_baslama_tarihi desc').filter(personel=personel)[0]
+
+    @classmethod
+    def personel_ilk_atama(cls, personel):
+        """
+        Personelin goreve_baslama_tarihi ne göre ilk atama kaydını döndürür.
+
+        Returns:
+            Atama örneği (instance)
+
+        """
+
+        return cls.objects.set_params(
+            sort='goreve_baslama_tarihi asc').filter(personel=personel)[0]
+
+    def post_save(self):
+        # Personel modeline arama için eklenen kadro_derece set edilecek
+        self.personel.kadro_derece = self.kadro.derece
+        self.personel.save()
+
+        # Atama sonrası kadro dolu durumuna çekilecek
+        self.kadro.durum = 4
+        self.kadro.save()
+
+    def pre_save(self):
+        self.hizmet_sinifi = self.personel.hizmet_sinifi
+        # Atama kaydetmeden önce kadro boş durumuna çekilecek
+        self.kadro.durum = 2
+        self.kadro.save()
+
+    def post_delete(self):
+        # Atama silinirse kadro boş duşuma çekilecek
+        self.kadro.durum = 2
+        self.kadro.save()
+
+        # personelin kadro derecesi 0 olacak
+        self.personel.kadro_derece = 0
+        self.personel.save()

@@ -5,10 +5,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from .personel import Personel
-from pyoko import Model, field, Node
-from .auth import Role
+from ..personel import Personel
+from pyoko import Model, field
 import datetime
+from .hitap_sebep import HitapSebep
 
 
 class NufusKayitlari(Model):
@@ -367,10 +367,14 @@ class HizmetKayitlari(Model):
     emekli_derece = field.Integer("Emekli Derecesi", index=True)  # personelden gelecek
     emekli_kademe = field.Integer("Emekli Kademe", index=True)  # personelden gelecek (gorunen)
     emekli_ekgosterge = field.Integer("Emekli Ek Göstergesi", index=True)  # personelden gelecek
-    sebep_kod = field.Integer("Sebep Kodu", index=True)
+    sebep_kod = HitapSebep("Hitap Sebep Kodu")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     sync = field.Integer("Senkronize", index=True)
     personel = Personel()
+
+    # hizmet cetveline birden cok modelden veri girilmektedir. bu alanda, hizmet
+    # cetveli kaydini olusturan diger modeldeki kaydin key i saklanir.
+    model_key = field.String()
 
     # post save metodunda baslangic ya da bitis tarihinden set edilir.
     order_date = field.DateTime()
@@ -402,11 +406,11 @@ class HizmetKayitlari(Model):
         if self.personel:
             self.tckn = self.personel.tckn
             self.gorev = "%s %s" % (self.personel.birim.name, self.personel.kadro.unvan)
-            self.unvan_kod = self.personel.kadro.unvan_kod
-            self.hizmet_sinifi = self.personel.atama.hizmet_sinif
+            self.unvan_kod = self.personel.kadro.unvan
+            self.hizmet_sinifi = self.personel.atama.hizmet_sinifi
             self.kadro_derece = self.personel.kadro_derece
             self.odeme_derece = self.personel.gorev_ayligi_derece
-            self.odeme_kademe = self.gorunen_gorev_ayligi_kademe
+            self.odeme_kademe = self.personel.gorunen_gorev_ayligi_kademe
             self.odeme_ekgosterge = self.personel.gorev_ayligi_ekgosterge
             self.kazanilmis_hak_ayligi_derece = self.personel.kazanilmis_hak_derece
             self.kazanilmis_hak_ayligi_kademe = self.personel.gorunen_kazanilmis_hak_kademe
@@ -414,6 +418,7 @@ class HizmetKayitlari(Model):
             self.emekli_derece = self.personel.emekli_muktesebat_derece
             self.emekli_kademe = self.personel.gorunen_emekli_muktesebat_kademe
             self.emekli_ekgosterge = self.personel.emekli_muktesebat_ekgosterge
+            self.save()
 
     def __unicode__(self):
         return '%s %s %s' % (self.unvan_kod, self.hizmet_sinifi, self.gorev)
@@ -451,20 +456,3 @@ class AskerlikKayitlari(Model):
     def __unicode__(self):
         return '%s %s %s %s' % (
             self.askerlik_nevi, self.kayit_no, self.kita_baslama_tarihi, self.gorev_yeri)
-
-
-class HitapSebep(Model):
-    sebep_no = field.Integer("Sebep No", index=True)
-    ad = field.String("Sebep Adı", index=True)
-    nevi = field.Integer("Sebep Nevi", index=True)
-    zorunlu_alan = field.String("Zorunlu ALan")
-
-    class Meta:
-        app = 'Personel'
-        verbose_name = "Hitap Sebep Kodu"
-        verbose_name_plural = "Hitap Sebep Kodları"
-        list_fields = ['sebep_no', 'ad', 'nevi', 'zorunlu_alan']
-        search_fields = ['sebep_no', 'ad']
-
-    def __unicode__(self):
-        return '%s - %s' % (self.sebep_no, self.ad)
