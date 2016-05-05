@@ -29,6 +29,7 @@ from ulakbus.models.auth import Role, AbstractRole, Unit
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from ulakbus.models.ogrenci import OgrenciDersi, Sinav
 from pyoko.exceptions import ObjectDoesNotExist
+import time
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -547,9 +548,10 @@ class KayitDondurma(CrudView):
                 }
 
             try:
-                abstract_role = AbstractRole.objects.get(name="dondurulmus_kayit")
+                abstract_role = AbstractRole.objects.get(name="Lisans Programı Öğrencisi - Kayıt Dondurmuş")
                 user = ogrenci.user
                 unit = Unit.objects.get(yoksis_no=ogrenci_program.program.yoksis_no)
+                time.sleep(1)
                 current_role = Role.objects.get(user=user, unit=unit)
                 current_role.abstract_role = abstract_role
                 current_role.save()

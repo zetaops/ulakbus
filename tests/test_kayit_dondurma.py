@@ -39,7 +39,7 @@ class TestCase(BaseTestCase):
         """
 
         # veritabanından test_use seçilir
-        usr = User.objects.get(username='test_user')
+        usr = User.objects.get(username='ogrenci_isleri_1')
         time.sleep(1)
 
         ogrenci_id = "RnKyAoVDT9Hc89KEZecz0kSRXRF"
@@ -82,7 +82,7 @@ class TestCase(BaseTestCase):
         assert len(d_kayit) > 0
 
         # Öğrencinin rolü değiştirilmiş mi?
-        arole = AbstractRole.objects.get(name='dondurulmus_kayit')
+        arole = AbstractRole.objects.get(name='Lisans Programı Öğrencisi - Kayıt Dondurmuş')
         role = Role.objects.get(user=ogrenci.user)
 
         assert role.abstract_role.key == arole.key
