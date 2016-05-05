@@ -8,7 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 # Yeni Personel Ekle WF adimlarini icerir.
-from datetime import datetime
+from datetime import date
 
 from ulakbus.lib.view_helpers import prepare_titlemap_for_model, prepare_choices_for_model
 from ulakbus.models.hitap.HitapSebep import HitapSebep
@@ -58,8 +58,10 @@ class PersonelAtama(CrudView):
         _form.gorev_suresi_bitis = fields.Date("Görev Süresi Bitiş", default=str(personel.gorev_suresi_bitis))
         _form.goreve_baslama_tarihi = fields.Date("Göreve Başlama Tarihi", default=str(personel.goreve_baslama_tarihi))
 
-        _form.baslama_sebep.default = personel.baslama_sebep
-        _form.set_choices_of('baslama_sebep', choices=prepare_choices_for_model(HitapSebep, nevi=1))
+        _form.baslama_sebep = fields.String("Durum", type='typeahead')
+        _form.baslama_sebep.default = str(personel.baslama_sebep)
+        # TODO: Set choices key error fırlatıyor. düzeltilecek
+        # _form.set_choices_of('baslama_sebep', choices=prepare_choices_for_model(HitapSebep, nevi=1))
 
         _form.mecburi_hizmet_suresi = fields.Date("Mecburi Hizmet Süresi", default=str(personel.mecburi_hizmet_suresi))
         _form.emekli_giris_tarihi = fields.Date("Emekliliğe Giriş Tarihi", default=str(personel.emekli_giris_tarihi))
@@ -79,7 +81,7 @@ class PersonelAtama(CrudView):
         self.current.task_data['personel'] = personel.clean_value()
         self.current.task_data['guncel_atama'] = personel.atama.key
 
-        if personel.atama:
+        if personel.atama.key:
             self.current.task_data['ilk_atama'] = False
         else:
             self.current.task_data['ilk_atama'] = True
@@ -134,42 +136,47 @@ class PersonelAtama(CrudView):
             self.current.task_data['kadro'] = str(atanacak_kadro)
 
             atama = Atama(personel_id = self.current.task_data['personel_id'])
-            atama.kadro = atanacak_kadro
-            atama.ibraz_tarihi = self.current.input['form']['ibraz_tarihi']
-            atama.durum = self.current.input['form']['durum']
-            atama.nereden = self.current.input['form']['nereden']
-            atama.atama_aciklama = self.current.input['form']['atama_aciklama']
-            atama.goreve_baslama_tarihi = self.current.input['form']['goreve_baslama_tarihi']
-            atama.goreve_baslama_aciklama = self.current.input['form']['goreve_baslama_aciklama']
-            atama.save()
+            try:
+                atama.kadro = atanacak_kadro
+                atama.ibraz_tarihi = self.current.input['form']['ibraz_tarihi']
+                atama.durum_id = self.current.input['form']['durum']
+                atama.nereden = self.current.input['form']['nereden']
+                atama.atama_aciklama = self.current.input['form']['atama_aciklama']
+                atama.goreve_baslama_tarihi = self.current.input['form']['goreve_baslama_tarihi']
+                atama.goreve_baslama_aciklama = self.current.input['form']['goreve_baslama_aciklama']
+                atama.save()
 
-            personel = Personel.objects.get(self.current.task_data['personel_id'])
+                personel = Personel.objects.get(self.current.task_data['personel_id'])
 
-            hk = HizmetKayitlari()
-            hk.tckn = personel.tckn
-            hk.baslama_tarihi = datetime.date.today
-            hk.gorev = "%s %s" % (personel.birim, atanacak_kadro.unvan_aciklama)
-            hk.unvan_kod = atanacak_kadro.unvan
-            hk.hizmet_sinifi = personel.hizmet_sinifi
-            hk.kadro_derece = atanacak_kadro.derece
-            hk.odeme_derece = personel.gorev_ayligi_derece
-            hk.odeme_kademe = personel.gorev_ayligi_kademe
-            hk.odeme_ekgosterge = personel.gorev_ayligi_ekgosterge
-            hk.kazanilmis_hak_ayligi_derece = personel.kazanilmis_hak_derece
-            hk.kazanilmis_hak_ayligi_kademe = personel.kazanilmis_hak_kademe
-            hk.kazanilmis_hak_ayligi_ekgosterge = personel.kazanilmis_hak_ekgosterge
-            hk.emekli_derece = personel.emekli_muktesebat_derece
-            hk.emekli_kademe = personel.emekli_muktesebat_kademe
-            hk.emekli_ekgosterge = personel.emekli_muktesebat_ekgosterge
-            hk.sebep_kod = atama.durum
-            hk.kurum_onay_tarihi = self.current.input['form']['kurum_onay_tarihi']
-            hk.sync = 1 # TODO: Düzeltilecek, Şu anda senkronize etmemesi için 1 yapıldı
-            hk.personel = personel
-            hk.save()
+                hk = HizmetKayitlari(personel=personel)
+                hk.baslama_tarihi = date.today()
+
+                # TODO: Model post_save düzgün çalışmadığı için eklendi. Düzeltildiğinde kaldırılacak
+                hk.tckn = personel.tckn
+                hk.hizmet_sinifi = personel.hizmet_sinifi
+                hk.kadro_derece = atanacak_kadro.derece
+                hk.odeme_derece = personel.gorev_ayligi_derece
+                hk.odeme_kademe = personel.gorev_ayligi_kademe
+                hk.odeme_ekgosterge = personel.gorev_ayligi_ekgosterge
+                hk.kazanilmis_hak_ayligi_derece = personel.kazanilmis_hak_derece
+                hk.kazanilmis_hak_ayligi_kademe = personel.kazanilmis_hak_kademe
+                hk.kazanilmis_hak_ayligi_ekgosterge = personel.kazanilmis_hak_ekgosterge
+                hk.emekli_derece = personel.emekli_muktesebat_derece
+                hk.emekli_kademe = personel.emekli_muktesebat_kademe
+                hk.emekli_ekgosterge = personel.emekli_muktesebat_ekgosterge
+                ##
+                hk.sebep_kod = atama.durum.sebep_no
+                hk.kurum_onay_tarihi = self.current.input['form']['kurum_onay_tarihi']
+                hk.sync = 1 # TODO: Düzeltilecek, Şu anda senkronize etmemesi için 1 yapıldı
+                hk.personel = personel
+                hk.save()
+            except:
+                # Herhangi bir hata oluşursa atama silinecek
+                atama.delete(True)
 
     def atama_goster(self):
-        kisi_bilgileri = """**Adı**: {personel_ad}
-                           **Soyad**: {personel_soyad}""".format(**self.current.task_data['personel'])
+        kisi_bilgileri = """**Adı**: {ad}
+                           **Soyad**: {soyad}""".format(**self.current.task_data['personel'])
 
         atama_bilgileri = "**kadro**: {kadro}\n" \
                           "**İlçe**: \n".format(**self.current.task_data)
@@ -283,7 +290,7 @@ class EksikBilgiForm(JsonForm):
                 }
             ]
 
-    baslama_sebep = fields.String("Durum", type='typeahead')
+    baslama_sebep = None
 
     kaydet = fields.Button("Kaydet", cmd="kaydet", style="btn-success")
     iptal = fields.Button("İptal", cmd="iptal", flow="iptal", form_validation=False)

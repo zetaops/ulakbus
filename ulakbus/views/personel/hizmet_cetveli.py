@@ -12,7 +12,7 @@ from ulakbus.models.personel import Personel
 from ulakbus.views.personel.crud_hitap import zato_service_selector
 from ulakbus.views.reports.base import Reporter
 from zengine.forms import fields
-from ulakbus.models.hitap import HizmetKayitlari
+from ulakbus.models.hitap.hitap import HizmetKayitlari
 from collections import OrderedDict
 import datetime
 
@@ -50,7 +50,7 @@ class HizmetCetveli(Reporter):
         for hk in HizmetKayitlari.objects.filter(
                 personel_id=self.current.task_data['personel_id']).order_by('order_date'):
             hk_record = OrderedDict({})
-            hk_record['Görev'] = hk.gorev.title()
+            hk_record['Görev'] = hk.gorev.title() if hk.gorev else ''
             hk_record['H. Sınıf'] = hk.get_hizmet_sinifi_display()
             hk_record['Kadro'] = str(hk.kadro_derece)
             hk_record['GA'] = "%i/%i" % (hk.odeme_derece, hk.odeme_kademe)
