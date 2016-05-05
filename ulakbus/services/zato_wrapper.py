@@ -31,7 +31,6 @@ Example:
 from ulakbus import settings
 import requests
 import json
-# from zato_url_paths import service_url_paths
 from .zato_url_paths import service_url_paths
 
 
@@ -107,9 +106,9 @@ class ZatoService(object):
                     # riak error, connection error etc..
                     raise Exception("your service request failed with error %s"
                                     % response['result'])
-            except KeyError, k:
+            except KeyError:
                 raise Exception("your service response contains no status code, "
-                                "check your zato service package %s" % k)
+                                "check your zato service package")
 
         if r.status_code == 404:
             raise Exception("Service called '%s' is not defined on zato "
@@ -122,6 +121,16 @@ class ZatoService(object):
                             % r.status_code)
 
     def rebuild_response(self, response_data):
+        """
+        Rebuild response data
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
         return response_data
 
 
@@ -1409,6 +1418,16 @@ class MernisKimlikBilgileriGetir(TcknService):
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
     def rebuild_response(self, response_data):
+        """
+        Kimlik Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
         ret = {}
 
         try:
@@ -1431,10 +1450,11 @@ class MernisKimlikBilgileriGetir(TcknService):
             ret['kayitli_oldugu_cilt_no'] = kb['KayitYeriBilgisi']['Cilt']['Kod']
             ret['kayitli_oldugu_aile_sira_no'] = kb['KayitYeriBilgisi']['AileSiraNo']
             ret['kayitli_oldugu_sira_no'] = kb['KayitYeriBilgisi']['BireySiraNo']
-        except:
+        except KeyError:
             ret['hata'] = True
 
         return ret
+
 
 class MernisCuzdanBilgileriGetir(TcknService):
     """
@@ -1455,6 +1475,16 @@ class MernisCuzdanBilgileriGetir(TcknService):
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
     def rebuild_response(self, response_data):
+        """
+        Mernis Cüzdan Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
         ret = {}
 
         try:
@@ -1468,10 +1498,11 @@ class MernisCuzdanBilgileriGetir(TcknService):
             ret['kimlik_cuzdani_verilis_tarihi'] = '%s.%s.%s' % (
                 kb['VerilmeTarih']['b:Gun'], kb['VerilmeTarih']['b:Ay'],
                 kb['VerilmeTarih']['b:Yil'])
-        except:
+        except KeyError:
             ret['hata'] = True
 
         return ret
+
 
 class KPSAdresBilgileriGetir(TcknService):
     """
@@ -1492,13 +1523,23 @@ class KPSAdresBilgileriGetir(TcknService):
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
     def rebuild_response(self, response_data):
+        """
+        KPS Adres Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
         ret = {}
         try:
             kb = response_data['KimlikNoileKisiAdresBilgileri']['YerlesimYeriAdresi']
             ret['ikamet_adresi'] = kb['AcikAdres']
             ret['ikamet_il'] = kb['IlIlceMerkezAdresi']['Il']
             ret['ikamet_ilce'] = kb['IlIlceMerkezAdresi']['Ilce']
-        except:
+        except KeyError:
             ret['hata'] = True
 
         return ret

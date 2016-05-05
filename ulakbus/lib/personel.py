@@ -86,12 +86,16 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
     baslangic_tarihi = baslangic_tarihi or simdi
     bitis_tarihi = bitis_tarihi or simdi + datetime.timedelta(days=90)
 
-    terfisi_gelen_personeller = Personel.objects.filter(
-        personel_turu=personel_turu,
-        sonraki_terfi_tarihi__gte=baslangic_tarihi,
-        sonraki_terfi_tarihi__lte=bitis_tarihi)
-
     personeller = {}
+
+    qs = Personel.objects.filter(personel_turu=personel_turu)
+
+    terfisi_gelen_personeller = qs.or_filter(
+        ga_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],
+        kh_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],
+        em_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi]
+    )
+
     for personel in terfisi_gelen_personeller:
 
         suren_terfi = False
@@ -129,19 +133,22 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
 
             # terfi sonrasi derece ve kademeler
             p_data["terfi_sonrasi_gorev_ayligi_derece"], p_data[
-                "terfi_sonrasi_gorev_ayligi_kademe"] = derece_ilerlet(pkd,
-                                                                      personel.gorev_ayligi_derece,
-                                                                      personel.gorev_ayligi_kademe + 1)
+                "terfi_sonrasi_gorev_ayligi_kademe"] = derece_ilerlet(
+                pkd,
+                personel.gorev_ayligi_derece,
+                personel.gorev_ayligi_kademe + 1)
 
             p_data["terfi_sonrasi_kazanilmis_hak_derece"], p_data[
-                "terfi_sonrasi_kazanilmis_hak_kademe"] = derece_ilerlet(pkd,
-                                                                        personel.kazanilmis_hak_derece,
-                                                                        personel.kazanilmis_hak_kademe + 1)
+                "terfi_sonrasi_kazanilmis_hak_kademe"] = derece_ilerlet(
+                pkd,
+                personel.kazanilmis_hak_derece,
+                personel.kazanilmis_hak_kademe + 1)
 
             p_data["terfi_sonrasi_emekli_muktesebat_derece"], p_data[
-                "terfi_sonrasi_emekli_muktesebat_kademe"] = derece_ilerlet(pkd,
-                                                                           personel.gorev_ayligi_derece,
-                                                                           personel.gorev_ayligi_kademe + 1)
+                "terfi_sonrasi_emekli_muktesebat_kademe"] = derece_ilerlet(
+                pkd,
+                personel.gorev_ayligi_derece,
+                personel.gorev_ayligi_kademe + 1)
 
             # terfi sonrasi gorunen kademeler
             p_data["terfi_sonrasi_gorunen_gorev_ayligi_kademe"] = gorunen_kademe_hesapla(

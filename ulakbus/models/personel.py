@@ -8,7 +8,7 @@
 Bu modül Ulakbüs uygulaması için personel modelini ve  personel ile ilişkili modelleri içerir.
 
 """
-from .hitap.HitapSebep import HitapSebep
+from .hitap.hitap_sebep import HitapSebep
 from pyoko.lib.utils import lazy_property
 
 from pyoko import Model, field
@@ -91,38 +91,47 @@ class Personel(Model):
     emekli_muktesebat_ekgosterge = field.Integer("Emekli Müktesebat Ek Gösterge", index=True)
 
     kh_sonraki_terfi_tarihi = field.Date("Kazanılmış Hak Sonraki Terfi Tarihi", index=True,
-                                     format="%d.%m.%Y")
+                                         format="%d.%m.%Y")
     ga_sonraki_terfi_tarihi = field.Date("Görev Aylığı Sonraki Terfi Tarihi", index=True,
-                                     format="%d.%m.%Y")
+                                         format="%d.%m.%Y")
     em_sonraki_terfi_tarihi = field.Date("Emekli Müktesebat Sonraki Terfi Tarihi", index=True,
-                                     format="%d.%m.%Y")
+                                         format="%d.%m.%Y")
+
     birim = Unit("Birim")
 
     # Personelin Kendi Ünvanı,
     unvan = field.Integer("Personel Unvan", index=True, choices="unvan_kod", required=False)
+
     # Aşağıdaki bilgiler atama öncesi kontrol edilecek, Doldurulması istenecek
     emekli_sicil_no = field.String("Emekli Sicil No", index=True)
+    emekli_giris_tarihi = field.Date("Emekliliğe Giriş Tarihi", index=True, format="%d.%m.%Y")
+
     personel_tip = field.Integer("Personel Tipi", choices="personel_tip")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", choices="hizmet_sinifi")
     statu = field.Integer("Statü", choices="personel_statu")
     brans = field.String("Branş", index=True)
+
+    # akademik personeller icin sozlesme sureleri
     gorev_suresi_baslama = field.Date("Görev Süresi Başlama", index=True, format="%d.%m.%Y")
     gorev_suresi_bitis = field.Date("Görev Süresi Bitiş", index=True, format="%d.%m.%Y")
+
+    # todo: durum_degisikligi yonetimi
+    # kurumda ilk goreve baslama bilgileri, atama modelinden elde edilip
+    # edilemeyecegini soracagiz. mevcut otomasyonda ayrilmalar da burada tutuluyor.
+    # bunu tarih ve durum_degisikligi fieldlarindan olusan bir listnode seklinde tutabiliriz.
     goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
     baslama_sebep = HitapSebep()
     baslama_sebep.title = "Durum"
-    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
-    emekli_giris_tarihi = field.Date("Emekliliğe Giriş Tarihi", index=True, format="%d.%m.%Y")
-    # Arama için kullanılacak Flaglar
-    aday_memur = field.Boolean()
-    arsiv = field.Boolean()
 
-    # Arama için eklenen parametreler
-    kadro_derece = field.Integer()
+    # aday ve idari memurlar icin mecburi hizmet suresi
+    mecburi_hizmet_suresi = field.Date("Mecburi Hizmet Süresi", index=True, format="%d.%m.%Y")
+
+    # Arama için kullanılacak Flaglar
+    kadro_derece = field.Integer(default=0)
+    aday_memur = field.Boolean()
+    arsiv = field.Boolean()  # ayrilmis personeller icin gecerlidir.
 
     user = User(one_to_one=True)
-    # Arama için
-    kadro_derece = field.Integer()
 
     class Meta:
         app = 'Personel'
@@ -196,7 +205,6 @@ class Personel(Model):
 
     def __unicode__(self):
         return "%s %s" % (self.ad, self.soyad)
-
 
 
 class AdresBilgileri(Model):
@@ -442,17 +450,18 @@ class Atama(Model):
     Personelin atama bilgilerini içeren modeldir.
 
     """
-    # Arama için eklendi, Orjinali personelde tutulacak
-    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
+
     ibraz_tarihi = field.Date("İbraz Tarihi", index=True, format="%d.%m.%Y")
     durum = HitapSebep()
     durum.title = "Durum"
-    nereden = field.Integer("Nereden", index=True)
+    nereden = field.Integer("Nereden", index=True)  # modele baglanacak.
     atama_aciklama = field.String("Atama Açıklama", index=True)
     goreve_baslama_tarihi = field.Date("Göreve Başlama Tarihi", index=True, format="%d.%m.%Y")
     goreve_baslama_aciklama = field.String("Göreve Başlama Açıklama", index=True)
     kadro = Kadro()
     personel = Personel()
+    # Arama için eklendi, Orjinali personelde tutulacak
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi")
 
     class Meta:
         app = 'Personel'
@@ -463,7 +472,7 @@ class Atama(Model):
         search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.personel.tckn, self.gorev_suresi_baslama, self.ibraz_tarihi)
+        return '%s %s %s' % (self.personel.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
 
     @classmethod
     def personel_guncel_atama(cls, personel):
@@ -478,21 +487,38 @@ class Atama(Model):
         return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[
             0]
 
+    @classmethod
+    def personel_ilk_atama(cls, personel):
+        """
+        Personelin goreve_baslama_tarihi ne göre ilk atama kaydını döndürür.
+
+        Returns:
+            Atama örneği (instance)
+
+        """
+
+        return cls.objects.set_params(sort='goreve_baslama_tarihi asc').filter(personel=personel)[0]
+
     def post_save(self):
         # Personel modeline arama için eklenen kadro_derece set edilecek
         self.personel.kadro_derece = self.kadro.derece
         self.personel.save()
+
         # Atama sonrası kadro dolu durumuna çekilecek
         self.kadro.durum = 4
-        self.hizmet_sinifi = self.personel.hizmet_sinifi
         self.kadro.save()
 
     def pre_save(self):
+        self.hizmet_sinifi = self.personel.hizmet_sinifi
         # Atama kaydetmeden önce kadro boş durumuna çekilecek
         self.kadro.durum = 2
         self.kadro.save()
 
     def post_delete(self):
-        # Atama silinirse kadro boş duşuma çekilece
+        # Atama silinirse kadro boş duşuma çekilecek
         self.kadro.durum = 2
         self.kadro.save()
+
+        # personelin kadro derecesi 0 olacak
+        self.personel.kadro_derece = 0
+        self.personel.save()
