@@ -107,33 +107,37 @@ class TerfisiTikananPersonel(Reporter):
 
         return personel_list
 
+
 class GorevSuresiBitenPersonel(Reporter):
     TITLE = "Görev Süresi Dolan Personel Listesi"
 
     def get_objects(self):
         """ 
             Görev süresinin bitme durumu sadece akademik personel için geçerli
-            bir durumdur. Atama modelindeki gorev_suresi_bitis alanındaki değerin
+            bir durumdur. Personel modelindeki gorev_suresi_bitis alanındaki değerin
             bugünün datetime değerinden küçük olma durumuna bakılır.
         """
         simdi = datetime.date.today()
-        atamalar = Atama.objects.filter(
-            gorev_suresi_bitis__lte=simdi,
-            personel_tip=1
-            )
+        bitis_tarihi = simdi + datetime.timedelta(days=120)
+
+        # todo: add order_by
+        personeller = Personel.objects.filter(
+            gorev_suresi_bitis__lte=bitis_tarihi,
+            personel_turu=1
+        )
         personel_list = []
-        for atama in atamalar:
+        for p in personeller:
             personel = OrderedDict({})
-            personel["T.C. No"] = atama.personel.tckn
-            personel["İsim"] = atama.personel.ad
-            personel["Soyisim"] = atama.personel.soyad
-            personel["Birim"] = atama.personel.birim.name
-            if type(atama.gorev_suresi_baslama) is not str:
-                personel["Görev Süresi Başlangıç"] = atama.gorev_suresi_baslama.strftime("%d.%m.%Y")
-            if type(atama.gorev_suresi_bitis) is not str:
-                personel["Görev Süresi Bitiş"] = atama.gorev_suresi_bitis.strftime("%d.%m.%Y")
-            if type(atama.goreve_baslama_tarihi) is not str:
-                personel["Göreve Başlama Tarihi"] = atama.goreve_baslama_tarihi.strftime("%d.%m.%Y")
+            personel["T.C. No"] = p.tckn
+            personel["Ad"] = p.ad
+            personel["Soyad"] = p.soyad
+            personel["Birim"] = p.birim.name
+            if type(p.gorev_suresi_baslama) is not str:
+                personel["Görev Süresi Başlangıç"] = p.gorev_suresi_baslama.strftime("%d.%m.%Y")
+            if type(p.gorev_suresi_bitis) is not str:
+                personel["Görev Süresi Bitiş"] = p.gorev_suresi_bitis.strftime("%d.%m.%Y")
+            if type(p.goreve_baslama_tarihi) is not str:
+                personel["Göreve Başlama Tarihi"] = p.goreve_baslama_tarihi.strftime("%d.%m.%Y")
             personel_list.append(personel)
 
         return personel_list
