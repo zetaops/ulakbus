@@ -16,11 +16,6 @@ from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
 from ulakbus.settings import SICIL_PREFIX
 
-PERSONEL_TURU = [
-    (1, 'Akademik'),
-    (2, 'İdari')
-]
-
 
 class Personel(Model):
     """Personel Modeli
@@ -39,7 +34,6 @@ class Personel(Model):
     ikamet_il = field.String("İkamet İl")
     ikamet_ilce = field.String("İkamet İlçe")
     adres_2 = field.String("Adres 2")
-    adres_2_posta_kodu = field.String("Adres 2 Posta Kodu")
     oda_no = field.String("Oda Numarası")
     oda_tel_no = field.String("Oda Telefon Numarası")
     cep_telefonu = field.String("Cep Telefonu")
@@ -52,14 +46,12 @@ class Personel(Model):
     kan_grubu = field.String("Kan Grubu")
     ehliyet = field.String("Ehliyet")
     verdigi_dersler = field.String("Verdiği Dersler")
-    unvan = field.Integer("Ünvan", choices="akademik_unvan")
     biyografi = field.Text("Biyografi")
     notlar = field.Text("Notlar")
     engelli_durumu = field.String("Engellilik")
     engel_grubu = field.String("Engel Grubu")
     engel_derecesi = field.String("Engel Derecesi")
     engel_orani = field.Integer("Engellilik Oranı")
-    personel_turu = field.Integer("Personel Türü", choices=PERSONEL_TURU)
     cuzdan_seri = field.String("Seri")
     cuzdan_seri_no = field.String("Seri No")
     baba_adi = field.String("Ana Adı")
@@ -99,14 +91,14 @@ class Personel(Model):
 
     birim = Unit("Birim")
 
-    # Personelin Kendi Ünvanı,
+    # Personelin Kendi Ünvanı
     unvan = field.Integer("Personel Unvan", index=True, choices="unvan_kod", required=False)
 
     # Aşağıdaki bilgiler atama öncesi kontrol edilecek, Doldurulması istenecek
     emekli_sicil_no = field.String("Emekli Sicil No", index=True)
     emekli_giris_tarihi = field.Date("Emekliliğe Giriş Tarihi", index=True, format="%d.%m.%Y")
 
-    personel_tip = field.Integer("Personel Tipi", choices="personel_tip")
+    personel_turu = field.Integer("Personel Türü", choices="personel_turu")
     hizmet_sinifi = field.Integer("Hizmet Sınıfı", choices="hizmet_sinifi")
     statu = field.Integer("Statü", choices="personel_statu")
     brans = field.String("Branş", index=True)
@@ -467,12 +459,13 @@ class Atama(Model):
         app = 'Personel'
         verbose_name = "Atama"
         verbose_name_plural = "Atamalar"
-        list_fields = ['personel_tip', 'hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi',
+        list_fields = ['hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi',
                        'durum']
-        search_fields = ['personel_tip', 'hizmet_sinif', 'statu']
+        search_fields = ['hizmet_sinif', 'statu']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.personel.kurum_sicil_no, self.gorev_suresi_baslama, self.ibraz_tarihi)
+        return '%s %s %s' % (self.personel.kurum_sicil_no,
+                             self.gorev_suresi_baslama, self.ibraz_tarihi)
 
     @classmethod
     def personel_guncel_atama(cls, personel):
@@ -484,8 +477,8 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=personel)[
-            0]
+        return cls.objects.set_params(
+            sort='goreve_baslama_tarihi desc').filter(personel=personel)[0]
 
     @classmethod
     def personel_ilk_atama(cls, personel):
@@ -497,7 +490,8 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(sort='goreve_baslama_tarihi asc').filter(personel=personel)[0]
+        return cls.objects.set_params(
+            sort='goreve_baslama_tarihi asc').filter(personel=personel)[0]
 
     def post_save(self):
         # Personel modeline arama için eklenen kadro_derece set edilecek
