@@ -12,8 +12,9 @@ import httplib
 import os
 
 """
-UYARI : Lütfen bu kod içerisindeki uzun satırları formatlamayın. Satır gönderilen xml içersindeki satırların bozulması
-durumunda kps tarafında HTTP_STATUS 400 dönmektedir.
+UYARI : Lütfen bu kod içerisindeki uzun satırları formatlamayın. Gönderilen xml içersindeki
+satırların bozulması durumunda kps tarafında HTTP_STATUS 400 dönmektedir.
+
 """
 
 __author__ = 'Ali Riza Keles'
@@ -111,9 +112,9 @@ class NVIService(Service):
                      request_xml, headers)
         return conn.getresponse()
 
-    def xml_to_json(self, response_xml=None,response_element=None):
+    def xml_to_json(self, response_xml=None, response_element=None):
         from xml.dom import minidom
-        response_dict={}
+        response_dict = {}
 
         if response_xml:
             root = minidom.parseString(response_xml).getElementsByTagName('SorguSonucu')[0]
@@ -148,7 +149,6 @@ class KisiSorgulaTCKimlikNo(NVIService):
                   </ns1:ListeleCoklu>
             </env:Body>""" % tckn
         super(KisiSorgulaTCKimlikNo, self).handle()
-
 
 
 class CuzdanSorgulaTCKimlikNo(NVIService):
@@ -235,10 +235,3 @@ class AileBireySorgula(NVIService):
             </env:Body>""" % tckn
 
         super(AileBireySorgula, self).handle()
-
-
-r = {"status": 200,
-     "result": """
-               <s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"><s:Header><a:Action s:mustUnderstand="1">http://kps.nvi.gov.tr/2011/01/01/KisiSorgulaTCKimlikNoServis/ListeleCokluResponse</a:Action><a:RelatesTo>urn:uuid:48076750-9cd9-11e5-ae6f-fa163e024963</a:RelatesTo><o:Security s:mustUnderstand="1" xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><u:Timestamp u:Id="_0"><u:Created>2015-12-07T11:54:33.932Z</u:Created><u:Expires>2015-12-07T11:59:33.932Z</u:Expires></u:Timestamp></o:Security></s:Header><s:Body><ListeleCokluResponse xmlns="http://kps.nvi.gov.tr/2011/01/01"><ListeleCokluResult xmlns:i="http://www.w3.org/2001/XMLSchema-instance"><HataBilgisi i:nil="true"/><SorguSonucu><KisiBilgisi><AnneTCKimlikNo i:nil="true"/><BabaTCKimlikNo i:nil="true"/><DogumYerKod>1740</DogumYerKod><DurumBilgisi><Din i:nil="true"/><Durum><Aciklama>A\\u00e7\\u0131k</Aciklama><Kod>1</Kod></Durum><MedeniHal><Aciklama>Evli</Aciklama><Kod>2</Kod></MedeniHal><OlumTarih><Ay i:nil="true"/><Gun i:nil="true"/><Yil i:nil="true"/></OlumTarih></DurumBilgisi><EsTCKimlikNo i:nil="true"/><HataBilgisi i:nil="true"/><KayitYeriBilgisi><AileSiraNo>35</AileSiraNo><BireySiraNo>56</BireySiraNo><Cilt><Aciklama>BELPINAR</Aciklama><Kod>72</Kod></Cilt><Il><Aciklama>Tokat</Aciklama><Kod>60</Kod></Il><Ilce><Aciklama>Zile</Aciklama><Kod>1740</Kod></Ilce></KayitYeriBilgisi><TCKimlikNo>52231446850</TCKimlikNo><TemelBilgisi><Ad>AL\\u0130RIZA</Ad><AnneAd>NEJLA</AnneAd><BabaAd>AL\\u0130</BabaAd><Cinsiyet><Aciklama>Erkek</Aciklama><Kod>1</Kod></Cinsiyet><DogumTarih><Ay>6</Ay><Gun>10</Gun><Yil>1981</Yil></DogumTarih><DogumYer>Z\\u0130LE</DogumYer><Soyad>KELE\\u015e</Soyad></TemelBilgisi></KisiBilgisi></SorguSonucu></ListeleCokluResult></ListeleCokluResponse></s:Body></s:Envelope>
-               """
-     }

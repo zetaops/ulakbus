@@ -8,15 +8,14 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 # Yeni Personel Ekle WF adimlarini icerir.
-from ulakbus.lib.view_helpers import prepare_titlemap_for_model, prepare_choices_for_model
+from pyoko.exceptions import ObjectDoesNotExist
 from zengine.views.crud import CrudView
-
 from zengine.forms import JsonForm, fields
-from collections import OrderedDict
-from ulakbus.models.personel import Personel, Kadro
+from ulakbus.models.personel import Personel
 
 """
-| ``button`` nesnelerinin stillendirilmesi için bu nesnelere ``style`` anahtarı ile css class'ları gönderilebilir. Bu class'lar şunlar olabilir:
+``button`` nesnelerinin stillendirilmesi için bu nesnelere ``style`` anahtarı ile css class'ları
+gönderilebilir. Bu class'lar şunlar olabilir:
 ​
     - btn-default
     - btn-primary
@@ -48,8 +47,9 @@ class YeniPersonelEkle(CrudView):
             Personel.objects.get(tckn=tckn)
             self.current.task_data['mernis_tamam'] = False
             self.current.task_data['hata_msg'] = "Personel Daha Önce Kaydedilmiş"
-        except:
-            from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir, MernisCuzdanBilgileriGetir
+        except ObjectDoesNotExist:
+            from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir, \
+                MernisCuzdanBilgileriGetir
 
             # Kimlik bilgileri mernis servisi üzerinden çekilecek
             mernis_bilgileri = MernisKimlikBilgileriGetir(tckn=str(tckn))
@@ -81,35 +81,33 @@ class YeniPersonelEkle(CrudView):
 
     def yeni_ekle_kontrol(self):
         _form = IletisimveEngelliDurumBilgileriForm(current=self.current)
-        # if self.current.task_data['cmd'] == 'atama_yapmadan_gec':
-        #     self.current.task_data['atama_yapmadan_gec'] = True
-        # else:
-        #     self.current.task_data['atama_yapmadan_gec'] = False
-        #     self.current.task_data['atanacak_kadro'] = self.current.input['form']['kadro']
-
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Personel Kayıt Uyarısı',
-            "msg": 'Lütfen Personel bilgilerinin doğruluğunu kontrol ediniz. Kayıt işlemi geri döndürülemez.'
+            "msg": """
+                   Lütfen Personel bilgilerinin doğruluğunu kontrol ediniz.
+                   Kayıt işlemi geri döndürülemez.
+                   """
         }
-        #son_personel = Personel.objects.set_params(sort='kurum_sicil_no_int desc')[0]
-        #_form.sicil_no = fields.Integer("Kurum Sicil No (Sıradaki Sicil No : KON-%s)" % str(son_personel.kurum_sicil_no_int+1), required=True)
 
         _form.ikamet_adresi = self.current.task_data['adres_bilgileri']['ikamet_adresi']
         _form.ikamet_il = self.current.task_data['adres_bilgileri']['ikamet_il']
         _form.ikamet_ilce = self.current.task_data['adres_bilgileri']['ikamet_ilce']
 
-        _form.kaydet = fields.Button("Kaydet (Bu işlem geri alınamaz!)", cmd="kaydet", btn='success')
+        _form.kaydet = fields.Button("Kaydet (Bu işlem geri alınamaz!)", cmd="kaydet",
+                                     btn='success')
         _form.iptal = fields.Button("İptal", cmd="iptal", flow="iptal", form_validation=False)
 
         kimlik_bilgileri = """**Adı**: {ad}
                            **Soyad**: {soyad}
-                           **Doğum Tarihi**: {dogum_tarihi}""".format(**self.current.task_data['kimlik_bilgileri'])
+                           **Doğum Tarihi**: {dogum_tarihi}
+                           """.format(**self.current.task_data['kimlik_bilgileri'])
 
-        adres_bilgileri = "**İl**: {ikamet_il}\n" \
-                          "**İlçe**: {ikamet_ilce}\n" \
-                          "**Adres**: {ikamet_adresi}".format(**self.current.task_data['adres_bilgileri'])
+        adres_bilgileri = """**İl**: {ikamet_il}
+                          **İlçe**: {ikamet_ilce}
+                          **Adres**: {ikamet_adresi}
+                          """.format(**self.current.task_data['adres_bilgileri'])
 
-        output = [{'Kişi Bilgileri': kimlik_bilgileri, 'Adres Bilgileri': adres_bilgileri}] #,{"Kişi Bilgileri":_form.serialize(),"Adres Bilgileri":""}]
+        output = [{'Kişi Bilgileri': kimlik_bilgileri, 'Adres Bilgileri': adres_bilgileri}]
 
         self.current.output['object'] = {
             "type": "table-multiRow",
@@ -135,12 +133,19 @@ class YeniPersonelEkle(CrudView):
         yeni_personel.save()
 
         self.current.output['msgbox'] = {
-            'type': 'success', "title": '%s %s Başarı İle Kaydedildi' % (yeni_personel.ad,yeni_personel.soyad),
-            "msg": 'Personel Başarı ile Kaydedildi, Personele atama yapabilir veya daha sonra atama yapmak için "İşlemi Bitir" Butonuna tıklayabilirsiniz'
+            'type': 'success',
+            "title": '%s %s Başarı İle Kaydedildi' % (yeni_personel.ad, yeni_personel.soyad),
+            "msg": """
+                   Personel Başarı ile Kaydedildi, Personele atama yapabilir veya daha sonra
+                   atama yapmak için "İşlemi Bitir" Butonuna tıklayabilirsiniz
+                   """
         }
 
         _form = JsonForm(current=self.current)
+
+        # todo: bu buton ilgili personel secili olarak yeni bir wf baslatacak
         _form.geri = fields.Button("Atama Yap", style="btn-success", cmd="atama_yap")
+
         _form.iptal = fields.Button("İşlemi Bitir", cmd="bitir")
         self.form_out(_form)
 
@@ -157,9 +162,11 @@ class YeniPersonelEkle(CrudView):
         }
 
         _form = JsonForm(current=self.current)
-        _form.geri = fields.Button("Yeni bir Tc Kimlik Numarası ile dene", style="btn-success", cmd="tekrar")
+        _form.geri = fields.Button("Yeni bir Tc Kimlik Numarası ile dene", style="btn-success",
+                                   cmd="tekrar")
         _form.iptal = fields.Button("İptal", cmd="iptal")
         self.form_out(_form)
+
 
 # Formlar
 class YeniPersonelTcknForm(JsonForm):
@@ -169,6 +176,7 @@ class YeniPersonelTcknForm(JsonForm):
 
     tckn = fields.String("TC No")
     cmd = fields.String("Bilgileri Getir", type="button")
+
 
 class IletisimveEngelliDurumBilgileriForm(JsonForm):
     class Meta:
@@ -180,7 +188,8 @@ class IletisimveEngelliDurumBilgileriForm(JsonForm):
                 "groups": [
                     {
                         "group_title": "Adres Bilgileri",
-                        "items": ['ikamet_adresi', 'ikamet_il', 'ikamet_ilce', 'adres_2', 'adres_2_posta_kodu'],
+                        "items": ['ikamet_adresi', 'ikamet_il', 'ikamet_ilce',
+                                  'adres_2', 'adres_2_posta_kodu'],
                         "collapse": True,
                     }
                 ]
@@ -190,7 +199,8 @@ class IletisimveEngelliDurumBilgileriForm(JsonForm):
                 "groups": [
                     {
                         "group_title": "İletişim Bilgileri",
-                        "items": ['oda_tel_no', 'cep_telefonu', 'e_posta', 'e_posta_2', 'e_posta_3', 'web_sitesi', 'notlar'],
+                        "items": ['oda_tel_no', 'cep_telefonu', 'e_posta', 'e_posta_2',
+                                  'e_posta_3', 'web_sitesi', 'notlar'],
                         "collapse": True,
                     }
                 ]
@@ -213,7 +223,7 @@ class IletisimveEngelliDurumBilgileriForm(JsonForm):
     adres_2_posta_kodu = fields.String("Adres 2 Posta Kodu")
     oda_tel_no = fields.String("Oda Telefon Numarası")
     cep_telefonu = fields.String("Cep Telefonu")
-    e_posta = fields.String("Kurum E-Posta(Yeni Personel için boş bırakınız)",required=False)
+    e_posta = fields.String("Kurum E-Posta(Yeni Personel için boş bırakınız)", required=False)
     e_posta_2 = fields.String("E-Posta 2")
     e_posta_3 = fields.String("E-Posta 3")
     web_sitesi = fields.String("Web Sitesi")

@@ -301,12 +301,11 @@ class DersSubelendirme(CrudView):
                         }
                     )
 
-            except KeyError:
-                pass
-
-            ders_subeleri = ["{okutman_unvan} {okutman_ad}"
-                             "{okutman_soyad}, Sube:{sube_ad} Kontenjan{kontenjan} \n".format(**sb)
-                             for sb in sube]
+            for sube in ders_subeleri:
+                sube_append(sube)
+            for ders_key, sube_key in just_created:
+                if ders_key == d.key:
+                    sube_append(Sube.objects.get(sube_key))
 
             ders_subeleri = ["""* **%s %s %s**
                                 Sube: %s - Kontenjan: %s""" % (

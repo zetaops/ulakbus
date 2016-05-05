@@ -6,9 +6,9 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ..personel import Personel
-from pyoko import Model, field, Node
-from ..auth import Role
+from pyoko import Model, field
 import datetime
+from .hitap_sebep import HitapSebep
 
 
 class NufusKayitlari(Model):
@@ -34,7 +34,6 @@ class NufusKayitlari(Model):
     sync = field.Integer("Senkronize", index=True)
     personel = Personel(one_to_one=True)
 
-
     # TODO: Personele gore unique olmali
 
     class Meta:
@@ -53,8 +52,10 @@ class HizmetKurs(Model):
     kurs_ogrenim_suresi = field.Integer("Kurs Öğrenim Süresi", index=True)
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
     kurs_nevi = field.Integer("Kurs Nevi", index=True, choices="kurs_nevi")
-    bolum_ad = field.Integer("Bölüm Adı", index=True, choices="bolum_adi")  # TODO: serviste karsiligi yok
-    okul_ad = field.Integer("Okul Adı", index=True, choices="okul_adi")  # TODO: servisten gelen string
+    bolum_ad = field.Integer("Bölüm Adı", index=True,
+                             choices="bolum_adi")  # TODO: serviste karsiligi yok
+    okul_ad = field.Integer("Okul Adı", index=True,
+                            choices="okul_adi")  # TODO: servisten gelen string
     ogrenim_yeri = field.String("Öğrenim Yeri", index=True)
     denklik_tarihi = field.Date("Denklik Tarihi", index=True, format="%d.%m.%Y")
     denklik_okulu = field.String("Denklik Okulu", index=True)
@@ -348,27 +349,34 @@ class HizmetKayitlari(Model):
     baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     gorev = field.String("Görev", index=True)  # birim + kadro unvanı
-    unvan_kod = field.Integer("Unvan Kod", index=True) # kadro unvan kodu
+    unvan_kod = field.Integer("Unvan Kod", index=True)  # kadro unvan kodu
     yevmiye = field.String("Yevmiye", index=True)
     ucret = field.String("Ücret", index=True)
-    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True, choices="hizmet_sinifi") # atama modelinden gelecek
-    kadro_derece = field.Integer("Kadro Derecesi", index=True) # personelden gelecek
-    odeme_derece = field.Integer("Ödeme Derecesi", index=True) # personelden gelecek
-    odeme_kademe = field.Integer("Ödeme Kademesi", index=True) # personelden gelecek (gorunen)
-    odeme_ekgosterge = field.Integer("Ödeme Ek Göstergesi", index=True) # personelden gelecek
-    kazanilmis_hak_ayligi_derece = field.Integer("Kazanılmış Hak Aylığı Derecesi", index=True) # personelden gelecek
-    kazanilmis_hak_ayligi_kademe = field.Integer("Kazanılmış Hak Aylığı Kademesi", index=True) # personelden gelecek (gorunen)
+    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True,
+                                  choices="hizmet_sinifi")  # atama modelinden gelecek
+    kadro_derece = field.Integer("Kadro Derecesi", index=True)  # personelden gelecek
+    odeme_derece = field.Integer("Ödeme Derecesi", index=True)  # personelden gelecek
+    odeme_kademe = field.Integer("Ödeme Kademesi", index=True)  # personelden gelecek (gorunen)
+    odeme_ekgosterge = field.Integer("Ödeme Ek Göstergesi", index=True)  # personelden gelecek
+    kazanilmis_hak_ayligi_derece = field.Integer("Kazanılmış Hak Aylığı Derecesi",
+                                                 index=True)  # personelden gelecek
+    kazanilmis_hak_ayligi_kademe = field.Integer("Kazanılmış Hak Aylığı Kademesi",
+                                                 index=True)  # personelden gelecek (gorunen)
     kazanilmis_hak_ayligi_ekgosterge = field.Integer("Kazanılmış Hak Aylığı Ek Göstergesi",
-                                                     index=True) # personelden gelecek
-    emekli_derece = field.Integer("Emekli Derecesi", index=True) # personelden gelecek
-    emekli_kademe = field.Integer("Emekli Kademe", index=True) # personelden gelecek (gorunen)
-    emekli_ekgosterge = field.Integer("Emekli Ek Göstergesi", index=True) # personelden gelecek
-    sebep_kod = field.String("Sebep Kodu", index=True)
+                                                     index=True)  # personelden gelecek
+    emekli_derece = field.Integer("Emekli Derecesi", index=True)  # personelden gelecek
+    emekli_kademe = field.Integer("Emekli Kademe", index=True)  # personelden gelecek (gorunen)
+    emekli_ekgosterge = field.Integer("Emekli Ek Göstergesi", index=True)  # personelden gelecek
+    sebep_kod = HitapSebep("Hitap Sebep Kodu")
     kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
     sync = field.Integer("Senkronize", index=True)
     personel = Personel()
+
+    # hizmet cetveline birden cok modelden veri girilmektedir. bu alanda, hizmet
+    # cetveli kaydini olusturan diger modeldeki kaydin key i saklanir.
     model_key = field.String()
-    ##
+
+    # post save metodunda baslangic ya da bitis tarihinden set edilir.
     order_date = field.DateTime()
 
     class Meta:
@@ -379,14 +387,17 @@ class HizmetKayitlari(Model):
         search_fields = ['unvan_kod', 'gorev', 'yevmiye']
         hitap_service_prefix = "HitapHizmetCetveli"
 
-    """
-    Hizmet cetvelindeki kayıtların başlama veya bitiş tarihleri geliyor. Her kaydın başlama ve bitiş tarihi beraber gelmiyor
-    Bu yüzden kayıtların sıralanabilmesi için order_date alanı eklendi. Bitiş tarihi başka bir kaydın başlangıç tarihi ise
-    önce bitiş tarihi olan kayıt gürüntülenmelidir. Bu yüzden başlangıç tarihine +1 saat eklendi.
-    """
     def post_save(self):
+        """
+        Hizmet cetvelindeki kayıtların başlama veya bitiş tarihleri
+        geliyor. Her kaydın başlama ve bitiş tarihi beraber gelmiyor.
+        Bu yüzden kayıtların sıralanabilmesi için order_date alanı
+        eklendi. Bitiş tarihi başka bir kaydın başlangıç tarihi ise
+        önce bitiş tarihi olan kayıt gürüntülenmelidir. Bu yüzden
+        başlangıç tarihine +1 saat eklendi.
+        """
         if self.baslama_tarihi != datetime.date(1900, 1, 1):
-            self.order_date =datetime.datetime.combine(self.baslama_tarihi,datetime.time(1))
+            self.order_date = datetime.datetime.combine(self.baslama_tarihi, datetime.time(1))
         else:
             self.order_date = self.bitis_tarihi
         self.save()
@@ -407,6 +418,7 @@ class HizmetKayitlari(Model):
             self.emekli_derece = self.personel.emekli_muktesebat_derece
             self.emekli_kademe = self.personel.gorunen_emekli_muktesebat_kademe
             self.emekli_ekgosterge = self.personel.emekli_muktesebat_ekgosterge
+            self.save()
 
     def __unicode__(self):
         return '%s %s %s' % (self.unvan_kod, self.hizmet_sinifi, self.gorev)

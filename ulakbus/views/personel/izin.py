@@ -224,21 +224,11 @@ class IzinBasvuru(CrudView):
         form_data.save()
         self.current.task_data['izin_form_data_key'] = form_data.key
 
-    def izin_basvuru_kayit_bilgi_goster(self):
-        """Personele izin başvuru kayıt sonucu bilgisini gösteren methoddur.
-
-        """
-        izin_basvuru = self.current.task_data['izin_form_data']
-        izin_baslangic = izin_basvuru['izin_baslangic']
-        izin_bitis = izin_basvuru['izin_bitis']
-        _form = forms.JsonForm(current=self.current, title=" ")
-        _form.ileri = fields.Button("İleri")
-        self.form_out(_form)
-        self.current.output['msgbox'] = {
-            'type': 'info', "title": 'İzin Başvurusu Yapıldı',
-            "msg": '%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.' % (
-                izin_baslangic, izin_bitis)
-        }
+        msg = {"title": 'İzin Başvurusu Yapıldı',
+               "body": '%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.' % (
+                   self.input['form']['izin_baslangic'], self.input['form']['izin_bitis'])}
+        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def izin_basvuru_sonuc_kaydet(self):
         """Onay verilen izin başvuru sonucu kaydını gerçekleştiren methoddur.

@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 
-from pyoko import Model, field, Node
+from pyoko import Model, field
 
-## TODO : Sebep kodları fixture altına taşınacak, bkz; sepeb_kod_ayrilma, sebep_kod_baslama
+
 class HitapSebep(Model):
     sebep_no = field.Integer("Sebep No")
     ad = field.String("Sebep Adı")
