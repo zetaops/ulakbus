@@ -89,6 +89,9 @@ OBJECT_MENU = {
         {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
          'field': 'personel_id'},
 
+        {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma', 
+         'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},         
+
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
          'category': 'Hitap İşlemleri', 'wf': 'personel_hizmet_cetveli'},
