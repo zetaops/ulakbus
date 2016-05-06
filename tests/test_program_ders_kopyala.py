@@ -36,18 +36,18 @@ class TestCase(BaseTestCase):
 
         """
 
-        # veritabanından test_user seçilir
+        # veritabanından test_user seçilir.
         usr = User.objects.get(username='test_user')
 
-        # program_ders_kopyala workflowu çalıştırılır
+        # program_ders_kopyala workflowu çalıştırılır.
         self.prepare_client('/program_ders_kopyala', user=usr)
-
         resp = self.client.post()
-        # veritabanındaki program sayısı çekilir
+
+        # veritabanındaki program sayısı çekilir.
         program_sayisi = Program.objects.filter().count()
 
         # Veritabanından çekilen program sayısı ile sunucudan dönen program sayısının
-        # eşitliği karşılaştırılıp test edilir
+        # eşitliği karşılaştırılıp test edilir.
         assert program_sayisi == len(resp.json['forms']['form'][1]['titleMap'])
 
         # İlk program seçilir
@@ -60,10 +60,10 @@ class TestCase(BaseTestCase):
         program_versiyon_sayisi = len(program.Version)
         senato_karar_no = program.Version[program_versiyon_sayisi - 1].senato_karar_no
 
-        # "123" olarak girilen senato numarasının kaydedilip kaydedilmediği test edilir
+        # "123" olarak girilen senato numarasının kaydedilip kaydedilmediği test edilir.
         assert senato_karar_no == '123'
 
-        # "SEN123" olarak üretilmesi beklenen program versiyon numarası test edilir
+        # "SEN123" olarak üretilmesi beklenen program versiyon numarası test edilir.
         assert program.Version[program_versiyon_sayisi - 1].no == "SEN" + senato_karar_no
 
         guncel_yil = date.today().year
@@ -83,18 +83,36 @@ class TestCase(BaseTestCase):
 
         # Tabloda gösterilen derslerden ilki seçilir.
         resp.json['forms']['model']['Dersler'][0]['secim'] = True
+        resp.json['forms']['model']['Dersler'][1]['secim'] = True
         resp = self.client.post(form={'duzenle': 1, 'Dersler': resp.json['forms']['model']['Dersler']})
 
-        # Dersin adı "Embedded" olarak değiştirilir.
-        form_bir_kontrol = {'aciklama': "Hemşirelik", 'ad': "Embedded", 'ders_amaci': "Cocuk Bakimi",
-                            'ders_dili': "Turkce", 'ders_turu': 5, 'ects_kredisi': 5, 'kaydet': 1,
-                            'kod': "333", 'object_key': "WyL5Rk9BuNgDNJxYmXdF6gZPoYh",
-                            'onkosul': "Tıp", 'tanim': "iyte", 'teori_saati': 3, 'unicode': "Computer 333 Turkce",
-                            'uygulama_saati': 3,
-                            'yerel_kredisi': 6, 'zorunlu': 'true'}
+        # İlk formda dersin adı Embedded olarak değiştirilir.
+        resp.json["forms"]["model"]["ad"] = "Embedded"
+        form_bir_kontrol = resp.json["forms"]["model"]
         resp = self.client.post(form=form_bir_kontrol)
 
-        secilen_ders = Ders.objects.get('WyL5Rk9BuNgDNJxYmXdF6gZPoYh')
+        key = resp.json["forms"]["model"]["object_key"]
+        secilen_ders = Ders.objects.get(key)
 
-        # Ders adı değişikliğinin veritabanında da yapılıp yapılmadığı kontrol edilir.
-        assert resp.json['forms']['model']['ad'] == secilen_ders.ad
+        # İlk formda ders adı değişikliğinin veritabanında da yapılıp yapılmadığı kontrol edilir.
+        assert secilen_ders.ad == "Embedded"
+
+        # İkinci formda ders içeriği Math olarak değiştirilir.
+        resp.json["forms"]["model"]["ders_icerigi"] = "Math"
+        form_iki_kontrol = resp.json["forms"]["model"]
+
+        key = resp.json["forms"]["model"]["object_key"]
+        secilen_ders = Ders.objects.get(key)
+        self.client.post(form=form_iki_kontrol)
+
+        # İkinci formda ders içeriği değişikliğinin veritabanında da yapılıp yapılmadığı kontrol edilir.
+        assert secilen_ders.ders_icerigi == "Math"
+
+        # İkinci seçilen dersin ilk formuna tıklanır.
+        resp = self.client.post(form=form_bir_kontrol)
+        # İkinci seçilen dersin ikinci formuna tıklanır.
+        resp = self.client.post(form=form_iki_kontrol)
+
+        # Değişiklikler bittiğinde Tamamla butonuna basıldığında bitirip bitirmediği test edilir.  
+        resp = self.client.post(form={'onayla': 1, 'geri_don': 'null'}, flow="personel_bilgilendir")
+        assert resp.json['msgbox']['title'] == "Onay Mesajı"
