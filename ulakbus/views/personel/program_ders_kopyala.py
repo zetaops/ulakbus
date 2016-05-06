@@ -202,7 +202,7 @@ class SecilenDersForm(JsonForm):
                    'ects_kredisi', 'yerel_kredisi', 'zorunlu', 'ders_dili', 'ders_turu', 'ders_amaci']
 
 
-# todo: read-only özelliğinin eklenmesi. Örnek olarak: formda ders kodunun gösterilmesi ama değiştirilmemesi.
+# todo: read-only özelliğinin eklenmesi. Örnek olarak: formda ders kodunun gösterilmesi ama değiştirilememesi.
 
 
 class SecilenDersForm2(JsonForm):
