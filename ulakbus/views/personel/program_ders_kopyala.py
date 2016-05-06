@@ -13,9 +13,11 @@ from ulakbus.views.ders.ders import prepare_choices_for_model
 from ulakbus.models.ogrenci import Program, Ders, Donem
 from datetime import date
 
+
 class ProgramDersForm(JsonForm):
     """
     Kopyalanan dersleri tabloda gösterirken kullanılan form.
+
     """
 
     class Dersler(ListNode):
@@ -33,12 +35,14 @@ class ProgramKopyalama(CrudView):
     Bir programın bir önceki seneye ait tüm dersleri kopyalanır ve kopyalanan dersler üzerinde
     değişiklikler yapılarak (ders ekle, çıkar, ders adı, kredi değişikliği vb. ) programın dersleri
     güncellenir.
+
     """
 
     class Meta:
         model = "Ders"
 
     def program_sec(self):
+
         """
         Güncellenecek program seçimine karşılık gelen method.
 
@@ -76,8 +80,6 @@ class ProgramKopyalama(CrudView):
         program_versiyon = program_versiyon_no_uret(senato_karar_no)
 
         program = Program.objects.get(self.current.task_data['program_id'])
-        program.Version.add(senato_karar_no=senato_karar_no, no=program_versiyon)
-        program.save()
 
         guncel_yil = date.today().year
         bir_onceki_yil = str(guncel_yil - 1)
@@ -86,6 +88,14 @@ class ProgramKopyalama(CrudView):
         # todo: ders kopyalama islemi tek sefer yapilmali, bu islem bir servis olarak yazilmali.
 
         if len(Ders.objects.filter(program=program, yil=guncel_yil)) == 0:
+
+            """
+            Eger kopyalama işlemi yapılmamışsa bu condition içerisine girer.
+
+            """
+            program.Version.add(senato_karar_no=senato_karar_no, no=program_versiyon)
+            program.save()
+
             for ders in Ders.objects.filter(program=program, yil=bir_onceki_yil):
                 ders.key = None
                 ders.donem = Donem.guncel_donem()
@@ -124,6 +134,7 @@ class ProgramKopyalama(CrudView):
             }
 
     def ders_tablo_kontrol(self):
+
         """
         Seçilen ders olup olmadığını kontrol eden method. Eğer seçilen ders varsa
         "ders_bilgileri_duzenle_ilk_form" methoduna, yoksa  "degisiklik_bitirme_kontrol"
@@ -144,9 +155,11 @@ class ProgramKopyalama(CrudView):
             self.current.task_data["ders_duzenleme_ekranina_git"] = True
 
     def degisiklik_bitirme_kontrol(self):
+
         """
         Hiç ders seçilmeme durumunda ya da seçilen derslerde yapılan değişikliklerin
         bitmesi durumunda bu method çalışır.
+
         """
         _form = JsonForm(current=self.current, title="Uyarı Mesajı")
 
@@ -166,9 +179,10 @@ class ProgramKopyalama(CrudView):
         del self.current.task_data["dersler"]
 
     def personel_bilgilendir(self):
-        """
 
+        """
         İşlem sonucunda personelin bilgilendirilmesini sağlayan method.
+
         """
 
         self.current.output['msgbox'] = {
@@ -180,6 +194,7 @@ class ProgramKopyalama(CrudView):
 class SecilenDersForm(JsonForm):
     """
     Dersler üzerinde değişiklik yaparken ilk kullanılan form.
+
     """
 
     class Meta:
@@ -193,6 +208,7 @@ class SecilenDersForm(JsonForm):
 class SecilenDersForm2(JsonForm):
     """
     Dersler üzerinde değişiklik yaparken ikinci kullanılan form.
+
     """
 
     class Meta:
@@ -209,6 +225,7 @@ class DersDuzenle(CrudView):
 
         """
         Seçilen dersler ilk değişiklik formuna gelir ve değişiklikler bu methodda yapılır.
+
         """
         secilen_ders = self.current.task_data["secilenler"][0]
         ders = Ders.objects.get(key=secilen_ders['key'])
@@ -231,9 +248,9 @@ class DersDuzenle(CrudView):
     def ders_bilgileri_duzenle_ikinci_form(self):
 
         """
-
         İlk formdaki değişiklikler kaydedildikten sonra aynı dersin ikinci düzenleme formu
         bu methodda gösterilir.
+
         """
         secilen_ders = self.current.task_data["secilenler"][0]
         ders = Ders.objects.get(key=secilen_ders['key'])
@@ -245,6 +262,7 @@ class DersDuzenle(CrudView):
         self.form_out(_form)
 
     def ders_bilgileri_duzenle_ikinci_form_kaydet(self):
+
         """
         İkinci düzenleme formunda yapılan değişiklikler bu methodda kaydedilir.
 
@@ -262,6 +280,7 @@ class DersDuzenle(CrudView):
 def program_versiyon_no_uret(senato_karar_no):
     """
     Girilen senato numarasının başına "SEN" eklenerek program versiyon numarası üretilir.
+
     """
     senato_karar_no = "SEN" + str(senato_karar_no)
 
