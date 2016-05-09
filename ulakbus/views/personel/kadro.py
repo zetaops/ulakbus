@@ -579,9 +579,9 @@ class GorevSuresiForm(JsonForm):
         """
 
         self.gorev_suresi_bitis = fields.Date("Görev Süresi Bitiş Tarihi",
-                                              default=kwargs.pop('gorev_suresi_bitis_tarihi'))
-        self.atama_id = fields.String("atama_id", hidden=True,
-                                      default=kwargs.pop('atama_id'))
+            default = kwargs.pop('gorev_suresi_bitis_tarihi'))
+        self.personel_id = fields.String("personel_id", hidden=True,
+            default=kwargs.pop('personel_id'))
 
         # Üst sınıfın constructor metodu çağrılmaktadır.        
         super(GorevSuresiForm, self).__init__()
@@ -609,22 +609,24 @@ class GorevSuresiUzat(CrudView):
             Son olarak da form görüntülenir. 
         """
         try:
-            atama = Atama.objects.get(personel_id=self.current.input["id"])
-            if atama.personel_tip == 1:
+            personel = Personel.objects.get(self.current.input["id"])
+            if personel.personel_turu == 1:
+                if type(personel.gorev_suresi_bitis) is datetime.date:
+                    gorev_suresi_bitis = personel.gorev_suresi_bitis.strftime("%Y-%m-%d")
+                else:
+                    gorev_suresi_bitis = None
                 _form = GorevSuresiForm(current=self.current, title="Görev Süresi Uzat",
-                                        gorev_suresi_bitis_tarihi=atama.gorev_suresi_bitis.strftime(
-                                            "%Y-%m-%d"),
-                                        atama_id=atama.key)
+                    gorev_suresi_bitis_tarihi=gorev_suresi_bitis,
+                    personel_id=personel.key)
                 self.form_out(_form)
             else:
                 self.current.output['msgbox'] = {
                     'type': 'info', "title": 'HATA !',
                     "msg": '%s %s akademik bir personel değildir.' % (
-                        atama.personel.ad,
-                        atama.personel.soyad)
-                }
+                        personel.ad,
+                        personel.soyad)
+                }            
         except ObjectDoesNotExist:
-            personel = Personel.objects.get(self.current.input["id"])
             self.current.output["msgbox"] = {
                 'type': "info", "title": "HATA !",
                 "msg": "%s %s e ait bir atama kaydı bulunamadı" % (personel.ad,
@@ -638,7 +640,7 @@ class GorevSuresiUzat(CrudView):
             Yeni görev süresi başlama tarihi işlemin yapıldığı tarih,
             yeni görev süresi bitiş tarihi formdan gelen tarih olur.
         """
-        atama = Atama.objects.get(self.current.input["form"]["atama_id"])
-        atama.gorev_suresi_baslama = datetime.date.today()
-        atama.gorev_suresi_bitis = self.current.input["form"]["gorev_suresi_bitis"]
-        atama.save()
+        personel = Personel.objects.get(self.current.input["form"]["personel_id"])
+        personel.gorev_suresi_baslama = datetime.date.today()
+        personel.gorev_suresi_bitis = self.current.input["form"]["gorev_suresi_bitis"]
+        personel.save()
