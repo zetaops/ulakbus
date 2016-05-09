@@ -635,7 +635,7 @@ class GorevSuresiUzat(CrudView):
 
     def kaydet(self):
         """ 
-            Formdan gelen atama id ile atama kaydı elde edilir. Sonrasındada
+            Formdan gelen personel id ile personel kaydı elde edilir. Sonrasındada
             görev süresi başlama ve bitiş tarihleri değiştirilerek kaydedilir.
             Yeni görev süresi başlama tarihi işlemin yapıldığı tarih,
             yeni görev süresi bitiş tarihi formdan gelen tarih olur.
