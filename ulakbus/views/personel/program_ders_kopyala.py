@@ -12,6 +12,7 @@ from zengine.forms import JsonForm
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from ulakbus.models.ogrenci import Program, Ders, Donem
 from datetime import date
+import time
 
 
 class ProgramDersForm(JsonForm):
@@ -54,14 +55,33 @@ class ProgramKopyalama(CrudView):
         _form.sec = fields.Button("Seç")
         self.form_out(_form)
 
+    def ders_kopyala_kontrol(self):
+        """
+        Kopyalama işinin bir kere yapılması beklenmektedir. Yapılıp yapılmadığı
+        kontrol edilir. Eğer yapılmamışsa senato_no_gir methoduna yapılmışsa ders_tablo methoduna gider
+
+        """
+        self.current.task_data['program_id'] = self.current.input['form']['program']
+        program = Program.objects.get(self.current.task_data['program_id'])
+        guncel_yil = date.today().year
+        # bir_onceki_yil = str(guncel_yil - 1)
+        guncel_yil = str(guncel_yil)
+
+        # for ders in Ders.objects.filter(program=program):
+        #     ders.yil = bir_onceki_yil
+        #     ders.save()
+
+        self.current.task_data["ders_kopyalama"] = False
+        if len(Ders.objects.filter(program=program, yil=guncel_yil)) == 0:
+            self.current.task_data["ders_kopyalama"] = True
+
     def senato_no_gir(self):
 
         """
-        Belirlenen senato numarasına karşılık gelen method.
+        Dersler kopyalanmamışsa senato numarası istenir.
 
         """
 
-        self.current.task_data['program_id'] = self.current.input['form']['program']
         _form = JsonForm(current=self.current, title="Senato Numarasi Giriniz")
         _form.senato_karar_no = fields.String("Senato Karar Numarası", index=True)
         _form.kaydet = fields.Button("Kaydet")
@@ -71,9 +91,7 @@ class ProgramKopyalama(CrudView):
 
         """
         Bir önceki adımda girilen senato numarasından program versiyonu üretilir ve
-        kaydedilir. Kopyalama işinin bir kere yapılması beklenmektedir. Yapılıp yapılmadığı
-        kontrol edilir. Eğer yapılmamışsa, seçilmiş programın bir önceki sene açılmış tüm dersleri
-        kopyalanır.
+        kaydedilir. Bir önceki senenin derslerinden bu sene için dersler kopyalanır.
         """
 
         senato_karar_no = self.current.input['form']['senato_karar_no']
@@ -85,23 +103,21 @@ class ProgramKopyalama(CrudView):
         bir_onceki_yil = str(guncel_yil - 1)
         guncel_yil = str(guncel_yil)
 
-        # todo: ders kopyalama islemi tek sefer yapilmali, bu islem bir servis olarak yazilmali.
+        # TODO: ders kopyalama islemi tek sefer yapilmali, bu islem bir servis olarak yazilmali.
+        program.Version.add(senato_karar_no=senato_karar_no, no=program_versiyon)
+        program.save()
 
-        if len(Ders.objects.filter(program=program, yil=guncel_yil)) == 0:
+        for ders in Ders.objects.filter(program=program, yil=bir_onceki_yil):
+            ders.key = None
+            ders.program_versiyon = program_versiyon
+            ders.yil = guncel_yil
+            ders.save()
 
-            """
-            Eger kopyalama işlemi yapılmamışsa bu condition içerisine girer.
+        self.current.task_data["ders_kopyalama"] = False
 
-            """
-            program.Version.add(senato_karar_no=senato_karar_no, no=program_versiyon)
-            program.save()
+        # FIXME: riak, solr post ettikten sonra kaydetme gecikmesi halledilecek.
 
-            for ders in Ders.objects.filter(program=program, yil=bir_onceki_yil):
-                ders.key = None
-                ders.donem = Donem.guncel_donem()
-                ders.program_versiyon = program_versiyon
-                ders.yil = guncel_yil
-                ders.save()
+        time.sleep(1)
 
     def ders_tablo(self):
 
