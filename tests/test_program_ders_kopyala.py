@@ -39,6 +39,9 @@ class TestCase(BaseTestCase):
 
         """
 
+        # for döngüsünün ilk turunda derslerin kopyalanması, senato numarasının girilmesi, program versiyonunun
+        # veritabanına kaydedilip kaydedilmediğini kontrol edilir. İkinci turunda derslerin birdaha kopyalanmadığını
+        # ve kopyalanan derslerin bir önceki yıla ait olan derslerin sayısına eşit olup olmadığı kontrol edilir.
         for i in range(2):
 
             # veritabanından test_user seçilir.

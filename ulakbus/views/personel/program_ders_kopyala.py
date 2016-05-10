@@ -64,12 +64,7 @@ class ProgramKopyalama(CrudView):
         self.current.task_data['program_id'] = self.current.input['form']['program']
         program = Program.objects.get(self.current.task_data['program_id'])
         guncel_yil = date.today().year
-        # bir_onceki_yil = str(guncel_yil - 1)
         guncel_yil = str(guncel_yil)
-
-        # for ders in Ders.objects.filter(program=program):
-        #     ders.yil = bir_onceki_yil
-        #     ders.save()
 
         self.current.task_data["ders_kopyalama"] = False
         if len(Ders.objects.filter(program=program, yil=guncel_yil)) == 0:
