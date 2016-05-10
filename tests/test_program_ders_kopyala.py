@@ -45,7 +45,7 @@ class TestCase(BaseTestCase):
         for i in range(2):
 
             # veritabanından test_user seçilir.
-            usr = User.objects.get(username='test_user')
+            usr = User.objects.get(username='ogrenci_isleri_1')
 
             # program_ders_kopyala workflowu çalıştırılır.
             self.prepare_client('/program_ders_kopyala', user=usr)
