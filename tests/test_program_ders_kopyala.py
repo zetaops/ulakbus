@@ -74,8 +74,6 @@ class TestCase(BaseTestCase):
                 # Senato numarası girilir,
                 resp = self.client.post(form={'kaydet': 1, 'senato_karar_no': "123"})
 
-                time.sleep(1)
-
                 program = Program.objects.get("Gvsgkf7JMgIHKBY6JAO4wFC5kc6")
 
                 program_versiyon_sayisi = len(program.Version)
