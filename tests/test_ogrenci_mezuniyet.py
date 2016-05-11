@@ -44,7 +44,7 @@ class TestCase(BaseTestCase):
         program_id = "7GPhFaFbPqysh7mnkkd9Bq3cmCh"
 
         # veritabanından test_user seçilir
-        usr = User.objects.get(username='test_user')
+        usr = User.objects.get(username='personel_isleri_1')
         ogrenci = Ogrenci.objects.get(ogrenci_id)
         ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
         time.sleep(1)
