@@ -57,8 +57,8 @@ class TestCase(BaseTestCase):
 
         """
 
-        # Okutman kullanıcısı seçilir.
-        usr = User.objects.get('Bkhc7dupquiIFPmOSKuO0kXJC8q')
+        # ogretim_uyesi_1 kullanıcısı seçilir.
+        usr = User.objects.get('P2ir7Jns7xdmjh1lazZeSNbRBEn')
         time.sleep(1)
 
         # Kullanıcıya login yaptırılır.
