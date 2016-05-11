@@ -38,17 +38,13 @@ class TestCase(BaseTestCase):
 
         """
 
-        # veritabanından test_use seçilir
+        # Veritabanından ogrenci_isleri_1 seçilir
         usr = User.objects.get(username='ogrenci_isleri_1')
         time.sleep(1)
 
         ogrenci_id = "RnKyAoVDT9Hc89KEZecz0kSRXRF"
 
-        # # Kullanıcıya login yaptırılır.
-        # self.prepare_client('/login', user=usr)
-        # resp = self.client.post()
-
-        # kayit_dondur wF çalıştırılır
+        # Kayit_dondur wF çalıştırılır
         self.prepare_client('/kayit_dondur', user=usr)
         resp = self.client.post(id=ogrenci_id, model="DondurulmusKayit", param="ogrenci_id",
                                 wf="kayit_dondur")
@@ -61,11 +57,11 @@ class TestCase(BaseTestCase):
         # eşitliği karşılaştırılıp test edilir.
         assert len(resp.json['forms']['form'][2]['titleMap']) == len(op)
 
-        # ogrencinin kayıtlı olduğu program yollanır
+        # Ögrencinin kayıtlı olduğu program yollanır
         program = {'program': "UEGET7qn9CDj9VEj4n0nbQ7m89d", 'sec': 1}
         self.client.post(model="DondurulmusKayit", wf="kayit_dondur", form=program)
 
-        # kayıt dondurulacak olan donem yollanır
+        # Kayıt dondurulacak olan donem yollanır
         donemler = {'baslangic_tarihi': "06.03.2016", 'sec': 1,
                     'Donemler': [{'aciklama': "kayit dondurma test",
                                   'donem': "Güz - 2017",
@@ -73,10 +69,12 @@ class TestCase(BaseTestCase):
                                   'secim': True}]}
 
         resp = self.client.post(model="DondurulmusKayit", wf="kayit_dondur", form=donemler)
-        # sonucu doğrula
+
+        # Sonucu doğrula
         assert resp.json['msgbox']['title'] == "Öğrenci Kayıt Dondurma Başarılı"
 
-        time.sleep(3)
+        time.sleep(1)
+
         # Veritabanından ogrencinin kaydının dondurulmuş olup olmadığı doğrulanır
         d_kayit = DondurulmusKayit.objects.filter(ogrenci_program=op[0])
         assert len(d_kayit) > 0
