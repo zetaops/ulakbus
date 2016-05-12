@@ -21,7 +21,7 @@ class TestCase(BaseTestCase):
     """
 
     def test_ogrenci_mezuniyet(self):
-        """test_user kullanıcısı giriş yapar ve RnKyAoVDT9Hc89KEZecz0kSRXRF keyine sahip öğrencinin
+        """personel_isleri_1 kullanıcısı giriş yapar ve RnKyAoVDT9Hc89KEZecz0kSRXRF keyine sahip öğrencinin
         kayıtlı olduğu UEGET7qn9CDj9VEj4n0nbQ7m89d keyine sahip proggramdan mezuniyet kaydını yapar.
 
         Bu iş akışı iki adımadan oluşmaktadır:
@@ -35,7 +35,7 @@ class TestCase(BaseTestCase):
         Öğrencinin en son girdiği sınavın tarihi ile `OgrenciProgram` modelinden dönen mezuniyet
         tarihinin aynı olması beklenir.
 
-        test_user adlı kullanıcıya çıkış yaptırılır.
+        personel_isleri_1 adlı kullanıcıya çıkış yaptırılır.
 
         """
 
@@ -43,7 +43,7 @@ class TestCase(BaseTestCase):
         ogrenci_program_id = "UEGET7qn9CDj9VEj4n0nbQ7m89d"
         program_id = "7GPhFaFbPqysh7mnkkd9Bq3cmCh"
 
-        # veritabanından test_user seçilir
+        # veritabanından personel_isleri_1 seçilir
         usr = User.objects.get(username='personel_isleri_1')
         ogrenci = Ogrenci.objects.get(ogrenci_id)
         ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
