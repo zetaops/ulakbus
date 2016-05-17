@@ -608,6 +608,7 @@ class OgrenciProgram(Model):
         app = 'Ogrenci'
         verbose_name = "Öğrenci Programı"
         verbose_name_plural = "Öğrenci Programları"
+        unique_together = [('program', 'ogrenci'), ]
 
     class Belgeler(ListNode):
         tip = field.Integer("Belge Tipi", choices="belge_tip", index=True)
