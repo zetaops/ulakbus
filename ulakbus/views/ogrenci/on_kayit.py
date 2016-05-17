@@ -18,7 +18,7 @@ class YerlestirmeBilgisi(CrudView):
 
     def yerlestirme_bilgisi_form(self):
         ogrenci = Ogrenci.objects.get(user=self.current.user)
-        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, durum=1)
+        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, ogrencilik_statusu=1)
         self.form_out(YerlestirmeBilgisiForm(ogrenci_program, current=self.current))
 
 
