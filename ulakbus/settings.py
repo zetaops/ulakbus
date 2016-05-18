@@ -217,3 +217,6 @@ ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabi
                     "Şimdi bunlardan birini görüyorsunuz. Lütfen daha sonra tekrar deneyiniz"
 
 SICIL_PREFIX = "KON"
+
+#: These models will not flushed when running tests
+TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'
