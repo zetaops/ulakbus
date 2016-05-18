@@ -103,9 +103,9 @@ class User(Model):
         """
         return self.role_set.node_dict[role_id]
 
-    def send_message(self, title, message):
+    def send_message(self, title, message, sender=None):
         from zengine.notifications import Notify
-        Notify(self.key).set_message(title, message, typ=Notify.Message)
+        Notify(self.key).set_message(title, message, typ=Notify.Message, sender=sender)
 
 
 class Permission(Model):
@@ -157,7 +157,7 @@ class Permission(Model):
             for r in ars.abstract_role.role_set:
                 roles.add(r.role)
         for r in self.role_set:
-            roles.add(r)
+            roles.add(r.role)
         return roles
 
 
