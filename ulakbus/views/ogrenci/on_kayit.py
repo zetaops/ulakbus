@@ -21,6 +21,12 @@ class YerlestirmeBilgisi(CrudView):
         ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, ogrencilik_statusu=1)
         self.form_out(YerlestirmeBilgisiForm(ogrenci_program, current=self.current))
 
+    def kaydet(self):
+        ogrenci = Ogrenci.objects.get(user=self.current.user)
+        self.set_form_data_to_object()
+        self.object.ogrenci = ogrenci
+        self.object.save()
+
 
 class OncekiEgitimBilgileriForm(forms.JsonForm):
     class Meta:
@@ -65,6 +71,11 @@ class OnKayit(CrudView):
         ogrenci = Ogrenci.objects.get(user=self.current.user)
         self.form_out(OnKayitForm(ogrenci, current=self.current))
 
+    def kaydet(self):
+        ogrenci = Ogrenci.objects.get(user=self.current.user)
+        self.object.ogrenci = ogrenci
+        self.object.save()
+
 
 class BelgeForm(forms.JsonForm):
     class Meta:
@@ -85,6 +96,6 @@ class KayitBelgeler(CrudView):
 
     def onayla(self):
         ogrenci = Ogrenci.objects.get(user=self.current.user)
-        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, durum=1)
+        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, ogrencilik_statusu=1)
         ogrenci_program.durum = 2
         ogrenci_program.save()
