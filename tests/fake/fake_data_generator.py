@@ -22,6 +22,9 @@ __author__ = 'Halil İbrahim Yılmaz'
 
 
 class FakeDataGenerator:
+    def __init__(self):
+        pass
+
     @staticmethod
     def yeni_kampus(kampus_say=2):
         """
@@ -251,18 +254,18 @@ class FakeDataGenerator:
             p.hizmet_sinifi = random.choice(range(1, 30))
             p.birim = unit
             p.gorev_suresi_baslama = (datetime.datetime.now() - datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
             p.goreve_baslama_tarihi = p.gorev_suresi_baslama
 
             p.gorev_suresi_bitis = (datetime.datetime.now() + datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
 
             p.kh_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
             p.ga_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
             p.em_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
 
             p.kazanilmis_hak_derece = random.randint(1, 7)
             p.kazanilmis_hak_kademe = random.randint(1, 8)
@@ -553,15 +556,16 @@ class FakeDataGenerator:
             sinav_list.append(s)
         return sinav_list
 
-    def yeni_ogrenci_program(self, ogrenci, program, personel):
+    @staticmethod
+    def yeni_ogrenci_program(ogrenci, program, personel):
         """
         Rastgele verileri ve parametre olarak verilen verileri
         kullanarak yeni öğrenci programı kaydı oluştururup kaydeder.
 
         Args:
             ogrenci (Ogrenci): Öğrenci nesnesi
-            personel (Personel): Personel nesnesi
-            program (Program): Program nesnesi
+            personel (object): Personel nesnesi
+            program (object): Program nesnesi
 
         Returns:
             OgrenciProgram: Yeni öğrenci program kaydı
@@ -588,7 +592,8 @@ class FakeDataGenerator:
 
         Args:
             sube (Sube): Şube nesnesi
-            ogrenci_program (OgrenciProgram): Öğrenci Programı nesnesi
+            ogrenci_program (object): Öğrenci Programı nesnesi
+            donem (object): Donem nesnesi
 
         Returns:
             OgrenciDersi: Yeni öğrenci ders kaydı
@@ -747,7 +752,6 @@ class FakeDataGenerator:
         # buildings, rooms = self.yeni_bina()
         # print("Oluşturulan bina listesi : %s\n" % buildings)
         # print("Oluşturulan oda listesi : %s\n" % rooms)
-
 
         donem_list = self.yeni_donem(donem_say=donem_say, guncel=True)
         print("Oluşturulan donem listesi : %s\n" % donem_list)
