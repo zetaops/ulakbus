@@ -211,8 +211,7 @@ class KadroIslemleri(CrudView):
         """
         # TODO: Sakli kadronun silinme denemesi loglanacak.
         assert self.object.durum == self.SAKLI, "attack detected, should be logged/banned"
-        self.delete()
-        time.sleep(1)
+        self.object.blocking_delete()
 
     def sakli_izinli_degistir(self):
         """Saklı İzinli Değiştir
