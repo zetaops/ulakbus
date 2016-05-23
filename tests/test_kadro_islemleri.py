@@ -165,7 +165,6 @@ class TestCase(BaseTestCase):
         self.client.post(cmd='kadro_sil_onay_form',
                          object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
         resp = self.client.post(cmd='kadro_sil', form={'evet': 1, 'hayir': 'null'})
-        time.sleep(1)
 
         kadro_lst = Kadro.objects.filter()
 

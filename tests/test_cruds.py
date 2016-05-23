@@ -53,6 +53,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post(model='Personel',
                                 cmd='delete',
                                 object_id=resp.json['objects'][4]['key'])
+        time.sleep(1)
 
         # Mevcut kayıtların sayısının, başlangıçtaki kayıt sayısına eşit olup olmadığını test eder.
         assert 'reload' in resp.json['client_cmd']
