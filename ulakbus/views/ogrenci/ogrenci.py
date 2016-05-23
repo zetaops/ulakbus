@@ -14,7 +14,6 @@ iş akışlarının yürütülmesini sağlar.
 """
 
 from collections import OrderedDict
-from pyoko.exceptions import ObjectDoesNotExist
 from pyoko import ListNode
 from zengine.forms import fields
 from zengine import forms
@@ -27,9 +26,8 @@ from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
 from ulakbus.models.personel import Personel
 from ulakbus.models.auth import Role, AbstractRole, Unit
 from ulakbus.lib.view_helpers import prepare_choices_for_model
-from ulakbus.models.ogrenci import OgrenciDersi, Sinav
+from ulakbus.models.ogrenci import OgrenciDersi
 from pyoko.exceptions import ObjectDoesNotExist
-import time
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -295,6 +293,7 @@ class KayitDondurmaForm(forms.JsonForm):
     ``KayitDondurma`` sınıfı için form olarak kullanılacaktır.
 
     """
+
     class Meta:
         inline_edit = ['secim', 'aciklama']
 
@@ -548,10 +547,10 @@ class KayitDondurma(CrudView):
                 }
 
             try:
-                abstract_role = AbstractRole.objects.get(name="Lisans Programı Öğrencisi - Kayıt Dondurmuş")
+                abstract_role = AbstractRole.objects.get(
+                    name="Lisans Programı Öğrencisi - Kayıt Dondurmuş")
                 user = ogrenci.user
                 unit = Unit.objects.get(yoksis_no=ogrenci_program.program.yoksis_no)
-                time.sleep(1)
                 current_role = Role.objects.get(user=user, unit=unit)
                 current_role.abstract_role = abstract_role
                 current_role.save()
@@ -569,14 +568,13 @@ class KayitDondurma(CrudView):
                                                  msg=notify_message, typ=Notify.Message)
                 self.current.output['msgbox'] = {
                     'type': 'info', "title": 'Öğrenci Kayıt Dondurma Başarılı',
-                    "msg": '%s' % (notify_message)
+                    "msg": '%s' % notify_message
                 }
             except Exception as e:
                 self.current.output['msgbox'] = {
                     'type': 'warning', "title": 'Bir Hata Oluştu',
                     "msg": 'Öğrenci Danışmanı Bilgilendirme Başarısız. Hata Kodu : %s' % (e.message)
                 }
-
 
 
 class BasariDurum(CrudView):
@@ -708,7 +706,9 @@ class MazeretliDersKaydi(CrudView):
         ogrenci = ogrenci_program.ogrenci
         ogrenci_ad_soyad = ogrenci.ad + " " + ogrenci.soyad
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Öğrenci Ders Kayıt Durumu Değiştirme Başarılı',
-            "msg": '%s nolu %s adlı Öğrencinin %s Programına Ait Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi' % (
-                ogrenci_program.ogrenci_no, ogrenci_ad_soyad, ogrenci_program.program.adi)
+            "type": "info",
+            "title": "Öğrenci Ders Kayıt Durumu Değiştirme Başarılı",
+            "msg": """%s nolu %s adlı Öğrencinin %s Programına Ait
+                    Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi""" % (
+                         ogrenci_program.ogrenci_no, ogrenci_ad_soyad, ogrenci_program.program.adi)
         }

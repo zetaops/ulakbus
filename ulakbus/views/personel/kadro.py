@@ -61,9 +61,7 @@ Kadro Sil Onay
 """
 import datetime
 import time
-
 from dateutil.relativedelta import relativedelta
-
 from pyoko import ListNode
 from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi
