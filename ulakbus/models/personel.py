@@ -381,7 +381,7 @@ class Kadro(Model):
         list_filters = ['durum']
 
     def __unicode__(self):
-        return "%s - %s %s. derece" % (self.kadro_no, self.get_unvan_display(), self.derece)
+        return "%s  %s. derece" % (self.kadro_no, self.derece)
 
 
 class Izin(Model):
