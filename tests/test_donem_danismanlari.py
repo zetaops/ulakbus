@@ -22,8 +22,7 @@ class TestCase(BaseTestCase):
         """
         Dönem danışmanları iş akışı başlattıktan sonra;
 
-        İş akışının ilk adımında bölüm giris yapan kullanıcının
-        rolunden bulunur.
+        İş akışının ilk adımında bölüm başkanın kayıtlı olduğu bölüm seçilir.
 
         Sunucudan dönen bölüme ait dönem danışmanlarının sayısı ile
         veritabanından çekilen dönem danışmanlarının sayısı
@@ -38,12 +37,14 @@ class TestCase(BaseTestCase):
         """
 
         # Veritabanından bölüm başkanı kullanıcısı seçilir.
-        usr = User.objects.get(username='mengi')
-        time.sleep(1)
+        usr = User.objects.get(username='bolum_baskani_1')
 
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/donem_danismanlari', user=usr)
         resp = self.client.post()
+
+        # Kullanıcının kayıtlı olduğu bolum seçilir.
+        resp = self.client.post(form={'ileri': 1, 'program': "BpmGHdZo8sQC85cL6wffYr4CEKh"})
 
         # Kullanıcının kayıtlı olduğu bölüm.
         bolum = usr.role_set[0].role.unit
@@ -52,7 +53,7 @@ class TestCase(BaseTestCase):
 
         # Db'den varolan danışman  kayıtları seçilir.
         count_of_danisman = len(DonemDanisman.objects.filter(donem=donem, bolum=bolum))
-
+        time.sleep(1)
         num_of_danisman = 0
         for okutman in resp.json['forms']['model']['Okutmanlar']:
             if okutman['secim']:
@@ -85,6 +86,9 @@ class TestCase(BaseTestCase):
         # İş akışı tekrardan başlatılır.
         self.client.set_path('/donem_danismanlari')
         resp = self.client.post()
+
+        # Kullanıcının kayıtlı olduğu bolum seçilir.
+        resp = self.client.post(form={'ileri': 1, 'program': "BpmGHdZo8sQC85cL6wffYr4CEKh"})
 
         num_of_danisman = 0
         for okutman in resp.json['forms']['model']['Okutmanlar']:

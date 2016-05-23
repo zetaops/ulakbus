@@ -31,7 +31,7 @@ class TestCase(BaseTestCase):
         sunucudan dönen kullanıcı bilgileri karşılaştırılır.
 
         """
-        usr = User.objects.get(username='test_user')
+        usr = User.objects.get(username='personel_isleri_1')
         # '/menu' yolunu çağırır.
         self.prepare_client('/menu', user=usr)
         resp = self.client.post()
@@ -64,7 +64,7 @@ class TestCase(BaseTestCase):
                                      'is_student'], 'The %s is not in the given list ' % value
 
         # Kullanıcı adı baz alınarak veritabanından kullanıcı seçilir.
-        usr = User.objects.get(username='test_user')
+        usr = User.objects.get(username='personel_isleri_1')
 
         # Kullanıcının bilgilerini, sunucudan dönen kullanıcı bilgileriyle
         # eşleşip eşleşmediğini test eder.

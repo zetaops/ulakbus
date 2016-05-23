@@ -35,7 +35,7 @@ class TestCase(BaseTestCase):
         """
 
         # Kullanıcıya login yaptırılır.
-        self.prepare_client('/danisman_atama', username='zeynep')
+        self.prepare_client('/danisman_atama', username='bolum_baskani_1')
 
         resp = self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
                                 model="OgrenciProgram",

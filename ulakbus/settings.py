@@ -146,7 +146,7 @@ OBJECT_MENU = {
         {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
          'field': 'ogrenci_id'},
         {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci',
-         'wf': 'mazeretli_ders_kaydi'},
+         'wf': 'mazeretli_ders_kaydi', 'field': 'ogrenci_id'},
         {'name': 'DegerlendirmeNot', 'verbose_name': 'Not Düzenleme',
          'wf': 'ogrenci_isleri_not_duzenleme',
          'field': 'ogrenci_id'}

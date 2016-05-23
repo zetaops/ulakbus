@@ -57,8 +57,8 @@ class TestCase(BaseTestCase):
 
         """
 
-        # Okutman kullanıcısı seçilir.
-        usr = User.objects.get('Bkhc7dupquiIFPmOSKuO0kXJC8q')
+        # ogretim_uyesi_1 kullanıcısı seçilir.
+        usr = User.objects.get('P2ir7Jns7xdmjh1lazZeSNbRBEn')
         time.sleep(1)
 
         # Kullanıcıya login yaptırılır.
@@ -100,9 +100,8 @@ class TestCase(BaseTestCase):
         # Veritabanından çekilen öğrenci bilgisi ile sıunucudan gelen öğrenci bilgisi
         # karşılaştırılarak test edilir.
         for i in range(0, len(resp.json['forms']['model']['Ogrenciler'])):
-            ogrenci_ders = OgrenciDersi.objects.filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')
-            ogrenci_ad = ogrenci_ders[i].ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders[
-                i].ogrenci_program.ogrenci.soyad
+            ogrenci_ders = OgrenciDersi.objects.filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')[i]
+            ogrenci_ad = ogrenci_ders.ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders.ogrenci_program.ogrenci.soyad
             assert ogrenci_ad == resp.json['forms']['model']['Ogrenciler'][i]['ad_soyad']
 
         # Öğrencilerin sayısı.

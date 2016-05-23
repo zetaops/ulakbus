@@ -66,7 +66,7 @@ class TestCase(BaseTestCase):
             return len(lst) - 1
 
         # Veritabanından personel işleri kullanıcısı seçer.
-        usr = User(super_context).objects.get('RW5nDzjDSfSNLIeLiQySfABxBHU')
+        usr = User(super_context).objects.get('UuXR8pmKQNzfaPHB2K5wxhC7WDo')
 
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/kadro_islemleri', user=usr)
@@ -165,7 +165,6 @@ class TestCase(BaseTestCase):
         self.client.post(cmd='kadro_sil_onay_form',
                          object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
         resp = self.client.post(cmd='kadro_sil', form={'evet': 1, 'hayir': 'null'})
-        time.sleep(1)
 
         kadro_lst = Kadro.objects.filter()
 

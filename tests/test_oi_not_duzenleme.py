@@ -42,7 +42,7 @@ class TestCase(BaseTestCase):
         """
         
         # Veritabanından öğrenci işleri personeli seçilir.
-        usr = User.objects.get(username='imran')
+        usr = User.objects.get(username='ogrenci_isleri_1')
 
         # Öğrenci işleri not düzenleme iş akışı başlatılır.
         self.prepare_client('/ogrenci_isleri_not_duzenleme', user=usr)

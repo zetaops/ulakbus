@@ -59,15 +59,16 @@ Kadro Sil Onay
    Silme işlemi için onay adımıdır.
 
 """
+import datetime
+import time
+from dateutil.relativedelta import relativedelta
+from pyoko import ListNode
 from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi
-from zengine.views.crud import CrudView, obj_filter
+from ulakbus.models import Personel
 from zengine.forms import JsonForm
 from zengine.forms import fields
-from ulakbus.models import Personel
-from pyoko import ListNode
-from dateutil.relativedelta import relativedelta
-import datetime
+from zengine.views.crud import CrudView, obj_filter
 
 
 class KadroObjectForm(JsonForm):
@@ -75,12 +76,6 @@ class KadroObjectForm(JsonForm):
 
     Meta değiştirilerek, formlardan durum alanı çıkarılmış, ve form
     alanları iki gruba ayrılmıştır.
-
-    Formda bulunan iki alan unvan ve unvan_kod karşıt alanlardır. İkisi
-    aynı kayıtta bulunamazlar. Bu sebeple Meta'ya constraints
-    eklenmiştir. Bu sayede UI tarafında forma kontroller eklenecek, biri
-    seçildiğinde diğerinin değeri boşaltılacaktır. Benzer şekilde, arka
-    uçta aynı kontrol bu ifadeler kullanılarak yapılacaktr.
 
     Formun sadece bir kaydet butonu mevcuttur.
 
@@ -116,16 +111,6 @@ class KadroObjectForm(JsonForm):
                         "items": ['kaydet']
                     }
                 ]
-            }
-        ]
-        constraints = [
-            {
-                'cons': [{'id': 'unvan_kod', 'cond': 'exists'}],
-                'do': 'change_fields', 'fields': [{'unvan': None}]
-            },
-            {
-                'cons': [{'id': 'unvan', 'cond': 'exists'}],
-                'do': 'change_fields', 'fields': [{'unvan_kod': None}]
             }
         ]
 
@@ -207,18 +192,16 @@ class KadroIslemleri(CrudView):
         unvan = self.object.get_unvan_display()
         aciklama = self.object.aciklama
         kadro_no = self.object.kadro_no
-        unvan_kod = self.object.get_unvan_kod_display()
 
         self.current.task_data['object_id'] = self.object.key
 
         _form = self.SilOnayForm(title=" ")
         _form.help_text = """Akademik unvanı: **%s**
         Kadro numarası: **%s**
-        Unvan Kodu: **%s**
         Açıklaması: **%s**
 
         bilgilerine sahip kadroyu silmek istiyor musunuz ?""" % (
-            unvan, kadro_no, unvan_kod, aciklama)
+            unvan, kadro_no, aciklama)
         self.form_out(_form)
 
     def kadro_sil(self):
@@ -228,7 +211,7 @@ class KadroIslemleri(CrudView):
         """
         # TODO: Sakli kadronun silinme denemesi loglanacak.
         assert self.object.durum == self.SAKLI, "attack detected, should be logged/banned"
-        self.delete()
+        self.object.blocking_delete()
 
     def sakli_izinli_degistir(self):
         """Saklı İzinli Değiştir
