@@ -132,12 +132,9 @@ class GorevSuresiBitenPersonel(Reporter):
             personel["Ad"] = p.ad
             personel["Soyad"] = p.soyad
             personel["Birim"] = p.birim.name
-            if type(p.gorev_suresi_baslama) is not str:
-                personel["Görev Süresi Başlangıç"] = p.gorev_suresi_baslama.strftime("%d.%m.%Y")
-            if type(p.gorev_suresi_bitis) is not str:
-                personel["Görev Süresi Bitiş"] = p.gorev_suresi_bitis.strftime("%d.%m.%Y")
-            if type(p.goreve_baslama_tarihi) is not str:
-                personel["Göreve Başlama Tarihi"] = p.goreve_baslama_tarihi.strftime("%d.%m.%Y")
+            personel["Görev Süresi Başlangıç"] = p.gorev_suresi_baslama.strftime("%d.%m.%Y")
+            personel["Görev Süresi Bitiş"] = p.gorev_suresi_bitis.strftime("%d.%m.%Y")
+            personel["Göreve Başlama Tarihi"] = p.goreve_baslama_tarihi.strftime("%d.%m.%Y")
             personel_list.append(personel)
 
         return personel_list
