@@ -10,7 +10,7 @@
 __author__ = 'Mithat Raşit Özçıkrıkcı'
 
 from zengine.lib.test_utils import BaseTestCase
-from ulakbus.models import User, Atama
+from ulakbus.models import User, Personel
 import datetime
 
 
@@ -19,12 +19,13 @@ class TestCase(BaseTestCase):
         """
             Görev süresi dolan personel raporu sorgulanır.
         """
-        user = User.objects.get(username="mithat")
+        user = User.objects.get(username="personel_isleri_1")
         self.prepare_client("generic_reporter", user=user)
         res = self.client.post(model="GorevSuresiBitenPersonel")
-        simdi = datetime.date.today()
-        atamalar = Atama.objects.filter(
-            gorev_suresi_bitis__lte=simdi,
+
+        personeller = Personel.objects.filter(
+            gorev_suresi_bitis__lte=datetime.date(2016, 5, 24) + datetime.timedelta(days=120),
             personel_turu=1
         )
-        assert len(res.json["object"]["fields"]) == len(atamalar)
+
+        assert len(res.json["object"]["fields"]) == len(personeller)
