@@ -387,10 +387,10 @@ class TerfiDuzenleForm(JsonForm):
 
 class PersonelTerfiKriterleri(JsonForm):
     baslangic_tarihi = fields.Date("Başlangıç Tarihi",
-                                   default=datetime.date.today().strftime('%Y-%m-%d'))
+                                   default=datetime.date.today().strftime('d.%m.%Y'))
 
     bitis_tarihi = fields.Date("Bitiş Tarihi", default=(
-        datetime.date.today() + datetime.timedelta(days=15)).strftime('%Y-%m-%d'))
+        datetime.date.today() + datetime.timedelta(days=15)).strftime('d.%m.%Y'))
 
     personel_turu = fields.Integer("Personel Türü", choices=[(1, "Akademik"), (2, "Idari")],
                                    default=2)
@@ -502,8 +502,13 @@ class TerfiListe(CrudView):
                 "yeni_emekli_muktesebat_gorunen"]
 
     # todo: lane geicisi
-    def onaya_gonder(self):
-        pass
+    def mesaj_goster(self):
+
+        msg = {"title": 'Personeller Onay Icin Gonderildi!',
+               "body": 'Talebiniz Basariyla iletildi.'}
+        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
+
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def onay_kontrol(self):
         _form = TerfiForm(current=self.current, title="Terfi İşlemi")
@@ -542,7 +547,7 @@ class TerfiListe(CrudView):
                 personel.emekli_muktesebat_derece = p_data["terfi_sonrasi_emekli_muktesebat_derece"]
                 personel.emekli_muktesebat_kademe = p_data["terfi_sonrasi_emekli_muktesebat_kademe"]
 
-                personel.sonraki_terfi_tarihi = personel.sonraki_terfi_tarihi + relativedelta(
+                personel.kh_sonraki_terfi_tarihi = personel.kh_sonraki_terfi_tarihi + relativedelta(
                     years=1)
 
                 personel.save()
