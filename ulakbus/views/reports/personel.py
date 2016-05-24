@@ -10,6 +10,7 @@
 from ulakbus.models import *
 from ulakbus.views.reports.base import Reporter
 from collections import OrderedDict
+import datetime
 
 
 class PersonelByGender(Reporter):
@@ -103,5 +104,37 @@ class TerfisiTikananPersonel(Reporter):
                 p.emekli_muktesebat_derece, p.emekli_muktesebat_kademe)
 
             personel_list.append(personel_record)
+
+        return personel_list
+
+
+class GorevSuresiBitenPersonel(Reporter):
+    TITLE = "Görev Süresi Dolan Personel Listesi"
+
+    def get_objects(self):
+        """ 
+            Görev süresinin bitme durumu sadece akademik personel için geçerli
+            bir durumdur. Personel modelindeki gorev_suresi_bitis alanındaki değerin
+            bugünün datetime değerinden küçük olma durumuna bakılır.
+        """
+        simdi = datetime.date.today()
+        bitis_tarihi = simdi + datetime.timedelta(days=120)
+
+        # todo: add order_by
+        personeller = Personel.objects.filter(
+            gorev_suresi_bitis__lte=bitis_tarihi,
+            personel_turu=1
+        )
+        personel_list = []
+        for p in personeller:
+            personel = OrderedDict({})
+            personel["T.C. No"] = p.tckn
+            personel["Ad"] = p.ad
+            personel["Soyad"] = p.soyad
+            personel["Birim"] = p.birim.name
+            personel["Görev Süresi Başlangıç"] = p.gorev_suresi_baslama.strftime("%d.%m.%Y")
+            personel["Görev Süresi Bitiş"] = p.gorev_suresi_bitis.strftime("%d.%m.%Y")
+            personel["Göreve Başlama Tarihi"] = p.goreve_baslama_tarihi.strftime("%d.%m.%Y")
+            personel_list.append(personel)
 
         return personel_list
