@@ -62,27 +62,31 @@ class TerfisiTikananPersonel(Reporter):
 
     def get_objects(self):
         """
-        Terfisi Duran Personel icin kriterlerimiz:
+        Terfisi Tikanan Personel icin kriterlerimiz:
             - gorev_ayligi_derecesi, kadro_derecesine esit olmali
             - gorev_ayligi_kademesi 3 ten buyuk olmalidir.
 
-            Metodun amacı terfisi duran personelleri listelemektir. Burada
-            görev aylığı kademesi 3 den yukarı olan personel listelenir.
-            Sonrada bu personeller içerisinden kadro derecesi görev aylığı
-            derecesine eşit olanlar seçilir. Örneğin bir personelin
-            kadro derecesi ve görev aylığı derecesi 4 ise o personel 4/3 e
-            kadar yükselebilir. 3 e düşemez. 4/4, 4/5 ... şeklinde gider.
-            Bu yüzden personeller veritabanından çekilirken görev aylığı kademesi
-            3 den yukarı olanlara bakıyoruz.
+        Metodun amacı terfisi duran personelleri listelemektir. Burada
+        görev aylığı kademesi 3 den yukarı olan personel listelenir.
+        Sonrada bu personeller içerisinden kadro derecesi görev aylığı
+        derecesine eşit olanlar seçilir. Örneğin bir personelin
+        kadro derecesi ve görev aylığı derecesi 4 ise o personel 4/3 e
+        kadar yükselebilir. 3 e düşemez. 4/4, 4/5 ... şeklinde gider.
+        Bu yüzden personeller veritabanından çekilirken görev aylığı kademesi
+        3 den yukarı olanlara bakıyoruz.
+
+        Returns:
+            personel_list (list): terfisi duran personel listesi
 
         """
 
         personel_list = []
         # todo: pyoko bir metod sagladiginda, raw yazilan bu sorguyu duzeltecegiz.
-        p_query = Personel.objects.set_params(fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)").filter(gorev_ayligi_kademe__gte=4)
+        p_query = Personel.objects.set_params(
+            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)").filter(
+            gorev_ayligi_kademe__gte=4)
 
         for p in p_query:
-
             personel_record = OrderedDict({})
             personel_record["TCK No"] = p.tckn
             personel_record["Ad"] = "%s %s" % (p.ad, p.soyad)
