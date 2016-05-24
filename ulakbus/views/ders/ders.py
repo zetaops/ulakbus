@@ -14,7 +14,10 @@ Ders Ekle ve Ders Şubelendirme iş akışlarının yürütülmesini sağlar.
 
 from collections import OrderedDict
 
+import time
+
 from pyoko import ListNode
+from pyoko.db.adapter.db_riak import BlockSave, BlockDelete
 from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
 from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciDersi, Donem
 from zengine import forms
@@ -357,24 +360,24 @@ class DersSubelendirme(CrudView):
         sb = self.input['form']['Subeler']
         ders = self.current.task_data['ders_key']
         mevcut_subeler = Sube.objects.filter(ders_id=ders)
-        self.current.task_data['just_created'] = []
-        for s in sb:
-            okutman = s['okutman']
-            sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders)
-            # mevcut_subelerden cikar
-            mevcut_subeler = list(set(mevcut_subeler) - {sube})
-            sube.kontenjan = s['kontenjan']
-            sube.dis_kontenjan = s['dis_kontenjan']
-            sube.ad = s['ad']
-            sube.donem = Donem.guncel_donem()
-            sube.save()
-            if is_new:
-                self.current.task_data['just_created'].append((ders, sube.key))
+        # self.current.task_data['just_created'] = []
+        with BlockSave(Sube):
+            for s in sb:
+                okutman = s['okutman']
+                sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders)
+                # mevcut_subelerden cikar
+                mevcut_subeler = list(set(mevcut_subeler) - {sube})
+                sube.kontenjan = s['kontenjan']
+                sube.dis_kontenjan = s['dis_kontenjan']
+                sube.ad = s['ad']
+                sube.donem = Donem.guncel_donem()
+                sube.save()
+            # if is_new:
+            #     self.current.task_data['just_created'].append((ders, sube.key))
         # mevcut subelerde kalanlari sil
-        self.current.task_data['just_deleted'] = []
-        for s in mevcut_subeler:
-            self.current.task_data['just_deleted'].append(s.key)
-            s.delete()
+        with BlockDelete(Sube):
+            for s in mevcut_subeler:
+                s.delete()
 
     def bilgi_ver(self):
         """Bilgi ver
