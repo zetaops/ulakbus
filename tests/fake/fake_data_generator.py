@@ -194,7 +194,7 @@ class FakeDataGenerator:
         return room_type
 
     @staticmethod
-    def yeni_personel(personel_turu=1, unit='', personel_say=1):
+    def yeni_personel(personel_turu=1, unit='', personel_say=1, user=None):
         """
         Rastgele verileri ve parametre olarak verilen veriyi kullanarak
         yeni personel kaydı oluştururup kaydeder. Oluşturulan kayıtları liste olarak döndürür.
@@ -203,6 +203,7 @@ class FakeDataGenerator:
             personel_turu (Personel): Personel türü
             unit (Unit) : Unit nesnesi
             personel_say : Oluşturulacak personel sayısı
+            user : Personele atanacak user
 
         Returns:
             Personel: Yeni personel listesi
@@ -249,10 +250,38 @@ class FakeDataGenerator:
             p.medeni_hali = random.choice(['1', '2'])
             p.hizmet_sinifi = random.choice(range(1, 30))
             p.birim = unit
+            p.gorev_suresi_baslama = (datetime.datetime.now() - datetime.timedelta(
+                                        days=random.choice(range(1, 30))))
+            p.goreve_baslama_tarihi = p.gorev_suresi_baslama
 
-            username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
-            user = new_user(username=username)
-            p.user = user
+            p.gorev_suresi_bitis = (datetime.datetime.now() + datetime.timedelta(
+                                        days=random.choice(range(1, 30))))
+
+            p.kh_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
+                                        days=random.choice(range(1, 30))))
+            p.ga_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
+                                        days=random.choice(range(1, 30))))
+            p.em_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
+                                        days=random.choice(range(1, 30))))
+
+            p.kazanilmis_hak_derece = random.randint(1, 7)
+            p.kazanilmis_hak_kademe = random.randint(1, 8)
+            p.kazanilmis_hak_ekgosterge = random.randint(1000, 3000)
+
+            p.gorev_ayligi_derece = random.randint(1, 7)
+            p.gorev_ayligi_kademe = random.randint(1, 8)
+            p.gorev_ayligi_ekgosterge = random.randint(1000, 3000)
+
+            p.emekli_muktesebat_derece = random.randint(1, 7)
+            p.emekli_muktesebat_kademe = random.randint(1, 8)
+            p.emekli_muktesebat_ekgosterge = random.randint(1000, 3000)
+
+            if user:
+                p.user = user
+            else:
+                username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
+                user = new_user(username=username)
+                p.user = user
 
             p.save()
             personel_list.append(p)
