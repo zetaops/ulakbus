@@ -27,8 +27,8 @@ class TestCase(BaseTestCase):
         def len_1(lst):
             return len(lst) - 1
 
-        # Veritabanından personel_isleri_1 adlı kullanıcı seçilir.
-        usr = User.objects.get(username='personel_isleri_1')
+        # Veritabanından ulakbus adlı kullanıcı seçilir.
+        usr = User.objects.get(username='ulakbus')
 
         # Crud iş akışını başlatır.
         self.prepare_client('/crud', user=usr)
@@ -87,6 +87,13 @@ class TestCase(BaseTestCase):
         AkademikTakvim modelini is select list işlemiyle test eder.
 
         """
+
+        # Veritabanından ulakbus adlı kullanıcı seçilir.
+        usr = User.objects.get(username='ulakbus')
+
+        # Crud iş akışını başlatır.
+        self.prepare_client('/crud', user=usr)
+
         # crud iş akışı tekrardan başlatılır.
         self.client.set_path('/crud')
         self.client.post(model='Personel', cmd='list')
