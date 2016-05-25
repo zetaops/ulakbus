@@ -14,6 +14,7 @@ class TestCase(BaseTestCase):
     Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
 
     """
+
     def test_kayit_silme(self):
         """
         Kayıt silme iş akışı başlatılmadan önce kaydı silinecek öğrenci seçilir.
@@ -54,10 +55,12 @@ class TestCase(BaseTestCase):
         self.prepare_client('/kayit_sil', username='ogrenci_isleri_1')
         self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
                          param="ogrenci_id",
-                         filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"], 'type': "check"}})
+                         filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"],
+                                                 'type': "check"}})
 
         # Kayıt silme işleminden vazgeçilir.
-        resp = self.client.post(form={'vazgecme': 1, 'kaydet': 'null'}, flow='kayit_silme_isleminden_vazgec')
+        resp = self.client.post(form={'vazgecme': 1, 'kaydet': 'null'},
+                                flow='kayit_silme_isleminden_vazgec')
 
         # Bilgi mesajı verilip verilmediğini test eder.
         assert resp.json['msgbox']['msg'] == "Kayıt silme işlemi iptal edilmiştir."
@@ -66,10 +69,11 @@ class TestCase(BaseTestCase):
         self.client.set_path('/kayit_sil')
         self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
                          param="ogrenci_id",
-                         filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"], 'type': "check"}})
+                         filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"],
+                                                 'type': "check"}})
 
         # Kayıt silme işleminden onaylanır.
-        resp = self.client.post(form={'vazgecme': 'null', 'kaydet': 1}, flow='fakulte_yonetim_karari')
+        self.client.post(form={'vazgecme': 'null', 'kaydet': 1}, flow='fakulte_yonetim_karari')
 
         # Fakülte kara no girilir.
         resp = self.client.post(form={'karar': "455", 'kaydet': 1})
@@ -77,7 +81,8 @@ class TestCase(BaseTestCase):
         # Ayrılma nedenlerini tutan list.
         lst = OgrenciProgram().get_choices_for('ayrilma_nedeni')
 
-        # Sunucudan dönen ayrılma nedenleri sayısı ile veritabanından dönen ayrılma nedenlerinin sayısının
+        # Sunucudan dönen ayrılma nedenleri sayısı ile
+        # veritabanından dönen ayrılma nedenlerinin sayısının
         # eşitliği karşılaştırılır.
         assert len(resp.json['forms']['form'][1]['titleMap']) == len(lst)
 
@@ -103,19 +108,23 @@ class TestCase(BaseTestCase):
             for role in roles:
                 if role.abstract_role.name in ABSTRACT_ROLE_LIST:
                     if role.unit.unit_type == 'Program':
-                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[0])
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[0])
                         assert role.abstract_role == abstract_role
 
                     elif role.unit.unit_type == 'Yüksek Lisans Programı':
-                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[2])
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[2])
                         assert role.abstract_role == abstract_role
 
                     elif role.unit.unit_type == 'Doktora Programı':
-                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[3])
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[3])
                         assert role.abstract_role == abstract_role
 
                     else:
-                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[1])
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[1])
                         assert role.abstract_role == abstract_role
 
         assert 'msgbox' in resp.json
@@ -124,6 +133,8 @@ class TestCase(BaseTestCase):
         self.client.set_path('/kayit_sil')
         resp = self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
                                 param="ogrenci_id",
-                                filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"], 'type': "check"}})
+                                filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"],
+                                                        'type': "check"}})
 
-        assert resp.json['msgbox']['msg'] == " Bahtinur Zengin adlı öğrencinin kaydı daha önceden silinmiştir."
+        assert resp.json['msgbox'][
+                   'msg'] == " Bahtinur Zengin adlı öğrencinin kaydı daha önceden silinmiştir."
