@@ -64,7 +64,7 @@ from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
-from ulakbus.models import Personel, Atama
+from ulakbus.models import Personel
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
 import datetime
@@ -569,7 +569,7 @@ class GorevSuresiForm(JsonForm):
         JsonForm dan türetilmiş bir form sınıfıdır.
     """
 
-    def __init__(self, current, *args, **kwargs):
+    def __init__(self, **kwargs):
         """ 
             form nesnesi üretilirken girilen parametrelerin form elemanlarının
             default değeri olarak kullanıla bilmesi amacıyla yazılan constructor
@@ -579,9 +579,9 @@ class GorevSuresiForm(JsonForm):
         """
 
         self.gorev_suresi_bitis = fields.Date("Görev Süresi Bitiş Tarihi",
-            default = kwargs.pop('gorev_suresi_bitis_tarihi'))
+                                              default=kwargs.pop('gorev_suresi_bitis_tarihi'))
         self.personel_id = fields.String("personel_id", hidden=True,
-            default=kwargs.pop('personel_id'))
+                                         default=kwargs.pop('personel_id'))
 
         # Üst sınıfın constructor metodu çağrılmaktadır.        
         super(GorevSuresiForm, self).__init__()
@@ -600,24 +600,27 @@ class GorevSuresiUzat(CrudView):
 
     def gorev_suresi_form(self):
         """ 
-            Öncelikle anasayfadaki personel seçim formundan seçilen personelin
-            id si elde edilir. Personel id ile atama kaydı elde edilir.
-            Eğer personel akademik personel değilse hata mesajı görüntülenir.
-            Her akademik personele ait sadece bir adet atama kaydı bulunabilir.
-            Elde edilen atama nesnesinden çekilen görev süresi bitiş tarihi
-            form nesnesi instance üretilirken parametre olarak verilir.
-            Son olarak da form görüntülenir. 
+        Öncelikle anasayfadaki personel seçim formundan seçilen personelin
+        id si elde edilir. Personel id ile atama kaydı elde edilir.
+        Eğer personel akademik personel değilse hata mesajı görüntülenir.
+        Her akademik personele ait sadece bir adet atama kaydı bulunabilir.
+        Elde edilen atama nesnesinden çekilen görev süresi bitiş tarihi
+        form nesnesi instance üretilirken parametre olarak verilir.
+        Son olarak da form görüntülenir.
         """
+
         try:
             personel = Personel.objects.get(self.current.input["id"])
+
             if personel.personel_turu == 1:
                 if type(personel.gorev_suresi_bitis) is datetime.date:
                     gorev_suresi_bitis = personel.gorev_suresi_bitis.strftime("%Y-%m-%d")
                 else:
                     gorev_suresi_bitis = None
+
                 _form = GorevSuresiForm(current=self.current, title="Görev Süresi Uzat",
-                    gorev_suresi_bitis_tarihi=gorev_suresi_bitis,
-                    personel_id=personel.key)
+                                        gorev_suresi_bitis_tarihi=gorev_suresi_bitis,
+                                        personel_id=personel.key)
                 self.form_out(_form)
             else:
                 self.current.output['msgbox'] = {
@@ -625,7 +628,8 @@ class GorevSuresiUzat(CrudView):
                     "msg": '%s %s akademik bir personel değildir.' % (
                         personel.ad,
                         personel.soyad)
-                }            
+                }
+
         except ObjectDoesNotExist:
             self.current.output["msgbox"] = {
                 'type': "info", "title": "HATA !",
@@ -635,10 +639,10 @@ class GorevSuresiUzat(CrudView):
 
     def kaydet(self):
         """ 
-            Formdan gelen personel id ile personel kaydı elde edilir. Sonrasındada
-            görev süresi başlama ve bitiş tarihleri değiştirilerek kaydedilir.
-            Yeni görev süresi başlama tarihi işlemin yapıldığı tarih,
-            yeni görev süresi bitiş tarihi formdan gelen tarih olur.
+        Formdan gelen personel id ile personel kaydı elde edilir. Sonrasındada
+        görev süresi başlama ve bitiş tarihleri değiştirilerek kaydedilir.
+        Yeni görev süresi başlama tarihi işlemin yapıldığı tarih,
+        yeni görev süresi bitiş tarihi formdan gelen tarih olur.
         """
         personel = Personel.objects.get(self.current.input["form"]["personel_id"])
         personel.gorev_suresi_baslama = datetime.date.today()
