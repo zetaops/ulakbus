@@ -56,3 +56,10 @@ class TestCase(BaseTestCase):
                                                           'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
+        self.client.set_path('/logout')
+
+        usr = User.objects.get(username='genel_sekreter_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=usr)
+        resp = self.client.post()
+
+        assert len(resp.json['forms']['model']['Personel']) == len(ter_gel_id_per)
