@@ -47,7 +47,6 @@ class DonemDanismanAtama(CrudView):
 
     Dönem Danışman Atama, aşağıda tanımlı iş akışı adımlarını yürütür.
 
-
     - Bölüm Seç
     - Öğretim Elemanlarını Seç
     - Kaydet
@@ -95,7 +94,7 @@ class DonemDanismanAtama(CrudView):
         unit = Unit.objects.get(self.current.input['form']['program'])
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
         okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
-        donem = Donem.objects.get(guncel=True)
+        donem = Donem.guncel_donem()
         _form = DonemDanismanListForm(current=self, title="Okutman Seçiniz")
 
         for okt in okutmanlar:
