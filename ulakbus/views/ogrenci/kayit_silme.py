@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-from zengine.lib.forms import JsonForm
+from zengine.forms import JsonForm
 
 from ulakbus.models import OgrenciProgram, Ogrenci, Role, User, AbstractRole
 from zengine.forms import fields
@@ -133,8 +133,9 @@ class KayitSil(CrudView):
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         _form = JsonForm(current=self.current,
                          title='Kayıt Silme İşlemini Onaylayınız.')
-        _form.help_text = '%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?' % (ogrenci, '-'.join(
-        name for name in self.current.task_data['roles']))
+        _form.help_text = '%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?' % (
+        ogrenci, '-'.join(
+            name for name in self.current.task_data['roles']))
         _form.kaydet = fields.Button('Onayla', flow='fakulte_yonetim_karari')
         _form.vazgecme = fields.Button('Vazgeç', flow='kayit_silme_isleminden_vazgec')
         self.form_out(_form)
@@ -205,19 +206,23 @@ class KayitSil(CrudView):
             for role in roles:
                 if role.abstract_role.name in ABSTRACT_ROLE_LIST:
                     if role.unit.unit_type == 'Program':
-                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[0])
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[0])
                         role.abstract_role = abstract_role
                         role.save()
                     elif role.unit.unit_type == 'Yüksek Lisans Programı':
-                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[2])
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[2])
                         role.abstract_role = abstract_role
                         role.save()
                     elif role.unit.unit_type == 'Doktora Programı':
-                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[3])
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[3])
                         role.abstract_role = abstract_role
                         role.save()
                     else:
-                        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_SILINMIS[1])
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[1])
                         role.abstract_role = abstract_role
                         role.save()
 
@@ -225,13 +230,12 @@ class KayitSil(CrudView):
         for role in ogrenci_rolleri:
             if role.abstract_role.name not in ABSTRACT_ROLE_LIST_SILINMIS:
                 title = 'Kayıt Silme'
-                msg = '%s adlı öğrencinin kaydı silinmiştir. Öğrenci farklı rollere sahiptir. ' % ogrenci
+                msg = """%s adlı öğrencinin kaydı silinmiştir.
+                         Öğrenci farklı rollere sahiptir.""" % ogrenci
 
-                def notify(user):
-                    Notify(user.key).set_message(msg=msg, title=title, typ=Notify.TaskInfo)
-
-                usr = User.objects.get(username='test_user')
-                notify(usr)
+                # TODO: sistem yoneticisine bilgi ver.
+                usr = User.objects.get(username='ulakbus')
+                self.notify(usr, msg=msg, title=title)
                 break
 
     def bilgi_ver(self):
@@ -244,13 +248,20 @@ class KayitSil(CrudView):
         ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
         self.current.output['msgbox'] = {
             'type': 'warning', "title": 'Kayıt Silme',
-            "msg": 'Öğrencinin kaydı %s nedeniyle silinmiştir.' % self.current.input['form']['aciklama']
+            "msg": 'Öğrencinin kaydı %s nedeniyle silinmiştir.' % self.current.input['form'][
+                'aciklama']
         }
         title = 'Kayıt Silme'
-        msg = '%s adlı öğrencinin kaydı %s nedeniyle silinmiştir.' % (ogrenci, self.current.input['form']['aciklama'])
+        msg = '%s adlı öğrencinin kaydı %s nedeniyle silinmiştir.' % (
+            ogrenci, self.current.input['form']['aciklama'])
 
-        def notify(person):
-            Notify(person.user.key).set_message(msg=msg, title=title, typ=Notify.TaskInfo)
         for program in ogrenci_program:
-            notify(program.danisman)
-        notify(ogrenci)
+            self.notify(program.danisman.user, title=title, msg=msg)
+
+        self.notify(ogrenci.user, title=title, msg=msg)
+
+    @staticmethod
+    def notify(user, msg, title):
+        if user:
+            Notify(user.key).set_message(msg=msg, title=title, typ=Notify.TaskInfo)
+
