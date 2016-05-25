@@ -37,3 +37,6 @@ class TestCase(BaseTestCase):
         assert sube.ad == 'Varsayılan Şube'
         assert sube.kontenjan == 30
         assert sube.dis_kontenjan == 10
+
+        ders.delete()
+        sube.delete()
