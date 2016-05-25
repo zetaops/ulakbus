@@ -244,6 +244,7 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
+    program_turu = field.String("Program Tipi", index=True)
     farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme",
                                                      default=False, index=True)
     bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
@@ -264,6 +265,9 @@ class Program(Model):
         verbose_name_plural = "Programlar"
         list_fields = ['adi', 'yil']
         search_fields = ['adi', 'yil', 'tanim']
+
+    def post_creation(self):
+        self.program_turu = self.birim.unit_type
 
     def __unicode__(self):
         return '%s %s' % (self.adi, self.yil)
@@ -657,7 +661,11 @@ class OgrenciDersi(Model):
         list_fields = ['ders', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
 
-    def post_creation(self):
+    def pre_save(self):
+        self.donem = self.ders.donem
+        self.ogrenci = self.ogrenci_program.ogrenci
+
+    def sube_dersi(self):
         """
         Yeni bir ``OgrenciDers``'i ilk defa yaratılınca ``donem`` ve ``ders`` alanları,
         bağlı şubeden atanır.
