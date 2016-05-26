@@ -342,7 +342,7 @@ class TerfiForm(JsonForm):
             )
 
 
-class TerfiDuzenleForm(JsonForm):
+class   TerfiDuzenleForm(JsonForm):
     class Meta:
         inline_edit = [
             'yeni_gorev_ayligi_derece', 'yeni_gorev_ayligi_kademe', 'yeni_gorev_ayligi_gorunen',
@@ -558,12 +558,13 @@ class TerfiListe(CrudView):
 
     # todo: lane geicisi
     def taraflari_bilgilendir(self):
-        pass
+        msg = {"title": 'Personel Terfi Islemi Onaylandi!',
+               "body": 'Onay Belgesi icin Personel Islerine Gonderildi.'}
 
     def onay_belgesi_uret(self):
         self.current.output['msgbox'] = {
             'type': 'info',
-            'title': 'Terfi İşlemleri',
+            'title': 'Terfi İşlemleri Onay Belgesi!',
             'msg': 'Toplu terfi İşleminiz Onaylandı'
         }
 
