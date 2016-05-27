@@ -9,15 +9,15 @@
 Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
 
 """
-from pyoko.exceptions import ObjectDoesNotExist
+import six
 
-from pyoko.lib.utils import lazy_property
-from .personel import Personel
 from pyoko import Model, field, ListNode, LinkProxy
+from pyoko.exceptions import ObjectDoesNotExist
+from pyoko.lib.utils import lazy_property
 from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room
-import six
+from .personel import Personel
 
 
 class HariciOkutman(Model):
@@ -244,7 +244,6 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
-    program_turu = field.String("Program Tipi", index=True)
     farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme",
                                                      default=False, index=True)
     bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
@@ -265,9 +264,6 @@ class Program(Model):
         verbose_name_plural = "Programlar"
         list_fields = ['adi', 'yil']
         search_fields = ['adi', 'yil', 'tanim']
-
-    def post_creation(self):
-        self.program_turu = self.birim.unit_type
 
     def __unicode__(self):
         return '%s %s' % (self.adi, self.yil)
@@ -300,8 +296,8 @@ class Ders(Model):
     ders_mufredati = field.String("Ders Müfredatı", index=True)
     verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
     katilim_sarti = field.Integer("Katılım Şartı", index=True)
-    ontanimli_kontenjan = field.Integer('Öntanımlı Kontenjan', default=30)
-    ontanimli_dis_kontenjan = field.Integer('ÖnTanımlı Dış Kontenjan', default=10)
+    ontanimli_kontenjan = field.Integer('Kontenjan', default=20)
+    ontanimli_dis_kontenjan = field.Integer('Dış Kontenjan', default=35)
     program = Program()
     donem = Donem()
     ders_koordinatoru = Personel()
@@ -328,14 +324,7 @@ class Ders(Model):
         return '%s %s %s' % (self.ad, self.kod, self.ders_dili)
 
     def ontanimli_sube_olustur(self):
-        """
-        Yeni bir ders yaratıldığında, dersin bağlı olacağı default şube yaratılır.
-
-        """
-
         sube = Sube()
-        sube.kontenjan = self.ontanimli_kontenjan
-        sube.dis_kontenjan = self.ontanimli_dis_kontenjan
         sube.ad = 'Varsayılan Şube'
         sube.ders = self
         sube.save()
@@ -368,6 +357,7 @@ class Sube(Model):
     okutman = Okutman()
     ders = Ders()
     donem = Donem()
+    ders_adi = field.String("Ders Adi", index=True)
 
     class NotDonusumTablosu(ListNode):
         """Not Donusum Tablosu
@@ -403,11 +393,16 @@ class Sube(Model):
             sinav = Sinav(tur=dg.tur, sube=self, ders=self.ders)
             sinav.save()
 
+    def ders_adi_olustur(self):
+        self.ders_adi = self.ders.ad + '-' + self.ad + ' ' + str(self.kontenjan)
+        self.save()
+
     def post_creation(self):
         self.sube_sinavlarini_olustur()
+        self.ders_adi_olustur()
 
     def __unicode__(self):
-        return '%s - %s %s' % (self.ders.ad, self.ad, self.kontenjan)
+        return '%s' % self.ders_adi
 
 
 class Sinav(Model):
@@ -643,9 +638,9 @@ class OgrenciDersi(Model):
     """
 
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
-    sube = Sube()
+    sube = Sube(unique=True)
     ogrenci_program = OgrenciProgram()
-    ogrenci = Ogrenci()
+    ogrenci = Ogrenci(unique=True)
     basari_ortalamasi = field.Float("Ortalama", index=True)
     harflendirilmis_not = field.String("Harf", index=True)
     katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
@@ -660,17 +655,16 @@ class OgrenciDersi(Model):
         verbose_name_plural = "Öğrenci Dersleri"
         list_fields = ['ders', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
+        unique_together = [('ogrenci', 'sube')]
 
-    def pre_save(self):
-        self.donem = self.ders.donem
-        self.ogrenci = self.ogrenci_program.ogrenci
+    def post_creation(self):
 
-    def sube_dersi(self):
         """
         Yeni bir ``OgrenciDers``'i ilk defa yaratılınca ``donem`` ve ``ders`` alanları,
         bağlı şubeden atanır.
 
         """
+
         self.donem = self.sube.donem
         self.ders = self.sube.ders
         self.save()
@@ -683,6 +677,7 @@ class OgrenciDersi(Model):
             Şubenin bağlı olduğu ders örneğinin adını döndürür.
 
         """
+
         return six.text_type(self.ders.ad)
 
     ders_adi.title = 'Ders'

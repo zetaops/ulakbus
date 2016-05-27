@@ -12,22 +12,25 @@ Kimlik Bilgileri, İletişim Bilgileri ve Önceki Eğitim Bilgileri gibi
 iş akışlarının yürütülmesini sağlar.
 
 """
-
 from collections import OrderedDict
+
+import time
+
 from pyoko import ListNode
-from zengine.forms import fields
-from zengine import forms
-from zengine.views.crud import CrudView
-from zengine.notifications import Notify
-from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
-from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, DonemDanisman
-from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
-from ulakbus.models.personel import Personel
-from ulakbus.models.auth import Role, AbstractRole, Unit
-from ulakbus.lib.view_helpers import prepare_choices_for_model
-from ulakbus.models.ogrenci import OgrenciDersi
 from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.models.auth import Role, AbstractRole, Unit
+from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
+from ulakbus.models.ogrenci import DonemDanisman
+from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, Sube
+from ulakbus.models.ogrenci import OgrenciDersi
+from ulakbus.models.personel import Personel
+from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
+from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
+from ulakbus.views.ders.ders import prepare_choices_for_model
+from zengine import forms
+from zengine.forms import fields
+from zengine.notifications import Notify
+from zengine.views.crud import CrudView
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -293,7 +296,6 @@ class KayitDondurmaForm(forms.JsonForm):
     ``KayitDondurma`` sınıfı için form olarak kullanılacaktır.
 
     """
-
     class Meta:
         inline_edit = ['secim', 'aciklama']
 
@@ -306,6 +308,15 @@ class KayitDondurmaForm(forms.JsonForm):
         aciklama = fields.String('Aciklama')
 
     sec = fields.Button("Kaydet")
+
+
+class OgrenciProgramSecimForm(forms.JsonForm):
+    """
+    ``OgrenciDersAtama`` sınıfı için form olarak kullanılacaktır.
+
+    """
+
+    sec = fields.Button("Seç")
 
 
 class DanismanAtama(CrudView):
@@ -547,8 +558,7 @@ class KayitDondurma(CrudView):
                 }
 
             try:
-                abstract_role = AbstractRole.objects.get(
-                    name="Lisans Programı Öğrencisi - Kayıt Dondurmuş")
+                abstract_role = AbstractRole.objects.get(name="dondurulmus_kayit")
                 user = ogrenci.user
                 unit = Unit.objects.get(yoksis_no=ogrenci_program.program.yoksis_no)
                 current_role = Role.objects.get(user=user, unit=unit)
@@ -568,7 +578,7 @@ class KayitDondurma(CrudView):
                                                  msg=notify_message, typ=Notify.Message)
                 self.current.output['msgbox'] = {
                     'type': 'info', "title": 'Öğrenci Kayıt Dondurma Başarılı',
-                    "msg": '%s' % notify_message
+                    "msg": '%s' % (notify_message)
                 }
             except Exception as e:
                 self.current.output['msgbox'] = {
@@ -633,6 +643,194 @@ class BasariDurum(CrudView):
             self.output['meta']['selective_listing'] = True
             self.output['meta']['selective_listing_label'] = "Dönem Seçiniz"
             self.output['meta']['allow_actions'] = False
+
+
+class DersSecimForm(forms.JsonForm):
+    class Meta:
+        inline_edit = ['secim']
+
+    class Dersler(ListNode):
+        key = fields.String(hidden=True)
+        ders_adi = fields.String('Ders')
+
+    ileri = fields.Button("İleri")
+
+
+def ders_arama(current):
+    ogrenci = Ogrenci.objects.get(current.session['ogrenci_id'])
+    mevcut_subeler = []
+    for od in OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=Donem.guncel_donem()):
+        mevcut_subeler.append(od.sube)
+
+    q = current.input.get('query')
+    r = []
+
+    for o in Sube.objects.search_on(*['ders_adi'], contains=q):
+        if o not in mevcut_subeler:
+            r.append((o.key, o.__unicode__()))
+
+    current.output['objects'] = r
+
+
+class OgrenciDersAtama(CrudView):
+    """Ögrenci Ders Atama
+
+    Öğrenci Ders atama iş akışı aşağıda tanımlı 4 adımdan oluşur.
+
+    - Program seç:
+    Öğrencinin kayıtlı olduğu programlar listelenir ve programlardan biri seçilir.
+
+    - Ders listele:
+    Öğrencinin kayıtlı olduğu dersleri listeler. Öğrenciye yeni dersler eklenir.
+
+    - Kontrol:
+    Öğrencinin kayıtlı olduğu dersler ve eklenen dersler karşılatırılır.
+    Aynı ders key'ine sahip dersler var ise ders_listele iş adımına döner.
+    Aynı ders key'ine sahip dersler yok ise ogrenci_ders_kaydet iş akışına gider.
+
+    - Öğrenci Dersi Kaydet:
+    Eklenen yeni ders varsa ve bu ders öğrenci dersi olarak kayıtlı değil ise;
+    Öğrenciye ait yeni bir ders oluşturulur ve ekrana ders kaydının başarılı olduğuna
+    dair mesaj basılır.
+
+    Eklenen ders yok ise;
+    Ekrana ders seçimin yapılmadığına ilişkin mesaj yazılır.
+
+
+    """
+
+    # TODO: Aynı derse ait iki kayıt oluşturulursa farklı renkte görülmeli
+    # TODO: quick_add_field ve quick_add_view  class Meta içinde  tanımlanması
+
+    class Meta:
+        model = "OgrenciDersi"
+
+    def program_sec(self):
+        """
+        Öğrencinin kayıtlı olduğu programlar listelenir ve programlardan biri seçilir.
+
+        """
+        ogrenci_id = self.current.input['id']
+        self.current.session['ogrenci_id'] = ogrenci_id
+        _form = OgrenciProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
+        _form.program = fields.Integer(choices=_choices)
+        self.form_out(_form)
+
+    def ders_listele(self):
+        """
+        Öğrencinin kayıtlı olduğu dersleri listeler ve öğrenciye yeni dersler eklenir.
+
+        """
+
+        if 'program_key' and 'dersler' not in self.current.task_data:
+            ogrenci_dersi_lst = []
+            program_key = self.input['form']['program']
+            self.current.task_data['program_key'] = program_key
+            guncel_donem = Donem.guncel_donem()
+            ogrenci_program = OgrenciProgram.objects.get(program_key)
+            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program, donem=guncel_donem)
+            _form = DersSecimForm(current=self.current, title="Ders Seçiniz")
+            for ogrenci_dersi in ogrenci_dersleri:
+                ogrenci_dersi_lst.append(ogrenci_dersi.key)
+                _form.Dersler(key=ogrenci_dersi.sube.key, ders_adi=ogrenci_dersi.sube.ders_adi)
+            self.form_out(_form)
+            self.current.task_data['ogrenci_dersi_lst'] = ogrenci_dersi_lst
+
+        else:
+            _form = DersSecimForm(current=self.current, title="Ders Seçiniz")
+            for ders in self.current.task_data['dersler']:
+                try:
+                    ogrenci_dersi = OgrenciDersi.objects.get(sube_id=ders['key'],
+                                                             ogrenci_id=self.current.session['ogrenci_id'])
+                    if ogrenci_dersi.key not in self.current.task_data['ogrenci_dersi_lst']:
+                        self.current.task_data['ogrenci_dersi_lst'].append(ogrenci_dersi.key)
+
+                except ObjectDoesNotExist:
+                    _form.Dersler(key=ders['key'], ders_adi=ders['ders_adi'])
+
+            for ogrenci_dersi_key in self.current.task_data['ogrenci_dersi_lst']:
+                ogrenci_dersi = OgrenciDersi.objects.get(ogrenci_dersi_key)
+                _form.Dersler(key=ogrenci_dersi.sube.key, ders_adi=ogrenci_dersi.sube.ders_adi)
+
+            self.form_out(_form)
+
+        self.ders_secim_form_inline_edit()
+        self.current.output["meta"]["allow_actions"] = True
+
+    def kontrol(self):
+        """
+        Öğrencinin kayıtlı olduğu dersler ve eklenen dersler karşılatırılır.
+        Aynı ders key'ine sahip dersler var ise ders_listele iş adımına döner.
+        Aynı ders key'ine sahip dersler yok ise ogrenci_ders_kaydet iş akışına gider.
+
+        """
+
+        dersler = self.current.input['form']['Dersler']
+        self.current.task_data['dersler'] = dersler
+
+        sube_ders_lst = []
+        for ders in self.current.input['form']['Dersler']:
+            sube = Sube.objects.get(ders['key'])
+            sube_ders_lst.append(sube.key)
+
+        for ogrenci_dersi_key in self.current.task_data['ogrenci_dersi_lst']:
+            ogrenci_dersi = OgrenciDersi.objects.get(ogrenci_dersi_key)
+            if ogrenci_dersi.sube.key not in sube_ders_lst:
+                sube_ders_lst.append(ogrenci_dersi.sube.key)
+
+        ders_lst = []
+        for sube_key in sube_ders_lst:
+            sube = Sube.objects.get(sube_key)
+            ders_lst.append(sube.ders.key)
+
+        for item in ders_lst:
+            if ders_lst.count(item) > 1:
+                self.current.task_data['cmd'] = 'ders_listele'
+                break
+
+    def ogrenci_ders_kaydet(self):
+        """
+        Eklenen yeni ders varsa ve bu ders öğrenci dersi olarak kayıtlı değil ise;
+        Öğrenciye ait yeni bir ders oluşturulur ve ekrana ders kaydının başarılı olduğuna
+        dair mesaj basılır.
+
+        Eklenen ders yok ise;
+        Ekrana ders seçimin yapılmadığına ilişkin mesaj yazılır.
+
+        """
+
+        is_new_lst = []
+        for ders in self.current.task_data['dersler']:
+            ogrenci_dersi, is_new = OgrenciDersi.objects.get_or_create(sube_id=ders['key'],
+                                                                       ogrenci_id=self.current.session['ogrenci_id'])
+            is_new_lst.append(is_new)
+            if is_new:
+                ogrenci_dersi.sube = Sube.objects.get(ders['key'])
+                ogrenci_dersi.ogrenci = Ogrenci.objects.get(self.current.session['ogrenci_id'])
+                ogrenci_dersi.ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['program_key'])
+                ogrenci_dersi.save()
+
+        def all_same(items):
+            return all(x == items[0] for x in items)
+
+        if all_same(is_new_lst):
+            self.current.output['msgbox'] = {
+                'type': 'warning', "title": 'Öğrenci Ders Ekleme',
+                "msg": 'Ders seçimi yapılmadı'
+            }
+        else:
+            self.current.output['msgbox'] = {
+                'type': 'warning', "title": 'Öğrenci Ders Ekleme',
+                "msg": 'Seçilen ders başarıyla eklendi.'
+            }
+
+    def ders_secim_form_inline_edit(self):
+        self.output['forms']['schema']['properties']['Dersler']['schema'][0]['type'] = 'model'
+        self.output['forms']['schema']['properties']['Dersler']['schema'][0]['model_name'] = "Ders"
+        self.output['forms']['schema']['properties']['Dersler']['quick_add'] = True
+        self.output['forms']['schema']['properties']['Dersler']['quick_add_field'] = "ders_adi"
+        self.output['forms']['schema']['properties']['Dersler']['quick_add_view'] = "ders_arama"
 
 
 class MazeretliDersKaydi(CrudView):
@@ -706,9 +904,7 @@ class MazeretliDersKaydi(CrudView):
         ogrenci = ogrenci_program.ogrenci
         ogrenci_ad_soyad = ogrenci.ad + " " + ogrenci.soyad
         self.current.output['msgbox'] = {
-            "type": "info",
-            "title": "Öğrenci Ders Kayıt Durumu Değiştirme Başarılı",
-            "msg": """%s nolu %s adlı Öğrencinin %s Programına Ait
-                    Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi""" % (
-                         ogrenci_program.ogrenci_no, ogrenci_ad_soyad, ogrenci_program.program.adi)
+            'type': 'info', "title": 'Öğrenci Ders Kayıt Durumu Değiştirme Başarılı',
+            "msg": '%s nolu %s adlı Öğrencinin %s Programına Ait Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi' % (
+                ogrenci_program.ogrenci_no, ogrenci_ad_soyad, ogrenci_program.program.adi)
         }

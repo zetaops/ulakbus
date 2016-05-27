@@ -154,6 +154,8 @@ OBJECT_MENU = {
          'wf': 'ogrenci_isleri_not_duzenleme',
          'field': 'ogrenci_id'},
         {'name': 'OgrenciProgram', 'verbose_name': 'Kayıt Sil', 'wf': 'kayit_sil',
+         'field': 'ogrenci_id'},
+        {'name': 'OgrenciDersi', 'verbose_name': 'Ders Ekle', 'wf': 'ogrenci_ders_atama',
          'field': 'ogrenci_id'}
     ],
 }
@@ -166,6 +168,7 @@ VIEW_URLS.update({
     'get_current_user': 'ulakbus.views.system.GetCurrentUser',
     'dashboard': 'ulakbus.views.system.UlakbusMenu',
     'menu': 'ulakbus.views.system.UlakbusMenu',
+    'ders_arama': 'ulakbus.views.ogrenci.ogrenci.ders_arama'
 })
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
