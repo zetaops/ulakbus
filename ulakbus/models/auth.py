@@ -190,7 +190,7 @@ class AbstractRole(Model):
             list: Permission code değerleri
 
         """
-        return [p.permission.code for p in self.Permissions]
+        return [p.permission.code for p in self.Permissions if p.permission.code]
 
     def add_permission(self, perm):
         """
@@ -345,7 +345,7 @@ class Role(Model):
             list: yetki listesi
 
         """
-        return [p.permission.code for p in self.Permissions] + (
+        return [p.permission.code for p in self.Permissions if p.permission.code] + (
             self.abstract_role.get_permissions() if self.abstract_role.key else [])
 
     def _cache_permisisons(self, pcache):
