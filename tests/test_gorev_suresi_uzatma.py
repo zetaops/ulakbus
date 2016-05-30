@@ -5,8 +5,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import User, Personel
+from zengine.lib.test_utils import BaseTestCase
 from dateutil.relativedelta import relativedelta
 
 __author__ = 'Mithat Raşit Özçıkrıkcı'
