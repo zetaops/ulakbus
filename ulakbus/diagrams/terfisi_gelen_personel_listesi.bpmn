@@ -6,6 +6,11 @@
   <bpmn2:process id="terfisi_gelen_personel_listesi" name="Terfisi Gelen Personel Listesi" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="personel_lane" name="Sube Muduru">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="permissions" value="idari_personel_terfi_onay_belge" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
         <bpmn2:flowNodeRef>terfi_duzenle</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>terfisi_gelen_personel_listes</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>terfi_duzenlemelerini_kaydet</bpmn2:flowNodeRef>
