@@ -296,8 +296,8 @@ class Ders(Model):
     ders_mufredati = field.String("Ders Müfredatı", index=True)
     verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
     katilim_sarti = field.Integer("Katılım Şartı", index=True)
-    ontanimli_kontenjan = field.Integer('Kontenjan', default=20)
-    ontanimli_dis_kontenjan = field.Integer('Dış Kontenjan', default=35)
+    ontanimli_kontenjan = field.Integer('Kontenjan', default=30)
+    ontanimli_dis_kontenjan = field.Integer('Dış Kontenjan', default=5)
     program = Program()
     donem = Donem()
     ders_koordinatoru = Personel()
@@ -326,7 +326,10 @@ class Ders(Model):
     def ontanimli_sube_olustur(self):
         sube = Sube()
         sube.ad = 'Varsayılan Şube'
+        sube.kontenjan = self.ontanimli_kontenjan
+        sube.dis_kontenjan = self.ontanimli_dis_kontenjan
         sube.ders = self
+        sube.donem = Donem.guncel_donem()
         sube.save()
 
     def pre_save(self):
@@ -394,7 +397,7 @@ class Sube(Model):
             sinav.save()
 
     def ders_adi_olustur(self):
-        self.ders_adi = self.ders.ad + '-' + self.ad + ' ' + str(self.kontenjan)
+        self.ders_adi = "%s - %s %s" % (self.ders.ad, self.ad, str(self.kontenjan))
         self.save()
 
     def post_creation(self):
