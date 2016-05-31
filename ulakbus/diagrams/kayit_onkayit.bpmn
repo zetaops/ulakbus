@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_2xkEEMC5EeS_7KcPqLElmg" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
   <bpmn2:collaboration id="_Collaboration_2">
+    <bpmn2:extensionElements>
+      <camunda:properties>
+        <camunda:property name="permissions" value="ogrenci_on_kayit" />
+      </camunda:properties>
+    </bpmn2:extensionElements>
     <bpmn2:participant id="Kayit" name="Ogrenci Kayit ve Kayit Yenileme" processRef="kayit_onkayit" />
     <bpmn2:participant id="Participant_1" name="Pool" />
     <bpmn2:participant id="Participant_3" name="Pool" />
@@ -9,6 +14,11 @@
   <bpmn2:process id="kayit_onkayit" name="Ön Kayıt" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="Ogrenci" name="Ogrenci">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="permissions" value="ogrenci_on_kayit" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
         <bpmn2:flowNodeRef>on_kayit_form_goster</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>yerlestirme_bilgileri</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>yerlestirme_bilgileri_kaydet</bpmn2:flowNodeRef>
@@ -18,6 +28,11 @@
         <bpmn2:flowNodeRef>on_kayit_kaydet</bpmn2:flowNodeRef>
       </bpmn2:lane>
       <bpmn2:lane id="Memur" name="Memur">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="permissions" value="memur_kayit_yenileme" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
         <bpmn2:flowNodeRef>belge_form</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ManualTask_2</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ManualTask_3</bpmn2:flowNodeRef>
@@ -25,6 +40,7 @@
         <bpmn2:flowNodeRef>belge_kaydet</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>onayla</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>EndEvent_5</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>on_kayit_bigilendir</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
     <bpmn2:userTask id="belge_form" name="Belge Form" camunda:assignee="ogrenci.on_kayit.KayitBelgeler.belge_form">
@@ -102,6 +118,10 @@
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="belge_kaydet" targetRef="belge_form" />
     <bpmn2:sequenceFlow id="SequenceFlow_17" name="" sourceRef="belge_form" targetRef="ManualTask_2" />
+    <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="onayla" targetRef="on_kayit_bigilendir" />
+    <bpmn2:sequenceFlow id="SequenceFlow_19" name="" sourceRef="ExclusiveGateway_1" targetRef="onayla">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="onayla"]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
     <bpmn2:serviceTask id="onayla" name="Onayla" camunda:class="ogrenci.on_kayit.KayitBelgeler.onayla">
       <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
@@ -118,17 +138,18 @@
           </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_0u1zflr</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="onayla" targetRef="EndEvent_5" />
-    <bpmn2:sequenceFlow id="SequenceFlow_19" name="" sourceRef="ExclusiveGateway_1" targetRef="onayla">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="onayla"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_0u1zflr" sourceRef="on_kayit_bigilendir" targetRef="EndEvent_5" />
+    <bpmn2:userTask id="on_kayit_bigilendir" name="On Kayit Tamamlandi" camunda:assignee="ogrenci.on_kayit.KayitBelgeler.on_kayit_bigilendir">
+      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0u1zflr</bpmn2:outgoing>
+    </bpmn2:userTask>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_2">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_4" bpmnElement="Kayit" isHorizontal="true">
-        <dc:Bounds x="156" y="324" width="2064" height="745" />
+        <dc:Bounds x="156" y="332" width="1761" height="737" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_4" bpmnElement="StartEvent_3">
         <dc:Bounds x="372" y="466" width="36" height="36" />
@@ -140,10 +161,10 @@
         <dc:Bounds x="1092" y="444" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Lane_2" bpmnElement="Ogrenci" isHorizontal="true">
-        <dc:Bounds x="186" y="324" width="2034" height="313" />
+        <dc:Bounds x="186" y="332" width="1731" height="305" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Lane_3" bpmnElement="Memur" isHorizontal="true">
-        <dc:Bounds x="186" y="636" width="2034" height="433" />
+        <dc:Bounds x="186" y="636" width="1731" height="433" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_ManualTask_3" bpmnElement="ManualTask_2">
         <dc:Bounds x="1224" y="813" width="100" height="80" />
@@ -165,9 +186,9 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_EndEvent_10" bpmnElement="EndEvent_5">
-        <dc:Bounds x="1752" y="957" width="36" height="36" />
+        <dc:Bounds x="1854" y="965" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1770" y="998" width="0" height="0" />
+          <dc:Bounds x="1827" y="1006" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_17" bpmnElement="belge_form">
@@ -265,20 +286,26 @@
         <di:waypoint xsi:type="dc:Point" x="1274" y="813" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_38" bpmnElement="onayla">
-        <dc:Bounds x="1560" y="936" width="100" height="80" />
+        <dc:Bounds x="1533" y="943" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_18" bpmnElement="SequenceFlow_18" sourceElement="_BPMNShape_ServiceTask_38" targetElement="_BPMNShape_EndEvent_10">
-        <di:waypoint xsi:type="dc:Point" x="1660" y="976" />
-        <di:waypoint xsi:type="dc:Point" x="1706" y="976" />
-        <di:waypoint xsi:type="dc:Point" x="1706" y="975" />
-        <di:waypoint xsi:type="dc:Point" x="1752" y="975" />
+        <di:waypoint xsi:type="dc:Point" x="1633" y="983" />
+        <di:waypoint xsi:type="dc:Point" x="1694" y="983" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_19" bpmnElement="SequenceFlow_19" sourceElement="_BPMNShape_ExclusiveGateway_11" targetElement="_BPMNShape_ServiceTask_38">
         <di:waypoint xsi:type="dc:Point" x="1454" y="982" />
-        <di:waypoint xsi:type="dc:Point" x="1507" y="982" />
-        <di:waypoint xsi:type="dc:Point" x="1507" y="976" />
-        <di:waypoint xsi:type="dc:Point" x="1560" y="976" />
+        <di:waypoint xsi:type="dc:Point" x="1533" y="983" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0u1zflr_di" bpmnElement="SequenceFlow_0u1zflr">
+        <di:waypoint xsi:type="dc:Point" x="1794" y="983" />
+        <di:waypoint xsi:type="dc:Point" x="1854" y="983" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1779" y="973" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0kl9gby_di" bpmnElement="on_kayit_bigilendir">
+        <dc:Bounds x="1694.1439169139467" y="943" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>
