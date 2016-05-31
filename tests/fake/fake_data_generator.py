@@ -224,7 +224,6 @@ class FakeDataGenerator:
             p.ikamet_il = fake.state()
             p.ikamet_ilce = fake.state()
             p.adres_2 = fake.address()
-            p.adres_2_posta_kodu = fake.postcode()
             p.oda_no = fake.classroom_code()
             p.oda_tel_no = fake.phone_number()
             p.cep_telefonu = fake.phone_number()
