@@ -130,7 +130,7 @@ OBJECT_MENU = {
          'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
     ],
     'ogrenci': [
-        {'name': 'DersKatilimi', 'verbose_name': 'Devam Durumu', 'field': 'ogrenci_id'},
+        {'name': 'DersKatilimi', 'verbose_name': 'Devam Durumu', 'wf': 'ders_katilimi_giris'},
         {'name': 'Borc', 'verbose_name': 'Harç Bilgileri', 'field': 'ogrenci_id'},
         {'name': 'OgrenciProgram', 'verbose_name': 'Öğrenci Mezuniyet', 'wf': 'ogrenci_mezuniyet',
          'field': 'ogrenci_id'},

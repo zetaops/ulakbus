@@ -49,7 +49,6 @@ class KatilimDurumu(CrudView):
     def sube_sec(self):
         """Sube seçim adımına karşılık gelen metod."""
         _form = forms.JsonForm(current=self.current, title="Ders Seçim Formu")
-        okutman = self.get_okutman_key
         _form.sube = fields.Integer("Sube Seçiniz",
                                     choices=prepare_choices_for_model(Sube,
                                                                       okutman_id=self.get_okutman_key))
