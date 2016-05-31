@@ -132,7 +132,7 @@ OBJECT_MENU = {
     'ogrenci': [
         {'name': 'DersKatilimi', 'verbose_name': 'Devam Durumu', 'field': 'ogrenci_id'},
         {'name': 'Borc', 'verbose_name': 'Harç Bilgileri', 'field': 'ogrenci_id'},
-        {'name': 'OgrenciProgram', 'verbose_name': 'Oğrenci Mezuniyet', 'wf': 'ogrenci_mezuniyet',
+        {'name': 'OgrenciProgram', 'verbose_name': 'Öğrenci Mezuniyet', 'wf': 'ogrenci_mezuniyet',
          'field': 'ogrenci_id'},
         {'name': 'DegerlendirmeNot', 'field': 'ogrenci_id'},
         {'name': 'OgrenciDersi', 'field': 'ogrenci_id'},
@@ -148,7 +148,7 @@ OBJECT_MENU = {
          'verbose_name': 'Danışman Atama'},
         {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
          'field': 'ogrenci_id'},
-        {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci',
+        {'name': 'OgrenciProgram', 'verbose_name': 'Mazaretli Öğrenci',
          'wf': 'mazeretli_ders_kaydi', 'field': 'ogrenci_id'},
         {'name': 'DegerlendirmeNot', 'verbose_name': 'Not Düzenleme',
          'wf': 'ogrenci_isleri_not_duzenleme',
