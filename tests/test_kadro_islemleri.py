@@ -136,7 +136,8 @@ class TestCase(BaseTestCase):
         birim_no = resp.json['objects'][0]['key']
 
         # Kadro ekle formu doldurulur.
-        kadro_data = {'unvan': 3, 'unvan_kod': 22464, 'derece': 3, 'birim_id': birim_no,
+        kadro_data = {'unvan': 3, 'unvan_aciklama': 'bolum sef',
+                      'derece': 3, 'birim_id': birim_no,
                       'kadro_no': 4, 'save_edit': 1,
                       'aciklama': 'kadro'}
 
