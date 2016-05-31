@@ -133,10 +133,9 @@ class NotDuzenleme(CrudView):
         sinav = Sinav.objects.get(sinav_id)
         self.current.task_data['sinav'] = sinav.__unicode__()
         ogrenci_id = self.current.task_data['ogrenci_id']
-        degerlendirme_not = DegerlendirmeNot.objects.filter(sinav_id=sinav_id,
-                                                            ogrenci_id=ogrenci_id)[0]
+        degerlendirme_not = \
+            DegerlendirmeNot.objects.filter(sinav_id=sinav_id, ogrenci_id=ogrenci_id)[0]
         self.current.task_data['onceki_puan'] = degerlendirme_not.puan
-        self.current.task_data['degerlendirme_key'] = degerlendirme_not.key
 
         title = '%s adlı öğrencinin % sınava ait notunu düzenleyiniz.' % (
             degerlendirme_not.ogrenci, degerlendirme_not.sinav)
@@ -146,18 +145,13 @@ class NotDuzenleme(CrudView):
 
     def bilgilendir(self):
         """
-        Not düzenleme işlemi kaydedilip ekrana bilgilendirme mesajı basılır.
+        Not düzenleme işlemi tamamlandıktan sonra ekrana bilgilendirme mesajı basılır.
 
         """
 
-        yeni_puan = self.current.input['form']['puan']
-        degerlendirme = DegerlendirmeNot.objects.get(self.current.task_data['degerlendirme_key'])
-        degerlendirme.puan = yeni_puan
-        degerlendirme.save()
-
         ogrenci_id = self.current.task_data['ogrenci_id']
         ogrenci = Ogrenci.objects.get(ogrenci_id)
-
+        yeni_puan = self.current.input['form']['puan']
         sinav = self.current.task_data['sinav']
         onceki_puan = self.current.task_data['onceki_puan']
 
