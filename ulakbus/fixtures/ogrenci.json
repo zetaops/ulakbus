@@ -25,7 +25,7 @@
 		"4" : {
 			"tr" : "Uzaklaştırma Cezası",
 			"en" : ""
-		}			
+		}
 	},
 	"ders_alis_tipleri": {
 		"1" : {
@@ -342,7 +342,7 @@
 		"AA": {
 			"tr": "",
 			"en": ""
-		},
+		}
 	},
 	"dortluk_katsayilari":{}
 }
