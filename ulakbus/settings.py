@@ -156,6 +156,8 @@ OBJECT_MENU = {
         {'name': 'OgrenciProgram', 'verbose_name': 'Kayıt Sil', 'wf': 'kayit_sil',
          'field': 'ogrenci_id'},
         {'name': 'OgrenciDersi', 'verbose_name': 'Ders Ekle', 'wf': 'ogrenci_ders_atama',
+         'field': 'ogrenci_id'},
+        {'name': 'OgrenciProgram', 'verbose_name': 'On Kayit Onay', 'wf': 'ogrenci_isleri_onkayit_onay',
          'field': 'ogrenci_id'}
     ],
 }
