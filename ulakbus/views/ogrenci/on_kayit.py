@@ -5,34 +5,11 @@ from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, OncekiEgitimBilgisi
 
 
-class YerlestirmeBilgisiForm(forms.JsonForm):
-    class Meta:
-        include = ["giris_puan_turu", "giris_puani"]
-
-    ileri_buton = fields.Button("İleri", cmd="save")
-
-
-class YerlestirmeBilgisi(CrudView):
-    class Meta:
-        model = "OgrenciProgram"
-
-    def yerlestirme_bilgisi_form(self):
-        ogrenci = Ogrenci.objects.get(user=self.current.user)
-        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, ogrencilik_statusu=1)
-        self.form_out(YerlestirmeBilgisiForm(ogrenci_program, current=self.current))
-
-    def kaydet(self):
-        ogrenci = Ogrenci.objects.get(user=self.current.user)
-        self.set_form_data_to_object()
-        self.object.ogrenci = ogrenci
-        self.object.save()
-
-
 class OncekiEgitimBilgileriForm(forms.JsonForm):
     class Meta:
         include = ["okul_adi", "diploma_notu", "mezuniyet_yili"]
 
-    kaydet = fields.Button("Kaydet", cmd="save")
+    kaydet = fields.Button("Kaydet", cmd="kaydet")
 
 
 class OncekiEgitimBilgileri(CrudView):
@@ -46,7 +23,28 @@ class OncekiEgitimBilgileri(CrudView):
 
     def kaydet(self):
         ogrenci = Ogrenci.objects.get(user=self.current.user)
-        self.set_form_data_to_object()
+        self.object.ogrenci = ogrenci
+        self.object.save()
+
+
+class YerlestirmeBilgisiForm(forms.JsonForm):
+    class Meta:
+        include = ["giris_puan_turu", "giris_puani"]
+
+    ileri_buton = fields.Button("İleri", cmd="kaydet")
+
+
+class YerlestirmeBilgisi(CrudView):
+    class Meta:
+        model = "OgrenciProgram"
+
+    def yerlestirme_bilgisi_form(self):
+        ogrenci = Ogrenci.objects.get(user=self.current.user)
+        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, ogrencilik_statusu=1)
+        self.form_out(YerlestirmeBilgisiForm(ogrenci_program, current=self.current))
+
+    def kaydet(self):
+        ogrenci = Ogrenci.objects.get(user=self.current.user)
         self.object.ogrenci = ogrenci
         self.object.save()
 
@@ -70,11 +68,14 @@ class OnKayit(CrudView):
     def on_kayit_form(self):
         ogrenci = Ogrenci.objects.get(user=self.current.user)
         self.form_out(OnKayitForm(ogrenci, current=self.current))
+        self.object.save()
 
     def kaydet(self):
-        ogrenci = Ogrenci.objects.get(user=self.current.user)
-        self.object.ogrenci = ogrenci
-        self.object.save()
+        msg = {"title": 'On Kayit Islemi Gonderildi!',
+               "body": 'Onay icin ilgili memura gonderildi.'}
+
+        self.current.output['msgbox'] = msg
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
 
 class BelgeForm(forms.JsonForm):
@@ -89,13 +90,47 @@ class KayitBelgeler(CrudView):
     class Meta:
         model = "OgrenciProgram"
 
+    def on_kayit_kontrol(self):
+        ogrenci_id = self.current.input['id']
+        self.current.task_data['ogrenci_id'] = ogrenci_id
+        ogrenci = Ogrenci.objects.get(ogrenci_id)
+        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
+
+        if ogrenci_program.ogrencilik_statusu == 2:
+            self.current.task_data['cmd'] = 'kayitli'
+
     def belge_form(self):
-        ogrenci = Ogrenci.objects.get(user=self.current.user)
+        """
+        Öğrencinin kayıtlı olduğu programlar listelenir ve programlardan biri seçilir.
+
+        """
+
+        ogrenci_id = self.current.task_data['ogrenci_id']
+        ogrenci = Ogrenci.objects.get(ogrenci_id)
         ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
         self.form_out(BelgeForm(ogrenci_program, current=self.current))
 
     def onayla(self):
-        ogrenci = Ogrenci.objects.get(user=self.current.user)
+        ogrenci_id = self.current.task_data['ogrenci_id']
+        ogrenci = Ogrenci.objects.get(ogrenci_id)
         ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, ogrencilik_statusu=1)
-        ogrenci_program.durum = 2
+        ogrenci_program.ogrencilik_statusu = 2
         ogrenci_program.save()
+
+    def on_kayit_tamamlandi(self):
+
+        msg = {"type": 'info',
+               "title": 'On Kayit Islemi Gerceklestirildi!',
+               "msg": 'Ilgili ogrencinin on kaydini basariyla gerceklestirdiniz.'}
+
+        self.current.output['msgbox'] = msg
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+    def kayitli(self):
+        msg = {"type": 'info',
+               "title": 'Bu Kayit Zaten Var!',
+               "msg": 'Ilgili ogrencinin on kaydi daha onceden yapilmistir.'}
+
+        self.current.output['msgbox'] = msg
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
+
