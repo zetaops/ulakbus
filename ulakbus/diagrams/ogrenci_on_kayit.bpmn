@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_2xkEEMC5EeS_7KcPqLElmg" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:collaboration id="_Collaboration_2">
+    <bpmn2:extensionElements>
+      <camunda:properties>
+        <camunda:property name="permissions" value="ogrenci_on_kayit" />
+      </camunda:properties>
+    </bpmn2:extensionElements>
+    <bpmn2:participant id="OgrenciOnKayit" name="Ogrenci On Kayit" processRef="ogrenci_on_kayit" />
+    <bpmn2:participant id="Participant_1" name="Pool" />
+    <bpmn2:participant id="Participant_3" name="Pool" />
+  </bpmn2:collaboration>
+  <bpmn2:dataStore id="DataStore_1" name="Data Store 1" />
+  <bpmn2:process id="ogrenci_on_kayit" name="Ön Kayıt" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn2:lane id="Ogrenci" name="Ogrenci">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="permissions" value="ogrenci_on_kayit" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
+        <bpmn2:flowNodeRef>yerlestirme_bilgileri</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>on_kayit_basla</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>onceki_egitim_bilgisi</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>onceki_egitim_bilgisi_kaydet</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>on_kayit_kaydet</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>on_kayit_form_goster</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>yerlestirme_bilgileri_kaydet</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_0cp71n2</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:userTask id="yerlestirme_bilgileri" name="Yerleştirme Bilgileri Form" camunda:assignee="ogrenci.on_kayit.YerlestirmeBilgisi.yerlestirme_bilgisi_form">
+      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:startEvent id="on_kayit_basla" name="On kayit&#10;bildirimi ile&#10;surec baslar">
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition id="_MessageEventDefinition_3" />
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="yerlestirme_bilgileri_kaydet" targetRef="on_kayit_form_goster" />
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="on_kayit_form_goster" targetRef="on_kayit_kaydet" />
+    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="onceki_egitim_bilgisi_kaydet" targetRef="yerlestirme_bilgileri" />
+    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="yerlestirme_bilgileri" targetRef="yerlestirme_bilgileri_kaydet" />
+    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="on_kayit_basla" targetRef="onceki_egitim_bilgisi" />
+    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="onceki_egitim_bilgisi" targetRef="onceki_egitim_bilgisi_kaydet" />
+    <bpmn2:sequenceFlow id="SequenceFlow_1i9ww7x" sourceRef="on_kayit_kaydet" targetRef="EndEvent_0cp71n2" />
+    <bpmn2:userTask id="onceki_egitim_bilgisi" name="Önceki Eğitim Bilgisi" camunda:assignee="ogrenci.on_kayit.OncekiEgitimBilgileri.onceki_egitim_bilgileri">
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:serviceTask id="onceki_egitim_bilgisi_kaydet" name="Önceki Eğitim Bilgisi Kaydet" camunda:class="ogrenci.on_kayit.OncekiEgitimBilgileri.kaydet">
+      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:serviceTask id="on_kayit_kaydet" name="Ön Kayıt Form Kaydet" camunda:class="ogrenci.on_kayit.OnKayit.kaydet">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="client_message">
+            <camunda:map>
+              <camunda:entry key="title">Başarılı</camunda:entry>
+              <camunda:entry key="body">Ön kayıt işleminiz gerçekleştirildi. Bu aşamadan sonra gerekli belgeri tamamlayıp teslim etmeniz ve harç yatırmanız gerekmektedir.</camunda:entry>
+              <camunda:entry key="type">info</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1i9ww7x</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:userTask id="on_kayit_form_goster" name="On Kayit Formunu Goster" camunda:assignee="ogrenci.on_kayit.OnKayit.on_kayit_form">
+      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:serviceTask id="yerlestirme_bilgileri_kaydet" name="Yerleştirme Bilgileri Kaydet" camunda:class="ogrenci.on_kayit.YerlestirmeBilgisi.kaydet">
+      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:endEvent id="EndEvent_0cp71n2">
+      <bpmn2:incoming>SequenceFlow_1i9ww7x</bpmn2:incoming>
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_2">
+      <bpmndi:BPMNShape id="_BPMNShape_Participant_4" bpmnElement="OgrenciOnKayit" isHorizontal="true">
+        <dc:Bounds x="156" y="332" width="1245" height="295" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_4" bpmnElement="on_kayit_basla">
+        <dc:Bounds x="247" y="466" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="221" y="507" width="90" height="54" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_10" bpmnElement="on_kayit_form_goster">
+        <dc:Bounds x="1004" y="444" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_2" bpmnElement="Ogrenci" isHorizontal="true">
+        <dc:Bounds x="186" y="332" width="1215" height="295" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_18" bpmnElement="yerlestirme_bilgileri">
+        <dc:Bounds x="679" y="444" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_35" bpmnElement="yerlestirme_bilgileri_kaydet">
+        <dc:Bounds x="845" y="444" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="_BPMNShape_UserTask_18" targetElement="_BPMNShape_ServiceTask_35">
+        <di:waypoint xsi:type="dc:Point" x="779" y="484" />
+        <di:waypoint xsi:type="dc:Point" x="845" y="484" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="756" y="484" width="90" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_19" bpmnElement="onceki_egitim_bilgisi">
+        <dc:Bounds x="341" y="444" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_36" bpmnElement="onceki_egitim_bilgisi_kaydet">
+        <dc:Bounds x="513" y="444" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="_BPMNShape_UserTask_19" targetElement="_BPMNShape_ServiceTask_36">
+        <di:waypoint xsi:type="dc:Point" x="441" y="484" />
+        <di:waypoint xsi:type="dc:Point" x="513" y="484" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="486" y="484" width="90" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="_BPMNShape_ServiceTask_36" targetElement="_BPMNShape_UserTask_18">
+        <di:waypoint xsi:type="dc:Point" x="613" y="484" />
+        <di:waypoint xsi:type="dc:Point" x="679" y="484" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="628" y="484" width="90" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_StartEvent_4" targetElement="_BPMNShape_UserTask_19">
+        <di:waypoint xsi:type="dc:Point" x="283" y="484" />
+        <di:waypoint xsi:type="dc:Point" x="341" y="484" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="304" y="484" width="90" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_37" bpmnElement="on_kayit_kaydet">
+        <dc:Bounds x="1161" y="444" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_Task_10" targetElement="_BPMNShape_ServiceTask_37">
+        <di:waypoint xsi:type="dc:Point" x="1104" y="484" />
+        <di:waypoint xsi:type="dc:Point" x="1161" y="484" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1032" y="484" width="90" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="_BPMNShape_ServiceTask_35" targetElement="_BPMNShape_Task_10">
+        <di:waypoint xsi:type="dc:Point" x="945" y="484" />
+        <di:waypoint xsi:type="dc:Point" x="1004" y="484" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="900" y="474" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0cp71n2_di" bpmnElement="EndEvent_0cp71n2">
+        <dc:Bounds x="1331.4702907711758" y="466" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1304.4702907711758" y="502" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1i9ww7x_di" bpmnElement="SequenceFlow_1i9ww7x">
+        <di:waypoint xsi:type="dc:Point" x="1261" y="484" />
+        <di:waypoint xsi:type="dc:Point" x="1332" y="484" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1222" y="474" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
