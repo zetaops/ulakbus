@@ -11,7 +11,7 @@ from zengine.views.crud import CrudView
 from zengine.forms import fields
 from zengine.forms import JsonForm
 from ulakbus.views.ders.ders import prepare_choices_for_model
-from ulakbus.models.ogrenci import AkademikTakvim, OgrenciProgram, Unit, Program
+from ulakbus.models.ogrenci import AkademikTakvim, OgrenciProgram, Unit, Program, User
 from datetime import date
 import time
 
@@ -27,11 +27,14 @@ class ProgramDersForm(JsonForm):
 
     class SilmeForm(ListNode):
         secim = fields.Boolean(type="checkbox")
-        birim_ad = fields.String("Ad", index=True)
+        birim_ad = fields.String("Ad", hidden=True)
+        tanim = fields.String("Tanım", index=True)
+        durum = fields.Integer("Durum", hidden=True)
         # ogrenci_sayisi = fields.String("Silinecek Öğrenci Sayısı", index=True)
         birim_no = fields.String("Birim No", hidden=True)
         # kod = fields.String("Kod", index=True)
         key = fields.String('Key', hidden=True)
+
 
 class OnKayitSil(CrudView):
     """Okutman Not Girişi
@@ -57,13 +60,13 @@ class OnKayitSil(CrudView):
             if not birim.unit_type in birim_type and birim.is_active:
                 birim_type.append(birim.unit_type)
 
-        # toplam_silinecek = str(len(OgrenciProgram.objects.filter(durum = 1)))
-
-        _form.SilmeForm(secim=False, birim_ad=parent.unit_type) #universite icin
+        _form.SilmeForm(secim=False, birim_ad="Üniversitedeki Ön Kayıtta Bulunan Bütün Ögrencileri Sil")
 
         for type in birim_type:
-            if not type in ['İdari','Rektörlük']:
-                _form.SilmeForm(secim=False, birim_ad=type)
+            if not type in ['İdari', 'Rektörlük']:
+                _form.SilmeForm(secim=False, tanim=type, birim_ad=type, durum=0)
+                _form.SilmeForm(secim=False, tanim=type + " Birimine Ait Ön Kayıttaki Bütün Ögrencileri Sil",
+                                birim_ad=type, durum=1)
         _form.duzenle = fields.Button("İlerle")
         self.form_out(_form)
 
@@ -73,47 +76,50 @@ class OnKayitSil(CrudView):
         for birim in self.current.task_data["gelen_form"]:
             if birim['secim']:
                 unit_type = birim['birim_ad']
-                self.current.task_data["secilen_birim"] = unit_type
-                secilen_birim = Unit.objects.filter(unit_type =unit_type)
-                # secilen birimin alt birimleri
+                # self.current.task_data["secilen_birim"] = unit_type
+                # secilen_birim = Unit.objects.filter(unit_type =unit_type)
 
-        _form = ProgramDersForm(current=self.current,
-                                title="Kaydı Gerçekleşmeyen Ön Kayıt Öğrencilerini Silmek İstediğiniz Birimi Seçiniz")
+        _form = JsonForm(current=self.current, title="Silinecek Birimi Seçiniz")
+        _choices = prepare_choices_for_model(Unit, is_active=True, unit_type=unit_type)
 
-        # for birim in secilen_birim:
-        #     birim_len = 0
-        #     if birim.is_active:
-        #         bolumler=Unit.objects.filter(parent_unit_no=birim.yoksis_no)
-        #         for bolum in bolumler:
-        #             programlar=Unit.objects.filter(parent_unit_no=bolum.yoksis_no)
-        #             for program in programlar:
-        #                 birim_len += len(OgrenciProgram.objects.filter(program=program,durum = 1))
-
-        for birim in secilen_birim:
-            if birim.is_active:
-                _form.SilmeForm(secim=False, birim_ad=birim.name)
-        _form.duzenle = fields.Button("Onayla")
+        _form.program = fields.Integer(choices=_choices)
+        _form.sec = fields.Button("Seç")
         self.form_out(_form)
 
+        # _form = ProgramDersForm(current=self.current,
+        #                         title="Kaydı Gerçekleşmeyen Ön Kayıt Öğrencilerini Silmek İstediğiniz Birimi Seçiniz")
+        #
+        # for birim in secilen_birim:
+        #     if birim.is_active:
+        #         _form.SilmeForm(secim=False, birim_ad=birim.name)
+        # _form.duzenle = fields.Button("Onayla")
+        # self.form_out(_form)
 
     def kayit_tarihi_kontrol(self):
 
         self.current.task_data["birim"] = self.current.input['form']['SilmeForm']
         for secilen_birim in self.current.task_data["birim"]:
-            if secilen_birim['secim']==True:
-                secilen_birim_akademik_takvim = AkademikTakvim.objects.filter(birim=secilen_birim['birim_ad'])[0]
-                ders_kayit_son_tarih= secilen_birim_akademik_takvim.Takvim[9].bitis
-                if date.today() > ders_kayit_son_tarih:
-                    self.current.task_data["kayit_tarih_kontrol"] = True
-                else:
-                    self.current.task_data["kayit_tarih_kontrol"] = False
+            if secilen_birim['secim'] == True:
+                birim = secilen_birim['birim_ad']
+
+        en_son_bitis_tarihi=[]
+        son_kayit_tarihleri = AkademikTakvim.objects.filter(birim=birim)
+        for son_tarih in son_kayit_tarihleri:
+            en_son_bitis_tarihi.append(son_tarih.Takvim[9].bitis)
+        ders_kayit_son_tarih = max(en_son_bitis_tarihi)
+
+
+        if date.today() > ders_kayit_son_tarih:
+            self.current.task_data["kayit_tarih_kontrol"] = True
+        else:
+            self.current.task_data["kayit_tarih_kontrol"] = False
 
     def silinecek_ogrenci_kontrol(self):
 
-        if len(OgrenciProgram.objects.filter(durum=1))>0:
+        if len(OgrenciProgram.objects.filter(durum=1)) > 0:
             self.current.task_data["silinecek_ogrenci_kontrol"] = True
         else:
-             self.current.task_data["silinecek_ogrenci_kontrol"] = False
+            self.current.task_data["silinecek_ogrenci_kontrol"] = False
 
     def secilen_on_kayit_sil(self):
 
@@ -132,7 +138,6 @@ class OnKayitSil(CrudView):
             'type': 'warning', "title": 'Uyarı Mesajı',
             "msg": 'Silinecek ön kayıt kaydı bulunmamaktadır.'
         }
-
 
     def personel_kayit_uyari(self):
 
