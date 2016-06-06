@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_SYEKMMEMEeW_8Jn-b-swxg" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_SYEKMMEMEeW_8Jn-b-swxg" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
   <bpmn2:collaboration id="_Collaboration_3">
-    <bpmn2:participant id="ogrenci_basari_durumu_pool" name="Öğrenci Basari Durumu" processRef="ogrenci_basari_durumu"/>
+    <bpmn2:participant id="ogrenci_basari_durumu_pool" name="Öğrenci Basari Durumu" processRef="ogrenci_basari_durumu" />
   </bpmn2:collaboration>
-  <bpmn2:process id="ogrenci_basari_durumu" name="Basari Durumu" isExecutable="false">
+  <bpmn2:process id="ogrenci_basari_durumu" name="Başarı Durumu" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="personel_lane" name="Ogrenci">
         <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
@@ -17,48 +17,48 @@
     <bpmn2:endEvent id="EndEvent_1">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="StartEvent_1" targetRef="basari_durumu"/>
-    <bpmn2:userTask id="basari_durumu" camunda:assignee="ogrenci.ogrenci.BasariDurum.doneme_bazli_not_tablosu" name="Basari Durumu">
+    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="StartEvent_1" targetRef="basari_durumu" />
+    <bpmn2:userTask id="basari_durumu" name="Basari Durumu" camunda:assignee="ogrenci.ogrenci.BasariDurum.doneme_bazli_not_tablosu">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="basari_durumu" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="basari_durumu" targetRef="EndEvent_1" />
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_5" bpmnElement="ogrenci_basari_durumu_pool" isHorizontal="true">
-        <dc:Bounds height="277.0" width="757.0" x="96.0" y="36.0"/>
+        <dc:Bounds x="96" y="36" width="757" height="277" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Lane_4" bpmnElement="personel_lane" isHorizontal="true">
-        <dc:Bounds height="277.0" width="727.0" x="126.0" y="36.0"/>
+        <dc:Bounds x="126" y="36" width="727" height="277" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_5" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="240.0" y="154.0"/>
+        <dc:Bounds x="240" y="154" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="258.0" y="195.0"/>
+          <dc:Bounds x="258" y="195" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_20" bpmnElement="basari_durumu">
-        <dc:Bounds height="80.0" width="100.0" x="396.0" y="132.0"/>
+        <dc:Bounds x="396" y="132" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_EndEvent_11" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="660.0" y="154.0"/>
+        <dc:Bounds x="660" y="154" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="678.0" y="195.0"/>
+          <dc:Bounds x="678" y="195" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_UserTask_20" targetElement="_BPMNShape_EndEvent_11">
-        <di:waypoint xsi:type="dc:Point" x="496.0" y="172.0"/>
-        <di:waypoint xsi:type="dc:Point" x="660.0" y="172.0"/>
+        <di:waypoint xsi:type="dc:Point" x="496" y="172" />
+        <di:waypoint xsi:type="dc:Point" x="660" y="172" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="535.0" y="172.0"/>
+          <dc:Bounds x="535" y="172" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="_BPMNShape_StartEvent_5" targetElement="_BPMNShape_UserTask_20">
-        <di:waypoint xsi:type="dc:Point" x="276.0" y="172.0"/>
-        <di:waypoint xsi:type="dc:Point" x="396.0" y="172.0"/>
+        <di:waypoint xsi:type="dc:Point" x="276" y="172" />
+        <di:waypoint xsi:type="dc:Point" x="396" y="172" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="379.0" y="172.0"/>
+          <dc:Bounds x="379" y="172" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
