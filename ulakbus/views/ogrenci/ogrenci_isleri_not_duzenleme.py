@@ -134,7 +134,7 @@ class NotDuzenleme(CrudView):
         self.current.task_data['sinav'] = sinav.__unicode__()
         ogrenci_id = self.current.task_data['ogrenci_id']
         degerlendirme_not = \
-            DegerlendirmeNot.objects.filter(sinav_id=sinav_id, ogrenci_id=ogrenci_id)[0]
+            DegerlendirmeNot.objects.get(sinav_id=sinav_id, ogrenci_id=ogrenci_id)
         self.current.task_data['onceki_puan'] = degerlendirme_not.puan
 
         title = '%s adlı öğrencinin % sınava ait notunu düzenleyiniz.' % (

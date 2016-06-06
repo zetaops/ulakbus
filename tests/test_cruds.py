@@ -44,7 +44,7 @@ class TestCase(BaseTestCase):
         self.client.post(model='Personel', cmd='add_edit_form')
         resp = self.client.post(model='Personel',
                                 cmd='save::list',
-                                form=dict(ad="Em1", tckn="12323121443"))
+                                form=dict(ad="Nuray ", tckn="12323121443", soyad='Söner'))
 
         # Eklenen kaydın, başlangıçtaki kayıtların sayısında değişiklik yapıp yapmadığını test eder.
         assert num_of_objects + 1 == len_1(resp.json['objects'])
@@ -99,17 +99,6 @@ class TestCase(BaseTestCase):
         self.client.post(model='Personel', cmd='list')
 
         # Query değerine göre personel kayıtlarını filtreler.
-        resp = self.client.post(model='Personel', query="1234567", wf="crud")
-
-        # Kayıtların sayısı 2'den küçük ise, yeni kayıtlar ekler.
-        if len(resp.json['objects']) < 2:
-            self.client.post(model='Personel', cmd='add_edit_form')
-            for i in range(9):
-                resp = self.client.post(model='Personel',
-                                        cmd='save::add_edit_form',
-                                        form=dict(ad="Per%s" % i, tckn="123456789%s" % i))
-            time.sleep(1)
-
         resp = self.client.post(model='Personel', query="12345678")
         assert len(resp.json['objects']) - 1 == len(Personel.objects.filter(tckn__startswith='12345678'))
 
