@@ -590,42 +590,68 @@ class BasariDurum(CrudView):
     class Meta:
         model = "OgrenciProgram"
 
+    def not_durum(self, ortalama):
+        harf_notu = ''
+
+        harflendirme = {
+            100: 'AA',
+            89: 'BA',
+            84: 'BB',
+            74: 'CB',
+            69: 'CC',
+            59: 'DC',
+            54: 'DD',
+            49: 'FD',
+            39: 'FF',
+        }
+        for key in sorted(harflendirme.keys()):
+            if key >= ortalama:
+                harf_notu = harflendirme[key]
+                break
+
+        return harf_notu
+
     def doneme_bazli_not_tablosu(self):
 
-        unit = self.current.role.unit
-        program = Program.objects.get(birim=unit)
+        # unit = self.current.role.unit
+        # program = Program.objects.get(birim=unit)
 
         ogrenci = self.current.role.get_user().ogrenci
-        ogrenci_program = OgrenciProgram.objects.get(program=program,
-                                                     ogrenci=ogrenci)
+        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
         donemler = [d.donem for d in ogrenci_program.OgrenciDonem]
-        donemler = sorted(donemler, key=lambda donem: donem.baslangic_tarihi)
+        # donemler = sorted(donemler, key=lambda donem: donem.baslangic_tarihi)
         # donemler = ogrenci_program.tarih_sirasiyla_donemler()
 
         donem_tablosu = list()
 
         for donem in donemler:
             donem_basari_durumu = [
-                ['Ders Kodu', 'Ders Adi', 'Sinav Notlari', 'Ortalama', 'Durum']
+                ['Ders Kodu', 'Ders Adi', 'Ogretim Elemani', 'Sinav Notlari', 'Ortalama', 'Not', 'Durum']
             ]
             ogrenci_dersler = OgrenciDersi.objects.filter(donem=donem,
                                                           ogrenci_program=ogrenci_program)
-            dersler = list()
             for d in ogrenci_dersler:
                 dersler = list()
                 dersler.append(d.ders.kod)
-                dersler.append(d.ders_adi())
+                dersler.append("""**%s**
+                \n**TU:** %s - **Krd:** %s - **AKTS:** %s""" % (d.ders_adi(), "2+0", '2', '4'))
                 degerlendirmeler = DegerlendirmeNot.objects.filter(
                     ogrenci_no=ogrenci_program.ogrenci_no, donem=donem.ad, ders=d.ders)
-                notlar = [(d.sinav.get_tur_display(), d.puan) for d in degerlendirmeler]
+                notlar = [(deg.sinav.get_tur_display(),
+                           deg.puan,
+                           deg.sinav.sube_ortalamasi,
+                           deg.sinav.tarih) for deg in degerlendirmeler]
+                dersler.append('Ogretim Elemani')
                 if len(notlar) > 0:
-                    dersler.append(
-                        " - ".join(["**%s:** %s" % (sinav, puan) for sinav, puan in notlar]))
+                    dersler.append(''.join(["""**%s:** %s, **Ort:** %s, **Tarih:** %s
+                    \n""" % (sinav, puan, ort, tarih) for sinav, puan, ort, tarih in notlar]))
                     notlar = list(zip(*notlar)[1])
                     ortalama = sum(notlar) / len(notlar)
                     dersler.append("{0:.2f}".format(ortalama))
-                    dersler.append('Gecti' if ortalama > 50 else 'Kaldi')
+                    dersler.append(self.not_durum(ortalama))
+                    dersler.append('Gecti' if ortalama > 59 else 'Kaldi')
                 else:
+                    dersler.append('')
                     dersler.append('')
                     dersler.append('')
                     dersler.append('')
