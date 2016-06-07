@@ -501,6 +501,24 @@ class Sinav(Model):
     # arama amacli
     ders = Ders()
     puan = field.Integer("Puan", index=True)
+    sube_ortalamasi = field.Float("Ortalama", default=0)
+
+    def sube_ortalama_hesapla(self):
+        degerlendirmeler = DegerlendirmeNot.objects.filter(sinav=self)
+        puanlar = [deg.puan for deg in degerlendirmeler]
+        self.sube_ortalamasi = sum(puanlar) / len(puanlar)
+        self.save()
+
+    def post_save(self):
+        """
+        Degerlendirme onaylandiysa, Sube ortalama hesaplanir. Eger, false geldiyse
+        Sube ortalama hesaplamasi sifirlanir.
+        """
+        if self.degerlendirme:
+            self.sube_ortalama_hesapla()
+        else:
+            self.sube_ortalamasi = 0
+        self.save()
 
     class Meta:
         app = 'Ogrenci'
