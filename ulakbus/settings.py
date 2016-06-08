@@ -92,6 +92,7 @@ OBJECT_MENU = {
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
 
+
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
          'category': 'Hitap İşlemleri', 'wf': 'personel_hizmet_cetveli'},
@@ -167,7 +168,8 @@ VIEW_URLS.update({
     'get_current_user': 'ulakbus.views.system.GetCurrentUser',
     'dashboard': 'ulakbus.views.system.UlakbusMenu',
     'menu': 'ulakbus.views.system.UlakbusMenu',
-    'ders_arama': 'ulakbus.views.ogrenci.ogrenci.ders_arama'
+    'ders_arama': 'ulakbus.views.ogrenci.ogrenci.ders_arama',
+    'sube_arama': 'ulakbus.views.ogrenci.ogrenci_not_duzenleme.sube_arama'
 })
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
