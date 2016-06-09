@@ -111,13 +111,14 @@ class KatilimDurumu(CrudView):
                 derse_katilim = DersKatilimi.objects.get(sube_id=sube_key,
                                                          ogrenci=ogrenci_dersi.ogrenci)
                 katilim_durumu = derse_katilim.katilim_durumu
+                aciklama = derse_katilim.aciklama
             except ObjectDoesNotExist:
                 katilim_durumu = ""
 
             _form.Ogrenciler(ad_soyad='%s %s' % (ogrenci_dersi.ogrenci.ad, ogrenci_dersi.ogrenci.soyad),
                              ogrenci_no=ogrenci_dersi.ogrenci_program.ogrenci_no,
                              katilim_durumu=katilim_durumu, ogrenci_key=ogrenci_dersi.ogrenci.key,
-                             sube_key=ogrenci_dersi.sube.key)
+                             sube_key=ogrenci_dersi.sube.key, aciklama=aciklama)
 
         _form.onizleme = fields.Button("Önizleme", cmd="kontrol")
         self.form_out(_form)
@@ -152,6 +153,7 @@ class KatilimDurumu(CrudView):
             ders_katilimi, is_new = DersKatilimi.objects.get_or_create(
                 ogrenci_id=katilim['ogrenci_key'], sube_id=katilim['sube_key'])
             ders_katilimi.katilim_durumu = katilim['katilim_durumu']
+            ders_katilimi.aciklama = katilim['aciklama']
             ders_katilimi.save()
 
     def bilgi_ver(self):

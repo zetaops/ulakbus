@@ -59,7 +59,7 @@ class TestCase(BaseTestCase):
         # Şube seçilir.
         resp = self.client.post(form={'sube': "VgX4EFavEABkgaahcuxPyKbUog1", 'sec': 1})
 
-        resp.json['forms']['model']['Ogrenciler'][0]['katilim_durumu'] = 75
+        resp.json['forms']['model']['Ogrenciler'][0]['katilim_durumu'] = 80
         resp.json['forms']['model']['Ogrenciler'][0]['aciklama'] = 'Devamlı'
 
         sube_key = resp.json['forms']['model']['Ogrenciler'][0]['sube_key']
@@ -69,16 +69,15 @@ class TestCase(BaseTestCase):
         resp = self.client.post(
             form={'onizleme': 1, 'cmd': 'kontrol', 'Ogrenciler': resp.json['forms']['model']['Ogrenciler']})
 
-        ilk_ders_katilimi = DersKatilimi.objects.get(sube_id=sube_key, okutman_id=get_okutman_key(),
-                                                     ogrenci_id=ogrenci_key)
+        ilk_ders_katilimi = DersKatilimi.objects.get(sube_id=sube_key, ogrenci_id=ogrenci_key)
 
         # Öğrenciye ait katılım formu kaydedilir.
         resp = self.client.post(form={'kaydet': 1, 'Ogrenciler': resp.json['forms']['model']['Ogrenciler']})
 
-        son_ders_katilimi = DersKatilimi.objects.get(sube_id=sube_key, okutman_id=get_okutman_key(),
-                                                     ogrenci_id=ogrenci_key)
+        son_ders_katilimi = DersKatilimi.objects.get(sube_id=sube_key, ogrenci_id=ogrenci_key)
 
         assert 'msgbox' in resp.json
+
         # Değiştirilen katılım durumunun kaydedilip kaydedilmediği test edilir.
         assert son_ders_katilimi.katilim_durumu != ilk_ders_katilimi.katilim_durumu \
-               and son_ders_katilimi.katilim_durumu == 75
+               and son_ders_katilimi.katilim_durumu == 80
