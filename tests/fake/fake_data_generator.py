@@ -634,7 +634,7 @@ class FakeDataGenerator:
         try:
             dk = DersKatilimi()
             dk.katilim_durumu = float(random.randint(50, 100))
-            dk.ders = sube
+            dk.sube = sube
             dk.ogrenci = ogrenci
             dk.okutman = okutman
 

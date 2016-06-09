@@ -704,7 +704,7 @@ class DersKatilimi(Model):
 
     # TODO: Neden float, soralım?
     katilim_durumu = field.Integer("Katılım Durumu", index=True)
-    ders = Sube()
+    sube = Sube()
     ogrenci = Ogrenci()
     okutman = Okutman()
 
@@ -724,7 +724,7 @@ class DersKatilimi(Model):
 
         """
 
-        return six.text_type(self.ders.ders)
+        return six.text_type(self.sube.ders)
 
     sube_dersi.title = 'Ders'
 
