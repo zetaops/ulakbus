@@ -18,6 +18,7 @@ from collections import OrderedDict
 
 
 from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.lib.common import get_akademik_takvim
 from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI
 from ulakbus.models.ogrenci import AkademikTakvim, Unit
 from zengine.views.crud import CrudView
@@ -66,15 +67,6 @@ class AkademikTakvimView(CrudView):
         """
         self.current.output['client_cmd'] = ['show', ]
         etkinlikler = []
-
-        def get_akademik_takvim(unit):
-            try:
-                akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)
-                return akademik_takvim
-            except ObjectDoesNotExist:
-                yoksis_key = unit.parent_unit_no
-                birim = Unit.objects.get(yoksis_no=yoksis_key)
-                return get_akademik_takvim(birim)
 
         akademik_takvim = get_akademik_takvim(self.current.role.unit)
         for e in akademik_takvim.Takvim:
