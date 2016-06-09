@@ -5,18 +5,19 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+import datetime
+import random
+
 from ulakbus.models.auth import Unit
+from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
+from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav
 from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
-from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.personel import Personel
-from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
-from .general import ints, gender, marital_status, blood_type, create_fake_geo_data
+from user import new_user
 from .general import driver_license_class, id_card_serial, birth_date
 from .general import fake
-from user import new_user
-import random
-import datetime
+from .general import ints, gender, marital_status, blood_type, create_fake_geo_data
 
 __author__ = 'Halil İbrahim Yılmaz'
 
@@ -637,6 +638,10 @@ class FakeDataGenerator:
             dk.sube = sube
             dk.ogrenci = ogrenci
             dk.okutman = okutman
+            if dk.katilim_durumu >= 60:
+                dk.aciklama = "Devamlı"
+            else:
+                dk.aciklama = "Devamsız"
 
             dk.save()
             return dk

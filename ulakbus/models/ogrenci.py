@@ -707,6 +707,7 @@ class DersKatilimi(Model):
     sube = Sube()
     ogrenci = Ogrenci()
     okutman = Okutman()
+    aciklama = field.String("Açıklama")
 
     class Meta:
         app = 'Ogrenci'
