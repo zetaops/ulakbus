@@ -7,55 +7,48 @@
 
 from pyoko import ListNode
 from pyoko import fields as furkan
+from pyoko.exceptions import ObjectDoesNotExist
 from zengine.views.crud import CrudView
 from zengine.forms import fields
 from zengine.forms import JsonForm
 from ulakbus.views.ders.ders import prepare_choices_for_model
-from ulakbus.models.ogrenci import AkademikTakvim, OgrenciProgram, Unit, Program, User
+from ulakbus.models.ogrenci import OgrenciProgram, Unit, Program, AkademikTakvim
 from datetime import date
 import time
 from ulakbus.lib.common import get_akademik_takvim
 
 
-class ProgramDersForm(JsonForm):
-    """
-    Kopyalanan dersleri tabloda gösterirken kullanılan form.
-
-    """
-
+class OnKayitSilForm(JsonForm):
     class Meta:
-        inline_edit = ['secim']
+        inline_edit = ['secim', 'action_secim']
 
     class SilmeForm(ListNode):
         secim = fields.Boolean("Seçim", type="checkbox")
         birim_ad = fields.String("Ad", hidden=True)
         tanim = fields.String("Tanım", index=True)
-        detay = fields.String("Detaylı Birim Seç", index=True)
-        durum = fields.Integer("Durum", hidden=True)
         form_sira = fields.Integer("Form Sırası", hidden=True)
-        # ogrenci_sayisi = fields.String("Silinecek Öğrenci Sayısı", index=True)
+        ogrenci_sayisi = fields.Integer("Silinecek Öğrenci Sayısı", index=True)
+        action_secim = fields.Boolean("Action Seçim", type="checkbox")
         birim_no = fields.String("Birim No", hidden=True)
-        # kod = fields.String("Kod", index=True)
         key = fields.String('Key', hidden=True)
 
 
+class OnKayitSilUyariForm(JsonForm):
+    class UyariForm(ListNode):
+        birim = fields.String("Birim Adı", index=True)
+
+
 class OnKayitSil(CrudView):
-    """Okutman Not Girişi
-
-    Okutmanların öğrenci devamsızlıklarını sisteme girebilmesini
-    sağlayan workflowa ait metdodları barındıran sınıftır.
-
-    """
-
     class Meta:
-        model = "Program"
+        model = "Unit"
 
     def on_kayit_silme_tercih_form(self):
 
-        _form = ProgramDersForm(current=self.current,
-                                title="Kaydı Gerçekleşmeyen Ön Kayıt Öğrencilerini Silmek İstediğiniz Birimi Seçiniz")
+        _form = OnKayitSilForm(current=self.current,
+                               title="Kaydı Gerçekleşmeyen Ön Kayıt Öğrencilerini Silmek İstediğiniz Birimi Seçiniz")
         parent = Unit.objects.get(parent_unit_no=0)
         birimler = Unit.objects.filter(parent_unit_no=parent.yoksis_no)
+        silinecek_ogrenci_sayisi = len(OgrenciProgram.objects.filter(durum=1))
 
         birim_type = []
 
@@ -63,257 +56,289 @@ class OnKayitSil(CrudView):
             if not birim.unit_type in birim_type and birim.is_active:
                 birim_type.append(birim.unit_type)
 
-        _form.SilmeForm(secim=False, tanim="Üniversite Çapında Tüm Öğrencileri Sil", birim_ad="Üniversite", durum=0)
-
+        _form.SilmeForm(secim=False, tanim="Üniversite Çapında Tüm Öğrencileri Sil", birim_ad="Üniversite",
+                        form_sira=1, ogrenci_sayisi=silinecek_ogrenci_sayisi, action_secim=False)
+        silinecek_ogrenci_sayisi = 0
         for type in birim_type:
             if not type in ['İdari', 'Rektörlük', 'Araştırma ve Uygulama Merkezleri']:
                 # _form.SilmeForm(secim=False, tanim=type, birim_ad=type, durum=0, form_sira = 1)
+                birimler = Unit.objects.filter(unit_type=type)
+                for birim in birimler:
+                    silinecek_ogrenci_sayisi += len(
+                        OgrenciProgram.objects.filter(durum=1, bagli_oldugu_ana_birim=birim))
                 _form.SilmeForm(secim=False, tanim=type + " Çapında Tüm Öğrencileri Sil",
-                                detay=type + " Seç",
-                                birim_ad=type, durum= 0, form_sira=1)
-        _form.duzenle = fields.Button("İlerle")
+                                birim_ad=type, form_sira=2, ogrenci_sayisi=silinecek_ogrenci_sayisi, action_secim=False)
+        _form.duzenle = fields.Button("Seçilen Birimleri Sil")
         self.form_out(_form)
 
     def secilen_birim_kontrol(self):
-        self.current.task_data["secilen"] = self.current.input['form']['SilmeForm']
-        for birim in self.current.task_data["secilen"]:
+
+        self.current.task_data["gelen_form"] = self.current.input['form']['SilmeForm']
+        self.current.task_data["secim_kontrol"] = True
+        self.current.task_data["secim_var"] = False
+        self.current.task_data["action"] = False
+        for birim in self.current.task_data["gelen_form"]:
             if birim['secim']:
-                if birim['durum'] == 1:
-                    self.current.task_data["secim_kontrol"] = True
-                else:
-                    self.current.task_data["secim_kontrol"] = False
+                self.current.task_data["secim_kontrol"] = False
+                self.current.task_data["secim_var"] = True
+            if birim['action_secim']:
+                self.current.task_data["action"] = True
+                self.current.task_data["secim_kontrol"] = False
 
     def on_kayit_silme_tercih_form_2(self):
 
         self.current.task_data["gelen_form"] = self.current.input['form']['SilmeForm']
         for birim in self.current.task_data["gelen_form"]:
-            if birim['secim']:
+            if birim['action_secim']:
                 unit_type = birim['birim_ad']
                 # self.current.task_data["secilen_birim"] = unit_type
                 # secilen_birim = Unit.objects.filter(unit_type =unit_type)
         secilen_birim = Unit.objects.filter(unit_type=unit_type, is_active=True)
 
-        _form = ProgramDersForm(current=self.current, title="Silinecek Birimi Seçiniz")
+        _form = OnKayitSilForm(current=self.current, title="Silinecek Birimi Seçiniz")
         for secilen_alt_birim in secilen_birim:
             if secilen_alt_birim.is_active:
-                # _form.SilmeForm(secim=False, tanim=secilen_alt_birim.name, birim_ad=secilen_alt_birim.name, durum=0,
-                #                 form_sira=2, key=secilen_alt_birim.key)
+                silinecek_ogrenci_sayisi = len(OgrenciProgram.objects.filter(durum=1,
+                                                                             bagli_oldugu_ana_birim=secilen_alt_birim))
                 _form.SilmeForm(secim=False, tanim=secilen_alt_birim.name + "'nde Bulunan Tüm Öğrencileri Sil",
-                                detay= "Bu Fakülteden Bölüm Seç",
-                                birim_ad=secilen_alt_birim.name, durum=0, form_sira=1, key=secilen_alt_birim.key)
+                                birim_ad=secilen_alt_birim.name, form_sira=3,
+                                key=secilen_alt_birim.key, ogrenci_sayisi=silinecek_ogrenci_sayisi, action_secim=False)
 
-        _form.sec = fields.Button("Seç")
+        _form.sec = fields.Button("Seçilen Birimleri Sil")
         self.form_out(_form)
-
-        # _choices = prepare_choices_for_model(Unit, is_active=True, unit_type=unit_type)
-        #
-        # _form.program = fields.Integer(choices=_choices)
-
-
-        # _form = ProgramDersForm(current=self.current,
-        #                         title="Kaydı Gerçekleşmeyen Ön Kayıt Öğrencilerini Silmek İstediğiniz Birimi Seçiniz")
-        #
-        # for birim in secilen_birim:
-        #     if birim.is_active:
-        #         _form.SilmeForm(secim=False, birim_ad=birim.name)
-        # _form.duzenle = fields.Button("Onayla")
-        # self.form_out(_form)
 
     def secilen_birim_kontrol_2(self):
         self.current.task_data["secilen"] = self.current.input['form']['SilmeForm']
+        self.current.task_data["secim_kontrol"] = True
+        self.current.task_data["secim_var"] = False
+        self.current.task_data["action"] = False
         for birim in self.current.task_data["secilen"]:
             if birim['secim']:
-                if birim['durum'] == 1:
-                    self.current.task_data["secim_kontrol"] = True
-                else:
-                    self.current.task_data["secim_kontrol"] = False
+                self.current.task_data["secim_kontrol"] = False
+                self.current.task_data["secim_var"] = True
+            if birim['action_secim']:
+                self.current.task_data["action"] = True
+                self.current.task_data["secim_kontrol"] = False
 
     def on_kayit_silme_tercih_form_3(self):
 
         self.current.task_data["gelen_form"] = self.current.input['form']['SilmeForm']
         for birim in self.current.task_data["gelen_form"]:
-            if birim['secim']:
-                # unit_type = birim['birim_ad']
+            if birim['action_secim']:
                 birim_key = birim['key']
-                # self.current.task_data["secilen_birim"] = unit_type
-                # secilen_birim = Unit.objects.filter(unit_type =unit_type)
 
         secilen_birim = Unit.objects.get(birim_key)
 
         secilenler = Unit.objects.filter(parent_unit_no=secilen_birim.yoksis_no)
-        _form = ProgramDersForm(current=self.current, title="Silinecek Birimi Seçiniz")
+        _form = OnKayitSilForm(current=self.current, title="Silinecek Birimi Seçiniz")
         for secilen_alt_birim in secilenler:
+            # if secilen_alt_birim.is_active and len(Program.objects.filter(bolum=secilen_alt_birim))>0:
             if secilen_alt_birim.is_active:
-                # _form.SilmeForm(secim=False, tanim=secilen_alt_birim.name, birim_ad=secilen_alt_birim.name, durum=0,
-                #                 form_sira=3, key=secilen_alt_birim.key)
+                silinecek_ogrenci_sayisi = 0
+                silinecek_ogrenci_sayisi = len(OgrenciProgram.objects.filter(durum=1,
+                                                                             bagli_oldugu_bolum=secilen_alt_birim))
                 _form.SilmeForm(secim=False,
                                 tanim=secilen_alt_birim.name + "'nde Bulunan Tüm Öğrencileri Sil",
-                                detay="Bu Bölümden Program Seç",birim_ad=secilen_alt_birim.name, durum=0, form_sira=3, key=secilen_alt_birim.key)
-        _form.sec = fields.Button("Seç")
+                                birim_ad=secilen_alt_birim.name, form_sira=4, key=secilen_alt_birim.key,
+                                ogrenci_sayisi=silinecek_ogrenci_sayisi, action_secim=False)
+        _form.sec = fields.Button("Seçilen Birimleri Sil")
         self.form_out(_form)
-
-        # self.current.task_data['birim'] = self.current.input['form']['program']
-        # birim = Unit.objects.get(self.current.task_data['birim'])
-        #
-        # _form = JsonForm(current=self.current, title="Silinecek Birimi Seçiniz")
-        # _choices = prepare_choices_for_model(Unit, is_active=True, parent_unit_no=birim.yoksis_no)
-        #
-        # _form.program = fields.Integer(choices=_choices)
-        # _form.sec = fields.Button("Seç")
-        # self.form_out(_form)
 
     def secilen_birim_kontrol_3(self):
         self.current.task_data["secilen"] = self.current.input['form']['SilmeForm']
+        self.current.task_data["secim_kontrol"] = True
+        self.current.task_data["secim_var"] = False
+        self.current.task_data["action"] = False
         for birim in self.current.task_data["secilen"]:
             if birim['secim']:
-                if birim['durum'] == 1:
-                    self.current.task_data["secim_kontrol"] = True
-                else:
-                    self.current.task_data["secim_kontrol"] = False
+                self.current.task_data["secim_kontrol"] = False
+                self.current.task_data["secim_var"] = True
+            if birim['action_secim']:
+                self.current.task_data["action"] = True
+                self.current.task_data["secim_kontrol"] = False
 
     def on_kayit_silme_tercih_form_4(self):
 
         self.current.task_data["gelen_form"] = self.current.input['form']['SilmeForm']
         for birim in self.current.task_data["gelen_form"]:
-            if birim['secim']:
-                # unit_type = birim['birim_ad']
+            if birim['action_secim']:
                 birim_key = birim['key']
-                # self.current.task_data["secilen_birim"] = unit_type
-                # secilen_birim = Unit.objects.filter(unit_type =unit_type)
 
         secilen_birim = Unit.objects.get(birim_key)
 
         secilenler = Unit.objects.filter(parent_unit_no=secilen_birim.yoksis_no)
-        _form = ProgramDersForm(current=self.current, title="Silinecek Birimi Seçiniz")
+        _form = OnKayitSilForm(current=self.current, title="Silinecek Birimi Seçiniz")
         for secilen_alt_birim in secilenler:
             if secilen_alt_birim.is_active:
-                # _form.SilmeForm(secim=False, tanim=secilen_alt_birim.name, birim_ad=secilen_alt_birim.name, durum=0,
-                #                 form_sira=3, key=secilen_alt_birim.key)
+                try:
+                    program = Program.objects.get(yoksis_no=secilen_alt_birim.yoksis_no)
+                except:
+                    program = secilen_alt_birim
+
+                silinecek_ogrenci_sayisi = len(OgrenciProgram.objects.filter(durum=1, program=program))
                 _form.SilmeForm(secim=False,
                                 tanim=secilen_alt_birim.name + "'nde Bulunan Tüm Öğrencileri Sil",
-                                birim_ad=secilen_alt_birim.name, durum=0, form_sira=3)
-        _form.sec = fields.Button("Onayla")
+                                birim_ad=secilen_alt_birim.name, form_sira=5, ogrenci_sayisi=silinecek_ogrenci_sayisi
+                                , action_secim=False)
+        _form.sec = fields.Button("Seçilen Birimleri Sil")
         self.form_out(_form)
-
-
-        # self.current.task_data['birim_id'] = self.current.input['form']['program']
-        # birim = Unit.objects.get(self.current.task_data['birim_id'])
-        #
-        # _form = ProgramDersForm(current=self.current,
-        #                         title="Kaydı Gerçekleşmeyen Seçiniz")
-        #
-        # birimler = Unit.objects.filter(parent_unit_no=birim.yoksis_no)
-        # for birim in birimler:
-        #     _form.SilmeForm(secim=False, tanim=birim.name, birim_ad=birim.name, durum=0)
-        #
-        # _form.duzenle = fields.Button("İlerle")
-        # self.form_out(_form)
-
-
-
-        # _form = JsonForm(current=self.current, title="Silinecek Birimi Seçiniz")
-        # _choices = prepare_choices_for_model(Unit, is_active=True, parent_unit_no=birim.yoksis_no)
-        #
-        # _form.program = fields.Integer(choices=_choices)
-        # _form.sec = fields.Button("Seç")
-        # self.form_out(_form)
-
-    def kayit_tarihi_kontrol(self):
-        self.current.task_data["kayit_tarih_kontrol"] = True
-
-        # self.current.task_data["birim"] = self.current.input['form']['SilmeForm']
-        # for secilen_birim in self.current.task_data["birim"]:
-        #     if secilen_birim['secim'] == True:
-        #         birim = secilen_birim['birim_ad']
-        #
-        # bitis_tarihi = get_akademik_takvim(birim)
-
-        # if date.today() > ders_kayit_son_tarih:
-        #     self.current.task_data["kayit_tarih_kontrol"] = True
-        #
-        # else:
-        #     self.current.task_data["kayit_tarih_kontrol"] = False
-
-        # en_son_bitis_tarihi=[]
-        # son_kayit_tarihleri = AkademikTakvim.objects.filter(birim=birim)
-        # for son_tarih in son_kayit_tarihleri:
-        #     en_son_bitis_tarihi.append(son_tarih.Takvim[9].bitis)
-        # ders_kayit_son_tarih = max(en_son_bitis_tarihi)
-
-    def silinecek_ogrenci_kontrol(self):
-
-        self.current.task.data["secim"] = True
-
-        # self.current.task_data["birim"] = self.current.input['form']['SilmeForm']
-        # for secilen_birim in self.current.task_data["birim"]:
-        #     if secilen_birim['secim'] == True:
-        #         birim = secilen_birim['birim_ad']
-        #         form_sira = secilen_birim['form_sira']
-        #
-        # if form_sira == 1:
-        #
-        #     if len(OgrenciProgram.objects.filter(durum=1, bagli_oldugu_ana_birim_turu=birim)) > 0:
-        #         self.current.task_data["silinecek_ogrenci_kontrol"] = True
-        #     else:
-        #         self.current.task_data["silinecek_ogrenci_kontrol"] = False
-        #
-        # if form_sira == 2:
-        #
-        #     if len(OgrenciProgram.objects.filter(durum=1, bagli_oldugu_ana_birim=birim)) > 0:
-        #         self.current.task_data["silinecek_ogrenci_kontrol"] = True
-        #     else:
-        #         self.current.task_data["silinecek_ogrenci_kontrol"] = False
-        #
-        # if form_sira == 3:
-        #
-        #     if len(OgrenciProgram.objects.filter(durum=1, bolum=birim)) > 0:
-        #         self.current.task_data["silinecek_ogrenci_kontrol"] = True
-        #     else:
-        #         self.current.task_data["silinecek_ogrenci_kontrol"] = False
 
     def personel_onay(self):
 
-        # self.current.output['msgbox'] = {
-        #     'type': 'info', "title": 'Onay',
-        #     "msg": 'Seçilen Birimlerdeki Kaydı Gerçekleşmeyen Öğrencileri Silmek İstiyor musunuz?'
-        # }
+        self.current.task_data["secilen"] = self.current.input['form']['SilmeForm']
+        _form = OnKayitSilUyariForm(current=self.current, title="Onay Mesajı")
+        _form.help_text = """Aşağıda gösterilen birim veya birimlerde bulunan
+                             öğrencileri silmek üzeresiniz. Bu işlem geri alınamaz!
+                             Onaylamak için Tamamla butonuna basınız.
+                             İptal edip geri dönmek istiyorsanız İptal butonuna basınız."""
 
-        _form = JsonForm(current=self.current, title="Uyarı Mesajı")
-        _form.help_text = """Seçilen birimdeki öğrencileri silmek üzeresiniz. Bu işlemi
-        onaylamak için Tamamla butonuna basınız. İptal edip geri dönmek istiyorsanız
-        İptal butonuna basınız."""
-        _form.geri_don = fields.Button("Tamamla", flow="secilen_on_kayit_sil")
+        for birim in self.current.task_data["secilen"]:
+            if birim['secim']:
+                _form.UyariForm(birim=birim['birim_ad'])
+
+        _form.tamamla = fields.Button("Tamamla", flow="kayit_tarihi_kontrol_sil")
+        _form.iptal = fields.Button("İptal", flow="on_kayit_silme_tercih_form")
         self.form_out(_form)
 
-    def secilen_on_kayit_sil(self):
+    def kayit_tarihi_kontrol_sil(self):
 
-        secilen = self.current.task_data["secilen"][0]
-        birim = secilen['birim_ad']
+        secilen_birimler = []
+        form_sirasi = []
+        self.current.task_data["birim"] = self.current.input['form']['SilmeForm']
+        for secilen_birim in self.current.task_data["birim"]:
+            if secilen_birim['secim'] == True:
+                secilen_birimler.append(secilen_birim['birim_ad'])
+                dene = secilen_birim['form_sira']
+                form_sirasi.append(dene)
 
-        silinecek_ogrenciler = OgrenciProgram.objects.filter(durum=1, bagli_oldugu_ana_birim_turu=birim)
+        secilen_birim_sayisi = len(secilen_birimler)
 
-        for silinecek_ogrenci in silinecek_ogrenciler:
-            silinecek_ogrenci.durum = 0
-            silinecek_ogrenci.save()
+        self.current.task_data["kayit_tarih_kontrol"] = True
+        kayit_tarihi_bitmeyenler = []
+
+        if 1 in form_sirasi:
+            on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1)
+            for on_kayit_ogrenci in on_kayit_ogrenciler:
+                son_kayit_tarihi, birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                if date.today() < son_kayit_tarihi:
+                    self.current.task_data["kayit_tarih_kontrol"] = False
+                    kayit_tarihi_bitmeyenler.append(birim.name)
+                    # if self.current.task_data["kayit_tarih_kontrol"]:
+                    #     on_kayit_ogrenciler.delete()
+                    #     on_kayit_ogrenciler.save()
+
+        else:
+            if 2 in form_sirasi:
+                for i in range(0, secilen_birim_sayisi):
+                    on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1)
+
+                    # bagli_oldugu_ana_birim_turu = secilen_birimler[i]
+
+                    for on_kayit_ogrenci in on_kayit_ogrenciler:
+                        son_kayit_tarihi, birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                        if date.today() < son_kayit_tarihi:
+                            self.current.task_data["kayit_tarih_kontrol"] = False
+                            kayit_tarihi_bitmeyenler.append(birim.name)
+                            # if self.current.task_data["kayit_tarih_kontrol"]:
+                            #     on_kayit_ogrenciler.delete()
+                            #     on_kayit_ogrenciler.save()
+
+            if 3 in form_sirasi:
+                for i in range(0, secilen_birim_sayisi):
+                    on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1,
+                                                                        bagli_oldugu_ana_birim=secilen_birimler[i])
+                    for on_kayit_ogrenci in on_kayit_ogrenciler:
+                        son_kayit_tarihi, birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                        if date.today() < son_kayit_tarihi:
+                            self.current.task_data["kayit_tarih_kontrol"] = False
+                            kayit_tarihi_bitmeyenler.append(birim.name)
+                            # if self.current.task_data["kayit_tarih_kontrol"]:
+                            #     on_kayit_ogrenciler.delete()
+                            #     on_kayit_ogrenciler.save()
+
+            if 4 in form_sirasi:
+                for i in range(0, secilen_birim_sayisi):
+                    programlar = Program.objects.filter(bolum=secilen_birimler[i])
+                    son_kayit_tarihi, birim = get_akademik_takvim(secilen_birimler[i])
+                    if date.today() < son_kayit_tarihi:
+                        self.current.task_data["kayit_tarih_kontrol"] = False
+                        kayit_tarihi_bitmeyenler.append(birim.name)
+                        # if self.current.task_data["kayit_tarih_kontrol"]:
+                        #     for program in programlar:
+                        #         OgrenciProgram.objects.filter(durum=1,program=program).delete()
+                        #         OgrenciProgram.objects.filter(durum=1, program=program).save()
+
+            if 5 in form_sirasi:
+                for i in range(0, secilen_birim_sayisi):
+
+                    on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1, program=secilen_birimler[i])
+                    son_kayit_tarihi, birim = get_akademik_takvim(secilen_birimler[i].bolum)
+                    if date.today() < son_kayit_tarihi:
+                        self.current.task_data["kayit_tarih_kontrol"] = False
+                        kayit_tarihi_bitmeyenler.append(birim.name)
+                        # if self.current.task_data["kayit_tarih_kontrol"]:
+                        #     on_kayit_ogrenciler.delete()
+                        #     on_kayit_ogrenciler.save()
+
+        self.current.task_data['kayit_tarihi_bitmeyenler'] = kayit_tarihi_bitmeyenler
+
+    # def secilen_on_kayit_sil(self):
+    #
+    #     secilen = self.current.task_data["secilen"][0]
+    #     birim = secilen['birim_ad']
+    #
+    #     silinecek_ogrenciler = OgrenciProgram.objects.filter(durum=1, bagli_oldugu_ana_birim_turu=birim)
+    #
+    #     for silinecek_ogrenci in silinecek_ogrenciler:
+    #         silinecek_ogrenci.durum = 0
+    #         silinecek_ogrenci.save()
+
+    def secim_kontrol_uyari(self):
+        _form = JsonForm(current=self.current, title="Uyarı Mesajı")
+        _form.help_text = """Devam edebilmek için en az bir birim seçmelisiniz.
+                             Geriye dönmek için 'Geri Dön' butonuna tıklayınız."""
+        _form.geri_don = fields.Button("Geri Dön", flow="on_kayit_silme_tercih_form")
+        self.form_out(_form)
 
     def personel_bilgilendir(self):
 
         _form = JsonForm(current=self.current, title="Uyarı Mesajı")
         _form.help_text = """Seçilen birimdeki öğrenciler başarıyla silindi."""
-        _form.geri_don = fields.Button("Tamamla", flow="secilen_on_kayit_sil")
         self.form_out(_form)
 
-    def personel_silme_uyari(self):
-
-        self.current.output['msgbox'] = {
-            'type': 'warning', "title": 'Uyarı Mesajı',
-            "msg": 'Silinecek .'
-        }
+    # def personel_silme_uyari(self):
+    #
+    #     self.current.output['msgbox'] = {
+    #         'type': 'warning', "title": 'Uyarı Mesajı',
+    #         "msg": 'Silinecek .'
+    #     }
 
     def personel_kayit_uyari(self):
 
-        self.current.output['msgbox'] = {
-            'type': 'warning', "title": 'Uyarı Mesajı',
-            "msg": """Kayıt işlemi devam etmektedir! Silme işlemini gerçekleştirebilmek
-                      için kayıt işleminin bitmesini bekleyiniz."""
-        }
+        _form = OnKayitSilUyariForm(current=self.current, title="Uyarı Mesajı")
+        _form.help_text = """Aşağıdaki birim veya birimlerde kayıt işlemi hala devam etmektedir!
+                             Kayıt işlemi bitmeyen birimlerde silme işlemi yapılamaz. Lütfen
+                             kayıt işleminin bitmesini bekleyiniz."""
+        for bitmeyen_birim in self.current.task_data['kayit_tarihi_bitmeyenler']:
+            _form.UyariForm(birim=bitmeyen_birim)
+
+        _form.geri_don = fields.Button("Geri Dön", flow="on_kayit_silme_tercih_form")
+        self.form_out(_form)
+
+
+def get_akademik_takvim(unit):
+    """
+
+    Args:
+        unit:
+
+    Returns:
+
+    """
+    try:
+        akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)
+        return (akademik_takvim, unit)
+    except ObjectDoesNotExist:
+        yoksis_key = unit.parent_unit_no
+        birim = Unit.objects.get(yoksis_no=yoksis_key)
+        return get_akademik_takvim(birim)

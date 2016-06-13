@@ -601,7 +601,12 @@ class OgrenciProgram(Model):
     danisman = Personel()
     program = Program()
     ogrenci = Ogrenci()
+    bagli_oldugu_bolum = Unit("Bölüm")
+    bagli_oldugu_ana_birim = Unit("Ana Birim")
 
+
+    # bagli_oldugu_ana_birim_turu = field.String("Bağlı Olduğu Ana Birim Türü", index=True)
+    # bagli_oldugu_ana_birim = field.String("Bağlı Olduğu Ana Birim", index=True)
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Öğrenci Programı"
