@@ -225,6 +225,41 @@ class Donem(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.baslangic_tarihi)
 
+    @classmethod
+    def en_son_kaydedilen_bahar_donemi(cls):
+        """
+        Returns:
+             Veritabanında kayıtlı olan en son bahar dönemini
+
+        """
+
+        donemler = cls.objects.filter()
+        for donem in donemler:
+            if all(donem.bitis_tarihi.year >= donm.bitis_tarihi.year for donm in donemler):
+                return donem
+
+    @classmethod
+    def en_son_kaydedilen_guz_donemi(cls):
+        """
+        Returns:
+             Veritabanında kayıtlı olan en son güz dönemini
+        """
+        en_son_kaydedilen_bahar_donemi = cls.en_son_kaydedilen_bahar_donemi()
+        en_son_kaydedilen_guz_donemi_yili = en_son_kaydedilen_bahar_donemi.bitis_tarihi.year - 1
+        donemler = cls.objects.filter()
+        lst_donem = [donem for donem in donemler if
+                     donem.baslangic_tarihi.year == en_son_kaydedilen_guz_donemi_yili and donem.ad == 'Güz Dönemi']
+        if len(lst_donem) == 1:
+            return lst_donem[0]
+
+        else:
+            if not len(lst_donem):
+                raise Exception(
+                    '{0} yılına ait güz dönemi kayıtlı değildir.'.format(en_son_kaydedilen_guz_donemi_yili))
+            else:
+                raise Exception(
+                    '{0} yılına ait birden fazla güz dönemi kayıtlıdır.'.format(en_son_kaydedilen_guz_donemi_yili))
+
 
 class Program(Model):
     """Program Modeli

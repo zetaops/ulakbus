@@ -3,6 +3,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from pyoko.exceptions import ObjectDoesNotExist
+
 from ulakbus.models import Donem
 from zengine import forms
 from zengine.forms import fields
@@ -15,7 +17,7 @@ class DonemForm(forms.JsonForm):
 
     """
 
-    guz_baslangic_tarihi = fields.Date("Başlangıç Tarihi", format="%d.%m.%Y", required=True)
+    guz_baslangic_tarihi = fields.Date("Başlangıç Tarihi", format="%d.%m.%Y")
     guz_bitis_tarihi = fields.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y", required=True)
     bahar_baslangic_tarihi = fields.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y", required=True)
     bahar_bitis_tarihi = fields.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y", required=True)
@@ -75,50 +77,53 @@ class YeniDonemOlusturma(CrudView):
     class Meta:
         model = "Donem"
 
-    @staticmethod
-    def en_son_kaydedilen_bahar_donemi():
-        """
-        Returns:
-             Veritabanında kayıtlı olan en son bahar dönemini
+    # @staticmethod
+    # def en_son_kaydedilen_bahar_donemi():
+    #     """
+    #     Returns:
+    #          Veritabanında kayıtlı olan en son bahar dönemini
+    #
+    #     """
+    #
+    #     donemler = Donem.objects.filter()
+    #     for donem in donemler:
+    #         if all(donem.bitis_tarihi.year >= donm.bitis_tarihi.year for donm in donemler):
+    #             return donem
 
-        """
+    # @staticmethod
+    # def en_son_kaydedilen_guz_donemi():
+    #     """
+    #     Returns:
+    #          Veritabanında kayıtlı olan en son güz dönemini
+    #     """
+    #     en_son_kaydedilen_bahar_donemi = YeniDonemOlusturma.en_son_kaydedilen_bahar_donemi()
+    #     en_son_kaydedilen_guz_donemi_yili = en_son_kaydedilen_bahar_donemi.bitis_tarihi.year - 1
+    #     donemler = Donem.objects.filter()
+    #     lst_donem = [donem for donem in donemler if
+    #                  donem.baslangic_tarihi.year == en_son_kaydedilen_guz_donemi_yili and donem.ad == 'Güz Dönemi']
+    #     if len(lst_donem) == 1:
+    #         return lst_donem[0]
+    #
+    #     else:
+    #         raise Exception(
+    #             '{0} yılına ait birden fazla güz dönemi kayıtlıdır.'.format(en_son_kaydedilen_guz_donemi_yili))
 
-        donemler = Donem.objects.filter()
-        for donem in donemler:
-            if all(donem.bitis_tarihi.year >= donm.bitis_tarihi.year for donm in donemler):
-                return donem
-
-    @staticmethod
-    def en_son_kaydedilen_guz_donemi():
-        """
-        Returns:
-             Veritabanında kayıtlı olan en son güz dönemini
-        """
-        en_son_kaydedilen_bahar_donemi = YeniDonemOlusturma.en_son_kaydedilen_bahar_donemi()
-        en_son_kaydedilen_guz_donemi_yili = en_son_kaydedilen_bahar_donemi.bitis_tarihi.year - 1
-        donemler = Donem.objects.filter()
-        lst_donem = [donem for donem in donemler if
-                     donem.baslangic_tarihi.year == en_son_kaydedilen_guz_donemi_yili and donem.ad == 'Güz Dönemi']
-        if len(lst_donem) == 1:
-            return lst_donem[0]
-
-        else:
-            raise Exception(
-                '{0} yılına ait birden fazla güz dönemi kayıtlıdır.'.format(en_son_kaydedilen_guz_donemi_yili))
-
-    @staticmethod
-    def guncel_donem_bul():
-        """
-        Returns:
-             Veritabanında kayıtlı olan güncel dönemi
-        """
-        donemler = Donem.objects.filter()
-        lst_guncel_donem = [donem for donem in donemler if donem.guncel]
-        if len(lst_guncel_donem) == 1:
-            return lst_guncel_donem[0]
-
-        else:
-            raise Exception('Sisteminizde birden fazla güncel dönem kayıtlıdır.')
+    # @staticmethod
+    # def guncel_donem_bul():
+    #     """
+    #     Returns:
+    #          Veritabanında kayıtlı olan güncel dönemi
+    #     """
+    #     donemler = Donem.objects.filter()
+    #     lst_guncel_donem = [donem for donem in donemler if donem.guncel]
+    #     if len(lst_guncel_donem) == 1:
+    #         return lst_guncel_donem[0]
+    #
+    #     else:
+    #         if not len(lst_guncel_donem):
+    #             raise Exception('Veritabanında kayıtlı güncel dönem mevcut değildir.')
+    #         else:
+    #             raise Exception('Sisteminizde birden fazla güncel dönem kayıtlıdır.')
 
     def donem_formu_olustur(self):
         """
@@ -126,20 +131,27 @@ class YeniDonemOlusturma(CrudView):
 
         """
 
-        _form = DonemForm(current=self.current, title='Güz ve Bahar Dönemi')
         try:
-            son_bahar_donemi = YeniDonemOlusturma.en_son_kaydedilen_bahar_donemi()
-            son_guz_donemi = YeniDonemOlusturma.en_son_kaydedilen_guz_donemi()
-            guncel_donem = YeniDonemOlusturma.guncel_donem_bul()
+            _form = DonemForm(current=self.current, title='Güz ve Bahar Dönemi')
+            son_bahar_donemi = Donem.en_son_kaydedilen_bahar_donemi()
+            son_guz_donemi = Donem.en_son_kaydedilen_guz_donemi()
+            guncel_donem = Donem.guncel_donem()
             _form.help_text = "En son kaydedilen donemler {0} ve {1},Güncel Dönem {2}," \
                               "{3} Güz Dönem ve {4} Bahar Dönemi Kaydedebilirsiniz".format(
                 son_bahar_donemi, son_guz_donemi, guncel_donem,
                 son_bahar_donemi.bitis_tarihi.year,
                 son_bahar_donemi.bitis_tarihi.year + 1)
+            self.form_out(_form)
 
         except AttributeError:
-            pass
-        self.form_out(_form)
+            _form = DonemForm(current=self.current, title='Güz ve Bahar Dönemi')
+            self.form_out(_form)
+        except ObjectDoesNotExist:
+            self.current.output['msgbox'] = {
+                'type': 'error', 'title': 'Güncel Dönem',
+                'msg': 'Veritabanında kayıtlı güncel dönem yoktur, Lütfen dönemlerden birini güncel '
+                       'donem olarak seçiniz.'
+            }
 
     def donem_formu_kaydet(self):
         """
@@ -167,6 +179,6 @@ class YeniDonemOlusturma(CrudView):
         """
 
         self.current.output['msgbox'] = {
-            'type': 'error', "title": 'Güz ve Bahar Dönemi',
+            'type': 'bilgilendirme', "title": 'Güz ve Bahar Dönemi',
             "msg": 'Güz ve Bahar Dönemi başarıyla oluşturulmuştur.'
         }
