@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_09j68dn">
+    <bpmn:participant id="yeni_donem_olusturma_" name="Öğrenci İşleri" processRef="yeni_donem_olusturma" />
+  </bpmn:collaboration>
+  <bpmn:process id="yeni_donem_olusturma" name="Yeni Dönem Oluştur" isExecutable="false">
+    <bpmn:sequenceFlow id="SequenceFlow_1unmp7k" sourceRef="StartEvent_1viqlao" targetRef="donem_formu_olustur" />
+    <bpmn:sequenceFlow id="SequenceFlow_11iv7pa" sourceRef="donem_formu_olustur" targetRef="donem_formu_kaydet" />
+    <bpmn:endEvent id="EndEvent_16dlw87">
+      <bpmn:incoming>SequenceFlow_0bgypyc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0bgypyc" sourceRef="bilgi_ver" targetRef="EndEvent_16dlw87" />
+    <bpmn:startEvent id="StartEvent_1viqlao">
+      <bpmn:outgoing>SequenceFlow_1unmp7k</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="bilgi_ver" name="Bilgi_ver" camunda:assignee="common.yeni_donem_olusturma.YeniDonemOlusturma.bilgi_ver">
+      <bpmn:incoming>SequenceFlow_0smpmjv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0bgypyc</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="donem_formu_olustur" name="Dönem Formu Oluştur" camunda:assignee="common.yeni_donem_olusturma.YeniDonemOlusturma.donem_formu_olustur">
+      <bpmn:incoming>SequenceFlow_1unmp7k</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11iv7pa</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0smpmjv" sourceRef="donem_formu_kaydet" targetRef="bilgi_ver" />
+    <bpmn:serviceTask id="donem_formu_kaydet" name="Dönem Formu Kaydet" camunda:class="common.yeni_donem_olusturma.YeniDonemOlusturma.donem_formu_kaydet">
+      <bpmn:incoming>SequenceFlow_11iv7pa</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0smpmjv</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_09j68dn">
+      <bpmndi:BPMNShape id="Participant_0ppckfx_di" bpmnElement="yeni_donem_olusturma_">
+        <dc:Bounds x="132" y="133" width="840" height="279" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1viqlao_di" bpmnElement="StartEvent_1viqlao">
+        <dc:Bounds x="182" y="250" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="286" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0poy8zh_di" bpmnElement="donem_formu_olustur">
+        <dc:Bounds x="310" y="228" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1gkfc1b_di" bpmnElement="donem_formu_kaydet">
+        <dc:Bounds x="522" y="228" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_16dlw87_di" bpmnElement="EndEvent_16dlw87">
+        <dc:Bounds x="907" y="250" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="880" y="286" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1unmp7k_di" bpmnElement="SequenceFlow_1unmp7k">
+        <di:waypoint xsi:type="dc:Point" x="218" y="268" />
+        <di:waypoint xsi:type="dc:Point" x="310" y="268" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="262" y="236" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_11iv7pa_di" bpmnElement="SequenceFlow_11iv7pa">
+        <di:waypoint xsi:type="dc:Point" x="410" y="268" />
+        <di:waypoint xsi:type="dc:Point" x="522" y="268" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="477" y="227" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0bgypyc_di" bpmnElement="SequenceFlow_0bgypyc">
+        <di:waypoint xsi:type="dc:Point" x="870" y="268" />
+        <di:waypoint xsi:type="dc:Point" x="907" y="268" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="815" y="258" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0a1ftj9_di" bpmnElement="bilgi_ver">
+        <dc:Bounds x="770.4431202600217" y="228" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0smpmjv_di" bpmnElement="SequenceFlow_0smpmjv">
+        <di:waypoint xsi:type="dc:Point" x="622" y="268" />
+        <di:waypoint xsi:type="dc:Point" x="770" y="268" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="634" y="258" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
