@@ -4,9 +4,9 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import Ders, Sube
 import time
+from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):

@@ -117,8 +117,5 @@ class TestCase(BaseTestCase):
         # ders_listele adımında olup olmadığı test edilir.
         assert self.client.current.task_data['cmd'] == 'ders_listele'
 
-
-
-
-
-
+        OgrenciDersi.objects.filter(sube_id='TumPjkBBhmLfr6OliLR4GEVpfzi').delete()
+        OgrenciDersi.objects.filter(sube_id='8G8yOtYattpuxjLbX8SkrAQS2D0').delete()

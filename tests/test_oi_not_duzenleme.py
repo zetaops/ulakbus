@@ -47,23 +47,23 @@ class TestCase(BaseTestCase):
         # Öğrenci işleri not düzenleme iş akışı başlatılır.
         self.prepare_client('/ogrenci_isleri_not_duzenleme', user=usr)
         self.client.post(param='ogrenci_id',
-                         id="T8PMMytvrHwhlRnQpBq8B5eB7Ut",
-                         filters={'ogrenci_id': {'values': ["T8PMMytvrHwhlRnQpBq8B5eB7Ut"], 'type': "check"}})
+                         id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
+                         filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"], 'type': "check"}})
 
         # Fakülte karar no'su girilir.
         resp = self.client.post(form={'karar': "4353", 'kaydet': 1})
 
         # Veritabanından öğrencinin kayıtlı olduğu programlar çekilir.
-        op = OgrenciProgram.objects.filter(ogrenci_id="T8PMMytvrHwhlRnQpBq8B5eB7Ut")
+        op = OgrenciProgram.objects.filter(ogrenci_id="RnKyAoVDT9Hc89KEZecz0kSRXRF")
         # Sunucudan dönen program sayısı ile veritabanından çekilen program sayısı
         # karşılaştırılıp test edilir.
         assert len(op) == len(resp.json['forms']['form'][1]['titleMap'])
 
         # Program seçilir.
-        resp = self.client.post(form={'onayla': 1, 'program': "ZOQpL23OsEUWqUuslPD8CFNp74j"})
+        resp = self.client.post(form={'onayla': 1, 'program': "UEGET7qn9CDj9VEj4n0nbQ7m89d"})
 
         # Veritabanından öğrencinin kayıtlı olduğu programa ait olan dersler seçilir.
-        ogrenci_dersi = OgrenciDersi.objects.filter(ogrenci_program_id="ZOQpL23OsEUWqUuslPD8CFNp74j")
+        ogrenci_dersi = OgrenciDersi.objects.filter(ogrenci_program_id="UEGET7qn9CDj9VEj4n0nbQ7m89d")
         # Sunucudan dönen ders sayısı ile veritabanından çekilen ders sayısı
         # karşılaştırılıp test edilir.
         assert len(ogrenci_dersi) == len(resp.json['forms']['form'][1]['titleMap'])
@@ -91,6 +91,6 @@ class TestCase(BaseTestCase):
         assert 'msgbox' in resp.json
 
         # Veritabanından notu düzenlenen sınavın değerlendirme notu çekilir.
-        degerlendirme_not = DegerlendirmeNot.objects.get(ogrenci_id='T8PMMytvrHwhlRnQpBq8B5eB7Ut',
+        degerlendirme_not = DegerlendirmeNot.objects.get(ogrenci_id='RnKyAoVDT9Hc89KEZecz0kSRXRF',
                                                          sinav_id='RoFKPHZNuvXcgOUtxuwEKxHgj95')
         assert degerlendirme_not.puan == 30

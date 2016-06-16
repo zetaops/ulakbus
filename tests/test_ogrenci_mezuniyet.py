@@ -21,7 +21,7 @@ class TestCase(BaseTestCase):
     """
 
     def test_ogrenci_mezuniyet(self):
-        """personel_isleri_1 kullanıcısı giriş yapar ve RnKyAoVDT9Hc89KEZecz0kSRXRF keyine sahip öğrencinin
+        """ogrenci_isleri_1 kullanıcısı giriş yapar ve RnKyAoVDT9Hc89KEZecz0kSRXRF keyine sahip öğrencinin
         kayıtlı olduğu UEGET7qn9CDj9VEj4n0nbQ7m89d keyine sahip proggramdan mezuniyet kaydını yapar.
 
         Bu iş akışı iki adımadan oluşmaktadır:
@@ -35,7 +35,7 @@ class TestCase(BaseTestCase):
         Öğrencinin en son girdiği sınavın tarihi ile `OgrenciProgram` modelinden dönen mezuniyet
         tarihinin aynı olması beklenir.
 
-        personel_isleri_1 adlı kullanıcıya çıkış yaptırılır.
+        ogrenci_isleri_1 adlı kullanıcıya çıkış yaptırılır.
 
         """
 

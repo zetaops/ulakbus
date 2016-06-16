@@ -38,7 +38,7 @@ class TestCase(BaseTestCase):
         assert 'objects' in resp.json
 
         # Mevcut kayıtların sayısını tutar.
-        num_of_objects = len_1(resp.json['objects'])
+        num_of_objects = len(Personel.objects.filter())
 
         # Yeni bir personel kaydı ekler, kayıtların listesini döndürür.
         self.client.post(model='Personel', cmd='add_edit_form')
@@ -47,7 +47,7 @@ class TestCase(BaseTestCase):
                                 form=dict(ad="Nuray ", tckn="12323121443", soyad='Söner'))
 
         # Eklenen kaydın, başlangıçtaki kayıtların sayısında değişiklik yapıp yapmadığını test eder.
-        assert num_of_objects + 1 == len_1(resp.json['objects'])
+        assert num_of_objects + 1 == len(Personel.objects.filter())
 
         # İlk kaydı siliyor, kayıtların listesini döndürür.
         resp = self.client.post(model='Personel',

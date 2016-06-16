@@ -98,3 +98,7 @@ class TestCase(BaseTestCase):
         # Eklenen danışmanlar kaydedildikten sonra, sunucudan dönen cevapta danışman kayıt sayıların
         # doğruluğu test edilir.
         assert num_of_danisman == count_of_danisman + 3
+
+        for dd in DonemDanisman.objects.filter(donem=donem, bolum=bolum):
+            dd.delete()
+            dd.save()

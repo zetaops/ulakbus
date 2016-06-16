@@ -39,7 +39,7 @@ class TestCase(BaseTestCase):
                                                           'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
-        self.client.set_path('/logout')
+        # self.client.set_path('/logout')
 
         time.sleep(1)
 
@@ -56,7 +56,7 @@ class TestCase(BaseTestCase):
                                                                            'red_aciklama': "Reddedildi"})
 
         assert resp.json['msgbox']['msg'] == "Talebiniz Basariyla iletildi."
-        self.client.set_path('/logout')
+        # self.client.set_path('/logout')
 
         time.sleep(1)
 
@@ -96,7 +96,7 @@ class TestCase(BaseTestCase):
                                                           'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
-        self.client.set_path('/logout')
+        # self.client.set_path('/logout')
 
         time.sleep(1)
 
@@ -118,7 +118,7 @@ class TestCase(BaseTestCase):
                                                        'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personel Terfi Islemi Onaylandi!"
-        self.client.set_path('/logout')
+        # self.client.set_path('/logout')
 
         time.sleep(1)
 
@@ -129,9 +129,3 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
 
         assert resp.json['msgbox']['title'] == "Terfi İşlemleri Onay Belgesi!"
-    #
-    # def get_notification(self, username):
-    #
-    #
-    #     return usr, token
-    #
