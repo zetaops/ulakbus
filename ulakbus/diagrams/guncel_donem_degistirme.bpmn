@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_13ddjm5">
+    <bpmn:participant id="guncel_donem_degistir" name="Öğrenci işleri" processRef="guncel_donem_degistirme" />
+  </bpmn:collaboration>
+  <bpmn:process id="guncel_donem_degistirme" name="Güncel Dönem Değiştir" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_15kmzr4</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="guncel_donem_sec" name="Güncel Dönem Seç" camunda:assignee="common.guncel_donem_degistirme.GuncelDonemDegistirme.guncel_donem_sec">
+      <bpmn:incoming>SequenceFlow_15kmzr4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1buurbw</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="bilgi_ver" name="Bilgi Ver" camunda:assignee="common.guncel_donem_degistirme.GuncelDonemDegistirme.bilgi_ver">
+      <bpmn:incoming>SequenceFlow_1ppo6x3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0pvufb1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_15kmzr4" sourceRef="StartEvent_1" targetRef="guncel_donem_sec" />
+    <bpmn:sequenceFlow id="SequenceFlow_1buurbw" sourceRef="guncel_donem_sec" targetRef="guncel_donem_kaydet" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ppo6x3" sourceRef="guncel_donem_kaydet" targetRef="bilgi_ver" />
+    <bpmn:sequenceFlow id="SequenceFlow_0pvufb1" sourceRef="bilgi_ver" targetRef="EndEvent_0nxltrj" />
+    <bpmn:endEvent id="EndEvent_0nxltrj">
+      <bpmn:incoming>SequenceFlow_0pvufb1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="guncel_donem_kaydet" name="Güncel Dönem Kaydet" camunda:class="common.guncel_donem_degistirme.GuncelDonemDegistirme.guncel_donem_kaydet">
+      <bpmn:incoming>SequenceFlow_1buurbw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ppo6x3</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_13ddjm5">
+      <bpmndi:BPMNShape id="Participant_00fej3c_di" bpmnElement="guncel_donem_degistir">
+        <dc:Bounds x="150" y="162" width="789" height="259" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="200" y="257" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="173" y="293" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0anb42e_di" bpmnElement="guncel_donem_sec">
+        <dc:Bounds x="288" y="235" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_05af77n_di" bpmnElement="guncel_donem_kaydet">
+        <dc:Bounds x="476" y="235" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1kf8tfx_di" bpmnElement="bilgi_ver">
+        <dc:Bounds x="669" y="235" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_15kmzr4_di" bpmnElement="SequenceFlow_15kmzr4">
+        <di:waypoint xsi:type="dc:Point" x="236" y="275" />
+        <di:waypoint xsi:type="dc:Point" x="288" y="275" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="217" y="265" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1buurbw_di" bpmnElement="SequenceFlow_1buurbw">
+        <di:waypoint xsi:type="dc:Point" x="388" y="275" />
+        <di:waypoint xsi:type="dc:Point" x="476" y="275" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="380" y="265" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ppo6x3_di" bpmnElement="SequenceFlow_1ppo6x3">
+        <di:waypoint xsi:type="dc:Point" x="576" y="275" />
+        <di:waypoint xsi:type="dc:Point" x="669" y="275" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="570.5" y="265" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0nxltrj_di" bpmnElement="EndEvent_0nxltrj">
+        <dc:Bounds x="836" y="257" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="809" y="293" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0pvufb1_di" bpmnElement="SequenceFlow_0pvufb1">
+        <di:waypoint xsi:type="dc:Point" x="769" y="275" />
+        <di:waypoint xsi:type="dc:Point" x="836" y="275" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="746.5" y="265" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
