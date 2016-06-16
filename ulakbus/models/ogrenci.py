@@ -597,6 +597,7 @@ class OgrenciProgram(Model):
                                               choices="ogrenci_ders_kayit_durum")
     ayrilma_nedeni = field.Integer('Ayrılma Nedeni', index=True, choices='ayrilma_nedeni')
     basari_durumu = field.String("Başarı Durumu", index=True)
+    diploma_no = field.String("Diploma No", index=True)
     ders_programi = DersProgrami()
     danisman = Personel()
     program = Program()
