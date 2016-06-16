@@ -44,14 +44,12 @@ class TestCase(BaseTestCase):
         time.sleep(1)
 
         # Personel terfi islemini reddet bolumu
-        usr = User.objects.get(username='genel_sekreter_1')
-        msg = NotificationMessage.objects.filter(receiver=usr)[0]
-        token = msg.url.split('/')[-1]
-        self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
+        token, user = self.get_user_token('genel_sekreter_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post()
         self.client.post(cmd="red_aciklamasi_yaz", form={'Personel': resp.json['forms']['model']['Personel'],
                                                          'duzenle': 1})
-
+        NotificationMessage.objects.filter().delete()
         resp = self.client.post(wf='terfisi_gelen_personel_listesi', form={'devam': 1,
                                                                            'red_aciklama': "Reddedildi"})
 
@@ -60,12 +58,12 @@ class TestCase(BaseTestCase):
 
         time.sleep(1)
 
-        usr = User.objects.get(username='personel_isleri_1')
-        msg = NotificationMessage.objects.filter(receiver=usr)[0]
-        token = msg.url.split('/')[-1]
-        self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
-        resp = self.client.post()
+        user = User.objects.get(username='personel_isleri_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=user)
+        token, user = self.get_user_token('personel_isleri_1')
+        resp = self.client.post(token=token)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
+        NotificationMessage.objects.filter().delete()
 
         assert len(ter_gel_id_per) == 3
 
@@ -79,7 +77,12 @@ class TestCase(BaseTestCase):
         resp = self.client.post(cmd="terfi_liste_duzenle", form=terfi_duz_forms)
 
         resp.json['forms']['model']['Personel'][0]['yeni_gorev_ayligi_derece'] = 2
+        resp.json['forms']['model']['Personel'][0]['yeni_gorev_ayligi_kademe'] = 8
+        resp.json['forms']['model']['Personel'][0]['yeni_gorev_ayligi_gorunen'] = 8
+
         resp.json['forms']['model']['Personel'][1]['yeni_kazanilmis_hak_derece'] = 3
+        resp.json['forms']['model']['Personel'][1]['yeni_kazanilmis_hak_kademe'] = 8
+        resp.json['forms']['model']['Personel'][1]['yeni_kazanilmis_hak_gorunen'] = 8
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
@@ -104,13 +107,12 @@ class TestCase(BaseTestCase):
 
     def personel_terfi_onay(self):
         # Personel terfi islemini onayla bolumu
-        usr = User.objects.get(username='genel_sekreter_1')
-        msg = NotificationMessage.objects.filter(receiver=usr)[0]
-        token = msg.url.split('/')[-1]
-        self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
-        resp = self.client.post()
-
+        user = User.objects.get(username='genel_sekreter_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=user)
+        token, user = self.get_user_token('genel_sekreter_1')
+        resp = self.client.post(token=token)
         assert len(resp.json['forms']['model']['Personel']) == 3
+        NotificationMessage.objects.filter().delete()
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
@@ -127,5 +129,6 @@ class TestCase(BaseTestCase):
         token = msg.url.split('/')[-1]
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
         resp = self.client.post()
+        NotificationMessage.objects.filter().delete()
 
         assert resp.json['msgbox']['title'] == "Terfi İşlemleri Onay Belgesi!"
