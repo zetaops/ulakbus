@@ -36,6 +36,8 @@ class OnKayitSilForm(JsonForm):
 class OnKayitSilUyariForm(JsonForm):
     class UyariForm(ListNode):
         birim = fields.String("Birim Adı", index=True)
+        ogrenci_ad = fields.String("Öğrenci Adı", index=True)
+        ogrenci_soyadi = fields.String("Öğrenci Soyadı", index=True)
 
 
 class OnKayitSil(CrudView):
@@ -76,13 +78,21 @@ class OnKayitSil(CrudView):
         self.current.task_data["gelen_form"] = self.current.input['form']['SilmeForm']
         self.current.task_data["secim_kontrol"] = True
         self.current.task_data["secim_var"] = False
-        self.current.task_data["action"] = False
+        self.current.task_data["action2"] = False
+        self.current.task_data["action3"] = False
+        self.current.task_data["action4"] = False
         for birim in self.current.task_data["gelen_form"]:
             if birim['secim']:
                 self.current.task_data["secim_kontrol"] = False
                 self.current.task_data["secim_var"] = True
-            if birim['action_secim']:
-                self.current.task_data["action"] = True
+            if birim['action_secim'] == True and birim['form_sira'] == 2:
+                self.current.task_data["action2"] = True
+                self.current.task_data["secim_kontrol"] = False
+            if birim['action_secim'] == True and birim['form_sira'] == 3:
+                self.current.task_data["action3"] = True
+                self.current.task_data["secim_kontrol"] = False
+            if birim['action_secim'] == True and birim['form_sira'] == 4:
+                self.current.task_data["action4"] = True
                 self.current.task_data["secim_kontrol"] = False
 
     def on_kayit_silme_tercih_form_2(self):
@@ -106,19 +116,6 @@ class OnKayitSil(CrudView):
 
         _form.sec = fields.Button("Seçilen Birimleri Sil")
         self.form_out(_form)
-
-    def secilen_birim_kontrol_2(self):
-        self.current.task_data["secilen"] = self.current.input['form']['SilmeForm']
-        self.current.task_data["secim_kontrol"] = True
-        self.current.task_data["secim_var"] = False
-        self.current.task_data["action"] = False
-        for birim in self.current.task_data["secilen"]:
-            if birim['secim']:
-                self.current.task_data["secim_kontrol"] = False
-                self.current.task_data["secim_var"] = True
-            if birim['action_secim']:
-                self.current.task_data["action"] = True
-                self.current.task_data["secim_kontrol"] = False
 
     def on_kayit_silme_tercih_form_3(self):
 
@@ -144,19 +141,6 @@ class OnKayitSil(CrudView):
         _form.sec = fields.Button("Seçilen Birimleri Sil")
         self.form_out(_form)
 
-    def secilen_birim_kontrol_3(self):
-        self.current.task_data["secilen"] = self.current.input['form']['SilmeForm']
-        self.current.task_data["secim_kontrol"] = True
-        self.current.task_data["secim_var"] = False
-        self.current.task_data["action"] = False
-        for birim in self.current.task_data["secilen"]:
-            if birim['secim']:
-                self.current.task_data["secim_kontrol"] = False
-                self.current.task_data["secim_var"] = True
-            if birim['action_secim']:
-                self.current.task_data["action"] = True
-                self.current.task_data["secim_kontrol"] = False
-
     def on_kayit_silme_tercih_form_4(self):
 
         self.current.task_data["gelen_form"] = self.current.input['form']['SilmeForm']
@@ -178,6 +162,7 @@ class OnKayitSil(CrudView):
                 silinecek_ogrenci_sayisi = len(OgrenciProgram.objects.filter(durum=1, program=program))
                 _form.SilmeForm(secim=False,
                                 tanim=secilen_alt_birim.name + "'nde Bulunan Tüm Öğrencileri Sil",
+                                key=secilen_alt_birim.key,
                                 birim_ad=secilen_alt_birim.name, form_sira=5, ogrenci_sayisi=silinecek_ogrenci_sayisi
                                 , action_secim=False)
         _form.sec = fields.Button("Seçilen Birimleri Sil")
@@ -192,9 +177,60 @@ class OnKayitSil(CrudView):
                              Onaylamak için Tamamla butonuna basınız.
                              İptal edip geri dönmek istiyorsanız İptal butonuna basınız."""
 
-        for birim in self.current.task_data["secilen"]:
-            if birim['secim']:
-                _form.UyariForm(birim=birim['birim_ad'])
+        secilen_birimler = []
+        secilen_birim_adi = []
+        form_sirasi = []
+        self.current.task_data["birim"] = self.current.input['form']['SilmeForm']
+        for secilen_birim in self.current.task_data["birim"]:
+            if secilen_birim['secim'] == True:
+                try:
+                    secilen_birimler.append(Unit.objects.get(secilen_birim['key']))
+                except:
+                    secilen_birim_adi.append(secilen_birim['birim_ad'])
+
+                form_sirasi.append(secilen_birim['form_sira'])
+        ogrenci_sayisi = len(form_sirasi)
+
+        if 1 in form_sirasi:
+            ogrenciler = OgrenciProgram.objects.filter(durum=1)
+            for ogrenci in ogrenciler:
+                _form.UyariForm(birim=ogrenci.program.adi, ogrenci_ad=ogrenci.ogrenci.ad,
+                                ogrenci_soyadi=ogrenci.ogrenci.soyad)
+
+        else:
+            if 2 in form_sirasi:
+                for i in range(0, ogrenci_sayisi):
+                    birimler = Unit.objects.filter(unit_type=secilen_birim_adi[i])
+                    for birim in birimler:
+                        ogrenciler = OgrenciProgram.objects.filter(bagli_oldugu_ana_birim=birim)
+                        for ogrenci in ogrenciler:
+                            _form.UyariForm(birim=ogrenci.program, ogrenci_ad=ogrenci.ogrenci.ad,
+                                            ogrenci_soyadi=ogrenci.ogrenci.soyad)
+
+            if 3 in form_sirasi:
+                for i in range(0, ogrenci_sayisi):
+                    ogrenciler = OgrenciProgram.objects.filter(bagli_oldugu_ana_birim=secilen_birimler[i])
+                    for ogrenci in ogrenciler:
+                        _form.UyariForm(birim=ogrenci.program, ogrenci_ad=ogrenci.ogrenci.ad,
+                                        ogrenci_soyadi=ogrenci.ogrenci.soyad)
+
+            if 4 in form_sirasi:
+                for i in range(0, ogrenci_sayisi):
+                    ogrenciler = OgrenciProgram.objects.filter(bagli_oldugu_bolum=secilen_birimler[i])
+                    for ogrenci in ogrenciler:
+                        _form.UyariForm(birim=ogrenci.program, ogrenci_ad=ogrenci.ogrenci.ad,
+                                        ogrenci_soyadi=ogrenci.ogrenci.soyad)
+
+            if 5 in form_sirasi:
+                for i in range(0, ogrenci_sayisi):
+                    try:
+                        program = Program.objects.get(yoksis_no=secilen_birimler[i].yoksis_no)
+                    except:
+                        program = Unit.objects.get(yoksis_no=secilen_birimler[i].yoksis_no)
+                    ogrenciler = OgrenciProgram.objects.filter(program=program)
+                    for ogrenci in ogrenciler:
+                        _form.UyariForm(birim=ogrenci.program(), ogrenci_ad=ogrenci.ogrenci.ad,
+                                        ogrenci_soyadi=ogrenci.ogrenci.soyad)
 
         _form.tamamla = fields.Button("Tamamla", flow="kayit_tarihi_kontrol_sil")
         _form.iptal = fields.Button("İptal", flow="on_kayit_silme_tercih_form")
@@ -204,12 +240,11 @@ class OnKayitSil(CrudView):
 
         secilen_birimler = []
         form_sirasi = []
-        self.current.task_data["birim"] = self.current.input['form']['SilmeForm']
-        for secilen_birim in self.current.task_data["birim"]:
+        # self.current.task_data["birim"] = self.current.input['form']['SilmeForm']
+        for secilen_birim in self.current.task_data["secilen"]:
             if secilen_birim['secim'] == True:
                 secilen_birimler.append(secilen_birim['birim_ad'])
-                dene = secilen_birim['form_sira']
-                form_sirasi.append(dene)
+                form_sirasi.append(secilen_birim['form_sira'])
 
         secilen_birim_sayisi = len(secilen_birimler)
 
@@ -219,10 +254,11 @@ class OnKayitSil(CrudView):
         if 1 in form_sirasi:
             on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1)
             for on_kayit_ogrenci in on_kayit_ogrenciler:
-                son_kayit_tarihi, birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                akademik_birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                son_kayit_tarihi = akademik_birim.Takvim[9].bitis
                 if date.today() < son_kayit_tarihi:
                     self.current.task_data["kayit_tarih_kontrol"] = False
-                    kayit_tarihi_bitmeyenler.append(birim.name)
+                    kayit_tarihi_bitmeyenler.append(akademik_birim.name)
                     # if self.current.task_data["kayit_tarih_kontrol"]:
                     #     on_kayit_ogrenciler.delete()
                     #     on_kayit_ogrenciler.save()
@@ -230,36 +266,42 @@ class OnKayitSil(CrudView):
         else:
             if 2 in form_sirasi:
                 for i in range(0, secilen_birim_sayisi):
-                    on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1)
+                    birimler = Unit.objects.filter(unit_type=secilen_birimler[i])
+                    for birim in birimler:
+                        on_kayit_ogrenciler = OgrenciProgram.objects.filter(bagli_oldugu_ana_birim=birim)
 
-                    # bagli_oldugu_ana_birim_turu = secilen_birimler[i]
-
-                    for on_kayit_ogrenci in on_kayit_ogrenciler:
-                        son_kayit_tarihi, birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
-                        if date.today() < son_kayit_tarihi:
-                            self.current.task_data["kayit_tarih_kontrol"] = False
-                            kayit_tarihi_bitmeyenler.append(birim.name)
-                            # if self.current.task_data["kayit_tarih_kontrol"]:
-                            #     on_kayit_ogrenciler.delete()
-                            #     on_kayit_ogrenciler.save()
+                for on_kayit_ogrenci in on_kayit_ogrenciler:
+                    akademik_birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                    son_kayit_tarihi = akademik_birim.Takvim[9].bitis
+                    if date.today() < son_kayit_tarihi:
+                        self.current.task_data["kayit_tarih_kontrol"] = False
+                        kayit_tarihi_bitmeyenler.append(birim.name)
+                        # if self.current.task_data["kayit_tarih_kontrol"]:
+                        #     on_kayit_ogrenciler.delete()
+                        #     on_kayit_ogrenciler.save()
 
             if 3 in form_sirasi:
                 for i in range(0, secilen_birim_sayisi):
                     on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1,
                                                                         bagli_oldugu_ana_birim=secilen_birimler[i])
                     for on_kayit_ogrenci in on_kayit_ogrenciler:
-                        son_kayit_tarihi, birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                        akademik_birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                        son_kayit_tarihi = akademik_birim.Takvim[9].bitis
                         if date.today() < son_kayit_tarihi:
                             self.current.task_data["kayit_tarih_kontrol"] = False
                             kayit_tarihi_bitmeyenler.append(birim.name)
-                            # if self.current.task_data["kayit_tarih_kontrol"]:
-                            #     on_kayit_ogrenciler.delete()
-                            #     on_kayit_ogrenciler.save()
+                            if self.current.task_data["kayit_tarih_kontrol"]:
+                                on_kayit_ogrenciler.delete()
+                                on_kayit_ogrenciler.save()
 
             if 4 in form_sirasi:
                 for i in range(0, secilen_birim_sayisi):
+                    on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1,
+                                                                        bagli_oldugu_bolum=secilen_birimler[i])
+
                     programlar = Program.objects.filter(bolum=secilen_birimler[i])
-                    son_kayit_tarihi, birim = get_akademik_takvim(secilen_birimler[i])
+                    akademik_birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                    son_kayit_tarihi = akademik_birim.Takvim[9].bitis
                     if date.today() < son_kayit_tarihi:
                         self.current.task_data["kayit_tarih_kontrol"] = False
                         kayit_tarihi_bitmeyenler.append(birim.name)
@@ -270,9 +312,13 @@ class OnKayitSil(CrudView):
 
             if 5 in form_sirasi:
                 for i in range(0, secilen_birim_sayisi):
+                    program = Program.objects.get(yoksis_no=secilen_birimler[i].yoksis_no)
+                    on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1,
+                                                                        program=program)
 
                     on_kayit_ogrenciler = OgrenciProgram.objects.filter(durum=1, program=secilen_birimler[i])
-                    son_kayit_tarihi, birim = get_akademik_takvim(secilen_birimler[i].bolum)
+                    akademik_birim = get_akademik_takvim(on_kayit_ogrenci.program.bolum)
+                    son_kayit_tarihi = akademik_birim.Takvim[9].bitis
                     if date.today() < son_kayit_tarihi:
                         self.current.task_data["kayit_tarih_kontrol"] = False
                         kayit_tarihi_bitmeyenler.append(birim.name)
@@ -281,17 +327,6 @@ class OnKayitSil(CrudView):
                         #     on_kayit_ogrenciler.save()
 
         self.current.task_data['kayit_tarihi_bitmeyenler'] = kayit_tarihi_bitmeyenler
-
-    # def secilen_on_kayit_sil(self):
-    #
-    #     secilen = self.current.task_data["secilen"][0]
-    #     birim = secilen['birim_ad']
-    #
-    #     silinecek_ogrenciler = OgrenciProgram.objects.filter(durum=1, bagli_oldugu_ana_birim_turu=birim)
-    #
-    #     for silinecek_ogrenci in silinecek_ogrenciler:
-    #         silinecek_ogrenci.durum = 0
-    #         silinecek_ogrenci.save()
 
     def secim_kontrol_uyari(self):
         _form = JsonForm(current=self.current, title="Uyarı Mesajı")
@@ -306,13 +341,6 @@ class OnKayitSil(CrudView):
         _form.help_text = """Seçilen birimdeki öğrenciler başarıyla silindi."""
         self.form_out(_form)
 
-    # def personel_silme_uyari(self):
-    #
-    #     self.current.output['msgbox'] = {
-    #         'type': 'warning', "title": 'Uyarı Mesajı',
-    #         "msg": 'Silinecek .'
-    #     }
-
     def personel_kayit_uyari(self):
 
         _form = OnKayitSilUyariForm(current=self.current, title="Uyarı Mesajı")
@@ -324,21 +352,3 @@ class OnKayitSil(CrudView):
 
         _form.geri_don = fields.Button("Geri Dön", flow="on_kayit_silme_tercih_form")
         self.form_out(_form)
-
-
-def get_akademik_takvim(unit):
-    """
-
-    Args:
-        unit:
-
-    Returns:
-
-    """
-    try:
-        akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)
-        return (akademik_takvim, unit)
-    except ObjectDoesNotExist:
-        yoksis_key = unit.parent_unit_no
-        birim = Unit.objects.get(yoksis_no=yoksis_key)
-        return get_akademik_takvim(birim)
