@@ -226,40 +226,42 @@ class Donem(Model):
         return '%s %s' % (self.ad, self.baslangic_tarihi)
 
     @classmethod
-    def en_son_kaydedilen_bahar_donemi(cls):
+    def en_son_bahar_donemi(cls):
         """
         Returns:
-             Veritabanında kayıtlı olan en son bahar dönemini
+            Veritabanında kayıtlı olan en son bahar dönemini
 
         """
-
-        donemler = cls.objects.filter()
-        for donem in donemler:
-            if all(donem.bitis_tarihi.year >= donm.bitis_tarihi.year and donem.ad == 'Bahar Dönemi' for donm in
-                   donemler):
-                return donem
+        return cls.objects.filter(ad='Bahar Dönemi').order_by('-baslangic_tarihi')[0]
 
     @classmethod
-    def en_son_kaydedilen_guz_donemi(cls):
+    def en_son_guz_donemi(cls):
         """
         Returns:
-             Veritabanında kayıtlı olan en son güz dönemini
-        """
-        en_son_kaydedilen_bahar_donemi = cls.en_son_kaydedilen_bahar_donemi()
-        en_son_kaydedilen_guz_donemi_yili = en_son_kaydedilen_bahar_donemi.bitis_tarihi.year - 1
-        donemler = cls.objects.filter()
-        lst_donem = [donem for donem in donemler if
-                     donem.baslangic_tarihi.year == en_son_kaydedilen_guz_donemi_yili and donem.ad == 'Güz Dönemi']
-        if len(lst_donem) == 1:
-            return lst_donem[0]
+            Veritabanında kayıtlı olan en son güz dönemini
 
-        else:
-            if not len(lst_donem):
-                raise Exception(
-                    '{0} yılına ait güz dönemi kayıtlı değildir.'.format(en_son_kaydedilen_guz_donemi_yili))
-            else:
-                raise Exception(
-                    '{0} yılına ait birden fazla güz dönemi kayıtlıdır.'.format(en_son_kaydedilen_guz_donemi_yili))
+        """
+
+        return cls.objects.filter(ad='Güz Dönemi').order_by('-baslangic_tarihi')[0]
+
+    def onceki_donem(self):
+        """
+        Returns:
+            Belli bir dönemden önceki dönemi
+
+        """
+
+        return self.objects.filter(baslangic_tarihi__lt=self.baslangic_tarihi).order_by(
+            '-baslangic_tarihi')[0]
+
+    def sonraki_donem(self):
+        """
+        Returns:
+            Belli bir dönemden sonraki dönemi
+
+        """
+        return self.objects.filter(baslangic_tarihi__gt=self.baslangic_tarihi).order_by(
+            'baslangic_tarihi')[0]
 
 
 class Program(Model):
