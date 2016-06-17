@@ -105,8 +105,6 @@ class TestCase(BaseTestCase):
         assert resp.json['msgbox'][
                    'msg'] == " Bahtinur Zengin adlı öğrencinin kaydı daha önceden silinmiştir."
 
-
-
         for program in ogrenci_program:
             # Ayrılma nedenine atanan değerin doğruluğu test eder.
             assert program.ayrilma_nedeni == 11
@@ -123,34 +121,31 @@ class TestCase(BaseTestCase):
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[0])
                         assert role.abstract_role == abstract_role
-                        abstract_role = AbstractRole.objects.get(
+                        previous_abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST[1])
-                        role.abstract_role = abstract_role
-                        role.save()
                     elif role.unit.unit_type == 'Yüksek Lisans Programı':
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[2])
                         assert role.abstract_role == abstract_role
-                        abstract_role = AbstractRole.objects.get(
+                        previous_abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST[5])
-                        role.abstract_role = abstract_role
-                        role.save()
                     elif role.unit.unit_type == 'Doktora Programı':
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[3])
                         assert role.abstract_role == abstract_role
-                        abstract_role = AbstractRole.objects.get(
+                        previous_abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST[7])
-                        role.abstract_role = abstract_role
-                        role.save()
                     else:
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[1])
                         assert role.abstract_role == abstract_role
-                        abstract_role = AbstractRole.objects.get(
+                        previous_abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST[3])
-                        role.abstract_role = abstract_role
-                        role.save()
+
+                    # test ile degisen rolu geri donduruyoruz.
+                    role.abstract_role = previous_abstract_role
+                    role.save()
+
             program.ayrilma_nedeni = 0
             program.ogrencilik_statusu = 0
             program.save()

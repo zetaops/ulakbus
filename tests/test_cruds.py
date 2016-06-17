@@ -17,15 +17,14 @@ class TestCase(BaseTestCase):
 
     def test_list_add_delete_edit_with_models(self):
         """
-        Crud iş akışına ait Personel modelini listele, ekleme ve silme işlemleriyle;
-        AkademikTakvim modeli ise düzenle işlemi ile test eder. Crud iş akışına ait modelleri
-        listele, ekleme,silme gibi işlemlerle test ederken aynı işlemleri(listele, ekleme,silme gibi)
-        farklı modellerde test etmek gereksizdir.
+        Crud iş akışına ait Personel modelini listele, ekleme
+        ve silme işlemleriyle; AkademikTakvim modeli ise düzenle
+        işlemi ile test eder. Crud iş akışına ait modelleri
+        listele, ekleme,silme gibi işlemlerle test ederken aynı
+        işlemleri(listele, ekleme,silme gibi) farklı modellerde
+        test etmek gereksizdir.
 
         """
-
-        def len_1(lst):
-            return len(lst) - 1
 
         # Veritabanından ulakbus adlı kullanıcı seçilir.
         usr = User.objects.get(username='ulakbus')
@@ -46,8 +45,11 @@ class TestCase(BaseTestCase):
                                 cmd='save::list',
                                 form=dict(ad="Nuray ", tckn="12323121443", soyad='Söner'))
 
-        # Eklenen kaydın, başlangıçtaki kayıtların sayısında değişiklik yapıp yapmadığını test eder.
+        # Eklenen kaydın, başlangıçtaki kayıtların sayısında
+        # değişiklik yapıp yapmadığını test eder.
         assert num_of_objects + 1 == len(Personel.objects.filter())
+
+        silenecek_personel = Personel.objects.get(resp.json['objects'][4]['key'])
 
         # İlk kaydı siliyor, kayıtların listesini döndürür.
         resp = self.client.post(model='Personel',
@@ -55,10 +57,16 @@ class TestCase(BaseTestCase):
                                 object_id=resp.json['objects'][4]['key'])
         time.sleep(1)
 
-        # Mevcut kayıtların sayısının, başlangıçtaki kayıt sayısına eşit olup olmadığını test eder.
+        # Mevcut kayıtların sayısının, başlangıçtaki kayıt
+        # sayısına eşit olup olmadığını test eder.
         assert 'reload' in resp.json['client_cmd']
 
-        # AkademikTakvim modeli ve varsayılan komut 'list' ile sunucuya request yapılır.
+        silenecek_personel.deleted = False
+        silenecek_personel.save()
+
+
+        # AkademikTakvim modeli ve varsayılan komut 'list' ile sunucuya
+        # request yapılır.
         resp = self.client.post(model='AkademikTakvim')
 
         # İlk kaydı düzenlemek için seçer.
@@ -83,8 +91,9 @@ class TestCase(BaseTestCase):
 
     def test_add_search_filter_select_list(self):
         """
-        Crud iş akışına ait Personel modelini arama, ekleme ve filtreleme işlemleriyle,
-        AkademikTakvim modelini is select list işlemiyle test eder.
+        Crud iş akışına ait Personel modelini arama, ekleme ve
+        filtreleme işlemleriyle, AkademikTakvim modelini is select list
+        işlemiyle test eder.
 
         """
 
@@ -100,7 +109,8 @@ class TestCase(BaseTestCase):
 
         # Query değerine göre personel kayıtlarını filtreler.
         resp = self.client.post(model='Personel', query="12345678")
-        assert len(resp.json['objects']) - 1 == len(Personel.objects.filter(tckn__startswith='12345678'))
+        assert len(resp.json['objects']) - 1 == len(
+            Personel.objects.filter(tckn__startswith='12345678'))
 
         # crud iş akışı tekrardan başlatılır.
         self.client.set_path('/crud')
@@ -113,7 +123,8 @@ class TestCase(BaseTestCase):
 
         num_of_kayit = Unit.objects.filter(name='jsghgahfsghfaghfhga')
 
-        # 0 değeri ise queryset alanına girilen değere ait herhangi bir kayıt bulunamadığını gösterir.
+        # 0 değeri ise queryset alanına girilen değere ait herhangi
+        # bir kayıt bulunamadığını gösterir.
         assert resp.json['objects'][0] == num_of_kayit.count()
 
         resp = self.client.post(model='Unit',
@@ -130,4 +141,3 @@ class TestCase(BaseTestCase):
 
         # Queryset alanına girilen değere ait bir ya da birden fazla kayıt bulunduğunu gösterir.
         assert len(resp.json['objects']) == num_of_kayit.count()
-

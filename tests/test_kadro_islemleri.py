@@ -99,6 +99,19 @@ class TestCase(BaseTestCase):
         # Saklı izinli değiştir komutundan sonra kadronun durumunu kontrol eder.
         assert beginning_state != last_state
 
+        # durum bir kez daha degistirilir.
+        self.client.post(cmd='sakli_izinli_degistir',
+                         object_id='8ICt8g0NpPdn5eDfh4yz0vsLqkn')
+
+        # Veritabanından kadro kaydı seçer.
+        kadro = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
+
+        # Kadronun son durumu.
+        last_state = kadro.get_durum_display()
+
+        # Ikinci saklı izinli değiştir komutundan sonra kadronun durumunu kontrol eder.
+        assert beginning_state == last_state
+
         # İş akışının başlangıç token değeridir.
         form_token = self.client.token
 
@@ -136,31 +149,32 @@ class TestCase(BaseTestCase):
         birim_no = resp.json['objects'][0]['key']
 
         # Kadro ekle formu doldurulur.
-        kadro_data = {'unvan': 3, 'unvan_aciklama': 22464, 'derece': 3, 'birim_id': birim_no,
-                      'kadro_no': 4, 'save_edit': 1,
-                      'aciklama': 'kadro'}
+        kadro_data = {'unvan': 3, 'unvan_aciklama': '22464', 'derece': 3, 'birim_id': birim_no,
+                      'kadro_no': 4, 'save_edit': 1, 'durum': 1, 'aciklama': 'kadro'}
 
         self.client.set_path('/kadro_islemleri')
         resp = self.client.post()
+
         # Kadro kaydını kaydeder.
         resp = self.client.post(form=kadro_data)
-        # assert 'reset' in resp.json['client_cmd']
 
         time.sleep(1)
+        yeni_kadro = Kadro.objects.get(unvan=3, unvan_aciklama='22464',
+                                       derece=3, birim_id=birim_no,
+                                       kadro_no=4, durum=1, aciklama='kadro')
 
         # İş akışı resetlendiği için token değeri sıfırlanıyor.
         self.client.set_path('/kadro_islemleri')
         resp = self.client.post()
         assert 'list_filters' in resp.json
 
-        kadro_lst = Kadro.objects.filter()
+        last_kadro_lst = Kadro.objects.filter()
 
-        assert len_1(resp.json['objects']) == len(kadro_lst)
+        assert len(last_kadro_lst) == len(kadro_lst) + 1
+        assert len_1(resp.json['objects']) == len(last_kadro_lst)
 
-        # Kadro nesnesi seçilir.
-        kadro_object = Kadro.objects.get('8ICt8g0NpPdn5eDfh4yz0vsLqkn')
         # Seçilen kadronun durumu.
-        kadro_durum = kadro_object.durum
+        kadro_durum = yeni_kadro.durum
 
         # Kadronun durumu saklı ise silinir, değilse silinmez.
         self.client.post(cmd='kadro_sil_onay_form',

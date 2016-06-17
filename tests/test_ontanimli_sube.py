@@ -17,13 +17,23 @@ class TestCase(BaseTestCase):
 
     def test_ontanimli_sube(self):
         """
-        Yeni bir ders kaydı yaratılılıp kaydedildiğinde derse default olarak şube atanır.
-        Kaydedilmeden önce pre_save metotu ile ders nesnenin var olup olmadığı belirlenir.
-        Kaydedildikten sonra post_save metotu ile ontanimli_sube_olustur metotu çağrılır.
-        Bu metot içerisinde yeni şube oluşturulur.Ders modelinde tanımlı ontanimli_kontenjan,
-        ontanimli_dis_kontenjan fieldlarının değerleri yeni yaratılan şubenin kontenjan ve
-        dış kontenjan fieldlarına atanır. Ders nesnesi yaratıldığında ontanimli_kontenjan,
-        ontanimli_dis_kontenjan fieldlarına herhengi bi değer atanmamışsa field içinde tanımlı
+        Yeni bir ders kaydı yaratılılıp kaydedildiğinde derse
+        default olarak şube atanır.
+
+        Kaydedilmeden önce pre_save metotu ile ders nesnenin
+        var olup olmadığı belirlenir.
+
+        Kaydedildikten sonra post_save metotu ile ontanimli_sube_olustur
+        metotu çağrılır.
+
+        Bu metot ontanimli degerler ile yeni bir şube oluşturur.
+
+        Ders modelinde tanımlı ontanimli_kontenjan, ontanimli_dis_kontenjan
+        fieldlarının değerleri yeni yaratılan şubenin kontenjan ve dış
+        kontenjan fieldlarına atanır.
+
+        Ders nesnesi yaratıldığında ontanimli_kontenjan, ontanimli_dis_kontenjan
+        fieldlarına herhengi bi değer atanmamışsa field içinde tanımlı
         default değeri atanır.
 
         """

@@ -18,7 +18,9 @@ class TestCase(BaseTestCase):
     terfi_red = True
 
     def test_terfisi_gelen_personel(self):
-
+        """
+        TODO: docstring eklenecek.
+        """
         usr = User.objects.get(username='personel_isleri_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr)
         self.client.post()
@@ -39,7 +41,7 @@ class TestCase(BaseTestCase):
                                                           'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
-        # self.client.set_path('/logout')
+        self.client.set_path('/logout')
 
         time.sleep(1)
 
@@ -47,14 +49,17 @@ class TestCase(BaseTestCase):
         token, user = self.get_user_token('genel_sekreter_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post()
-        self.client.post(cmd="red_aciklamasi_yaz", form={'Personel': resp.json['forms']['model']['Personel'],
-                                                         'duzenle': 1})
+        self.client.post(cmd="red_aciklamasi_yaz",
+                         form={'Personel': resp.json['forms']['model']['Personel'],
+                               'duzenle': 1})
         NotificationMessage.objects.filter().delete()
-        resp = self.client.post(wf='terfisi_gelen_personel_listesi', form={'devam': 1,
-                                                                           'red_aciklama': "Reddedildi"})
+        resp = self.client.post(
+            wf='terfisi_gelen_personel_listesi',
+            form={'devam': 1, 'red_aciklama': "Reddedildi"}
+        )
 
         assert resp.json['msgbox']['msg'] == "Talebiniz Basariyla iletildi."
-        # self.client.set_path('/logout')
+        self.client.set_path('/logout')
 
         time.sleep(1)
 
@@ -91,21 +96,24 @@ class TestCase(BaseTestCase):
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
-        assert ter_gel_id_per[0]['yeni_gorev_ayligi'] == '2/8(8)' and \
-               ter_gel_id_per[2]['yeni_kazanilmis_hak'] == '3/8(8)'
+        assert ter_gel_id_per[0]['yeni_gorev_ayligi'] == '2/8(8)'
+        assert ter_gel_id_per[2]['yeni_kazanilmis_hak'] == '3/8(8)'
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
                                                           'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
-        # self.client.set_path('/logout')
+        self.client.set_path('/logout')
 
         time.sleep(1)
 
         self.personel_terfi_onay()
 
     def personel_terfi_onay(self):
+        """
+        TODO: docstring eklenecek..
+        """
         # Personel terfi islemini onayla bolumu
         user = User.objects.get(username='genel_sekreter_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user)
@@ -120,7 +128,7 @@ class TestCase(BaseTestCase):
                                                        'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personel Terfi Islemi Onaylandi!"
-        # self.client.set_path('/logout')
+        self.client.set_path('/logout')
 
         time.sleep(1)
 

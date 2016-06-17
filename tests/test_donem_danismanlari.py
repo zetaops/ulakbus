@@ -100,5 +100,5 @@ class TestCase(BaseTestCase):
         assert num_of_danisman == count_of_danisman + 3
 
         for dd in DonemDanisman.objects.filter(donem=donem, bolum=bolum):
-            dd.delete()
-            dd.save()
+            if not dd.okutman.key == 'Bf1CPIKs6txfhvlBQ7jqhy0iwv':
+                dd.delete()
