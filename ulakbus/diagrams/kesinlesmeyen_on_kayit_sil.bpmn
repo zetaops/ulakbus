@@ -11,7 +11,6 @@
         <bpmn2:flowNodeRef>On_Kayit2</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>On_Kayit3</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>On_Kayit4</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>Secilen_Birim_Kontrol</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>Personel_Onay</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>UserTask_1sgod5t</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ExclusiveGateway_025dkuv</bpmn2:flowNodeRef>
@@ -22,6 +21,7 @@
         <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>Personel_Kayit_Uyari</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>Kayit_Tarihi_Kontrol_Sil</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Secilen_Birim_Kontrol</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
     <bpmn2:userTask id="On_Kayit1" name="Ön Kayıt Silme Tercih Formu" camunda:assignee="ogrenci.kesinlesmeyen_on_kayit_sil.OnKayitSil.on_kayit_silme_tercih_form">
@@ -46,13 +46,6 @@
       <bpmn2:incoming>SequenceFlow_04e6quz</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1ikv5i0</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:serviceTask id="Secilen_Birim_Kontrol" name="Seçilen Birim Kontrol" camunda:class="ogrenci.kesinlesmeyen_on_kayit_sil.OnKayitSil.secilen_birim_kontrol">
-      <bpmn2:incoming>SequenceFlow_19rz259</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1dkw6nh</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1egnki7</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1ikv5i0</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_0hq91xk</bpmn2:outgoing>
-    </bpmn2:serviceTask>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_025dkuv">
       <bpmn2:incoming>SequenceFlow_0hq91xk</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_0t6ml7n</bpmn2:outgoing>
@@ -140,6 +133,13 @@
       <bpmn2:incoming>SequenceFlow_0qyrxh3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_0u9zwk7</bpmn2:outgoing>
     </bpmn2:serviceTask>
+    <bpmn2:serviceTask id="Secilen_Birim_Kontrol" name="Seçilen Birim Kontrol" camunda:class="ogrenci.kesinlesmeyen_on_kayit_sil.OnKayitSil.secilen_birim_kontrol">
+      <bpmn2:incoming>SequenceFlow_19rz259</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1dkw6nh</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1egnki7</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1ikv5i0</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0hq91xk</bpmn2:outgoing>
+    </bpmn2:serviceTask>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_4">
@@ -194,8 +194,8 @@
       <bpmndi:BPMNEdge id="SequenceFlow_19rz259_di" bpmnElement="SequenceFlow_19rz259">
         <di:waypoint xsi:type="dc:Point" x="-2250" y="781" />
         <di:waypoint xsi:type="dc:Point" x="-2250" y="684" />
-        <di:waypoint xsi:type="dc:Point" x="-2117" y="684" />
-        <di:waypoint xsi:type="dc:Point" x="-2050" y="684" />
+        <di:waypoint xsi:type="dc:Point" x="-2117" y="661" />
+        <di:waypoint xsi:type="dc:Point" x="-2050" y="661" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-2228.5" y="659" width="90" height="20" />
         </bpmndi:BPMNLabel>
@@ -273,20 +273,20 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_17oo7n9_di" bpmnElement="Secilen_Birim_Kontrol">
-        <dc:Bounds x="-2043" y="664" width="100" height="80" />
+        <dc:Bounds x="-2043" y="641" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1dkw6nh_di" bpmnElement="SequenceFlow_1dkw6nh">
         <di:waypoint xsi:type="dc:Point" x="-2080" y="781" />
-        <di:waypoint xsi:type="dc:Point" x="-2080" y="728" />
-        <di:waypoint xsi:type="dc:Point" x="-2044" y="728" />
+        <di:waypoint xsi:type="dc:Point" x="-2080" y="705" />
+        <di:waypoint xsi:type="dc:Point" x="-2044" y="705" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-2110" y="744.5" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1egnki7_di" bpmnElement="SequenceFlow_1egnki7">
         <di:waypoint xsi:type="dc:Point" x="-1893" y="781" />
-        <di:waypoint xsi:type="dc:Point" x="-1893" y="723" />
-        <di:waypoint xsi:type="dc:Point" x="-1943" y="723" />
+        <di:waypoint xsi:type="dc:Point" x="-1893" y="700" />
+        <di:waypoint xsi:type="dc:Point" x="-1943" y="700" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-1923" y="742" width="90" height="20" />
         </bpmndi:BPMNLabel>
@@ -294,8 +294,8 @@
       <bpmndi:BPMNEdge id="SequenceFlow_1ikv5i0_di" bpmnElement="SequenceFlow_1ikv5i0">
         <di:waypoint xsi:type="dc:Point" x="-1723" y="781" />
         <di:waypoint xsi:type="dc:Point" x="-1723" y="684" />
-        <di:waypoint xsi:type="dc:Point" x="-1859" y="684" />
-        <di:waypoint xsi:type="dc:Point" x="-1943" y="684" />
+        <di:waypoint xsi:type="dc:Point" x="-1859" y="661" />
+        <di:waypoint xsi:type="dc:Point" x="-1943" y="661" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-1836" y="659" width="90" height="20" />
         </bpmndi:BPMNLabel>
@@ -307,7 +307,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0hq91xk_di" bpmnElement="SequenceFlow_0hq91xk">
-        <di:waypoint xsi:type="dc:Point" x="-1993" y="744" />
+        <di:waypoint xsi:type="dc:Point" x="-1993" y="721" />
         <di:waypoint xsi:type="dc:Point" x="-1993" y="863" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-2023" y="793.5" width="90" height="20" />
