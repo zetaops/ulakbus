@@ -40,8 +40,8 @@ class TestCase(BaseTestCase):
         usr = User.objects.get(username='ogrenci_isleri_1')
         time.sleep(1)
 
-        ogrenci_id = "T8PMMytvrHwhlRnQpBq8B5eB7Ut"
-        program_id = "ZOQpL23OsEUWqUuslPD8CFNp74j"
+        ogrenci_id = "RnKyAoVDT9Hc89KEZecz0kSRXRF"
+        program_id = "UEGET7qn9CDj9VEj4n0nbQ7m89d"
 
         # Mazeretli_ders_kaydi wF çalıştırılır
         self.prepare_client('/mazeretli_ders_kaydi', user=usr)
@@ -49,7 +49,7 @@ class TestCase(BaseTestCase):
                                 wf="mazeretli_ders_kaydi")
 
         # Öğrenciye ait programlar db'den seçilir.
-        op = OgrenciProgram.objects.filter(ogrenci_id='T8PMMytvrHwhlRnQpBq8B5eB7Ut')
+        op = OgrenciProgram.objects.filter(ogrenci_id=ogrenci_id)
 
         # Veritabanından öğrenciye ait  çekilen program sayısı ile sunucudan dönen program sayısının
         # eşitliği karşılaştırılıp test edilir.
@@ -64,7 +64,7 @@ class TestCase(BaseTestCase):
         self.client.post(model="OgrenciProgram", wf="mazeretli_ders_kaydi", form=karar_no)
 
         # Öğrencinin programdaki Ders Kayıt Durumu "Mazeretli" Olarak Güncellenmiş mi?
-        md_kayit = OgrenciProgram.objects.filter(ogrenci_id='T8PMMytvrHwhlRnQpBq8B5eB7Ut')
+        md_kayit = OgrenciProgram.objects.filter(ogrenci_id=ogrenci_id)
         assert len(md_kayit) > 0
 
         assert md_kayit[0].ogrenci_ders_kayit_status == 1

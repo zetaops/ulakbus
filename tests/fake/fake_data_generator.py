@@ -379,7 +379,7 @@ class FakeDataGenerator:
             harici_okutman_list.append(ho)
         return harici_okutman_list
 
-    def yeni_ogrenci(self, ogrenci_say=1, program=None, personel=None):
+    def yeni_ogrenci(self, ogrenci_say=1, program=None, personel=None, user=None):
         """
         Rastgele veriler kullanarak yeni öğrenci kaydı oluştururup kaydeder.
         Oluşturulan kayıtları liste olarak döndürür.
@@ -388,6 +388,7 @@ class FakeDataGenerator:
             ogrenci_say (int): Oluşturulacak ogrenci sayısı
             program (object): Ogrencinin kaydedilecegi program
             personel (object): Ogrencinin programdaki danisamani
+            user (object): Ogrencinin atanacagi user
 
         Returns:
             Ogrenci (list): Yeni öğrenci kaydı
@@ -416,9 +417,12 @@ class FakeDataGenerator:
             o.dogum_yeri = fake.state()
             o.tel_no = fake.phone_number()
 
-            username = fake.slug(u'%s-%s' % (o.ad, o.soyad))
-            user = new_user(username=username)
-            o.user = user
+            if user:
+                o.user = user
+            else:
+                username = fake.slug(u'%s-%s' % (o.ad, o.soyad))
+                user = new_user(username=username)
+                o.user = user
 
             o.save()
             ogrenci_list.append(o)
