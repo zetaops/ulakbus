@@ -45,6 +45,7 @@ import urllib2
 import socket
 from json import loads, dumps
 from six import iteritems
+from ulakbus.models.personel import Personel
 
 
 H_USER = os.environ["HITAP_USER"]
@@ -82,6 +83,7 @@ class HITAPSync(Service):
 
         self.logger.info("zato service started to work.")
         tckn = self.request.payload['tckn']
+        self.personel = Personel.objects.filter(tckn=tckn)[0]
 
         self.sync_hitap_data(tckn)
 
@@ -123,6 +125,7 @@ class HITAPSync(Service):
             setattr(obj, hk, hv)
 
         obj.sync = 1
+        obj.personel = self.personel
         obj.save()
         self.logger.info("hitaptaki kayit yerele kaydedildi. kayit no => "
                          + str(obj.kayit_no))

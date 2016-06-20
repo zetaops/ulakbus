@@ -8,12 +8,12 @@
         <camunda:property value="hidden" name="menu_category"/>
       </camunda:properties>
     </bpmn2:extensionElements>
-    <bpmn2:userTask id="form" camunda:assignee="personel.crud_hitap.CrudHitap" name="add/edit form">
+    <bpmn2:userTask id="form" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="add/edit form">
       <bpmn2:incoming>save_then_add_arrow</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="form" targetRef="save_object"/>
-    <bpmn2:userTask id="delete_object" camunda:class="personel.crud_hitap.CrudHitap" camunda:assignee="personel.crud_hitap.CrudHitap" name="delete_object">
+    <bpmn2:userTask id="delete_object" camunda:class="personel.crud_hitap.CrudHitap.call" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="delete_object">
       <bpmn2:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="list">1</camunda:inputParameter>
@@ -23,7 +23,7 @@
       <bpmn2:outgoing>del_to_finish</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="del_to_finish" name="" sourceRef="delete_object" targetRef="FINISH_XOR"/>
-    <bpmn2:serviceTask id="save_object" camunda:class="personel.crud_hitap.CrudHitap" name="save_object">
+    <bpmn2:serviceTask id="save_object" camunda:class="personel.crud_hitap.CrudHitap.call" name="save_object">
       <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
     </bpmn2:serviceTask>
@@ -34,10 +34,12 @@
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
       <bpmn2:incoming>list_to_finish</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>fin_list_arrow</bpmn2:outgoing>
       <bpmn2:outgoing>save_then_add_arrow</bpmn2:outgoing>
       <bpmn2:outgoing>fin_to_delete</bpmn2:outgoing>
       <bpmn2:outgoing>fin_to_show</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="fin_list_arrow" name="save_then_list" sourceRef="FINISH_XOR" targetRef="list_objects">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'list'</bpmn2:conditionExpression>
@@ -51,12 +53,12 @@
     <bpmn2:sequenceFlow id="fin_to_show" name="fin_to_show" sourceRef="FINISH_XOR" targetRef="show_object">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'show' and object_id</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:userTask id="list_objects" camunda:assignee="personel.crud_hitap.CrudHitap" name="list_objects">
+    <bpmn2:userTask id="list_objects" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="list_objects">
       <bpmn2:incoming>fin_list_arrow</bpmn2:incoming>
       <bpmn2:outgoing>list_to_finish</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="list_to_finish" name="" sourceRef="list_objects" targetRef="FINISH_XOR"/>
-    <bpmn2:userTask id="show_object" camunda:assignee="personel.crud_hitap.CrudHitap" name="show_object">
+    <bpmn2:userTask id="show_object" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="show_object">
       <bpmn2:incoming>fin_to_show</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
     </bpmn2:userTask>
@@ -70,6 +72,14 @@
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="init"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="FINISH_XOR" targetRef="ServiceTask_1">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'sync'</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:serviceTask id="ServiceTask_1" camunda:class="personel.crud_hitap.CrudHitap.call" name="sync_object">
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ServiceTask_1" targetRef="FINISH_XOR"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="crud_hitap">
@@ -184,6 +194,26 @@
         <di:waypoint xsi:type="dc:Point" x="391.0" y="368.0"/>
         <bpmndi:BPMNLabel>
           <dc:Bounds height="6.0" width="6.0" x="386.0" y="377.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_43" bpmnElement="ServiceTask_1">
+        <dc:Bounds height="49.0" width="100.0" x="552.0" y="446.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_3" sourceElement="_BPMNShape_ExclusiveGateway_6" targetElement="_BPMNShape_ServiceTask_43">
+        <di:waypoint xsi:type="dc:Point" x="439.0" y="393.0"/>
+        <di:waypoint xsi:type="dc:Point" x="481.0" y="440.0"/>
+        <di:waypoint xsi:type="dc:Point" x="552.0" y="458.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="490.0" y="443.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_4" sourceElement="_BPMNShape_ServiceTask_43" targetElement="_BPMNShape_ExclusiveGateway_6">
+        <di:waypoint xsi:type="dc:Point" x="567.0" y="446.0"/>
+        <di:waypoint xsi:type="dc:Point" x="521.0" y="414.0"/>
+        <di:waypoint xsi:type="dc:Point" x="497.0" y="414.0"/>
+        <di:waypoint xsi:type="dc:Point" x="441.0" y="382.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="471.0" y="401.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

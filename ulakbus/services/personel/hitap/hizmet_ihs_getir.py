@@ -38,11 +38,12 @@ class HizmetIHSGetir(HITAPSorgula):
         self.service_dict = {
             'fields': {
                 'tckn': 'tckn',
-                'kayit_no': 'kayitNo',  # TODO: ihzID mi olacak?
+                'kayit_no': 'ihzID',  # TODO: ihzID mi olacak?
                 'baslama_tarihi': 'baslamaTarihi',
                 'bitis_tarihi': 'bitisTarihi',
                 'ihz_nevi': 'ihzNevi'
             },
-            'date_filter': ['baslama_tarihi', 'bitis_tarihi']
+            'date_filter': ['baslama_tarihi', 'bitis_tarihi'],
+            'required_fields': ['tckn']
         }
         super(HizmetIHSGetir, self).handle()

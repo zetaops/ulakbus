@@ -12,29 +12,18 @@ Ders Ekle ve Ders Şubelendirme iş akışlarının yürütülmesini sağlar.
 
 """
 
-from pyoko import ListNode
-from zengine import forms
-from zengine.forms import fields
-from zengine.views.crud import CrudView, form_modifier
-from ulakbus.models.ogrenci import Program, Okutman, DegerlendirmeNot, Ders, Sube, Sinav, OgrenciDersi, Donem
-from ulakbus.models.ogrenci import DegerlendirmeNot, Ogrenci, OgrenciProgram
 from collections import OrderedDict
 
+import time
 
-def prepare_choices_for_model(model, **kwargs):
-    """Model için Seçenekler Hazırla
-
-    Args:
-        model: Model
-        **kwargs: Keyword argümanları
-
-    Returns:
-        Keyword argümanlara göre filtrelenmiş modelin,
-        key ve __unicode__ method değerlerini
-
-    """
-
-    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
+from pyoko import ListNode
+from pyoko.db.adapter.db_riak import BlockSave, BlockDelete
+from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
+from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciDersi, Donem
+from zengine import forms
+from zengine.forms import fields
+from zengine.views.crud import CrudView
+from ulakbus.lib.view_helpers import prepare_choices_for_model
 
 
 def okutman_choices():
@@ -78,7 +67,14 @@ class DersBilgileriForm(forms.JsonForm):
                    'verilis_bicimi', 'donem',
                    'ders_koordinatoru']
 
-    kaydet = fields.Button("Kaydet", cmd="kaydet", flow="end")
+    kaydet = fields.Button("Kaydet", cmd="kaydet")
+
+
+class DersDegerlendirmeForm(forms.JsonForm):
+    class Meta:
+        include = ['Degerlendirme']
+
+    kaydet = fields.Button("Kaydet", cmd="degerlendirme_kaydet", flow="end")
     kaydet_yeni_kayit = fields.Button("Kaydet/Yeni Kayıt Ekle", cmd="kaydet", flow="start")
 
 
@@ -125,10 +121,15 @@ class DersEkle(CrudView):
         self.set_form_data_to_object()
         self.current.task_data['program_id'] = self.object.program.key
 
+    def degerlendirme_form(self):
+        ders = Ders.objects.get(self.current.task_data['ders_id'])
+        self.form_out(DersDegerlendirmeForm(ders, current=self.current))
+
     def kaydet(self):
         self.set_form_data_to_object()
         self.object.program = Program.objects.get(self.current.task_data['program_id'])
         self.save_object()
+        self.current.task_data['ders_id'] = self.object.key
         # self.current.task_data['next'] = self.current.input['next']
 
     def ders_bilgileri(self):
@@ -181,6 +182,9 @@ class SubelendirmeForm(forms.JsonForm):
 
 
 class NotGirisForm(forms.JsonForm):
+    class Meta:
+        inline_edit = ['degerlendirme', 'aciklama']
+
     class Ogrenciler(ListNode):
         ogrenci_no = fields.String('No')
         ad_soyad = fields.String('Ad Soyad')
@@ -281,27 +285,38 @@ class DersSubelendirme(CrudView):
         p = Program.objects.get(key=self.current.task_data['program'])
         dersler = Ders.objects.filter(program=p)
         # dersler = Ders.objects.filter()
+        just_created = self.current.task_data.get('just_created', [])
+        just_deleted = self.current.task_data.get('just_deleted', [])
         for d in dersler:
-            ders = "{} - {} ({} ECTS)".format(d.kod, d.ad, d.ects_kredisi)
-            subeler = Sube.objects.filter(ders=d)
-            sube = []
-            for s in subeler:
-                sube.append(
-                    {
-                        "sube_ad": s.ad,
-                        "okutman_ad": s.okutman.ad,
-                        "okutman_soyad": s.okutman.soyad,
-                        "okutman_unvan": s.okutman.unvan,
-                        "kontenjan": s.kontenjan,
-                    }
-                )
+            ders = "%s - %s (%s ECTS)" % (d.kod, d.ad, d.ects_kredisi)
+            ders_subeleri = Sube.objects.filter(ders=d)
+            subeler = []
 
-            ders_subeleri = ["{okutman_unvan} {okutman_ad}"
-                             "{okutman_soyad}, Sube:{sube_ad} Kontenjan{kontenjan} \n".format(**sb)
-                             for sb in sube]
+            def sube_append(sube):
+                if sube.key not in just_deleted:
+                    subeler.append(
+                        {
+                            "sube_ad": sube.ad,
+                            "okutman_ad": sube.okutman.ad,
+                            "okutman_soyad": sube.okutman.soyad,
+                            "okutman_unvan": sube.okutman.okutman.get_unvan_display(),
+                            "kontenjan": sube.kontenjan,
+                        }
+                    )
 
+            for sube in ders_subeleri:
+                sube_append(sube)
+            for ders_key, sube_key in just_created:
+                if ders_key == d.key:
+                    sube_append(Sube.objects.get(sube_key))
+
+            ders_subeleri = ["""* **%s %s %s**
+                                Sube: %s - Kontenjan: %s""" % (
+            sb['okutman_unvan'], sb['okutman_ad'],
+            sb['okutman_soyad'], sb['sube_ad'],
+            sb['kontenjan']) for sb in subeler]
             item = {
-                "fields": ["{} \n {}".format(ders, ders_subeleri), ],
+                "fields": ["%s\n%s" % (ders, "\n".join(ders_subeleri)), ],
                 "actions": [
                     {'name': 'Subelendir', 'cmd': 'ders_okutman_formu', 'show_as': 'button',
                      'object_key': 'sube'},
@@ -345,18 +360,24 @@ class DersSubelendirme(CrudView):
         sb = self.input['form']['Subeler']
         ders = self.current.task_data['ders_key']
         mevcut_subeler = Sube.objects.filter(ders_id=ders)
-        for s in sb:
-            okutman = s['okutman']
-            sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders)
-            # mevcut_subelerden cikar
-            mevcut_subeler = list(set(mevcut_subeler) - {sube})
-            sube.kontenjan = s['kontenjan']
-            sube.dis_kontenjan = s['dis_kontenjan']
-            sube.ad = s['ad']
-            sube.save()
+        # self.current.task_data['just_created'] = []
+        with BlockSave(Sube):
+            for s in sb:
+                okutman = s['okutman']
+                sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders)
+                # mevcut_subelerden cikar
+                mevcut_subeler = list(set(mevcut_subeler) - {sube})
+                sube.kontenjan = s['kontenjan']
+                sube.dis_kontenjan = s['dis_kontenjan']
+                sube.ad = s['ad']
+                sube.donem = Donem.guncel_donem()
+                sube.save()
+            # if is_new:
+            #     self.current.task_data['just_created'].append((ders, sube.key))
         # mevcut subelerde kalanlari sil
-        for s in mevcut_subeler:
-            s.delete()
+        with BlockDelete(Sube):
+            for s in mevcut_subeler:
+                s.delete()
 
     def bilgi_ver(self):
         """Bilgi ver
@@ -365,8 +386,29 @@ class DersSubelendirme(CrudView):
 
         """
 
+        from zengine.notifications import Notify
+
+        just_created = self.current.task_data.get('just_created', [])
+        just_deleted = self.current.task_data.get('just_deleted', [])
+        ders_key = self.current.task_data['ders_key']
+
+        title = "Şubelendirme"
+        bolum_baskani = "%s %s" % (self.current.user.name, self.current.user.surname)
+        msg = "Bölum Başkanı %s tarafından şubelerinizde degisiklikler yapilmistir." % bolum_baskani
+        okutmanlar = []
+
+        def notify(okutman):
+            Notify(okutman.okutman.user.key).set_message(title=title, msg=msg, typ=Notify.TaskInfo)
+            okutmanlar.append(okutman.__unicode__())
+
+        for ders, sube_key in just_created:
+            if ders == ders_key:
+                notify(Sube.objects.get(sube_key).okutman)
+
         sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
-        okutmanlar = [s.okutman.__unicode__() for s in sbs]
+        for s in sbs:
+            if s.key not in just_deleted:
+                notify(s.okutman)
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Mesaj Iletildi',
@@ -400,7 +442,8 @@ class NotGirisi(CrudView):
         user = self.current.user
         subeler = Sube.objects.filter(okutman_id=self.get_okutman_key)
         _form.sube = fields.Integer("Sube Seçiniz",
-                                    choices=prepare_choices_for_model(Sube, okutman_id=self.get_okutman_key))
+                                    choices=prepare_choices_for_model(Sube,
+                                                                      okutman_id=self.get_okutman_key))
         _form.sec = fields.Button("Seç", cmd="Ders Şubesi Seçin")
         self.form_out(_form)
 
@@ -431,7 +474,8 @@ class NotGirisi(CrudView):
         except:
             sube_key = self.current.task_data["sube"]
 
-        _form.sinav = fields.Integer("Sınav Seçiniz", choices=prepare_choices_for_model(Sinav, sube_id=sube_key))
+        _form.sinav = fields.Integer("Sınav Seçiniz",
+                                     choices=prepare_choices_for_model(Sinav, sube_id=sube_key))
         self.current.task_data["sube"] = sube_key
         _form.sec = fields.Button("Seç", cmd="Sınav Seçin")
         self.form_out(_form)
@@ -449,7 +493,7 @@ class NotGirisi(CrudView):
         sayesinde notları onaylanmış (teslim edilmiş) sınavlara ait
         notlar bir önizleme ekranında görüntülenrek, tekrar işlenmesi
         ve değiştirilmesi engellenmektedir.
-        
+
         """
 
         sinav_key = self.current.input['form']['sinav']
@@ -479,7 +523,7 @@ class NotGirisi(CrudView):
         ``not_form_inline_edit`` adlı form modifier ile
         ``degerlendirme`` ve ``aciklama`` alanlarına inline edit
         özelliği kazandırılmaktadır.
-        
+
         """
 
         _form = NotGirisForm(current=self.current, title="Not Giriş Formu")
@@ -495,11 +539,12 @@ class NotGirisi(CrudView):
                                  aciklama=ogr['aciklama'],
                                  key=ogr['key'])
         except:
-            ogrenciler = OgrenciDersi.objects.filter(ders_id=sube_key)
+            ogrenciler = OgrenciDersi.objects.filter(sube_id=sube_key)
 
             for ogr in ogrenciler:
-                try: # Öğrencinin bu sınava ait daha önceden kayıtlı notu var mı?
-                    degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav, ogrenci=ogr.ogrenci_program.ogrenci)
+                try:  # Öğrencinin bu sınava ait daha önceden kayıtlı notu var mı?
+                    degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav,
+                                                                 ogrenci=ogr.ogrenci_program.ogrenci)
                     puan = degerlendirme.puan
                     aciklama = degerlendirme.aciklama
                     degerlendirme_key = degerlendirme.key
@@ -508,13 +553,16 @@ class NotGirisi(CrudView):
                     aciklama = ""
                     degerlendirme_key = ""
 
-                _form.Ogrenciler(ad_soyad='%s %s' % (ogr.ogrenci_program.ogrenci.ad, ogr.ogrenci_program.ogrenci.soyad),
-                                 ogrenci_no=ogr.ogrenci_program.ogrenci_no, degerlendirme=puan, aciklama=aciklama,
+                _form.Ogrenciler(ad_soyad='%s %s' % (
+                ogr.ogrenci_program.ogrenci.ad, ogr.ogrenci_program.ogrenci.soyad),
+                                 ogrenci_no=ogr.ogrenci_program.ogrenci_no, degerlendirme=puan,
+                                 aciklama=aciklama,
                                  key=degerlendirme_key)
 
         _form.kaydet = fields.Button("Önizleme", cmd="not_kontrol")
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def not_kontrol(self):
         """Okutmanların girmiş olduğu öğrenci notlarının listelenmesini
@@ -556,12 +604,13 @@ class NotGirisi(CrudView):
             sinav_key = self.current.task_data['sinav_key']
             sube_key = self.current.task_data["sube"]
             sinav = Sinav.objects.get(sinav_key)
-            ogrenciler = OgrenciDersi.objects.filter(ders_id=sube_key)
+            ogrenciler = OgrenciDersi.objects.filter(sube_id=sube_key)
             notlar = []
 
             for ogr in ogrenciler:
                 try:  # Öğrencinin bu sınava ait daha önceden kayıtlı notu var mı?
-                    degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav, ogrenci=ogr.ogrenci_program.ogrenci)
+                    degerlendirme = DegerlendirmeNot.objects.get(sinav=sinav,
+                                                                 ogrenci=ogr.ogrenci_program.ogrenci)
                     puan = degerlendirme.puan
                     aciklama = degerlendirme.aciklama
                 except:
@@ -570,7 +619,8 @@ class NotGirisi(CrudView):
 
                 ogrnot = OrderedDict({})
                 ogrnot['Öğrenci No'] = ogr.ogrenci_program.ogrenci_no
-                ogrnot['Adı Soyadı'] = '%s %s' % (ogr.ogrenci_program.ogrenci.ad, ogr.ogrenci_program.ogrenci.soyad)
+                ogrnot['Adı Soyadı'] = '%s %s' % (
+                ogr.ogrenci_program.ogrenci.ad, ogr.ogrenci_program.ogrenci.soyad)
                 ogrnot['Değerlendirme'] = puan
                 ogrnot['Açıklama'] = aciklama
                 notlar.append(ogrnot)
@@ -584,18 +634,21 @@ class NotGirisi(CrudView):
 
             }
             _form.ders_secim = fields.Button("Ders Seçim Ekranına Dön", cmd="ders_sec",
-                                                     flow="ders_secim_adimina_don")
+                                             flow="ders_secim_adimina_don")
             _form.sinav_secim = fields.Button("Sınav Seçim Ekranına Dön", cmd="sinav_sec",
-                                                      flow="sinav_secim_adimina_don")
+                                              flow="sinav_secim_adimina_don")
 
         else:  # Eğer notlar hala onaylanmamışsa (teslim edilmemişse) form düğmelerini göster
 
             _form.not_onay = fields.Boolean("Sınav Notlarını Onaylıyorum (Bu işlem geri alınamaz!)")
-            _form.not_duzenle = fields.Button("Notları Düzenle", cmd="not_girisi", flow="not_giris_formuna_don")
+            _form.not_duzenle = fields.Button("Notları Düzenle", cmd="not_girisi",
+                                              flow="not_giris_formuna_don")
             _form.kaydet = fields.Button("Kaydet", cmd="not_kaydet", flow="end")
-            _form.kaydet_ve_ders_sec = fields.Button("Kaydet ve Ders Seçim Ekranına Dön", cmd="ders_sec",
+            _form.kaydet_ve_ders_sec = fields.Button("Kaydet ve Ders Seçim Ekranına Dön",
+                                                     cmd="ders_sec",
                                                      flow="ders_adimina_don")
-            _form.kaydet_ve_sinav_sec = fields.Button("Kaydet ve Sınav Seçim Ekranına Dön", cmd="sinav_sec",
+            _form.kaydet_ve_sinav_sec = fields.Button("Kaydet ve Sınav Seçim Ekranına Dön",
+                                                      cmd="sinav_sec",
                                                       flow="sinav_adimina_don")
 
         self.current.output['object'] = {
@@ -627,7 +680,7 @@ class NotGirisi(CrudView):
             try:
                 ogr_data = OgrenciProgram.objects.get(ogrenci_no=ogrenci_not['ogrenci_no'])
 
-                if ogrenci_not['key']: # Önceden girilmiş bir kayıt mı?
+                if ogrenci_not['key']:  # Önceden girilmiş bir kayıt mı?
                     ogr_not = DegerlendirmeNot.objects.get(ogrenci_not['key'])
                 else:
                     ogr_not = DegerlendirmeNot()
@@ -641,6 +694,7 @@ class NotGirisi(CrudView):
                 ogr_not.ders = ders
                 ogr_not.sinav = sinav
                 ogr_not.ogrenci = ogr_data.ogrenci
+                ogr_not.sinav_tarihi = sinav.tarih
                 ogr_not.save()
 
             except:
@@ -653,14 +707,14 @@ class NotGirisi(CrudView):
             sinav.save()
 
     def kayit_bilgisi_ver(self):
-        import datetime
         sinav_key = self.current.task_data["sinav_key"]
         sinav = Sinav.objects.get(sinav_key)
         sinav_tarihi = sinav.tarih.strftime("%d/%m/%Y")
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Notlar Kaydedildi',
-            "msg": '%s dersine ait %s tarihli sınav notları kaydedildi' % (sinav.ders.ad, sinav_tarihi)}
+            "msg": '%s dersine ait %s tarihli sınav notları kaydedildi' % (
+            sinav.ders.ad, sinav_tarihi)}
 
     @property
     def get_okutman_key(self):
@@ -675,11 +729,3 @@ class NotGirisi(CrudView):
         return "%s %s" % (self.current.user.personel.okutman.ad,
                           self.current.user.personel.okutman.soyad) if self.current.user.personel.key else "%s %s" % (
             self.current.user.harici_okutman.ad, self.current.user.harici_okutman.soyad)
-
-    @form_modifier
-    def not_form_inline_edit(self, serialized_form):
-        """NotGirisForm'da degerlendirme ve aciklama alanlarına inline edit özelliği sağlayan method.
-
-        """
-        if 'Ogrenciler' in serialized_form['schema']['properties']:
-            serialized_form['inline_edit'] = ['degerlendirme', 'aciklama']

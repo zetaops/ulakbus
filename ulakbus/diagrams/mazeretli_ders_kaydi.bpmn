@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_luOHwACgEeaK0unu71azXw" targetNamespace="http://activiti.org/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:collaboration id="_Collaboration_3" name="mazeretli_ders_kaydi">
+    <bpmn2:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="hidden" />
+      </camunda:properties>
+    </bpmn2:extensionElements>
+    <bpmn2:participant id="Maz_Ogrenci_Isleri" name="Ogrenci Isleri" processRef="mazeretli_ders_kaydi" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="mazeretli_ders_kaydi" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn2:lane id="Mazeretli_ogrenci_secimi_lane" name="Mazeretli Ogrenci Secimi">
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Fak_Yon_Kar_No_UserTask</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Program_Sec_UserTask</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Kaydet_ServiceTask</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Kayit_Bilgisi_Ver_UserTask</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="Fak_Yon_Kar_No_UserTask" name="Fakulte Yonetim Karar No Gir" camunda:assignee="ogrenci.ogrenci.MazeretliDersKaydi.karar_no_gir">
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="Program_Sec_UserTask" name="Program Sec" camunda:assignee="ogrenci.ogrenci.MazeretliDersKaydi.program_sec">
+      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="StartEvent_1" targetRef="Program_Sec_UserTask" />
+    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="Program_Sec_UserTask" targetRef="Fak_Yon_Kar_No_UserTask" />
+    <bpmn2:serviceTask id="Kaydet_ServiceTask" name="Kaydet" camunda:class="ogrenci.ogrenci.MazeretliDersKaydi.kaydet">
+      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="Kaydet_ServiceTask" targetRef="Kayit_Bilgisi_Ver_UserTask" />
+    <bpmn2:endEvent id="EndEvent_1">
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:userTask id="Kayit_Bilgisi_Ver_UserTask" name="Kayit Bilgisi Ver" camunda:assignee="ogrenci.ogrenci.MazeretliDersKaydi.kayit_bilgisi_ver">
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="Kayit_Bilgisi_Ver_UserTask" targetRef="EndEvent_1" />
+    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="Fak_Yon_Kar_No_UserTask" targetRef="Kaydet_ServiceTask" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
+      <bpmndi:BPMNShape id="_BPMNShape_Participant_3" bpmnElement="Maz_Ogrenci_Isleri" isHorizontal="true">
+        <dc:Bounds x="48" y="72" width="829" height="349" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_3" bpmnElement="Mazeretli_ogrenci_secimi_lane" isHorizontal="true">
+        <dc:Bounds x="78" y="72" width="799" height="349" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_2" bpmnElement="Fak_Yon_Kar_No_UserTask">
+        <dc:Bounds x="348" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_3" bpmnElement="StartEvent_1">
+        <dc:Bounds x="108" y="229" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="126" y="270" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_4" bpmnElement="Kaydet_ServiceTask">
+        <dc:Bounds x="504" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_4" bpmnElement="Kayit_Bilgisi_Ver_UserTask">
+        <dc:Bounds x="652" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="_BPMNShape_ServiceTask_4" targetElement="_BPMNShape_UserTask_4">
+        <di:waypoint xsi:type="dc:Point" x="604" y="247" />
+        <di:waypoint xsi:type="dc:Point" x="652" y="247" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="769" y="247" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_3" bpmnElement="EndEvent_1">
+        <dc:Bounds x="816" y="229" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="834" y="270" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="_BPMNShape_UserTask_4" targetElement="_BPMNShape_EndEvent_3">
+        <di:waypoint xsi:type="dc:Point" x="752" y="247" />
+        <di:waypoint xsi:type="dc:Point" x="816" y="247" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="637" y="247" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_20" bpmnElement="Program_Sec_UserTask">
+        <dc:Bounds x="180" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="_BPMNShape_StartEvent_3" targetElement="_BPMNShape_UserTask_20">
+        <di:waypoint xsi:type="dc:Point" x="144" y="247" />
+        <di:waypoint xsi:type="dc:Point" x="180" y="247" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="159" y="247" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="_BPMNShape_UserTask_20" targetElement="_BPMNShape_UserTask_2">
+        <di:waypoint xsi:type="dc:Point" x="280" y="247" />
+        <di:waypoint xsi:type="dc:Point" x="348" y="247" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="311" y="247" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="_BPMNShape_UserTask_2" targetElement="_BPMNShape_ServiceTask_4">
+        <di:waypoint xsi:type="dc:Point" x="448" y="247" />
+        <di:waypoint xsi:type="dc:Point" x="504" y="247" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="473" y="247" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

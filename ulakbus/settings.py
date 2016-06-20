@@ -5,9 +5,10 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-__author__ = 'Evren Esat Ozkan'
 from zengine.settings import *
 import os.path
+
+__author__ = 'Evren Esat Ozkan'
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -17,6 +18,8 @@ DEFAULT_LANG = 'tr'
 ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
 # absolute path to the workflow packages
 WORKFLOW_PACKAGES_PATHS.append(os.path.join(BASE_DIR, 'diagrams'))
+
+LOG_FILE = os.environ.get('LOG_FILE', './ulakbus.log')
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 
@@ -32,13 +35,13 @@ ROLE_MODEL = 'ulakbus.models.auth.Role'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # diagrams that does not require logged in user
-ANONYMOUS_WORKFLOWS = ['login', 'logout']
+ANONYMOUS_WORKFLOWS.extend(['login', 'logout'])
 
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 
 DATE_DEFAULT_FORMAT = "%d.%m.%Y"
-DATETIME_DEFAULT_FORMAT = "%d.%m.%Y %H:%s"
+DATETIME_DEFAULT_FORMAT = "%d.%m.%Y %H:%S"
 
 DEFAULT_WF_CATEGORY_NAME = 'Genel'
 DEFAULT_OBJECT_CATEGORY_NAME = 'Seçime Uygun Görevler'
@@ -66,34 +69,70 @@ OBJECT_MENU = {
         {'name': 'OgrenciProgram', 'category': 'Genel'},
     ],
     'personel': [
-        {'name': 'Personel', 'field': 'object_id', 'wf': 'kimlik_ve_iletisim_bilgileri',
+        {'name': 'Personel', 'wf': 'kimlik_ve_iletisim_bilgileri',
          'verbose_name': 'Kimlik ve Iletisim Bilgileri', 'field': 'personel_id'},
-        {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id'},
+
         {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri', 'field': 'personel_id'},
+
         {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri',
          'field': 'personel_id'},
+
         {'name': 'KurumDisiGorevlendirmeBilgileri', 'field': 'personel_id'},
+
         {'name': 'KurumIciGorevlendirmeBilgileri', 'field': 'personel_id'},
+
         {'name': 'AdresBilgileri', 'verbose_name': 'Adres Bilgileri', 'field': 'personel_id'},
-        {'name': 'HizmetKurs', 'field': 'personel_id'},
-        {'name': 'HizmetOkul', 'field': 'personel_id'},
-        {'name': 'HizmetMahkeme', 'field': 'personel_id'},
-        {'name': 'HizmetBirlestirme', 'verbose_name': 'Hizmet Birleştirme',
+
+        {'name': 'Atama', 'verbose_name': 'Atama İşlemleri', "wf": 'personel_atama',
          'field': 'personel_id'},
-        {'name': 'HizmetTazminat', 'verbose_name': 'Tazminat Bilgileri', 'field': 'personel_id'},
-        {'name': 'HizmetUnvan', 'verbose_name': 'Ünvan', 'field': 'personel_id'},
-        {'name': 'HizmetAcikSure', 'verbose_name': 'Açık Süre Bilgileri', 'field': 'personel_id'},
-        {'name': 'HizmetBorclanma', 'verbose_name': 'Borçlanma Bilgileri', 'field': 'personel_id'},
-        {'name': 'HizmetIHS', 'field': 'personel_id'},
-        {'name': 'HizmetIstisnaiIlgi', 'field': 'personel_id'},
-        {'name': 'AskerlikKayitlari', 'verbose_name': 'Askerlik Kayıtları',
+
+        {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
          'field': 'personel_id'},
-        {'name': 'Atama', 'field': 'personel_id'},
-        # {'name': 'Kadro'        , 'field': 'personel_id'},
+
+        {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
+         'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
+
+        # Hitap İşlemleri
+        {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'personel_hizmet_cetveli'},
+
+        {'name': 'HizmetKurs', 'verbose_name': 'Kurs Bilgileri', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetOkul', 'verbose_name': 'Okul Bilgileri', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetMahkeme', 'verbose_name': 'Mahkeme Bilgileri', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetBirlestirme', 'verbose_name': 'Hizmet Birleştirme', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetTazminat', 'verbose_name': 'Tazminat Bilgileri', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetUnvan', 'verbose_name': 'Ünvan', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetAcikSure', 'verbose_name': 'Açık Süre Bilgileri', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetBorclanma', 'verbose_name': 'Borçlanma Bilgileri', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetIHS', 'verbose_name': 'İtibari Hizmet', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'HizmetIstisnaiIlgi', 'verbose_name': 'İstisnai İlgi', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
+        {'name': 'AskerlikKayitlari', 'verbose_name': 'Askerlik Kayıtları', 'field': 'personel_id',
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
     ],
     'ogrenci': [
-        {'name': 'DersKatilimi', 'verbose_name': 'Devam Durumu', 'field': 'ogrenci_id'},
         {'name': 'Borc', 'verbose_name': 'Harç Bilgileri', 'field': 'ogrenci_id'},
+        {'name': 'OgrenciProgram', 'verbose_name': 'Öğrenci Mezuniyet', 'wf': 'ogrenci_mezuniyet',
+         'field': 'ogrenci_id'},
         {'name': 'DegerlendirmeNot', 'field': 'ogrenci_id'},
         {'name': 'OgrenciDersi', 'field': 'ogrenci_id'},
         {'name': 'Ogrenci', 'field': 'object_id', 'wf': 'ogrenci_kimlik_bilgileri',
@@ -102,17 +141,34 @@ OBJECT_MENU = {
          'verbose_name': 'İletişim Bilgileri'},
         {'name': 'OncekiEgitimBilgisi', 'verbose_name': 'Önceki Eğitim Bilgileri',
          'field': 'ogrenci_id'},
+        # {'name': 'OgrenciProgram', 'field': 'ogrenci_id', 'wf': 'ders_ekle',
+        #  'verbose_name': 'Ders Ekle'},
+        {'name': 'OgrenciProgram', 'field': 'ogrenci_id', 'wf': 'danisman_atama',
+         'verbose_name': 'Danışman Atama'},
+        {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
+         'field': 'ogrenci_id'},
+        {'name': 'OgrenciProgram', 'verbose_name': 'Mazaretli Öğrenci',
+         'wf': 'mazeretli_ders_kaydi', 'field': 'ogrenci_id'},
+        {'name': 'DegerlendirmeNot', 'verbose_name': 'Not Düzenleme',
+         'wf': 'ogrenci_isleri_not_duzenleme',
+         'field': 'ogrenci_id'},
+        {'name': 'OgrenciProgram', 'verbose_name': 'Kayıt Sil', 'wf': 'kayit_sil',
+         'field': 'ogrenci_id'},
+        {'name': 'OgrenciDersi', 'verbose_name': 'Ders Ekle', 'wf': 'ogrenci_ders_atama',
+         'field': 'ogrenci_id'}
     ],
 }
 
-VIEW_URLS = [
+VIEW_URLS.update({
     # ('falcon URI template', 'python path to view method/class')
-    ('/ara/ogrenci/{query}', 'ulakbus.views.system.SearchStudent'),
-    ('/ara/personel/{query}', 'ulakbus.views.system.SearchPerson'),
-    ('/notify/', 'ulakbus.views.system.Notification'),
-    ('/get_current_user/', 'ulakbus.views.system.GetCurrentUser'),
-    ('/menu', 'ulakbus.views.system.UlakbusMenu'),
-]
+    'ogrenci_ara': 'ulakbus.views.system.SearchStudent',
+    'personel_ara': 'ulakbus.views.system.SearchPerson',
+    'notify': 'ulakbus.views.system.Notification',
+    'get_current_user': 'ulakbus.views.system.GetCurrentUser',
+    'dashboard': 'ulakbus.views.system.UlakbusMenu',
+    'menu': 'ulakbus.views.system.UlakbusMenu',
+    'ders_arama': 'ulakbus.views.ogrenci.ogrenci.ders_arama'
+})
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
@@ -164,6 +220,10 @@ MAX_NUM_DROPDOWN_LINKED_MODELS = 20
 
 PERMISSION_PROVIDER = 'ulakbus.models.auth.ulakbus_permissions'
 
-
 ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabilir." \
                     "Şimdi bunlardan birini görüyorsunuz. Lütfen daha sonra tekrar deneyiniz"
+
+SICIL_PREFIX = "KON"
+
+#: These models will not flushed when running tests
+TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'

@@ -71,6 +71,11 @@ class User(Model):
         self.password = pbkdf2_sha512.encrypt(raw_password, rounds=10000,
                                               salt_size=10)
 
+    def pre_save(self):
+        """ encrypt password if not already encrypted """
+        if self.password and not self.password.startswith('$pbkdf2'):
+            self.set_password(self.password)
+
     def check_password(self, raw_password):
         """
         Verilen encrypt edilmemiş şifreyle kullanıcıya ait encrypt
@@ -98,6 +103,10 @@ class User(Model):
         """
         return self.role_set.node_dict[role_id]
 
+    def send_message(self, title, message, sender=None):
+        from zengine.notifications import Notify
+        Notify(self.key).set_message(title, message, typ=Notify.Message, sender=sender)
+
 
 class Permission(Model):
     """Permission modeli
@@ -119,6 +128,39 @@ class Permission(Model):
     def __unicode__(self):
         return "%s %s" % (self.name, self.code)
 
+    def get_permitted_users(self):
+        """
+        Get users which has this permission
+
+        Returns:
+            User list
+        """
+        users = set()
+        for ars in self.abstract_role_set:
+            for r in ars.abstract_role.role_set:
+                users.add(r.role.user)
+        for r in self.role_set:
+            users.add(r.role.user)
+
+        return users
+
+
+    def get_permitted_roles(self):
+        """
+        Get roles which has this permission
+
+        Returns:
+            Role list
+        """
+        roles = set()
+        for ars in self.abstract_role_set:
+            for r in ars.abstract_role.role_set:
+                roles.add(r.role)
+        for r in self.role_set:
+            roles.add(r.role)
+        return roles
+
+
 
 class AbstractRole(Model):
     """AbstractRole Modeli
@@ -128,6 +170,7 @@ class AbstractRole(Model):
     """
     id = field.Integer("ID No", index=True)
     name = field.String("İsim", index=True)
+    read_only = field.Boolean("Read Only")
 
     class Meta:
         app = 'Sistem'
@@ -147,7 +190,7 @@ class AbstractRole(Model):
             list: Permission code değerleri
 
         """
-        return [p.permission.code for p in self.Permissions]
+        return [p.permission.code for p in self.Permissions if p.permission.code]
 
     def add_permission(self, perm):
         """
@@ -302,7 +345,7 @@ class Role(Model):
             list: yetki listesi
 
         """
-        return [p.permission.code for p in self.Permissions] + (
+        return [p.permission.code for p in self.Permissions if p.permission.code] + (
             self.abstract_role.get_permissions() if self.abstract_role.key else [])
 
     def _cache_permisisons(self, pcache):
@@ -399,7 +442,7 @@ class LimitedPermissions(Model):
     ip'lerden gelen requestlere cevap verecek şekilde kısıtlanır.
 
     """
-    restrictive = field.Boolean("Sınırlandırıcı",default=False)
+    restrictive = field.Boolean("Sınırlandırıcı", default=False)
     time_start = field.String("Başlama Tarihi", index=True)
     time_end = field.String("Bitiş Tarihi", index=True)
 
@@ -429,6 +472,7 @@ class AuthBackend(object):
     için kullanılan bir dizi metodu içerir.
 
     """
+
     def __init__(self, current):
         self.session = current.session
         self.current = current
@@ -493,7 +537,8 @@ class AuthBackend(object):
         default_role = user.role_set[0].role
         # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
-        self.current.user_id = default_role.key
+        self.current.role_id = default_role.key
+        self.current.user_id = user.key
         self.perm_cache = PermissionCache(default_role.key)
         self.session['permissions'] = default_role.get_permissions()
 
@@ -532,7 +577,7 @@ class AuthBackend(object):
             bool:
 
         """
-        user = User.objects.filter(username=username).get()
+        user = User.objects.get(username=username)
         is_login_ok = user.check_password(password)
         if is_login_ok:
             self.set_user(user)
@@ -563,6 +608,7 @@ def clear_perm_cache(sender, *args, **kwargs):
     elif sender.model_class.__name__ == 'AbstractRole':
         PermissionCache.flush()
 
+
 def ulakbus_permissions():
     """Bu metot Ulakbus'e ait tüm yetkileri birleştirerek döner.
 
@@ -574,3 +620,4 @@ def ulakbus_permissions():
     from ulakbus.views.reports import ReporterRegistry
     report_perms = ReporterRegistry.get_permissions()
     return default_perms + report_perms
+

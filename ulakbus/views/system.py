@@ -13,6 +13,7 @@ from pyoko.modelmeta import model_registry
 from pyoko.conf import settings
 
 from ulakbus.views.reports import ReporterRegistry
+#from zengine.views import basic_view
 from zengine.views.base import BaseView
 from ulakbus.models import Personel, Ogrenci
 from zengine.views.menu import Menu
@@ -22,8 +23,8 @@ class Search(BaseView):
     SEARCH_ON = None
 
     def __init__(self, *args, **kwargs):
-        self.query = kwargs.pop('query')
-        super(Search, self).__init__(*args)
+        super(Search, self).__init__(*args, **kwargs)
+        self.query = self.current.input['query']
         self.output['results'] = []
         self.do_search()
 
@@ -38,7 +39,7 @@ class Search(BaseView):
         for o in objects:
             self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
 
-
+# @basic_view('ogrenci_ara')
 class SearchStudent(Search):
     SEARCH_ON = Ogrenci
 
@@ -63,16 +64,22 @@ class Notification(BaseView):
     def __init__(self, current):
         super(Notification, self).__init__(current)
 
-        if 'read' in current.input:
-            self.mark_as_read()
+        # if 'read' in current.input:
+        #     self.mark_as_read()
+        self.output['notifications'] = []
+        msg_id_to_delete = current.input.get('id')
+        notifies = list(self.current.msg_cache.get_all())
+        for ntf in notifies:
+            if ntf['id'] == msg_id_to_delete:
+                self.current.msg_cache.remove_item(ntf)
+            else:
+                self.output['notifications'].append(ntf)
+        self.output['cmd'] = 'notification'
 
-        notifies = self.current.msg_cache.get_all()
-        self.output['notifications'] = list(notifies)
-
-    def mark_as_read(self):
-        read_messages = self.current.input['read']
-        for msg in read_messages:
-            self.current.msg_cache.remove_item(msg)
+    # def mark_as_read(self):
+    #     read_messages = self.current.input['read']
+    #     for msg in read_messages:
+    #         self.current.msg_cache.remove_item(msg)
 
 
 class GetCurrentUser(BaseView):

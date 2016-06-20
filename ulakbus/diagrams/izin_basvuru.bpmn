@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_HGO90AF8Eeam2ohh4WVWnA" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:collaboration id="_Collaboration_4" name="izin_basvuru">
+    <bpmn2:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="Formlar" />
+      </camunda:properties>
+    </bpmn2:extensionElements>
+    <bpmn2:participant id="_Participant_3" name="Personel" processRef="izin_basvuru" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="izin_basvuru" name="İzin Başvuru" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn2:lane id="izin_basvuru_lane_1" name="Izin Basvuru">
+        <bpmn2:flowNodeRef>StartEvent_2</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_0jdpi39</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>izin_basvuru_kaydet</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>izin_basvuru_formu_goster</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>izin_kontrol</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ExclusiveGateway_01</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="izin_basvuru_goruntule" name="Izin Basvuru Goruntule">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="permissions" value="IzinBasvuruGoruntule" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
+        <bpmn2:flowNodeRef>izin_basvuru_sonuc_kaydet</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>izin_istegi_goruntule</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="StartEvent_2">
+      <bpmn2:outgoing>SequenceFlow_0d5yodu</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="izin_basvuru_formu_goster" targetRef="izin_basvuru_kaydet" />
+    <bpmn2:serviceTask id="izin_basvuru_sonuc_kaydet" name="izin basvuru sonuc kaydet" camunda:class="personel.izin.IzinBasvuru.izin_basvuru_sonuc_kaydet">
+      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="izin_basvuru_sonuc_kaydet" targetRef="EndEvent_1" />
+    <bpmn2:userTask id="izin_istegi_goruntule" name="izin istegi goruntule" camunda:assignee="personel.izin.IzinBasvuru.izin_basvuru_goster">
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="izin_istegi_goruntule" targetRef="izin_basvuru_sonuc_kaydet" />
+    <bpmn2:endEvent id="EndEvent_1">
+      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="izin_basvuru_kaydet" targetRef="izin_istegi_goruntule" />
+    <bpmn2:sequenceFlow id="SequenceFlow_0d5yodu" sourceRef="StartEvent_2" targetRef="izin_kontrol" />
+    <bpmn2:endEvent id="EndEvent_0jdpi39">
+      <bpmn2:incoming>SequenceFlow_02</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:serviceTask id="izin_basvuru_kaydet" name="izin basvuru kaydet" camunda:class="personel.izin.IzinBasvuru.izin_basvuru_kaydet">
+      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:userTask id="izin_basvuru_formu_goster" name="izin basvuru formu goster" camunda:assignee="personel.izin.IzinBasvuru.izin_basvuru_formu_goster">
+      <bpmn2:incoming>SequenceFlow_0</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:serviceTask id="izin_kontrol" name="İzin Kontrol" camunda:class="personel.izin.IzinBasvuru.izin_kontrol">
+      <bpmn2:incoming>SequenceFlow_0d5yodu</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1mxz1t8</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_01">
+      <bpmn2:incoming>SequenceFlow_1mxz1t8</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_02</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_1mxz1t8" sourceRef="izin_kontrol" targetRef="ExclusiveGateway_01" />
+    <bpmn2:sequenceFlow id="SequenceFlow_0" sourceRef="ExclusiveGateway_01" targetRef="izin_basvuru_formu_goster">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'izin_basvuru_formu_goster']]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_02" sourceRef="ExclusiveGateway_01" targetRef="EndEvent_0jdpi39">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'end']]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_4">
+      <bpmndi:BPMNShape id="_BPMNShape_Participant_4" bpmnElement="_Participant_3" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="1153" height="475" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_4" bpmnElement="izin_basvuru_lane_1" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="1123" height="238" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_21" bpmnElement="izin_basvuru_formu_goster">
+        <dc:Bounds x="391" y="81" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_23" bpmnElement="izin_istegi_goruntule">
+        <dc:Bounds x="744" y="317" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_4" bpmnElement="EndEvent_1">
+        <dc:Bounds x="1080" y="339" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1098" y="380" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_5" bpmnElement="StartEvent_2">
+        <dc:Bounds x="72" y="103" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="168" y="191" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_6" bpmnElement="izin_basvuru_sonuc_kaydet">
+        <dc:Bounds x="912" y="317" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="_BPMNShape_UserTask_23" targetElement="_BPMNShape_ServiceTask_6">
+        <di:waypoint xsi:type="dc:Point" x="844" y="357" />
+        <di:waypoint xsi:type="dc:Point" x="912" y="357" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="875" y="427" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="_BPMNShape_ServiceTask_6" targetElement="_BPMNShape_EndEvent_4">
+        <di:waypoint xsi:type="dc:Point" x="1012" y="357" />
+        <di:waypoint xsi:type="dc:Point" x="1080" y="357" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1044" y="427" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_7" bpmnElement="izin_basvuru_kaydet">
+        <dc:Bounds x="561" y="81" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="_BPMNShape_UserTask_21" targetElement="_BPMNShape_ServiceTask_7">
+        <di:waypoint xsi:type="dc:Point" x="491" y="121" />
+        <di:waypoint xsi:type="dc:Point" x="561" y="121" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="341" y="191" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_6" bpmnElement="izin_basvuru_goruntule" isHorizontal="true">
+        <dc:Bounds x="30" y="237" width="1123" height="238" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_ServiceTask_7" targetElement="_BPMNShape_UserTask_23">
+        <di:waypoint xsi:type="dc:Point" x="661" y="121" />
+        <di:waypoint xsi:type="dc:Point" x="744" y="121" />
+        <di:waypoint xsi:type="dc:Point" x="744" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0d5yodu_di" bpmnElement="SequenceFlow_0d5yodu">
+        <di:waypoint xsi:type="dc:Point" x="108" y="121" />
+        <di:waypoint xsi:type="dc:Point" x="134" y="121" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="93" y="111" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1mhaxck_di" bpmnElement="izin_kontrol">
+        <dc:Bounds x="134" y="81" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0jdpi39_di" bpmnElement="EndEvent_0jdpi39">
+        <dc:Bounds x="951.0709504685408" y="103" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="924.0709504685408" y="139" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_01vuh0w_di" bpmnElement="ExclusiveGateway_01" isMarkerVisible="true">
+        <dc:Bounds x="272.07095046854084" y="96" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="252.07095046854084" y="146" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1mxz1t8_di" bpmnElement="SequenceFlow_1mxz1t8">
+        <di:waypoint xsi:type="dc:Point" x="234" y="121" />
+        <di:waypoint xsi:type="dc:Point" x="272" y="121" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="208" y="111" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0s0eh7j_di" bpmnElement="SequenceFlow_0">
+        <di:waypoint xsi:type="dc:Point" x="322.07095046854084" y="121" />
+        <di:waypoint xsi:type="dc:Point" x="391" y="121" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="311.5354752342704" y="111" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_02w1b9k_di" bpmnElement="SequenceFlow_02">
+        <di:waypoint xsi:type="dc:Point" x="297" y="96" />
+        <di:waypoint xsi:type="dc:Point" x="297" y="76" />
+        <di:waypoint xsi:type="dc:Point" x="529" y="17" />
+        <di:waypoint xsi:type="dc:Point" x="952" y="117" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="591.5" y="111" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

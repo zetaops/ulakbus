@@ -28,11 +28,10 @@ Example:
 
 """
 
-
 from ulakbus import settings
 import requests
 import json
-from zato_url_paths import service_url_paths
+from .zato_url_paths import service_url_paths
 
 
 class ZatoService(object):
@@ -101,7 +100,7 @@ class ZatoService(object):
             r.close()
             try:
                 if response['status'] == 'ok':
-                    return response['result']
+                    return self.rebuild_response(response['result'])
                 else:
                     # all zato internal errors will be handled here,
                     # riak error, connection error etc..
@@ -121,9 +120,21 @@ class ZatoService(object):
                             "this means something really went bad, check zato server logs"
                             % r.status_code)
 
+    def rebuild_response(self, response_data):
+        """
+        Rebuild response data
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
+        return response_data
+
 
 class TcknService(ZatoService):
-
     @staticmethod
     def check_turkish_identity_number(tckn):
         """
@@ -192,22 +203,69 @@ class HitapAcikSureSenkronizeEt(HitapService):
     """
 
     def __init__(self, tckn=""):
-
         super(HitapAcikSureSenkronizeEt, self).__init__()
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
 class HitapAcikSureEkle(HitapService):
-    pass
+    """
+    Personelin açık süre hizmet bilgilerinin Hitap'a,
+    eklemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapAcikSureEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapAcikSureGuncelle(HitapService):
-    pass
+    """
+    Personelin açık süre hizmet bilgilerinin Hitap üzerinde
+    guncellemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapAcikSureGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapAcikSureSil(HitapService):
-    pass
+    """
+    Personelin açık süre hizmet bilgilerinin Hitap üzerinden
+    silme işlemini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapAcikSureSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapAskerlikGetir(HitapService):
@@ -250,15 +308,62 @@ class HitapAskerlikSenkronizeEt(HitapService):
 
 
 class HitapAskerlikEkle(HitapService):
-    pass
+    """
+    Personelin askerlik bilgilerinin Hitap'a eklemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapAskerlikEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapAskerlikGuncelle(HitapService):
-    pass
+    """
+    Personelin askerlik bilgilerinin Hitap üzerinde
+    guncellemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapAskerlikGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapAskerlikSil(HitapService):
-    pass
+    """
+    Personelin askerlik bilgilerinin Hitap üzerinden
+    silme işlemini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapAskerlikSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapBirlestirmeGetir(HitapService):
@@ -301,15 +406,63 @@ class HitapBirlestirmeSenkronizeEt(HitapService):
 
 
 class HitapBirlestirmeEkle(HitapService):
-    pass
+    """
+    Personelin hizmet birleştirme bilgilerinin Hitap'a
+    eklemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapBirlestirmeEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapBirlestirmeGuncelle(HitapService):
-    pass
+    """
+    Personelin hizmet birleştirme bilgilerinin Hitap üzerinde
+    güncellemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapBirlestirmeGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapBirlestirmeSil(HitapService):
-    pass
+    """
+    Personelin hizmet birleştirme bilgilerinin Hitap üzerinde
+    silme işlemini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapBirlestirmeSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapBorclanmaGetir(HitapService):
@@ -352,15 +505,63 @@ class HitapBorclanmaSenkronizeEt(HitapService):
 
 
 class HitapBorclanmaEkle(HitapService):
-    pass
+    """
+    Personelin hizmet borçlanma bilgilerinin Hitap'a
+    eklemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapBorclanmaEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapBorclanmaGuncelle(HitapService):
-    pass
+    """
+    Personelin hizmet borçlanma bilgilerinin Hitap üzerinde
+    güncellemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapBorclanmaGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapBorclanmaSil(HitapService):
-    pass
+    """
+    Personelin hizmet borçlanma bilgilerinin Hitap üzerinden
+    silme işlemini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapBorclanmaSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapHizmetCetveliGetir(HitapService):
@@ -403,15 +604,63 @@ class HitapHizmetCetveliSenkronizeEt(HitapService):
 
 
 class HitapHizmetCetveliEkle(HitapService):
-    pass
+    """
+    Personelin hizmet kaydı bilgilerinin Hitap'a
+    eklemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapHizmetCetveliEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapHizmetCetveliGuncelle(HitapService):
-    pass
+    """
+    Personelin hizmet kaydı bilgilerinin Hitap üzerinde
+    güncellemesini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapHizmetCetveliGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapHizmetCetveliSil(HitapService):
-    pass
+    """
+    Personelin hizmet kaydı bilgilerinin Hitap üzerinde
+    silme işlemini yapar.
+
+    Args:
+      service_payload (dict): Servise gönderilecek olan veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapHizmetCetveliSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapIHSGetir(HitapService):
@@ -455,20 +704,65 @@ class HitapIHSSenkronizeEt(HitapService):
 
 
 class HitapIHSEkle(HitapService):
-    pass
+    """Hitap'a personelin itibari hizmet süresi zammı
+    bilgisi ekler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapIHSEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapIHSGuncelle(HitapService):
-    pass
+    """Hitap üzerinde personelin itibari hizmet süresi zammı
+    bilgilerini günceller.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapIHSGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapIHSSil(HitapService):
-    pass
+    """Hitap üzerinde personelin itibari hizmet süresi zammı
+    bilgilerini siler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapIHSSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapIstisnaiIlgiGetir(HitapService):
     """
-    Hitap üzerinden, personelin istisnai ilgi
+    Hitap üzerinden personelin istisnai ilgi
     bilgilerini sorgular.
 
     Args:
@@ -507,15 +801,58 @@ class HitapIstisnaiIlgiSenkronizeEt(HitapService):
 
 
 class HitapIstisnaiIlgiEkle(HitapService):
-    pass
+    """Hitap'a personelin istisnai ilgi bilgilerini ekler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapIstisnaiIlgiEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapIstisnaiIlgiGuncelle(HitapService):
-    pass
+    """Hitap üzerinde personelin istisnai ilgi bilgilerini
+     günceller.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapIstisnaiIlgiGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapIstisnaiIlgiSil(HitapService):
-    pass
+    """Hitap üzerinde personelin istisnai ilgi bilgilerini siler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapIstisnaiIlgiSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapKursGetir(HitapService):
@@ -558,15 +895,57 @@ class HitapKursSenkronizeEt(HitapService):
 
 
 class HitapKursEkle(HitapService):
-    pass
+    """Hitap'a personelin kurs bilgilerini ekler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapKursEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapKursGuncelle(HitapService):
-    pass
+    """Personelin Hitap'taki kurs bilgilerini günceller.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapKursGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapKursSil(HitapService):
-    pass
+    """Personelin Hitap'taki kurs bilgilerini siler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapKursSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapMahkemeGetir(HitapService):
@@ -609,15 +988,57 @@ class HitapMahkemeSenkronizeEt(HitapService):
 
 
 class HitapMahkemeGuncelle(HitapService):
-    pass
+    """Personelin Hitap'taki mahkeme bilgilerini gunceller.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapMahkemeGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapMahkemeEkle(HitapService):
-    pass
+    """Personelin mahkeme bilgilerini Hitap'a ekler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapMahkemeEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapMahkemeSil(HitapService):
-    pass
+    """Personelin Hitap'taki mahkeme bilgilerini siler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapMahkemeSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapNufusGetir(HitapService):
@@ -660,11 +1081,39 @@ class HitapNufusSenkronizeEt(HitapService):
 
 
 class HitapNufusEkle(HitapService):
-    pass
+    """Personelin nufus bilgilerini Hitap'a ekler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapNufusEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapNufusGuncelle(HitapService):
-    pass
+    """Personelin  Hitap'ta bulunan nufus bilgilerini gunceller.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapNufusGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapNufusSil(HitapService):
@@ -711,15 +1160,57 @@ class HitapOkulSenkronizeEt(HitapService):
 
 
 class HitapOkulEkle(HitapService):
-    pass
+    """Personelin okul bilgilerini Hitap'a ekler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapOkulEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapOkulGuncelle(HitapService):
-    pass
+    """Personelin Hitap'ta bulunan okul bilgilerini gunceller.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapOkulGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapOkulSil(HitapService):
-    pass
+    """Personelin Hitap'ta bulunan okul bilgilerini siler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapOkulSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapTazminatGetir(HitapService):
@@ -762,15 +1253,57 @@ class HitapTazminatSenkronizeEt(HitapService):
 
 
 class HitapTazminatEkle(HitapService):
-    pass
+    """Personelin tazminat bilgilerini Hitap'a ekler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapTazminatEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapTazminatGuncelle(HitapService):
-    pass
+    """Personelin Hitap'ta bulunan tazminat bilgilerini günceller.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapTazminatGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapTazminatSil(HitapService):
-    pass
+    """Personelin Hitap'ta bulunan tazminat bilgilerini siler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapTazminatSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapUnvanGetir(HitapService):
@@ -813,15 +1346,57 @@ class HitapUnvanSenkronizeEt(HitapService):
 
 
 class HitapUnvanEkle(HitapService):
-    pass
+    """Personelin ünvan bilgilerini Hitap'a ekler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapUnvanEkle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapUnvanGuncelle(HitapService):
-    pass
+    """Personelin Hitap'ta bulunan ünvan bilgilerini günceller.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapUnvanGuncelle, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class HitapUnvanSil(HitapService):
-    pass
+    """Personelin Hitap'ta bulunan ünvan bilgilerini siler.
+
+    Args:
+      service_payload (dict): Servise gönderilecek veri
+
+    Attributes:
+        service_uri (str): İlgili Hitap servisinin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, service_payload={}):
+        super(HitapUnvanSil, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
 
 
 class MernisKimlikBilgileriGetir(TcknService):
@@ -842,6 +1417,92 @@ class MernisKimlikBilgileriGetir(TcknService):
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
+    def rebuild_response(self, response_data):
+        """
+        Kimlik Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
+        ret = {}
+
+        try:
+            kb = response_data['KisiBilgisi']
+
+            ret['tckn'] = kb['TCKimlikNo']
+            ret['ad'] = kb['TemelBilgisi']['Ad']
+            ret['soyad'] = kb['TemelBilgisi']['Soyad']
+            ret['cinsiyet'] = kb['TemelBilgisi']['Cinsiyet']['Kod']
+            ret['dogum_tarihi'] = '%s.%s.%s' % (
+                kb['TemelBilgisi']['DogumTarih']['Gun'], kb['TemelBilgisi']['DogumTarih']['Ay'],
+                kb['TemelBilgisi']['DogumTarih']['Yil'])
+            ret['dogum_yeri'] = kb['TemelBilgisi']['DogumYer']
+            ret['baba_adi'] = kb['TemelBilgisi']['BabaAd']
+            ret['ana_adi'] = kb['TemelBilgisi']['AnneAd']
+            ret['medeni_hali'] = kb['DurumBilgisi']['MedeniHal']['Kod']
+            ret['kayitli_oldugu_il'] = kb['KayitYeriBilgisi']['Il']['Aciklama']
+            ret['kayitli_oldugu_ilce'] = kb['KayitYeriBilgisi']['Ilce']['Aciklama']
+            ret['kayitli_oldugu_mahalle_koy'] = kb['KayitYeriBilgisi']['Cilt']['Aciklama']
+            ret['kayitli_oldugu_cilt_no'] = kb['KayitYeriBilgisi']['Cilt']['Kod']
+            ret['kayitli_oldugu_aile_sira_no'] = kb['KayitYeriBilgisi']['AileSiraNo']
+            ret['kayitli_oldugu_sira_no'] = kb['KayitYeriBilgisi']['BireySiraNo']
+        except KeyError:
+            ret['hata'] = True
+
+        return ret
+
+
+class MernisCuzdanBilgileriGetir(TcknService):
+    """
+    Personelin Mernis üzerinden nüfus cüzdanı bilgilerini sorgular.
+
+    Args:
+        tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+
+    Attributes:
+        service_uri (str): İlgili servisin adı
+        payload (str): Servis verisi
+
+    """
+
+    def __init__(self, tckn=""):
+        super(MernisCuzdanBilgileriGetir, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+    def rebuild_response(self, response_data):
+        """
+        Mernis Cüzdan Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
+        ret = {}
+
+        try:
+            kb = response_data['CuzdanBilgisi']
+            ret['tckn'] = kb['TCKimlikNo']
+            ret['cuzdan_seri'] = kb['SeriNo'][0:3]
+            ret['cuzdan_seri_no'] = kb['SeriNo'][3:]
+            ret['kimlik_cuzdani_verildigi_yer'] = kb['VerildigiIlce']['b:Aciklama']
+            ret['kimlik_cuzdani_verilis_nedeni'] = kb['CuzdanVerilmeNeden']['b:Aciklama']
+            ret['kimlik_cuzdani_kayit_no'] = kb['KayitNo']
+            ret['kimlik_cuzdani_verilis_tarihi'] = '%s.%s.%s' % (
+                kb['VerilmeTarih']['b:Gun'], kb['VerilmeTarih']['b:Ay'],
+                kb['VerilmeTarih']['b:Yil'])
+        except KeyError:
+            ret['hata'] = True
+
+        return ret
+
 
 class KPSAdresBilgileriGetir(TcknService):
     """
@@ -860,3 +1521,25 @@ class KPSAdresBilgileriGetir(TcknService):
         super(KPSAdresBilgileriGetir, self).__init__()
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
+
+    def rebuild_response(self, response_data):
+        """
+        KPS Adres Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+        Args:
+            response_data (dict): contains data returned from service
+
+        Returns:
+            response_data (dict): reformatted data compatible with our data models
+
+        """
+        ret = {}
+        try:
+            kb = response_data['KimlikNoileKisiAdresBilgileri']['YerlesimYeriAdresi']
+            ret['ikamet_adresi'] = kb['AcikAdres']
+            ret['ikamet_il'] = kb['IlIlceMerkezAdresi']['Il']
+            ret['ikamet_ilce'] = kb['IlIlceMerkezAdresi']['Ilce']
+        except KeyError:
+            ret['hata'] = True
+
+        return ret

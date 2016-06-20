@@ -11,8 +11,7 @@ import os
 import sys
 from zengine.management_commands import *
 from lxml import etree
-from ulakbus.models import Donem, Ogrenci, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, \
-    Okutman, Campus
+from ulakbus.models import Donem, Ogrenci, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Campus
 import datetime
 
 
@@ -26,9 +25,11 @@ class UnitimeEntityXMLExport(Command):
 
     def write_file(self, data):
         out_dir = self.create_dir()
-        out_file = open( out_dir + '/' + self.FILE_NAME, 'w+')
+        out_file = open(out_dir + '/' + self.FILE_NAME, 'w+')
         out_file.write("%s" % data)
-        print("Veriler %s dizini altinda %s adlı dosyaya kayit edilmiştir" % (out_dir, self.FILE_NAME))
+        print(
+            "Veriler %s dizini altinda %s adlı dosyaya kayit edilmiştir" % (
+                out_dir, self.FILE_NAME))
 
     def run(self):
         data = self.prepare_data()
@@ -42,7 +43,7 @@ class UnitimeEntityXMLExport(Command):
 
     def create_dir(self):
         current_date = datetime.datetime.now()
-        export_directory = self.EXPORT_DIR + current_date.strftime('%d_%m_%Y_%H_%M_%S')
+        export_directory = self.EXPORT_DIR + current_date.strftime('%d_%m_%Y_%H')
         if not os.path.exists(export_directory):
             os.makedirs(export_directory)
         return export_directory
@@ -90,6 +91,7 @@ class UnitimeEntityXMLExport(Command):
             print("Bolum Bulunamadi")
             sys.exit(1)
 
+
 class ExportRooms(UnitimeEntityXMLExport):
     CMD_NAME = 'export_rooms'
     HELP = 'Generates Unitime XML import file for rooms'
@@ -98,44 +100,48 @@ class ExportRooms(UnitimeEntityXMLExport):
     DOC_TYPE = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
 
     def prepare_data(self):
-            # create XML
-            root = ''
-            for campus in self.campuses:
-                if campus.building_set:
-                    root = etree.Element('buildingsRooms', campus="%s" % self.uni,
-                                         term="%s" % self.term.ad,
-                                         year="%s" % self.term.baslangic_tarihi.year)
-                    for building in campus.building_set:
+        # create XML
+        root = ''
+        for campus in self.campuses:
+            if campus.building_set:
+                root = etree.Element('buildingsRooms', campus="%s" % self.uni,
+                                     term="%s" % self.term.ad,
+                                     year="%s" % self.term.baslangic_tarihi.year)
+                for building in campus.building_set:
 
-                        buildingelement = etree.SubElement(root, 'building',
-                                                           externalId="%s" % building.building.key,
-                                                           abbreviation="%s" % building.building.code,
-                                                           locationX="%s" % building.building.coordinate_x,
-                                                           locationY="%s" % building.building.coordinate_y,
-                                                           name="%s" % building.building.name)
-                        if building.building.room_set:
+                    buildingelement = etree.SubElement(
+                            root, 'building',
+                            externalId="%s" % building.building.key,
+                            abbreviation="%s" % building.building.code,
+                            locationX="%s" % building.building.coordinate_x,
+                            locationY="%s" % building.building.coordinate_y,
+                            name="%s" % building.building.name)
+                    if building.building.room_set:
 
-                            for room in building.building.room_set:
-                                roomelement = etree.SubElement(buildingelement, 'room',
-                                                               externalId="%s" % room.room.key,
-                                                               locationX="%s" % building.building.coordinate_x,
-                                                               locationY="%s" % building.building.coordinate_y,
-                                                               roomNumber="%s" % room.room.code,
-                                                               roomClassification="%s" % room.room.room_type.type,
-                                                               capacity="%s" % room.room.capacity,
-                                                               instructional="True")
+                        for room in building.building.room_set:
+                            roomelement = etree.SubElement(
+                                    buildingelement, 'room',
+                                    externalId="%s" % room.room.key,
+                                    locationX="%s" % building.building.coordinate_x,
+                                    locationY="%s" % building.building.coordinate_y,
+                                    roomNumber="%s" % room.room.code,
+                                    roomClassification="%s" % room.room.room_type.type,
+                                    capacity="%s" % room.room.capacity,
+                                    instructional="True")
 
-                                if room.room.RoomDepartments:
-                                    roommdepartments = etree.SubElement(roomelement,
-                                                                        'roomDepartments')
-                                    for department in room.room.RoomDepartments:
-                                        etree.SubElement(roommdepartments, 'assigned',
-                                                         departmentNumber="%s" % department.unit.yoksis_no,
-                                                         percent="100")
+                            if room.room.RoomDepartments:
+                                roommdepartments = etree.SubElement(roomelement,
+                                                                    'roomDepartments')
+                                for department in room.room.RoomDepartments:
+                                    etree.SubElement(
+                                            roommdepartments, 'assigned',
+                                            departmentNumber="%s" % department.unit.yoksis_no,
+                                            percent="100")
 
-            # pretty string
-            return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                                  doctype="%s" % self.DOC_TYPE)
+        # pretty string
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % self.DOC_TYPE)
+
 
 class ExportSessionsToXml(UnitimeEntityXMLExport):
     CMD_NAME = 'export_sessions'
@@ -145,7 +151,7 @@ class ExportSessionsToXml(UnitimeEntityXMLExport):
     DOC_TYPE = '<!DOCTYPE session PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/Session.dtd">'
 
     def prepare_data(self):
-        root=''
+        root = ''
         # create XML
         for campus in self.campuses:
 
@@ -160,8 +166,7 @@ class ExportSessionsToXml(UnitimeEntityXMLExport):
                                  eventBegin="%s" % start_date, eventEnd="%s" % end_date)
         # pretty string
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                           doctype="%s" % self.DOC_TYPE)
-
+                              doctype="%s" % self.DOC_TYPE)
 
 
 class ExportDepartmentsToXML(UnitimeEntityXMLExport):
@@ -177,14 +182,14 @@ class ExportDepartmentsToXML(UnitimeEntityXMLExport):
         for campus in self.campuses:
 
             root = etree.Element('departments', campus="%s" % self.uni, term="%s" % self.term.ad,
-                                     year="%s" % self.term.baslangic_tarihi.year)
+                                 year="%s" % self.term.baslangic_tarihi.year)
             for unit in self.bolumler:
                 etree.SubElement(root, 'department', externalId="%s" % unit.key,
                                  abbreviation="%s" % unit.yoksis_no, name="%s" % unit.name,
                                  deptCode="%s" % unit.yoksis_no, allowEvents="true")
         # pretty string
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                           doctype="%s" % self.DOC_TYPE)
+                              doctype="%s" % self.DOC_TYPE)
 
 
 class ExportAcademicSubjectsToXML(UnitimeEntityXMLExport):
@@ -217,7 +222,6 @@ class ExportAcademicSubjectsToXML(UnitimeEntityXMLExport):
                               doctype="%s" % self.DOC_TYPE)
 
 
-
 class ExportStaffToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_staff'
     HELP = 'Generates Unitime XML import file for staff'
@@ -236,7 +240,8 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
                     staff_dep = staffmember.birim_no
                     if staffmember.birim_no:
                         try:
-                            staff_dep = Unit.objects.filter(yoksis_no=staffmember.birim_no)[0].parent_unit_no
+                            staff_dep = Unit.objects.filter(yoksis_no=staffmember.birim_no)[
+                                0].parent_unit_no
                             etree.SubElement(root, 'staffMember', externalId="%s" % staffmember.key,
                                              firstName="%s" % staffmember.ad,
                                              lastName="%s" % staffmember.soyad,
@@ -253,13 +258,13 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
     @staticmethod
     def acadTitle(title):
         if title == 1:
-            return ["Professor", "Prof"]
+            return ["Professor", "PROF"]
         elif title == 2:
-            return ["Associate Professor", "Ass. Prof"]
+            return ["Associate Professor", "ASSOC_PROF"]
         elif title == 3:
-            return ["Research Assistant", "Res. Assist."]
+            return ["Research Assistant", "INSTRUCTOR"]
         elif title == 4:
-            return ["Lecturer", "Lect."]
+            return ["Lecturer", "INSTRUCTOR"]
         else:
             return ["", ""]
 
@@ -355,29 +360,20 @@ class ExportCurriculaToXML(UnitimeEntityXMLExport):
             for program in program_list:
                 ders_list = Ders.objects.filter(program=program).count()
                 try:
-                    parent_yoksis_no = Unit.objects.filter(yoksis_no=program.yoksis_no)[0].parent_unit_no
+                    parent_yoksis_no = Unit.objects.filter(yoksis_no=program.yoksis_no)[
+                        0].parent_unit_no
                     curriculum = etree.SubElement(root, 'curriculum')
                     etree.SubElement(curriculum, 'academicArea', abbreviation='A')
                     etree.SubElement(curriculum, 'department', code="%s" % parent_yoksis_no)
                     etree.SubElement(curriculum, 'major', code="M1")
-                    classification = etree.SubElement(curriculum, 'classification', name="01", enrollment='2')
+                    classification = etree.SubElement(curriculum, 'classification', name="01",
+                                                      enrollment='2')
                     etree.SubElement(classification, 'academicClassification', code="01")
                     for program_ders in Ders.objects.filter(program=program):
                         etree.SubElement(classification, 'course', subject="%s" % program.yoksis_no,
                                          courseNbr="%s" % program_ders.kod)
                 except:
                     pass
-
-            # export curricula-releated xml files
-
-            export_academic_areas = ExportAcademicAreaToXML(self)
-            export_academic_areas.run()
-
-            export_academic_class = ExportAcademicClassificationsToXML(self)
-            export_academic_class.run()
-
-            export_posmjors = ExportPosMajorsToXML(self)
-            export_posmjors.run()
 
             # pretty string
             return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
@@ -421,7 +417,8 @@ class ExportAcademicClassificationsToXML(UnitimeEntityXMLExport):
 
         """
 
-        root = etree.Element('academicClassifications', campus="%s" % self.uni, term="%s" % self.term.ad,
+        root = etree.Element('academicClassifications', campus="%s" % self.uni,
+                             term="%s" % self.term.ad,
                              year="%s" % self.term.baslangic_tarihi.year)
         etree.SubElement(root, 'academicClassification',
                          externalId="01",
@@ -445,7 +442,8 @@ class ExportPosMajorsToXML(UnitimeEntityXMLExport):
 
         root = etree.Element('posMajors', campus="%s" % self.uni, term="%s" % self.term.ad,
                              year="%s" % self.term.baslangic_tarihi.year)
-        etree.SubElement(root, 'posMajor', externalId="M1", code="M1", name="%s Major 1" % self.term.baslangic_tarihi.year,
+        etree.SubElement(root, 'posMajor', externalId="M1", code="M1",
+                         name="%s Major 1" % self.term.baslangic_tarihi.year,
                          academicArea="A")
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
@@ -471,7 +469,8 @@ class ExportStudentCourseDemandsToXML(UnitimeEntityXMLExport):
             '''
             lastLikeCourseDemand Import File
             '''
-            root = etree.Element('lastLikeCourseDemand', campus="%s" % self.uni, term="%s" % self.term.ad,
+            root = etree.Element('lastLikeCourseDemand', campus="%s" % self.uni,
+                                 term="%s" % self.term.ad,
                                  year="%s" % self.term.baslangic_tarihi.year)
 
             batch_size = int(self.manager.args.batch_size)
@@ -486,9 +485,11 @@ class ExportStudentCourseDemandsToXML(UnitimeEntityXMLExport):
                                                            externalId="%s" % student.key)
                         for department in student_department_list:
                             try:
-                                for ogrenci_ders in OgrenciDersi.objects.filter(ogrenci_program=department):
-                                    ders = ogrenci_ders.ders.ders
-                                    etree.SubElement(student_element, 'studentCourse', externalId="%s" % ders.key,
+                                for ogrenci_ders in OgrenciDersi.objects.filter(
+                                        ogrenci_program=department):
+                                    ders = ogrenci_ders.ders
+                                    etree.SubElement(student_element, 'studentCourse',
+                                                     externalId="%s" % ders.key,
                                                      courseNumber="%s" % ders.kod,
                                                      subject="%s" % ders.program.yoksis_no)
                             except:
@@ -521,7 +522,8 @@ class ExportStudentCoursesToXML(UnitimeEntityXMLExport):
             studentEnrollments Import File
             '''
 
-            root = etree.Element('studentEnrollments', campus="%s" % self.uni, term="%s" % self.term.ad,
+            root = etree.Element('studentEnrollments', campus="%s" % self.uni,
+                                 term="%s" % self.term.ad,
                                  year="%s" % self.term.baslangic_tarihi.year)
 
             batch_size = int(self.manager.args.batch_size)
@@ -532,15 +534,17 @@ class ExportStudentCoursesToXML(UnitimeEntityXMLExport):
                 for student in Ogrenci.objects.set_params(rows=1000, start=i * batch_size).filter():
                     student_department_list = OgrenciProgram.objects.filter(ogrenci=student)
                     if len(student_department_list) > 0:
-                        student_element = etree.SubElement(root, "student", externalId="%s" % student.key,
+                        student_element = etree.SubElement(root, "student",
+                                                           externalId="%s" % student.key,
                                                            firstName="%s" % student.ad,
                                                            lastName="%s" % student.soyad,
                                                            email="%s" % student.e_posta)
                         for department in student_department_list:
                             try:
-                                for ogrenci_ders in OgrenciDersi.objects.filter(ogrenci_program=department):
+                                for ogrenci_ders in OgrenciDersi.objects.filter(
+                                        ogrenci_program=department):
                                     if (ogrenci_ders):
-                                        ders = ogrenci_ders.ders.ders
+                                        ders = ogrenci_ders.ders
                                         etree.SubElement(student_element, 'class',
                                                          externalId="%s" % ders.key,
                                                          courseNbr="%s" % ders.kod,
@@ -584,7 +588,8 @@ class ExportClassesToXML(UnitimeEntityXMLExport):
                              dateFormat="yyyy/M/d")
 
         for i in range(rounds):
-            for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(donem=self.term):
+            for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(
+                    donem=self.term):
                 lecture = sube.ders
                 etree.SubElement(root, 'class', name="%s" % sube.ad,
                                  courseNbr="%s" % lecture.kod,
@@ -623,15 +628,19 @@ class ExportCorseOfferingsToXML(UnitimeEntityXMLExport):
                              timeFormat="HHmm", dateFormat="yyyy/M/d")
 
         for i in range(rounds):
-            for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(donem=self.term):
+            for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(
+                    donem=self.term):
 
                 try:
                     lecture = sube.ders
-                    offering_elem = etree.SubElement(root, 'offering', id="%s" % sube.ad, offered="true")
-                    course_elem = etree.SubElement(offering_elem, 'course', courseNbr="%s" % lecture.kod,
+                    offering_elem = etree.SubElement(root, 'offering', id="%s" % sube.ad,
+                                                     offered="true")
+                    course_elem = etree.SubElement(offering_elem, 'course',
+                                                   courseNbr="%s" % lecture.kod,
                                                    subject="%s" % lecture.program.yoksis_no,
                                                    controlling="true")
-                    etree.SubElement(course_elem, 'class', name="%s" % sube.ad, suffix="1", limit="%s" % sube.kontenjan,
+                    etree.SubElement(course_elem, 'class', name="%s" % sube.ad, suffix="1",
+                                     limit="%s" % sube.kontenjan,
                                      type="Rec")
                 except:
                     pass
@@ -639,3 +648,25 @@ class ExportCorseOfferingsToXML(UnitimeEntityXMLExport):
         # pretty string
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
+
+
+class ExportAllUnitimeXMLs(Command):
+    CMD_NAME = 'export_all_unitime_xmls'
+    HELP = 'Tum unitime xml dosyalarini tek bir dizine aktarir.'
+
+    def run(self):
+        ExportSessionsToXml().run()
+        ExportRooms().run()
+        ExportDepartmentsToXML().run()
+        ExportAcademicSubjectsToXML().run()
+        ExportStaffToXML().run()
+        ExportStudentInfoToXML().run()
+        ExportCourseCatalogToXML().run()
+        ExportCorseOfferingsToXML().run()
+        ExportStudentCoursesToXML().run()
+        ExportStudentCourseDemandsToXML().run()
+        ExportClassesToXML().run()
+        ExportAcademicAreaToXML().run()
+        ExportAcademicClassificationsToXML().run()
+        ExportPosMajorsToXML().run()
+        ExportCurriculaToXML().run()

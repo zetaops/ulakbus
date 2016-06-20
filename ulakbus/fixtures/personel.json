@@ -16,5 +16,75 @@
       "tr": "Dolu",
       "en": "Occupied"
     }
+  },
+  "personel_turu": {
+    "1": {
+      "tr": "Akademik",
+      "en": "Akademic"
+    },
+    "2": {
+      "tr": "İdari",
+      "en": ""
+    },
+    "11": {
+      "tr": "Yabancı Uyruklu",
+      "en": ""
+    },
+    "12": {
+      "tr": "Geçici",
+      "en": "Temp"
+    }
+  },
+  "personel_statu": {
+    "1": {
+      "tr": "Kadrolu",
+      "en": ""
+    },
+    "2": {
+      "tr": "Kadrosuz",
+      "en": ""
+    },
+    "3": {
+      "tr": "Kısmi",
+      "en": ""
+    },
+    "4": {
+      "tr": "35. Madde",
+      "en": ""
+    },
+    "5": {
+      "tr": "Sözleşmeli",
+      "en": ""
+    },
+    "6": {
+      "tr": "7/L",
+      "en": ""
+    },
+    "7": {
+      "tr": "Bakanlık Personeli",
+      "en": ""
+    }
+  },
+  "izin_turleri": {
+    "1": {
+      "tr": "Yıllık İzin",
+      "en": "Annual Vacation"
+    },
+    "2": {
+      "tr": "Mazeret İzni",
+      "en": "Compassionate Leave"
+    },
+    "3": {
+      "tr": "Refakat İzni",
+      "en": "Accompanimental Leave"
+    },
+    "4": {
+      "tr": "Fazla Mesai İzni",
+      "en": "Overtime Leave"
+    },
+    "5": {
+      "tr": "Ücretsiz İzin",
+      "en": "Unpaid Vacation"
+    }
   }
 }

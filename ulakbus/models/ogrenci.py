@@ -9,14 +9,15 @@
 Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
 
 """
+import six
 
+from pyoko import Model, field, ListNode, LinkProxy
+from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
-from .personel import Personel
-from pyoko import Model, field, ListNode
 from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room
-import six
+from .personel import Personel
 
 
 class HariciOkutman(Model):
@@ -201,6 +202,19 @@ class Donem(Model):
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     guncel = field.Boolean(index=True)
 
+    @classmethod
+    def guncel_donem(cls):
+        return cls.objects.get(guncel=True)
+
+    def pre_save(self):
+        if self.guncel:
+            try:
+                old = self.guncel_donem()
+                old.guncel = False
+                old.save()
+            except ObjectDoesNotExist:
+                pass
+
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Dönem"
@@ -230,6 +244,8 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
+    farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme",
+                                                     default=False, index=True)
     bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
     ects_bolum_kordinator = Role(verbose_name='ECTS Bölüm Koordinator',
                                  reverse_name='ects_koordinator_program')
@@ -279,12 +295,16 @@ class Ders(Model):
     ders_kaynaklari = field.String("Ders Kaynakları", index=True)
     ders_mufredati = field.String("Ders Müfredatı", index=True)
     verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
+    katilim_sarti = field.Integer("Katılım Şartı", index=True)
+    ontanimli_kontenjan = field.Integer('Kontenjan', default=30)
+    ontanimli_dis_kontenjan = field.Integer('Dış Kontenjan', default=5)
     program = Program()
     donem = Donem()
     ders_koordinatoru = Personel()
+    yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")
 
     class Degerlendirme(ListNode):
-        tur = field.String("Değerlendirme Türü", index=True)
+        tur = field.Integer("Değerlendirme Türü", choices="sinav_turleri", index=True)
         toplam_puana_etki_yuzdesi = field.Integer("Toplam Puana Etki Yüzdesi", index=True)
 
     class DersYardimcilari(ListNode):
@@ -302,6 +322,22 @@ class Ders(Model):
 
     def __unicode__(self):
         return '%s %s %s' % (self.ad, self.kod, self.ders_dili)
+
+    def ontanimli_sube_olustur(self):
+        sube = Sube()
+        sube.ad = 'Varsayılan Şube'
+        sube.kontenjan = self.ontanimli_kontenjan
+        sube.dis_kontenjan = self.ontanimli_dis_kontenjan
+        sube.ders = self
+        sube.donem = Donem.guncel_donem()
+        sube.save()
+
+    def pre_save(self):
+        self.just_created = not self.exist
+
+    def post_save(self):
+        if self.just_created:
+            self.ontanimli_sube_olustur()
 
 
 class Sube(Model):
@@ -324,6 +360,26 @@ class Sube(Model):
     okutman = Okutman()
     ders = Ders()
     donem = Donem()
+    ders_adi = field.String("Ders Adi", index=True)
+
+    class NotDonusumTablosu(ListNode):
+        """Not Donusum Tablosu
+
+        Bu tablo, settings seklinde universite geneli icin tanimlanmistir.
+        Eger okutman baska bir not donusum tablosu kullanmak isterse,
+        harflendirme wf da bu tabloyu duzenlerse, tablo bir list node
+        olarak bu modelde saklanir.
+
+        """
+
+        harf = field.String("Harf", index=True, choices="harf_notlari")
+        dortluk_katsayi = field.Float("", choices="dortluk_katsayilari")
+        yuzluk_not_baslangic = field.Float("Başlangıç", index=True)
+        yuzluk_not_bitis = field.Float("Bitis", index=True)
+
+        def __unicode__(self):
+            return '%s %s %s %s' % (
+                self.harf, self.yuzluk_not_baslangic, self.yuzluk_not_bitis, self.dortluk_katsayi)
 
     class Programlar(ListNode):
         programlar = Program()
@@ -335,8 +391,21 @@ class Sube(Model):
         list_fields = ['ad', 'kontenjan']
         search_fields = ['ad', 'kontenjan']
 
+    def sube_sinavlarini_olustur(self):
+        for dg in self.ders.Degerlendirme:
+            sinav = Sinav(tur=dg.tur, sube=self, ders=self.ders)
+            sinav.save()
+
+    def ders_adi_olustur(self):
+        self.ders_adi = "%s - %s %s" % (self.ders.ad, self.ad, str(self.kontenjan))
+        self.save()
+
+    def post_creation(self):
+        self.sube_sinavlarini_olustur()
+        self.ders_adi_olustur()
+
     def __unicode__(self):
-        return '%s %s' % (self.ad, self.kontenjan)
+        return '%s' % self.ders_adi
 
 
 class Sinav(Model):
@@ -357,8 +426,11 @@ class Sinav(Model):
     tur = field.Integer("Sınav Türü", index=True, choices="sinav_turleri")
     aciklama = field.String("Açıklama", index=True)
     sube = Sube()
-    ders = Ders()
     degerlendirme = field.Boolean("Değerlendirme Durumu", index=True, default=False)
+
+    # arama amacli
+    ders = Ders()
+    puan = field.Integer("Puan", index=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -368,7 +440,7 @@ class Sinav(Model):
         search_fields = ['aciklama', 'tarih']
 
     def __unicode__(self):
-        return '%s %s' % (self.tarih, self.yapilacagi_yer)
+        return '%s %s %s' % (self.get_tur_display(), self.ders, self.sube)
 
 
 class DersProgrami(Model):
@@ -519,8 +591,13 @@ class OgrenciProgram(Model):
     giris_puan_turu = field.Integer("Puan Türü", index=True, choices="giris_puan_turleri")
     giris_puani = field.Float("Giriş Puani", index=True)
     aktif_donem = field.String("Dönem", index=True)
-    durum = field.Integer("Durum", index=True, choices="ogrenci_program_durumlar")
+    ogrencilik_statusu = field.Integer('Öğrencilik Statüsü', index=True,
+                                       choices="ogrenci_program_durumlar")
+    ogrenci_ders_kayit_status = field.Integer('Öğrencilik Ders Kayıt Statüsü', index=True,
+                                              choices="ogrenci_ders_kayit_durum")
+    ayrilma_nedeni = field.Integer('Ayrılma Nedeni', index=True, choices='ayrilma_nedeni')
     basari_durumu = field.String("Başarı Durumu", index=True)
+    diploma_no = field.String("Diploma No", index=True)
     ders_programi = DersProgrami()
     danisman = Personel()
     program = Program()
@@ -536,9 +613,19 @@ class OgrenciProgram(Model):
         aciklama = field.String("Ek Açıklama", index=True, default="-", required=False)
         tamam = field.Boolean("Belge kontrol edildi", index=True, required=True)
 
+    class OgrenciDonem(ListNode):
+        donem = Donem()
+
     def __unicode__(self):
         return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad,
                                     self.program.adi, self.program.yil)
+
+    def tarih_sirasiyla_donemler(self):
+        r = []
+        for ogd in self.OgrenciDonem:
+            r.append((ogd.donem.ad, ogd.donem.baslangic_tarihi))
+        r.sort(key=lambda tup: tup[1])
+        return r
 
 
 class OgrenciDersi(Model):
@@ -549,20 +636,44 @@ class OgrenciDersi(Model):
     Ders alanı Şube modeli ile ilişkilendirilmiştir. Bunun sebebi öğrencilerin ders seçiminin,
     ders ve okutmanın birleştiği şube seçimi olmasıdır. Detaylı bilgiler Şube modelinde bulunabilir.
 
+    Bir öğrencinin devamsızlıktan kalıp kalmadığı devamsizliktan_kalma alanı ile kontrol edilir.
+    Bu alan False olduğu zaman öğrenci devamsızlıktan kalır.
+
     """
 
     alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
-    ders = Sube()
+    sube = Sube(unique=True)
     ogrenci_program = OgrenciProgram()
+    ogrenci = Ogrenci(unique=True)
+    basari_ortalamasi = field.Float("Ortalama", index=True)
+    harflendirilmis_not = field.String("Harf", index=True)
+    katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
+
+    # arama amaçlı alanlar
+    ders = Ders()
+    donem = Donem()
 
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Ögrenci Dersi"
         verbose_name_plural = "Öğrenci Dersleri"
-        list_fields = ['sube_dersi', 'alis_bicimi']
+        list_fields = ['ders', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
+        unique_together = [('ogrenci', 'sube')]
 
-    def sube_dersi(self):
+    def post_creation(self):
+
+        """
+        Yeni bir ``OgrenciDers``'i ilk defa yaratılınca ``donem`` ve ``ders`` alanları,
+        bağlı şubeden atanır.
+
+        """
+
+        self.donem = self.sube.donem
+        self.ders = self.sube.ders
+        self.save()
+
+    def ders_adi(self):
         """
         Şubenin bağlı olduğu ders adı.
 
@@ -570,12 +681,13 @@ class OgrenciDersi(Model):
             Şubenin bağlı olduğu ders örneğinin adını döndürür.
 
         """
-        return six.text_type(self.ders.ders)
 
-    sube_dersi.title = 'Ders'
+        return six.text_type(self.ders.ad)
+
+    ders_adi.title = 'Ders'
 
     def __unicode__(self):
-        return '%s %s %s' % (self.ders.ders.kod, self.ders.ders.ad, self.alis_bicimi)
+        return '%s %s %s' % (self.ders.kod, self.ders.ad, self.alis_bicimi)
 
 
 class DersKatilimi(Model):
@@ -592,7 +704,7 @@ class DersKatilimi(Model):
     """
 
     # TODO: Neden float, soralım?
-    katilim_durumu = field.Float("Katılım Durumu", index=True)
+    katilim_durumu = field.Integer("Katılım Durumu", index=True)
     ders = Sube()
     ogrenci = Ogrenci()
     okutman = Okutman()
@@ -748,14 +860,26 @@ class DegerlendirmeNot(Model):
     donem = field.String("Dönem", index=True)
     ogretim_elemani = field.String("Öğretim Elemanı", index=True)
     ogrenci_no = field.String("Öğrenci No", index=True)
+    sinav_tarihi = field.Date("Sınav Tarihi", index=True)
     ders = Ders()
 
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Not"
         verbose_name_plural = "Notlar"
-        list_fields = ['puan', 'ders']
-        search_fields = ['aciklama', 'puan']
+        list_fields = ['puan', 'ders_adi']
+        search_fields = ['aciklama', 'puan', 'ogrenci_no']
+        list_filters = ['donem', ]
+
+    def post_save(self):
+        self.sinav.degerlendirme = True
+        self.sinav.puan = self.puan
+        self.sinav.save()
+
+    def ders_adi(self):
+        return "%s" % self.ders.ad
+
+    ders_adi.title = "Ders"
 
     def __unicode__(self):
         return '%s %s' % (self.puan, self.sinav)
@@ -853,3 +977,50 @@ class AkademikTakvim(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.birim, self.yil)
+
+
+class DonemDanisman(Model):
+    """Dönem Danışmanları Modeli
+
+    Dönem, Bölüm ve Program bazlı olarak öğrencilere danışman
+    atanabilecek olan öğretim elemanlarının saklandığı data modelidir.
+
+    """
+
+    donem = Donem()
+    okutman = Okutman()
+    bolum = Unit()
+    aciklama = field.String("Açıklama", index=True, required=False)
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Dönem Danışman"
+        verbose_name_plural = "Dönem Danışmanları"
+        list_fields = ['program', 'okutman', 'bolum', 'donem']
+        search_fields = ['aciklama']
+
+    def __unicode__(self):
+        return '%s %s' % (self.bolum, self.okutman)
+
+
+class DondurulmusKayit(Model):
+    """Dondurulmuş Kayıt Modeli
+
+    Dondurulmuş öğrenci kayıtlarının saklandığı data modelidir.
+
+    """
+
+    donem = Donem()
+    ogrenci_program = OgrenciProgram()
+    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True)
+    aciklama = field.String("Açıklama", index=True, required=False)
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Dondurulmuş Kayıt"
+        verbose_name_plural = "Dondurulmuş Kayıtlar"
+        list_fields = ['ogrenci_program', 'baslangic_tarihi', 'aciklama', 'donem']
+        search_fields = ['aciklama', 'baslangic_tarihi']
+
+    def __unicode__(self):
+        return '%s %s' % (self.ogrenci_program, self.donem)
