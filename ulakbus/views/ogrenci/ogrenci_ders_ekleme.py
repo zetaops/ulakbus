@@ -8,8 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko import ListNode
 from ulakbus.models import Ogrenci, OgrenciDersi, Sube
-from zengine.forms import fields
-from zengine.lib import forms
+from zengine.forms import fields, JsonForm
 from zengine.views.crud import CrudView
 
 
@@ -23,7 +22,7 @@ def sube_arama(current):
     current.output['objects'] = r
 
 
-class DersSecimForm(forms.JsonForm):
+class DersSecimForm(JsonForm):
     class Meta:
         inline_edit = ['secim']
 
