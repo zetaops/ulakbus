@@ -7,7 +7,7 @@
 
 import time
 
-from ulakbus.models import OgrenciDersi
+from ulakbus.models import OgrenciDersi, Sinav
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import User
 
@@ -131,3 +131,9 @@ class TestCase(BaseTestCase):
 
         assert num_of_ogrenci == len(resp.json['object']['fields'])
         assert resp.json['msgbox']['title'] == 'Notlar Onaylandı'
+
+        # Ilgili Sinav tekrardan degerlendirilebilir
+        sinav = Sinav.objects.get('IvXH1cqyYoHznv0iRV4FjLvXWwz')
+        sinav.degerlendirme = False
+        sinav.save()
+
