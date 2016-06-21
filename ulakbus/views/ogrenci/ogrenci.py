@@ -29,7 +29,7 @@ from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
-from zengine.notifications import Notify
+from zengine.messaging import Notify
 from zengine.views.crud import CrudView
 
 
