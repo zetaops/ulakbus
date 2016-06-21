@@ -36,13 +36,22 @@ HAFTA_SONU_GUNLER = [
 
 HAFTA = HAFTA_ICI_GUNLER + HAFTA_SONU_GUNLER
 
-HAFTA_ICI_ZAMAN_DILIMLERI = [
-    (1, "08:00 - 12:00"),
-    (2, "13:00 - 17:00"),
-    (3, "17:00 - 21:00")
-]
 
-HAFTA_SONU_ZAMAN_DILIMLERI = HAFTA_ICI_ZAMAN_DILIMLERI
+class GunZamanDilimleri(Model):
+    class Meta:
+        unique_together = [('birim', 'gun', 'baslama', 'bitis')]
+
+    birim = Unit("Birim")
+    gun = field.Integer("Gun", choices=HAFTA)
+    baslama = field.String("Baslama")
+    bitis = field.String("Bitis")
+
+    def post_save(self):
+        """
+        kayit baslama bitis zamani cakisiyor mu?
+        """
+        pass
+
 
 class OgElemaniZamanPlani(Model):
     """
@@ -55,32 +64,17 @@ class OgElemaniZamanPlani(Model):
         app = 'Ogrenci'
         verbose_name = 'Ogretim Elemani Zaman Kaydi'
         verbose_name_plural = 'Ogretim Elemanlari Zaman Kaydi'
-        unique_together = [('okutman', 'bolum')]
+        unique_together = [('okutman', 'birim')]
 
-
-    okutman = Okutman(unique=True)
-    bolum = Unit(unique=True)
+    okutman = Okutman("Okutman")
+    birim = Unit("Birim")
     toplam_ders_saati = field.Integer("Ogretim Elemani Toplam Ders Saati", index=True)
 
-    class ZamanCetveli(ListNode):
-        class Meta:
-            unique_together = [('gun', 'zaman_araligi')]
-        gun = field.Integer(choices=HAFTA)
-        zaman_araligi = field.Integer(choices=HAFTA_ICI_ZAMAN_DILIMLERI)
-        durum = field.Integer(choices=UYGUNLUK_DURUMU)
 
+class ZamanCetveli(Model):
+    class Meta:
+        unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani')]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    zaman_dilimi = GunZamanDilimleri("Zaman Dilimi")
+    durum = field.Integer(choices=UYGUNLUK_DURUMU)
+    ogretim_elemani_zaman_plani = OgElemaniZamanPlani("Ogretim Elemani")
