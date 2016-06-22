@@ -15,6 +15,7 @@ from pyoko import Model, ListNode
 from passlib.hash import pbkdf2_sha512
 from pyoko import LinkProxy
 from pyoko.conf import settings
+from pyoko.lib.utils import lazy_property
 
 from zengine.auth.permissions import get_all_permissions
 from zengine.dispatch.dispatcher import receiver
@@ -51,59 +52,11 @@ class User(Model, BaseUser):
         verbose_name_plural = "Kullanıcılar"
         search_fields = ['username', 'name', 'surname']
 
-    def get_avatar_url(self):
-        """
-        Bu metot kullanıcıya ait avatar url'ini üretir.
+    @lazy_property
+    def full_name(self):
+        return "%s %s" % (self.name, self.surname)
 
-        Returns:
-            str: kullanıcı avatar url
-        """
-        return "%s%s" % (settings.S3_PUBLIC_URL, self.avatar)
 
-    def __unicode__(self):
-        return "User %s" % self.username
-
-    def set_password(self, raw_password):
-        """
-        Kullanıcı şifresini encrypt ederek set eder.
-
-        Args:
-            raw_password (str)
-        """
-        self.password = pbkdf2_sha512.encrypt(raw_password, rounds=10000,
-                                              salt_size=10)
-
-    def pre_save(self):
-        """ encrypt password if not already encrypted """
-        if self.password and not self.password.startswith('$pbkdf2'):
-            self.set_password(self.password)
-
-    def check_password(self, raw_password):
-        """
-        Verilen encrypt edilmemiş şifreyle kullanıcıya ait encrypt
-        edilmiş şifreyi karşılaştırır.
-
-        Args:
-            raw_password (str)
-
-        Returns:
-             bool: Değerler aynı olması halinde True, değilse False
-                döner.
-        """
-        return pbkdf2_sha512.verify(raw_password, self.password)
-
-    def get_role(self, role_id):
-        """
-        Kullanıcıya ait Role nesnesini getirir.
-
-        Args:
-            role_id (int)
-
-        Returns:
-            dict: Role nesnesi
-
-        """
-        return self.role_set.node_dict[role_id]
 
     # def send_message(self, title, message, sender=None):
     #     from zengine.messaging import Notify
