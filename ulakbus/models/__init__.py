@@ -13,3 +13,4 @@ from .ogrenci import *
 from .hitap.hitap import *
 from .buildings_rooms import *
 from .form import *
+from .ders_programi import *
