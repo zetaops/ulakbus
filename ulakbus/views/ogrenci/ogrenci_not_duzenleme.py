@@ -7,7 +7,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko import ListNode
-from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models import Sube, Sinav, OgrenciDersi, Ogrenci, DegerlendirmeNot
 from zengine import forms
 from zengine.forms import fields
@@ -23,13 +22,6 @@ class OgrenciSecimForm(forms.JsonForm):
         secim = fields.Boolean(type="checkbox")
         ad_soyad = fields.String('Ad Soyad')
 
-
-# class SubeSecimForm(forms.JsonForm):
-#     class Subeler(ListNode):
-#         key = fields.String('sube_key', hidden=True)
-#         ders_adi = fields.String('Şube')
-#
-#     ileri = fields.Button('İleri')
 
 class SubeSecimForm(forms.JsonForm):
     class Meta:
@@ -76,13 +68,13 @@ class OgrenciNotDuzenleme(CrudView):
 
         """
         _form = SubeSecimForm(current=self.current)
-        _form.set_choices_of('sube', choices=prepare_choices_for_model(Sube))
+        # _form.set_choices_of('sube', choices=prepare_choices_for_model(Sube))
         # if 'subeler' in self.current.task_data:
         #     for sube in self.current.task_data['subeler']:
         #         _form.Subeler(key=sube['key'], ders_adi=sube['ders_adi'])
 
         self.form_out(_form)
-        # self.inline_edit_sube_form()
+        self.sube_secim_form_inline_edit()
         self.current.output["meta"]["allow_actions"] = True
 
     def sinav_sec(self):
@@ -130,3 +122,7 @@ class OgrenciNotDuzenleme(CrudView):
     def bilgi_ver(self):
         self.current.output['msgbox'] = {'type': 'info', "title": 'Not Düzenleme',
                                          "msg": 'Öğrencilere ait notlar başarıyla düzenlendi'}
+
+    def sube_secim_form_inline_edit(self):
+        self.output['forms']['schema']['properties']['sube']['widget'] = 'custom'
+        self.output['forms']['schema']['properties']['sube']['view'] = 'sube_arama'
