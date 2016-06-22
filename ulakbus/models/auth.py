@@ -18,9 +18,10 @@ from pyoko.conf import settings
 
 from zengine.auth.permissions import get_all_permissions
 from zengine.dispatch.dispatcher import receiver
+
 from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
-
+from zengine.messaging.lib import BaseUser
 try:
     from zengine.lib.exceptions import PermissionDenied
 except ImportError:
@@ -28,7 +29,8 @@ except ImportError:
         pass
 
 
-class User(Model):
+
+class User(Model, BaseUser):
     """User modeli
 
     User modeli Ulakbus temel kullanıcı modelidir. Temel kullanıcı
@@ -103,9 +105,9 @@ class User(Model):
         """
         return self.role_set.node_dict[role_id]
 
-    def send_message(self, title, message, sender=None):
-        from zengine.messaging import Notify
-        Notify(self.key).set_message(title, message, typ=Notify.Message, sender=sender)
+    # def send_message(self, title, message, sender=None):
+    #     from zengine.messaging import Notify
+    #     Notify(self.key).set_message(title, message, typ=Notify.Message, sender=sender)
 
 
 class Permission(Model):
