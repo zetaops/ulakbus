@@ -11,8 +11,7 @@ import os
 import sys
 from zengine.management_commands import *
 from lxml import etree
-from ulakbus.models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Campus, \
-    Building, Room, Ogrenci
+from ulakbus.models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Campus
 import datetime
 
 
