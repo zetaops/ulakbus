@@ -601,6 +601,7 @@ class OgrenciProgram(Model):
     danisman = Personel()
     program = Program()
     ogrenci = Ogrenci()
+    bagli_oldugu_bolum = Unit("Bölüm")
 
     class Meta:
         app = 'Ogrenci'
