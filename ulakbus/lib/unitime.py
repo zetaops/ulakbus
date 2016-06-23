@@ -52,7 +52,6 @@ class UnitimeEntityXMLExport(Command):
     @property
     def uni(self):
         try:
-            # return Unit.objects.filter(parent_unit_no=0)[0].yoksis_no
             return Unit.objects.get(parent_unit_no=0).yoksis_no
         except:
             print("Universite tanimlanmamis")
@@ -371,10 +370,9 @@ class ExportCurriculaToXML(UnitimeEntityXMLExport):
                                  year="%s" % self.term.baslangic_tarihi.year)
             for program in program_list:
                 try:
-                    parent_yoksis_no = Unit.objects.get(yoksis_no=program.yoksis_no).parent_unit_no
                     curriculum = etree.SubElement(root, 'curriculum')
                     etree.SubElement(curriculum, 'academicArea', abbreviation='A')
-                    etree.SubElement(curriculum, 'department', code="%s" % parent_yoksis_no)
+                    etree.SubElement(curriculum, 'department', code="%s" % bolum.yoksis_no)
                     etree.SubElement(curriculum, 'major', code="M1")
                     classification = etree.SubElement(curriculum, 'classification', name="01",
                                                       enrollment='2')
@@ -607,10 +605,9 @@ class ExportClassesToXML(UnitimeEntityXMLExport):
                 for i in range(rounds):
                     for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(
                             donem=self.term, ders=ders):
-                        lecture = sube.ders
                         etree.SubElement(root, 'class', name="%s" % sube.ad,
-                                         courseNbr="%s" % lecture.kod,
-                                         subject="%s" % lecture.program.yoksis_no,
+                                         courseNbr="%s" % ders.kod,
+                                         subject="%s" % ders.program.yoksis_no,
                                          type="Lec")
 
         # pretty string
@@ -654,12 +651,11 @@ class ExportCourseOfferingsToXML(UnitimeEntityXMLExport):
                             donem=self.term, ders=ders):
 
                         try:
-                            lecture = sube.ders
                             offering_elem = etree.SubElement(root, 'offering', id="%s" % sube.ad,
                                                              offered="true")
                             course_elem = etree.SubElement(offering_elem, 'course',
-                                                           courseNbr="%s" % lecture.kod,
-                                                           subject="%s" % lecture.program.yoksis_no,
+                                                           courseNbr="%s" % ders.kod,
+                                                           subject="%s" % ders.program.yoksis_no,
                                                            controlling="true")
                             etree.SubElement(course_elem, 'class', name="%s" % sube.ad, suffix="1",
                                              limit="%s" % sube.kontenjan,
