@@ -274,13 +274,14 @@ class FakeDataGenerator:
             p.gorev_ayligi_kademe = random.randint(1, 8)
             p.gorev_ayligi_ekgosterge = random.randint(1000, 3000)
 
+            p.emekli_muktesebat_derece = random.randint(1, 7)
+            p.emekli_muktesebat_kademe = random.randint(1, 8)
+            p.emekli_muktesebat_ekgosterge = random.randint(1000, 3000)
+
             p.gorunen_gorev_ayligi_kademe = random.randint(1, 8)
             p.gorunen_kazanilmis_hak_kademe = random.randint(1, 8)
             p.gorunen_emekli_muktesebat_kademe = random.randint(1, 8)
 
-            p.emekli_muktesebat_derece = random.randint(1, 7)
-            p.emekli_muktesebat_kademe = random.randint(1, 8)
-            p.emekli_muktesebat_ekgosterge = random.randint(1000, 3000)
 
             if user:
                 p.user = user
