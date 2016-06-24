@@ -244,7 +244,7 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
-    surdugu_donem = field.Integer("Sürdüğü Dönem Sayısı", index=True)
+    donem_sayisi = field.Integer("Sürdüğü Dönem Sayısı", index=True)
     farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme",
                                                      default=False, index=True)
     bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
@@ -256,8 +256,9 @@ class Program(Model):
 
     bolum = Unit(reverse_name="bolum_program", verbose_name="Bölüm")
 
-    class Donemler(ListNode):
-        donem = Donem()
+    # todo: to be removed
+    # class Donemler(ListNode):
+    #     donem = Donem()
 
     class Meta:
         app = 'Ogrenci'
@@ -300,7 +301,7 @@ class Ders(Model):
     ontanimli_kontenjan = field.Integer('Kontenjan', default=30)
     ontanimli_dis_kontenjan = field.Integer('Dış Kontenjan', default=5)
     program = Program()
-    programda_donem = field.Integer('Programda Verileceği Dönem', index=True)
+    program_donemi = field.Integer('Programda Yeraldığı Dönem', index=True)
     donem = Donem()
     ders_koordinatoru = Personel()
     yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")
