@@ -16,7 +16,7 @@ from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
 from .auth import Role, User
 from .auth import Unit
-from .buildings_rooms import Room
+from .buildings_rooms import Room, RoomType
 from .personel import Personel
 
 
@@ -315,6 +315,15 @@ class Ders(Model):
 
     class DersVerenler(ListNode):
         dersi_verenler = Okutman()
+
+    class DerslikTurleri(ListNode):
+        """
+        Bir dersin hangi derslik türlerinde kaç saat yapılacağı burada saklanır.
+        Örneğin 5 saatlik bir dersin 3 saati sınıfta, 2 saati laboratuvarda
+        yapılacaksa bu bilgi burada saklanır.
+        """
+        sinif_turu = RoomType()
+        ders_saati = field.Integer("Ders Saati", index=True)
 
     class Meta:
         app = 'Ogrenci'
