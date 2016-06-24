@@ -54,8 +54,12 @@
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_1" targetRef="kurum_ici_gorevlendirme_form"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="kurum_disi_gorevlendirme_form"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_1" targetRef="kurum_ici_gorevlendirme_form">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">gorevlendirme_tur==2</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="kurum_disi_gorevlendirme_form">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">gorevlendirme_tur==1</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
     <bpmn2:userTask id="kurum_disi_gorevlendirme_form" camunda:assignee="personel.gorevlendirme.Gorevlendirme.kurum_disi_gorevlendirme_form" name="Kurum Dışı Görevlendirme Form">
       <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>

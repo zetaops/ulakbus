@@ -15,6 +15,7 @@ from pyoko import Model, field
 from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
 from ulakbus.settings import SICIL_PREFIX
+from ulakbus.models import AbstractRole
 
 class Personel(Model):
     """Personel Modeli
@@ -234,6 +235,7 @@ class KurumIciGorevlendirmeBilgileri(Model):
     kurum_ici_gorev_baslama_tarihi = field.Date("Başlama Tarihi", format="%d.%m.%Y")
     kurum_ici_gorev_bitis_tarihi = field.Date("Bitiş Tarihi", format="%d.%m.%Y")
     birim = Unit()
+    soyut_rol = AbstractRole()
     aciklama = field.String("Açıklama")
     resmi_yazi_sayi = field.String("Resmi Yazı Sayı")
     resmi_yazi_tarih = field.Date("Resmi Yazı Tarihi", format="%d.%m.%Y")
@@ -301,6 +303,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     yevmiye = field.Boolean("Yevmiye", default=False)
     yolluk = field.Boolean("Yolluk", default=False)
     ulke = field.Integer("Ülke", default="90", choices="ulke")
+    soyut_rol = AbstractRole()
     personel = Personel()
 
     class Meta:
