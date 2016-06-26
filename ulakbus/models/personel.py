@@ -15,7 +15,7 @@ from pyoko import Model, field
 from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
 from ulakbus.settings import SICIL_PREFIX
-from ulakbus.models import AbstractRole
+from .auth import AbstractRole
 
 class Personel(Model):
     """Personel Modeli
