@@ -112,18 +112,18 @@ class ExportRooms(UnitimeEntityXMLExport):
             for room in rooms:
                 roomelement = etree.SubElement(
                     buildingelement, 'room',
-                    externalId="%s" % room.room.key,
-                    locationX="%s" % room.room.building.coordinate_x,
-                    locationY="%s" % room.room.building.coordinate_y,
-                    roomNumber="%s" % room.room.code,
-                    roomClassification="%s" % room.room.room_type.type,
-                    capacity="%s" % room.room.capacity,
+                    externalId="%s" % room.key,
+                    locationX="%s" % room.building.coordinate_x,
+                    locationY="%s" % room.building.coordinate_y,
+                    roomNumber="%s" % room.code,
+                    roomClassification="%s" % room.room_type,
+                    capacity="%s" % room.capacity,
                     instructional="True")
 
-                if room.room.RoomDepartments:
+                if room.RoomDepartments:
                     roommdepartments = etree.SubElement(roomelement,
                                                         'roomDepartments')
-                    for department in room.room.RoomDepartments:
+                    for department in room.RoomDepartments:
                         etree.SubElement(
                             roommdepartments, 'assigned',
                             departmentNumber="%s" % department.unit.yoksis_no,
@@ -158,7 +158,7 @@ class ExportSessionsToXml(UnitimeEntityXMLExport):
             start_date = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=1).baslangic.strftime("%m/%d/%Y")
             end_date = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=34).bitis.strftime("%m/%d/%Y")
             class_end = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=24).bitis.strftime("%m/%d/%Y")
-            exam_begin = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=25).baslangic.strftime("%m/%d/%Y")
+            # exam_begin = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=25).baslangic.strftime("%m/%d/%Y")
 
         else:
 
@@ -172,7 +172,7 @@ class ExportSessionsToXml(UnitimeEntityXMLExport):
 
         etree.SubElement(root, 'sessionDates', beginDate="%s" % start_date,
                          endDate="%s" % end_date,
-                         classesEnd="%s" % class_end, examBegin="%s" % exam_begin,
+                         classesEnd="%s" % class_end, examBegin="%s" % start_date,
                          eventBegin="%s" % start_date, eventEnd="%s" % end_date)
         # pretty string
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
@@ -431,22 +431,35 @@ class ExportCourseOfferingsToXML(UnitimeEntityXMLExport):
                 batch_size = int(self.manager.args.batch_size)
                 count = Sube.objects.filter(donem=self.term, ders=ders).count()
                 rounds = int(count / batch_size) + 1
+
+                offering_elem = etree.SubElement(root, 'offering', id="%s" % ders.key,
+                                                 offered="true")
+                course_elem = etree.SubElement(offering_elem, 'course',
+                                               courseNbr="%s" % ders.kod,
+                                               subject="%s" % ders.program.yoksis_no,
+                                               controlling="true")
                 for i in range(rounds):
                     for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(
                             donem=self.term, ders=ders):
 
-                        try:
-                            offering_elem = etree.SubElement(root, 'offering', id="%s" % sube.ad,
-                                                             offered="true")
-                            course_elem = etree.SubElement(offering_elem, 'course',
-                                                           courseNbr="%s" % ders.kod,
-                                                           subject="%s" % ders.program.yoksis_no,
-                                                           controlling="true")
-                            etree.SubElement(course_elem, 'class', name="%s" % sube.ad, suffix="1",
+                        config = etree.SubElement(course_elem, 'config', name="%s" % sube.ad,
+                                         limit="%s" % sube.kontenjan
+                                        )
+
+                        for ders_turu in ders.DerslikTurleri:
+                            etree.SubElement(config, 'subpart', type="%s" % ders_turu.sinif_turu.type,
+                                                minPerWeek = "%i" % (ders_turu.ders_saati*60) )
+
+                            _class = etree.SubElement(config, 'class', id="%s %s" % (sube.key,ders_turu.sinif_turu.type ) , suffix="1",
                                              limit="%s" % sube.kontenjan,
-                                             type="Rec")
-                        except:
-                            pass
+                                             type="%s" % ders_turu.sinif_turu.type)
+
+                            etree.SubElement(_class, 'instructor', id="%s" % sube.okutman.key,
+                                             fname="%s" % sube.okutman.ad,
+                                                  lname="%s" % sube.okutman.soyad,
+                                                  title="%s" % sube.okutman.unvan, share = "100", lead = "true")
+
+
 
         # pretty string
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
