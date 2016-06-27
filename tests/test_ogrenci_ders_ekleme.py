@@ -11,5 +11,5 @@ class TestCase(BaseTestCase):
     def test_ogrenci_ders_ekleme(self):
         user = User.objects.get(username='ogrenci_1')
         self.prepare_client('/ogrenci_ders_ekleme', user=user)
-        self.client.post()
-        
+        resp = self.client.post()
+        self.client.post(form={'ileri': 1, 'Dersler': resp.json['forms']['model']['Dersler']})
