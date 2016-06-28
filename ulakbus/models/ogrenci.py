@@ -960,7 +960,11 @@ AKADEMIK_TAKVIM_ETKINLIKLERI = [
     ('59', 'Yarıyıl Sınavı Not Giriş'),
     ('60', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
     ('61', 'Öğretim Elemanı Yoklama Girişi'),
-    ('62', 'Bahar Dönemi Bitişi'),
+    ('62', 'Yaz Dönemi Başlangıcı'),
+    ('63', 'Yaz Dönemi Derslerin Bitişi'),
+    ('64', 'Yaz Dönemi Sınavların Başlangıcı'),
+    ('65', 'Yaz Dönemi Bitişi')
+
 
 
 ]

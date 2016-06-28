@@ -165,12 +165,18 @@ class ExportSessionsToXml(UnitimeEntityXMLExport):
             class_end = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=24).bitis.strftime("%m/%d/%Y")
             exam_begin = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=25).baslangic.strftime("%m/%d/%Y")
 
-        else:
+        elif 'Bahar' in self.term.ad:
 
             start_date = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=35).baslangic.strftime("%m/%d/%Y")
             end_date = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=61).bitis.strftime("%m/%d/%Y")
             class_end = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=56).bitis.strftime("%m/%d/%Y")
             exam_begin = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=57).baslangic.strftime("%m/%d/%Y")
+
+        else:
+            start_date = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=61).baslangic.strftime("%m/%d/%Y")
+            end_date = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=62).bitis.strftime("%m/%d/%Y")
+            class_end = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=63).bitis.strftime("%m/%d/%Y")
+            exam_begin = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=64).baslangic.strftime("%m/%d/%Y")
 
         root = etree.Element('session', campus="%s" % self.uni, term="%s" % self.term.ad,
                              year="%s" % self.term.baslangic_tarihi.year, dateFormat="M/d/y")
