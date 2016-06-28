@@ -52,7 +52,7 @@ class KurumDisiGorevlendirmeForm(JsonForm):
 
 class Gorevlendirme(CrudView):
     class Meta:
-        model = "KurumIciGorevlendirme"
+        model = "KurumIciGorevlendirmeBilgileri"
 
     def gorevlendirme_tur_sec(self):
         """
@@ -101,7 +101,14 @@ class Gorevlendirme(CrudView):
             gorevlendirme.personel = personel
             gorevlendirme.save()
 
-        if self.current.input["form"]["soyut_rol"] == ""
+
+        # D6PqVfErY3mX8SfrW88EBKqMyYC => Dekan soyut rolünün id si
+        # 2ry2lgJhp6iR9QNVuAehY1F7O1g => Rektör soyut rolüne ait id
+        if (self.current.input["form"]["soyut_rol"] == "D6PqVfErY3mX8SfrW88EBKqMyYC") | (
+                self.current.input["form"]["soyut_rol"] == "2ry2lgJhp6iR9QNVuAehY1F7O1g"):
+            self.current.task_data["hizmet_cetvel_giris"] = True
+        else:
+            self.current.task_data["hizmet_cetvel_giris"] = False
 
 class HizmetCetveliForm(JsonForm):
     class Meta:
