@@ -170,7 +170,7 @@ class FakeDataGenerator:
         room_types = list(RoomType.objects.filter())
         for i in range(1, count+1):
             room = Room(
-                code=fake.classroom_code(),
+                code=fake.classroom_code()+str(i),
                 name=fake.classroom(),
                 building=building,
                 room_type=random.choice(room_types),
@@ -876,7 +876,7 @@ class FakeDataGenerator:
                                 "%s sınavı için %s adlı öğrencinin değerlendirme notu girildi.\n" %
                                 (sinav, ogrenci))
 
-
+            time.sleep(1)
             varsayilan_subeler = Sube.objects.filter(ad = 'Varsayılan Şube')
             for sube in varsayilan_subeler:
                 sube.delete()
