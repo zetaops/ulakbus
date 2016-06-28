@@ -7,7 +7,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-import os
 import sys
 from zengine.management_commands import *
 from lxml import etree
@@ -74,12 +73,6 @@ class UnitimeEntityXMLExport(Command):
         else:
             print("Bolum Bulunamadi")
             sys.exit(1)
-
-# bolum = Unit.objects.get(yoksis_no = 124150)
-#
-# programlar = Program.objects.filter(bolum = bolum)
-#
-# for program
 
 class ExportRooms(UnitimeEntityXMLExport):
     """
@@ -436,6 +429,9 @@ class ExportCourseOfferingsToXML(UnitimeEntityXMLExport):
                              year="%s" % self.term.baslangic_tarihi.year, action="insert",
                              incremental="true",
                              timeFormat="HHmm", dateFormat="yyyy/M/d")
+
+        alphabet = ['','a','b','c','d','e','f']
+
         for program in programlar:
             dersler = Ders.objects.filter(program=program)
             for ders in dersler:
@@ -458,13 +454,15 @@ class ExportCourseOfferingsToXML(UnitimeEntityXMLExport):
                                         )
 
                         for j, ders_turu in enumerate(ders.DerslikTurleri):
+
                             etree.SubElement(config, 'subpart', type="Lec",
-                                                suffix = "%i" %j,
+                                                suffix = "%s" % alphabet[j],
                                                 minPerWeek = "%i" % (ders_turu.ders_saati*60) )
 
-                            _class = etree.SubElement(config, 'class', id="%s %s" % (sube.key, j) , suffix="%i" %j,
-                                             limit="%s" % sube.kontenjan,
-                                             type="Lec",scheduleNote="", studentScheduling="true",
+                            _class = etree.SubElement(config, 'class', id="%s %s" % (sube.key, j) ,
+                                                      suffix="%s%s" %(sube.ad,alphabet[j]),
+                                                      limit="%s" % sube.kontenjan,
+                                                      type="Lec",scheduleNote="", studentScheduling="true",
                                                       displayInScheduleBook="true")
 
                             etree.SubElement(_class, 'instructor', id="%s" % sube.okutman.key,

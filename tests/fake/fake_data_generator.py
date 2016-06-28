@@ -506,6 +506,8 @@ class FakeDataGenerator:
             d.donem = donem
             d.ders_koordinatoru = personel
             for derslik_turu in random.sample(room_type_list, random.randint(1, len(room_type_list))):
+                print d.ad
+                print derslik_turu
                 d.DerslikTurleri.add(sinif_turu = derslik_turu,ders_saati = random.randint(1,5))
             d.save()
             ders_list.append(d)
@@ -535,6 +537,8 @@ class FakeDataGenerator:
             s.kontenjan = random.randint(10, 80)
             s.dis_kontenjan = random.randint(10, 80)
             s.okutman = okutman
+            print '*******'
+            print okutman
             s.ders = ders
             s.donem = ders.donem
             s.save()
@@ -844,7 +848,7 @@ class FakeDataGenerator:
 
                 # derse ait subeler
 
-                for sc in range(sube_say-1):
+                for sc in range(sube_say):
                     okutman = random.choice(okutman_list)
                     sb = self.yeni_sube(ders, okutman)[0]
                     print("%s dersi için %s adlı okutman ile oluşturulan şube : %s\n" % (
@@ -877,4 +881,7 @@ class FakeDataGenerator:
                                 (sinav, ogrenci))
 
 
-
+            varsayilan_subeler = Sube.objects.filter(ad = 'Varsayılan Şube')
+            for sube in varsayilan_subeler:
+                sube.delete()
+                sube.save()
