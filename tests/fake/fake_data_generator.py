@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models.auth import Unit
-from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav
+from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, OgretimElemani, Sinav
 from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
 from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.personel import Personel
@@ -294,36 +294,36 @@ class FakeDataGenerator:
         return personel_list
 
     @staticmethod
-    def yeni_okutman(personel, birim_no=''):
+    def yeni_ogretim_elemani(personel, birim_no=''):
         """
         Rastgele verileri ve parametre olarak verilen veriyi kullanarak
-        yeni okutman kaydı oluştururup kaydeder.
+        yeni öğretim elemanı kaydı oluştururup kaydeder.
 
         Args:
             personel (list): Personel nesne listesi
             birim_no (str): Birim yoksis no
 
         Returns:
-            okutman_list (list): Yeni okutman kaydı
+            ogretim_elemani_list (list): Yeni öğretim elemanı kaydı
 
         """
-        okutman_list = []
+        ogretim_elemani_list = []
 
         for person in personel:
-            o = Okutman()
-            o.ad = fake.first_name()
-            o.soyad = fake.last_name()
-            o.unvan = person.unvan
-            o.birim_no = birim_no
-            o.personel = person
+            oe = OgretimElemani()
+            oe.ad = fake.first_name()
+            oe.soyad = fake.last_name()
+            oe.unvan = person.unvan
+            oe.birim_no = birim_no
+            oe.personel = person
 
             # duplicate data check
             try:
-                o.save()
-                okutman_list.append(o)
+                oe.save()
+                ogretim_elemani_list.append(oe)
             except:
                 pass
-        return okutman_list
+        return ogretim_elemani_list
 
     @staticmethod
     def yeni_harici_okutman(harici_okutman_say=1):
@@ -504,7 +504,7 @@ class FakeDataGenerator:
         return ders_list
 
     @staticmethod
-    def yeni_sube(ders, okutman, sube_say=1):
+    def yeni_sube(ders, ogretim_elemani, sube_say=1):
         """
         Rastgele verileri ve parametre olarak verilen veriyi
         kullanarak yeni şube kaydı oluştururup kaydeder.
@@ -512,7 +512,7 @@ class FakeDataGenerator:
 
         Args:
             ders (Ders): Ders nesnesi
-            okutman (Okutman): Okutman nesnesi
+            ogretim_elemani (Öğretim Elemanı): Öğretim Elemanı nesnesi
             sube_say : Oluşturulacak sube sayısı
 
         Returns:
@@ -526,7 +526,7 @@ class FakeDataGenerator:
             s.ad = fake.classroom_code()
             s.kontenjan = random.randint(1, 500)
             s.dis_kontenjan = random.randint(1, 500)
-            s.okutman = okutman
+            s.ogretim_elemani = ogretim_elemani
             s.ders = ders
             s.donem = ders.donem
             s.save()

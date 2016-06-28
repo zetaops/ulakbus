@@ -102,16 +102,16 @@ class HariciOkutman(Model):
             self.okutman.save()
 
 
-class Okutman(Model):
-    """Okutman Modeli
+class OgretimElemani(Model):
+    """Öğretim Elemanı Modeli
 
-    Okutman bilgileri için data modelidir.
+    Öğretim Elemanı bilgileri için data modelidir.
 
-    Okutman, ders veren tüm öğretim elemanlarının (öğretim üyesi, öğretim elemanı,
+    Öğretim Elemanı, ders veren tüm öğretim elemanlarının (öğretim üyesi, öğretim elemanı,
     okutman ve harici okutman) genel adıdır.
 
     Bu model, aynı amaçla iki ayrı modele bağlıdır: Personel veya Harici Okutman.
-    Ancak herbir kaydın sadece bir tanesine bağı olabilir. Okutman universite personeli
+    Ancak herbir kaydın sadece bir tanesine bağı olabilir. Öğretim Elemanı universite personeli
     veya dışarıdan harici bir personel olabilir. Aynı anda ikisi birden olamaz.
 
     Birim alanı okutmanın bağlı olduğu bölümü ifade eder. Harici okutmanlar da bu bölümlerin
@@ -128,21 +128,21 @@ class Okutman(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Okutman"
-        verbose_name_plural = "Okutmanlar"
+        verbose_name = "Ogretim Elemani"
+        verbose_name_plural = "Ogretim Elemanlari"
         search_fields = ['unvan', 'personel']
 
     @lazy_property
-    def okutman(self):
-        """Okutmanın bağlı olduğu personel veya harici okutmanı döndürür.
+    def ogretim_elemani(self):
+        """Öğretim Elemanının bağlı olduğu personel veya harici okutmanı döndürür.
 
         Example:
-            Okutman örneği (instance) üzerinden erişilebilir. Aşağıdaki örnek ilgili okutmanın
+            Öğretim Elemanı örneği (instance) üzerinden erişilebilir. Aşağıdaki örnek ilgili okutmanın
             eposta bilgisine erişim sağlar. Okutman personel ise Personel modeli eposta alanı,
             harici okutman ise HariciOkutman modeli eposta alanı kullanılır::
 
-                ders_okutman = Okutman.objects.get(ad="Yeter", soyad="Demir")
-                eposta = ders_okutman.okutman.eposta
+                ders_ogretim_elemani = OgretimElemani.objects.get(ad="Yeter", soyad="Demir")
+                eposta = ders_ogretim_elemani.ogretim_elemani.eposta
 
         """
 
@@ -167,10 +167,10 @@ class Okutman(Model):
     def pre_save(self):
         """Bu metot nesne kayıt edilmeden hemen önce çalışır.
 
-        Okutmanın bağlı olduğu personel veya harici okutman kaydı tekil olmalıdır. Bir okutmanın
+        Öğretim elemanının bağlı olduğu personel veya harici okutman kaydı tekil olmalıdır. Bir öğretim elemanının
         ya personel ya da harici okutman kaydı bulunabilir.
 
-        Ayrıca aynı personel veya aynı harici okutmanın birden fazla Okutman kaydı bulunamaz.
+        Ayrıca aynı personel veya aynı harici okutmanın birden fazla Öğretim Elemanı kaydı bulunamaz.
 
         Bu metot ilgili kontrolleri yapıp, nesneyi kaydetmeye hazır hale getirir.
 
@@ -180,12 +180,12 @@ class Okutman(Model):
 
 
         """
-        if self.okutman.key:
-            self.ad = self.okutman.ad
-            self.soyad = self.okutman.soyad
-            self.unvan = self.okutman.unvan
+        if self.ogretim_elemani.key:
+            self.ad = self.ogretim_elemani.ad
+            self.soyad = self.ogretim_elemani.soyad
+            self.unvan = self.ogretim_elemani.unvan
         if not self.is_in_db() and self.is_not_unique():
-            raise Exception("Okutman %s must be unique" % self.okutman)
+            raise Exception("Okutman %s must be unique" % self.ogretim_elemani)
 
 
 class Donem(Model):
@@ -311,7 +311,7 @@ class Ders(Model):
         ders_yardimcilari = Personel()
 
     class DersVerenler(ListNode):
-        dersi_verenler = Okutman()
+        dersi_verenler = OgretimElemani()
 
     class Meta:
         app = 'Ogrenci'
@@ -357,7 +357,7 @@ class Sube(Model):
     ad = field.String("Ad", index=True)
     kontenjan = field.Integer("Kontenjan", index=True)
     dis_kontenjan = field.Integer("Dış Kontenjan", index=True)
-    okutman = Okutman()
+    ogretim_elemani = OgretimElemani()
     ders = Ders()
     donem = Donem()
     ders_adi = field.String("Ders Adi", index=True)
@@ -366,7 +366,7 @@ class Sube(Model):
         """Not Donusum Tablosu
 
         Bu tablo, settings seklinde universite geneli icin tanimlanmistir.
-        Eger okutman baska bir not donusum tablosu kullanmak isterse,
+        Eger ogretim elemani baska bir not donusum tablosu kullanmak isterse,
         harflendirme wf da bu tabloyu duzenlerse, tablo bir list node
         olarak bu modelde saklanir.
 
@@ -707,7 +707,7 @@ class DersKatilimi(Model):
     katilim_durumu = field.Integer("Katılım Durumu", index=True)
     ders = Sube()
     ogrenci = Ogrenci()
-    okutman = Okutman()
+    ogretim_elemani = OgretimElemani()
 
     class Meta:
         app = 'Ogrenci'
@@ -988,7 +988,7 @@ class DonemDanisman(Model):
     """
 
     donem = Donem()
-    okutman = Okutman()
+    okutman = OgretimElemani()
     bolum = Unit()
     aciklama = field.String("Açıklama", index=True, required=False)
 

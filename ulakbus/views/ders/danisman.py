@@ -16,7 +16,7 @@ from pyoko import ListNode
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
+from ulakbus.models.ogrenci import Donem, DonemDanisman, OgretimElemani
 from ulakbus.models.auth import Unit
 from collections import OrderedDict
 from ulakbus.views.ders.ders import prepare_choices_for_model
@@ -93,18 +93,18 @@ class DonemDanismanAtama(CrudView):
 
         unit = Unit.objects.get(self.current.input['form']['program'])
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
-        okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
+        ogretim_elemanlari = OgretimElemani.objects.filter(birim_no=unit.yoksis_no)
         donem = Donem.guncel_donem()
         _form = DonemDanismanListForm(current=self, title="Okutman Seçiniz")
 
-        for okt in okutmanlar:
+        for okt in ogretim_elemanlari:
             try:
-                if DonemDanisman.objects.filter(donem=donem, okutman=okt, bolum=unit):
-                    _form.Okutmanlar(secim=True, ad_soyad='%s %s' % (okt.ad, okt.soyad),
-                                     key=okt.key)
+                if DonemDanisman.objects.filter(donem=donem, ogretim_elemani=okt, bolum=unit):
+                    _form.OgretimElemanlari(secim=True, ad_soyad='%s %s' % (okt.ad, okt.soyad),
+                                            key=okt.key)
                 else:
-                    _form.Okutmanlar(secim=False, ad_soyad='%s %s' % (okt.ad, okt.soyad),
-                                     key=okt.key)
+                    _form.OgretimElemanlari(secim=False, ad_soyad='%s %s' % (okt.ad, okt.soyad),
+                                            key=okt.key)
             except:
                 pass
 
@@ -116,7 +116,7 @@ class DonemDanismanAtama(CrudView):
         yoksis_no = self.current.task_data['unit_yoksis_no']
         unit = Unit.objects.get(yoksis_no=yoksis_no)
         donem = Donem.objects.get(guncel=True)
-        danismanlar = self.current.input['form']['Okutmanlar']
+        danismanlar = self.current.input['form']['OgretimElemanlari']
 
         # Bölümün ilgili dönemine ait bütün danışmanları sil
         try:
@@ -128,10 +128,10 @@ class DonemDanismanAtama(CrudView):
         for danisman in danismanlar:
             if danisman['secim']:
                 key = danisman['key']
-                okutman = Okutman.objects.get(key)
+                ogretim_elemani = OgretimElemani.objects.get(key)
                 donem_danisman = DonemDanisman()
                 donem_danisman.donem = donem
-                donem_danisman.okutman = okutman
+                donem_danisman.ogretim_elemani = ogretim_elemani
                 donem_danisman.bolum = unit
                 try:
                     donem_danisman.save()
