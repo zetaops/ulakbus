@@ -75,6 +75,11 @@ class UnitimeEntityXMLExport(Command):
             print("Bolum Bulunamadi")
             sys.exit(1)
 
+# bolum = Unit.objects.get(yoksis_no = 124150)
+#
+# programlar = Program.objects.filter(bolum = bolum)
+#
+# for program
 
 class ExportRooms(UnitimeEntityXMLExport):
     """
@@ -158,7 +163,7 @@ class ExportSessionsToXml(UnitimeEntityXMLExport):
             start_date = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=1).baslangic.strftime("%m/%d/%Y")
             end_date = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=34).bitis.strftime("%m/%d/%Y")
             class_end = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=24).bitis.strftime("%m/%d/%Y")
-            # exam_begin = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=25).baslangic.strftime("%m/%d/%Y")
+            exam_begin = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=25).baslangic.strftime("%m/%d/%Y")
 
         else:
 
@@ -172,7 +177,7 @@ class ExportSessionsToXml(UnitimeEntityXMLExport):
 
         etree.SubElement(root, 'sessionDates', beginDate="%s" % start_date,
                          endDate="%s" % end_date,
-                         classesEnd="%s" % class_end, examBegin="%s" % start_date,
+                         classesEnd="%s" % class_end, examBegin="%s" % exam_begin,
                          eventBegin="%s" % start_date, eventEnd="%s" % end_date)
         # pretty string
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
@@ -433,8 +438,8 @@ class ExportCourseOfferingsToXML(UnitimeEntityXMLExport):
                 rounds = int(count / batch_size) + 1
 
                 offering_elem = etree.SubElement(root, 'offering', id="%s" % ders.key,
-                                                 offered="true")
-                course_elem = etree.SubElement(offering_elem, 'course',
+                                                 offered="true",action = "insert")
+                course_elem = etree.SubElement(offering_elem, 'course',id="%s" % ders.kod,
                                                courseNbr="%s" % ders.kod,
                                                subject="%s" % ders.program.yoksis_no,
                                                controlling="true")
@@ -442,17 +447,19 @@ class ExportCourseOfferingsToXML(UnitimeEntityXMLExport):
                     for sube in Sube.objects.set_params(rows=1000, start=i * batch_size).filter(
                             donem=self.term, ders=ders):
 
-                        config = etree.SubElement(course_elem, 'config', name="%s" % sube.ad,
+                        config = etree.SubElement(offering_elem, 'config', name="%s" % sube.ad,
                                          limit="%s" % sube.kontenjan
                                         )
 
-                        for ders_turu in ders.DerslikTurleri:
-                            etree.SubElement(config, 'subpart', type="%s" % ders_turu.sinif_turu.type,
+                        for j, ders_turu in enumerate(ders.DerslikTurleri):
+                            etree.SubElement(config, 'subpart', type="Lec",
+                                                suffix = "%i" %j,
                                                 minPerWeek = "%i" % (ders_turu.ders_saati*60) )
 
-                            _class = etree.SubElement(config, 'class', id="%s %s" % (sube.key,ders_turu.sinif_turu.type ) , suffix="1",
+                            _class = etree.SubElement(config, 'class', id="%s %s" % (sube.key, j) , suffix="%i" %j,
                                              limit="%s" % sube.kontenjan,
-                                             type="%s" % ders_turu.sinif_turu.type)
+                                             type="Lec",scheduleNote="", studentScheduling="true",
+                                                      displayInScheduleBook="true")
 
                             etree.SubElement(_class, 'instructor', id="%s" % sube.okutman.key,
                                              fname="%s" % sube.okutman.ad,
@@ -469,6 +476,8 @@ class ExportCourseOfferingsToXML(UnitimeEntityXMLExport):
 class ExportAllUnitimeXMLs(Command):
     CMD_NAME = 'export_all_unitime_xmls'
     HELP = 'Tum unitime xml dosyalarini tek bir dizine aktarir.'
+    PARAMS = [{'name': 'bolum', 'type': int, 'required': True,
+               'help': 'Bolum olarak yoksis numarasi girilmelidir. Ornek: --bolum 124150'}]
 
     def run(self):
         ExportSessionsToXml().run()
@@ -476,16 +485,16 @@ class ExportAllUnitimeXMLs(Command):
         ExportDepartmentsToXML().run()
         ExportAcademicSubjectsToXML().run()
         ExportStaffToXML().run()
-        ExportStudentInfoToXML().run()
-        ExportCourseCatalogToXML().run()
-        ExportCourseOfferingsToXML().run()
-        ExportStudentCoursesToXML().run()
-        ExportStudentCourseDemandsToXML().run()
-        ExportClassesToXML().run()
+        # ExportStudentInfoToXML().run()
+        # ExportCourseCatalogToXML().run()
+        ExportCourseOfferingsToXML(bolum = self.manager.args.bolum).run()
+        # ExportStudentCoursesToXML().run()
+        # ExportStudentCourseDemandsToXML().run()
+        # ExportClassesToXML().run()
         ExportAcademicAreaToXML().run()
         ExportAcademicClassificationsToXML().run()
         ExportPosMajorsToXML().run()
-        ExportCurriculaToXML().run()
+        ExportCurriculaToXML(bolum = self.manager.args.bolum).run()
 
 class ExportClassesToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_classes'
