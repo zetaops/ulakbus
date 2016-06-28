@@ -188,16 +188,6 @@ class Okutman(Model):
             raise Exception("Okutman %s must be unique" % self.okutman)
 
 
-class OgretimYili(Model):
-    """
-    Öğretim yılını bilgilerini tutan modeldir.
-
-    """
-
-    yil = field.Integer("Yıl") # 2015
-    ad = field.String("Öğretim Yılı") # 2015 - 2016 Öğretim Yılı
-
-
 class Donem(Model):
     """Dönem Modeli
 
@@ -211,7 +201,6 @@ class Donem(Model):
     baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     guncel = field.Boolean(index=True)
-    ogretim_yili = OgretimYili()
 
     @classmethod
     def guncel_donem(cls):
@@ -248,7 +237,6 @@ class Program(Model):
     yoksis_no = field.String("YOKSIS ID", index=True)
     bolum_adi = field.String("Bölüm", index=True)
     ucret = field.Integer("Ücret", index=True)
-    # Programın ilk başlangıç yılı, aktif döneme ait yıl değil
     yil = field.String("Yıl", index=True)
     adi = field.String("Adı", index=True)
     tanim = field.String("Tanım", index=True)
@@ -256,7 +244,6 @@ class Program(Model):
     program_ciktilari = field.String("Program Çıktıları", index=True)
     mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
     kabul_kosullari = field.String("Kabul Koşulları", index=True)
-    # Programın kaç dönem süreceğini 8 donem 10 donem gibi
     donem_sayisi = field.Integer("Sürdüğü Dönem Sayısı", index=True)
     farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme",
                                                      default=False, index=True)
@@ -292,7 +279,6 @@ class Ders(Model):
     """
 
     ad = field.String("Ad", index=True)
-    # Unique olmalı
     kod = field.String("Kod", index=True)
     tanim = field.String("Tanım", index=True)
     aciklama = field.String("Açıklama", index=True)
@@ -358,8 +344,12 @@ class Ders(Model):
         sube.donem = Donem.guncel_donem()
         sube.save()
 
-    def post_creation(self):
-        self.ontanimli_sube_olustur()
+    def pre_save(self):
+        self.just_created = not self.exist
+
+    def post_save(self):
+        if self.just_created:
+            self.ontanimli_sube_olustur()
 
 
 class Sube(Model):
@@ -473,7 +463,7 @@ class DersProgrami(Model):
     """
 
     gun = field.String("Ders Günü", index=True)
-    saat = field.String("Ders Saati", index=True)
+    saat = field.Integer("Ders Saati", index=True)
     sube = Sube()
     derslik = Room()
 
@@ -612,8 +602,7 @@ class OgrenciProgram(Model):
     mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
     giris_puan_turu = field.Integer("Puan Türü", index=True, choices="giris_puan_turleri")
     giris_puani = field.Float("Giriş Puani", index=True)
-    # Progresteki dönemi
-    aktif_donem = field.Integer("Dönem", index=True)
+    aktif_donem = field.String("Dönem", index=True)
     ogrencilik_statusu = field.Integer('Öğrencilik Statüsü', index=True,
                                        choices="ogrenci_program_durumlar")
     ogrenci_ders_kayit_status = field.Integer('Öğrencilik Ders Kayıt Statüsü', index=True,
@@ -621,8 +610,6 @@ class OgrenciProgram(Model):
     ayrilma_nedeni = field.Integer('Ayrılma Nedeni', index=True, choices='ayrilma_nedeni')
     basari_durumu = field.String("Başarı Durumu", index=True)
     diploma_no = field.String("Diploma No", index=True)
-    donem_ortalamasi = field.Float("Dönem Ortalaması")
-    genel_ortalama = field.Float("Genel Ortalama")
     ders_programi = DersProgrami()
     danisman = Personel()
     program = Program()
@@ -667,13 +654,12 @@ class OgrenciDersi(Model):
 
     """
 
-    alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True, choices='ders_alis_tipleri')
+    alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
     sube = Sube(unique=True)
     ogrenci_program = OgrenciProgram()
     ogrenci = Ogrenci(unique=True)
     basari_ortalamasi = field.Float("Ortalama", index=True)
     harflendirilmis_not = field.String("Harf", index=True)
-    # Yıl sonundaki katılım durumunu gösterir.
     katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
 
     # arama amaçlı alanlar
@@ -1106,35 +1092,3 @@ class DondurulmusKayit(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.ogrenci_program, self.donem)
-
-
-class SecmeliDersGruplari(Model):
-    """  Seçmeli Ders Grupları Modeli
-
-    Seçmeli ders gruplarının saklandığı data modelidir.
-
-    """
-
-    # Teknik ve Teknik olmayan grup adı
-    secmeli_grup_adi = field.String('Seçmeli Grup Adı')
-    # Öğrencinin seçmesi gereken minimum seçmeli ders sayısı
-    min_sayi = field.Integer('Minumum Seçmeli Ders Sayısı')
-    # Öğrencinin seçmesi gereken msximum seçmeli ders sayısı
-    max_sayi = field.Integer('Maximum Seçmeli Ders Sayısı')
-    program = Program()
-    donem = field.Integer('Dönem')
-    ogretim_yili = OgretimYili()
-
-    class Dersler(ListNode):
-        ders = Ders()
-        # Seçmeli ders zorunlu ise True
-        zorunlu_secmeli = field.Boolean('Zorunlu Seçmeli')
-
-    class Meta:
-        app = 'Ogrenci'
-        verbose_name = 'Seçmeli Ders Grubu'
-        verbose_name_plural = 'Seçmeli Ders Grupları'
-        list_fields = ['secmeli_ders_adi, donem, ders ']
-
-    def __unicode__(self):
-        return '%s %s  ' % (self.secmeli_grup_adi, self.donem)
