@@ -103,15 +103,15 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
 
     def exportRooms(self, root):
         buildings = Building.objects.filter()
-        for building in buildings:
+        for k, building in enumerate(buildings):
             rooms = Room.objects.filter(building=building)
 
             roomselement = etree.SubElement(root,'rooms')
 
-            for room in rooms:
+            for l, room in enumerate(rooms):
                 roomelement = etree.SubElement(
                     roomselement, 'room',
-                    room ="%s" % room.key,
+                    id ="%i%i" % (k,l),
                     constraint = "true",
                     capacity="%s" % room.capacity,
                     location="%s,%s" % (room.building.coordinate_x,room.building.coordinate_y))
@@ -206,7 +206,7 @@ class ExportRooms(UnitimeEntityXMLExport):
 
         buildings = Building.objects.filter()
 
-        for building in buildings:
+        for k, building in enumerate(buildings):
             buildingelement = etree.SubElement(
                 root, 'building',
                 externalId="%s" % building.key,
@@ -217,10 +217,10 @@ class ExportRooms(UnitimeEntityXMLExport):
 
             rooms = Room.objects.filter(building=building)
 
-            for room in rooms:
+            for l, room in enumerate(rooms):
                 roomelement = etree.SubElement(
                     buildingelement, 'room',
-                    externalId="%s" % room.key,
+                    externalId="%i%i" % (k,l),
                     locationX="%s" % room.building.coordinate_x,
                     locationY="%s" % room.building.coordinate_y,
                     roomNumber="%s" % room.code,
