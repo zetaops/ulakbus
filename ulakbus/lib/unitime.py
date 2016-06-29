@@ -14,6 +14,8 @@ from ulakbus.models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, Ogr
     Room
 import datetime
 from common import get_akademik_takvim
+import random
+from datetime import date
 
 
 class UnitimeEntityXMLExport(Command):
@@ -90,15 +92,57 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
 
     def prepare_data(self):
         bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
-        root = etree.Element('timetable', initiative="%s" % self.uni,
-                             term="%s" % self.term.ad,created = "",nrDays = "7",
+        root = etree.Element('timetable', version = "2.4", initiative="%s" % self.uni,
+                             term="%s" % self.term.ad, created = "%s" %str(date.today()),nrDays = "7",
                              slotsPerDay="%i" % self._saat2slot(24))
 
-        self.exportRooms(self,root, bolum)
-        self.exportClasses(self, root, bolum)
+        self.exportRooms(root)
+        self.exportClasses(root, bolum)
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % self.DOC_TYPE)
 
-    def exportRooms(self, root, bolum):
-        pass
+    def exportRooms(self, root):
+        buildings = Building.objects.filter()
+        for building in buildings:
+            rooms = Room.objects.filter(building=building)
+
+            roomselement = etree.SubElement(root,'rooms')
+
+            for room in rooms:
+                roomelement = etree.SubElement(
+                    roomselement, 'room',
+                    room ="%s" % room.key,
+                    constraint = "true",
+                    capacity="%s" % room.capacity,
+                    location="%s,%s" % (room.building.coordinate_x,room.building.coordinate_y))
+
+                if room.RoomDepartments:
+                    roommdepartments = etree.SubElement(roomelement,'sharing')
+                    department_pattern = etree.SubElement(
+                        roommdepartments, 'pattern',
+                        unit="288")
+                    pattern = self.generate_pattern()
+                    department_pattern.text = "%s" % pattern
+                    # modelle birlikte guncellenecek.
+
+                    etree.SubElement(
+                        roommdepartments, 'freeForAll',
+                        value="F")
+                    etree.SubElement(
+                        roommdepartments, 'notAvailable',
+                        value="X")
+
+                    for j, department in enumerate(room.RoomDepartments):
+                        etree.SubElement(
+                            roommdepartments, 'department',
+                            value="%i" %j,id="%s" %department.unit.yoksis_no)
+
+    def generate_pattern(self):
+        generate= ""
+        rand_list = ['F','X','0','1']
+        for i in range(7):
+            generate += random.choice(rand_list)
+        return generate
 
     def exportClasses(self, root ,bolum):
         classes = etree.SubElement(root, 'classes')
@@ -136,6 +180,8 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                          days=gun,
                          start='%i' % self._saat2slot(baslangic),
                          length='%i' % self._saat2slot(sure))
+
+
 
 
 class ExportRooms(UnitimeEntityXMLExport):
@@ -541,6 +587,15 @@ class ExportCourseOfferingsToXML(UnitimeEntityXMLExport):
                               doctype="%s" % self.DOC_TYPE)
 
 
+class ExportAllDataSetXML(Command):
+    CMD_NAME = 'export_all_data_set'
+    HELP = 'Tum unitime xml dosyalarini tek bir dizine aktarir.'
+    PARAMS = [{'name': 'bolum', 'type': int, 'required': True,
+               'help': 'Bolum olarak yoksis numarasi girilmelidir. Ornek: --bolum 124150'}]
+
+    def run(self):
+        ExportAllDataSet(bolum = self.manager.args.bolum).run()
+
 class ExportAllUnitimeXMLs(Command):
     CMD_NAME = 'export_all_unitime_xmls'
     HELP = 'Tum unitime xml dosyalarini tek bir dizine aktarir.'
@@ -563,6 +618,7 @@ class ExportAllUnitimeXMLs(Command):
         ExportAcademicClassificationsToXML().run()
         ExportPosMajorsToXML().run()
         ExportCurriculaToXML(bolum = self.manager.args.bolum).run()
+
 
 class ExportClassesToXML(UnitimeEntityXMLExport):
     CMD_NAME = 'export_classes'
