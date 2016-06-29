@@ -82,12 +82,17 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'}]
     FILE_NAME = 'buildingRoomImport.xml'
     DOC_TYPE = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
+    # Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
+    _SLOT_SURESI = 5
+
+    def _saat2slot(self, saat):
+        return saat * 60 / self._SLOT_SURESI
 
     def prepare_data(self):
         bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
         root = etree.Element('timetable', initiative="%s" % self.uni,
                              term="%s" % self.term.ad,created = "",nrDays = "7",
-                             slotsPerDay="288")
+                             slotsPerDay="%i" % self._saat2slot(24))
 
         self.exportRooms(self,root, bolum)
         self.exportClasses(self, root, bolum)
@@ -96,7 +101,42 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         pass
 
     def exportClasses(self, root ,bolum):
-        pass
+        classes = etree.SubElement(root, 'classes')
+        programlar = Program.objects.filter(bolum=bolum)
+        for program in programlar:
+            dersler = Ders.objects.filter(program=program)
+            for ders in dersler:
+                self._export_ders(classes, bolum, ders)
+
+    def _export_ders(self, parent, bolum, ders):
+        subeler = Sube.objects.filter(ders = ders)
+        derslik_turleri = ders.DerslikTurleri
+        for i, tur in enumerate(derslik_turleri):
+            uygun_derslikler = Room.objects.filter(room_type=tur.sinif_turu())
+            for sube in subeler:
+                class_ = etree.SubElement(parent, 'class',
+                                          id='%s %s %i' % (sube.key, tur.sinif_turu().key, i),
+                                          offering=ders.key,
+                                          config=sube.key,
+                                          subpart='s %s %s' % (sube.key, tur.sinif_turu().key),
+                                          classLimit='%i' % sube.kontenjan,
+                                          scheduler=bolum.key,
+                                          dates='1111100111110011111001111100')  # haftasonları hariç 1 ay her gün
+                for derslik in uygun_derslikler:
+                    etree.SubElement(class_, 'room',
+                                     id=derslik.key,
+                                     pref='0')
+                etree.SubElement(class_, 'instructor', id=sube.okutman().key)
+                for baslangic in [8, 9, 10, 11, 12, 13, 14, 15, 16]:
+                    for gun in ['1000000', '0100000', '0010000', '0001000', '0000100']:
+                        self._export_time(class_, gun, baslangic, tur.ders_saati)
+
+    def _export_time(self, parent, gun, baslangic, sure):
+        etree.SubElement(parent, 'time',
+                         days=gun,
+                         start='%i' % self._saat2slot(baslangic),
+                         length='%i' % self._saat2slot(sure))
+
 
 class ExportRooms(UnitimeEntityXMLExport):
     """
