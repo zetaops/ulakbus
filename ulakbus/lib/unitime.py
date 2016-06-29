@@ -156,6 +156,8 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
             dersler = Ders.objects.filter(program=program)
             for i, ders in enumerate(dersler):
                 self._export_ders(i, classes, bolum, ders, unitime_ids)
+        etree.SubElement(root, 'groupConstraints')
+        etree.SubElement(root, 'students')
 
     def _export_ders(self, dersid, parent, bolum, ders, unitime_ids):
         subeler = Sube.objects.filter(ders = ders)
@@ -185,7 +187,8 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         etree.SubElement(parent, 'time',
                          days=gun,
                          start='%i' % self._saat2slot(baslangic),
-                         length='%i' % self._saat2slot(sure))
+                         length='%i' % self._saat2slot(sure),
+                         breaktime = "10",pref = "0.0")
 
 
 
