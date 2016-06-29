@@ -74,6 +74,30 @@ class UnitimeEntityXMLExport(Command):
             print("Bolum Bulunamadi")
             sys.exit(1)
 
+
+class ExportAllDataSet(UnitimeEntityXMLExport):
+    CMD_NAME = 'export_all_data_set_xmls'
+    HELP = 'Generates all data set Unitime XML import file'
+    PARAMS = [{'name': 'batch_size', 'type': int, 'default': 1000,
+               'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'}]
+    FILE_NAME = 'buildingRoomImport.xml'
+    DOC_TYPE = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
+
+    def prepare_data(self):
+        bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
+        root = etree.Element('timetable', initiative="%s" % self.uni,
+                             term="%s" % self.term.ad,created = "",nrDays = "7",
+                             slotsPerDay="288")
+
+        self.exportRooms(self,root, bolum)
+        self.exportClasses(self, root, bolum)
+
+    def exportRooms(self, root, bolum):
+        pass
+
+    def exportClasses(self, root ,bolum):
+        pass
+
 class ExportRooms(UnitimeEntityXMLExport):
     """
         yöksis numarası verilen bölümün kullanabileceği odalar, o odaların bulunduğu
