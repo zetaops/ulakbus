@@ -110,14 +110,17 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
             roomselement = etree.SubElement(root,'rooms')
 
             for l, room in enumerate(rooms):
-                id = "%i%i" % (k, l)
+                id = k * 100 + l + 1  # TODO: geçici hack, id oluşturmayı düzenlerken değiştirilecek
                 roomelement = etree.SubElement(
                     roomselement, 'room',
-                    id ="%s" % id,
+                    id ="%i" % id,
                     constraint = "true",
                     capacity="%s" % room.capacity,
                     location="%s,%s" % (room.building.coordinate_x,room.building.coordinate_y))
-                unitime_id[room.key] = id
+                unitime_id[room.key] = '%i' % id
+                room.unitime_id = id
+                print(room.name, id)
+                room.save()
 
                 if room.RoomDepartments:
                     roommdepartments = etree.SubElement(roomelement,'sharing')
