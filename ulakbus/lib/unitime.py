@@ -670,3 +670,20 @@ class ExportAllUnitimeXMLs(Command):
         ExportAcademicClassificationsToXML().run()
         ExportPosMajorsToXML().run()
         ExportCurriculaToXML().run()
+
+
+class ExportResolvedXMLtoModel(UnitimeEntityXMLExport):
+    EXPORT_DIR = " "
+    CMD_NAME = " "
+    HELP = " "
+    FILE_NAME = " "
+    PARAMS = []
+
+    def create_dir(self):
+        export_directory = self.EXPORT_DIR
+        if not os.path.exists(export_directory):
+            os.makedirs(export_directory)
+        return export_directory
+
+    def prepare_data(self):
+        pass
