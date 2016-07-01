@@ -11,7 +11,7 @@ import sys
 from zengine.management_commands import *
 from lxml import etree
 from ulakbus.models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, Building, \
-    Room, DersEtkinligi
+    Room, Ders Etkinligi
 import datetime
 from common import get_akademik_takvim
 import random
@@ -30,6 +30,7 @@ class UnitimeEntityXMLExport(Command):
         out_dir = self.create_dir()
         out_file = open(out_dir + '/' + self.FILE_NAME, 'w+')
         out_file.write("%s" % data)
+
         print(
             "Veriler %s dizini altinda %s adlı dosyaya kayit edilmiştir" % (
                 out_dir, self.FILE_NAME))
@@ -110,12 +111,18 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                              term="%i%s" % (date.today().year,self.term.ad), created = "%s" %str(date.today()),nrDays = "7",
                              slotsPerDay="%i" % self._saat2slot(24))
 
-        self.exportRooms(root)
-        self.exportClasses(root, bolum)
-        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
-                              doctype="%s" % self.DOC_TYPE)
 
-    def exportRooms(self, root):
+        unitime_ids = self.exportRooms(root)
+        self.exportClasses(root, bolum, unitime_ids)
+        self.FILE_NAME = str(bolum.yoksis_no)
+
+        self.export_rooms(root)
+        self.export_classes(root, bolum)
+
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                      doctype="%s" % self.DOC_TYPE)
+
+    def export_rooms(self, root):
         buildings = Building.objects.filter()
         for building in buildings:
             rooms = Room.objects.filter(building=building)
@@ -164,7 +171,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
             generate += random.choice(rand_list)
         return generate
 
-    def exportClasses(self, root ,bolum):
+    def export_classes(self, root ,bolum):
         classes = etree.SubElement(root, 'classes')
         programlar = Program.objects.filter(bolum=bolum)
         for program in programlar:
