@@ -110,12 +110,12 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                              term="%i%s" % (date.today().year,self.term.ad), created = "%s" %str(date.today()),nrDays = "7",
                              slotsPerDay="%i" % self._saat2slot(24))
 
-        self.exportRooms(root)
-        self.exportClasses(root, bolum)
+        self.export_rooms(root)
+        self.export_classes(root, bolum)
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
 
-    def exportRooms(self, root):
+    def export_rooms(self, root):
         buildings = Building.objects.filter()
         for building in buildings:
             rooms = Room.objects.filter(building=building)
@@ -164,7 +164,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
             generate += random.choice(rand_list)
         return generate
 
-    def exportClasses(self, root ,bolum):
+    def export_classes(self, root ,bolum):
         classes = etree.SubElement(root, 'classes')
         programlar = Program.objects.filter(bolum=bolum)
         for program in programlar:
