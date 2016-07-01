@@ -11,6 +11,7 @@ Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili 
 """
 
 from pyoko import Model, field
+from .buildings_rooms import Room
 from .auth import Unit
 from .ogrenci import Okutman
 from ulakbus.lib.exceptions import DataConflictError
@@ -32,6 +33,12 @@ HAFTA_ICI_GUNLER = [
 HAFTA_SONU_GUNLER = [
     (6, "Ctesi"),
     (7, "Pazar")
+]
+
+DERSLIK_DURUMU = [
+    (1, 'Herkese Acik'),
+    (2, 'Bolume Ait'),
+    (3, 'Herkese Kapali')
 ]
 
 HAFTA = HAFTA_ICI_GUNLER + HAFTA_SONU_GUNLER
@@ -125,3 +132,20 @@ class ZamanCetveli(Model):
 
     def __unicode__(self):
         return '%s - %s - %s' % (self.ogretim_elemani_zaman_plani, self.zaman_dilimi, self.durum)
+
+
+class DerslikZamanPlani(Model):
+
+    class Meta:
+        verbose_name = 'Derslik Zaman Plani'
+        unique_together = [('derslik', 'gun', 'baslangic_saat', 'baslangic_dakika', 'bitis_saat', 'bitis_dakika')]
+        search_fields = ['unit', 'derslik', 'gun', 'derslik_durum']
+
+    unit = Unit()
+    derslik = Room()
+    gun = field.Integer("Gun", choices=HAFTA, index=True)
+    baslangic_saat = field.String('Baslangic Saat', default='08', index=True)
+    baslangic_dakika = field.String('Baslangic Dakika', default='30', index=True)
+    bitis_saat = field.String("Bitis Saat", default='12', index=True)
+    bitis_dakika = field.String("Bitis Dakika", default='00', index=True)
+    derslik_durum = field.Integer("Durum", choices=DERSLIK_DURUMU, index=True)
