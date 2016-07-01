@@ -14,7 +14,6 @@ from pyoko import Model, field
 from .buildings_rooms import Room
 from .auth import Unit
 from .ogrenci import Okutman
-from ulakbus.lib.exceptions import DataConflictError
 
 UYGUNLUK_DURUMU = [
     (1, "Uygun"),
@@ -41,59 +40,37 @@ DERSLIK_DURUMU = [
     (3, 'Herkese Kapali')
 ]
 
+GUN_DILIMI = [
+    (1, 'Sabah'),
+    (2, 'Ogle'),
+    (3, 'Aksam')
+]
+
 HAFTA = HAFTA_ICI_GUNLER + HAFTA_SONU_GUNLER
 
 
-class GunZamanDilimleri(Model):
-    """
-        Belirtilen birimin, haftanin secilen bir gunune ait saat araligi belirler.
+class ZamanDilimleri(Model):
 
-        Ornek:
-
-            birim - Bilgisayar Muhendisligi Bolumu (Unit Nesnesi)
-            gun - 1(Pazartesi)
-            baslama_saat = '10'
-            baslama_dakika = '30'
-            bitis_saat = '12'
-            bitis_dakika = '00'
-
-        Bu ornege gore Bilgisayar Muhendisligi Bolumunde pazartesi gunu 10:30-12:00 saatleri arasi
-        ders verilebilir. Bu belirlenen gune ait saat araliklari benzer olmamalidir. Eger cakisan
-        saat veye saat araligi olursa ilgili model DataConflictError hatasi dondurur.
-    """
     class Meta:
-        unique_together = [('birim', 'gun', 'baslama_saat', 'baslama_dakika', 'bitis_saat', 'bitis_dakika')]
-        search_fields = ['birim', 'gun', 'baslama_saat', 'bitis_saat']
+        unique_together = [('birim', 'gun_dilimi')]
+        search_fields = ['birim', 'gun_dilimi']
 
-    birim = Unit("Birim")
-    gun = field.Integer("Gun", choices=HAFTA, index=True)
+    birim = Unit('Bolum')
+    gun_dilimi = field.Integer('Gun Dilimi', choices=GUN_DILIMI, index=True)
+
     baslama_saat = field.String("Baslama Saat", default='08', index=True)
     baslama_dakika = field.String("Baslama Dakika", default='00', index=True)
+
     bitis_saat = field.String("Bitis Saat", default='12', index=True)
     bitis_dakika = field.String("Bitis Dakika", default='00', index=True)
 
-    def pre_save(self):
-        """
-        kayit baslama bitis zamani cakisiyor mu?
-        """
-        zaman_dilimleri = GunZamanDilimleri.objects.filter(birim=self.birim, gun=self.gun)
-
-        for zaman in zaman_dilimleri:
-            baslangic = int("%s%s" % (zaman.baslama_saat, zaman.baslama_dakika))
-            bitis = int("%s%s" % (zaman.bitis_saat, zaman.bitis_dakika))
-
-            yeni_baslangic = int("%s%s" % (self.baslama_saat, self.baslama_dakika))
-            yeni_bitis = int("%s%s" % (self.bitis_saat, self.bitis_dakika))
-
-            if yeni_baslangic > yeni_bitis:
-                raise DataConflictError("Baslangic zamani bitis zamanindan buyuk olamaz.")
-
-            if not ((yeni_baslangic < baslangic and yeni_bitis <= baslangic) or
-                    (yeni_baslangic >= bitis and yeni_bitis > bitis)):
-                raise DataConflictError("Baslangic bitis zamanlari onceki kayitlar ile cakismaktadir.")
+    # Ara suresi de dahil. Ornek olarak 30 girildiyse ders 9, 9.30, 10 gibi surelerde baslayabilir.
+    ders_araligi = field.Integer('Ders Suresi', default=60, index=True)
+    ara_suresi = field.Integer('Tenefus', default=10, index=True)
 
     def __unicode__(self):
-        return '%s - %s:%s' % (self.gun, self.baslama_saat, self.baslama_dakika)
+        return '%s - %s:%s|%s:%s' % (dict(HAFTA_ICI_GUNLER)[int(self.gun_dilimi)], self.baslama_saat,
+                                     self.baslama_dakika, self.bitis_saat, self.bitis_dakika)
 
 
 class OgElemaniZamanPlani(Model):
@@ -126,12 +103,14 @@ class ZamanCetveli(Model):
         search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim']
 
     birim = Unit("Birim")
-    zaman_dilimi = GunZamanDilimleri("Zaman Dilimi")
+    gun = field.Integer("Gun", choices=HAFTA, index=True)
+    zaman_dilimi = ZamanDilimleri("Zaman Dilimi")
     durum = field.Integer("Uygunluk Durumu", choices=UYGUNLUK_DURUMU, default=1, index=True)
     ogretim_elemani_zaman_plani = OgElemaniZamanPlani("Ogretim Elemani")
 
     def __unicode__(self):
-        return '%s - %s - %s' % (self.ogretim_elemani_zaman_plani, self.zaman_dilimi, self.durum)
+        return '%s - %s - %s' % (self.ogretim_elemani_zaman_plani, self.zaman_dilimi,
+                                 dict(UYGUNLUK_DURUMU)[int(self.durum)])
 
 
 class DerslikZamanPlani(Model):
@@ -149,3 +128,4 @@ class DerslikZamanPlani(Model):
     bitis_saat = field.String("Bitis Saat", default='12', index=True)
     bitis_dakika = field.String("Bitis Dakika", default='00', index=True)
     derslik_durum = field.Integer("Durum", choices=DERSLIK_DURUMU, index=True)
+
