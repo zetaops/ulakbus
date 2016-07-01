@@ -877,8 +877,7 @@ class FakeDataGenerator:
                                 "%s sınavı için %s adlı öğrencinin değerlendirme notu girildi.\n" %
                                 (sinav, ogrenci))
 
-            time.sleep(1)
+            time.sleep(3)
             varsayilan_subeler = Sube.objects.filter(ad = 'Varsayılan Şube')
-            for sube in varsayilan_subeler:
-                sube.delete()
-                sube.save()
+            varsayilan_subeler._clear()
+

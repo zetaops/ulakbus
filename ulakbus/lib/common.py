@@ -1,5 +1,5 @@
-from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, ders_programi_data
-from ulakbus.lib.unitime import ExportAllDataSet
+from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi
+# from ulakbus.lib.unitime import ExportAllDataSet
 from math import floor
 
 
@@ -14,7 +14,6 @@ def get_akademik_takvim(unit):
 
 
 def ders_programi_doldurma(root):
-
     # inst = [child for child in root.iter('instructor') if child.get('solution') == 'true']
 
     # room = [child for child in root.iter('room') if child.get('solution') == 'true']
@@ -23,11 +22,10 @@ def ders_programi_doldurma(root):
 
     cls = [child for child in root.iter('class') for i in child.iter('instructor') if i.get('solution') == 'true']
 
-    data_set = ExportAllDataSet()
-    ders = ders_programi_data
+    # data_set = ExportAllDataSet()
 
     for child in cls:
-        ders_etkinlik = ders.DersEtkinligi.objects.get(unitime_id=child.get('id'))
+        ders_etkinlik = DersEtkinligi.objects.get(unitime_id=child.get('id'))
         ders_etkinlik.solved = True
 
         for room in child.iter('room'):
@@ -49,9 +47,8 @@ def ders_programi_doldurma(root):
 
                 saat = "%02d" % floor(duration)
                 ders_etkinlik.baslangic_saat = str(saat)
-                dakika = "%02d" % (60 *(duration %1))
+                dakika = "%02d" % (60 * (duration % 1))
                 ders_etkinlik.baslangic_dakika = dakika
-
 
                 duration = start + length
                 duration = duration * data_set._SLOT_SURESI / 60

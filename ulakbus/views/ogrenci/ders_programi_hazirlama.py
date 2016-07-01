@@ -1,13 +1,12 @@
-from ulakbus.lib.unitime import ExportAllDataSet
-from ulakbus.lib.common import ders_programi_doldurma
-from ulakbus.models import ders_programi_data
+# from ulakbus.lib.unitime import ExportAllDataSet
+from ulakbus.models import DersEtkinligi
 import xml.etree.ElementTree as ET
 import subprocess, os
+from ulakbus.lib.common import ders_programi_doldurma
 
 data_set = ExportAllDataSet()
 data_set.EXPORT_DIR = '/opt/zato/solver'
 data_set.run()
-ders = ders_programi_data
 
 bolum = 124150
 export_file = str(bolum)
@@ -33,7 +32,7 @@ else:
 
     ders_programi_doldurma(root)
     cozulmeyenler = []
-    for ders in ders.DersEtkinligi.objects.filter():
+    for ders in DersEtkinligi.objects.filter():
         if ders.solved == False:
             cozulmeyenler.append(ders.unitime_id)
 
