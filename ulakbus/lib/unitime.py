@@ -11,7 +11,7 @@ import sys
 from zengine.management_commands import *
 from lxml import etree
 from ulakbus.models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, Building, \
-    Room
+    Room, Ders Etkinligi
 import datetime
 from common import get_akademik_takvim
 import random
@@ -112,6 +112,15 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                              slotsPerDay="%i" % self._saat2slot(24))
 
 
+        unitime_ids = self.exportRooms(root)
+        self.exportClasses(root, bolum, unitime_ids)
+        self.FILE_NAME = str(bolum.yoksis_no)
+
+        self.export_rooms(root)
+        self.export_classes(root, bolum)
+
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                      doctype="%s" % self.DOC_TYPE)
 
     def export_rooms(self, root):
         buildings = Building.objects.filter()
