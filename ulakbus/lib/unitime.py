@@ -30,6 +30,7 @@ class UnitimeEntityXMLExport(Command):
         out_dir = self.create_dir()
         out_file = open(out_dir + '/' + self.FILE_NAME, 'w+')
         out_file.write("%s" % data)
+
         print(
             "Veriler %s dizini altinda %s adlı dosyaya kayit edilmiştir" % (
                 out_dir, self.FILE_NAME))
@@ -98,6 +99,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
 
         unitime_ids = self.exportRooms(root)
         self.exportClasses(root, bolum, unitime_ids)
+        self.FILE_NAME = str(bolum.yoksis_no)
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
 
