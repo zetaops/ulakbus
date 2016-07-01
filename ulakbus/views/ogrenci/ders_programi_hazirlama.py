@@ -5,7 +5,7 @@ import subprocess, os
 from ulakbus.lib.common import ders_programi_doldurma
 
 data_set = ExportAllDataSet()
-data_set.EXPORT_DIR = '/opt/zato/solver'
+data_set.EXPORT_DIR = '../../../../../../opt/zato/solver'
 data_set.run()
 
 bolum = 124150

@@ -1,7 +1,16 @@
+# -*-  coding: utf-8 -*-
+
 from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi
-# from ulakbus.lib.unitime import ExportAllDataSet
 from math import floor
 
+# Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
+SLOT_SURESI = 5
+# CPSolver'ın ID alanlarında kabul ettiği maximum değer
+SOLVER_MAX_ID = 900000000000000000
+
+
+def saat2slot(saat):
+    return saat * 60 / SLOT_SURESI
 
 def get_akademik_takvim(unit):
     try:
@@ -22,8 +31,6 @@ def ders_programi_doldurma(root):
 
     cls = [child for child in root.iter('class') for i in child.iter('instructor') if i.get('solution') == 'true']
 
-    # data_set = ExportAllDataSet()
-
     for child in cls:
         ders_etkinlik = DersEtkinligi.objects.get(unitime_id=child.get('id'))
         ders_etkinlik.solved = True
@@ -43,7 +50,7 @@ def ders_programi_doldurma(root):
 
                 start = int(time.get('start'))
                 length = int(time.get('length'))
-                duration = start * data_set._SLOT_SURESI / 60
+                duration = start * SLOT_SURESI / 60
 
                 saat = "%02d" % floor(duration)
                 ders_etkinlik.baslangic_saat = str(saat)
@@ -51,7 +58,7 @@ def ders_programi_doldurma(root):
                 ders_etkinlik.baslangic_dakika = dakika
 
                 duration = start + length
-                duration = duration * data_set._SLOT_SURESI / 60
+                duration = duration * SLOT_SURESI / 60
                 saat = "%02d" % floor(duration)
                 ders_etkinlik.bitis_saat = str(saat)
                 dakika = "%02d" % (60 * (duration % 1))

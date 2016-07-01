@@ -11,7 +11,7 @@ import sys
 from zengine.management_commands import *
 from lxml import etree
 from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, Building, Room, DersEtkinligi
-from common import get_akademik_takvim
+from common import get_akademik_takvim, SOLVER_MAX_ID, saat2slot
 from datetime import datetime, date
 import random
 
@@ -25,6 +25,7 @@ class UnitimeEntityXMLExport(Command):
     PARAMS = []
 
     def write_file(self, data):
+        # out_dir = self.create_dir()
         out_dir = self.create_dir()
         out_file = open(out_dir + '/' + self.FILE_NAME, 'w+')
         out_file.write("%s" % data)
@@ -44,8 +45,9 @@ class UnitimeEntityXMLExport(Command):
         return ''
 
     def create_dir(self):
-        current_date = datetime.now()
-        export_directory = self.EXPORT_DIR + current_date.strftime('%d_%m_%Y_%H')
+        # current_date = datetime.now()
+        # export_directory = self.EXPORT_DIR + current_date.strftime('%d_%m_%Y_%H')
+        export_directory = self.EXPORT_DIR
         if not os.path.exists(export_directory):
             os.makedirs(export_directory)
         return export_directory
@@ -83,20 +85,14 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'}]
     FILE_NAME = 'buildingRoomImport.xml'
     DOC_TYPE = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
-    # Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
-    _SLOT_SURESI = 5
-    # CPSolver'ın ID alanlarında kabul ettiği maximum değer
-    _SOLVER_MAX_ID = 900000000000000000
+
     # CPSolver için ID oluştururken pyoko keyleri ile solver idlerini eşleştirmek için kullanılan sözlük
     _SOLVER_IDS = {}
-
-    def _saat2slot(self, saat):
-        return saat * 60 / self._SLOT_SURESI
 
     def _key2id(self, key):
         if key in self._SOLVER_IDS:
             return self._SOLVER_IDS[key]
-        unitime_id = hash(key) % self._SOLVER_MAX_ID
+        unitime_id = hash(key) % SOLVER_MAX_ID
         # Çakışmalar çözülene kadar id değerini değiştir
         while unitime_id in self._SOLVER_IDS.values():
             unitime_id += 1
@@ -108,7 +104,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         root = etree.Element('timetable', version="2.4", initiative="%s" % self.uni,
                              term="%i%s" % (date.today().year, self.term.ad), created="%s" % str(date.today()),
                              nrDays="7",
-                             slotsPerDay="%i" % self._saat2slot(24))
+                             slotsPerDay="%i" % saat2slot(24))
 
         self.FILE_NAME = str(bolum.yoksis_no)
         self.export_rooms(root)
@@ -118,11 +114,11 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                               doctype="%s" % self.DOC_TYPE)
 
     def export_rooms(self, root):
+        roomselement = etree.SubElement(root, 'rooms')
         buildings = Building.objects.filter()
         for building in buildings:
             rooms = Room.objects.filter(building=building)
 
-            roomselement = etree.SubElement(root, 'rooms')
 
             for room in rooms:
                 id = room.unitime_id
@@ -181,7 +177,9 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         # Önceki exportlardan kalmış olabilecek kayıtları, yenileriyle
         # karışmaması için temizle
         for sube in subeler:
-            DersEtkinligi.objects.filter(sube=sube).delete()
+            if len(DersEtkinligi.objects.filter(sube=sube))>0:
+                DersEtkinligi.objects.filter(sube=sube).delete()
+
         derslik_turleri = ders.DerslikTurleri
         for i, tur in enumerate(derslik_turleri):
             uygun_derslikler = Room.objects.filter(room_type=tur.sinif_turu())
@@ -216,8 +214,8 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
     def _export_time(self, parent, gun, baslangic, sure):
         etree.SubElement(parent, 'time',
                          days=gun,
-                         start='%i' % self._saat2slot(baslangic),
-                         length='%i' % self._saat2slot(sure),
+                         start='%i' % saat2slot(baslangic),
+                         length='%i' % saat2slot(sure),
                          breaktime="10", pref="0.0")
 
 

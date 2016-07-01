@@ -493,6 +493,8 @@ class FakeDataGenerator:
 
         ders_list = []
         room_type_list = list(RoomType.objects)
+        sube_olustur = Ders.ontanimli_sube_olustur
+        Ders.ontanimli_sube_olustur = lambda x: None
         for i in range(ders_say):
             d = Ders()
             d.ad = fake.lecture()
@@ -510,6 +512,7 @@ class FakeDataGenerator:
                 d.DerslikTurleri.add(sinif_turu = derslik_turu,ders_saati = random.randint(1,5))
             d.save()
             ders_list.append(d)
+        Ders.ontanimli_sube_olustur = sube_olustur
         return ders_list
 
     @staticmethod
@@ -879,5 +882,8 @@ class FakeDataGenerator:
 
             time.sleep(3)
             varsayilan_subeler = Sube.objects.filter(ad = 'Varsayılan Şube')
-            varsayilan_subeler._clear()
+            for sube in varsayilan_subeler:
+                sube.delete()
+                sube.save()
+            # varsayilan_subeler._clear()
 
