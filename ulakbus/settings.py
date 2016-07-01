@@ -167,7 +167,8 @@ VIEW_URLS.update({
     'get_current_user': 'ulakbus.views.system.GetCurrentUser',
     'dashboard': 'ulakbus.views.system.UlakbusMenu',
     'menu': 'ulakbus.views.system.UlakbusMenu',
-    'ders_arama': 'ulakbus.views.ogrenci.ogrenci.ders_arama'
+    'ders_arama': 'ulakbus.views.ogrenci.ogrenci.ders_arama',
+    'sube_arama': 'ulakbus.views.ogrenci.ogrenci_ders_ekleme.sube_arama'
 })
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')

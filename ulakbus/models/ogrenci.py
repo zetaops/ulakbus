@@ -1127,7 +1127,7 @@ class SecmeliDersGruplari(Model):
 
     class Dersler(ListNode):
         ders = Ders()
-        # Seçmeli
+        # Seçmeli ders zorunlu ise True
         zorunlu_secmeli = field.Boolean('Zorunlu Seçmeli')
 
     class Meta:
