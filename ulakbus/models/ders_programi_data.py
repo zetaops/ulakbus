@@ -10,6 +10,11 @@ from . import RoomType, Okutman, Room, Sube
 
 
 class DersEtkinligi(Model):
+
+    class Meta:
+        verbose_name = "Ders Etkinligi"
+        search_fields = ['unit_yoksis_no']
+
     solved = fields.Boolean()
     unitime_id = fields.Integer() #class id
     unit_yoksis_no = fields.Integer()
