@@ -11,7 +11,7 @@ import sys
 from zengine.management_commands import *
 from lxml import etree
 from ulakbus.models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, Building, \
-    Room
+    Room, DersEtkinligi
 import datetime
 from common import get_akademik_takvim
 import random
@@ -176,19 +176,32 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
 
     def _export_ders(self, parent, bolum, ders):
         subeler = Sube.objects.filter(ders = ders)
+        # Önceki exportlardan kalmış olabilecek kayıtları, yenileriyle
+        # karışmaması için temizle
+        for sube in subeler:
+            DersEtkinligi.objects.filter(sube=sube).delete()
         derslik_turleri = ders.DerslikTurleri
-        for tur in derslik_turleri:
+        for i, tur in enumerate(derslik_turleri):
             uygun_derslikler = Room.objects.filter(room_type=tur.sinif_turu())
-            for i, sube in enumerate(subeler):
-                sube_subpart_key = '%i' % self._key2id('%i %s' % (i, sube.key))
+            for sube in subeler:
+                sube_subpart_id = '%i' % self._key2id('%i %s' % (i, sube.key))
                 class_ = etree.SubElement(parent, 'class',
-                                          id=sube_subpart_key,
+                                          id=sube_subpart_id,
                                           offering='%i' % self._key2id(ders.key),
                                           config='%i' % self._key2id(sube.key),
-                                          subpart=sube_subpart_key,
+                                          subpart=sube_subpart_id,
                                           classLimit='%i' % sube.kontenjan,
                                           scheduler='%i' % bolum.yoksis_no,
                                           dates='1111100111110011111001111100')  # haftasonları hariç 1 ay her gün
+                # Çıkartılan ders için ders etkinliği kaydı oluştur
+                d = DersEtkinligi()
+                d.solved = False
+                d.unitime_id = sube_subpart_id
+                d.unit_yoksis_no = bolum.yoksis_no
+                d.room_type = tur.sinif_turu()
+                d.okutman = sube.okutman()
+                d.sube = sube
+                d.save()
                 for derslik in uygun_derslikler:
                     etree.SubElement(class_, 'room',
                                      id='%i' % derslik.unitime_id,
