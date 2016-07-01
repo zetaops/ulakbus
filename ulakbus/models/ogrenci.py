@@ -1127,7 +1127,7 @@ class SecmeliDersGruplari(Model):
 
     class Dersler(ListNode):
         ders = Ders()
-        # Bşarısız olunduğunda öğrencinin bu dersi seçmesi zorunlu ise
+        # Seçmeli
         zorunlu_secmeli = field.Boolean('Zorunlu Seçmeli')
 
     class Meta:
