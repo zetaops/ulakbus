@@ -10,12 +10,17 @@ from . import RoomType, Okutman, Room, Sube
 
 
 class DersEtkinligi(Model):
-    solved = fields.Boolean()
-    unitime_id = fields.Integer() #class id
-    unit_yoksis_no = fields.Integer()
-    room_type = RoomType()
-    okutman = Okutman("Ogretim Elemani")
-    sube = Sube()
+    
+    class Meta:
+        verbose_name = "Ders Etkinligi"
+        search_fields = ['unit_yoksis_no']
+
+    solved = fields.Boolean(index=True)
+    unitime_id = fields.String(index=True) #class id
+    unit_yoksis_no = fields.Integer(index=True)
+    room_type = RoomType(index=True)
+    okutman = Okutman("Ogretim Elemani", index=True)
+    sube = Sube(index=True)
 
     # to be calculated
     room = Room()

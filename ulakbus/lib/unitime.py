@@ -11,7 +11,7 @@ import sys
 from zengine.management_commands import *
 from lxml import etree
 from ulakbus.models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, Building, \
-    Room
+    Room, DersEtkinligi
 import datetime
 from common import get_akademik_takvim
 import random
@@ -87,9 +87,23 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
     DOC_TYPE = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
     # Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
     _SLOT_SURESI = 5
+    # CPSolver'ın ID alanlarında kabul ettiği maximum değer
+    _SOLVER_MAX_ID = 900000000000000000
+    # CPSolver için ID oluştururken pyoko keyleri ile solver idlerini eşleştirmek için kullanılan sözlük
+    _SOLVER_IDS = {}
 
     def _saat2slot(self, saat):
         return saat * 60 / self._SLOT_SURESI
+
+    def _key2id(self, key):
+        if key in self._SOLVER_IDS:
+            return self._SOLVER_IDS[key]
+        unitime_id = hash(key) % self._SOLVER_MAX_ID
+        # Çakışmalar çözülene kadar id değerini değiştir
+        while unitime_id in self._SOLVER_IDS.values():
+            unitime_id += 1
+        self._SOLVER_IDS[key] = unitime_id
+        return unitime_id
 
     def prepare_data(self):
         bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
@@ -97,29 +111,37 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                              term="%i%s" % (date.today().year,self.term.ad), created = "%s" %str(date.today()),nrDays = "7",
                              slotsPerDay="%i" % self._saat2slot(24))
 
+<<<<<<< HEAD
         unitime_ids = self.exportRooms(root)
         self.exportClasses(root, bolum, unitime_ids)
         self.FILE_NAME = str(bolum.yoksis_no)
+=======
+        self.export_rooms(root)
+        self.export_classes(root, bolum)
+>>>>>>> ea006ed1d9dc8cbc787ca3f73cb0db64eae70d40
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                               doctype="%s" % self.DOC_TYPE)
 
-    def exportRooms(self, root):
-        unitime_id = {}
+    def export_rooms(self, root):
         buildings = Building.objects.filter()
-        for k, building in enumerate(buildings):
+        for building in buildings:
             rooms = Room.objects.filter(building=building)
 
             roomselement = etree.SubElement(root,'rooms')
 
-            for l, room in enumerate(rooms):
-                id = "%i%i" % (k, l)
+            for room in rooms:
+                id = room.unitime_id
+                if id is None:
+                    id = self._key2id(room.key)
+                    room.unitime_id = id
+                    room.save()
+
                 roomelement = etree.SubElement(
                     roomselement, 'room',
-                    id ="%s" % id,
+                    id ="%i" % id,
                     constraint = "true",
                     capacity="%s" % room.capacity,
                     location="%s,%s" % (room.building.coordinate_x,room.building.coordinate_y))
-                unitime_id[room.key] = id
 
                 if room.RoomDepartments:
                     roommdepartments = etree.SubElement(roomelement,'sharing')
@@ -142,8 +164,6 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                             roommdepartments, 'department',
                             value="%i" %j,id="%s" %department.unit.yoksis_no)
 
-        return unitime_id
-
     def generate_pattern(self):
         generate= ""
         rand_list = ['F','X','0','1']
@@ -151,37 +171,50 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
             generate += random.choice(rand_list)
         return generate
 
-    def exportClasses(self, root ,bolum, unitime_ids):
+    def export_classes(self, root ,bolum):
         classes = etree.SubElement(root, 'classes')
         programlar = Program.objects.filter(bolum=bolum)
         for program in programlar:
             dersler = Ders.objects.filter(program=program)
-            for i, ders in enumerate(dersler):
-                self._export_ders(i, classes, bolum, ders, unitime_ids)
+            for ders in dersler:
+                self._export_ders(classes, bolum, ders)
         etree.SubElement(root, 'groupConstraints')
         etree.SubElement(root, 'students')
 
-    def _export_ders(self, dersid, parent, bolum, ders, unitime_ids):
+    def _export_ders(self, parent, bolum, ders):
         subeler = Sube.objects.filter(ders = ders)
+        # Önceki exportlardan kalmış olabilecek kayıtları, yenileriyle
+        # karışmaması için temizle
+        for sube in subeler:
+            DersEtkinligi.objects.filter(sube=sube).delete()
         derslik_turleri = ders.DerslikTurleri
         for i, tur in enumerate(derslik_turleri):
             uygun_derslikler = Room.objects.filter(room_type=tur.sinif_turu())
-            for l,sube in enumerate(subeler):
-                sube_key = "%i%i" %(i,l)
+            for sube in subeler:
+                sube_subpart_id = '%i' % self._key2id('%i %s' % (i, sube.key))
                 class_ = etree.SubElement(parent, 'class',
-                                          id=sube_key,
-                                          offering='%i' % dersid,
-                                          config='%i' % l,
-                                          subpart=sube_key,
+                                          id=sube_subpart_id,
+                                          offering='%i' % self._key2id(ders.key),
+                                          config='%i' % self._key2id(sube.key),
+                                          subpart=sube_subpart_id,
                                           classLimit='%i' % sube.kontenjan,
                                           scheduler='%i' % bolum.yoksis_no,
                                           dates='1111100111110011111001111100')  # haftasonları hariç 1 ay her gün
+                # Çıkartılan ders için ders etkinliği kaydı oluştur
+                d = DersEtkinligi()
+                d.solved = False
+                d.unitime_id = sube_subpart_id
+                d.unit_yoksis_no = bolum.yoksis_no
+                d.room_type = tur.sinif_turu()
+                d.okutman = sube.okutman()
+                d.sube = sube
+                d.save()
                 for derslik in uygun_derslikler:
                     etree.SubElement(class_, 'room',
-                                     id=unitime_ids[derslik.key],
+                                     id='%i' % derslik.unitime_id,
                                      pref='0')
-                etree.SubElement(class_, 'instructor', id='%i' % (hash(sube.okutman().key) % 1000))
-                for baslangic in [8, 9, 10, 11, 12, 13, 14, 15, 16]:
+                etree.SubElement(class_, 'instructor', id='%i' % self._key2id(sube.okutman()))
+                for baslangic in [8, 9, 10, 11, 12, 13, 14]:
                     for gun in ['1000000', '0100000', '0010000', '0001000', '0000100']:
                         self._export_time(class_, gun, baslangic, tur.ders_saati)
 

@@ -131,6 +131,7 @@ class Room(Model):
     building = Building()
 
     is_active = field.Boolean("Aktif", index=True)
+    unitime_id = field.String()  # Ders/Sınav programları hazırlanırken id'leri eşleştirmek için
 
     class Meta:
         verbose_name = "Oda"
