@@ -11,7 +11,7 @@ import sys
 from zengine.management_commands import *
 from lxml import etree
 from ulakbus.models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, Building, \
-    Room, Ders Etkinligi
+    Room, DersEtkinligi
 import datetime
 from common import get_akademik_takvim
 import random
@@ -112,10 +112,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                              slotsPerDay="%i" % self._saat2slot(24))
 
 
-        unitime_ids = self.exportRooms(root)
-        self.exportClasses(root, bolum, unitime_ids)
         self.FILE_NAME = str(bolum.yoksis_no)
-
         self.export_rooms(root)
         self.export_classes(root, bolum)
 
