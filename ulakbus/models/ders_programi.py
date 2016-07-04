@@ -99,7 +99,7 @@ class ZamanCetveli(Model):
     """
     class Meta:
         verbose_name = 'Zaman Cetveli'
-        unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani')]
+        unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani', 'gun')]
         search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim']
 
     birim = Unit("Birim")
