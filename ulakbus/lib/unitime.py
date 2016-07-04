@@ -10,7 +10,8 @@
 import sys
 from zengine.management_commands import *
 from lxml import etree
-from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, Building, Room, DersEtkinligi
+from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, \
+    Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri
 from common import get_akademik_takvim, SOLVER_MAX_ID, saat2slot
 from datetime import datetime, date
 import random
@@ -88,6 +89,10 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
 
     # CPSolver için ID oluştururken pyoko keyleri ile solver idlerini eşleştirmek için kullanılan sözlük
     _SOLVER_IDS = {}
+    # Ders programı modellerindeki günleri, solver'ın günleri ile eşleştiren sözlük
+    _GUNLER = {1: '1000000', 2: '0100000', 3: '0010000', 4: '0001000',
+               5: '0000100', 6: '0000010', 7: '0000001'}
+
 
     def _key2id(self, key):
         if key in self._SOLVER_IDS:
@@ -185,6 +190,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
             uygun_derslikler = Room.objects.filter(room_type=tur.sinif_turu())
             for sube in subeler:
                 sube_subpart_id = '%i' % self._key2id('%i %s' % (i, sube.key))
+                okutman = sube.okutman()
                 class_ = etree.SubElement(parent, 'class',
                                           id=sube_subpart_id,
                                           offering='%i' % self._key2id(ders.key),
@@ -199,24 +205,56 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                 d.unitime_id = sube_subpart_id
                 d.unit_yoksis_no = bolum.yoksis_no
                 d.room_type = tur.sinif_turu()
-                d.okutman = sube.okutman()
+                d.okutman = okutman
                 d.sube = sube
                 d.save()
                 for derslik in uygun_derslikler:
                     etree.SubElement(class_, 'room',
                                      id='%i' % derslik.unitime_id,
                                      pref='0')
-                etree.SubElement(class_, 'instructor', id='%i' % self._key2id(sube.okutman()))
-                for baslangic in [8, 9, 10, 11, 12, 13, 14]:
-                    for gun in ['1000000', '0100000', '0010000', '0001000', '0000100']:
-                        self._export_time(class_, gun, baslangic, tur.ders_saati)
+                etree.SubElement(class_, 'instructor', id='%i' % self._key2id(okutman.key))
+                self._zamanlari_cikar(class_, okutman, tur, bolum)
 
-    def _export_time(self, parent, gun, baslangic, sure):
-        etree.SubElement(parent, 'time',
-                         days=gun,
-                         start='%i' % saat2slot(baslangic),
-                         length='%i' % saat2slot(sure),
-                         breaktime="10", pref="0.0")
+    def _zamanlari_cikar(self, parent, ogretim_elemani, tur, bolum):
+        """Okutmanın bölüme ait zaman planına göre zaman seçenekleri çıkar
+
+        Args:
+            parent (etree.SubElement): Zamanların ekleneceği xml elemanı
+            okutman (Okutman): Zaman planları kontrol edilecek eğitim görevlisi
+            tur (Ders.DerslikTurleri): Zamanların çıkarıldığı dersin ders etkinliği
+            bolum (Unit): Uygun zamanları çıkartan bölüm
+        """
+        plan = OgElemaniZamanPlani.objects.get(birim=bolum, okutman=ogretim_elemani)
+        # Sadece uygun olan zaman cetvelleri
+        cetveller = ZamanCetveli.objects.filter(birim=bolum,
+                                                ogretim_elemani_zaman_plani=plan).exclude(durum=3)
+        for cetvel in cetveller:
+            dilim = cetvel.zaman_dilimi
+            zaman = self._zaman_ayrik2sayisal(dilim.baslama_saat, dilim.baslama_dakika)
+            bitis = self._zaman_ayrik2sayisal(dilim.bitis_saat, dilim.bitis_dakika)
+            gun = self._GUNLER[cetvel.gun]
+            sure = int(tur.ders_saati)
+            ders_araligi = self._zaman_ayrik2sayisal(0, dilim.ders_araligi)
+            # Bitiş zamanı gelene kadar, zamanları ekle
+            while zaman < bitis:
+                etree.SubElement(parent, 'time',
+                                 days=gun,
+                                 start='%i' % saat2slot(zaman),
+                                 length='%i' % saat2slot(sure),
+                                 breaktime='%i' % dilim.ara_suresi,
+                                 pref='%i' % cetvel.durum)
+                zaman += ders_araligi
+
+    @staticmethod
+    def _zaman_ayrik2sayisal(saat, dakika):
+        """Saat ve dakika olarak ayrık gösterilen zamanı, sayısal bir zaman gösterimine çevirir.
+
+        Oluşturulan sayısal gösterimde tam sayılar saat başlarını gösterirken, ondalık sayılar
+        ise saat başları arasındaki zamanları gösterir. Örneğin 8.5 sayısı '8:30', 8.75 sayısı
+        '8:45', 8.9 sayısı ise '8:54' saatine denk gelir.
+        """
+        saat, dakika = int(saat), int(dakika)
+        return (saat * 60 + dakika) / 60.0
 
 
 class ExportRooms(UnitimeEntityXMLExport):
