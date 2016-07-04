@@ -10,6 +10,7 @@ from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman,
 from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
 from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.personel import Personel
+from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri, GUN_DILIMI
 from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
 from .general import ints, gender, marital_status, blood_type, create_fake_geo_data
 from .general import driver_license_class, id_card_serial, birth_date
@@ -103,6 +104,36 @@ class FakeDataGenerator:
                 donem.save()
 
         return donem_list
+
+    def yeni_zaman_dilimleri(self, bolum):
+        """Bölüm için rastgele ders programı zaman dilimleri oluşturur.
+
+        Args:
+            bolum (Unit): Zaman dilimleri oluşturulacak bölüm.
+
+        Returns:
+            `list` of `ZamanDilimleri`: Oluşturulan zaman dilimleri.
+        """
+        zaman_dilimleri = []
+        saat = random.randint(7, 9)
+        dakika = random.choice(['00', '00', '30'])
+        for dilim, dilim_adi in GUN_DILIMI:
+            z = ZamanDilimleri()
+            z.birim = bolum
+            z.gun_dilimi = dilim
+            z.baslama_saat = str(saat)
+            z.baslama_dakika = dakika
+            # Her bir zaman dilimi 3-4 saat sürer
+            saat += random.randint(3, 4)
+            z.bitis_saat = str(saat)
+            z.bitis_dakika = dakika
+            z.ders_araligi = random.choice([30, 60, 60, 60, 90])
+            z.ara_suresi = random.choice([5, 10, 10, 15])
+            z.save()
+            zaman_dilimleri.append(z)
+            # İki zaman dilimi arasında boşluk olabilir
+            saat += random.choice([0, 0, 0, 1])
+        return zaman_dilimleri
 
     def yeni_bina(self,fakulte= None):
         """
@@ -801,6 +832,8 @@ class FakeDataGenerator:
 
         """
         bolum = Unit.objects.get(yoksis_no=yoksis_no)
+        zaman_dilimleri = self.yeni_zaman_dilimleri(bolum)
+        print('Oluşturulan zaman dilimleri : %s\n' % zaman_dilimleri)
         fakulte = Unit.objects.get(yoksis_no = bolum.parent_unit_no)
         self.yeni_bina(fakulte)
         if not Donem.objects.filter(guncel = True):
