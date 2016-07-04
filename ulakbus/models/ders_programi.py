@@ -69,7 +69,7 @@ class ZamanDilimleri(Model):
     ara_suresi = field.Integer('Tenefus', default=10, index=True)
 
     def __unicode__(self):
-        return '%s - %s:%s|%s:%s' % (dict(HAFTA_ICI_GUNLER)[int(self.gun_dilimi)], self.baslama_saat,
+        return '%s - %s:%s|%s:%s' % (dict(GUN_DILIMI)[int(self.gun_dilimi)], self.baslama_saat,
                                      self.baslama_dakika, self.bitis_saat, self.bitis_dakika)
 
 
