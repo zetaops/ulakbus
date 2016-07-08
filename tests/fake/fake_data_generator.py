@@ -10,6 +10,8 @@ from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman,
 from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
 from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.personel import Personel
+from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri,\
+    HAFTA, UYGUNLUK_DURUMU, GUN_DILIMI
 from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
 from .general import ints, gender, marital_status, blood_type, create_fake_geo_data
 from .general import driver_license_class, id_card_serial, birth_date
@@ -103,6 +105,36 @@ class FakeDataGenerator:
                 donem.save()
 
         return donem_list
+
+    def yeni_zaman_dilimleri(self, bolum):
+        """Bölüm için rastgele ders programı zaman dilimleri oluşturur.
+
+        Args:
+            bolum (Unit): Zaman dilimleri oluşturulacak bölüm.
+
+        Returns:
+            `list` of `ZamanDilimleri`: Oluşturulan zaman dilimleri.
+        """
+        zaman_dilimleri = []
+        saat = random.randint(7, 9)
+        dakika = random.choice(['00', '00', '30'])
+        for dilim, dilim_adi in GUN_DILIMI:
+            z = ZamanDilimleri()
+            z.birim = bolum
+            z.gun_dilimi = dilim
+            z.baslama_saat = str(saat)
+            z.baslama_dakika = dakika
+            # Her bir zaman dilimi 3-4 saat sürer
+            saat += random.randint(3, 4)
+            z.bitis_saat = str(saat)
+            z.bitis_dakika = dakika
+            z.ders_araligi = random.choice([30, 60, 60, 60, 90])
+            z.ara_suresi = random.choice([5, 10, 10, 15])
+            z.save()
+            zaman_dilimleri.append(z)
+            # İki zaman dilimi arasında boşluk olabilir
+            saat += random.choice([0, 0, 0, 1])
+        return zaman_dilimleri
 
     def yeni_bina(self,fakulte= None):
         """
@@ -330,6 +362,60 @@ class FakeDataGenerator:
             except:
                 pass
         return okutman_list
+
+    @staticmethod
+    def yeni_zaman_planlari(okutman, bolum):
+        """Okutmanın, verilen bölüm için zaman planını oluşturur.
+
+        Args:
+            okutman (Okutman): Zaman planı oluşturulacak olan öğretim görevlisi.
+            bolum (Unit): Oluşturulacak zaman planı, okutmanın bu bölümde
+                verdiği derslerde geçerli olacaktır.
+
+        Returns:
+           `lift` of `OgElemaniZamanPlani`: Oluşturulan zaman planı.
+        """
+        # Okutmanın bilgilerini topla
+        dersler = {sube.ders() for sube in Sube.objects.filter(okutman=okutman)}
+        programlar = {ders.program() for ders in dersler}
+        bolumler = {program.bolum() for program in programlar}
+
+        planlar = []
+        for bolum in bolumler:
+            plan = OgElemaniZamanPlani()
+            plan.okutman = okutman
+            plan.birim = bolum
+            plan.toplam_ders_saati = sum([ders.teori_saati + ders.uygulama_saati
+                                          for ders in dersler
+                                          if ders.program().bolum() == bolum])
+            plan.save()
+            planlar.append(plan)
+        return planlar
+
+    @staticmethod
+    def yeni_zaman_cetvelleri(planlar):
+        """Zaman planları için zaman cetvellerini oluşturur.
+
+        Args:
+            planlar (`list` of `OgElemaniZamanPlani`): Zaman cetvellerinin bağlı olduğu zaman planları
+
+        Returns:
+            `list` of `ZamanCetveli`: Oluşturulan zaman cetvelleri
+        """
+        cetveller = []
+        for plan in planlar:
+            birim = plan.birim()
+            for gun, gun_adi in HAFTA:
+                for zaman_dilimi in ZamanDilimleri.objects.filter(birim=birim):
+                    cetvel = ZamanCetveli()
+                    cetvel.birim = birim
+                    cetvel.gun = gun
+                    cetvel.zaman_dilimi = zaman_dilimi
+                    cetvel.durum = random.choice(dict(UYGUNLUK_DURUMU).keys())
+                    cetvel.ogretim_elemani_zaman_plani = plan
+                    cetvel.save()
+                    cetveller.append(cetvel)
+        return cetveller
 
     @staticmethod
     def yeni_harici_okutman(harici_okutman_say=1):
@@ -801,6 +887,8 @@ class FakeDataGenerator:
 
         """
         bolum = Unit.objects.get(yoksis_no=yoksis_no)
+        zaman_dilimleri = self.yeni_zaman_dilimleri(bolum)
+        print('Oluşturulan zaman dilimleri : %s\n' % zaman_dilimleri)
         fakulte = Unit.objects.get(yoksis_no = bolum.parent_unit_no)
         self.yeni_bina(fakulte)
         if not Donem.objects.filter(guncel = True):
@@ -887,3 +975,8 @@ class FakeDataGenerator:
                 sube.save()
             # varsayilan_subeler._clear()
 
+            for okutman in okutman_list:
+                planlar = self.yeni_zaman_planlari(okutman, bolum)
+                cetveller = self.yeni_zaman_cetvelleri(planlar)
+                print('%s adlı okutman için %i zaman planı ve %i zaman cetveli oluşturuldu.'
+                      % (okutman.ad, len(planlar), len(cetveller)))

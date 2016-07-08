@@ -69,7 +69,7 @@ class ZamanDilimleri(Model):
     ara_suresi = field.Integer('Tenefus', default=10, index=True)
 
     def __unicode__(self):
-        return '%s - %s:%s|%s:%s' % (dict(HAFTA_ICI_GUNLER)[int(self.gun_dilimi)], self.baslama_saat,
+        return '%s - %s:%s|%s:%s' % (dict(GUN_DILIMI)[int(self.gun_dilimi)], self.baslama_saat,
                                      self.baslama_dakika, self.bitis_saat, self.bitis_dakika)
 
 
@@ -99,7 +99,7 @@ class ZamanCetveli(Model):
     """
     class Meta:
         verbose_name = 'Zaman Cetveli'
-        unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani')]
+        unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani', 'gun')]
         search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim']
 
     birim = Unit("Birim")
