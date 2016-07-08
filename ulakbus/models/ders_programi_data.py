@@ -13,7 +13,7 @@ class DersEtkinligi(Model):
     
     class Meta:
         verbose_name = "Ders Etkinligi"
-        search_fields = ['unit_yoksis_no']
+        search_fields = ['unit_yoksis_no', 'room', 'okutman']
 
     solved = fields.Boolean(index=True)
     unitime_id = fields.String(index=True) #class id
@@ -23,7 +23,7 @@ class DersEtkinligi(Model):
     sube = Sube(index=True)
 
     # to be calculated
-    room = Room()
+    room = Room('Derslik')
     gun = fields.String("Gun")
     baslangic_saat = fields.String("Baslangic Saat")
     baslangic_dakika = fields.String("Baslangic Dakika")
