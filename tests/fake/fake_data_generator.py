@@ -883,7 +883,7 @@ class FakeDataGenerator:
         # yoksis program listesinden program olustur
         # for yoksis_program in yoksis_program_list:
 
-    def program_data_olustur(self,yoksis_no,personel_say = 30,okutman_say = 20,ogrenci_say =50,ders_say=48,sube_say=2,sinav_say=1):
+    def program_data_olustur(self,yoksis_no,personel_say = 30,okutman_say = 20,ogrenci_say =50,ders_say=48,sube_say=2,sinav_say=1,bina_say=4):
         """
         bolum parametresi bolumun unit objesi olarak verilir.
         O bolume bagli olan programlardan 2 tanesini generate eder.
@@ -893,7 +893,8 @@ class FakeDataGenerator:
         zaman_dilimleri = self.yeni_zaman_dilimleri(bolum)
         print('Oluşturulan zaman dilimleri : %s\n' % zaman_dilimleri)
         fakulte = Unit.objects.get(yoksis_no = bolum.parent_unit_no)
-        self.yeni_bina(fakulte)
+        for i in range(bina_say):
+            self.yeni_bina(fakulte)
         if not Donem.objects.filter(guncel = True):
             self.yeni_donem(guncel=True)
 

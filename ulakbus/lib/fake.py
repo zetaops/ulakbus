@@ -72,8 +72,9 @@ class GenerateFakeProgramData(Command):
         {'name': 'sinav_sayisi', 'type': int, 'default': 3,
          'help': 'Üretilecek sınav sayısı, varsayılan 3'},
         {'name': 'ogrenci_sayisi', 'type': int, 'default': 30,
-         'help': 'Üretilecek öğrenci sayısı, varsayılan 30'}
-
+         'help': 'Üretilecek öğrenci sayısı, varsayılan 30'},
+        {'name': 'bina_sayisi', 'type': int, 'default': 4,
+         'help': 'Üretilecek bina sayısı, varsayılan 4'}
     ]
 
     def run(self):
@@ -85,12 +86,14 @@ class GenerateFakeProgramData(Command):
         sube_say = int(self.manager.args.sube_sayisi)
         sinav_say = int(self.manager.args.sinav_sayisi)
         ogrenci_say = int(self.manager.args.ogrenci_sayisi)
+        bina_say = int(self.manager.args.bina_sayisi)
         fake = FakeDataGenerator()
         fake.program_data_olustur(bolum_yoksis_no,personel_say=personel_say,
                        okutman_say=okutman_say,
                        ders_say=ders_say, sinav_say=sinav_say,
                        sube_say=sube_say,
-                       ogrenci_say=ogrenci_say)
+                       ogrenci_say=ogrenci_say,
+                       bina_say=bina_say)
 
 
 class GenerateAbstractRoles(Command):
