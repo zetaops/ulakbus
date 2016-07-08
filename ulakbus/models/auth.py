@@ -56,6 +56,12 @@ class User(Model, BaseUser):
     def full_name(self):
         return "%s %s" % (self.name, self.surname)
 
+    def pre_save(self):
+        self.encrypt_password()
+
+    def post_creation(self):
+        self.prepare_channels()
+
 
 
     # def send_message(self, title, message, sender=None):
