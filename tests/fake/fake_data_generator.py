@@ -592,6 +592,9 @@ class FakeDataGenerator:
             d.uygulama_saati = yerel_kredi / 2
             d.teori_saati = yerel_kredi / 2
             d.program = program
+            # Güz dönemi ise program dönemleri tek, bahar dönemi ise çift
+            d.program_donemi = random.choice([1, 3, 5, 7] if donem.baslangic_tarihi in range(8, 11)
+                                             else [2, 4, 6, 8])
             d.donem = donem
             d.ders_koordinatoru = personel
             for derslik_turu in random.sample(room_type_list, random.randint(1, len(room_type_list))):

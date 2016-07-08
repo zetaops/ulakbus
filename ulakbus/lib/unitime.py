@@ -177,12 +177,23 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         group_constraints = etree.SubElement(root, 'groupConstraints')
         programlar = Program.objects.filter(bolum=bolum)
         for program in programlar:
-            dersler = Ders.objects.filter(program=program)
-            for ders in dersler:
-                self._export_ders(classes, bolum, ders, group_constraints)
+            donemler_dersler = {}
+            for ders in Ders.objects.filter(program=program):
+                donem = ders.program_donemi
+                try:
+                    donemler_dersler[donem].append(ders)
+                except KeyError:
+                    donemler_dersler[donem] = [ders]
+            for donem, donem_dersler in donemler_dersler.items():
+                # Aynı programın aynı dönemindeki ders etkinlikleri mümkün olduğunca çakışmamalı
+                program_constraint = etree.SubElement(group_constraints, 'constraint',
+                                              type='SPREAD', pref='R',
+                                              id='%i' % self._key2id('%i %s' % (donem, program.key)))
+                for ders in donem_dersler:
+                    self._export_ders(classes, bolum, ders, group_constraints, program_constraint)
         etree.SubElement(root, 'students')
 
-    def _export_ders(self, parent, bolum, ders, group_constraints):
+    def _export_ders(self, parent, bolum, ders, group_constraints, program_constraint):
         subeler = Sube.objects.filter(ders=ders)
         # Önceki exportlardan kalmış olabilecek kayıtları, yenileriyle
         # karışmaması için temizle
@@ -209,6 +220,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                                           scheduler='%i' % bolum.yoksis_no,
                                           dates='1111100111110011111001111100')  # haftasonları hariç 1 ay her gün
                 etree.SubElement(constraint, 'class', id=sube_subpart_id)
+                etree.SubElement(program_constraint, 'class', id=sube_subpart_id)
                 # Çıkartılan ders için ders etkinliği kaydı oluştur
                 d = DersEtkinligi()
                 d.solved = False
