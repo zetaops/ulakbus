@@ -113,8 +113,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         root = etree.Element('timetable', version="2.4", initiative="%s" % self.uni,
                              term="%i%s" % (date.today().year, self.term.ad), created="%s" % str(date.today()),
                              nrDays="7",
-
-                             slotsPerDay="%i" % self._saat2slot(24))
+                             slotsPerDay="%i" % saat2slot(24))
 
         self.FILE_NAME = str(bolum.yoksis_no)
 
@@ -131,10 +130,6 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         buildings = Building.objects.filter()
         for building in buildings:
             rooms = Room.objects.filter(building=building)
-
-            roomselement = etree.SubElement(root, 'rooms')
-
-
             for room in rooms:
                 id = room.unitime_id
                 if id is None:
@@ -179,15 +174,26 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
 
     def export_classes(self, root, bolum):
         classes = etree.SubElement(root, 'classes')
+        group_constraints = etree.SubElement(root, 'groupConstraints')
         programlar = Program.objects.filter(bolum=bolum)
         for program in programlar:
-            dersler = Ders.objects.filter(program=program)
-            for ders in dersler:
-                self._export_ders(classes, bolum, ders)
-        etree.SubElement(root, 'groupConstraints')
+            donemler_dersler = {}
+            for ders in Ders.objects.filter(program=program):
+                donem = ders.program_donemi
+                try:
+                    donemler_dersler[donem].append(ders)
+                except KeyError:
+                    donemler_dersler[donem] = [ders]
+            for donem, donem_dersler in donemler_dersler.items():
+                # Aynı programın aynı dönemindeki ders etkinlikleri mümkün olduğunca çakışmamalı
+                program_constraint = etree.SubElement(group_constraints, 'constraint',
+                                              type='SPREAD', pref='R',
+                                              id='%i' % self._key2id('%i %s' % (donem, program.key)))
+                for ders in donem_dersler:
+                    self._export_ders(classes, bolum, ders, group_constraints, program_constraint)
         etree.SubElement(root, 'students')
 
-    def _export_ders(self, parent, bolum, ders):
+    def _export_ders(self, parent, bolum, ders, group_constraints, program_constraint):
         subeler = Sube.objects.filter(ders=ders)
         # Önceki exportlardan kalmış olabilecek kayıtları, yenileriyle
         # karışmaması için temizle
@@ -196,9 +202,13 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                 DersEtkinligi.objects.filter(sube=sube).delete()
 
         derslik_turleri = ders.DerslikTurleri
-        for i, tur in enumerate(derslik_turleri):
-            uygun_derslikler = Room.objects.filter(room_type=tur.sinif_turu())
-            for sube in subeler:
+        for sube in subeler:
+            # Aynı şubenin ders etkinliklerinin aynı öğrenciler tarafından alınacağını gösterir
+            constraint = etree.SubElement(group_constraints, 'constraint',
+                                          id='%i' % self._key2id(sube.key),
+                                          type='SAME_STUDENTS', pref='R')
+            for i, tur in enumerate(derslik_turleri):
+                uygun_derslikler = Room.objects.filter(room_type=tur.sinif_turu())
                 sube_subpart_id = '%i' % self._key2id('%i %s' % (i, sube.key))
                 okutman = sube.okutman()
                 class_ = etree.SubElement(parent, 'class',
@@ -209,6 +219,8 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                                           classLimit='%i' % sube.kontenjan,
                                           scheduler='%i' % bolum.yoksis_no,
                                           dates='1111100111110011111001111100')  # haftasonları hariç 1 ay her gün
+                etree.SubElement(constraint, 'class', id=sube_subpart_id)
+                etree.SubElement(program_constraint, 'class', id=sube_subpart_id)
                 # Çıkartılan ders için ders etkinliği kaydı oluştur
                 d = DersEtkinligi()
                 d.solved = False
@@ -218,6 +230,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                 d.okutman = okutman
                 d.sube = sube
                 d.save()
+                # Derse uygun derslikleri çıkar
                 for derslik in uygun_derslikler:
                     etree.SubElement(class_, 'room',
                                      id='%i' % derslik.unitime_id,
