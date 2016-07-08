@@ -970,6 +970,7 @@ class FakeDataGenerator:
 
             time.sleep(3)
             varsayilan_subeler = Sube.objects.filter(ad = 'Varsayılan Şube')
+
             for sube in varsayilan_subeler:
                 sube.delete()
                 sube.save()
@@ -980,3 +981,4 @@ class FakeDataGenerator:
                 cetveller = self.yeni_zaman_cetvelleri(planlar)
                 print('%s adlı okutman için %i zaman planı ve %i zaman cetveli oluşturuldu.'
                       % (okutman.ad, len(planlar), len(cetveller)))
+

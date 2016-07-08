@@ -10,6 +10,7 @@
 import sys
 from zengine.management_commands import *
 from lxml import etree
+
 from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, \
     Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri
 from common import get_akademik_takvim, SOLVER_MAX_ID, saat2slot
@@ -48,9 +49,10 @@ class UnitimeEntityXMLExport(Command):
         return ''
 
     def create_dir(self):
-        # current_date = datetime.now()
-        # export_directory = self.EXPORT_DIR + current_date.strftime('%d_%m_%Y_%H')
-        export_directory = self.EXPORT_DIR
+
+        current_date = datetime.now()
+        export_directory = self.EXPORT_DIR + current_date.strftime('%d_%m_%Y_%H')
+
         if not os.path.exists(export_directory):
             os.makedirs(export_directory)
         return export_directory
@@ -111,7 +113,11 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         root = etree.Element('timetable', version="2.4", initiative="%s" % self.uni,
                              term="%i%s" % (date.today().year, self.term.ad), created="%s" % str(date.today()),
                              nrDays="7",
-                             slotsPerDay="%i" % saat2slot(24))
+
+                             slotsPerDay="%i" % self._saat2slot(24))
+
+        self.FILE_NAME = str(bolum.yoksis_no)
+
 
         self.FILE_NAME = str(bolum.yoksis_no) + '.xml'
         self.export_rooms(root)
@@ -125,6 +131,8 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         buildings = Building.objects.filter()
         for building in buildings:
             rooms = Room.objects.filter(building=building)
+
+            roomselement = etree.SubElement(root, 'rooms')
 
 
             for room in rooms:
@@ -257,6 +265,14 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         """
         saat, dakika = int(saat), int(dakika)
         return (saat * 60 + dakika) / 60.0
+
+#     def _export_time(self, parent, gun, baslangic, sure):
+#         etree.SubElement(parent, 'time',
+#                          days=gun,
+#                          start='%i' % self._saat2slot(baslangic),
+#                          length='%i' % self._saat2slot(sure),
+#                          breaktime="10", pref="0.0")
+
 
 
 class ExportRooms(UnitimeEntityXMLExport):
