@@ -30,9 +30,11 @@ class UnitimeEntityXMLExport(Command):
         out_file = open(out_dir + '/' + self.FILE_NAME, 'w+')
         out_file.write("%s" % data)
 
+
+
         print(
             "Veriler %s dizini altinda %s adlı dosyaya kayit edilmiştir" % (
-                out_dir, self.FILE_NAME))
+                out_dir,self.FILE_NAME))
 
     def run(self):
         data = self.prepare_data()
@@ -106,7 +108,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                              nrDays="7",
                              slotsPerDay="%i" % saat2slot(24))
 
-        self.FILE_NAME = str(bolum.yoksis_no)
+        self.FILE_NAME = str(bolum.yoksis_no) + '.xml'
         self.export_rooms(root)
         self.export_classes(root, bolum)
 
