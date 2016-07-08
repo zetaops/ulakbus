@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_bEzKEOKPEeS7M8UkBUcISA" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:collaboration id="_Collaboration_3" name="Derslik Ogretim Elemani Arama">
+    <bpmn2:participant id="_Participant_2" name="Derslik Ogretim Elemani Arama" processRef="derslik_ogretim_elemani_arama" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="derslik_ogretim_elemani_arama" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_3" name="Lane Set 3">
+      <bpmn2:lane id="Lane_1" name="">
+        <bpmn2:flowNodeRef>StartEvent_2</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>derslik_og_elemani_ara</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>arama_kontrol</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ExclusiveGateway_4</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>tek_sonuc</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_2</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>coklu_sonuc</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="StartEvent_2">
+      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="derslik_og_elemani_ara" name="Derslik Veya Ogretim Elemani Ara" camunda:assignee="ders_programi.arama.DerslikOgElemaniArama.derslik_og_elemani_ara">
+      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="StartEvent_2" targetRef="derslik_og_elemani_ara" />
+    <bpmn2:sequenceFlow id="SequenceFlow_19" name="" sourceRef="derslik_og_elemani_ara" targetRef="arama_kontrol" />
+    <bpmn2:sequenceFlow id="SequenceFlow_22" name="" sourceRef="ExclusiveGateway_4" targetRef="tek_sonuc">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=='tekli']]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_25" name="" sourceRef="ExclusiveGateway_4" targetRef="derslik_og_elemani_ara" />
+    <bpmn2:serviceTask id="arama_kontrol" name="Arama Kontrol" camunda:class="ders_programi.arama.DerslikOgElemaniArama.arama_kontrol">
+      <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_02sai3f</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_02sai3f" sourceRef="arama_kontrol" targetRef="ExclusiveGateway_4" />
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_4" default="SequenceFlow_25">
+      <bpmn2:incoming>SequenceFlow_02sai3f</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_0s0ohx3</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:userTask id="tek_sonuc" name="Tek Sonuc" camunda:assignee="ders_programi.arama.DerslikOgElemaniArama.tek_sonuc">
+      <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1wk0hs8</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0bchaue</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_0s0ohx3" sourceRef="ExclusiveGateway_4" targetRef="coklu_sonuc">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=='coklu']]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_1wk0hs8" sourceRef="coklu_sonuc" targetRef="tek_sonuc" />
+    <bpmn2:endEvent id="EndEvent_2">
+      <bpmn2:incoming>SequenceFlow_0bchaue</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_0bchaue" sourceRef="tek_sonuc" targetRef="EndEvent_2" />
+    <bpmn2:userTask id="coklu_sonuc" name="Coklu Sonuc" camunda:assignee="ders_programi.arama.DerslikOgElemaniArama.coklu_sonuc">
+      <bpmn2:incoming>SequenceFlow_0s0ohx3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1wk0hs8</bpmn2:outgoing>
+    </bpmn2:userTask>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
+      <bpmndi:BPMNShape id="_BPMNShape_Participant_5" bpmnElement="_Participant_2" isHorizontal="true">
+        <dc:Bounds x="0" y="35" width="1088" height="474" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_7" bpmnElement="Lane_1" isHorizontal="true">
+        <dc:Bounds x="30" y="35" width="1058" height="474" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_8" bpmnElement="StartEvent_2">
+        <dc:Bounds x="96" y="240" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="114" y="281" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_19" bpmnElement="derslik_og_elemani_ara">
+        <dc:Bounds x="182" y="218" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_16" sourceElement="_BPMNShape_StartEvent_8" targetElement="_BPMNShape_UserTask_19">
+        <di:waypoint xsi:type="dc:Point" x="132" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="182" y="258" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="154" y="258" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_19" bpmnElement="SequenceFlow_19" sourceElement="_BPMNShape_UserTask_19">
+        <di:waypoint xsi:type="dc:Point" x="282" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="332" y="258" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="304" y="258" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_17" bpmnElement="ExclusiveGateway_4" isMarkerVisible="true">
+        <dc:Bounds x="559" y="233" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="539" y="288" width="90" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_22" bpmnElement="SequenceFlow_22" sourceElement="_BPMNShape_ExclusiveGateway_17">
+        <di:waypoint xsi:type="dc:Point" x="609" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="676" y="258" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="704" y="258" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_12" bpmnElement="EndEvent_2">
+        <dc:Bounds x="897" y="240" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="870" y="281" width="90" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_25" bpmnElement="SequenceFlow_25" sourceElement="_BPMNShape_ExclusiveGateway_17">
+        <di:waypoint xsi:type="dc:Point" x="584" y="233" />
+        <di:waypoint xsi:type="dc:Point" x="584" y="152" />
+        <di:waypoint xsi:type="dc:Point" x="232" y="152" />
+        <di:waypoint xsi:type="dc:Point" x="232" y="217" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="635" y="152" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0poz0n6_di" bpmnElement="arama_kontrol">
+        <dc:Bounds x="332" y="218" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_02sai3f_di" bpmnElement="SequenceFlow_02sai3f">
+        <di:waypoint xsi:type="dc:Point" x="432" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="559" y="258" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="487" y="248" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0vygqmo_di" bpmnElement="tek_sonuc">
+        <dc:Bounds x="676" y="218" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0s0ohx3_di" bpmnElement="SequenceFlow_0s0ohx3">
+        <di:waypoint xsi:type="dc:Point" x="584" y="283" />
+        <di:waypoint xsi:type="dc:Point" x="584" y="348" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="539" y="305.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wk0hs8_di" bpmnElement="SequenceFlow_1wk0hs8">
+        <di:waypoint xsi:type="dc:Point" x="634" y="388" />
+        <di:waypoint xsi:type="dc:Point" x="726" y="388" />
+        <di:waypoint xsi:type="dc:Point" x="726" y="298" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="610" y="313" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0bchaue_di" bpmnElement="SequenceFlow_0bchaue">
+        <di:waypoint xsi:type="dc:Point" x="776" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="897" y="258" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="791.5" y="248" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1n0cwxu_di" bpmnElement="coklu_sonuc">
+        <dc:Bounds x="534" y="348.11764705882354" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
