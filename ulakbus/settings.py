@@ -228,3 +228,6 @@ SICIL_PREFIX = "KON"
 
 #: These models will not flushed when running tests
 TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'
+
+#: User search method of messaging subsystem will work on these fields
+MESSAGING_USER_SEARCH_FIELDS = ['username', ]
