@@ -26,6 +26,8 @@ AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
 ROLE_MODEL = 'ulakbus.models.auth.Role'
+UNIT_MODEL = 'ulakbus.models.auth.Unit'
+
 # # left blank to use StreamHandler aka stderr
 # LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
 #
@@ -231,3 +233,6 @@ TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'
 
 #: User search method of messaging subsystem will work on these fields
 MESSAGING_USER_SEARCH_FIELDS = ['username', ]
+
+#: Unit search method of messaging subsystem will work on these fields
+MESSAGING_UNIT_SEARCH_FIELDS = ['name',]

@@ -224,6 +224,11 @@ class Unit(Model):
     uid = field.Integer(index=True)
     parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
 
+
+    @classmethod
+    def get_user_keys(cls, current, unit_key):
+        return cls(current).objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
+
     class Meta:
         app = 'Sistem'
         verbose_name = "Unit"
