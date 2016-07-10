@@ -24,14 +24,14 @@ class TestCase(BaseTestCase):
     def test_kurum_ici_gorevlendirme_standart(self):
         user = User.objects.get(username="personel_isleri_1")
         self.prepare_client("/gorevlendirme", user = user)
-        personel_id = "V9AJztgnQQc6vbIfNice2ZrHAvF"
+        personel_id = "ShW15GBQCCUAuk64ZrK9myA470y"
 
         # Görevlendirilecek birim
         birim_id = "PNrGNyS35dmw9WHKPyl9Er0CiWN"
         birim = Unit.objects.get(birim_id)
 
         # Görevlendirilecek personel veritabanından çekilir.
-        personel = Personel.objects.get("V9AJztgnQQc6vbIfNice2ZrHAvF")
+        personel = Personel.objects.get(personel_id)
 
         # Görevlendirilecek personel seçilir.
         self.client.post(id=personel_id,model="Personel", param="personel_id", wf="gorevlendirme")
@@ -58,8 +58,7 @@ class TestCase(BaseTestCase):
             soyut_rol = soyut_rol,
             aciklama = "Test Öğrenci İşleri Daire Başkanlığı Görevlendirme",
             resmi_yazi_sayi = "123123",
-            resmi_yazi_tarih = resmi_yazi_tarih,
-            personel = personel
+            resmi_yazi_tarih = resmi_yazi_tarih.strftime("%d.%m.%Y")
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
@@ -68,7 +67,7 @@ class TestCase(BaseTestCase):
 
         assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi = bitis,
+        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
 
         assert gorevlendirme.birim.key == birim_id
 
@@ -80,11 +79,11 @@ class TestCase(BaseTestCase):
         """
 
         # Dekan Soyut Rol
-        soyut_rol_id = "D6PqVfErY3mX8SfrW88EBKqMyYC"
+        soyut_rol_id = "YmEn6XK0L3OHDObgWi5RjZmkk0O"
         soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         # Görevlendirme yapılacak personel
-        personel_id = "V9AJztgnQQc6vbIfNice2ZrHAvF"
+        personel_id = "OFrnc32AYZou8KcZjKFZGD7gOj3"
         personel = Personel.objects.get(personel_id)
 
         # Görevlendirilecek birim
@@ -119,8 +118,7 @@ class TestCase(BaseTestCase):
             soyut_rol = soyut_rol,
             aciklama = "Dekan olarak görevlendirme",
             resmi_yazi_sayi = "123123",
-            resmi_yazi_tarih = resmi_yazi_tarih,
-            personel = personel
+            resmi_yazi_tarih = resmi_yazi_tarih
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
@@ -129,7 +127,7 @@ class TestCase(BaseTestCase):
 
         assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi = bitis,
+        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
 
         assert gorevlendirme.birim.key == birim_id
 
@@ -199,7 +197,7 @@ class TestCase(BaseTestCase):
         self.prepare_client("/gorevlendirme", user = user)
 
         # Rektör Soyut Rol
-        soyut_rol_id = "2ry2lgJhp6iR9QNVuAehY1F7O1g"
+        soyut_rol_id = "5xanqtlXnY9dsQhWNV8gMK1rXcm"
         soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         #Görevlendirilecek personel
@@ -257,8 +255,8 @@ class TestCase(BaseTestCase):
         user = User.objects.get(username="personel_isleri_1")
         self.prepare_client("/gorevlendirme", user = user)
 
-        # Rektör Soyut Rol
-        soyut_rol_id = "2ry2lgJhp6iR9QNVuAehY1F7O1g"
+        # Dekan Soyut Rol
+        soyut_rol_id = "YmEn6XK0L3OHDObgWi5RjZmkk0O"
         soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         #Görevlendirilecek personel
@@ -291,8 +289,7 @@ class TestCase(BaseTestCase):
             yevmiye = False,
             yolluk = True,
             ulke= 90,
-            soyut_rol = soyut_rol,
-            personel = personel
+            soyut_rol = soyut_rol
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
@@ -312,16 +309,12 @@ class TestCase(BaseTestCase):
          Bir personelin başka bir kuruma rektör olarak görevlendirilmesi durumudur.
         """
 
-        """
-            Bir personelin kurum dışına dekan olarak görevlendirilmesi durumudur.
-        """
-
         #Görevlendirme işlemini yapacak olan personel işleri dairesi personeli
         user = User.objects.get(username="personel_isleri_1")
         self.prepare_client("/gorevlendirme", user = user)
 
         # Rektör Soyut Rol
-        soyut_rol_id = "2ry2lgJhp6iR9QNVuAehY1F7O1g"
+        soyut_rol_id = "5xanqtlXnY9dsQhWNV8gMK1rXcm"
         soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         #Görevlendirilecek personel

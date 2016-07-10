@@ -27,32 +27,9 @@ class GorevlendirmeTurSecForm(JsonForm):
     gorevlendirme_tur = fields.Integer("Görevlendirme Tür", choices="gorev_tipi")
     kaydet_buton = fields.Button("Kaydet ve Devam Et", cmd="gorevlendirme_tur_kaydet")
 
-class KurumIciGorevlendirmeForm(JsonForm):
-    goreve_baslama_tarihi = fields.Date("Göreve Başlama Tarihi")
-    gorev_bitis_tarihi = fields.Date("Görev Bitiş Tarihi")
-    birim = Unit()
-    soyut_rol = AbstractRole()
-    aciklama = fields.Text("Açıklama")
-    resmi_yazi_sayi = fields.String("Resmi Yazı Sayı")
-    resmi_yazi_tarih = fields.Date("Resmi Yazı Tarih")
-    kaydet_buton = fields.Button("Kaydet ve Devam Et", cmd="kaydet")
-
-class KurumDisiGorevlendirmeForm(JsonForm):
-    goreve_baslama_tarihi = fields.Date("Göreve Başlama Tarihi")
-    gorev_bitis_tarihi = fields.Date("Görev Bitiş Tarihi")
-    aciklama = fields.Text("Açıklama")
-    resmi_yazi_sayi = fields.String("Resmi Yazı Sayı")
-    resmi_yazi_tarih = fields.Date("Resmi Yazı Tarih")
-    maas = fields.Boolean("Maaş", type="checkbox")
-    yevmiye = fields.Boolean("Yevmiye", type="checkbox")
-    yolluk = fields.Boolean("Yolluk", type="checkbox")
-    ulke = fields.Integer("Ülke")
-    soyut_rol = AbstractRole()
-    kaydet_buton = fields.Button("Kaydet ve Devam Et", cmd="kaydet")
-
 class Gorevlendirme(CrudView):
     class Meta:
-        model = "KurumIciGorevlendirmeBilgileri"
+        model = "Personel"
 
     def gorevlendirme_tur_sec(self):
         """
@@ -67,45 +44,61 @@ class Gorevlendirme(CrudView):
         # Görevlendirme türü wf nin ilerleyen adımları için task data da saklandı
         self.current.task_data["gorevlendirme_tur"] = self.current.input["form"]["gorevlendirme_tur"]
 
-    def kurum_ici_gorevlendirme_form(self):
-        self.form_out(KurumIciGorevlendirmeForm(current=self.current))
+class KurumIciGorevlendirmeForm(JsonForm):
+    class Meta:
+        include = ["kurum_ici_gorev_baslama_tarihi", "kurum_ici_gorev_bitis_tarihi", "birim", "soyut_rol",
+                   "aciklama", "resmi_yazi_sayi", "resmi_yazi_tarih"]
+        title = "KURUM İÇİ GÖREVLENDİRME FORM"
 
-    def kurum_disi_gorevlendirme_form(self):
-        self.form_out(KurumDisiGorevlendirmeForm(current=self.current))
+    kaydet_buton = fields.Button("Kaydet ve Devam Et", cmd="kaydet")
+
+class KurumIciGorevlendirme(CrudView):
+    class Meta:
+        model = "KurumIciGorevlendirmeBilgileri"
+
+    def gorevlendirme_form(self):
+        self.form_out(KurumIciGorevlendirmeForm(self.object, current=self.current))
 
     def kaydet(self):
+        self.set_form_data_to_object()
         personel = Personel.objects.get(self.current.task_data["personel_id"])
-        if self.current.task_data["gorevlendirme_tur"] == 1:
-            gorevlendirme = KurumDisiGorevlendirmeBilgileri()
-            gorevlendirme.kurum_disi_gorev_baslama_tarihi = self.current.input["form"]["goreve_baslama_tarihi"]
-            gorevlendirme.kurum_disi_gorev_bitis_tarihi = self.current.input["form"]["gorev_bitis_tarihi"]
-            gorevlendirme.aciklama = self.current.input["form"]["aciklama"]
-            gorevlendirme.resmi_yazi_sayi = self.current.input["form"]["resmi_yazi_sayi"]
-            gorevlendirme.resmi_yazi_tarih = self.current.input["form"]["resmi_yazi_tarih"]
-            gorevlendirme.maas = self.current.input["form"]["maas"]
-            gorevlendirme.yevmiye = self.current.input["form"]["yevmiye"]
-            gorevlendirme.yolluk = self.current.input["form"]["yolluk"]
-            gorevlendirme.ulke = self.current.input["form"]["ulke"]
-            gorevlendirme.soyut_rol = self.current.input["form"]["soyut_rol"]
-            gorevlendirme.personel = personel
-            gorevlendirme.save()
-        elif self.current.task_data["gorevlendirme_tur"] == 2:
-            gorevlendirme = KurumIciGorevlendirmeBilgileri()
-            gorevlendirme.kurum_ici_gorev_baslama_tarihi = self.current.input["form"]["goreve_baslama_tarihi"]
-            gorevlendirme.kurum_ici_gorev_bitis_tarihi = self.current.input["form"]["gorev_bitis_tarihi"]
-            gorevlendirme.birim = self.current.input["form"]["birim"]
-            gorevlendirme.soyut_rol = self.current.input["form"]["soyut_rol"]
-            gorevlendirme.aciklama = self.current.input["form"]["aciklama"]
-            gorevlendirme.resmi_yazi_sayi = self.current.input["form"]["resmi_yazi_sayi"]
-            gorevlendirme.resmi_yazi_tarih = self.current.input["form"]["resmi_yazi_tarih"]
-            gorevlendirme.personel = personel
-            gorevlendirme.save()
+        self.object.personel = personel
+        self.object.save()
 
+        if (
+                    (self.current.input["form"]["soyut_rol_id"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
+                    (self.current.input["form"]["soyut_rol_id"] == "5xanqtlXnY9dsQhWNV8gMK1rXcm")
+           ):
+            self.current.task_data["hizmet_cetvel_giris"] = True
+        else:
+            self.current.task_data["hizmet_cetvel_giris"] = False
 
-        # D6PqVfErY3mX8SfrW88EBKqMyYC => Dekan soyut rolünün id si
-        # 2ry2lgJhp6iR9QNVuAehY1F7O1g => Rektör soyut rolüne ait id
-        if (self.current.input["form"]["soyut_rol"] == "D6PqVfErY3mX8SfrW88EBKqMyYC") | (
-                self.current.input["form"]["soyut_rol"] == "2ry2lgJhp6iR9QNVuAehY1F7O1g"):
+class KurumDisiGorevlendirmeForm(JsonForm):
+    class Meta:
+        include = ["kurum_disi_gorev_baslama_tarihi", "kurum_disi_gorev_bitis_tarihi", "aciklama",
+                   "resmi_yazi_sayi", "resmi_yazi_tarih", "maas", "yevmiye", "yolluk", "ulke",
+                   "soyut_rol"]
+        title = "KURUM DIŞI GÖREVLENDİRME FORM"
+
+    kaydet_buton = fields.Button("Kaydet ve Devam Et", cmd="kaydet")
+
+class KurumDisiGorevlendirme(CrudView):
+    class Meta:
+        model = "KurumDisiGorevlendirmeBilgileri"
+
+    def gorevlendirme_form(self):
+        self.form_out(KurumDisiGorevlendirmeForm(self.object, current=self.current))
+
+    def kaydet(self):
+        self.set_form_data_to_object()
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+        self.object.personel = personel
+        self.object.save()
+
+        if (
+                    (self.current.input["form"]["soyut_rol"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
+                    (self.current.input["form"]["soyut_rol"] == "5xanqtlXnY9dsQhWNV8gMK1rXcm")
+           ):
             self.current.task_data["hizmet_cetvel_giris"] = True
         else:
             self.current.task_data["hizmet_cetvel_giris"] = False
