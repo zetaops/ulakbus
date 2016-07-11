@@ -129,3 +129,8 @@ class DerslikZamanPlani(Model):
     bitis_dakika = field.String("Bitis Dakika", default='00', index=True)
     derslik_durum = field.Integer("Durum", choices=DERSLIK_DURUMU, index=True)
 
+    def __unicode__(self):
+        return '%s %s %s:%s|%s:%s %s' % (self.derslik, dict(HAFTA)[self.gun],
+                                         self.baslangic_saat, self.baslangic_dakika,
+                                         self.bitis_saat, self.bitis_dakika,
+                                         dict(DERSLIK_DURUMU)[self.derslik_durum])
