@@ -1,4 +1,3 @@
-
 # -*-  coding: utf-8 -*-
 
 from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi
@@ -51,7 +50,7 @@ def ders_programi_doldurma(root):
 
                 start = int(time.get('start'))
                 length = int(time.get('length'))
-                duration = start * SLOT_SURESI / 60
+                duration = (start * SLOT_SURESI) / 60
 
                 saat = "%02d" % floor(duration)
                 ders_etkinlik.baslangic_saat = str(saat)
@@ -59,7 +58,7 @@ def ders_programi_doldurma(root):
                 ders_etkinlik.baslangic_dakika = dakika
 
                 duration = start + length
-                duration = duration * SLOT_SURESI / 60
+                duration = (duration * SLOT_SURESI) / 60
                 saat = "%02d" % floor(duration)
                 ders_etkinlik.bitis_saat = str(saat)
                 dakika = "%02d" % (60 * (duration % 1))

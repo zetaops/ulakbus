@@ -86,7 +86,9 @@ class UnitimeEntityXMLExport(Command):
 class ExportAllDataSet(UnitimeEntityXMLExport):
     CMD_NAME = 'export_all_data_set_xmls'
     HELP = 'Generates all data set Unitime XML import file'
-    PARAMS = [{'name': 'batch_size', 'type': int, 'default': 1000,
+    PARAMS = [{'name': 'bolum', 'type': int, 'required': True,
+               'help': 'Bolum olarak yoksis numarasi girilmelidir. Ornek: --bolum 124150'},
+                {'name': 'batch_size', 'type': int, 'default': 1000,
                'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'}]
     FILE_NAME = 'buildingRoomImport.xml'
     DOC_TYPE = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
@@ -96,7 +98,6 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
     # Ders programı modellerindeki günleri, solver'ın günleri ile eşleştiren sözlük
     _GUNLER = {1: '1000000', 2: '0100000', 3: '0010000', 4: '0001000',
                5: '0000100', 6: '0000010', 7: '0000001'}
-
 
     def _key2id(self, key):
         if key in self._SOLVER_IDS:
@@ -109,14 +110,13 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         return unitime_id
 
     def prepare_data(self):
+
         bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
+
         root = etree.Element('timetable', version="2.4", initiative="%s" % self.uni,
                              term="%i%s" % (date.today().year, self.term.ad), created="%s" % str(date.today()),
                              nrDays="7",
                              slotsPerDay="%i" % saat2slot(24))
-
-        self.FILE_NAME = str(bolum.yoksis_no)
-
 
         self.FILE_NAME = str(bolum.yoksis_no) + '.xml'
         self.export_rooms(root)
@@ -278,15 +278,6 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         """
         saat, dakika = int(saat), int(dakika)
         return (saat * 60 + dakika) / 60.0
-
-#     def _export_time(self, parent, gun, baslangic, sure):
-#         etree.SubElement(parent, 'time',
-#                          days=gun,
-#                          start='%i' % self._saat2slot(baslangic),
-#                          length='%i' % self._saat2slot(sure),
-#                          breaktime="10", pref="0.0")
-
-
 
 class ExportRooms(UnitimeEntityXMLExport):
     """
