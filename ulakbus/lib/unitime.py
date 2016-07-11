@@ -12,10 +12,9 @@ from zengine.management_commands import *
 from lxml import etree
 
 from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, \
-    Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri
-from common import get_akademik_takvim, SOLVER_MAX_ID, saat2slot
+    Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, HAFTA
+from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot
 from datetime import datetime, date
-import random
 
 
 class UnitimeEntityXMLExport(Command):
@@ -91,13 +90,22 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                 {'name': 'batch_size', 'type': int, 'default': 1000,
                'help': 'Retrieve this amount of records from Solr in one time, defaults to 1000'}]
     FILE_NAME = 'buildingRoomImport.xml'
-    DOC_TYPE = '<!DOCTYPE buildingsRooms PUBLIC "-//UniTime//DTD University Course Timetabling/EN" "http://www.unitime.org/interface/BuildingRoom.dtd">'
+    DOC_TYPE = ''
 
     # CPSolver için ID oluştururken pyoko keyleri ile solver idlerini eşleştirmek için kullanılan sözlük
     _SOLVER_IDS = {}
     # Ders programı modellerindeki günleri, solver'ın günleri ile eşleştiren sözlük
     _GUNLER = {1: '1000000', 2: '0100000', 3: '0010000', 4: '0001000',
                5: '0000100', 6: '0000010', 7: '0000001'}
+    # Dersliklerin zaman planlarını hesaplarken kullanılacak minimum zaman, slot sayısı olarak.
+    # Bu süreden daha küçük zaman dilimleri planları çıkarırken dikkate alınmayacaktır
+    _ODA_ZAMAN_SLOT = 6
+    # Room sharing pattern'larında oda kullanımını gösteren semboller
+    _ODA_KAPALI = '0'  # Oda herkese kapalı
+    _ODA_ACIK = '1'  # Oda herkese açık
+    # Bölümlerin value'ları olarak kullanılacak olan karakterler,
+    # 'A' ... 'Z' ve 'a' ... 'z' arasındaki tüm ascii karakterlerini içerir
+    _BOLUM_KARAKTER = [chr(c) for c in range(65, 91) + range(97, 122)]
 
     def _key2id(self, key):
         if key in self._SOLVER_IDS:
@@ -146,31 +154,84 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
 
                 if room.RoomDepartments:
                     roommdepartments = etree.SubElement(roomelement, 'sharing')
+                    bolum_values = {}  # Pattern oluştururken bölümleri valuelar ile eşleştirmek için
+                    for j, department in enumerate(room.RoomDepartments):
+                        value = self._BOLUM_KARAKTER[j]
+                        id_ = '%i' % department.unit.yoksis_no
+                        bolum_values[id_] = value
+                        etree.SubElement(
+                            roommdepartments, 'department',
+                            value=value, id=id_)
                     department_pattern = etree.SubElement(
                         roommdepartments, 'pattern',
-                        unit="288")
-                    pattern = self.generate_pattern()
-                    department_pattern.text = "%s" % pattern
-                    # modelle birlikte guncellenecek.
+                        unit='%i' % self._ODA_ZAMAN_SLOT)
+                    department_pattern.text = self._derslik_zaman_plani(room, bolum_values)
 
                     etree.SubElement(
                         roommdepartments, 'freeForAll',
-                        value="F")
+                        value=self._ODA_ACIK)
                     etree.SubElement(
                         roommdepartments, 'notAvailable',
-                        value="X")
+                        value=self._ODA_KAPALI)
 
-                    for j, department in enumerate(room.RoomDepartments):
-                        etree.SubElement(
-                            roommdepartments, 'department',
-                            value="%i" % j, id="%s" % department.unit.yoksis_no)
+    def _derslik_zaman_plani(self, derslik, bolum_values):
+        """Dersliğin zaman planını, solver'a verilecek bir pattern olarak çıkartır.
 
-    def generate_pattern(self):
-        generate = ""
-        rand_list = ['F', 'X', '0', '1']
-        for i in range(7):
-            generate += random.choice(rand_list)
-        return generate
+        Args:
+            derslik (Room): Zaman planı çıkarılacak derslik
+            bolum_values: Bölüm yoksis no'larını, pattern'da kullanılacak value'lar
+                ile eşleştiren sözlük
+
+        Returns:
+            str: Solver'a verilecek room sharing pattern'i
+        """
+        # Haftada ilk gerçekleşenden son gerçekleşene doğru sıralı zaman planları
+        zaman_planlari = sorted(DerslikZamanPlani.objects.filter(derslik=derslik),
+                                key=lambda p: (p.gun, p.baslangic_saat, p.baslangic_dakika))
+        haftanin_basi, haftanin_basi_adi = HAFTA[0]
+        haftanin_sonu, haftanin_sonu_adi = HAFTA[-1]
+        gun = haftanin_basi
+        saat = saat2slot(0)
+        plan = zaman_planlari.pop(0)
+        pattern = []
+        while gun < haftanin_sonu or saat < 24:
+            gun += int(saat / 24)
+            saat = saat % 24
+            while self._zaman_araliginda(plan, gun, saat) > 0:
+                try:
+                    plan = zaman_planlari.pop(0)
+                except IndexError: # Eğer işlenmemiş plan kalmadıysa
+                    break
+            if self._zaman_araliginda(plan, gun, saat) == 0:
+                if plan.derslik_durum == 1:  # Herkese açık
+                    pattern.append(self._ODA_ACIK)
+                elif plan.derslik_durum == 2:  # Bölüme ait
+                    pattern.append(bolum_values[str(plan.unit.yoksis_no)])
+                else:  # Herkese kapalı
+                    pattern.append(self._ODA_KAPALI)
+            else:
+                # Eğer bu zaman için zaman planı girilmediyse odayı herkese kapalı say
+                pattern.append(self._ODA_KAPALI)
+            saat += self._zaman_ayrik2sayisal(0, SLOT_SURESI * self._ODA_ZAMAN_SLOT)
+        return ''.join(pattern)
+
+    @staticmethod
+    def _zaman_araliginda(plan, gun, saat):
+        """Verilen gün ve saatin, zaman planının içinde olup olmadığını kontrol eder.
+
+        Eğer zaman, planın içerisinde ise 0 sonucunu döndürür.
+        Zaman, plandan önce ise negatif, sonra ise pozitif bir sonuç döndürür.
+
+        Saat olarak ondalıklı bir sayı kullanarak dakika bilgisi de verilebilir,
+        _zaman_ayrik2sayisal methodunda bu zaman gösterimi açıklanmaktadır.
+        """
+        plan_baslangic = (plan.gun, int(plan.baslangic_saat), int(plan.baslangic_dakika))
+        plan_bitis = (plan.gun, int(plan.bitis_saat), int(plan.bitis_dakika))
+        zaman = (gun, int(saat), int((saat % 1) * 60))
+        if zaman < plan_baslangic: return -1
+        if plan_bitis <= zaman: return 1
+        # Aralıktaysa
+        return 0
 
     def export_classes(self, root, bolum):
         classes = etree.SubElement(root, 'classes')

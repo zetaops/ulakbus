@@ -11,7 +11,7 @@ from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
 from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.personel import Personel
 from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri,\
-    HAFTA, UYGUNLUK_DURUMU, GUN_DILIMI
+    HAFTA, UYGUNLUK_DURUMU, GUN_DILIMI, DERSLIK_DURUMU, DerslikZamanPlani
 from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
 from .general import ints, gender, marital_status, blood_type, create_fake_geo_data
 from .general import driver_license_class, id_card_serial, birth_date
@@ -214,6 +214,7 @@ class FakeDataGenerator:
                 room.RoomDepartments(unit=unit)
             room.save()
             room_list.append("%s - %s" % (room.code, room.name))
+            FakeDataGenerator.yeni_derslik_zaman_plani(room, random.choice(unit_list))
         return room_list
 
     @staticmethod
@@ -233,6 +234,25 @@ class FakeDataGenerator:
         room_type.save()
 
         return room_type
+
+    @staticmethod
+    def yeni_derslik_zaman_plani(derslik, bolum):
+        dakika = random.choice(['0', '0', '30'])
+        for gun, gun_adi in HAFTA:
+            saat = random.randint(6,12)
+            while saat < 20:
+                d = DerslikZamanPlani()
+                d.unit = bolum
+                d.derslik = derslik
+                d.gun = gun
+                d.baslangic_saat = str(saat)
+                d.baslangic_dakika = dakika
+                saat += random.randint(2, 4)
+                d.bitis_saat = str(saat)
+                d.bitis_dakika = dakika
+                saat += random.choice([0, 0, 0, 1])
+                d.derslik_durum = random.choice(DERSLIK_DURUMU)[0]
+                d.save()
 
     @staticmethod
     def yeni_personel(personel_turu=1, unit='', personel_say=1, user=None):
