@@ -96,8 +96,8 @@ class KurumDisiGorevlendirme(CrudView):
         self.object.save()
 
         if (
-                    (self.current.input["form"]["soyut_rol"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
-                    (self.current.input["form"]["soyut_rol"] == "5xanqtlXnY9dsQhWNV8gMK1rXcm")
+                    (self.current.input["form"]["soyut_rol_id"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
+                    (self.current.input["form"]["soyut_rol_id"] == "5xanqtlXnY9dsQhWNV8gMK1rXcm")
            ):
             self.current.task_data["hizmet_cetvel_giris"] = True
         else:

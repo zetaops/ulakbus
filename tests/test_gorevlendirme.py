@@ -50,16 +50,10 @@ class TestCase(BaseTestCase):
         baslangic = datetime.date.today()
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
-        self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            gorev_tipi=2,
-            kurum_ici_gorev_baslama_tarihi = baslangic,
-            kurum_ici_gorev_bitis_tarihi = bitis,
-            birim = birim,
-            soyut_rol = soyut_rol,
-            aciklama = "Test Öğrenci İşleri Daire Başkanlığı Görevlendirme",
-            resmi_yazi_sayi = "123123",
-            resmi_yazi_tarih = resmi_yazi_tarih.strftime("%d.%m.%Y")
-        ))
+        self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(gorev_tipi=2,
+            kurum_ici_gorev_baslama_tarihi = baslangic, kurum_ici_gorev_bitis_tarihi = bitis,
+            birim = birim, soyut_rol_id = soyut_rol_id, aciklama = "Test Öğrenci İşleri Daire Başkanlığı Görevlendirme",
+            resmi_yazi_sayi = "123123", resmi_yazi_tarih = resmi_yazi_tarih.strftime("%d.%m.%Y")))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
         gorevlendirme = KurumIciGorevlendirmeBilgileri()[0]
