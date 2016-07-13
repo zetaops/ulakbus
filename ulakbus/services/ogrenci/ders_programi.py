@@ -8,7 +8,9 @@ import os
 from ulakbus.lib.common import ders_programi_doldurma
 import time
 import signal
+
 import shutil
+
 
 
 class ExecuteSolver(Service):
@@ -21,23 +23,44 @@ class ExecuteSolver(Service):
 
         # XML exportlarını almak için instance yaratılır.
         data_set = ExportAllDataSet(bolum=bolum_yoksis_no)
-        # XML exportlarının çıkartılacağı yerin pathi
         export_dir = os.path.join(self._SOLVER_DIR, bolum_yoksis_no)
 
-        # eğer solver çalışır durumdaysa (bölüm yoksis numarası ile oluşturulmuş
-        # bir directrory varsa error döndürülür.)
-        if os.path.isdir(export_dir):
-            status = 'fail'
-            result = 'zaten calisan bir solver var'
-        # çalışan bir solver yoksa, bölümün yöksis numarasından bir directory yaratılır.
+        data_set.EXPORT_DIR = '/opt/zato/solver'
+        data_set.run()
 
-        else:
-            os.mkdir(export_dir)
+        # export edilen XML dosyasini, solverda calistirir.
+        export_file = str(bolum_yoksis_no) + '.xml'
+        os.chdir(data_set.EXPORT_DIR)
+        # subprocess.check_call(
+        #         ["java", "-Xmx1g", "-jar", "cpsolver-1.3.79.jar", "great-deluge.cfg", "%s" % export_file, ".", ">",
+        #      "data.txt"])
+
+        p = subprocess.Popen(["java", "-Xmx1g", "-jar", "cpsolver-1.3.79.jar", "great-deluge.cfg", export_file],
+                         stdout=subprocess.PIPE, universal_newlines=True)
+        output_folder = ''
+        status = 'ok'
+        result = ''
+        while p.poll() is None:
+            time.sleep(60)
+            best_found = False
+            for line in p.stdout:
+                if 'test failed' in line.lower():
+                    status = 'fail'
+                    result = 'XML exportlari hatali'
+                if line.startswith("Output folder:"):
+                    output_folder = line.split(":")[1][1:].strip()
+                if "BEST" in line:
+                    best_found = True
+            if not best_found:
+                break
+            if status == 'fail': break
+
 
             # XML exportlarının çıkartılacağı yerin path'i verilir.
             data_set.EXPORT_DIR = export_dir
             # XML exportları çıkartılır.
             data_set.run()
+
 
             # export edilen XML dosyasini, solverda calistirir.
             export_file = os.path.join(export_dir, str(bolum_yoksis_no) + '.xml')
@@ -116,4 +139,3 @@ class ExecuteSolver(Service):
 
 
         self.response.payload = {"status": status, "result": result}
-
