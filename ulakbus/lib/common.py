@@ -2,6 +2,7 @@
 
 from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi
 from math import floor
+import datetime
 
 # Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
 SLOT_SURESI = 5
@@ -11,6 +12,20 @@ SOLVER_MAX_ID = 900000000000000000
 
 def saat2slot(saat):
     return saat * 60 / SLOT_SURESI
+
+def timedelta2slot(td):
+    """timedelta cinsinden süreyi slot cinsine dönüştürür.
+
+    Slot, CPSolver tarafından işlenen en küçük zaman birimidir.
+
+    Args:
+        td (datetime.timedelta):
+
+    Returns:
+        int: Slot cinsinden süre.
+    """
+    dakika = td.seconds / 60
+    return dakika / SLOT_SURESI
 
 def get_akademik_takvim(unit):
     try:

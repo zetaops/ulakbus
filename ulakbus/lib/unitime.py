@@ -13,8 +13,12 @@ from lxml import etree
 
 from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, \
     Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, HAFTA
-from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot
-from datetime import datetime, date
+from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot, timedelta2slot
+from datetime import datetime, date, timedelta
+
+
+def _year():
+    return date.today().year
 
 
 class UnitimeEntityXMLExport(Command):
@@ -121,7 +125,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
 
         root = etree.Element('timetable', version="2.4", initiative="%s" % self.uni,
-                             term="%i%s" % (date.today().year, self.term.ad), created="%s" % str(date.today()),
+                             term="%i%s" % (_year(), self.term.ad), created="%s" % str(date.today()),
                              nrDays="7",
                              slotsPerDay="%i" % saat2slot(24))
 
@@ -187,21 +191,19 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         # Haftada ilk gerçekleşenden son gerçekleşene doğru sıralı zaman planları
         zaman_planlari = sorted(DerslikZamanPlani.objects.filter(derslik=derslik),
                                 key=lambda p: (p.gun, p.baslangic_saat, p.baslangic_dakika))
-        haftanin_basi, haftanin_basi_adi = HAFTA[0]
-        haftanin_sonu, haftanin_sonu_adi = HAFTA[-1]
-        gun = haftanin_basi
-        saat = saat2slot(0)
+        hs, hs_adi = HAFTA[-1]
+        hafta_sonu = datetime.min + timedelta(days=hs)
+        zaman = datetime.min
+        zaman_adimlari = timedelta(minutes=self._ODA_ZAMAN_SLOT*SLOT_SURESI)
         plan = zaman_planlari.pop(0)
         pattern = []
-        while gun < haftanin_sonu or saat < 24:
-            gun += int(saat / 24)
-            saat = saat % 24
-            while self._zaman_araliginda(plan, gun, saat) > 0:
+        while zaman < hafta_sonu:
+            while self._zaman_araliginda(zaman, plan) > 0:
                 try:
                     plan = zaman_planlari.pop(0)
                 except IndexError: # Eğer işlenmemiş plan kalmadıysa
                     break
-            if self._zaman_araliginda(plan, gun, saat) == 0:
+            if self._zaman_araliginda(zaman, plan) == 0:
                 if plan.derslik_durum == 1:  # Herkese açık
                     pattern.append(self._ODA_ACIK)
                 elif plan.derslik_durum == 2:  # Bölüme ait
@@ -211,22 +213,27 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
             else:
                 # Eğer bu zaman için zaman planı girilmediyse odayı herkese kapalı say
                 pattern.append(self._ODA_KAPALI)
-            saat += self._zaman_ayrik2sayisal(0, SLOT_SURESI * self._ODA_ZAMAN_SLOT)
+            zaman = zaman + zaman_adimlari
         return ''.join(pattern)
 
     @staticmethod
-    def _zaman_araliginda(plan, gun, saat):
-        """Verilen gün ve saatin, zaman planının içinde olup olmadığını kontrol eder.
+    def _zaman_araliginda(zaman, plan):
+        """Verilen zamanın, zaman planının içinde olup olmadığını kontrol eder.
 
-        Eğer zaman, planın içerisinde ise 0 sonucunu döndürür.
-        Zaman, plandan önce ise negatif, sonra ise pozitif bir sonuç döndürür.
+        Args:
+            zaman (datetime):
+            plan (DerslikZamanPlani):
 
-        Saat olarak ondalıklı bir sayı kullanarak dakika bilgisi de verilebilir,
-        _zaman_ayrik2sayisal methodunda bu zaman gösterimi açıklanmaktadır.
+        Returns:
+            int: Eğer zaman, planın içerisinde ise 0, plandan önce ise negatif, plandan
+                sonra ise de pozitif bir sayı.
         """
-        plan_baslangic = (plan.gun, int(plan.baslangic_saat), int(plan.baslangic_dakika))
-        plan_bitis = (plan.gun, int(plan.bitis_saat), int(plan.bitis_dakika))
-        zaman = (gun, int(saat), int((saat % 1) * 60))
+        plan_baslangic = datetime.min + timedelta(days=plan.gun - 1,
+                                                  hours=int(plan.baslangic_saat),
+                                                  minutes=int(plan.baslangic_dakika))
+        plan_bitis = datetime.min + timedelta(days=plan.gun - 1,
+                                              hours=int(plan.bitis_saat),
+                                              minutes=int(plan.bitis_dakika))
         if zaman < plan_baslangic: return -1
         if plan_bitis <= zaman: return 1
         # Aralıktaysa
@@ -318,16 +325,16 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                                                 ogretim_elemani_zaman_plani=plan).exclude(durum=3)
         for cetvel in cetveller:
             dilim = cetvel.zaman_dilimi
-            zaman = self._zaman_ayrik2sayisal(dilim.baslama_saat, dilim.baslama_dakika)
-            bitis = self._zaman_ayrik2sayisal(dilim.bitis_saat, dilim.bitis_dakika)
+            zaman = timedelta(hours=int(dilim.baslama_saat), minutes=int(dilim.baslama_dakika))
+            bitis = timedelta(hours=int(dilim.bitis_saat), minutes=int(dilim.bitis_dakika))
             gun = self._GUNLER[cetvel.gun]
             sure = int(tur.ders_saati)
-            ders_araligi = self._zaman_ayrik2sayisal(0, dilim.ders_araligi)
+            ders_araligi = timedelta(minutes=int(dilim.ders_araligi))
             # Bitiş zamanı gelene kadar, zamanları ekle
             while zaman < bitis:
                 etree.SubElement(parent, 'time',
                                  days=gun,
-                                 start='%i' % saat2slot(zaman),
+                                 start='%i' % timedelta2slot(zaman),
                                  length='%i' % saat2slot(sure),
                                  breaktime='%i' % dilim.ara_suresi,
                                  pref='%i' % cetvel.durum)
