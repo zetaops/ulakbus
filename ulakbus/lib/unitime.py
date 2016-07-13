@@ -258,8 +258,10 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         # Önceki exportlardan kalmış olabilecek kayıtları, yenileriyle
         # karışmaması için temizle
         for sube in subeler:
-            if len(DersEtkinligi.objects.filter(sube=sube))>0:
-                DersEtkinligi.objects.filter(sube=sube).delete()
+            etkinlikler = DersEtkinligi.objects.filter(bolum=bolum, published=False,
+                                                       donem=self.term, sube=sube)
+            if etkinlikler.count() > 0:
+                etkinlikler.delete()
 
         derslik_turleri = ders.DerslikTurleri
         for sube in subeler:
@@ -289,6 +291,9 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                 d.room_type = tur.sinif_turu()
                 d.okutman = okutman
                 d.sube = sube
+                d.donem = self.term
+                d.bolum = bolum
+                d.published = False
                 d.save()
                 # Derse uygun derslikleri çıkar
                 for derslik in uygun_derslikler:
