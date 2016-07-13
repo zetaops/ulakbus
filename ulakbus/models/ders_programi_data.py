@@ -6,7 +6,7 @@
 
 from pyoko import Model
 from zengine.forms import fields
-from . import RoomType, Okutman, Room, Sube
+from . import RoomType, Okutman, Room, Sube, Donem, Unit
 
 
 class DersEtkinligi(Model):
@@ -21,6 +21,9 @@ class DersEtkinligi(Model):
     room_type = RoomType(index=True)
     okutman = Okutman("Ogretim Elemani", index=True)
     sube = Sube(index=True)
+    donem = Donem("Donem",index = True)
+    bolum = Unit(index = True)
+    published = fields.Boolean(index=True)
 
     # to be calculated
     room = Room('Derslik')
@@ -29,3 +32,4 @@ class DersEtkinligi(Model):
     baslangic_dakika = fields.String("Baslangic Dakika")
     bitis_saat = fields.String("Bitis Saat")
     bitis_dakika = fields.String("Bitis Dakika")
+

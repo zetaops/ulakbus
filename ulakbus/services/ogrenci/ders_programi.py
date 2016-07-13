@@ -1,67 +1,103 @@
 from zato.server.service import Service
 from ulakbus.lib.unitime import ExportAllDataSet
-from ulakbus.models.ders_programi_data import DersEtkinligi
+from ulakbus.models.ders_programi_data import DersEtkinligi, Donem, Unit
 import xml.etree.ElementTree as ET
 import subprocess
 import os
 from ulakbus.lib.common import ders_programi_doldurma
+import time
+import signal
+import shutil
 
 
 class ExecuteSolver(Service):
+    _SOLVER_DIR = '/opt/zato/solver'
+
     def handle(self):
-        bolum_yoksis_no = self.request.payload['bolum']
-        # XML export etmeye yarar.
-        data_set = ExportAllDataSet(bolum=bolum_yoksis_no)
-        # data_set = ExportAllDataSet()
-        data_set.EXPORT_DIR = '/opt/zato/solver'
-        data_set.run()
 
-        # export edilen XML dosyasini, solverda calistirir.
-        bolum = bolum_yoksis_no  # bolum is akisinda personel tarafindan dinamik olarak girilmelidir.
-        export_file = str(bolum) + '.xml'
-        os.chdir(data_set.EXPORT_DIR)
-        subprocess.check_call(
-            ["sudo", "java", "-Xmx1g", "-jar", "coursett-1.2.jar", "default.cfg", "%s" % export_file, ".", ">",
-             "data.txt"])
+        bolum_yoksis_no = str(self.request.payload['bolum'])
+        # bolum_yoksis_no = str(self.bolum_yoksis_no)
+        # guncel_donem = Donem.objects.get(guncel=True)
+        # bolum = Unit.objects.get(yoksis_no = bolum_yoksis_no)
+        # secilen_bolum = DersEtkinligi.objects.get(donem=guncel_donem, bolum = bolum)
 
-        # solver calistiktan sonra eger outputta 'Test Failed' olmussa, hata var demektir.
+        if True:
 
+            # XML export etmeye yarar.
+            data_set = ExportAllDataSet(bolum=bolum_yoksis_no)
+            export_dir = os.path.join(self._SOLVER_DIR, bolum_yoksis_no)
+            print export_dir
+            if os.path.isdir(export_dir):
+                status = 'fail'
+                result = 'zaten calisan bir solver var'
 
-
-        if 'Test Failed' in open('data.txt').read():
-            print "XML exportlari hatali"
-            status = 'error'
-            result = 'XML exportlari hatali'
-
-        # yoksa bir sonuc bulmus demektir. Olusan ciktiyi txt dosyasina yazarak ve parse ederek,
-        # olusturulan sonucu hangi klasore koydugunu bulabiliriz.
-        else:
-            folder_dir = ''
-            searchfile = open("data.txt", "r")
-            for line in searchfile:
-                if "Output folder:" in line:
-                    folder_dir = line[16:31]
-                    break
-
-            # o klasore giderek solution.xml dosyasini parse ederek ders_programi_doldurma methoduna yollariz.
-            searchfile.close()
-            os.chdir(folder_dir)
-            root = ET.parse('solution_xml').getroot()  # '/160630_120504'
-
-            # bu method ile olusturulan ders programinin hatasiz ya da ne kadar hatali bir sonuc urettigini bulabiliriz.
-            ders_programi_doldurma(root)
-            cozulmeyenler = []
-            for ders in DersEtkinligi.objects.filter():
-                if not ders.solved:
-                    cozulmeyenler.append(ders.unitime_id)
-
-            status = 'ok'
-
-            if len(cozulmeyenler) > 0:
-                print 'hatali'
-                result = 'eksik cozum bulundu'
             else:
-                result = 'butun dersler yerlestirildi'
-                print 'hatasiz'
+                os.mkdir(export_dir)
+                data_set.EXPORT_DIR = export_dir
+                data_set.run()
+
+                # export edilen XML dosyasini, solverda calistirir.
+                export_file = os.path.join(export_dir, str(bolum_yoksis_no) + '.xml')
+                print export_file
+                os.chdir(self._SOLVER_DIR)
+
+                p = subprocess.Popen(
+                    ["java", "-Xmx1g", "-jar", "cpsolver-1.3.79.jar", "great-deluge.cfg", export_file, export_dir],
+                    stdout=subprocess.PIPE, universal_newlines=True)
+
+                # os.chdir(export_dir)
+                output_folder = ''
+                status = 'ok'
+                result = ''
+                c = 0
+                time.sleep(5)
+                # while p.poll() is None:
+                while c < 100:
+                    c += 1
+
+                    best_found = False
+                    for line in p.stdout:
+                        print line
+                        if 'test failed' in line.lower():
+                            status = 'fail'
+                            result = 'XML exportlari hatali'
+                        if line.startswith("Output folder:"):
+                            output_folder = line.split(":")[1][1:].strip()
+                        if "BEST" in line:
+                            best_found = True
+                    if not best_found:
+                        break
+                    if status == 'fail': break
+
+                try:
+                    p.send_signal(signal.SIGINT)
+                except OSError:
+                    pass
+
+                p.wait()
+                print output_folder
+                if status == 'ok':
+
+                    os.chdir(output_folder)
+                    root = ET.parse('solution.xml').getroot()
+
+                    ders_programi_doldurma(root)
+                    cozulmeyenler = []
+                    for ders in DersEtkinligi.objects.filter():
+                        if not ders.solved:
+                            cozulmeyenler.append(ders.unitime_id)
+
+                    if len(cozulmeyenler) > 0:
+                        print 'hatali'
+                        result = 'eksik cozum bulundu'
+                    else:
+                        result = 'butun dersler yerlestirildi'
+                        print 'hatasiz'
+
+                shutil.rmtree(export_dir)
+        else:
+            status = 'fail'
+            result = 'bu bolum icin ders programi yayinlanmistir'
 
         self.response.payload = {"status": status, "result": result}
+

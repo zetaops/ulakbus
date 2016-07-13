@@ -26,7 +26,6 @@ class UnitimeEntityXMLExport(Command):
     PARAMS = []
 
     def write_file(self, data):
-        # out_dir = self.create_dir()
         out_dir = self.create_dir()
         out_file = open(out_dir + '/' + self.FILE_NAME, 'w+')
         out_file.write("%s" % data)
@@ -50,8 +49,8 @@ class UnitimeEntityXMLExport(Command):
     def create_dir(self):
 
         current_date = datetime.now()
-        export_directory = self.EXPORT_DIR + current_date.strftime('%d_%m_%Y_%H')
-
+        # export_directory = self.EXPORT_DIR + current_date.strftime('%d_%m_%Y_%H')
+        export_directory = self.EXPORT_DIR
         if not os.path.exists(export_directory):
             os.makedirs(export_directory)
         return export_directory
