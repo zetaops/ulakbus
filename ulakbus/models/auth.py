@@ -23,12 +23,12 @@ from zengine.dispatch.dispatcher import receiver
 from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
 from zengine.messaging.lib import BaseUser
+
 try:
     from zengine.lib.exceptions import PermissionDenied
 except ImportError:
     class PermissionDenied(Exception):
         pass
-
 
 
 class User(Model, BaseUser):
@@ -64,9 +64,9 @@ class User(Model, BaseUser):
 
 
 
-    # def send_message(self, title, message, sender=None):
-    #     from zengine.messaging import Notify
-    #     Notify(self.key).set_message(title, message, typ=Notify.Message, sender=sender)
+        # def send_message(self, title, message, sender=None):
+        #     from zengine.messaging import Notify
+        #     Notify(self.key).set_message(title, message, typ=Notify.Message, sender=sender)
 
 
 class Permission(Model):
@@ -105,7 +105,6 @@ class Permission(Model):
 
         return users
 
-
     def get_permitted_roles(self):
         """
         Get roles which has this permission
@@ -120,7 +119,6 @@ class Permission(Model):
         for r in self.role_set:
             roles.add(r.role)
         return roles
-
 
 
 class AbstractRole(Model):
@@ -224,10 +222,12 @@ class Unit(Model):
     uid = field.Integer(index=True)
     parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
 
-
     @classmethod
-    def get_user_keys(cls, current, unit_key):
-        return cls(current).objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
+    def get_user_keys(cls, unit_key):
+        stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
+        for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
+            stack.extend(cls.get_user_keys(unit_key))
+        return stack
 
     class Meta:
         app = 'Sistem'
@@ -586,4 +586,3 @@ def ulakbus_permissions():
     from ulakbus.views.reports import ReporterRegistry
     report_perms = ReporterRegistry.get_permissions()
     return default_perms + report_perms
-
