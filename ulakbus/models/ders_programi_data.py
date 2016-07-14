@@ -6,7 +6,7 @@
 
 from pyoko import Model
 from zengine.forms import fields
-from . import RoomType, Okutman, Room, Sube, Donem, Unit
+from . import RoomType, Okutman, Room, Sube, Donem, Unit, Ders
 
 
 class DersEtkinligi(Model):
@@ -24,6 +24,8 @@ class DersEtkinligi(Model):
     donem = Donem("Donem",index = True)
     bolum = Unit(index = True)
     published = fields.Boolean(index=True)
+    # Arama amaçlı
+    ders = Ders(index=True)
 
     # to be calculated
     room = Room('Derslik')
@@ -33,3 +35,7 @@ class DersEtkinligi(Model):
     bitis_saat = fields.String("Bitis Saat")
     bitis_dakika = fields.String("Bitis Dakika")
 
+    def post_creation(self):
+        """Yeni bir DersEtkinligi oluşturulduğunda arama amaçlı olan alanları otomatik olarak doldurur."""
+        self.ders = self.sube.ders
+        self.save()
