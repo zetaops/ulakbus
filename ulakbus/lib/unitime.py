@@ -29,6 +29,20 @@ class UnitimeEntityXMLExport(Command):
     HELP = ''
     PARAMS = []
 
+    # CPSolver için ID oluştururken pyoko keyleri ile solver idlerini eşleştirmek için kullanılan sözlük
+    _SOLVER_IDS = {}
+
+    def _key2id(self, key):
+        """Çakışmaları önleyerek pyoko key'lerinden solver id'leri oluşturur."""
+        if key in self._SOLVER_IDS:
+            return self._SOLVER_IDS[key]
+        unitime_id = hash(key) % SOLVER_MAX_ID
+        # Çakışmalar çözülene kadar id değerini değiştir
+        while unitime_id in self._SOLVER_IDS.values():
+            unitime_id += 1
+        self._SOLVER_IDS[key] = unitime_id
+        return unitime_id
+
     def write_file(self, data):
         out_dir = self.create_dir()
         out_file = open(out_dir + '/' + self.FILE_NAME, 'w+')
@@ -95,8 +109,6 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
     FILE_NAME = 'buildingRoomImport.xml'
     DOC_TYPE = ''
 
-    # CPSolver için ID oluştururken pyoko keyleri ile solver idlerini eşleştirmek için kullanılan sözlük
-    _SOLVER_IDS = {}
     # Ders programı modellerindeki günleri, solver'ın günleri ile eşleştiren sözlük
     _GUNLER = {1: '1000000', 2: '0100000', 3: '0010000', 4: '0001000',
                5: '0000100', 6: '0000010', 7: '0000001'}
@@ -109,16 +121,6 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
     # Bölümlerin value'ları olarak kullanılacak olan karakterler,
     # 'A' ... 'Z' ve 'a' ... 'z' arasındaki tüm ascii karakterlerini içerir
     _BOLUM_KARAKTER = [chr(c) for c in range(65, 91) + range(97, 122)]
-
-    def _key2id(self, key):
-        if key in self._SOLVER_IDS:
-            return self._SOLVER_IDS[key]
-        unitime_id = hash(key) % SOLVER_MAX_ID
-        # Çakışmalar çözülene kadar id değerini değiştir
-        while unitime_id in self._SOLVER_IDS.values():
-            unitime_id += 1
-        self._SOLVER_IDS[key] = unitime_id
-        return unitime_id
 
     def prepare_data(self):
 
