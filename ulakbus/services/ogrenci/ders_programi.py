@@ -21,6 +21,9 @@ class ExecuteSolver(Service):
         # bolum = Unit.objects.get(yoksis_no = bolum_yoksis_no)
         # secilen_bolum = DersEtkinligi.objects.get(donem=guncel_donem, bolum = bolum)
 
+        if not os.path.isdir(self._SOLVER_DIR):
+            os.mkdir(self._SOLVER_DIR)
+
         # XML export etmeye yarar.
         data_set = ExportAllDataSet(bolum=bolum_yoksis_no)
         export_dir = os.path.join(self._SOLVER_DIR, bolum_yoksis_no)
@@ -43,36 +46,36 @@ class ExecuteSolver(Service):
                 ["java", "-Xmx1g", "-jar", "cpsolver-1.3.79.jar", "great-deluge.cfg", export_file, export_dir],
                 stdout=subprocess.PIPE, universal_newlines=True)
 
-            # os.chdir(export_dir)
+            os.chdir(export_dir)
             output_folder = ''
             status = 'ok'
             result = ''
-            c = 0
-            time.sleep(5)
+            # c = 0
+            # time.sleep()
             # while p.poll() is None:
-            while c < 100:
-                c += 1
-
-                best_found = False
-                for line in p.stdout:
-                    print line
-                    if 'test failed' in line.lower():
-                        status = 'fail'
-                        result = 'XML exportlari hatali'
-                    if line.startswith("Output folder:"):
-                        output_folder = line.split(":")[1][1:].strip()
-                    if "BEST" in line:
-                        best_found = True
-                if not best_found:
-                    break
-                if status == 'fail': break
-
-            try:
-                p.send_signal(signal.SIGINT)
-            except OSError:
-                pass
-
+            # while c < 100:
+            # c += 1
             p.wait()
+            best_found = False
+            for line in p.stdout:
+                print line
+                if 'test failed' in line.lower():
+                    status = 'fail'
+                    result = 'XML exportlari hatali'
+                if line.startswith("Output folder:"):
+                    output_folder = line.split(":")[1][1:].strip()
+                if "BEST" in line:
+                    best_found = True
+            # if not best_found:
+            #     break
+            # if status == 'fail': break
+
+            # try:
+            #     p.send_signal(signal.SIGINT)
+            # except OSError:
+            #     pass
+
+            # p.wait()
             print output_folder
             if status == 'ok':
 
