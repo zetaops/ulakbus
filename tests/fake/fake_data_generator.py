@@ -619,6 +619,11 @@ class FakeDataGenerator:
             d.ders_koordinatoru = personel
             for derslik_turu in random.sample(room_type_list, random.randint(1, len(room_type_list))):
                 d.DerslikTurleri.add(sinif_turu = derslik_turu,ders_saati = random.randint(1,5))
+
+            for degerlendirme_turu in [1, 2, 3, 4, 5, 6, 7]:
+                d.Degerlendirme(tur=degerlendirme_turu,
+                                sinav_suresi=random.choice([60, 90, 120]),
+                                toplam_puana_etki_yuzdesi=random.choice([20, 30, 40, 50]))
             d.save()
             ders_list.append(d)
         Ders.ontanimli_sube_olustur = sube_olustur
@@ -735,6 +740,7 @@ class FakeDataGenerator:
             od.ogrenci = ogrenci_program.ogrenci
             if donem:
                 od.donem = donem
+            od.katilim_durumu = random.choice(([True] * 9 ) + [False])
 
             od.save()
             return od

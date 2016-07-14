@@ -353,6 +353,120 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         saat, dakika = int(saat), int(dakika)
         return (saat * 60 + dakika) / 60.0
 
+class ExportExams(UnitimeEntityXMLExport):
+    """Solver için sınavları export eder.
+
+    Yöksis numarası verilen bölümün sınavlarını, CPSolver ile çözülebilecek bir sınav
+    planlama problem olarak export eder.
+    """
+    CMD_NAME = 'export_exams'
+    HELP = 'Exports a XML file of the exams, to be solved by CPSolver.'
+    PARAMS = [{'name': 'bolum', 'type': int, 'required': True,
+               'help': 'Bolum olarak yoksis numarasi girilmelidir. Ornek: --bolum 124150'},
+              {'name': 'sinav_turleri', 'type': str, 'required': True,
+               'help': 'Çıkartılacak sınav türü. '
+                       'Virgüllerle ayırarak birden fazla sınav türü seçilebilir. '
+                       'Seçenekler için `sinav_turleri`ne bakın.'}]
+    FILE_NAME = 'exam.xml'
+    DOC_TYPE = ''
+
+    def prepare_data(self):
+        bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
+        sinav_turleri = [int(t) for t in self.manager.args.sinav_turleri.split(',')]
+        root = etree.Element('examtt', version='1.0', campus='1',
+                             term='Term', year='%i' % _year(), created=str(date.today()))
+        # Sınavların gerçekleşebileceği zamanlar
+        periods = etree.SubElement(root, 'periods')
+        self._zamanlar(bolum, periods)
+        rooms = etree.SubElement(root, 'rooms')
+        self._odalar(bolum, rooms)
+        exams = etree.SubElement(root, 'exams')
+        self._sinavlar(bolum, sinav_turleri, exams)
+        students = etree.SubElement(root, 'students')
+        self._ogrenciler(bolum, sinav_turleri, students)
+        etree.SubElement(root, 'instructors')
+        constraints = etree.SubElement(root, 'constraints')
+        self._sinirlandirmalar(bolum, constraints)
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
+                              doctype="%s" % self.DOC_TYPE)
+
+    def _zamanlar(self, bolum, periods):
+        pass
+
+    def _odalar(self, bolum, rooms):
+        """Sınavların yapılabileceği odaları, sınav planı çıktısına ekler.
+
+        Args:
+            bolum (Unit): Sınav planı çıkarılacak bölüm.
+            rooms (etree.SubElement): Çıktının ekleneceği xml elemanı.
+        """
+        odalar = [r for r in Room.objects if bolum in r.RoomDepartments]
+        for oda in odalar:
+            etree.SubElement(rooms, 'room', id='%i' % self._key2id(oda.key),
+                             size='%i' % oda.capacity,
+                             alt='%i' % oda.capacity,
+                             coordinates='%s,%s' % (oda.building.coordinate_x, oda.building.coordinate_y))
+            # TODO: odanın uygun olduğu periodlar? Yoksa hep uygun mu?
+
+    def _sinavlar(self, bolum, sinav_turleri, exams):
+        """Sınavları, sınav planı çıktısına ekler.
+
+        Args:
+            bolum (Unit): Sınav planı çıkarılacak bölüm.
+            exams (etree.SubElement): Çıktının ekleneceği xml elemanı.
+        """
+        donem = Donem.guncel_donem()
+        programlar = Program.objects.filter(bolum=bolum)
+        for program in programlar:
+            dersler = Ders.objects.filter(program=program, donem=donem)
+            for ders in dersler:
+                kontenjan = 0
+                subeler = Sube.objects.filter(ders=ders, donem=donem)
+                for sube in subeler:
+                    kontenjan += sube.kontenjan
+                for s, sinav in enumerate(ders.Degerlendirme):
+                    if sinav.tur in sinav_turleri: continue
+                    sinav_id = '%i' % self._key2id('%s %i' % (ders.key, s))
+                    sinav.unitime_id = sinav_id
+                    etree.SubElement(exams, 'exam',
+                                     id=sinav_id,
+                                     length='%i' % sinav.sinav_suresi,
+                                     # Alternative seating özelliği, odaların oturma planları için kullanılabilir
+                                     alt="false",
+                                     minSize='%i' % kontenjan,
+                                     # Sınavın en çok kaç odaya bölünebileceği
+                                     maxRooms='%i' % subeler.count())
+                    # TODO: sınavın olabileceği periodları ve roomları ekle
+                ders.save()
+
+    def _ogrenciler(self, bolum, sinav_turleri, students):
+        donem = Donem.guncel_donem()
+
+        dersler = []
+        for program in Program.objects.filter(bolum=bolum):
+            for ders in Ders.objects.filter(program=program, donem=donem):
+                dersler.append(ders)
+
+        ogrenciler = set()
+        for ders in dersler:
+            # Bu dönem bu dersi alan, devamsızlıktan kalmamış öğrenciler
+            ods = {od.ogrenci for od in
+                   OgrenciDersi.objects.filter(ders=ders, donem=donem).exclude(katilim_durumu=False)}
+            ogrenciler.update(ods)
+
+        for ogrenci in ogrenciler:
+            student = etree.SubElement(students, 'student', id='%i' % self._key2id(ogrenci.key))
+            # Öğrencinin bu dönem aldığı ve devamsızlıktan kalmadığı dersleri
+            dersleri = OgrenciDersi.objects.filter(ogrenci=ogrenci,
+                                                   donem=donem).exclude(katilim_durumu=False)
+            for ders in dersleri:
+                for sinav in ders.ders.Degerlendirme:
+                    if sinav.tur in sinav_turleri: continue
+                    etree.SubElement(student, 'exam', id=sinav.unitime_id)
+
+    def _sinirlandirmalar(self, bolum, constraints):
+        pass
+
 class ExportRooms(UnitimeEntityXMLExport):
     """
         yöksis numarası verilen bölümün kullanabileceği odalar, o odaların bulunduğu
