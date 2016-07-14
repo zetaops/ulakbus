@@ -60,14 +60,25 @@ class KurumIciGorevlendirme(CrudView):
         self.form_out(KurumIciGorevlendirmeForm(self.object, current=self.current))
 
     def kaydet(self):
-        self.set_form_data_to_object()
-        personel = Personel.objects.get(self.current.task_data["personel_id"])
-        self.object.personel = personel
-        self.object.save()
+        #self.set_form_data_to_object()
+        gorevlendirme = KurumIciGorevlendirmeBilgileri()
+        gorevlendirme.gorev_tipi = self.current.task_data["gorevlendirme_tur"]
+        gorevlendirme.kurum_ici_gorev_baslama_tarihi = self.current.input["form"]["kurum_ici_gorev_baslama_tarihi"]
+        gorevlendirme.kurum_ici_gorev_bitis_tarihi = self.current.input["form"]["kurum_ici_gorev_bitis_tarihi"]
+        gorevlendirme.birim = Unit.objects.get(self.current.input["form"]["birim_id"])
+        gorevlendirme.soyut_rol = AbstractRole.objects.get(self.current.input["form"]["soyut_rol_id"])
+        gorevlendirme.aciklama = self.current.input["form"]["aciklama"]
+        gorevlendirme.resmi_yazi_sayi = self.current.input["form"]["resmi_yazi_sayi"]
+        gorevlendirme.resmi_yazi_tarih = self.current.input["form"]["resmi_yazi_tarih"]
+        gorevlendirme.personel = Personel.objects.get(self.current.task_data["personel_id"])
+        gorevlendirme.save()
+        #personel = Personel.objects.get(self.current.task_data["personel_id"])
+        #self.object.personel = personel
+        #self.object.save()
 
         if (
-                    (self.current.input["form"]["soyut_rol_id"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
-                    (self.current.input["form"]["soyut_rol_id"] == "5xanqtlXnY9dsQhWNV8gMK1rXcm")
+                (self.current.input["form"]["soyut_rol_id"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
+                (self.current.input["form"]["soyut_rol_id"] == "5xanqtlXnY9dsQhWNV8gMK1rXcm")
            ):
             self.current.task_data["hizmet_cetvel_giris"] = True
         else:
@@ -90,10 +101,23 @@ class KurumDisiGorevlendirme(CrudView):
         self.form_out(KurumDisiGorevlendirmeForm(self.object, current=self.current))
 
     def kaydet(self):
-        self.set_form_data_to_object()
-        personel = Personel.objects.get(self.current.task_data["personel_id"])
-        self.object.personel = personel
-        self.object.save()
+        gorevlendirme = KurumDisiGorevlendirmeBilgileri()
+        gorevlendirme.kurum_disi_gorev_baslama_tarihi = self.current.input["form"]["kurum_disi_gorev_baslama_tarihi"]
+        gorevlendirme.kurum_disi_gorev_bitis_tarihi = self.current.input["form"]["kurum_disi_gorev_bitis_tarihi"]
+        gorevlendirme.aciklama = self.current.input["form"]["aciklama"]
+        gorevlendirme.resmi_yazi_sayi = self.current.input["form"]["resmi_yazi_sayi"]
+        gorevlendirme.resmi_yazi_tarih = self.current.input["form"]["resmi_yazi_tarih"]
+        gorevlendirme.maas = self.current.input["form"]["maas"]
+        gorevlendirme.yevmiye = self.current.input["form"]["yevmiye"]
+        gorevlendirme.yolluk = self.current.input["form"]["yolluk"]
+        gorevlendirme.ulke = self.current.input["form"]["ulke"]
+        gorevlendirme.soyut_rol = AbstractRole.objects.get(self.current.input["form"]["soyut_rol_id"])
+        gorevlendirme.personel = Personel.objects.get(self.current.task_data["personel_id"])
+        gorevlendirme.save()
+        #self.set_form_data_to_object()
+        #personel = Personel.objects.get(self.current.task_data["personel_id"])
+        #self.object.personel = personel
+        #self.object.save()
 
         if (
                     (self.current.input["form"]["soyut_rol_id"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
@@ -109,6 +133,7 @@ class HizmetCetveliForm(JsonForm):
                     "kadro_derece", "odeme_derece", "odeme_kademe", "odeme_ekgosterge", "kazanilmis_hak_ayligi_derece",
                     "kazanilmis_hak_ayligi_kademe", "kazanilmis_hak_ayligi_ekgosterge", "emekli_derece", "emekli_kademe",
                     "emekli_ekgosterge", "sebep_kod", "kurum_onay_tarihi"]
+    kaydet_buton = fields.Button("Kaydet")
 
 class HizmetCetveli(CrudView):
     class Meta:
