@@ -342,6 +342,8 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
             ders_araligi = timedelta(minutes=int(dilim.ders_araligi))
             # Bitiş zamanı gelene kadar, zamanları ekle
             while zaman < bitis:
+                # Pazar günü gece yarısını geçen zaman çıkarırsak solver hata veriyor
+                if cetvel.gun == 7 and (zaman + timedelta(hours=sure)) >= timedelta(hours=24): break
                 etree.SubElement(parent, 'time',
                                  days=gun,
                                  start='%i' % timedelta2slot(zaman),
@@ -350,16 +352,6 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                                  pref='%i' % cetvel.durum)
                 zaman += ders_araligi
 
-    @staticmethod
-    def _zaman_ayrik2sayisal(saat, dakika):
-        """Saat ve dakika olarak ayrık gösterilen zamanı, sayısal bir zaman gösterimine çevirir.
-
-        Oluşturulan sayısal gösterimde tam sayılar saat başlarını gösterirken, ondalık sayılar
-        ise saat başları arasındaki zamanları gösterir. Örneğin 8.5 sayısı '8:30', 8.75 sayısı
-        '8:45', 8.9 sayısı ise '8:54' saatine denk gelir.
-        """
-        saat, dakika = int(saat), int(dakika)
-        return (saat * 60 + dakika) / 60.0
 
 class ExportExams(UnitimeEntityXMLExport):
     """Solver için sınavları export eder.
