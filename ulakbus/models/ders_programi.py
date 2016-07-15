@@ -100,7 +100,7 @@ class ZamanCetveli(Model):
     class Meta:
         verbose_name = 'Zaman Cetveli'
         unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani', 'gun')]
-        search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim']
+        search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim', 'gun']
 
     birim = Unit("Birim")
     gun = field.Integer("Gun", choices=HAFTA, index=True)
