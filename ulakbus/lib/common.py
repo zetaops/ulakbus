@@ -27,6 +27,26 @@ def timedelta2slot(td):
     dakika = td.seconds / 60
     return dakika / SLOT_SURESI
 
+def datetime2timestamp(dt):
+    """Bir datetime objesini, saat dilimi bilgisi olmayan bir POSIX timestamp'ine dönüştürür.
+
+    Bu fonksiyonun verdiği sonuç, datetime.datetime.utcfromtimestamp
+    methodu ile geri okunabilir. Yani,
+    >>> dt == datetime.datetime.utcfromtimestamp(datetime2timestamp(dt))
+    True
+
+    Bu fonksiyon saat dilimlerini dikkate almadan çalışmaktadır, bu nedenle bu fonksiyonun
+    sonuçlarının farklı saat dilimleri arasında kullanılması sorun çıkaracaktır. Aynı nedenle,
+    bu fonksiyonun verdiği timestampler POSIX ile uyumlu değildir.
+
+    Args:
+        dt (datetime.datetime): Dönüştürülecek datetime objesi
+
+    Returns:
+        float: Karşılık gelen POSIX timestamp'i
+    """
+    return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
+
 def get_akademik_takvim(unit):
     try:
         akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)

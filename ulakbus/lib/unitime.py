@@ -13,8 +13,9 @@ from lxml import etree
 
 from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, \
     Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, HAFTA
-from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot, timedelta2slot
-from datetime import datetime, date, timedelta
+from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot,\
+    timedelta2slot, datetime2timestamp
+from datetime import datetime, date, timedelta, time
 
 
 def _year():
@@ -369,6 +370,15 @@ class ExportExams(UnitimeEntityXMLExport):
                        'Seçenekler için `sinav_turleri`ne bakın.'}]
     FILE_NAME = 'exam.xml'
     DOC_TYPE = ''
+    # Sınavların yerleştirilebilecekleri saat aralıkları
+    _SINAV_SURELERI = [
+        (time(hour=9),  time(hour=12)),
+        (time(hour=12), time(hour=14)),
+        (time(hour=14), time(hour=17)),
+        (time(hour=17), time(hour=20)),
+    ]
+    # AKADEMIK_TAKVIM_ETKINLIKLERI arasında sınav tarihlerini gösteren etkinliklerin kodları
+    _SINAV_ETKINLIKLERI = (26, 58, 65)
 
     def prepare_data(self):
         bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
@@ -377,11 +387,11 @@ class ExportExams(UnitimeEntityXMLExport):
                              term='Term', year='%i' % _year(), created=str(date.today()))
         # Sınavların gerçekleşebileceği zamanlar
         periods = etree.SubElement(root, 'periods')
-        self._zamanlar(bolum, periods)
+        zamanlar = self._zamanlar(bolum, periods)
         rooms = etree.SubElement(root, 'rooms')
         self._odalar(bolum, rooms)
         exams = etree.SubElement(root, 'exams')
-        self._sinavlar(bolum, sinav_turleri, exams)
+        self._sinavlar(bolum, sinav_turleri, zamanlar, exams)
         students = etree.SubElement(root, 'students')
         self._ogrenciler(bolum, sinav_turleri, students)
         etree.SubElement(root, 'instructors')
@@ -391,7 +401,68 @@ class ExportExams(UnitimeEntityXMLExport):
                               doctype="%s" % self.DOC_TYPE)
 
     def _zamanlar(self, bolum, periods):
-        pass
+        """Sınavların yapılabilecekleri tarih ve saatleri, sınav planı çıktısına ekler.
+
+        Çıkartılan tarih ve saatler, ``period`` xml elemanının ``time`` alanına bakarak
+        bulunabilir. Burada, boşluk ile ayrılmış halde başlangıç ve bitiş zamanları,
+        saat dilimi bilgisi içermeyen bir POSIX timestamp'i olarak bulunabilir. Bu
+        değerler ``datetime.datetime.utcfromtimestamp`` fonksiyonu ile okunabilir.
+
+        Args:
+            bolum (Unit): Sınav planı çıkarılacak bölüm.
+            rooms (etree.SubElement): Çıktının ekleneceği xml elemanı.
+        Returns:
+            dict: Sınav sürelerini, bu süre uzunluğundaki zamanlarla eşleştiren bir sözlük.
+        """
+        tarihler = self._sinav_tarihleri(bolum)
+        zaman = tarihler.baslangic
+        i = 0
+        zamanlar = {}
+        while zaman <= tarihler.bitis:
+            i += 1
+            for j, (sure_bas, sure_bit) in enumerate(self._SINAV_SURELERI):
+                baslangic = zaman.replace(hour=sure_bas.hour, minute=sure_bas.minute)
+                bitis = zaman.replace(hour=sure_bit.hour, minute=sure_bit.minute)
+                zaman = bitis
+                id_ = '%i' % (i * len(self._SINAV_SURELERI) + j)
+                length = int((bitis - baslangic).seconds / 60)
+                etree.SubElement(periods, 'period',
+                                 id=id_,
+                                 length='%i' % length,
+                                 day='',
+                                 time='%f %f' % (datetime2timestamp(baslangic),
+                                                 datetime2timestamp(bitis)),
+                                 penalty='0')
+                try:
+                    zamanlar[length].append(id_)
+                except KeyError:
+                    zamanlar[length] = [id_]
+            zaman = zaman + timedelta(days=1)
+        return zamanlar
+
+    def _sinav_tarihleri(self, bolum):
+        """Bu bölüm için geçerli olan sınav tarihlerini bulur.
+
+        Args:
+            bolum:
+
+        Returns:
+            Takvim:
+        """
+        akademik_takvim = get_akademik_takvim(bolum)
+        sinav_takvim = None
+        for etkinlik in self._SINAV_ETKINLIKLERI:
+            try:
+                sinav_takvim = Takvim.objects.get(akademik_takvim=akademik_takvim, etkinlik=etkinlik)
+            except ObjectDoesNotExist:
+                pass
+        if not sinav_takvim:
+            raise RuntimeError('Sınav etkinliği bulunamadı')
+        if not sinav_takvim.baslangic:
+            raise RuntimeError('Sınav etkinliğinin başlangıç tarihi tanımlanmamış')
+        if not sinav_takvim.bitis:
+            raise RuntimeError('Sınav etkinliğinin bitiş tarihi tanımlanmamış')
+        return sinav_takvim
 
     def _odalar(self, bolum, rooms):
         """Sınavların yapılabileceği odaları, sınav planı çıktısına ekler.
@@ -406,14 +477,14 @@ class ExportExams(UnitimeEntityXMLExport):
                              size='%i' % oda.capacity,
                              alt='%i' % oda.capacity,
                              coordinates='%s,%s' % (oda.building.coordinate_x, oda.building.coordinate_y))
-            # TODO: odanın uygun olduğu periodlar? Yoksa hep uygun mu?
 
-    def _sinavlar(self, bolum, sinav_turleri, exams):
+    def _sinavlar(self, bolum, sinav_turleri, zamanlar, exams):
         """Sınavları, sınav planı çıktısına ekler.
 
         Args:
             bolum (Unit): Sınav planı çıkarılacak bölüm.
             exams (etree.SubElement): Çıktının ekleneceği xml elemanı.
+            zamanlar (dict): Sınav sürelerini, bu süre uzunluğundaki zamanlarla eşleştiren sözlük.
         """
         donem = Donem.guncel_donem()
         programlar = Program.objects.filter(bolum=bolum)
@@ -428,15 +499,23 @@ class ExportExams(UnitimeEntityXMLExport):
                     if sinav.tur in sinav_turleri: continue
                     sinav_id = '%i' % self._key2id('%s %i' % (ders.key, s))
                     sinav.unitime_id = sinav_id
-                    etree.SubElement(exams, 'exam',
-                                     id=sinav_id,
-                                     length='%i' % sinav.sinav_suresi,
-                                     # Alternative seating özelliği, odaların oturma planları için kullanılabilir
-                                     alt="false",
-                                     minSize='%i' % kontenjan,
-                                     # Sınavın en çok kaç odaya bölünebileceği
-                                     maxRooms='%i' % subeler.count())
-                    # TODO: sınavın olabileceği periodları ve roomları ekle
+                    exam = etree.SubElement(exams, 'exam',
+                                            id=sinav_id,
+                                            length='%i' % sinav.sinav_suresi,
+                                            # Alternative seating özelliği, odaların oturma planları için kullanılabilir
+                                            alt="false",
+                                            minSize='%i' % kontenjan,
+                                            # Sınavın en çok kaç odaya bölünebileceği
+                                            maxRooms='%i' % subeler.count())
+                    uygun_zamanlar = filter(lambda z: z[0] >= sinav.sinav_suresi, zamanlar.items())
+                    for zaman, zaman_idleri in uygun_zamanlar:
+                        # Kısa süreli sınavların uzun zaman dilimlerine ayrılmasını önlemek için
+                        # farka bağlı olarak bir penalty ata
+                        penalty = round((zaman - sinav.sinav_suresi) / 30)
+                        for zaman_id in zaman_idleri:
+                            etree.SubElement(exam, 'period',
+                                             id=zaman_id,
+                                             penalty='%i' % penalty)
                 ders.save()
 
     def _ogrenciler(self, bolum, sinav_turleri, students):
