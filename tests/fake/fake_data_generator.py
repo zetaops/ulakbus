@@ -425,7 +425,7 @@ class FakeDataGenerator:
         cetveller = []
         for plan in planlar:
             birim = plan.birim()
-            for gun, gun_adi in HAFTA_ICI_GUNLER:
+            for gun, gun_adi in HAFTA:
                 for zaman_dilimi in ZamanDilimleri.objects.filter(birim=birim):
                     cetvel = ZamanCetveli()
                     cetvel.birim = birim

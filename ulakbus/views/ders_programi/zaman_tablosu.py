@@ -9,62 +9,90 @@
 #
 
 from zengine.views.crud import CrudView
-from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli
-from collections import OrderedDict
+from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri
 
 
 class ZamanTablo(CrudView):
 
+    def ogretim_gorevlisi_sec(self):
+        # default select first person
+        try:
+            if self.current.secili_og_elemani:
+                self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.secili_og_elemani)
+        except AttributeError:
+            self.current.ogretim_elemani = OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)[0]
+
     def zaman_tablosu_listele(self):
         """
-            Ilgili birime ait Ogretim elemanlarini ekranda gosterir.
-            Ilk kez girildiginde birime ait ogretim elemanlarin, gunlerin
-            saat araliklarindaki durumlari default olarak uygun olarak gelir.
-            Duzenle butonuna tiklandigi zaman o ogretim elemanina ait gun saat dilimi
-            degisebilir hale gelir.Degisiklikler bittigi zaman kaydedilip tekrar
-            zaman_tablosu_listele is akisina gelir. Duzenlemeler yapildiktan sonra
-            onayla butonuna tiklandiginda duzenlenen zaman tablosu birimin bolum
-            baskanina onay icin gonderilir.
+        Creates a message for the given channel.
+        .. code-block:: python
+            # response:
+            {
+                'ogretim_elemani': {
+                    'oe_key': string   # ogretim_elemani_key
+                    'name': string,     # name surname,
+                    'toplam_ders_saati': int,   # hours,
+                    'uygunluk_durumu': [{
+                        'key': string,     # zaman_cetveli_key
+                        'saat': string,  # 10:00-12:00,
+                        'gun': int,     # 1 = pazartesi,
+                        'durum': int    # 2 = mumkunse uygun degil,
+                        }]}
+            }
+        """
+
+        zaman_cetveli = sorted(ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=self.current.ogretim_elemani),
+                               key=lambda z: (z.zaman_dilimi, z.gun))
+
+        uygunluk_durumu = list()
+
+        for zc in zaman_cetveli:
+            durum = dict()
+            durum['key'] = zc.key
+            durum['saat'] = zc.zaman_dilimi.baslama_saat + ':' + zc.zaman_dilimi.baslama_dakika + '-' + \
+                            zc.zaman_dilimi.bitis_saat + ':' + zc.zaman_dilimi.bitis_dakika
+            durum['gun'] = zc.gun
+            durum['durum'] = zc.durum
+            uygunluk_durumu.append(durum)
+
+        item = {'oe_key': self.current.ogretim_elemani.key,
+                'name': self.current.ogretim_elemani.okutman.ad + ' ' + self.current.ogretim_elemani.okutman.soyad,
+                'toplam_ders_saati': self.current.ogretim_elemani.toplam_ders_saati,
+                'uygunluk_durumu': uygunluk_durumu}
+
+        self.output['ogretim_elemani_zt'] = item
+
+    def zaman_degisiklik_kaydet(self):
+        """"
+
+        # request:
+        {
+            'change':{
+                'key': string   # key,
+                'durum': int    # 1 = uygun,
+                'cmd': 'degistir'}
+        }
 
         """
-        self.output['objects'] = [['Ogretim Elemani', 'Pazartesi', 'Sali', 'Carsamba', 'Persembe', 'Cuma']]
-        unit = self.current.role.unit
-        ogretim_elemani_zaman_planlari = OgElemaniZamanPlani.objects.filter(birim=unit)
 
-        for oe in ogretim_elemani_zaman_planlari:
-            zaman_tablosu = OrderedDict({})
-            zaman_cetveli = ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=oe, birim=unit)
-            zaman_tablosu['Ogretim Elemani'] = str(oe.okutman())
-            zaman_tablosu['Pazartesi'] = ''.join(sorted(["""%s:%s-%s:%s= %s
-            \n""" % (zc.zaman_dilimi.baslama_saat,
-                     zc.zaman_dilimi.baslama_dakika,
-                     zc.zaman_dilimi.bitis_saat,
-                     zc.zaman_dilimi.bitis_dakika,
-                     zc.durum) for zc in zaman_cetveli if zc.zaman_dilimi.gun == 1]))
-            zaman_tablosu['Sali'] = ' '
-            zaman_tablosu['Carsamba'] = ' '
-            zaman_tablosu['Persembe'] = ' '
-            zaman_tablosu['Cuma'] = ' '
+        change = self.current.input['change']
+        key = change['key']
+        zc = ZamanCetveli.objects.get(key)
+        zc.durum = change['durum']
+        zc.save()
 
-            item = {
-                "type": "table-multiRow",
-                "fields": zaman_tablosu,
-                "actions": [
-                    {'name': 'Duzenle', 'cmd': 'duzenle', 'show_as': 'button', 'object_key': 'okutman'},
-                ],
-                'key': oe.okutman.key
-            }
+    def personel_sec(self):
+        """
 
-            self.output['objects'].append(item)
+        # request:
+        {
+            'secili_og_elemani':{
+                'key': string   #  personel key,
+                'cmd': 'personel_sec'}
+        }
 
-    def duzenle(self):
-            pass
-
-    def reddet(self):
-        pass
-
-    def ogretim_elemani_kaydet(self):
-        pass
+        """
+        self.current.secili_og_elemani = self.current.input['secili_og_elemani']['key']
 
     def onaya_gonder(self):
         msg = {"title": 'Onay İçin Gönderildi!!',
@@ -73,7 +101,7 @@ class ZamanTablo(CrudView):
         self.current.output['msgbox'] = msg
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
-    def bilgi_ekrani(self):
+    def bilgilendirme(self):
         pass
 
     # Lane Gecisi Bolum Baskani
@@ -81,8 +109,12 @@ class ZamanTablo(CrudView):
     def onay_ekrani(self):
         pass
 
-    def geri_gonder(self):
+    def reddet_ve_geri_gonder(self):
         pass
 
-    def onayla_ve_bilgilendir(self):
+    def onayla(self):
         pass
+
+
+class DerslikZamanTablosu(CrudView):
+    pass
