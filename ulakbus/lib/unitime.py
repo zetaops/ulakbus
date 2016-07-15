@@ -44,6 +44,17 @@ class UnitimeEntityXMLExport(Command):
         self._SOLVER_IDS[key] = unitime_id
         return unitime_id
 
+    def _room_id(self, room):
+        id_ = room.unitime_id
+        if id_ is None:
+            id_ = self._key2id(room.key)
+            room.unitime_id = id_
+            room.save()
+        else:
+            # Daha sonraki çakışmaları önlemek için, görülen key'i kaydet
+            self._SOLVER_IDS[room.key] = id_
+        return id_
+
     def write_file(self, data):
         out_dir = self.create_dir()
         out_file = open(out_dir + '/' + self.FILE_NAME, 'w+')
@@ -145,11 +156,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
         for building in buildings:
             rooms = Room.objects.filter(building=building)
             for room in rooms:
-                id = room.unitime_id
-                if id is None:
-                    id = self._key2id(room.key)
-                    room.unitime_id = id
-                    room.save()
+                id = self._room_id(room)
 
                 roomelement = etree.SubElement(
                     roomselement, 'room',
@@ -389,9 +396,9 @@ class ExportExams(UnitimeEntityXMLExport):
         periods = etree.SubElement(root, 'periods')
         zamanlar = self._zamanlar(bolum, periods)
         rooms = etree.SubElement(root, 'rooms')
-        self._odalar(bolum, rooms)
+        odalar = self._odalar(bolum, rooms)
         exams = etree.SubElement(root, 'exams')
-        self._sinavlar(bolum, sinav_turleri, zamanlar, exams)
+        self._sinavlar(bolum, sinav_turleri, zamanlar, odalar, exams)
         students = etree.SubElement(root, 'students')
         self._ogrenciler(bolum, sinav_turleri, students)
         etree.SubElement(root, 'instructors')
@@ -470,6 +477,9 @@ class ExportExams(UnitimeEntityXMLExport):
         Args:
             bolum (Unit): Sınav planı çıkarılacak bölüm.
             rooms (etree.SubElement): Çıktının ekleneceği xml elemanı.
+
+        Returns:
+            `list` of `Room`: Bu bölümün sınav yapabileceği odaların listesi.
         """
         odalar = [r for r in Room.objects if bolum in r.RoomDepartments]
         for oda in odalar:
@@ -477,8 +487,9 @@ class ExportExams(UnitimeEntityXMLExport):
                              size='%i' % oda.capacity,
                              alt='%i' % oda.capacity,
                              coordinates='%s,%s' % (oda.building.coordinate_x, oda.building.coordinate_y))
+        return odalar
 
-    def _sinavlar(self, bolum, sinav_turleri, zamanlar, exams):
+    def _sinavlar(self, bolum, sinav_turleri, zamanlar, odalar, exams):
         """Sınavları, sınav planı çıktısına ekler.
 
         Args:
@@ -516,6 +527,9 @@ class ExportExams(UnitimeEntityXMLExport):
                             etree.SubElement(exam, 'period',
                                              id=zaman_id,
                                              penalty='%i' % penalty)
+                    for oda in odalar:
+                        oda_id = '%i' % self._room_id(oda)
+                        etree.SubElement(exam, 'room', id=oda_id)
                 ders.save()
 
     def _ogrenciler(self, bolum, sinav_turleri, students):
