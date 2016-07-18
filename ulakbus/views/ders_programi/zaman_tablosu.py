@@ -9,7 +9,8 @@
 #
 
 from zengine.views.crud import CrudView
-from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri
+from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri, DerslikZamanPlani
+from ulakbus.models import Room
 
 
 class ZamanTablo(CrudView):
@@ -117,4 +118,99 @@ class ZamanTablo(CrudView):
 
 
 class DerslikZamanTablosu(CrudView):
-    pass
+
+    def derslik_sec(self):
+        try:
+            if self.current.secili_derslik:
+                self.current.room = Room.objects.get(self.current.secili_derslik)
+        except AttributeError:
+            self.current.room = Room.objects.raw("room_departments.unit_id:" + self.current.role.unit.key)
+
+    def listele(self):
+        """
+        Creates a message for the given channel.
+        .. code-block:: python
+            # response:
+            {
+                'derslik': {
+                    'derslik_key': string   # ogretim_elemani_key
+                    'name': string,     # name surname,
+                    'kapasite': int,   # hours,
+                    'zaman_plani': [{
+                        'key': string,     # zaman_cetveli_key
+                        'saat': string,  # 10:00-12:00,
+                        'gun': int,     # 1 = pazartesi,
+                        'durum': int    # 2 = Bolume Ait,
+                        }]}
+            }
+        """
+
+        dzps = sorted(DerslikZamanPlani.objects.filter(derslik=self.current.room),
+                      key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+
+        zaman_plani = list()
+
+        for dz in dzps:
+            durum = dict()
+            durum['key'] = dz.key
+            durum['saat'] = dz.baslangic_saat + ':' + dz.baslangic_dakika + '-' + dz.bitis_saat + ':' + dz.bitis_dakika
+            durum['gun'] = dz.gun
+            durum['durum'] = dz.derslik_durum
+            zaman_plani.append(durum)
+
+        item = {'derslik_key': self.current.room.key,
+                'name': self.current.room.name,
+                'kapasite': self.current.room.capacity,
+                'zaman_plani': zaman_plani}
+
+        self.output['derslik_zaman_tablosu'] = item
+
+    def degisiklikleri_kaydet(self):
+        """"
+
+        # request:
+        {
+            'change':{
+                'key': string   # key,
+                'durum': int    # 1 = uygun,
+                'cmd': 'kaydet'}
+        }
+
+        """
+        change = self.current.input['change']
+        key = change['key']
+        dz = DerslikZamanPlani.objects.get(key)
+        dz.derslik_durum = change['durum']
+        dz.save()
+
+    def derslik_degistir(self):
+        """
+
+        # request:
+        {
+            'secili_derslik':{
+                'key': string   #  personel key,
+                'cmd': 'derslik_degistir'}
+        }
+
+        """
+        self.current.secili_derslik = self.current.input['secili_derslik']['key']
+
+    def onaya_gonder(self):
+        msg = {"title": 'Onay İçin Gönderildi!!',
+               "body": 'Derslik zaman tablosu onay için Bölüm Başkanına gönderildi.'}
+
+        self.current.output['msgbox'] = msg
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+    def onay_ekrani(self):
+        pass
+
+    def reddet_ve_geri_gonder(self):
+        pass
+
+    def onayla(self):
+        pass
+
+    def bilgilendirme(self):
+        pass
