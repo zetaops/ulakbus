@@ -12,7 +12,8 @@ from zengine.management_commands import *
 from lxml import etree
 
 from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, \
-    Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, HAFTA
+    Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, HAFTA,\
+    SinavEtkinligi
 from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot,\
     timedelta2slot, datetime2timestamp
 from datetime import datetime, date, timedelta, time
@@ -418,7 +419,6 @@ class ExportExams(UnitimeEntityXMLExport):
         i = 0
         zamanlar = {}
         while zaman <= tarihler.bitis:
-            i += 1
             for j, (sure_bas, sure_bit) in enumerate(self._SINAV_SURELERI):
                 baslangic = zaman.replace(hour=sure_bas.hour, minute=sure_bas.minute)
                 bitis = zaman.replace(hour=sure_bit.hour, minute=sure_bit.minute)
@@ -437,6 +437,7 @@ class ExportExams(UnitimeEntityXMLExport):
                 except KeyError:
                     zamanlar[length] = [id_]
             zaman = zaman + timedelta(days=1)
+            i += 1
         return zamanlar
 
     def _sinav_tarihleri(self, bolum):
@@ -490,6 +491,8 @@ class ExportExams(UnitimeEntityXMLExport):
             zamanlar (dict): Sınav sürelerini, bu süre uzunluğundaki zamanlarla eşleştiren sözlük.
         """
         donem = Donem.guncel_donem()
+        # Eski exportlardan kalmış olabilecek kayıtları, yenileri ile karışmaması için temizle
+        SinavEtkinligi.objects.filter(donem=donem, bolum=bolum, published=False).delete()
         programlar = Program.objects.filter(bolum=bolum)
         for program in programlar:
             dersler = Ders.objects.filter(program=program, donem=donem)
@@ -499,7 +502,7 @@ class ExportExams(UnitimeEntityXMLExport):
                 for sube in subeler:
                     kontenjan += sube.kontenjan
                 for s, sinav in enumerate(ders.Degerlendirme):
-                    if sinav.tur in sinav_turleri: continue
+                    if sinav.tur not in sinav_turleri: continue
                     sinav_id = '%i' % self._key2id('%s %i' % (ders.key, s))
                     sinav.unitime_id = sinav_id
                     exam = etree.SubElement(exams, 'exam',
@@ -510,6 +513,8 @@ class ExportExams(UnitimeEntityXMLExport):
                                             minSize='%i' % kontenjan,
                                             # Sınavın en çok kaç odaya bölünebileceği
                                             maxRooms='%i' % subeler.count())
+                    SinavEtkinligi(ders=ders, donem=donem, bolum=bolum,
+                                   unitime_id=sinav_id, published=False).save()
                     uygun_zamanlar = filter(lambda z: z[0] >= sinav.sinav_suresi, zamanlar.items())
                     for zaman, zaman_idleri in uygun_zamanlar:
                         # Kısa süreli sınavların uzun zaman dilimlerine ayrılmasını önlemek için
@@ -546,7 +551,7 @@ class ExportExams(UnitimeEntityXMLExport):
                                                    donem=donem).exclude(katilim_durumu=False)
             for ders in dersleri:
                 for sinav in ders.ders.Degerlendirme:
-                    if sinav.tur in sinav_turleri: continue
+                    if sinav.tur not in sinav_turleri: continue
                     etree.SubElement(student, 'exam', id=sinav.unitime_id)
 
     def _sinirlandirmalar(self, bolum, constraints):

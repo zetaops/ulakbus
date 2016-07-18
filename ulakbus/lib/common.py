@@ -1,6 +1,6 @@
 # -*-  coding: utf-8 -*-
 
-from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi
+from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi
 from math import floor
 import datetime
 
@@ -100,3 +100,30 @@ def ders_programi_doldurma(root):
                 ders_etkinlik.bitis_dakika = dakika
 
         ders_etkinlik.save()
+
+def sinav_etkinlikleri_oku(root):
+    """CPSolver tarafından çözülen bir sınav planını okur.
+
+    Args:
+        root (xml.etree.ElementTree.Element): Çözülmüş
+            sınav planının root elemanı.
+    """
+    periods = root.find('periods')
+    zamanlar = {}
+    for period in periods.iter('period'):
+        baslangic_s, bitis_s = period.get('time').split(' ')
+        baslangic = datetime.datetime.utcfromtimestamp(float(baslangic_s))
+        id_ = period.get('id')
+        zamanlar[id_] = baslangic
+
+    exams = root.find('exams')
+    for exam in exams.iter('exam'):
+        assignment = exam.find('assignment')
+        if assignment is not None:
+            etkinlik = SinavEtkinligi.objects.get(unitime_id=exam.get('id'))
+            period_id = assignment.find('period').get('id')
+            etkinlik.tarih = zamanlar[period_id]
+            for period in assignment.iter('room'):
+                room = Room.objects.get(unitime_id=period.get('id'))
+                etkinlik.SinavYerleri.add(room=room)
+            etkinlik.save()

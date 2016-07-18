@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from pyoko import Model
+from pyoko import Model, ListNode
 from zengine.forms import fields
 from . import RoomType, Okutman, Room, Sube, Donem, Unit, Ders
 
@@ -39,3 +39,20 @@ class DersEtkinligi(Model):
         """Yeni bir DersEtkinligi oluşturulduğunda arama amaçlı olan alanları otomatik olarak doldurur."""
         self.ders = self.sube.ders
         self.save()
+
+
+class SinavEtkinligi(Model):
+
+    class Meta:
+        verbose_name = 'Sınav Etkinliği'
+
+    ders = Ders(index=True)
+    donem = Donem(index=True)
+    bolum = Unit(index=True)
+    unitime_id = fields.String(index=True)
+
+    published = fields.Boolean(index=True, default=False)
+    tarih = fields.DateTime('Sınav Tarihi', index=True)
+
+    class SinavYerleri(ListNode):
+        room = Room('Sınav Yeri', index=True)
