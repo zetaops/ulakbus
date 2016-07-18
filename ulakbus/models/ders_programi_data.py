@@ -50,6 +50,7 @@ class SinavEtkinligi(Model):
     donem = Donem(index=True)
     bolum = Unit(index=True)
     unitime_id = fields.String(index=True)
+    solved = fields.Boolean(index=True, default=False)
 
     published = fields.Boolean(index=True, default=False)
     tarih = fields.DateTime('Sınav Tarihi', index=True)

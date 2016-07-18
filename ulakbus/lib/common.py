@@ -123,6 +123,7 @@ def sinav_etkinlikleri_oku(root):
             etkinlik = SinavEtkinligi.objects.get(unitime_id=exam.get('id'))
             period_id = assignment.find('period').get('id')
             etkinlik.tarih = zamanlar[period_id]
+            etkinlik.solved = True
             for period in assignment.iter('room'):
                 room = Room.objects.get(unitime_id=period.get('id'))
                 etkinlik.SinavYerleri.add(room=room)
