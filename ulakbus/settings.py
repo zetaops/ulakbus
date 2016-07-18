@@ -179,6 +179,7 @@ ALLOWED_ORIGINS += [
     'http://www.ulakbus.net',
     'http://dev.zetaops.io',
     'http://nightly.zetaops.io',
+    'http://nightly.ulakbus.net'
 ]
 
 UID = 173500
