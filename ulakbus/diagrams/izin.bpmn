@@ -8,7 +8,7 @@
     </bpmn2:extensionElements>
     <bpmn2:participant id="_Participant_3" name="İzin İşlemleri" processRef="izin"/>
   </bpmn2:collaboration>
-  <bpmn2:process id="izin" isExecutable="false">
+  <bpmn2:process id="izin" name="İzin İşlemleri" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_2" name="Lane Set 2">
       <bpmn2:lane id="personel" name="personel">
         <bpmn2:flowNodeRef>basla</bpmn2:flowNodeRef>
@@ -29,7 +29,7 @@
       <bpmn2:outgoing>SequenceFlow_20</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ServiceTask_2" targetRef="izin_bilgileri_goster"/>
-    <bpmn2:serviceTask id="ServiceTask_1" camunda:class="personel.izin.IzinIslemleri.save" name="Kaydet">
+    <bpmn2:serviceTask id="ServiceTask_1" camunda:class="personel.izin.IzinIslemleri.kaydet" name="Kaydet">
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
     </bpmn2:serviceTask>
@@ -48,7 +48,7 @@
       <bpmn2:outgoing>SequenceFlow_24</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="UserTask_2">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'add_edit_form'</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'yeni_izin'</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_2">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'delete'</bpmn2:conditionExpression>
@@ -57,7 +57,7 @@
     <bpmn2:endEvent id="EndEvent_3">
       <bpmn2:incoming>SequenceFlow_24</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="UserTask_2" camunda:assignee="personel.izin.IzinIslemleri.add_edit_form" name="İzin Ekle">
+    <bpmn2:userTask id="UserTask_2" camunda:assignee="personel.izin.IzinIslemleri.izin_form" name="İzin Ekle">
       <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:userTask>
