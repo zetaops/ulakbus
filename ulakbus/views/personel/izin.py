@@ -6,9 +6,21 @@ from ulakbus.models.form import Form, FormData
 from ulakbus.models.hitap.hitap import HizmetKayitlari, HizmetBirlestirme
 from ulakbus.models.personel import Personel, Izin
 from zengine import forms
-from zengine.forms import fields
+from zengine.forms import fields, JsonForm
 from zengine.views.crud import CrudView
+from dateutil.relativedelta import relativedelta
 import time
+
+class IzinForm(JsonForm):
+    """
+        Ücretsiz izin dışındaki izin işlemleri için jsonform dan türetilmiş bir
+        form class dır.
+    """
+    class Meta:
+        title = "Personel İzin Form"
+        include = ["tip", "baslangic", "bitis", "onay", "adres", "telefon", "vekil"]
+
+    kaydet_buton = fields.Button("Kaydet")
 
 class IzinIslemleri(CrudView):
     class Meta:
@@ -21,10 +33,15 @@ class IzinIslemleri(CrudView):
         #     # {'fields': [0, ], 'cmd': 'show', 'mode': 'normal', 'show_as': 'link'},
         # ]
 
+    def izin_form(self):
+        self.form_out(IzinForm(self.object, current=self.current))
+
     def goster(self):
         yil = date.today().year
         self.list()
-        personel = Personel.objects.get(self.input['id'])
+        if "id" in self.current.input:
+            self.current.task_data["personel_id"] = self.current.input["id"]
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
         izin_gun = self.hizmet_izin_yil_hesapla(personel)
         kalan_izin = self.kalan_izin_hesapla()
         bu_yil_kalan_izin = getattr(kalan_izin['yillik'], str(yil), 0)
@@ -43,6 +60,9 @@ class IzinIslemleri(CrudView):
             self.ListForm.add = None
 
         # TODO: Personel bilgileri tabloda gösterilecek
+        _form = JsonForm()
+        _form.yeni_izin_buton = fields.Button("Yeni İzin", cmd="yeni_izin")
+        self.form_out(_form)
         self.output['object'] = {
             "type": "table",
             "fields": [
@@ -127,18 +147,23 @@ class IzinIslemleri(CrudView):
         return emekli_sandigi_gun + sgk_gun
 
     def kalan_izin_hesapla(self):
-        query = self._apply_list_queries(self.object.objects.filter())
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+        ilk_izin_hakedis = personel.goreve_baslama_tarihi + relativedelta(years=1)
+        izinler = Izin.objects.filter(personel_id=personel.key)
         yillik_izinler = dict()
         mazeret_izinler = dict()
 
-        if self.ilk_izin_hakedis > date.today():
+        if ilk_izin_hakedis > date.today():
             return {'yillik': None, 'mazeret': None}
 
-        for yil in range(self.ilk_izin_hakedis.year, date.today().year + 1):
-            yillik_izinler[yil] = 20
+        for yil in range(ilk_izin_hakedis.year, date.today().year + 1):
+            if (date.today().year - personel.goreve_baslama_tarihi.year) >10:
+                yillik_izinler[yil] = 30
+            else:
+                yillik_izinler[yil] = 20
             mazeret_izinler[yil] = 10
 
-        for izin in query:
+        for izin in izinler:
             if izin.tip == 1:
                 yil = izin.baslangic.year - 1
                 if yil in yillik_izinler.keys() and yillik_izinler[yil] > 0:
@@ -151,6 +176,35 @@ class IzinIslemleri(CrudView):
 
         return {'yillik': yillik_izinler, 'mazeret': mazeret_izinler}
 
+    def kaydet(self):
+        baslangic_tarih = datetime.strptime(self.current.input["form"]["baslangic"], "%d.%m.%Y")
+        bitis_tarih = datetime.strptime(self.current.input["form"]["bitis"], "%d.%m.%Y")
+        izin_gun = (bitis_tarih - baslangic_tarih).days
+        kalan_izin= self.kalan_izin_hesapla()
+        mesaj_text = "İzin kaydedildi"
+        if (self.current.input["form"]["tip"] == 1) and (kalan_izin["yillik"] < izin_gun):
+            mesaj_text = "Yeterli yıllık izin bulunmamaktadır"
+            mesaj_type = "error"
+        elif (self.current.input["form"] == 5) and (kalan_izin["mazeret"] < izin_gun):
+            mesaj_text = "Yeterli mazeret izni bulunamadı"
+            mesaj_type = "error"
+        else:
+            izin_kayit = Izin()
+            izin_kayit.tip = self.current.input["form"]["tip"]
+            izin_kayit.baslangic = self.current.input["form"]["baslangic"]
+            izin_kayit.bitis = self.current.input["form"]["bitis"]
+            izin_kayit.onay = self.current.input["form"]["onay"]
+            izin_kayit.adres = self.current.input["form"]["adres"]
+            izin_kayit.telefon = self.current.input["form"]["telefon"]
+            izin_kayit.personel = Personel.objects.get(self.current.task_data["personel_id"])
+            if self.current.input["form"]["vekil_id"] != None:
+                izin_kayit.vekil = Personel.objects.get(self.current.input["form"]["vekil_id"])
+            izin_kayit.save()
+            mesaj_type = "info"
+
+        self.current.output["msgbox"] = {
+            "type" : mesaj_type, "title" : "Terfi Sonuç Bilgisi", "msg" : mesaj_text
+        }
 
 class IzinBasvuru(CrudView):
     """İzin Başvuru İş Akışı
