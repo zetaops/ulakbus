@@ -503,7 +503,7 @@ class ExportExams(UnitimeEntityXMLExport):
                     kontenjan += sube.kontenjan
                 for s, sinav in enumerate(ders.Degerlendirme):
                     if sinav.tur not in sinav_turleri: continue
-                    sinav_id = '%i' % self._key2id('%s %i' % (ders.key, s))
+                    sinav_id = '%i' % self._key2id('%s %s %i' % (program.key, ders.key, s))
                     sinav.unitime_id = sinav_id
                     exam = etree.SubElement(exams, 'exam',
                                             id=sinav_id,
@@ -549,10 +549,13 @@ class ExportExams(UnitimeEntityXMLExport):
             # Öğrencinin bu dönem aldığı ve devamsızlıktan kalmadığı dersleri
             dersleri = OgrenciDersi.objects.filter(ogrenci=ogrenci,
                                                    donem=donem).exclude(katilim_durumu=False)
+            sinav_idleri = set()
             for ders in dersleri:
                 for sinav in ders.ders.Degerlendirme:
                     if sinav.tur not in sinav_turleri: continue
-                    etree.SubElement(student, 'exam', id=sinav.unitime_id)
+                    sinav_idleri.add(sinav.unitime_id)
+            for id_ in sinav_idleri:
+                etree.SubElement(student, 'exam', id=id_)
 
     def _sinirlandirmalar(self, bolum, constraints):
         pass

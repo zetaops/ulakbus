@@ -10,7 +10,7 @@ import os
 
 
 class ExecuteExamSolver(Service):
-    _SOLVER_DIR = '/opt/zato/examsolver'
+    _SOLVER_DIR = '/opt/zato/solver'
 
     def handle(self):
         status, result = self._handle()
@@ -44,8 +44,8 @@ class ExecuteExamSolver(Service):
         export_file = '%s.xml' % prefix_file
         output_file = '%s.OUTPUT.xml' % prefix_file
         p = subprocess.Popen(
-            ['java', '-Xmx1g', '-jar', 'examtt-1.2.jar', 'base-config.cfg', export_file, output_file],
-#            stdout=subprocess.PIPE, universal_newlines=True
+            ['java', '-Xmx1g', '-cp', 'cpsolver-1.3.79.jar', 'org.cpsolver.exam.Test', 'exam-base.cfg',
+             export_file, output_file],
         )
         p.wait()
 
@@ -62,10 +62,3 @@ class ExecuteExamSolver(Service):
         if len(cozulmemis_sinavlar) > 0:
             return 'ok', 'Eksik çözüm bulundu'
         return 'ok', 'Tüm sınavlar yerleştirildi'
-
-
-
-if __name__ == '__main__':
-    e = ExecuteExamSolver()
-    e.handle()
-    print(e.response.payload)
