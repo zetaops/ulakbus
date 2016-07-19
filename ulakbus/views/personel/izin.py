@@ -177,10 +177,17 @@ class IzinIslemleri(CrudView):
         return {'yillik': yillik_izinler, 'mazeret': mazeret_izinler}
 
     def kaydet(self):
+        """
+            Form dan gelen verinin kontrol edilerek uygun olması halinde izin kaydını yapan metoddur
+        """
         baslangic_tarih = datetime.strptime(self.current.input["form"]["baslangic"], "%d.%m.%Y")
         bitis_tarih = datetime.strptime(self.current.input["form"]["bitis"], "%d.%m.%Y")
         izin_gun = (bitis_tarih - baslangic_tarih).days
+
+        # Personelin kalan izin günü
         kalan_izin= self.kalan_izin_hesapla()
+
+        # Bilgi mesajları hazırlandı
         mesaj_text = "İzin kaydedildi"
         if (self.current.input["form"]["tip"] == 1) and (kalan_izin["yillik"] < izin_gun):
             mesaj_text = "Yeterli yıllık izin bulunmamaktadır"
@@ -197,6 +204,8 @@ class IzinIslemleri(CrudView):
             izin_kayit.adres = self.current.input["form"]["adres"]
             izin_kayit.telefon = self.current.input["form"]["telefon"]
             izin_kayit.personel = Personel.objects.get(self.current.task_data["personel_id"])
+
+            # İzin alan personelin yerine vekil bırakması durumu
             if self.current.input["form"]["vekil_id"] != None:
                 izin_kayit.vekil = Personel.objects.get(self.current.input["form"]["vekil_id"])
             izin_kayit.save()
