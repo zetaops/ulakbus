@@ -9,19 +9,30 @@
 #
 
 from zengine.views.crud import CrudView
-from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri, DerslikZamanPlani
+from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani
 from ulakbus.models import Room
 
 
 class ZamanTablo(CrudView):
 
     def ogretim_gorevlisi_sec(self):
+        """
+
+        # request:
+        {
+            'secili_og_elemani':{
+                'key': string   #  personel key,
+                'cmd': 'personel_sec'}
+        }
+
+        """
         # default select first person
         try:
-            if self.current.secili_og_elemani:
-                self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.secili_og_elemani)
-        except AttributeError:
-            self.current.ogretim_elemani = OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)[0]
+            if self.current.input['secili_og_elemani']['key']:
+                self.current.task_data['ogretim_elemani_key'] = self.current.input['secili_og_elemani']['key']
+        except:
+            self.current.task_data['ogretim_elemani_key'] = \
+                (OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)[0]).key
 
     def zaman_tablosu_listele(self):
         """
@@ -41,7 +52,7 @@ class ZamanTablo(CrudView):
                         }]}
             }
         """
-
+        self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
         zaman_cetveli = sorted(ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=self.current.ogretim_elemani),
                                key=lambda z: (z.zaman_dilimi, z.gun))
 
@@ -82,19 +93,6 @@ class ZamanTablo(CrudView):
         zc.durum = change['durum']
         zc.save()
 
-    def personel_sec(self):
-        """
-
-        # request:
-        {
-            'secili_og_elemani':{
-                'key': string   #  personel key,
-                'cmd': 'personel_sec'}
-        }
-
-        """
-        self.current.secili_og_elemani = self.current.input['secili_og_elemani']['key']
-
     def onaya_gonder(self):
         msg = {"title": 'Onay İçin Gönderildi!!',
                "body": 'Ögretim elemanı zaman tablosu onay için Bölüm Başkanına gönderildi.'}
@@ -120,11 +118,22 @@ class ZamanTablo(CrudView):
 class DerslikZamanTablosu(CrudView):
 
     def derslik_sec(self):
+        """
+
+        # request:
+        {
+            'secili_derslik':{
+                'key': string   #  derslik key,
+                'cmd': 'derslik_degistir'}
+        }
+
+        """
         try:
-            if self.current.secili_derslik:
-                self.current.room = Room.objects.get(self.current.secili_derslik)
-        except AttributeError:
-            self.current.room = Room.objects.raw("room_departments.unit_id:" + self.current.role.unit.key)
+            if self.current.input['secili_derslik']['key']:
+                self.current.task_data['room_key'] = self.current.input['secili_derslik']['key']
+        except:
+            self.current.task_data['room_key'] = Room.objects.raw("room_departments.unit_id:" +
+                                                                  self.current.role.unit.key)[0].key
 
     def listele(self):
         """
@@ -132,19 +141,19 @@ class DerslikZamanTablosu(CrudView):
         .. code-block:: python
             # response:
             {
-                'derslik': {
-                    'derslik_key': string   # ogretim_elemani_key
-                    'name': string,     # name surname,
-                    'kapasite': int,   # hours,
+                'derslik_zaman_tablosu': {
+                    'derslik_key': string   # derslik key
+                    'name': string,     # room name,
+                    'kapasite': int,   # capacity,
                     'zaman_plani': [{
-                        'key': string,     # zaman_cetveli_key
+                        'key': string,     # derslik zaman plani key
                         'saat': string,  # 10:00-12:00,
                         'gun': int,     # 1 = pazartesi,
                         'durum': int    # 2 = Bolume Ait,
                         }]}
             }
         """
-
+        self.current.room = Room.objects.get(self.current.task_data['room_key'])
         dzps = sorted(DerslikZamanPlani.objects.filter(derslik=self.current.room),
                       key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
 
@@ -172,7 +181,7 @@ class DerslikZamanTablosu(CrudView):
         {
             'change':{
                 'key': string   # key,
-                'durum': int    # 1 = uygun,
+                'durum': int    # 1 = Herkese Acik,
                 'cmd': 'kaydet'}
         }
 
@@ -182,19 +191,6 @@ class DerslikZamanTablosu(CrudView):
         dz = DerslikZamanPlani.objects.get(key)
         dz.derslik_durum = change['durum']
         dz.save()
-
-    def derslik_degistir(self):
-        """
-
-        # request:
-        {
-            'secili_derslik':{
-                'key': string   #  personel key,
-                'cmd': 'derslik_degistir'}
-        }
-
-        """
-        self.current.secili_derslik = self.current.input['secili_derslik']['key']
 
     def onaya_gonder(self):
         msg = {"title": 'Onay İçin Gönderildi!!',
