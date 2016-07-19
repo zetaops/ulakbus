@@ -11,19 +11,18 @@ setup(
     license='GPL v3',
     author_email='info@zetaops.io',
     install_requires=[
-        'zengine==0.7',
+        'zengine==0.7.3',
         'requests',
         'boto',
         'reportlab',
         'six'
     ],
-    dependency_links=[
-        'git+https://github.com/zetaops/pyoko.git@0.7#egg=pyoko',
-        'git+https://github.com/zetaops/zengine.git@0.7#egg=zengine'],
-
     url='https://github.com/zetaops/ulakbus',
     packages=find_packages(exclude=['tests', 'tests.*']),
+    download_url='https://github.com/zetaops/ulakbus/archive/master.zip',
     package_data={
         'ulakbus': ['diagrams/*.bpmn'],
-    }
+    },
+    keywords=['academic erp', 'universty automation system'],
+    classifiers=[]
 )
