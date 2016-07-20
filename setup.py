@@ -15,7 +15,8 @@ setup(
         'requests',
         'boto',
         'reportlab',
-        'six'
+        'six',
+        'lxml'
     ],
     url='https://github.com/zetaops/ulakbus',
     packages=find_packages(exclude=['tests', 'tests.*']),
