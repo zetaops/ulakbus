@@ -5,7 +5,7 @@ from setuptools import find_packages
 
 setup(
     name='Ulakbus',
-    version='0.8.2',
+    version='0.8.4',
     description='Ulakbus Butunlesik Universite Sistemi',
     author='Zetaops',
     license='GPL v3',
@@ -15,7 +15,8 @@ setup(
         'requests',
         'boto',
         'reportlab',
-        'six'
+        'six',
+        'lxml'
     ],
     url='https://github.com/zetaops/ulakbus',
     packages=find_packages(exclude=['tests', 'tests.*']),
