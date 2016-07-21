@@ -9,6 +9,7 @@ Bu modül Ulakbüs uygulaması için authorization ile ilişkili data modellerin
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import hashlib
 
 from pyoko import field
 from pyoko import Model, ListNode
@@ -61,6 +62,14 @@ class User(Model, BaseUser):
 
     def post_creation(self):
         self.prepare_channels()
+
+    def get_avatar_url(self):
+        if self.avatar:
+            return super(BaseUser, self).get_avatar_url()
+        else:
+            # FIXME: This is for fun, remove when we resolve static hosting problem
+            return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
+                "%s@gmail.com" % self.username).hexdigest()
 
 
 
