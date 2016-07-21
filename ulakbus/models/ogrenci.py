@@ -324,6 +324,10 @@ class Ders(Model):
         Bir dersin hangi derslik türlerinde kaç saat yapılacağı burada saklanır.
         Örneğin 5 saatlik bir dersin 3 saati sınıfta, 2 saati laboratuvarda
         yapılacaksa bu bilgi burada saklanır.
+
+        Bir ders içini iki ayrı etkinlik planlanması isteniyorsa, örneğin 4 saat
+        teorik dersi olan bir dersin 2 saatinin bir gün, 2 saatinin ise farklı
+        bir gün yapılması için burada 2 ayrı kayıt oluşturulmalıdır.
         """
         sinif_turu = RoomType()
         ders_saati = field.Integer("Ders Saati", index=True)
