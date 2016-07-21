@@ -11,6 +11,25 @@ import httplib
 
 
 class ExecuteSolver(Service):
+    """Bir bölüm için ders programı hesaplaması yapar.
+
+    Bu servisi çalıştırmak için ders programı hesaplanacak olan bölümün
+    yöksis numarası verilmelidir. Örneğin:
+
+    >>> requests.post('http://example.com/dersler', json={'bolum': 124150})
+
+    Servis, ders programını hesaplayarak sonucunu kaydedecektir. İşlem
+    bittiğinde, servis durumunu bildiren bir sonuç verir. Örneğin başarılı
+    olması durumunda gelecek sonuç:
+
+        {'status': 'ok', 'result': 'Tüm dersler yerleştirildi'}
+
+    Başarısız bir sonuç örneği:
+
+        {'status': 'fail', 'result': 'Solver çalıştırılırken hata oluştu'}
+
+    Eğer servis HTTP üzerinden kullanılıyorsa HTTP durum kodlarına da bakılabilir.
+    """
     _SOLVER_DIR = '/opt/zato/solver'
 
     def handle(self):
@@ -22,6 +41,7 @@ class ExecuteSolver(Service):
             shutil.rmtree(export_dir)
             raise e
 
+        # İşlem sonucunu hem HTTP durumu olarak, hem de yanıtın içine yaz
         self.response.status_code = status
         status_msg = 'ok' if status == httplib.OK else 'fail'
         self.response.payload = {'status': status_msg, 'result': result}
@@ -33,7 +53,7 @@ class ExecuteSolver(Service):
         if os.path.isdir(export_dir):
             return httplib.CONFLICT, '%i yöksis no\'lu bölüm için çalışan bir solver var' % bolum_yoksis_no
 
-        # XML export etmeye yarar.
+        # Derslerin export'unu al
         data_set = ExportCourseTimetable(bolum=bolum_yoksis_no)
         os.mkdir(export_dir)
         data_set.EXPORT_DIR = export_dir
@@ -50,6 +70,8 @@ class ExecuteSolver(Service):
         os.chdir(export_dir)
         output_folder = ''
         p.wait()
+        # Solver'ın çıktısını inceleyerek olası hata mesajlarını yakala,
+        # solver'ın çözümü yazdığı yeri bul
         for line in p.stdout:
             if 'test failed' in line.lower():
                 return httplib.INTERNAL_SERVER_ERROR, 'XML exportları hatalı'
@@ -59,9 +81,11 @@ class ExecuteSolver(Service):
         if output_folder == '':
             return httplib.INTERNAL_SERVER_ERROR, 'Solver çalıştırılırken hata oluştu'
 
+        # Sonuçları oku
         root = ET.parse(os.path.join(output_folder, 'solution.xml')).getroot()
         ders_programi_doldurma(root)
 
+        # Tüm derslerin çözülüp çözülmediğini kontrol et
         donem = Donem.guncel_donem()
         bolum = Unit.objects.get(yoksis_no=bolum_yoksis_no)
         cozulemeyenler = DersEtkinligi.objects\

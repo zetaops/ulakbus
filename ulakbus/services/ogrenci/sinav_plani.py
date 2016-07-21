@@ -11,6 +11,26 @@ import httplib
 
 
 class ExecuteExamSolver(Service):
+    """Bir bölüm için sınav planı hesaplaması yapar.
+
+    Bu servisi çalıştırmak için sınav planı hesaplanacak olan bölümün
+    yöksis numarası, ve hesaplamaya dahil edilecek sınavların türlerinin
+    listesi verilmelidir. Örneğin:
+
+    >>> requests.post('http://example.com/sinavlar', json={'bolum': 124150, 'sinav_turleri': [1]})
+
+    Servis, sınav programını hesaplayarak sonucunu kaydedecektir. İşlem
+    bittiğinde, servis durumunu bildiren bir sonuç verir. Örneğin başarılı
+    olması durumunda gelecek sonuç:
+
+        {'status': 'ok', 'result': 'Tüm sınavlar yerleştirildi'}
+
+    Başarısız bir sonuç örneği:
+
+        {'status': 'fail', 'result': '00000 yöksis no\'lu bölüm için çalışan bir solver var'}
+
+    Eğer servis HTTP üzerinden kullanılıyorsa HTTP durum kodlarına da bakılabilir.
+    """
     _SOLVER_DIR = '/opt/zato/solver'
 
     def handle(self):
@@ -23,6 +43,7 @@ class ExecuteExamSolver(Service):
             shutil.rmtree(export_dir)
             raise e
 
+        # İşlem sonucunu hem HTTP durumu olarak, hem de yanıtın içine yaz
         self.response.status_code = status
         status_msg = 'ok' if status == httplib.OK else 'fail'
         self.response.payload = {'status': status_msg, 'result': result}
