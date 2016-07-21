@@ -303,6 +303,7 @@ class ExportAllDataSet(UnitimeEntityXMLExport):
                 d.donem = self.term
                 d.bolum = bolum
                 d.published = False
+                d.sure = tur.ders_saati
                 d.save()
                 # Derse uygun derslikleri çıkar
                 for derslik in uygun_derslikler:

@@ -24,6 +24,8 @@ class DersEtkinligi(Model):
     donem = Donem("Donem",index = True)
     bolum = Unit(index = True)
     published = fields.Boolean(index=True)
+    ek_ders = fields.Boolean(index=True)
+    sure = fields.Integer("Ders Etkinliği Süresi",index=True)
 
     # to be calculated
     room = Room('Derslik')
