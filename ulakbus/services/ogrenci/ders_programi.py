@@ -1,5 +1,5 @@
 from zato.server.service import Service
-from ulakbus.lib.unitime import ExportAllDataSet
+from ulakbus.lib.unitime import ExportCourseTimetable
 from ulakbus.models.ders_programi_data import DersEtkinligi, Donem, Unit
 import xml.etree.ElementTree as ET
 import subprocess
@@ -25,7 +25,7 @@ class ExecuteSolver(Service):
             os.mkdir(self._SOLVER_DIR)
 
         # XML export etmeye yarar.
-        data_set = ExportAllDataSet(bolum=bolum_yoksis_no)
+        data_set = ExportCourseTimetable(bolum=bolum_yoksis_no)
         export_dir = os.path.join(self._SOLVER_DIR, bolum_yoksis_no)
 
         if os.path.isdir(export_dir):

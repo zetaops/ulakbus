@@ -17,6 +17,7 @@ reportlab
 six
 pika
 tornado
+streamingxmlwriter
 
 # apt-get install libjpeg-dev libpng-dev zlib1g-dev
 # following projeets are parts of our project,

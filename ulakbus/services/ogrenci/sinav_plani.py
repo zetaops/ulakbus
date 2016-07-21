@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 from zato.server.service import Service
-from ulakbus.lib.unitime import ExportExams
+from ulakbus.lib.unitime import ExportExamTimetable
 from ulakbus.lib.common import sinav_etkinlikleri_oku
 from ulakbus.models import SinavEtkinligi, Donem, Unit
 from xml.etree import ElementTree
@@ -24,7 +24,7 @@ class ExecuteExamSolver(Service):
             os.mkdir(self._SOLVER_DIR)
 
 
-        exporter = ExportExams(bolum=bolum_yoksis_no, sinav_turleri=sinav_turleri)
+        exporter = ExportExamTimetable(bolum=bolum_yoksis_no, sinav_turleri=sinav_turleri)
         export_dir = os.path.join(self._SOLVER_DIR, bolum_yoksis_no)
 
         if os.path.isdir(export_dir):
