@@ -60,7 +60,7 @@ class User(Model, BaseUser):
         self.encrypt_password()
 
     def post_creation(self):
-        self.prepare_channels()
+        self.prepare_user_channel()
 
 
 
