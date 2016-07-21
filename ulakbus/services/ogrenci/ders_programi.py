@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from zato.server.service import Service
 from ulakbus.lib.unitime import ExportCourseTimetable
 from ulakbus.models.ders_programi_data import DersEtkinligi, Donem, Unit
@@ -5,97 +6,69 @@ import xml.etree.ElementTree as ET
 import subprocess
 import os
 from ulakbus.lib.common import ders_programi_doldurma
-import time
-import signal
 import shutil
+import httplib
 
 
 class ExecuteSolver(Service):
     _SOLVER_DIR = '/opt/zato/solver'
 
     def handle(self):
-
         bolum_yoksis_no = int(self.request.payload['bolum'])
-        # bolum_yoksis_no = str(self.bolum_yoksis_no)
-        # guncel_donem = Donem.objects.get(guncel=True)
-        # bolum = Unit.objects.get(yoksis_no = bolum_yoksis_no)
-        # secilen_bolum = DersEtkinligi.objects.get(donem=guncel_donem, bolum = bolum)
+        export_dir = os.path.join(self._SOLVER_DIR, str(bolum_yoksis_no))
+        try:
+            status, result = self._handle(bolum_yoksis_no, export_dir)
+        except Exception as e:
+            shutil.rmtree(export_dir)
+            raise e
 
+        self.response.status_code = status
+        status_msg = 'ok' if status == httplib.OK else 'fail'
+        self.response.payload = {'status': status_msg, 'result': result}
+
+    def _handle(self, bolum_yoksis_no, export_dir):
         if not os.path.isdir(self._SOLVER_DIR):
             os.mkdir(self._SOLVER_DIR)
 
+        if os.path.isdir(export_dir):
+            return httplib.CONFLICT, '%i yöksis no\'lu bölüm için çalışan bir solver var' % bolum_yoksis_no
+
         # XML export etmeye yarar.
         data_set = ExportCourseTimetable(bolum=bolum_yoksis_no)
-        export_dir = os.path.join(self._SOLVER_DIR, str(bolum_yoksis_no))
+        os.mkdir(export_dir)
+        data_set.EXPORT_DIR = export_dir
+        data_set.run()
 
-        if os.path.isdir(export_dir):
-            status = 'fail'
-            result = 'zaten calisan bir solver var'
+        # export edilen XML dosyasini, solverda calistirir.
+        export_file = os.path.join(export_dir, '%i.xml' % bolum_yoksis_no)
+        os.chdir(self._SOLVER_DIR)
 
-        else:
-            os.mkdir(export_dir)
-            data_set.EXPORT_DIR = export_dir
-            data_set.run()
+        p = subprocess.Popen(
+            ["java", "-Xmx1g", "-jar", "cpsolver-1.3.79.jar", "great-deluge.cfg", export_file, export_dir],
+            stdout=subprocess.PIPE, universal_newlines=True)
 
-            # export edilen XML dosyasini, solverda calistirir.
-            export_file = os.path.join(export_dir, str(bolum_yoksis_no) + '.xml')
-            print export_file
-            os.chdir(self._SOLVER_DIR)
+        os.chdir(export_dir)
+        output_folder = ''
+        p.wait()
+        for line in p.stdout:
+            if 'test failed' in line.lower():
+                return httplib.INTERNAL_SERVER_ERROR, 'XML exportları hatalı'
+            elif line.startswith("Output folder:"):
+                output_folder = line.split(":")[1][1:].strip()
 
-            p = subprocess.Popen(
-                ["java", "-Xmx1g", "-jar", "cpsolver-1.3.79.jar", "great-deluge.cfg", export_file, export_dir],
-                stdout=subprocess.PIPE, universal_newlines=True)
+        if output_folder == '':
+            return httplib.INTERNAL_SERVER_ERROR, 'Solver çalıştırılırken hata oluştu'
 
-            os.chdir(export_dir)
-            output_folder = ''
-            status = 'ok'
-            result = ''
-            # c = 0
-            # time.sleep()
-            # while p.poll() is None:
-            # while c < 100:
-            # c += 1
-            p.wait()
-            best_found = False
-            for line in p.stdout:
-                print line
-                if 'test failed' in line.lower():
-                    status = 'fail'
-                    result = 'XML exportlari hatali'
-                if line.startswith("Output folder:"):
-                    output_folder = line.split(":")[1][1:].strip()
-                if "BEST" in line:
-                    best_found = True
-            # if not best_found:
-            #     break
-            # if status == 'fail': break
+        root = ET.parse(os.path.join(output_folder, 'solution.xml')).getroot()
+        ders_programi_doldurma(root)
 
-            # try:
-            #     p.send_signal(signal.SIGINT)
-            # except OSError:
-            #     pass
+        donem = Donem.guncel_donem()
+        bolum = Unit.objects.get(yoksis_no=bolum_yoksis_no)
+        cozulemeyenler = DersEtkinligi.objects\
+            .filter(donem=donem, bolum=bolum)\
+            .exclude(solved=True)
 
-            # p.wait()
-            print output_folder
-            if status == 'ok':
-
-                os.chdir(output_folder)
-                root = ET.parse('solution.xml').getroot()
-
-                ders_programi_doldurma(root)
-                cozulmeyenler = []
-                for ders in DersEtkinligi.objects.filter():
-                    if not ders.solved:
-                        cozulmeyenler.append(ders.unitime_id)
-
-                if len(cozulmeyenler) > 0:
-                    print 'hatali'
-                    result = 'eksik cozum bulundu'
-                else:
-                    result = 'butun dersler yerlestirildi'
-                    print 'hatasiz'
-
-            shutil.rmtree(export_dir)
-
-
-        self.response.payload = {"status": status, "result": result}
+        shutil.rmtree(export_dir)
+        if len(cozulemeyenler) > 0:
+            return httplib.OK, 'Eksik çözüm bulundu'
+        return httplib.OK, 'Tüm dersler yerleştirildi'

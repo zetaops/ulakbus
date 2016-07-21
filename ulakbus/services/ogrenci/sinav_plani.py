@@ -7,40 +7,47 @@ from xml.etree import ElementTree
 import subprocess
 import shutil
 import os
+import httplib
 
 
 class ExecuteExamSolver(Service):
     _SOLVER_DIR = '/opt/zato/solver'
 
     def handle(self):
-        status, result = self._handle()
-        self.response.payload = {'status': status, 'result': result}
+        bolum_yoksis_no = int(self.request.payload['bolum'])
+        sinav_turleri = self.request.payload['sinav_turleri']
+        export_dir = os.path.join(self._SOLVER_DIR, '%i' % bolum_yoksis_no)
+        try:
+            status, result = self._handle(bolum_yoksis_no, sinav_turleri, export_dir)
+        except Exception as e:
+            shutil.rmtree(export_dir)
+            raise e
 
-    def _handle(self):
-        bolum_yoksis_no = str(self.request.payload['bolum'])
-        sinav_turleri = str(self.request.payload['sinav_turleri'])
+        self.response.status_code = status
+        status_msg = 'ok' if status == httplib.OK else 'fail'
+        self.response.payload = {'status': status_msg, 'result': result}
 
+    def _handle(self, bolum_yoksis_no, sinav_turleri, export_dir):
         if not os.path.isdir(self._SOLVER_DIR):
             os.mkdir(self._SOLVER_DIR)
 
-
-        exporter = ExportExamTimetable(bolum=bolum_yoksis_no, sinav_turleri=sinav_turleri)
-        export_dir = os.path.join(self._SOLVER_DIR, bolum_yoksis_no)
+        exporter = ExportExamTimetable(bolum=bolum_yoksis_no,
+                                       sinav_turleri=','.join(map(str, sinav_turleri)))
 
         if os.path.isdir(export_dir):
-            return 'fail', '%s yöksis no\'lu bölüm için çalışan bir solver var' % bolum_yoksis_no
+            return httplib.CONFLICT, '%i yöksis no\'lu bölüm için çalışan bir solver var' % bolum_yoksis_no
 
         # Sınavların export'unu al
         os.mkdir(export_dir)
         exporter.EXPORT_DIR = export_dir
-        exporter.FILE_NAME = '%s.xml' % bolum_yoksis_no
+        exporter.FILE_NAME = '%i.xml' % bolum_yoksis_no
         exporter.run()
         if not os.path.isfile(os.path.join(export_dir, exporter.FILE_NAME)):
-            return 'fail', '%s yöksis no\'lu bölüm için export alınamamış'
+            return httplib.INTERNAL_SERVER_ERROR, '%s yöksis no\'lu bölüm için export alınamamış'
 
         # Alınan export'u solver'a çözdür
         os.chdir(self._SOLVER_DIR)
-        prefix_file = os.path.join(export_dir, bolum_yoksis_no)
+        prefix_file = os.path.join(export_dir, '%i' % bolum_yoksis_no)
         export_file = '%s.xml' % prefix_file
         output_file = '%s.OUTPUT.xml' % prefix_file
         p = subprocess.Popen(
@@ -60,5 +67,5 @@ class ExecuteExamSolver(Service):
                                                             solved=True,
                                                             bolum=bolum)
         if len(cozulmemis_sinavlar) > 0:
-            return 'ok', 'Eksik çözüm bulundu'
-        return 'ok', 'Tüm sınavlar yerleştirildi'
+            return httplib.OK, 'Eksik çözüm bulundu'
+        return httplib.OK, 'Tüm sınavlar yerleştirildi'
