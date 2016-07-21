@@ -97,12 +97,11 @@ class Permission(Model):
             User list
         """
         users = set()
-        for ars in self.abstract_role_set:
-            for r in ars.abstract_role.role_set:
-                users.add(r.role.user)
-        for r in self.role_set:
-            users.add(r.role.user)
-
+        for ars in self.abstract_role_set.objects.filter():
+            for r in ars.role_set.objects.filter():
+                users.add(r.user)
+        for r in self.role_set.objects.filter():
+            users.add(r.user)
         return users
 
     def get_permitted_roles(self):
@@ -113,11 +112,11 @@ class Permission(Model):
             Role list
         """
         roles = set()
-        for ars in self.abstract_role_set:
-            for r in ars.abstract_role.role_set:
-                roles.add(r.role)
-        for r in self.role_set:
-            roles.add(r.role)
+        for ars in self.abstract_role_set.objects.filter():
+            for r in ars.role_set.objects.filter():
+                roles.add(r)
+        for r in self.role_set.objects.filter():
+            roles.add(r)
         return roles
 
 
