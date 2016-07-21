@@ -15,7 +15,7 @@ class ExecuteSolver(Service):
 
     def handle(self):
 
-        bolum_yoksis_no = str(self.request.payload['bolum'])
+        bolum_yoksis_no = int(self.request.payload['bolum'])
         # bolum_yoksis_no = str(self.bolum_yoksis_no)
         # guncel_donem = Donem.objects.get(guncel=True)
         # bolum = Unit.objects.get(yoksis_no = bolum_yoksis_no)
@@ -26,7 +26,7 @@ class ExecuteSolver(Service):
 
         # XML export etmeye yarar.
         data_set = ExportCourseTimetable(bolum=bolum_yoksis_no)
-        export_dir = os.path.join(self._SOLVER_DIR, bolum_yoksis_no)
+        export_dir = os.path.join(self._SOLVER_DIR, str(bolum_yoksis_no))
 
         if os.path.isdir(export_dir):
             status = 'fail'

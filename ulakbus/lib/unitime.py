@@ -319,6 +319,7 @@ class ExportCourseTimetable(UnitimeEntityXMLExport):
             tur (Ders.DerslikTurleri): Zamanların çıkarıldığı dersin ders etkinliği
             bolum (Unit): Uygun zamanları çıkartan bölüm
         """
+        # TODO: Eğer öğretim elemanı birden fazla bölümde ders veriyorsa, diğer bölümlerde ders verdiği ders saatleri burada export edilmemeli
         plan = OgElemaniZamanPlani.objects.get(birim=bolum, okutman=ogretim_elemani)
         # Sadece uygun olan zaman cetvelleri
         cetveller = list(ZamanCetveli.objects.filter(birim=bolum, ogretim_elemani_zaman_plani=plan).exclude(durum=3))
@@ -349,6 +350,7 @@ class ExportCourseTimetable(UnitimeEntityXMLExport):
                                                    }):
                     for etkinlik_id in ders_etkinligi_idleri:
                         writer.text_element('class', attrs={'id': etkinlik_id})
+            # TODO: Aynı şubenin derslerini farklı günlere dağıtılması tercih edilmeli
             for sube_key, ders_etkinligi_idleri in sube_sinirlama.items():
                 with writer.element('constraint',
                                     {'id': '%i' % self._key2id(sube_key),
@@ -479,6 +481,7 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
         Returns:
             `list` of `Room`: Bu bölümün sınav yapabileceği odaların listesi.
         """
+        # TODO: Hangi tür odalarda sınav yapılabilir? Buna göre filitrelenmeli odalar
         odalar = [r for r in Room.objects if bolum in r.RoomDepartments]
         for oda in odalar:
             writer.text_element('room', attrs={'id': '%i' % self._key2id(oda.key),
@@ -499,6 +502,7 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
             odalar (`list` of `Room`): Sınavlar için kullanılabilecek olan odalar.
             writer: XML çıktısını yazacak obje
         """
+        # TODO: Eğer odalar paylaşılıyorsa, diğer bölümlerle sınav yerlerinin çakışmaması sağlanmalı
         donem = Donem.guncel_donem()
         # Eski exportlardan kalmış olabilecek kayıtları, yenileri ile karışmaması için temizle
         SinavEtkinligi.objects.filter(donem=donem, bolum=bolum, published=False).delete()
@@ -551,6 +555,7 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
             for ders in list(Ders.objects.filter(program=program, donem=donem)):
                 dersler.append(ders)
 
+        # TODO: Eğer öğrenci birden fazla bölümden ders alıyorsa, diğer bölümlerin sınavlarının olduğu period'lar unavailable işaretlenmeli
         ogrenciler = set()
         for ders in dersler:
             # Bu dönem bu dersi alan, devamsızlıktan kalmamış öğrenciler
