@@ -17,33 +17,33 @@ from .ogrenci import Okutman
 
 UYGUNLUK_DURUMU = [
     (1, "Uygun"),
-    (2, "Mumkunse Uygun Degil"),
-    (3, "Kesinlikle Uygun Degil")
+    (2, "Mümkünse Uygun Değil"),
+    (3, "Kesinlikle Uygun Değil")
 ]
 
 HAFTA_ICI_GUNLER = [
     (1, "Pazartesi"),
-    (2, "Sali"),
-    (3, "Carsamba"),
-    (4, "Persembe"),
+    (2, "Salı"),
+    (3, "Çarşamba"),
+    (4, "Perşembe"),
     (5, "Cuma")
 ]
 
 HAFTA_SONU_GUNLER = [
-    (6, "Ctesi"),
+    (6, "Cumartesi"),
     (7, "Pazar")
 ]
 
 DERSLIK_DURUMU = [
-    (1, 'Herkese Acik'),
-    (2, 'Bolume Ait'),
-    (3, 'Herkese Kapali')
+    (1, 'Herkese Açık'),
+    (2, 'Bölüme Ait'),
+    (3, 'Herkese Kapalı')
 ]
 
 GUN_DILIMI = [
     (1, 'Sabah'),
-    (2, 'Ogle'),
-    (3, 'Aksam')
+    (2, 'Öğle'),
+    (3, 'Akşam')
 ]
 
 HAFTA = HAFTA_ICI_GUNLER + HAFTA_SONU_GUNLER
@@ -55,18 +55,18 @@ class ZamanDilimleri(Model):
         unique_together = [('birim', 'gun_dilimi')]
         search_fields = ['birim', 'gun_dilimi']
 
-    birim = Unit('Bolum')
-    gun_dilimi = field.Integer('Gun Dilimi', choices=GUN_DILIMI, index=True)
+    birim = Unit('Bölüm')
+    gun_dilimi = field.Integer('Gün Dilimi', choices=GUN_DILIMI, index=True)
 
-    baslama_saat = field.String("Baslama Saat", default='08', index=True)
-    baslama_dakika = field.String("Baslama Dakika", default='00', index=True)
+    baslama_saat = field.String("Başlama Saati", default='08', index=True)
+    baslama_dakika = field.String("Başlama Dakikası", default='00', index=True)
 
-    bitis_saat = field.String("Bitis Saat", default='12', index=True)
-    bitis_dakika = field.String("Bitis Dakika", default='00', index=True)
+    bitis_saat = field.String("Bitiş Saati", default='12', index=True)
+    bitis_dakika = field.String("Bitiş Dakikası", default='00', index=True)
 
     # Ara suresi de dahil. Ornek olarak 30 girildiyse ders 9, 9.30, 10 gibi surelerde baslayabilir.
-    ders_araligi = field.Integer('Ders Suresi', default=60, index=True)
-    ara_suresi = field.Integer('Tenefus', default=10, index=True)
+    ders_araligi = field.Integer('Ders Süresi', default=60, index=True)
+    ara_suresi = field.Integer('Tenefüs Süresi', default=10, index=True)
 
     def __unicode__(self):
         return '%s - %s:%s|%s:%s' % (dict(GUN_DILIMI)[int(self.gun_dilimi)], self.baslama_saat,
@@ -79,14 +79,14 @@ class OgElemaniZamanPlani(Model):
     """
 
     class Meta:
-        verbose_name = 'Ogretim Elemani Zaman Kaydi'
-        verbose_name_plural = 'Ogretim Elemanlari Zaman Kaydi'
+        verbose_name = 'Öğretim Elemanı Zaman Kaydı'
+        verbose_name_plural = 'Öğretim Elemanı Zaman Kayıtları'
         unique_together = [('okutman', 'birim')]
         search_fields = ['okutman', 'birim']
 
-    okutman = Okutman("Okutman")
+    okutman = Okutman("Öğretim Elemanı")
     birim = Unit("Birim")
-    toplam_ders_saati = field.Integer("Ogretim Elemani Toplam Ders Saati", index=True)
+    toplam_ders_saati = field.Integer("Öğretim Elemanı Toplam Ders Saati", index=True)
 
     def __unicode__(self):
         return '%s - %s' % (self.birim, self.okutman)
@@ -103,10 +103,10 @@ class ZamanCetveli(Model):
         search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim', 'gun']
 
     birim = Unit("Birim")
-    gun = field.Integer("Gun", choices=HAFTA, index=True)
+    gun = field.Integer("Gün", choices=HAFTA, index=True)
     zaman_dilimi = ZamanDilimleri("Zaman Dilimi")
     durum = field.Integer("Uygunluk Durumu", choices=UYGUNLUK_DURUMU, default=1, index=True)
-    ogretim_elemani_zaman_plani = OgElemaniZamanPlani("Ogretim Elemani")
+    ogretim_elemani_zaman_plani = OgElemaniZamanPlani("Öğretim Elemanı")
 
     def __unicode__(self):
         return '%s - %s - %s' % (self.ogretim_elemani_zaman_plani, self.zaman_dilimi,
@@ -116,17 +116,17 @@ class ZamanCetveli(Model):
 class DerslikZamanPlani(Model):
 
     class Meta:
-        verbose_name = 'Derslik Zaman Plani'
+        verbose_name = 'Derslik Zaman Planı'
         unique_together = [('derslik', 'gun', 'baslangic_saat', 'baslangic_dakika', 'bitis_saat', 'bitis_dakika')]
         search_fields = ['unit', 'derslik', 'gun', 'derslik_durum']
 
     unit = Unit()
     derslik = Room()
-    gun = field.Integer("Gun", choices=HAFTA, index=True)
-    baslangic_saat = field.String('Baslangic Saat', default='08', index=True)
-    baslangic_dakika = field.String('Baslangic Dakika', default='30', index=True)
-    bitis_saat = field.String("Bitis Saat", default='12', index=True)
-    bitis_dakika = field.String("Bitis Dakika", default='00', index=True)
+    gun = field.Integer("Gün", choices=HAFTA, index=True)
+    baslangic_saat = field.String('Başlangıç Saati', default='08', index=True)
+    baslangic_dakika = field.String('Başlangıç Dakikası', default='30', index=True)
+    bitis_saat = field.String("Bitiş Saati", default='12', index=True)
+    bitis_dakika = field.String("Bitiş Dakikası", default='00', index=True)
     derslik_durum = field.Integer("Durum", choices=DERSLIK_DURUMU, index=True)
 
     def __unicode__(self):
