@@ -331,8 +331,8 @@ class FakeDataGenerator:
                 p.user = user
             else:
                 username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
-                user = new_user(username=username)
-                p.user = user
+                n_user = new_user(username=username)
+                p.user = n_user
 
             p.save()
             personel_list.append(p)
