@@ -100,6 +100,7 @@ class RoomType(Model):
 
     type = field.String("Oda Tipi", index=True)
     notes = field.Text("Notlar", index=True)
+    exam_available = field.Boolean("Sınav Amaçlı Kullanılabilir", index=True)
 
     class Meta:
         verbose_name = "Oda Tipi"

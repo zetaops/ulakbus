@@ -481,8 +481,8 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
         Returns:
             `list` of `Room`: Bu bölümün sınav yapabileceği odaların listesi.
         """
-        # TODO: Hangi tür odalarda sınav yapılabilir? Buna göre filitrelenmeli odalar
-        odalar = [r for r in Room.objects if bolum in r.RoomDepartments]
+        # Bu bölümün ders verebildiği, ve sınav amaçlı kullanılabilen odalar
+        odalar = [r for r in Room.objects if bolum in r.RoomDepartments and r.room_type.exam_available == True]
         for oda in odalar:
             writer.text_element('room', attrs={'id': '%i' % self._key2id(oda.key),
                                                'size': '%i' % oda.capacity,

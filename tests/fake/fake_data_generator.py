@@ -152,7 +152,7 @@ class FakeDataGenerator:
         # campus = Campus.objects.filter()[0]
         # Eğer daha önceden oluşturulmuş oda tipi yoksa
         if RoomType.objects.count() < 1:
-            self.yeni_oda_tipi('Derslik')
+            self.yeni_oda_tipi('Derslik', sinav_uygun=True)
             self.yeni_oda_tipi('Laboratuvar')
             self.yeni_oda_tipi('Studyo')
             time.sleep(3)
@@ -205,19 +205,20 @@ class FakeDataGenerator:
             FakeDataGenerator.yeni_derslik_zaman_plani(room, random.choice(unit_list))
 
     @staticmethod
-    def yeni_oda_tipi(oda_tip="Derslik"):
+    def yeni_oda_tipi(oda_tip="Derslik", sinav_uygun=False):
         """
         RoomType modeli için verilen tipte oda tipi oluşturur. Varsayılan tip Derslik'tir
 
         Args:
             oda_tip (str) : Oluşturulacak oda tipinin adı
+            sinav_uygun (bool) : Odanın sınav yapmak için uygunluğu
 
         Returns:
              room_type (RoomType) : RoomType nesnesi
 
         """
 
-        room_type = RoomType(type=oda_tip)
+        room_type = RoomType(type=oda_tip, exam_available=sinav_uygun)
         room_type.save()
 
         return room_type
