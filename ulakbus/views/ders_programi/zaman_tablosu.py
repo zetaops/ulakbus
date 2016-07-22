@@ -15,16 +15,66 @@ from ulakbus.models import Room
 
 
 class ZamanTablo(CrudView):
+    """
+    .. code-block:: python
+        # default_request:
+        {
+            'callbackID': string,
+            'client_cmd':['string',],
+            'forms': {},
+            'meta': {},
+            'reload_cmd': string,
+            'reply_timestamp': float
+            'token': string
+        },
+
+        # default_response
+        {
+            'callbackID': string,
+            'data': {
+                'form': {},
+                'cmd': string,
+                'token': string,
+                'wf': string,
+        }
+
+    """
+
+    def ogretim_elemani_zaman_tablosu(self):
+
+        self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
+        zaman_cetveli = sorted(ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=self.current.ogretim_elemani),
+                               key=lambda z: (z.zaman_dilimi, z.gun))
+
+        uygunluk_durumu = list()
+
+        for zc in zaman_cetveli:
+            durum = dict()
+            durum['key'] = zc.key
+            durum['saat'] = zc.zaman_dilimi.baslama_saat + ':' + zc.zaman_dilimi.baslama_dakika + '-' + \
+                            zc.zaman_dilimi.bitis_saat + ':' + zc.zaman_dilimi.bitis_dakika
+            durum['gun'] = zc.gun
+            durum['durum'] = zc.durum
+            uygunluk_durumu.append(durum)
+
+        item = {'avatar': self.current.ogretim_elemani.okutman.personel.user.get_avatar_url(),
+                'oe_key': self.current.ogretim_elemani.key,
+                'name': self.current.ogretim_elemani.okutman.ad + ' ' + self.current.ogretim_elemani.okutman.soyad,
+                'toplam_ders_saati': self.current.ogretim_elemani.toplam_ders_saati,
+                'uygunluk_durumu': uygunluk_durumu}
+
+        self.output['ogretim_elemani_zt'] = item
 
     def ogretim_gorevlisi_sec(self):
         """
-
-        # request:
-        {
-            'secili_og_elemani':{
-                'key': string   #  personel key,
-                'cmd': 'personel_sec'}
-        }
+        Switch lecturer or select default one
+        .. code-block:: python
+            # request:
+            {
+                'secili_og_elemani':{
+                    'key': string   #  personel key,
+                    'cmd': 'personel_sec'}
+            }
 
         """
         # default select first person
@@ -42,10 +92,13 @@ class ZamanTablo(CrudView):
 
     def zaman_tablosu_listele(self):
         """
+        show & edit timetable for lecturer
+
         .. code-block:: python
             # response:
             {
-                'ogretim_elemani': {
+                'ogretim_elemani_zt': {
+                    'avatar': string,
                     'oe_key': string   # ogretim_elemani_key
                     'name': string,     # name surname,
                     'toplam_ders_saati': int,   # hours,
@@ -65,49 +118,42 @@ class ZamanTablo(CrudView):
         except KeyError:
             pass
 
-        self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
-        zaman_cetveli = sorted(ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=self.current.ogretim_elemani),
-                               key=lambda z: (z.zaman_dilimi, z.gun))
+        self.ogretim_elemani_zaman_tablosu()
 
-        uygunluk_durumu = list()
-
-        for zc in zaman_cetveli:
-            durum = dict()
-            durum['key'] = zc.key
-            durum['saat'] = zc.zaman_dilimi.baslama_saat + ':' + zc.zaman_dilimi.baslama_dakika + '-' + \
-                            zc.zaman_dilimi.bitis_saat + ':' + zc.zaman_dilimi.bitis_dakika
-            durum['gun'] = zc.gun
-            durum['durum'] = zc.durum
-            uygunluk_durumu.append(durum)
-
-        item = {'oe_key': self.current.ogretim_elemani.key,
-                'name': self.current.ogretim_elemani.okutman.ad + ' ' + self.current.ogretim_elemani.okutman.soyad,
-                'toplam_ders_saati': self.current.ogretim_elemani.toplam_ders_saati,
-                'uygunluk_durumu': uygunluk_durumu}
-
-        self.output['ogretim_elemani_zt'] = item
         _form = JsonForm()
         _form.gonder = fields.Button('Onaya Gonder', cmd='onaya_gonder')
         self.form_out(_form)
 
     def zaman_degisiklik_kaydet(self):
         """"
+        save timetable state when user switches lecturer's availability  options
 
-        # request:
-        {
-            'change':{
-                'key': string   # key,
-                'durum': int    # 1 = uygun,
-                'cmd': 'degistir'}
-        }
+        .. code-block:: python
+            # request:
+            {
+                'change':{
+                    'key': string   # key,
+                    'durum': int    # 1 = uygun,
+                    'cmd': 'degistir'}
+            }
+
+            # response:
+            {
+                'kayit_durum': Boolean
+            }
 
         """
+        try:
+            change = self.current.input['change']
+            key = change['key']
+            zc = ZamanCetveli.objects.get(key)
+            zc.durum = change['durum']
+            zc.save()
+            kayit_durum = True
+        except:
+            kayit_durum = False
 
-        change = self.current.input['change']
-        key = change['key']
-        zc = ZamanCetveli.objects.get(key)
-        zc.durum = change['durum']
-        zc.save()
+        self.current.output['kayit_durum'] = kayit_durum
 
     def onaya_gonder(self):
         _form = JsonForm(title='Ogretim Elemani Ders Programini Bolum Baskanina yollamak istiyor musunuz?')
@@ -133,10 +179,13 @@ class ZamanTablo(CrudView):
     # Lane Gecisi Bolum Baskani
     def onay_ekrani(self):
         """
+        read only control and approve screen
+
         .. code-block:: python
             # response:
             {
-                'ogretim_elemani': {
+                default_response,
+                'ogretim_elemani_zt': {
                     'oe_key': string   # ogretim_elemani_key
                     'name': string,     # name surname,
                     'toplam_ders_saati': int,   # hours,
@@ -148,27 +197,9 @@ class ZamanTablo(CrudView):
                         }]}
             }
         """
-        self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
-        zaman_cetveli = sorted(ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=self.current.ogretim_elemani),
-                               key=lambda z: (z.zaman_dilimi, z.gun))
 
-        uygunluk_durumu = list()
+        self.ogretim_elemani_zaman_tablosu()
 
-        for zc in zaman_cetveli:
-            durum = dict()
-            durum['key'] = zc.key
-            durum['saat'] = zc.zaman_dilimi.baslama_saat + ':' + zc.zaman_dilimi.baslama_dakika + '-' + \
-                            zc.zaman_dilimi.bitis_saat + ':' + zc.zaman_dilimi.bitis_dakika
-            durum['gun'] = zc.gun
-            durum['durum'] = zc.durum
-            uygunluk_durumu.append(durum)
-
-        item = {'oe_key': self.current.ogretim_elemani.key,
-                'name': self.current.ogretim_elemani.okutman.ad + ' ' + self.current.ogretim_elemani.okutman.soyad,
-                'toplam_ders_saati': self.current.ogretim_elemani.toplam_ders_saati,
-                'uygunluk_durumu': uygunluk_durumu}
-
-        self.output['ogretim_elemani_zt'] = item
         _form = JsonForm()
         _form.onayla = fields.Button('Onayla', cmd='onay')
         _form.reddet = fields.Button('Reddet', cmd='reddet')
@@ -176,13 +207,15 @@ class ZamanTablo(CrudView):
 
     def kontrol_et(self):
         """
+        Switch lecturer or select default one
 
-        # request:
-        {
-            'secili_og_elemani':{
-                'key': string   #  personel key,
-                'cmd': 'kontrol'}
-        }
+        .. code-block:: python
+            # request:
+            {
+                'secili_og_elemani':{
+                    'key': string   #  personel key,
+                    'cmd': string}
+            }
 
         """
         # default select first person
@@ -219,20 +252,46 @@ class ZamanTablo(CrudView):
 
 
 class DerslikZamanTablosu(CrudView):
-
-    def derslik_sec(self):
-        """
-
-        # request:
+    """
+    .. code-block:: python
+        # default_response:
         {
-            'secili_derslik':{
-                'key': string   #  derslik key,
-                'cmd': 'derslik_degistir'}
+            'callbackID': string,
+            'client_cmd':['string',],
+            'forms': {},
+            'meta': {},
+            'reload_cmd': string,
+            'reply_timestamp': float
+            'token': string
+        },
+
+        # default_request
+        {
+            'callbackID': string,
+            'data': {
+                'form': {},
+                'cmd': string,
+                'token': string,
+                'wf': string,
         }
+
+    """
+
+    def derslik_sec_kontrol(self, cmd=''):
+        """
+        Switch room or select default one
+
+        .. code-block:: python
+            # request:
+            {
+                'secili_derslik':{
+                    'key': string   #  derslik key,
+                    'cmd': 'derslik_degistir'}
+            }
 
         """
         try:
-            if self.current.task_data['cmd'] == 'derslik_degistir':
+            if self.current.task_data['cmd'] == cmd:
                 self.current.task_data['room_key'] = self.current.input['secili_derslik']['key']
             elif self.current.task_data['cmd'] == 'hayir':
                 pass
@@ -243,8 +302,35 @@ class DerslikZamanTablosu(CrudView):
             self.current.task_data['room_key'] = Room.objects.raw("room_departments.unit_id:" +
                                                                   self.current.role.unit.key)[0].key
 
+    def derslik_zaman_tablosu(self):
+        self.current.room = Room.objects.get(self.current.task_data['room_key'])
+        dzps = sorted(DerslikZamanPlani.objects.filter(derslik=self.current.room),
+                      key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+
+        zaman_plani = list()
+
+        for dz in dzps:
+            durum = dict()
+            durum['key'] = dz.key
+            durum['saat'] = dz.baslangic_saat + ':' + dz.baslangic_dakika + '-' + dz.bitis_saat + ':' + dz.bitis_dakika
+            durum['gun'] = dz.gun
+            durum['durum'] = dz.derslik_durum
+            zaman_plani.append(durum)
+
+        item = {'derslik_key': self.current.room.key,
+                'name': self.current.room.name,
+                'kapasite': self.current.room.capacity,
+                'zaman_plani': zaman_plani}
+
+        self.output['derslik_zaman_tablosu'] = item
+
+    def derslik_sec(self):
+        self.derslik_sec_kontrol('derslik_degistir')
+
     def listele(self):
         """
+        show & edit timetable for room
+
         .. code-block:: python
             # response:
             {
@@ -269,47 +355,43 @@ class DerslikZamanTablosu(CrudView):
         except KeyError:
             pass
 
-        self.current.room = Room.objects.get(self.current.task_data['room_key'])
-        dzps = sorted(DerslikZamanPlani.objects.filter(derslik=self.current.room),
-                      key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+        self.derslik_zaman_tablosu()
 
-        zaman_plani = list()
-
-        for dz in dzps:
-            durum = dict()
-            durum['key'] = dz.key
-            durum['saat'] = dz.baslangic_saat + ':' + dz.baslangic_dakika + '-' + dz.bitis_saat + ':' + dz.bitis_dakika
-            durum['gun'] = dz.gun
-            durum['durum'] = dz.derslik_durum
-            zaman_plani.append(durum)
-
-        item = {'derslik_key': self.current.room.key,
-                'name': self.current.room.name,
-                'kapasite': self.current.room.capacity,
-                'zaman_plani': zaman_plani}
-
-        self.output['derslik_zaman_tablosu'] = item
         _form = JsonForm()
-        _form.gonder = fields.Button('Onaya Gonder', cmd='onaya_gonder')
+        _form.gonder = fields.Button('Onaya Gonder', cmd='gonder')
         self.form_out(_form)
 
     def degisiklikleri_kaydet(self):
         """"
+        save timetable state when user switches room's availability  options
 
-        # request:
-        {
-            'change':{
-                'key': string   # key,
-                'durum': int    # 1 = Herkese Acik,
-                'cmd': 'kaydet'}
-        }
+        .. code-block:: python
+            # request:
+            {
+                'change':{
+                    'key': string   # key,
+                    'durum': int    # 1 = Herkese Acik,
+                    'cmd': 'kaydet'}
+            }
+
+             # response:
+            {
+                'kayit_durum': Boolean
+            }
 
         """
-        change = self.current.input['change']
-        key = change['key']
-        dz = DerslikZamanPlani.objects.get(key)
-        dz.derslik_durum = change['durum']
-        dz.save()
+
+        try:
+            change = self.current.input['change']
+            key = change['key']
+            dz = DerslikZamanPlani.objects.get(key)
+            dz.derslik_durum = change['durum']
+            dz.save()
+            kayit_durum = True
+        except:
+            kayit_durum = False
+
+        self.current.output['kayit_durum'] = kayit_durum
 
     def onaya_gonder(self):
         _form = JsonForm(title='Derslik Ders Programini Bolum Baskanina yollaman istiyor musunuz?')
@@ -325,30 +407,12 @@ class DerslikZamanTablosu(CrudView):
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def kontrol_et(self):
-        """
-
-        # request:
-        {
-            'secili_derslik':{
-                'key': string   #  derslik key,
-                'cmd': 'kontrol'}
-        }
-
-        """
-        try:
-            if self.current.task_data['cmd'] == 'kontrol':
-                self.current.task_data['room_key'] = self.current.input['secili_derslik']['key']
-            elif self.current.task_data['cmd'] == 'hayir':
-                pass
-            else:
-                self.current.task_data['room_key'] = Room.objects.raw("room_departments.unit_id:" +
-                                                                      self.current.role.unit.key)[0].key
-        except:
-            self.current.task_data['room_key'] = Room.objects.raw("room_departments.unit_id:" +
-                                                                  self.current.role.unit.key)[0].key
+        self.derslik_sec_kontrol('kontrol')
 
     def onay_ekrani(self):
         """
+        read only control and approve screen
+
         .. code-block:: python
             # response:
             {
@@ -364,26 +428,9 @@ class DerslikZamanTablosu(CrudView):
                         }]}
             }
         """
-        self.current.room = Room.objects.get(self.current.task_data['room_key'])
-        dzps = sorted(DerslikZamanPlani.objects.filter(derslik=self.current.room),
-                      key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
 
-        zaman_plani = list()
+        self.derslik_zaman_tablosu()
 
-        for dz in dzps:
-            durum = dict()
-            durum['key'] = dz.key
-            durum['saat'] = dz.baslangic_saat + ':' + dz.baslangic_dakika + '-' + dz.bitis_saat + ':' + dz.bitis_dakika
-            durum['gun'] = dz.gun
-            durum['durum'] = dz.derslik_durum
-            zaman_plani.append(durum)
-
-        item = {'derslik_key': self.current.room.key,
-                'name': self.current.room.name,
-                'kapasite': self.current.room.capacity,
-                'zaman_plani': zaman_plani}
-
-        self.output['derslik_zaman_tablosu'] = item
         _form = JsonForm()
         _form.onayla = fields.Button('Onayla', cmd='onay')
         _form.reddet = fields.Button('Reddet', cmd='reddet')
