@@ -19,15 +19,15 @@ import time
 from pyoko import ListNode
 from pyoko.db.adapter.db_riak import BlockSave, BlockDelete
 from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
-from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciDersi, Donem
+from ulakbus.models.ogrenci import Program, OgretimElemani, Ders, Sube, Sinav, OgrenciDersi, Donem
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 
 
-def okutman_choices():
-    """Okutman Seçenekleri
+def ogretim_elemani_choices():
+    """Öğretim Elemanı Seçenekleri
 
     Returns:
         prepare_choices_for_model methodundan dönen değerleri dictionary
@@ -35,7 +35,7 @@ def okutman_choices():
 
     """
 
-    return [{'name': name, 'value': value} for value, name in prepare_choices_for_model(Okutman)]
+    return [{'name': name, 'value': value} for value, name in prepare_choices_for_model(OgretimElemani)]
 
 
 class ProgramBilgisiForm(forms.JsonForm):
@@ -178,7 +178,7 @@ class SubelendirmeForm(forms.JsonForm):
         ad = fields.String('Sube Adi')
         kontenjan = fields.Integer('Sube Kontenjani')
         dis_kontenjan = fields.Integer('Sube Dis Kontenjani')
-        okutman = fields.String('Okutman', choices=okutman_choices)
+        ogretim_elemani = fields.String('Okutman', choices=ogretim_elemani_choices)
 
 
 class NotGirisForm(forms.JsonForm):

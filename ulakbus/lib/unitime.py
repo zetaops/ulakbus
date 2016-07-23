@@ -11,7 +11,7 @@ import os
 import sys
 from zengine.management_commands import *
 from lxml import etree
-from ulakbus.models import Donem, Ogrenci, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Campus
+from ulakbus.models import Donem, Ogrenci, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, OgretimElemani, Campus
 import datetime
 
 
@@ -230,7 +230,7 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
     DOC_TYPE = '<!DOCTYPE staff PUBLIC "-//UniTime//UniTime Staff Import DTD/EN" "http://www.unitime.org/interface/Staff.dtd">'
 
     def prepare_data(self):
-        stafflist = Okutman.objects.filter()
+        stafflist = OgretimElemani.objects.filter()
         if len(stafflist) > 0:
             for campus in self.campuses:
                 root = etree.Element('staff', campus="%s" % self.uni, term="%s" % self.term.ad,
@@ -253,7 +253,7 @@ class ExportStaffToXML(UnitimeEntityXMLExport):
             return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8',
                                   doctype="%s" % self.DOC_TYPE)
         else:
-            print("Okutman Bulunamadi")
+            print("Ogretim Elemani Bulunamadi")
 
     @staticmethod
     def acadTitle(title):
