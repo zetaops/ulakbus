@@ -15,16 +15,16 @@ from ulakbus.models import Room, Okutman, DersEtkinligi
 
 ARAMA_TURU = [
     (1, 'Derslik'),
-    (2, 'Ogretim Elemani')
+    (2, 'Öğretim Elemanı')
 ]
 
 
 class AramaForm(JsonForm):
 
     class Meta:
-        title = 'Ogretim Elemani veya Derslik Ara'
+        title = 'Öğretim Elemanı veya Derslik Ara'
 
-    arama_sec = fields.String('Arama Secenegi', choices=ARAMA_TURU, default=1)
+    arama_sec = fields.String('Arama Seçeneği', choices=ARAMA_TURU, default=1)
     arama_text = fields.String(" ")
     arama_button = fields.Button('Ara')
 
@@ -32,25 +32,29 @@ class AramaForm(JsonForm):
 class DersProgramiYap(CrudView):
 
     def kontrol(self):
-        pass
+        ders_etkinligi_count = DersEtkinligi.objects.filter().count()
+        solved_count = DersEtkinligi.objects.filter(solved=True).count()
 
-    def ders_programi_yolla(self):
-        _form = JsonForm(title="Ders Programi Olustur")
+        if ders_etkinligi_count != solved_count:
+            self.current.task_data['cmd'] = 'kayit_var'
+
+    def ders_programi_hesaplama_baslat(self):
+        _form = JsonForm(title="Ders Programı Oluştur")
         _form.button = fields.Button('Gonder')
         self.form_out(_form)
 
-    def zato_service_cagir(self):
+    def ders_programi_hesapla(self):
         pass
 
-    def ders_programi_olusturuluyor(self):
-        msg = {"title": 'Ders Programi Olusturuluyor',
-               "body": 'Ders programi için yaptığınız taleb başarıyla alınmıştır.'}
+    def servis_bilgi_mesaji(self):
+        msg = {"title": 'Ders Programı Oluşturuluyor',
+               "body": 'Ders programı için yaptığınız taleb başarıyla alınmıştır.'}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
         _form = JsonForm(title="Devam")
         _form.devam = fields.Button("Devam")
         self.form_out(_form)
 
-    def ders_programi_tamamlandi(self):
+    def ders_programi_sonucu(self):
         self.current.task_data['cmd'] = 'hata_yok'
 
     def hatasiz(self):
@@ -66,7 +70,7 @@ class DersProgramiYap(CrudView):
         # sample:
         self.form_out(AramaForm(self.object, current=self.current))
 
-    def arama_kontrol(self):
+    def arama(self):
         text = str(self.input['form']['arama_text'])
         try:
             if self.input['form']['arama_sec'] == 1:
@@ -116,7 +120,7 @@ class DersProgramiYap(CrudView):
             }
             self.output['objects'].append(item)
 
-    def tek_sonuc(self):
+    def detay_goster(self):
         """
         .. code-block:: python
             # response:
@@ -158,8 +162,45 @@ class DersProgramiYap(CrudView):
     def derslik_ogretim_elemani_kontrol(self):
         pass
 
-    def yolla(self):
+    def yayinla(self):
         pass
 
     def bilgilendirme(self):
         pass
+
+
+class OgretimElemaniDersProgrami(CrudView):
+
+    def kontrol(self):
+        okutman = Okutman.objects.get(personel=self.current.user.personel)
+        ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman=okutman), key=lambda d: (d.gun, d.baslangic_saat))
+        for de in ders_etkinligi:
+            if not de.published or de.published is False:
+                self.current.task_data['cmd'] = 'yok'
+                break
+
+    def ders_programini_goster(self):
+        okutman = Okutman.objects.get(personel=self.current.user.personel)
+        ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman=okutman), key=lambda d: (d.gun, d.baslangic_saat))
+
+        dersler = list()
+
+        for de in ders_etkinligi:
+            ders = dict()
+            ders['ad'] = de.sube.ders.ad
+            ders['gun'] = de.gun
+            ders[
+                'saat_araligi'] = de.baslangic_saat + ':' + de.baslangic_dakika + '-' + de.bitis_saat + ':' + de.bitis_dakika
+            dersler.append(ders)
+        item = {'name': self.current.user.name,
+                'gunler': ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
+                'dersler': dersler}
+
+        self.output['ders_programi'] = item
+
+    def ders_programi_bulunamadi(self):
+        msg = {"type": "warning",
+               "title": 'Ders Programı Bulunamadı',
+               "msg": "Ders Programı Henüz Oluşturulmadı."}
+
+        self.current.output['msgbox'] = msg
