@@ -385,6 +385,10 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
     ]
     # AKADEMIK_TAKVIM_ETKINLIKLERI arasında sınav tarihlerini gösteren etkinliklerin kodları
     _SINAV_ETKINLIKLERI = (26, 58, 65)
+    # Bir şubenin sınavı için kullanılacak maksimum oda sayısı
+    _SINAV_MAX_ODA = 2
+    # Bir şubenin sınavı, birden fazla odada yapılacaksa, her odada olacak minimum öğrenci sayısı
+    _SINAV_MIN_KONTENJAN = 10
 
     def prepare_data(self, writer):
         bolum = Unit.objects.get(yoksis_no=self.manager.args.bolum)
@@ -513,7 +517,6 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
         for program in programlar:
             dersler = list(Ders.objects.filter(program=program, donem=donem))
             for ders in dersler:
-                kontenjan = 0
                 subeler = list(Sube.objects.filter(ders=ders, donem=donem))
                 for s, sinav in enumerate(ders.Degerlendirme):
                     if sinav.tur not in sinav_turleri: continue
@@ -523,9 +526,10 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
                                                  'length': '%i' % sinav.sinav_suresi,
                                                  # Alternative seating özelliği, odaların oturma planları için kullanılabilir
                                                  'alt': "false",
-                                                 'minSize': '%i' % kontenjan,
+                                                 # Her odadaki minimum öğrenci sayısı
+                                                 'minSize': '%i' % self._SINAV_MIN_KONTENJAN,
                                                  # Sınavın en çok kaç odaya bölünebileceği
-                                                 'maxRooms': '%i' % len(subeler),
+                                                 'maxRooms': '%i' % self._SINAV_MAX_ODA,
                                                  }):
                             SinavEtkinligi(ders=ders, sube=sube, donem=donem, bolum=bolum,
                                            unitime_id=sinav_id, published=False).save()
