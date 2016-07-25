@@ -8,7 +8,9 @@
       <bpmn:outgoing>SequenceFlow_18bjpua</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_18bjpua" sourceRef="StartEvent_1" targetRef="zaman_dilimlerini_belirle" />
-    <bpmn:sequenceFlow id="SequenceFlow_03wrxtv" sourceRef="ExclusiveGateway_11huakc" targetRef="kayit_islemi_tamamlandi" />
+    <bpmn:sequenceFlow id="SequenceFlow_03wrxtv" sourceRef="ExclusiveGateway_11huakc" targetRef="kayit_islemi_tamamlandi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='bitir']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_074uj94" sourceRef="zaman_dilimlerini_belirle" targetRef="ExclusiveGateway_11huakc" />
     <bpmn:sequenceFlow id="SequenceFlow_04m22il" sourceRef="ExclusiveGateway_11huakc" targetRef="kaydet">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='kayit']]></bpmn:conditionExpression>
@@ -29,7 +31,7 @@
       <bpmn:outgoing>SequenceFlow_04m22il</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_03wrxtv</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="kayit_islemi_tamamlandi" name="Kayıt İşlemi Tamamlandı">
+    <bpmn:userTask id="kayit_islemi_tamamlandi" name="Kayıt İşlemi Tamamlandı" camunda:assignee="ders_programi.zaman_dilimi.ZamanDilimiDuzenle.kayit_islemi_tamamlandi">
       <bpmn:incoming>SequenceFlow_03wrxtv</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_09lbe79</bpmn:outgoing>
     </bpmn:userTask>

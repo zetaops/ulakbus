@@ -10,7 +10,7 @@
 
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
-from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani
+from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, ZamanDilimleri
 from ulakbus.models import Room
 
 
@@ -76,11 +76,34 @@ class ZamanTablo(CrudView):
                     'cmd': 'personel_sec'}
             }
 
+            # response:
+            {
+                'ders_saati_durum': Boolean
+            }
+
         """
         # default select first person
         try:
             if self.current.task_data['cmd'] == 'personel_sec':
-                self.current.task_data['ogretim_elemani_key'] = self.current.input['secili_og_elemani']['key']
+                zaman_dilimleri = ZamanDilimleri.objects.filter(birim=self.current.role.unit)
+                ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
+                zaman_cetveli = ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=ogretim_elemani, durum=3)
+
+                toplam_ders_saat = 0
+                for zd in zaman_dilimleri:
+                    toplam_ders_saat += (zd.zaman_dilimi_suresi * 5)
+
+                time = 0
+                for zc in zaman_cetveli:
+                    if zc.gun not in [6, 7]:
+                        time += zc.zaman_dilimi.zaman_dilimi_suresi
+                oe_ders_saati = int(ogretim_elemani.toplam_ders_saati + (ogretim_elemani.toplam_ders_saati/2))
+                if time <= (toplam_ders_saat - oe_ders_saati):
+                    self.current.task_data['ogretim_elemani_key'] = self.current.input['secili_og_elemani']['key']
+                    self.current.output['ders_saati_durum'] = True
+                else:
+                    self.current.output['ders_saati_durum'] = False
+
             elif self.current.task_data['cmd'] == 'hayir':
                 pass
             else:

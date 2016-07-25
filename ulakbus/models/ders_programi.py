@@ -62,6 +62,11 @@ class ZamanDilimleri(Model):
     ders_araligi = field.Integer('Ders Süresi', default=60, index=True)
     ara_suresi = field.Integer('Tenefüs Süresi', default=10, index=True)
 
+    zaman_dilimi_suresi = field.Integer("Zaman Dilimi Süresi", index=True)
+
+    def pre_save(self):
+        self.zaman_dilimi_suresi = int(self.bitis_saat) - int(self.baslama_saat)
+
     def __unicode__(self):
         return '%s - %s:%s|%s:%s' % (dict(GUN_DILIMI)[int(self.gun_dilimi)], self.baslama_saat,
                                      self.baslama_dakika, self.bitis_saat, self.bitis_dakika)
@@ -94,7 +99,7 @@ class ZamanCetveli(Model):
     class Meta:
         verbose_name = 'Zaman Cetveli'
         unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani', 'gun')]
-        search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim', 'gun']
+        search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim', 'gun', 'durum']
 
     birim = Unit("Birim")
     gun = field.Integer("Gün", choices=HAFTA, index=True)
