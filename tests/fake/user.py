@@ -15,7 +15,7 @@ __author__ = 'Ali Riza Keles'
 def new_user(username=None, password=None, superuser=False):
     """
     Rastgele verileri ve parametre olarak verilen verileri
-    kullanarak yeni değerlendirme notu kaydı oluşturup kaydeder.
+    kullanarak user kaydı oluşturup kaydeder.
 
     Args:
         username (str): Kullanıcı adı

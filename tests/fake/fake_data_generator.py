@@ -17,6 +17,7 @@ from .general import ints, gender, marital_status, blood_type, create_fake_geo_d
 from .general import driver_license_class, id_card_serial, birth_date
 from .general import fake
 from user import new_user
+from pyoko.exceptions import IntegrityError
 import random
 import datetime
 import time
@@ -427,14 +428,17 @@ class FakeDataGenerator:
             birim = plan.birim()
             for gun, gun_adi in HAFTA_ICI_GUNLER:
                 for zaman_dilimi in ZamanDilimleri.objects.filter(birim=birim):
-                    cetvel = ZamanCetveli()
-                    cetvel.birim = birim
-                    cetvel.gun = gun
-                    cetvel.zaman_dilimi = zaman_dilimi
-                    cetvel.durum = random.choice(dict(UYGUNLUK_DURUMU).keys())
-                    cetvel.ogretim_elemani_zaman_plani = plan
-                    cetvel.save()
-                    cetveller.append(cetvel)
+                    try:
+                        cetvel = ZamanCetveli()
+                        cetvel.birim = birim
+                        cetvel.gun = gun
+                        cetvel.zaman_dilimi = zaman_dilimi
+                        cetvel.durum = random.choice(dict(UYGUNLUK_DURUMU).keys())
+                        cetvel.ogretim_elemani_zaman_plani = plan
+                        cetvel.save()
+                        cetveller.append(cetvel)
+                    except IntegrityError:
+                        pass
         return cetveller
 
     @staticmethod
@@ -921,7 +925,7 @@ class FakeDataGenerator:
         time.sleep(1)
         program_unit = Unit.objects.filter(parent_unit_no = yoksis_no)
         programlar = []
-        for p in program_unit[:2]:
+        for p in program_unit[:1]:
             programlar.extend(self.yeni_program(p,1))
         for program in programlar:
 

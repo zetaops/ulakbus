@@ -6,7 +6,7 @@
 
 from pyoko import Model
 from zengine.forms import fields
-from . import RoomType, Okutman, Room, Sube, Donem, Unit
+from . import RoomType, Okutman, Room, Sube, Donem, Unit, HAFTA
 
 
 class DersEtkinligi(Model):
@@ -27,7 +27,7 @@ class DersEtkinligi(Model):
 
     # to be calculated
     room = Room('Derslik')
-    gun = fields.String("Gun")
+    gun = fields.Integer("Gun", choices=HAFTA)
     baslangic_saat = fields.String("Baslangic Saat")
     baslangic_dakika = fields.String("Baslangic Dakika")
     bitis_saat = fields.String("Bitis Saat")
