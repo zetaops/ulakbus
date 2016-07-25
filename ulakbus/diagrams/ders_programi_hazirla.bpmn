@@ -1,125 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.1.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.1">
   <bpmn:collaboration id="Collaboration_1xz8zp8">
     <bpmn:participant id="Participant_05hd04f" name="DersProgramiHazirla" processRef="ders_programi_hazirla" />
   </bpmn:collaboration>
   <bpmn:process id="ders_programi_hazirla" name="Ders Programi Hazirla" isExecutable="false">
-    <bpmn:serviceTask id="ders_programi_tamamlandi" name="Ders Programi Tamamlandi" camunda:class="ders_programi.ders_programi.DersProgramiYap.ders_programi_tamamlandi">
-      <bpmn:incoming>SequenceFlow_16ey3nh</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1sgwn2c</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:userTask id="hatali" name="Hatali" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.hatali">
-      <bpmn:incoming>SequenceFlow_0ykxla2</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_08rgoh1</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:userTask id="ders_programi_olusturuluyor" name="Ders Programi Olusturuluyor" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.ders_programi_olusturuluyor">
-      <bpmn:incoming>SequenceFlow_0xvg3pb</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_16ey3nh</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:serviceTask id="zato_service_cagir" name="Zato Service Cagir" camunda:class="ders_programi.ders_programi.DersProgramiYap.zato_service_cagir">
-      <bpmn:incoming>SequenceFlow_06dv8za</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0xvg3pb</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:userTask id="bilgilendirme" name="Bilgilendirme" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.bilgilendirme">
-      <bpmn:incoming>SequenceFlow_0j7khz5</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0jb050w</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_01yqy00</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:userTask id="ders_programi_yolla" name="Ders Programi Yolla" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.ders_programi_yolla">
-      <bpmn:incoming>SequenceFlow_0zizont</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_06dv8za</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:serviceTask id="kontrol" name="Kontrol" camunda:class="ders_programi.ders_programi.DersProgramiYap.kontrol">
-      <bpmn:incoming>SequenceFlow_0amgk6o</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0opcoik</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:endEvent id="EndEvent_0um7mnm">
-      <bpmn:incoming>SequenceFlow_08rgoh1</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_01yqy00</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_0s7rxur" default="SequenceFlow_1byn1n6">
-      <bpmn:incoming>SequenceFlow_1sgwn2c</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1byn1n6</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_0ykxla2</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_1qchit3" default="SequenceFlow_0zizont">
-      <bpmn:incoming>SequenceFlow_0opcoik</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0zizont</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_0j7khz5</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>SequenceFlow_0amgk6o</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:userTask id="derslik_og_elemani_ara" name="Derslik Ogretim Elemani Ara" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.derslik_og_elemani_ara">
-      <bpmn:incoming>SequenceFlow_1j1qq3t</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0bu9pez</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_16ey3nh" sourceRef="ders_programi_olusturuluyor" targetRef="ders_programi_tamamlandi" />
-    <bpmn:sequenceFlow id="SequenceFlow_1sgwn2c" sourceRef="ders_programi_tamamlandi" targetRef="ExclusiveGateway_0s7rxur" />
-    <bpmn:sequenceFlow id="SequenceFlow_0ykxla2" sourceRef="ExclusiveGateway_0s7rxur" targetRef="hatali">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='hata']]></bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_08rgoh1" sourceRef="hatali" targetRef="EndEvent_0um7mnm" />
-    <bpmn:sequenceFlow id="SequenceFlow_0xvg3pb" sourceRef="zato_service_cagir" targetRef="ders_programi_olusturuluyor" />
-    <bpmn:sequenceFlow id="SequenceFlow_06dv8za" sourceRef="ders_programi_yolla" targetRef="zato_service_cagir" />
-    <bpmn:sequenceFlow id="SequenceFlow_0jb050w" sourceRef="yolla" targetRef="bilgilendirme" />
-    <bpmn:sequenceFlow id="SequenceFlow_0j7khz5" sourceRef="ExclusiveGateway_1qchit3" targetRef="bilgilendirme">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='kayit_var']]></bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_01yqy00" sourceRef="bilgilendirme" targetRef="EndEvent_0um7mnm" />
-    <bpmn:sequenceFlow id="SequenceFlow_0zizont" sourceRef="ExclusiveGateway_1qchit3" targetRef="ders_programi_yolla" />
-    <bpmn:sequenceFlow id="SequenceFlow_0amgk6o" sourceRef="StartEvent_1" targetRef="kontrol" />
-    <bpmn:sequenceFlow id="SequenceFlow_0opcoik" sourceRef="kontrol" targetRef="ExclusiveGateway_1qchit3" />
-    <bpmn:sequenceFlow id="SequenceFlow_1byn1n6" sourceRef="ExclusiveGateway_0s7rxur" targetRef="hatasiz" />
-    <bpmn:sequenceFlow id="SequenceFlow_0bu9pez" sourceRef="derslik_og_elemani_ara" targetRef="arama_kontrol" />
+    <bpmn:sequenceFlow id="SequenceFlow_0xby1l5" sourceRef="coklu_sonuc" targetRef="detay_goster" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ozzjo5" sourceRef="detay_goster" targetRef="hatasiz" />
     <bpmn:sequenceFlow id="SequenceFlow_1jfexrt" sourceRef="hatasiz" targetRef="ExclusiveGateway_05cto6g" />
-    <bpmn:sequenceFlow id="SequenceFlow_006powt" sourceRef="ExclusiveGateway_05cto6g" targetRef="yolla">
+    <bpmn:sequenceFlow id="SequenceFlow_006powt" sourceRef="ExclusiveGateway_05cto6g" targetRef="yayinla">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='bitir']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0ej6lnp" sourceRef="ExclusiveGateway_1fpu3dq" targetRef="detay_goster">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='tekli']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1atmd2a" sourceRef="ExclusiveGateway_1fpu3dq" targetRef="coklu_sonuc">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='coklu']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0cjvj2j" sourceRef="arama" targetRef="ExclusiveGateway_1fpu3dq" />
+    <bpmn:sequenceFlow id="SequenceFlow_0bu9pez" sourceRef="derslik_og_elemani_ara" targetRef="arama" />
     <bpmn:sequenceFlow id="SequenceFlow_1j1qq3t" sourceRef="ExclusiveGateway_05cto6g" targetRef="derslik_og_elemani_ara">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='incele']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="arama_kontrol" name="Arama Kontrol" camunda:class="ders_programi.ders_programi.DersProgramiYap.arama_kontrol">
-      <bpmn:incoming>SequenceFlow_0bu9pez</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0cjvj2j</bpmn:outgoing>
+    <bpmn:sequenceFlow id="SequenceFlow_1byn1n6" sourceRef="ExclusiveGateway_0s7rxur" targetRef="hatasiz" />
+    <bpmn:sequenceFlow id="SequenceFlow_0opcoik" sourceRef="kontrol" targetRef="ExclusiveGateway_1qchit3" />
+    <bpmn:sequenceFlow id="SequenceFlow_0amgk6o" sourceRef="StartEvent_1" targetRef="kontrol" />
+    <bpmn:sequenceFlow id="SequenceFlow_0zizont" sourceRef="ExclusiveGateway_1qchit3" targetRef="ders_programi_hesaplama_baslat" />
+    <bpmn:sequenceFlow id="SequenceFlow_01yqy00" sourceRef="bilgilendirme" targetRef="EndEvent_0um7mnm" />
+    <bpmn:sequenceFlow id="SequenceFlow_0j7khz5" sourceRef="ExclusiveGateway_1qchit3" targetRef="bilgilendirme">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='kayit_var']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0jb050w" sourceRef="yayinla" targetRef="bilgilendirme" />
+    <bpmn:sequenceFlow id="SequenceFlow_06dv8za" sourceRef="ders_programi_hesaplama_baslat" targetRef="ders_programi_hesapla" />
+    <bpmn:sequenceFlow id="SequenceFlow_0xvg3pb" sourceRef="ders_programi_hesapla" targetRef="servis_bilgi_mesaji" />
+    <bpmn:sequenceFlow id="SequenceFlow_08rgoh1" sourceRef="hatali" targetRef="EndEvent_0um7mnm" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ykxla2" sourceRef="ExclusiveGateway_0s7rxur" targetRef="hatali">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='hata']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1sgwn2c" sourceRef="ders_programi_sonucu" targetRef="ExclusiveGateway_0s7rxur" />
+    <bpmn:sequenceFlow id="SequenceFlow_16ey3nh" sourceRef="servis_bilgi_mesaji" targetRef="ders_programi_sonucu" />
+    <bpmn:userTask id="detay_goster" name="Detay Goster" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.detay_goster">
+      <bpmn:incoming>SequenceFlow_0xby1l5</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0ej6lnp</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ozzjo5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="coklu_sonuc" name="Coklu Sonuc" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.coklu_sonuc">
+      <bpmn:incoming>SequenceFlow_1atmd2a</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0xby1l5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="hatasiz" name="Hatasiz" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.hatasiz">
+      <bpmn:incoming>SequenceFlow_1byn1n6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1ozzjo5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1jfexrt</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_05cto6g">
+      <bpmn:incoming>SequenceFlow_1jfexrt</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1j1qq3t</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_006powt</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="yayinla" name="Yayinla" camunda:class="ders_programi.ders_programi.DersProgramiYap.yayinla">
+      <bpmn:incoming>SequenceFlow_006powt</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0jb050w</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1fpu3dq">
       <bpmn:incoming>SequenceFlow_0cjvj2j</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1atmd2a</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0ej6lnp</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0cjvj2j" sourceRef="arama_kontrol" targetRef="ExclusiveGateway_1fpu3dq" />
-    <bpmn:serviceTask id="yolla" name="Yolla" camunda:class="ders_programi.ders_programi.DersProgramiYap.yolla">
-      <bpmn:incoming>SequenceFlow_006powt</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0jb050w</bpmn:outgoing>
+    <bpmn:serviceTask id="arama" name="Arama" camunda:class="ders_programi.ders_programi.DersProgramiYap.arama">
+      <bpmn:incoming>SequenceFlow_0bu9pez</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0cjvj2j</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_05cto6g">
-      <bpmn:incoming>SequenceFlow_1jfexrt</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1j1qq3t</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_006powt</bpmn:outgoing>
+    <bpmn:userTask id="derslik_og_elemani_ara" name="Derslik Ogretim Elemani Ara" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.derslik_og_elemani_ara">
+      <bpmn:incoming>SequenceFlow_1j1qq3t</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0bu9pez</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0amgk6o</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1qchit3" default="SequenceFlow_0zizont">
+      <bpmn:incoming>SequenceFlow_0opcoik</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0zizont</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0j7khz5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="hatasiz" name="Hatasiz" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.hatasiz">
-      <bpmn:incoming>SequenceFlow_1byn1n6</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1ozzjo5</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1jfexrt</bpmn:outgoing>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0s7rxur" default="SequenceFlow_1byn1n6">
+      <bpmn:incoming>SequenceFlow_1sgwn2c</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1byn1n6</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0ykxla2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_0um7mnm">
+      <bpmn:incoming>SequenceFlow_08rgoh1</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_01yqy00</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="kontrol" name="Kontrol" camunda:class="ders_programi.ders_programi.DersProgramiYap.kontrol">
+      <bpmn:incoming>SequenceFlow_0amgk6o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0opcoik</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="ders_programi_hesaplama_baslat" name="Ders Programi Hesaplama Baslat" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.ders_programi_hesaplama_baslat">
+      <bpmn:incoming>SequenceFlow_0zizont</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_06dv8za</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0xby1l5" sourceRef="coklu_sonuc" targetRef="tek_sonuc" />
-    <bpmn:sequenceFlow id="SequenceFlow_1atmd2a" sourceRef="ExclusiveGateway_1fpu3dq" targetRef="coklu_sonuc">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='coklu']]></bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0ej6lnp" sourceRef="ExclusiveGateway_1fpu3dq" targetRef="tek_sonuc">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='tekli']]></bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1ozzjo5" sourceRef="tek_sonuc" targetRef="hatasiz" />
-    <bpmn:userTask id="coklu_sonuc" name="Coklu Sonuc" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.coklu_sonuc">
-      <bpmn:incoming>SequenceFlow_1atmd2a</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0xby1l5</bpmn:outgoing>
+    <bpmn:userTask id="bilgilendirme" name="Bilgilendirme" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.bilgilendirme">
+      <bpmn:incoming>SequenceFlow_0j7khz5</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0jb050w</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_01yqy00</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="tek_sonuc" name="Tek Sonuc" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.tek_sonuc">
-      <bpmn:incoming>SequenceFlow_0xby1l5</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0ej6lnp</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1ozzjo5</bpmn:outgoing>
+    <bpmn:serviceTask id="ders_programi_hesapla" name="Ders Programi Hesapla" camunda:class="ders_programi.ders_programi.DersProgramiYap.ders_programi_hesapla">
+      <bpmn:incoming>SequenceFlow_06dv8za</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0xvg3pb</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="servis_bilgi_mesaji" name="Servis Bilgi Mesaji" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.servis_bilgi_mesaji">
+      <bpmn:incoming>SequenceFlow_0xvg3pb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16ey3nh</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:userTask id="hatali" name="Hatali" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.hatali">
+      <bpmn:incoming>SequenceFlow_0ykxla2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_08rgoh1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="ders_programi_sonucu" name="Ders Programi Sonucu" camunda:class="ders_programi.ders_programi.DersProgramiYap.ders_programi_sonucu">
+      <bpmn:incoming>SequenceFlow_16ey3nh</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1sgwn2c</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1xz8zp8">
@@ -276,22 +276,22 @@
         <di:waypoint xsi:type="dc:Point" x="1330" y="492" />
         <di:waypoint xsi:type="dc:Point" x="1330" y="445" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1268" y="443.5" width="90" height="20" />
+          <dc:Bounds x="1268" y="444" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0br55hj_di" bpmnElement="kontrol">
         <dc:Bounds x="190" y="695" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="UserTask_0ehd0fw_di" bpmnElement="ders_programi_yolla">
+      <bpmndi:BPMNShape id="UserTask_0ehd0fw_di" bpmnElement="ders_programi_hesaplama_baslat">
         <dc:Bounds x="445" y="695" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_0rudmt8_di" bpmnElement="bilgilendirme">
         <dc:Bounds x="1654" y="696" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_02g7ucu_di" bpmnElement="zato_service_cagir">
+      <bpmndi:BPMNShape id="ServiceTask_02g7ucu_di" bpmnElement="ders_programi_hesapla">
         <dc:Bounds x="620" y="695" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="UserTask_0iidivl_di" bpmnElement="ders_programi_olusturuluyor">
+      <bpmndi:BPMNShape id="UserTask_0iidivl_di" bpmnElement="servis_bilgi_mesaji">
         <dc:Bounds x="793" y="695" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_15l1q25_di" bpmnElement="hatali">
@@ -303,19 +303,19 @@
       <bpmndi:BPMNShape id="UserTask_0a1is1x_di" bpmnElement="derslik_og_elemani_ara">
         <dc:Bounds x="1280" y="492" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_0t8a0oj_di" bpmnElement="yolla">
+      <bpmndi:BPMNShape id="ServiceTask_0t8a0oj_di" bpmnElement="yayinla">
         <dc:Bounds x="1470" y="585" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_1pplh4z_di" bpmnElement="ders_programi_tamamlandi">
+      <bpmndi:BPMNShape id="ServiceTask_1pplh4z_di" bpmnElement="ders_programi_sonucu">
         <dc:Bounds x="966" y="695" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_0ipaeux_di" bpmnElement="arama_kontrol">
+      <bpmndi:BPMNShape id="ServiceTask_0ipaeux_di" bpmnElement="arama">
         <dc:Bounds x="1280" y="365" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_1fpu3dq_di" bpmnElement="ExclusiveGateway_1fpu3dq" isMarkerVisible="true">
-        <dc:Bounds x="1305" y="285.0229591836735" width="50" height="50" />
+        <dc:Bounds x="1305" y="285" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1285" y="335.0229591836735" width="90" height="20" />
+          <dc:Bounds x="1285" y="335" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0cjvj2j_di" bpmnElement="SequenceFlow_0cjvj2j">
@@ -330,14 +330,14 @@
         <di:waypoint xsi:type="dc:Point" x="1157" y="196" />
         <di:waypoint xsi:type="dc:Point" x="1157" y="270" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1173.5" y="171" width="90" height="20" />
+          <dc:Bounds x="1174" y="171" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1atmd2a_di" bpmnElement="SequenceFlow_1atmd2a">
         <di:waypoint xsi:type="dc:Point" x="1330" y="285" />
         <di:waypoint xsi:type="dc:Point" x="1330" y="237" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1300" y="250.5" width="90" height="20" />
+          <dc:Bounds x="1300" y="251" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0ej6lnp_di" bpmnElement="SequenceFlow_0ej6lnp">
@@ -351,13 +351,13 @@
         <di:waypoint xsi:type="dc:Point" x="1157" y="350" />
         <di:waypoint xsi:type="dc:Point" x="1157" y="585" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1127" y="457.5" width="90" height="20" />
+          <dc:Bounds x="1127" y="458" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_1tbemtu_di" bpmnElement="coklu_sonuc">
         <dc:Bounds x="1280" y="157" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="UserTask_1lw8us6_di" bpmnElement="tek_sonuc">
+      <bpmndi:BPMNShape id="UserTask_1lw8us6_di" bpmnElement="detay_goster">
         <dc:Bounds x="1108" y="270" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
