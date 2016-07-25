@@ -27,6 +27,10 @@ class DersEtkinligi(Model):
     ek_ders = fields.Boolean(index=True)
     sure = fields.Integer("Ders Etkinliği Süresi",index=True)
 
+    # teori = field.Integer("Ders Teori Saati", index=True)
+    # uygulama = field.Integer("Ders Uygulama Saati", index=True)
+    # dersin süresinin ne kadarı teori ne kadarı uygulama gibi 2+2, 4+0 gibi
+
     # to be calculated
     room = Room('Derslik')
     gun = fields.String("Gun")

@@ -357,6 +357,10 @@ class Ders(Model):
         sinif_turu = RoomType()
         ders_saati = field.Integer("Ders Saati", index=True)
 
+        # teori = field.Integer("Ders Teori Saati", index=True)
+        # uygulama = field.Integer("Ders Uygulama Saati", index=True)
+        # dersin süresinin ne kadarı teori ne kadarı uygulama gibi 2+2, 4+0 gibi
+
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Ders"

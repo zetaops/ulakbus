@@ -104,6 +104,13 @@ class DersUcretiHesaplama(CrudView):
         _form.iptal = fields.Button("İptal")
         self.form_out(_form)
 
+    def islem_iptali_bilgilendir(self):
+
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'Durum Mesajı',
+            "msg": 'Puantaj cetveli görüntüleme işleminiz iptal edilmiştir.'
+        }
+
     def okutman_sec(self):
         """
         Puantaj tablosunun hesaplanacağı okutmanların
@@ -113,7 +120,7 @@ class DersUcretiHesaplama(CrudView):
         gelecektir.
         """
 
-        self.current.role.unit.yoksis_no = 207974  # it will be dynamic
+        # self.current.role.unit.yoksis_no = 207974  # it will be dynamic
         birim_no = self.current.role.unit.yoksis_no
         _form = OkutmanListelemeForm(current=self.current, title="Okutman Seçiniz")
         okutmanlar = Okutman.objects.filter(birim_no=birim_no)
@@ -141,7 +148,7 @@ class DersUcretiHesaplama(CrudView):
 
         _form = JsonForm(current=self.current, title="Öğretim Görevlileri"
                                                      " Puantaj Tablosu Hesaplama"
-                                                     "Türü Seçiniz")
+                                                     " Türü Seçiniz")
 
         _form.ders = fields.Button("Ders Ücreti Hesapla", cmd='ders_ucreti_hesapla')
         _form.ek_ders = fields.Button("Ek Ders Ücreti Hesapla", cmd='ek_ders_ucreti_hesapla')
@@ -180,32 +187,42 @@ class DersUcretiHesaplama(CrudView):
         # o donemleri dondürür.
         donem_list = Donem.donem_dondur(yil, ay, takvim)
 
-        # Resmi tatilerin gununu donduruyor (23, 12, 8) gibi
+        # Resmi tatilerin gununu (23, 12, 8) gibi ve doneme gore akademik takvim donduruyor
         resmi_tatil_list, akademik_takvim_list = Takvim.resmi_tatil_gunleri_getir(donem_list, birim_unit, yil, ay)
-        print akademik_takvim_list
+
+        print resmi_tatil_list
 
         # Kapsadığı dönemlere göre ders baslangıc ve bitis tarihlerini
         # baz alarak kapsadığı her bir dönemin seçilen ayda hangi gün
         # aralıklarını kapsadığı bilgisini tuple olarak dondurur. Bir
         # dönemi kapsıyorsa bir tuple, iki dönemi kapsıyorsa iki tuple
         # döner. (4,12) (19,31) gibi
-
         tarih_araligi = donem_aralik_dondur(donem_list, yil, ay, takvim, akademik_takvim_list)
 
-        self.output['objects'] = [['Okutman']]
+        object_list = ['Öğretim Elemanı']
+        tarih_list = list(range(1,takvim[1]+1))
+        for tarih in tarih_list:
+            object_list.append(' '+str(tarih))
 
+        # object_list = ['Ogretim Elemani', 'bir', 'iki', 'uc']
         _form = JsonForm(current=self.current)
 
         kontrol = self.current.task_data["control"]
         if kontrol:
-            _form.title = " %s Yılı %s Ayı Ders Ücreti Puantaj Tablosu" % (yil, ay_isim)
-        else:
-            _form.title = " %s Yılı %s Ayı Ek Ders Ücreti Puantaj Tablosu" % (yil, ay_isim)
+            _form.title = "%s %s-%s AYI DERS PUANTAJ TABLOSU" % (birim_unit.name,yil, ay_isim.upper())
+            ders_saati_turu = 'Ders Saati'
 
-        self.form_out(_form)
+        else:
+            _form.title = "%s %s-%s AYI EK DERS PUANTAJ TABLOSU" % (birim_unit.name,yil, ay_isim.upper())
+            ders_saati_turu = 'Ek Ders Saati'
+
+        object_list.append(ders_saati_turu)
+        self.output['objects'] = [object_list]
 
         for secilen_okutman in self.current.task_data["secilen_okutmanlar"]:
             okutman = Okutman.objects.get(secilen_okutman['key'])
+
+            data_list = OrderedDict({})
 
             # Seçilen okutmanın İzin ve Ücretsiz İzinlerini dikkate alarak, verilen ayda
             # hangi günler izinli olduğunu liste halinde döndürmeye yarayan method
@@ -227,14 +244,31 @@ class DersUcretiHesaplama(CrudView):
                                                                resmi_tatil_list, personel_izin_list,
                                                                tarih_araligi, yil, ay)
 
-            data_list = OrderedDict({})
-            data_list['Okutman'] = okutman_adi + "  " + str(ders_saati)
+
+            data_list['Öğretim Elemanı'] = okutman_adi
+
+            for gun in range(1,takvim[1]+1):
+                if gun in okutman_aylik_plan:
+                    data_list[' ' + str(gun)] = str(okutman_aylik_plan[gun])
+                else:
+                    data_list[' ' + str(gun)] = ' '
+
+            data_list[ders_saati_turu] = str(ders_saati)
+
             item = {
-                'type': "table-multiRow",
-                'fields': data_list,
-                'actions': False
+                "type": "table-multiRow",
+                "fields": data_list,
+                "actions": False,
+                'key': okutman.key
             }
+
             self.output['objects'].append(item)
+
+        _form.pdf_sec = fields.Button("Pdf Çıkar")
+        _form.help_text="""
+                         R: Resmi Tatil
+                         İ: İzinli"""
+        self.form_out(_form)
 
 
 def ders_saati_doldur(donem_list, ders_etkinlik_list, resmi_tatil_list, personel_izin_list, tarih_araligi, yil, ay):
@@ -258,7 +292,7 @@ def ders_saati_doldur(donem_list, ders_etkinlik_list, resmi_tatil_list, personel
                 okutman_aylik_plan[i] = 'İ'
 
             # Eğer gün personel izin listesinde varsa
-            elif i in resmi_tatil_list:
+            elif i in resmi_tatil_list[j]:
                 okutman_aylik_plan[i] = 'R'
 
             # Eğer o gün izinli ya da resmi tatil değilse
@@ -327,31 +361,37 @@ def donem_aralik_dondur(donem_list, yil, ay, takvim, akademik_takvim_list):
 
         # 08.08.2016 > 01.08.2016
         # baslangic_tarih = 08.08.2016
+        # dönem başlangıcı ve ders başlangıcı seçilen ayın içindedir
         if ders_bas_tarih > ay_baslangic and ders_bas_tarih.month == ay:
             baslangic_tarih = ders_bas_tarih
 
         # 05.09.2016 > 01.08.2016
         # baslangic_tarih = 31.08.2016
+        # dönem başlangıcı seçilen ayın içindedir ama ders başlangıcı diğer aya sarkmıştır
         elif ders_bas_tarih > ay_baslangic and ders_bas_tarih.month != ay:
             baslangic_tarih = ay_bitis
 
         # 15.07.2016 < 01.08.2016
         # baslangic_tarih = 01.08.2016
+        # dönem başlangıcı ve ders başlangıcı seçilen aydan öncedir
         else:
             baslangic_tarih = ay_baslangic
 
         # 15.08.2016 < 31.08.2016
         # bitis_tarih = 15.08.2016
+        # dönem bitişi ve ders bitişi seçilen ayın içindedir
         if ders_bit_tarih < ay_bitis and ders_bit_tarih.month == ay:
             bitis_tarih = ders_bit_tarih
 
         # 25.07.2016 < 31.08.2016
         # bitis_tarih = 01.08.2016
+        # dönem bitişi seçilen ayın içindedir ama ders bitişi bir önceki aydır
         elif ders_bit_tarih < ay_bitis and ders_bit_tarih.month != ay:
             bitis_tarih = ay_baslangic
 
         # 15.09.2016 > 31.08.2016
         # bitis_tarih = 31.08.2016
+        # dönem bitişi ve ders bitişi seçilen aydan sonradır
         else:
             bitis_tarih = ay_bitis
 
