@@ -10,6 +10,16 @@ import os
 import httplib
 
 
+class StartExamSolver(Service):
+    """Sınav programı planlamasını arka planda başlatır."""
+    def handle(self):
+        solver_service = ExecuteExamSolver().name
+        # Bize verilen payload'u Exam Solver servisine aktararak çalıştırıyoruz
+        self.invoke_async(solver_service, payload=self.request.payload)
+        self.response.status_code = httplib.OK
+        self.response.payload = {'status': 'OK', 'message': 'Sınav planlaması başlatıldı'}
+
+
 class ExecuteExamSolver(Service):
     """Bir bölüm için sınav planı hesaplaması yapar.
 

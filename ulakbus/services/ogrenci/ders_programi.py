@@ -10,6 +10,15 @@ import shutil
 import httplib
 
 
+class StartSolver(Service):
+    """Ders programı planlamasını arka planda başlatır."""
+    def handle(self):
+        solver_service = ExecuteSolver().name
+        self.invoke_async(solver_service, payload=self.request.payload)
+        self.response.status_code = httplib.OK
+        self.response.payload = {'status': 'OK', 'message': 'Ders planlaması başlatıldı'}
+
+
 class ExecuteSolver(Service):
     """Bir bölüm için ders programı hesaplaması yapar.
 
