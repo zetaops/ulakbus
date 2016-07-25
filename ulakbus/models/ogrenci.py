@@ -310,8 +310,6 @@ class Ders(Model):
         tur = field.Integer("Değerlendirme Türü", choices="sinav_turleri", index=True)
         sinav_suresi = field.Integer("Sınav Süresi (dakika)")
         toplam_puana_etki_yuzdesi = field.Integer("Toplam Puana Etki Yüzdesi", index=True)
-        # Solver id'lerini exportlarda eşleştirmek için kullanılan alan
-        unitime_id = field.String(index=True, required=False, default='')
 
     class DersYardimcilari(ListNode):
         ders_yardimcilari = Personel()

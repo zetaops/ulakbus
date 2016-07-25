@@ -492,6 +492,9 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
                                                })
         return odalar
 
+    def _sinav_id(self, sube, sinav):
+        return '%i' % self._key2id('%s %i' % (sube.key, sinav.tur))
+
     def _sinavlar(self, bolum, sinav_turleri, zamanlar, odalar, writer):
         """Sınavları, sınav planı çıktısına ekler.
 
@@ -512,13 +515,11 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
             for ders in dersler:
                 kontenjan = 0
                 subeler = list(Sube.objects.filter(ders=ders, donem=donem))
-                for sube in subeler:
-                    kontenjan += sube.kontenjan
                 for s, sinav in enumerate(ders.Degerlendirme):
                     if sinav.tur not in sinav_turleri: continue
-                    sinav_id = '%i' % self._key2id('%s %s %i' % (program.key, ders.key, s))
-                    sinav.unitime_id = sinav_id
-                    with writer.element('exam', {'id': sinav_id,
+                    for sube in subeler:
+                        sinav_id = self._sinav_id(sube, sinav)
+                        with writer.element('exam', {'id': sinav_id,
                                                  'length': '%i' % sinav.sinav_suresi,
                                                  # Alternative seating özelliği, odaların oturma planları için kullanılabilir
                                                  'alt': "false",
@@ -526,19 +527,18 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
                                                  # Sınavın en çok kaç odaya bölünebileceği
                                                  'maxRooms': '%i' % len(subeler),
                                                  }):
-                        SinavEtkinligi(ders=ders, donem=donem, bolum=bolum,
-                                       unitime_id=sinav_id, published=False).save()
-                        uygun_zamanlar = filter(lambda z: z[0] >= sinav.sinav_suresi, zamanlar.items())
-                        for zaman, zaman_idleri in uygun_zamanlar:
-                            # Kısa süreli sınavların uzun zaman dilimlerine ayrılmasını önlemek için
-                            # farka bağlı olarak bir penalty ata
-                            penalty = round((zaman - sinav.sinav_suresi) / 30)
-                            for zaman_id in zaman_idleri:
-                                writer.text_element('period', attrs={'id': zaman_id, 'penalty': '%i' % penalty})
-                        for oda in odalar:
-                            oda_id = '%i' % self._room_id(oda)
-                            writer.text_element('room', attrs={'id': oda_id})
-                    ders.save()
+                            SinavEtkinligi(ders=ders, sube=sube, donem=donem, bolum=bolum,
+                                           unitime_id=sinav_id, published=False).save()
+                            uygun_zamanlar = filter(lambda z: z[0] >= sinav.sinav_suresi, zamanlar.items())
+                            for zaman, zaman_idleri in uygun_zamanlar:
+                                # Kısa süreli sınavların uzun zaman dilimlerine ayrılmasını önlemek için
+                                # farka bağlı olarak bir penalty ata
+                                penalty = round((zaman - sinav.sinav_suresi) / 30)
+                                for zaman_id in zaman_idleri:
+                                    writer.text_element('period', attrs={'id': zaman_id, 'penalty': '%i' % penalty})
+                            for oda in odalar:
+                                oda_id = '%i' % self._room_id(oda)
+                                writer.text_element('room', attrs={'id': oda_id})
 
     def _ogrenciler(self, bolum, sinav_turleri, writer):
         """Öğrencileri, ve girecekleri sınavları çıktıya ekler.
@@ -571,7 +571,7 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
                 for ders in dersleri:
                     for sinav in ders.ders.Degerlendirme:
                         if sinav.tur not in sinav_turleri: continue
-                        sinav_idleri.add(sinav.unitime_id)
+                        sinav_idleri.add(self._sinav_id(ders.sube, sinav))
                 for id_ in sinav_idleri:
                     writer.text_element('exam', attrs={'id': id_})
 

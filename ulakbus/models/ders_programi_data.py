@@ -46,6 +46,7 @@ class SinavEtkinligi(Model):
     class Meta:
         verbose_name = 'Sınav Etkinliği'
 
+    sube = Sube('Şube', index=True)
     ders = Ders('Ders', index=True)
     donem = Donem('Dönem', index=True)
     bolum = Unit('Bölüm', index=True)
