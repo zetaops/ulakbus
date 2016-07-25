@@ -4,12 +4,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""Öğrenci Modülü
-
-Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
-
-"""
-
 from pyoko import Model, field
 from .buildings_rooms import Room
 from .auth import Unit
@@ -58,11 +52,11 @@ class ZamanDilimleri(Model):
     birim = Unit('Bölüm')
     gun_dilimi = field.Integer('Gün Dilimi', choices=GUN_DILIMI, index=True)
 
-    baslama_saat = field.String("Başlama Saati", default='08', index=True)
-    baslama_dakika = field.String("Başlama Dakikası", default='00', index=True)
+    baslama_saat = field.String("Başlama Saati", index=True)
+    baslama_dakika = field.String("Başlama Dakikası", index=True)
 
-    bitis_saat = field.String("Bitiş Saati", default='12', index=True)
-    bitis_dakika = field.String("Bitiş Dakikası", default='00', index=True)
+    bitis_saat = field.String("Bitiş Saati", index=True)
+    bitis_dakika = field.String("Bitiş Dakikası", index=True)
 
     # Ara suresi de dahil. Ornek olarak 30 girildiyse ders 9, 9.30, 10 gibi surelerde baslayabilir.
     ders_araligi = field.Integer('Ders Süresi', default=60, index=True)

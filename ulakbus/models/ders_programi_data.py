@@ -21,8 +21,8 @@ class DersEtkinligi(Model):
     room_type = RoomType('İşleneceği Oda Türü', index=True)
     okutman = Okutman("Öğretim Elemanı", index=True)
     sube = Sube('Şube', index=True)
-    donem = Donem('Dönem',index = True)
-    bolum = Unit('Bölüm', index = True)
+    donem = Donem('Dönem', index=True)
+    bolum = Unit('Bölüm', index=True)
     published = fields.Boolean('Ders Planı Yayınlanma Durumu', index=True)
     # Arama amaçlı
     ders = Ders('Ders', index=True)
@@ -40,11 +40,16 @@ class DersEtkinligi(Model):
         self.ders = self.sube.ders
         self.save()
 
+    def __unicode__(self):
+        return '%s - %s - %s:%s|%s:%s - %s' % (self.room.name, self.gun, self.baslangic_saat, self.baslangic_dakika,
+                                               self.bitis_saat, self.bitis_dakika, self.okutman)
+
 
 class SinavEtkinligi(Model):
 
     class Meta:
         verbose_name = 'Sınav Etkinliği'
+        search_field = ['bolum', 'ders', 'sube']
 
     sube = Sube('Şube', index=True)
     ders = Ders('Ders', index=True)
