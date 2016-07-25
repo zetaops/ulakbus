@@ -40,6 +40,18 @@ class ZamanTablo(CrudView):
 
     """
 
+    def ogretim_elemani_listele(self):
+        oe_zaman_plani = OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)
+        ogretim_elemanlari = list()
+
+        for oe in oe_zaman_plani:
+            ogretim_elemani = dict()
+            ogretim_elemani['name'] = oe.okutman.ad + ' ' + oe.okutman.soyad
+            ogretim_elemani['key'] = oe.key
+            ogretim_elemanlari.append(ogretim_elemani)
+
+        return ogretim_elemanlari
+
     def ogretim_elemani_zaman_tablosu(self):
 
         self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
@@ -61,7 +73,8 @@ class ZamanTablo(CrudView):
                 'oe_key': self.current.ogretim_elemani.key,
                 'name': self.current.ogretim_elemani.okutman.ad + ' ' + self.current.ogretim_elemani.okutman.soyad,
                 'toplam_ders_saati': self.current.ogretim_elemani.toplam_ders_saati,
-                'uygunluk_durumu': uygunluk_durumu}
+                'uygunluk_durumu': uygunluk_durumu,
+                'ogretim_elemanlari:': self.ogretim_elemani_listele()}
 
         self.output['ogretim_elemani_zt'] = item
 
@@ -130,13 +143,16 @@ class ZamanTablo(CrudView):
                         'saat': string,  # 10:00-12:00,
                         'gun': int,     # 1 = pazartesi,
                         'durum': int    # 2 = mumkunse uygun degil,
-                        }]}
+                        }],
+                    'ogretim_elemanlari': [{
+                        'name': string,
+                        'key': string}]}
             }
         """
         try:
             if self.current.task_data['red_aciklamasi']:
                 self.current.output['msgbox'] = {"type": "warning",
-                                                 "title": "Talebiniz Bolum Baskani Tarafindan Reddedildi",
+                                                 "title": "Talebiniz Bölüm Başkanı Tarafından Reddedildi",
                                                  "msg": self.current.task_data['red_aciklamasi']}
         except KeyError:
             pass
@@ -144,7 +160,7 @@ class ZamanTablo(CrudView):
         self.ogretim_elemani_zaman_tablosu()
 
         _form = JsonForm()
-        _form.gonder = fields.Button('Onaya Gonder', cmd='onaya_gonder')
+        _form.gonder = fields.Button('Onaya Gönder', cmd='onaya_gonder')
         self.form_out(_form)
 
     def zaman_degisiklik_kaydet(self):
@@ -179,9 +195,9 @@ class ZamanTablo(CrudView):
         self.current.output['kayit_durum'] = kayit_durum
 
     def onaya_gonder(self):
-        _form = JsonForm(title='Ogretim Elemani Ders Programini Bolum Baskanina yollamak istiyor musunuz?')
+        _form = JsonForm(title='Öğretim Elemani Ders Programını Bölüm Başkanına yollamak istiyor musunuz?')
         _form.evet = fields.Button('Evet', cmd='evet')
-        _form.hayir = fields.Button('Hayir', cmd='hayir')
+        _form.hayir = fields.Button('Hayır', cmd='hayir')
         self.form_out(_form)
 
     def mesaj(self):
@@ -194,7 +210,7 @@ class ZamanTablo(CrudView):
     def bilgilendirme(self):
         msg = {"type": "info",
                "title": 'Talebiniz Onaylandi!',
-               "msg": 'Gonderdiginiz ogretim elemani zaman tablosu Bolum Baskani tarafindan onaylandi'}
+               "msg": 'Gönderdiğiniz öğretim elemanı zaman tablosu Bölüm Başkanı tarafından onaylandı.'}
         # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
 
         self.current.output['msgbox'] = msg
@@ -217,7 +233,10 @@ class ZamanTablo(CrudView):
                         'saat': string,  # 10:00-12:00,
                         'gun': int,     # 1 = pazartesi,
                         'durum': int    # 2 = mumkunse uygun degil,
-                        }]}
+                        }],
+                    'ogretim_elemanlari': [{
+                        'name': string,
+                        'key': string}]}
             }
         """
 
@@ -254,14 +273,14 @@ class ZamanTablo(CrudView):
 
     def aciklama_yaz(self):
         _form = JsonForm()
-        _form.mesaj = fields.String('Aciklama')
+        _form.mesaj = fields.String('Açıklama')
         _form.gonder = fields.Button('gonder')
         self.form_out(_form)
 
     def red_aciklamasini_gonder(self):
         self.current.task_data['red_aciklamasi'] = self.current.input['form']['mesaj']
-        msg = {"title": 'Red Aciklamasi Gonderildi!',
-               "body": 'Isleminiz basariyla gerceklesmistir'}
+        msg = {"title": 'Red Açıklaması Gönderildi!',
+               "body": 'İşleminiz başarıyla gerçekleşmiştir'}
         # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
 
         self.current.task_data['LANE_CHANGE_MSG'] = msg
