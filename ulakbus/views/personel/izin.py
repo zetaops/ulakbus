@@ -1,7 +1,7 @@
 # -*-  coding: utf-8 -*-
 
 from datetime import timedelta, date, datetime
-
+from collections import OrderedDict
 from ulakbus.models.form import Form, FormData
 from ulakbus.models.hitap.hitap import HizmetKayitlari, HizmetBirlestirme
 from ulakbus.models.personel import Personel, Izin
@@ -23,6 +23,11 @@ class IzinForm(JsonForm):
     kaydet_buton = fields.Button("Kaydet")
 
 class IzinIslemleri(CrudView):
+    """
+        Personel izin işlemlerinin yürütüldüğü CrudView dan türetilmiş classdır.
+        Personel Dairesi tarafından işletilmesi düşünülmüş olan izin wf için yazılmıştır.
+        Bir personelin tüm izinlerinin görüldüğü ve yeni izinlerin tanımlandığı bir wf dir.
+    """
     class Meta:
         # CrudViev icin kullanilacak temel Model
         model = 'Izin'
@@ -37,6 +42,9 @@ class IzinIslemleri(CrudView):
         self.form_out(IzinForm(self.object, current=self.current))
 
     def goster(self):
+        """
+            Personelin izin durumunun ve kullandığı izinlerin görüntülendiği metoddur.
+        """
         yil = date.today().year
         self.list()
         if "id" in self.current.input:
@@ -44,9 +52,14 @@ class IzinIslemleri(CrudView):
         personel = Personel.objects.get(self.current.task_data["personel_id"])
         izin_gun = self.hizmet_izin_yil_hesapla(personel)
         kalan_izin = self.kalan_izin_hesapla()
-        bu_yil_kalan_izin = getattr(kalan_izin['yillik'], str(yil), 0)
-        gecen_yil_kalan_izin = getattr(kalan_izin['yillik'], str(yil - 1), 0)
-        kalan_mazeret_izin = getattr(kalan_izin['mazeret'], str(yil), 0)
+        bu_yil_kalan_izin = str(kalan_izin['yillik'][str(date.today().year)])
+        # date.today().year ifadesi int döndürdüğü için bu verinin bir dict key olarak kullanılması için
+        # string e dönüştürülmesi gerekir.
+        if str(date.today().year-1) in kalan_izin["yillik"]:
+            gecen_yil_kalan_izin = str(kalan_izin["yillik"][str(date.today().year-1)])
+        else:
+            gecen_yil_kalan_izin = "0"
+        kalan_mazeret_izin = str(kalan_izin["mazeret"][str(date.today().year)])
 
         # Personelin izin gün sayısı 365 günden azsa eklemeyi kaldır.
         # Personel pasifse eklemeyi kaldır.
@@ -56,33 +69,30 @@ class IzinIslemleri(CrudView):
             self.personel_aktif,
             bu_yil_kalan_izin <= 0 and gecen_yil_kalan_izin <= 0 and kalan_mazeret_izin <= 0
         ]
+        # Yeni izin butonu için form nesnesi oluşturuluyor.
+        _form = JsonForm()
+        # Eğer izin hakkı yoksa yeni izin butonu oluşturulmuyor.
         if any(izin_hakki_yok_sartlari):
-            self.ListForm.add = None
+            _form.yeni_izin_buton = fields.Button("Yeni İzin", cmd="yeni_izin")
 
         # TODO: Personel bilgileri tabloda gösterilecek
-        _form = JsonForm()
-        _form.yeni_izin_buton = fields.Button("Yeni İzin", cmd="yeni_izin")
+        # Form görüntüleniyor
         self.form_out(_form)
+        # Personelin izin hakkı durumunu gösteren tablo oluşturuluyor.
+        field_dict = OrderedDict({})
+        field_dict["Gün"] = izin_gun
+        field_dict["Durum"] = "Aktif" if not personel.arsiv else "Pasif"
+        field_dict["%i Yılı Kalan Yıllık İzin"%date.today().year] = bu_yil_kalan_izin
+        field_dict["%i Yılı Kalan Yıllık İzin"%(date.today().year-1)] = gecen_yil_kalan_izin
+        field_dict["Kalan Mazaret İzni"] = kalan_mazeret_izin
+        field_dict["Hizmet Süre"] = izin_gun
         self.output['object'] = {
             "type": "table",
-            "fields": [
-                {
-                    "name": personel.ad,
-                    "surname": personel.soyad
-                },
-                {
-                    "gun": izin_gun,
-                    "durum": "Aktif" if self.personel_aktif else "Pasif"
-                }, {
-                    "izinler": kalan_izin,
-                    "hizmet_sure": izin_gun
-                }
-            ]
+            "fields": field_dict
         }
 
     def emekli_sandigi_hesapla(self, personel):
         personel_hizmetler = HizmetKayitlari.objects.filter(tckn=personel.tckn)
-
         baslangic_liste = set()
         bitis_liste = set()
 
@@ -146,6 +156,19 @@ class IzinIslemleri(CrudView):
         self.personel_aktif = aktif
         return emekli_sandigi_gun + sgk_gun
 
+    def gecmis_donem_kullanilan_mazeret_izin(self, personel, baslangic, bitis):
+        izinler = Izin.objects.filter(
+            personel_id = personel.key,
+            tip = 5,
+            baslangic__lte = baslangic,
+            bitis__gte = bitis
+        )
+        izin_sayi = 0
+        for izin in izinler:
+            izin_sayi += (izin.bitis - izin.baslangic).days
+
+        return izin_sayi
+
     def kalan_izin_hesapla(self):
         personel = Personel.objects.get(self.current.task_data["personel_id"])
         ilk_izin_hakedis = personel.goreve_baslama_tarihi + relativedelta(years=1)
@@ -157,22 +180,33 @@ class IzinIslemleri(CrudView):
             return {'yillik': None, 'mazeret': None}
 
         for yil in range(ilk_izin_hakedis.year, date.today().year + 1):
+
+            # Burada içinde bulunulan yılın ilk günü ve son günü arasındaki kayıtları çekmemiz gerekiyor
+            # Küçük eşittir yada büyük eşittir şeklinde bir sorgu yapamadığımız için başlangıç tarihi
+            # bir önceki yılın son günü, bitiş tarihi ise bir sonraki yılın ilk günü olarak düzenlendi
+            baslangic = datetime.strptime("31.12.%s"%(yil-2), "%d.%m.%Y")
+            bitis = datetime.strptime("01.01.%s"%(yil), "%d.%m.%Y")
+            gecmis_mazeret_izin = self.gecmis_donem_kullanilan_mazeret_izin(personel, baslangic, bitis)
             if (date.today().year - personel.goreve_baslama_tarihi.year) >10:
-                yillik_izinler[yil] = 30
+                yillik_izinler[str(yil)] = 30
             else:
-                yillik_izinler[yil] = 20
-            mazeret_izinler[yil] = 10
+                yillik_izinler[str(yil)] = 20
+
+            if gecmis_mazeret_izin > 10:
+                yillik_izinler[str(yil)] -= (gecmis_mazeret_izin - 10)
+
+            mazeret_izinler[str(yil)] = 10
 
         for izin in izinler:
             if izin.tip == 1:
                 yil = izin.baslangic.year - 1
-                if yil in yillik_izinler.keys() and yillik_izinler[yil] > 0:
-                    yillik_izinler[yil] -= (izin.bitis - izin.baslangic).days
+                if (str(yil) in yillik_izinler.keys()) and (yillik_izinler[str(yil)] > 0):
+                    yillik_izinler[str(yil)] -= ((izin.bitis - izin.baslangic).days + 1)
                 else:
                     yil += 1
-                    yillik_izinler[yil] -= (izin.bitis - izin.baslangic).days
+                    yillik_izinler[str(yil)] -= ((izin.bitis - izin.baslangic).days + 1)
             elif izin.tip == 5:
-                mazeret_izinler[yil] -= (izin.bitis - izin.baslangic).days
+                mazeret_izinler[str(yil)] -= ((izin.bitis - izin.baslangic).days + 1)
 
         return {'yillik': yillik_izinler, 'mazeret': mazeret_izinler}
 
