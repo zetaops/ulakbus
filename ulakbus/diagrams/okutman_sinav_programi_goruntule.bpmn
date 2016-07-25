@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_0jqtmlj">
+    <bpmn:participant id="OgretimElemaniSinavProgrami" processRef="okutman_sinav_programi_goruntule" />
+  </bpmn:collaboration>
+  <bpmn:process id="okutman_sinav_programi_goruntule" name="Öğretim Elemanı Sınav Programı" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_18408cb</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_18408cb" sourceRef="StartEvent_1" targetRef="SinavProgramiGoruntule" />
+    <bpmn:sequenceFlow id="SequenceFlow_0bro10m" sourceRef="SinavProgramiGoruntule" targetRef="EndEvent_0wartdq" />
+    <bpmn:endEvent id="EndEvent_0wartdq">
+      <bpmn:incoming>SequenceFlow_0bro10m</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="SinavProgramiGoruntule" name="Sınav Programı Görüntüle" camunda:assignee="sinav_programi.okutman_sinav_programi_goruntule.Okutman_Sinav_Programi_Goruntule.sinav_programi_goruntule">
+      <bpmn:incoming>SequenceFlow_18408cb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0bro10m</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0jqtmlj">
+      <bpmndi:BPMNShape id="Participant_0an1mes_di" bpmnElement="OgretimElemaniSinavProgrami">
+        <dc:Bounds x="155" y="175" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="202" y="283" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="175" y="319" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0kiit6r_di" bpmnElement="SinavProgramiGoruntule">
+        <dc:Bounds x="396" y="261" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_18408cb_di" bpmnElement="SequenceFlow_18408cb">
+        <di:waypoint xsi:type="dc:Point" x="238" y="301" />
+        <di:waypoint xsi:type="dc:Point" x="396" y="301" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="231.5" y="291" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0wartdq_di" bpmnElement="EndEvent_0wartdq">
+        <dc:Bounds x="661" y="283" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="634" y="319" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0bro10m_di" bpmnElement="SequenceFlow_0bro10m">
+        <di:waypoint xsi:type="dc:Point" x="496" y="301" />
+        <di:waypoint xsi:type="dc:Point" x="661" y="301" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="440.5" y="291" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

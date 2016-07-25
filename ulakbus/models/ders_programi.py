@@ -48,7 +48,6 @@ GUN_DILIMI = [
 
 HAFTA = HAFTA_ICI_GUNLER + HAFTA_SONU_GUNLER
 
-
 class ZamanDilimleri(Model):
 
     class Meta:
