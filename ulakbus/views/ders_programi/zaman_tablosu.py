@@ -74,7 +74,7 @@ class ZamanTablo(CrudView):
                 'name': self.current.ogretim_elemani.okutman.ad + ' ' + self.current.ogretim_elemani.okutman.soyad,
                 'toplam_ders_saati': self.current.ogretim_elemani.toplam_ders_saati,
                 'uygunluk_durumu': uygunluk_durumu,
-                'ogretim_elemanlari:': self.ogretim_elemani_listele()}
+                'ogretim_elemanlari': self.ogretim_elemani_listele()}
 
         self.output['ogretim_elemani_zt'] = item
 
