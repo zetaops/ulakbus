@@ -46,14 +46,14 @@ class TestCase(BaseTestCase):
 
             for i in range(2):
                 resp = self.client.post(cmd='gonder')
-                assert resp.json['forms']['schema']['title'] == 'Ogretim Elemani Ders Programini Bolum Baskanina ' \
-                                                                'yollamak istiyor musunuz?'
+                assert resp.json['forms']['schema']['title'] == 'Öğretim Elemanı Ders Programını ' \
+                                                                'Bölüm Başkanına yollamak istiyor musunuz?'
                 if i == 0:
                     resp = self.client.post(cmd='hayir')
                     assert resp.json['ogretim_elemani_zt']['oe_key'] == 'GIga2Cy4iYV4rwfCs9SjVqyygFg'
                 else:
                     resp = self.client.post(cmd='evet')
-                    assert resp.json['msgbox']['title'] == 'Onay Icin Gonderildi!'
+                    assert resp.json['msgbox']['title'] == 'Onay İçin Gonderildi!'
 
             time.sleep(1)
 
@@ -67,18 +67,18 @@ class TestCase(BaseTestCase):
             assert resp.json['ogretim_elemani_zt']['oe_key'] == 'GIga2Cy4iYV4rwfCs9SjVqyygFg'
             if loop == 1:
                 resp = self.client.post(cmd='onay')
-                assert resp.json['msgbox']['title'] == 'Ogretim Elemani Zaman Tablosunu Onayladiniz!'
+                assert resp.json['msgbox']['title'] == 'Öğretim Elemani Zaman Tablosunu Onayladınız!'
             else:
                 self.client.post(cmd='reddet')
                 resp = self.client.post(form={"gonder": 1,
                                               "mesaj": "Reddedildi"})
-                assert resp.json['msgbox']['title'] == "Red Aciklamasi Gonderildi!"
+                assert resp.json['msgbox']['title'] == "Red Açıklaması Gönderildi!"
         time.sleep(1)
 
         token, user = self.get_user_token('ders_programi_koordinatoru_1')
         self.prepare_client('/ogretim_elemani_zaman_tablosu', user=user, token=token)
         resp = self.client.post()
-        assert resp.json['msgbox']['title'] == 'Talebiniz Onaylandi!'
+        assert resp.json['msgbox']['title'] == 'Talebiniz Onaylandı!'
         NotificationMessage.objects.filter().delete()
 
     def test_derslik_zaman_tablosu(self):
@@ -94,7 +94,7 @@ class TestCase(BaseTestCase):
                 usr = User.objects.get(username='ders_programi_koordinatoru_1')
                 self.prepare_client('/derslik_zaman_tablosu', user=usr)
                 resp = self.client.post()
-                assert len(resp.json['derslik_zaman_tablosu']) == 4
+                assert len(resp.json['derslik_zaman_tablosu']) == 5
 
             derslik_key = 'YuwgqKIyWFJeNSgY2FAHt2b1T1O'
             derslik_durum = 1
@@ -115,14 +115,14 @@ class TestCase(BaseTestCase):
 
             for i in range(2):
                 resp = self.client.post(cmd='gonder')
-                assert resp.json['forms']['schema']['title'] == 'Derslik Ders Programini Bolum Baskanina ' \
-                                                                'yollaman istiyor musunuz?'
+                assert resp.json['forms']['schema']['title'] == 'Derslik Ders Programını ' \
+                                                                'Bölüm Başkanına yollamak istiyor musunuz?'
                 if i == 0:
                     resp = self.client.post(cmd='hayir')
                     assert resp.json['derslik_zaman_tablosu']['derslik_key'] == '6Jy9r5e05DwsnkPGOesSvG9v6T8'
                 else:
                     resp = self.client.post(cmd='evet')
-                    assert resp.json['msgbox']['title'] == 'Onay Icin Gonderildi!'
+                    assert resp.json['msgbox']['title'] == 'Onay İçin Gönderildi!'
 
             time.sleep(1)
 
@@ -130,23 +130,23 @@ class TestCase(BaseTestCase):
             self.prepare_client('/derslik_zaman_tablosu', user=user, token=token)
             resp = self.client.post()
             NotificationMessage.objects.filter().delete()
-            assert len(resp.json['derslik_zaman_tablosu']) == 4
+            assert len(resp.json['derslik_zaman_tablosu']) == 5
 
             resp = self.client.post(cmd='kontrol', secili_derslik=item_key)
             assert resp.json['derslik_zaman_tablosu']['derslik_key'] == '6Jy9r5e05DwsnkPGOesSvG9v6T8'
             if loop == 1:
                 resp = self.client.post(cmd='onay')
-                assert resp.json['msgbox']['title'] == 'Derslik Zaman Tablosunu Onayladiniz!'
+                assert resp.json['msgbox']['title'] == 'Derslik Zaman Tablosunu Onayladınız!'
             else:
                 self.client.post(cmd='reddet')
                 resp = self.client.post(form={"gonder": 1,
                                               "mesaj": "Reddedildi"})
-                assert resp.json['msgbox']['title'] == "Red Aciklamasi Gonderildi!"
+                assert resp.json['msgbox']['title'] == "Red Açıklaması Gönderildi!"
 
         time.sleep(1)
 
         token, user = self.get_user_token('ders_programi_koordinatoru_1')
         self.prepare_client('/derslik_zaman_tablosu', user=user, token=token)
         resp = self.client.post()
-        assert resp.json['msgbox']['title'] == 'Talebiniz Onaylandi!'
+        assert resp.json['msgbox']['title'] == 'Talebiniz Onaylandı!'
         NotificationMessage.objects.filter().delete()
