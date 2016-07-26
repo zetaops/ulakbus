@@ -10,7 +10,7 @@ from . import RoomType, Okutman, Room, Sube, Donem, Unit, Ders
 
 
 class DersEtkinligi(Model):
-    
+
     class Meta:
         verbose_name = "Ders Etkinliği"
         search_fields = ['unit_yoksis_no', 'room', 'okutman']
@@ -26,6 +26,12 @@ class DersEtkinligi(Model):
     published = fields.Boolean('Ders Planı Yayınlanma Durumu', index=True)
     # Arama amaçlı
     ders = Ders('Ders', index=True)
+    ek_ders = fields.Boolean(index=True)
+    sure = fields.Integer("Ders Etkinliği Süresi",index=True)
+
+    # teori = field.Integer("Ders Teori Saati", index=True)
+    # uygulama = field.Integer("Ders Uygulama Saati", index=True)
+    # dersin süresinin ne kadarı teori ne kadarı uygulama gibi 2+2, 4+0 gibi
 
     # to be calculated
     room = Room('Derslik')
