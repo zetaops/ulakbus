@@ -130,7 +130,7 @@ class Okutman(Model):
         app = 'Ogrenci'
         verbose_name = "Okutman"
         verbose_name_plural = "Okutmanlar"
-        search_fields = ['unvan', 'personel']
+        search_fields = ['unvan', 'personel', 'ad', 'soyad']
 
     @lazy_property
     def okutman(self):
@@ -308,6 +308,7 @@ class Ders(Model):
 
     class Degerlendirme(ListNode):
         tur = field.Integer("Değerlendirme Türü", choices="sinav_turleri", index=True)
+        sinav_suresi = field.Integer("Sınav Süresi (dakika)")
         toplam_puana_etki_yuzdesi = field.Integer("Toplam Puana Etki Yüzdesi", index=True)
 
     class DersYardimcilari(ListNode):
@@ -321,6 +322,10 @@ class Ders(Model):
         Bir dersin hangi derslik türlerinde kaç saat yapılacağı burada saklanır.
         Örneğin 5 saatlik bir dersin 3 saati sınıfta, 2 saati laboratuvarda
         yapılacaksa bu bilgi burada saklanır.
+
+        Bir ders içini iki ayrı etkinlik planlanması isteniyorsa, örneğin 4 saat
+        teorik dersi olan bir dersin 2 saatinin bir gün, 2 saatinin ise farklı
+        bir gün yapılması için burada 2 ayrı kayıt oluşturulmalıdır.
         """
         sinif_turu = RoomType()
         ders_saati = field.Integer("Ders Saati", index=True)
@@ -614,6 +619,7 @@ class OgrenciProgram(Model):
     danisman = Personel()
     program = Program()
     ogrenci = Ogrenci()
+    bagli_oldugu_bolum = Unit("Bölüm")
 
     class Meta:
         app = 'Ogrenci'
@@ -911,48 +917,62 @@ AKADEMIK_TAKVIM_ETKINLIKLERI = [
     ('11', 'Danışman Onay'),
     ('12', 'Mazeretli Ders Kayıt'),
     ('13', 'Mazeretli Danışman Onay'),
-    ('14', 'Ders Ekle/Bırak'),
-    ('15', 'Ders Ekle/Bırak Danışman Onay'),
-    ('16', 'Danışman Dersten Çekilme İşlemleri'),
-    ('17', 'Ara Sinav'),
-    ('18', 'Ara Sınav Not Giriş'),
-    ('19', 'Ara Sınav Notlarının Öğrenciye Yayınlanması'),
-    ('20', 'Ara Sinav Mazeretli'),
-    ('21', 'Ara Sınav Mazeret Not Giriş'),
-    ('22', 'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması'),
-    ('23', 'Sınav Maddi Hata Düzeltme'),
-    ('24', 'Yariyil Sinav'),
-    ('25', 'Yarıyıl Sınavı Not Giriş'),
-    ('26', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
-    ('27', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı'),
-    ('28', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Not Giriş'),
-    ('29', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye Yayınlanması'),
-    ('30', 'Harf Notlarının Öğrenciye Yayınlanması'),
-    ('31', 'Bütünleme Harf Notlarının Öğrenciye Yayınlanması'),
-    ('32', 'Öğretim Elemanı Yoklama Girişi'),
-    ('33', 'Bahar Donemi Derslerin Acilmasi'),
-    ('34', 'Bahar Donemi Subelendirme ve Ders Programının Ilan Edilmesi'),
-    ('35', 'Bahar Dönem Başlangıcı'),
-    ('36', 'Öğrenci Harç'),
-    ('37', 'Öğrenci Ek Harç'),
-    ('38', 'Mazeretli Öğrenci Harç'),
-    ('39', 'Ders Kayıt'),
-    ('40', 'Danışman Onay'),
-    ('41', 'Mazeretli Ders Kayıt'),
-    ('42', 'Mazeretli Danışman Onay'),
-    ('43', 'Ders Ekle / Bırak'),
-    ('44', 'Ders Ekle / Bırak Onay'),
-    ('45', 'Ara Sinav'),
-    ('46', 'Ara Sınav Not Giriş'),
-    ('47', 'Ara Sınav Notlarının Öğrenciye Yayınlanması'),
-    ('48', 'Ara Sinav Mazeretli'),
-    ('49', 'Ara Sınav Mazeret Not Giriş'),
-    ('50', 'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması'),
-    ('51', 'Sınav Maddi Hata Düzeltme'),
-    ('52', 'Yariyil Sinav'),
-    ('53', 'Yarıyıl Sınavı Not Giriş'),
-    ('54', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
-    ('55', 'Öğretim Elemanı Yoklama Girişi'),
+    ('14', 'Derslerin Başlangıcı'),
+    ('15', 'Ders Ekle/Bırak'),
+    ('16', 'Ders Ekle/Bırak Danışman Onay'),
+    ('17', 'Danışman Dersten Çekilme İşlemleri'),
+    ('18', 'Ara Sinav'),
+    ('19', 'Ara Sınav Not Giriş'),
+    ('20', 'Ara Sınav Notlarının Öğrenciye Yayınlanması'),
+    ('21', 'Ara Sinav Mazeretli'),
+    ('22', 'Ara Sınav Mazeret Not Giriş'),
+    ('23', 'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması'),
+    ('24', 'Sınav Maddi Hata Düzeltme'),
+    ('25', 'Derslerin Bitişi'),
+    ('26', 'Yariyil Sinav'),
+    ('27', 'Yarıyıl Sınavı Not Giriş'),
+    ('28', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
+    ('29', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı'),
+    ('30', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Not Giriş'),
+    ('31', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye Yayınlanması'),
+    ('32', 'Harf Notlarının Öğrenciye Yayınlanması'),
+    ('33', 'Bütünleme Harf Notlarının Öğrenciye Yayınlanması'),
+    ('34', 'Öğretim Elemanı Yoklama Girişi'),
+    ('35', 'Güz Dönemi Bitiş'),
+    ('36', 'Bahar Dönemi Başlangıcı'),
+    ('37', 'Bahar Donemi Derslerin Acilmasi'),
+    ('38', 'Bahar Donemi Subelendirme ve Ders Programının Ilan Edilmesi'),
+    ('39', 'Bahar Dönem Başlangıcı'),
+    ('40', 'Öğrenci Harç'),
+    ('41', 'Öğrenci Ek Harç'),
+    ('42', 'Mazeretli Öğrenci Harç'),
+    ('43', 'Ders Kayıt'),
+    ('44', 'Danışman Onay'),
+    ('45', 'Mazeretli Ders Kayıt'),
+    ('46', 'Mazeretli Danışman Onay'),
+    ('47', 'Derslerin Başlangıcı'),
+    ('48', 'Ders Ekle / Bırak'),
+    ('49', 'Ders Ekle / Bırak Onay'),
+    ('50', 'Ara Sinav'),
+    ('51', 'Ara Sınav Not Giriş'),
+    ('52', 'Ara Sınav Notlarının Öğrenciye Yayınlanması'),
+    ('53', 'Ara Sinav Mazeretli'),
+    ('54', 'Ara Sınav Mazeret Not Giriş'),
+    ('55', 'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması'),
+    ('56', 'Sınav Maddi Hata Düzeltme'),
+    ('57', 'Derslerin Bitişi'),
+    ('58', 'Yariyil Sinav baslangic'),
+    ('59', 'Yarıyıl Sınavı Not Giriş'),
+    ('60', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
+    ('61', 'Öğretim Elemanı Yoklama Girişi'),
+    ('62', 'Bahar Dönem Bitişi'),
+    ('63', 'Yaz Dönemi Başlangıcı'),
+    ('64', 'Yaz Dönemi Derslerin Bitişi'),
+    ('65', 'Yaz Dönemi Sınavların Başlangıcı'),
+    ('66', 'Yaz Dönemi Bitişi')
+
+
+
 ]
 
 
@@ -970,10 +990,6 @@ class AkademikTakvim(Model):
     birim = Unit("Birim", index=True)
     yil = field.Date("Yıl", index=True)
 
-    class Takvim(ListNode):
-        etkinlik = field.Integer("Etkinlik", index=True, choices=AKADEMIK_TAKVIM_ETKINLIKLERI)
-        baslangic = field.Date("Başlangıç", index=True, format="%d.%m.%Y")
-        bitis = field.Date("Bitiş", index=True, format="%d.%m.%Y", required=False)
 
     class Meta:
         app = 'Ogrenci'
@@ -989,6 +1005,51 @@ class AkademikTakvim(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.birim, self.yil)
+
+    def etkinlikler(self):
+        return Takvim.objects.filter(akademik_takvim=self)
+
+    def timeline(self):
+        tl = []
+        for e in self.etkinlikler():
+            if not e.baslangic:
+                tl.append((e.etkinlik, e.bitis))
+            elif not e.bitis:
+                tl.append((e.etkinlik, e.baslangic))
+            elif e.baslangic and e.bitis:
+                if e.baslangic.date == e.bitis.date:
+                    tl.append((e.etkinlik, e.baslangic))
+                else:
+                    tl.append(("%s baslangic" % e.etkinlik, e.baslangic))
+                    tl.append(("%s bitis" % e.etkinlik, e.bitis))
+
+
+class Takvim(Model):
+    """
+    olay, bir zaman araliginda gerceklesiyorsa(ayni gunun saat araliklari dahil), baslangic ve bitis zamanlari ayri ayri verilir,
+    olay, bir gun icinde ancak kesin zaman bagimsiz/belirsiz gerceklesiyorsa, baslangic ve bitis zamanlari ayni verilir,
+    olay, belirsiz bir baslangic yani son gun belirtilmisse, sadece bitis tarihi verilir,
+    olay, belirsiz bir son yani baslama gun belirtilmisse, sadece baslangic tarihi verilir,
+    """
+    etkinlik = field.Integer("Etkinlik", index=True, choices=AKADEMIK_TAKVIM_ETKINLIKLERI)
+    baslangic = field.DateTime("Başlangıç", index=True, format="%d.%m.%Y", required=False)
+    bitis = field.DateTime("Bitiş", index=True, format="%d.%m.%Y", required=False)
+    akademik_takvim = AkademikTakvim("Akademik Takvim")
+
+    def pre_save(self):
+        if not self.baslangic or not self.bitis:
+            raise Exception("Tarihlerden en az bir tanesi dolu olmalidir.")
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Takvim"
+        verbose_name_plural = "Takvimler"
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.yil, self.etkinlik)
+
+
+
 
 
 class DonemDanisman(Model):

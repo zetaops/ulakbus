@@ -80,5 +80,6 @@ service_url_paths = {
     "HitapUnvanSil": {"url": "hizmet-unvan-sil"},
     "MernisKimlikBilgileriGetir": {"url": "nvi-kisi-sorgula"},
     "MernisCuzdanBilgileriGetir": {"url": "nvi-cuzdan-sorgula"},
-    "KPSAdresBilgileriGetir": {"url": "nvi-adres-sorgula"}
+    "KPSAdresBilgileriGetir": {"url": "nvi-adres-sorgula"},
+    "DersProgramiOlustur": {"url": "ders-programi-olustur"}
 }
