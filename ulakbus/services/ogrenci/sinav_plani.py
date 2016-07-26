@@ -2,7 +2,7 @@
 from zato.server.service import Service
 from ulakbus.lib.unitime import ExportExamTimetable
 from ulakbus.lib.common import sinav_etkinlikleri_oku
-from ulakbus.models import SinavEtkinligi, Donem, Unit
+from ulakbus.models import User
 from xml.etree import ElementTree
 import subprocess
 import shutil
@@ -24,31 +24,38 @@ class ExecuteExamSolver(Service):
     """Bir bölüm için sınav planı hesaplaması yapar.
 
     Bu servisi çalıştırmak için sınav planı hesaplanacak olan bölümün
-    yöksis numarası, ve hesaplamaya dahil edilecek sınavların türlerinin
-    listesi verilmelidir. Örneğin:
+    yöksis numarası, hesaplamaya dahil edilecek sınavların türlerinin
+    listesi, ve sınav planı hesaplamasını başlatan kullanıcının key'i
+    verilmelidir. Örneğin:
 
-    >>> requests.post('http://example.com/sinavlar', json={'bolum': 124150, 'sinav_turleri': [1]})
+    >>> requests.post('http://example.com/sinavlar', json={'bolum': 124150, 'sinav_turleri': [1], 'kullanici': 'Lpdk2348cTfWeTTXY22asd', 'url': ''})
 
     Servis, sınav programını hesaplayarak sonucunu kaydedecektir. İşlem
     bittiğinde, servis durumunu bildiren bir sonuç verir. Örneğin başarılı
     olması durumunda gelecek sonuç:
 
-        {'status': 'ok', 'result': 'Tüm sınavlar yerleştirildi'}
+        {'status': 'ok', 'result': 'Planlama tamamlandı'}
 
     Başarısız bir sonuç örneği:
 
         {'status': 'fail', 'result': '00000 yöksis no\'lu bölüm için çalışan bir solver var'}
 
     Eğer servis HTTP üzerinden kullanılıyorsa HTTP durum kodlarına da bakılabilir.
+
+    Servis tamamlandıktan sonra, işlemi başlatan kullanıcıyı notification göndererek uyaracaktır.
+    Kullanıcıya gönderilecek olan mesajı değiştirmek için, servise gönderilen istekte 'baslik' ve 'mesaj'
+    alanları kullanılabilir.
     """
     _SOLVER_DIR = '/opt/zato/solver'
 
     def handle(self):
         bolum_yoksis_no = int(self.request.payload['bolum'])
         sinav_turleri = self.request.payload['sinav_turleri']
+        kullanici_key = self.request.payload['kullanici']
+        url = self.request.payload['url']
         export_dir = os.path.join(self._SOLVER_DIR, '%i' % bolum_yoksis_no)
         try:
-            status, result = self._handle(bolum_yoksis_no, sinav_turleri, export_dir)
+            status, result = self._handle(bolum_yoksis_no, sinav_turleri, kullanici_key, url, export_dir)
         except Exception as e:
             shutil.rmtree(export_dir)
             raise e
@@ -58,7 +65,7 @@ class ExecuteExamSolver(Service):
         status_msg = 'ok' if status == httplib.OK else 'fail'
         self.response.payload = {'status': status_msg, 'result': result}
 
-    def _handle(self, bolum_yoksis_no, sinav_turleri, export_dir):
+    def _handle(self, bolum_yoksis_no, sinav_turleri, kullanici_key, url, export_dir):
         if not os.path.isdir(self._SOLVER_DIR):
             os.mkdir(self._SOLVER_DIR)
 
@@ -74,7 +81,7 @@ class ExecuteExamSolver(Service):
         exporter.FILE_NAME = '%i.xml' % bolum_yoksis_no
         exporter.run()
         if not os.path.isfile(os.path.join(export_dir, exporter.FILE_NAME)):
-            return httplib.INTERNAL_SERVER_ERROR, '%s yöksis no\'lu bölüm için export alınamamış'
+            return httplib.INTERNAL_SERVER_ERROR, '%i yöksis no\'lu bölüm için export alınamamış' % bolum_yoksis_no
 
         # Alınan export'u solver'a çözdür
         os.chdir(self._SOLVER_DIR)
@@ -91,12 +98,10 @@ class ExecuteExamSolver(Service):
         root = ElementTree.parse(output_file).getroot()
         sinav_etkinlikleri_oku(root)
         shutil.rmtree(export_dir)
-        # Sonuçları kontrol et
-        guncel_donem = Donem.guncel_donem()
-        bolum = Unit.objects.get(yoksis_no=bolum_yoksis_no)
-        cozulmemis_sinavlar = SinavEtkinligi.objects.filter(donem=guncel_donem,
-                                                            solved=True,
-                                                            bolum=bolum)
-        if len(cozulmemis_sinavlar) > 0:
-            return httplib.OK, 'Eksik çözüm bulundu'
-        return httplib.OK, 'Tüm sınavlar yerleştirildi'
+
+        # Çözümü isteyen kullanıcıyı bilgilendir
+        kullanici = User.objects.get(key=kullanici_key)
+        baslik = self.request.payload.get('baslik', 'Sınav planlaması tamamlandı')
+        mesaj = self.request.payload.get('mesaj', 'Sınav planlaması işlemi tamamlandı.')
+        kullanici.send_notification(baslik, mesaj, url=url)
+        return httplib.OK, mesaj

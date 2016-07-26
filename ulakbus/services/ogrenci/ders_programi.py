@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from zato.server.service import Service
 from ulakbus.lib.unitime import ExportCourseTimetable
-from ulakbus.models.ders_programi_data import DersEtkinligi, Donem, Unit
+from ulakbus.models import User
 import xml.etree.ElementTree as ET
 import subprocess
 import os
@@ -23,9 +23,10 @@ class ExecuteSolver(Service):
     """Bir bölüm için ders programı hesaplaması yapar.
 
     Bu servisi çalıştırmak için ders programı hesaplanacak olan bölümün
-    yöksis numarası verilmelidir. Örneğin:
+    yöksis numarası, ve ders planı hesaplamasını başlatan kullanıcının key'i
+     verilmelidir. Örneğin:
 
-    >>> requests.post('http://example.com/dersler', json={'bolum': 124150})
+    >>> requests.post('http://example.com/dersler', json={'bolum': 124150, 'kullanici': 'Lpdk2348cTfWeTTXY22asd', 'url': ''})
 
     Servis, ders programını hesaplayarak sonucunu kaydedecektir. İşlem
     bittiğinde, servis durumunu bildiren bir sonuç verir. Örneğin başarılı
@@ -38,14 +39,20 @@ class ExecuteSolver(Service):
         {'status': 'fail', 'result': 'Solver çalıştırılırken hata oluştu'}
 
     Eğer servis HTTP üzerinden kullanılıyorsa HTTP durum kodlarına da bakılabilir.
+
+    Servis tamamlandıktan sonra, işlemi başlatan kullanıcıyı notification göndererek uyaracaktır.
+    Kullanıcıya gönderilecek olan mesajı değiştirmek için, servise gönderilen istekte 'baslik' ve 'mesaj'
+    alanları kullanılabilir.
     """
     _SOLVER_DIR = '/opt/zato/solver'
 
     def handle(self):
         bolum_yoksis_no = int(self.request.payload['bolum'])
+        kullanici_key = self.request.payload['kullanici']
+        url = self.request.payload['url']
         export_dir = os.path.join(self._SOLVER_DIR, str(bolum_yoksis_no))
         try:
-            status, result = self._handle(bolum_yoksis_no, export_dir)
+            status, result = self._handle(bolum_yoksis_no, kullanici_key, url, export_dir)
         except Exception as e:
             shutil.rmtree(export_dir)
             raise e
@@ -55,7 +62,7 @@ class ExecuteSolver(Service):
         status_msg = 'ok' if status == httplib.OK else 'fail'
         self.response.payload = {'status': status_msg, 'result': result}
 
-    def _handle(self, bolum_yoksis_no, export_dir):
+    def _handle(self, bolum_yoksis_no, kullanici_key, url, export_dir):
         if not os.path.isdir(self._SOLVER_DIR):
             os.mkdir(self._SOLVER_DIR)
 
@@ -93,15 +100,11 @@ class ExecuteSolver(Service):
         # Sonuçları oku
         root = ET.parse(os.path.join(output_folder, 'solution.xml')).getroot()
         ders_programi_doldurma(root)
-
-        # Tüm derslerin çözülüp çözülmediğini kontrol et
-        donem = Donem.guncel_donem()
-        bolum = Unit.objects.get(yoksis_no=bolum_yoksis_no)
-        cozulemeyenler = DersEtkinligi.objects\
-            .filter(donem=donem, bolum=bolum)\
-            .exclude(solved=True)
-
         shutil.rmtree(export_dir)
-        if len(cozulemeyenler) > 0:
-            return httplib.OK, 'Eksik çözüm bulundu'
-        return httplib.OK, 'Tüm dersler yerleştirildi'
+
+        # Çözümü isteyen kullanıcıyı bilgilendir
+        kullanici = User.objects.get(key=kullanici_key)
+        baslik = self.request.payload.get('baslik', 'Ders planlaması tamamlandı')
+        mesaj = self.request.payload.get('mesaj', 'Ders planlaması işlemi tamamlandı.')
+        kullanici.send_notification(baslik, mesaj, url=url)
+        return httplib.OK, mesaj
