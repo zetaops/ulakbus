@@ -1004,9 +1004,9 @@ AKADEMIK_TAKVIM_ETKINLIKLERI = [
     ('67', 'Güz Dönemi Dersler'),
     ('68', 'Bahar Dönemi Dersler'),
     ('69', 'Yaz Dönemi Dersler'),
-    ('70', 'Muhendisler Bayrami'),
-    ('71', '23 Nisan Ulusal Egemenlik ve Cocuk Bayrami'),
-    ('72', '19 Mayis Genclik ve Spor Bayrami')
+    ('70', '1 Mayıs İşçi Bayrami'),
+    ('71', '23 Nisan Ulusal Egemenlik ve Çocuk Bayramı'),
+    ('72', '19 Mayıs Genclik ve Spor Bayramı')
 
 
 ]
@@ -1024,7 +1024,8 @@ class AkademikTakvim(Model):
     """
 
     birim = Unit("Birim", index=True)
-    yil = field.Date("Yıl", index=True)
+    # yil = field.Date("Yıl", index=True)
+    ogretim_yili = field.Integer("Öğretim Yılı", index=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -1073,7 +1074,7 @@ class Takvim(Model):
     resmi_tatil = field.Boolean("Resmi Tatil", index = True)
 
     def pre_save(self):
-        if not self.baslangic or not self.bitis:
+        if not self.baslangic and not self.bitis:
             raise Exception("Tarihlerden en az bir tanesi dolu olmalidir.")
 
     class Meta:

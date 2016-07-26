@@ -9,7 +9,7 @@ SLOT_SURESI = 5
 # CPSolver'ın ID alanlarında kabul ettiği maximum değer
 SOLVER_MAX_ID = 900000000000000000
 
-AYLAR = [(1, 'Ocak'),( 2, 'Subat'), (3, 'Mart'), (4, 'Nisan'), (5, 'Mayis'), (6, 'Haziran'), (7, 'Temmuz'),
+AYLAR = [(1, 'Ocak'),( 2, 'Şubat'), (3, 'Mart'), (4, 'Nisan'), (5, 'Mayıs'), (6, 'Haziran'), (7, 'Temmuz'),
 (8, 'Ağustos'), (9, 'Eylül'), (10, 'Ekim'), (11, 'Kasım'), (12, 'Aralık')]
 
 def saat2slot(saat):

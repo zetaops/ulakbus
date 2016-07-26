@@ -15,7 +15,8 @@ from ulakbus.models.ders_programi_data import DersEtkinligi
 from datetime import datetime, date
 import calendar
 from collections import OrderedDict
-from ulakbus.lib.common import AYLAR, get_akademik_takvim
+from ulakbus.lib.common import AYLAR
+import json
 
 guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
@@ -120,7 +121,6 @@ class DersUcretiHesaplama(CrudView):
         gelecektir.
         """
 
-        # self.current.role.unit.yoksis_no = 207974  # it will be dynamic
         birim_no = self.current.role.unit.yoksis_no
         _form = OkutmanListelemeForm(current=self.current, title="Okutman Seçiniz")
         okutmanlar = Okutman.objects.filter(birim_no=birim_no)
@@ -178,9 +178,9 @@ class DersUcretiHesaplama(CrudView):
         # Ayın ilk günü = 0-6 Pazt-Pazar
         # 2016 yılı Temmuz ayı için = (4,31)
 
-        birim_no = 207974  # rolden gelecek
-        birim_unit = Unit.objects.get(yoksis_no=birim_no)
-
+        birim_unit = Unit.objects.get(yoksis_no=self.current.role.unit.yoksis_no)
+        ust_birim = Unit.objects.get(yoksis_no=self.current.role.unit.parent_unit_no)
+        universite = Unit.objects.get(parent_unit_no=0)
         # Verilen yıl ve birime göre akademik takvim döndürür
 
         # Secilen ay hangi donemleri kapsiyor, kac donemi kapsıyorsa
@@ -190,8 +190,6 @@ class DersUcretiHesaplama(CrudView):
         # Resmi tatilerin gununu (23, 12, 8) gibi ve doneme gore akademik takvim donduruyor
         resmi_tatil_list, akademik_takvim_list = Takvim.resmi_tatil_gunleri_getir(donem_list, birim_unit, yil, ay)
 
-        print resmi_tatil_list
-
         # Kapsadığı dönemlere göre ders baslangıc ve bitis tarihlerini
         # baz alarak kapsadığı her bir dönemin seçilen ayda hangi gün
         # aralıklarını kapsadığı bilgisini tuple olarak dondurur. Bir
@@ -200,26 +198,46 @@ class DersUcretiHesaplama(CrudView):
         tarih_araligi = donem_aralik_dondur(donem_list, yil, ay, takvim, akademik_takvim_list)
 
         object_list = ['Öğretim Elemanı']
-        tarih_list = list(range(1,takvim[1]+1))
-        for tarih in tarih_list:
-            object_list.append(' '+str(tarih))
+        tarih_list = list(range(1, takvim[1] + 1))
+        hafta_gun_list = []
+        for i, tarih in enumerate(tarih_list):
+            object_list.append(' ' + str(tarih))
+            gun = calendar.weekday(yil, ay, tarih) + 1
+            hafta_gun_list.append(hafta_gunler[gun])
 
-        # object_list = ['Ogretim Elemani', 'bir', 'iki', 'uc']
+        # integer kabul etmedigi icin bosluk + integer koyuldu.
+        # sonradan degistirilecek.
+
+
         _form = JsonForm(current=self.current)
 
         kontrol = self.current.task_data["control"]
         if kontrol:
-            _form.title = "%s %s-%s AYI DERS PUANTAJ TABLOSU" % (birim_unit.name,yil, ay_isim.upper())
+            _form.title = "%s %s-%s AYI DERS PUANTAJ TABLOSU" % (birim_unit.name, yil, ay_isim.upper())
             ders_saati_turu = 'Ders Saati'
 
         else:
-            _form.title = "%s %s-%s AYI EK DERS PUANTAJ TABLOSU" % (birim_unit.name,yil, ay_isim.upper())
+            _form.title = "%s %s-%s AYI EK DERS PUANTAJ TABLOSU" % (birim_unit.name, yil, ay_isim.upper())
             ders_saati_turu = 'Ek Ders Saati'
 
         object_list.append(ders_saati_turu)
         self.output['objects'] = [object_list]
 
+        json_dict = {
+            "gunler": object_list[1:-1],
+            "hafta_gunler": hafta_gun_list,
+            "ucret_tipi": "Gündüz",
+            "butce_yil": str(yil),
+            "fakulte": ust_birim.name,
+            "universite": universite.name,
+            "bolum": birim_unit.name,
+            "dersler": [],
+            "toplam": ''
+        }
+        toplam = 0
+        sira = 0
         for secilen_okutman in self.current.task_data["secilen_okutmanlar"]:
+            sira += 1
             okutman = Okutman.objects.get(secilen_okutman['key'])
 
             data_list = OrderedDict({})
@@ -243,16 +261,34 @@ class DersUcretiHesaplama(CrudView):
             okutman_aylik_plan, ders_saati = ders_saati_doldur(donem_list, ders_etkinlik_list,
                                                                resmi_tatil_list, personel_izin_list,
                                                                tarih_araligi, yil, ay)
-
+            toplam += ders_saati
+            dersler_dict = {
+                "sira": str(sira),
+                "okutman": okutman_adi,
+                "okutman_id": "38812710558",
+                "okutman_unvan": Okutman_Unvan[okutman.unvan],
+                "teori_dersler": [],
+                "teori_toplam": '',
+                "diger_dersler": [],
+                "diger_toplam": '',
+                "toplam": '',
+                "aciklama": " "
+            }
 
             data_list['Öğretim Elemanı'] = okutman_adi
 
-            for gun in range(1,takvim[1]+1):
+            for gun in range(1, takvim[1] + 1):
                 if gun in okutman_aylik_plan:
                     data_list[' ' + str(gun)] = str(okutman_aylik_plan[gun])
+                    dersler_dict["teori_dersler"].append(str(okutman_aylik_plan[gun]))
                 else:
                     data_list[' ' + str(gun)] = ' '
+                    dersler_dict["teori_dersler"].append(" ")
 
+            dersler_dict["teori_toplam"] = str(ders_saati)
+            dersler_dict["toplam"] = str(ders_saati)
+
+            json_dict["dersler"].append(dersler_dict)
             data_list[ders_saati_turu] = str(ders_saati)
 
             item = {
@@ -264,8 +300,11 @@ class DersUcretiHesaplama(CrudView):
 
             self.output['objects'].append(item)
 
+        json_dict["toplam"] = str(toplam)
+        dump_data = json.dumps(json_dict)
+        print dump_data
         _form.pdf_sec = fields.Button("Pdf Çıkar")
-        _form.help_text="""
+        _form.help_text = """
                          R: Resmi Tatil
                          İ: İzinli"""
         self.form_out(_form)
@@ -400,19 +439,19 @@ def donem_aralik_dondur(donem_list, yil, ay, takvim, akademik_takvim_list):
     return tarih_araligi
 
 
-# donem getir (once olan)
-# ders baslangic tarihi = haziran 3
-# ders bitis tarihi = haziran 28
-# haziran 1 - haziran 30 sorgu araligi
-# haziran 1, ders baslangic tarihinden once mi? 'haziran 3' : 'haziran 1'
-# kac donem var?
-## 1
-### ders bitis tariginden once mi? 'haziran 30': 'haziran 28'
-### 1 donem, 3 haziran - 28 Haziran
+Okutman_Unvan = {
+    1: "Prof",
+    2: "Doç",
+    3: "Araş. Gör.",
+    4: "Öğr. Gör."
+}
 
-## 2
-### ders bitis tariginden once mi? 'haziran 30': 'haziran 28'
-### 1 donem, 3 haziran - donem.ders bitis_tarihine kadar
-### 2 donem, donem.ders_Baskangic - haziran 28 e kadar.
-
-3 - 10, 17 - 28
+hafta_gunler = {
+    1: "Pt",
+    2: "Sl",
+    3: "Çr",
+    4: "Pr",
+    5: "Cu",
+    6: "Ct",
+    7: "Pz"
+}
