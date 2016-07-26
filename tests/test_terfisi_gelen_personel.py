@@ -10,7 +10,7 @@
 
 from ulakbus.models import User, Personel
 from zengine.lib.test_utils import BaseTestCase
-from zengine.notifications.model import NotificationMessage
+from zengine.messaging.model import Message
 import time
 
 
@@ -52,7 +52,7 @@ class TestCase(BaseTestCase):
         self.client.post(cmd="red_aciklamasi_yaz",
                          form={'Personel': resp.json['forms']['model']['Personel'],
                                'duzenle': 1})
-        NotificationMessage.objects.filter().delete()
+        Message.objects.filter().delete()
         resp = self.client.post(
             wf='terfisi_gelen_personel_listesi',
             form={'devam': 1, 'red_aciklama': "Reddedildi"}
@@ -68,7 +68,7 @@ class TestCase(BaseTestCase):
         token, user = self.get_user_token('personel_isleri_1')
         resp = self.client.post(token=token)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
-        NotificationMessage.objects.filter().delete()
+        Message.objects.filter().delete()
 
         assert len(ter_gel_id_per) == 3
 
@@ -120,7 +120,7 @@ class TestCase(BaseTestCase):
         token, user = self.get_user_token('genel_sekreter_1')
         resp = self.client.post(token=token)
         assert len(resp.json['forms']['model']['Personel']) == 3
-        NotificationMessage.objects.filter().delete()
+        Message.objects.filter().delete()
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
@@ -133,10 +133,10 @@ class TestCase(BaseTestCase):
         time.sleep(1)
 
         usr = User.objects.get(username='personel_isleri_1')
-        msg = NotificationMessage.objects.filter(receiver=usr)[0]
+        msg = Message.objects.filter(receiver=usr)[0]
         token = msg.url.split('/')[-1]
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
         resp = self.client.post()
-        NotificationMessage.objects.filter().delete()
+        Message.objects.filter().delete()
 
         assert resp.json['msgbox']['title'] == "Terfi İşlemleri Onay Belgesi!"
