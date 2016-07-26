@@ -386,7 +386,7 @@ class DersSubelendirme(CrudView):
 
         """
 
-        from zengine.notifications import Notify
+        from zengine.messaging import Notify
 
         just_created = self.current.task_data.get('just_created', [])
         just_deleted = self.current.task_data.get('just_deleted', [])
