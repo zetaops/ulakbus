@@ -72,12 +72,6 @@ class User(Model, BaseUser):
                 "%s@gmail.com" % self.username).hexdigest()
 
 
-
-        # def send_message(self, title, message, sender=None):
-        #     from zengine.messaging import Notify
-        #     Notify(self.key).set_message(title, message, typ=Notify.Message, sender=sender)
-
-
 class Permission(Model):
     """Permission modeli
 
