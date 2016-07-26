@@ -13,7 +13,7 @@
       <bpmn2:lane id="personel" name="personel">
         <bpmn2:flowNodeRef>basla</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ServiceTask_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ServiceTask_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>kaydet</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>izin_bilgileri_goster</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>EndEvent_3</bpmn2:flowNodeRef>
@@ -29,11 +29,11 @@
       <bpmn2:outgoing>SequenceFlow_20</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ServiceTask_2" targetRef="izin_bilgileri_goster"/>
-    <bpmn2:serviceTask id="ServiceTask_1" camunda:class="personel.izin.IzinIslemleri.kaydet" name="Kaydet">
+    <bpmn2:serviceTask id="kaydet" camunda:class="personel.izin.IzinIslemleri.kaydet" name="Kaydet">
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_25" name="" sourceRef="ServiceTask_1" targetRef="izin_bilgileri_goster"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_25" name="" sourceRef="kaydet" targetRef="izin_bilgileri_goster"/>
     <bpmn2:userTask id="izin_bilgileri_goster" camunda:assignee="personel.izin.IzinIslemleri.goster" name="İzin Bilgileri Listele">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
@@ -61,7 +61,7 @@
       <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="UserTask_2" targetRef="ServiceTask_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="UserTask_2" targetRef="kaydet"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
@@ -115,7 +115,7 @@
           <dc:Bounds height="6.0" width="6.0" x="850.0" y="209.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_26" bpmnElement="ServiceTask_1">
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_26" bpmnElement="kaydet">
         <dc:Bounds height="80.0" width="100.0" x="521.0" y="96.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="_BPMNShape_UserTask_13" targetElement="_BPMNShape_ServiceTask_26">
