@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.0.0">
   <bpmn:collaboration id="Collaboration_0jqtmlj">
-    <bpmn:participant id="OgretimElemaniSinavProgrami" processRef="okutman_sinav_programi_goruntule" />
+    <bpmn:participant id="OgretimElemaniSinavProgrami" name="Öğretim Elemanı" processRef="okutman_sinav_programi_goruntule" />
   </bpmn:collaboration>
-  <bpmn:process id="okutman_sinav_programi_goruntule" name="Öğretim Elemanı Sınav Programı" isExecutable="false">
+  <bpmn:process id="okutman_sinav_programi_goruntule" name="Sınav Programı" isExecutable="false">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_18408cb</bpmn:outgoing>
     </bpmn:startEvent>
