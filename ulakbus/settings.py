@@ -232,7 +232,7 @@ SICIL_PREFIX = "KON"
 TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'
 
 #: User search method of messaging subsystem will work on these fields
-MESSAGING_USER_SEARCH_FIELDS = ['username', ]
+MESSAGING_USER_SEARCH_FIELDS = ['name', 'surname']
 
 #: Unit search method of messaging subsystem will work on these fields
 MESSAGING_UNIT_SEARCH_FIELDS = ['name',]
