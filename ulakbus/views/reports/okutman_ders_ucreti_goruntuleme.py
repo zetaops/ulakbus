@@ -11,11 +11,10 @@ from zengine.forms import fields
 from zengine.forms import JsonForm
 from ulakbus.models.ogrenci import Okutman, Donem, Takvim, Unit, Personel
 from ulakbus.models.personel import Izin
-from ulakbus.models.ders_programi_data import DersEtkinligi
-from datetime import datetime, date
+from datetime import datetime
 import calendar
 from collections import OrderedDict
-from ulakbus.lib.common import AYLAR, get_akademik_takvim
+from ulakbus.lib.common import AYLAR
 from ulakbus.views.reports import ders_ucreti_hesaplama as DU
 
 guncel_yil = datetime.now().year
@@ -152,7 +151,7 @@ class DersUcretiHesaplama(CrudView):
         # Ayın ilk günü = 0-6 Pazt-Pazar
         # 2016 yılı Temmuz ayı için = (4,31)
 
-        birim_no = self.current.role.unit.yoksis_no # rolden gelecek
+        birim_no = self.current.role.unit.yoksis_no  # rolden gelecek
         birim_unit = Unit.objects.get(yoksis_no=birim_no)
 
         # Verilen yıl ve birime göre akademik takvim döndürür
@@ -181,11 +180,13 @@ class DersUcretiHesaplama(CrudView):
 
         kontrol = self.current.task_data["control"]
         if kontrol:
-            _form.title = "%s - %s %s-%s AYI DERS PUANTAJ TABLOSU" % (okutman_adi.upper(),birim_unit.name, yil, ay_isim.upper())
+            _form.title = "%s - %s %s-%s AYI DERS PUANTAJ TABLOSU" % (
+            okutman_adi.upper(), birim_unit.name, yil, ay_isim.upper())
             ders_saati_turu = 'Ders Saati'
 
         else:
-            _form.title = "%s - %s %s-%s AYI EK DERS PUANTAJ TABLOSU" % (okutman_adi.upper(),birim_unit.name, yil, ay_isim.upper())
+            _form.title = "%s - %s %s-%s AYI EK DERS PUANTAJ TABLOSU" % (
+            okutman_adi.upper(), birim_unit.name, yil, ay_isim.upper())
             ders_saati_turu = 'Ek Ders Saati'
 
         object_list.append(ders_saati_turu)
