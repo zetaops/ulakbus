@@ -127,7 +127,8 @@ class DersProgramiYap(CrudView):
         text = str(self.input['form']['arama_text'])
         try:
             if self.input['form']['arama_sec'] == 1:
-                room_search = [r for r in Room.objects.filter(code=text) if self.current.role.unit in r.RoomDepartments]
+                room_search = [r for r in Room.objects.filter(code=text) if
+                               self.current.role.unit in r.RoomDepartments]
                 if room_search:
                     self.current.task_data['data_key'] = room_search[0].key
                     self.current.task_data['cmd'] = 'tekli'
@@ -163,7 +164,8 @@ class DersProgramiYap(CrudView):
                 'type': "table-multiRow",
                 'fields': data_list,
                 'actions': [
-                    {'name': 'Goster', 'cmd': 'tek_sonuc', 'show_as': 'button', 'object_key': 'ogretim_elemani'}
+                    {'name': 'Goster', 'cmd': 'tek_sonuc', 'show_as': 'button',
+                     'object_key': 'ogretim_elemani'}
                 ],
                 'key': data.key
             }
@@ -175,40 +177,46 @@ class DersProgramiYap(CrudView):
                         self.current.task_data["LANE_CHANGE_MSG"]["title"] == "Kayıt Bulunamadı":
             self.current.output['msgbox'] = self.current.task_data["LANE_CHANGE_MSG"]
         else:
+            obj_key = self.current.task_data['data_key']
             if self.input['form']['arama_sec'] == 1:
-                ders_etkinligi = sorted(DersEtkinligi.objects.filter(room_id=self.current.task_data['data_key']),
-                                        key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+                ders_etkinligi = DersEtkinligi.objects.filter(room_id=obj_key)
+                obj = Room.objects.get(obj_key)
+
             else:
-                ders_etkinligi = sorted(DersEtkinligi.objects.filter(
-                    okutman_id=self.current.task_data['data_key']),
-                    key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+                ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman_id=obj_key),
+                                        key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+                obj = Okutman.objects.get(obj_key)
 
-            days = ["Saat Aralığı", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+            days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+            self.output['objects'] = [days]
 
-            for data in ders_etkinligi:
-                if self.input['form']['arama_sec'] == 1:
-                    ad = data.okutman.ad
-                    soyad = data.okutman.soyad
-                else:
-                    ad = data.room.code
-                    soyad = data.room.name
-                data_list = OrderedDict({})
+            data_list = []
 
-                data_list["Saat Aralığı"] = "%s:%s-%s:%s" % (data.baslangic_saat,
-                                                             data.baslangic_dakika,
-                                                             data.bitis_saat,
-                                                             data.bitis_dakika)
-                for i in range(1, len(days)):
-                    if data.gun == i:
-                        data_list[days[i]] = "%s %s" % (ad, soyad)
-                    else:
-                        data_list[days[i]] = " "
+            def etkinlik(de):
+                """
+                Ders etkinligi formatlar ve dondurur.
 
-                item = {
-                    "title": "Detaylı Zaman Tablosu",
-                    'type': "table-multiRow",
-                    'fields': data_list}
-                self.output['objects'].append(item)
+                :param de: ders etkinligi
+                :return: ders adi ve zamani
+                """
+                aralik = "%s:%s - %s:%s" % (de.baslangic_saat,
+                                            de.baslangic_dakika,
+                                            de.bitis_saat,
+                                            de.bitis_dakika)
+                return "\n\n**%s**\n%s\n\n" % (aralik, de.ders.ad)
+
+            for day in days:
+                for de in ders_etkinligi.filter(gun=days.index(day)):
+                    data_list.append("%s" % etkinlik(de))
+
+            item = {
+                "title": "%s - Detaylı Zaman Tablosu" % obj.__unicode__(),
+                'type': "table-multiRow",
+                'fields': data_list,
+                "actions": False,
+                'key': ''
+            }
+            self.output['objects'].append(item)
         _json = JsonForm(title="Güncel Zaman Dilimleri")
         _json.tamamla = fields.Button("Bitir")
         self.form_out(_json)
@@ -230,10 +238,10 @@ class DersProgramiYap(CrudView):
 
 
 class OgretimElemaniDersProgrami(CrudView):
-
     def kontrol(self):
         okutman = Okutman.objects.get(personel=self.current.user.personel)
-        ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman=okutman), key=lambda d: (d.gun, d.baslangic_saat))
+        ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman=okutman),
+                                key=lambda d: (d.gun, d.baslangic_saat))
         for de in ders_etkinligi:
             if not de.published or de.published is False:
                 self.current.task_data['cmd'] = 'yok'
@@ -241,7 +249,8 @@ class OgretimElemaniDersProgrami(CrudView):
 
     def ders_programini_goster(self):
         okutman = Okutman.objects.get(personel=self.current.user.personel)
-        ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman=okutman), key=lambda d: (d.gun, d.baslangic_saat))
+        ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman=okutman),
+                                key=lambda d: (d.gun, d.baslangic_saat))
 
         dersler = list()
 
@@ -254,7 +263,8 @@ class OgretimElemaniDersProgrami(CrudView):
             dersler.append(ders)
         item = {'read_only': True,
                 'name': self.current.user.name,
-                'gunler': ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
+                'gunler': ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi",
+                           "Pazar"],
                 'dersler': dersler}
 
         self.output['ders_programi'] = item
