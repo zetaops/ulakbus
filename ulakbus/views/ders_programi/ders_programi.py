@@ -11,7 +11,8 @@
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
 from collections import OrderedDict
-from ulakbus.models import Room, Okutman, DersEtkinligi
+from ulakbus.services.zato_wrapper import DersProgramiOlustur
+from ulakbus.models import Room, Okutman, DersEtkinligi, Donem
 
 ARAMA_TURU = [
     (1, 'Derslik'),
@@ -32,24 +33,64 @@ class AramaForm(JsonForm):
 class DersProgramiYap(CrudView):
 
     def kontrol(self):
-        ders_etkinligi_count = DersEtkinligi.objects.filter().count()
-        solved_count = DersEtkinligi.objects.filter(solved=True).count()
+        ders_etkinligi_count = DersEtkinligi.objects.filter(bolum=self.current.role.unit,
+                                                            donem=Donem.guncel_donem()).count()
 
-        if ders_etkinligi_count != solved_count:
+        solved_count = DersEtkinligi.objects.filter(bolum=self.current.role.unit,
+                                                    donem=Donem.guncel_donem(),
+                                                    solved=True).count()
+
+        published_count = DersEtkinligi.objects.filter(bolum=self.current.role.unit, published=True,
+                                                       donem=Donem.guncel_donem()).count()
+
+        if published_count > 0:
             self.current.task_data['cmd'] = 'kayit_var'
 
+        elif solved_count == ders_etkinligi_count and solved_count > 0:
+            self.current.task_data['cmd'] = 'hatasiz_sonuc'
+            msg = {"type": 'info',
+                   "title": 'Yayınlanmamış Ders Programı Var!',
+                   "msg":  'Yayınlanmayan ders programını inceleyip yayınlayabilirsiniz.'}
+            # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
+            self.current.task_data['LANE_CHANGE_MSG'] = msg
+        elif solved_count != ders_etkinligi_count:
+            msg = {"type": 'warning',
+                   "title": 'Hatalı Sonuçlar Var!',
+                   "msg":  'Oluşturulan ders programınızda hatalı sonuçlar bulunmaktadır.'
+                            'Lütfen tekrardan ders programı oluşturunuz.'}
+            # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
+            self.current.task_data['LANE_CHANGE_MSG'] = msg
+
     def ders_programi_hesaplama_baslat(self):
+        if 'LANE_CHANGE_MSG' in self.current.task_data:
+            if self.current.task_data['LANE_CHANGE_MSG']['title'] == 'Hatalı Sonuçlar Var!':
+                self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
         _form = JsonForm(title="Ders Programı Oluştur")
-        _form.button = fields.Button('Gonder')
+        _form.button = fields.Button('Başlat')
         self.form_out(_form)
 
     def ders_programi_hesapla(self):
-        pass
+        dp = DersProgramiOlustur(service_payload={"bolum": self.current.role.unit.yoksis_no,
+                                                  "kullanici": self.current.user.key,
+                                                  "url": self.current.get_wf_link()})
+        response = dp.zato_request()
+
+        if response:
+            msg = {"type": 'info',
+                   "title": 'Ders Programı Oluşturuluyor',
+                   "msg": 'Ders programı için yaptığınız taleb başarıyla alınmıştır.'}
+            self.current.task_data['LANE_CHANGE_MSG'] = msg
+        else:
+            msg = {"type": 'warning',
+                   "title": 'Sistemde Sorun Oluştu',
+                   "msg": 'Lütfen tekrardan ders programı oluşturmayı çalıştırnız!'}
+            self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def servis_bilgi_mesaji(self):
-        msg = {"title": 'Ders Programı Oluşturuluyor',
-               "body": 'Ders programı için yaptığınız taleb başarıyla alınmıştır.'}
-        self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+        if self.current.task_data['LANE_CHANGE_MSG']['title'] == 'Ders Programı Oluşturuluyor':
+            self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
+
         _form = JsonForm(title="Devam")
         _form.devam = fields.Button("Devam")
         self.form_out(_form)
@@ -58,28 +99,22 @@ class DersProgramiYap(CrudView):
         self.current.task_data['cmd'] = 'hata_yok'
 
     def hatasiz(self):
-        msg = {"title": 'Ders Programi Olusturuldu',
-               "body": 'Ders programi hatasiz bir sekilde olusturuldu.'}
-
-        self.current.task_data['LANE_CHANGE_MSG'] = msg
         _form = JsonForm(title="Devam")
         _form.devam = fields.Button("Devam", cmd='incele')
         self.form_out(_form)
+        self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
 
     def derslik_og_elemani_ara(self):
-        # sample:
+
         self.form_out(AramaForm(self.object, current=self.current))
 
     def arama(self):
         text = str(self.input['form']['arama_text'])
         try:
             if self.input['form']['arama_sec'] == 1:
-                room_search = Room.objects.filter(code=text)
-                if len(room_search) > 1:
-                    self.current.search = room_search
-                    self.current.task_data['cmd'] = 'coklu'
-                elif len(room_search) == 1:
-                    self.current.ders_etkinligi = sorted(DersEtkinligi.objects.filter(room=room_search[0]),
+                room_search = Room.objects.get(code=text)
+                if room_search:
+                    self.current.ders_etkinligi = sorted(DersEtkinligi.objects.filter(room=room_search),
                                                          key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
                     self.current.task_data['cmd'] = 'tekli'
                 else:
