@@ -39,18 +39,18 @@ class UnitimeEntityXMLExport(Command):
         """Çakışmaları önleyerek pyoko key'lerinden solver id'leri oluşturur."""
         if key in self._SOLVER_IDS:
             return self._SOLVER_IDS[key]
-        unitime_id = hash(key) % SOLVER_MAX_ID
+        unitime_key = hash(key) % SOLVER_MAX_ID
         # Çakışmalar çözülene kadar id değerini değiştir
-        while unitime_id in self._SOLVER_IDS.values():
-            unitime_id += 1
-        self._SOLVER_IDS[key] = unitime_id
-        return unitime_id
+        while unitime_key in self._SOLVER_IDS.values():
+            unitime_key += 1
+        self._SOLVER_IDS[key] = unitime_key
+        return unitime_key
 
     def _room_id(self, room):
-        id_ = room.unitime_id
+        id_ = room.unitime_key
         if id_ is None:
             id_ = self._key2id(room.key)
-            room.unitime_id = id_
+            room.unitime_key = id_
             room.save()
         else:
             # Daha sonraki çakışmaları önlemek için, görülen key'i kaydet
@@ -294,7 +294,7 @@ class ExportCourseTimetable(UnitimeEntityXMLExport):
                     # Çıkartılan ders için ders etkinliği kaydı oluştur
                     d = DersEtkinligi()
                     d.solved = False
-                    d.unitime_id = sube_subpart_id
+                    d.unitime_key = sube_subpart_id
                     d.unit_yoksis_no = bolum.yoksis_no
                     d.room_type = tur.sinif_turu()
                     d.okutman = okutman
@@ -305,7 +305,7 @@ class ExportCourseTimetable(UnitimeEntityXMLExport):
                     d.save()
                     # Derse uygun derslikleri çıkar
                     for derslik in uygun_derslikler:
-                        writer.text_element('room', attrs={'id': '%i' % derslik.unitime_id, 'pref': '0'})
+                        writer.text_element('room', attrs={'id': '%i' % derslik.unitime_key, 'pref': '0'})
 
                     writer.text_element('instructor', attrs={'id': '%i' % self._key2id(okutman.key)})
                     self._zamanlari_cikar(writer, okutman, tur, bolum)
@@ -532,7 +532,7 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
                                                  'maxRooms': '%i' % self._SINAV_MAX_ODA,
                                                  }):
                             SinavEtkinligi(ders=ders, sube=sube, donem=donem, bolum=bolum,
-                                           unitime_id=sinav_id, published=False).save()
+                                           unitime_key=sinav_id, published=False).save()
                             uygun_zamanlar = filter(lambda z: z[0] >= sinav.sinav_suresi, zamanlar.items())
                             for zaman, zaman_idleri in uygun_zamanlar:
                                 # Kısa süreli sınavların uzun zaman dilimlerine ayrılmasını önlemek için

@@ -73,12 +73,12 @@ def ders_programi_doldurma(root):
     cls = [child for child in root.iter('class') for i in child.iter('instructor') if i.get('solution') == 'true']
 
     for child in cls:
-        ders_etkinlik = DersEtkinligi.objects.get(unitime_id=child.get('id'))
+        ders_etkinlik = DersEtkinligi.objects.get(unitime_key=child.get('id'))
         ders_etkinlik.solved = True
 
         for room in child.iter('room'):
             if room.get('solution') == 'true':
-                room = Room.objects.get(unitime_id=room.get('id'))
+                room = Room.objects.get(unitime_key=room.get('id'))
                 ders_etkinlik.room = room
                 break
 
@@ -126,11 +126,11 @@ def sinav_etkinlikleri_oku(root):
     for exam in exams.iter('exam'):
         assignment = exam.find('assignment')
         if assignment is not None:
-            etkinlik = SinavEtkinligi.objects.get(unitime_id=exam.get('id'))
+            etkinlik = SinavEtkinligi.objects.get(unitime_key=exam.get('id'))
             period_id = assignment.find('period').get('id')
             etkinlik.tarih = zamanlar[period_id]
             etkinlik.solved = True
             for period in assignment.iter('room'):
-                room = Room.objects.get(unitime_id=period.get('id'))
+                room = Room.objects.get(unitime_key=period.get('id'))
                 etkinlik.SinavYerleri.add(room=room)
             etkinlik.save()

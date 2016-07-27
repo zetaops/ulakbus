@@ -16,7 +16,7 @@ class DersEtkinligi(Model):
         search_fields = ['unit_yoksis_no', 'room', 'okutman']
 
     solved = fields.Boolean('Ders Planı Çözüm Durumu', index=True)
-    unitime_id = fields.String(index=True) #class id
+    unitime_key = fields.String(index=True) #class id
     unit_yoksis_no = fields.Integer('Bölüm Yöksis Numarası', index=True)
     room_type = RoomType('İşleneceği Oda Türü', index=True)
     okutman = Okutman("Öğretim Elemanı", index=True)
@@ -61,7 +61,7 @@ class SinavEtkinligi(Model):
     ders = Ders('Ders', index=True)
     donem = Donem('Dönem', index=True)
     bolum = Unit('Bölüm', index=True)
-    unitime_id = fields.String(index=True)
+    unitime_key = fields.String(index=True)
     solved = fields.Boolean('Sınav Planı Çözüm Durumu', index=True, default=False)
 
     published = fields.Boolean('Sınav Planı Yayınlanma Durumu', index=True, default=False)
