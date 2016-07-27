@@ -55,7 +55,7 @@ class SinavEtkinligi(Model):
 
     class Meta:
         verbose_name = 'Sınav Etkinliği'
-        search_field = ['bolum', 'ders', 'sube']
+        search_field = ['bolum', 'ders', 'sube', 'donem']
 
     sube = Sube('Şube', index=True)
     ders = Ders('Ders', index=True)
