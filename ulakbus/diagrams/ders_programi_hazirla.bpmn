@@ -50,6 +50,7 @@
     <bpmn:userTask id="hatasiz" name="Hatasiz" camunda:assignee="ders_programi.ders_programi.DersProgramiYap.hatasiz">
       <bpmn:incoming>SequenceFlow_1byn1n6</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1ozzjo5</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0fx3re5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1jfexrt</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_05cto6g">
@@ -81,6 +82,7 @@
       <bpmn:incoming>SequenceFlow_0opcoik</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0zizont</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0j7khz5</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0fx3re5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0s7rxur" default="SequenceFlow_1byn1n6">
       <bpmn:incoming>SequenceFlow_1sgwn2c</bpmn:incoming>
@@ -120,6 +122,9 @@
       <bpmn:incoming>SequenceFlow_16ey3nh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1sgwn2c</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0fx3re5" sourceRef="ExclusiveGateway_1qchit3" targetRef="hatasiz">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='hatasiz_sonuc']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1xz8zp8">
@@ -360,6 +365,14 @@
       <bpmndi:BPMNShape id="UserTask_1lw8us6_di" bpmnElement="detay_goster">
         <dc:Bounds x="1108" y="270" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fx3re5_di" bpmnElement="SequenceFlow_0fx3re5">
+        <di:waypoint xsi:type="dc:Point" x="359" y="710" />
+        <di:waypoint xsi:type="dc:Point" x="359" y="625" />
+        <di:waypoint xsi:type="dc:Point" x="1107" y="625" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="329" y="657.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
