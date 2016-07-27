@@ -83,7 +83,7 @@ class KatilimDurumu(CrudView):
         Okutmanın kayıtlı olduğu şubelerden biri seçilir.
 
         """
-        _form = forms.JsonForm(current=self.current)
+        _form = forms.JsonForm(current=self.current, title="Şube Seçiniz.")
         _form.sube = fields.Integer("Sube Seçiniz",
                                     choices=prepare_choices_for_model(Sube,
                                                                       okutman_id=self.get_okutman_key))
@@ -114,6 +114,7 @@ class KatilimDurumu(CrudView):
                 aciklama = derse_katilim.aciklama
             except ObjectDoesNotExist:
                 katilim_durumu = ""
+                aciklama = ""
 
             _form.Ogrenciler(ad_soyad='%s %s' % (ogrenci_dersi.ogrenci.ad, ogrenci_dersi.ogrenci.soyad),
                              ogrenci_no=ogrenci_dersi.ogrenci_program.ogrenci_no,
@@ -165,7 +166,7 @@ class KatilimDurumu(CrudView):
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Devamsızlıklar Kaydedildi',
-            "msg": '%s dersine ait ogrenci katilim bilgileri  kaydedildi' % sube.ders.ad}
+            "msg": '%s dersine ait öğrencilerin katılım bilgileri  başarıyla kaydedildi' % sube.ders.ad}
 
     @property
     def get_okutman_key(self):
