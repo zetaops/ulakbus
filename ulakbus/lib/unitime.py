@@ -460,7 +460,8 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
         Returns:
             Takvim:
         """
-        akademik_takvim = get_akademik_takvim(bolum)
+        yil = _year()
+        akademik_takvim = get_akademik_takvim(bolum, yil)
         sinav_takvim = None
         for etkinlik in self._SINAV_ETKINLIKLERI:
             try:
