@@ -21,7 +21,6 @@ ARAMA_TURU = [
 
 
 class AramaForm(JsonForm):
-
     class Meta:
         title = 'Öğretim Elemanı veya Derslik Ara'
 
@@ -32,7 +31,6 @@ class AramaForm(JsonForm):
 
 
 class DersProgramiYap(CrudView):
-
     def ders_etkinligi_sayisi(self):
         ders_etkinligi_count = DersEtkinligi.objects.filter(bolum=self.current.role.unit,
                                                             donem=Donem.guncel_donem()).count()
@@ -56,13 +54,13 @@ class DersProgramiYap(CrudView):
             self.current.task_data['cmd'] = 'hatasiz_sonuc'
             msg = {"type": 'info',
                    "title": 'Yayınlanmamış Ders Programı Var!',
-                   "msg":  'Yayınlanmayan ders programını inceleyip yayınlayabilirsiniz.'}
+                   "msg": 'Yayınlanmayan ders programını inceleyip yayınlayabilirsiniz.'}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
         elif solved_count != ders_etkinligi_count and solved_count > 0:
             msg = {"type": 'warning',
                    "title": 'Hatalı Sonuçlar Var!',
-                   "msg":  'Oluşturulan ders programınızda hatalı sonuçlar bulunmaktadır.'
-                            'Lütfen tekrardan ders programı oluşturunuz.'}
+                   "msg": 'Oluşturulan ders programınızda hatalı sonuçlar bulunmaktadır.'
+                          'Lütfen tekrardan ders programı oluşturunuz.'}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def ders_programi_hesaplama_baslat(self):
@@ -111,7 +109,7 @@ class DersProgramiYap(CrudView):
         else:
             msg = {"type": 'info',
                    "title": 'Ders Programı Başarıyla Oluşturuldu!',
-                   "msg":  'Yayınlanmayan ders programını inceleyip yayınlayabilirsiniz.'}
+                   "msg": 'Yayınlanmayan ders programını inceleyip yayınlayabilirsiniz.'}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def hatasiz(self):
@@ -131,8 +129,7 @@ class DersProgramiYap(CrudView):
             if self.input['form']['arama_sec'] == 1:
                 room_search = [r for r in Room.objects.filter(code=text) if self.current.role.unit in r.RoomDepartments]
                 if room_search:
-                    self.current.ders_etkinligi = sorted(DersEtkinligi.objects.filter(room=room_search[0]),
-                                                         key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+                    self.current.task_data['data_key'] = room_search[0].key
                     self.current.task_data['cmd'] = 'tekli'
                 else:
                     raise
@@ -144,16 +141,16 @@ class DersProgramiYap(CrudView):
                     self.current.search = okutman_search
                     self.current.task_data['cmd'] = 'coklu'
                 elif len(okutman_search) == 1:
-                    self.current.ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman=okutman_search[0]),
-                                                         key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+                    self.current.task_data['data_key'] = okutman_search[0]
                     self.current.task_data['cmd'] = 'tekli'
                 else:
                     raise
         except:
-            self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Kayıt Bulunamadi',
-                "msg": 'Ilgili kayit bulunamadi.'
+            msg = {
+                'type': 'warning', "title": 'Kayıt Bulunamadı',
+                "msg": 'İlgili kayıt bulunamadı.'
             }
+            self.current.task_data["LANE_CHANGE_MSG"] = msg
 
     def coklu_sonuc(self):
 
@@ -173,46 +170,48 @@ class DersProgramiYap(CrudView):
             self.output['objects'].append(item)
 
     def detay_goster(self):
-        """
-        .. code-block:: python
-            # response:
-            {
-             'ders_programi': {
-                 'name': string,     # code
-                 'gunler': [string, string,...],     # days,
-                 'dersler': [{
-                     'ad': string,  # lesson name
-                     'gun': string,  # day,
-                     'saat_araligi': string,  # '10.30-12.00',
-                     'atama': string,      # code or name
-                     }]}
-        """
 
-        days = ['Saat Aralığı', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']
-
-        self.output['objects'] = [days]
-        for data in self.current.ders_etkinligi:
+        if "LANE_CHANGE_MSG" in self.current.task_data and \
+                        self.current.task_data["LANE_CHANGE_MSG"]["title"] == "Kayıt Bulunamadı":
+            self.current.output['msgbox'] = self.current.task_data["LANE_CHANGE_MSG"]
+        else:
             if self.input['form']['arama_sec'] == 1:
-                ad = data.okutman.ad
-                soyad = data.okutman.soyad
+                ders_etkinligi = sorted(DersEtkinligi.objects.filter(room_id=self.current.task_data['data_key']),
+                                        key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
             else:
-                ad = data.room.code
-                soyad = data.room.name
-            data_list = OrderedDict({})
+                ders_etkinligi = sorted(DersEtkinligi.objects.filter(
+                    okutman_id=self.current.task_data['data_key']),
+                    key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
 
-            data_list["Saat Aralığı"] = "%s:%s-%s:%s" % (data.baslangic_saat,
-                                                         data.baslangic_dakika,
-                                                         data.bitis_saat,
-                                                         data.bitis_dakika)
-            for i in range(len(days)):
-                if data.gun == i:
-                    data_list[days[i]] = "%s %s " % (ad, soyad)
+            days = ["Saat Aralığı", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
 
-            item = {
-                "title": "Detaylı Zaman Tablosu",
-                'type': "table-multiRow",
-                'fields': data_list}
-            self.output['objects'].append(item)
+            for data in ders_etkinligi:
+                if self.input['form']['arama_sec'] == 1:
+                    ad = data.okutman.ad
+                    soyad = data.okutman.soyad
+                else:
+                    ad = data.room.code
+                    soyad = data.room.name
+                data_list = OrderedDict({})
+
+                data_list["Saat Aralığı"] = "%s:%s-%s:%s" % (data.baslangic_saat,
+                                                             data.baslangic_dakika,
+                                                             data.bitis_saat,
+                                                             data.bitis_dakika)
+                for i in range(1, len(days)):
+                    if data.gun == i:
+                        data_list[days[i]] = "%s %s" % (ad, soyad)
+                    else:
+                        data_list[days[i]] = " "
+
+                item = {
+                    "title": "Detaylı Zaman Tablosu",
+                    'type': "table-multiRow",
+                    'fields': data_list}
+                self.output['objects'].append(item)
+        _json = JsonForm(title="Güncel Zaman Dilimleri")
+        _json.tamamla = fields.Button("Bitir")
+        self.form_out(_json)
 
     def hatali(self):
         msg = {"type": 'info',
