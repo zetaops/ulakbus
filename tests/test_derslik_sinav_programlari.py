@@ -26,7 +26,7 @@ class TestCase(BaseTestCase):
 
         """
 
-        user = User.objects.get(username="ders_programi_bolum_koordinatoru_1")
+        user = User.objects.get(username="ders_programi_koordinatoru_1")
         self.prepare_client("/derslik_sinav_programlari", user=user)
         resp = self.client.post()
         derslikler = [s_yerleri.room for s_etkinlik in SinavEtkinligi.objects.filter(solved=True)
