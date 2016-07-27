@@ -24,7 +24,7 @@ class TestCase(BaseTestCase):
         karşılaştılıp test edilir.
 
         """
-        user = User.objects.get(username="ders_programi_bolum_koordinatoru_1")
+        user = User.objects.get(username="ders_programi_koordinatoru_1")
         self.prepare_client("/derslik_ders_programlari", user=user)
         resp = self.client.post()
         ders_etkinlikleri = DersEtkinligi.objects.filter(solved=True)
