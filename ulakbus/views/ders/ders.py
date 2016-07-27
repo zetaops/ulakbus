@@ -386,8 +386,6 @@ class DersSubelendirme(CrudView):
 
         """
 
-        from zengine.notifications import Notify
-
         just_created = self.current.task_data.get('just_created', [])
         just_deleted = self.current.task_data.get('just_deleted', [])
         ders_key = self.current.task_data['ders_key']
@@ -398,7 +396,7 @@ class DersSubelendirme(CrudView):
         okutmanlar = []
 
         def notify(okutman):
-            Notify(okutman.okutman.user.key).set_message(title=title, msg=msg, typ=Notify.TaskInfo)
+            okutman.okutman.user.send_notification(title=title, message=msg)
             okutmanlar.append(okutman.__unicode__())
 
         for ders, sube_key in just_created:

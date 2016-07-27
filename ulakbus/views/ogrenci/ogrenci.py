@@ -29,7 +29,6 @@ from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
-from zengine.notifications import Notify
 from zengine.views.crud import CrudView
 
 
@@ -574,8 +573,8 @@ class KayitDondurma(CrudView):
             # öğrencinin danışmanına bilgilendirme geçilir
             try:
                 danisman_key = ogrenci_program.danisman.user.key
-                Notify(danisman_key).set_message(title="Öğrenci Kaydı Donduruldu",
-                                                 msg=notify_message, typ=Notify.Message)
+                ogrenci_program.danisman.user.send_notification(title="Öğrenci Kaydı Donduruldu",
+                                                 message=notify_message, typ=111)
                 self.current.output['msgbox'] = {
                     'type': 'info', "title": 'Öğrenci Kayıt Dondurma Başarılı',
                     "msg": '%s' % (notify_message)
