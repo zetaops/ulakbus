@@ -65,7 +65,7 @@ class User(Model, BaseUser):
 
     def get_avatar_url(self):
         if self.avatar:
-            return super(BaseUser, self).get_avatar_url()
+            return BaseUser.get_avatar_url(self)
         else:
             # FIXME: This is for fun, remove when we resolve static hosting problem
             return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
