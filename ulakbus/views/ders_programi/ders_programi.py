@@ -227,7 +227,8 @@ class OgretimElemaniDersProgrami(CrudView):
             ders[
                 'saat_araligi'] = de.baslangic_saat + ':' + de.baslangic_dakika + '-' + de.bitis_saat + ':' + de.bitis_dakika
             dersler.append(ders)
-        item = {'name': self.current.user.name,
+        item = {'read_only': True,
+                'name': self.current.user.name,
                 'gunler': ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
                 'dersler': dersler}
 
