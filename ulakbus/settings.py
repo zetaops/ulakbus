@@ -26,6 +26,8 @@ AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
 ROLE_MODEL = 'ulakbus.models.auth.Role'
+UNIT_MODEL = 'ulakbus.models.auth.Unit'
+
 # # left blank to use StreamHandler aka stderr
 # LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
 #
@@ -179,6 +181,7 @@ ALLOWED_ORIGINS += [
     'http://www.ulakbus.net',
     'http://dev.zetaops.io',
     'http://nightly.zetaops.io',
+    'http://nightly.ulakbus.net'
 ]
 
 UID = 173500
@@ -202,7 +205,7 @@ S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
 S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
 S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
 S3_PUBLIC_URL = os.environ.get('S3_PUBLIC_URL')
-S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '8080')
+S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '80')
 S3_BUCKET_NAME = 'ulakbus'
 
 QUICK_MENU = [
@@ -227,3 +230,9 @@ SICIL_PREFIX = "KON"
 
 #: These models will not flushed when running tests
 TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'
+
+#: User search method of messaging subsystem will work on these fields
+MESSAGING_USER_SEARCH_FIELDS = ['name', 'surname']
+
+#: Unit search method of messaging subsystem will work on these fields
+MESSAGING_UNIT_SEARCH_FIELDS = ['name',]

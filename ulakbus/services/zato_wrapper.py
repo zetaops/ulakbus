@@ -1543,3 +1543,16 @@ class KPSAdresBilgileriGetir(TcknService):
             ret['hata'] = True
 
         return ret
+
+class DersProgramiOlustur(ZatoService):
+    """
+    dp = DersProgramiOlustur(service_payload={"bolum": 123445})
+    response = dp.zato_request()
+    """
+
+    def __init__(self, service_payload={}):
+        super(ZatoService, self).__init__()
+        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
+        self.payload = json.dump(service_payload)
+
+

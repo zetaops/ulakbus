@@ -10,7 +10,7 @@
 
 from ulakbus.models import User, Personel
 from zengine.lib.test_utils import BaseTestCase
-from zengine.notifications.model import NotificationMessage
+from zengine.messaging.model import Message
 import time
 
 
@@ -18,7 +18,9 @@ class TestCase(BaseTestCase):
     terfi_red = True
 
     def test_terfisi_gelen_personel(self):
-
+        """
+        TODO: docstring eklenecek.
+        """
         usr = User.objects.get(username='personel_isleri_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr)
         self.client.post()
@@ -44,28 +46,29 @@ class TestCase(BaseTestCase):
         time.sleep(1)
 
         # Personel terfi islemini reddet bolumu
-        usr = User.objects.get(username='genel_sekreter_1')
-        msg = NotificationMessage.objects.filter(receiver=usr)[0]
-        token = msg.url.split('/')[-1]
-        self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
+        token, user = self.get_user_token('genel_sekreter_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post()
-        self.client.post(cmd="red_aciklamasi_yaz", form={'Personel': resp.json['forms']['model']['Personel'],
-                                                         'duzenle': 1})
-
-        resp = self.client.post(wf='terfisi_gelen_personel_listesi', form={'devam': 1,
-                                                                           'red_aciklama': "Reddedildi"})
+        self.client.post(cmd="red_aciklamasi_yaz",
+                         form={'Personel': resp.json['forms']['model']['Personel'],
+                               'duzenle': 1})
+        Message.objects.filter().delete()
+        resp = self.client.post(
+            wf='terfisi_gelen_personel_listesi',
+            form={'devam': 1, 'red_aciklama': "Reddedildi"}
+        )
 
         assert resp.json['msgbox']['msg'] == "Talebiniz Basariyla iletildi."
         self.client.set_path('/logout')
 
         time.sleep(1)
 
-        usr = User.objects.get(username='personel_isleri_1')
-        msg = NotificationMessage.objects.filter(receiver=usr)[0]
-        token = msg.url.split('/')[-1]
-        self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
-        resp = self.client.post()
+        user = User.objects.get(username='personel_isleri_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=user)
+        token, user = self.get_user_token('personel_isleri_1')
+        resp = self.client.post(token=token)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
+        Message.objects.filter().delete()
 
         assert len(ter_gel_id_per) == 3
 
@@ -79,7 +82,12 @@ class TestCase(BaseTestCase):
         resp = self.client.post(cmd="terfi_liste_duzenle", form=terfi_duz_forms)
 
         resp.json['forms']['model']['Personel'][0]['yeni_gorev_ayligi_derece'] = 2
+        resp.json['forms']['model']['Personel'][0]['yeni_gorev_ayligi_kademe'] = 8
+        resp.json['forms']['model']['Personel'][0]['yeni_gorev_ayligi_gorunen'] = 8
+
         resp.json['forms']['model']['Personel'][1]['yeni_kazanilmis_hak_derece'] = 3
+        resp.json['forms']['model']['Personel'][1]['yeni_kazanilmis_hak_kademe'] = 8
+        resp.json['forms']['model']['Personel'][1]['yeni_kazanilmis_hak_gorunen'] = 8
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
@@ -88,8 +96,8 @@ class TestCase(BaseTestCase):
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
-        assert ter_gel_id_per[0]['yeni_gorev_ayligi'] == '2/8(8)' and \
-               ter_gel_id_per[2]['yeni_kazanilmis_hak'] == '3/8(8)'
+        assert ter_gel_id_per[0]['yeni_gorev_ayligi'] == '2/8(8)'
+        assert ter_gel_id_per[2]['yeni_kazanilmis_hak'] == '3/8(8)'
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
@@ -103,14 +111,16 @@ class TestCase(BaseTestCase):
         self.personel_terfi_onay()
 
     def personel_terfi_onay(self):
+        """
+        TODO: docstring eklenecek..
+        """
         # Personel terfi islemini onayla bolumu
-        usr = User.objects.get(username='genel_sekreter_1')
-        msg = NotificationMessage.objects.filter(receiver=usr)[0]
-        token = msg.url.split('/')[-1]
-        self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
-        resp = self.client.post()
-
+        user = User.objects.get(username='genel_sekreter_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=user)
+        token, user = self.get_user_token('genel_sekreter_1')
+        resp = self.client.post(token=token)
         assert len(resp.json['forms']['model']['Personel']) == 3
+        Message.objects.filter().delete()
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
@@ -123,15 +133,10 @@ class TestCase(BaseTestCase):
         time.sleep(1)
 
         usr = User.objects.get(username='personel_isleri_1')
-        msg = NotificationMessage.objects.filter(receiver=usr)[0]
+        msg = Message.objects.filter(receiver=usr)[0]
         token = msg.url.split('/')[-1]
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
         resp = self.client.post()
+        Message.objects.filter().delete()
 
         assert resp.json['msgbox']['title'] == "Terfi İşlemleri Onay Belgesi!"
-    #
-    # def get_notification(self, username):
-    #
-    #
-    #     return usr, token
-    #

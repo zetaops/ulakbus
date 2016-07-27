@@ -100,6 +100,7 @@ class RoomType(Model):
 
     type = field.String("Oda Tipi", index=True)
     notes = field.Text("Notlar", index=True)
+    exam_available = field.Boolean("Sınav Amaçlı Kullanılabilir", index=True)
 
     class Meta:
         verbose_name = "Oda Tipi"
@@ -131,6 +132,7 @@ class Room(Model):
     building = Building()
 
     is_active = field.Boolean("Aktif", index=True)
+    unitime_key = field.String()  # Ders/Sınav programları hazırlanırken id'leri eşleştirmek için
 
     class Meta:
         verbose_name = "Oda"
