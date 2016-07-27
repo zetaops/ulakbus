@@ -17,7 +17,7 @@ class StartExamSolver(Service):
         # Bize verilen payload'u Exam Solver servisine aktararak çalıştırıyoruz
         self.invoke_async(solver_service, payload=self.request.payload)
         self.response.status_code = httplib.OK
-        self.response.payload = {'status': 'OK', 'message': 'Sınav planlaması başlatıldı'}
+        self.response.payload = {'status': 'ok', 'result': 'Sınav planlaması başlatıldı'}
 
 
 class ExecuteExamSolver(Service):

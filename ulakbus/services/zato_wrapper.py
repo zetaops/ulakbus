@@ -1553,6 +1553,6 @@ class DersProgramiOlustur(ZatoService):
     def __init__(self, service_payload={}):
         super(ZatoService, self).__init__()
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
-        self.payload = json.dump(service_payload)
+        self.payload = json.dumps(service_payload)
 
 
