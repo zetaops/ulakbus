@@ -53,7 +53,7 @@ class DersProgramiYap(CrudView):
                    "msg":  'Yayınlanmayan ders programını inceleyip yayınlayabilirsiniz.'}
             # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
             self.current.task_data['LANE_CHANGE_MSG'] = msg
-        elif solved_count != ders_etkinligi_count:
+        elif solved_count != ders_etkinligi_count and solved_count > 0:
             msg = {"type": 'warning',
                    "title": 'Hatalı Sonuçlar Var!',
                    "msg":  'Oluşturulan ders programınızda hatalı sonuçlar bulunmaktadır.'
