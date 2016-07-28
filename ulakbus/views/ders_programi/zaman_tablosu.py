@@ -241,6 +241,7 @@ class ZamanTablo(CrudView):
         """
 
         self.ogretim_elemani_zaman_tablosu()
+        self.output['ogretim_elemani_zt']['readonly'] = True
 
         _form = JsonForm()
         _form.onayla = fields.Button('Onayla', cmd='onay')
@@ -488,7 +489,9 @@ class DerslikZamanTablosu(CrudView):
             }
         """
 
+
         self.derslik_zaman_tablosu()
+        self.output['derslik_zaman_tablosu']['readonly'] = True
 
         _form = JsonForm()
         _form.onayla = fields.Button('Onayla', cmd='onay')
