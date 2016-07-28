@@ -3,18 +3,31 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-#
 
 from zengine.forms import JsonForm
 from zengine.views.crud import CrudView
 from collections import OrderedDict
-from ulakbus.models import Donem, Ogrenci, OgrenciDersi, \
-    Sube  # eğer haftanın günü(1,2..) öğretim görevlisinin sınavı varsa
+from ulakbus.models import Donem, Ogrenci, OgrenciDersi, SinavEtkinligi,Sube
 from ulakbus.models.ders_programi import HAFTA
 from ulakbus.views.sinav_programi import okutman_sinav_programi_goruntule as SP
 
 
 class Ogrenci_Sinav_Programi_Goruntule(CrudView):
+
+    def sinav_programi_kontrol(self):
+
+        guncel_donem = Donem.objects.get(guncel=True)
+        if len(SinavEtkinligi.objects.filter(published=True, donem=guncel_donem)) > 0:
+            self.current.task_data['sinav_kontrol'] = True
+        else:
+            self.current.task_data['sinav_kontrol'] = False
+
+    def sinav_programi_uyari(self):
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'Uyarı!',
+            "msg": 'Bulunduğunuz döneme ait, güncel yayınlanmış sınav programı bulunmamaktadır.'
+        }
+
     def sinav_programi_goruntule(self):
 
         """
@@ -45,7 +58,7 @@ class Ogrenci_Sinav_Programi_Goruntule(CrudView):
         self.output['objects'] = [object_list]
 
         _form = JsonForm(current=self.current)
-        _form.title = "%s / %s Sınav Programı" % (ogrenci_adi, guncel_donem.ad)
+        _form.title = "%s / %s / Yarıyıl Sınav Programı" % (ogrenci_adi, guncel_donem.ad)
 
         hafta_dict = SP.hafta_gun_olustur(HAFTA)
         # Öğrencinin bir günde maksimum kaç tane sınavı olduğu bulunur
@@ -58,9 +71,8 @@ class Ogrenci_Sinav_Programi_Goruntule(CrudView):
                     try:
                         etkinlik = sinav_etkinlik[hafta_gun][i]
                         sinav_saat = "%02d:%02d" % (etkinlik.tarih.time().hour, etkinlik.tarih.time().minute)
-                        sinav_etkinlik_list[hafta_dict[hafta_gun]] = str(
-                            etkinlik.sube.ad) + ' / ' + etkinlik.tarih.strftime(
-                            '%d:%m:%Y') + ' / ' + sinav_saat
+                        sinav_etkinlik_list[hafta_dict[hafta_gun]] = "%s / %s / %s / %s" %(etkinlik.sube.ders.ad,etkinlik.sube.ad,etkinlik.tarih.strftime(
+                            '%d:%m:%Y'),sinav_saat)
                     except:
                         sinav_etkinlik_list[hafta_dict[hafta_gun]] = ''
 
