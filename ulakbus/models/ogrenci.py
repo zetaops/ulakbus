@@ -132,7 +132,7 @@ class Okutman(Model):
         app = 'Ogrenci'
         verbose_name = "Okutman"
         verbose_name_plural = "Okutmanlar"
-        search_fields = ['unvan', 'personel', 'ad', 'soyad']
+        search_fields = ['unvan', 'personel', 'ad', 'soyad', 'birim_no']
 
     @lazy_property
     def okutman(self):
