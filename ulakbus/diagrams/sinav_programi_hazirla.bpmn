@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.0">
   <bpmn:collaboration id="Collaboration_0ze4k2q">
     <bpmn:participant id="Participant_0nwlcc9" name="Sinav Programi Hazirla" processRef="sinav_programi_hazirla" />
   </bpmn:collaboration>
@@ -39,6 +39,7 @@
       <bpmn:incoming>SequenceFlow_0sgvbmo</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_19h9d5y</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1uwbt2j</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0ie54qj</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1qdniu3" default="SequenceFlow_1oj9dg6">
       <bpmn:incoming>SequenceFlow_009qy3s</bpmn:incoming>
@@ -98,6 +99,7 @@
       <bpmn:incoming>SequenceFlow_1oj9dg6</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0n8p1pn</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1blrly5</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0ie54qj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0wpt0ce</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="hatali" name="Hatalı" camunda:assignee="ders_programi.sinav_programi.SinavProgramiYap.hatali">
@@ -130,6 +132,9 @@
       <bpmn:incoming>SequenceFlow_0lvb9vr</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1blrly5</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0ie54qj" sourceRef="ExclusiveGateway_0sq08m5" targetRef="hatasiz">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='hatasiz_sonuc']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0ze4k2q">
@@ -405,6 +410,14 @@
       <bpmndi:BPMNShape id="UserTask_040gcsu_di" bpmnElement="detay_goster">
         <dc:Bounds x="931" y="210" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ie54qj_di" bpmnElement="SequenceFlow_0ie54qj">
+        <di:waypoint xsi:type="dc:Point" x="379" y="717" />
+        <di:waypoint xsi:type="dc:Point" x="379" y="594.8376068376069" />
+        <di:waypoint xsi:type="dc:Point" x="1074" y="595" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="349" y="645.9188034188035" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
