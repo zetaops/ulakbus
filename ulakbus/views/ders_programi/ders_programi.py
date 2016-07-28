@@ -25,7 +25,7 @@ class AramaForm(JsonForm):
         title = 'Öğretim Elemanı veya Derslik Ara'
 
     arama_sec = fields.String('Arama Seçeneği', choices=ARAMA_TURU, default=1)
-    arama_text = fields.String(" ")
+    arama_text = fields.String(" ", required=False)
     arama_button = fields.Button('Ara')
     vazgec_button = fields.Button('Geri', cmd='vazgec')
 
@@ -49,6 +49,10 @@ class DersProgramiYap(CrudView):
 
         if published_count > 0:
             self.current.task_data['cmd'] = 'kayit_var'
+            msg = {"type": 'info',
+                   "title": 'Yayınlanmış Ders Programı Var!',
+                   "msg": 'Yayınlanan ders programınız bulunmaktadır. Tekrardan ders programı oluşturamazsınız.'}
+            self.current.task_data['LANE_CHANGE_MSG'] = msg
 
         elif solved_count == ders_etkinligi_count and solved_count > 0:
             self.current.task_data['cmd'] = 'hatasiz_sonuc'
@@ -56,6 +60,7 @@ class DersProgramiYap(CrudView):
                    "title": 'Yayınlanmamış Ders Programı Var!',
                    "msg": 'Yayınlanmayan ders programını inceleyip yayınlayabilirsiniz.'}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
+
         elif solved_count != ders_etkinligi_count and solved_count > 0:
             msg = {"type": 'warning',
                    "title": 'Hatalı Sonuçlar Var!',
@@ -137,12 +142,12 @@ class DersProgramiYap(CrudView):
             else:
                 ad = text.split()[0]
                 soyad = text.split()[1]
-                okutman_search = Okutman.objects.filter(ad=ad, soyad=soyad)
+                okutman_search = Okutman.objects.filter(birim_no=self.current.role.unit.yoksis_no, ad=ad, soyad=soyad)
                 if len(okutman_search) > 1:
                     self.current.search = okutman_search
                     self.current.task_data['cmd'] = 'coklu'
                 elif len(okutman_search) == 1:
-                    self.current.task_data['data_key'] = okutman_search[0]
+                    self.current.task_data['data_key'] = okutman_search[0].key
                     self.current.task_data['cmd'] = 'tekli'
                 else:
                     raise
@@ -174,8 +179,11 @@ class DersProgramiYap(CrudView):
     def detay_goster(self):
 
         if "LANE_CHANGE_MSG" in self.current.task_data and \
-                        self.current.task_data["LANE_CHANGE_MSG"]["title"] == "Kayıt Bulunamadı":
+                        'title' in self.current.task_data["LANE_CHANGE_MSG"] and \
+                        self.current.task_data["LANE_CHANGE_MSG"]['title'] == "Kayıt Bulunamadı":
+
             self.current.output['msgbox'] = self.current.task_data["LANE_CHANGE_MSG"]
+            self.current.task_data["LANE_CHANGE_MSG"] = ''
         else:
             obj_key = self.current.task_data['data_key']
             if self.input['form']['arama_sec'] == 1:
@@ -183,14 +191,11 @@ class DersProgramiYap(CrudView):
                 obj = Room.objects.get(obj_key)
 
             else:
-                ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman_id=obj_key),
-                                        key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+                ders_etkinligi = DersEtkinligi.objects.filter(okutman_id=obj_key)
                 obj = Okutman.objects.get(obj_key)
 
             days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
             self.output['objects'] = [days]
-
-            data_list = []
 
             def etkinlik(de):
                 """
@@ -204,17 +209,15 @@ class DersProgramiYap(CrudView):
                                             de.bitis_saat,
                                             de.bitis_dakika)
                 return "\n\n**%s**\n%s\n\n" % (aralik, de.ders.ad)
-
+            data_list = []
             for day in days:
-                for de in ders_etkinligi.filter(gun=days.index(day)):
-                    data_list.append("%s" % etkinlik(de))
+                data_list.append(''.join(["%s" % etkinlik(de) for de in ders_etkinligi.filter(gun=days.index(day)+1)]))
 
             item = {
                 "title": "%s - Detaylı Zaman Tablosu" % obj.__unicode__(),
                 'type': "table-multiRow",
                 'fields': data_list,
                 "actions": False,
-                'key': ''
             }
             self.output['objects'].append(item)
         _json = JsonForm(title="Güncel Zaman Dilimleri")
@@ -229,9 +232,19 @@ class DersProgramiYap(CrudView):
 
     def yayinla(self):
         des = DersEtkinligi.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem())
-        for de in des:
-            de.published = True
-            de.save()
+        try:
+            for de in des:
+                de.published = True
+                de.save()
+            msg = {"type": 'info',
+                   "title": 'Ders Programı Yayınlandı!',
+                   "msg": 'Oluşturulan Ders Programı Başarıyla Yayınlandı'}
+            self.current.task_data['LANE_CHANGE_MSG'] = msg
+        except:
+            msg = {"type": 'warning',
+                   "title": '!!HATA!!',
+                   "msg": 'Ders Programı yayınlanırken hata oluştu lütfen tekrar yayınlayınç'}
+            self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def bilgilendirme(self):
         self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
