@@ -289,7 +289,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0bu9pez_di" bpmnElement="SequenceFlow_0bu9pez">
         <di:waypoint xsi:type="dc:Point" x="1330" y="492" />
-        <di:waypoint xsi:type="dc:Point" x="1330" y="429.379020979021" />
+        <di:waypoint xsi:type="dc:Point" x="1330" y="454" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1300" y="463" width="90" height="20" />
         </bpmndi:BPMNLabel>

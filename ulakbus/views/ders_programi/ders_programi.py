@@ -11,8 +11,8 @@
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
 from collections import OrderedDict
-from ulakbus.services.zato_wrapper import DersProgramiOlustur
-from ulakbus.models import Room, Okutman, DersEtkinligi, Donem
+from ulakbus.services.zato_wrapper import DersProgramiOlustur, SinavProgramiOlustur
+from ulakbus.models import Room, Okutman, DersEtkinligi, Donem, SinavEtkinligi
 
 ARAMA_TURU = [
     (1, 'Derslik'),
@@ -209,9 +209,11 @@ class DersProgramiYap(CrudView):
                                             de.bitis_saat,
                                             de.bitis_dakika)
                 return "\n\n**%s**\n%s\n\n" % (aralik, de.ders.ad)
+
             data_list = []
             for day in days:
-                data_list.append(''.join(["%s" % etkinlik(de) for de in ders_etkinligi.filter(gun=days.index(day)+1)]))
+                data_list.append(
+                    ''.join(["%s" % etkinlik(de) for de in ders_etkinligi.filter(gun=days.index(day) + 1)]))
 
             item = {
                 "title": "%s - Detaylı Zaman Tablosu" % obj.__unicode__(),
@@ -248,6 +250,7 @@ class DersProgramiYap(CrudView):
 
     def bilgilendirme(self):
         self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
+
 
 
 class OgretimElemaniDersProgrami(CrudView):

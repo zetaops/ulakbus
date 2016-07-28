@@ -54,11 +54,9 @@ class ExecuteExamSolver(Service):
         kullanici_key = self.request.payload['kullanici']
         url = self.request.payload['url']
         export_dir = os.path.join(self._SOLVER_DIR, '%i' % bolum_yoksis_no)
-        try:
-            status, result = self._handle(bolum_yoksis_no, sinav_turleri, kullanici_key, url, export_dir)
-        except Exception as e:
-            shutil.rmtree(export_dir)
-            raise e
+        
+        status, result = self._handle(bolum_yoksis_no, sinav_turleri, kullanici_key, url, export_dir)
+
 
         # İşlem sonucunu hem HTTP durumu olarak, hem de yanıtın içine yaz
         self.response.status_code = status
