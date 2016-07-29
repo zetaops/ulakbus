@@ -57,7 +57,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1ais7s2" sourceRef="degisiklikleri_kaydet" targetRef="listele" />
     <bpmn:sequenceFlow id="SequenceFlow_0gsdy3q" sourceRef="listele" targetRef="ExclusiveGateway_19xsa2j" />
     <bpmn:sequenceFlow id="SequenceFlow_01bz9m6" sourceRef="ExclusiveGateway_19xsa2j" targetRef="degisiklikleri_kaydet">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='kaydet']]></bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='degistir']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0uj20xh" sourceRef="ExclusiveGateway_19xsa2j" targetRef="onaya_gonder">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='gonder']]></bpmn:conditionExpression>

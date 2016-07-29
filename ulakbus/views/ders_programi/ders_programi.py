@@ -252,7 +252,6 @@ class DersProgramiYap(CrudView):
         self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
 
 
-
 class OgretimElemaniDersProgrami(CrudView):
     def kontrol(self):
         okutman = Okutman.objects.get(personel=self.current.user.personel)
@@ -265,25 +264,36 @@ class OgretimElemaniDersProgrami(CrudView):
 
     def ders_programini_goster(self):
         okutman = Okutman.objects.get(personel=self.current.user.personel)
-        ders_etkinligi = sorted(DersEtkinligi.objects.filter(okutman=okutman),
-                                key=lambda d: (d.gun, d.baslangic_saat))
+        ders_etkinligi = DersEtkinligi.objects.filter(bolum=self.current.role.unit, okutman=okutman)
 
-        dersler = list()
+        days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+        self.output['objects'] = [days]
 
-        for de in ders_etkinligi:
-            ders = dict()
-            ders['ad'] = de.sube.ders.ad
-            ders['gun'] = de.gun
-            ders[
-                'saat_araligi'] = de.baslangic_saat + ':' + de.baslangic_dakika + '-' + de.bitis_saat + ':' + de.bitis_dakika
-            dersler.append(ders)
-        item = {'read_only': True,
-                'name': self.current.user.name,
-                'gunler': ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi",
-                           "Pazar"],
-                'dersler': dersler}
+        def etkinlik(de):
+            """
+            Ders etkinligi formatlar ve dondurur.
 
-        self.output['ders_programi'] = item
+            :param de: ders etkinligi
+            :return: ders adi ve zamani
+            """
+            aralik = "%s:%s - %s:%s" % (de.baslangic_saat,
+                                        de.baslangic_dakika,
+                                        de.bitis_saat,
+                                        de.bitis_dakika)
+            return "\n\n**%s**\n%s\n\n" % (aralik, de.ders.ad)
+
+        data_list = []
+        for day in days:
+            data_list.append(
+                ''.join(["%s" % etkinlik(de) for de in ders_etkinligi.filter(gun=days.index(day) + 1)]))
+
+        item = {
+            "title": "%s - Ders Programı" % okutman.__unicode__(),
+            'type': "table-multiRow",
+            'fields': data_list,
+            "actions": False,
+        }
+        self.output['objects'].append(item)
 
     def ders_programi_bulunamadi(self):
         msg = {"type": "warning",
