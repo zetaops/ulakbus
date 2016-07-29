@@ -9,7 +9,7 @@
 #
 from collections import OrderedDict
 
-from ulakbus.models import SinavEtkinligi, Donem, Okutman, Room
+from ulakbus.models import SinavEtkinligi, Donem, Okutman, Room, Sube
 from ulakbus.services.zato_wrapper import SinavProgramiOlustur
 from ulakbus.views.ders_programi.ders_programi import AramaForm
 from zengine.forms import JsonForm
@@ -176,11 +176,12 @@ class SinavProgramiYap(CrudView):
         else:
             obj_key = self.current.task_data['data_key']
             if self.input['form']['arama_sec'] == 1:
-                ders_etkinligi = SinavEtkinligi.objects.filter(room_id=obj_key)
+                ders_etkinligi = SinavEtkinligi.objects.raw("sinav_yerleri.room_id:" + obj_key)
                 obj = Room.objects.get(obj_key)
 
             else:
-                ders_etkinligi = SinavEtkinligi.objects.filter(okutman_id=obj_key)
+                ders_etkinligi = map(lambda s: SinavEtkinligi.objects.get(sube=s), Sube.objects.filter(
+                                                                okutman_id=obj_key, donem=Donem.guncel_donem()))
                 obj = Okutman.objects.get(obj_key)
 
             days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
@@ -194,16 +195,14 @@ class SinavProgramiYap(CrudView):
                 :param de: ders etkinligi
                 :return: ders adi ve zamani
                 """
-                aralik = "%s:%s - %s:%s" % (de.baslangic_saat,
-                                            de.baslangic_dakika,
-                                            de.bitis_saat,
-                                            de.bitis_dakika)
+                aralik = de.tarih.strftime('%H.%M, %d.%m.%Y')
                 return "\n\n**%s**\n%s\n\n" % (aralik, de.ders.ad)
 
             data_list = []
-            for day in days:
+            for i, day in enumerate(days):
                 data_list.append(
-                    ''.join(["%s" % etkinlik(de) for de in ders_etkinligi.filter(gun=days.index(day) + 1)]))
+                    ''.join(["%s" % etkinlik(de) for de in filter(lambda d: d.tarih.isoweekday() == i + 1,
+                                                                  ders_etkinligi)]))
 
             item = {
                 "title": "%s - Detaylı Zaman Tablosu" % obj.__unicode__(),
