@@ -18,6 +18,7 @@ from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot,\
 from datetime import datetime, date, timedelta, time
 import streamingxmlwriter
 import io
+import random
 
 
 def _year():
@@ -275,6 +276,7 @@ class ExportCourseTimetable(UnitimeEntityXMLExport):
                 etkinlikler.delete()
 
         derslik_turleri = ders.DerslikTurleri
+        ders_turu = [True,False]
         for sube in subeler:
             sube_sinirlama[sube.key] = []
             for i, tur in enumerate(derslik_turleri):
@@ -302,6 +304,8 @@ class ExportCourseTimetable(UnitimeEntityXMLExport):
                     d.donem = self.term
                     d.bolum = bolum
                     d.published = False
+                    d.sure = tur.ders_saati
+                    d.ek_ders = random.choice(ders_turu)
                     d.save()
                     # Derse uygun derslikleri çıkar
                     for derslik in uygun_derslikler:
