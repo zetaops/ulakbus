@@ -6,7 +6,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 import time
 
-from ulakbus.models import FormData
 from ulakbus.models.auth import User
 from ulakbus.models.personel import Izin, Personel
 from datetime import date
