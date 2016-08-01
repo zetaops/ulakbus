@@ -18,7 +18,7 @@ class Okutman_Sinav_Programi_Goruntule(CrudView):
     def sinav_programi_kontrol(self):
 
         guncel_donem = Donem.objects.get(guncel = True)
-        if len(SinavEtkinligi.objects.filter(donem= guncel_donem))>0:
+        if len(SinavEtkinligi.objects.filter(published = True, donem= guncel_donem))>0:
             self.current.task_data['sinav_kontrol'] = True
         else:
             self.current.task_data['sinav_kontrol'] = False

@@ -151,7 +151,7 @@ class DersUcretiHesaplama(CrudView):
 
     def okutman_secim_uyari(self):
 
-        _form = JsonForm(current=self.current, title="Okutman Bulunamadı")
+        _form = JsonForm(current=self.current, title="Öğretim Görevlisi Seçmelisiniz")
         _form.help_text = """Seçtiğiniz yıl ve aya ait dönem bulunamadı. Tarih
                               seçimine geri dönmek için Geri Dön butonuna, işlemi
                               iptal etmek için İptal butonuna basabilirsiniz."""
