@@ -25,6 +25,7 @@ class Ogrenci_Sinav_Programi_Goruntule(CrudView):
         sinav_etkinlikleri = ogrenci_sinav_etkinligi_getir(ogrenci)
 
         if len(sinav_etkinlikleri) > 0:
+
             self.current.task_data['sinav_kontrol'] = True
             # Sınav Etkinliği objelerinin key lerini tutar.
             self.current.task_data['sinav_etkinlikleri'] = map(lambda s: s.key, sinav_etkinlikleri)

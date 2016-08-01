@@ -161,7 +161,7 @@ class DersUcretiHesaplama(CrudView):
 
         _form = JsonForm(current=self.current, title="Öğretim Görevlisi Seçmelisiniz")
         _form.help_text = """İşlem yapabilmek için en az bir öğretim görevlisi seçmelisiniz.
-                             Öğretim görevlisi seçimine geri dönmek için Geri Dön butonuna,
+                             Öğretim görevlisi s    eçimine geri dönmek için Geri Dön butonuna,
                              işlemi iptal etmek için İptal butonuna basabilirsiniz."""
         _form.geri_don = fields.Button("Geri Dön", flow='okutman_sec')
         _form.iptal = fields.Button("İptal")

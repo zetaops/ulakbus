@@ -12,6 +12,9 @@ import time
 class TestCase(BaseTestCase):
     def test_okutman_ders_ucreti_goruntuleme(self):
 
+        time.sleep(1)
+
+
         for loop in range(2):
             # ogretim_elemani_2 kullanıcısıyla giriş yapılır.
             user = User.objects.get(username='ogretim_elemani_2')
@@ -21,6 +24,7 @@ class TestCase(BaseTestCase):
 
             if loop == 0:
                 for i in range(2):
+
 
                     # 2016 yılı Mayıs ayı seçilir. Veritabanında seçilen yıl ve
                     #  ayı içeren dönem bulunmamaktadır. 'Dönem Bulunamadı' başlıklı
