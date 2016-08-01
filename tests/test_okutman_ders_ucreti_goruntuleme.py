@@ -6,6 +6,7 @@
 
 from ulakbus.models import User, Okutman, Personel, Izin
 from zengine.lib.test_utils import BaseTestCase
+import time
 
 
 class TestCase(BaseTestCase):

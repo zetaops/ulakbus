@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import Personel, Okutman, Donem, Sube, SinavEtkinligi, User
+from ulakbus.models import Personel, Okutman, Donem, Sube, Unit, SinavEtkinligi, User
 from zengine.lib.test_utils import BaseTestCase
 import time
 
