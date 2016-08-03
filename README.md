@@ -1,4 +1,3 @@
-[![Coverage Status](https://coveralls.io/repos/zetaops/ulakbus/badge.svg?branch=master&service=github)](https://coveralls.io/github/zetaops/ulakbus?branch=master)
 
 #Ulakbüs - Bütünleşik Üniversite Sistemi
 

@@ -18,6 +18,9 @@ from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room, RoomType
 from .personel import Personel
+from datetime import timedelta
+from datetime import date
+from ulakbus.models.personel import Izin
 
 
 class HariciOkutman(Model):
@@ -130,7 +133,7 @@ class Okutman(Model):
         app = 'Ogrenci'
         verbose_name = "Okutman"
         verbose_name_plural = "Okutmanlar"
-        search_fields = ['unvan', 'personel', 'ad', 'soyad']
+        search_fields = ['unvan', 'personel', 'ad', 'soyad', 'birim_no']
 
     @lazy_property
     def okutman(self):
@@ -211,7 +214,7 @@ class Donem(Model):
     baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     guncel = field.Boolean(index=True)
-    ogretim_yili = OgretimYili()
+    ogretim_yili = field.Integer("Öğretim Yılı", index=True)
 
     @classmethod
     def guncel_donem(cls):
@@ -235,6 +238,36 @@ class Donem(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.baslangic_tarihi)
+
+    @staticmethod
+    def donem_dondur(yil,ay,takvim):
+
+        baslangic = date(yil, ay, 01)
+        bitis = date(yil, ay, takvim[1])
+
+        donem_list = []
+        for donem in Donem.objects.filter():
+
+            # Dönemin bitiş tarihi seçilen ay içerisinde oluyorsa
+            # 01.08.2016 - 13.08.2016 - 31.08.2016 (Yaz Dönemi Bitişi)
+            if donem.bitis_tarihi >= baslangic and donem.bitis_tarihi <= bitis:
+                donem_list.append(donem)
+
+            # Dönemin başlangıç tarihi seçilen ay içerisinde oluyorsa
+            # 01.02.2016 - 21.02.2016 - 29.02.2016 (Güz Dönemi Başlangıcı)
+            elif donem.baslangic_tarihi >= baslangic and donem.baslangic_tarihi <= bitis:
+                donem_list.append(donem)
+
+            # Dönem, seçilen ayın bütün günlerini kapsıyorsa
+            # 21.02.2016 - Nisan Ayı - 15.06.2016 (Güz Dönemi)
+            elif donem.baslangic_tarihi < baslangic and donem.bitis_tarihi > bitis:
+                donem_list.append(donem)
+
+        # Eğer iki donem varsa bitis tarihi once olani ilk siraya koyar.
+        if len(donem_list) == 2 and donem_list[0].bitis_tarihi > donem_list[1].bitis_tarihi:
+            donem_list[0],donem_list[1] = donem_list[1], donem_list[0]
+
+        return donem_list
 
 
 class Program(Model):
@@ -322,6 +355,7 @@ class Ders(Model):
 
     class Degerlendirme(ListNode):
         tur = field.Integer("Değerlendirme Türü", choices="sinav_turleri", index=True)
+        sinav_suresi = field.Integer("Sınav Süresi (dakika)")
         toplam_puana_etki_yuzdesi = field.Integer("Toplam Puana Etki Yüzdesi", index=True)
 
     class DersYardimcilari(ListNode):
@@ -335,9 +369,17 @@ class Ders(Model):
         Bir dersin hangi derslik türlerinde kaç saat yapılacağı burada saklanır.
         Örneğin 5 saatlik bir dersin 3 saati sınıfta, 2 saati laboratuvarda
         yapılacaksa bu bilgi burada saklanır.
+
+        Bir ders içini iki ayrı etkinlik planlanması isteniyorsa, örneğin 4 saat
+        teorik dersi olan bir dersin 2 saatinin bir gün, 2 saatinin ise farklı
+        bir gün yapılması için burada 2 ayrı kayıt oluşturulmalıdır.
         """
         sinif_turu = RoomType()
         ders_saati = field.Integer("Ders Saati", index=True)
+
+        # teori = field.Integer("Ders Teori Saati", index=True)
+        # uygulama = field.Integer("Ders Uygulama Saati", index=True)
+        # dersin süresinin ne kadarı teori ne kadarı uygulama gibi 2+2, 4+0 gibi
 
     class Meta:
         app = 'Ogrenci'
@@ -473,7 +515,7 @@ class DersProgrami(Model):
     """
 
     gun = field.String("Ders Günü", index=True)
-    saat = field.String("Ders Saati", index=True)
+    saat = field.Integer("Ders Saati", index=True)
     sube = Sube()
     derslik = Room()
 
@@ -978,8 +1020,13 @@ AKADEMIK_TAKVIM_ETKINLIKLERI = [
     ('63', 'Yaz Dönemi Başlangıcı'),
     ('64', 'Yaz Dönemi Derslerin Bitişi'),
     ('65', 'Yaz Dönemi Sınavların Başlangıcı'),
-    ('66', 'Yaz Dönemi Bitişi')
-
+    ('66', 'Yaz Dönemi Bitişi'),
+    ('67', 'Güz Dönemi Dersler'),
+    ('68', 'Bahar Dönemi Dersler'),
+    ('69', 'Yaz Dönemi Dersler'),
+    ('70', '1 Mayıs İşçi Bayrami'),
+    ('71', '23 Nisan Ulusal Egemenlik ve Çocuk Bayramı'),
+    ('72', '19 Mayıs Genclik ve Spor Bayramı')
 
 
 ]
@@ -997,8 +1044,8 @@ class AkademikTakvim(Model):
     """
 
     birim = Unit("Birim", index=True)
-    yil = field.Date("Yıl", index=True)
-
+    # yil = field.Date("Yıl", index=True)
+    ogretim_yili = field.Integer("Öğretim Yılı", index=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -1044,9 +1091,10 @@ class Takvim(Model):
     baslangic = field.DateTime("Başlangıç", index=True, format="%d.%m.%Y", required=False)
     bitis = field.DateTime("Bitiş", index=True, format="%d.%m.%Y", required=False)
     akademik_takvim = AkademikTakvim("Akademik Takvim")
+    resmi_tatil = field.Boolean("Resmi Tatil", index = True)
 
     def pre_save(self):
-        if not self.baslangic or not self.bitis:
+        if not self.baslangic and not self.bitis:
             raise Exception("Tarihlerden en az bir tanesi dolu olmalidir.")
 
     class Meta:
@@ -1057,6 +1105,26 @@ class Takvim(Model):
     def __unicode__(self):
         return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.yil, self.etkinlik)
 
+    @staticmethod
+    def resmi_tatil_gunleri_getir(donem_list,birim_unit,yil,ay):
+
+        from ulakbus.lib.common import get_akademik_takvim
+
+        resmi_tatil_list = []
+        akademik_takvim_list = []
+        for donem in donem_list:
+            akademik_takvim = get_akademik_takvim(birim_unit,donem.ogretim_yili)
+            resmi_tatiller = Takvim.objects.filter(akademik_takvim = akademik_takvim,resmi_tatil= True)
+
+            tatil_list=[]
+            for resmi_tatil in resmi_tatiller:
+                for gun in Izin.zaman_araligi(resmi_tatil.baslangic, resmi_tatil.bitis):
+                    if gun.month==ay and gun.year==yil:
+                        tatil_list.append(gun.day)
+            resmi_tatil_list.append(tatil_list)
+            akademik_takvim_list.append(akademik_takvim)
+
+        return resmi_tatil_list, akademik_takvim_list
 
 class DonemDanisman(Model):
     """Dönem Danışmanları Modeli
