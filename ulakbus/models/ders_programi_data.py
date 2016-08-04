@@ -6,7 +6,7 @@
 
 from pyoko import Model, ListNode
 from zengine.forms import fields
-from . import RoomType, Okutman, Room, Sube, Donem, Unit, Ders, HAFTA
+from . import RoomType, Okutman, Room, Sube, Donem, Unit, Ders, HAFTA, OgrenciDersi
 
 
 class DersEtkinligi(Model):
@@ -67,5 +67,39 @@ class SinavEtkinligi(Model):
     published = fields.Boolean('Sınav Planı Yayınlanma Durumu', index=True, default=False)
     tarih = fields.DateTime('Sınav Tarihi', index=True)
 
+
     class SinavYerleri(ListNode):
         room = Room('Sınav Yeri', index=True)
+
+def ogrenci_sinav_etkinligi_getir(ogrenci):
+
+    guncel_donem = Donem.objects.get(guncel=True)
+    # Güncel döneme ve giriş yapan, öğrenciye ait öğrenci_dersleri bulunur.
+    ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=guncel_donem)
+
+    subeler = []
+    # Bulunan öğrenci derslerinin şubeleri bulunur ve listeye eklenir.
+    for ogrenci_ders in ogrenci_dersleri:
+        try:
+            sube = Sube.objects.get(ogrenci_ders.sube.key)
+            subeler.append(sube)
+        except:
+            pass
+
+    sinav_etkinlikleri = []
+    for sube in subeler:
+        for etkinlik in SinavEtkinligi.objects.filter(published=True, sube=sube, donem=guncel_donem):
+            sinav_etkinlikleri.append(etkinlik)
+
+    return sinav_etkinlikleri
+
+def okutman_sinav_etkinligi_getir(okutman):
+    guncel_donem = Donem.objects.get(guncel=True)
+    subeler = Sube.objects.filter(okutman=okutman, donem=guncel_donem)
+
+    sinav_etkinlikleri = []
+    for sube in subeler:
+        for etkinlik in SinavEtkinligi.objects.filter(published=True, sube=sube, donem=guncel_donem):
+            sinav_etkinlikleri.append(etkinlik)
+
+    return sinav_etkinlikleri
