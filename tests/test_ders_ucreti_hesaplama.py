@@ -41,8 +41,8 @@ class TestCase(BaseTestCase):
 
                     if i == 1:
 
-                        # Eğer iptal butonuna basılırsa, işem iptali hakkında bilgilendirme
 
+                        # Eğer iptal butonuna basılırsa, işlem iptali hakkında bilgilendirme
                         # mesajı çıkması beklenir.
                         resp = self.client.post(form={"iptal": 1, "geri_don": "null", "sec": 1},
                                                 flow="islem_iptali_bilgilendir")
@@ -83,8 +83,8 @@ class TestCase(BaseTestCase):
                                "Okutman Seçiniz"
                     if i == 1:
 
-                        # Eğer iptal butonuna basılırsa, işem iptali hakkında bilgilendirme
 
+                        # Eğer iptal butonuna basılırsa, işlem iptali hakkında bilgilendirme
                         # mesajı çıkması beklenir.
                         resp = self.client.post(form={"iptal": 1, "geri_don": "null", "sec": 1},
                                                 flow="islem_iptali_bilgilendir")
