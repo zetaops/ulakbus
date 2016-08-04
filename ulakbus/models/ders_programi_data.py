@@ -6,6 +6,7 @@
 
 from pyoko import Model, ListNode
 from zengine.forms import fields
+
 from . import RoomType, Okutman, Room, Sube, Donem, Unit, Ders, HAFTA, OgrenciDersi
 
 class DersEtkinligi(Model):
