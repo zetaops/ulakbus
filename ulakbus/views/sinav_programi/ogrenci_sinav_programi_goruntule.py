@@ -10,19 +10,32 @@ from collections import OrderedDict
 from ulakbus.models import Donem, Ogrenci, OgrenciDersi, SinavEtkinligi,Sube
 from ulakbus.models.ders_programi import HAFTA
 from ulakbus.views.sinav_programi import okutman_sinav_programi_goruntule as SP
-
+from ulakbus.models.ders_programi_data import ogrenci_sinav_etkinligi_getir
 
 class Ogrenci_Sinav_Programi_Goruntule(CrudView):
 
     def sinav_programi_kontrol(self):
 
-        guncel_donem = Donem.objects.get(guncel=True)
-        if len(SinavEtkinligi.objects.filter(published = True,donem=guncel_donem)) > 0:
+        """
+        Öğrencinin yaynlanmış sınav programının olup olmadığını kontrol eder.
+        """
+
+        ogrenci = Ogrenci.objects.get(user=self.current.user)
+
+        sinav_etkinlikleri = ogrenci_sinav_etkinligi_getir(ogrenci)
+        # Sınav Etkinliği objelerinin key lerini tutar.
+        self.current.task_data['sinav_etkinlikleri'] = map(lambda s: s.key, sinav_etkinlikleri)
+
+        if len(sinav_etkinlikleri) > 0:
             self.current.task_data['sinav_kontrol'] = True
         else:
             self.current.task_data['sinav_kontrol'] = False
 
     def sinav_programi_uyari(self):
+
+        """
+        Eğer yayınlanmış sınav programı yoksa uyarı verir.
+        """
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Uyarı!',
             "msg": 'Bulunduğunuz döneme ait, güncel yayınlanmış sınav programı bulunmamaktadır.'
@@ -36,24 +49,13 @@ class Ogrenci_Sinav_Programi_Goruntule(CrudView):
 
         """
         ogrenci = Ogrenci.objects.get(user=self.current.user)
-        guncel_donem = Donem.objects.get(guncel=True)
-        # Güncel döneme ve giriş yapan, öğrenciye ait öğrenci_dersleri bulunur.
-        ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=guncel_donem)
-
-        subeler = []
-        # Bulunan öğrenci derslerinin şubeleri bulunur ve listeye eklenir.
-        for ogrenci_ders in ogrenci_dersleri:
-            try:
-                sube = Sube.objects.get(ogrenci_ders.sube.key)
-                subeler.append(sube)
-            except:
-                pass
-
         ogrenci_adi = ogrenci.ad + ' ' + ogrenci.soyad
+        guncel_donem = Donem.objects.get(guncel=True)
 
         # öğrencinin şubelerine göre sınav etkinlikleri
         # dictionary'e eklenir.
-        sinav_etkinlik = SP.sinav_etkinlik_olustur(subeler)
+        sinav_etkinlik = SP.sinav_etkinlik_olustur(map(lambda s: SinavEtkinligi.objects.get(s),
+                                                       self.current.task_data['sinav_etkinlikleri']))
         object_list = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']
         self.output['objects'] = [object_list]
 
