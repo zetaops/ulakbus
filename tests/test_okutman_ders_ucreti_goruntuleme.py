@@ -12,7 +12,6 @@ import time
 class TestCase(BaseTestCase):
     def test_okutman_ders_ucreti_goruntuleme(self):
 
-        time.sleep(1)
 
 
         for loop in range(2):
