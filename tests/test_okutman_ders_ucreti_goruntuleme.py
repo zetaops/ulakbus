@@ -11,7 +11,6 @@ import time
 
 class TestCase(BaseTestCase):
     def test_okutman_ders_ucreti_goruntuleme(self):
-        time.sleep(1)
 
         for loop in range(2):
             # ogretim_elemani_2 kullanıcısıyla giriş yapılır.
@@ -23,10 +22,9 @@ class TestCase(BaseTestCase):
             if loop == 0:
                 for i in range(2):
 
-                    # 2016 yılı Aralık ayı seçilir. Veritabanında seçilen yıl ve
+                    # 2016 yılı Mayıs ayı seçilir. Veritabanında seçilen yıl ve
                     #  ayı içeren dönem bulunmamaktadır. 'Dönem Bulunamadı' başlıklı
                     # hata mesajının çıkması beklenir.
-
                     resp = self.client.post(form={"ay_sec": 5, "yil_sec": 0, "sec": 1})
                     assert resp.json['forms']['schema']["title"] == "Dönem Bulunamadı"
 
