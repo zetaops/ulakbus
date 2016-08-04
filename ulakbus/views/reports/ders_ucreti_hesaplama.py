@@ -140,6 +140,7 @@ class DersUcretiHesaplama(CrudView):
         İşlem yapılacak öğretim görevlisi seçilip seçilmediğini kontrol eder.
         """
 
+        self.current.task_data["control"] = None
         secilen_okutmanlar = []
         for okutman_secim in self.current.input['form']['OkutmanListesi']:
             if okutman_secim['secim'] == True:
