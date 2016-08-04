@@ -22,7 +22,7 @@ class TestCase(BaseTestCase):
             if loop == 0:
                 for i in range(2):
 
-                    # 2016 yılı Aralık ayı seçilir. Veritabanında seçilen yıl ve
+                    # 2016 yılı Mayıs ayı seçilir. Veritabanında seçilen yıl ve
                     #  ayı içeren dönem bulunmamaktadır. 'Dönem Bulunamadı' başlıklı
                     # hata mesajının çıkması beklenir.
 
@@ -37,7 +37,7 @@ class TestCase(BaseTestCase):
                                    "title"] == "Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz"
 
                     if i == 1:
-                        # Eğer iptal butonuna basılırsa, işem iptali hakkında bilgilendirme
+                        # Eğer iptal butonuna basılırsa, işlem iptali hakkında bilgilendirme
                         # mesajı çıkması beklenir.
                         resp = self.client.post(form={"iptal": 1, "geri_don": "null", "sec": 1},
                                                 flow="islem_iptali_bilgilendir")
@@ -77,7 +77,7 @@ class TestCase(BaseTestCase):
                         assert resp.json['forms']['schema']["title"] == \
                                "Okutman Seçiniz"
                     if i == 1:
-                        # Eğer iptal butonuna basılırsa, işem iptali hakkında bilgilendirme
+                        # Eğer iptal butonuna basılırsa, işlem iptali hakkında bilgilendirme
                         # mesajı çıkması beklenir.
                         resp = self.client.post(form={"iptal": 1, "geri_don": "null", "sec": 1},
                                                 flow="islem_iptali_bilgilendir")

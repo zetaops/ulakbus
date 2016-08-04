@@ -108,6 +108,10 @@ class DersUcretiHesaplama(CrudView):
 
     def islem_iptali_bilgilendir(self):
 
+        """
+        İşlem iptal edildiğinde kullanıcı iptal hakkında bilgilendirilir.
+        """
+
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Durum Mesajı',
             "msg": 'Puantaj cetveli görüntüleme işleminiz iptal edilmiştir.'
@@ -136,6 +140,10 @@ class DersUcretiHesaplama(CrudView):
 
     def okutman_secim_kontrol(self):
 
+        """
+        İşlem yapılacak öğretim görevlisi seçilip seçilmediğini kontrol eder.
+        """
+
         self.current.task_data["control"] = None
         secilen_okutmanlar = []
         for okutman_secim in self.current.input['form']['OkutmanListesi']:
@@ -151,10 +159,14 @@ class DersUcretiHesaplama(CrudView):
 
     def okutman_secim_uyari(self):
 
+        """
+        Hiç öğretim görevlisi seçilmediği durumda, uyarı verir.
+        """
+
         _form = JsonForm(current=self.current, title="Öğretim Görevlisi Seçmelisiniz")
-        _form.help_text = """Seçtiğiniz yıl ve aya ait dönem bulunamadı. Tarih
-                              seçimine geri dönmek için Geri Dön butonuna, işlemi
-                              iptal etmek için İptal butonuna basabilirsiniz."""
+        _form.help_text = """İşlem yapabilmek için en az bir öğretim görevlisi seçmelisiniz.
+                             Öğretim görevlisi seçimine geri dönmek için Geri Dön butonuna, işlemi
+                             iptal etmek için İptal butonuna basabilirsiniz."""
         _form.geri_don = fields.Button("Geri Dön", flow='okutman_sec')
         _form.iptal = fields.Button("İptal")
         self.form_out(_form)
@@ -240,6 +252,7 @@ class DersUcretiHesaplama(CrudView):
 
         object_list.append(ders_saati_turu)
         self.output['objects'] = [object_list]
+
 
         json_dict = {
             "gunler": object_list[1:-1],
