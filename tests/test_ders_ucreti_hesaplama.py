@@ -8,7 +8,6 @@ from ulakbus.models import User, Okutman, Donem, Takvim, Unit
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.views.reports.ders_ucreti_hesaplama import donem_aralik_dondur
 import calendar
-import time
 
 
 class TestCase(BaseTestCase):

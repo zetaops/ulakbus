@@ -13,6 +13,24 @@ class TestCase(BaseTestCase):
     def test_okutman_sinav_programi_goruntule(self):
 
 
+        user = User.objects.get(username='ogrenci_3')
+        self.prepare_client('/ogrenci_sinav_programi_goruntule', user=user)
+        # Giriş yapılan user'ın öğrenci objesi bulunur.
+        ogrenci = Ogrenci.objects.get(user=self.client.current.user)
+        guncel_donem = Donem.objects.get(guncel=True)
+        # Öğrencinin güncel dönemde aldığı dersler bulunur.
+        ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=guncel_donem)
+        ogrenci_adi = ogrenci.ad + ' ' + ogrenci.soyad
+
+        subeler = []
+        # Bulunan öğrenci derslerinin şubeleri bulunur ve listeye eklenir.
+        for ogrenci_ders in ogrenci_dersleri:
+            try:
+                sube = Sube.objects.get(ogrenci_ders.sube.key)
+                subeler.append(sube)
+            except:
+                pass
+
         for i in range(2):
             # ogrenci_3 kullanıcısıyla giriş yapılır.
             user = User.objects.get(username='ogrenci_3')
