@@ -349,7 +349,7 @@ class ExportCourseTimetable(UnitimeEntityXMLExport):
     def _sinirlandirmalar(self, writer, program_sinirlama, sube_sinirlama):
         with writer.element('groupConstraints'):
             for (program_key, program_donemi), ders_etkinligi_idleri in program_sinirlama.items():
-                with writer.element('constraint', {'type': 'SPREAD', 'pref': 'R',
+                with writer.element('constraint', {'type': 'SAME_DAYS', 'pref': 'P',
                                                    'id': '%i' % self._key2id('%i %s' % (program_donemi, program_key)),
                                                    }):
                     for etkinlik_id in ders_etkinligi_idleri:
