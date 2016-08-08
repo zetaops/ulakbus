@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_0uylzx1">
+    <bpmn:participant id="Participant_01h7u3b" name="Ders Programı Bölüm Koordinatörü" processRef="derslik_ders_programlari" />
+  </bpmn:collaboration>
+  <bpmn:process id="derslik_ders_programlari" name="Derslik Ders Programları" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_0v7apz3">
+      <bpmn:outgoing>SequenceFlow_0ce1n5c</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_00nb5ss" sourceRef="derslik_ders_programini_goster" targetRef="EndEvent_1raroty" />
+    <bpmn:endEvent id="EndEvent_1raroty">
+      <bpmn:incoming>SequenceFlow_00nb5ss</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="derslik_ders_programini_goster" name="Derslik Ders Programını Göster" camunda:assignee="ders_programi.derslik_ders_programlari.DerslikDersProgrami.derslik_ders_programini_goster">
+      <bpmn:incoming>SequenceFlow_15vkkl2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_00nb5ss</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0ce1n5c" sourceRef="StartEvent_0v7apz3" targetRef="derslik_sec" />
+    <bpmn:sequenceFlow id="SequenceFlow_15vkkl2" sourceRef="derslik_sec" targetRef="derslik_ders_programini_goster" />
+    <bpmn:userTask id="derslik_sec" name="Derslik Seç" camunda:assignee="ders_programi.derslik_ders_programlari.DerslikDersProgrami.derslik_sec">
+      <bpmn:incoming>SequenceFlow_0ce1n5c</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_15vkkl2</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0uylzx1">
+      <bpmndi:BPMNShape id="Participant_01h7u3b_di" bpmnElement="Participant_01h7u3b">
+        <dc:Bounds x="103" y="189" width="845" height="311" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0v7apz3_di" bpmnElement="StartEvent_0v7apz3">
+        <dc:Bounds x="182" y="309" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="345" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0ooxsrh_di" bpmnElement="derslik_ders_programini_goster">
+        <dc:Bounds x="548" y="287" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1raroty_di" bpmnElement="EndEvent_1raroty">
+        <dc:Bounds x="786" y="309" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="759" y="345" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_00nb5ss_di" bpmnElement="SequenceFlow_00nb5ss">
+        <di:waypoint xsi:type="dc:Point" x="648" y="327" />
+        <di:waypoint xsi:type="dc:Point" x="717" y="327" />
+        <di:waypoint xsi:type="dc:Point" x="717" y="327" />
+        <di:waypoint xsi:type="dc:Point" x="786" y="327" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="476" y="317" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ce1n5c_di" bpmnElement="SequenceFlow_0ce1n5c">
+        <di:waypoint xsi:type="dc:Point" x="218" y="327" />
+        <di:waypoint xsi:type="dc:Point" x="293" y="327" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="210.5" y="317" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_15vkkl2_di" bpmnElement="SequenceFlow_15vkkl2">
+        <di:waypoint xsi:type="dc:Point" x="393" y="327" />
+        <di:waypoint xsi:type="dc:Point" x="548" y="327" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="425.5" y="317" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1pi6lii_di" bpmnElement="derslik_sec">
+        <dc:Bounds x="293" y="287" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

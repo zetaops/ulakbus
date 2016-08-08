@@ -16,7 +16,8 @@ setup(
         'boto',
         'reportlab',
         'six',
-        'lxml'
+        'lxml',
+        'streamingxmlwriter'
     ],
     url='https://github.com/zetaops/ulakbus',
     packages=find_packages(exclude=['tests', 'tests.*']),

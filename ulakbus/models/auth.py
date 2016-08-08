@@ -65,7 +65,7 @@ class User(Model, BaseUser):
 
     def get_avatar_url(self):
         if self.avatar:
-            return super(BaseUser, self).get_avatar_url()
+            return BaseUser.get_avatar_url(self)
         else:
             # FIXME: This is for fun, remove when we resolve static hosting problem
             return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
@@ -226,16 +226,25 @@ class Unit(Model):
 
     @classmethod
     def get_user_keys(cls, unit_key):
+        return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
         stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
         for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
             stack.extend(cls.get_user_keys(unit_key))
+        return stack
+
+    @classmethod
+    def get_user_keys_by_yoksis(cls, yoksis_no):
+        # because we don't refactor our data to use Unit.parent, yet!
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('user_id', flatten=True)
+        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
+            stack.extend(cls.get_user_keys_by_yoksis(yoksis_no))
         return stack
 
     class Meta:
         app = 'Sistem'
         verbose_name = "Unit"
         verbose_name_plural = "Units"
-        search_fields = ['name']
+        search_fields = ['name', 'yoksis_no']
         list_fields = ['name', 'unit_type']
 
     def __unicode__(self):
