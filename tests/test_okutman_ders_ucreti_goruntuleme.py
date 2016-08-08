@@ -4,9 +4,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import User, Okutman, Personel
+from ulakbus.models import User, Okutman, Personel, Izin
 from zengine.lib.test_utils import BaseTestCase
-import time
 
 
 class TestCase(BaseTestCase):
@@ -25,7 +24,7 @@ class TestCase(BaseTestCase):
                     # 2016 yılı Mayıs ayı seçilir. Veritabanında seçilen yıl ve
                     #  ayı içeren dönem bulunmamaktadır. 'Dönem Bulunamadı' başlıklı
                     # hata mesajının çıkması beklenir.
-                    resp = self.client.post(form={"ay_sec": 5, "yil_sec": 0, "sec": 1})
+                    resp = self.client.post(form={"ay_sec": 5, "yil_sec": 1, "sec": 1})
                     assert resp.json['forms']['schema']["title"] == "Dönem Bulunamadı"
 
                     if i == 0:
@@ -44,7 +43,7 @@ class TestCase(BaseTestCase):
 
             if loop == 1:
                 # Geçerli bir dönemin bulunduğu tarih seçilir.
-                resp = self.client.post(form={"ay_sec": 12, "yil_sec": 0, "sec": 1})
+                resp = self.client.post(form={"ay_sec": 11, "yil_sec": 0, "sec": 1})
 
                 # Ders ücreti hesaplama türü seçim ekranına gelmesi beklenir.
                 assert resp.json['forms']['schema'][
@@ -61,4 +60,11 @@ class TestCase(BaseTestCase):
                 okutman = Okutman.objects.get(personel=okutman_personel)
                 okutman_adi = okutman.ad + ' ' + okutman.soyad
 
+                # Personel izin listesi getirilir.
+                personel_izin_list = Izin.personel_izin_gunlerini_getir(okutman, 2016, 11)
+
+                # Personel'in izin günlerinin doğru olup olmadığı test edilir.
+                assert personel_izin_list == [16, 17, 18, 19, 20, 21]
+
+                # Puantaj tablosu'nda öğretim görevlisinin isminin olduğu test edilir.
                 assert okutman_adi.upper() in resp.json['forms']['schema']["title"].upper()

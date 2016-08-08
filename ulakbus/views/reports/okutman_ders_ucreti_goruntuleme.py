@@ -154,8 +154,6 @@ class DersUcretiHesaplama(CrudView):
         birim_no = self.current.role.unit.yoksis_no  # rolden gelecek
         birim_unit = Unit.objects.get(yoksis_no=birim_no)
 
-        # Verilen yıl ve birime göre akademik takvim döndürür
-
         # Secilen ay hangi donemleri kapsiyor, kac donemi kapsıyorsa
         # o donemleri dondürür.
         donem_list = Donem.donem_dondur(yil, ay, takvim)

@@ -16,8 +16,6 @@ from datetime import datetime, date
 import calendar
 from collections import OrderedDict
 from ulakbus.lib.common import AYLAR
-import json
-import random
 
 guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
@@ -33,9 +31,6 @@ class TarihForm(JsonForm):
     Puantaj tablosu hazırlanırken ay ve yıl seçiminde
     kullanılan form.
     """
-
-    class Meta:
-        title = 'Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz'
 
     yil_sec = fields.String('Yıl Seçiniz', choices=YIL, default=0)
     ay_sec = fields.String('Ay Seçiniz', choices=AYLAR, default=guncel_ay)
@@ -70,6 +65,7 @@ class DersUcretiHesaplama(CrudView):
         """
 
         _form = TarihForm(current=self.current)
+        _form.title = 'Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz'
         _form.sec = fields.Button("İlerle")
         self.form_out(_form)
 
@@ -144,7 +140,6 @@ class DersUcretiHesaplama(CrudView):
         İşlem yapılacak öğretim görevlisi seçilip seçilmediğini kontrol eder.
         """
 
-        self.current.task_data["control"] = None
         secilen_okutmanlar = []
         for okutman_secim in self.current.input['form']['OkutmanListesi']:
             if okutman_secim['secim'] == True:
@@ -165,8 +160,8 @@ class DersUcretiHesaplama(CrudView):
 
         _form = JsonForm(current=self.current, title="Öğretim Görevlisi Seçmelisiniz")
         _form.help_text = """İşlem yapabilmek için en az bir öğretim görevlisi seçmelisiniz.
-                             Öğretim görevlisi seçimine geri dönmek için Geri Dön butonuna, işlemi
-                             iptal etmek için İptal butonuna basabilirsiniz."""
+                             Öğretim görevlisi seçimine geri dönmek için Geri Dön butonuna,
+                             işlemi iptal etmek için İptal butonuna basabilirsiniz."""
         _form.geri_don = fields.Button("Geri Dön", flow='okutman_sec')
         _form.iptal = fields.Button("İptal")
         self.form_out(_form)
@@ -176,9 +171,8 @@ class DersUcretiHesaplama(CrudView):
         Ders Ücreti ya da Ek Ders Ücreti hesaplarından birini seçmeye yarar.
         """
 
-        _form = JsonForm(current=self.current, title="Öğretim Görevlileri"
-                                                     " Puantaj Tablosu Hesaplama"
-                                                     " Türü Seçiniz")
+        _form = JsonForm(current=self.current, title=
+        "Öğretim Görevlileri Puantaj Tablosu Hesaplama Türü Seçiniz")
 
         _form.ders = fields.Button("Ders Ücreti Hesapla", cmd='ders_ucreti_hesapla')
         _form.ek_ders = fields.Button("Ek Ders Ücreti Hesapla", cmd='ek_ders_ucreti_hesapla')
@@ -209,9 +203,6 @@ class DersUcretiHesaplama(CrudView):
         # 2016 yılı Temmuz ayı için = (4,31)
 
         birim_unit = Unit.objects.get(yoksis_no=self.current.role.unit.yoksis_no)
-        ust_birim = Unit.objects.get(yoksis_no=self.current.role.unit.parent_unit_no)
-        universite = Unit.objects.get(parent_unit_no=0)
-        # Verilen yıl ve birime göre akademik takvim döndürür
 
         # Secilen ay hangi donemleri kapsiyor, kac donemi kapsıyorsa
         # o donemleri dondürür.
@@ -229,15 +220,11 @@ class DersUcretiHesaplama(CrudView):
 
         object_list = ['Öğretim Elemanı']
         tarih_list = list(range(1, takvim[1] + 1))
-        hafta_gun_list = []
-        for i, tarih in enumerate(tarih_list):
-            object_list.append(' ' + str(tarih))
-            gun = calendar.weekday(yil, ay, tarih) + 1
-            hafta_gun_list.append(hafta_gunler[gun])
 
         # integer kabul etmedigi icin bosluk + integer koyuldu.
         # sonradan degistirilecek.
-
+        for tarih in tarih_list:
+            object_list.append(' ' + str(tarih))
 
         _form = JsonForm(current=self.current)
 
@@ -253,22 +240,7 @@ class DersUcretiHesaplama(CrudView):
         object_list.append(ders_saati_turu)
         self.output['objects'] = [object_list]
 
-
-        json_dict = {
-            "gunler": object_list[1:-1],
-            "hafta_gunler": hafta_gun_list,
-            "ucret_tipi": "Gündüz",
-            "butce_yil": str(yil),
-            "fakulte": ust_birim.name,
-            "universite": universite.name,
-            "bolum": birim_unit.name,
-            "dersler": [],
-            "toplam": ''
-        }
-        toplam = 0
-        sira = 0
         for secilen_okutman in self.current.task_data["secilen_okutmanlar"]:
-            sira += 1
             okutman = Okutman.objects.get(secilen_okutman['key'])
 
             data_list = OrderedDict({})
@@ -292,34 +264,15 @@ class DersUcretiHesaplama(CrudView):
             okutman_aylik_plan, ders_saati = ders_saati_doldur(donem_list, ders_etkinlik_list,
                                                                resmi_tatil_list, personel_izin_list,
                                                                tarih_araligi, yil, ay)
-            toplam += ders_saati
-            dersler_dict = {
-                "sira": str(sira),
-                "okutman": okutman_adi,
-                "okutman_id": "38812710558",
-                "okutman_unvan": Okutman_Unvan[okutman.unvan],
-                "teori_dersler": [],
-                "teori_toplam": '',
-                "diger_dersler": [],
-                "diger_toplam": '',
-                "toplam": '',
-                "aciklama": " "
-            }
 
             data_list['Öğretim Elemanı'] = okutman_adi
 
             for gun in range(1, takvim[1] + 1):
                 if gun in okutman_aylik_plan:
                     data_list[' ' + str(gun)] = str(okutman_aylik_plan[gun])
-                    dersler_dict["teori_dersler"].append(str(okutman_aylik_plan[gun]))
                 else:
                     data_list[' ' + str(gun)] = ' '
-                    dersler_dict["teori_dersler"].append(" ")
 
-            dersler_dict["teori_toplam"] = str(ders_saati)
-            dersler_dict["toplam"] = str(ders_saati)
-
-            json_dict["dersler"].append(dersler_dict)
             data_list[ders_saati_turu] = str(ders_saati)
 
             item = {
@@ -331,9 +284,6 @@ class DersUcretiHesaplama(CrudView):
 
             self.output['objects'].append(item)
 
-        json_dict["toplam"] = str(toplam)
-        dump_data = json.dumps(json_dict)
-        print dump_data
         _form.pdf_sec = fields.Button("Pdf Çıkar")
         _form.help_text = """
                          R: Resmi Tatil
@@ -351,7 +301,13 @@ def ders_saati_doldur(donem_list, ders_etkinlik_list, resmi_tatil_list, personel
     for j, donem in enumerate(donem_list):
         okutman_ders_dict = ders_etkinlik_list[j]
 
-        for i in range(tarih_araligi[j][0], tarih_araligi[j][1] + 1):
+        # Dönemi kapsıyor fakat ders etkinliği yoksa, döngünün dönmemesi
+        # için tuple'dan bir eksiltilir. (1,1) ise (1,0) yapılır. Çünkü
+        # döngü range'inde tuple'ın ikinci elemanı bir arttırılıyor.
+        if tarih_araligi[j][0]==tarih_araligi[j][1]:
+            tarih_araligi[j]=(tarih_araligi[j][0], tarih_araligi[j][1] -1)
+
+        for i in range(tarih_araligi[j][0], tarih_araligi[j][1] +1):
 
             gun = calendar.weekday(yil, ay, i) + 1
             # calendar haftanın günlerini 0-6, biz 1-7
@@ -408,6 +364,10 @@ def donem_aralik_dondur(donem_list, yil, ay, takvim, akademik_takvim_list):
     # dikkate almak için Akademik Takvim'de bulunan etkinlik
     # döneme göre seçilir.
     for j, donem in enumerate(donem_list):
+
+        # İçinde bulunulan dönemin ders başlangıç ve bitiş tarihlerini
+        # bulmak için kullanılır.
+
         if 'Güz' in donem.ad:
             etkinlik = 66
         elif 'Bahar' in donem.ad:
@@ -468,21 +428,3 @@ def donem_aralik_dondur(donem_list, yil, ay, takvim, akademik_takvim_list):
         tarih_araligi.append((baslangic_tarih.day, bitis_tarih.day))
 
     return tarih_araligi
-
-
-Okutman_Unvan = {
-    1: "Prof",
-    2: "Doç",
-    3: "Araş. Gör.",
-    4: "Öğr. Gör."
-}
-
-hafta_gunler = {
-    1: "Pt",
-    2: "Sl",
-    3: "Çr",
-    4: "Pr",
-    5: "Cu",
-    6: "Ct",
-    7: "Pz"
-}
