@@ -9,18 +9,18 @@
 Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
 
 """
+from datetime import date
+
 import six
 
 from pyoko import Model, field, ListNode, LinkProxy
 from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
+from ulakbus.models.personel import Izin
 from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room, RoomType
 from .personel import Personel
-from datetime import timedelta
-from datetime import date
-from ulakbus.models.personel import Izin
 
 class HariciOkutman(Model):
     """Harici Okutman Modeli
@@ -190,6 +190,23 @@ class Okutman(Model):
             raise Exception("Okutman %s must be unique" % self.okutman)
 
 
+class OgretimYili(Model):
+    """
+    Öğretim yılını bilgilerini tutan modeldir.
+    """
+
+    yil = field.Integer("Yıl")  # 2015
+    ad = field.String("Öğretim Yılı")  # 2015 - 2016 Öğretim Yılı
+
+    def post_creation(self):
+        self.yil = Donem.guncel_donem().baslangic_tarihi.year
+        self.ad = "%s - %s Öğretim Yılı" % (self.yil, self.yil + 1 )
+        self.save()
+
+    def __unicode__(self):
+        return self.ad
+
+
 class Donem(Model):
     """Dönem Modeli
 
@@ -203,7 +220,7 @@ class Donem(Model):
     baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     guncel = field.Boolean(index=True)
-    ogretim_yili = field.Integer("Öğretim Yılı", index=True)
+    ogretim_yili = OgretimYili("Öğretim Yılı", index=True)
 
     @classmethod
     def guncel_donem(cls):
@@ -1031,7 +1048,7 @@ class AkademikTakvim(Model):
 
     birim = Unit("Birim", index=True)
     # yil = field.Date("Yıl", index=True)
-    ogretim_yili = field.Integer("Öğretim Yılı", index=True)
+    ogretim_yili = OgretimYili("Öğretim Yılı", index=True)
 
     class Meta:
         app = 'Ogrenci'
@@ -1046,7 +1063,7 @@ class AkademikTakvim(Model):
     _birim.title = 'Birim'
 
     def __unicode__(self):
-        return '%s %s' % (self.birim, self.ogretim_yili)
+        return '%s %s' % (self.birim, self.ogretim_yili.ad)
 
     def etkinlikler(self):
         return Takvim.objects.filter(akademik_takvim=self)
@@ -1099,7 +1116,7 @@ class Takvim(Model):
         resmi_tatil_list = []
         akademik_takvim_list = []
         for donem in donem_list:
-            akademik_takvim = get_akademik_takvim(birim_unit,donem.ogretim_yili)
+            akademik_takvim = get_akademik_takvim(birim_unit, donem.ogretim_yili)
             resmi_tatiller = Takvim.objects.filter(akademik_takvim = akademik_takvim,resmi_tatil= True)
 
             tatil_list=[]

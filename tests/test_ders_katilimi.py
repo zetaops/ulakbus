@@ -81,3 +81,5 @@ class TestCase(BaseTestCase):
         # Değiştirilen katılım durumunun kaydedilip kaydedilmediği test edilir.
         assert son_ders_katilimi.katilim_durumu != ilk_ders_katilimi.katilim_durumu \
                and son_ders_katilimi.katilim_durumu == 80
+        son_ders_katilimi.katilim_durumu = 90
+        son_ders_katilimi.save()
