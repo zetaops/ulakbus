@@ -65,17 +65,16 @@ class DersProgramiYap(CrudView):
             msg = {"type": 'warning',
                    "title": 'Hatalı Sonuçlar Var!',
                    "msg": 'Oluşturulan ders programınızda hatalı sonuçlar bulunmaktadır.'
-                          'Lütfen tekrardan ders programı oluşturunuz.'}
+                          'Lütfen tekrardan Zaman Tablolarını düzenleyip çalıştırınız.'}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def ders_programi_hesaplama_baslat(self):
         if 'LANE_CHANGE_MSG' in self.current.task_data:
             if self.current.task_data['LANE_CHANGE_MSG']['title'] == 'Hatalı Sonuçlar Var!':
                 self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
-        else:
-            _form = JsonForm(title="Ders Programı Oluştur")
-            _form.button = fields.Button('Başlat')
-            self.form_out(_form)
+        _form = JsonForm(title="Ders Programı Oluştur")
+        _form.button = fields.Button('Başlat')
+        self.form_out(_form)
 
     def ders_programi_hesapla(self):
         dp = DersProgramiOlustur(service_payload={"bolum": self.current.role.unit.yoksis_no,
@@ -107,7 +106,7 @@ class DersProgramiYap(CrudView):
             msg = {"type": 'warning',
                    "title": 'Hatalı Sonuçlar Var!',
                    "msg": 'Oluşturulan ders programınızda hatalı sonuçlar bulunmaktadır.'
-                          'Lütfen tekrardan ders programı oluşturunuz.'}
+                          'Lütfen tekrardan Zaman Tablolarını düzenleyip çalıştırınız.'}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
             self.current.task_data['cmd'] = 'hata'
