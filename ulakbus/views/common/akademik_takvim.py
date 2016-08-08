@@ -16,10 +16,9 @@ birime ait akademik takvim gösterilir. Eğer birime özel bir akademik takvim b
 
 from collections import OrderedDict
 
-
 from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI
-from ulakbus.models.ogrenci import AkademikTakvim, Unit
+from ulakbus.models.ogrenci import AkademikTakvim, Unit, Takvim
 from zengine.views.crud import CrudView
 
 __author__ = 'Ali Riza Keles'
@@ -77,11 +76,12 @@ class AkademikTakvimView(CrudView):
                 return get_akademik_takvim(birim)
 
         akademik_takvim = get_akademik_takvim(self.current.role.unit)
-        for e in akademik_takvim.Takvim:
+
+        for e in Takvim.objects.filter(akademik_takvim=akademik_takvim):
             etkinlik = OrderedDict({})
             etkinlik['Etkinlik'] = dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(e.etkinlik), '')
-            etkinlik['Başlangıç'] = '{:%d.%m.%Y}'.format(e.baslangic)
-            etkinlik['Bitiş'] = '{:%d.%m.%Y}'.format(e.bitis)
+            etkinlik['Başlangıç'] = '{:%d.%m.%Y}'.format(e.baslangic) if e.baslangic else ''
+            etkinlik['Bitiş'] = '{:%d.%m.%Y}'.format(e.bitis) if e.bitis else ''
             etkinlikler.append(etkinlik)
 
         # cikti multirow table seklindedir.

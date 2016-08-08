@@ -236,3 +236,13 @@ MESSAGING_USER_SEARCH_FIELDS = ['name', 'surname']
 
 #: Unit search method of messaging subsystem will work on these fields
 MESSAGING_UNIT_SEARCH_FIELDS = ['name',]
+
+MESSAGES = {
+    'lane_change_invite_title': 'Etkinlik gerekiyor!',
+    'lane_change_invite_body': 'Bir iş akışı sizin etkinliğinizi gerektiriyor, '
+                               'lütfen aşağıdaki bağlantıya tıklayarak akışa katılın:',
+    'lane_change_message_title': 'Teşekkürler!',
+    'lane_change_message_body': 'Bu iş akışında şuan için gerekli adımları tamamladınız. '
+                                'İlgili kişiler, iş akışına katılmaları için haberdar edildiler.',
+
+}

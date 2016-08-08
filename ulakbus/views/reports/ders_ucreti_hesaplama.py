@@ -17,6 +17,7 @@ import calendar
 from collections import OrderedDict
 from ulakbus.lib.common import AYLAR
 import json
+import random
 
 guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
@@ -133,10 +134,7 @@ class DersUcretiHesaplama(CrudView):
         _form.sec = fields.Button("İlerle")
         self.form_out(_form)
 
-    def ders_saati_turu_secme(self):
-        """
-        Ders Ücreti ya da Ek Ders Ücreti hesaplarından birini seçmeye yarar.
-        """
+    def okutman_secim_kontrol(self):
 
         self.current.task_data["control"] = None
         secilen_okutmanlar = []
@@ -145,6 +143,26 @@ class DersUcretiHesaplama(CrudView):
                 secilen_okutmanlar.append(okutman_secim)
 
         self.current.task_data["secilen_okutmanlar"] = secilen_okutmanlar
+
+        if len(secilen_okutmanlar)>0:
+            self.current.task_data["okutman_kontrol"] = True
+        else:
+            self.current.task_data["okutman_kontrol"] = False
+
+    def okutman_secim_uyari(self):
+
+        _form = JsonForm(current=self.current, title="Okutman Bulunamadı")
+        _form.help_text = """Seçtiğiniz yıl ve aya ait dönem bulunamadı. Tarih
+                              seçimine geri dönmek için Geri Dön butonuna, işlemi
+                              iptal etmek için İptal butonuna basabilirsiniz."""
+        _form.geri_don = fields.Button("Geri Dön", flow='okutman_sec')
+        _form.iptal = fields.Button("İptal")
+        self.form_out(_form)
+
+    def ders_saati_turu_secme(self):
+        """
+        Ders Ücreti ya da Ek Ders Ücreti hesaplarından birini seçmeye yarar.
+        """
 
         _form = JsonForm(current=self.current, title="Öğretim Görevlileri"
                                                      " Puantaj Tablosu Hesaplama"

@@ -16,7 +16,7 @@ class StartSolver(Service):
         solver_service = ExecuteSolver().name
         self.invoke_async(solver_service, payload=self.request.payload)
         self.response.status_code = httplib.OK
-        self.response.payload = {'status': 'OK', 'message': 'Ders planlaması başlatıldı'}
+        self.response.payload = {'status': 'ok', 'result': 'Ders planlaması başlatıldı'}
 
 
 class ExecuteSolver(Service):

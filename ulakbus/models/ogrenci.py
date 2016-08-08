@@ -132,7 +132,7 @@ class Okutman(Model):
         app = 'Ogrenci'
         verbose_name = "Okutman"
         verbose_name_plural = "Okutmanlar"
-        search_fields = ['unvan', 'personel', 'ad', 'soyad']
+        search_fields = ['unvan', 'personel', 'ad', 'soyad', 'birim_no']
 
     @lazy_property
     def okutman(self):
@@ -1037,7 +1037,7 @@ class AkademikTakvim(Model):
         app = 'Ogrenci'
         verbose_name = "Akademik Takvim"
         verbose_name_plural = "Akademik Takvimler"
-        list_fields = ['_birim', 'yil']
+        list_fields = ['_birim', 'ogretim_yili']
         # search_fields = ['yil']
 
     def _birim(self):
@@ -1046,7 +1046,7 @@ class AkademikTakvim(Model):
     _birim.title = 'Birim'
 
     def __unicode__(self):
-        return '%s %s' % (self.birim, self.yil)
+        return '%s %s' % (self.birim, self.ogretim_yili)
 
     def etkinlikler(self):
         return Takvim.objects.filter(akademik_takvim=self)
@@ -1089,7 +1089,7 @@ class Takvim(Model):
         verbose_name_plural = "Takvimler"
 
     def __unicode__(self):
-        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.yil, self.etkinlik)
+        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
 
     @staticmethod
     def resmi_tatil_gunleri_getir(donem_list,birim_unit,yil,ay):

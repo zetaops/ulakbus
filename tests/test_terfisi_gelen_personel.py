@@ -41,31 +41,29 @@ class TestCase(BaseTestCase):
                                                           'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
-        self.client.set_path('/logout')
 
         time.sleep(1)
 
         # Personel terfi islemini reddet bolumu
         token, user = self.get_user_token('genel_sekreter_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
-        resp = self.client.post()
+        # resp = self.client.post()
         self.client.post(cmd="red_aciklamasi_yaz",
-                         form={'Personel': resp.json['forms']['model']['Personel'],
+                         form={'Personel': ter_gel_id_per,
                                'duzenle': 1})
         Message.objects.filter().delete()
+        self.client.post()
         resp = self.client.post(
             wf='terfisi_gelen_personel_listesi',
             form={'devam': 1, 'red_aciklama': "Reddedildi"}
         )
 
         assert resp.json['msgbox']['msg'] == "Talebiniz Basariyla iletildi."
-        self.client.set_path('/logout')
 
         time.sleep(1)
 
-        user = User.objects.get(username='personel_isleri_1')
-        self.prepare_client('/terfisi_gelen_personel_listesi', user=user)
         token, user = self.get_user_token('personel_isleri_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
         Message.objects.filter().delete()
@@ -104,20 +102,15 @@ class TestCase(BaseTestCase):
                                                           'kaydet': 1})
 
         assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
-        self.client.set_path('/logout')
 
         time.sleep(1)
 
-        self.personel_terfi_onay()
-
-    def personel_terfi_onay(self):
         """
         TODO: docstring eklenecek..
         """
         # Personel terfi islemini onayla bolumu
-        user = User.objects.get(username='genel_sekreter_1')
-        self.prepare_client('/terfisi_gelen_personel_listesi', user=user)
         token, user = self.get_user_token('genel_sekreter_1')
+        self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
         assert len(resp.json['forms']['model']['Personel']) == 3
         Message.objects.filter().delete()
@@ -132,9 +125,7 @@ class TestCase(BaseTestCase):
 
         time.sleep(1)
 
-        usr = User.objects.get(username='personel_isleri_1')
-        msg = Message.objects.filter(receiver=usr)[0]
-        token = msg.url.split('/')[-1]
+        token, user = self.get_user_token('personel_isleri_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
         resp = self.client.post()
         Message.objects.filter().delete()
