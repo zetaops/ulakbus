@@ -7,7 +7,7 @@
 
 import time
 
-from ulakbus.models import OgrenciDersi
+from ulakbus.models import OgrenciDersi, Sinav
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import User
 
@@ -78,7 +78,8 @@ class TestCase(BaseTestCase):
         # karşılaştırılarak test edilir.
         for i in range(0, len(resp.json['object']['fields'])):
             ogrenci_ders = OgrenciDersi.objects.filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')[i]
-            ogrenci_ad = ogrenci_ders.ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders.ogrenci_program.ogrenci.soyad
+            ogrenci_ad = "%s %s" % (ogrenci_ders.ogrenci_program.ogrenci.ad,
+                                    ogrenci_ders.ogrenci_program.ogrenci.soyad)
             assert ogrenci_ad == resp.json['object']['fields'][i]['Adı Soyadı']
 
         # Sınav seçim ekranına geri döner
@@ -97,7 +98,8 @@ class TestCase(BaseTestCase):
         # karşılaştırılarak test edilir.
         for i in range(0, len(resp.json['forms']['model']['Ogrenciler'])):
             ogrenci_ders = OgrenciDersi.objects.filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')[i]
-            ogrenci_ad = ogrenci_ders.ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders.ogrenci_program.ogrenci.soyad
+            ogrenci_ad = "%s %s" % (ogrenci_ders.ogrenci_program.ogrenci.ad,
+                                    ogrenci_ders.ogrenci_program.ogrenci.soyad)
             assert ogrenci_ad == resp.json['forms']['model']['Ogrenciler'][i]['ad_soyad']
 
         # Öğrencilerin sayısı.
@@ -118,7 +120,7 @@ class TestCase(BaseTestCase):
         assert resp.json['msgbox']['title'] == 'Notlar Kaydedildi'
 
         # İş akışı tekrardan başlatılır.
-        resp = self.client.set_path('/okutman_not_girisi')
+        self.client.set_path('/okutman_not_girisi')
         self.client.post()
 
         # Ders şubesi seçilir.
@@ -131,3 +133,9 @@ class TestCase(BaseTestCase):
 
         assert num_of_ogrenci == len(resp.json['object']['fields'])
         assert resp.json['msgbox']['title'] == 'Notlar Onaylandı'
+
+        # Ilgili Sinav tekrardan degerlendirilebilir
+        sinav = Sinav.objects.get('IvXH1cqyYoHznv0iRV4FjLvXWwz')
+        sinav.degerlendirme = False
+        sinav.save()
+

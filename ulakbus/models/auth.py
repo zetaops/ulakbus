@@ -9,17 +9,21 @@ Bu modül Ulakbüs uygulaması için authorization ile ilişkili data modellerin
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import hashlib
 
 from pyoko import field
 from pyoko import Model, ListNode
 from passlib.hash import pbkdf2_sha512
 from pyoko import LinkProxy
 from pyoko.conf import settings
+from pyoko.lib.utils import lazy_property
 
 from zengine.auth.permissions import get_all_permissions
 from zengine.dispatch.dispatcher import receiver
+
 from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
+from zengine.messaging.lib import BaseUser
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -28,7 +32,7 @@ except ImportError:
         pass
 
 
-class User(Model):
+class User(Model, BaseUser):
     """User modeli
 
     User modeli Ulakbus temel kullanıcı modelidir. Temel kullanıcı
@@ -49,63 +53,23 @@ class User(Model):
         verbose_name_plural = "Kullanıcılar"
         search_fields = ['username', 'name', 'surname']
 
-    def get_avatar_url(self):
-        """
-        Bu metot kullanıcıya ait avatar url'ini üretir.
-
-        Returns:
-            str: kullanıcı avatar url
-        """
-        return "%s%s" % (settings.S3_PUBLIC_URL, self.avatar)
-
-    def __unicode__(self):
-        return "User %s" % self.username
-
-    def set_password(self, raw_password):
-        """
-        Kullanıcı şifresini encrypt ederek set eder.
-
-        Args:
-            raw_password (str)
-        """
-        self.password = pbkdf2_sha512.encrypt(raw_password, rounds=10000,
-                                              salt_size=10)
+    @lazy_property
+    def full_name(self):
+        return "%s %s" % (self.name, self.surname)
 
     def pre_save(self):
-        """ encrypt password if not already encrypted """
-        if self.password and not self.password.startswith('$pbkdf2'):
-            self.set_password(self.password)
+        self.encrypt_password()
 
-    def check_password(self, raw_password):
-        """
-        Verilen encrypt edilmemiş şifreyle kullanıcıya ait encrypt
-        edilmiş şifreyi karşılaştırır.
+    def post_creation(self):
+        self.prepare_channels()
 
-        Args:
-            raw_password (str)
-
-        Returns:
-             bool: Değerler aynı olması halinde True, değilse False
-                döner.
-        """
-        return pbkdf2_sha512.verify(raw_password, self.password)
-
-    def get_role(self, role_id):
-        """
-        Kullanıcıya ait Role nesnesini getirir.
-
-        Args:
-            role_id (int)
-
-        Returns:
-            dict: Role nesnesi
-
-        """
-        return self.role_set.node_dict[role_id]
-
-    def send_message(self, title, message, sender=None):
-        from zengine.notifications import Notify
-        Notify(self.key).set_message(title, message, typ=Notify.Message, sender=sender)
+    def get_avatar_url(self):
+        if self.avatar:
+            return BaseUser.get_avatar_url(self)
+        else:
+            # FIXME: This is for fun, remove when we resolve static hosting problem
+            return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
+                "%s@gmail.com" % self.username).hexdigest()
 
 
 class Permission(Model):
@@ -136,14 +100,12 @@ class Permission(Model):
             User list
         """
         users = set()
-        for ars in self.abstract_role_set:
-            for r in ars.abstract_role.role_set:
-                users.add(r.role.user)
-        for r in self.role_set:
-            users.add(r.role.user)
-
+        for ars in self.abstract_role_set.objects.filter():
+            for r in ars.role_set.objects.filter():
+                users.add(r.user)
+        for r in self.role_set.objects.filter():
+            users.add(r.user)
         return users
-
 
     def get_permitted_roles(self):
         """
@@ -153,13 +115,12 @@ class Permission(Model):
             Role list
         """
         roles = set()
-        for ars in self.abstract_role_set:
-            for r in ars.abstract_role.role_set:
-                roles.add(r.role)
-        for r in self.role_set:
-            roles.add(r.role)
+        for ars in self.abstract_role_set.objects.filter():
+            for r in ars.role_set.objects.filter():
+                roles.add(r)
+        for r in self.role_set.objects.filter():
+            roles.add(r)
         return roles
-
 
 
 class AbstractRole(Model):
@@ -263,11 +224,27 @@ class Unit(Model):
     uid = field.Integer(index=True)
     parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
 
+    @classmethod
+    def get_user_keys(cls, unit_key):
+        return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
+        stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
+        for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
+            stack.extend(cls.get_user_keys(unit_key))
+        return stack
+
+    @classmethod
+    def get_user_keys_by_yoksis(cls, yoksis_no):
+        # because we don't refactor our data to use Unit.parent, yet!
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('user_id', flatten=True)
+        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
+            stack.extend(cls.get_user_keys_by_yoksis(yoksis_no))
+        return stack
+
     class Meta:
         app = 'Sistem'
         verbose_name = "Unit"
         verbose_name_plural = "Units"
-        search_fields = ['name']
+        search_fields = ['name', 'yoksis_no']
         list_fields = ['name', 'unit_type']
 
     def __unicode__(self):
@@ -620,4 +597,3 @@ def ulakbus_permissions():
     from ulakbus.views.reports import ReporterRegistry
     report_perms = ReporterRegistry.get_permissions()
     return default_perms + report_perms
-
