@@ -21,6 +21,7 @@ from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room, RoomType
 from .personel import Personel
+from zengine.messaging.model import Channel
 
 
 class OgretimYili(Model):
@@ -534,9 +535,24 @@ class Sube(Model):
         self.ders_adi = "%s - %s %s" % (self.ders.ad, self.ad, str(self.kontenjan))
         self.save()
 
+    def sube_kanal_olustur(self):
+        """Yeni bir şube oluşturulduğunda mesajlaşma kanalı oluşturur ve o şubenin
+            öğretim görevlisini o kanala yönetici olarak atar."""
+        channel = Channel()
+        channel.name = "%s %s" % (self.ders.kod, self.ad)
+        channel.typ = 15
+        channel.description = "%s Dersi %s Şubesi Mesajlaşma Kanalı" % (self.ders.ad, self.ad)
+        try:
+            personel = Personel.objects.get(okutman=self.okutman)
+            channel.owner = personel.user
+        except:
+            pass
+        channel.save()
+
     def post_creation(self):
         self.sube_sinavlarini_olustur()
         self.ders_adi_olustur()
+        self.sube_kanal_olustur()
 
     def __unicode__(self):
         return '%s' % self.ders_adi
