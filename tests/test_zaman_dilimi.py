@@ -45,6 +45,8 @@ class TestCase(BaseTestCase):
 
         zd = ZamanDilimleri.objects.get('XUM8nQZv1eJ6cgyDXnvpVG9BmcA')
 
+        assert zd.baslama_saat == '10'
+
         zd.baslama_saat = '09'
         zd.save()
 
