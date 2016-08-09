@@ -10,7 +10,7 @@ from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):
-    def test_aktif_donem_degistirme(self):
+    def test_yeni_donem_olusturma(self):
         """
         Yeni Dönem Oluşturma iş akışının ilk adımında Güz ve Bahar
         Dönemi formu oluşturulur.
@@ -35,7 +35,7 @@ class TestCase(BaseTestCase):
 
         # Güz ve Bahar dönemi formları doldurulur, request yapılır.
         resp = self.client.post(
-            form={'kaydet': 1, 'guz_baslangic_tarhi': '02.09.2015', 'guz_bitis_tarihi': '15.02.2016',
+            form={'kaydet': 1, 'guz_baslangic_tarihi': '02.09.2015', 'guz_bitis_tarihi': '15.02.2016',
                   'bahar_baslangic_tarihi': '01.03.2016', 'bahar_bitis_tarihi': '17.06.2016'})
 
         # Solr ve Riak arasındaki gecikmeden dolayı 1 saniye bekletilir.

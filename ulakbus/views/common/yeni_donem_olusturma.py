@@ -4,6 +4,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from datetime import datetime
+
 from ulakbus.models import Donem
 from zengine import forms
 from zengine.forms import fields
@@ -101,13 +103,13 @@ class YeniDonemOlusturma(CrudView):
 
         del self.current.input['form']['kaydet']
         bahar_donemi = Donem()
-        bahar_donemi.ad = 'Bahar Dönemi'
+        bahar_donemi.ad = 'Bahar - %s ' % datetime.strptime(self.current.input['form']['bahar_baslangic_tarihi'], "%d.%m.%Y")
         bahar_donemi.baslangic_tarihi = self.current.input['form']['bahar_baslangic_tarihi']
         bahar_donemi.bitis_tarihi = self.current.input['form']['bahar_bitis_tarihi']
         bahar_donemi.save()
 
         guz_donemi = Donem()
-        guz_donemi.ad = 'Güz Dönemi'
+        guz_donemi.ad = 'Güz - %s' % datetime.strptime(self.current.input['form']['guz_baslangic_tarihi'], "%d.%m.%Y")
         guz_donemi.baslangic_tarihi = self.current.input['form']['guz_baslangic_tarihi']
         guz_donemi.bitis_tarihi = self.current.input['form']['guz_bitis_tarihi']
         guz_donemi.save()

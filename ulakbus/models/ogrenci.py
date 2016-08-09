@@ -252,7 +252,7 @@ class Donem(Model):
             Veritabanında kayıtlı olan en son bahar dönemini
 
         """
-        return cls.objects.filter(ad='Bahar Dönemi').order_by('-baslangic_tarihi')[0]
+        return cls.objects.filter(ad__contains='Bahar').order_by('-baslangic_tarihi')[0]
 
     @classmethod
     def en_son_guz_donemi(cls):
@@ -262,7 +262,7 @@ class Donem(Model):
 
         """
 
-        return cls.objects.filter(ad='Güz Dönemi').order_by('-baslangic_tarihi')[0]
+        return cls.objects.filter(ad__contains='Güz').order_by('-baslangic_tarihi')[0]
 
     def onceki_donem(self):
         """
