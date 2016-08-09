@@ -3,8 +3,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
-from ulakbus.models import User, DersEtkinligi, SinavEtkinligi
+from pyoko.db.adapter.db_riak import BlockSave
+from ulakbus.models import User, DersEtkinligi, SinavEtkinligi, Donem
 from zengine.lib.test_utils import BaseTestCase
 import time
 
@@ -15,7 +15,7 @@ class TestCase(BaseTestCase):
 
         usr = User.objects.get(username='ders_programi_koordinatoru_1')
         unit = usr.role_set[0].role.unit()
-        published_false_count = DersEtkinligi.objects.filter(bolum=unit, published=False).count()
+        published_false_count = DersEtkinligi.objects.filter(bolum=unit, published=False, donem=Donem.guncel_donem()).count()
 
         self.prepare_client("/ders_programi_hazirla", user=usr)
         resp = self.client.post()
@@ -71,13 +71,13 @@ class TestCase(BaseTestCase):
 
         assert resp.json['msgbox']['title'] == "Ders Programı Yayınlandı!"
 
+        time.sleep(1)
+
         resp = self.client.post()
 
         assert resp.json['msgbox']['title'] == "Yayınlanmış Ders Programı Var!"
 
-        time.sleep(1)
-
-        published_true = DersEtkinligi.objects.filter(bolum=unit, published=True)
+        published_true = DersEtkinligi.objects.filter(bolum=unit, published=True, donem=Donem.guncel_donem())
 
         assert published_false_count == len(published_true)
 
@@ -87,12 +87,12 @@ class TestCase(BaseTestCase):
 
         time.sleep(1)
 
-        assert published_false_count == DersEtkinligi.objects.filter(bolum=unit, published=False).count()
+        assert published_false_count == DersEtkinligi.objects.filter(bolum=unit, published=False, donem=Donem.guncel_donem()).count()
 
     def test_sinav_programi_yap(self):
         usr = User.objects.get(username='ders_programi_koordinatoru_1')
         unit = usr.role_set[0].role.unit()
-        published_false_count = SinavEtkinligi.objects.filter(bolum=unit, published=False).count()
+        published_false_count = SinavEtkinligi.objects.filter(bolum=unit, published=False, donem=Donem.guncel_donem()).count()
 
         self.prepare_client('/sinav_programi_hazirla', user=usr)
         resp = self.client.post()
@@ -154,9 +154,7 @@ class TestCase(BaseTestCase):
 
         assert resp.json['msgbox']['title'] == "Yayınlanmış Sınav Programı Var!"
 
-        time.sleep(1)
-
-        published_true = SinavEtkinligi.objects.filter(bolum=unit, published=True)
+        published_true = SinavEtkinligi.objects.filter(bolum=unit, published=True, donem=Donem.guncel_donem())
 
         assert published_false_count == len(published_true)
 
@@ -166,4 +164,4 @@ class TestCase(BaseTestCase):
 
         time.sleep(1)
 
-        assert published_false_count == SinavEtkinligi.objects.filter(bolum=unit, published=False).count()
+        assert published_false_count == SinavEtkinligi.objects.filter(bolum=unit, published=False, donem=Donem.guncel_donem()).count()
