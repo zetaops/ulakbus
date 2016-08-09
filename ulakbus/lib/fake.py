@@ -54,6 +54,47 @@ class GenerateFakeData(Command):
                        sube_say=sube_say,
                        ogrenci_say=ogrenci_say)
 
+class GenerateFakeProgramData(Command):
+    CMD_NAME = 'generate_fake_program_data'
+    HELP = 'Generates fake program data for ulakbüs'
+    PARAMS = [
+
+        {'name': 'bolum_yoksis_no', 'type': int, 'required': True,
+         'help': 'Bolum yoksis no girilmelidir.'},
+        {'name': 'personel_sayisi', 'type': int, 'default': 30,
+         'help': 'Üretilecek personel sayısı, varsayılan 30'},
+        {'name': 'okutman_sayisi', 'type': int, 'default': 20,
+         'help': 'Üretilecek okutman sayısı, varsayılan 20'},
+        {'name': 'ders_sayisi', 'type': int, 'default': 40,
+         'help': 'Üretilecek ders sayısı, varsayılan 40'},
+        {'name': 'sube_sayisi', 'type': int, 'default': 3,
+         'help': 'Üretilecek şube sayısı, varsayılan 3'},
+        {'name': 'sinav_sayisi', 'type': int, 'default': 3,
+         'help': 'Üretilecek sınav sayısı, varsayılan 3'},
+        {'name': 'ogrenci_sayisi', 'type': int, 'default': 30,
+         'help': 'Üretilecek öğrenci sayısı, varsayılan 30'},
+        {'name': 'bina_sayisi', 'type': int, 'default': 4,
+         'help': 'Üretilecek bina sayısı, varsayılan 4'}
+    ]
+
+    def run(self):
+        from tests.fake.fake_data_generator import FakeDataGenerator
+        bolum_yoksis_no = int(self.manager.args.bolum_yoksis_no)
+        personel_say = int(self.manager.args.personel_sayisi)
+        okutman_say = int(self.manager.args.okutman_sayisi)
+        ders_say = int(self.manager.args.ders_sayisi)
+        sube_say = int(self.manager.args.sube_sayisi)
+        sinav_say = int(self.manager.args.sinav_sayisi)
+        ogrenci_say = int(self.manager.args.ogrenci_sayisi)
+        bina_say = int(self.manager.args.bina_sayisi)
+        fake = FakeDataGenerator()
+        fake.program_data_olustur(bolum_yoksis_no,personel_say=personel_say,
+                       okutman_say=okutman_say,
+                       ders_say=ders_say, sinav_say=sinav_say,
+                       sube_say=sube_say,
+                       ogrenci_say=ogrenci_say,
+                       bina_say=bina_say)
+
 
 class GenerateAbstractRoles(Command):
     CMD_NAME = 'generate_abstract_roles'

@@ -8,7 +8,6 @@ from zengine.forms import JsonForm
 
 from ulakbus.models import OgrenciProgram, Ogrenci, Role, User, AbstractRole
 from zengine.forms import fields
-from zengine.notifications import Notify
 from zengine.views.crud import CrudView
 
 ABSTRACT_ROLE_LIST = [
@@ -263,5 +262,5 @@ class KayitSil(CrudView):
     @staticmethod
     def notify(user, msg, title):
         if user:
-            Notify(user.key).set_message(msg=msg, title=title, typ=Notify.TaskInfo)
+            user.send_notification(message=msg, title=title)
 
