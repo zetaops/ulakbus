@@ -27,6 +27,7 @@ PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
 ROLE_MODEL = 'ulakbus.models.auth.Role'
 UNIT_MODEL = 'ulakbus.models.auth.Unit'
+ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
 
 # # left blank to use StreamHandler aka stderr
 # LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
@@ -165,7 +166,6 @@ VIEW_URLS.update({
     # ('falcon URI template', 'python path to view method/class')
     'ogrenci_ara': 'ulakbus.views.system.SearchStudent',
     'personel_ara': 'ulakbus.views.system.SearchPerson',
-    'notify': 'ulakbus.views.system.Notification',
     'get_current_user': 'ulakbus.views.system.GetCurrentUser',
     'dashboard': 'ulakbus.views.system.UlakbusMenu',
     'menu': 'ulakbus.views.system.UlakbusMenu',
