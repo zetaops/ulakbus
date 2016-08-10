@@ -130,6 +130,7 @@ OBJECT_MENU = {
 
         {'name': 'AskerlikKayitlari', 'verbose_name': 'Askerlik Kayıtları', 'field': 'personel_id',
          'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+
         {'name': 'Personel', 'verbose_name': 'Personel İşten Ayrılma', 'field': 'personel_id',
          'wf': 'personel_isten_ayrilma'}
     ],
