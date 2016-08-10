@@ -197,16 +197,23 @@ class IzinIslemleri(CrudView):
 
             mazeret_izinler[str(yil)] = 10
 
+        ara_deger = 0
+
         for izin in izinler:
             if izin.tip == 1:
                 yil = izin.baslangic.year - 1
                 if (str(yil) in yillik_izinler.keys()) and (yillik_izinler[str(yil)] > 0):
                     yillik_izinler[str(yil)] -= ((izin.bitis - izin.baslangic).days + 1)
+                    if yillik_izinler[str(yil)] < 0:
+                        ara_deger = -1*yillik_izinler[str(yil)]
+                        yillik_izinler[str(yil)] = 0
+                        yillik_izinler[str(yil+1)] -= ara_deger
                 else:
                     yil += 1
                     yillik_izinler[str(yil)] -= ((izin.bitis - izin.baslangic).days + 1)
             elif izin.tip == 5:
                 mazeret_izinler[str(yil)] -= ((izin.bitis - izin.baslangic).days + 1)
+
 
         return {'yillik': yillik_izinler, 'mazeret': mazeret_izinler}
 
@@ -238,11 +245,13 @@ class IzinIslemleri(CrudView):
             izin_kayit.adres = self.current.input["form"]["adres"]
             izin_kayit.telefon = self.current.input["form"]["telefon"]
             izin_kayit.personel = Personel.objects.get(self.current.task_data["personel_id"])
+            izin_kayit.personel_id = str(self.current.task_data["personel_id"])
 
             # İzin alan personelin yerine vekil bırakması durumu
             if self.current.input["form"]["vekil_id"] != None:
                 izin_kayit.vekil = Personel.objects.get(self.current.input["form"]["vekil_id"])
-            izin_kayit.save()
+                izin_kayit.vekil_id = str(self.current.input["form"]["vekil_id"])
+            izin_kayit.blocking_save()
             mesaj_type = "info"
 
         self.current.output["msgbox"] = {
