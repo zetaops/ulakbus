@@ -14,6 +14,10 @@ from zengine.views.crud import CrudView
 
 
 class OgrenciSecimForm(forms.JsonForm):
+    """
+    Öğrenci Not Duzenleme sınıfı için form olarak kullanılacaktır.
+
+    """
     class Meta:
         inline_edit = ['secim']
 
@@ -24,6 +28,10 @@ class OgrenciSecimForm(forms.JsonForm):
 
 
 class SubeSecimForm(forms.JsonForm):
+    """
+    Öğrenci Not Duzenleme sınıfı için form olarak kullanılacaktır.
+
+    """
     class Meta:
         title = 'Şube Seçim'
     sube = fields.String('Şube Seçiniz', type='typeahead')
@@ -31,6 +39,13 @@ class SubeSecimForm(forms.JsonForm):
 
 
 class NotDuzenlemeForm(forms.JsonForm):
+    """
+
+    Öğrenci Not Duzenleme sınıfı için form olarak kullanılacaktır. Form,
+    include listesinde, aşağıda tanımlı alanlara sahiptir.
+
+    """
+
     class Meta:
         include = ['puan']
 
@@ -38,6 +53,11 @@ class NotDuzenlemeForm(forms.JsonForm):
 
 
 def sube_arama(current):
+    """
+    custom search için kullanılan viewdir.
+
+    """
+
     subeler = []
     query = current.input.get('query')
     for sube in Sube.objects.search_on(*['ders_adi'], contains=query):
@@ -47,6 +67,26 @@ def sube_arama(current):
 
 
 class OgrenciNotDuzenleme(CrudView):
+    """Öğrenci İşleri Not Düzenleme İş Akışı
+
+    Öğrenci İşleri Not Düzenleme  iş akışı 8 adımdan ve 2 laneden oluşmaktadır. İlk lane öğrenci işleri
+    tarafından, ikinci lane ise öğretim üyesi tarafından işletilir.
+
+    İlk lane aşağıdaki beş adımdan oluşur.
+       * Fakülte Yönetim Karar No Gir
+       * Şube Seç
+       * Sınav Seç
+       * Öğrenci Seç
+       * Öğrenci Seçim Kaydet
+
+    İkinci lane 3 adımdan oluşur.
+
+       * Not Düzenle
+       * Not Kaydet
+       * Bilgi ver
+
+    """
+
     class Meta:
         model = 'DegerlendirmeNot'
 
@@ -65,33 +105,33 @@ class OgrenciNotDuzenleme(CrudView):
 
     def sube_sec(self):
         """
+        Şube seçilir.
 
         """
-        _form = SubeSecimForm(current=self.current)
-        # _form.set_choices_of('sube', choices=prepare_choices_for_model(Sube))
-        # if 'subeler' in self.current.task_data:
-        #     for sube in self.current.task_data['subeler']:
-        #         _form.Subeler(key=sube['key'], ders_adi=sube['ders_adi'])
 
+        _form = SubeSecimForm(current=self.current)
         self.form_out(_form)
         self.sube_secim_form_inline_edit()
         self.current.output["meta"]["allow_actions"] = True
 
     def sinav_sec(self):
-        self.current.task_data['sube'] = self.current.input['form']['sube']
-        sinavlar = []
-        sinav_lst = Sinav.objects.filter(sube_id=self.current.task_data['sube'])
-        for sinav in sinav_lst:
-            _sinav = (sinav.key, sinav.__unicode__())
-            sinavlar.append(_sinav)
+        """
+        Sınav seçilir.
 
+        """
+
+        self.current.task_data['sube'] = self.current.input['form']['sube']
+        sinavlar = [(sinav.key, sinav.__unicode__()) for sinav in Sinav.objects.filter(sube_id=self.current.task_data['sube'])]
         _form = forms.JsonForm(current=self.current, title='Sınav Seçiniz')
-        # Integer ya da String farketmiyor, anlaşılmadı. Esata sor
         _form.sinav = fields.Integer('Sınavlar', choices=tuple(sinavlar))
         _form.ileri = fields.Button('İleri')
         self.form_out(_form)
 
     def ogrenci_sec(self):
+        """
+        Notu değiştirelecek öğrenciler seçilir.
+
+        """
         self.current.task_data['sinav_key'] = self.current.input['form']['sinav']
         ogrenci_dersi_lst = OgrenciDersi.objects.filter(sube_id=self.current.task_data['sube'])
         _form = OgrenciSecimForm(current=self.current, title='Öğrenci Seçiniz')
@@ -103,6 +143,11 @@ class OgrenciNotDuzenleme(CrudView):
         self.current.output['meta']['allow_actions'] = False
 
     def ogrenci_secim_kaydet(self):
+        """
+        Ekrana bilgi mesajı basılır ve seçilen öğrenciler task data içinde bir sonraki adımda kullanılmak
+        üzere tutulur.
+
+        """
         self.current.task_data['ogrenciler'] = [ogr for ogr in self.current.input['form']['Ogrenciler'] if ogr['secim']]
         msg = {"title": 'Not Düzenleme İşlemi',
                "body": 'Not düzenleme işlemi için sınav, öğrenci, şube seçimi başarıyla tamamlanmıştır.'}
@@ -110,6 +155,10 @@ class OgrenciNotDuzenleme(CrudView):
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def not_duzenle(self):
+        """
+        Öğrencilere ait notlar düzenlenir.
+
+        """
         _ogrenci = self.current.task_data['ogrenciler'].pop()
         ogrenci_object = Ogrenci.objects.get(_ogrenci['ogrenci_key'])
         _sinav = Sinav.objects.get(self.current.task_data['sinav_key'])
@@ -120,9 +169,14 @@ class OgrenciNotDuzenleme(CrudView):
         self.form_out(_form)
 
     def bilgi_ver(self):
+        """
+        İşlemin başarıyla tamamlandığına dair bilgi mesajı basılır.
+
+        """
         self.current.output['msgbox'] = {'type': 'info', "title": 'Not Düzenleme',
                                          "msg": 'Öğrencilere ait notlar başarıyla düzenlendi'}
 
     def sube_secim_form_inline_edit(self):
         self.output['forms']['schema']['properties']['sube']['widget'] = 'custom'
         self.output['forms']['schema']['properties']['sube']['view'] = 'sube_arama'
+        self.output['forms']['schema']['properties']['sube']['wf'] = "ogrenci_not_duzenleme"
