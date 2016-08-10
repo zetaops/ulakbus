@@ -1,0 +1,348 @@
+{
+	"uyruklar": {
+		"1" : {
+			"tr" : "T.C.",
+			"en" : "T.C."
+		},
+		"2" : {
+			"tr" : "Yabancı",
+			"en" : "Yabancı"
+		}
+	},
+	"ceza_turler": {
+		"1" : {
+			"tr" : "Disiplin Cezası",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "Uyarı Cezası",
+			"en" : ""
+		},
+		"3" : {
+			"tr" : "Kınama Cezası",
+			"en" : ""
+		},
+		"4" : {
+			"tr" : "Uzaklaştırma Cezası",
+			"en" : ""
+		}
+	},
+	"ders_alis_tipleri": {
+		"1" : {
+			"tr" : "İlk",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "Üstten",
+			"en" : ""
+		},
+		"3" : {
+			"tr" : "Devamlı Tekrar",
+			"en" : ""
+		},
+		"4" : {
+			"tr" : "Yükseltme İçin",
+			"en" : ""
+		},
+		"5" : {
+			"tr" : "Devamsız Tekrar",
+			"en" : ""
+		}
+	},
+	"ders_gecme_durum" : {
+		"1" : {
+			"tr" : "Alıyor",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "Geçti",
+			"en" : ""
+		},
+		"3" : {
+			"tr" : "Kaldı",
+			"en" : ""
+		},
+		"4" : {
+			"tr" : "Devamsızlıktan Kaldı",
+			"en" : ""
+		},
+		"5" : {
+			"tr" : "Muaf",
+			"en" : ""
+		},
+		"6" : {
+			"tr" : "Notsuz Muaf",
+			"en" : ""
+		}
+	},
+	"ogrenci_program_durumlar" : {
+		"1" : {
+			"tr" : "Ön Kayıt",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "Kayıt Yenileme",
+			"en" : ""
+		},
+		"3" : {
+			"tr" : "Kayıt Yenilendi",
+			"en" : ""
+		}
+	},
+	"masraf_sponsorlar" : {
+		"1" : {
+			"tr" : "Anne",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "Baba",
+			"en" : ""
+		},
+		"3" : {
+			"tr" : "Diğer",
+			"en" : ""
+		}
+	},
+	"ozur_durumu" : {
+		"1" : {
+			"tr" : "Yok",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "Görme Engelliler",
+			"en" : ""
+		},
+		"3" : {
+			"tr" : "İşitme Engelliler",
+			"en" : ""
+		},
+		"4" : {
+			"tr" : "Fiziksel Engelliler",
+			"en" : ""
+		},
+		"5" : {
+			"tr" : "Dil ve Konuşma Problemliler",
+			"en" : ""
+		},
+		"6" : {
+			"tr" : "Dikkat Eksikliği (Hiperaktif)"
+		},
+		"7" : {
+			"tr" : "Psikolojik Problemliler",
+			"en" : ""
+		},
+		"8" : {
+			"tr" : "Zihinsel Engelliler",
+			"en" : ""
+		},
+		"9" : {
+			"tr" : "Öğrenme Güçlüğü",
+			"en" : ""
+		},
+		"10" : {
+			"tr" : "Kronik Sağlık Sorunları",
+			"en" : ""
+		},
+		"11" : {
+			"tr" : "Asperger veya Yüksek Fonksiyonlu Otistik Bireyler",
+			"en" : ""
+		},
+		"12" : {
+			"tr" : "Geçici Yetersizlikleri Olanlar",
+			"en" : ""
+		},
+		"13" : {
+			"tr" : "Diğer",
+			"en" : ""
+		}
+	},
+	"evet_hayir" : {
+		"1" : {
+			"tr" : "Evet",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "Hayır",
+			"en" : ""
+		}
+	},
+	"barinma_alan" : {
+		"1" : {
+			"tr" : "KYK",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "Özel Yurt",
+			"en" : ""
+		},
+		"3" : {
+			"tr" : "Öğrenci Evi",
+			"en" : ""
+		},
+		"4" : {
+			"tr" : "Diğer",
+			"en" : ""
+		}
+	},
+	"giris_puan_turleri" : {
+		"1" : {
+			"tr" : "YGS 1",
+			"en" : ""
+		},
+		"2" : {
+			"tr" : "YGS 2",
+			"en" : ""
+		},
+		"3" : {
+			"tr" : "YGS 3",
+			"en" : ""
+		},
+		"4" : {
+			"tr" : "YGS 4",
+			"en" : ""
+		},
+		"5" : {
+			"tr" : "YGS 5",
+			"en" : ""
+		},
+		"6" : {
+			"tr" : "YGS 6",
+			"en" : ""
+		},
+		"7" : {
+			"tr" : "MF 1",
+			"en" : ""
+		},
+		"8" : {
+			"tr" : "MF 2",
+			"en" : ""
+		},
+		"9" : {
+			"tr" : "MF 3",
+			"en" : ""
+		},
+		"10" : {
+			"tr" : "MF 4",
+			"en" : ""
+		},
+		"11" : {
+			"tr" : "TM 1",
+			"en" : ""
+		},
+		"12" : {
+			"tr" : "TM 2",
+			"en" : ""
+		},
+		"13" : {
+			"tr" : "TM 3",
+			"en" : ""
+ 		},
+ 		"14" : {
+ 			"tr" : "TS 1",
+ 			"en" : ""
+ 		},
+ 		"15" : {
+ 			"tr" : "TS 2",
+ 			"en" : ""
+ 		},
+ 		"16" : {
+ 			"tr" : "DİL 1",
+ 			"en" : ""
+ 		},
+ 		"17" : {
+ 			"tr" : "DİL 2",
+ 			"en" : ""
+ 		},
+ 		"18" : {
+ 			"tr" : "DİL 3",
+ 			"en" : ""
+ 		},
+ 		"19" : {
+ 			"tr" : "SAY 1",
+ 			"en" : ""
+ 		},
+ 		"20" : {
+ 			"tr" : "SAY 2",
+ 			"en" : ""
+ 		},
+ 		"21" : {
+ 			"tr" : "SÖZ 1",
+ 			"en" : ""
+ 		},
+ 		"22" : {
+ 			"tr" : "SÖZ 2",
+ 			"en" : ""
+ 		},
+ 		"23" : {
+ 			"tr" : "EA 1",
+ 			"en" : ""
+ 		},
+ 		"24" : {
+ 			"tr" : "EA 2",
+ 			"en" : ""
+ 		},
+ 		"25" : {
+ 			"tr" : "SAT 1",
+ 			"en" : ""
+ 		},
+ 		"26" : {
+ 			"tr" : "ACT",
+ 			"en" : ""
+ 		},
+ 		"27" : {
+ 			"tr" : "ABITUR",
+ 			"en" : ""
+ 		},
+ 		"28" : {
+ 			"tr" : "GCE A Level Sertifika",
+ 			"en" : ""
+ 		},
+ 		"29" : {
+ 			"tr" : "Diğer",
+ 			"en" : ""
+ 		}
+	},
+	"harf_notlari": {
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		},
+		"AA": {
+			"tr": "",
+			"en": ""
+		}
+	},
+	"dortluk_katsayilari":{}
+}

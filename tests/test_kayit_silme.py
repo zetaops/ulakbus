@@ -95,6 +95,16 @@ class TestCase(BaseTestCase):
         # Öğrencinin kayıtlı olduğu program
         ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
 
+        # İş akışı tekrardan başlatılır.
+        self.client.set_path('/kayit_sil')
+        resp = self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
+                                param="ogrenci_id",
+                                filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"],
+                                                        'type': "check"}})
+
+        assert resp.json['msgbox'][
+                   'msg'] == " Bahtinur Zengin adlı öğrencinin kaydı daha önceden silinmiştir."
+
         for program in ogrenci_program:
             # Ayrılma nedenine atanan değerin doğruluğu test eder.
             assert program.ayrilma_nedeni == 11
@@ -106,35 +116,36 @@ class TestCase(BaseTestCase):
 
             # Rolün değişip değişmediğini test eder.
             for role in roles:
-                if role.abstract_role.name in ABSTRACT_ROLE_LIST:
+                if role.abstract_role.name in ABSTRACT_ROLE_LIST_SILINMIS:
                     if role.unit.unit_type == 'Program':
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[0])
                         assert role.abstract_role == abstract_role
-
+                        previous_abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST[1])
                     elif role.unit.unit_type == 'Yüksek Lisans Programı':
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[2])
                         assert role.abstract_role == abstract_role
-
+                        previous_abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST[5])
                     elif role.unit.unit_type == 'Doktora Programı':
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[3])
                         assert role.abstract_role == abstract_role
-
+                        previous_abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST[7])
                     else:
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[1])
                         assert role.abstract_role == abstract_role
+                        previous_abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST[3])
 
-        assert 'msgbox' in resp.json
+                    # test ile degisen rolu geri donduruyoruz.
+                    role.abstract_role = previous_abstract_role
+                    role.save()
 
-        # İş akışı tekrardan başlatılır.
-        self.client.set_path('/kayit_sil')
-        resp = self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
-                                param="ogrenci_id",
-                                filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"],
-                                                        'type': "check"}})
-
-        assert resp.json['msgbox'][
-                   'msg'] == " Bahtinur Zengin adlı öğrencinin kaydı daha önceden silinmiştir."
+            program.ayrilma_nedeni = 0
+            program.ogrencilik_statusu = 0
+            program.save()
