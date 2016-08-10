@@ -23,14 +23,18 @@ class TestCase(BaseTestCase):
         Seçilen dönemin güncel dönem olarak kaydedilip kaydedilmediği test edilir.
         Sunucudan dönen cevapta msgboz olup olmadığı test edilir.
 
+        Testte üretilen dataların diğer testleri kırmaması için değişiklikler geri alınır.
+
         """
 
         # ögrenci_isleri_1 kullanıcısı seçilir.
-        user = User.objects.get(username='ulakbus')
+        user = User.objects.get(username='ogrenci_isleri_1')
 
         # guncel_donem_degistirme iş akışı başlatılır.
         self.prepare_client('/guncel_donem_degistirme', user=user)
         self.client.post()
+
+        ilk_guncel_donem = Donem.guncel_donem()
 
         # Seçilen dönem
         secilen_guncel_donem_key = 'SBx09BKCv86hp53HGVT2i7vBxGN'
@@ -43,3 +47,11 @@ class TestCase(BaseTestCase):
         assert Donem.guncel_donem().key == secilen_guncel_donem_key
 
         assert 'msgbox' in resp.json
+
+        yeni_guncel_donem = Donem.guncel_donem()
+        yeni_guncel_donem.guncel = False
+        yeni_guncel_donem.save()
+        yeni_guncel_donem.ogretim_yili.delete()
+        ilk_guncel_donem.guncel = True
+        ilk_guncel_donem.save()
+

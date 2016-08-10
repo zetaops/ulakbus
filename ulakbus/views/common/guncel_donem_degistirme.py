@@ -5,10 +5,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko.exceptions import ObjectDoesNotExist
-from ulakbus.models import Donem
+from ulakbus.models import Donem, OgretimYili
 from zengine.forms import JsonForm
-from zengine.views.crud import CrudView
 from zengine.forms import fields
+from zengine.views.crud import CrudView
 
 
 class GuncelDonemDegistirme(CrudView):
@@ -67,6 +67,15 @@ class GuncelDonemDegistirme(CrudView):
 
         self.current.task_data['donem_key'] = self.current.input['form']['guncel_donem']
         donem = Donem.objects.get(self.current.task_data['donem_key'])
+        try:
+            _ogretim_yili = OgretimYili.objects.get(yil=int(donem.baslangic_tarihi.year))
+            donem.ogretim_yili = _ogretim_yili
+        except ObjectDoesNotExist:
+            ogretim_yili = OgretimYili()
+            ogretim_yili.yil = int(donem.baslangic_tarihi.year)
+            ogretim_yili.ad = "%s - %s Öğretim Yılı" % (int(donem.baslangic_tarihi.year), int(donem.baslangic_tarihi.year) + 1)
+            ogretim_yili.save()
+            donem.ogretim_yili = ogretim_yili
         guncel_donem = Donem.guncel_donem()
         guncel_donem.guncel = False
         guncel_donem.save()
