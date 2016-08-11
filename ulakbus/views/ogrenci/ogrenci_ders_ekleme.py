@@ -221,10 +221,16 @@ class OgrenciDersEkleme(CrudView):
         derslerin_keyleri = []
         derslerin_kredileri = []
         for item in subeler:
-            if item['secim']:
+            try:
+                if item['secim']:
+                    sube = Sube.objects.get(item['key'])
+                    derslerin_keyleri.append(sube.ders.key)
+                    derslerin_kredileri.append(sube.ders.yerel_kredisi)
+            except KeyError:
                 sube = Sube.objects.get(item['key'])
                 derslerin_keyleri.append(sube.ders.key)
                 derslerin_kredileri.append(sube.ders.yerel_kredisi)
+
         return derslerin_keyleri, derslerin_kredileri
 
     @staticmethod
@@ -258,8 +264,6 @@ class OgrenciDersEkleme(CrudView):
 
     @staticmethod
     def cakisan_dersleri_bul(subeler):
-        _items = []
-
         def ders_etkinliklerinin_zamanlarini_bul(ders_etkinligi):
             baslangic = int("%s%s" % (ders_etkinligi.baslangic_saat, ders_etkinligi.baslangic_dakika))
             bitis = int("%s%s" % (ders_etkinligi.bitis_saat, ders_etkinligi.bitis_dakika))
@@ -268,49 +272,34 @@ class OgrenciDersEkleme(CrudView):
         def indices(mylist, gun):
             return [i for i, x in enumerate(mylist) if x == gun]
 
-        # def zamanlari_karsilastir(*args):
-        #     for arg in args:
-        #         len_args = len(arg)
-        #         i = 0
-        #         while True:
-        #             try:
-        #                 if not ((arg[0][0] < arg[len_args - (i + 1)][0] and arg[0][1] <= arg[len_args - (i + 1)][0]) or
-        #                             (arg[0][0] >= arg[len_args - (i + 1)][1] and arg[0][1] > arg[len_args - (i + 1)][1])):
-        #                     _zamanlar.append(True)
-        #                 else:
-        #                     _zamanlar.append(False)
-        #                 i += 1
-        #             except IndexError:
-        #                 break
-        #
-        # _ders_etkinlikleri = []
-        # _ders_etkinliklerin_gunleri = []
-        # for sube_dict in subeler:
-        #     if sube_dict['secim']:
-        #         sube = Sube.objects.get(sube_dict['key'])
-        #         _etkinlik = [ders_etkinligi.ders_etkinligi
-        #                      for ders_etkinligi in sube.ders_etkinligi_set]
-        #         _ders_etkinlikleri.extend(_etkinlik)
-        #         _gunler = [ders_etkinligi.ders_etkinligi.get_gun_display()
-        #                    for ders_etkinligi in sube.ders_etkinligi_set]
-        #         _ders_etkinliklerin_gunleri.extend(_gunler)
-        # if not ((yeni_baslangic < baslangic and yeni_bitis <= baslangic) or
-        #                  (yeni_baslangic >= bitis and yeni_bitis > bitis)):
-
         def zamanlari_karsilastir(*args):
-            for arg in args:
-                len_args = len(arg)
-                values = arg
-                for i in range(len_args):
-                    for y in enumerate(range(len_args), 1):
-                        if not ((values[i][1][0] < values[y][1][0] and values[i][1][1] <= values[y][1][0]) or
-                                (values[i][1][0] >= values[y][1][1] and values[i][1][1] > values[y][1][1])):
-                            _items.append((values[i], values[y]))
+
+            _items = []
+            values = args[0].values()
+            for i in range(len(values)):
+                aralik = range(len(values))
+                aralik.remove(i)
+                for y in aralik:
+                    value_1 = values[i][0] < values[y][0] and values[i][1] <= values[y][0]
+                    value_2 = values[i][0] >= values[y][1] and values[i][1] > values[y][1]
+                    if not (value_1 or value_2):
+                            _items.append((values[i],))
+
+            return _items
 
         _ders_etkinlikleri = []
         _ders_etkinliklerin_gunleri = []
         for sube_dict in subeler:
-            if sube_dict['secim']:
+            try:
+                if sube_dict['secim']:
+                    sube = Sube.objects.get(sube_dict['key'])
+                    _etkinlik = [ders_etkinligi.ders_etkinligi
+                                 for ders_etkinligi in sube.ders_etkinligi_set]
+                    _ders_etkinlikleri.extend(_etkinlik)
+                    _gunler = [ders_etkinligi.ders_etkinligi.get_gun_display()
+                               for ders_etkinligi in sube.ders_etkinligi_set]
+                    _ders_etkinliklerin_gunleri.extend(_gunler)
+            except KeyError:
                 sube = Sube.objects.get(sube_dict['key'])
                 _etkinlik = [ders_etkinligi.ders_etkinligi
                              for ders_etkinligi in sube.ders_etkinligi_set]
@@ -318,23 +307,10 @@ class OgrenciDersEkleme(CrudView):
                 _gunler = [ders_etkinligi.ders_etkinligi.get_gun_display()
                            for ders_etkinligi in sube.ders_etkinligi_set]
                 _ders_etkinliklerin_gunleri.extend(_gunler)
-
-        # _zaman = []
-        # for gun in _ders_etkinliklerin_gunleri:
-        #     _indices = indices(_ders_etkinliklerin_gunleri, gun)
-        #     if len(_indices) > 1:
-        #         for i in _indices:
-        #             dez = ders_etkinliklerinin_zamanlarini_bul(_ders_etkinlikleri[i])
-        #             if dez not in _zaman:
-        #                 _zaman.append(dez)
-        #             else:
-        #                 continue
-        #         zamanlari_karsilastir(_zaman)
-        #
-
-        _zaman = collections.OrderedDict()
+        zaman = []
         for gun in _ders_etkinliklerin_gunleri:
             _indices = indices(_ders_etkinliklerin_gunleri, gun)
+            _zaman = collections.OrderedDict()
             if len(_indices) > 1:
                 for i in _indices:
                     dez = ders_etkinliklerinin_zamanlarini_bul(_ders_etkinlikleri[i])
@@ -342,9 +318,11 @@ class OgrenciDersEkleme(CrudView):
                         _zaman[_ders_etkinlikleri[i]] = dez
                     else:
                         continue
-                zamanlari_karsilastir(_zaman)
-
-        return _items
+            if zamanlari_karsilastir(_zaman):
+                zaman.append(_zaman)
+            else:
+                continue
+        return zaman
 
     def degistirilen_derslerden_secim_yap(self):
         """
@@ -392,9 +370,20 @@ class OgrenciDersEkleme(CrudView):
                 _zaman = OgrenciDersEkleme.ders_zamanini_bul(sube.sube)
                 _form.Dersler(key=sube.sube.key, ders_adi=sube.sube.ders_adi,
                               ders_zamani=_zaman, ders_tipi='Seçmeli')
-        _form.help_text = "Mininum Krediniz 30, Maximum Krediniz 45dir."
+        if "d_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["d_k_help_text"]
+            del self.current.task_data["d_k_help_text"]
+        elif "c_d_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["c_d_help_text"]
+            del self.current.task_data["c_d_help_text"]
+        elif "a_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["a_k_help_text"]
+            del self.current.task_data["a_k_help_text"]
+        else:
+            _form.help_text = "Mininum Krediniz 30, Maximum Krediniz 45"
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def is_akisi_adimina_karar_ver(self):
         """
@@ -421,13 +410,24 @@ class OgrenciDersEkleme(CrudView):
             OgrenciDersEkleme.dersin_kredilerini_keylerini_bul(self.current.task_data['ak_ders_subeleri'])
         self.current.task_data['ak_derslerin_kredileri'] = sum(derslerin_kredileri)
         d_key = OgrenciDersEkleme.birden_fazla_secilen_subeleri_bul(derslerin_keyleri)
-        # cakisan_dersler = OgrenciDersEkleme.cakisan_dersleri_bul(subeler)
-        for key in d_key:
-            if d_key[key] > 1 or self.current.task_data['ak_derslerin_kredileri'] > 45:
-                self.current.task_data['alttan_ders_cmd'] = 'alttan_kalan_ders_sec'
+        cakisan_dersler = OgrenciDersEkleme.cakisan_dersleri_bul(subeler)
+        if any(1 != i for i in d_key.values()):
+            dersler = [Ders.objects.get(key).ad for key in d_key if d_key[key] > 1]
+            self.current.task_data["d_k_help_text"] = "----".join(
+                dersler) + "  adlı derslere ait birden fazla şube seçimiz yaptınız!!!"
+            self.current.task_data['alttan_ders_cmd'] = 'alttan_kalan_ders_sec'
 
-            else:
-                self.current.task_data['alttan_ders_cmd'] = "guncel_donemden_zorunlu_ders_sec"
+        elif self.current.task_data['ak_derslerin_kredileri'] > 45:
+            self.current.task_data["a_k_help_text"] = "Toplam krediniz %s,minumum krediniz 30, maximum ise 45" % \
+                                                      self.current.task_data['ak_derslerin_kredileri']
+            self.current.task_data['alttan_ders_cmd'] = 'alttan_kalan_ders_sec'
+        elif cakisan_dersler:
+            self.current.task_data["c_d_help_text"] = "\n".join(
+                [key.__unicode__() for ders in cakisan_dersler for key in ders.keys()]) \
+                                                      + "dersleri  çakışmaktadır"
+            self.current.task_data['alttan_ders_cmd'] = 'alttan_kalan_ders_sec'
+        else:
+            self.current.task_data['alttan_ders_cmd'] = "guncel_donemden_zorunlu_ders_sec"
 
     def guncel_donemden_zorunlu_ders_sec(self):
         """
@@ -448,8 +448,22 @@ class OgrenciDersEkleme(CrudView):
                 _form.Dersler(key=sube.sube.key, ders_adi=sube.sube.ders_adi,
                               ders_zamani=_zaman,
                               ders_tipi='Zorunlu')
+
+        if "d_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["d_k_help_text"]
+            del self.current.task_data["d_k_help_text"]
+        elif "c_d_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["c_d_help_text"]
+            del self.current.task_data["c_d_help_text"]
+        elif "a_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["a_k_help_text"]
+            del self.current.task_data["a_k_help_text"]
+        else:
+            _form.help_text = "Mininum Krediniz 30, Maximum Krediniz 45"
+        _form.alttan_ders_sec = fields.Button("Alttan Ders Seç", cmd="alttan_kalan_ders_sec")
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def guncel_donemden_zorunlu_ders_secimlerini_kontrol_et(self):
         """
@@ -460,30 +474,43 @@ class OgrenciDersEkleme(CrudView):
         """
 
         subeler = [sube for sube in self.current.input['form']['Dersler'] if sube['secim']]
-        self.current.task_data['gdz_derslerin_subeleri'] = subeler
+        self.current.task_data['gdz_derslerin_subeleri'] = [sube for sube in self.current.input['form']['Dersler'] if
+                                                            sube['secim']]
         derslerin_keyleri, derslerin_kredileri = \
             OgrenciDersEkleme.dersin_kredilerini_keylerini_bul(self.current.input['form']['Dersler'])
         self.current.task_data['gdz_derslerinin_kredileri'] = sum(derslerin_kredileri)
         toplam_kredi = self.current.task_data['ak_derslerin_kredileri'] + self.current.task_data[
             'gdz_derslerinin_kredileri']
         d_key = OgrenciDersEkleme.birden_fazla_secilen_subeleri_bul(derslerin_keyleri)
-        # cakisan_dersler = OgrenciDersEkleme.cakisan_dersleri_bul(subeler)
-        if d_key:
+        subeler.extend(self.current.task_data['ak_ders_subeleri'])
+        cakisan_dersler = OgrenciDersEkleme.cakisan_dersleri_bul(subeler)
+        if any(1 != i for i in d_key.values()):
             for key in d_key:
-                if d_key[key] > 1 or toplam_kredi > 45:
+                if d_key[key] > 1:
+                    ders = Ders.objects.get(key)
+                    self.current.task_data["d_k_help_text"] = "%s dersine ait %s şube seçtiniz!!" % (
+                        ders.ad, d_key[key])
                     self.current.task_data["zorunlu_ders_cmd"] = "guncel_donemden_zorunlu_ders_sec"
-                    break
-                else:
-                    self.current.task_data["zorunlu_ders_cmd"] = "guncel_donemin_zorunlu_secmeli_derslerini_sec"
+
+        elif cakisan_dersler:
+            self.current.task_data["c_d_help_text"] = "\n".join(
+                [key.__unicode__() for ders in cakisan_dersler for key in ders.keys()]) \
+                                                      + "dersleri  çakışmaktadır"
+            self.current.task_data["zorunlu_ders_cmd"] = "guncel_donemden_zorunlu_ders_sec"
+
+        elif toplam_kredi > 45:
+            self.current.task_data["a_k_help_text"] = "Toplam krediniz %s,minumum krediniz 30, maximum ise 45" % \
+                                                      self.current.task_data['ak_derslerin_kredileri']
+            self.current.task_data["zorunlu_ders_cmd"] = "guncel_donemden_zorunlu_ders_sec"
         else:
             self.current.task_data["zorunlu_ders_cmd"] = "guncel_donemin_zorunlu_secmeli_derslerini_sec"
+
 
     def guncel_donemin_zorunlu_secmeli_derslerini_sec(self):
         """
         Güncel dönemin zorunlu teknik seçmeli dersleri seçilir.
 
         """
-
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['ogrenci_program_key'])
         guncel_donem = Donem.guncel_donem()
         if 'Güz' in guncel_donem.ad:
@@ -505,8 +532,25 @@ class OgrenciDersEkleme(CrudView):
                     _form.Dersler(key=sube.sube.key, ders_adi=sube.sube.ders_adi,
                                   ders_zamani=_zaman,
                                   ders_tipi='Seçmeli')
+        if "d_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["d_k_help_text"]
+            del self.current.task_data["d_k_help_text"]
+        elif "c_d_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["c_d_help_text"]
+            del self.current.task_data["c_d_help_text"]
+        elif "a_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["a_k_help_text"]
+            del self.current.task_data["a_k_help_text"]
+        elif "s_d_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["s_d_help_text"]
+            del self.current.task_data["s_d_help_text"]
+        else:
+            _form.help_text = "Mininum Krediniz 30, Maximum Krediniz 45"
+        _form.alttan_ders_sec = fields.Button("Alttan Ders Seç", cmd="alttan_kalan_ders_sec")
+        _form.gdz_sec = fields.Button("Güncel Dönemden Zorunlu Ders Seç", cmd="guncel_donemden_zorunlu_ders_sec")
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def guncel_donemin_zorunlu_secmelilerini_kontrol_et(self):
         """
@@ -517,7 +561,9 @@ class OgrenciDersEkleme(CrudView):
         """
 
         subeler = [sube for sube in self.current.input['form']['Dersler'] if sube['secim']]
-        self.current.task_data['gdz_secmeli_derslerinin_subeleri'] = subeler
+        self.current.task_data['gdz_secmeli_derslerinin_subeleri'] = [sube for sube in
+                                                                      self.current.input['form']['Dersler'] if
+                                                                      sube['secim']]
         secmeli_ders = SecmeliDersGruplari.objects.get(self.current.task_data["secmeli_ders_key"])
         count = 0
         for ders in self.current.input['form']['Dersler']:
@@ -531,15 +577,30 @@ class OgrenciDersEkleme(CrudView):
                        self.current.task_data['gdz_derslerinin_kredileri']
 
         d_key = OgrenciDersEkleme.birden_fazla_secilen_subeleri_bul(derslerin_keyleri)
+        subeler.extend(self.current.task_data['ak_ders_subeleri'])
         cakisan_dersler = OgrenciDersEkleme.cakisan_dersleri_bul(subeler)
-        if d_key:
+        if any(1 != i for i in d_key.values()):
             for key in d_key:
-                if d_key[key] > 1 or secmeli_ders.max_sayi < count or secmeli_ders.min_sayi > count or toplam_kredi > 45 \
-                        or cakisan_dersler:
+                if d_key[key] > 1:
+                    ders = Ders.objects.get(key)
+                    self.current.task_data["d_k_help_text"] = "%s dersine ait %s şube seçtiniz!!" % (
+                        ders.ad, d_key[key])
                     self.current.task_data["zorunlu_secmeli_cmd"] = "guncel_donemin_secmeli_derslerini_sec"
-                    break
-                else:
-                    self.current.task_data["zorunlu_secmeli_cmd"] = "ustten_ders_secimini_onayla"
+        elif cakisan_dersler:
+            self.current.task_data["c_d_help_text"] = "\n".join(
+                [key.__unicode__() for ders in cakisan_dersler for key in ders.keys()]) \
+                                                      + "dersleri  çakışmaktadır"
+            self.current.task_data["zorunlu_secmeli_cmd"] = "guncel_donemin_secmeli_derslerini_sec"
+        elif toplam_kredi > 45:
+            self.current.task_data["a_k_help_text"] = "Toplam krediniz %s,minumum krediniz 30, maximum ise 45" % \
+                                                      self.current.task_data['ak_derslerin_kredileri']
+            self.current.task_data["zorunlu_secmeli_cmd"] = "guncel_donemin_secmeli_derslerini_sec"
+
+        # elif secmeli_ders.max_sayi < count or secmeli_ders.min_sayi > count:
+        #     self.current.task_data['s_d_help_text'] = "Seçmeli ders sayınız minimum %s maximum %s olmalıdır" % \
+        #                                               (secmeli_ders.min_sayi, secmeli_ders.max_sayi)
+        #     self.current.task_data["zorunlu_secmeli_cmd"] = "guncel_donemin_secmeli_derslerini_sec"
+
         else:
             self.current.task_data["zorunlu_secmeli_cmd"] = "ustten_ders_secimini_onayla"
 
@@ -577,8 +638,29 @@ class OgrenciDersEkleme(CrudView):
                 _form.Dersler(key=sube.sube.key, ders_adi=sube.sube.ders_adi,
                               ders_zamani=_zaman,
                               ders_tipi='Üstten')
+
+        if "d_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["d_k_help_text"]
+            del self.current.task_data["d_k_help_text"]
+        elif "c_d_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["c_d_help_text"]
+            del self.current.task_data["c_d_help_text"]
+        elif "a_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["a_k_help_text"]
+            del self.current.task_data["a_k_help_text"]
+        elif 'ua_help_text' in self.current.task_data:
+            _form.help_text = self.current.task_data['ua_help_text']
+            del self.current.task_data['ua_help_text']
+        else:
+            _form.help_text = "Mininum Krediniz 30, Maximum Kredi"
+
+        _form.alttan_ders_sec = fields.Button("Alttan Ders Seç", cmd="alttan_kalan_ders_sec")
+        _form.gdz_sec = fields.Button("Güncel Dönemden Zorunlu Ders Seç", cmd="guncel_donemden_zorunlu_ders_sec")
+        _form.gdzs_sec = fields.Button("Güncel Dönemden Zorunlu Seçmeli Ders Seç",
+                                       cmd="guncel_donemin_zorunlu_secmeli_derslerini_sec")
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def ustten_alinan_dersleri_kontrol_et(self):
         """
@@ -589,24 +671,44 @@ class OgrenciDersEkleme(CrudView):
         """
 
         subeler = [sube for sube in self.current.input['form']['Dersler'] if sube['secim']]
-        self.current.task_data['ua_derslerin_subeleri'] = subeler
+        self.current.task_data['ua_derslerin_subeleri'] = [sube for sube in self.current.input['form']['Dersler'] if
+                                                           sube['secim']]
         derslerin_keyleri, derslerin_kredileri = \
             OgrenciDersEkleme.dersin_kredilerini_keylerini_bul(self.current.input['form']['Dersler'])
         self.current.task_data['ua_derslerin_kredileri'] = sum(derslerin_kredileri)
         d_key = OgrenciDersEkleme.birden_fazla_secilen_subeleri_bul(derslerin_keyleri)
+        subeler.extend(self.current.task_data['ak_ders_subeleri'])
+        subeler.extend(self.current.task_data['gdz_derslerin_subeleri'])
+        subeler.extend(self.current.task_data['gdz_secmeli_derslerinin_subeleri'])
         cakisan_dersler = OgrenciDersEkleme.cakisan_dersleri_bul(subeler)
         toplam_kredi = self.current.task_data['gdz_secmelilerin_kredileri'] + \
                        self.current.task_data['ak_derslerin_kredileri'] + \
                        self.current.task_data['gdz_derslerinin_kredileri'] + \
                        self.current.task_data['ua_derslerin_kredileri']
-        if d_key:
+
+        if any(1 != i for i in d_key.values()):
             for key in d_key:
-                if d_key[key] > 1 or toplam_kredi > 45 or self.current.task_data['ua_derslerin_kredileri'] > 9 \
-                        or True in cakisan_dersler:
+                if d_key[key] > 1:
+                    ders = Ders.objects.get(key)
+                    self.current.task_data["d_k_help_text"] = "%s dersine ait %s şube seçtiniz!!" % (
+                        ders.ad, d_key[key])
                     self.current.task_data['secim_command'] = "ustten_ders_sec"
-                    break
-                else:
-                    self.current.task_data['secim_command'] = "farkli_bolumlerden_ders_sec"
+
+        elif toplam_kredi > 45:
+            self.current.task_data["a_k_help_text"] = "Toplam krediniz %s,minumum krediniz 30, maximum ise 45" % \
+                                                      self.current.task_data['ak_derslerin_kredileri']
+            self.current.task_data['secim_command'] = "ustten_ders_sec"
+
+        elif self.current.task_data['ua_derslerin_kredileri'] > 9:
+            self.current.task_data['ua_help_text'] = "Üstten seçilen derslerin toplam kredisi maximum 9 olmalıdır."
+            self.current.task_data['secim_command'] = "ustten_ders_sec"
+
+        elif cakisan_dersler:
+            self.current.task_data["c_d_help_text"] = "\n".join(
+                [key.__unicode__() for ders in cakisan_dersler for key in ders.keys()]) \
+                                                      + "dersleri  çakışmaktadır"
+            self.current.task_data['secim_command'] = "ustten_ders_sec"
+
         else:
             self.current.task_data['secim_command'] = "farkli_bolumlerden_ders_sec"
 
@@ -617,8 +719,70 @@ class OgrenciDersEkleme(CrudView):
         """
 
         _form = DersSecimForm(title='Ders Seçiniz', current=self.current)
+        if "d_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["d_k_help_text"]
+            del self.current.task_data["d_k_help_text"]
+        elif "c_d_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["c_d_help_text"]
+            del self.current.task_data["c_d_help_text"]
+        elif "a_k_help_text" in self.current.task_data:
+            _form.help_text = self.current.task_data["a_k_help_text"]
+            del self.current.task_data["a_k_help_text"]
+        else:
+            _form.help_text = "Mininum Krediniz 30, Maximum Kredi"
+        _form.alttan_ders_sec = fields.Button("Alttan Ders Seç", cmd="alttan_kalan_ders_sec")
+        _form.gdz_sec = fields.Button("Güncel Dönemden Zorunlu Ders Seç", cmd="guncel_donemden_zorunlu_ders_sec")
+        _form.gdzs_sec = fields.Button("Güncel Dönemden Zorunlu Seçmeli Ders Seç",
+                                       cmd="guncel_donemin_zorunlu_secmeli_derslerini_sec")
+        _form.ustten_ders_sec = fields.Button("Üstten Ders Seç", cmd="ustten_ders_sec")
         self.form_out(_form)
         self.sube_secim_form_inline_edit()
+
+    def butun_dersleri_kontrol_et(self):
+        """
+        Bölümlerden  seçilen derslere ait birden fazla şube olup olmadığını ve bütün seçilen derslerin toplam kredisinin
+        45 geçmemesi şartlarını kontrol eder.
+        Yukarıda tanımlı şartların sağlanmaması iş akışı önceki adıma geri döner.
+        Şartlar sağlandığında ise danışamana bilgi verecek iş akışı adımına gider.
+
+        """
+        if 'ua_derslerin_subeleri' in self.current.task_data:
+            butun_derslerin_sube_keyleri = self.current.task_data['ua_derslerin_subeleri'] + \
+                                           self.current.task_data['gdz_secmeli_derslerinin_subeleri'] + \
+                                           self.current.task_data['gdz_derslerin_subeleri'] + \
+                                           self.current.task_data['ak_ders_subeleri']
+        else:
+            butun_derslerin_sube_keyleri = self.current.task_data['gdz_secmeli_derslerinin_subeleri'] + \
+                                           self.current.task_data['gdz_derslerin_subeleri'] + \
+                                           self.current.task_data['ak_ders_subeleri']
+
+        subeler = butun_derslerin_sube_keyleri + self.current.input['form']['Dersler']
+        self.current.task_data['butun_derslerin_subeleri'] = subeler
+        derslerin_keyleri, derslerin_kredileri = \
+            OgrenciDersEkleme.dersin_kredilerini_keylerini_bul(subeler)
+        self.current.task_data['secilen_derslerin_kredileri'] = sum(derslerin_kredileri)
+        d_key = OgrenciDersEkleme.birden_fazla_secilen_subeleri_bul(derslerin_keyleri)
+        cakisan_dersler = OgrenciDersEkleme.cakisan_dersleri_bul(subeler)
+        if any(1 != i for i in d_key.values()):
+            for key in d_key:
+                if d_key[key] > 1:
+                    ders = Ders.objects.get(key)
+                    self.current.task_data["d_k_help_text"] = "%s dersine ait %s şube seçtiniz!!" % (
+                        ders.ad, d_key[key])
+                self.current.task_data["butun_bolumler_cmd"] = "butun_bolumlerden_ders_sec"
+
+        elif self.current.task_data['secilen_derslerin_kredileri'] > 45:
+            self.current.task_data["a_k_help_text"] = "Toplam krediniz %s,minumum krediniz 30, maximum ise 45" % \
+                                                      self.current.task_data['ak_derslerin_kredileri']
+            self.current.task_data["butun_bolumler_cmd"] = "butun_bolumlerden_ders_sec"
+
+        elif cakisan_dersler:
+            self.current.task_data["c_d_help_text"] = "\n".join(
+                [key.__unicode__() for ders in cakisan_dersler for key in ders.keys()]) \
+                                                      + "dersleri  çakışmaktadır"
+            self.current.task_data["butun_bolumler_cmd"] = "butun_bolumlerden_ders_sec"
+        else:
+            self.current.task_data["butun_bolumler_cmd"] = "butun_secilen_dersleri_listele"
 
     def butun_secilen_dersleri_listele(self):
         """
@@ -650,32 +814,6 @@ class OgrenciDersEkleme(CrudView):
                           secim=True, ders_tipi="Bölüm")
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
-
-    def butun_dersleri_kontrol_et(self):
-        """
-        Bölümlerden  seçilen derslere ait birden fazla şube olup olmadığını ve bütün seçilen derslerin toplam kredisinin
-        45 geçmemesi şartlarını kontrol eder.
-        Yukarıda tanımlı şartların sağlanmaması iş akışı önceki adıma geri döner.
-        Şartlar sağlandığında ise danışamana bilgi verecek iş akışı adımına gider.
-
-        """
-
-        subeler = [sube for sube in self.current.input['form']['Dersler'] if sube['secim']]
-        self.current.task_data['butun_derslerin_subeleri'] = subeler
-        count = 0
-        for ders in self.current.input['form']['Dersler']:
-            if ders['secim']:
-                count += 1
-        derslerin_keyleri, derslerin_kredileri = \
-            OgrenciDersEkleme.dersin_kredilerini_keylerini_bul(self.current.input['form']['Dersler'])
-        self.current.task_data['secilen_derslerin_kredileri'] = sum(derslerin_kredileri)
-        d_key = OgrenciDersEkleme.birden_fazla_secilen_subeleri_bul(derslerin_keyleri)
-        for key in d_key:
-            if d_key[key] > 1 or self.current.task_data['secilen_derslerin_kredileri'] > 45:
-                self.current.task_data["cmd"] = "butun_bolumlerden_ders_sec"
-                break
-            else:
-                self.current.task_data["cmd"] = "bilgi_ver"
 
     def bilgi_ver(self):
         """
