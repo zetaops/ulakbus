@@ -16,10 +16,10 @@ birime ait akademik takvim gösterilir. Eğer birime özel bir akademik takvim b
 
 from collections import OrderedDict
 
-
 from pyoko.exceptions import ObjectDoesNotExist
-from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI
-from ulakbus.models.ogrenci import AkademikTakvim, Unit
+from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI, Donem, OgretimYili
+from ulakbus.models.ogrenci import Takvim
+from ulakbus.lib.common import get_akademik_takvim
 from zengine.views.crud import CrudView
 
 __author__ = 'Ali Riza Keles'
@@ -67,21 +67,14 @@ class AkademikTakvimView(CrudView):
         self.current.output['client_cmd'] = ['show', ]
         etkinlikler = []
 
-        def get_akademik_takvim(unit):
-            try:
-                akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)
-                return akademik_takvim
-            except ObjectDoesNotExist:
-                yoksis_key = unit.parent_unit_no
-                birim = Unit.objects.get(yoksis_no=yoksis_key)
-                return get_akademik_takvim(birim)
+        ogretim_yili = OgretimYili.objects.get(yil=Donem.guncel_donem().baslangic_tarihi.year)
+        akademik_takvim = get_akademik_takvim(self.current.role.unit, ogretim_yili)
 
-        akademik_takvim = get_akademik_takvim(self.current.role.unit)
-        for e in akademik_takvim.Takvim:
+        for e in Takvim.objects.filter(akademik_takvim=akademik_takvim):
             etkinlik = OrderedDict({})
             etkinlik['Etkinlik'] = dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(e.etkinlik), '')
-            etkinlik['Başlangıç'] = '{:%d.%m.%Y}'.format(e.baslangic)
-            etkinlik['Bitiş'] = '{:%d.%m.%Y}'.format(e.bitis)
+            etkinlik['Başlangıç'] = '{:%d.%m.%Y}'.format(e.baslangic) if e.baslangic else ''
+            etkinlik['Bitiş'] = '{:%d.%m.%Y}'.format(e.bitis) if e.bitis else ''
             etkinlikler.append(etkinlik)
 
         # cikti multirow table seklindedir.

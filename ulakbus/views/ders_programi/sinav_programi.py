@@ -59,10 +59,9 @@ class SinavProgramiYap(CrudView):
         if 'LANE_CHANGE_MSG' in self.current.task_data:
             if self.current.task_data['LANE_CHANGE_MSG']['title'] == 'Hatalı Sonuçlar Var!':
                 self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
-        else:
-            _form = JsonForm(title="Sınav Programı Oluştur")
-            _form.button = fields.Button('Başlat')
-            self.form_out(_form)
+        _form = JsonForm(title="Sınav Programı Oluştur")
+        _form.button = fields.Button('Başlat')
+        self.form_out(_form)
 
     def sinav_programi_hesapla(self):
         # bolum = self.current.role.unit.yoksis_no

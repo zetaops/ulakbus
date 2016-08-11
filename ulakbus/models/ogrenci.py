@@ -9,18 +9,18 @@
 Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
 
 """
+from datetime import date
+
 import six
 
 from pyoko import Model, field, ListNode, LinkProxy
 from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
+from ulakbus.models.personel import Izin
 from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room, RoomType
 from .personel import Personel
-from datetime import timedelta
-from datetime import date
-from ulakbus.models.personel import Izin
 
 
 class HariciOkutman(Model):
@@ -194,11 +194,18 @@ class Okutman(Model):
 class OgretimYili(Model):
     """
     Öğretim yılını bilgilerini tutan modeldir.
-
     """
 
-    yil = field.Integer("Yıl") # 2015
-    ad = field.String("Öğretim Yılı") # 2015 - 2016 Öğretim Yılı
+    yil = field.Integer("Yıl")  # 2015
+    ad = field.String("Öğretim Yılı")  # 2015 - 2016 Öğretim Yılı
+
+    def post_creation(self):
+        self.yil = Donem.guncel_donem().baslangic_tarihi.year
+        self.ad = "%s - %s Öğretim Yılı" % (self.yil, self.yil + 1 )
+        self.save()
+
+    def __unicode__(self):
+        return self.ad
 
 
 class Donem(Model):
@@ -214,7 +221,7 @@ class Donem(Model):
     baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
     guncel = field.Boolean(index=True)
-    ogretim_yili = field.Integer("Öğretim Yılı", index=True)
+    ogretim_yili = OgretimYili("Öğretim Yılı", index=True)
 
     @classmethod
     def guncel_donem(cls):
@@ -774,9 +781,10 @@ class DersKatilimi(Model):
 
     # TODO: Neden float, soralım?
     katilim_durumu = field.Integer("Katılım Durumu", index=True)
-    ders = Sube()
+    sube = Sube()
     ogrenci = Ogrenci()
     okutman = Okutman()
+    aciklama = field.String("Açıklama")
 
     class Meta:
         app = 'Ogrenci'
@@ -794,7 +802,7 @@ class DersKatilimi(Model):
 
         """
 
-        return six.text_type(self.ders.ders)
+        return six.text_type(self.sube.ders)
 
     sube_dersi.title = 'Ders'
 
@@ -1045,13 +1053,13 @@ class AkademikTakvim(Model):
 
     birim = Unit("Birim", index=True)
     # yil = field.Date("Yıl", index=True)
-    ogretim_yili = field.Integer("Öğretim Yılı", index=True)
+    ogretim_yili = OgretimYili("Öğretim Yılı", index=True)
 
     class Meta:
         app = 'Ogrenci'
         verbose_name = "Akademik Takvim"
         verbose_name_plural = "Akademik Takvimler"
-        list_fields = ['_birim', 'yil']
+        list_fields = ['_birim', 'ogretim_yili']
         # search_fields = ['yil']
 
     def _birim(self):
@@ -1060,7 +1068,7 @@ class AkademikTakvim(Model):
     _birim.title = 'Birim'
 
     def __unicode__(self):
-        return '%s %s' % (self.birim, self.yil)
+        return '%s %s' % (self.birim, self.ogretim_yili.ad)
 
     def etkinlikler(self):
         return Takvim.objects.filter(akademik_takvim=self)
@@ -1103,7 +1111,7 @@ class Takvim(Model):
         verbose_name_plural = "Takvimler"
 
     def __unicode__(self):
-        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.yil, self.etkinlik)
+        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
 
     @staticmethod
     def resmi_tatil_gunleri_getir(donem_list,birim_unit,yil,ay):
@@ -1113,7 +1121,7 @@ class Takvim(Model):
         resmi_tatil_list = []
         akademik_takvim_list = []
         for donem in donem_list:
-            akademik_takvim = get_akademik_takvim(birim_unit,donem.ogretim_yili)
+            akademik_takvim = get_akademik_takvim(birim_unit, donem.ogretim_yili)
             resmi_tatiller = Takvim.objects.filter(akademik_takvim = akademik_takvim,resmi_tatil= True)
 
             tatil_list=[]

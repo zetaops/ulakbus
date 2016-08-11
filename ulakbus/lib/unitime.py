@@ -12,7 +12,7 @@ from zengine.management_commands import *
 
 from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, \
     Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, HAFTA,\
-    SinavEtkinligi
+    SinavEtkinligi, OgretimYili
 from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot,\
     timedelta2slot, datetime2timestamp
 from datetime import datetime, date, timedelta, time
@@ -464,7 +464,7 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
         Returns:
             Takvim:
         """
-        yil = _year()
+        yil = OgretimYili.objects.get(yil=Donem.guncel_donem().baslangic_tarihi.year)
         akademik_takvim = get_akademik_takvim(bolum, yil)
         sinav_takvim = None
         for etkinlik in self._SINAV_ETKINLIKLERI:

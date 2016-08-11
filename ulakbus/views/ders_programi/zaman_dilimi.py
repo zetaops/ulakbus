@@ -18,11 +18,11 @@ class ZamanDilimiDuzenle(CrudView):
         zaman_dilimleri = sorted(ZamanDilimleri.objects.filter(birim=self.current.role.unit),
                                  key=lambda zd: zd.gun_dilimi)
 
-        self.output['objects'] = [['Gun Dilimi', 'Zaman Araligi']]
+        self.output['objects'] = [['Gün Dilimi', 'Zaman Aralığı']]
         for data in zaman_dilimleri:
             data_list = OrderedDict({})
-            data_list["Gun Dilimi"] = "%s" % (data.get_gun_dilimi_display())
-            data_list["Zaman Araligi"] = "%s:%s-%s:%s" % (data.baslama_saat,
+            data_list["Gün Dilimi"] = "%s" % (data.get_gun_dilimi_display())
+            data_list["Zaman Aralığı"] = "%s:%s-%s:%s" % (data.baslama_saat,
                                                           data.baslama_dakika,
                                                           data.bitis_saat,
                                                           data.bitis_dakika)
@@ -31,7 +31,7 @@ class ZamanDilimiDuzenle(CrudView):
                 'type': "table-multiRow",
                 'fields': data_list,
                 'actions': [
-                    {'name': 'Degistir', 'cmd': 'degistir', 'show_as': 'button', 'object_key':'zaman_dilimi'}
+                    {'name': 'Değiştir', 'cmd': 'degistir', 'show_as': 'button', 'object_key':'zaman_dilimi'}
                 ],
                 'key': data.key}
             self.output['objects'].append(item)
@@ -64,7 +64,7 @@ class ZamanDilimiDuzenle(CrudView):
 
             msg = {"type": "info",
                    "title": 'Kaydedildi!',
-                   "msg": "Kaydiniz basariyla gerceklesti"}
+                   "msg": "Kaydınız başarıyla gerçekleşti"}
 
             self.current.output['msgbox'] = msg
         except:
@@ -76,7 +76,7 @@ class ZamanDilimiDuzenle(CrudView):
 
     def kayit_islemi_tamamlandi(self):
         msg = {"type": "info",
-               "title": 'Kayit Isleminiz Tamamlanmistir!',
+               "title": 'Kayıt İşleminiz Tamamlanmıştır!',
                "msg": 'Guncel Zaman Dilimleri Zaman Tablosuna eklenmistir'}
         # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
 

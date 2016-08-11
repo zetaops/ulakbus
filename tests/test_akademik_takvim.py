@@ -7,8 +7,10 @@
 
 
 import time
-from ulakbus.models.auth import User
-from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI
+
+from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.models.auth import User, Unit
+from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI, OgretimYili, Donem
 from ulakbus.models.ogrenci import AkademikTakvim
 from zengine.lib.test_utils import BaseTestCase
 
@@ -48,6 +50,15 @@ class TestCase(BaseTestCase):
 
         """
 
+        def get_akademik_takvim(unit, ogretim_yili):
+            try:
+                akademik_takvim = AkademikTakvim.objects.get(birim=unit, ogretim_yili=ogretim_yili)
+                return akademik_takvim
+            except ObjectDoesNotExist:
+                parent_yoksis_no = unit.parent_unit_no
+                birim = Unit.objects.get(yoksis_no=parent_yoksis_no)
+                return get_akademik_takvim(birim, ogretim_yili)
+
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/akademik_takvim', username='ogrenci_1')
         resp = self.client.post()
@@ -58,24 +69,26 @@ class TestCase(BaseTestCase):
         # Rol'ün kayıtlı olduğu birim getirilir.
         unit = user.role_set[0].role.unit
 
-        # Birimin kayıtlı olduğu akademik takvim kayıtını getirir.
-        akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)
+        ogretim_yili = OgretimYili.objects.get(yil=Donem.guncel_donem().baslangic_tarihi.year)
+
+        # Birimin kayıtlı olduğu akademik takvim kayıtlarını getirir.
+        akademik_takvim = get_akademik_takvim(unit, ogretim_yili)
 
         # Sunucudan dönen akademik takvim kayıtları ile veritabanından çekilen akademik kayıtları
         # karşılaştırılıp test edilir
-        assert len(akademik_takvim.Takvim) == len(resp.json['object']['fields'])
+        assert len(akademik_takvim.etkinlikler()) == len(resp.json['object']['fields'])
 
         # Akademik takvim kaydının nesnelerinden biri seçilir.
-        takvim = akademik_takvim.Takvim[3]
+        takvim = akademik_takvim.etkinlikler()[4]
         # Takvim kaydının etkinliğini getirir.
         etkinlik = takvim.etkinlik
 
         assert dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(etkinlik), '') == \
-               resp.json['object']['fields'][etkinlik - 1][
+               resp.json['object']['fields'][4][
                    'Etkinlik']
-        assert takvim.baslangic.strftime('%d.%m.%Y') == resp.json['object']['fields'][etkinlik - 1][
+        assert takvim.baslangic.strftime('%d.%m.%Y') == resp.json['object']['fields'][4][
             'Başlangıç']
-        assert takvim.bitis.strftime('%d.%m.%Y') == resp.json['object']['fields'][etkinlik - 1][
+        assert takvim.bitis.strftime('%d.%m.%Y') == resp.json['object']['fields'][4][
             'Bitiş']
 
         # Kullanıcıya çıkış yaptırılır.
@@ -94,20 +107,20 @@ class TestCase(BaseTestCase):
         unit = usr.role_set[0].role.unit
 
         # Birimin kayıtlı olduğu akademik takvim kayıtını getirir.
-        akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key)
+        akademik_takvim = get_akademik_takvim(unit, ogretim_yili)
 
         # Sunucudan dönen akademik takvim kayıtları ile veritabanından çekilen akademik kayıtları
         # karşılaştırılıp test edilir.
-        assert len(akademik_takvim.Takvim) == len(response.json['object']['fields'])
+        assert len(akademik_takvim.etkinlikler()) == len(response.json['object']['fields'])
 
         # Akademik takvim kaydının nesnelerinden biri seçilir.
-        takvim = akademik_takvim.Takvim[0]
+        takvim = akademik_takvim.etkinlikler()[5]
         # Takvim kaydının etkinliğini getirir.
         etkinlik = takvim.etkinlik
 
-        assert response.json['object']['fields'][0]['Etkinlik'] == dict(
+        assert response.json['object']['fields'][5]['Etkinlik'] == dict(
             AKADEMIK_TAKVIM_ETKINLIKLERI).get(
             str(etkinlik), '')
-        assert response.json['object']['fields'][0]['Başlangıç'] == takvim.baslangic.strftime(
+        assert response.json['object']['fields'][5]['Başlangıç'] == takvim.baslangic.strftime(
             '%d.%m.%Y')
-        assert response.json['object']['fields'][0]['Bitiş'] == takvim.bitis.strftime('%d.%m.%Y')
+        assert response.json['object']['fields'][5]['Bitiş'] == takvim.bitis.strftime('%d.%m.%Y')
