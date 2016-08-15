@@ -289,6 +289,7 @@ class Role(Model):
         verbose_name_plural = "Roller"
         search_fields = ['name']
         list_fields = []
+        crud_extra_actions = [{'name': 'İzinleri Düzenle', 'wf': 'permissions', 'show_as': 'button'}]
 
     @property
     def is_staff(self):
