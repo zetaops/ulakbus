@@ -24,17 +24,16 @@ def prepare_choices_for_model(model, **kwargs):
     return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
 
 
-def prepare_titlemap_for_model(model, **kwargs):
-    """Model için Typeahead Seçenekleri Hazırla
+def convert_model_object_titlemap_item(m):
+    """
+    Callable nesneler ile titlemap uretirken, callable method geriye name, value
+    keylerine sahip bir dict dondurmeli. Bu method verilen nesnenin key ve unicode
+    methodlarindan bir dict dondurur.
 
     Args:
-        model: Model
-        **kwargs: Keyword argümanları
-
+        m (Model): model instance
     Returns:
-        Keyword argümanlara göre filtrelenmiş modelin,
-        key ve __unicode__ method değerlerini
+        (dict) name value keyleri ve karsilik gelen degerlerden olusan dict
 
     """
-
-    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
+    return {"name": m.__unicode__(), "value": m.key}
