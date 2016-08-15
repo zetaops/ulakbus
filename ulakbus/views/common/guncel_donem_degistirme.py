@@ -5,10 +5,33 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.lib.view_helpers import convert_model_object_titlemap_item
 from ulakbus.models import Donem, OgretimYili
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+
+
+def donemler():
+    """
+    Dönem seçim formunu dinamik olarak dolduran method.
+    Güncel dönemden önceki ve sonraki 2 şer adet dönemle birlikte bir seçim
+    listesi oluşturur.
+    """
+    ds = []  # return list
+    td = []  # tum donemler, onceki guncel ve sonrakilerden liste
+    gd = Donem.guncel_donem()
+    td.extend(gd.onceki_donemler(2))
+    td.append(gd)
+    td.extend(gd.sonraki_donemler(2))
+    for donem in td:
+        ds.append(convert_model_object_titlemap_item(donem))
+    return ds
+
+
+class DonemSecForm(JsonForm):
+    guncel_donem = fields.Integer("Dönem Seçiniz", choices=donemler)
+    kaydet = fields.Button('Kaydet')
 
 
 class GuncelDonemDegistirme(CrudView):
@@ -36,27 +59,12 @@ class GuncelDonemDegistirme(CrudView):
         dönemden sonraki iki dönem  ve güncel dönem sıralanır.
 
         """
-        # TODO : Güncel dönem seçili olarak verilecek.
-        _form = JsonForm(title='Güncel Dönem Seçiniz', current=self.current)
-        guncel_donem = Donem.guncel_donem()
-        donemler = []
-        try:
-            ilk_onceki_donem = guncel_donem.onceki_donem()
-            donemler.append((ilk_onceki_donem.key, ilk_onceki_donem.__unicode__()))
-            ikinci_onceki_donem = ilk_onceki_donem.onceki_donem()
-            donemler.append((ilk_onceki_donem.key, ikinci_onceki_donem.__unicode__()))
-        except ObjectDoesNotExist:
-            pass
-        try:
-            ilk_sonraki_donem = guncel_donem.sonraki_donem()
-            donemler.append((ilk_sonraki_donem.key, ilk_sonraki_donem.__unicode__()))
-            ikinci_sonraki_donem = ilk_sonraki_donem.sonraki_donem()
-            donemler.append((ikinci_sonraki_donem.key, ikinci_sonraki_donem.__unicode__()))
-        except ObjectDoesNotExist:
-            pass
-        donemler.append((guncel_donem.key, guncel_donem.__unicode__()))
-        _form.guncel_donem = fields.Integer(choices=donemler)
-        _form.kaydet = fields.Button('Kaydet')
+
+        _form = DonemSecForm(title='Güncel Dönem Seçiniz', current=self.current)
+
+        # formun güncel dönemi seçili hale getirilir.
+        _form.guncel_donem = Donem.guncel_donem().key
+
         self.form_out(_form)
 
     def guncel_donem_kaydet(self):
@@ -68,17 +76,12 @@ class GuncelDonemDegistirme(CrudView):
         self.current.task_data['donem_key'] = self.current.input['form']['guncel_donem']
         donem = Donem.objects.get(self.current.task_data['donem_key'])
         try:
-            _ogretim_yili = OgretimYili.objects.get(yil=int(donem.baslangic_tarihi.year))
-            donem.ogretim_yili = _ogretim_yili
+            ogretim_yili = OgretimYili.objects.get(yil=int(donem.baslangic_tarihi.year))
         except ObjectDoesNotExist:
-            ogretim_yili = OgretimYili()
-            ogretim_yili.yil = int(donem.baslangic_tarihi.year)
-            ogretim_yili.ad = "%s - %s Öğretim Yılı" % (int(donem.baslangic_tarihi.year), int(donem.baslangic_tarihi.year) + 1)
+            ogretim_yili = OgretimYili(yil=int(donem.baslangic_tarihi.year))
             ogretim_yili.save()
-            donem.ogretim_yili = ogretim_yili
-        guncel_donem = Donem.guncel_donem()
-        guncel_donem.guncel = False
-        guncel_donem.save()
+
+        donem.ogretim_yili = ogretim_yili
         donem.guncel = True
         donem.save()
 
