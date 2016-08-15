@@ -291,33 +291,55 @@ class Donem(Model):
         except IndexError:
             return None
 
-    @staticmethod
-    def donem_dondur(yil, ay, takvim):
+    @classmethod
+    def en_son_bahar_donemi(cls):
+        """
+        Returns:
+            Veritabanında kayıtlı olan en son bahar dönemini
 
-        baslangic = date(yil, ay, 01)
+        """
+        return cls.objects.filter(ad__contains='Bahar').order_by('-baslangic_tarihi')[0]
+
+    @classmethod
+    def en_son_guz_donemi(cls):
+        """
+        Returns:
+            Veritabanında kayıtlı olan en son güz dönemini
+
+        """
+
+        return cls.objects.filter(ad__contains='Güz').order_by('-baslangic_tarihi')[0]
+
+    @staticmethod
+    def takvim_ayina_rastlayan_donemler(yil, ay, takvim):
+        """
+        Bir takvim ayına rastlayan dönemleri döndürür.
+
+        Args:
+            yil (int): takvim yili
+            ay (int): takvim ayi
+            takvim (tuple): ayın ilk günününö haftanın hangi gününe
+            denk geldiği ve ayin kac gün sürdüğü integerlarından oluşan tuple. e.g (4, 29)
+
+        Returns:
+            (list) donem nesneleri listesi
+        """
+
+        baslangic = date(yil, ay, 1)
         bitis = date(yil, ay, takvim[1])
 
         donem_list = []
-        for donem in Donem.objects.filter():
 
-            # Dönemin bitiş tarihi seçilen ay içerisinde oluyorsa
-            # 01.08.2016 - 13.08.2016 - 31.08.2016 (Yaz Dönemi Bitişi)
-            if donem.bitis_tarihi >= baslangic and donem.bitis_tarihi <= bitis:
-                donem_list.append(donem)
+        donem_list.extend(list(Donem.objects.filter(bitis_tarihi__gte=baslangic,
+                                                    bitis_tarihi__lte=bitis)))
 
-            # Dönemin başlangıç tarihi seçilen ay içerisinde oluyorsa
-            # 01.02.2016 - 21.02.2016 - 29.02.2016 (Güz Dönemi Başlangıcı)
-            elif donem.baslangic_tarihi >= baslangic and donem.baslangic_tarihi <= bitis:
-                donem_list.append(donem)
+        donem_list.extend(list(Donem.objects.filter(baslangic_tarihi__gte=baslangic,
+                                                    baslangic_tarihi__lte=bitis)))
 
-            # Dönem, seçilen ayın bütün günlerini kapsıyorsa
-            # 21.02.2016 - Nisan Ayı - 15.06.2016 (Güz Dönemi)
-            elif donem.baslangic_tarihi < baslangic and donem.bitis_tarihi > bitis:
-                donem_list.append(donem)
+        donem_list.extend(list(Donem.objects.filter(bitis_tarihi__gt=bitis,
+                                                    baslangic_tarihi__lt=baslangic)))
 
-        # Eğer iki donem varsa bitis tarihi once olani ilk siraya koyar.
-        if len(donem_list) == 2 and donem_list[0].bitis_tarihi > donem_list[1].bitis_tarihi:
-            donem_list[0], donem_list[1] = donem_list[1], donem_list[0]
+        donem_list = sorted(donem_list, key=lambda d: d.baslangic_tarihi)
 
         return donem_list
 
