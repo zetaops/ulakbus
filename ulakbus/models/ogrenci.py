@@ -245,6 +245,45 @@ class Donem(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.baslangic_tarihi)
 
+    @classmethod
+    def en_son_bahar_donemi(cls):
+        """
+        Returns:
+            Veritabanında kayıtlı olan en son bahar dönemini
+
+        """
+        return cls.objects.filter(ad='Bahar Dönemi').order_by('-baslangic_tarihi')[0]
+
+    @classmethod
+    def en_son_guz_donemi(cls):
+        """
+        Returns:
+            Veritabanında kayıtlı olan en son güz dönemini
+
+        """
+
+        return cls.objects.filter(ad='Güz Dönemi').order_by('-baslangic_tarihi')[0]
+
+    def onceki_donem(self):
+        """
+        Returns:
+            Belli bir dönemden önceki dönemi
+
+        """
+
+        return self.objects.filter(baslangic_tarihi__lt=self.baslangic_tarihi).order_by(
+            '-baslangic_tarihi')[0]
+
+    def sonraki_donem(self):
+        """
+        Returns:
+            Belli bir dönemden sonraki dönemi
+
+        """
+        return self.objects.filter(baslangic_tarihi__gt=self.baslangic_tarihi).order_by(
+            'baslangic_tarihi')[0]
+
+
     @staticmethod
     def donem_dondur(yil,ay,takvim):
 
@@ -274,6 +313,7 @@ class Donem(Model):
             donem_list[0],donem_list[1] = donem_list[1], donem_list[0]
 
         return donem_list
+
 
 class Program(Model):
     """Program Modeli
