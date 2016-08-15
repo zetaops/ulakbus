@@ -80,7 +80,7 @@ class DersUcretiHesaplama(CrudView):
         self.current.task_data["ay_isim"] = AYLAR[self.input['form']['ay_sec'] - 1][1]
 
         takvim = calendar.monthrange(self.current.task_data["yil"], self.current.task_data["ay"])
-        donem_list = Donem.donem_dondur(self.current.task_data["yil"], self.current.task_data["ay"], takvim)
+        donem_list = Donem.takvim_ayina_rastlayan_donemler(self.current.task_data["yil"], self.current.task_data["ay"], takvim)
 
         if len(donem_list) > 0:
             self.current.task_data['donem_sayi'] = True
@@ -207,7 +207,7 @@ class DersUcretiHesaplama(CrudView):
 
         # Secilen ay hangi donemleri kapsiyor, kac donemi kapsıyorsa
         # o donemleri dondürür.
-        donem_list = Donem.donem_dondur(yil, ay, takvim)
+        donem_list = Donem.takvim_ayina_rastlayan_donemler(yil, ay, takvim)
 
         # Resmi tatilerin gununu (23, 12, 8) gibi ve doneme gore akademik takvim donduruyor
         resmi_tatil_list, akademik_takvim_list = Takvim.resmi_tatil_gunleri_getir(donem_list, birim_unit, yil, ay)

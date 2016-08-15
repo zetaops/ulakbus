@@ -105,7 +105,7 @@ class TestCase(BaseTestCase):
                     # için tarih aralığının (21,29) olması kontrol edilir.
                     if i == 0:
                         takvim = calendar.monthrange(2016, 2)
-                        donem_list = Donem.donem_dondur(2016, 2, takvim)
+                        donem_list = Donem.takvim_ayina_rastlayan_donemler(2016, 2, takvim)
                         assert len(donem_list) == 1
 
                         resmi_tatil_list, akademik_takvim_list = Takvim.resmi_tatil_gunleri_getir(donem_list,
@@ -121,7 +121,7 @@ class TestCase(BaseTestCase):
                     # 2 tuple dan oluşması ve bir tanesinin birbirine eşit olması beklenir.
                     if i == 1:
                         takvim = calendar.monthrange(2016, 7)
-                        donem_list = Donem.donem_dondur(2016, 7, takvim)
+                        donem_list = Donem.takvim_ayina_rastlayan_donemler(2016, 7, takvim)
                         assert len(donem_list) == 2
 
                         resmi_tatil_list, akademik_takvim_list = Takvim.resmi_tatil_gunleri_getir(donem_list,
@@ -136,7 +136,7 @@ class TestCase(BaseTestCase):
                     # 19 Mayıs ve 1 Mayıs'ın resmi tatil listesinde olması beklenir.
                     else:
                         takvim = calendar.monthrange(2016, 5)
-                        donem_list = Donem.donem_dondur(2016, 5, takvim)
+                        donem_list = Donem.takvim_ayina_rastlayan_donemler(2016, 5, takvim)
                         assert len(donem_list) == 1
                         resmi_tatil_list, akademik_takvim_list = Takvim.resmi_tatil_gunleri_getir(donem_list,
                                                                                                   birim_unit, 2016, 5)
