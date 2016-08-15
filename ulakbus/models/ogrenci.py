@@ -22,6 +22,7 @@ from .auth import Unit
 from .buildings_rooms import Room, RoomType
 from .personel import Personel
 
+
 class HariciOkutman(Model):
     """Harici Okutman Modeli
 
@@ -195,12 +196,11 @@ class OgretimYili(Model):
     Öğretim yılını bilgilerini tutan modeldir.
     """
 
-    yil = field.Integer("Yıl")  # 2015
+    yil = field.Integer("Yıl", unique=True)  # 2015
     ad = field.String("Öğretim Yılı")  # 2015 - 2016 Öğretim Yılı
 
     def post_creation(self):
-        self.yil = Donem.guncel_donem().baslangic_tarihi.year
-        self.ad = "%s - %s Öğretim Yılı" % (self.yil, self.yil + 1 )
+        self.ad = "%s - %s Öğretim Yılı" % (self.yil, int(self.yil) + 1)
         self.save()
 
     def __unicode__(self):
@@ -245,47 +245,54 @@ class Donem(Model):
     def __unicode__(self):
         return '%s %s' % (self.ad, self.baslangic_tarihi)
 
-    @classmethod
-    def en_son_bahar_donemi(cls):
+    def onceki_donemler(self, n=1):
         """
+        Args:
+            n: geriye doğru kaç dönem döndürmeli.
         Returns:
-            Veritabanında kayıtlı olan en son bahar dönemini
-
-        """
-        return cls.objects.filter(ad='Bahar Dönemi').order_by('-baslangic_tarihi')[0]
-
-    @classmethod
-    def en_son_guz_donemi(cls):
-        """
-        Returns:
-            Veritabanında kayıtlı olan en son güz dönemini
-
-        """
-
-        return cls.objects.filter(ad='Güz Dönemi').order_by('-baslangic_tarihi')[0]
-
-    def onceki_donem(self):
-        """
-        Returns:
-            Belli bir dönemden önceki dönemi
+            (list) önceki dönemler listesi
 
         """
 
         return self.objects.filter(baslangic_tarihi__lt=self.baslangic_tarihi).order_by(
-            '-baslangic_tarihi')[0]
+            '-baslangic_tarihi')[0:n]
+
+    def onceki_donem(self):
+        """
+        Returns:
+            (donem) donemden bir önceki dönemi dondurur.
+
+        """
+        try:
+            return list(self.onceki_donemler())[0]
+        except IndexError:
+            return None
+
+    def sonraki_donemler(self, n=1):
+        """
+        Args:
+            n: ileriye dogru kac donem dondurmeli.
+        Returns:
+            (list) önceki dönemler listesi
+
+        """
+
+        return self.objects.filter(baslangic_tarihi__gt=self.baslangic_tarihi).order_by(
+            'baslangic_tarihi')[0:n]
 
     def sonraki_donem(self):
         """
         Returns:
-            Belli bir dönemden sonraki dönemi
+            (donem) donemden bir sonraki dönemi dondurur.
 
         """
-        return self.objects.filter(baslangic_tarihi__gt=self.baslangic_tarihi).order_by(
-            'baslangic_tarihi')[0]
-
+        try:
+            return list(self.sonraki_donemler())[0]
+        except IndexError:
+            return None
 
     @staticmethod
-    def donem_dondur(yil,ay,takvim):
+    def donem_dondur(yil, ay, takvim):
 
         baslangic = date(yil, ay, 01)
         bitis = date(yil, ay, takvim[1])
@@ -310,7 +317,7 @@ class Donem(Model):
 
         # Eğer iki donem varsa bitis tarihi once olani ilk siraya koyar.
         if len(donem_list) == 2 and donem_list[0].bitis_tarihi > donem_list[1].bitis_tarihi:
-            donem_list[0],donem_list[1] = donem_list[1], donem_list[0]
+            donem_list[0], donem_list[1] = donem_list[1], donem_list[0]
 
         return donem_list
 
@@ -773,7 +780,6 @@ class OgrenciDersi(Model):
         unique_together = [('ogrenci', 'sube')]
 
     def post_creation(self):
-
         """
         Yeni bir ``OgrenciDers``'i ilk defa yaratılınca ``donem`` ve ``ders`` alanları,
         bağlı şubeden atanır.
@@ -1071,7 +1077,6 @@ AKADEMIK_TAKVIM_ETKINLIKLERI = [
     ('71', '23 Nisan Ulusal Egemenlik ve Çocuk Bayramı'),
     ('72', '19 Mayıs Genclik ve Spor Bayramı')
 
-
 ]
 
 
@@ -1134,7 +1139,7 @@ class Takvim(Model):
     baslangic = field.DateTime("Başlangıç", index=True, format="%d.%m.%Y", required=False)
     bitis = field.DateTime("Bitiş", index=True, format="%d.%m.%Y", required=False)
     akademik_takvim = AkademikTakvim("Akademik Takvim")
-    resmi_tatil = field.Boolean("Resmi Tatil", index = True)
+    resmi_tatil = field.Boolean("Resmi Tatil", index=True)
 
     def pre_save(self):
         if not self.baslangic and not self.bitis:
@@ -1146,10 +1151,11 @@ class Takvim(Model):
         verbose_name_plural = "Takvimler"
 
     def __unicode__(self):
-        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
+        return '%s %s %s' % (
+            self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
 
     @staticmethod
-    def resmi_tatil_gunleri_getir(donem_list,birim_unit,yil,ay):
+    def resmi_tatil_gunleri_getir(donem_list, birim_unit, yil, ay):
 
         from ulakbus.lib.common import get_akademik_takvim
 
@@ -1157,17 +1163,19 @@ class Takvim(Model):
         akademik_takvim_list = []
         for donem in donem_list:
             akademik_takvim = get_akademik_takvim(birim_unit, donem.ogretim_yili)
-            resmi_tatiller = Takvim.objects.filter(akademik_takvim = akademik_takvim,resmi_tatil= True)
+            resmi_tatiller = Takvim.objects.filter(akademik_takvim=akademik_takvim,
+                                                   resmi_tatil=True)
 
-            tatil_list=[]
+            tatil_list = []
             for resmi_tatil in resmi_tatiller:
                 for gun in Izin.zaman_araligi(resmi_tatil.baslangic, resmi_tatil.bitis):
-                    if gun.month==ay and gun.year==yil:
+                    if gun.month == ay and gun.year == yil:
                         tatil_list.append(gun.day)
             resmi_tatil_list.append(tatil_list)
             akademik_takvim_list.append(akademik_takvim)
 
         return resmi_tatil_list, akademik_takvim_list
+
 
 class DonemDanisman(Model):
     """Dönem Danışmanları Modeli
