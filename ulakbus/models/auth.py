@@ -360,6 +360,17 @@ class Role(Model):
         PermissionCache(self.key).delete()
         self.save()
 
+    def remove_permission(self, perm):
+        """
+        Removes a :class:`Permission` from the role
+
+        Args:
+             perm: :class:`Permission` object.
+        """
+        del self.Permissions[perm.key]
+        PermissionCache(self.key).delete()
+        self.save()
+
     def add_permission_by_name(self, code, save=False):
         """
         Role nesnesine Permission eklemek veya eklenebilecek Permission
