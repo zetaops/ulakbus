@@ -18,9 +18,10 @@ class DonemForm(forms.JsonForm):
 
     """
 
-    guz_baslangic_tarihi = fields.Date("Başlangıç Tarihi", format="%d.%m.%Y")
+    guz_baslangic_tarihi = fields.Date("Başlangıç Tarihi", format="%d.%m.%Y", required=True)
     guz_bitis_tarihi = fields.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y", required=True)
-    bahar_baslangic_tarihi = fields.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y", required=True)
+    bahar_baslangic_tarihi = fields.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y",
+                                         required=True)
     bahar_bitis_tarihi = fields.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y", required=True)
 
     class Meta:
@@ -85,14 +86,16 @@ class YeniDonemOlusturma(CrudView):
         """
 
         _form = DonemForm(current=self.current, title='Güz ve Bahar Dönemi')
-        son_bahar_donemi = Donem.en_son_bahar_donemi()
-        son_guz_donemi = Donem.en_son_guz_donemi()
-        guncel_donem = Donem.guncel_donem()
-        _form.help_text = "En son kaydedilen donemler {0} ve {1},Güncel Dönem {2}," \
-                          "{3} Güz Dönem ve {4} Bahar Dönemi Kaydedebilirsiniz".format(
-            son_bahar_donemi, son_guz_donemi, guncel_donem,
-            son_bahar_donemi.bitis_tarihi.year,
-            son_bahar_donemi.bitis_tarihi.year + 1)
+
+        son_donem = Donem.son_donem()
+
+        _form.help_text = """Kayıtlardaki en son donem {}
+        Başlangıç Tarihi: {:%d.%m.%Y},
+        Bitiş Tarihi: {:%d.%m.%Y}
+        """.format(son_donem.ad,
+                   son_donem.baslangic_tarihi,
+                   son_donem.bitis_tarihi)
+
         self.form_out(_form)
 
     def donem_formu_kaydet(self):
@@ -101,18 +104,18 @@ class YeniDonemOlusturma(CrudView):
 
         """
 
-        del self.current.input['form']['kaydet']
-        bahar_donemi = Donem()
-        bahar_donemi.ad = 'Bahar - %s ' % datetime.strptime(self.current.input['form']['bahar_baslangic_tarihi'], "%d.%m.%Y")
-        bahar_donemi.baslangic_tarihi = self.current.input['form']['bahar_baslangic_tarihi']
-        bahar_donemi.bitis_tarihi = self.current.input['form']['bahar_bitis_tarihi']
-        bahar_donemi.save()
+        def yeni_donem(ad, baslangic, bitis):
+            d = Donem(
+                ad='%s - %s' % (ad, baslangic.split('.')[2]),
+                baslangic=baslangic,
+                bitis=bitis
+            )
+            d.save()
 
-        guz_donemi = Donem()
-        guz_donemi.ad = 'Güz - %s' % datetime.strptime(self.current.input['form']['guz_baslangic_tarihi'], "%d.%m.%Y")
-        guz_donemi.baslangic_tarihi = self.current.input['form']['guz_baslangic_tarihi']
-        guz_donemi.bitis_tarihi = self.current.input['form']['guz_bitis_tarihi']
-        guz_donemi.save()
+        fdata = self.current.input['form']
+
+        yeni_donem('Bahar', fdata['bahar_baslangic_tarihi'], fdata['bahar_bitis_tarihi'])
+        yeni_donem('Güz', fdata['guz_baslangic_tarihi'], fdata['guz_bitis_tarihi'])
 
     def bilgi_ver(self):
         """
