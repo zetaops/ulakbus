@@ -292,23 +292,14 @@ class Donem(Model):
             return None
 
     @classmethod
-    def en_son_bahar_donemi(cls):
+    def son_donem(cls):
         """
         Returns:
-            Veritabanında kayıtlı olan en son bahar dönemini
-
-        """
-        return cls.objects.filter(ad__contains='Bahar').order_by('-baslangic_tarihi')[0]
-
-    @classmethod
-    def en_son_guz_donemi(cls):
-        """
-        Returns:
-            Veritabanında kayıtlı olan en son güz dönemini
+            Veritabanında kayıtlı olan en son dönemi döndürür.
 
         """
 
-        return cls.objects.filter(ad__contains='Güz').order_by('-baslangic_tarihi')[0]
+        return cls.objects.filter().order_by('-baslangic_tarihi')[0]
 
     @staticmethod
     def takvim_ayina_rastlayan_donemler(yil, ay, takvim):
