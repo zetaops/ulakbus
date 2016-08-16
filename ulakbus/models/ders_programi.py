@@ -5,6 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from pyoko import Model, field
+from ulakbus.lib.date_time_helper import GUN_DILIMI, HAFTA
 from .buildings_rooms import Room
 from .auth import Unit
 from .ogrenci import Okutman
@@ -14,36 +15,14 @@ UYGUNLUK_DURUMU = [
     (2, "Mümkünse Uygun Değil"),
     (3, "Kesinlikle Uygun Değil")
 ]
-
-HAFTA_ICI_GUNLER = [
-    (1, "Pazartesi"),
-    (2, "Salı"),
-    (3, "Çarşamba"),
-    (4, "Perşembe"),
-    (5, "Cuma")
-]
-
-HAFTA_SONU_GUNLER = [
-    (6, "Cumartesi"),
-    (7, "Pazar")
-]
-
 DERSLIK_DURUMU = [
     (1, 'Herkese Açık'),
     (2, 'Bölüme Ait'),
     (3, 'Herkese Kapalı')
 ]
 
-GUN_DILIMI = [
-    (1, 'Sabah'),
-    (2, 'Öğle'),
-    (3, 'Akşam')
-]
-
-HAFTA = HAFTA_ICI_GUNLER + HAFTA_SONU_GUNLER
 
 class ZamanDilimleri(Model):
-
     class Meta:
         unique_together = [('birim', 'gun_dilimi')]
         search_fields = ['birim', 'gun_dilimi']
@@ -95,6 +74,7 @@ class ZamanCetveli(Model):
         Ilgili birime ait belirlenen zaman dilimleri ders program koordinatoru tarafindan
         ogretim elemanlarin saat araliklarina gore durumlarini belirleyecegi model
     """
+
     class Meta:
         verbose_name = 'Zaman Cetveli'
         unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani', 'gun')]
@@ -112,10 +92,10 @@ class ZamanCetveli(Model):
 
 
 class DerslikZamanPlani(Model):
-
     class Meta:
         verbose_name = 'Derslik Zaman Planı'
-        unique_together = [('derslik', 'gun', 'baslangic_saat', 'baslangic_dakika', 'bitis_saat', 'bitis_dakika')]
+        unique_together = [
+            ('derslik', 'gun', 'baslangic_saat', 'baslangic_dakika', 'bitis_saat', 'bitis_dakika')]
         search_fields = ['unit', 'derslik', 'gun', 'derslik_durum']
 
     unit = Unit()
@@ -131,4 +111,4 @@ class DerslikZamanPlani(Model):
         return '%s %s %s:%s|%s:%s %s' % (self.derslik, dict(HAFTA)[self.gun],
                                          self.baslangic_saat, self.baslangic_dakika,
                                          self.bitis_saat, self.bitis_dakika,
-                                         dict(DERSLIK_DURUMU)[self.derslik_durum])
+                                         dict(DERSLIK_DURUMU)[int(self.derslik_durum)])

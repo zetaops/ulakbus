@@ -414,15 +414,14 @@ class OgrenciMezuniyet(CrudView):
         self.form_out(_form)
 
     def mezuniyet_kaydet(self):
-        from ulakbus.lib.ogrenci import OgrenciHelper
+        from ulakbus.lib.ogrenci import diploma_no_uret
         try:
 
-            mn = OgrenciHelper()
             ogrenci_program = OgrenciProgram.objects.get(self.input['form']['program'])
             ogrenci_sinav_list = DegerlendirmeNot.objects.set_params(
                 rows=1, sort='sinav_tarihi desc').filter(ogrenci=ogrenci_program.ogrenci)
             ogrenci_son_sinav = ogrenci_sinav_list[0]
-            diploma_no = mn.diploma_notu_uret(ogrenci_program.ogrenci_no)
+            diploma_no = diploma_no_uret(ogrenci_program)
             ogrenci_program.diploma_no = diploma_no
             ogrenci_program.mezuniyet_tarihi = ogrenci_son_sinav.sinav.tarih
             ogrenci_program.save()

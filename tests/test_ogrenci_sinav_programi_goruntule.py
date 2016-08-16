@@ -12,7 +12,6 @@ import time
 class TestCase(BaseTestCase):
     def test_okutman_sinav_programi_goruntule(self):
 
-
         user = User.objects.get(username='ogrenci_3')
         self.prepare_client('/ogrenci_sinav_programi_goruntule', user=user)
         # Giriş yapılan user'ın öğrenci objesi bulunur.
@@ -36,7 +35,6 @@ class TestCase(BaseTestCase):
             user = User.objects.get(username='ogrenci_3')
             # testi yazılacak iş akışı seçilir.
             self.prepare_client('/ogrenci_sinav_programi_goruntule', user=user)
-
 
             # Giriş yapılan user'ın öğrenci objesi bulunur.
             ogrenci = Ogrenci.objects.get(user=self.client.current.user)
@@ -65,7 +63,7 @@ class TestCase(BaseTestCase):
                 cond = True
 
             for sube in subeler:
-                for sinav_etkinlik in SinavEtkinligi.objects.filter(sube = sube,donem = guncel_donem):
+                for sinav_etkinlik in SinavEtkinligi.objects.filter(sube=sube, donem=guncel_donem):
                     sinav_etkinlik.published = cond
                     sinav_etkinlik.save()
 

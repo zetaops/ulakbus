@@ -23,6 +23,150 @@ from .buildings_rooms import Room, RoomType
 from .personel import Personel
 
 
+class OgretimYili(Model):
+    """
+    Öğretim yılını bilgilerini tutan modeldir.
+    """
+
+    yil = field.Integer("Yıl", unique=True)  # 2015
+    ad = field.String("Öğretim Yılı")  # 2015 - 2016 Öğretim Yılı
+
+    def post_creation(self):
+        self.ad = "%s - %s Öğretim Yılı" % (self.yil, int(self.yil) + 1)
+        self.save()
+
+    def __unicode__(self):
+        return self.ad
+
+
+class Donem(Model):
+    """Dönem Modeli
+
+    Güz, bahar ve yaz akademik dönemlerinin bilgilerine ait modeldir.
+
+    Güncel alanı, içerisinde bulunulan akademik dönemi işaret eder.
+
+    """
+
+    ad = field.String("Ad", index=True)
+    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
+    guncel = field.Boolean(index=True)
+    ogretim_yili = OgretimYili("Öğretim Yılı", index=True)
+
+    @classmethod
+    def guncel_donem(cls):
+        return cls.objects.get(guncel=True)
+
+    def pre_save(self):
+        if self.guncel:
+            try:
+                old = self.guncel_donem()
+                old.guncel = False
+                old.save()
+            except ObjectDoesNotExist:
+                pass
+
+    class Meta:
+        app = 'Ogrenci'
+        verbose_name = "Dönem"
+        verbose_name_plural = "Dönemler"
+        list_fields = ['ad', 'baslangic_tarihi']
+        search_fields = ['ad']
+
+    def __unicode__(self):
+        return '%s %s' % (self.ad, self.baslangic_tarihi)
+
+    def onceki_donemler(self, n=1):
+        """
+        Args:
+            n: geriye doğru kaç dönem döndürmeli.
+        Returns:
+            (list) önceki dönemler listesi
+
+        """
+
+        return self.objects.filter(baslangic_tarihi__lt=self.baslangic_tarihi).order_by(
+            '-baslangic_tarihi')[0:n]
+
+    def onceki_donem(self):
+        """
+        Returns:
+            (donem) donemden bir önceki dönemi dondurur.
+
+        """
+        try:
+            return list(self.onceki_donemler())[0]
+        except IndexError:
+            return None
+
+    def sonraki_donemler(self, n=1):
+        """
+        Args:
+            n: ileriye dogru kac donem dondurmeli.
+        Returns:
+            (list) önceki dönemler listesi
+
+        """
+
+        return self.objects.filter(baslangic_tarihi__gt=self.baslangic_tarihi).order_by(
+            'baslangic_tarihi')[0:n]
+
+    def sonraki_donem(self):
+        """
+        Returns:
+            (donem) donemden bir sonraki dönemi dondurur.
+
+        """
+        try:
+            return list(self.sonraki_donemler())[0]
+        except IndexError:
+            return None
+
+    @classmethod
+    def son_donem(cls):
+        """
+        Returns:
+            Veritabanında kayıtlı olan en son dönemi döndürür.
+
+        """
+
+        return cls.objects.filter().order_by('-baslangic_tarihi')[0]
+
+    @staticmethod
+    def takvim_ayina_rastlayan_donemler(yil, ay, takvim):
+        """
+        Bir takvim ayına rastlayan dönemleri döndürür.
+
+        Args:
+            yil (int): takvim yili
+            ay (int): takvim ayi
+            takvim (tuple): ayın ilk günününö haftanın hangi gününe
+            denk geldiği ve ayin kac gün sürdüğü integerlarından oluşan tuple. e.g (4, 29)
+
+        Returns:
+            (list) donem nesneleri listesi
+        """
+
+        baslangic = date(yil, ay, 1)
+        bitis = date(yil, ay, takvim[1])
+
+        donem_list = []
+
+        donem_list.extend(list(Donem.objects.filter(bitis_tarihi__gte=baslangic,
+                                                    bitis_tarihi__lte=bitis)))
+
+        donem_list.extend(list(Donem.objects.filter(baslangic_tarihi__gte=baslangic,
+                                                    baslangic_tarihi__lte=bitis)))
+
+        donem_list.extend(list(Donem.objects.filter(bitis_tarihi__gt=bitis,
+                                                    baslangic_tarihi__lt=baslangic)))
+
+        donem_list = sorted(donem_list, key=lambda d: d.baslangic_tarihi)
+
+        return donem_list
+
+
 class HariciOkutman(Model):
     """Harici Okutman Modeli
 
@@ -190,149 +334,9 @@ class Okutman(Model):
         if not self.is_in_db() and self.is_not_unique():
             raise Exception("Okutman %s must be unique" % self.okutman)
 
-
-class OgretimYili(Model):
-    """
-    Öğretim yılını bilgilerini tutan modeldir.
-    """
-
-    yil = field.Integer("Yıl", unique=True)  # 2015
-    ad = field.String("Öğretim Yılı")  # 2015 - 2016 Öğretim Yılı
-
-    def post_creation(self):
-        self.ad = "%s - %s Öğretim Yılı" % (self.yil, int(self.yil) + 1)
-        self.save()
-
-    def __unicode__(self):
-        return self.ad
-
-
-class Donem(Model):
-    """Dönem Modeli
-
-    Güz, bahar ve yaz akademik dönemlerinin bilgilerine ait modeldir.
-
-    Güncel alanı, içerisinde bulunulan akademik dönemi işaret eder.
-
-    """
-
-    ad = field.String("Ad", index=True)
-    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    guncel = field.Boolean(index=True)
-    ogretim_yili = OgretimYili("Öğretim Yılı", index=True)
-
-    @classmethod
-    def guncel_donem(cls):
-        return cls.objects.get(guncel=True)
-
-    def pre_save(self):
-        if self.guncel:
-            try:
-                old = self.guncel_donem()
-                old.guncel = False
-                old.save()
-            except ObjectDoesNotExist:
-                pass
-
-    class Meta:
-        app = 'Ogrenci'
-        verbose_name = "Dönem"
-        verbose_name_plural = "Dönemler"
-        list_fields = ['ad', 'baslangic_tarihi']
-        search_fields = ['ad']
-
-    def __unicode__(self):
-        return '%s %s' % (self.ad, self.baslangic_tarihi)
-
-    def onceki_donemler(self, n=1):
-        """
-        Args:
-            n: geriye doğru kaç dönem döndürmeli.
-        Returns:
-            (list) önceki dönemler listesi
-
-        """
-
-        return self.objects.filter(baslangic_tarihi__lt=self.baslangic_tarihi).order_by(
-            '-baslangic_tarihi')[0:n]
-
-    def onceki_donem(self):
-        """
-        Returns:
-            (donem) donemden bir önceki dönemi dondurur.
-
-        """
-        try:
-            return list(self.onceki_donemler())[0]
-        except IndexError:
-            return None
-
-    def sonraki_donemler(self, n=1):
-        """
-        Args:
-            n: ileriye dogru kac donem dondurmeli.
-        Returns:
-            (list) önceki dönemler listesi
-
-        """
-
-        return self.objects.filter(baslangic_tarihi__gt=self.baslangic_tarihi).order_by(
-            'baslangic_tarihi')[0:n]
-
-    def sonraki_donem(self):
-        """
-        Returns:
-            (donem) donemden bir sonraki dönemi dondurur.
-
-        """
-        try:
-            return list(self.sonraki_donemler())[0]
-        except IndexError:
-            return None
-
-    @classmethod
-    def son_donem(cls):
-        """
-        Returns:
-            Veritabanında kayıtlı olan en son dönemi döndürür.
-
-        """
-
-        return cls.objects.filter().order_by('-baslangic_tarihi')[0]
-
-    @staticmethod
-    def takvim_ayina_rastlayan_donemler(yil, ay, takvim):
-        """
-        Bir takvim ayına rastlayan dönemleri döndürür.
-
-        Args:
-            yil (int): takvim yili
-            ay (int): takvim ayi
-            takvim (tuple): ayın ilk günününö haftanın hangi gününe
-            denk geldiği ve ayin kac gün sürdüğü integerlarından oluşan tuple. e.g (4, 29)
-
-        Returns:
-            (list) donem nesneleri listesi
-        """
-
-        baslangic = date(yil, ay, 1)
-        bitis = date(yil, ay, takvim[1])
-
-        donem_list = []
-
-        donem_list.extend(list(Donem.objects.filter(bitis_tarihi__gte=baslangic,
-                                                    bitis_tarihi__lte=bitis)))
-
-        donem_list.extend(list(Donem.objects.filter(baslangic_tarihi__gte=baslangic,
-                                                    baslangic_tarihi__lte=bitis)))
-
-        donem_list.extend(list(Donem.objects.filter(bitis_tarihi__gt=bitis,
-                                                    baslangic_tarihi__lt=baslangic)))
-
-        donem_list = sorted(donem_list, key=lambda d: d.baslangic_tarihi)
-
-        return donem_list
+    def donem_subeleri(self, donem=None):
+        donem = donem or Donem.guncel_donem()
+        return [s for s in Sube.objects.filter(okutman=self, donem=donem)]
 
 
 class Program(Model):
@@ -672,6 +676,14 @@ class Ogrenci(Model):
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.soyad)
+
+    def donem_dersleri(self, donem=None):
+        return [d.ders for d in
+                OgrenciDersi.objects.filter(ogrenci=self, donem=donem or Donem.guncel_donem())]
+
+    def donem_subeleri(self, donem=None):
+        return [d.sube for d in
+                OgrenciDersi.objects.filter(ogrenci=self, donem=donem or Donem.guncel_donem())]
 
 
 class OncekiEgitimBilgisi(Model):
