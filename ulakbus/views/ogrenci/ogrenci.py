@@ -634,7 +634,9 @@ class BasariDurum(CrudView):
                 dersler = list()
                 dersler.append(d.ders.kod)
                 dersler.append("""**%s**
-                \n**TU:** %s - **Krd:** %s - **AKTS:** %s""" % (d.ders_adi(), "2+0", '2', '4'))
+                \n**TU:** %s - **Krd:** %s - **AKTS:** %s""" % (d.ders_adi(), str(d.ders.teori_saati) + '-'
+                                                                + str(d.ders.uygulama_saati), str(d.ders.yerel_kredisi),
+                                                                str(d.ders.ects_kredisi)))
                 degerlendirmeler = DegerlendirmeNot.objects.filter(
                     ogrenci_no=ogrenci_program.ogrenci_no, donem=donem.ad, ders=d.ders)
                 notlar = [(deg.sinav.get_tur_display(),
