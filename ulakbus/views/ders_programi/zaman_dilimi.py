@@ -8,7 +8,7 @@
 
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
-from ulakbus.models.ders_programi import GUN_DILIMI, ZamanDilimleri
+from ulakbus.models.ders_sinav_programi import GUN_DILIMI, ZamanDilimleri
 from collections import OrderedDict
 
 

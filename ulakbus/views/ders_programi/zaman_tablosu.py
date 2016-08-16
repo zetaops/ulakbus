@@ -10,7 +10,7 @@
 
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
-from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, ZamanDilimleri
+from ulakbus.models.ders_sinav_programi import OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, ZamanDilimleri
 from ulakbus.models import Room
 
 

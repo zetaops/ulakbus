@@ -10,7 +10,7 @@ from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman,
 from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
 from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.personel import Personel
-from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri,\
+from ulakbus.models.ders_sinav_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri,\
     HAFTA, UYGUNLUK_DURUMU, GUN_DILIMI, DerslikZamanPlani
 from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
 from .general import ints, gender, marital_status, blood_type, create_fake_geo_data

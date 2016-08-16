@@ -7,7 +7,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import Ogrenci
+from ulakbus.models import Ogrenci, SinavEtkinligi
 
 
 def diploma_no_uret(ogrenci_program):
@@ -37,7 +37,7 @@ def aktif_sinav_listesi(obj):
 
     """
 
-    from ulakbus.models.ders_programi_data import SinavEtkinligi
+    from ulakbus.models.ders_sinav_programi import SinavEtkinligi
     sinavlar = []
     for sube in obj.donem_subeleri():
         sinavlar.extend(SinavEtkinligi.sube_sinav_listesi(sube=sube))

@@ -9,7 +9,7 @@ from zengine.forms import JsonForm
 from zengine.views.crud import CrudView
 from collections import OrderedDict
 from ulakbus.models import Personel, Donem, Ogrenci
-from ulakbus.models.ders_programi import HAFTA
+from ulakbus.models.ders_sinav_programi import HAFTA
 from ...lib.ogrenci import aktif_sinav_listesi
 
 

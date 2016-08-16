@@ -11,7 +11,7 @@ from zengine.forms import fields
 from zengine.forms import JsonForm
 from ulakbus.models.ogrenci import Okutman, Donem, Takvim, Unit
 from ulakbus.models.personel import Izin
-from ulakbus.models.ders_programi_data import DersEtkinligi
+from ulakbus.models.ders_sinav_programi import DersEtkinligi
 from datetime import datetime, date
 import calendar
 from collections import OrderedDict

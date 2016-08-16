@@ -11,8 +11,9 @@ import sys
 from zengine.management_commands import *
 
 from ..models import Donem, Unit, Sube, Ders, Program, OgrenciProgram, OgrenciDersi, Okutman, Takvim, \
-    Building, Room, DersEtkinligi, OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, HAFTA,\
+    Building, Room, OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, HAFTA,\
     SinavEtkinligi, OgretimYili
+from ulakbus.models import DersEtkinligi, SinavEtkinligi
 from common import get_akademik_takvim, SOLVER_MAX_ID, SLOT_SURESI, saat2slot,\
     timedelta2slot, datetime2timestamp
 from datetime import datetime, date, timedelta, time

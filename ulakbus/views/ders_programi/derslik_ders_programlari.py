@@ -10,7 +10,7 @@
 from collections import OrderedDict
 
 from ulakbus.models import DersEtkinligi, Room
-from ulakbus.models.ders_programi import HAFTA as hafta
+from ulakbus.models.ders_sinav_programi import HAFTA as hafta
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
 

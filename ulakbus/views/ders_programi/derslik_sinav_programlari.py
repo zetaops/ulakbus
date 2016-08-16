@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models import SinavEtkinligi, Room
-from ulakbus.models.ders_programi import HAFTA
+from ulakbus.models.ders_sinav_programi import HAFTA
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
