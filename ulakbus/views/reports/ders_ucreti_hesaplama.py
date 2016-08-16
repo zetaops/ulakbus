@@ -15,7 +15,7 @@ from ulakbus.models.ders_sinav_programi import DersEtkinligi
 from datetime import datetime, date
 import calendar
 from collections import OrderedDict
-from ulakbus.lib.common import AYLAR
+from ulakbus.lib.date_time_helper import AYLAR
 
 guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month

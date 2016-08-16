@@ -14,7 +14,7 @@ from ulakbus.models.personel import Izin
 from datetime import datetime
 import calendar
 from collections import OrderedDict
-from ulakbus.lib.common import AYLAR
+from ulakbus.lib.date_time_helper import AYLAR
 from ulakbus.views.reports import ders_ucreti_hesaplama as DU
 
 guncel_yil = datetime.now().year
