@@ -289,6 +289,7 @@ class Role(Model):
         verbose_name_plural = "Roller"
         search_fields = ['name']
         list_fields = []
+        crud_extra_actions = [{'name': 'İzinleri Düzenle', 'wf': 'permissions', 'show_as': 'button'}]
 
     @property
     def is_staff(self):
@@ -356,6 +357,17 @@ class Role(Model):
 
         """
         self.Permissions(permission=perm)
+        PermissionCache(self.key).delete()
+        self.save()
+
+    def remove_permission(self, perm):
+        """
+        Removes a :class:`Permission` from the role
+
+        Args:
+             perm: :class:`Permission` object.
+        """
+        del self.Permissions[perm.key]
         PermissionCache(self.key).delete()
         self.save()
 
