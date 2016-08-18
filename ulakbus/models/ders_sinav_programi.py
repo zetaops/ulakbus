@@ -191,7 +191,7 @@ class SinavEtkinligi(Model):
         """
         donem = donem or Donem.guncel_donem()
         return [e for e in cls.objects.filter(published=True, sube=sube,  archived=archived,
-                                              donem=donem).order_by('-tarih')]
+                                                  donem=donem).order_by('-tarih')]
 
     def __unicode__(self):
         return '{} {} {}'.format(self.ders.ad, self.sube.ad, self.sinav_zamani())

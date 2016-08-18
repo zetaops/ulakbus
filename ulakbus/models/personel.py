@@ -15,8 +15,6 @@ from pyoko import Model, field
 from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
 from ulakbus.settings import SICIL_PREFIX
-from datetime import timedelta
-
 
 class Personel(Model):
     """Personel Modeli
@@ -410,55 +408,6 @@ class Izin(Model):
     def __unicode__(self):
         return '%s %s' % (self.tip, self.onay)
 
-    @staticmethod
-    def personel_izin_gunlerini_getir(okutman,yil,ay):
-        """
-        Args:
-            okutman: okutman object
-            yil: 2016
-            ay: 7
-
-        Returns: Seçilen yıl ve ay içinde
-        okutmanın izin ve ücretsiz izinlerini
-        gün şeklinde döndüren liste.
-
-        """
-        personel_izin_list = []
-
-        personel_izinler = Izin.objects.filter(personel = okutman.personel)
-
-        for personel_izin in personel_izinler:
-            for gun in Izin.zaman_araligi(personel_izin.baslangic, personel_izin.bitis):
-                if gun.month == ay and gun.year == yil:
-                    personel_izin_list.append(gun.day)
-
-        personel_ucretsiz_izinler = UcretsizIzin.objects.filter(personel=okutman.personel)
-
-        for personel_izin in personel_ucretsiz_izinler:
-            for gun in Izin.zaman_araligi(personel_izin.baslangic_tarihi, personel_izin.bitis_tarihi):
-                if gun.month == ay and gun.year == yil:
-                    personel_izin_list.append(gun.day)
-
-        return personel_izin_list
-
-    @staticmethod
-    def zaman_araligi(baslangic, bitis):
-        """
-        Verilen iki tarih arasinda kalan tarihleri
-        donduren method.
-
-        Args:
-            baslangic: Date 02.04.2016
-            bitis: Date 04.04.2016
-
-        Returns:
-            [02.04.2016,03.04.2016,04.04.2016]
-
-        """
-
-        for n in range(int((bitis - baslangic).days) + 1):
-            yield baslangic + timedelta(n)
-
 
 class UcretsizIzin(Model):
     """Ücretsiz izin Modeli
@@ -468,8 +417,8 @@ class UcretsizIzin(Model):
     """
 
     tip = field.Integer("Tip", choices="ucretsiz_izin")
-    baslangic_tarihi = field.Date("İzin Başlangıç Tarihi", format="%d.%m.%Y")
-    bitis_tarihi = field.Date("İzin Bitiş Tarihi", format="%d.%m.%Y")
+    baslangic = field.Date("İzin Başlangıç Tarihi", format="%d.%m.%Y")
+    bitis= field.Date("İzin Bitiş Tarihi", format="%d.%m.%Y")
     donus_tarihi = field.Date("Dönüş Tarihi", format="%d.%m.%Y")
     donus_tip = field.Integer("Dönüş Tip")
     onay_tarihi = field.Date("Onay Tarihi", format="%d.%m.%Y")

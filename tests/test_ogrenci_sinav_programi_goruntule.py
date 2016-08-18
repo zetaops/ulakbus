@@ -4,8 +4,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import Donem, SinavEtkinligi, User, Ogrenci, OgrenciDersi, Sube
+from ulakbus.models import Personel, Ogrenci, User
 from zengine.lib.test_utils import BaseTestCase
+from ulakbus.lib.ogrenci import aktif_sinav_listesi
+from ulakbus.lib.date_time_helper import map_sinav_etkinlik_hafta_gunleri
 import time
 
 
@@ -13,59 +15,27 @@ class TestCase(BaseTestCase):
     def test_okutman_sinav_programi_goruntule(self):
 
         user = User.objects.get(username='ogrenci_3')
-        self.prepare_client('/ogrenci_sinav_programi_goruntule', user=user)
-        # Giriş yapılan user'ın öğrenci objesi bulunur.
-        ogrenci = Ogrenci.objects.get(user=self.client.current.user)
-        guncel_donem = Donem.objects.get(guncel=True)
-        # Öğrencinin güncel dönemde aldığı dersler bulunur.
-        ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=guncel_donem)
-        ogrenci_adi = ogrenci.ad + ' ' + ogrenci.soyad
-
-        subeler = []
-        # Bulunan öğrenci derslerinin şubeleri bulunur ve listeye eklenir.
-        for ogrenci_ders in ogrenci_dersleri:
-            try:
-                sube = Sube.objects.get(ogrenci_ders.sube.key)
-                subeler.append(sube)
-            except:
-                pass
+        # İlgili öğrenci bulunur.
+        ogrenci = Ogrenci.objects.get(user=user)
+        ogrenci_adi = ogrenci.__unicode__()
+        sinav_etkinlikleri = aktif_sinav_listesi(ogrenci)
 
         for i in range(2):
-            # ogrenci_3 kullanıcısıyla giriş yapılır.
-            user = User.objects.get(username='ogrenci_3')
-            # testi yazılacak iş akışı seçilir.
+
+            # Testi çalıştırılacak iş akışı seçilir.
             self.prepare_client('/ogrenci_sinav_programi_goruntule', user=user)
 
-            # Giriş yapılan user'ın öğrenci objesi bulunur.
-            ogrenci = Ogrenci.objects.get(user=self.client.current.user)
-            guncel_donem = Donem.objects.get(guncel=True)
-            # Öğrencinin güncel dönemde aldığı dersler bulunur.
-            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=guncel_donem)
-            ogrenci_adi = ogrenci.ad + ' ' + ogrenci.soyad
-
-            subeler = []
-            # Bulunan öğrenci derslerinin şubeleri bulunur ve listeye eklenir.
-            for ogrenci_ders in ogrenci_dersleri:
-                try:
-                    sube = Sube.objects.get(ogrenci_ders.sube.key)
-                    subeler.append(sube)
-                except:
-                    pass
+            cond = False if i == 0 else True
 
             # İlk test yayınlanmış sınav etkinliğinin olmaması durumudur.
             # Bu yüzden Sınav Etkinliği modelinin published fieldı False yapılır.
-            if i == 0:
-                cond = False
 
             # İkinci test yayınlanmış sınav etkinliğinin olması durumudur.
             # Bu yüzden Sınav Etkinliği modelinin published fieldı True yapılır.
-            else:
-                cond = True
 
-            for sube in subeler:
-                for sinav_etkinlik in SinavEtkinligi.objects.filter(sube=sube, donem=guncel_donem):
-                    sinav_etkinlik.published = cond
-                    sinav_etkinlik.save()
+            for etkinlik in sinav_etkinlikleri:
+                etkinlik.published = cond
+                etkinlik.save()
 
             time.sleep(1)
 
@@ -78,4 +48,40 @@ class TestCase(BaseTestCase):
             # Yayınlanmış sınav etkinliği olması durumunda öğretim görevlisinin adının
             # bulunduğu bir sınav takvimi gösterilmesi beklenir.
             else:
+
+                # Öğrencinin güncel dönemde aktif şube
+                # sayısının 7 olması beklenir.
+                assert len(ogrenci.donem_subeleri()) == 7
+
+                # Sınav etkinlikleri sayısının 7 olması beklenir.
+                assert len(sinav_etkinlikleri) == 7
+
+                # Sınav etkinliklerinin tarihe göre küçükten büyüğe sıralandığı
+                # kontrol edilir.
+                assert sinav_etkinlikleri[0].tarih <= sinav_etkinlikleri[-1].tarih
+
+                etkinlikler = map_sinav_etkinlik_hafta_gunleri(sinav_etkinlikleri)
+
+                # Sınav etkinliklerinin etkinlikler sözlüğü içerisinde istenildiği
+                # gibi yerleştirildiği kontrol edilir.
+                for etkinlik in sinav_etkinlikleri:
+                    assert etkinlik.tarih.isoweekday() in etkinlikler
+                    assert etkinlik.__unicode__() in etkinlikler[etkinlik.tarih.isoweekday()]
+
+                # Yayınlanmış sınav etkinliği olması durumunda öğretim görevlisinin adının
+                # bulunduğu bir sınav takvimi gösterilmesi beklenir.
                 assert ogrenci_adi in resp.json['forms']['schema']["title"]
+
+                etkinlik_sayisi = 0
+
+                for i in range(1, len(resp.json['objects'])):
+                    for k, day in enumerate(resp.json['objects'][i]['fields']):
+                        if resp.json['objects'][i]['fields'][day]:
+                            # Ekranda gösterilen sınav etkinliklerinin istenildiği gibi
+                            # gösterildiği kontrol edilir.
+                            assert resp.json['objects'][i]['fields'][day] == etkinlikler[k + 1][i - 1]
+                            etkinlik_sayisi += 1
+
+                # Ekranda gösterilen sınav etkinliklerinin sayısının veri tabanından
+                # dönen etkinlik sayısıyla eşit olduğu kontrol edilir.
+                assert etkinlik_sayisi == len(sinav_etkinlikleri)

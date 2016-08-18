@@ -16,11 +16,11 @@ import six
 from pyoko import Model, field, ListNode, LinkProxy
 from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
-from ulakbus.models.personel import Izin
 from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room, RoomType
 from .personel import Personel
+from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_son_gun
 
 
 class OgretimYili(Model):
@@ -134,7 +134,7 @@ class Donem(Model):
         return cls.objects.filter().order_by('-baslangic_tarihi')[0]
 
     @staticmethod
-    def takvim_ayina_rastlayan_donemler(yil, ay, takvim):
+    def takvim_ayina_rastlayan_donemler(yil, ay):
         """
         Bir takvim ayına rastlayan dönemleri döndürür.
 
@@ -147,9 +147,7 @@ class Donem(Model):
         Returns:
             (list) donem nesneleri listesi
         """
-
-        baslangic = date(yil, ay, 1)
-        bitis = date(yil, ay, takvim[1])
+        baslangic, bitis = yil_ve_aya_gore_ilk_son_gun(yil,ay)
 
         donem_list = []
 
@@ -1178,29 +1176,6 @@ class Takvim(Model):
     def __unicode__(self):
         return '%s %s %s' % (
             self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
-
-    @staticmethod
-    def resmi_tatil_gunleri_getir(donem_list, birim_unit, yil, ay):
-
-        from ulakbus.lib.common import get_akademik_takvim
-
-        resmi_tatil_list = []
-        akademik_takvim_list = []
-        for donem in donem_list:
-            akademik_takvim = get_akademik_takvim(birim_unit, donem.ogretim_yili)
-            resmi_tatiller = Takvim.objects.filter(akademik_takvim=akademik_takvim,
-                                                   resmi_tatil=True)
-
-            tatil_list = []
-            for resmi_tatil in resmi_tatiller:
-                for gun in Izin.zaman_araligi(resmi_tatil.baslangic, resmi_tatil.bitis):
-                    if gun.month == ay and gun.year == yil:
-                        tatil_list.append(gun.day)
-            resmi_tatil_list.append(tatil_list)
-            akademik_takvim_list.append(akademik_takvim)
-
-        return resmi_tatil_list, akademik_takvim_list
-
 
 class DonemDanisman(Model):
     """Dönem Danışmanları Modeli

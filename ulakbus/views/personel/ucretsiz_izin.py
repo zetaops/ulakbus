@@ -25,7 +25,7 @@ class UcretsizIzinIslemleri(CrudView):
 
     class IzinForm(JsonForm):
         class Meta:
-            include = ['tip', 'baslangic_tarihi', 'bitis_tarihi', 'onay_tarihi', 'personel']
+            include = ['tip', 'baslangic', 'bitis', 'onay_tarihi', 'personel']
             title = "İzine Ayır"
 
         kaydet = fields.Button("Kaydet", next="izine_ayir", cmd="izine_ayir")
