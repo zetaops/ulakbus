@@ -6,11 +6,12 @@
 
 from pyoko import Model, field, ListNode
 from ulakbus.lib.date_time_helper import GUN_DILIMI, HAFTA
-from ulakbus.models import RoomType, Okutman, Sube, Donem, Unit, Ders, Room
+from ulakbus.models import RoomType, Ogrenci, Sube, Donem, Ders, OgrenciDersi
 from zengine.forms import fields
 from .buildings_rooms import Room
 from .auth import Unit
 from .ogrenci import Okutman
+import random
 
 UYGUNLUK_DURUMU = [
     (1, "Uygun"),
@@ -182,6 +183,24 @@ class SinavEtkinligi(Model):
 
     class SinavYerleri(ListNode):
         room = Room('Sınav Yeri', index=True)
+
+    class Ogrenciler(ListNode):
+        ogrenci = Ogrenci('Öğrenci', index = True)
+        room = Room('Sınav Yeri', index=True)
+
+    def sinav_ogrenci_listesi(self):
+        """
+        Verilen sınav etkinliğine katılacak olan öğrencilerin
+        listesini döndürür.
+
+        """
+        return [e.ogrenci for e in OgrenciDersi.objects.filter(sube=self.sube,donem =self.donem)]
+
+    @classmethod
+    def ogrencileri_odalara_rastgele_ata(cls,bolum,donem = Donem.guncel_donem()):
+        for etkinlik in cls.objects.filter(published=True,archived=False,donem=donem, bolum=bolum):
+            for j,ogrenci in enumerate(etkinlik.sinav_ogrenci_listesi()):
+                etkinlik.Ogrenciler.add(ogrenci = ogrenci,room = random.choice(etkinlik.SinavYerleri).room)
 
     @classmethod
     def sube_sinav_listesi(cls, sube, archived=False, donem=None):
