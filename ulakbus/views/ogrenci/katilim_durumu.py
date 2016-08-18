@@ -6,17 +6,13 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from collections import OrderedDict
-
-from pyoko.exceptions import ObjectDoesNotExist
 
 from pyoko import ListNode
-from ulakbus.models import Sube, OgrenciDersi, DersKatilimi
-
-from zengine.forms import fields
+from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.lib.view_helpers import prepare_choices_for_model
-
+from ulakbus.models import Sube, OgrenciDersi, DersKatilimi
 from zengine import forms
+from zengine.forms import fields
 from zengine.views.crud import CrudView
 
 __author__ = 'Ali Riza Keles'
@@ -25,21 +21,57 @@ __author__ = 'Ali Riza Keles'
 class DevamsizlikForm(forms.JsonForm):
     class Meta:
         inline_edit = ['katilim_durumu', 'aciklama']
+        title = "Ders Seçim Formu"
 
     class Ogrenciler(ListNode):
-        ogrenci_no = fields.String('No')
+        ogrenci_no = fields.String('Öğrenci No')
         ad_soyad = fields.String('Ad Soyad')
         katilim_durumu = fields.Integer('Katılım Durumu')
         aciklama = fields.String('Açıklama')
         ogrenci_key = fields.String('ogrenci_key', hidden=True)
-        ders_key = fields.String('ders_key', hidden=True)
+        sube_key = fields.String('ders_key', hidden=True)
+
+
+class OnizlemeForm(forms.JsonForm):
+    class Meta:
+        title = "Katılım Durumu Bilgileri Önizleme Ekranı"
+
+    class Ogrenciler(ListNode):
+        ogrenci_no = fields.String('Öğrenci No')
+        ad_soyad = fields.String('Ad Soyad')
+        katilim_durumu = fields.Integer('Katılım Durumu')
+        aciklama = fields.String('Açıklama')
+        ogrenci_key = fields.String('ogrenci_key', hidden=True)
+        sube_key = fields.String('ders_key', hidden=True)
 
 
 class KatilimDurumu(CrudView):
-    """Okutman Not Girişi
+    """ Ders Katılım Durumu
 
     Okutmanların öğrenci devamsızlıklarını sisteme girebilmesini
-    sağlayan workflowa ait metdodları barındıran sınıftır.
+    sağlayan workflowa ait metotları barındıran sınıftır.
+
+    Bu iş akışı 5 adımdan oluşur.
+
+    Sube seç:
+    Okutmanın kayıtlı olduğu şubelerden biri seçilir.
+
+    Katılım Durumu Formu:
+    Şubeye kayıtlı öğrencilerden bir form oluşturur. Yerinde düzenleme
+    ile öğrenci devamsızlıkları girilir.
+
+    Kontrol:
+    Önceki adımda forma girilen bilgilerin doğruluğunun kontrol edilmesi
+    için bilgileri bir tablo şeklinde ekrana getirir.
+
+    Kaydet:
+    Doğruluğu onaylanan bilgileri kaydeder.
+
+    Bilgi Ver:
+    Yapılan işlemin başarıyla sonuçlandığı ekrana basar.
+
+
+
 
     """
 
@@ -47,17 +79,23 @@ class KatilimDurumu(CrudView):
         model = "DersKatilimi"
 
     def sube_sec(self):
-        """Sube seçim adımına karşılık gelen metod."""
-        _form = forms.JsonForm(current=self.current, title="Ders Seçim Formu")
+        """
+        Okutmanın kayıtlı olduğu şubelerden biri seçilir.
+
+        """
+        _form = forms.JsonForm(current=self.current, title="Şube Seçiniz.")
         _form.sube = fields.Integer("Sube Seçiniz",
                                     choices=prepare_choices_for_model(Sube,
                                                                       okutman_id=self.get_okutman_key))
-        _form.sec = fields.Button("Seç", cmd="Ders Şubesi Seçin")
+        _form.sec = fields.Button("Seç")
         self.form_out(_form)
 
     def katilim_durumu(self):
-        """Öğrencileri listesinden bir form oluşturur. Yerinde düzenleme
-        ile öğrenci devamsızlıkları girilir."""
+        """
+        Seçile şubeye ait öğrencilerden  bir form oluşturur. Yerinde düzenleme
+        ile öğrencilerin devamsızlıkları girilir.
+
+        """
 
         _form = DevamsizlikForm(current=self.current, title="Ders Katılımı Giriş Formu")
 
@@ -67,74 +105,77 @@ class KatilimDurumu(CrudView):
         except KeyError:
             sube_key = self.current.task_data["sube_key"]
 
-        ogrenciler = OgrenciDersi.objects.filter(sube_id=sube_key)
-
-        for ogr in ogrenciler:
+        ogrenci_dersleri = OgrenciDersi.objects.filter(sube_id=sube_key)
+        for ogrenci_dersi in ogrenci_dersleri:
             try:
-                katilim = DersKatilimi.objects.get(ders_id=sube_key, ogrenci=ogr.ogrenci)
-                katilim_durumu = katilim.katilim_durumu
+                derse_katilim = DersKatilimi.objects.get(sube_id=sube_key,
+                                                         ogrenci=ogrenci_dersi.ogrenci)
+                katilim_durumu = derse_katilim.katilim_durumu
+                aciklama = derse_katilim.aciklama
             except ObjectDoesNotExist:
                 katilim_durumu = ""
+                aciklama = ""
 
-            _form.Ogrenciler(ad_soyad='%s %s' % (ogr.ogrenci.ad, ogr.ogrenci.soyad),
-                             ogrenci_no=ogr.ogrenci_program.ogrenci_no,
-                             katilim_durumu=katilim_durumu, ogrenci_key=ogr.ogrenci.key,
-                             ders_key=ogr.sube.key)
+            _form.Ogrenciler(ad_soyad='%s %s' % (ogrenci_dersi.ogrenci.ad, ogrenci_dersi.ogrenci.soyad),
+                             ogrenci_no=ogrenci_dersi.ogrenci_program.ogrenci_no,
+                             katilim_durumu=katilim_durumu, ogrenci_key=ogrenci_dersi.ogrenci.key,
+                             sube_key=ogrenci_dersi.sube.key, aciklama=aciklama)
 
-        _form.kaydet = fields.Button("Önizleme", cmd="kontrol")
+        _form.onizleme = fields.Button("Önizleme", cmd="kontrol")
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
 
     def kontrol(self):
-        """Önceki adımda forma girilen bilgilerin doğruluğunun
+        """
+        Önceki adımda forma girilen bilgilerin doğruluğunun
         kontrol edilmesi için bilgileri bir tablo şeklinde ekrana
-        getirir."""
+        getirir.
+
+        """
 
         ogrenci_katilim_durumlari = self.current.input['form']['Ogrenciler']
-        self.current.task_data["katilim_durumlari"] = ogrenci_katilim_durumlari
-
-        katilim_durumlari = []
-        for ogr in ogrenci_katilim_durumlari:
-            katilim_durumu = OrderedDict({})
-            katilim_durumu['Öğrenci No'] = ogr['ogrenci_no']
-            katilim_durumu['Adı Soyadı'] = ogr['ad_soyad']
-            katilim_durumu['Değerlendirme'] = ogr['katilim_durumu']
-            katilim_durumu['ogrenci_key'] = ogr['ogrenci_key']
-            katilim_durumu['ders_key'] = ogr['ders_key']
-            katilim_durumlari.append(katilim_durumu)
-
-        _form = forms.JsonForm(current=self.current,
-                               title="Katılım Durumu Bilgileri Önizleme Ekranı")
-        _form.duzenle = fields.Button("Geri Dön ve Düzenle", cmd="katilim_durumu",
-                                      flow="katilim_durumu")
-        _form.kaydet = fields.Button("Kaydet", cmd="kaydet", flow="end")
-
-        self.current.output['object'] = {
-            "type": "table-multiRow",
-            "fields": katilim_durumlari,
-            "actions": False
-        }
-
+        _form = OnizlemeForm(current=self.current)
+        _form.duzenle = fields.Button("Geri Dön ve Düzenle", flow="katilim_durumu")
+        for katilim_durumu in ogrenci_katilim_durumlari:
+            _form.Ogrenciler(ad_soyad=katilim_durumu['ad_soyad'],
+                             ogrenci_no=katilim_durumu['ogrenci_no'],
+                             katilim_durumu=katilim_durumu['katilim_durumu'], ogrenci_key=katilim_durumu['ogrenci_key'],
+                             sube_key=katilim_durumu['sube_key'], aciklama=katilim_durumu['aciklama'])
+        _form.kaydet = fields.Button("Kaydet")
+        self.current.output["meta"]["allow_actions"] = False
         self.form_out(_form)
 
     def kaydet(self):
-        """Doğruluğu onaylanan bilgileri kaydeder."""
-        for katilim in self.current.task_data['katilim_durumlari']:
+        """
+        Doğruluğu onaylanan bilgileri kaydeder.
+
+        """
+        for katilim in self.current.input['form']['Ogrenciler']:
             ders_katilimi, is_new = DersKatilimi.objects.get_or_create(
-                ogrenci_id=katilim['ogrenci_key'], ders_id=katilim['ders_key'])
+                ogrenci_id=katilim['ogrenci_key'], sube_id=katilim['sube_key'])
             ders_katilimi.katilim_durumu = katilim['katilim_durumu']
+            ders_katilimi.aciklama = katilim['aciklama']
             ders_katilimi.save()
 
     def bilgi_ver(self):
-        """Yapılan işlem hakkında bilgi verir."""
+        """
+        Yapılan işlemin başarıyla sonuçlandığı gösterir.
+
+        """
         sube = Sube.objects.get(self.current.task_data['sube_key'])
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Devamsızlıklar Kaydedildi',
-            "msg": '%s dersine ait ogrenci katilim bilgileri  kaydedildi' % sube.ders.ad}
+            "msg": '%s dersine ait öğrencilerin katılım bilgileri  başarıyla kaydedildi' % sube.ders.ad}
 
     @property
     def get_okutman_key(self):
-        """Harici okutman ve okutman kayıt key'lerinin ayrımını sağlayan method.
         """
+        Harici okutman ve okutman kayıt key'lerinin ayrımını sağlayan metot.
+
+        Returns:
+            Okutman nesnesinin keyini
+
+        """
+
         return self.current.user.personel.okutman.key if self.current.user.personel.key else self.current.user.harici_okutman.okutman.key

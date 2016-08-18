@@ -26,6 +26,9 @@ AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
 ROLE_MODEL = 'ulakbus.models.auth.Role'
+UNIT_MODEL = 'ulakbus.models.auth.Unit'
+ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
+
 # # left blank to use StreamHandler aka stderr
 # LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
 #
@@ -163,7 +166,6 @@ VIEW_URLS.update({
     # ('falcon URI template', 'python path to view method/class')
     'ogrenci_ara': 'ulakbus.views.system.SearchStudent',
     'personel_ara': 'ulakbus.views.system.SearchPerson',
-    'notify': 'ulakbus.views.system.Notification',
     'get_current_user': 'ulakbus.views.system.GetCurrentUser',
     'dashboard': 'ulakbus.views.system.UlakbusMenu',
     'menu': 'ulakbus.views.system.UlakbusMenu',
@@ -203,7 +205,7 @@ S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
 S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
 S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
 S3_PUBLIC_URL = os.environ.get('S3_PUBLIC_URL')
-S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '8080')
+S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '80')
 S3_BUCKET_NAME = 'ulakbus'
 
 QUICK_MENU = [
@@ -228,3 +230,19 @@ SICIL_PREFIX = "KON"
 
 #: These models will not flushed when running tests
 TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'
+
+#: User search method of messaging subsystem will work on these fields
+MESSAGING_USER_SEARCH_FIELDS = ['name', 'surname']
+
+#: Unit search method of messaging subsystem will work on these fields
+MESSAGING_UNIT_SEARCH_FIELDS = ['name',]
+
+MESSAGES = {
+    'lane_change_invite_title': 'Etkinlik gerekiyor!',
+    'lane_change_invite_body': 'Bir iş akışı sizin etkinliğinizi gerektiriyor, '
+                               'lütfen aşağıdaki bağlantıya tıklayarak akışa katılın:',
+    'lane_change_message_title': 'Teşekkürler!',
+    'lane_change_message_body': 'Bu iş akışında şuan için gerekli adımları tamamladınız. '
+                                'İlgili kişiler, iş akışına katılmaları için haberdar edildiler.',
+
+}

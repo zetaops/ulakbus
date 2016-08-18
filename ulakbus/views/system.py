@@ -60,28 +60,6 @@ def get_random_msg():
     return msgs[random.randrange(0, len(msgs))]
 
 
-class Notification(BaseView):
-    def __init__(self, current):
-        super(Notification, self).__init__(current)
-
-        # if 'read' in current.input:
-        #     self.mark_as_read()
-        self.output['notifications'] = []
-        msg_id_to_delete = current.input.get('id')
-        notifies = list(self.current.msg_cache.get_all())
-        for ntf in notifies:
-            if ntf['id'] == msg_id_to_delete:
-                self.current.msg_cache.remove_item(ntf)
-            else:
-                self.output['notifications'].append(ntf)
-        self.output['cmd'] = 'notification'
-
-    # def mark_as_read(self):
-    #     read_messages = self.current.input['read']
-    #     for msg in read_messages:
-    #         self.current.msg_cache.remove_item(msg)
-
-
 class GetCurrentUser(BaseView):
     def __init__(self, current):
         super(GetCurrentUser, self).__init__(current)
