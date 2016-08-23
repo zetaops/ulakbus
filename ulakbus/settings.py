@@ -68,7 +68,7 @@ OBJECT_MENU = {
         {'name': 'Campus', 'category': 'Genel'},
         {'name': 'Building', 'category': 'Genel'},
         {'name': 'Room', 'category': 'Genel'},
-        {'name': 'AkademikTakvim', 'category': 'Genel'},
+        # {'name': 'AkademikTakvim', 'category': 'Genel'},
         {'name': 'OgrenciProgram', 'category': 'Genel'},
     ],
     'personel': [
