@@ -33,9 +33,7 @@ class Search(BaseView):
             tckn = int(self.query.strip())
             objects = self.SEARCH_ON.objects.filter(tckn__startswith=tckn)
         except ValueError:
-            q = self.query.replace(' ', '\ ')
-            # objects = self.SEARCH_ON.objects.raw("ad:*%s* OR soyad:*%s*" % (q, q))
-            objects = self.SEARCH_ON.objects.search_on('ad', 'soyad', contains=q)
+            objects = self.SEARCH_ON.objects.search_on('ad', 'soyad', contains=self.query)
         for o in objects:
             self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
 
