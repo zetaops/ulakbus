@@ -10,9 +10,9 @@
 from collections import OrderedDict
 
 from ulakbus.models import DersEtkinligi, Room
-from ulakbus.models.ders_sinav_programi import HAFTA
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
+from ulakbus.lib.date_time_helper import map_ders_etkinlik_hafta_gunleri, HAFTA
 
 
 class DerslikSecimFormu(JsonForm):
@@ -28,7 +28,13 @@ class DerslikDersProgrami(CrudView):
     Derslik Ders Programi,bir bölümün sahip olduğu dersliklere ait ders programlarını gösterir ve
     kullanıcının ders programlarını yazdırabilmesine olanak sağlar.
 
-    Bu iş akışı 2 adımdan oluşur.
+    Bu iş akışı 4 adımdan oluşur.
+
+    Ders Etkinliklerini Kontrol Et:
+    Yayınlanmış ders etkinlikleri var mı yok mu diye kontrol eder.
+
+    Bilgi Ver:
+    Yayınlanmış ders etkinlikleri yok ise ekrana bilgi mesajı basılır.
 
     Derslik Seç:
     Derslikler listelenir.
@@ -40,13 +46,30 @@ class DerslikDersProgrami(CrudView):
     class Meta:
         model = 'DersEtkinligi'
 
+    def ders_etkinliklerini_kontrol_et(self):
+        """
+        Yayınlanmış ders etkinlikleri var mı yok mu diye kontrol eder.
+
+        """
+        self.current.task_data['yayinlanmis_ders_varsa'] = len(DersEtkinligi.objects.filter(published=True))
+
+    def bilgi_ver(self):
+        """
+        Yayınlanmış ders etkinlikleri yok ise  ekrana bilgi mesajı basılır.
+
+        """
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": 'Yayınlanmamış Dersler',
+            'msg': "Yayınlanmış dersler bulunmamaktadır."
+        }
+
     def derslik_sec(self):
         """
         Derslikler listelenir.
 
         """
         _form = DerslikSecimFormu(title='Derslik Seçiniz', current=self.current)
-        ders_etkinlikleri = DersEtkinligi.objects.filter(solved=True)
+        ders_etkinlikleri = DersEtkinligi.objects.filter(published=True)
         _choices = [(_etkinlik.room.key, _etkinlik.room.__unicode__()) for _etkinlik in ders_etkinlikleri]
         _form.derslik = fields.Integer(choices=_choices)
         self.form_out(_form)
@@ -57,40 +80,23 @@ class DerslikDersProgrami(CrudView):
 
         """
         room = Room.objects.get(self.current.input['form']['derslik'])
-
-        def hafta_gun_olustur(hafta):
-            hafta_dict = {}
-            for i in range(len(hafta)):
-                hafta_dict[hafta[i][0]] = hafta[i][1]
-
-            return hafta_dict
-
-        def ders_etkinlik_olustur(ders_etkinlikleri):
-            ders_etkinlik = {}
-            for d_e in ders_etkinlikleri:
-                if d_e.gun in ders_etkinlik:
-                    ders_etkinlik[d_e.gun].append(d_e)
-                else:
-                    ders_etkinlik[d_e.gun] = [d_e]
-            return ders_etkinlik
-
-        ders_etkinlikleri = ders_etkinlik_olustur(DersEtkinligi.objects.filter(room=room))
-        self.output['objects'] = [['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']]
-        hafta_dict = hafta_gun_olustur(HAFTA)
-        for i in range(max(map(len, ders_etkinlikleri.values()))):
+        hafta = dict(HAFTA)
+        self.output['objects'] = [hafta]
+        d_etkinlikleri = DersEtkinligi.objects.filter(room=room)
+        ders_etkinlikleri = map_ders_etkinlik_hafta_gunleri(d_etkinlikleri.order_by('gun', 'baslangic_saat', 'bitis_saat','baslangic_dakika','bitis_dakika'))
+        # Bir güne ait maximum etkinlik sayısı.
+        max_etkinlik = max(map(len, ders_etkinlikleri.values()))
+        for i in range(max_etkinlik):
             ders_etkinlikleri_dict = OrderedDict({})
-            for hafta_gun in hafta_dict.keys():
+            for hafta_gun in hafta.keys():
                 if hafta_gun in ders_etkinlikleri:
                     try:
                         etkinlik = ders_etkinlikleri[hafta_gun][i]
-                        baslangic_saati = "**%s**" % etkinlik.baslangic_saat + ':' + "**%s**" % etkinlik.baslangic_dakika
-                        bitis_saati = "**%s**" % etkinlik.bitis_saat + ':' "**%s**" % etkinlik.bitis_dakika
-                        ders_etkinlikleri_dict[hafta_dict[hafta_gun]] = baslangic_saati + ' - ' + bitis_saati + ' ' + \
-                                                                        etkinlik.sube.ders_adi
+                        ders_etkinlikleri_dict[hafta[hafta_gun]] = etkinlik
                     except IndexError:
-                        ders_etkinlikleri_dict[hafta_dict[hafta_gun]] = ""
+                        ders_etkinlikleri_dict[hafta[hafta_gun]] = ""
                 else:
-                    ders_etkinlikleri_dict[hafta_dict[hafta_gun]] = ""
+                    ders_etkinlikleri_dict[hafta[hafta_gun]] = ""
             item = {
                 "type": "table-multiRow",
                 "fields": ders_etkinlikleri_dict,

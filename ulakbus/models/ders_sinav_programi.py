@@ -154,9 +154,9 @@ class DersEtkinligi(Model):
         self.save()
 
     def __unicode__(self):
-        return '%s - %s - %s:%s|%s:%s - %s' % (
+        return '%s - %s - %s:%s|%s:%s - %s|%s' % (
             self.room.name, self.gun, self.baslangic_saat, self.baslangic_dakika,
-            self.bitis_saat, self.bitis_dakika, self.okutman)
+            self.bitis_saat, self.bitis_dakika, self.okutman, self.sube.ders_adi)
 
 
 class SinavEtkinligi(Model):

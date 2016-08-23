@@ -27,14 +27,17 @@ class TestCase(BaseTestCase):
         user = User.objects.get(username="ders_programi_koordinatoru_1")
         self.prepare_client("/derslik_ders_programlari", user=user)
         resp = self.client.post()
-        ders_etkinlikleri = DersEtkinligi.objects.filter(solved=True)
-        derslikler = [etkinlik.room for etkinlik in ders_etkinlikleri]
-        assert len(resp.json['forms']['form'][2]['titleMap']) == len(derslikler)
-        resp = self.client.post(form={"ileri": 1, "derslik": "JlPb05QuhqMju6pEFNSPZwWgAxr"})
-        num_of_ders_etkinlikleri = DersEtkinligi.objects.filter(room_id="JlPb05QuhqMju6pEFNSPZwWgAxr")
-        count_of_ders_etkinlikleri = 0
-        for i in range(1, len(resp.json['objects'])):
-            for day in resp.json['objects'][i]['fields']:
-                if resp.json['objects'][i]['fields'][day]:
-                    count_of_ders_etkinlikleri += 1
-        assert len(num_of_ders_etkinlikleri) == count_of_ders_etkinlikleri
+        if self.client.current.task_data['yayinlanmis_ders_varsa']:
+            ders_etkinlikleri = DersEtkinligi.objects.filter(published=True)
+            derslikler = [etkinlik.room for etkinlik in ders_etkinlikleri]
+            assert len(resp.json['forms']['form'][2]['titleMap']) == len(derslikler)
+            resp = self.client.post(form={"ileri": 1, "derslik": "JlPb05QuhqMju6pEFNSPZwWgAxr"})
+            num_of_ders_etkinlikleri = DersEtkinligi.objects.filter(room_id="JlPb05QuhqMju6pEFNSPZwWgAxr")
+            count_of_ders_etkinlikleri = 0
+            for i in range(1, len(resp.json['objects'])):
+                for day in resp.json['objects'][i]['fields']:
+                    if resp.json['objects'][i]['fields'][day]:
+                        count_of_ders_etkinlikleri += 1
+            assert len(num_of_ders_etkinlikleri) == count_of_ders_etkinlikleri
+        else:
+            assert 'msgbox' in resp.json

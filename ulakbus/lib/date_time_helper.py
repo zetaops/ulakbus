@@ -6,6 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from collections import defaultdict
 
 __author__ = 'Ali Riza Keles'
 
@@ -57,10 +58,20 @@ def map_sinav_etkinlik_hafta_gunleri(sinavlar):
     Returns:
         (dict)
     """
-    r = {}
+    r = defaultdict(list)
     for e in sinavlar:
         weekday = e.tarih.isoweekday()
-        etkinlik_listesi = r.get(weekday, [])
+        etkinlik_listesi = r[weekday]
         etkinlik_listesi.append(e.__unicode__())
         r[weekday] = etkinlik_listesi
     return r
+
+
+def map_ders_etkinlik_hafta_gunleri(ders_etkinlikleri):
+    d_etkinlikleri = defaultdict(list)
+    for ders in ders_etkinlikleri:
+        weekday = ders.gun
+        ders_etkinlikleri = d_etkinlikleri[weekday]
+        ders_etkinlikleri.append(ders.__unicode__())
+        d_etkinlikleri[weekday] = ders_etkinlikleri
+    return d_etkinlikleri
