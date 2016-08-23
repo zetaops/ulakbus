@@ -160,7 +160,7 @@ class DersEtkinligi(Model):
             self.bitis_saat, self.bitis_dakika, self.okutman)
 
 
-class SinavEtkinligi(Model):
+class   SinavEtkinligi(Model):
     class Meta:
         verbose_name = 'Sınav Etkinliği'
         search_field = ['bolum', 'ders', 'sube', 'donem']
@@ -179,14 +179,23 @@ class SinavEtkinligi(Model):
     # sistem servisiyle sinavlarin ardindan True yapilir.
     archived = fields.Boolean('Arşivlenmiş', default=False, index=True)
 
-    tarih = fields.DateTime('Sınav Tarihi', index=True)
+    tarih = fields.DateTime('Sınav Tarihi')
 
     class SinavYerleri(ListNode):
-        room = Room('Sınav Yeri', index=True)
+        room = Room('Sınav Yeri')
 
     class Ogrenciler(ListNode):
-        ogrenci = Ogrenci('Öğrenci', index = True)
-        room = Room('Sınav Yeri', index=True)
+        ogrenci = Ogrenci('Öğrenci')
+        room = Room('Sınav Yeri')
+
+    @classmethod
+    def aktif_bolum_sinav_etkinlik_listesi(cls, donem, bolum):
+        """
+        Verilen bölümün aktif yayınlanmış sınav etkinliklerinin
+        listesini döndürür.
+
+        """
+        return [e for e in cls.objects.filter(published=True, archived=False, donem=donem, bolum=bolum)]
 
     def sinav_ogrenci_listesi(self):
         """
@@ -194,13 +203,68 @@ class SinavEtkinligi(Model):
         listesini döndürür.
 
         """
-        return [e.ogrenci for e in OgrenciDersi.objects.filter(sube=self.sube,donem =self.donem)]
+
+        return [e.ogrenci for e in OgrenciDersi.objects.filter(sube=self.sube, donem=self.donem)]
+
+    def doluluk_orani_hesapla(self):
+        """
+        Bir sınav etkinliğine kayıtlı olan öğrencilerin sayısı ile
+        etkinliğin yapılacak sınav yerlerinin toplam kontenjan sayısının
+        birbirine bölünmesi ile elde edilen oranı döndürür. Bu oran öğrencileri
+        odalara dengeli şekilde dağıtmak için kullanılacaktır.
+
+        """
+        toplam_kontenjan = 0
+        for sinav_yeri in self.SinavYerleri:
+            toplam_kontenjan += sinav_yeri.room.capacity
+        doluluk_orani = len(self.Ogrenciler) / float(toplam_kontenjan)
+
+        return doluluk_orani
+
+
+    def ogrencileri_odalara_dagit(self,doluluk_orani):
+        """
+        Öğrencileri sınavın yapılacağı odalara doluluk oranını
+        göz önüne alarak dengeli bir şekilde dağıtır.
+
+        """
+        from math import ceil
+        random.shuffle(self.Ogrenciler)
+        j = 0
+        for sinav_yeri in self.SinavYerleri:
+            temp = j + int(ceil(sinav_yeri.room.capacity * doluluk_orani))
+            i = j
+            j = temp
+            for ogrenci in self.Ogrenciler[i:j]:
+                ogrenci.room = sinav_yeri.room
+
+        self.save()
 
     @classmethod
-    def ogrencileri_odalara_rastgele_ata(cls,bolum,donem = Donem.guncel_donem()):
-        for etkinlik in cls.objects.filter(published=True,archived=False,donem=donem, bolum=bolum):
-            for j,ogrenci in enumerate(etkinlik.sinav_ogrenci_listesi()):
-                etkinlik.Ogrenciler.add(ogrenci = ogrenci,room = random.choice(etkinlik.SinavYerleri).room)
+    def ogrencileri_odalara_rastgele_ata(cls,bolum):
+        """
+        Bir bölümün yayınlanmış sınav programındaki her bir sınav etkinliğine
+        katılacak olan öğrencileri, sınavın yapılabilineceği odalara rastgele
+        atar, bu atamayı yaparken kontenjan sınırını aşmamasına dikkat edilir.
+
+        """
+        donem = Donem.guncel_donem()
+        aktif_sinav_etkinlikleri = cls.aktif_bolum_sinav_etkinlik_listesi(donem,bolum)
+        for etkinlik in aktif_sinav_etkinlikleri:
+            doluluk_orani = etkinlik.doluluk_orani_hesapla()
+            etkinlik.ogrencileri_odalara_dagit(doluluk_orani)
+
+    def ogrenci_sinav_oda_getir(self, ogrenci):
+        """
+        Verilen öğrencinin sınava gireceği oda bilgisini döndürür.
+
+        """
+        for ogrenci_oda in self.Ogrenciler:
+            if ogrenci_oda.ogrenci == ogrenci:
+                break
+
+        return ogrenci_oda.room
+
 
     @classmethod
     def sube_sinav_listesi(cls, sube, archived=False, donem=None):
