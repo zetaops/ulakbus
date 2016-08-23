@@ -63,6 +63,7 @@ class SinavProgramiGoruntule(CrudView):
         """
 
         sinav_etkinlikleri = self.current.task_data['sinav_etkinlikleri']
+        donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
 
         self.output['objects'] = [GUN_LISTESI]
         hafta = dict(HAFTA)
@@ -96,6 +97,6 @@ class SinavProgramiGoruntule(CrudView):
 
         _form = JsonForm(current=self.current)
         _form.title = "%s / %s / Yarıyıl Sınav Programı" % (
-            self.current.task_data['user_ad'], Donem.guncel_donem().ad)
+            self.current.task_data['user_ad'], donem.ad)
 
         self.form_out(_form)

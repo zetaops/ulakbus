@@ -336,10 +336,10 @@ class DanismanAtama(CrudView):
         doldurulur.
 
         """
-        guncel_donem = Donem.objects.filter(guncel=True)[0]
+        donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
         ogrenci_id = self.current.input['id']
         self.current.task_data['ogrenci_id'] = ogrenci_id
-        self.current.task_data['donem_id'] = guncel_donem.key
+        self.current.task_data['donem_id'] = donem.key
 
         _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
         _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
@@ -403,10 +403,10 @@ class OgrenciMezuniyet(CrudView):
         doldurulur.
 
         """
-        guncel_donem = Donem.objects.filter(guncel=True)[0]
+        donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
         ogrenci_id = self.current.input['id']
         self.current.task_data['ogrenci_id'] = ogrenci_id
-        self.current.task_data['donem_id'] = guncel_donem.key
+        self.current.task_data['donem_id'] = donem.key
 
         _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
         _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
@@ -655,9 +655,10 @@ class DersSecimForm(forms.JsonForm):
 
 
 def ders_arama(current):
+    donem = Donem.tarihe_gore_donem(current.wfinstance.task.start_date)
     ogrenci = Ogrenci.objects.get(current.session['ogrenci_id'])
     mevcut_subeler = []
-    for od in OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=Donem.guncel_donem()):
+    for od in OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=donem):
         mevcut_subeler.append(od.sube)
 
     q = current.input.get('query')
@@ -725,9 +726,9 @@ class OgrenciDersAtama(CrudView):
             ogrenci_dersi_lst = []
             program_key = self.input['form']['program']
             self.current.task_data['program_key'] = program_key
-            guncel_donem = Donem.guncel_donem()
+            donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
             ogrenci_program = OgrenciProgram.objects.get(program_key)
-            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program, donem=guncel_donem)
+            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program, donem=donem)
             _form = DersSecimForm(current=self.current, title="Ders Seçiniz")
             for ogrenci_dersi in ogrenci_dersleri:
                 ogrenci_dersi_lst.append(ogrenci_dersi.key)

@@ -66,8 +66,8 @@ class AkademikTakvimView(CrudView):
         """
         self.current.output['client_cmd'] = ['show', ]
         etkinlikler = []
-
-        ogretim_yili = OgretimYili.objects.get(yil=Donem.guncel_donem().baslangic_tarihi.year)
+        donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
+        ogretim_yili = OgretimYili.objects.get(yil=donem.baslangic_tarihi.year)
         akademik_takvim = get_akademik_takvim(self.current.role.unit, ogretim_yili)
 
         for e in Takvim.objects.filter(akademik_takvim=akademik_takvim):

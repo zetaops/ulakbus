@@ -94,7 +94,7 @@ class DonemDanismanAtama(CrudView):
         unit = Unit.objects.get(self.current.input['form']['program'])
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
         okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
-        donem = Donem.guncel_donem()
+        donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
         _form = DonemDanismanListForm(current=self, title="Okutman Seçiniz")
 
         for okt in okutmanlar:

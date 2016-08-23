@@ -19,15 +19,16 @@ from zengine.views.crud import CrudView
 
 class SinavProgramiYap(CrudView):
     def sinav_etkinligi_sayisi(self):
+        donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
         sinav_etkinligi_count = SinavEtkinligi.objects.filter(bolum=self.current.role.unit,
-                                                              donem=Donem.guncel_donem()).count()
+                                                              donem=donem).count()
 
         solved_count = SinavEtkinligi.objects.filter(bolum=self.current.role.unit,
-                                                     donem=Donem.guncel_donem(),
+                                                     donem=donem,
                                                      solved=True).count()
 
         published_count = SinavEtkinligi.objects.filter(bolum=self.current.role.unit, published=True,
-                                                        donem=Donem.guncel_donem()).count()
+                                                        donem=donem).count()
 
         return sinav_etkinligi_count, solved_count, published_count
 

@@ -360,6 +360,7 @@ class DersSubelendirme(CrudView):
         sb = self.input['form']['Subeler']
         ders = self.current.task_data['ders_key']
         mevcut_subeler = Sube.objects.filter(ders_id=ders)
+        donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
         # self.current.task_data['just_created'] = []
         with BlockSave(Sube):
             for s in sb:
@@ -370,7 +371,7 @@ class DersSubelendirme(CrudView):
                 sube.kontenjan = s['kontenjan']
                 sube.dis_kontenjan = s['dis_kontenjan']
                 sube.ad = s['ad']
-                sube.donem = Donem.guncel_donem()
+                sube.donem = donem
                 sube.save()
             # if is_new:
             #     self.current.task_data['just_created'].append((ders, sube.key))
@@ -666,7 +667,7 @@ class NotGirisi(CrudView):
 
         """
 
-        term = Donem.objects.filter(guncel=True)[0]
+        donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
         sinav_key = self.current.task_data["sinav_key"]
         sube_key = self.current.task_data["sube"]
 
@@ -686,8 +687,8 @@ class NotGirisi(CrudView):
                 ogr_not.puan = ogrenci_not['degerlendirme']
                 ogr_not.aciklama = ogrenci_not['aciklama']
                 ogr_not.ogrenci_no = ogrenci_not['ogrenci_no']
-                ogr_not.donem = '%s' % term.ad
-                ogr_not.yil = term.baslangic_tarihi.year
+                ogr_not.donem = '%s' % donem.ad
+                ogr_not.yil = donem.baslangic_tarihi.year
                 ogr_not.ogretim_elemani = self.get_okutman_name_surname
                 ogr_not.ders = ders
                 ogr_not.sinav = sinav
