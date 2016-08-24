@@ -48,9 +48,12 @@ class TestCase(BaseTestCase):
         time.sleep(1)
         assert ders.just_created
         sube = Sube.objects.get(ders_id=ders.key)
+
         assert sube.ad == 'Varsayılan Şube'
         assert sube.kontenjan == 30
         assert sube.dis_kontenjan == 5
         assert len(Channel.objects) == channel_sayisi + 1
+        assert Channel.objects.get(name = "%s %s" % (ders.kod, sube.ad))
+
         ders.delete()
         sube.delete()

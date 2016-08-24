@@ -542,11 +542,7 @@ class Sube(Model):
         channel.name = "%s %s" % (self.ders.kod, self.ad)
         channel.typ = 15
         channel.description = "%s Dersi %s Şubesi Mesajlaşma Kanalı" % (self.ders.ad, self.ad)
-        try:
-            personel = Personel.objects.get(okutman=self.okutman)
-            channel.owner = personel.user
-        except:
-            pass
+        channel.owner = self.okutman.personel.user
         channel.save()
 
     def post_creation(self):
