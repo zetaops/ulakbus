@@ -22,8 +22,9 @@ guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
 
 # Guncel donem ve 5 onceki yili tuple halinde YIL listesinde tutar.
-yil_secenekleri = [(yil, yil) for yil in range(guncel_yil, guncel_yil - 5)]
-
+yillar = range(guncel_yil - 5,guncel_yil+1)
+yillar.sort(reverse = True)
+yil_secenekleri = [(yil, yil) for yil in yillar]
 
 class TarihForm(JsonForm):
     """
@@ -31,7 +32,7 @@ class TarihForm(JsonForm):
     kullanılan form.
     """
 
-    yil_sec = fields.String('Yıl Seçiniz', choices=yil_secenekleri, default=0)
+    yil_sec = fields.String('Yıl Seçiniz', choices=yil_secenekleri, default=guncel_yil)
     ay_sec = fields.String('Ay Seçiniz', choices=AYLAR, default=guncel_ay)
 
 
@@ -53,8 +54,8 @@ class OkutmanListelemeForm(JsonForm):
 class PuantajFormu(JsonForm):
     class Meta:
         help_text = """
-                                     R: Resmi Tatil
-                                     İ: İzinli"""
+                     R: Resmi Tatil
+                     İ: İzinli"""
 
     pdf_sec = fields.Button("Pdf Çıkar")
 
@@ -135,7 +136,7 @@ class DersUcretiHesaplama(CrudView):
         okutmanlar = Okutman.objects.filter(birim_no=birim_no)
 
         for okutman in okutmanlar:
-            _form.OkutmanListesi(secim=True, okutman=okutman, key=okutman.key)
+            _form.OkutmanListesi(secim=True, okutman=okutman.__unicode__(), key=okutman.key)
 
         _form.sec = fields.Button("İlerle")
         self.form_out(_form)
@@ -151,9 +152,9 @@ class DersUcretiHesaplama(CrudView):
                 secilen_okutmanlar.append(okutman_secim)
 
         self.current.task_data["secilen_okutmanlar"] = secilen_okutmanlar
-        self.current.task_data["title"] = self.current.user.role.unit.name.upper()
+        self.current.task_data["title"] = self.current.role.unit.name.upper()
 
-        self.current.task_data["okutman_kontrol"] = True if secilen_okutmanlar > 0 else False
+        self.current.task_data["okutman_kontrol"] = True if secilen_okutmanlar else False
 
     def okutman_secim_uyari(self):
 
@@ -214,7 +215,9 @@ class DersUcretiHesaplama(CrudView):
         tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, yil, ay, birim_unit)
 
         table_head = ['Öğretim Elemanı']
-        table_head.append(['{0:3d}'.format(d) for d in range(1, ayin_son_gunu + 1)])
+        # table_head.append(['{0:3d}'.format(d) for d in range(1, ayin_son_gunu + 1)])
+        for gun in range(1, ayin_son_gunu+1):
+            table_head.append(gun)
         table_head.append('Toplam')
 
         self.output['objects'] = [table_head]
@@ -416,7 +419,6 @@ def okutman_aylik_plani(donem_list, ders_etkinlik_list, resmi_tatil_list, person
                 ders_saati += ders_etkinlik_list[j][hafta_gun]
 
     return okutman_aylik_plan, ders_saati
-
 
 def okutman_bilgileri_doldur(okutman, ayin_son_gunu, okutman_aylik_plan, ders_saati):
     okutman_bilgi_listesi = OrderedDict({})

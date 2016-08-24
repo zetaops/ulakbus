@@ -69,7 +69,7 @@ class TestCase(BaseTestCase):
                 donem_list = Donem.takvim_ayina_rastlayan_donemler(2016, 11)
                 assert len(donem_list) == 1
 
-                ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman, True)
+                ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman, False)
 
                 # Etkinlik olan günlerin etkinlik listede olduğu kontrol edilir.
                 for etkinlik in DersEtkinligi.objects.filter(donem=donem_list[0], okutman=okutman, ek_ders=False):

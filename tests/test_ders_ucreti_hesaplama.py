@@ -148,14 +148,14 @@ class TestCase(BaseTestCase):
 
                 # Ders ücreti hesaplama türü seçim ekranına gelmesi beklenir.
                 assert resp.json['forms']['schema'][
-                           "title"] == "Öğretim Görevlileri Puantaj Tablosu Hesaplama Türü Seçiniz"
+                           "title"] == "Puantaj Tablosu Hesaplama Türü Seçiniz"
 
                 resp = self.client.post(form={"ek_ders": 'null', "ders": 1})
 
                 for j,okutman in enumerate(okutman_listesi):
                     okutman = Okutman.objects.get(okutman['key'])
 
-                    ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman, True)
+                    ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman, False)
 
                     # Etkinlik olan günlerin etkinlik listede olduğu kontrol edilir.
                     for etkinlik in DersEtkinligi.objects.filter(donem=donem_list[0], okutman=okutman, ek_ders=False):
