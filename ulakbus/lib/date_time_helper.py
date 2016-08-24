@@ -68,21 +68,7 @@ def map_sinav_etkinlik_hafta_gunleri(sinavlar):
         r[weekday] = etkinlik_listesi
     return r
 
-def zaman_araligi(baslangic, bitis):
-    """
-    Verilen iki tarih arasinda kalan tarihleri
-    donduren method.
 
-    Args:
-        baslangic: Date 02.04.2016
-        bitis: Date 04.04.2016
-
-    Returns:
-        [02.04.2016,03.04.2016,04.04.2016]
-
-    """
-    for n in range(int((bitis - baslangic).days) + 1):
-        yield baslangic + timedelta(n)
 
 def resmi_tatil_gunleri_getir(birim_unit, yil, ay):
     from ulakbus.models.ogrenci import Takvim, Donem
@@ -102,6 +88,22 @@ def resmi_tatil_gunleri_getir(birim_unit, yil, ay):
         resmi_tatil_list.append(tatil_list)
 
     return resmi_tatil_list
+
+def zaman_araligi(baslangic, bitis):
+    """
+    Verilen iki tarih arasinda kalan tarihleri
+    donduren method.
+
+    Args:
+        baslangic: Date 02.04.2016
+        bitis: Date 04.04.2016
+
+    Returns:
+        [02.04.2016,03.04.2016,04.04.2016]
+
+    """
+    for n in range(int((bitis - baslangic).days) + 1):
+        yield baslangic + timedelta(n)
 
 def yil_ve_aya_gore_ilk_son_gun(yil,ay):
 
