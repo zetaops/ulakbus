@@ -8,7 +8,7 @@ from ulakbus.models import User, Okutman, Donem, Unit, DersEtkinligi
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.views.reports.ders_ucreti_hesaplama import ders_etkinligine_gore_tarih_araligi,\
     doneme_gore_okutman_etkinlikleri, okutman_aylik_plani
-from ulakbus.lib.date_time_helper import resmi_tatil_gunleri_getir, yil_ve_aya_gore_ilk_son_gun
+from ulakbus.lib.date_time_helper import resmi_tatil_gunleri_getir, yil_ve_aya_gore_ilk_ve_son_gun
 from ulakbus.lib.personel import personel_izin_gunlerini_getir
 from datetime import date
 
@@ -31,7 +31,7 @@ class TestCase(BaseTestCase):
                     #  ayı içeren dönem bulunmamaktadır. 'Dönem Bulunamadı' başlıklı
                     # hata mesajının çıkması beklenir.
 
-                    resp = self.client.post(form={"ay_sec": 5, "yil_sec": 1, "sec": 1})
+                    resp = self.client.post(form={"ay_sec": 5, "yil_sec": 2013, "sec": 1})
                     assert resp.json['forms']['schema']["title"] == "Dönem Bulunamadı"
 
                     if i == 0:
@@ -55,7 +55,7 @@ class TestCase(BaseTestCase):
                 # Geçerli bir dönemin bulunduğu tarih seçildiğinde, mutemetin
                 # işlem yaptığı birime ait öğretim görevlilerinin isimlerinin
                 # olduğu bir form gelmesi beklenir.
-                resp = self.client.post(form={"ay_sec": 11, "yil_sec": 0, "sec": 1})
+                resp = self.client.post(form={"ay_sec": 11, "yil_sec": 2016, "sec": 1})
                 assert resp.json['forms']['schema']["title"] == "Okutman Seçiniz"
 
                 # Ekrana gelen öğretim görevlisi sayısıyla veritabanındaki sayının
@@ -94,7 +94,7 @@ class TestCase(BaseTestCase):
 
             if loop == 2:
                 # Geçerli bir tarih ve öğretim görevlisi seçilmesi senaryosu.
-                resp = self.client.post(form={"ay_sec": 5, "yil_sec": 0, "sec": 1})
+                resp = self.client.post(form={"ay_sec": 5, "yil_sec": 2016, "sec": 1})
                 okutman_listesi = resp.json['forms']['model']["OkutmanListesi"]
 
                 for i in range(3):
@@ -168,7 +168,7 @@ class TestCase(BaseTestCase):
                                                      resmi_tatil_list, personel_izin_list,
                                                      tarih_araligi, 2016, 5)
 
-                    son_gun = yil_ve_aya_gore_ilk_son_gun(2016, 5)[1].day
+                    son_gun = yil_ve_aya_gore_ilk_ve_son_gun(2016, 5)[1].day
 
                     for i in range(son_gun):
                         if resp.json['objects'][j+1]['fields'][" %i" % (i + 1)] == ' ':

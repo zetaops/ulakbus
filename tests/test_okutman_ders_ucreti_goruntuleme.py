@@ -11,7 +11,7 @@ from ulakbus.views.reports.ders_ucreti_hesaplama import \
     doneme_gore_okutman_etkinlikleri,okutman_aylik_plani,\
     ders_etkinligine_gore_tarih_araligi
 from ulakbus.lib.date_time_helper import resmi_tatil_gunleri_getir,\
-    yil_ve_aya_gore_ilk_son_gun
+    yil_ve_aya_gore_ilk_ve_son_gun
 from datetime import date
 
 class TestCase(BaseTestCase):
@@ -30,7 +30,7 @@ class TestCase(BaseTestCase):
                     # 2016 yılı Mayıs ayı seçilir. Veritabanında seçilen yıl ve
                     #  ayı içeren dönem bulunmamaktadır. 'Dönem Bulunamadı' başlıklı
                     # hata mesajının çıkması beklenir.
-                    resp = self.client.post(form={"ay_sec": 5, "yil_sec": 1, "sec": 1})
+                    resp = self.client.post(form={"ay_sec": 5, "yil_sec": 2013, "sec": 1})
                     assert resp.json['forms']['schema']["title"] == "Dönem Bulunamadı"
 
                     if i == 0:
@@ -49,11 +49,11 @@ class TestCase(BaseTestCase):
 
             if loop == 1:
                 # Geçerli bir dönemin bulunduğu tarih seçilir.
-                resp = self.client.post(form={"ay_sec": 11 , "yil_sec": 0, "sec": 1})
+                resp = self.client.post(form={"ay_sec": 11 , "yil_sec": 2016, "sec": 1})
 
                 # Ders ücreti hesaplama türü seçim ekranına gelmesi beklenir.
                 assert resp.json['forms']['schema'][
-                           "title"] == "Öğretim Görevlileri Puantaj Tablosu Hesaplama Türü Seçiniz"
+                           "title"] == "Puantaj Tablosu Hesaplama Türü Seçiniz"
 
                 # Tür seçildikten sonra ekrana Puantaj Tablosu çıkarılması beklenir.
                 resp = self.client.post(form={"ek_ders": 'null', "ders": 1})
@@ -89,7 +89,7 @@ class TestCase(BaseTestCase):
                                     resmi_tatil_list, personel_izin_list,
                                     tarih_araligi,2016, 11)
 
-                son_gun = yil_ve_aya_gore_ilk_son_gun(2016,11)[1].day
+                son_gun = yil_ve_aya_gore_ilk_ve_son_gun(2016, 11)[1].day
 
                 for i in range(son_gun):
                     if resp.json['objects'][1]['fields'][" %i"%(i+1)]== ' ':

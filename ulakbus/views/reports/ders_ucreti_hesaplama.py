@@ -16,15 +16,13 @@ from datetime import datetime, date
 from collections import OrderedDict
 from ulakbus.lib.date_time_helper import AYLAR, resmi_tatil_gunleri_getir
 from ulakbus.lib.common import get_akademik_takvim
-from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_son_gun
+from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
 
 guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
 
 # Guncel donem ve 5 onceki yili tuple halinde YIL listesinde tutar.
-YIL = []
-for i in range(5):
-    YIL.append((i, guncel_yil - i))
+yil_secenekleri = [(yil, yil) for yil in range(guncel_yil, guncel_yil - 5)]
 
 
 class TarihForm(JsonForm):
@@ -33,8 +31,9 @@ class TarihForm(JsonForm):
     kullanılan form.
     """
 
-    yil_sec = fields.String('Yıl Seçiniz', choices=YIL, default=0)
+    yil_sec = fields.String('Yıl Seçiniz', choices=yil_secenekleri, default=0)
     ay_sec = fields.String('Ay Seçiniz', choices=AYLAR, default=guncel_ay)
+
 
 class OkutmanListelemeForm(JsonForm):
     """
@@ -49,6 +48,15 @@ class OkutmanListelemeForm(JsonForm):
         secim = fields.Boolean("Seçim", type="checkbox")
         okutman = fields.String('Okutman')
         key = fields.String(hidden=True)
+
+
+class PuantajFormu(JsonForm):
+    class Meta:
+        help_text = """
+                                     R: Resmi Tatil
+                                     İ: İzinli"""
+
+    pdf_sec = fields.Button("Pdf Çıkar")
 
 
 class DersUcretiHesaplama(CrudView):
@@ -72,16 +80,18 @@ class DersUcretiHesaplama(CrudView):
         """
         Seçilen ay ve yıla ait dönem olup olmadığını kontrol eder.
         """
-        self.current.task_data["secilen_okutmanlar"]=None
-        self.current.task_data["yil"] = YIL[self.input['form']['yil_sec']][1]
-        self.current.task_data["ay"] = self.input['form']['ay_sec']
-        # guncel olan ayın ismi getirilir.
-        self.current.task_data["ay_isim"] = AYLAR[self.input['form']['ay_sec'] - 1][1]
+        secilen_ay = self.input['form']['ay_sec']
+        self.current.task_data["yil"] = self.input['form']['yil_sec']
+        self.current.task_data["ay"] = secilen_ay
 
+        # guncel olan ayın ismi getirilir.
+        self.current.task_data["ay_isim"] = dict(AYLAR).get(secilen_ay)
+
+        # TODO: aktif donem ve oncesine rastlayan donem varmi diye kontrol etmeliyiz.
         donem_list = Donem.takvim_ayina_rastlayan_donemler(self.current.task_data["yil"],
                                                            self.current.task_data["ay"])
 
-        self.current.task_data['donem_sayi'] = True if len(donem_list) > 0 else False
+        self.current.task_data['donem_sayi'] = True if donem_list else False
 
     def donem_secim_uyari(self):
         """
@@ -95,7 +105,7 @@ class DersUcretiHesaplama(CrudView):
                           seçimine geri dönmek için Geri Dön butonuna, işlemi
                           iptal etmek için İptal butonuna basabilirsiniz."""
         _form.geri_don = fields.Button("Geri Dön", flow='tarih_sec')
-        _form.iptal = fields.Button("İptal", flow = 'islem_iptali_bilgilendir')
+        _form.iptal = fields.Button("İptal", flow='islem_iptali_bilgilendir')
         self.form_out(_form)
 
     def islem_iptali_bilgilendir(self):
@@ -120,11 +130,12 @@ class DersUcretiHesaplama(CrudView):
 
         birim_no = self.current.role.unit.yoksis_no
         _form = OkutmanListelemeForm(current=self.current, title="Okutman Seçiniz")
+
+        # TODO: ilgili doneme ait okutmanlar listelenmeli.
         okutmanlar = Okutman.objects.filter(birim_no=birim_no)
 
         for okutman in okutmanlar:
-            _form.OkutmanListesi(secim=True, okutman=okutman.__unicode__(),
-                                 key=okutman.key)
+            _form.OkutmanListesi(secim=True, okutman=okutman, key=okutman.key)
 
         _form.sec = fields.Button("İlerle")
         self.form_out(_form)
@@ -136,13 +147,13 @@ class DersUcretiHesaplama(CrudView):
         """
         secilen_okutmanlar = []
         for okutman_secim in self.current.input['form']['OkutmanListesi']:
-            if okutman_secim['secim'] == True:
+            if okutman_secim['secim']:
                 secilen_okutmanlar.append(okutman_secim)
 
         self.current.task_data["secilen_okutmanlar"] = secilen_okutmanlar
+        self.current.task_data["title"] = self.current.user.role.unit.name.upper()
 
-        self.current.task_data["okutman_kontrol"] = True if len(secilen_okutmanlar)>0\
-                                                         else False
+        self.current.task_data["okutman_kontrol"] = True if secilen_okutmanlar > 0 else False
 
     def okutman_secim_uyari(self):
 
@@ -155,7 +166,7 @@ class DersUcretiHesaplama(CrudView):
                              Öğretim görevlisi seçimine geri dönmek için Geri Dön butonuna,
                              işlemi iptal etmek için İptal butonuna basabilirsiniz."""
         _form.geri_don = fields.Button("Geri Dön", flow='okutman_sec')
-        _form.iptal = fields.Button("İptal", flow = 'islem_iptali_bilgilendir')
+        _form.iptal = fields.Button("İptal", flow='islem_iptali_bilgilendir')
         self.form_out(_form)
 
     def ders_saati_turu_secme(self):
@@ -163,8 +174,7 @@ class DersUcretiHesaplama(CrudView):
         Ders Ücreti ya da Ek Ders Ücreti hesaplarından birini seçmeye yarar.
         """
 
-        _form = JsonForm(current=self.current, title=
-        "Öğretim Görevlileri Puantaj Tablosu Hesaplama Türü Seçiniz")
+        _form = JsonForm(current=self.current, title="Puantaj Tablosu Hesaplama Türü Seçiniz")
 
         _form.ders = fields.Button("Ders Ücreti Hesapla", cmd='ders_ucreti_hesapla')
         _form.ek_ders = fields.Button("Ek Ders Ücreti Hesapla", cmd='ek_ders_ucreti_hesapla')
@@ -176,17 +186,18 @@ class DersUcretiHesaplama(CrudView):
         resmi tatil ve izinleri dikkate alarak aylık ders saati planlamasını
         yapar
         """
+        # Ders seçim türüne göre ayarlamalar yapılır.
+        ek_ders, ders_turu = (True, 'Ek') if self.input['form']['ek_ders'] == 1 else (False, '')
+
         yil = self.current.task_data["yil"]  # girilen yil
         ay = self.current.task_data["ay"]  # girilen ayin orderi
         ay_isim = self.current.task_data["ay_isim"]  # ayin adi
 
-        # Ders seçim türüne göre ayarlamalar yapılır.
-        kontrol, ders_turu = (True, ' ') if self.input['form']['ders'] == 1 else (False, ' Ek ')
+        # verilen ayın son gunu bulunur 28,31 gibi
+        ilk, son = yil_ve_aya_gore_ilk_ve_son_gun(yil, ay)
+        ayin_son_gunu = son.day
 
-        #verilen ayın son gunu bulunur 28,31 gibi
-        ayin_son_gunu = yil_ve_aya_gore_ilk_son_gun(yil,ay)[1].day
-
-        birim_unit = Unit.objects.get(yoksis_no=self.current.role.unit.yoksis_no)
+        birim_unit = self.current.role.unit
 
         # Secilen ay hangi donemleri kapsiyor, kac donemi kapsıyorsa
         # o donemleri dondürür.
@@ -202,11 +213,18 @@ class DersUcretiHesaplama(CrudView):
         # döner. (1,12) (19,31) gibi
         tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, yil, ay, birim_unit)
 
-        title, object_list, ders_saati_turu = tablo_yapisini_hazirla(self, ayin_son_gunu,
-                                                        ders_turu, yil, ay_isim, birim_unit)
-        self.output['objects'] = [object_list]
+        table_head = ['Öğretim Elemanı']
+        table_head.append(['{0:3d}'.format(d) for d in range(1, ayin_son_gunu + 1)])
+        table_head.append('Toplam')
 
-        form_olustur(self, title)
+        self.output['objects'] = [table_head]
+
+        # Seçilen okutmanların bulunmaması demek,
+        title = "%s %s-%s AYI %s DERS PUANTAJ TABLOSU" % (self.current.task_data["title"],
+                                                          yil, ay_isim.upper(), ders_turu.upper())
+
+        _form = PuantajFormu(title=title)
+        self.form_out(_form)
 
         for secilen_okutman in self.current.task_data["secilen_okutmanlar"]:
             okutman = Okutman.objects.get(secilen_okutman['key'])
@@ -220,18 +238,19 @@ class DersUcretiHesaplama(CrudView):
             # (seçilen seçeneğe göre ders veya ek ders) olduğunu gösteren
             # dictionarylerden oluşan liste, seçilen yıl ve ay bir dönemi kapsıyorsa
             # bir dict, iki dönemi kapsıyorsa iki dict döner.
-            ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman, kontrol)
+            ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman, ek_ders)
 
             # Bulunan tarih araliklarina, okutmanın aylık ders etkinliklerine göre
             # ayın hangi gününde dersi varsa kaç saat dersi olduğu bilgisi,
             # izinliyse İ, resmi tatilse R bilgisini bir dictionary e doldurur.
             okutman_aylik_plan, ders_saati = okutman_aylik_plani(donem_list, ders_etkinlik_list,
-                                                               resmi_tatil_list, personel_izin_list,
-                                                               tarih_araligi, yil, ay)
+                                                                 resmi_tatil_list,
+                                                                 personel_izin_list,
+                                                                 tarih_araligi, yil, ay)
 
             # Okutmanın oluşturulan bilgilerinin ekrana basılacağı şeklinin oluşturulması
-            okutman_bilgi_listesi = okutman_bilgileri_doldur(okutman,ayin_son_gunu,okutman_aylik_plan,
-                                                             ders_saati_turu,ders_saati)
+            okutman_bilgi_listesi = okutman_bilgileri_doldur(okutman, ayin_son_gunu,
+                                                             okutman_aylik_plan, ders_saati)
 
             item = {
                 "type": "table-multiRow",
@@ -240,6 +259,11 @@ class DersUcretiHesaplama(CrudView):
             }
 
             self.output['objects'].append(item)
+
+    def tek_okutman_sec(self):
+        okutman = self.current.user.personel.okutman
+        self.current.task_data["secilen_okutmanlar"] = [{'key': okutman.key}]
+        self.current.task_data["title"] = okutman.__unicode__().upper()
 
 
 def ders_etkinligine_gore_tarih_araligi(donem_list, yil, ay, birim_unit):
@@ -267,7 +291,7 @@ def ders_etkinligine_gore_tarih_araligi(donem_list, yil, ay, birim_unit):
 
         # Seçilen ayın ilk günü = 01.08.2016
         # Seçilen ayın son günü = 31.08.2016
-        ay_baslangic, ay_bitis = yil_ve_aya_gore_ilk_son_gun(yil,ay)
+        ay_baslangic, ay_bitis = yil_ve_aya_gore_ilk_ve_son_gun(yil, ay)
 
         # 08.08.2016 > 01.08.2016
         # baslangic_tarih = 08.08.2016
@@ -293,13 +317,19 @@ def ders_etkinligine_gore_tarih_araligi(donem_list, yil, ay, birim_unit):
         # bitis_tarih = 31.08.2016
         # dönem bitişi ve ders bitişi seçilen aydan sonradır
 
-        baslangic_tarih = ders_bas_tarih.day if ders_bas_tarih > ay_baslangic \
-                        and ders_bas_tarih.month == ay else ay_bitis.day if ders_bas_tarih > ay_baslangic\
-                                and ders_bas_tarih.month != ay else ay_baslangic.day
+        if not ders_bas_tarih > ay_baslangic:
+            baslangic_tarih = ay_baslangic.day
+        elif ders_bas_tarih.month == ay:
+            baslangic_tarih = ders_bas_tarih.day
+        else:
+            baslangic_tarih = ay_bitis.day
 
-        bitis_tarih = ders_bit_tarih.day if ders_bit_tarih < ay_bitis\
-                        and ders_bit_tarih.month == ay else ay_baslangic.day if ders_bit_tarih < ay_bitis \
-                                and ders_bit_tarih.month != ay else ay_bitis.day
+        if not ders_bit_tarih < ay_bitis:
+            bitis_tarih = ay_bitis.day
+        elif ders_bit_tarih.month == ay:
+            bitis_tarih = ders_bit_tarih.day
+        else:
+            bitis_tarih = ay_baslangic.day
 
         # Eğer tuple lardan birisi (1,1) ya da (31,31) gibiyse bu
         # seçilen ayın içinde bir döneme rast geldiğini fakat ders etkinliğine
@@ -317,23 +347,35 @@ def ders_etkinligine_gore_tarih_araligi(donem_list, yil, ay, birim_unit):
 
     return tarih_araligi
 
-def doneme_gore_okutman_etkinlikleri(donem_list, okutman, kontrol):
+
+def doneme_gore_okutman_etkinlikleri(donem_list, okutman, ek_ders):
+    """
+    Verilen dönemde okutmanın hangi günler kaç saat dersi olduğu
+    bilgisini list of dict halinde döndürür. Günler 1-7 Pazt-Pazar
+    şeklinde belirlenmiştir. Örnek: {1:4, 3:3, 4:2} gibi. Bu
+    dict bize okutmanın Pazartesi 4 saat, Çarşamba günü 3 saatlik
+    dersi olduğunu gösterir. Bir dönem varsa bir dict iki dönem varsa,
+    iki dict dönecektir. [{1:4, 3:3, 4:2}, {2:5, 5:3}]
+
+    Args:
+        donem_list (list): donem objeleri listesi
+        okutman (Okutman): okutman objesi
+        ek_ders (Boolean): etkinlik ek_ders mi?
+
+    Returns:
+        (list): hafta gunu ve ders saati sozluk listesi
+
+    """
 
     # kontrol ders ya da ek ders hesaplamasını gösterir.
     # Eğer kontrol True ise ders, False ise ek ders hesaplanır.
 
-    # Verilen dönemde okutmanın hangi günler kaç saat dersi olduğu
-    # bilgisini dict halinde döndürür. Günler 1-7 Pazt-Pazar
-    # şeklinde belirlenmiştir. Örnek: {1:4, 3:3,4:2} gibi. Bu
-    # dict bize okutmanın Pazartesi 4 saat, Çarşamba günü 3 saatlik
-    # dersi olduğunu gösterir. Bir dönem varsa bir dict iki dönem varsa,
-    # iki dict dönecektir. [{1:4, 3:3,4:2},{2:5,5:3}]
     ders_etkinlik_list = []
     for donem in donem_list:
 
         okutman_ders_dict = {}
 
-        for etkinlik in DersEtkinligi.objects.filter(donem=donem, okutman=okutman, ek_ders=not kontrol):
+        for etkinlik in DersEtkinligi.objects.filter(donem=donem, okutman=okutman, ek_ders=ek_ders):
 
             if not etkinlik.gun in okutman_ders_dict:
                 okutman_ders_dict[etkinlik.gun] = etkinlik.sure
@@ -344,21 +386,20 @@ def doneme_gore_okutman_etkinlikleri(donem_list, okutman, kontrol):
 
     return ders_etkinlik_list
 
-def okutman_aylik_plani(donem_list, ders_etkinlik_list, resmi_tatil_list,
-                        personel_izin_list, tarih_araligi, yil, ay):
-    """
-     Tarih aralığı bir tuple olduğu için her bir dönem için o dönemin
-     tarih aralığı dikkate alınır.
-    {1: 'R', 4: 3, 6: 1, 11: 3, 13: 1, 18: 3, 19: 'R', 20: 1, 25: 3, 27: 1}
-    """
 
+def okutman_aylik_plani(donem_list, ders_etkinlik_list, resmi_tatil_list, personel_izin_list,
+                        tarih_araligi, yil, ay):
+    # Tarih aralığı bir tuple olduğu için
+    # her bir dönem için o dönemin tarih aralığı
+    # dikkate alınır.
+    # {1: 'R', 4: 3, 6: 1, 11: 3, 13: 1, 18: 3, 19: 'R', 20: 1, 25: 3, 27: 1}
     ders_saati = 0
     okutman_aylik_plan = {}
     for j, donem in enumerate(donem_list):
 
-        for i in range(tarih_araligi[j][0], tarih_araligi[j][1] +1):
+        for i in range(tarih_araligi[j][0], tarih_araligi[j][1] + 1):
 
-            hafta_gun = date(yil,ay,i).isoweekday()
+            hafta_gun = date(yil, ay, i).isoweekday()
             # Eğer gün personel izin listesinde varsa
             if i in personel_izin_list:
                 okutman_aylik_plan[i] = 'İ'
@@ -376,15 +417,8 @@ def okutman_aylik_plani(donem_list, ders_etkinlik_list, resmi_tatil_list,
 
     return okutman_aylik_plan, ders_saati
 
-def okutman_bilgileri_doldur(okutman,ayin_son_gunu,okutman_aylik_plan,ders_saati_turu,ders_saati):
-    """
-    Öğretim görevlisinin ders veya ek ders bilgilerinin ekrana yansıtılacağı
-    OrderedDict bu methodda doldurulur. Seçilen ayın her günü için dönülür.
-    Ders etkinliği, resmi tatil veyaz izin bilgisi varsa o güne o atanır. Eğer
-    yoksa boş bırakılır.
 
-    """
-
+def okutman_bilgileri_doldur(okutman, ayin_son_gunu, okutman_aylik_plan, ders_saati):
     okutman_bilgi_listesi = OrderedDict({})
 
     okutman_bilgi_listesi['Öğretim Elemanı'] = okutman.__unicode__()
@@ -395,47 +429,6 @@ def okutman_bilgileri_doldur(okutman,ayin_son_gunu,okutman_aylik_plan,ders_saati
         else:
             okutman_bilgi_listesi[' ' + str(gun)] = ' '
 
-    okutman_bilgi_listesi[ders_saati_turu] = str(ders_saati)
+    okutman_bilgi_listesi['Toplam'] = str(ders_saati)
 
     return okutman_bilgi_listesi
-
-def form_olustur(self,title):
-    _form = JsonForm()
-
-    _form.title = title
-
-    _form.pdf_sec = fields.Button("Pdf Çıkar")
-    _form.help_text = """
-                                 R: Resmi Tatil
-                                 İ: İzinli"""
-    self.form_out(_form)
-
-def tablo_yapisini_hazirla(self,ayin_son_gunu,ders_turu,yil,ay_isim,birim_unit):
-
-    # Seçilen okutmanların bulunmaması demek,
-    # okutman user'ının kendi puantaj tablosunu görüntülemesi
-    # demektir. Bu durumda kendisi seçilmiş olarak atanıp,
-    # işleme devam edilir.
-
-    object_list = ['Öğretim Elemanı']
-    tarih_list = list(range(1, ayin_son_gunu + 1))
-
-    # TODO integer kabul etmedigi icin bosluk + integer koyuldu sonradan degistirilecek.
-    for tarih in tarih_list:
-        object_list.append(' ' + str(tarih))
-
-    ders_saati_turu = '%sDers Saati' % ders_turu
-    object_list.append(ders_saati_turu)
-
-    if not self.current.task_data["secilen_okutmanlar"]:
-        self.current.task_data["secilen_okutmanlar"] = \
-            [{'key': self.current.user.personel.okutman.key}]
-        title = "%s %s-%s AYI%sDERS PUANTAJ TABLOSU" % \
-                (self.current.user.personel.okutman.__unicode__().upper(),
-                 yil, ay_isim.upper(), ders_turu.upper())
-    else:
-        title = "%s %s-%s AYI%sDERS PUANTAJ TABLOSU" \
-                % (birim_unit.name, yil, ay_isim.upper(), ders_turu.upper())
-
-    return title, object_list, ders_saati_turu
-

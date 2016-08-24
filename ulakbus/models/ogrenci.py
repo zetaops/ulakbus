@@ -20,7 +20,7 @@ from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room, RoomType
 from .personel import Personel
-from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_son_gun
+from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
 
 
 class OgretimYili(Model):
@@ -147,7 +147,7 @@ class Donem(Model):
         Returns:
             (list) donem nesneleri listesi
         """
-        baslangic, bitis = yil_ve_aya_gore_ilk_son_gun(yil,ay)
+        baslangic, bitis = yil_ve_aya_gore_ilk_ve_son_gun(yil, ay)
 
         donem_list = []
 

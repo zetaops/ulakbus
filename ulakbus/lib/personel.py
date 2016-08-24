@@ -11,6 +11,7 @@ from ulakbus.lib.date_time_helper import zaman_araligi
 
 __author__ = 'Ali Riza Keles'
 
+
 def personel_izin_gunlerini_getir(okutman, yil, ay):
     """
     Args:
@@ -24,15 +25,15 @@ def personel_izin_gunlerini_getir(okutman, yil, ay):
 
     """
     from ulakbus.models.personel import Izin, UcretsizIzin
-    from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_son_gun
+    from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
 
-    baslangic, bitis = yil_ve_aya_gore_ilk_son_gun(yil,ay)
+    baslangic, bitis = yil_ve_aya_gore_ilk_ve_son_gun(yil, ay)
     personel_izin_list = []
     for i in range(2):
         model = Izin if i==0 else UcretsizIzin
 
         for personel_izin in model.objects.filter(personel=okutman.personel,
-                                                  baslangic__gte = baslangic,
+                                                  baslangic__gte=baslangic,
                                                   bitis__lte=bitis):
             for gun in zaman_araligi(personel_izin.baslangic, personel_izin.bitis):
                     personel_izin_list.append(gun.day)

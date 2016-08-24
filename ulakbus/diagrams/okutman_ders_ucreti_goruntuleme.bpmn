@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.0.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_1qr942n">
     <bpmn:participant id="Participant_0r4june" name="Öğretim Görevlisi" processRef="okutman_ders_ucreti_goruntuleme" />
   </bpmn:collaboration>
   <bpmn:process id="okutman_ders_ucreti_goruntuleme" name="Puantaj Tablosu Görüntüle" isExecutable="false">
     <bpmn:userTask id="TarihSec" name="Tarih Sec" camunda:assignee="reports.ders_ucreti_hesaplama.DersUcretiHesaplama.tarih_sec">
-      <bpmn:incoming>SequenceFlow_1mtbhen</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_11ftrmp</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_16c5eit</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ykv52b</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="DonemKontrol" name="Donem Kontrol" camunda:class="reports.ders_ucreti_hesaplama.DersUcretiHesaplama.donem_kontrol">
@@ -18,9 +18,6 @@
       <bpmn:outgoing>SequenceFlow_1v93ccp</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0op93yo</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>SequenceFlow_1mtbhen</bpmn:outgoing>
-    </bpmn:startEvent>
     <bpmn:userTask id="DonemSecimUyari" name="Donem Secim Uyari" camunda:assignee="reports.ders_ucreti_hesaplama.DersUcretiHesaplama.donem_secim_uyari">
       <bpmn:incoming>SequenceFlow_1v93ccp</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_05jrmjz</bpmn:outgoing>
@@ -42,7 +39,7 @@
       <bpmn:incoming>SequenceFlow_0gfh5g1</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1oc4yfp</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1mtbhen" sourceRef="StartEvent_1" targetRef="TarihSec" />
+    <bpmn:sequenceFlow id="SequenceFlow_1mtbhen" sourceRef="StartEvent_1" targetRef="okutman_sec" />
     <bpmn:sequenceFlow id="SequenceFlow_11ftrmp" sourceRef="ExclusiveGateway_04brr9l" targetRef="TarihSec">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "tarih_sec"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -61,16 +58,24 @@
       <bpmn:incoming>SequenceFlow_1d73q9s</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1oc4yfp</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1mtbhen</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_16c5eit" sourceRef="okutman_sec" targetRef="TarihSec" />
+    <bpmn:serviceTask id="okutman_sec" name="Okutman Sec" camunda:class="reports.ders_ucreti_hesaplama.DersUcretiHesaplama.tek_okutman_sec">
+      <bpmn:incoming>SequenceFlow_1mtbhen</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16c5eit</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1qr942n">
       <bpmndi:BPMNShape id="Participant_0r4june_di" bpmnElement="Participant_0r4june">
-        <dc:Bounds x="272" y="32" width="960" height="427" />
+        <dc:Bounds x="194" y="32" width="1038" height="429" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="307" y="321" width="36" height="36" />
+        <dc:Bounds x="249" y="321" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="280" y="357" width="90" height="20" />
+          <dc:Bounds x="222" y="357" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_07s8q49_di" bpmnElement="TarihSec">
@@ -83,10 +88,12 @@
         <dc:Bounds x="819" y="299" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1mtbhen_di" bpmnElement="SequenceFlow_1mtbhen">
-        <di:waypoint xsi:type="dc:Point" x="343" y="339" />
-        <di:waypoint xsi:type="dc:Point" x="386" y="339" />
+        <di:waypoint xsi:type="dc:Point" x="267" y="321" />
+        <di:waypoint xsi:type="dc:Point" x="267" y="301" />
+        <di:waypoint xsi:type="dc:Point" x="352" y="301" />
+        <di:waypoint xsi:type="dc:Point" x="352" y="280" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="376" y="269" width="90" height="20" />
+          <dc:Bounds x="264.5" y="276" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1i9x0xv_di" bpmnElement="DonemKontrol">
@@ -190,6 +197,16 @@
           <dc:Bounds x="1072.5" y="329" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_16c5eit_di" bpmnElement="SequenceFlow_16c5eit">
+        <di:waypoint xsi:type="dc:Point" x="386" y="280" />
+        <di:waypoint xsi:type="dc:Point" x="402" y="299" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="349" y="264.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0lexlga_di" bpmnElement="okutman_sec">
+        <dc:Bounds x="302" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
