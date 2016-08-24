@@ -51,3 +51,7 @@ class IstenAyrilma(CrudView):
         # Burada personelin işten ayrıldığına dair bir açıklama metni girişi yapılmaktadır.
         personel.notlar = self.current.input["form"]["notlar"]
         personel.save()
+
+    # TODO: İşten ayrılan personelin üzerinde devam etmekte olan iş akışları için yapılacak
+    def wf_devir(self):
+        pass
