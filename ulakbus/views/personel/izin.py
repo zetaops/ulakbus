@@ -6,10 +6,23 @@ from ulakbus.models.form import Form, FormData
 from ulakbus.models.hitap.hitap import HizmetKayitlari, HizmetBirlestirme
 from ulakbus.models.personel import Personel, Izin
 from zengine import forms
-from zengine.forms import fields
+from zengine.forms import fields, JsonForm
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy
 import time
+
+
+class IzinForm(JsonForm):
+    """
+        Ücretsiz izin dışındaki izin işlemleri için jsonform dan türetilmiş bir
+        form class dır.
+    """
+    class Meta:
+        title = "Personel İzin Form"
+        include = ["tip", "baslangic", "bitis", "onay", "adres", "telefon", "vekil"]
+
+    kaydet_buton = fields.Button("Kaydet")
+
 
 class IzinIslemleri(CrudView):
     class Meta:
@@ -23,43 +36,61 @@ class IzinIslemleri(CrudView):
         # ]
 
     def goster(self):
-        yil = date.today().year
-        self.list()
-        personel = Personel.objects.get(self.input['id'])
-        izin_gun = self.hizmet_izin_yil_hesapla(personel)
-        kalan_izin = self.kalan_izin_hesapla()
-        bu_yil_kalan_izin = getattr(kalan_izin['yillik'], str(yil), 0)
-        gecen_yil_kalan_izin = getattr(kalan_izin['yillik'], str(yil - 1), 0)
-        kalan_mazeret_izin = getattr(kalan_izin['mazeret'], str(yil), 0)
+        self.current.task_data["personel_id"] = self.current.input["id"]
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+        izinler = Izin.objects.get(personel=self.current.task_data["personel_id"])
+        bu_yil = datetime.date.today().year
+        gecen_yil = bu_yil - 1
 
-        # Personelin izin gün sayısı 365 günden azsa eklemeyi kaldır.
-        # Personel pasifse eklemeyi kaldır.
-        yil = date.today().year
-        izin_hakki_yok_sartlari = [
-            izin_gun < 365,
-            self.personel_aktif,
-            bu_yil_kalan_izin <= 0 and gecen_yil_kalan_izin <= 0 and kalan_mazeret_izin <= 0
-        ]
-        if any(izin_hakki_yok_sartlari):
-            self.ListForm.add = None
+        if not personel.arsiv:
+            self.output['object'] = {
+                "type": "table",
+                "fields": [
+                    {
+                        "%i Kalan Yıllık İzin"%bu_yil: personel.bu_yil_kalan_izin,
+                        "%i Kalan Yıllık İzin"%gecen_yil: personel.gecen_yil_kalan_izin
+                    }
+                ]
+            }
+            _form = JsonForm()
+            _form.button = fields.Button("Yeni İzin", cmd="yeni_izin")
+            self.form_out(_form)
+        else:
+            self.current.output["msgbox"] = {
+                "type" : "error", "title" : "İşlem Gerçekleştirilemiyor !",
+                "msg" : "%s %s isimli personel aktif değildir"%(personel.ad, personel.soyad)
+            }
 
-        # TODO: Personel bilgileri tabloda gösterilecek
-        self.output['object'] = {
-            "type": "table",
-            "fields": [
-                {
-                    "name": personel.ad,
-                    "surname": personel.soyad
-                },
-                {
-                    "gun": izin_gun,
-                    "durum": _(u"Aktif") if self.personel_aktif else _(u"Pasif")
-                }, {
-                    "izinler": kalan_izin,
-                    "hizmet_sure": izin_gun
-                }
-            ]
-        }
+    def izin_form(self):
+        self.form_out(IzinForm(), self.object)
+
+    def kaydet(self):
+        baslangic_tarih = datetime.strptime(self.current.input["baslangic"], "%d.%m.%Y")
+        bitis_tarih = datetime.strptime(self.current.input["bitis"], "%d.%m.%Y")
+        izin_sure = bitis_tarih.days - baslangic_tarih.days
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+        _form = JsonForm()
+        _form.button = fields.Button("İzinler Ekranına Geri Dön")
+
+        # TODO : personelin bu_yil_kalan_izin ve gecen_yil_kalan_izin fieldları Nonetype ise hata verir. Kontrol edilecek
+        if izin_sure > (personel.gecen_yil_kalan_izin + personel.bu_yil_kalan_izin):
+            self.current.output["msgbox"] = {
+                "type" : "error", "title" : "İşlem Gerçekleştirilemiyor !",
+                "msg" : "İzin miktarı hakedilen sayının üzerinde"
+            }
+        else:
+            personel.gecen_yil_kalan_izin -= izin_sure
+            if personel.gecen_yil_kalan_izin < 0:
+                personel.bu_yil_kalan_izin += personel.gecen_yil_kalan_izin
+                personel.gecen_yil_kalan_izin = 0
+
+            personel.save()
+            self.current.output["msgbox"] = {
+                "type" : "info", "title" : "İşem Gerçekleştirildi !",
+                "msg" : "İzin kaydedildi"
+            }
+
+        self.form_out(_form)
 
     def emekli_sandigi_hesapla(self, personel):
         personel_hizmetler = HizmetKayitlari.objects.filter(tckn=personel.tckn)

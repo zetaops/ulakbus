@@ -124,7 +124,8 @@ class Personel(Model):
     kadro_derece = field.Integer(default=0)
     aday_memur = field.Boolean()
     arsiv = field.Boolean()  # ayrilmis personeller icin gecerlidir.
-
+    bu_yil_kalan_izin = field.Integer("Bu Yıl Kalan İzin", index=True)
+    gecen_yil_kalan_izin = field.Integer("Geçen Yıl Kalan İzin", index=True)
     user = User(one_to_one=True)
 
     class Meta:
