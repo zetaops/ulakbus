@@ -7,7 +7,14 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import Ogrenci, SinavEtkinligi
+from ulakbus.models import Ogrenci, SinavEtkinligi, AbstractRole
+
+ABSTRACT_ROLE_LIST_DONDURULMUS = [
+    "Doktora Programı Öğrencisi - Kayıt Dondurmuş",
+    "Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+    "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+    "Lisans Programı Öğrencisi - Kayıt Dondurmuş"
+]
 
 
 def diploma_no_uret(ogrenci_program):
@@ -42,3 +49,18 @@ def aktif_sinav_listesi(obj):
     for sube in obj.donem_subeleri():
         sinavlar.extend(SinavEtkinligi.sube_sinav_listesi(sube=sube))
     return sinavlar
+
+
+def dondurulacak_kayitin_abstract_rolu(unit):
+    abstract_role = None
+    if unit.unit_type == "Program" and unit.learning_duration == 4:
+        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_DONDURULMUS[3])
+    elif unit.unit_type == "Program" and unit.learning_duration == 2:
+        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_DONDURULMUS[2])
+    elif unit.unit_type == "Yüksek Lisans Programı":
+        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_DONDURULMUS[1])
+    elif unit.unit_type == "Doktora Programı":
+        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_DONDURULMUS[0])
+    else:
+        pass
+    return abstract_role
