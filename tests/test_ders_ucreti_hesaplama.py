@@ -6,11 +6,12 @@
 
 from ulakbus.models import User, Okutman, Donem, Unit, DersEtkinligi
 from zengine.lib.test_utils import BaseTestCase
-from ulakbus.views.reports.ders_ucreti_hesaplama import ders_etkinligine_gore_tarih_araligi,\
+from ulakbus.views.reports.ders_ucreti_hesaplama import ders_etkinligine_gore_tarih_araligi, \
     doneme_gore_okutman_etkinlikleri, okutman_aylik_plani
 from ulakbus.lib.date_time_helper import resmi_tatil_gunleri_getir, yil_ve_aya_gore_ilk_ve_son_gun
 from ulakbus.lib.personel import personel_izin_gunlerini_getir
 from datetime import date
+
 
 class TestCase(BaseTestCase):
     def test_ders_ucreti_hesaplama(self):
@@ -42,8 +43,6 @@ class TestCase(BaseTestCase):
                                    "title"] == "Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz"
 
                     if i == 1:
-
-
                         # Eğer iptal butonuna basılırsa, işlem iptali hakkında bilgilendirme
                         # mesajı çıkması beklenir.
                         resp = self.client.post(form={"iptal": 1, "geri_don": "null", "sec": 1},
@@ -84,8 +83,6 @@ class TestCase(BaseTestCase):
                         assert resp.json['forms']['schema']["title"] == \
                                "Okutman Seçiniz"
                     if i == 1:
-
-
                         # Eğer iptal butonuna basılırsa, işlem iptali hakkında bilgilendirme
                         # mesajı çıkması beklenir.
                         resp = self.client.post(form={"iptal": 1, "geri_don": "null", "sec": 1},
@@ -101,7 +98,6 @@ class TestCase(BaseTestCase):
 
                     birim_no = self.client.current.role.unit.yoksis_no
                     birim_unit = Unit.objects.get(yoksis_no=birim_no)
-
 
                     # 2016 yılı Şubat ayı verilir. Bahar dönemi ders başlangıcı 21 Şubat olduğu
                     # için tarih aralığının (21,29) olması kontrol edilir.
@@ -132,7 +128,6 @@ class TestCase(BaseTestCase):
                         assert len(donem_list) == 1
                         resmi_tatil_list = resmi_tatil_gunleri_getir(birim_unit, 2016, 5)
 
-
                         assert 19 and 1 in resmi_tatil_list[0]
                         tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, 2016, 5, birim_unit)
 
@@ -152,7 +147,7 @@ class TestCase(BaseTestCase):
 
                 resp = self.client.post(form={"ek_ders": 'null', "ders": 1})
 
-                for j,okutman in enumerate(okutman_listesi):
+                for j, okutman in enumerate(okutman_listesi):
                     okutman = Okutman.objects.get(okutman['key'])
 
                     ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman, False)
@@ -171,18 +166,18 @@ class TestCase(BaseTestCase):
                     son_gun = yil_ve_aya_gore_ilk_ve_son_gun(2016, 5)[1].day
 
                     for i in range(son_gun):
-                        if resp.json['objects'][j+1]['fields'][" %i" % (i + 1)] == ' ':
+                        if resp.json['objects'][j + 1]['fields'][" %i" % (i + 1)] == ' ':
                             assert i + 1 not in aylik_plan[0]
-                        elif resp.json['objects'][j+1]['fields'][" %i" % (i + 1)] == 'İ':
+                        elif resp.json['objects'][j + 1]['fields'][" %i" % (i + 1)] == 'İ':
                             assert aylik_plan[0][i + 1] == 'İ'
-                        elif resp.json['objects'][j+1]['fields'][" %i" % (i + 1)] == 'R':
+                        elif resp.json['objects'][j + 1]['fields'][" %i" % (i + 1)] == 'R':
                             assert aylik_plan[0][i + 1] == 'R'
                         else:
                             hafta_gun = date(2016, 5, i + 1).isoweekday()
 
-                            assert resp.json['objects'][j+1]['fields'][" %i" % (i + 1)] == str(
+                            assert resp.json['objects'][j + 1]['fields'][" %i" % (i + 1)] == str(
                                 ders_etkinlik_list[0][hafta_gun])
-                            assert resp.json['objects'][j+1]['fields'][" %i" % (i + 1)] == str(aylik_plan[0][i + 1])
+                            assert resp.json['objects'][j + 1]['fields'][" %i" % (i + 1)] == str(aylik_plan[0][i + 1])
 
                     # Tür seçildikten sonra ekrana Puantaj Tablosu çıkarılması beklenir.
                     assert "PUANTAJ TABLOSU" in resp.json['forms']['schema']["title"]

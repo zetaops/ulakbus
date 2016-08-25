@@ -22,9 +22,10 @@ guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
 
 # Guncel donem ve 5 onceki yili tuple halinde YIL listesinde tutar.
-yillar = range(guncel_yil - 5,guncel_yil+1)
-yillar.sort(reverse = True)
+yillar = range(guncel_yil - 5, guncel_yil + 1)
+yillar.sort(reverse=True)
 yil_secenekleri = [(yil, yil) for yil in yillar]
+
 
 class TarihForm(JsonForm):
     """
@@ -216,7 +217,7 @@ class DersUcretiHesaplama(CrudView):
 
         table_head = ['Öğretim Elemanı']
         # table_head.append(['{0:3d}'.format(d) for d in range(1, ayin_son_gunu + 1)])
-        for gun in range(1, ayin_son_gunu+1):
+        for gun in range(1, ayin_son_gunu + 1):
             table_head.append(gun)
         table_head.append('Toplam')
 
@@ -420,10 +421,12 @@ def okutman_aylik_plani(donem_list, ders_etkinlik_list, resmi_tatil_list, person
 
     return okutman_aylik_plan, ders_saati
 
+
 def okutman_bilgileri_doldur(okutman, ayin_son_gunu, okutman_aylik_plan, ders_saati):
     okutman_bilgi_listesi = OrderedDict({})
 
     okutman_bilgi_listesi['Öğretim Elemanı'] = okutman.__unicode__()
+
 
     for gun in range(1, ayin_son_gunu + 1):
         if gun in okutman_aylik_plan:
