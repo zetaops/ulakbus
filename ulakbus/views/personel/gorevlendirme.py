@@ -22,6 +22,7 @@ from zengine.views.crud import CrudView, obj_filter
 from pyoko import ListNode
 from ulakbus.models import AbstractRole, Unit, Personel
 from ulakbus.models import KurumDisiGorevlendirmeBilgileri, KurumIciGorevlendirmeBilgileri
+import datetime
 
 class GorevlendirmeTurSecForm(JsonForm):
     gorevlendirme_tur = fields.Integer("Görevlendirme Tür", choices="gorev_tipi")
@@ -61,12 +62,14 @@ class KurumIciGorevlendirme(CrudView):
 
     def kaydet(self):
         #self.set_form_data_to_object()
+        #baslangic = datetime.date.strptime("%d.%m.%Y")
         gorevlendirme = KurumIciGorevlendirmeBilgileri()
         gorevlendirme.gorev_tipi = self.current.task_data["gorevlendirme_tur"]
         gorevlendirme.kurum_ici_gorev_baslama_tarihi = self.current.input["form"]["kurum_ici_gorev_baslama_tarihi"]
         gorevlendirme.kurum_ici_gorev_bitis_tarihi = self.current.input["form"]["kurum_ici_gorev_bitis_tarihi"]
         gorevlendirme.birim = Unit.objects.get(self.current.input["form"]["birim_id"])
-        gorevlendirme.soyut_rol = AbstractRole.objects.get(self.current.input["form"]["soyut_rol_id"])
+        if self.current.input["form"]["soyut_rol_id"] != None:
+            gorevlendirme.soyut_rol = AbstractRole.objects.get(self.current.input["form"]["soyut_rol_id"])
         gorevlendirme.aciklama = self.current.input["form"]["aciklama"]
         gorevlendirme.resmi_yazi_sayi = self.current.input["form"]["resmi_yazi_sayi"]
         gorevlendirme.resmi_yazi_tarih = self.current.input["form"]["resmi_yazi_tarih"]

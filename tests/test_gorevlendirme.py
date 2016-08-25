@@ -274,8 +274,8 @@ class TestCase(BaseTestCase):
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            kurum_disi_gorev_baslama_tarihi = baslangic,
-            kurum_disi_gorev_bitis_tarihi = bitis,
+            kurum_disi_gorev_baslama_tarihi = baslangic.strftime("%d.%m.%Y"),
+            kurum_disi_gorev_bitis_tarihi = bitis.strftime("%d.%m.%Y"),
             aciklama = "Rektör kurum dışı görevlendirme",
             resmi_yazi_sayi = "234234",
             resmi_yazi_tarih = resmi_yazi_tarih,
@@ -283,7 +283,7 @@ class TestCase(BaseTestCase):
             yevmiye = False,
             yolluk = True,
             ulke= 90,
-            soyut_rol = soyut_rol
+            soyut_rol_id = soyut_rol_id
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
