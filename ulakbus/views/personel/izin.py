@@ -9,6 +9,7 @@ from zengine import forms
 from zengine.forms import fields, JsonForm
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy
+from collections import OrderedDict
 import time
 
 
@@ -36,24 +37,31 @@ class IzinIslemleri(CrudView):
         # ]
 
     def goster(self):
-        self.current.task_data["personel_id"] = self.current.input["id"]
+        """
+         İzin wf nin ilk ekranını gösteren metodddur. Burada personelin yıllık izin ve mazeret izin hakları gösterilir
+        """
+        if "id" in self.current.input:
+            self.current.task_data["personel_id"] = self.current.input["id"]
         personel = Personel.objects.get(self.current.task_data["personel_id"])
-        izinler = Izin.objects.get(personel=self.current.task_data["personel_id"])
-        bu_yil = datetime.date.today().year
+        izinler = Izin.objects.filter(personel=self.current.task_data["personel_id"])
+        bu_yil = date.today().year
         gecen_yil = bu_yil - 1
 
+        # arsiv field eğer true ise personel aktif değildir. Aktif olmayan personele de izin yazılamaz.
         if not personel.arsiv:
+            field_dict = OrderedDict({})
+            field_dict["%i Kalan Yıllık İzin"%bu_yil] = str(personel.bu_yil_kalan_izin)
+            field_dict["%i Kalan Yıllık İzin"%gecen_yil] = str(personel.gecen_yil_kalan_izin)
+            field_dict["%i Kullanılan Mazeret İzni"%(bu_yil)] = str(personel.mazeret_izin)
             self.output['object'] = {
                 "type": "table",
-                "fields": [
-                    {
-                        "%i Kalan Yıllık İzin"%bu_yil: personel.bu_yil_kalan_izin,
-                        "%i Kalan Yıllık İzin"%gecen_yil: personel.gecen_yil_kalan_izin
-                    }
-                ]
+                "fields": field_dict
             }
+
+            # İzin listeleme ekranına geçiş butonları için form oluşturuldu
             _form = JsonForm()
             _form.button = fields.Button("Yeni İzin", cmd="yeni_izin")
+            _form.listele_buton = fields.Button("Kullanılan İzinler", cmd="izin_listele")
             self.form_out(_form)
         else:
             self.current.output["msgbox"] = {
@@ -62,35 +70,73 @@ class IzinIslemleri(CrudView):
             }
 
     def izin_form(self):
-        self.form_out(IzinForm(), self.object)
+        self.form_out(IzinForm(self.object, current=self.current))
 
     def kaydet(self):
-        baslangic_tarih = datetime.strptime(self.current.input["baslangic"], "%d.%m.%Y")
-        bitis_tarih = datetime.strptime(self.current.input["bitis"], "%d.%m.%Y")
-        izin_sure = bitis_tarih.days - baslangic_tarih.days
+        baslangic_tarih = datetime.strptime(self.current.input["form"]["baslangic"], "%d.%m.%Y")
+        bitis_tarih = datetime.strptime(self.current.input["form"]["bitis"], "%d.%m.%Y")
+        izin_sure = bitis_tarih.day - baslangic_tarih.day + 1
         personel = Personel.objects.get(self.current.task_data["personel_id"])
         _form = JsonForm()
         _form.button = fields.Button("İzinler Ekranına Geri Dön")
 
-        # TODO : personelin bu_yil_kalan_izin ve gecen_yil_kalan_izin fieldları Nonetype ise hata verir. Kontrol edilecek
-        if izin_sure > (personel.gecen_yil_kalan_izin + personel.bu_yil_kalan_izin):
+        bir_sonraki_yil = date.today().year + 1
+
+        if (baslangic_tarih.year == bir_sonraki_yil) or (bitis_tarih.year == bir_sonraki_yil):
             self.current.output["msgbox"] = {
                 "type" : "error", "title" : "İşlem Gerçekleştirilemiyor !",
-                "msg" : "İzin miktarı hakedilen sayının üzerinde"
+                "msg" : "Bir sonraki yıl için izin yazamazsınız"
             }
         else:
-            personel.gecen_yil_kalan_izin -= izin_sure
-            if personel.gecen_yil_kalan_izin < 0:
-                personel.bu_yil_kalan_izin += personel.gecen_yil_kalan_izin
-                personel.gecen_yil_kalan_izin = 0
+            # TODO : personelin bu_yil_kalan_izin ve gecen_yil_kalan_izin fieldları Nonetype ise hata verir. Kontrol edilecek
 
-            personel.save()
-            self.current.output["msgbox"] = {
-                "type" : "info", "title" : "İşem Gerçekleştirildi !",
-                "msg" : "İzin kaydedildi"
-            }
+                personel.gecen_yil_kalan_izin -= izin_sure
+                if personel.gecen_yil_kalan_izin < 0:
+                    personel.bu_yil_kalan_izin += personel.gecen_yil_kalan_izin
+                    personel.gecen_yil_kalan_izin = 0
 
-        self.form_out(_form)
+                yeni_izin = Izin()
+                yeni_izin.tip = self.current.input["form"]["tip"]
+                yeni_izin.baslangic = self.current.input["form"]["baslangic"]
+                yeni_izin.bitis = self.current.input["form"]["bitis"]
+                yeni_izin.onay = self.current.input["form"]["onay"]
+                yeni_izin.adres = self.current.input["form"]["adres"]
+                yeni_izin.telefon = self.current.input["form"]["telefon"]
+                yeni_izin.personel = personel
+                if("vekil" in self.current.input["form"]):
+                    vekil_personel = Personel.objects.get(self.current.input["form"]["vekil"])
+                    yeni_izin.vekil = vekil_personel
+
+                yeni_izin.blocking_save()
+
+                personel.save()
+                self.current.output["msgbox"] = {
+                    "type" : "info", "title" : "İşem Gerçekleştirildi !",
+                    "msg" : "İzin kaydedildi"
+                }
+
+            self.form_out(_form)
+
+    def izin_listele(self):
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+        izinler = Izin.objects.filter(
+            personel= personel
+        )
+        izin_list = []
+        for izin in izinler:
+            izin_dict = OrderedDict({})
+            izin_dict["İzin Tip"] = izin.get_tip_display()
+            izin_dict["İzin Başlangıç"] = izin.baslangic.strftime("%d.%m.%Y")
+            izin_dict["İzin Bitiş"] = izin.bitis.strftime("%d.%m.%Y")
+            izin_dict["Onay Tarihi"] = izin.onay.strftime("%d.%m.%Y")
+            izin_dict["İzin Süresi/Gün"] = str((izin.bitis - izin.baslangic).days + 1)
+            izin_list.append(izin_dict)
+
+        self.output["object"] = {
+            "title" : "Personelin Kullandığı İzinler",
+            "type" : "table-multiRow",
+            "fields" : izin_list
+        }
 
     def emekli_sandigi_hesapla(self, personel):
         personel_hizmetler = HizmetKayitlari.objects.filter(tckn=personel.tckn)
