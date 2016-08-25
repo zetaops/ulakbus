@@ -75,7 +75,7 @@ class IzinIslemleri(CrudView):
     def kaydet(self):
         baslangic_tarih = datetime.strptime(self.current.input["form"]["baslangic"], "%d.%m.%Y")
         bitis_tarih = datetime.strptime(self.current.input["form"]["bitis"], "%d.%m.%Y")
-        izin_sure = bitis_tarih.day - baslangic_tarih.day + 1
+        izin_sure = (bitis_tarih - baslangic_tarih).days + 1
         personel = Personel.objects.get(self.current.task_data["personel_id"])
         _form = JsonForm()
         _form.button = fields.Button("İzinler Ekranına Geri Dön")
@@ -90,11 +90,25 @@ class IzinIslemleri(CrudView):
         else:
             # TODO : personelin bu_yil_kalan_izin ve gecen_yil_kalan_izin fieldları Nonetype ise hata verir. Kontrol edilecek
 
-                personel.gecen_yil_kalan_izin -= izin_sure
-                if personel.gecen_yil_kalan_izin < 0:
-                    personel.bu_yil_kalan_izin += personel.gecen_yil_kalan_izin
-                    personel.gecen_yil_kalan_izin = 0
+            # Personelin izin alıp alamayacağının kontrolü için tanımlandı
+            izin_kontrol = False
+            if self.current.input["form"]["tip"] == 1:
+                if (int(personel.gecen_yil_kalan_izin) + int(personel.bu_yil_kalan_izin)) < izin_sure:
+                    self.current.output["msgbox"] = {
+                        "type" : "error", "title" : "İşlem Gerçekleştirilemiyor !",
+                        "msg" : "Yıllık izin yetersiz"
+                    }
+                else:
+                    personel.gecen_yil_kalan_izin -= izin_sure
+                    izin_kontrol = True
+                    if personel.gecen_yil_kalan_izin < 0:
+                        personel.bu_yil_kalan_izin += personel.gecen_yil_kalan_izin
+                        personel.gecen_yil_kalan_izin = 0
+            elif self.current.input["form"]["tip"] == 5:
+                personel.mazeret_izin += izin_sure
+                izin_kontrol = True
 
+            if izin_kontrol:
                 yeni_izin = Izin()
                 yeni_izin.tip = self.current.input["form"]["tip"]
                 yeni_izin.baslangic = self.current.input["form"]["baslangic"]
@@ -115,7 +129,7 @@ class IzinIslemleri(CrudView):
                     "msg" : "İzin kaydedildi"
                 }
 
-            self.form_out(_form)
+                self.form_out(_form)
 
     def izin_listele(self):
         personel = Personel.objects.get(self.current.task_data["personel_id"])
