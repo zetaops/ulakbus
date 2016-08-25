@@ -22,9 +22,7 @@ guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
 
 # Guncel donem ve 5 onceki yili tuple halinde YIL listesinde tutar.
-yillar = range(guncel_yil - 5, guncel_yil + 1)
-yillar.sort(reverse=True)
-yil_secenekleri = [(yil, yil) for yil in yillar]
+yil_secenekleri = [(yil, yil) for yil in range(guncel_yil, guncel_yil - 6, -1)]
 
 
 class TarihForm(JsonForm):
@@ -216,9 +214,7 @@ class DersUcretiHesaplama(CrudView):
         tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, yil, ay, birim_unit)
 
         table_head = ['Öğretim Elemanı']
-        # table_head.append(['{0:3d}'.format(d) for d in range(1, ayin_son_gunu + 1)])
-        for gun in range(1, ayin_son_gunu + 1):
-            table_head.append(gun)
+        table_head.extend([str(d) for d in range(1, ayin_son_gunu + 1)])
         table_head.append('Toplam')
 
         self.output['objects'] = [table_head]
@@ -277,7 +273,7 @@ def ders_etkinligine_gore_tarih_araligi(donem_list, yil, ay, birim_unit):
     # dikkate alınacağını belirlemek için Akademik Takvim'de
     # bulunan etkinlik döneme göre seçilir.
 
-    for j, donem in enumerate(donem_list):
+    for donem in donem_list:
 
         # İçinde bulunulan dönemin ders başlangıç ve bitiş tarihlerini
         # bulmak için kullanılır.
@@ -426,7 +422,6 @@ def okutman_bilgileri_doldur(okutman, ayin_son_gunu, okutman_aylik_plan, ders_sa
     okutman_bilgi_listesi = OrderedDict({})
 
     okutman_bilgi_listesi['Öğretim Elemanı'] = okutman.__unicode__()
-
 
     for gun in range(1, ayin_son_gunu + 1):
         if gun in okutman_aylik_plan:
