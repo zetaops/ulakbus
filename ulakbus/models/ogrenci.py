@@ -21,6 +21,7 @@ from .auth import Unit
 from .buildings_rooms import Room, RoomType
 from .personel import Personel
 from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
+from zengine.messaging.model import Channel
 
 
 class OgretimYili(Model):
@@ -464,12 +465,8 @@ class Ders(Model):
         sube.donem = Donem.guncel_donem()
         sube.save()
 
-    def pre_save(self):
-        self.just_created = not self.exist
-
-    def post_save(self):
-        if self.just_created:
-            self.ontanimli_sube_olustur()
+    def post_creation(self):
+        self.ontanimli_sube_olustur()
 
 
 class Sube(Model):
@@ -532,9 +529,20 @@ class Sube(Model):
         self.ders_adi = "%s - %s %s" % (self.ders.ad, self.ad, str(self.kontenjan))
         self.save()
 
+    def sube_kanal_olustur(self):
+        """Yeni bir şube oluşturulduğunda mesajlaşma kanalı oluşturur ve o şubenin
+            öğretim görevlisini o kanala yönetici olarak atar."""
+        channel = Channel()
+        channel.name = "%s %s" % (self.ders.kod, self.ad)
+        channel.typ = 15  # public kanal
+        channel.description = "%s Dersi %s Şubesi Mesajlaşma Kanalı" % (self.ders.ad, self.ad)
+        channel.owner = self.okutman.personel.user
+        channel.save()
+
     def post_creation(self):
         self.sube_sinavlarini_olustur()
         self.ders_adi_olustur()
+        self.sube_kanal_olustur()
 
     def __unicode__(self):
         return '%s' % self.ders_adi
@@ -1176,6 +1184,7 @@ class Takvim(Model):
     def __unicode__(self):
         return '%s %s %s' % (
             self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
+
 
 class DonemDanisman(Model):
     """Dönem Danışmanları Modeli
