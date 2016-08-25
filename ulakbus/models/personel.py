@@ -127,6 +127,8 @@ class Personel(Model):
     arsiv = field.Boolean()  # ayrilmis personeller icin gecerlidir.
     bu_yil_kalan_izin = field.Integer("Bu Yıl Kalan İzin", index=True)
     gecen_yil_kalan_izin = field.Integer("Geçen Yıl Kalan İzin", index=True)
+    # İçinde bulunulan yıl kullanılan mazeret izin gün sayısını tutar. Bir sonraki yıla geçildiğinde 0 yapılmalıdır.
+    mazeret_izin = field.Integer("Mazeret İzni", index=True)
     user = User(one_to_one=True)
 
     class Meta:
@@ -202,6 +204,7 @@ class Personel(Model):
     def __unicode__(self):
         return gettext(u"%(ad)s %(soyad)s") % {'ad': self.ad, 'soyad': self.soyad}
 
+<<<<<<< ed4904449859116c80ff3d6036dc09ad19d732ff
     def post_save(self):
         # Personel oluştuğunda User Otomatik olarak Oluşturulacaktır
 <<<<<<< HEAD
@@ -215,6 +218,23 @@ class Personel(Model):
             self.user.name = self.ad
             self.user.surname = self.soyad
             self.user.save()
+=======
+    def izin_guncelle(self):
+        """
+            Personelin içinde bulunulan yıla ve önceki yıla ait olan izin hakkını günceller
+        """
+
+        self.gecen_yil_kalan_izin = self.bu_yil_kalan_izin
+
+        # TODO: Burada personelin ilk atama tarihi çekilip içinde bulunulan yıl için hakedilen izin günü buna göre hesaplanmalıdır.
+        self.bu_yil_kalan_izin = 20
+
+        if self.mazeret_izin > 10:
+            self.bu_yil_kalan_izin -= (self.mazeret_izin - 10)
+
+        self.mazeret_izin = 0
+
+>>>>>>> a73f1783d867617c45b5ee6e1e397dda00efeb28
 
 class AdresBilgileri(Model):
     """Adres Bilgileri Modeli
