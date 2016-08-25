@@ -73,7 +73,7 @@ class TestCase(BaseTestCase):
         """
 
         # Dekan Soyut Rol
-        soyut_rol_id = "YmEn6XK0L3OHDObgWi5RjZmkk0O"
+        soyut_rol_id = "EsDTPb8K5e7HlocpZPlVvX2VDAI"
         soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         # Görevlendirme yapılacak personel
@@ -191,7 +191,7 @@ class TestCase(BaseTestCase):
         self.prepare_client("/gorevlendirme", user = user)
 
         # Rektör Soyut Rol
-        soyut_rol_id = "5xanqtlXnY9dsQhWNV8gMK1rXcm"
+        soyut_rol_id = "H6h6y7gIdX1JprWlljJniCgXtjU"
         soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         #Görevlendirilecek personel
@@ -250,7 +250,7 @@ class TestCase(BaseTestCase):
         self.prepare_client("/gorevlendirme", user = user)
 
         # Dekan Soyut Rol
-        soyut_rol_id = "YmEn6XK0L3OHDObgWi5RjZmkk0O"
+        soyut_rol_id = "EsDTPb8K5e7HlocpZPlVvX2VDAI"
         soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         #Görevlendirilecek personel
@@ -308,7 +308,7 @@ class TestCase(BaseTestCase):
         self.prepare_client("/gorevlendirme", user = user)
 
         # Rektör Soyut Rol
-        soyut_rol_id = "5xanqtlXnY9dsQhWNV8gMK1rXcm"
+        soyut_rol_id = "H6h6y7gIdX1JprWlljJniCgXtjU"
         soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         #Görevlendirilecek personel
