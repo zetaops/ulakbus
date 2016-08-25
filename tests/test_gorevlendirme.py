@@ -51,12 +51,13 @@ class TestCase(BaseTestCase):
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(gorev_tipi=2,
-            kurum_ici_gorev_baslama_tarihi = baslangic, kurum_ici_gorev_bitis_tarihi = bitis,
-            birim = birim, soyut_rol_id = soyut_rol_id, aciklama = "Test Öğrenci İşleri Daire Başkanlığı Görevlendirme",
+            kurum_ici_gorev_baslama_tarihi = baslangic.strftime("%d.%m.%Y"),
+            kurum_ici_gorev_bitis_tarihi = bitis.strftime("%d.%m.%Y"),
+            birim_id = birim_id, soyut_rol_id = soyut_rol_id, aciklama = "Test Öğrenci İşleri Daire Başkanlığı Görevlendirme",
             resmi_yazi_sayi = "123123", resmi_yazi_tarih = resmi_yazi_tarih.strftime("%d.%m.%Y")))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
-        gorevlendirme = KurumIciGorevlendirmeBilgileri()[0]
+        gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
         assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
@@ -106,17 +107,17 @@ class TestCase(BaseTestCase):
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
             gorev_tipi=2,
-            kurum_ici_gorev_baslama_tarihi = baslangic,
-            kurum_ici_gorev_bitis_tarihi = bitis,
-            birim = birim,
-            soyut_rol = soyut_rol,
+            kurum_ici_gorev_baslama_tarihi = baslangic.strftime("%d.%m.%Y"),
+            kurum_ici_gorev_bitis_tarihi = bitis.strftime("%d.%m.%Y"),
+            birim_id = birim_id,
+            soyut_rol_id = soyut_rol_id,
             aciklama = "Dekan olarak görevlendirme",
             resmi_yazi_sayi = "123123",
-            resmi_yazi_tarih = resmi_yazi_tarih
+            resmi_yazi_tarih = resmi_yazi_tarih.strftime("%d.%m.%Y")
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
-        gorevlendirme = KurumIciGorevlendirmeBilgileri()[0]
+        gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
         assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
@@ -124,6 +125,11 @@ class TestCase(BaseTestCase):
         assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
 
         assert gorevlendirme.birim.key == birim_id
+
+        self.client.post(cmd="hizmet_cetveli_giris", wf="gorevlendirme", form=dict(
+            baslama_tarihi = "23.03.2017",
+            bitis_tarihi = "28.09.2017"
+        ))
 
         # Hizmet cetveli kontrolü
         assert HizmetKayitlari.objects.filter().count() > 0
@@ -159,8 +165,8 @@ class TestCase(BaseTestCase):
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            kurum_disi_gorev_baslama_tarihi = baslangic,
-            kurum_disi_gorev_bitis_tarihi = bitis,
+            kurum_disi_gorev_baslama_tarihi = baslangic.strftime("%d.%m.%Y"),
+            kurum_disi_gorev_bitis_tarihi = bitis.strftime("%d.%m.%Y"),
             aciklama = "Standart kurum dışı görevlendirme",
             resmi_yazi_sayi = "234234",
             resmi_yazi_tarih = resmi_yazi_tarih,
@@ -168,8 +174,7 @@ class TestCase(BaseTestCase):
             yevmiye = False,
             yolluk = True,
             ulke= 90,
-            soyut_rol = soyut_rol,
-            personel = personel
+            soyut_rol_id = soyut_rol_id
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
@@ -177,9 +182,9 @@ class TestCase(BaseTestCase):
         gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
-        assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
+        assert gorevlendirme.kurum_disi_gorev_baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
+        assert gorevlendirme.kurum_disi_gorev_bitis_tarihi == bitis
 
     def test_kurum_disi_gorevlendirme_rektor(self):
         """
@@ -215,17 +220,16 @@ class TestCase(BaseTestCase):
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            kurum_disi_gorev_baslama_tarihi = baslangic,
-            kurum_disi_gorev_bitis_tarihi = bitis,
+            kurum_disi_gorev_baslama_tarihi = baslangic.strftime("%d.%m.%Y"),
+            kurum_disi_gorev_bitis_tarihi = bitis.strftime("%d.%m.%Y"),
             aciklama = "Rektör kurum dışı görevlendirme",
             resmi_yazi_sayi = "234234",
-            resmi_yazi_tarih = resmi_yazi_tarih,
+            resmi_yazi_tarih = resmi_yazi_tarih.strftime("%d.%m.%Y"),
             maas = False,
             yevmiye = False,
             yolluk = True,
             ulke= 90,
-            soyut_rol = soyut_rol,
-            personel = personel
+            soyut_rol_id = soyut_rol_id
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
@@ -233,9 +237,14 @@ class TestCase(BaseTestCase):
         gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
-        assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
+        assert gorevlendirme.kurum_disi_gorev_baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
+        assert gorevlendirme.kurum_disi_gorev_bitis_tarihi == bitis
+
+        self.client.post(cmd="hizmet_cetveli_giris", wf="gorevlendirme", form=dict(
+            baslama_tarihi = "23.03.2017",
+            bitis_tarihi = "28.09.2017"
+        ))
 
         # Hizmet cetveli kontrolü
         assert HizmetKayitlari.objects.filter().count() > 0
@@ -278,7 +287,7 @@ class TestCase(BaseTestCase):
             kurum_disi_gorev_bitis_tarihi = bitis.strftime("%d.%m.%Y"),
             aciklama = "Rektör kurum dışı görevlendirme",
             resmi_yazi_sayi = "234234",
-            resmi_yazi_tarih = resmi_yazi_tarih,
+            resmi_yazi_tarih = resmi_yazi_tarih.strftime("%d.%m.%Y"),
             maas = False,
             yevmiye = False,
             yolluk = True,
@@ -291,9 +300,14 @@ class TestCase(BaseTestCase):
         gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
-        assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
+        assert gorevlendirme.kurum_disi_gorev_baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
+        assert gorevlendirme.kurum_disi_gorev_bitis_tarihi == bitis
+
+        self.client.post(cmd="hizmet_cetveli_giris", wf="gorevlendirme", form=dict(
+            baslama_tarihi = "23.03.2017",
+            bitis_tarihi = "28.09.2017"
+        ))
 
         # Hizmet cetveli kontrolü
         assert HizmetKayitlari.objects.filter().count() > 0
@@ -332,17 +346,16 @@ class TestCase(BaseTestCase):
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            kurum_disi_gorev_baslama_tarihi = baslangic,
-            kurum_disi_gorev_bitis_tarihi = bitis,
+            kurum_disi_gorev_baslama_tarihi = baslangic.strftime("%d.%m.%Y"),
+            kurum_disi_gorev_bitis_tarihi = bitis.strftime("%d.%m.%Y"),
             aciklama = "Rektör kurum dışı görevlendirme",
             resmi_yazi_sayi = "234234",
-            resmi_yazi_tarih = resmi_yazi_tarih,
+            resmi_yazi_tarih = resmi_yazi_tarih.strftime("%d.%m.%Y"),
             maas = False,
             yevmiye = False,
             yolluk = True,
             ulke= 90,
-            soyut_rol = soyut_rol,
-            personel = personel
+            soyut_rol_id = soyut_rol_id
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
@@ -350,9 +363,14 @@ class TestCase(BaseTestCase):
         gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
-        assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
+        assert gorevlendirme.kurum_disi_gorev_baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
+        assert gorevlendirme.kurum_disi_gorev_bitis_tarihi == bitis
+
+        self.client.post(cmd="hizmet_cetveli_giris", wf="gorevlendirme", form=dict(
+            baslama_tarihi = "23.03.2017",
+            bitis_tarihi = "28.09.2017"
+        ))
 
         # Hizmet cetveli kontrolü
         assert HizmetKayitlari.objects.filter().count() > 0

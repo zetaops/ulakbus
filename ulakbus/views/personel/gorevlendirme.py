@@ -20,7 +20,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
 from pyoko import ListNode
-from ulakbus.models import AbstractRole, Unit, Personel
+from ulakbus.models import AbstractRole, Unit, Personel, HizmetKayitlari
 from ulakbus.models import KurumDisiGorevlendirmeBilgileri, KurumIciGorevlendirmeBilgileri
 import datetime
 
@@ -74,14 +74,14 @@ class KurumIciGorevlendirme(CrudView):
         gorevlendirme.resmi_yazi_sayi = self.current.input["form"]["resmi_yazi_sayi"]
         gorevlendirme.resmi_yazi_tarih = self.current.input["form"]["resmi_yazi_tarih"]
         gorevlendirme.personel = Personel.objects.get(self.current.task_data["personel_id"])
-        gorevlendirme.save()
+        gorevlendirme.blocking_save()
         #personel = Personel.objects.get(self.current.task_data["personel_id"])
         #self.object.personel = personel
         #self.object.save()
 
         if (
-                (self.current.input["form"]["soyut_rol_id"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
-                (self.current.input["form"]["soyut_rol_id"] == "5xanqtlXnY9dsQhWNV8gMK1rXcm")
+                (self.current.input["form"]["soyut_rol_id"] == "EsDTPb8K5e7HlocpZPlVvX2VDAI") or
+                (self.current.input["form"]["soyut_rol_id"] == "H6h6y7gIdX1JprWlljJniCgXtjU")
            ):
             self.current.task_data["hizmet_cetvel_giris"] = True
         else:
@@ -116,15 +116,15 @@ class KurumDisiGorevlendirme(CrudView):
         gorevlendirme.ulke = self.current.input["form"]["ulke"]
         gorevlendirme.soyut_rol = AbstractRole.objects.get(self.current.input["form"]["soyut_rol_id"])
         gorevlendirme.personel = Personel.objects.get(self.current.task_data["personel_id"])
-        gorevlendirme.save()
+        gorevlendirme.blocking_save()
         #self.set_form_data_to_object()
         #personel = Personel.objects.get(self.current.task_data["personel_id"])
         #self.object.personel = personel
         #self.object.save()
 
         if (
-                    (self.current.input["form"]["soyut_rol_id"] == "JdT303huG7WYAF4FhKiEMOG3OuQ") or
-                    (self.current.input["form"]["soyut_rol_id"] == "5xanqtlXnY9dsQhWNV8gMK1rXcm")
+                    (self.current.input["form"]["soyut_rol_id"] == "EsDTPb8K5e7HlocpZPlVvX2VDAI") or
+                    (self.current.input["form"]["soyut_rol_id"] == "H6h6y7gIdX1JprWlljJniCgXtjU")
            ):
             self.current.task_data["hizmet_cetvel_giris"] = True
         else:
@@ -146,8 +146,28 @@ class HizmetCetveli(CrudView):
         self.form_out(HizmetCetveliForm(self.object, current = self.current))
 
     def kaydet(self):
-        self.set_form_data_to_object()
         personel = Personel.objects.get(self.current.task_data["personel_id"])
-        self.object.personel = personel
-        self.object.tckn = personel.tckn
-        self.object.save()
+        hizmet_kayitlari = HizmetKayitlari()
+        hizmet_kayitlari.personel = personel
+        hizmet_kayitlari.tckn = personel.tckn
+        hizmet_kayitlari.baslama_tarihi = self.current.input["form"]["baslama_tarihi"]
+        hizmet_kayitlari.bitis_tarihi = self.current.input["form"]["bitis_tarihi"]
+        hizmet_kayitlari.gorev = self.current.input["form"]["gorev"]
+        hizmet_kayitlari.unvan_kod = self.current.input["form"]["unvan_kod"]
+        hizmet_kayitlari.yevmiye = self.current.input["form"]["yevmiye"]
+        hizmet_kayitlari.ucret = self.current.input["form"]["ucret"]
+        hizmet_kayitlari.hizmet_sinifi = self.current.input["form"]["hizmet_sinifi"]
+        hizmet_kayitlari.kadro_derece = self.current.input["form"]["kadro_derece"]
+        hizmet_kayitlari.odeme_derece = self.current.input["form"]["odeme_derece"]
+        hizmet_kayitlari.odeme_kademe = self.current.input["form"]["odeme_kademe"]
+        hizmet_kayitlari.odeme_ekgosterge = self.current.input["form"]["odeme_ekgosterge"]
+        hizmet_kayitlari.kazanilmis_hak_ayligi_derece = self.current.input["form"]["kazanilmis_hak_ayligi_derece"]
+        hizmet_kayitlari.kazanilmis_hak_ayligi_kademe = self.current.input["form"]["kazanilmis_hak_ayligi_kademe"]
+        hizmet_kayitlari.kazanilmis_hak_ayligi_ekgosterge = self.current.input["form"]["kazanilmis_hak_ayligi_ekgosterge"]
+        hizmet_kayitlari.emekli_derece = self.current.input["form"]["emekli_derece"]
+        hizmet_kayitlari.emekli_kademe = self.current.input["form"]["emekli_kademe"]
+        hizmet_kayitlari.emekli_ekgosterge = self.current.input["form"]["emekli_ekgosterge"]
+        if "sebep_kod" in self.current.input["form"]:
+            hizmet_kayitlari.sebep_kod = self.current.input["form"]["sebep_kod"]
+        hizmet_kayitlari.kurum_onay_tarihi = self.current.input["form"]["kurum_onay_tarihi"]
+        hizmet_kayitlari.blocking_save()
