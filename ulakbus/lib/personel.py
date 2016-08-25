@@ -194,3 +194,13 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
             personeller[personel.key] = p_data
 
     return personeller
+
+def nonetype_kontrol(data):
+    """
+        Değeri 0 olan integer bir field veritabanından none olarak döndüğü için
+        none değeri 0 olarak return edecek bir metoda itiyaç duyuldu.
+    """
+    if data == None:
+        return 0
+    else:
+        return data
