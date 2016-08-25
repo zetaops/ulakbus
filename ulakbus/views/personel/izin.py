@@ -11,6 +11,7 @@ from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy
 from collections import OrderedDict
 import time
+from ulakbus.lib.personel import nonetype_kontrol
 
 
 class IzinForm(JsonForm):
@@ -93,19 +94,25 @@ class IzinIslemleri(CrudView):
             # Personelin izin alıp alamayacağının kontrolü için tanımlandı
             izin_kontrol = False
             if self.current.input["form"]["tip"] == 1:
-                if (int(personel.gecen_yil_kalan_izin) + int(personel.bu_yil_kalan_izin)) < izin_sure:
+                if (nonetype_kontrol(personel.gecen_yil_kalan_izin) + nonetype_kontrol(personel.bu_yil_kalan_izin)) < izin_sure:
                     self.current.output["msgbox"] = {
                         "type" : "error", "title" : "İşlem Gerçekleştirilemiyor !",
                         "msg" : "Yıllık izin yetersiz"
                     }
                 else:
-                    personel.gecen_yil_kalan_izin -= izin_sure
+                    if personel.gecen_yil_kalan_izin == None:
+                        personel.gecen_yil_kalan_izin = -1 * izin_sure
+                    else:
+                        personel.gecen_yil_kalan_izin -= izin_sure
                     izin_kontrol = True
                     if personel.gecen_yil_kalan_izin < 0:
                         personel.bu_yil_kalan_izin += personel.gecen_yil_kalan_izin
                         personel.gecen_yil_kalan_izin = 0
             elif self.current.input["form"]["tip"] == 5:
-                personel.mazeret_izin += izin_sure
+                if personel.mazeret_izin == None:
+                    personel.mazeret_izin = izin_sure
+                else:
+                    personel.mazeret_izin += izin_sure
                 izin_kontrol = True
 
             if izin_kontrol:
@@ -117,13 +124,15 @@ class IzinIslemleri(CrudView):
                 yeni_izin.adres = self.current.input["form"]["adres"]
                 yeni_izin.telefon = self.current.input["form"]["telefon"]
                 yeni_izin.personel = personel
-                if("vekil" in self.current.input["form"]):
-                    vekil_personel = Personel.objects.get(self.current.input["form"]["vekil"])
+
+                # Vekil personel girilip girilmediğinin kontrolü yapılıyor.
+                if not self.current.input["form"]["vekil_id"] == None:
+                    vekil_personel = Personel.objects.get(self.current.input["form"]["vekil_id"])
                     yeni_izin.vekil = vekil_personel
 
                 yeni_izin.blocking_save()
 
-                personel.save()
+                personel.blocking_save()
                 self.current.output["msgbox"] = {
                     "type" : "info", "title" : "İşem Gerçekleştirildi !",
                     "msg" : "İzin kaydedildi"
@@ -144,6 +153,10 @@ class IzinIslemleri(CrudView):
             izin_dict["İzin Bitiş"] = izin.bitis.strftime("%d.%m.%Y")
             izin_dict["Onay Tarihi"] = izin.onay.strftime("%d.%m.%Y")
             izin_dict["İzin Süresi/Gün"] = str((izin.bitis - izin.baslangic).days + 1)
+            if izin.vekil.ad == None:
+                izin_dict["Vekil Personel"] = ""
+            else:
+                izin_dict["Vekil Personel"] = "%s %s"%(izin.vekil.ad, izin.vekil.soyad)
             izin_list.append(izin_dict)
 
         self.output["object"] = {
