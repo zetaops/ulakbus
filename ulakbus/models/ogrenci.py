@@ -467,12 +467,8 @@ class Ders(Model):
         sube.donem = Donem.guncel_donem()
         sube.save()
 
-    def pre_save(self):
-        self.just_created = not self.exist
-
-    def post_save(self):
-        if self.just_created:
-            self.ontanimli_sube_olustur()
+    def post_creation(self):
+        self.ontanimli_sube_olustur()
 
 
 class Sube(Model):
@@ -540,7 +536,7 @@ class Sube(Model):
             öğretim görevlisini o kanala yönetici olarak atar."""
         channel = Channel()
         channel.name = "%s %s" % (self.ders.kod, self.ad)
-        channel.typ = 15
+        channel.typ = 15  # public kanal
         channel.description = "%s Dersi %s Şubesi Mesajlaşma Kanalı" % (self.ders.ad, self.ad)
         channel.owner = self.okutman.personel.user
         channel.save()

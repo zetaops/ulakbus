@@ -53,7 +53,7 @@ class TestCase(BaseTestCase):
         assert sube.kontenjan == 30
         assert sube.dis_kontenjan == 5
         assert len(Channel.objects) == channel_sayisi + 1
-        assert Channel.objects.get(name = "%s %s" % (ders.kod, sube.ad))
+        assert Channel.objects.get(name="%s %s" % (ders.kod, sube.ad))
 
         ders.delete()
         sube.delete()
