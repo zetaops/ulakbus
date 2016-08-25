@@ -7,6 +7,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from datetime import timedelta, date
+import calendar
+
 __author__ = 'Ali Riza Keles'
 
 HAFTA_ICI_GUNLER = [
@@ -64,3 +67,48 @@ def map_sinav_etkinlik_hafta_gunleri(sinavlar):
         etkinlik_listesi.append(e.__unicode__())
         r[weekday] = etkinlik_listesi
     return r
+
+
+def zaman_araligi(baslangic, bitis):
+    """
+    Verilen iki tarih arasinda kalan tarihleri
+    donduren method.
+
+    Args:
+        baslangic (datetime.date): Date 02.04.2016
+        bitis (datetime.date): Date 04.04.2016
+
+    Returns:
+        (list) [datetime.date(2016, 4, 2), datetime.date(2016, 4, 3), datetime.date(2016, 4, 4)]
+
+    """
+    for n in range(int((bitis - baslangic).days) + 1):
+        yield baslangic + timedelta(n)
+
+
+def resmi_tatil_gunleri_getir(birim_unit, yil, ay):
+    from ulakbus.models.ogrenci import Takvim, Donem
+    from ulakbus.lib.common import get_akademik_takvim
+
+    baslangic, bitis = yil_ve_aya_gore_ilk_ve_son_gun(yil, ay)
+    resmi_tatil_list = []
+    donem_list = Donem.takvim_ayina_rastlayan_donemler(yil, ay)
+    for donem in donem_list:
+        akademik_takvim = get_akademik_takvim(birim_unit, donem.ogretim_yili)
+        tatil_list = []
+        for resmi_tatil in Takvim.objects.filter(akademik_takvim=akademik_takvim,
+                                                 resmi_tatil=True, baslangic__gte=baslangic,
+                                                 bitis__lte=bitis):
+            for gun in zaman_araligi(resmi_tatil.baslangic, resmi_tatil.bitis):
+                tatil_list.append(gun.day)
+        resmi_tatil_list.append(tatil_list)
+
+    return resmi_tatil_list
+
+
+def yil_ve_aya_gore_ilk_ve_son_gun(yil, ay):
+    ilk = date(yil, ay, 1)
+    ayin_ilk_hafta_gunu, ay_sonu = calendar.monthrange(yil, ay)
+    son = date(yil, ay, ay_sonu)
+
+    return ilk, son
