@@ -113,6 +113,9 @@ OBJECT_MENU = {
         {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
          'field': 'personel_id'},
 
+        {'name': 'Personel', 'verbose_name': 'Personel Terfi', 'wf': 'tekil_personel_terfi',
+         'field': 'personel_id'},
+
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
         {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme',

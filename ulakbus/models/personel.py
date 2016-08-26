@@ -19,6 +19,7 @@ from ulakbus.settings import SICIL_PREFIX
 from .auth import AbstractRole
 
 
+
 class Personel(Model):
     """Personel Modeli
 

@@ -6,6 +6,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from dateutil.relativedelta import relativedelta
+from pyoko.exceptions import ObjectDoesNotExist
 import datetime
 from ulakbus.lib.date_time_helper import zaman_araligi
 
@@ -59,7 +61,7 @@ def gorunen_kademe_hesapla(derece, kademe):
         return 0
 
 
-def derece_ilerlet(pkd, der, kad):
+def derece_ilerlet(pkd, der, kad, terfi_tikanma):
     """
     Derece 3 kademede bir artar. Eger kademe 4 gelmise, derece 1 arttirilir
     Args:
@@ -72,7 +74,8 @@ def derece_ilerlet(pkd, der, kad):
 
     """
     if pkd < der:
-        if kad == 4:
+        kad += 1
+        if (not terfi_tikanma) & (kad == 4):
             kad = 1
             der -= 1
     return der, kad
@@ -194,3 +197,53 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
             personeller[personel.key] = p_data
 
     return personeller
+
+
+def terfi_durum_kontrol(personel_id):
+    """
+    :param personel_id:
+    :return: terfi_kontrol (bool) : İlgili personelin terfisinin durup durmadığını belirtir.
+    """
+
+    from ulakbus.models import Personel, AskerlikKayitlari, UcretsizIzin
+
+    personel = Personel.objects.get(personel_id)
+    baslangic_tarih = datetime.date.today() - datetime.timedelta(days=1)
+    bitis_tarih = datetime.date.today() + datetime.timedelta(days=1)
+    askerlik_kontrol = False
+    ucretsiz_izin_kontrol = False
+    aday_memur_kontrol = False
+    try:
+        askerlik_kayit = AskerlikKayitlari.objects.get(
+            personel_id = personel_id,
+            baslama_tarihi__gte = baslangic_tarih,
+            bitis_tarihi__lte = bitis_tarih
+        )
+    except ObjectDoesNotExist:
+        askerlik_kontrol = True
+
+    try:
+        ucretsiz_izin = UcretsizIzin.objects.get(
+            personel_id = personel_id,
+            baslangic_tarih__gte = baslangic_tarih,
+            bitis_tarihi__lte = bitis_tarih
+        )
+    except ObjectDoesNotExist:
+        ucretsiz_izin_kontrol = True
+
+    if not personel.aday_memur:
+        aday_memur_kontrol = True
+
+    # TODO : Personelin ceza durumu kontrol edilecek
+
+    return (askerlik_kontrol and ucretsiz_izin_kontrol and aday_memur_kontrol)
+
+def terfi_tikanma_kontrol(personel_id):
+
+    from ulakbus.models import Personel
+
+    personel = Personel.objects.get(personel_id)
+    if personel.gorev_ayligi_derece == personel.kadro_derece:
+        return True
+    else:
+        return False
