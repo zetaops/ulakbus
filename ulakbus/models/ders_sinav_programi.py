@@ -160,7 +160,7 @@ class DersEtkinligi(Model):
             self.bitis_saat, self.bitis_dakika, self.okutman)
 
 
-class   SinavEtkinligi(Model):
+class SinavEtkinligi(Model):
     class Meta:
         verbose_name = 'Sınav Etkinliği'
         search_field = ['bolum', 'ders', 'sube', 'donem']
@@ -203,8 +203,7 @@ class   SinavEtkinligi(Model):
         listesini döndürür.
 
         """
-
-        return [e.ogrenci for e in OgrenciDersi.objects.filter(sube=self.sube, donem=self.donem)]
+        return [e.ogrenci for e in self.Ogrenciler]
 
     def doluluk_orani_hesapla(self):
         """
@@ -214,15 +213,12 @@ class   SinavEtkinligi(Model):
         odalara dengeli şekilde dağıtmak için kullanılacaktır.
 
         """
-        toplam_kontenjan = 0
-        for sinav_yeri in self.SinavYerleri:
-            toplam_kontenjan += sinav_yeri.room.capacity
+        toplam_kontenjan = sum([e.room.capacity for e in self.SinavYerleri])
         doluluk_orani = len(self.Ogrenciler) / float(toplam_kontenjan)
 
         return doluluk_orani
 
-
-    def ogrencileri_odalara_dagit(self,doluluk_orani):
+    def ogrencileri_odalara_dagit(self, doluluk_orani):
         """
         Öğrencileri sınavın yapılacağı odalara doluluk oranını
         göz önüne alarak dengeli bir şekilde dağıtır.
@@ -241,7 +237,7 @@ class   SinavEtkinligi(Model):
         self.save()
 
     @classmethod
-    def ogrencileri_odalara_rastgele_ata(cls,bolum):
+    def ogrencileri_odalara_rastgele_ata(cls, bolum):
         """
         Bir bölümün yayınlanmış sınav programındaki her bir sınav etkinliğine
         katılacak olan öğrencileri, sınavın yapılabilineceği odalara rastgele
@@ -249,7 +245,7 @@ class   SinavEtkinligi(Model):
 
         """
         donem = Donem.guncel_donem()
-        aktif_sinav_etkinlikleri = cls.aktif_bolum_sinav_etkinlik_listesi(donem,bolum)
+        aktif_sinav_etkinlikleri = cls.aktif_bolum_sinav_etkinlik_listesi(donem, bolum)
         for etkinlik in aktif_sinav_etkinlikleri:
             doluluk_orani = etkinlik.doluluk_orani_hesapla()
             etkinlik.ogrencileri_odalara_dagit(doluluk_orani)
@@ -265,7 +261,6 @@ class   SinavEtkinligi(Model):
 
         return ogrenci_oda.room
 
-
     @classmethod
     def sube_sinav_listesi(cls, sube, archived=False, donem=None):
         """
@@ -273,8 +268,8 @@ class   SinavEtkinligi(Model):
 
         """
         donem = donem or Donem.guncel_donem()
-        return [e for e in cls.objects.filter(published=True, sube=sube,  archived=archived,
-                                                  donem=donem).order_by('-tarih')]
+        return [e for e in cls.objects.filter(published=True, sube=sube, archived=archived,
+                                              donem=donem).order_by('-tarih')]
 
     def __unicode__(self):
         return '{} {} {}'.format(self.ders.ad, self.sube.ad, self.sinav_zamani())
