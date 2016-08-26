@@ -22,6 +22,7 @@ from dateutil.relativedelta import relativedelta
 import datetime
 
 
+
 class Personel(Model):
     """Personel Modeli
 
