@@ -99,7 +99,7 @@ class HarfNotu(Enum):
 
     @classmethod
     def puan_harf_notu(cls, puan):
-        for name, obj in HarfNotu.__members__.items():
+        for name, obj in cls.__members__.items():
             bas, bit = obj.get_100()
             if puan in range(bas, bit + 1):
                 return name
