@@ -222,10 +222,11 @@ class Unit(Model):
     is_academic = field.Boolean("Akademik")
     is_active = field.Boolean("Aktif")
     uid = field.Integer(index=True)
-    parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
+    # parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
 
     @classmethod
     def get_user_keys(cls, unit_key):
+        """recursively gets all roles (keys) under given unit"""
         return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
         stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
         for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):

@@ -14,6 +14,8 @@ from pyoko.conf import settings
 
 from ulakbus.views.reports import ReporterRegistry
 #from zengine.views import basic_view
+from zengine.models import WFCache
+from zengine.models import WFInstance
 from zengine.views.base import BaseView
 from ulakbus.models import Personel, Ogrenci
 from zengine.views.menu import Menu
