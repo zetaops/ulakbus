@@ -18,11 +18,11 @@ class DonemForm(forms.JsonForm):
 
     """
 
-    guz_baslangic_tarihi = fields.Date("Başlangıç Tarihi", format="%d.%m.%Y", required=True)
-    guz_bitis_tarihi = fields.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y", required=True)
-    bahar_baslangic_tarihi = fields.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y",
+    guz_baslangic_tarihi = fields.Date(_("Başlangıç Tarihi"), format="%d.%m.%Y", required=True)
+    guz_bitis_tarihi = fields.Date(_("Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
+    bahar_baslangic_tarihi = fields.Date(_("Başlangıç Tarihi"), index=True, format="%d.%m.%Y",
                                          required=True)
-    bahar_bitis_tarihi = fields.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y", required=True)
+    bahar_bitis_tarihi = fields.Date(_("Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
 
     class Meta:
         grouping = [
@@ -30,7 +30,7 @@ class DonemForm(forms.JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": "Güz Dönemi",
+                        "group_title": _("Güz Dönemi"),
                         "items": ['guz_baslangic_tarihi', 'guz_bitis_tarihi'],
                         "collapse": True,
                     }
@@ -40,7 +40,7 @@ class DonemForm(forms.JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": "Bahar Dönemi",
+                        "group_title": _("Bahar Dönemi"),
                         "items": ['bahar_baslangic_tarihi', 'bahar_bitis_tarihi'],
                         "collapse": True,
 
@@ -58,7 +58,7 @@ class DonemForm(forms.JsonForm):
 
         ]
 
-    kaydet = fields.Button("Kaydet")
+    kaydet = fields.Button(_("Kaydet"))
 
 
 class YeniDonemOlusturma(CrudView):
@@ -85,14 +85,14 @@ class YeniDonemOlusturma(CrudView):
 
         """
 
-        _form = DonemForm(current=self.current, title='Güz ve Bahar Dönemi')
+        _form = DonemForm(current=self.current, title=_('Güz ve Bahar Dönemi'))
 
         son_donem = Donem.son_donem()
 
-        _form.help_text = """Kayıtlardaki en son donem {}
+        _form.help_text = _("""Kayıtlardaki en son donem {}
         Başlangıç Tarihi: {:%d.%m.%Y},
         Bitiş Tarihi: {:%d.%m.%Y}
-        """.format(son_donem.ad,
+        """).format(son_donem.ad,
                    son_donem.baslangic_tarihi,
                    son_donem.bitis_tarihi)
 
@@ -124,6 +124,6 @@ class YeniDonemOlusturma(CrudView):
         """
 
         self.current.output['msgbox'] = {
-            'type': 'bilgilendirme', "title": 'Güz ve Bahar Dönemi',
-            "msg": 'Güz ve Bahar Dönemi başarıyla oluşturulmuştur.'
+            'type': 'bilgilendirme', "title": _('Güz ve Bahar Dönemi'),
+            "msg": _('Güz ve Bahar Dönemi başarıyla oluşturulmuştur.')
         }

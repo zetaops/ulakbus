@@ -30,8 +30,8 @@ def donemler():
 
 
 class DonemSecForm(JsonForm):
-    guncel_donem = fields.Integer("Dönem Seçiniz", choices=donemler)
-    kaydet = fields.Button('Kaydet')
+    guncel_donem = fields.Integer(_("Dönem Seçiniz"), choices=donemler)
+    kaydet = fields.Button(_('Kaydet'))
 
 
 class GuncelDonemDegistirme(CrudView):
@@ -60,7 +60,7 @@ class GuncelDonemDegistirme(CrudView):
 
         """
 
-        _form = DonemSecForm(title='Güncel Dönem Seçiniz', current=self.current)
+        _form = DonemSecForm(title=_('Güncel Dönem Seçiniz'), current=self.current)
 
         # formun güncel dönemi seçili hale getirilir.
         _form.guncel_donem = Donem.guncel_donem().key

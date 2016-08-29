@@ -48,7 +48,7 @@ class ProgramBilgisiForm(forms.JsonForm):
     class Meta:
         include = ['program']
 
-    sec = fields.Button("Seç", cmd="program_sec")
+    sec = fields.Button(_("Seç"), cmd="program_sec")
 
 
 class DersBilgileriForm(forms.JsonForm):
@@ -67,15 +67,15 @@ class DersBilgileriForm(forms.JsonForm):
                    'verilis_bicimi', 'donem',
                    'ders_koordinatoru']
 
-    kaydet = fields.Button("Kaydet", cmd="kaydet")
+    kaydet = fields.Button(_("Kaydet"), cmd="kaydet")
 
 
 class DersDegerlendirmeForm(forms.JsonForm):
     class Meta:
         include = ['Degerlendirme']
 
-    kaydet = fields.Button("Kaydet", cmd="degerlendirme_kaydet", flow="end")
-    kaydet_yeni_kayit = fields.Button("Kaydet/Yeni Kayıt Ekle", cmd="kaydet", flow="start")
+    kaydet = fields.Button(_("Kaydet"), cmd="degerlendirme_kaydet", flow="end")
+    kaydet_yeni_kayit = fields.Button(_("Kaydet/Yeni Kayıt Ekle"), cmd="kaydet", flow="start")
 
 
 class DersEkle(CrudView):
@@ -150,7 +150,7 @@ class SecimForm(forms.JsonForm):
 
     """
 
-    sec = fields.Button("Sec", cmd="ders_sec")
+    sec = fields.Button(_("Sec"), cmd="ders_sec")
 
 
 class ProgramForm(forms.JsonForm):
@@ -159,7 +159,7 @@ class ProgramForm(forms.JsonForm):
 
     """
 
-    sec = fields.Button("Sec", cmd="ders_sec")
+    sec = fields.Button(_("Sec"), cmd="ders_sec")
 
 
 class SubelendirmeForm(forms.JsonForm):
@@ -167,18 +167,18 @@ class SubelendirmeForm(forms.JsonForm):
     ``DersSubelendirme`` sınıfı için form olarak kullanılacaktır.
     """
 
-    kaydet_ders = fields.Button("Kaydet ve Ders Seçim Ekranına Dön", cmd="subelendirme_kaydet",
+    kaydet_ders = fields.Button(_("Kaydet ve Ders Seçim Ekranına Dön"), cmd="subelendirme_kaydet",
                                 flow="ders_okutman_formu")
-    program_sec = fields.Button("Kaydet ve Program Seçim Ekranına Dön", cmd="subelendirme_kaydet",
+    program_sec = fields.Button(_("Kaydet ve Program Seçim Ekranına Dön"), cmd="subelendirme_kaydet",
                                 flow="program_sec")
-    bilgi_ver = fields.Button("Tamamla ve Hocaları Bilgilendir", cmd="subelendirme_kaydet",
+    bilgi_ver = fields.Button(_("Tamamla ve Hocaları Bilgilendir"), cmd="subelendirme_kaydet",
                               flow="bilgi_ver")
 
     class Subeler(ListNode):
-        ad = fields.String('Sube Adi')
-        kontenjan = fields.Integer('Sube Kontenjani')
-        dis_kontenjan = fields.Integer('Sube Dis Kontenjani')
-        okutman = fields.String('Okutman', choices=okutman_choices)
+        ad = fields.String(_('Sube Adi'))
+        kontenjan = fields.Integer(_('Sube Kontenjani'))
+        dis_kontenjan = fields.Integer(_('Sube Dis Kontenjani'))
+        okutman = fields.String(_('Okutman'), choices=okutman_choices)
 
 
 class NotGirisForm(forms.JsonForm):
@@ -186,11 +186,11 @@ class NotGirisForm(forms.JsonForm):
         inline_edit = ['degerlendirme', 'aciklama']
 
     class Ogrenciler(ListNode):
-        ogrenci_no = fields.String('No')
-        ad_soyad = fields.String('Ad Soyad')
-        degerlendirme = fields.Integer('Not')
-        aciklama = fields.String('Aciklama')
-        key = fields.String('KKKKey', hidden=True)
+        ogrenci_no = fields.String(_('No'))
+        ad_soyad = fields.String(_('Ad Soyad'))
+        degerlendirme = fields.Integer(_('Not'))
+        aciklama = fields.String(_('Aciklama'))
+        key = fields.String(_('KKKKey'), hidden=True)
 
 
 class DersSubelendirme(CrudView):
@@ -277,7 +277,7 @@ class DersSubelendirme(CrudView):
         """
 
         self.set_client_cmd('form')
-        self.output['objects'] = [['Dersler'], ]
+        self.output['objects'] = [[_('Dersler')], ]
 
         if 'program' in self.current.input['form']:
             self.current.task_data['program'] = self.current.input['form']['program']
@@ -390,7 +390,7 @@ class DersSubelendirme(CrudView):
         just_deleted = self.current.task_data.get('just_deleted', [])
         ders_key = self.current.task_data['ders_key']
 
-        title = "Şubelendirme"
+        title = _("Şubelendirme")
         bolum_baskani = "%s %s" % (self.current.user.name, self.current.user.surname)
         msg = "Bölum Başkanı %s tarafından şubelerinizde degisiklikler yapilmistir." % bolum_baskani
         okutmanlar = []
@@ -409,8 +409,8 @@ class DersSubelendirme(CrudView):
                 notify(s.okutman)
 
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Mesaj Iletildi',
-            "msg": 'Şubelendirme Bilgileri şu hocalara iletildi: %s' % ", ".join(okutmanlar)}
+            'type': 'info', "title": _('Mesaj Iletildi'),
+            "msg": _('Şubelendirme Bilgileri şu hocalara iletildi: %s' % ", ").join(okutmanlar)}
 
 
 class NotGirisi(CrudView):
@@ -436,13 +436,13 @@ class NotGirisi(CrudView):
 
         """
 
-        _form = forms.JsonForm(current=self.current, title="Ders Seçim Formu")
+        _form = forms.JsonForm(current=self.current, title=_("Ders Seçim Formu"))
         user = self.current.user
         subeler = Sube.objects.filter(okutman_id=self.get_okutman_key)
-        _form.sube = fields.Integer("Sube Seçiniz",
+        _form.sube = fields.Integer(_("Sube Seçiniz"),
                                     choices=prepare_choices_for_model(Sube,
                                                                       okutman_id=self.get_okutman_key))
-        _form.sec = fields.Button("Seç", cmd="Ders Şubesi Seçin")
+        _form.sec = fields.Button(_("Seç"), cmd="Ders Şubesi Seçin")
         self.form_out(_form)
 
     def sinav_sec(self):
@@ -465,17 +465,17 @@ class NotGirisi(CrudView):
 
         """
 
-        _form = forms.JsonForm(current=self.current, title="Sınav Seçim Formu")
+        _form = forms.JsonForm(current=self.current, title=_("Sınav Seçim Formu"))
 
         try:
             sube_key = self.current.input['form']['sube']
         except:
             sube_key = self.current.task_data["sube"]
 
-        _form.sinav = fields.Integer("Sınav Seçiniz",
+        _form.sinav = fields.Integer(_("Sınav Seçiniz"),
                                      choices=prepare_choices_for_model(Sinav, sube_id=sube_key))
         self.current.task_data["sube"] = sube_key
-        _form.sec = fields.Button("Seç", cmd="Sınav Seçin")
+        _form.sec = fields.Button(_("Seç"), cmd="Sınav Seçin")
         self.form_out(_form)
 
     def sinav_kontrol(self):
@@ -524,7 +524,7 @@ class NotGirisi(CrudView):
 
         """
 
-        _form = NotGirisForm(current=self.current, title="Not Giriş Formu")
+        _form = NotGirisForm(current=self.current, title=_("Not Giriş Formu"))
         sinav_key = self.current.task_data['sinav_key']
         sube_key = self.current.task_data["sube"]
         sinav = Sinav.objects.get(sinav_key)
@@ -583,7 +583,7 @@ class NotGirisi(CrudView):
 
         """
 
-        _form = forms.JsonForm(current=self.current, title="Not Önizleme Ekranı")
+        _form = forms.JsonForm(current=self.current, title=_("Not Önizleme Ekranı"))
 
         try:  # Eğer istek sinav_kontrol aşamasından yönlendirilmemişse öğrenci notları için formdan gelen veriyi kullan
             ogrenci_notlar = self.current.input['form']['Ogrenciler']
@@ -631,21 +631,21 @@ class NotGirisi(CrudView):
                 "msg": 'Bu derse ait notlar onaylanmış olduğu için içeriği değiştirilemez.'
 
             }
-            _form.ders_secim = fields.Button("Ders Seçim Ekranına Dön", cmd="ders_sec",
+            _form.ders_secim = fields.Button(_("Ders Seçim Ekranına Dön"), cmd="ders_sec",
                                              flow="ders_secim_adimina_don")
-            _form.sinav_secim = fields.Button("Sınav Seçim Ekranına Dön", cmd="sinav_sec",
+            _form.sinav_secim = fields.Button(_("Sınav Seçim Ekranına Dön"), cmd="sinav_sec",
                                               flow="sinav_secim_adimina_don")
 
         else:  # Eğer notlar hala onaylanmamışsa (teslim edilmemişse) form düğmelerini göster
 
-            _form.not_onay = fields.Boolean("Sınav Notlarını Onaylıyorum (Bu işlem geri alınamaz!)")
-            _form.not_duzenle = fields.Button("Notları Düzenle", cmd="not_girisi",
+            _form.not_onay = fields.Boolean(_("Sınav Notlarını Onaylıyorum (Bu işlem geri alınamaz!)"))
+            _form.not_duzenle = fields.Button(_("Notları Düzenle"), cmd="not_girisi",
                                               flow="not_giris_formuna_don")
-            _form.kaydet = fields.Button("Kaydet", cmd="not_kaydet", flow="end")
-            _form.kaydet_ve_ders_sec = fields.Button("Kaydet ve Ders Seçim Ekranına Dön",
+            _form.kaydet = fields.Button(_("Kaydet"), cmd="not_kaydet", flow="end")
+            _form.kaydet_ve_ders_sec = fields.Button(_("Kaydet ve Ders Seçim Ekranına Dön"),
                                                      cmd="ders_sec",
                                                      flow="ders_adimina_don")
-            _form.kaydet_ve_sinav_sec = fields.Button("Kaydet ve Sınav Seçim Ekranına Dön",
+            _form.kaydet_ve_sinav_sec = fields.Button(_("Kaydet ve Sınav Seçim Ekranına Dön"),
                                                       cmd="sinav_sec",
                                                       flow="sinav_adimina_don")
 
@@ -710,8 +710,8 @@ class NotGirisi(CrudView):
         sinav_tarihi = sinav.tarih.strftime("%d/%m/%Y")
 
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Notlar Kaydedildi',
-            "msg": '%s dersine ait %s tarihli sınav notları kaydedildi' % (
+            'type': 'info', "title": _('Notlar Kaydedildi'),
+            "msg": _('%s dersine ait %s tarihli sınav notları kaydedildi') % (
             sinav.ders.ad, sinav_tarihi)}
 
     @property
