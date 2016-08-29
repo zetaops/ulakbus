@@ -295,6 +295,7 @@ class KayitDondurmaForm(forms.JsonForm):
     ``KayitDondurma`` sınıfı için form olarak kullanılacaktır.
 
     """
+
     class Meta:
         inline_edit = ['secim', 'aciklama']
 
@@ -574,7 +575,7 @@ class KayitDondurma(CrudView):
             try:
                 danisman_key = ogrenci_program.danisman.user.key
                 ogrenci_program.danisman.user.send_notification(title="Öğrenci Kaydı Donduruldu",
-                                                 message=notify_message, typ=111)
+                                                                message=notify_message, typ=111)
                 self.current.output['msgbox'] = {
                     'type': 'info', "title": 'Öğrenci Kayıt Dondurma Başarılı',
                     "msg": '%s' % (notify_message)
@@ -584,93 +585,6 @@ class KayitDondurma(CrudView):
                     'type': 'warning', "title": 'Bir Hata Oluştu',
                     "msg": 'Öğrenci Danışmanı Bilgilendirme Başarısız. Hata Kodu : %s' % (e.message)
                 }
-
-
-class BasariDurum(CrudView):
-    class Meta:
-        model = "OgrenciProgram"
-
-    def not_durum(self, ortalama):
-        harf_notu = ''
-
-        harflendirme = {
-            100: 'AA',
-            89: 'BA',
-            84: 'BB',
-            74: 'CB',
-            69: 'CC',
-            59: 'DC',
-            54: 'DD',
-            49: 'FD',
-            39: 'FF',
-        }
-        for key in sorted(harflendirme.keys()):
-            if key >= ortalama:
-                harf_notu = harflendirme[key]
-                break
-
-        return harf_notu
-
-    def doneme_bazli_not_tablosu(self):
-
-        # unit = self.current.role.unit
-        # program = Program.objects.get(birim=unit)
-
-        ogrenci = self.current.role.get_user().ogrenci
-        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
-        donemler = [d.donem for d in ogrenci_program.OgrenciDonem]
-        # donemler = sorted(donemler, key=lambda donem: donem.baslangic_tarihi)
-        # donemler = ogrenci_program.tarih_sirasiyla_donemler()
-
-        donem_tablosu = list()
-
-        for donem in donemler:
-            donem_basari_durumu = [
-                ['Ders Kodu', 'Ders Adi', 'Ogretim Elemani', 'Sinav Notlari', 'Ortalama', 'Not', 'Durum']
-            ]
-            ogrenci_dersler = OgrenciDersi.objects.filter(donem=donem,
-                                                          ogrenci_program=ogrenci_program)
-            for d in ogrenci_dersler:
-                dersler = list()
-                dersler.append(d.ders.kod)
-                dersler.append("""**%s**
-                \n**TU:** %s - **Krd:** %s - **AKTS:** %s""" % (d.ders_adi(), str(d.ders.teori_saati) + '-'
-                                                                + str(d.ders.uygulama_saati), str(d.ders.yerel_kredisi),
-                                                                str(d.ders.ects_kredisi)))
-                degerlendirmeler = DegerlendirmeNot.objects.filter(
-                    ogrenci_no=ogrenci_program.ogrenci_no, donem=donem.ad, ders=d.ders)
-                notlar = [(deg.sinav.get_tur_display(),
-                           deg.puan,
-                           deg.sinav.sube_ortalamasi,
-                           deg.sinav.tarih) for deg in degerlendirmeler]
-                dersler.append('Ogretim Elemani')
-                if len(notlar) > 0:
-                    dersler.append(''.join(["""**%s:** %s, **Ort:** %s, **Tarih:** %s
-                    \n""" % (sinav, puan, ort, tarih) for sinav, puan, ort, tarih in notlar]))
-                    notlar = list(zip(*notlar)[1])
-                    ortalama = sum(notlar) / len(notlar)
-                    dersler.append("{0:.2f}".format(ortalama))
-                    dersler.append(self.not_durum(ortalama))
-                    dersler.append('Gecti' if ortalama > 59 else 'Kaldi')
-                else:
-                    dersler.append('')
-                    dersler.append('')
-                    dersler.append('')
-                    dersler.append('')
-                donem_basari_durumu.append({"fields": dersler})
-            donem_tablosu.append(
-                {
-                    "key": donem.ad,
-                    "selected": donem.guncel,
-                    "objects": donem_basari_durumu
-                }
-            )
-
-            self.output['objects'] = donem_tablosu
-            self.output['meta']['selective_listing'] = True
-            self.output['meta']['selective_listing_label'] = "Dönem Seçiniz"
-            self.output['meta']['allow_actions'] = False
-
 
 class DersSecimForm(forms.JsonForm):
     class Meta:
@@ -756,7 +670,8 @@ class OgrenciDersAtama(CrudView):
             self.current.task_data['program_key'] = program_key
             guncel_donem = Donem.guncel_donem()
             ogrenci_program = OgrenciProgram.objects.get(program_key)
-            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program, donem=guncel_donem)
+            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program,
+                                                           donem=guncel_donem)
             _form = DersSecimForm(current=self.current, title="Ders Seçiniz")
             for ogrenci_dersi in ogrenci_dersleri:
                 ogrenci_dersi_lst.append(ogrenci_dersi.key)
@@ -769,7 +684,8 @@ class OgrenciDersAtama(CrudView):
             for ders in self.current.task_data['dersler']:
                 try:
                     ogrenci_dersi = OgrenciDersi.objects.get(sube_id=ders['key'],
-                                                             ogrenci_id=self.current.session['ogrenci_id'])
+                                                             ogrenci_id=self.current.session[
+                                                                 'ogrenci_id'])
                     if ogrenci_dersi.key not in self.current.task_data['ogrenci_dersi_lst']:
                         self.current.task_data['ogrenci_dersi_lst'].append(ogrenci_dersi.key)
 
@@ -830,12 +746,15 @@ class OgrenciDersAtama(CrudView):
         is_new_lst = []
         for ders in self.current.task_data['dersler']:
             ogrenci_dersi, is_new = OgrenciDersi.objects.get_or_create(sube_id=ders['key'],
-                                                                       ogrenci_id=self.current.session['ogrenci_id'])
+                                                                       ogrenci_id=
+                                                                       self.current.session[
+                                                                           'ogrenci_id'])
             is_new_lst.append(is_new)
             if is_new:
                 ogrenci_dersi.sube = Sube.objects.get(ders['key'])
                 ogrenci_dersi.ogrenci = Ogrenci.objects.get(self.current.session['ogrenci_id'])
-                ogrenci_dersi.ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['program_key'])
+                ogrenci_dersi.ogrenci_program = OgrenciProgram.objects.get(
+                    self.current.task_data['program_key'])
                 ogrenci_dersi.save()
 
         def all_same(items):
