@@ -1,0 +1,289 @@
+# English translations for PROJECT.
+# Copyright (C) 2016 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-08-29 17:05+0300\n"
+"PO-Revision-Date: 2016-08-29 17:24+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: views/common/guncel_donem_degistirme.py:34
+msgid "Dönem Seçiniz"
+msgstr "Select a Term"
+
+#: views/common/guncel_donem_degistirme.py:35
+#: views/common/yeni_donem_olusturma.py:62 views/ders/danisman.py:43
+#: views/ders/ders.py:71 views/ders/ders.py:78 views/ders/ders.py:645
+msgid "Kaydet"
+msgstr "Save"
+
+#: views/common/guncel_donem_degistirme.py:64
+msgid "Güncel Dönem Seçiniz"
+msgstr "Choose a Current Term"
+
+#: views/common/guncel_donem_degistirme.py:97
+msgid "Güncel Dönem Değiştirme"
+msgstr "Change Current Term"
+
+#: views/common/guncel_donem_degistirme.py:98
+msgid "{donem} dönemi güncel dönem olarak atanmıştır"
+msgstr "Term {donem} has been set as the current term"
+
+#: views/common/yeni_donem_olusturma.py:22
+#: views/common/yeni_donem_olusturma.py:24
+msgid "Başlangıç Tarihi"
+msgstr "Start Date"
+
+#: views/common/yeni_donem_olusturma.py:23
+#: views/common/yeni_donem_olusturma.py:26
+msgid "Bitiş Tarihi"
+msgstr "Finish Date"
+
+#: views/common/yeni_donem_olusturma.py:34
+msgid "Güz Dönemi"
+msgstr "Fall Term"
+
+#: views/common/yeni_donem_olusturma.py:44
+msgid "Bahar Dönemi"
+msgstr "Spring Term"
+
+#: views/common/yeni_donem_olusturma.py:89
+#: views/common/yeni_donem_olusturma.py:128
+msgid "Güz ve Bahar Dönemi"
+msgstr "Spring and Fall Term"
+
+#: views/common/yeni_donem_olusturma.py:93
+#, python-format
+msgid ""
+"Kayıtlardaki en son donem {}\n"
+"        Başlangıç Tarihi: {:%d.%m.%Y},\n"
+"        Bitiş Tarihi: {:%d.%m.%Y}\n"
+"        "
+msgstr ""
+"Last term in the records {}\n"
+"        Start Date: {:%d.%m.%Y},\n"
+"        Finish Date: {:%d.%m.%Y}\n"
+"        "
+
+#: views/common/yeni_donem_olusturma.py:129
+msgid "Güz ve Bahar Dönemi başarıyla oluşturulmuştur."
+msgstr "Fall and Spring Term has been successfully created."
+
+#: views/ders/danisman.py:31
+msgid "İleri"
+msgstr "Next"
+
+#: views/ders/danisman.py:40 views/ders/ders.py:191
+msgid "Ad Soyad"
+msgstr "Name Surname"
+
+#: views/ders/danisman.py:41 views/ders/ders.py:194
+msgid "Key"
+msgstr "Key"
+
+#: views/ders/danisman.py:88
+msgid "Bölüm Seçiniz"
+msgstr "Select a Department"
+
+#: views/ders/danisman.py:99
+msgid "Okutman Seçiniz"
+msgstr "Select a Lecturer"
+
+#: views/ders/danisman.py:148
+msgid "Danışmanlar Kaydedildi"
+msgstr "Advisors Saved"
+
+#: views/ders/danisman.py:149
+#, python-format
+msgid ""
+"%(donem)s dönemi için %(program)s programına ait danışman listesi "
+"kaydedilmiştir"
+msgstr ""
+"Advisor list of program %(program)s for term %(donem)s"
+"has been saved"
+
+#: views/ders/ders.py:52 views/ders/ders.py:154 views/ders/ders.py:163
+#: views/ders/ders.py:446 views/ders/ders.py:479
+msgid "Seç"
+msgstr "Select"
+
+#: views/ders/ders.py:79
+msgid "Kaydet/Yeni Kayıt Ekle"
+msgstr "Save/Add New Record"
+
+#: views/ders/ders.py:171 views/ders/ders.py:646
+msgid "Kaydet ve Ders Seçim Ekranına Dön"
+msgstr "Save and Return to Course Selection Screen"
+
+#: views/ders/ders.py:173
+msgid "Kaydet ve Program Seçim Ekranına Dön"
+msgstr "Save and Return to Program Selection Screen"
+
+#: views/ders/ders.py:175
+msgid "Tamamla ve Hocaları Bilgilendir"
+msgstr "Finish and Notify Lecturers"
+
+#: views/ders/ders.py:179
+msgid "Şube Adı"
+msgstr "Section Name"
+
+#: views/ders/ders.py:180
+msgid "Şube Kontenjanı"
+msgstr "Section Capacity"
+
+#: views/ders/ders.py:181
+msgid "Şube Dış Kontenjanı"
+msgstr "Section External Capacity"
+
+#: views/ders/ders.py:182
+msgid "Okutman"
+msgstr "Lecturer"
+
+#: views/ders/ders.py:190
+msgid "No"
+msgstr "Number"
+
+#: views/ders/ders.py:192
+msgid "Not"
+msgstr "Grade"
+
+#: views/ders/ders.py:193 views/ders/ders.py:599 views/ders/ders.py:624
+msgid "Açıklama"
+msgstr "Explanation"
+
+#: views/ders/ders.py:281
+msgid "Dersler"
+msgstr "Courses"
+
+#: views/ders/ders.py:314
+#, python-format
+msgid ""
+"* **%(unvan)s %(ad)s %(soyad)s**\n"
+"                                Sube: %(sube)s - Kontenjan: %(kontenjan)s"
+msgstr ""
+"* **%(unvan)s %(ad)s %(soyad)s**\n"
+"                                Section: %(sube)s - Capacity: %(kontenjan)s"
+
+#: views/ders/ders.py:322
+msgid "Şubelendir"
+msgstr "Sectioning"
+
+#: views/ders/ders.py:343
+#, python-format
+msgid "%(donem)s / %(ders)s dersi için şubelendirme"
+msgstr "Sectioning for %(ders)s of %(donem)s"
+
+#: views/ders/ders.py:394
+msgid "Şubelendirme"
+msgstr "Sectioning"
+
+#: views/ders/ders.py:396
+#, python-format
+msgid "Bölum Başkanı %s tarafından şubelerinizde degisiklikler yapilmistir."
+msgstr "Department Head %s has made changes to your sections."
+
+#: views/ders/ders.py:413
+msgid "Mesaj İletildi"
+msgstr "Message Delivered"
+
+#: views/ders/ders.py:414
+#, python-format
+msgid "Şubelendirme bilgileri şu hocalara iletildi: %s"
+msgstr "Sectioning information has been sent to the following lecturers: %s"
+
+#: views/ders/ders.py:440
+msgid "Ders Seçim Formu"
+msgstr "Course Selection Form"
+
+#: views/ders/ders.py:443
+msgid "Şube Seçiniz"
+msgstr "Select Section"
+
+#: views/ders/ders.py:446
+msgid "Ders Şubesi Seçin"
+msgstr "Select Course Section"
+
+#: views/ders/ders.py:469
+msgid "Sınav Seçim Formu"
+msgstr "Exam Selection Form"
+
+#: views/ders/ders.py:476
+msgid "Sınav Seçiniz"
+msgstr "Select Exam"
+
+#: views/ders/ders.py:479
+msgid "Sınav Seçin"
+msgstr "Select Exam"
+
+#: views/ders/ders.py:528
+msgid "Not Giriş Formu"
+msgstr "Grade Entry Form"
+
+#: views/ders/ders.py:561
+msgid "Önizleme"
+msgstr "Preview"
+
+#: views/ders/ders.py:587
+msgid "Not Önizleme Ekranı"
+msgstr "Grade Preview Screen"
+
+#: views/ders/ders.py:596 views/ders/ders.py:620
+msgid "Öğrenci No"
+msgstr "Student Number"
+
+#: views/ders/ders.py:597 views/ders/ders.py:621
+msgid "Adı Soyadı"
+msgstr "Firstname Surname"
+
+#: views/ders/ders.py:598 views/ders/ders.py:623
+msgid "Değerlendirme"
+msgstr "Grading"
+
+#: views/ders/ders.py:631
+msgid "Notlar Onaylandı"
+msgstr "Grades Approved"
+
+#: views/ders/ders.py:632
+msgid "Bu derse ait notlar onaylanmış olduğu için içeriği değiştirilemez."
+msgstr "The contents may not be changed as the grades of this course have been approved."
+
+#: views/ders/ders.py:635
+msgid "Ders Seçim Ekranına Dön"
+msgstr "Return to Course Selection Screen"
+
+#: views/ders/ders.py:637
+msgid "Sınav Seçim Ekranına Dön"
+msgstr "Return to Grade Selection Screen"
+
+#: views/ders/ders.py:642
+msgid "Sınav Notlarını Onaylıyorum (Bu işlem geri alınamaz!)"
+msgstr "Approve Exam Grades (This operation can NOT be reversed!)"
+
+#: views/ders/ders.py:643
+msgid "Notları Düzenle"
+msgstr "Edit Grades"
+
+#: views/ders/ders.py:649
+msgid "Kaydet ve Sınav Seçim Ekranına Dön"
+msgstr "Save and Return to Exam Selection Screen"
+
+#: views/ders/ders.py:714
+msgid "Notlar Kaydedildi"
+msgstr "Grades Saved"
+
+#: views/ders/ders.py:715
+#, python-format
+msgid "%(ders)s dersine ait %(tarih)s tarihli sınav notları kaydedildi"
+msgstr ""
+

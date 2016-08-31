@@ -20,6 +20,7 @@ from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
 from ulakbus.models.auth import Unit
 from collections import OrderedDict
 from ulakbus.views.ders.ders import prepare_choices_for_model
+from zengine.lib.translation import gettext as _
 
 
 class DonemDanismanForm(forms.JsonForm):
@@ -27,7 +28,7 @@ class DonemDanismanForm(forms.JsonForm):
 
     """
 
-    ileri = fields.Button(_("İleri"))
+    ileri = fields.Button(_(u"İleri"))
 
 
 class DonemDanismanListForm(forms.JsonForm):
@@ -35,11 +36,11 @@ class DonemDanismanListForm(forms.JsonForm):
         inline_edit = ['secim']
 
     class Okutmanlar(ListNode):
-        secim = fields.Boolean(type="checkbox")
-        ad_soyad = fields.String(_('Ad Soyad'))
-        key = fields.String(_('Key'), hidden=True)
+        secim = fields.Boolean(_(u'Seçim'), type="checkbox")
+        ad_soyad = fields.String(_(u'Ad Soyad'))
+        key = fields.String(_(u'Key'), hidden=True)
 
-    kaydet = fields.Button(_("Kaydet"))
+    kaydet = fields.Button(_(u"Kaydet"))
 
 
 class DonemDanismanAtama(CrudView):
@@ -84,7 +85,7 @@ class DonemDanismanAtama(CrudView):
     def bolum_sec(self):
 
         _unit = self.current.role.unit
-        _form = DonemDanismanForm(current=self, title=_("Bölüm Seçiniz"))
+        _form = DonemDanismanForm(current=self, title=_(u"Bölüm Seçiniz"))
         _choices = prepare_choices_for_model(Unit, yoksis_no=_unit.yoksis_no)
         _form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
@@ -95,7 +96,7 @@ class DonemDanismanAtama(CrudView):
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
         okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
         donem = Donem.guncel_donem()
-        _form = DonemDanismanListForm(current=self, title=_("Okutman Seçiniz"))
+        _form = DonemDanismanListForm(current=self, title=_(u"Okutman Seçiniz"))
 
         for okt in okutmanlar:
             try:
@@ -144,6 +145,6 @@ class DonemDanismanAtama(CrudView):
         donem = Donem.objects.get(guncel=True)
 
         self.current.output['msgbox'] = {
-            'type': 'info', "title": _('Danismanlar Kaydedildi'),
-            "msg": _('%s dönemi için %s programına ait danışman listesi kaydedilmiştir') % (
-                donem, unit)}
+            'type': 'info', "title": _(u'Danışmanlar Kaydedildi'),
+            "msg": _(u'%(donem)s dönemi için %(program)s programına ait danışman listesi kaydedilmiştir') % {
+                'donem': donem, 'program': unit}}

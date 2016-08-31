@@ -46,6 +46,11 @@ class User(Model, BaseUser):
     name = field.String("First Name", index=True)
     surname = field.String("Surname", index=True)
     superuser = field.Boolean("Super user", default=False)
+    locale_language = field.String("Preferred Language", index=False, default=settings.DEFAULT_LANG)
+    locale_datetime = field.String("Preferred Date and Time Format", index=False,
+                                   default=settings.DEFAULT_LOCALIZATION_FORMAT)
+    locale_number = field.String("Preferred Number Format", index=False,
+                                 default=settings.DEFAULT_LOCALIZATION_FORMAT)
 
     class Meta:
         app = 'Sistem'

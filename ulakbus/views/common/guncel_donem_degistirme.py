@@ -10,6 +10,7 @@ from ulakbus.models import Donem, OgretimYili
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _
 
 
 def donemler():
@@ -30,8 +31,8 @@ def donemler():
 
 
 class DonemSecForm(JsonForm):
-    guncel_donem = fields.Integer(_("Dönem Seçiniz"), choices=donemler)
-    kaydet = fields.Button(_('Kaydet'))
+    guncel_donem = fields.Integer(_(u"Dönem Seçiniz"), choices=donemler)
+    kaydet = fields.Button(_(u'Kaydet'))
 
 
 class GuncelDonemDegistirme(CrudView):
@@ -60,7 +61,7 @@ class GuncelDonemDegistirme(CrudView):
 
         """
 
-        _form = DonemSecForm(title=_('Güncel Dönem Seçiniz'), current=self.current)
+        _form = DonemSecForm(title=_(u'Güncel Dönem Seçiniz'), current=self.current)
 
         # formun güncel dönemi seçili hale getirilir.
         _form.guncel_donem = Donem.guncel_donem().key
@@ -93,5 +94,5 @@ class GuncelDonemDegistirme(CrudView):
 
         donem = Donem.objects.get(self.current.task_data['donem_key'])
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Güncel Dönem Değiştirme',
-            "msg": '{0} dönemi güncel dönem olarak atanmıştır'.format(donem)}
+            'type': 'info', "title": _(u'Güncel Dönem Değiştirme'),
+            "msg": _(u'{donem} dönemi güncel dönem olarak atanmıştır').format(donem=donem)}

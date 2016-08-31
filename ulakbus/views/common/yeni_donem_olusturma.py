@@ -10,6 +10,7 @@ from ulakbus.models import Donem
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _, format_date
 
 
 class DonemForm(forms.JsonForm):
@@ -18,11 +19,11 @@ class DonemForm(forms.JsonForm):
 
     """
 
-    guz_baslangic_tarihi = fields.Date(_("Başlangıç Tarihi"), format="%d.%m.%Y", required=True)
-    guz_bitis_tarihi = fields.Date(_("Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
-    bahar_baslangic_tarihi = fields.Date(_("Başlangıç Tarihi"), index=True, format="%d.%m.%Y",
+    guz_baslangic_tarihi = fields.Date(_(u"Başlangıç Tarihi"), format="%d.%m.%Y", required=True)
+    guz_bitis_tarihi = fields.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
+    bahar_baslangic_tarihi = fields.Date(_(u"Başlangıç Tarihi"), index=True, format="%d.%m.%Y",
                                          required=True)
-    bahar_bitis_tarihi = fields.Date(_("Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
+    bahar_bitis_tarihi = fields.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
 
     class Meta:
         grouping = [
@@ -30,7 +31,7 @@ class DonemForm(forms.JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": _("Güz Dönemi"),
+                        "group_title": _(u"Güz Dönemi"),
                         "items": ['guz_baslangic_tarihi', 'guz_bitis_tarihi'],
                         "collapse": True,
                     }
@@ -40,7 +41,7 @@ class DonemForm(forms.JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": _("Bahar Dönemi"),
+                        "group_title": _(u"Bahar Dönemi"),
                         "items": ['bahar_baslangic_tarihi', 'bahar_bitis_tarihi'],
                         "collapse": True,
 
@@ -58,7 +59,7 @@ class DonemForm(forms.JsonForm):
 
         ]
 
-    kaydet = fields.Button(_("Kaydet"))
+    kaydet = fields.Button(_(u"Kaydet"))
 
 
 class YeniDonemOlusturma(CrudView):
@@ -85,16 +86,16 @@ class YeniDonemOlusturma(CrudView):
 
         """
 
-        _form = DonemForm(current=self.current, title=_('Güz ve Bahar Dönemi'))
+        _form = DonemForm(current=self.current, title=_(u'Güz ve Bahar Dönemi'))
 
         son_donem = Donem.son_donem()
 
-        _form.help_text = _("""Kayıtlardaki en son donem {}
-        Başlangıç Tarihi: {:%d.%m.%Y},
-        Bitiş Tarihi: {:%d.%m.%Y}
-        """).format(son_donem.ad,
-                   son_donem.baslangic_tarihi,
-                   son_donem.bitis_tarihi)
+        _form.help_text = _(u"""Kayıtlardaki en son donem {donem}
+        Başlangıç Tarihi: {baslangic},
+        Bitiş Tarihi: {bitis}
+        """).format(donem=son_donem.ad,
+                    baslangic=format_date(son_donem.baslangic_tarihi),
+                    bitis=format_date(son_donem.bitis_tarihi))
 
         self.form_out(_form)
 
@@ -114,8 +115,8 @@ class YeniDonemOlusturma(CrudView):
 
         fdata = self.current.input['form']
 
-        yeni_donem('Bahar', fdata['bahar_baslangic_tarihi'], fdata['bahar_bitis_tarihi'])
-        yeni_donem('Güz', fdata['guz_baslangic_tarihi'], fdata['guz_bitis_tarihi'])
+        yeni_donem(_(u'Bahar'), fdata['bahar_baslangic_tarihi'], fdata['bahar_bitis_tarihi'])
+        yeni_donem(_(u'Güz'), fdata['guz_baslangic_tarihi'], fdata['guz_bitis_tarihi'])
 
     def bilgi_ver(self):
         """
@@ -124,6 +125,6 @@ class YeniDonemOlusturma(CrudView):
         """
 
         self.current.output['msgbox'] = {
-            'type': 'bilgilendirme', "title": _('Güz ve Bahar Dönemi'),
-            "msg": _('Güz ve Bahar Dönemi başarıyla oluşturulmuştur.')
+            'type': 'bilgilendirme', "title": _(u'Güz ve Bahar Dönemi'),
+            "msg": _(u'Güz ve Bahar Dönemi başarıyla oluşturulmuştur.')
         }

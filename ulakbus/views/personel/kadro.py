@@ -64,6 +64,7 @@ from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
+from zengine.lib.translation import gettext as _, format_datetime, format_date
 from ulakbus.models import Personel
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
@@ -195,12 +196,13 @@ class KadroIslemleri(CrudView):
         self.current.task_data['object_id'] = self.object.key
 
         _form = self.SilOnayForm(title=" ")
-        _form.help_text = """Akademik unvanı: **%s**
-        Kadro numarası: **%s**
-        Açıklaması: **%s**
+        _form.help_text = _(u"""Akademik unvanı: **%(unvan)s**
+        Kadro numarası: **%(kadro)s**
+        Açıklaması: **%(aciklama)s**
 
-        bilgilerine sahip kadroyu silmek istiyor musunuz ?""" % (
-            unvan, kadro_no, aciklama)
+        bilgilerine sahip kadroyu silmek istiyor musunuz ?""") % {
+            'unvan': unvan, 'kadro': kadro_no, 'aciklama': aciklama,
+        }
         self.form_out(_form)
 
     def kadro_sil(self):
@@ -240,8 +242,8 @@ class KadroIslemleri(CrudView):
 
         if obj.durum == self.SAKLI:
             result['actions'].extend([
-                {'name': 'Sil', 'cmd': 'kadro_sil_onay_form', 'show_as': 'button'},
-                {'name': 'İzinli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'}])
+                {'name': _(u'Sil'), 'cmd': 'kadro_sil_onay_form', 'show_as': 'button'},
+                {'name': _(u'İzinli Yap'), 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'}])
 
     @obj_filter
     def izinli_kadro(self, obj, result):
@@ -258,7 +260,7 @@ class KadroIslemleri(CrudView):
 
         if obj.durum == self.IZINLI:
             result['actions'].append(
-                {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
+                {'name': _(u'Sakli Yap'), 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
 
     @obj_filter
     def duzenlenebilir_veya_silinebilir_kadro(self, obj, result):
@@ -275,7 +277,7 @@ class KadroIslemleri(CrudView):
 
         if obj.durum in [self.SAKLI, self.IZINLI]:
             result['actions'].extend([
-                {'name': 'Düzenle', 'cmd': 'add_edit_form', 'show_as': 'button'},
+                {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'show_as': 'button'},
             ])
 
 
@@ -404,7 +406,7 @@ class TerfiListe(CrudView):
 
     def personel_kriterleri(self):
         _form = PersonelTerfiKriterleri(current=self.current,
-                                        title="Terfisi Yapılacak Personel Kriterleri")
+                                        title=_(u"Terfisi Yapılacak Personel Kriterleri"))
         self.form_out(_form)
 
     def terfisi_gelen_personel_liste(self):
@@ -423,11 +425,11 @@ class TerfiListe(CrudView):
                 personel_turu=personel_turu)
 
         if self.current.task_data["personeller"]:
-            _form = TerfiForm(current=self.current, title="Terfi İşlemi")
+            _form = TerfiForm(current=self.current, title=_(u"Terfi İşlemi"))
             _form.generate_form()
 
-            _form.kaydet = fields.Button("Onaya Gönder", cmd="onaya_gonder")
-            _form.duzenle = fields.Button("Terfi Düzenle", cmd="terfi_liste_duzenle")
+            _form.kaydet = fields.Button(_(u"Onaya Gönder"), cmd="onaya_gonder")
+            _form.duzenle = fields.Button(_(u"Terfi Düzenle"), cmd="terfi_liste_duzenle")
 
             self.form_out(_form)
             self.current.output["meta"]["allow_actions"] = False
@@ -435,10 +437,11 @@ class TerfiListe(CrudView):
         else:
             datetime.datetime.today()
             self.current.output['msgbox'] = {
-                'type': 'info', "title": 'Terfi Bekleyen Personel Bulunamadı',
-                "msg": '%s - %s tarih aralığında terfi bekleyen personel bulunamadı.' % (
-                    baslangic_tarihi.strftime('%d-%m-%Y'),
-                    bitis_tarihi.strftime('%d-%m-%Y'))
+                'type': 'info', "title": _(u'Terfi Bekleyen Personel Bulunamadı'),
+                "msg": _(u'%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen personel bulunamadı.') % {
+                    'baslangic': format_datetime(baslangic_tarihi),
+                    'bitis': format_datetime(bitis_tarihi),
+                }
             }
 
     def terfi_liste_duzenle(self):
@@ -504,30 +507,30 @@ class TerfiListe(CrudView):
     # todo: lane geicisi
     def mesaj_goster(self):
 
-        msg = {"title": 'Personeller Onay Icin Gonderildi!',
-               "body": 'Talebiniz Basariyla iletildi.'}
+        msg = {"title": _(u'Personeller Onay Icin Gonderildi!'),
+               "body": _(u'Talebiniz Basariyla iletildi.')}
         # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
 
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def onay_kontrol(self):
-        _form = TerfiForm(current=self.current, title="Terfi İşlemi")
+        _form = TerfiForm(current=self.current, title=_(u"Terfi İşlemi"))
         _form.generate_form()
         _form.Meta.inline_edit = []
 
-        _form.kaydet = fields.Button(title="Onayla", cmd="terfi_yap")
-        _form.duzenle = fields.Button(title="Reddet", cmd="red_aciklamasi_yaz")
+        _form.kaydet = fields.Button(title=_(u"Onayla"), cmd="terfi_yap")
+        _form.duzenle = fields.Button(title=_(u"Reddet"), cmd="red_aciklamasi_yaz")
 
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def red_aciklamasi_yaz(self):
-        _form = JsonForm(title="Terfi Islemi Reddedildi.")
-        _form.Meta.help_text = """Terfi işlemini onaylamadınız. İlgili personele bir açıklama
-                                  yazmak ister misiniz?"""
-        _form.red_aciklama = fields.String("Açıklama")
-        _form.devam = fields.Button("Devam Et")
+        _form = JsonForm(title=_(u"Terfi İşlemi Reddedildi."))
+        _form.Meta.help_text = _(u"""Terfi işlemini onaylamadınız. İlgili personele bir açıklama
+                                  yazmak ister misiniz?""")
+        _form.red_aciklama = fields.String(_(u"Açıklama"))
+        _form.devam = fields.Button(_(u"Devam Et"))
         self.form_out(_form)
 
     def red_aciklamasi_kaydet(self):
@@ -558,16 +561,16 @@ class TerfiListe(CrudView):
 
     # todo: lane geicisi
     def taraflari_bilgilendir(self):
-        msg = {"title": 'Personel Terfi Islemi Onaylandi!',
-               "body": 'Onay Belgesi icin Personel Islerine Gonderildi.'}
+        msg = {"title": _(u'Personel Terfi Islemi Onaylandi!'),
+               "body": _(u'Onay Belgesi icin Personel Islerine Gonderildi.')}
         self.current.output['msgbox'] = msg
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def onay_belgesi_uret(self):
         self.current.output['msgbox'] = {
             'type': 'info',
-            'title': 'Terfi İşlemleri Onay Belgesi!',
-            'msg': 'Toplu terfi İşleminiz Onaylandı'
+            'title': _(u'Terfi İşlemleri Onay Belgesi!'),
+            'msg': _(u'Toplu terfi İşleminiz Onaylandı')
         }
 
 
@@ -586,7 +589,7 @@ class GorevSuresiForm(JsonForm):
             ihtiyacımız bulunmaktadır.
         """
 
-        self.gorev_suresi_bitis = fields.Date("Görev Süresi Bitiş Tarihi",
+        self.gorev_suresi_bitis = fields.Date(_(u"Görev Süresi Bitiş Tarihi"),
                                               default=kwargs.pop('gorev_suresi_bitis_tarihi'))
         self.personel_id = fields.String("personel_id", hidden=True,
                                          default=kwargs.pop('personel_id'))
@@ -622,27 +625,30 @@ class GorevSuresiUzat(CrudView):
 
             if personel.personel_turu == 1:
                 if type(personel.gorev_suresi_bitis) is datetime.date:
-                    gorev_suresi_bitis = personel.gorev_suresi_bitis.strftime("%Y-%m-%d")
+                    gorev_suresi_bitis = format_date(personel.gorev_suresi_bitis)
                 else:
                     gorev_suresi_bitis = None
 
-                _form = GorevSuresiForm(current=self.current, title="Görev Süresi Uzat",
+                _form = GorevSuresiForm(current=self.current, title=_(u"Görev Süresi Uzat"),
                                         gorev_suresi_bitis_tarihi=gorev_suresi_bitis,
                                         personel_id=personel.key)
                 self.form_out(_form)
             else:
                 self.current.output['msgbox'] = {
-                    'type': 'info', "title": 'HATA !',
-                    "msg": '%s %s akademik bir personel değildir.' % (
-                        personel.ad,
-                        personel.soyad)
+                    'type': 'info', "title": _(u'HATA !'),
+                    "msg": _(u'%(ad)s %(soyad)s akademik bir personel değildir.') % {
+                        'ad': personel.ad,
+                        'soyad': personel.soyad,
+                    }
                 }
 
         except ObjectDoesNotExist:
             self.current.output["msgbox"] = {
-                'type': "info", "title": "HATA !",
-                "msg": "%s %s e ait bir atama kaydı bulunamadı" % (personel.ad,
-                                                                     personel.soyad)
+                'type': "info", "title": _(u"HATA !"),
+                "msg": _(u"%(ad)s %(soyad)s e ait bir atama kaydı bulunamadı") % {
+                    'ad': personel.ad,
+                    'soyad': personel.soyad,
+                }
             }
 
     def kaydet(self):
