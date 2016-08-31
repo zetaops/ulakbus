@@ -9,7 +9,7 @@
 #
 from zengine.forms import fields, JsonForm
 from zengine.views.crud import CrudView, view_method, list_query
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel
 
 
@@ -46,8 +46,8 @@ class ListFormHitap(JsonForm):
     """
     HITAP Sync eklenmis list view formu.
     """
-    add = fields.Button(_(u"Ekle"), cmd="add_edit_form")
-    sync = fields.Button(_(u"HITAP ile senkronize et"), cmd="sync")
+    add = fields.Button(gettext_lazy(u"Ekle"), cmd="add_edit_form")
+    sync = fields.Button(gettext_lazy(u"HITAP ile senkronize et"), cmd="sync")
 
 
 class CrudHitap(CrudView):

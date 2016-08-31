@@ -9,7 +9,7 @@ from ulakbus.models.ders_sinav_programi import HAFTA
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _, get_day_names, format_datetime
+from zengine.lib.translation import gettext as _, gettext_lazy, get_day_names, format_datetime
 from collections import OrderedDict
 import calendar
 
@@ -19,7 +19,7 @@ class DerslikSecimFormu(JsonForm):
     Derslik Sınav ProgramLaı iş akışının sınav seç adımında kullanılan form.
     """
 
-    ileri = fields.Button(_(u"İleri"))
+    ileri = fields.Button(gettext_lazy(u"İleri"))
 
 
 class DerslikSinavProgramlari(CrudView):

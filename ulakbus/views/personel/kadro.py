@@ -64,7 +64,7 @@ from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
-from zengine.lib.translation import gettext as _, format_datetime, format_date
+from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
 from ulakbus.models import Personel
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
@@ -89,7 +89,7 @@ class KadroObjectForm(JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": "Ünvan ve Derece",
+                        "group_title": gettext_lazy(u"Ünvan ve Derece"),
                         "items": ['unvan', 'derece', 'unvan_aciklama'],
                         "collapse": True,
                     }
@@ -99,7 +99,7 @@ class KadroObjectForm(JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": "Diğer",
+                        "group_title": gettext_lazy(u"Diğer"),
                         "items": ['kadro_no', 'aciklama', 'birim_id']
                     }
                 ]
@@ -114,7 +114,7 @@ class KadroObjectForm(JsonForm):
             }
         ]
 
-    save_edit = fields.Button("Kaydet")
+    save_edit = fields.Button(gettext_lazy(u"Kaydet"))
 
 
 class KadroIslemleri(CrudView):
@@ -179,8 +179,8 @@ class KadroIslemleri(CrudView):
         self.reset()
 
     class SilOnayForm(JsonForm):
-        evet = fields.Button("Evet", cmd='kadro_sil')
-        hayir = fields.Button("Hayır")
+        evet = fields.Button(gettext_lazy(u"Evet"), cmd='kadro_sil')
+        hayir = fields.Button(gettext_lazy(u"Hayır"))
 
     def kadro_sil_onay_form(self):
         """
@@ -287,18 +287,24 @@ class TerfiForm(JsonForm):
 
     class Personel(ListNode):
         key = fields.String("Key", hidden=True)
-        sec = fields.Boolean("Seç", type="checkbox")
-        tckn = fields.String("TCK No")
-        ad_soyad = fields.String("Ad")
-        kadro_derece = fields.String("Kadro Derece")
+        sec = fields.Boolean(gettext_lazy(u"Seç"), type="checkbox")
+        tckn = fields.String(gettext_lazy(u"TCK No"))
+        ad_soyad = fields.String(gettext_lazy(u"Ad"))
+        kadro_derece = fields.String(gettext_lazy(u"Kadro Derece"))
 
-        gorev_ayligi = fields.String("GA")
-        kazanilmis_hak = fields.String("KH")
-        emekli_muktesebat = fields.String("EM")
+        #tn: Görev Aylığı
+        gorev_ayligi = fields.String(gettext_lazy(u"GA"))
+        #tn: Kazanılmış Hak
+        kazanilmis_hak = fields.String(gettext_lazy(u"KH"))
+        #tn: Emekli Muktesebat
+        emekli_muktesebat = fields.String(gettext_lazy(u"EM"))
 
-        yeni_gorev_ayligi = fields.String("Yeni GA")
-        yeni_kazanilmis_hak = fields.String("Yeni KH")
-        yeni_emekli_muktesebat = fields.String("Yeni EM")
+        # tn: Yeni Görev Aylığı
+        yeni_gorev_ayligi = fields.String(gettext_lazy(u"Yeni GA"))
+        #tn: Yeni Kazanılmış Hak
+        yeni_kazanilmis_hak = fields.String(gettext_lazy(u"Yeni KH"))
+        #tn: Yeni Emekli Muktesebat
+        yeni_emekli_muktesebat = fields.String(gettext_lazy(u"Yeni EM"))
 
     def generate_form(self):
         """
@@ -352,7 +358,7 @@ class TerfiDuzenleForm(JsonForm):
             'yeni_kazanilmis_hak_gorunen', 'yeni_emekli_muktesebat_derece',
             'yeni_emekli_muktesebat_kademe', 'yeni_emekli_muktesebat_gorunen']
 
-        help_text = """
+        help_text = gettext_lazy(u"""
         GA: Görev Aylığı
         KH: Kazanılmış Hak
         EM: Emekli Muktesebat
@@ -360,44 +366,56 @@ class TerfiDuzenleForm(JsonForm):
         D: Derece
         K: Kademe
         G: Gorunen
-        """
+        """)
 
     class Personel(ListNode):
         key = fields.String("Key", hidden=True)
-        tckn = fields.String("T.C. No")
-        ad_soyad = fields.String("İsim")
-        kadro_derece = fields.String("Kadro Derece")
+        tckn = fields.String(gettext_lazy(u"T.C. No"))
+        ad_soyad = fields.String(gettext_lazy(u"İsim"))
+        kadro_derece = fields.String(gettext_lazy(u"Kadro Derece"))
 
-        gorev_ayligi = fields.String("GA")
-        kazanilmis_hak = fields.String("KH")
-        emekli_muktesebat = fields.String("EM")
+        #tn: Görev Aylığı
+        gorev_ayligi = fields.String(gettext_lazy(u"GA"))
+        #tn: Kazanılmış Hak
+        kazanilmis_hak = fields.String(gettext_lazy(u"KH"))
+        #tn: Emekli Muktesebat
+        emekli_muktesebat = fields.String(gettext_lazy(u"EM"))
 
-        yeni_gorev_ayligi_derece = fields.Integer("GAD")
-        yeni_gorev_ayligi_kademe = fields.Integer("GAK")
-        yeni_gorev_ayligi_gorunen = fields.Integer("GAG")
+        #tn: Yeni Görev Aylığı Derece
+        yeni_gorev_ayligi_derece = fields.Integer(gettext_lazy(u"GAD"))
+        #tn: Yeni Görev Aylığı Kademe
+        yeni_gorev_ayligi_kademe = fields.Integer(gettext_lazy(u"GAK"))
+        #tn: Yeni Görev Aylığı Görünen
+        yeni_gorev_ayligi_gorunen = fields.Integer(gettext_lazy(u"GAG"))
 
-        yeni_kazanilmis_hak_derece = fields.Integer("KHD")
-        yeni_kazanilmis_hak_kademe = fields.Integer("KHK")
-        yeni_kazanilmis_hak_gorunen = fields.Integer("KHG")
+        #tn: Kazanılmış Görev Aylığı Derece
+        yeni_kazanilmis_hak_derece = fields.Integer(gettext_lazy(u"KHD"))
+        #tn: Kazanılmış Görev Aylığı Derece
+        yeni_kazanilmis_hak_kademe = fields.Integer(gettext_lazy(u"KHK"))
+        #tn: Kazanılmış Görev Aylığı Derece
+        yeni_kazanilmis_hak_gorunen = fields.Integer(gettext_lazy(u"KHG"))
 
-        yeni_emekli_muktesebat_derece = fields.Integer("EMD")
-        yeni_emekli_muktesebat_kademe = fields.Integer("EMK")
-        yeni_emekli_muktesebat_gorunen = fields.Integer("EMG")
+        #tn: Emekli Muktesebat Derece
+        yeni_emekli_muktesebat_derece = fields.Integer(gettext_lazy(u"EMD"))
+        #tn: Emekli Muktesebat Derece
+        yeni_emekli_muktesebat_kademe = fields.Integer(gettext_lazy(u"EMK"))
+        #tn: Emekli Muktesebat Derece
+        yeni_emekli_muktesebat_gorunen = fields.Integer(gettext_lazy(u"EMG"))
 
-    devam = fields.Button("Devam Et", cmd="kaydet")
+    devam = fields.Button(gettext_lazy(u"Devam Et"), cmd="kaydet")
 
 
 class PersonelTerfiKriterleri(JsonForm):
-    baslangic_tarihi = fields.Date("Başlangıç Tarihi",
+    baslangic_tarihi = fields.Date(gettext_lazy(u"Başlangıç Tarihi"),
                                    default=datetime.date.today().strftime('d.%m.%Y'))
 
-    bitis_tarihi = fields.Date("Bitiş Tarihi", default=(
+    bitis_tarihi = fields.Date(gettext_lazy(u"Bitiş Tarihi"), default=(
         datetime.date.today() + datetime.timedelta(days=15)).strftime('d.%m.%Y'))
 
-    personel_turu = fields.Integer("Personel Türü", choices=[(1, "Akademik"), (2, "Idari")],
+    personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"), choices=[(1, gettext_lazy(u"Akademik")), (2, gettext_lazy(u"İdari"))],
                                    default=2)
 
-    devam = fields.Button("Sorgula")
+    devam = fields.Button(gettext_lazy(u"Sorgula"))
 
 
 class TerfiListe(CrudView):
@@ -597,7 +615,7 @@ class GorevSuresiForm(JsonForm):
         # Üst sınıfın constructor metodu çağrılmaktadır.        
         super(GorevSuresiForm, self).__init__()
 
-    kaydet = fields.Button("Kaydet", cmd="kaydet")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="kaydet")
 
 
 class GorevSuresiUzat(CrudView):

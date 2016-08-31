@@ -14,7 +14,7 @@ from ulakbus.models import DersEtkinligi, Room
 from ulakbus.models.ders_sinav_programi import HAFTA
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _, format_time, get_day_names
+from zengine.lib.translation import gettext as _, gettext_lazy, format_time, get_day_names
 
 
 class DerslikSecimFormu(JsonForm):
@@ -22,7 +22,7 @@ class DerslikSecimFormu(JsonForm):
     Derslik Seç adımında kullanılan formdur.
 
     """
-    ileri = fields.Button(_(u"İleri"))
+    ileri = fields.Button(gettext_lazy(u"İleri"))
 
 
 class DerslikDersProgrami(CrudView):

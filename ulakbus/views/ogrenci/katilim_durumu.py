@@ -14,7 +14,7 @@ from ulakbus.models import Sube, OgrenciDersi, DersKatilimi
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 __author__ = 'Ali Riza Keles'
 
@@ -22,26 +22,26 @@ __author__ = 'Ali Riza Keles'
 class DevamsizlikForm(forms.JsonForm):
     class Meta:
         inline_edit = ['katilim_durumu', 'aciklama']
-        title = _(u"Ders Seçim Formu")
+        title = gettext_lazy(u"Ders Seçim Formu")
 
     class Ogrenciler(ListNode):
-        ogrenci_no = fields.String(_(u'Öğrenci No'))
-        ad_soyad = fields.String(_(u'Ad Soyad'))
-        katilim_durumu = fields.Integer(_(u'Katılım Durumu'))
-        aciklama = fields.String(_(u'Açıklama'))
+        ogrenci_no = fields.String(gettext_lazy(u'Öğrenci No'))
+        ad_soyad = fields.String(gettext_lazy(u'Ad Soyad'))
+        katilim_durumu = fields.Integer(gettext_lazy(u'Katılım Durumu'))
+        aciklama = fields.String(gettext_lazy(u'Açıklama'))
         ogrenci_key = fields.String('ogrenci_key', hidden=True)
         sube_key = fields.String('ders_key', hidden=True)
 
 
 class OnizlemeForm(forms.JsonForm):
     class Meta:
-        title = _(u"Katılım Durumu Bilgileri Önizleme Ekranı")
+        title = gettext_lazy(u"Katılım Durumu Bilgileri Önizleme Ekranı")
 
     class Ogrenciler(ListNode):
-        ogrenci_no = fields.String(_(u'Öğrenci No'))
-        ad_soyad = fields.String(_(u'Ad Soyad'))
-        katilim_durumu = fields.Integer(_(u'Katılım Durumu'))
-        aciklama = fields.String(_(u'Açıklama'))
+        ogrenci_no = fields.String(gettext_lazy(u'Öğrenci No'))
+        ad_soyad = fields.String(gettext_lazy(u'Ad Soyad'))
+        katilim_durumu = fields.Integer(gettext_lazy(u'Katılım Durumu'))
+        aciklama = fields.String(gettext_lazy(u'Açıklama'))
         ogrenci_key = fields.String('ogrenci_key', hidden=True)
         sube_key = fields.String('ders_key', hidden=True)
 

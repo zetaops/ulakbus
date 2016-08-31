@@ -11,7 +11,7 @@ from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 
 class NotDuzenlemeForm(forms.JsonForm):
@@ -24,7 +24,7 @@ class NotDuzenlemeForm(forms.JsonForm):
     class Meta:
         include = ['puan']
 
-    kaydet = fields.Button(_(u'Kaydet'))
+    kaydet = fields.Button(gettext_lazy(u'Kaydet'))
 
 
 class NotDuzenleme(CrudView):

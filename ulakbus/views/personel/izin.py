@@ -8,7 +8,7 @@ from ulakbus.models.personel import Personel, Izin
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy
 import time
 
 class IzinIslemleri(CrudView):
@@ -194,25 +194,29 @@ class IzinBasvuru(CrudView):
 
         """
 
-        izin_turleri = ((1, "Yıllık İzin"), (2, "Mazeret İzni"), (3, "Refakat İzni"),
-                        (4, "Fazla Mesai İzni"), (5, "Ücretsiz İzin"))
+        izin_turleri = ((1, gettext_lazy("Yıllık İzin")),
+                        (2, gettext_lazy("Mazeret İzni")),
+                        (3, gettext_lazy("Refakat İzni")),
+                        (4, gettext_lazy("Fazla Mesai İzni")),
+                        (5, gettext_lazy("Ücretsiz İzin")),
+        )
         gecerli_yil = date.today().year
         yillar = ((gecerli_yil, gecerli_yil),)
 
-        izin_turu = fields.Integer("İzin Türü Seçiniz", choices=izin_turleri)
-        izin_ait_yil = fields.Integer("Ait Olduğu Yıl", choices=yillar)
-        izin_baslangic = fields.Date("İzin Başlangıç Tarihi")
-        izin_bitis = fields.Date("İzin Bitiş Tarihi")
-        izin_adres = fields.Text("İzindeki Adres")
-        personel_ad_soyad = fields.String("İzin Talep Eden")
-        personel_gorev = fields.String("Görevi")
-        personel_sicil_no = fields.String("Sicil no")
-        personel_birim = fields.String("Birimi")
-        yol_izni = fields.Boolean("Yol İzni")
-        toplam_izin_gun = fields.Integer("Kullanacağı İzin Süresi(Gün)")
-        toplam_kalan_izin = fields.Integer("Kalan İzin Süresi(Gün)")
+        izin_turu = fields.Integer(gettext_lazy(u"İzin Türü Seçiniz"), choices=izin_turleri)
+        izin_ait_yil = fields.Integer(gettext_lazy(u"Ait Olduğu Yıl"), choices=yillar)
+        izin_baslangic = fields.Date(gettext_lazy(u"İzin Başlangıç Tarihi"))
+        izin_bitis = fields.Date(gettext_lazy(u"İzin Bitiş Tarihi"))
+        izin_adres = fields.Text(gettext_lazy(u"İzindeki Adres"))
+        personel_ad_soyad = fields.String(gettext_lazy(u"İzin Talep Eden"))
+        personel_gorev = fields.String(gettext_lazy(u"Görevi"))
+        personel_sicil_no = fields.String(gettext_lazy(u"Sicil no"))
+        personel_birim = fields.String(gettext_lazy(u"Birimi"))
+        yol_izni = fields.Boolean(gettext_lazy(u"Yol İzni"))
+        toplam_izin_gun = fields.Integer(gettext_lazy(u"Kullanacağı İzin Süresi(Gün)"))
+        toplam_kalan_izin = fields.Integer(gettext_lazy(u"Kalan İzin Süresi(Gün)"))
 
-        ileri = fields.Button("İleri")
+        ileri = fields.Button(gettext_lazy(u"İleri"))
 
     TOPLAM_IZIN_SAYISI = 10
 
@@ -249,16 +253,16 @@ class IzinBasvuru(CrudView):
         guncel_yil_izin = IzinBasvuru.guncel_izinleri_bul(lst_form_data, guncel_yil, onceki_yil_izin[1])
 
         _form = self.IzinBasvuruForm(current=self.current,
-                                     title="İzin Talep Formu",
+                                     title=_(u"İzin Talep Formu"),
                                      exclude=['personel_ad_soyad', 'personel_gorev',
                                               'toplam_kalan_izin', 'toplam_izin_gun',
                                               'yol_izni', 'personel_birim',
                                               'personel_sicil_no'])
 
-        _form.help_text = """
+        _form.help_text = _(u"""
                           {onceki} yılına ait izinli gün sayınız {onceki_izin}, Kalan gün sayınız {onceki_kalan}
                           {guncel} yılına ait izinli gün sayınız {guncel_izin}, Toplam izinli gün sayınız  {guncel_kalan}
-                          """.format(onceki=onceki_yil, onceki_izin=onceki_yil_izin[0], onceki_kalan=onceki_yil_izin[1],
+                          """).format(onceki=onceki_yil, onceki_izin=onceki_yil_izin[0], onceki_kalan=onceki_yil_izin[1],
                                      guncel=guncel_yil, guncel_izin=guncel_yil_izin[0], guncel_kalan=guncel_yil_izin[1],
                           )
         self.form_out(_form)

@@ -10,25 +10,25 @@
 
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _, get_day_names
+from zengine.lib.translation import gettext as _, gettext_lazy, get_day_names
 from collections import OrderedDict
 from ulakbus.services.zato_wrapper import DersProgramiOlustur, SinavProgramiOlustur
 from ulakbus.models import Room, Okutman, DersEtkinligi, Donem, SinavEtkinligi
 
 ARAMA_TURU = [
-    (1, _(u'Derslik')),
-    (2, _(u'Öğretim Elemanı'))
+    (1, gettext_lazy(u'Derslik')),
+    (2, gettext_lazy(u'Öğretim Elemanı'))
 ]
 
 
 class AramaForm(JsonForm):
     class Meta:
-        title = _(u'Öğretim Elemanı veya Derslik Ara')
+        title = gettext_lazy(u'Öğretim Elemanı veya Derslik Ara')
 
-    arama_sec = fields.String(_(u'Arama Seçeneği'), choices=ARAMA_TURU, default=1)
+    arama_sec = fields.String(gettext_lazy(u'Arama Seçeneği'), choices=ARAMA_TURU, default=1)
     arama_text = fields.String(" ", required=False)
-    arama_button = fields.Button(_(u'Ara'))
-    vazgec_button = fields.Button(_(u'Geri'), cmd='vazgec')
+    arama_button = fields.Button(gettext_lazy(u'Ara'))
+    vazgec_button = fields.Button(gettext_lazy(u'Geri'), cmd='vazgec')
 
 
 class DersProgramiYap(CrudView):

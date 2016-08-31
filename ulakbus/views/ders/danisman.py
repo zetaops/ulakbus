@@ -20,7 +20,7 @@ from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
 from ulakbus.models.auth import Unit
 from collections import OrderedDict
 from ulakbus.views.ders.ders import prepare_choices_for_model
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 
 class DonemDanismanForm(forms.JsonForm):
@@ -28,7 +28,7 @@ class DonemDanismanForm(forms.JsonForm):
 
     """
 
-    ileri = fields.Button(_(u"İleri"))
+    ileri = fields.Button(gettext_lazy(u"İleri"))
 
 
 class DonemDanismanListForm(forms.JsonForm):
@@ -36,11 +36,11 @@ class DonemDanismanListForm(forms.JsonForm):
         inline_edit = ['secim']
 
     class Okutmanlar(ListNode):
-        secim = fields.Boolean(_(u'Seçim'), type="checkbox")
-        ad_soyad = fields.String(_(u'Ad Soyad'))
-        key = fields.String(_(u'Key'), hidden=True)
+        secim = fields.Boolean(gettext_lazy(u'Seçim'), type="checkbox")
+        ad_soyad = fields.String(gettext_lazy(u'Ad Soyad'))
+        key = fields.String(gettext_lazy(u'Key'), hidden=True)
 
-    kaydet = fields.Button(_(u"Kaydet"))
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"))
 
 
 class DonemDanismanAtama(CrudView):

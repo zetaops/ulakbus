@@ -15,7 +15,7 @@ from ulakbus.models.hitap.hitap_sebep import HitapSebep
 from ulakbus.models.hitap.hitap import HizmetKayitlari
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel, Atama, Kadro
 
 
@@ -315,8 +315,8 @@ class EksikBilgiForm(JsonForm):
 
 class KadroBilgiForm(JsonForm):
     class Meta:
-        title = _(u'Atama Bilgileri')
-        help_text = _(u"Yeni Personelin Iletisim Bilgilerini Duzenle.")
+        title = gettext_lazy(u'Atama Bilgileri')
+        help_text = gettext_lazy(u"Yeni Personelin Iletisim Bilgilerini Duzenle.")
 
     kadro = fields.String(_(u"Atanacak Kadro Seçiniz"), type='typeahead')
     ibraz_tarihi = fields.Date(_(u"İbraz Tarihi"))

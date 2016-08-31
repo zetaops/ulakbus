@@ -10,7 +10,7 @@ from ulakbus.models import Donem
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _, format_date
+from zengine.lib.translation import gettext as _, gettext_lazy, format_date
 
 
 class DonemForm(forms.JsonForm):
@@ -19,11 +19,11 @@ class DonemForm(forms.JsonForm):
 
     """
 
-    guz_baslangic_tarihi = fields.Date(_(u"Başlangıç Tarihi"), format="%d.%m.%Y", required=True)
-    guz_bitis_tarihi = fields.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
-    bahar_baslangic_tarihi = fields.Date(_(u"Başlangıç Tarihi"), index=True, format="%d.%m.%Y",
+    guz_baslangic_tarihi = fields.Date(gettext_lazy(u"Başlangıç Tarihi"), format="%d.%m.%Y", required=True)
+    guz_bitis_tarihi = fields.Date(gettext_lazy(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
+    bahar_baslangic_tarihi = fields.Date(gettext_lazy(u"Başlangıç Tarihi"), index=True, format="%d.%m.%Y",
                                          required=True)
-    bahar_bitis_tarihi = fields.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
+    bahar_bitis_tarihi = fields.Date(gettext_lazy(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=True)
 
     class Meta:
         grouping = [
@@ -31,7 +31,7 @@ class DonemForm(forms.JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": _(u"Güz Dönemi"),
+                        "group_title": gettext_lazy(u"Güz Dönemi"),
                         "items": ['guz_baslangic_tarihi', 'guz_bitis_tarihi'],
                         "collapse": True,
                     }
@@ -41,7 +41,7 @@ class DonemForm(forms.JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": _(u"Bahar Dönemi"),
+                        "group_title": gettext_lazy(u"Bahar Dönemi"),
                         "items": ['bahar_baslangic_tarihi', 'bahar_bitis_tarihi'],
                         "collapse": True,
 
@@ -59,7 +59,7 @@ class DonemForm(forms.JsonForm):
 
         ]
 
-    kaydet = fields.Button(_(u"Kaydet"))
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"))
 
 
 class YeniDonemOlusturma(CrudView):

@@ -10,7 +10,7 @@ from ulakbus.models import Donem, OgretimYili
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 
 def donemler():
@@ -31,8 +31,8 @@ def donemler():
 
 
 class DonemSecForm(JsonForm):
-    guncel_donem = fields.Integer(_(u"Dönem Seçiniz"), choices=donemler)
-    kaydet = fields.Button(_(u'Kaydet'))
+    guncel_donem = fields.Integer(gettext_lazy(u"Dönem Seçiniz"), choices=donemler)
+    kaydet = fields.Button(gettext_lazy(u'Kaydet'))
 
 
 class GuncelDonemDegistirme(CrudView):

@@ -30,7 +30,7 @@ from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _, format_date
+from zengine.lib.translation import gettext as _, gettext_lazy, format_date
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -50,8 +50,8 @@ class KimlikBilgileriForm(forms.JsonForm):
                    "kimlik_cuzdani_verilis_nedeni", "kimlik_cuzdani_kayit_no",
                    "kimlik_cuzdani_verilis_tarihi"]
 
-    kaydet = fields.Button(_("Kaydet"), cmd="save")
-    mernis_sorgula = fields.Button(_("Mernis Sorgula"), cmd="mernis_sorgula")
+    kaydet = fields.Button(gettext_lazy("Kaydet"), cmd="save")
+    mernis_sorgula = fields.Button(gettext_lazy("Mernis Sorgula"), cmd="mernis_sorgula")
 
 
 class KimlikBilgileri(CrudView):
@@ -120,8 +120,8 @@ class IletisimBilgileriForm(forms.JsonForm):
                    "e_posta2", "tel_no",
                    "gsm"]
 
-    kaydet = fields.Button(_(u"Kaydet"), cmd="save")
-    kps_sorgula = fields.Button(_(u"KPS Sorgula"), cmd="kps_sorgula")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
+    kps_sorgula = fields.Button(gettext_lazy(u"KPS Sorgula"), cmd="kps_sorgula")
 
 
 class IletisimBilgileri(CrudView):
@@ -189,7 +189,7 @@ class OncekiEgitimBilgileriForm(forms.JsonForm):
     class Meta:
         include = ["okul_adi", "diploma_notu", "mezuniyet_yili"]
 
-    kaydet = fields.Button(_(u"Kaydet"), cmd="save")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
 
 
 class OncekiEgitimBilgileri(CrudView):
@@ -299,15 +299,15 @@ class KayitDondurmaForm(forms.JsonForm):
     class Meta:
         inline_edit = ['secim', 'aciklama']
 
-    baslangic_tarihi = fields.Date(_(u'Kayıt Dondurma Başlangıç Tarihi'))
+    baslangic_tarihi = fields.Date(gettext_lazy(u'Kayıt Dondurma Başlangıç Tarihi'))
 
     class Donemler(ListNode):
         secim = fields.Boolean(type="checkbox")
-        donem = fields.String(_(u'Dönem'))
+        donem = fields.String(gettext_lazy(u'Dönem'))
         key = fields.String('Key', hidden=True)
-        aciklama = fields.String(_(u'Aciklama'))
+        aciklama = fields.String(gettext_lazy(u'Aciklama'))
 
-    sec = fields.Button(_(u"Kaydet"))
+    sec = fields.Button(gettext_lazy(u"Kaydet"))
 
 
 class OgrenciProgramSecimForm(forms.JsonForm):
@@ -316,7 +316,7 @@ class OgrenciProgramSecimForm(forms.JsonForm):
 
     """
 
-    sec = fields.Button(_(u"Seç"))
+    sec = fields.Button(gettext_lazy(u"Seç"))
 
 
 class DanismanAtama(CrudView):
@@ -661,9 +661,9 @@ class DersSecimForm(forms.JsonForm):
 
     class Dersler(ListNode):
         key = fields.String(hidden=True)
-        ders_adi = fields.String(_(u'Ders'))
+        ders_adi = fields.String(gettext_lazy(u'Ders'))
 
-    ileri = fields.Button(_(u"İleri"))
+    ileri = fields.Button(gettext_lazy(u"İleri"))
 
 
 def ders_arama(current):
