@@ -6,7 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from enum.enum import Enum
+from enum import Enum
 
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
@@ -122,7 +122,7 @@ class AkademikTakvimEtkinlikleri(Enum):
     GUZ_DERSLERIN_BASLANGICI = "Derslerin Başlangıcı"
     GUZ_DERS_EKLE_BIRAK = "Ders Ekle/Bırak"
     GUZ_DERS_EKLE_BIRAK_DANISMAN_ONAY = "Ders Ekle/Bırak Danışman Onay"
-    GUZ_DANISMAN_DERSTEN_ÇEKILME_ISLEMLERI = "Danışman Dersten Çekilme İşlemleri"
+    GUZ_DANISMAN_DERSTEN_CEKILME_ISLEMLERI = "Danışman Dersten Çekilme İşlemleri"
     GUZ_ARA_SINAV = "Ara Sinav"
     GUZ_ARA_SINAV_NOT_GIRIS = "Ara Sınav Not Giriş"
     GUZ_ARA_SINAV_NOT_YAYINLAMA = "Ara Sınav Notlarının Öğrenciye Yayınlanması"
@@ -175,5 +175,5 @@ class AkademikTakvimEtkinlikleri(Enum):
     BAHAR_DONEMI_DERSLER = "Bahar Dönemi Dersler"
     YAZ_DONEMI_DERSLER = "Yaz Dönemi Dersler"
     ISCI_BAYRAMI = "1 Mayıs İşçi Bayrami"
-    ULUSAL_EGEMENLIK_VE_ÇOCUK_BAYRAMI = "23 Nisan Ulusal Egemenlik ve Çocuk Bayramı"
+    ULUSAL_EGEMENLIK_VE_COCUK_BAYRAMI = "23 Nisan Ulusal Egemenlik ve Çocuk Bayramı"
     GENCLIK_VE_SPOR_BAYRAMI = "19 Mayıs Genclik ve Spor Bayramı"
