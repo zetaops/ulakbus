@@ -11,7 +11,7 @@ from collections import OrderedDict
 from datetime import time
 
 from ulakbus.models import DersEtkinligi, Room
-from ulakbus.models.ders_sinav_programi import HAFTA
+from ulakbus.models.ders_sinav_programi import HAFTA, gun_listele
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy, format_time, get_day_names
@@ -78,7 +78,7 @@ class DerslikDersProgrami(CrudView):
 
         ders_etkinlikleri = ders_etkinlik_olustur(DersEtkinligi.objects.filter(room=room))
         self.output['objects'] = [list(get_day_names())]
-        hafta_dict = hafta_gun_olustur(HAFTA)
+        hafta_dict = hafta_gun_olustur(gun_listele())
         for i in range(max(map(len, ders_etkinlikleri.values()))):
             ders_etkinlikleri_dict = OrderedDict({})
             for hafta_gun in hafta_dict.keys():

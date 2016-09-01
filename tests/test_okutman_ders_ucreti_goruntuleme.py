@@ -53,7 +53,7 @@ class TestCase(BaseTestCase):
 
                 # Ders ücreti hesaplama türü seçim ekranına gelmesi beklenir.
                 assert resp.json['forms']['schema'][
-                           "title"] == "Puantaj Tablosu Hesaplama Türü Seçiniz"
+                           "title"] == u"Puantaj Tablosu Hesaplama Türü Seçiniz"
 
                 # Tür seçildikten sonra ekrana Puantaj Tablosu çıkarılması beklenir.
                 resp = self.client.post(form={"ek_ders": 'null', "ders": 1})

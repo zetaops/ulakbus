@@ -9,7 +9,7 @@
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, format_time
-from ulakbus.models.ders_sinav_programi import GUN_DILIMI, ZamanDilimleri
+from ulakbus.models.ders_sinav_programi import ZamanDilimleri
 from collections import OrderedDict
 from datetime import time
 

@@ -16,6 +16,7 @@ import six
 from pyoko import Model, field, ListNode, LinkProxy
 from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
+from zengine.lib.translation import gettext_lazy as _, gettext, format_date
 from .auth import Role, User
 from .auth import Unit
 from .buildings_rooms import Room, RoomType
@@ -29,8 +30,8 @@ class OgretimYili(Model):
     Öğretim yılını bilgilerini tutan modeldir.
     """
 
-    yil = field.Integer("Yıl", unique=True)  # 2015
-    ad = field.String("Öğretim Yılı")  # 2015 - 2016 Öğretim Yılı
+    yil = field.Integer(_(u"Yıl"), unique=True)  # 2015
+    ad = field.String(_(u"Öğretim Yılı"))  # 2015 - 2016 Öğretim Yılı
 
     def post_creation(self):
         self.ad = "%s - %s Öğretim Yılı" % (self.yil, int(self.yil) + 1)
@@ -49,11 +50,11 @@ class Donem(Model):
 
     """
 
-    ad = field.String("Ad", index=True)
-    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
+    ad = field.String(_(u"Ad"), index=True)
+    baslangic_tarihi = field.Date(_(u"Başlangıç Tarihi"), index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
     guncel = field.Boolean(index=True)
-    ogretim_yili = OgretimYili("Öğretim Yılı", index=True)
+    ogretim_yili = OgretimYili(_(u"Öğretim Yılı"), index=True)
 
     @classmethod
     def guncel_donem(cls):
@@ -70,8 +71,8 @@ class Donem(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Dönem"
-        verbose_name_plural = "Dönemler"
+        verbose_name = _(u"Dönem")
+        verbose_name_plural = _(u"Dönemler")
         list_fields = ['ad', 'baslangic_tarihi']
         search_fields = ['ad']
 
@@ -173,60 +174,60 @@ class HariciOkutman(Model):
 
     """
 
-    tckn = field.String("TC No", index=True)
-    ad = field.String("Adı", index=True)
-    soyad = field.String("Soyadı", index=True)
-    cinsiyet = field.Integer("Cinsiyet", index=True, choices='cinsiyet')
-    uyruk = field.String("Uyruk", index=True)
-    medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali", required=False)
-    ikamet_adresi = field.String("İkamet Adresi", index=True, required=False)
-    ikamet_il = field.String("İkamet İl", index=True, required=False)
-    ikamet_ilce = field.String("İkamet İlçe", index=True, required=False)
-    adres_2 = field.String("Adres 2", index=True, required=False)
-    adres_2_posta_kodu = field.String("Adres 2 Posta Kodu", index=True, required=False)
-    telefon_no = field.String("Telefon Numarası", index=True, required=True)
-    oda_no = field.String("Oda Numarası", index=True, required=False)
-    oda_tel_no = field.String("Oda Telefon Numarası", index=True, required=False)
-    e_posta = field.String("E-Posta", index=True)
-    e_posta_2 = field.String("E-Posta 2", index=True, required=False)
-    e_posta_3 = field.String("E-Posta 3", index=True, required=False)
-    web_sitesi = field.String("Web Sitesi", index=True, required=False)
-    yayinlar = field.String("Yayınlar", index=True, required=False)
-    projeler = field.String("Projeler", index=True, required=False)
-    kan_grubu = field.String("Kan Grubu", index=True, required=False)
-    ehliyet = field.String("Ehliyet", index=True, required=False)
-    biyografi = field.Text("Biyografi")
-    notlar = field.Text("Notlar")
-    engelli_durumu = field.String("Engellilik", index=True)
-    engel_grubu = field.String("Engel Grubu", index=True)
-    engel_derecesi = field.String("Engel Derecesi")
-    engel_orani = field.Integer("Engellilik Orani")
-    cuzdan_seri = field.String("Seri", index=True)
-    cuzdan_seri_no = field.String("Seri No", index=True)
-    baba_adi = field.String("Ana Adi", index=True)
-    ana_adi = field.String("Baba Adi", index=True)
-    dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
-    dogum_yeri = field.String("Doğum Yeri", index=True)
-    kayitli_oldugu_il = field.String("İl", index=True)
-    kayitli_oldugu_ilce = field.String("İlçe", index=True)
-    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Koy")
-    kayitli_oldugu_cilt_no = field.String("Cilt No")
-    kayitli_oldugu_aile_sira_no = field.String("Aile Sıra No")
-    kayitli_oldugu_sira_no = field.String("Sıra No")
-    kimlik_cuzdani_verildigi_yer = field.String("Cüzdanin Verildiği Yer")
-    kimlik_cuzdani_verilis_nedeni = field.String("Cüzdanin Veriliş Nedeni")
-    kimlik_cuzdani_kayit_no = field.String("Cüzdan Kayıt No")
-    kimlik_cuzdani_verilis_tarihi = field.String("Cüzdan Kayıt Tarihi")
-    akademik_yayinlari = field.String("Akademik Yayınları", index=True, required=False)
-    verdigi_dersler = field.String("Verdiği Dersler", index=True, required=False)
-    unvan = field.Integer("Unvan", index=True, choices="akademik_unvan", required=False)
-    aktif = field.Boolean("Aktif", index=True, required=False)
+    tckn = field.String(_(u"TC No"), index=True)
+    ad = field.String(_(u"Adı"), index=True)
+    soyad = field.String(_(u"Soyadı"), index=True)
+    cinsiyet = field.Integer(_(u"Cinsiyet"), index=True, choices='cinsiyet')
+    uyruk = field.String(_(u"Uyruk"), index=True)
+    medeni_hali = field.Integer(_(u"Medeni Hali"), index=True, choices="medeni_hali", required=False)
+    ikamet_adresi = field.String(_(u"İkamet Adresi"), index=True, required=False)
+    ikamet_il = field.String(_(u"İkamet İl"), index=True, required=False)
+    ikamet_ilce = field.String(_(u"İkamet İlçe"), index=True, required=False)
+    adres_2 = field.String(_(u"Adres 2"), index=True, required=False)
+    adres_2_posta_kodu = field.String(_(u"Adres 2 Posta Kodu"), index=True, required=False)
+    telefon_no = field.String(_(u"Telefon Numarası"), index=True, required=True)
+    oda_no = field.String(_(u"Oda Numarası"), index=True, required=False)
+    oda_tel_no = field.String(_(u"Oda Telefon Numarası"), index=True, required=False)
+    e_posta = field.String(_(u"E-Posta"), index=True)
+    e_posta_2 = field.String(_(u"E-Posta 2"), index=True, required=False)
+    e_posta_3 = field.String(_(u"E-Posta 3"), index=True, required=False)
+    web_sitesi = field.String(_(u"Web Sitesi"), index=True, required=False)
+    yayinlar = field.String(_(u"Yayınlar"), index=True, required=False)
+    projeler = field.String(_(u"Projeler"), index=True, required=False)
+    kan_grubu = field.String(_(u"Kan Grubu"), index=True, required=False)
+    ehliyet = field.String(_(u"Ehliyet"), index=True, required=False)
+    biyografi = field.Text(_(u"Biyografi"))
+    notlar = field.Text(_(u"Notlar"))
+    engelli_durumu = field.String(_(u"Engellilik"), index=True)
+    engel_grubu = field.String(_(u"Engel Grubu"), index=True)
+    engel_derecesi = field.String(_(u"Engel Derecesi"))
+    engel_orani = field.Integer(_(u"Engellilik Orani"))
+    cuzdan_seri = field.String(_(u"Seri"), index=True)
+    cuzdan_seri_no = field.String(_(u"Seri No"), index=True)
+    baba_adi = field.String(_(u"Ana Adi"), index=True)
+    ana_adi = field.String(_(u"Baba Adi"), index=True)
+    dogum_tarihi = field.Date(_(u"Doğum Tarihi"), index=True, format="%d.%m.%Y")
+    dogum_yeri = field.String(_(u"Doğum Yeri"), index=True)
+    kayitli_oldugu_il = field.String(_(u"İl"), index=True)
+    kayitli_oldugu_ilce = field.String(_(u"İlçe"), index=True)
+    kayitli_oldugu_mahalle_koy = field.String(_(u"Mahalle/Koy"))
+    kayitli_oldugu_cilt_no = field.String(_(u"Cilt No"))
+    kayitli_oldugu_aile_sira_no = field.String(_(u"Aile Sıra No"))
+    kayitli_oldugu_sira_no = field.String(_(u"Sıra No"))
+    kimlik_cuzdani_verildigi_yer = field.String(_(u"Cüzdanin Verildiği Yer"))
+    kimlik_cuzdani_verilis_nedeni = field.String(_(u"Cüzdanin Veriliş Nedeni"))
+    kimlik_cuzdani_kayit_no = field.String(_(u"Cüzdan Kayıt No"))
+    kimlik_cuzdani_verilis_tarihi = field.String(_(u"Cüzdan Kayıt Tarihi"))
+    akademik_yayinlari = field.String(_(u"Akademik Yayınları"), index=True, required=False)
+    verdigi_dersler = field.String(_(u"Verdiği Dersler"), index=True, required=False)
+    unvan = field.Integer(_(u"Unvan"), index=True, choices="akademik_unvan", required=False)
+    aktif = field.Boolean(_(u"Aktif"), index=True, required=False)
     user = User(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Harici Okutman"
-        verbose_name_plural = "Harici Okutmanlar"
+        verbose_name = _(u"Harici Okutman")
+        verbose_name_plural = _(u"Harici Okutmanlar")
         search_fields = ['unvan', 'ad', 'soyad']
 
     def __unicode__(self):
@@ -265,17 +266,17 @@ class Okutman(Model):
 
     """
 
-    ad = field.String("Ad", index=True, required=False)
-    soyad = field.String("Soyad", index=True, required=False)
-    unvan = field.String("Unvan", index=True, required=False)
-    birim_no = field.String("Birim ID", index=True, required=False)
+    ad = field.String(_(u"Ad"), index=True, required=False)
+    soyad = field.String(_(u"Soyad"), index=True, required=False)
+    unvan = field.String(_(u"Unvan"), index=True, required=False)
+    birim_no = field.String(_(u"Birim ID"), index=True, required=False)
     personel = Personel(one_to_one=True)
     harici_okutman = HariciOkutman(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Okutman"
-        verbose_name_plural = "Okutmanlar"
+        verbose_name = _(u"Okutman")
+        verbose_name_plural = _(u"Okutmanlar")
         search_fields = ['unvan', 'personel', 'ad', 'soyad', 'birim_no']
 
     @lazy_property
@@ -295,7 +296,7 @@ class Okutman(Model):
         return self.personel if self.personel.exist else self.harici_okutman
 
     def __unicode__(self):
-        return '%s %s' % (self.ad, self.soyad)
+        return gettext('%(ad)s %(soyad)s') % {'ad': self.ad, 'soyad': self.soyad}
 
     def is_not_unique(self):
         """Personel veya Harici Okutman sayısını bulur.
@@ -346,27 +347,27 @@ class Program(Model):
 
     """
 
-    yoksis_no = field.String("YOKSIS ID", index=True)
-    bolum_adi = field.String("Bölüm", index=True)
-    ucret = field.Integer("Ücret", index=True)
-    yil = field.String("Yıl", index=True)
-    adi = field.String("Adı", index=True)
-    tanim = field.String("Tanım", index=True)
-    yeterlilik_kosullari_aciklamasi = field.String("Yeterlilik Koşulları Açıklaması", index=True)
-    program_ciktilari = field.String("Program Çıktıları", index=True)
-    mezuniyet_kosullari = field.String("Mezuniyet Koşulları", index=True)
-    kabul_kosullari = field.String("Kabul Koşulları", index=True)
-    donem_sayisi = field.Integer("Sürdüğü Dönem Sayısı", index=True)
-    farkli_programdan_ders_secebilme = field.Boolean("Farklı Bir Programdan Ders Seçebilme",
+    yoksis_no = field.String(_(u"YOKSIS ID"), index=True)
+    bolum_adi = field.String(_(u"Bölüm"), index=True)
+    ucret = field.Integer(_(u"Ücret"), index=True)
+    yil = field.String(_(u"Yıl"), index=True)
+    adi = field.String(_(u"Adı"), index=True)
+    tanim = field.String(_(u"Tanım"), index=True)
+    yeterlilik_kosullari_aciklamasi = field.String(_(u"Yeterlilik Koşulları Açıklaması"), index=True)
+    program_ciktilari = field.String(_(u"Program Çıktıları"), index=True)
+    mezuniyet_kosullari = field.String(_(u"Mezuniyet Koşulları"), index=True)
+    kabul_kosullari = field.String(_(u"Kabul Koşulları"), index=True)
+    donem_sayisi = field.Integer(_(u"Sürdüğü Dönem Sayısı"), index=True)
+    farkli_programdan_ders_secebilme = field.Boolean(_(u"Farklı Bir Programdan Ders Seçebilme"),
                                                      default=False, index=True)
-    bolum_baskani = Role(verbose_name='Bölüm Başkanı', reverse_name='bolum_baskani_program')
-    ects_bolum_kordinator = Role(verbose_name='ECTS Bölüm Koordinator',
+    bolum_baskani = Role(verbose_name=_(u'Bölüm Başkanı'), reverse_name='bolum_baskani_program')
+    ects_bolum_kordinator = Role(verbose_name=_(u'ECTS Bölüm Koordinator'),
                                  reverse_name='ects_koordinator_program')
-    akademik_kordinator = Role(verbose_name='Akademik Koordinator',
+    akademik_kordinator = Role(verbose_name=_(u'Akademik Koordinator'),
                                reverse_name='akademik_koordinator_program')
-    birim = Unit(reverse_name="yoksis_program_program", verbose_name="YÖKSİS Program")
+    birim = Unit(reverse_name="yoksis_program_program", verbose_name=_(u"YÖKSİS Program"))
 
-    bolum = Unit(reverse_name="bolum_program", verbose_name="Bölüm")
+    bolum = Unit(reverse_name="bolum_program", verbose_name=_(u"Bölüm"))
 
     # todo: to be removed
     # class Donemler(ListNode):
@@ -374,8 +375,8 @@ class Program(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Program"
-        verbose_name_plural = "Programlar"
+        verbose_name = _(u"Program")
+        verbose_name_plural = _(u"Programlar")
         list_fields = ['adi', 'yil']
         search_fields = ['adi', 'yil', 'tanim']
 
@@ -390,38 +391,38 @@ class Ders(Model):
 
     """
 
-    ad = field.String("Ad", index=True)
-    kod = field.String("Kod", index=True)
-    tanim = field.String("Tanım", index=True)
-    aciklama = field.String("Açıklama", index=True)
-    onkosul = field.String("Önkoşul", index=True)
-    uygulama_saati = field.Integer("Uygulama Saati", index=True)
-    teori_saati = field.Integer("Teori Saati", index=True)
-    ects_kredisi = field.Integer("ECTS Kredisi", index=True)
-    yerel_kredisi = field.Integer("Yerel Kredisi", index=True)
-    zorunlu = field.Boolean("Zorunlu", index=True)
-    ders_dili = field.String("Ders Dili", index=True)
-    ders_turu = field.Integer("Ders Türü", index=True, choices="ders_turleri")
-    ders_amaci = field.String("Ders Amacı", index=True)
-    ogrenme_ciktilari = field.String("Öğrenme Çıktıları", index=True)
-    ders_icerigi = field.String("Ders İçeriği", index=True)
-    ders_kategorisi = field.Integer("Ders Kategorisi", index=True, choices="ders_kategorileri")
-    ders_kaynaklari = field.String("Ders Kaynakları", index=True)
-    ders_mufredati = field.String("Ders Müfredatı", index=True)
-    verilis_bicimi = field.Integer("Veriliş Biçimi", index=True, choices="ders_verilis_bicimleri")
-    katilim_sarti = field.Integer("Katılım Şartı", index=True)
-    ontanimli_kontenjan = field.Integer('Kontenjan', default=30)
-    ontanimli_dis_kontenjan = field.Integer('Dış Kontenjan', default=5)
+    ad = field.String(_(u"Ad"), index=True)
+    kod = field.String(_(u"Kod"), index=True)
+    tanim = field.String(_(u"Tanım"), index=True)
+    aciklama = field.String(_(u"Açıklama"), index=True)
+    onkosul = field.String(_(u"Önkoşul"), index=True)
+    uygulama_saati = field.Integer(_(u"Uygulama Saati"), index=True)
+    teori_saati = field.Integer(_(u"Teori Saati"), index=True)
+    ects_kredisi = field.Integer(_(u"ECTS Kredisi"), index=True)
+    yerel_kredisi = field.Integer(_(u"Yerel Kredisi"), index=True)
+    zorunlu = field.Boolean(_(u"Zorunlu"), index=True)
+    ders_dili = field.String(_(u"Ders Dili"), index=True)
+    ders_turu = field.Integer(_(u"Ders Türü"), index=True, choices="ders_turleri")
+    ders_amaci = field.String(_(u"Ders Amacı"), index=True)
+    ogrenme_ciktilari = field.String(_(u"Öğrenme Çıktıları"), index=True)
+    ders_icerigi = field.String(_(u"Ders İçeriği"), index=True)
+    ders_kategorisi = field.Integer(_(u"Ders Kategorisi"), index=True, choices="ders_kategorileri")
+    ders_kaynaklari = field.String(_(u"Ders Kaynakları"), index=True)
+    ders_mufredati = field.String(_(u"Ders Müfredatı"), index=True)
+    verilis_bicimi = field.Integer(_(u"Veriliş Biçimi"), index=True, choices="ders_verilis_bicimleri")
+    katilim_sarti = field.Integer(_(u"Katılım Şartı"), index=True)
+    ontanimli_kontenjan = field.Integer(_(u'Kontenjan'), default=30)
+    ontanimli_dis_kontenjan = field.Integer(_(u'Dış Kontenjan'), default=5)
     program = Program()
-    program_donemi = field.Integer('Programda Yeraldığı Dönem', index=True)
+    program_donemi = field.Integer(_(u'Programda Yeraldığı Dönem'), index=True)
     donem = Donem()
     ders_koordinatoru = Personel()
-    yerine_ders = LinkProxy("Ders", verbose_name="Yerine Açılan Ders", reverse_name="")
+    yerine_ders = LinkProxy("Ders", verbose_name=_(u"Yerine Açılan Ders"), reverse_name="")
 
     class Degerlendirme(ListNode):
-        tur = field.Integer("Değerlendirme Türü", choices="sinav_turleri", index=True)
-        sinav_suresi = field.Integer("Sınav Süresi (dakika)")
-        toplam_puana_etki_yuzdesi = field.Integer("Toplam Puana Etki Yüzdesi", index=True)
+        tur = field.Integer(_(u"Değerlendirme Türü"), choices="sinav_turleri", index=True)
+        sinav_suresi = field.Integer(_(u"Sınav Süresi (dakika)"))
+        toplam_puana_etki_yuzdesi = field.Integer(_(u"Toplam Puana Etki Yüzdesi"), index=True)
 
     class DersYardimcilari(ListNode):
         ders_yardimcilari = Personel()
@@ -440,7 +441,7 @@ class Ders(Model):
         bir gün yapılması için burada 2 ayrı kayıt oluşturulmalıdır.
         """
         sinif_turu = RoomType()
-        ders_saati = field.Integer("Ders Saati", index=True)
+        ders_saati = field.Integer(_(u"Ders Saati"), index=True)
 
         # teori = field.Integer("Ders Teori Saati", index=True)
         # uygulama = field.Integer("Ders Uygulama Saati", index=True)
@@ -448,8 +449,8 @@ class Ders(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ders"
-        verbose_name_plural = "Dersler"
+        verbose_name = _(u"Ders")
+        verbose_name_plural = _(u"Dersler")
         list_fields = ['ad', 'kod', 'ders_dili']
         search_fields = ['ad', 'kod']
 
@@ -483,13 +484,13 @@ class Sube(Model):
 
     """
 
-    ad = field.String("Ad", index=True)
-    kontenjan = field.Integer("Kontenjan", index=True)
-    dis_kontenjan = field.Integer("Dış Kontenjan", index=True)
+    ad = field.String(_(u"Ad"), index=True)
+    kontenjan = field.Integer(_(u"Kontenjan"), index=True)
+    dis_kontenjan = field.Integer(_(u"Dış Kontenjan"), index=True)
     okutman = Okutman()
     ders = Ders()
     donem = Donem()
-    ders_adi = field.String("Ders Adi", index=True)
+    ders_adi = field.String(_(u"Ders Adi"), index=True)
 
     class NotDonusumTablosu(ListNode):
         """Not Donusum Tablosu
@@ -501,10 +502,10 @@ class Sube(Model):
 
         """
 
-        harf = field.String("Harf", index=True, choices="harf_notlari")
+        harf = field.String(_(u"Harf"), index=True, choices="harf_notlari")
         dortluk_katsayi = field.Float("", choices="dortluk_katsayilari")
-        yuzluk_not_baslangic = field.Float("Başlangıç", index=True)
-        yuzluk_not_bitis = field.Float("Bitis", index=True)
+        yuzluk_not_baslangic = field.Float(_(u"Başlangıç"), index=True)
+        yuzluk_not_bitis = field.Float(_(u"Bitis"), index=True)
 
         def __unicode__(self):
             return '%s %s %s %s' % (
@@ -515,8 +516,8 @@ class Sube(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Şube"
-        verbose_name_plural = "Şubeler"
+        verbose_name = _(u"Şube")
+        verbose_name_plural = _(u"Şubeler")
         list_fields = ['ad', 'kontenjan']
         search_fields = ['ad', 'kontenjan']
 
@@ -561,21 +562,21 @@ class Sinav(Model):
 
     """
 
-    tarih = field.Date("Sınav Tarihi", index=True)
-    yapilacagi_yer = field.String("Yapılacağı Yer", index=True)
-    tur = field.Integer("Sınav Türü", index=True, choices="sinav_turleri")
-    aciklama = field.String("Açıklama", index=True)
+    tarih = field.Date(_(u"Sınav Tarihi"), index=True)
+    yapilacagi_yer = field.String(_(u"Yapılacağı Yer"), index=True)
+    tur = field.Integer(_(u"Sınav Türü"), index=True, choices="sinav_turleri")
+    aciklama = field.String(_(u"Açıklama"), index=True)
     sube = Sube()
-    degerlendirme = field.Boolean("Değerlendirme Durumu", index=True, default=False)
+    degerlendirme = field.Boolean(_(u"Değerlendirme Durumu"), index=True, default=False)
 
     # arama amacli
     ders = Ders()
-    puan = field.Integer("Puan", index=True)
+    puan = field.Integer(_(u"Puan"), index=True)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Sınav"
-        verbose_name_plural = "Sınavlar"
+        verbose_name = _(u"Sınav")
+        verbose_name_plural = _(u"Sınavlar")
         list_fields = ['tarih', 'yapilacagi_yer']
         search_fields = ['aciklama', 'tarih']
 
@@ -590,15 +591,15 @@ class DersProgrami(Model):
 
     """
 
-    gun = field.String("Ders Günü", index=True)
-    saat = field.Integer("Ders Saati", index=True)
+    gun = field.String(_(u"Ders Günü"), index=True)
+    saat = field.Integer(_(u"Ders Saati"), index=True)
     sube = Sube()
     derslik = Room()
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ders Programı"
-        verbose_name_plural = "Ders Programları"
+        verbose_name = _(u"Ders Programı")
+        verbose_name_plural = _(u"Ders Programları")
         list_fields = ['gun', 'saat']
         search_fields = ['gun', 'saat']
 
@@ -616,72 +617,72 @@ class Ogrenci(Model):
 
     """
 
-    ad = field.String("Ad", index=True)
-    soyad = field.String("Soyad", index=True)
-    cinsiyet = field.Integer("Cinsiyet", index=True, choices="cinsiyet")
-    tckn = field.String("TC Kimlik No", index=True)
-    cuzdan_seri = field.String("Seri", index=True)
-    cuzdan_seri_no = field.String("Seri No", index=True)
-    kayitli_oldugu_il = field.String("İl", index=True)
-    kayitli_oldugu_ilce = field.String("İlçe", index=True)
-    kayitli_oldugu_mahalle_koy = field.String("Mahalle/Köy")
-    kayitli_oldugu_cilt_no = field.String("Cilt No")
-    kayitli_oldugu_aile_sira_no = field.String("Aile Sıra No")
-    kayitli_oldugu_sira_no = field.String("Sıra No")
-    kimlik_cuzdani_verildigi_yer = field.String("Nüfus Cüzdanı Verildiği Yer")
-    kimlik_cuzdani_verilis_nedeni = field.String("Nüfus Cüzdanı Veriliş Nedeni")
-    kimlik_cuzdani_kayit_no = field.String("Nüfus Cüzdanı Kayıt No")
-    kimlik_cuzdani_verilis_tarihi = field.Date("Nüfus Cüzdanı Veriliş Tarihi", index=True,
+    ad = field.String(_(u"Ad"), index=True)
+    soyad = field.String(_(u"Soyad"), index=True)
+    cinsiyet = field.Integer(_(u"Cinsiyet"), index=True, choices="cinsiyet")
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    cuzdan_seri = field.String(_(u"Seri"), index=True)
+    cuzdan_seri_no = field.String(_(u"Seri No"), index=True)
+    kayitli_oldugu_il = field.String(_(u"İl"), index=True)
+    kayitli_oldugu_ilce = field.String(_(u"İlçe"), index=True)
+    kayitli_oldugu_mahalle_koy = field.String(_(u"Mahalle/Köy"))
+    kayitli_oldugu_cilt_no = field.String(_(u"Cilt No"))
+    kayitli_oldugu_aile_sira_no = field.String(_(u"Aile Sıra No"))
+    kayitli_oldugu_sira_no = field.String(_(u"Sıra No"))
+    kimlik_cuzdani_verildigi_yer = field.String(_(u"Nüfus Cüzdanı Verildiği Yer"))
+    kimlik_cuzdani_verilis_nedeni = field.String(_(u"Nüfus Cüzdanı Veriliş Nedeni"))
+    kimlik_cuzdani_kayit_no = field.String(_(u"Nüfus Cüzdanı Kayıt No"))
+    kimlik_cuzdani_verilis_tarihi = field.Date(_(u"Nüfus Cüzdanı Veriliş Tarihi"), index=True,
                                                format="%d.%m.%Y")
-    baba_adi = field.String("Ana Adı", index=True)
-    ana_adi = field.String("Baba Adı", index=True)
-    ikamet_il = field.String("İkamet İl", index=True)
-    ikamet_ilce = field.String("İkamet İlçe", index=True)
-    ikamet_adresi = field.String("İkametgah Adresi", index=True)
-    adres2 = field.String("2.Adres", index=True)
-    posta_kodu = field.String("Posta Kodu", index=True)
-    dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
-    dogum_yeri = field.String("Doğum Yeri", index=True)
-    uyruk = field.String("Uyruk", index=True)
-    medeni_hali = field.Integer("Medeni Hali", index=True, choices="medeni_hali")
-    ehliyet = field.String("Ehliyet", index=True)
-    e_posta = field.String("E-Posta", index=True)
-    e_posta2 = field.String("2.E-Posta", index=True)
-    tel_no = field.String("Telefon Numarası", index=True)
-    gsm = field.String("Cep Tel", index=True)
-    kan_grubu = field.String("Kan Grubu", index=True)
-    baba_aylik_kazanc = field.Integer("Babanızın Aylık Kazancı", index=True)
-    baba_ogrenim_durumu = field.Integer("Babanızın Öğrenim Durumu", index=True,
+    baba_adi = field.String(_(u"Ana Adı"), index=True)
+    ana_adi = field.String(_(u"Baba Adı"), index=True)
+    ikamet_il = field.String(_(u"İkamet İl"), index=True)
+    ikamet_ilce = field.String(_(u"İkamet İlçe"), index=True)
+    ikamet_adresi = field.String(_(u"İkametgah Adresi"), index=True)
+    adres2 = field.String(_(u"2.Adres"), index=True)
+    posta_kodu = field.String(_(u"Posta Kodu"), index=True)
+    dogum_tarihi = field.Date(_(u"Doğum Tarihi"), index=True, format="%d.%m.%Y")
+    dogum_yeri = field.String(_(u"Doğum Yeri"), index=True)
+    uyruk = field.String(_(u"Uyruk"), index=True)
+    medeni_hali = field.Integer(_(u"Medeni Hali"), index=True, choices="medeni_hali")
+    ehliyet = field.String(_(u"Ehliyet"), index=True)
+    e_posta = field.String(_(u"E-Posta"), index=True)
+    e_posta2 = field.String(_(u"2.E-Posta"), index=True)
+    tel_no = field.String(_(u"Telefon Numarası"), index=True)
+    gsm = field.String(_(u"Cep Tel"), index=True)
+    kan_grubu = field.String(_(u"Kan Grubu"), index=True)
+    baba_aylik_kazanc = field.Integer(_(u"Babanızın Aylık Kazancı"), index=True)
+    baba_ogrenim_durumu = field.Integer(_(u"Babanızın Öğrenim Durumu"), index=True,
                                         choices="ogrenim_durumu")
-    baba_meslek = field.String("Babanızın Mesleği", index=True)
-    anne_ogrenim_durumu = field.Integer("Annenizin Öğrenim Durumu", index=True,
+    baba_meslek = field.String(_(u"Babanızın Mesleği"), index=True)
+    anne_ogrenim_durumu = field.Integer(_(u"Annenizin Öğrenim Durumu"), index=True,
                                         choices="ogrenim_durumu")
-    anne_meslek = field.String("Annenizin Mesleği", index=True)
-    anne_aylik_kazanc = field.Integer("Annenizin Aylık Kazancı", index=True)
-    masraf_sponsor = field.Integer("Masraflarınız Kim Tarafından Karşılanacak", index=True,
+    anne_meslek = field.String(_(u"Annenizin Mesleği"), index=True)
+    anne_aylik_kazanc = field.Integer(_(u"Annenizin Aylık Kazancı"), index=True)
+    masraf_sponsor = field.Integer(_(u"Masraflarınız Kim Tarafından Karşılanacak"), index=True,
                                    choices="masraf_sponsorlar")
-    emeklilik_durumu = field.String("Velinizin Emeklilik Durumu", index=True)
-    kiz_kardes_sayisi = field.Integer("Kız Kardeş Sayısı", index=True)
-    erkek_kardes_sayisi = field.Integer("Erkek Kardeş Sayısı", index=True)
-    ogrenim_goren_kardes_sayisi = field.Integer("Öğrenim Gören Kardeş Sayısı", index=True)
-    burs_kredi_no = field.String("Kredi ve Yurtlar Kurumundan Aldığınız Kredi ve Burs No",
+    emeklilik_durumu = field.String(_(u"Velinizin Emeklilik Durumu"), index=True)
+    kiz_kardes_sayisi = field.Integer(_(u"Kız Kardeş Sayısı"), index=True)
+    erkek_kardes_sayisi = field.Integer(_(u"Erkek Kardeş Sayısı"), index=True)
+    ogrenim_goren_kardes_sayisi = field.Integer(_(u"Öğrenim Gören Kardeş Sayısı"), index=True)
+    burs_kredi_no = field.String(_(u"Kredi ve Yurtlar Kurumundan Aldığınız Kredi ve Burs No"),
                                  index=True)
-    aile_tel = field.String("Ailenizin Ev Tel", index=True)
-    aile_gsm = field.String("Ailenizin Cep Tel", index=True)
-    aile_adres = field.String("Ailenizin Daimi İkamet Ettiği Adres", index=True)
-    ozur_durumu = field.Integer("Varsa Özür Durumunuz", index=True, choices="ozur_durumu")
-    ozur_oran = field.Integer("Varsa Özür Oranınız %", index=True)
+    aile_tel = field.String(_(u"Ailenizin Ev Tel"), index=True)
+    aile_gsm = field.String(_(u"Ailenizin Cep Tel"), index=True)
+    aile_adres = field.String(_(u"Ailenizin Daimi İkamet Ettiği Adres"), index=True)
+    ozur_durumu = field.Integer(_(u"Varsa Özür Durumunuz"), index=True, choices="ozur_durumu")
+    ozur_oran = field.Integer(_(u"Varsa Özür Oranınız %"), index=True)
     user = User(one_to_one=True)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ögrenci"
-        verbose_name_plural = "Ögrenciler"
+        verbose_name = _(u"Ögrenci")
+        verbose_name_plural = _(u"Ögrenciler")
         list_fields = ['ad', 'soyad']
         search_fields = ['ad', 'soyad']
 
     def __unicode__(self):
-        return '%s %s' % (self.ad, self.soyad)
+        return gettext(u'%(ad)s %(soyad)s') % {'ad': self.ad, 'soyad': self.soyad}
 
     def donem_dersleri(self, donem=None):
         return [d.ders for d in
@@ -699,15 +700,15 @@ class OncekiEgitimBilgisi(Model):
 
     """
 
-    okul_adi = field.String("Mezun Olduğu Okul", index=True)
-    diploma_notu = field.Float("Diploma Notu", index=True)
-    mezuniyet_yili = field.String("Mezuniyet Yılı", index=True)
+    okul_adi = field.String(_(u"Mezun Olduğu Okul"), index=True)
+    diploma_notu = field.Float(_(u"Diploma Notu"), index=True)
+    mezuniyet_yili = field.String(_(u"Mezuniyet Yılı"), index=True)
     ogrenci = Ogrenci()
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Önceki Eğitim Bilgisi"
-        verbose_name_plural = "Önceki Eğitim Bilgileri"
+        verbose_name = _(u"Önceki Eğitim Bilgisi")
+        verbose_name_plural = _(u"Önceki Eğitim Bilgileri")
         list_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
         search_fields = ['okul_adi', 'diploma_notu', 'mezuniyet_yili']
 
@@ -733,41 +734,40 @@ class OgrenciProgram(Model):
 
     """
 
-    ogrenci_no = field.String("Öğrenci Numarası", index=True)
-    giris_tarihi = field.Date("Giriş Tarihi", index=True, format="%d.%m.%Y")
-    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
-    giris_puan_turu = field.Integer("Puan Türü", index=True, choices="giris_puan_turleri")
-    giris_puani = field.Float("Giriş Puani", index=True)
-    aktif_donem = field.String("Dönem", index=True)
-    ogrencilik_statusu = field.Integer('Öğrencilik Statüsü', index=True,
+    ogrenci_no = field.String(_(u"Öğrenci Numarası"), index=True)
+    giris_tarihi = field.Date(_(u"Giriş Tarihi"), index=True, format="%d.%m.%Y")
+    mezuniyet_tarihi = field.Date(_(u"Mezuniyet Tarihi"), index=True, format="%d.%m.%Y")
+    giris_puan_turu = field.Integer(_(u"Puan Türü"), index=True, choices="giris_puan_turleri")
+    giris_puani = field.Float(_(u"Giriş Puani"), index=True)
+    aktif_donem = field.String(_(u"Dönem"), index=True)
+    ogrencilik_statusu = field.Integer(_(u'Öğrencilik Statüsü'), index=True,
                                        choices="ogrenci_program_durumlar")
-    ogrenci_ders_kayit_status = field.Integer('Öğrencilik Ders Kayıt Statüsü', index=True,
+    ogrenci_ders_kayit_status = field.Integer(_(u'Öğrencilik Ders Kayıt Statüsü'), index=True,
                                               choices="ogrenci_ders_kayit_durum")
-    ayrilma_nedeni = field.Integer('Ayrılma Nedeni', index=True, choices='ayrilma_nedeni')
-    basari_durumu = field.String("Başarı Durumu", index=True)
-    diploma_no = field.String("Diploma No", index=True)
+    ayrilma_nedeni = field.Integer(_(u'Ayrılma Nedeni'), index=True, choices='ayrilma_nedeni')
+    basari_durumu = field.String(_(u"Başarı Durumu"), index=True)
+    diploma_no = field.String(_(u"Diploma No"), index=True)
     ders_programi = DersProgrami()
     danisman = Personel()
     program = Program()
     ogrenci = Ogrenci()
-    bagli_oldugu_bolum = Unit("Bölüm")
+    bagli_oldugu_bolum = Unit(_(u"Bölüm"))
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Öğrenci Programı"
-        verbose_name_plural = "Öğrenci Programları"
+        verbose_name = _(u"Öğrenci Programı")
+        verbose_name_plural = _(u"Öğrenci Programları")
 
     class Belgeler(ListNode):
-        tip = field.Integer("Belge Tipi", choices="belge_tip", index=True)
-        aciklama = field.String("Ek Açıklama", index=True, default="-", required=False)
-        tamam = field.Boolean("Belge kontrol edildi", index=True, required=True)
+        tip = field.Integer(_(u"Belge Tipi"), choices="belge_tip", index=True)
+        aciklama = field.String(_(u"Ek Açıklama"), index=True, default="-", required=False)
+        tamam = field.Boolean(_(u"Belge kontrol edildi"), index=True, required=True)
 
     class OgrenciDonem(ListNode):
         donem = Donem()
 
     def __unicode__(self):
-        return '%s %s - %s / %s' % (self.ogrenci.ad, self.ogrenci.soyad,
-                                    self.program.adi, self.program.yil)
+        return '%s - %s / %s' % (self.ogrenci, self.program.adi, self.program.yil)
 
     def tarih_sirasiyla_donemler(self):
         r = []
@@ -790,13 +790,13 @@ class OgrenciDersi(Model):
 
     """
 
-    alis_bicimi = field.Integer("Dersi Alış Biçimi", index=True)
+    alis_bicimi = field.Integer(_(u"Dersi Alış Biçimi"), index=True)
     sube = Sube(unique=True)
     ogrenci_program = OgrenciProgram()
     ogrenci = Ogrenci(unique=True)
-    basari_ortalamasi = field.Float("Ortalama", index=True)
-    harflendirilmis_not = field.String("Harf", index=True)
-    katilim_durumu = field.Boolean("Devamsızlıktan Kalma", default=False, index=True)
+    basari_ortalamasi = field.Float(_(u"Ortalama"), index=True)
+    harflendirilmis_not = field.String(_(u"Harf"), index=True)
+    katilim_durumu = field.Boolean(_(u"Devamsızlıktan Kalma"), default=False, index=True)
 
     # arama amaçlı alanlar
     ders = Ders()
@@ -804,8 +804,8 @@ class OgrenciDersi(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ögrenci Dersi"
-        verbose_name_plural = "Öğrenci Dersleri"
+        verbose_name = _(u"Ögrenci Dersi")
+        verbose_name_plural = _(u"Öğrenci Dersleri")
         list_fields = ['ders', 'alis_bicimi']
         search_fields = ['alis_bicimi', ]
         unique_together = [('ogrenci', 'sube')]
@@ -852,16 +852,16 @@ class DersKatilimi(Model):
     """
 
     # TODO: Neden float, soralım?
-    katilim_durumu = field.Integer("Katılım Durumu", index=True)
+    katilim_durumu = field.Integer(_(u"Katılım Durumu"), index=True)
     sube = Sube()
     ogrenci = Ogrenci()
     okutman = Okutman()
-    aciklama = field.String("Açıklama")
+    aciklama = field.String(_(u"Açıklama"))
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Ders Devamsızlığı"
-        verbose_name_plural = "Ders Devamsızlıklari"
+        verbose_name = _(u"Ders Devamsızlığı")
+        verbose_name_plural = _(u"Ders Devamsızlıklari")
         list_fields = ['katilim_durumu', 'sube_dersi']
         search_fields = ['sube_dersi', 'katilim_durumu']
 
@@ -894,19 +894,19 @@ class Borc(Model):
 
     """
 
-    miktar = field.Float("Borç Miktarı", index=True)
-    para_birimi = field.Integer("Para Birimi", index=True, choices="para_birimleri")
-    sebep = field.Integer("Borç Sebebi", index=True, choices="ogrenci_borc_sebepleri")
-    son_odeme_tarihi = field.Date("Son Ödeme Tarihi", index=True)
-    tahakkuk_referans_no = field.String("Tahakkuk Referans No", index=True)
-    aciklama = field.String("Borç Açıklaması", index=True)
+    miktar = field.Float(_(u"Borç Miktarı"), index=True)
+    para_birimi = field.Integer(_(u"Para Birimi"), index=True, choices="para_birimleri")
+    sebep = field.Integer(_(u"Borç Sebebi"), index=True, choices="ogrenci_borc_sebepleri")
+    son_odeme_tarihi = field.Date(_(u"Son Ödeme Tarihi"), index=True)
+    tahakkuk_referans_no = field.String(_(u"Tahakkuk Referans No"), index=True)
+    aciklama = field.String(_(u"Borç Açıklaması"), index=True)
     ogrenci = Ogrenci()
     donem = Donem()
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Borç"
-        verbose_name_plural = "Borçlar"
+        verbose_name = _(u"Borç")
+        verbose_name_plural = _(u"Borçlar")
         list_fields = ['miktar', 'son_odeme_tarihi']
         search_fields = ['miktar', 'odeme_tarihi']
 
@@ -961,7 +961,7 @@ class Odeme(Model):
         search_fields = ['miktar', 'odeme_tarihi']
 
     def __unicode__(self):
-        return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, self.son_odeme_tarihi)
+        return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, format_date(self.son_odeme_tarihi))
 
 
 class BankaAuth(Model):
@@ -972,13 +972,13 @@ class BankaAuth(Model):
 
     """
 
-    username = field.String("Username", index=True)
-    password = field.String("Password", index=True)
+    username = field.String(_(u"Username"), index=True)
+    password = field.String(_(u"Password"), index=True)
     banka = Banka()
 
     class Meta:
-        verbose_name = "Banka Kullanicisi"
-        verbose_name_plural = "Banka Kullanicilari"
+        verbose_name = _(u"Banka Kullanicisi")
+        verbose_name_plural = _(u"Banka Kullanicilari")
 
     def __unicode__(self):
         return '%s %s' % (self.username, self.banka.ad)
@@ -999,23 +999,23 @@ class DegerlendirmeNot(Model):
 
     """
 
-    puan = field.Integer("Puan", index=True)
+    puan = field.Integer(_(u"Puan"), index=True)
     sinav = Sinav()
     ogrenci = Ogrenci()
-    aciklama = field.String("Puan Açıklaması", index=True, required=False)
+    aciklama = field.String(_(u"Puan Açıklaması"), index=True, required=False)
 
     # Arama amacli alanlar.
-    yil = field.String("Yıl", index=True)
-    donem = field.String("Dönem", index=True)
-    ogretim_elemani = field.String("Öğretim Elemanı", index=True)
-    ogrenci_no = field.String("Öğrenci No", index=True)
-    sinav_tarihi = field.Date("Sınav Tarihi", index=True)
+    yil = field.String(_(u"Yıl"), index=True)
+    donem = field.String(_(u"Dönem"), index=True)
+    ogretim_elemani = field.String(_(u"Öğretim Elemanı"), index=True)
+    ogrenci_no = field.String(_(u"Öğrenci No"), index=True)
+    sinav_tarihi = field.Date(_(u"Sınav Tarihi"), index=True)
     ders = Ders()
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Not"
-        verbose_name_plural = "Notlar"
+        verbose_name = _(u"Not")
+        verbose_name_plural = _(u"Notlar")
         list_fields = ['puan', 'ders_adi']
         search_fields = ['aciklama', 'puan', 'ogrenci_no']
         list_filters = ['donem', ]
@@ -1035,78 +1035,78 @@ class DegerlendirmeNot(Model):
 
 
 AKADEMIK_TAKVIM_ETKINLIKLERI = [
-    ('1', 'Yeni Öğrenci Ön Kayıt'),
-    ('2', 'Güz Dönem Başlangıcı'),
-    ('3', 'Derslerin Acılması'),
-    ('4', 'Subelendirme ve Ders Programının Ilan Edilmesi'),
-    ('5', 'Öğrenci Harç'),
-    ('6', 'Öğrenci Ek Harç'),
-    ('7', 'Mazeretli Öğrenci Harç'),
-    ('8', 'Yeni Öğrenci Ders Kayıt'),
-    ('9', 'Yeni Öğrenci Danışman Onay'),
-    ('10', 'Ders Kayıt'),
-    ('11', 'Danışman Onay'),
-    ('12', 'Mazeretli Ders Kayıt'),
-    ('13', 'Mazeretli Danışman Onay'),
-    ('14', 'Derslerin Başlangıcı'),
-    ('15', 'Ders Ekle/Bırak'),
-    ('16', 'Ders Ekle/Bırak Danışman Onay'),
-    ('17', 'Danışman Dersten Çekilme İşlemleri'),
-    ('18', 'Ara Sinav'),
-    ('19', 'Ara Sınav Not Giriş'),
-    ('20', 'Ara Sınav Notlarının Öğrenciye Yayınlanması'),
-    ('21', 'Ara Sinav Mazeretli'),
-    ('22', 'Ara Sınav Mazeret Not Giriş'),
-    ('23', 'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması'),
-    ('24', 'Sınav Maddi Hata Düzeltme'),
-    ('25', 'Derslerin Bitişi'),
-    ('26', 'Yariyil Sinav'),
-    ('27', 'Yarıyıl Sınavı Not Giriş'),
-    ('28', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
-    ('29', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı'),
-    ('30', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Not Giriş'),
-    ('31', 'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye Yayınlanması'),
-    ('32', 'Harf Notlarının Öğrenciye Yayınlanması'),
-    ('33', 'Bütünleme Harf Notlarının Öğrenciye Yayınlanması'),
-    ('34', 'Öğretim Elemanı Yoklama Girişi'),
-    ('35', 'Güz Dönemi Bitiş'),
-    ('36', 'Bahar Dönemi Başlangıcı'),
-    ('37', 'Bahar Donemi Derslerin Acilmasi'),
-    ('38', 'Bahar Donemi Subelendirme ve Ders Programının Ilan Edilmesi'),
-    ('39', 'Bahar Dönem Başlangıcı'),
-    ('40', 'Öğrenci Harç'),
-    ('41', 'Öğrenci Ek Harç'),
-    ('42', 'Mazeretli Öğrenci Harç'),
-    ('43', 'Ders Kayıt'),
-    ('44', 'Danışman Onay'),
-    ('45', 'Mazeretli Ders Kayıt'),
-    ('46', 'Mazeretli Danışman Onay'),
-    ('47', 'Derslerin Başlangıcı'),
-    ('48', 'Ders Ekle / Bırak'),
-    ('49', 'Ders Ekle / Bırak Onay'),
-    ('50', 'Ara Sinav'),
-    ('51', 'Ara Sınav Not Giriş'),
-    ('52', 'Ara Sınav Notlarının Öğrenciye Yayınlanması'),
-    ('53', 'Ara Sinav Mazeretli'),
-    ('54', 'Ara Sınav Mazeret Not Giriş'),
-    ('55', 'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması'),
-    ('56', 'Sınav Maddi Hata Düzeltme'),
-    ('57', 'Derslerin Bitişi'),
-    ('58', 'Yariyil Sinav baslangic'),
-    ('59', 'Yarıyıl Sınavı Not Giriş'),
-    ('60', 'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi'),
-    ('61', 'Öğretim Elemanı Yoklama Girişi'),
-    ('62', 'Bahar Dönem Bitişi'),
-    ('63', 'Yaz Dönemi Başlangıcı'),
-    ('64', 'Yaz Dönemi Derslerin Bitişi'),
-    ('65', 'Yaz Dönemi Sınavların Başlangıcı'),
-    ('66', 'Yaz Dönemi Bitişi'),
-    ('67', 'Güz Dönemi Dersler'),
-    ('68', 'Bahar Dönemi Dersler'),
-    ('69', 'Yaz Dönemi Dersler'),
-    ('70', '1 Mayıs İşçi Bayrami'),
-    ('71', '23 Nisan Ulusal Egemenlik ve Çocuk Bayramı'),
-    ('72', '19 Mayıs Genclik ve Spor Bayramı')
+    ('1', _(u'Yeni Öğrenci Ön Kayıt')),
+    ('2', _(u'Güz Dönem Başlangıcı')),
+    ('3', _(u'Derslerin Acılması')),
+    ('4', _(u'Subelendirme ve Ders Programının Ilan Edilmesi')),
+    ('5', _(u'Öğrenci Harç')),
+    ('6', _(u'Öğrenci Ek Harç')),
+    ('7', _(u'Mazeretli Öğrenci Harç')),
+    ('8', _(u'Yeni Öğrenci Ders Kayıt')),
+    ('9', _(u'Yeni Öğrenci Danışman Onay')),
+    ('10', _(u'Ders Kayıt')),
+    ('11', _(u'Danışman Onay')),
+    ('12', _(u'Mazeretli Ders Kayıt')),
+    ('13', _(u'Mazeretli Danışman Onay')),
+    ('14', _(u'Derslerin Başlangıcı')),
+    ('15', _(u'Ders Ekle/Bırak')),
+    ('16', _(u'Ders Ekle/Bırak Danışman Onay')),
+    ('17', _(u'Danışman Dersten Çekilme İşlemleri')),
+    ('18', _(u'Ara Sinav')),
+    ('19', _(u'Ara Sınav Not Giriş')),
+    ('20', _(u'Ara Sınav Notlarının Öğrenciye Yayınlanması')),
+    ('21', _(u'Ara Sinav Mazeretli')),
+    ('22', _(u'Ara Sınav Mazeret Not Giriş')),
+    ('23', _(u'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması')),
+    ('24', _(u'Sınav Maddi Hata Düzeltme')),
+    ('25', _(u'Derslerin Bitişi')),
+    ('26', _(u'Yariyil Sinav')),
+    ('27', _(u'Yarıyıl Sınavı Not Giriş')),
+    ('28', _(u'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi')),
+    ('29', _(u'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı')),
+    ('30', _(u'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Not Giriş')),
+    ('31', _(u'Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye Yayınlanması')),
+    ('32', _(u'Harf Notlarının Öğrenciye Yayınlanması')),
+    ('33', _(u'Bütünleme Harf Notlarının Öğrenciye Yayınlanması')),
+    ('34', _(u'Öğretim Elemanı Yoklama Girişi')),
+    ('35', _(u'Güz Dönemi Bitiş')),
+    ('36', _(u'Bahar Dönemi Başlangıcı')),
+    ('37', _(u'Bahar Donemi Derslerin Acilmasi')),
+    ('38', _(u'Bahar Donemi Subelendirme ve Ders Programının Ilan Edilmesi')),
+    ('39', _(u'Bahar Dönem Başlangıcı')),
+    ('40', _(u'Öğrenci Harç')),
+    ('41', _(u'Öğrenci Ek Harç')),
+    ('42', _(u'Mazeretli Öğrenci Harç')),
+    ('43', _(u'Ders Kayıt')),
+    ('44', _(u'Danışman Onay')),
+    ('45', _(u'Mazeretli Ders Kayıt')),
+    ('46', _(u'Mazeretli Danışman Onay')),
+    ('47', _(u'Derslerin Başlangıcı')),
+    ('48', _(u'Ders Ekle / Bırak')),
+    ('49', _(u'Ders Ekle / Bırak Onay')),
+    ('50', _(u'Ara Sinav')),
+    ('51', _(u'Ara Sınav Not Giriş')),
+    ('52', _(u'Ara Sınav Notlarının Öğrenciye Yayınlanması')),
+    ('53', _(u'Ara Sinav Mazeretli')),
+    ('54', _(u'Ara Sınav Mazeret Not Giriş')),
+    ('55', _(u'Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması')),
+    ('56', _(u'Sınav Maddi Hata Düzeltme')),
+    ('57', _(u'Derslerin Bitişi')),
+    ('58', _(u'Yariyil Sinav baslangic')),
+    ('59', _(u'Yarıyıl Sınavı Not Giriş')),
+    ('60', _(u'Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi')),
+    ('61', _(u'Öğretim Elemanı Yoklama Girişi')),
+    ('62', _(u'Bahar Dönem Bitişi')),
+    ('63', _(u'Yaz Dönemi Başlangıcı')),
+    ('64', _(u'Yaz Dönemi Derslerin Bitişi')),
+    ('65', _(u'Yaz Dönemi Sınavların Başlangıcı')),
+    ('66', _(u'Yaz Dönemi Bitişi')),
+    ('67', _(u'Güz Dönemi Dersler')),
+    ('68', _(u'Bahar Dönemi Dersler')),
+    ('69', _(u'Yaz Dönemi Dersler')),
+    ('70', _(u'1 Mayıs İşçi Bayrami')),
+    ('71', _(u'23 Nisan Ulusal Egemenlik ve Çocuk Bayramı')),
+    ('72', _(u'19 Mayıs Genclik ve Spor Bayramı'))
 
 ]
 
@@ -1122,14 +1122,14 @@ class AkademikTakvim(Model):
 
     """
 
-    birim = Unit("Birim", index=True)
+    birim = Unit(_(u"Birim"), index=True)
     # yil = field.Date("Yıl", index=True)
-    ogretim_yili = OgretimYili("Öğretim Yılı", index=True)
+    ogretim_yili = OgretimYili(_(u"Öğretim Yılı"), index=True)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Akademik Takvim"
-        verbose_name_plural = "Akademik Takvimler"
+        verbose_name = _(u"Akademik Takvim")
+        verbose_name_plural = _(u"Akademik Takvimler")
         list_fields = ['_birim', 'ogretim_yili']
         # search_fields = ['yil']
 
@@ -1155,8 +1155,8 @@ class AkademikTakvim(Model):
                 if e.baslangic.date == e.bitis.date:
                     tl.append((e.etkinlik, e.baslangic))
                 else:
-                    tl.append(("%s baslangic" % e.etkinlik, e.baslangic))
-                    tl.append(("%s bitis" % e.etkinlik, e.bitis))
+                    tl.append((gettext(u"%s başlangıç") % e.etkinlik, e.baslangic))
+                    tl.append((gettext(u"%s bitiş") % e.etkinlik, e.bitis))
 
 
 class Takvim(Model):
@@ -1166,11 +1166,11 @@ class Takvim(Model):
     olay, belirsiz bir baslangic yani son gun belirtilmisse, sadece bitis tarihi verilir,
     olay, belirsiz bir son yani baslama gun belirtilmisse, sadece baslangic tarihi verilir,
     """
-    etkinlik = field.Integer("Etkinlik", index=True, choices=AKADEMIK_TAKVIM_ETKINLIKLERI)
-    baslangic = field.DateTime("Başlangıç", index=True, format="%d.%m.%Y", required=False)
-    bitis = field.DateTime("Bitiş", index=True, format="%d.%m.%Y", required=False)
-    akademik_takvim = AkademikTakvim("Akademik Takvim")
-    resmi_tatil = field.Boolean("Resmi Tatil", index=True)
+    etkinlik = field.Integer(_(u"Etkinlik"), index=True, choices=AKADEMIK_TAKVIM_ETKINLIKLERI)
+    baslangic = field.DateTime(_(u"Başlangıç"), index=True, format="%d.%m.%Y", required=False)
+    bitis = field.DateTime(_(u"Bitiş"), index=True, format="%d.%m.%Y", required=False)
+    akademik_takvim = AkademikTakvim(_(u"Akademik Takvim"))
+    resmi_tatil = field.Boolean(_(u"Resmi Tatil"), index=True)
 
     def pre_save(self):
         if not self.baslangic and not self.bitis:
@@ -1178,8 +1178,8 @@ class Takvim(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Takvim"
-        verbose_name_plural = "Takvimler"
+        verbose_name = _(u"Takvim")
+        verbose_name_plural = _(u"Takvimler")
 
     def __unicode__(self):
         return '%s %s %s' % (
@@ -1197,12 +1197,12 @@ class DonemDanisman(Model):
     donem = Donem()
     okutman = Okutman()
     bolum = Unit()
-    aciklama = field.String("Açıklama", index=True, required=False)
+    aciklama = field.String(_(u"Açıklama"), index=True, required=False)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Dönem Danışman"
-        verbose_name_plural = "Dönem Danışmanları"
+        verbose_name = _(u"Dönem Danışman")
+        verbose_name_plural = _(u"Dönem Danışmanları")
         list_fields = ['program', 'okutman', 'bolum', 'donem']
         search_fields = ['aciklama']
 
@@ -1219,13 +1219,13 @@ class DondurulmusKayit(Model):
 
     donem = Donem()
     ogrenci_program = OgrenciProgram()
-    baslangic_tarihi = field.Date("Başlangıç Tarihi", index=True)
-    aciklama = field.String("Açıklama", index=True, required=False)
+    baslangic_tarihi = field.Date(_(u"Başlangıç Tarihi"), index=True)
+    aciklama = field.String(_(u"Açıklama"), index=True, required=False)
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = "Dondurulmuş Kayıt"
-        verbose_name_plural = "Dondurulmuş Kayıtlar"
+        verbose_name = _(u"Dondurulmuş Kayıt")
+        verbose_name_plural = _(u"Dondurulmuş Kayıtlar")
         list_fields = ['ogrenci_program', 'baslangic_tarihi', 'aciklama', 'donem']
         search_fields = ['aciklama', 'baslangic_tarihi']
 

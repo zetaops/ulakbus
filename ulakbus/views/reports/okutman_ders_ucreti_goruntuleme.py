@@ -15,7 +15,7 @@ from ulakbus.models.personel import Izin
 from datetime import datetime
 import calendar
 from collections import OrderedDict
-from ulakbus.lib.date_time_helper import AYLAR
+from ulakbus.lib.date_time_helper import AYLAR, ay_listele
 from ulakbus.views.reports import ders_ucreti_hesaplama as DU
 
 guncel_yil = datetime.now().year
@@ -37,7 +37,7 @@ class TarihForm(JsonForm):
         title = gettext_lazy(u'Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz')
 
     yil_sec = fields.String(_(u'Yıl Seçiniz'), choices=YIL, default=0)
-    ay_sec = fields.String(_(u'Ay Seçiniz'), choices=AYLAR, default=guncel_ay)
+    ay_sec = fields.String(_(u'Ay Seçiniz'), choices=ay_listele, default=guncel_ay)
 
 
 class OkutmanListelemeForm(JsonForm):

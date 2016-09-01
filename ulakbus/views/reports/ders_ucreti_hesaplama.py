@@ -14,7 +14,7 @@ from ulakbus.lib.personel import personel_izin_gunlerini_getir
 from ulakbus.models.ders_sinav_programi import DersEtkinligi
 from datetime import datetime, date
 from collections import OrderedDict
-from ulakbus.lib.date_time_helper import AYLAR, resmi_tatil_gunleri_getir
+from ulakbus.lib.date_time_helper import AYLAR, ay_listele, resmi_tatil_gunleri_getir
 from ulakbus.lib.common import get_akademik_takvim
 from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
 from zengine.lib.translation import gettext as _, gettext_lazy

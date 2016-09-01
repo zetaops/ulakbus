@@ -384,7 +384,7 @@ class DanismanAtama(CrudView):
             'type': 'info', "title": _(u'Danışman Ataması Yapıldı'),
             "msg": _(u'%(ogrenci)s adlı öğrenciye %(danisman)s adlı personel danışman olarak atandı') % {
                 'ogrenci': ogrenci,
-                'personel': personel,
+                'danisman': personel,
             }
         }
 

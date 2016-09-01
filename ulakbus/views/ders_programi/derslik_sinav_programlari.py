@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models import SinavEtkinligi, Room
-from ulakbus.models.ders_sinav_programi import HAFTA
+from ulakbus.models.ders_sinav_programi import gun_listele
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
@@ -84,7 +84,7 @@ class DerslikSinavProgramlari(CrudView):
         self.output['objects'] = [object_list]
         s_etkinlikleri = [s for s in SinavEtkinligi.objects if room in s.SinavYerleri and s.solved]
         sinav_etkinlikleri = sinav_etkinlik_olustur(s_etkinlikleri)
-        hafta_dict = hafta_gun_olustur(HAFTA)
+        hafta_dict = hafta_gun_olustur(gun_listele())
         for i in range(max(map(len, sinav_etkinlikleri.values()))):
             sinav_etkinlik_list = OrderedDict({})
             for hafta_gun in hafta_dict.keys():

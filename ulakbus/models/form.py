@@ -13,6 +13,7 @@ Bu modül `Form` modeli ve bu modelle ilintili data modellerini içerir.
 __author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 from pyoko import Model, field, Node
+from zengine.lib.translation import gettext_lazy as _
 from .auth import Role, Permission, User
 
 
@@ -23,16 +24,16 @@ class Form(Model):
     modelidir.
 
     """
-    ad = field.String("Form Adı", index=True)
-    file = field.File("File", index=True,
+    ad = field.String(_(u"Form Adı"), index=True)
+    file = field.File(_(u"File"), index=True,
                       random_name=True)  # form eger PDF olarak yulendiyse bu alan kullanilir.
     permissions = Permission()
-    date = field.Date("Form Tarihi", index=True, format="%d.%m.%Y")
+    date = field.Date(_(u"Form Tarihi"), index=True, format="%d.%m.%Y")
 
     class Meta:
         app = 'Form'
-        verbose_name = "Form"
-        verbose_name_plural = "Formlar"
+        verbose_name = _(u"Form")
+        verbose_name_plural = _(u"Formlar")
         list_fields = ['ad', 'date']
         search_fields = ['ad', 'file']
 
@@ -48,15 +49,15 @@ class FormData(Model):
 
     """
     form = Form()
-    data = field.Text("Form Data", index=True)  # form datasi json serialized olarak saklanir
+    data = field.Text(_(u"Form Data"), index=True)  # form datasi json serialized olarak saklanir
     user = User()
     role = Role()
-    date = field.Date("Form Data Tarihi", index=True, format="%d.%m.%Y")
+    date = field.Date(_(u"Form Data Tarihi"), index=True, format="%d.%m.%Y")
 
     class Meta:
         app = 'Form'
-        verbose_name = "Form Data"
-        verbose_name_plural = "Form Data"
+        verbose_name = _(u"Form Data")
+        verbose_name_plural = _(u"Form Data")
         list_fields = ['form', 'data', 'date']
         search_fields = ['data', 'date', 'user']
 

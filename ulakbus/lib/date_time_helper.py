@@ -9,35 +9,46 @@
 
 from datetime import timedelta, date
 import calendar
+from zengine.lib.translation import gettext_lazy, gettext as _, LazyProxy, get_day_names, get_month_names
 
 __author__ = 'Ali Riza Keles'
 
-HAFTA_ICI_GUNLER = [
-    (1, "Pazartesi"),
-    (2, "Salı"),
-    (3, "Çarşamba"),
-    (4, "Perşembe"),
-    (5, "Cuma")
-]
 
-HAFTA_SONU_GUNLER = [
-    (6, "Cumartesi"),
-    (7, "Pazar")
-]
+def gun_dilimi_listele():
+    return [
+        (1, _(u'Sabah')),
+        (2, _(u'Öğle')),
+        (3, _(u'Akşam')),
+    ]
 
-GUN_DILIMI = [
-    (1, 'Sabah'),
-    (2, 'Öğle'),
-    (3, 'Akşam')
-]
 
-HAFTA = HAFTA_ICI_GUNLER + HAFTA_SONU_GUNLER
+def _liste_hazirla(fn, keep_fn=False):
+    """Babel'ın `get_day_names` ve `get_month_names` özelliklerini Ulakbus'e uyarlar.
 
-GUN_LISTESI = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']
+    Babel'ın `get_day_names` ve `get_month_names` methodları, gün ve ayları 0-indeksli
+    sözlükler olarak veriyor. Ancak uygulamanın bir çok yerinde `HAFTA` ve `AYLAR`
+    listelerinin 1-indeksli tuple'lar içeren bir liste olması bekleniyor. Ayrıca, gün
+    ve ay isimlerinin bakılmasının, isimler kullanıcıya gönderilmeden hemen önce
+    yapılması gerekli ki kullanıcının seçtiği tarih tercihine göre gönderilebilsin.
 
-AYLAR = [(1, 'Ocak'), (2, 'Şubat'), (3, 'Mart'), (4, 'Nisan'),
-         (5, 'Mayıs'), (6, 'Haziran'), (7, 'Temmuz'), (8, 'Ağustos'),
-         (9, 'Eylül'), (10, 'Ekim'), (11, 'Kasım'), (12, 'Aralık')]
+    Bunu sağlamak adına, LazyProxy ile listenin oluşturulması kullanım anına ertelenmiş,
+    yardımcı fonksiyon ile de indeksler beklenen sayılara kaydırılmıştır.
+    """
+    def hazirlik():
+        liste = []
+        for i, eleman in fn().items():
+            liste.append((i + 1, eleman))
+        return liste
+    if not keep_fn:
+        return LazyProxy(hazirlik, enable_cache=False)
+    else:
+        return hazirlik
+
+HAFTA = _liste_hazirla(get_day_names)
+gun_listele = _liste_hazirla(get_day_names, keep_fn=True)
+
+AYLAR = _liste_hazirla(get_month_names)
+ay_listele = _liste_hazirla(get_month_names, keep_fn=True)
 
 
 def map_sinav_etkinlik_hafta_gunleri(sinavlar):

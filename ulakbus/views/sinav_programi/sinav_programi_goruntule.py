@@ -4,14 +4,14 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-from ulakbus.lib.date_time_helper import map_sinav_etkinlik_hafta_gunleri, GUN_LISTESI
+from ulakbus.lib.date_time_helper import map_sinav_etkinlik_hafta_gunleri
 from zengine.forms import JsonForm
 from zengine.views.crud import CrudView
 from collections import OrderedDict
 from ulakbus.models import Personel, Donem, Ogrenci
 from ulakbus.models.ders_sinav_programi import HAFTA
 from ...lib.ogrenci import aktif_sinav_listesi
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, get_day_names
 
 
 class SinavProgramiGoruntule(CrudView):
@@ -65,7 +65,7 @@ class SinavProgramiGoruntule(CrudView):
 
         sinav_etkinlikleri = self.current.task_data['sinav_etkinlikleri']
 
-        self.output['objects'] = [GUN_LISTESI]
+        self.output['objects'] = [list(get_day_names().values())]
         hafta = dict(HAFTA)
 
         # Öğretim görevlisinin bir günde maksimum kaç tane sınavı olduğu bulunur
