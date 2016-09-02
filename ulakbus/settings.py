@@ -162,15 +162,9 @@ OBJECT_MENU = {
     ],
 }
 
-VIEW_URLS.update({
-    # ('falcon URI template', 'python path to view method/class')
-    'ogrenci_ara': 'ulakbus.views.system.SearchStudent',
-    'personel_ara': 'ulakbus.views.system.SearchPerson',
-    'get_current_user': 'ulakbus.views.system.GetCurrentUser',
-    'dashboard': 'ulakbus.views.system.UlakbusMenu',
-    'menu': 'ulakbus.views.system.UlakbusMenu',
-    'ders_arama': 'ulakbus.views.ogrenci.ogrenci.ders_arama'
-})
+AUTO_IMPORT_MODULES.extend([
+    'ulakbus.views.system',
+])
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
@@ -228,8 +222,6 @@ ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabi
 
 SICIL_PREFIX = "KON"
 
-#: These models will not flushed when running tests
-TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'
 
 #: User search method of messaging subsystem will work on these fields
 MESSAGING_USER_SEARCH_FIELDS = ['name', 'surname']

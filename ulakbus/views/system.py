@@ -13,16 +13,17 @@ from pyoko.modelmeta import model_registry
 from pyoko.conf import settings
 
 from ulakbus.views.reports import ReporterRegistry
-#from zengine.views import basic_view
+# from zengine.views import basic_view
 from zengine.models import WFCache
 from zengine.models import WFInstance
-from zengine.views.base import BaseView
+from zengine.views.base import SysView
 from ulakbus.models import Personel, Ogrenci
 from zengine.views.menu import Menu
 
 
-class Search(BaseView):
+class Search(SysView):
     SEARCH_ON = None
+    PATH = None
 
     def __init__(self, *args, **kwargs):
         super(Search, self).__init__(*args, **kwargs)
@@ -39,28 +40,21 @@ class Search(BaseView):
         for o in objects:
             self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
 
+
 # @basic_view('ogrenci_ara')
 class SearchStudent(Search):
+    PATH = 'ogrenci_ara'
     SEARCH_ON = Ogrenci
 
 
 class SearchPerson(Search):
+    PATH = 'personel_ara'
     SEARCH_ON = Personel
 
 
-def get_random_msg():
-    msgs = [{'type': 1, 'title': 'İşlem tamamlandı',
-             'body': 'Uzun süren işlem başarıyla tamamlandı',
-             'url': '#yeni_personel/?t=%s' % uuid4().hex},
-            {'type': 2, 'title': 'Yeni İleti', 'body': 'Dene Mem\'den mesajınız var',
-             'url': '#show_msg/?t=%s' % uuid4().hex},
-            {'type': 3, 'title': 'Hata', 'body': 'Ulakbus ölümcül bir hatadan kurtarıldı!',
-             'url': ''}
-            ]
-    return msgs[random.randrange(0, len(msgs))]
+class GetCurrentUser(SysView):
+    PATH = 'get_current_user'
 
-
-class GetCurrentUser(BaseView):
     def __init__(self, current):
         super(GetCurrentUser, self).__init__(current)
         self.output['current_user'] = {}
@@ -77,6 +71,8 @@ class GetCurrentUser(BaseView):
 
 
 class UlakbusMenu(Menu):
+    PATH = 'dashboard'
+
     def __init__(self, current):
         super(UlakbusMenu, self).__init__(current)
         self.add_reporters()
