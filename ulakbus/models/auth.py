@@ -20,6 +20,7 @@ from pyoko.lib.utils import lazy_property
 
 from zengine.auth.permissions import get_all_permissions
 from zengine.dispatch.dispatcher import receiver
+from zengine.lib.decorators import role_getter
 
 from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
@@ -223,6 +224,7 @@ class Unit(Model):
     is_active = field.Boolean("Aktif")
     uid = field.Integer(index=True)
     # parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
+    parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
     def get_user_keys(cls, unit_key):
@@ -268,6 +270,9 @@ class PermissionCache(Cache):
 
     def __init__(self, role_id):
         super(PermissionCache, self).__init__(role_id)
+
+
+
 
 
 class Role(Model):
@@ -418,6 +423,12 @@ class Role(Model):
         çağırarak oluşturur.
         """
         self.name = self._make_name()
+
+
+    @classmethod
+    @role_getter("Bölüm Başkanları")
+    def get_bolum_baskanlari(cls):
+        return []
 
 
 class LimitedPermissions(Model):
