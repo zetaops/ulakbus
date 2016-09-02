@@ -117,9 +117,9 @@ class DersUcretiHesaplama(CrudView):
         Ders Ücreti ya da Ek Ders Ücreti hesaplarından birini seçmeye yarar.
         """
 
-        _form = JsonForm(current=self.current, title=_(u"""Öğretim Görevlileri"
-                                                           Puantaj Tablosu Hesaplama"
-                                                           Türü Seçiniz"""))
+        _form = JsonForm(current=self.current, title=_(u"Öğretim Görevlileri "
+                                                       u"Puantaj Tablosu Hesaplama "
+                                                       u"Türü Seçiniz"))
 
         _form.ders = fields.Button(_(u"Ders Ücreti Hesapla"), cmd='ders_ucreti_hesapla')
         _form.ek_ders = fields.Button(_(u"Ek Ders Ücreti Hesapla"), cmd='ek_ders_ucreti_hesapla')

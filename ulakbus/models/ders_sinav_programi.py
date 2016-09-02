@@ -54,7 +54,7 @@ class ZamanDilimleri(Model):
 
     def __unicode__(self):
         return '%s - %s|%s' % (
-            dict(GUN_DILIMI)[int(self.gun_dilimi)],
+            dict(gun_dilimi_listele())[int(self.gun_dilimi)],
             format_time(time(int(self.baslama_saat), int(self.baslama_dakika))),
             format_time(time(int(self.baslama_dakika), int(self.bitis_dakika))),
         )
