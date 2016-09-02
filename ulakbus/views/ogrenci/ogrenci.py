@@ -321,8 +321,21 @@ class OgrenciProgramSecimForm(forms.JsonForm):
 class DanismanAtama(CrudView):
     """Danışman Atama
 
-    Öğrencilere danışman atamalarının yapılmasını sağlayan workflowa ait
-    metdodları barındıran sınıftır.
+    Danışmanları atanmayan öğrenciler danışman atanmasını sağlayan iş akışıdır.
+    İş akışı 4 adımdan oluşur.
+
+    Program Seç:
+    Öğrencinin kayıtlı olduğu program seçilir.
+
+    Danışman Seç:
+    Birime kayıtlı danışman  biri seçilir.
+
+    Danışman Kaydet:
+    Seçilen danışman  öğrencinin danışamanı olarak kaydedilir.
+
+    Kayıt Bilgisi Ver:
+    İşlemin başarıyla tamamlandığına dair bilgi mesajı basılır.
+    Danışmana bilgi mesajı yollanır.
 
     """
 
@@ -330,16 +343,12 @@ class DanismanAtama(CrudView):
         model = "OgrenciProgram"
 
     def program_sec(self):
-        """Program Seçim Adımı
-
-        Programlar veritabanından çekilip, açılır menu içine
-        doldurulur.
+        """
+        Öğrencinin kayıtlı olduğu program seçilir.
 
         """
-        guncel_donem = Donem.objects.filter(guncel=True)[0]
         ogrenci_id = self.current.input['id']
         self.current.task_data['ogrenci_id'] = ogrenci_id
-        self.current.task_data['donem_id'] = guncel_donem.key
 
         _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
         _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
@@ -347,32 +356,40 @@ class DanismanAtama(CrudView):
         self.form_out(_form)
 
     def danisman_sec(self):
-        program_id = self.current.input['form']['program']
-        donem_id = self.current.task_data['donem_id']
-        self.current.task_data['program_id'] = program_id
+        """
+        Birime kayıtlı danışman  biri seçilir.
 
-        program = OgrenciProgram.objects.get(program_id)
+        """
+        self.current.task_data['program_id'] = self.current.input['form']['program']
+
+        program = OgrenciProgram.objects.get(self.current.input['form']['program'])
 
         _form = DanismanSecimForm(current=self.current, title="Danışman Seçiniz")
-        _choices = prepare_choices_for_model(DonemDanisman, donem_id=donem_id,
+        _choices = prepare_choices_for_model(DonemDanisman, donem=Donem.guncel_donem(),
                                              bolum=program.program.birim)
         _form.donem_danisman = fields.Integer(choices=_choices)
         self.form_out(_form)
 
     def danisman_kaydet(self):
-        program_id = self.current.task_data['program_id']
-        donem_danisman_id = self.input['form']['donem_danisman']
+        """
+        Seçilen danışman  öğrencinin danışamanı olarak kaydedilir.
 
-        o = DonemDanisman.objects.get(donem_danisman_id)
-        personel = o.okutman.personel
+        """
+        donem_danisman = DonemDanisman.objects.get(self.input['form']['donem_danisman'])
+        personel = donem_danisman.okutman.personel
 
         self.current.task_data['personel_id'] = personel.key
 
-        ogrenci_program = OgrenciProgram.objects.get(program_id)
+        ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['program_id'])
         ogrenci_program.danisman = personel
         ogrenci_program.save()
 
     def kayit_bilgisi_ver(self):
+        """
+        İşlemin başarıyla tamamlandığına dair bilgi mesajı basılır.
+        Danışmana bilgi mesajı yollanır.
+
+        """
         ogrenci_id = self.current.task_data['ogrenci_id']
         personel_id = self.current.task_data['personel_id']
 
@@ -381,8 +398,16 @@ class DanismanAtama(CrudView):
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": 'Danışman Ataması Yapıldı',
-            "msg": '%s adlı öğrenciye %s adlı personel danışman olarak atandı' % (ogrenci, personel)
+            "msg": '%s adlı öğrenciye %s adlı personel danışman olarak atandı.' % (ogrenci, personel)
         }
+
+        def notify(user, message, title):
+            if user:
+                user.send_notification(message=message, title=title)
+
+        title = "Danışman Atama"
+        message = "%s adlı öğrenciye danışman olarak atandınız." % ogrenci
+        notify(personel.user, message, title)
 
 
 class OgrenciMezuniyet(CrudView):

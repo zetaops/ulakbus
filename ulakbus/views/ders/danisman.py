@@ -111,6 +111,7 @@ class DonemDanismanAtama(CrudView):
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_selection"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def danisman_kaydet(self):
         yoksis_no = self.current.task_data['unit_yoksis_no']
