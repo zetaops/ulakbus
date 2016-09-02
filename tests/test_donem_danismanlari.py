@@ -7,9 +7,10 @@
 
 import time
 
-from ulakbus.models import DonemDanisman, Donem
+from ulakbus.models import DonemDanisman, Donem, Okutman
 from ulakbus.models.auth import User
 from zengine.lib.test_utils import BaseTestCase
+from zengine.messaging.model import Message
 
 
 class TestCase(BaseTestCase):
@@ -34,10 +35,15 @@ class TestCase(BaseTestCase):
         seçilenen danışmanlar kaydedildikten sonra, sunucudan dönen cevapta danışman
         kayıt sayılarında degişiklik olup olmadığı test edilir.
 
+        Doğru mesaj nesnesi sayısının oluştrulup oluşturulmadığını test eder.
+
         """
 
         # Veritabanından bölüm başkanı kullanıcısı seçilir.
         usr = User.objects.get(username='bolum_baskani_1')
+
+        # Bütün mesaj nesneleri silinir.
+        Message.objects.delete()
 
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/donem_danismanlari', user=usr)
@@ -74,14 +80,17 @@ class TestCase(BaseTestCase):
             {'ad_soyad': "Övün Alemdar", 'secim': "", 'key': "4O7Nxt64EQumUzettWGyPHU9r3C"},
             {'ad_soyad': "Safura Kısakürek", 'secim': "", 'key': "9YivWjZb4iPp2O6eQq1X4bqkfIW"},
             {'ad_soyad': "Veis Güçlü", 'secim': 'true', 'key': "JdH5RzwbmhIBTAU4ec6J4fgNu4z"},
-            {'ad_soyad': "Öge Fırat", 'secim': "", 'key': "22Y0VMB98avgMjSbbH1KXkZrdLL"}]
+            {'ad_soyad': "Öge Fırat", 'secim': "", 'key': "22Y0VMB98avgMjSbbH1KXkZrdLL"},
+            {'ad_soyad': "Henife Şener", 'secim': 'true', 'key': "G2XjlaJMX0FUZX84aoIeiVCqZMR"}]
 
         # Seçilen dönem danışmanları kaydedilir.
         self.client.post(form={'kaydet': 1, 'Okutmanlar': okutmanlar})
         time.sleep(1)
 
         # Eklenen danışman kayıtlarının veritabanına kaydedilip kaydedilmediğini test eder.
-        assert len(DonemDanisman.objects.filter(donem=donem, bolum=bolum)) == count_of_danisman + 3
+        assert len(DonemDanisman.objects.filter(donem=donem, bolum=bolum)) == count_of_danisman + 5
+
+        assert Message.objects.count() == 5
 
         # İş akışı tekrardan başlatılır.
         self.client.set_path('/donem_danismanlari')
@@ -97,7 +106,7 @@ class TestCase(BaseTestCase):
 
         # Eklenen danışmanlar kaydedildikten sonra, sunucudan dönen cevapta danışman kayıt sayıların
         # doğruluğu test edilir.
-        assert num_of_danisman == count_of_danisman + 3
+        assert num_of_danisman == count_of_danisman + 5
 
         for dd in DonemDanisman.objects.filter(donem=donem, bolum=bolum):
             if not dd.okutman.key == 'Bf1CPIKs6txfhvlBQ7jqhy0iwv':

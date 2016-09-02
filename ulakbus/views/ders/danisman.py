@@ -13,6 +13,8 @@ Dönem bazlı danışman atanmasını sağlayan iş akışını yönetir.
 """
 
 from pyoko import ListNode
+from pyoko.db.adapter.db_riak import BlockSave, BlockDelete
+from pyoko.exceptions import IntegrityError
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
@@ -54,21 +56,19 @@ class DonemDanismanAtama(CrudView):
 
      Bu iş akışında kullanılan metotlar şu şekildedir:
 
-     Dönem Formunu Listele:
-        Kayıtlı dönemleri listeler
-
      Bölüm Seç:
-        Kullanıcının bölüm başkanı olduğu bölümleri listeler
+        Kullanıcının bölüm başkanı olduğu bölümleri listeler.
 
      Öğretim Elemanlarını Seç:
         Seçilen bölümdeki öğretim elemanları listelenir.
 
      Kaydet:
-        Seçilen dönem ve bölüm için seçilen danışman kayıtlarını yapar.
+        Seçilen öğretim elemanları danışman olarak kaydeder.
 
      Kayıt Bilgisi Göster:
-        Seçilen öğretim elemanları, dönem ve bölüm bilgilerinden oluşturulan kaydın özeti
+        Seçilen öğretim elemanları, dönem ve bölüm bilgilerinden oluşturulan kaydın mesajı
         gösterilir.
+        Danışmanlara bilgilendirme mesajı gönderilir.
         Bu adımdan sonra iş akışı sona erer.
 
      Bu sınıf ``CrudView`` extend edilerek hazırlanmıştır. Temel model
@@ -82,6 +82,10 @@ class DonemDanismanAtama(CrudView):
         model = "DonemDanisman"
 
     def bolum_sec(self):
+        """
+        Kullanıcının bölüm başkanı olduğu bölümleri listeler.
+
+        """
 
         _unit = self.current.role.unit
         _form = DonemDanismanForm(current=self, title="Bölüm Seçiniz")
@@ -90,6 +94,10 @@ class DonemDanismanAtama(CrudView):
         self.form_out(_form)
 
     def danisman_sec(self):
+        """
+        Seçilen bölümdeki öğretim elemanları listelenir.
+
+        """
 
         unit = Unit.objects.get(self.current.input['form']['program'])
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
@@ -114,32 +122,31 @@ class DonemDanismanAtama(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def danisman_kaydet(self):
+        """
+        Seçilen öğretim elemanları danışman olarak kaydeder.
+
+        """
         yoksis_no = self.current.task_data['unit_yoksis_no']
         unit = Unit.objects.get(yoksis_no=yoksis_no)
-        donem = Donem.objects.get(guncel=True)
+        donem = Donem.guncel_donem()
         danismanlar = self.current.input['form']['Okutmanlar']
 
-        # Bölümün ilgili dönemine ait bütün danışmanları sil
-        try:
-            for dd in DonemDanisman.objects.filter(donem=donem, bolum=unit):
-                dd.delete()
-        except:
-            pass
-
-        for danisman in danismanlar:
-            if danisman['secim']:
-                key = danisman['key']
-                okutman = Okutman.objects.get(key)
-                donem_danisman = DonemDanisman()
-                donem_danisman.donem = donem
-                donem_danisman.okutman = okutman
-                donem_danisman.bolum = unit
-                try:
-                    donem_danisman.save()
-                except Exception as e:
-                    print(e.message)
+        self.current.task_data['okutmanlar'] = []
+        with BlockSave(DonemDanisman):
+            for danisman in danismanlar:
+                if danisman['secim']:
+                    key = danisman['key']
+                    okutman = Okutman.objects.get(key)
+                    DonemDanisman.objects.get_or_create(okutman=okutman, donem=donem, bolum=unit)
+                    self.current.task_data['okutmanlar'].append(okutman.key)
 
     def kayit_bilgisi_ver(self):
+        """
+        Seçilen öğretim elemanları, dönem ve bölüm bilgilerinden oluşturulan kaydın mesajı
+        gösterilir.
+        Danışmanlara bilgilendirme mesajı gönderilir.
+
+        """
         yoksis_no = self.current.task_data['unit_yoksis_no']
         unit = Unit.objects.get(yoksis_no=yoksis_no)
         donem = Donem.objects.get(guncel=True)
@@ -148,3 +155,15 @@ class DonemDanismanAtama(CrudView):
             'type': 'info', "title": 'Danismanlar Kaydedildi',
             "msg": '%s dönemi için %s programına ait danışman listesi kaydedilmiştir' % (
                 donem, unit)}
+
+        def notify(user, message, title):
+            try:
+                user.send_notification(message=message, title=title)
+            except IntegrityError:
+                pass
+
+        title = "Danışman Atama"
+        message = "%s dönemi için  danışman olarak atandınız." % donem
+        for okutman_key in self.current.task_data['okutmanlar']:
+            okutman = Okutman.objects.get(okutman_key)
+            notify(okutman.personel.user, message, title)
