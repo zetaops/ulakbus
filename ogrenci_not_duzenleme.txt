@@ -1,0 +1,92 @@
+# Şubeye bağlı sınav sayısı
+        len_of_sinav = Sinav.objects.filter(sube_id="I8BhWGKroZIp3fp5b26ZtZJTULO").count()
+
+        # Sunucudan dönen sınav sayısı ile veritabanından çekilen sınav sayısı karşılaştırılıp test edilir.
+        assert len_of_sinav == len(resp.json['forms']['form'][1]['titleMap'])
+
+        # Sınav seçilir.
+        resp = self.client.post(
+            form={'ileri': 1, 'sinav': "OgBWnRDaAc39gID3aa2yj7VR9rC", 'form_key': "74351cafdea84852b358754db1d127b3"})
+
+        ogrenciler = [{'ad_soyad': "Salık Durmaz", 'secim': 'true', 'ogrenci_key': "YmbiCB5FR27xeB5IPrD0R8h4UiJ"}]
+
+        ogrenci_lst = []
+        # Şubeye kayıtlı öğrenci dersleri.
+        ogrenci_dersi_lst = OgrenciDersi.objects.filter(sube_id="I8BhWGKroZIp3fp5b26ZtZJTULO")
+        for ogrenci_dersi in ogrenci_dersi_lst:
+            ogrenci_lst.append(ogrenci_dersi.ogrenci)
+
+        # Veritabanından dönen öğrenci sayısı ile sunucudan dönen öğrenci sayısı karşılaştırılıp test edilir.
+        assert len(resp.json['forms']['model']['Ogrenciler']) == len(ogrenci_lst)
+
+        # Öğrenci seçilir.
+        self.client.post(form={'ileri': 1, 'form_key': "263015c04dea4110a9cfcfc2d1d03a36", 'Ogrenciler': ogrenciler})
+
+        assert 'LANE_CHANGE_MSG' in self.client.current.task_data
+
+        time.sleep(1)
+
+        token, user = BaseTestCase.get_user_token(username='ogretim_uyesi_1')
+
+        # ogretim_uyesi_1 kullanıcısına giriş yaptılır.
+        self.prepare_client('/ogrenci_not_duzenleme', user=user, token=token)
+        self.client.post()
+
+        baslangic_puani = DegerlendirmeNot.objects.get("Xq6MpL4xGFmZKEb7TAaCqIGDmRw").puan
+        self.client.post(form={'kaydet': 1, "object_key": "Xq6MpL4xGFmZKEb7TAaCqIGDmRw", 'puan': 78})
+        son_puani = DegerlendirmeNot.objects.get("Xq6MpL4xGFmZKEb7TAaCqIGDmRw").puan
+        assert baslangic_puani != son_puani and son_puani == 78
+
+
+----------------------------------------------------------
+
+    def sinav_sec(self):
+        sinavlar = []
+        for sube in self.current.task_data['sube_lst']:
+            sinav_lst = Sinav.objects.filter(sube_id=sube['key'])
+            for sinav in sinav_lst:
+                _sinav = (sinav.key, sinav.__unicode__())
+                sinavlar.append(_sinav)
+
+        _form = forms.JsonForm(current=self.current, title='Sınav Seçiniz')
+        _form.sinav = fields.Integer('Sınavlar', choices=tuple(sinavlar))
+        _form.ileri = fields.Button('İleri')
+        self.form_out(_form)
+
+    def ogrenci_sec(self):
+        _sinav = Sinav.objects.get(self.current.input['form']['sinav'])
+        self.current.task_data['sinav_key'] = self.current.input['form']['sinav']
+        ogrenci_dersi_lst = OgrenciDersi.objects.filter(sube=_sinav.sube)
+        _form = OgrenciSecimForm(current=self.current, title='Öğrenci Seçiniz')
+        for ogrenci_dersi in ogrenci_dersi_lst:
+            _form.Ogrenciler(ogrenci_key=ogrenci_dersi.ogrenci.key,
+                             ad_soyad='%s %s' % (ogrenci_dersi.ogrenci.ad, ogrenci_dersi.ogrenci.soyad))
+        _form.ileri = fields.Button('İleri')
+        self.form_out(_form)
+        self.current.output['meta']['allow_actions'] = False
+
+    def ogrenci_secim_kaydet(self):
+        self.current.task_data['ogrenciler'] = [ogr for ogr in self.current.input['form']['Ogrenciler'] if ogr['secim']]
+        msg = {"title": 'Not Düzenleme İşlemi',
+               "body": 'Not düzenleme işlemi için sınav, öğrenci, şube seçimi başarıyla tamamlanmıştır.'}
+
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+    def not_duzenle(self):
+        _ogrenci = self.current.task_data['ogrenciler'].pop()
+        ogrenci_object = Ogrenci.objects.get(_ogrenci['ogrenci_key'])
+        _sinav = Sinav.objects.get(self.current.task_data['sinav_key'])
+        degerlendirme_not = DegerlendirmeNot.objects.get(sinav_id=self.current.task_data['sinav_key'],
+                                                         ogrenci_id=_ogrenci['ogrenci_key'])
+        _form = NotDuzenlemeForm(degerlendirme_not, current=self.current, title='Not Düzenleme Ekranı')
+        _form.help_text = '%s adlı öğrencininin %s adlı sınava ait puanı' % (ogrenci_object, _sinav)
+        self.form_out(_form)
+
+    def bilgi_ver(self):
+        self.current.output['msgbox'] = {'type': 'info', "title": 'Not Düzenleme',
+                                         "msg": 'Öğrencilere ait notlar başarıyla düzenlendi'}
+
+    # def inline_edit_sube_form(self):
+    #     self.output['forms']['schema']['properties']['Subeler']['quick_add'] = True
+    #     self.output['forms']['schema']['properties']['Subeler']['quick_add_field'] = "ders_adi"
+    #     self.output['forms']['schema']['properties']['Subeler']['quick_add_view'] = "sube_arama"
