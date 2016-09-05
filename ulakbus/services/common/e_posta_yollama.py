@@ -30,34 +30,3 @@ class E_PostaYolla(Service):
 
         # Send the message
         conn.send(msg)
-
-
-# from zato.server.service import Service
-# from ulakbus.views.common import profil_sayfasi_goruntuleme
-# import smtplib
-# from zengine.lib.cache import Cache
-#
-# class E_PostaYolla(Service):
-#     """Ders programı planlamasını arka planda başlatır."""
-#
-#     def handle(self):
-#         wf_name = self.request.payload['wf_name']
-#         e_posta =self.request.payload['e_posta']
-#         # bilgi = self.request.payload['bilgi']
-#         aktivasyon_kodu = self.request.payload['aktivasyon_kodu']
-#
-#
-#
-#         fromaddr = 'furkanuyar92@gmail.com'
-#         toaddr = e_posta
-#         msg = 'Subject: Ulakbüs Aktivasyon Maili\n\nE-Posta adresinizi doğrulamak için ' \
-#               'aşağıdaki linke tıklayınız:\n\n %s' \
-#                % ('http://dev.zetaops.io/#/%s/object_id=%s' %(wf_name,aktivasyon_kodu) )
-#         username = 'furkanuyar92'
-#         password = profil_sayfasi_goruntuleme.P
-#         server = smtplib.SMTP('smtp.gmail.com:587')
-#         server.ehlo()
-#         server.starttls()
-#         server.login(username, password)
-#         server.sendmail(fromaddr, toaddr, msg)
-#         server.quit()
