@@ -6,7 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
+from collections import defaultdict
 from datetime import timedelta, date
 import calendar
 from zengine.lib.translation import gettext_lazy, gettext as _, LazyProxy, get_day_names, get_month_names
@@ -78,6 +78,28 @@ def map_sinav_etkinlik_hafta_gunleri(sinavlar):
         etkinlik_listesi.append(e.__unicode__())
         r[weekday] = etkinlik_listesi
     return r
+
+
+def map_ders_etkinlik_hafta_gunleri(ders_etkinlikleri):
+    """
+    Ders Etkinliği  nesnelerini tarihlerine göre haftanın günlerine dağıtır.
+
+    Haftanınn günlerinin key olarak kullanıldığı  bir dict üretir.
+
+    Args:
+        ders_etkinlikleri(list) : ders etkinliği objeleri listesi
+
+    Returns:
+        dict
+    """
+
+    d_etkinlikleri = defaultdict(list)
+    for ders in ders_etkinlikleri:
+        weekday = ders.gun
+        ders_etkinlikleri = d_etkinlikleri[weekday]
+        ders_etkinlikleri.append(ders.__unicode__())
+        d_etkinlikleri[weekday] = ders_etkinlikleri
+    return d_etkinlikleri
 
 
 def zaman_araligi(baslangic, bitis):
