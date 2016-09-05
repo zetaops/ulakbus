@@ -97,7 +97,7 @@ class TestCase(BaseTestCase):
         self.prepare_client('/sinav_programi_hazirla', user=usr)
         resp = self.client.post()
 
-        assert resp.json['msgbox']['title'] == "Yayınlanmamış Sınav Programı Var!"
+        assert resp.json['msgbox']['title'] == u"Yayınlanmamış Sınav Programı Var!"
 
         for i in range(2):
 

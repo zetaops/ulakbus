@@ -14,9 +14,11 @@ from ulakbus.lib.personel import personel_izin_gunlerini_getir
 from ulakbus.models.ders_sinav_programi import DersEtkinligi
 from datetime import datetime, date
 from collections import OrderedDict
-from ulakbus.lib.date_time_helper import AYLAR, resmi_tatil_gunleri_getir
+from ulakbus.lib.date_time_helper import AYLAR, ay_listele, resmi_tatil_gunleri_getir
 from ulakbus.lib.common import get_akademik_takvim
 from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
+from zengine.lib.translation import gettext as _, gettext_lazy
+
 
 guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
@@ -31,8 +33,8 @@ class TarihForm(JsonForm):
     kullanılan form.
     """
 
-    yil_sec = fields.String('Yıl Seçiniz', choices=yil_secenekleri, default=guncel_yil)
-    ay_sec = fields.String('Ay Seçiniz', choices=AYLAR, default=guncel_ay)
+    yil_sec = fields.String(gettext_lazy(u'Yıl Seçiniz'), choices=yil_secenekleri, default=guncel_yil)
+    ay_sec = fields.String(gettext_lazy(u'Ay Seçiniz'), choices=ay_listele, default=guncel_ay)
 
 
 class OkutmanListelemeForm(JsonForm):
@@ -45,8 +47,8 @@ class OkutmanListelemeForm(JsonForm):
         inline_edit = ['secim']
 
     class OkutmanListesi(ListNode):
-        secim = fields.Boolean("Seçim", type="checkbox")
-        okutman = fields.String('Okutman')
+        secim = fields.Boolean(gettext_lazy(u"Seçim"), type="checkbox")
+        okutman = fields.String(gettext_lazy(u'Okutman'))
         key = fields.String(hidden=True)
 
 
@@ -72,8 +74,8 @@ class DersUcretiHesaplama(CrudView):
         seçmeye yarar.
         """
         _form = TarihForm(current=self.current)
-        _form.title = 'Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz'
-        _form.sec = fields.Button("İlerle")
+        _form.title = _(u'Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz')
+        _form.sec = fields.Button(_(u"İlerle"))
         self.form_out(_form)
 
     def donem_kontrol(self):
@@ -100,12 +102,12 @@ class DersUcretiHesaplama(CrudView):
         istenirse daha o dönem açılmadığından hata verecektir.
         """
 
-        _form = JsonForm(current=self.current, title="Dönem Bulunamadı")
-        _form.help_text = """Seçtiğiniz yıl ve aya ait dönem bulunamadı. Tarih
+        _form = JsonForm(current=self.current, title=_(u"Dönem Bulunamadı"))
+        _form.help_text = _(u"""Seçtiğiniz yıl ve aya ait dönem bulunamadı. Tarih
                           seçimine geri dönmek için Geri Dön butonuna, işlemi
-                          iptal etmek için İptal butonuna basabilirsiniz."""
-        _form.geri_don = fields.Button("Geri Dön", flow='tarih_sec')
-        _form.iptal = fields.Button("İptal", flow='islem_iptali_bilgilendir')
+                          iptal etmek için İptal butonuna basabilirsiniz.""")
+        _form.geri_don = fields.Button(_(u"Geri Dön"), flow='tarih_sec')
+        _form.iptal = fields.Button(_(u"İptal"), flow='islem_iptali_bilgilendir')
         self.form_out(_form)
 
     def islem_iptali_bilgilendir(self):
@@ -115,8 +117,8 @@ class DersUcretiHesaplama(CrudView):
         """
 
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Durum Mesajı',
-            "msg": 'Puantaj cetveli görüntüleme işleminiz iptal edilmiştir.'
+            'type': 'info', "title": _(u'Durum Mesajı'),
+            "msg": _(u'Puantaj cetveli görüntüleme işleminiz iptal edilmiştir.')
         }
 
     def okutman_sec(self):
@@ -129,7 +131,7 @@ class DersUcretiHesaplama(CrudView):
         """
 
         birim_no = self.current.role.unit.yoksis_no
-        _form = OkutmanListelemeForm(current=self.current, title="Okutman Seçiniz")
+        _form = OkutmanListelemeForm(current=self.current, title=_(u"Okutman Seçiniz"))
 
         # TODO: ilgili doneme ait okutmanlar listelenmeli.
         okutmanlar = Okutman.objects.filter(birim_no=birim_no)
@@ -137,7 +139,7 @@ class DersUcretiHesaplama(CrudView):
         for okutman in okutmanlar:
             _form.OkutmanListesi(secim=True, okutman=okutman.__unicode__(), key=okutman.key)
 
-        _form.sec = fields.Button("İlerle")
+        _form.sec = fields.Button(_(u"İlerle"))
         self.form_out(_form)
 
     def okutman_secim_kontrol(self):
@@ -161,12 +163,12 @@ class DersUcretiHesaplama(CrudView):
         Hiç öğretim görevlisi seçilmediği durumda, uyarı verir.
         """
 
-        _form = JsonForm(current=self.current, title="Öğretim Görevlisi Seçmelisiniz")
-        _form.help_text = """İşlem yapabilmek için en az bir öğretim görevlisi seçmelisiniz.
-                             Öğretim görevlisi seçimine geri dönmek için Geri Dön butonuna,
-                             işlemi iptal etmek için İptal butonuna basabilirsiniz."""
-        _form.geri_don = fields.Button("Geri Dön", flow='okutman_sec')
-        _form.iptal = fields.Button("İptal", flow='islem_iptali_bilgilendir')
+        _form = JsonForm(current=self.current, title=_(u"Öğretim Görevlisi Seçmelisiniz"))
+        _form.help_text = _(u"""İşlem yapabilmek için en az bir öğretim görevlisi seçmelisiniz.
+                                Öğretim görevlisi seçimine geri dönmek için Geri Dön butonuna,
+                                işlemi iptal etmek için İptal butonuna basabilirsiniz.""")
+        _form.geri_don = fields.Button(_(u"Geri Dön"), flow='okutman_sec')
+        _form.iptal = fields.Button(_(u"İptal"), flow='islem_iptali_bilgilendir')
         self.form_out(_form)
 
     def ders_saati_turu_secme(self):
@@ -174,10 +176,9 @@ class DersUcretiHesaplama(CrudView):
         Ders Ücreti ya da Ek Ders Ücreti hesaplarından birini seçmeye yarar.
         """
 
-        _form = JsonForm(current=self.current, title="Puantaj Tablosu Hesaplama Türü Seçiniz")
-
-        _form.ders = fields.Button("Ders Ücreti Hesapla", cmd='ders_ucreti_hesapla')
-        _form.ek_ders = fields.Button("Ek Ders Ücreti Hesapla", cmd='ek_ders_ucreti_hesapla')
+        _form = JsonForm(current=self.current, title=_(u"Puantaj Tablosu Hesaplama Türü Seçiniz"))
+        _form.ders = fields.Button(_(u"Ders Ücreti Hesapla"), cmd='ders_ucreti_hesapla')
+        _form.ek_ders = fields.Button(_(u"Ek Ders Ücreti Hesapla"), cmd='ek_ders_ucreti_hesapla')
         self.form_out(_form)
 
     def ucret_hesapla(self):
@@ -220,8 +221,12 @@ class DersUcretiHesaplama(CrudView):
         self.output['objects'] = [table_head]
 
         # Seçilen okutmanların bulunmaması demek,
-        title = "%s %s-%s AYI %s DERS PUANTAJ TABLOSU" % (self.current.task_data["title"],
-                                                          yil, ay_isim.upper(), ders_turu.upper())
+        title = _(u"%(baslik)s %(yil)s-%(ay)s AYI %(ders)s DERS PUANTAJ TABLOSU") % {
+            'baslik': self.current.task_data["title"],
+            'yil': yil,
+            'ay': ay_isim.upper(),
+            'ders': ders_turu.upper(),
+        }
 
         _form = PuantajFormu(title=title)
         self.form_out(_form)

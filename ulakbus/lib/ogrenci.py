@@ -7,6 +7,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+<<<<<<< HEAD
 from ulakbus.models import Ogrenci, SinavEtkinligi, AbstractRole
 
 ABSTRACT_ROLE_LIST_DONDURULMUS = [
@@ -15,6 +16,9 @@ ABSTRACT_ROLE_LIST_DONDURULMUS = [
     "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
     "Lisans Programı Öğrencisi - Kayıt Dondurmuş"
 ]
+=======
+from ulakbus.models import Ogrenci
+>>>>>>> develop
 
 
 def diploma_no_uret(ogrenci_program):
@@ -49,7 +53,6 @@ def aktif_sinav_listesi(obj):
     for sube in obj.donem_subeleri():
         sinavlar.extend(SinavEtkinligi.sube_sinav_listesi(sube=sube))
     return sinavlar
-
 
 def dondurulacak_kayitin_abstract_rolu(unit):
     abstract_role = None

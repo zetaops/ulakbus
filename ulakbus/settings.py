@@ -12,7 +12,17 @@ __author__ = 'Evren Esat Ozkan'
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
+# Localization/Internationalization settings defaults
 DEFAULT_LANG = 'tr'
+DEFAULT_LOCALIZATION_FORMAT = 'tr_TR'
+# Available translations
+TRANSLATIONS = ['tr', 'en']
+# Locale options that should be given to the users for formatting of dates, numbers etc.
+LOCALIZATION_FORMATS = ['en_US', 'en_GB', 'tr_TR']
+# The directory containing the translations
+TRANSLATIONS_DIR = os.path.join(BASE_DIR, 'locale')
+# The language of messages in Ulakbus
+TRANSLATION_DOMAINS['messages'] = 'tr'
 
 # path of the activity modules which will be invoked by workflow tasks
 ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])

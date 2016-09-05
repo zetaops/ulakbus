@@ -22,6 +22,7 @@ from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
 from ulakbus.models.auth import Unit
 from collections import OrderedDict
 from ulakbus.views.ders.ders import prepare_choices_for_model
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 
 class DonemDanismanForm(forms.JsonForm):
@@ -29,7 +30,7 @@ class DonemDanismanForm(forms.JsonForm):
 
     """
 
-    ileri = fields.Button("İleri")
+    ileri = fields.Button(gettext_lazy(u"İleri"))
 
 
 class DonemDanismanListForm(forms.JsonForm):
@@ -37,11 +38,11 @@ class DonemDanismanListForm(forms.JsonForm):
         inline_edit = ['secim']
 
     class Okutmanlar(ListNode):
-        secim = fields.Boolean(type="checkbox")
-        ad_soyad = fields.String('Ad Soyad')
-        key = fields.String('Key', hidden=True)
+        secim = fields.Boolean(gettext_lazy(u'Seçim'), type="checkbox")
+        ad_soyad = fields.String(gettext_lazy(u'Ad Soyad'))
+        key = fields.String(gettext_lazy(u'Key'), hidden=True)
 
-    kaydet = fields.Button("Kaydet")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"))
 
 
 class DonemDanismanAtama(CrudView):
@@ -88,7 +89,7 @@ class DonemDanismanAtama(CrudView):
         """
 
         _unit = self.current.role.unit
-        _form = DonemDanismanForm(current=self, title="Bölüm Seçiniz")
+        _form = DonemDanismanForm(current=self, title=_(u"Bölüm Seçiniz"))
         _choices = prepare_choices_for_model(Unit, yoksis_no=_unit.yoksis_no)
         _form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
@@ -103,7 +104,7 @@ class DonemDanismanAtama(CrudView):
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
         okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
         donem = Donem.guncel_donem()
-        _form = DonemDanismanListForm(current=self, title="Okutman Seçiniz")
+        _form = DonemDanismanListForm(current=self, title=_(u"Okutman Seçiniz"))
 
         for okt in okutmanlar:
             try:
@@ -152,9 +153,9 @@ class DonemDanismanAtama(CrudView):
         donem = Donem.objects.get(guncel=True)
 
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Danismanlar Kaydedildi',
-            "msg": '%s dönemi için %s programına ait danışman listesi kaydedilmiştir' % (
-                donem, unit)}
+            'type': 'info', "title": _(u'Danismanlar Kaydedildi'),
+            "msg": _(u'%(donem)s dönemi için %(donem)s programına ait danışman listesi kaydedilmiştir') % {
+                'donem': donem, 'unit': unit}}
 
         def notify(user, message, title):
             try:
@@ -162,8 +163,8 @@ class DonemDanismanAtama(CrudView):
             except IntegrityError:
                 pass
 
-        title = "Danışman Atama"
-        message = "%s dönemi için  danışman olarak atandınız." % donem
+        title = _(u"Danışman Atama")
+        message = _(u"%s dönemi için  danışman olarak atandınız.") % donem
         for okutman_key in self.current.task_data['okutmanlar']:
             okutman = Okutman.objects.get(okutman_key)
             notify(okutman.personel.user, message, title)

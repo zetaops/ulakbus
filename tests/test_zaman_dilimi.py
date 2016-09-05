@@ -16,7 +16,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
         for i in range(2):
             if i == 1:
-                assert resp.json['objects'][1]['fields']['Zaman Aralığı'] == "09:00-12:00"
+                assert resp.json['objects'][1]['fields']['Zaman Aralığı'] == "09:00:00-12:00:00"
             else:
                 assert resp.json['objects'][0][0] == 'Gün Dilimi'
 

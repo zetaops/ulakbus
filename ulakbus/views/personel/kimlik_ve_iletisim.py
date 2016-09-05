@@ -13,6 +13,7 @@ Kimlik ve İletişim Bilgileri iş akışının yürütülmesini sağlar.
 
 from zengine.forms import JsonForm
 from zengine.forms import fields
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 from zengine.views.crud import CrudView
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
@@ -37,8 +38,8 @@ class KimlikBilgileriForm(JsonForm):
                    'kimlik_cuzdani_kayit_no',
                    'kimlik_cuzdani_verilis_tarihi']
 
-    kaydet = fields.Button("Kaydet", cmd="save")
-    mernis = fields.Button("Mernis'ten Kimlik Bilgileri Getir", cmd="mernis_kimlik_sorgula")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
+    mernis = fields.Button(gettext_lazy(u"Mernis'ten Kimlik Bilgileri Getir"), cmd="mernis_kimlik_sorgula")
 
 
 class IletisimBilgileriForm(JsonForm):
@@ -53,8 +54,8 @@ class IletisimBilgileriForm(JsonForm):
                    'oda_no', 'oda_tel_no', 'cep_telefonu', 'e_posta', 'e_posta_2', 'e_posta_3',
                    'web_sitesi']
 
-    kaydet = fields.Button("Kaydet", cmd="save")
-    kps = fields.Button("KPS'den Adres Bilgileri Getir", cmd="kps_adres_sorgula")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
+    kps = fields.Button(gettext_lazy(u"KPS'den Adres Bilgileri Getir"), cmd="kps_adres_sorgula")
 
 
 class DigerBilgilerForm(JsonForm):
@@ -69,7 +70,7 @@ class DigerBilgilerForm(JsonForm):
                    'unvan', 'biyografi', 'notlar', 'engelli_durumu', 'engel_grubu',
                    'engel_derecesi', 'engel_orani', 'personel_turu']
 
-    kaydet = fields.Button("Kaydet", cmd="save")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
 
 
 class KimlikIletisim(CrudView):
