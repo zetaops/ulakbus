@@ -59,6 +59,7 @@ class User(Model, BaseUser):
     locale_number = field.String(_(u"Preferred Number Format"), index=False,
                                  default=settings.DEFAULT_LOCALIZATION_FORMAT)
 
+
     class Meta:
         app = 'Sistem'
         verbose_name = _(u"Kullanıcı")
@@ -85,6 +86,8 @@ class User(Model, BaseUser):
             return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
                 "%s@gmail.com" % self.username).hexdigest()
 
+    def __unicode__(self):
+        return "%s %s" % (self.name, self.surname)
 
 class Permission(Model):
     """Permission modeli
