@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="Collaboration_1fokvh5">
+    <bpmn:participant id="Participant_15gdxif" name="Profil Sayfası Görüntüleme" processRef="profil_sayfasi_goruntuleme" />
+  </bpmn:collaboration>
+  <bpmn:process id="profil_sayfasi_goruntuleme" name="Profil Sayfası Görüntüleme" isExecutable="false">
+    <bpmn:userTask id="YeniSifreGirisi" name="Yeni Şifre Girişi" camunda:assignee="common.profil_sayfasi_goruntuleme.ProfilGoruntule.yeni_sifre_girisi">
+      <bpmn:incoming>SequenceFlow_0u4ng7m</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_08fhz4z</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="YeniKullaniciAdiGirisi" name="Yeni Kullanıcı Adı Girişi" camunda:assignee="common.profil_sayfasi_goruntuleme.ProfilGoruntule.yeni_kullanici_adi_girisi">
+      <bpmn:incoming>SequenceFlow_0ebdc3h</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1odfwi8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="YeniSifreKaydet" name="Yeni Şifre Kaydet " camunda:class="common.profil_sayfasi_goruntuleme.ProfilGoruntule.yeni_sifre_kaydet">
+      <bpmn:incoming>SequenceFlow_08fhz4z</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_156i3h0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="YeniKullaniciAdiKaydet" name="Yeni Kullanıcı Adı Kaydet" camunda:class="common.profil_sayfasi_goruntuleme.ProfilGoruntule.yeni_kullanici_adi_kaydet">
+      <bpmn:incoming>SequenceFlow_1odfwi8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1gfoq7l</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_18coav2" default="SequenceFlow_0fjioza">
+      <bpmn:incoming>SequenceFlow_093laux</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0fjioza</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1nq8smw</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="YeniE_PostaGirisi" name="Yeni E-Posta Girişi" camunda:assignee="common.profil_sayfasi_goruntuleme.ProfilGoruntule.yeni_e_posta_girisi">
+      <bpmn:incoming>SequenceFlow_0i1vrdx</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ui9n39</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="AktivasyonE_PostasiYolla" name="Aktivasyon E-Postası Yolla" camunda:class="common.profil_sayfasi_goruntuleme.ProfilGoruntule.aktivasyon_maili_yolla">
+      <bpmn:incoming>SequenceFlow_0ui9n39</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_09jjfwm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="CikisYapma" name="Çıkış Yapma" camunda:class="auth.logout">
+      <bpmn:incoming>SequenceFlow_0fjioza</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_1oq7a73" name="Link Gönderimi Bilgilendirme" camunda:assignee="common.profil_sayfasi_goruntuleme.ProfilGoruntule.link_gonderimi_bilgilendir">
+      <bpmn:incoming>SequenceFlow_09jjfwm</bpmn:incoming>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_0u27xmo">
+      <bpmn:outgoing>SequenceFlow_1qhy5g8</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="ProfilSayfasiIslemSecenegi" name="Profil Sayfası İşlem Seçeneği" camunda:class="common.profil_sayfasi_goruntuleme.ProfilGoruntule.profil_sayfasi_islem_secenegi">
+      <bpmn:incoming>SequenceFlow_1qhy5g8</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1nq8smw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0t3pbq4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="ProfilGoruntule" name="Profil Goruntule" camunda:assignee="common.profil_sayfasi_goruntuleme.ProfilGoruntule.profil_sayfasi_goruntule">
+      <bpmn:incoming>SequenceFlow_1sly7qn</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1426qzv</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1ruddp6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1do44vx</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Kaydet" name="Kaydet" camunda:class="common.profil_sayfasi_goruntuleme.ProfilGoruntule.kaydet">
+      <bpmn:incoming>SequenceFlow_11vx58r</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1sly7qn</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1093d74" default="SequenceFlow_1426qzv">
+      <bpmn:incoming>SequenceFlow_0t3pbq4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1426qzv</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_13d1mp2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="E_PostaDegistir" name="E-Posta Değiştir" camunda:class="common.profil_sayfasi_goruntuleme.ProfilGoruntule.e_posta_degistir">
+      <bpmn:incoming>SequenceFlow_13d1mp2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ruddp6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1do44vx" sourceRef="ProfilGoruntule" targetRef="ExclusiveGateway_00idijk" />
+    <bpmn:sequenceFlow id="SequenceFlow_0u4ng7m" sourceRef="ExclusiveGateway_00idijk" targetRef="YeniSifreGirisi" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ebdc3h" sourceRef="ExclusiveGateway_00idijk" targetRef="YeniKullaniciAdiGirisi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "yeni_kullanici_adi_girisi"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_11vx58r" sourceRef="ExclusiveGateway_00idijk" targetRef="Kaydet">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "kaydet"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0i1vrdx" sourceRef="ExclusiveGateway_00idijk" targetRef="YeniE_PostaGirisi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == 'varolan_e_posta_sec']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_08fhz4z" sourceRef="YeniSifreGirisi" targetRef="YeniSifreKaydet" />
+    <bpmn:sequenceFlow id="SequenceFlow_1odfwi8" sourceRef="YeniKullaniciAdiGirisi" targetRef="YeniKullaniciAdiKaydet" />
+    <bpmn:sequenceFlow id="SequenceFlow_156i3h0" sourceRef="YeniSifreKaydet" targetRef="SifreDegistirmeSonrasiIslem" />
+    <bpmn:sequenceFlow id="SequenceFlow_1gfoq7l" sourceRef="YeniKullaniciAdiKaydet" targetRef="SifreDegistirmeSonrasiIslem" />
+    <bpmn:sequenceFlow id="SequenceFlow_093laux" sourceRef="SifreDegistirmeSonrasiIslem" targetRef="ExclusiveGateway_18coav2" />
+    <bpmn:sequenceFlow id="SequenceFlow_1nq8smw" sourceRef="ExclusiveGateway_18coav2" targetRef="ProfilSayfasiIslemSecenegi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow=='profil_sayfasi_islem_secenegi']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0fjioza" sourceRef="ExclusiveGateway_18coav2" targetRef="CikisYapma" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ui9n39" sourceRef="YeniE_PostaGirisi" targetRef="AktivasyonE_PostasiYolla" />
+    <bpmn:sequenceFlow id="SequenceFlow_09jjfwm" sourceRef="AktivasyonE_PostasiYolla" targetRef="Task_1oq7a73" />
+    <bpmn:sequenceFlow id="SequenceFlow_1qhy5g8" sourceRef="StartEvent_0u27xmo" targetRef="ProfilSayfasiIslemSecenegi" />
+    <bpmn:sequenceFlow id="SequenceFlow_0t3pbq4" sourceRef="ProfilSayfasiIslemSecenegi" targetRef="ExclusiveGateway_1093d74" />
+    <bpmn:sequenceFlow id="SequenceFlow_1sly7qn" sourceRef="Kaydet" targetRef="ProfilGoruntule" />
+    <bpmn:sequenceFlow id="SequenceFlow_1426qzv" sourceRef="ExclusiveGateway_1093d74" targetRef="ProfilGoruntule" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ruddp6" sourceRef="E_PostaDegistir" targetRef="ProfilGoruntule" />
+    <bpmn:sequenceFlow id="SequenceFlow_13d1mp2" sourceRef="ExclusiveGateway_1093d74" targetRef="E_PostaDegistir">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">islem_secenek == True</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="SifreDegistirmeSonrasiIslem" name="Değişiklik Sonrası İşlem Seçeneği" camunda:assignee="common.profil_sayfasi_goruntuleme.ProfilGoruntule.degisiklik_sonrasi_islem">
+      <bpmn:incoming>SequenceFlow_156i3h0</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1gfoq7l</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_093laux</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_00idijk" default="SequenceFlow_0u4ng7m">
+      <bpmn:incoming>SequenceFlow_1do44vx</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0u4ng7m</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0ebdc3h</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_11vx58r</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0i1vrdx</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1fokvh5">
+      <bpmndi:BPMNShape id="Participant_15gdxif_di" bpmnElement="Participant_15gdxif">
+        <dc:Bounds x="425" y="127" width="1145" height="585" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_08g5xno_di" bpmnElement="ProfilGoruntule">
+        <dc:Bounds x="745" y="381" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_00idijk_di" bpmnElement="ExclusiveGateway_00idijk" isMarkerVisible="true">
+        <dc:Bounds x="880" y="396" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="860" y="446" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1do44vx_di" bpmnElement="SequenceFlow_1do44vx">
+        <di:waypoint xsi:type="dc:Point" x="845" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="880" y="421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="817.5" y="396" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0skbq4u_di" bpmnElement="YeniSifreGirisi">
+        <dc:Bounds x="966" y="255" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_19x5j99_di" bpmnElement="SifreDegistirmeSonrasiIslem">
+        <dc:Bounds x="1250" y="316" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_07h2kbn_di" bpmnElement="YeniSifreKaydet">
+        <dc:Bounds x="1116" y="255" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0u4ng7m_di" bpmnElement="SequenceFlow_0u4ng7m">
+        <di:waypoint xsi:type="dc:Point" x="905" y="396" />
+        <di:waypoint xsi:type="dc:Point" x="905" y="295" />
+        <di:waypoint xsi:type="dc:Point" x="966" y="295" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="875" y="335.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ebdc3h_di" bpmnElement="SequenceFlow_0ebdc3h">
+        <di:waypoint xsi:type="dc:Point" x="930" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="966" y="421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="903" y="396" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1xn8dja_di" bpmnElement="YeniKullaniciAdiGirisi">
+        <dc:Bounds x="966" y="381" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1tqxegh_di" bpmnElement="YeniKullaniciAdiKaydet">
+        <dc:Bounds x="1116" y="381" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_09qqxbo_di" bpmnElement="CikisYapma">
+        <dc:Bounds x="1450" y="526" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_18coav2_di" bpmnElement="ExclusiveGateway_18coav2" isMarkerVisible="true">
+        <dc:Bounds x="1475" y="396" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1455" y="446" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fjioza_di" bpmnElement="SequenceFlow_0fjioza">
+        <di:waypoint xsi:type="dc:Point" x="1500" y="446" />
+        <di:waypoint xsi:type="dc:Point" x="1500" y="486" />
+        <di:waypoint xsi:type="dc:Point" x="1500" y="486" />
+        <di:waypoint xsi:type="dc:Point" x="1500" y="526" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1470" y="476" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1nq8smw_di" bpmnElement="SequenceFlow_1nq8smw">
+        <di:waypoint xsi:type="dc:Point" x="1525" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="1546" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="1546" y="190" />
+        <di:waypoint xsi:type="dc:Point" x="598" y="190" />
+        <di:waypoint xsi:type="dc:Point" x="598" y="381" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1516" y="295.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_08fhz4z_di" bpmnElement="SequenceFlow_08fhz4z">
+        <di:waypoint xsi:type="dc:Point" x="1066" y="295" />
+        <di:waypoint xsi:type="dc:Point" x="1116" y="295" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1046" y="270" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_156i3h0_di" bpmnElement="SequenceFlow_156i3h0">
+        <di:waypoint xsi:type="dc:Point" x="1216" y="295" />
+        <di:waypoint xsi:type="dc:Point" x="1300" y="295" />
+        <di:waypoint xsi:type="dc:Point" x="1300" y="316" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1213" y="270" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_093laux_di" bpmnElement="SequenceFlow_093laux">
+        <di:waypoint xsi:type="dc:Point" x="1350" y="356" />
+        <di:waypoint xsi:type="dc:Point" x="1499" y="356" />
+        <di:waypoint xsi:type="dc:Point" x="1499" y="397" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1379.5" y="331" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1odfwi8_di" bpmnElement="SequenceFlow_1odfwi8">
+        <di:waypoint xsi:type="dc:Point" x="1066" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="1116" y="421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1046" y="396" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1jnaiim_di" bpmnElement="YeniE_PostaGirisi">
+        <dc:Bounds x="966" y="526" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_03cdmqr_di" bpmnElement="AktivasyonE_PostasiYolla">
+        <dc:Bounds x="1116" y="526" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ui9n39_di" bpmnElement="SequenceFlow_0ui9n39">
+        <di:waypoint xsi:type="dc:Point" x="1066" y="566" />
+        <di:waypoint xsi:type="dc:Point" x="1116" y="566" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1046" y="541" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_06iv463_di" bpmnElement="Kaydet">
+        <dc:Bounds x="745" y="526" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_11vx58r_di" bpmnElement="SequenceFlow_11vx58r">
+        <di:waypoint xsi:type="dc:Point" x="905" y="446" />
+        <di:waypoint xsi:type="dc:Point" x="905" y="566" />
+        <di:waypoint xsi:type="dc:Point" x="845" y="566" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="875" y="496" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0i1vrdx_di" bpmnElement="SequenceFlow_0i1vrdx">
+        <di:waypoint xsi:type="dc:Point" x="905" y="446" />
+        <di:waypoint xsi:type="dc:Point" x="905" y="566" />
+        <di:waypoint xsi:type="dc:Point" x="966" y="566" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="875" y="496" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1sly7qn_di" bpmnElement="SequenceFlow_1sly7qn">
+        <di:waypoint xsi:type="dc:Point" x="795" y="526" />
+        <di:waypoint xsi:type="dc:Point" x="795" y="494" />
+        <di:waypoint xsi:type="dc:Point" x="795" y="494" />
+        <di:waypoint xsi:type="dc:Point" x="795" y="461" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="765" y="484" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_10evdwl_di" bpmnElement="Task_1oq7a73">
+        <dc:Bounds x="1259" y="526" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_09jjfwm_di" bpmnElement="SequenceFlow_09jjfwm">
+        <di:waypoint xsi:type="dc:Point" x="1216" y="566" />
+        <di:waypoint xsi:type="dc:Point" x="1259" y="566" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1193" y="541" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_0u27xmo_di" bpmnElement="StartEvent_0u27xmo">
+        <dc:Bounds x="475" y="403" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="448" y="439" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qhy5g8_di" bpmnElement="SequenceFlow_1qhy5g8">
+        <di:waypoint xsi:type="dc:Point" x="511" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="537" y="421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="479" y="396" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0ifrypi_di" bpmnElement="ProfilSayfasiIslemSecenegi">
+        <dc:Bounds x="537" y="381" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1093d74_di" bpmnElement="ExclusiveGateway_1093d74" isMarkerVisible="true">
+        <dc:Bounds x="663" y="396" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="643" y="446" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0t3pbq4_di" bpmnElement="SequenceFlow_0t3pbq4">
+        <di:waypoint xsi:type="dc:Point" x="637" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="663" y="421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="605" y="396" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1426qzv_di" bpmnElement="SequenceFlow_1426qzv">
+        <di:waypoint xsi:type="dc:Point" x="713" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="745" y="421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="684" y="396" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13d1mp2_di" bpmnElement="SequenceFlow_13d1mp2">
+        <di:waypoint xsi:type="dc:Point" x="688" y="396" />
+        <di:waypoint xsi:type="dc:Point" x="688" y="326" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="658" y="351" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ruddp6_di" bpmnElement="SequenceFlow_1ruddp6">
+        <di:waypoint xsi:type="dc:Point" x="738" y="286" />
+        <di:waypoint xsi:type="dc:Point" x="795" y="286" />
+        <di:waypoint xsi:type="dc:Point" x="795" y="381" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="722" y="261" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0l0akey_di" bpmnElement="E_PostaDegistir">
+        <dc:Bounds x="638" y="246" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1gfoq7l_di" bpmnElement="SequenceFlow_1gfoq7l">
+        <di:waypoint xsi:type="dc:Point" x="1216" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="1293" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="1293" y="396" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1209.5" y="396" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
