@@ -30,6 +30,7 @@ from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _, gettext_lazy, format_date
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -49,8 +50,8 @@ class KimlikBilgileriForm(forms.JsonForm):
                    "kimlik_cuzdani_verilis_nedeni", "kimlik_cuzdani_kayit_no",
                    "kimlik_cuzdani_verilis_tarihi"]
 
-    kaydet = fields.Button("Kaydet", cmd="save")
-    mernis_sorgula = fields.Button("Mernis Sorgula", cmd="mernis_sorgula")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
+    mernis_sorgula = fields.Button(gettext_lazy(u"Mernis Sorgula"), cmd="mernis_sorgula")
 
 
 class KimlikBilgileri(CrudView):
@@ -119,8 +120,8 @@ class IletisimBilgileriForm(forms.JsonForm):
                    "e_posta2", "tel_no",
                    "gsm"]
 
-    kaydet = fields.Button("Kaydet", cmd="save")
-    kps_sorgula = fields.Button("KPS Sorgula", cmd="kps_sorgula")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
+    kps_sorgula = fields.Button(gettext_lazy(u"KPS Sorgula"), cmd="kps_sorgula")
 
 
 class IletisimBilgileri(CrudView):
@@ -188,7 +189,7 @@ class OncekiEgitimBilgileriForm(forms.JsonForm):
     class Meta:
         include = ["okul_adi", "diploma_notu", "mezuniyet_yili"]
 
-    kaydet = fields.Button("Kaydet", cmd="save")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
 
 
 class OncekiEgitimBilgileri(CrudView):
@@ -242,30 +243,30 @@ def ogrenci_bilgileri(current):
 
     # ordered tablo için OrderedDict kullanılmıştır.
     kimlik_bilgileri = OrderedDict({})
-    kimlik_bilgileri.update({'Ad Soyad': "%s %s" % (ogrenci.ad, ogrenci.soyad)})
-    kimlik_bilgileri.update({'Cinsiyet': ogrenci.cinsiyet})
-    kimlik_bilgileri.update({'Kimlik No': ogrenci.tckn})
-    kimlik_bilgileri.update({'Uyruk': ogrenci.tckn})
-    kimlik_bilgileri.update({'Doğum Tarihi': '{:%d.%m.%Y}'.format(ogrenci.dogum_tarihi)})
-    kimlik_bilgileri.update({'Doğum Yeri': ogrenci.dogum_yeri})
-    kimlik_bilgileri.update({'Baba Adı': ogrenci.baba_adi})
-    kimlik_bilgileri.update({'Anne Adı': ogrenci.ana_adi})
-    kimlik_bilgileri.update({'Medeni Hali': ogrenci.medeni_hali})
+    kimlik_bilgileri.update({_(u'Ad Soyad'): "%s %s" % (ogrenci.ad, ogrenci.soyad)})
+    kimlik_bilgileri.update({_(u'Cinsiyet'): ogrenci.cinsiyet})
+    kimlik_bilgileri.update({_(u'Kimlik No'): ogrenci.tckn})
+    kimlik_bilgileri.update({_(u'Uyruk'): ogrenci.tckn})
+    kimlik_bilgileri.update({_(u'Doğum Tarihi'): format_date(ogrenci.dogum_tarihi)})
+    kimlik_bilgileri.update({_(u'Doğum Yeri'): ogrenci.dogum_yeri})
+    kimlik_bilgileri.update({_(u'Baba Adı'): ogrenci.baba_adi})
+    kimlik_bilgileri.update({_(u'Anne Adı'): ogrenci.ana_adi})
+    kimlik_bilgileri.update({_(u'Medeni Hali'): ogrenci.medeni_hali})
 
     iletisim_bilgileri = {
-        'Eposta': ogrenci.e_posta,
-        'Telefon': ogrenci.tel_no,
-        'Sitem Kullanıcı Adı': current.user.username
+        _(u'Eposta'): ogrenci.e_posta,
+        _(u'Telefon'): ogrenci.tel_no,
+        _(u'Sitem Kullanıcı Adı'): current.user.username
     }
 
     current.output['object'] = [
         {
-            "title": "Kimlik Bilgileri",
+            "title": _(u"Kimlik Bilgileri"),
             "type": "table",
             "fields": kimlik_bilgileri
         },
         {
-            "title": "İletişim Bilgileri",
+            "title": _(u"İletişim Bilgileri"),
             "type": "table",
             "fields": iletisim_bilgileri
         }
@@ -278,7 +279,7 @@ class ProgramSecimForm(forms.JsonForm):
 
     """
 
-    sec = fields.Button("Seç")
+    sec = fields.Button(_(u"Seç"))
 
 
 class DanismanSecimForm(forms.JsonForm):
@@ -287,7 +288,7 @@ class DanismanSecimForm(forms.JsonForm):
 
     """
 
-    sec = fields.Button("Kaydet")
+    sec = fields.Button(_(u"Kaydet"))
 
 
 class KayitDondurmaForm(forms.JsonForm):
@@ -298,15 +299,15 @@ class KayitDondurmaForm(forms.JsonForm):
     class Meta:
         inline_edit = ['secim', 'aciklama']
 
-    baslangic_tarihi = fields.Date('Kayıt Dondurma Başlangıç Tarihi')
+    baslangic_tarihi = fields.Date(gettext_lazy(u'Kayıt Dondurma Başlangıç Tarihi'))
 
     class Donemler(ListNode):
         secim = fields.Boolean(type="checkbox")
-        donem = fields.String('Donem')
+        donem = fields.String(gettext_lazy(u'Dönem'))
         key = fields.String('Key', hidden=True)
-        aciklama = fields.String('Aciklama')
+        aciklama = fields.String(gettext_lazy(u'Aciklama'))
 
-    sec = fields.Button("Kaydet")
+    sec = fields.Button(gettext_lazy(u"Kaydet"))
 
 
 class OgrenciProgramSecimForm(forms.JsonForm):
@@ -315,7 +316,7 @@ class OgrenciProgramSecimForm(forms.JsonForm):
 
     """
 
-    sec = fields.Button("Seç")
+    sec = fields.Button(gettext_lazy(u"Seç"))
 
 
 class DanismanAtama(CrudView):
@@ -341,7 +342,7 @@ class DanismanAtama(CrudView):
         self.current.task_data['ogrenci_id'] = ogrenci_id
         self.current.task_data['donem_id'] = guncel_donem.key
 
-        _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _form = ProgramSecimForm(current=self.current, title=_(u"Öğrenci Programı Seçiniz"))
         _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
         _form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
@@ -353,7 +354,7 @@ class DanismanAtama(CrudView):
 
         program = OgrenciProgram.objects.get(program_id)
 
-        _form = DanismanSecimForm(current=self.current, title="Danışman Seçiniz")
+        _form = DanismanSecimForm(current=self.current, title=_(u"Danışman Seçiniz"))
         _choices = prepare_choices_for_model(DonemDanisman, donem_id=donem_id,
                                              bolum=program.program.birim)
         _form.donem_danisman = fields.Integer(choices=_choices)
@@ -380,8 +381,12 @@ class DanismanAtama(CrudView):
         personel = Personel.objects.get(personel_id)
 
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Danışman Ataması Yapıldı',
-            "msg": '%s adlı öğrenciye %s adlı personel danışman olarak atandı' % (ogrenci, personel)
+            'type': 'info', "title": _(u'Danışman Ataması Yapıldı'),
+            "msg": _(u'%(ogrenci)s adlı öğrenciye %(danisman)s adlı personel \
+                        danışman olarak atandı') % {
+                'ogrenci': ogrenci,
+                'danisman': personel,
+            }
         }
 
 
@@ -408,7 +413,7 @@ class OgrenciMezuniyet(CrudView):
         self.current.task_data['ogrenci_id'] = ogrenci_id
         self.current.task_data['donem_id'] = guncel_donem.key
 
-        _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _form = ProgramSecimForm(current=self.current, title=_(u"Öğrenci Programı Seçiniz"))
         _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
         _form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
@@ -431,15 +436,20 @@ class OgrenciMezuniyet(CrudView):
             ogrenci_adi = '%s %s' % (ogrenci_program.ogrenci.ad, ogrenci_program.ogrenci.soyad)
 
             self.current.output['msgbox'] = {
-                'type': 'info', "title": 'Öğrenci Mezuniyet Kaydı Başarılı',
-                "msg": '%s numaralı %s adlı öğrenci %s adlı bölümden %s diploma numarası ile mezun \
-                edilmiştir' % (ogrenci_no, ogrenci_adi, bolum_adi, diploma_no)
+                'type': 'info', "title": _(u'Öğrenci Mezuniyet Kaydı Başarılı'),
+                "msg": _(u'%(ogrenci_no)s numaralı %(ogrenci)s adlı öğrenci %(bolum)s adlı \
+                bölümden %(diploma)s diploma numarası ile mezun edilmiştir') % {
+                    'ogrenci_no': ogrenci_no,
+                    'ogrenci': ogrenci_adi,
+                    'bolum': bolum_adi,
+                    'diploma': diploma_no,
+                }
             }
 
         except Exception as e:
             self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Bir Hata Oluştu',
-                "msg": 'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s' % e.message
+                'type': 'warning', "title": _(u'Bir Hata Oluştu'),
+                "msg": _(u'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s') % e.message
             }
 
 
@@ -464,7 +474,7 @@ class KayitDondurma(CrudView):
         ogrenci_id = self.current.input['id']
         self.current.task_data['ogrenci_id'] = ogrenci_id
 
-        _form = ProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _form = ProgramSecimForm(current=self.current, title=_(u"Öğrenci Programı Seçiniz"))
         _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
         _form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
@@ -481,7 +491,7 @@ class KayitDondurma(CrudView):
             donemler = Donem.objects.set_params(sort='baslangic_tarihi desc', rows='2').filter()
             ogrenci_adi = '%s %s' % (ogrenci_program.ogrenci.ad, ogrenci_program.ogrenci.soyad)
 
-            _form = KayitDondurmaForm(current=self.current, title="Lütfen Dönem Seçiniz")
+            _form = KayitDondurmaForm(current=self.current, title=_(u"Lütfen Dönem Seçiniz"))
             for donem in donemler:
                 baslangic_tarihi = False
                 secim_durum = False
@@ -501,7 +511,7 @@ class KayitDondurma(CrudView):
             if baslangic_tarihi:
                 _form.baslangic_tarihi = baslangic_tarihi
             else:
-                _form.baslangic_tarihi = fields.Date('Başlangıç Tarihi')
+                _form.baslangic_tarihi = fields.Date(_(u'Başlangıç Tarihi'))
 
             self.form_out(_form)
             self.current.output["meta"]["allow_actions"] = False
@@ -509,8 +519,8 @@ class KayitDondurma(CrudView):
 
         except Exception as e:
             self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Bir Hata Oluştu',
-                "msg": 'Hata Kodu : %s' % e.message
+                'type': 'warning', "title": _(u'Bir Hata Oluştu'),
+                "msg": _(u'Hata Kodu : %s') % e.message
             }
 
     def ogrenci_kayit_dondur(self):
@@ -527,9 +537,12 @@ class KayitDondurma(CrudView):
         donemler = self.current.input['form']['Donemler']
         baslangic_tarihi = self.current.input['form']['baslangic_tarihi']
         ogrenci_ad_soyad = "%s %s" % (ogrenci.ad, ogrenci.soyad)
-        notify_message = '%s numaralı, %s adlı öğrencinin %s programındaki kaydı ' \
-                         'dondurulmuştur' % (ogrenci_program.ogrenci_no, ogrenci_ad_soyad,
-                                             ogrenci_program.program.adi)
+        notify_message = _(u'%(no)s numaralı, %(ogrenci)s adlı \
+                             öğrencinin %(program)s programındaki kaydı dondurulmuştur') % {
+                                 'no': ogrenci_program.ogrenci_no,
+                                 'ogrenci': ogrenci_ad_soyad,
+                                 'program': ogrenci_program.program.adi,
+                             }
         for donem in donemler:
             donem_kayit = Donem.objects.get(donem['key'])
             try:
@@ -551,8 +564,8 @@ class KayitDondurma(CrudView):
             except Exception as e:
 
                 self.current.output['msgbox'] = {
-                    'type': 'warning', "title": 'Bir Hata Oluştu',
-                    "msg": 'Hata Kodu : %s' % e.message
+                    'type': 'warning', "title": _(u'Bir Hata Oluştu'),
+                    "msg": _(u'Hata Kodu : %s') % e.message
                 }
 
             try:
@@ -565,23 +578,26 @@ class KayitDondurma(CrudView):
             except Exception as e:
 
                 self.current.output['msgbox'] = {
-                    'type': 'warning', "title": 'Bir Hata Oluştu',
-                    "msg": 'Öğrenci Rol Değişim Kaydı Başarısız. Hata Kodu : %s' % e.message
+                    'type': 'warning', "title": _(u'Bir Hata Oluştu'),
+                    "msg": _(u'Öğrenci Rol Değişim Kaydı Başarısız. Hata Kodu : %s') % e.message
                 }
 
             # öğrencinin danışmanına bilgilendirme geçilir
             try:
                 danisman_key = ogrenci_program.danisman.user.key
-                ogrenci_program.danisman.user.send_notification(title="Öğrenci Kaydı Donduruldu",
-                                                 message=notify_message, typ=111)
+                ogrenci_program.danisman.user.send_notification(
+                    title=_(u"Öğrenci Kaydı Donduruldu"),
+                    message=notify_message, typ=111
+                )
                 self.current.output['msgbox'] = {
-                    'type': 'info', "title": 'Öğrenci Kayıt Dondurma Başarılı',
-                    "msg": '%s' % (notify_message)
+                    'type': 'info', "title": _(u'Öğrenci Kayıt Dondurma Başarılı'),
+                    "msg": notify_message
                 }
             except Exception as e:
                 self.current.output['msgbox'] = {
-                    'type': 'warning', "title": 'Bir Hata Oluştu',
-                    "msg": 'Öğrenci Danışmanı Bilgilendirme Başarısız. Hata Kodu : %s' % (e.message)
+                    'type': 'warning', "title": _(u'Bir Hata Oluştu'),
+                    "msg": _(u'Öğrenci Danışmanı Bilgilendirme Başarısız. \
+                               Hata Kodu : %s') % e.message
                 }
 
 
@@ -605,7 +621,7 @@ class BasariDurum(CrudView):
 
         for donem in donemler:
             donem_basari_durumu = [
-                ['Ders Kodu', 'Ders Adi', 'Sinav Notlari', 'Ortalama', 'Durum']
+                [_(u'Ders Kodu'), _(u'Ders Adi'), _(u'Sinav Notlari'), _(u'Ortalama'), _(u'Durum')]
             ]
             ogrenci_dersler = OgrenciDersi.objects.filter(donem=donem,
                                                           ogrenci_program=ogrenci_program)
@@ -623,7 +639,7 @@ class BasariDurum(CrudView):
                     notlar = list(zip(*notlar)[1])
                     ortalama = sum(notlar) / len(notlar)
                     dersler.append("{0:.2f}".format(ortalama))
-                    dersler.append('Gecti' if ortalama > 50 else 'Kaldi')
+                    dersler.append(_(u'Geçti') if ortalama > 50 else _(u'Kaldı'))
                 else:
                     dersler.append('')
                     dersler.append('')
@@ -639,7 +655,7 @@ class BasariDurum(CrudView):
 
             self.output['objects'] = donem_tablosu
             self.output['meta']['selective_listing'] = True
-            self.output['meta']['selective_listing_label'] = "Dönem Seçiniz"
+            self.output['meta']['selective_listing_label'] = _(u"Dönem Seçiniz")
             self.output['meta']['allow_actions'] = False
 
 
@@ -649,9 +665,9 @@ class DersSecimForm(forms.JsonForm):
 
     class Dersler(ListNode):
         key = fields.String(hidden=True)
-        ders_adi = fields.String('Ders')
+        ders_adi = fields.String(gettext_lazy(u'Ders'))
 
-    ileri = fields.Button("İleri")
+    ileri = fields.Button(gettext_lazy(u"İleri"))
 
 
 def ders_arama(current):
@@ -710,7 +726,7 @@ class OgrenciDersAtama(CrudView):
         """
         ogrenci_id = self.current.input['id']
         self.current.session['ogrenci_id'] = ogrenci_id
-        _form = OgrenciProgramSecimForm(current=self.current, title="Öğrenci Programı Seçiniz")
+        _form = OgrenciProgramSecimForm(current=self.current, title=_(u"Öğrenci Programı Seçiniz"))
         _choices = prepare_choices_for_model(OgrenciProgram, ogrenci_id=ogrenci_id)
         _form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
@@ -727,8 +743,9 @@ class OgrenciDersAtama(CrudView):
             self.current.task_data['program_key'] = program_key
             guncel_donem = Donem.guncel_donem()
             ogrenci_program = OgrenciProgram.objects.get(program_key)
-            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program, donem=guncel_donem)
-            _form = DersSecimForm(current=self.current, title="Ders Seçiniz")
+            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program,
+                                                           donem=guncel_donem)
+            _form = DersSecimForm(current=self.current, title=_(u"Ders Seçiniz"))
             for ogrenci_dersi in ogrenci_dersleri:
                 ogrenci_dersi_lst.append(ogrenci_dersi.key)
                 _form.Dersler(key=ogrenci_dersi.sube.key, ders_adi=ogrenci_dersi.sube.ders_adi)
@@ -736,11 +753,13 @@ class OgrenciDersAtama(CrudView):
             self.current.task_data['ogrenci_dersi_lst'] = ogrenci_dersi_lst
 
         else:
-            _form = DersSecimForm(current=self.current, title="Ders Seçiniz")
+            _form = DersSecimForm(current=self.current, title=_(u"Ders Seçiniz"))
             for ders in self.current.task_data['dersler']:
                 try:
-                    ogrenci_dersi = OgrenciDersi.objects.get(sube_id=ders['key'],
-                                                             ogrenci_id=self.current.session['ogrenci_id'])
+                    ogrenci_dersi = OgrenciDersi.objects.get(
+                        sube_id=ders['key'],
+                        ogrenci_id=self.current.session['ogrenci_id']
+                    )
                     if ogrenci_dersi.key not in self.current.task_data['ogrenci_dersi_lst']:
                         self.current.task_data['ogrenci_dersi_lst'].append(ogrenci_dersi.key)
 
@@ -800,8 +819,10 @@ class OgrenciDersAtama(CrudView):
 
         is_new_lst = []
         for ders in self.current.task_data['dersler']:
-            ogrenci_dersi, is_new = OgrenciDersi.objects.get_or_create(sube_id=ders['key'],
-                                                                       ogrenci_id=self.current.session['ogrenci_id'])
+            ogrenci_dersi, is_new = OgrenciDersi.objects.get_or_create(
+                sube_id=ders['key'],
+                ogrenci_id=self.current.session['ogrenci_id']
+            )
             is_new_lst.append(is_new)
             if is_new:
                 ogrenci_dersi.sube = Sube.objects.get(ders['key'])
@@ -814,13 +835,13 @@ class OgrenciDersAtama(CrudView):
 
         if all_same(is_new_lst):
             self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Öğrenci Ders Ekleme',
-                "msg": 'Ders seçimi yapılmadı'
+                'type': 'warning', "title": _(u'Öğrenci Ders Ekleme'),
+                "msg": _(u'Ders seçimi yapılmadı')
             }
         else:
             self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Öğrenci Ders Ekleme',
-                "msg": 'Seçilen ders başarıyla eklendi.'
+                'type': 'warning', "title": _(u'Öğrenci Ders Ekleme'),
+                "msg": _(u'Seçilen ders başarıyla eklendi.')
             }
 
     def ders_secim_form_inline_edit(self):
@@ -847,11 +868,11 @@ class MazeretliDersKaydi(CrudView):
         ogrenci_id = self.current.input['id']
         ogrenci = Ogrenci.objects.get(ogrenci_id)
         _form = forms.JsonForm(current=self.current,
-                               title="Öğrenci Programı Seçiniz")
-        _form.program = fields.Integer("Öğrenci Programı Seçiniz",
+                               title=_(u"Öğrenci Programı Seçiniz"))
+        _form.program = fields.Integer(_(u"Öğrenci Programı Seçiniz"),
                                        choices=prepare_choices_for_model(OgrenciProgram,
                                                                          ogrenci=ogrenci))
-        _form.sec = fields.Button("İleri")
+        _form.sec = fields.Button(_(u"İleri"))
         self.form_out(_form)
 
     def karar_no_gir(self):
@@ -869,14 +890,14 @@ class MazeretliDersKaydi(CrudView):
 
         if ogrenci_program.ogrencilik_statusu in aktif_ogrenci_status_list:
             _form = forms.JsonForm(current=self.current,
-                                   title="Fakülte Yönetim Kurulu Karar No Giriniz")
-            _form.karar_no = fields.String(title="Fakülte Yönetim Kurulu Karar No")
-            _form.sec = fields.Button("Kaydet")
+                                   title=_(u"Fakülte Yönetim Kurulu Karar No Giriniz"))
+            _form.karar_no = fields.String(title=_(u"Fakülte Yönetim Kurulu Karar No"))
+            _form.sec = fields.Button(_(u"Kaydet"))
             self.form_out(_form)
         else:
             self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Öğrenci Ders Kaydı Yapamaz',
-                "msg": 'Öğrenci Durum Kodu Ders Kaydı İçin Uygun Değil'
+                'type': 'warning', "title": _(u'Öğrenci Ders Kaydı Yapamaz'),
+                "msg": _(u'Öğrenci Durum Kodu Ders Kaydı İçin Uygun Değil')
             }
 
     def kaydet(self):
@@ -889,8 +910,8 @@ class MazeretliDersKaydi(CrudView):
             ogrenci_program.save()
         except Exception as e:
             self.current.output['msgbox'] = {
-                'type': 'warning', "title": 'Bir Hata Oluştu',
-                "msg": 'Öğrenci Ders Kayıt Durumu Değiştirme Başarısız. Hata Kodu : %s' % (
+                'type': 'warning', "title": _(u'Bir Hata Oluştu'),
+                "msg": _(U'Öğrenci Ders Kayıt Durumu Değiştirme Başarısız. Hata Kodu : %s') % (
                     e.message)
             }
 
@@ -902,7 +923,7 @@ class MazeretliDersKaydi(CrudView):
         ogrenci = ogrenci_program.ogrenci
         ogrenci_ad_soyad = ogrenci.ad + " " + ogrenci.soyad
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Öğrenci Ders Kayıt Durumu Değiştirme Başarılı',
-            "msg": '%s nolu %s adlı Öğrencinin %s Programına Ait Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi' % (
+            'type': 'info', "title": _(u'Öğrenci Ders Kayıt Durumu Değiştirme Başarılı'),
+            "msg": _(u'%s nolu %s adlı Öğrencinin %s Programına Ait Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi') % (
                 ogrenci_program.ogrenci_no, ogrenci_ad_soyad, ogrenci_program.program.adi)
         }

@@ -13,6 +13,7 @@ from ulakbus.models.auth import User, Unit
 from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI, OgretimYili, Donem
 from ulakbus.models.ogrenci import AkademikTakvim
 from zengine.lib.test_utils import BaseTestCase
+from zengine.lib.translation import format_datetime
 
 
 class TestCase(BaseTestCase):
@@ -86,10 +87,10 @@ class TestCase(BaseTestCase):
         assert dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(etkinlik), '') == \
                resp.json['object']['fields'][4][
                    'Etkinlik']
-        assert takvim.baslangic.strftime('%d.%m.%Y') == resp.json['object']['fields'][4][
-            'Başlangıç']
-        assert takvim.bitis.strftime('%d.%m.%Y') == resp.json['object']['fields'][4][
-            'Bitiş']
+        assert format_datetime(takvim.baslangic) == resp.json['object']['fields'][4][
+            u'Başlangıç']
+        assert format_datetime(takvim.bitis) == resp.json['object']['fields'][4][
+            u'Bitiş']
 
         # Kullanıcıya çıkış yaptırılır.
         self.client.set_path('/logout')
@@ -118,9 +119,8 @@ class TestCase(BaseTestCase):
         # Takvim kaydının etkinliğini getirir.
         etkinlik = takvim.etkinlik
 
-        assert response.json['object']['fields'][5]['Etkinlik'] == dict(
+        assert response.json['object']['fields'][5][u'Etkinlik'] == dict(
             AKADEMIK_TAKVIM_ETKINLIKLERI).get(
             str(etkinlik), '')
-        assert response.json['object']['fields'][5]['Başlangıç'] == takvim.baslangic.strftime(
-            '%d.%m.%Y')
-        assert response.json['object']['fields'][5]['Bitiş'] == takvim.bitis.strftime('%d.%m.%Y')
+        assert response.json['object']['fields'][5][u'Başlangıç'] == format_datetime(takvim.baslangic)
+        assert response.json['object']['fields'][5][u'Bitiş'] == format_datetime(takvim.bitis)

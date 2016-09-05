@@ -30,7 +30,7 @@ def personel_izin_gunlerini_getir(okutman, yil, ay):
     baslangic, bitis = yil_ve_aya_gore_ilk_ve_son_gun(yil, ay)
     personel_izin_list = []
     for i in range(2):
-        model = Izin if i==0 else UcretsizIzin
+        model = Izin if i == 0 else UcretsizIzin
 
         for personel_izin in model.objects.filter(personel=okutman.personel,
                                                   baslangic__gte=baslangic,
@@ -39,6 +39,7 @@ def personel_izin_gunlerini_getir(okutman, yil, ay):
                     personel_izin_list.append(gun.day)
 
     return personel_izin_list
+
 
 def gorunen_kademe_hesapla(derece, kademe):
     """

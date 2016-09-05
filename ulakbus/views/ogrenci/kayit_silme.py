@@ -9,6 +9,7 @@ from zengine.forms import JsonForm
 from ulakbus.models import OgrenciProgram, Ogrenci, Role, User, AbstractRole
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _
 
 ABSTRACT_ROLE_LIST = [
     "Lisans Programı Öğrencisi - Aktif",
@@ -118,8 +119,8 @@ class KayitSil(CrudView):
 
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         self.current.output['msgbox'] = {
-            'type': 'warning', "title": 'Kayıt Silme Başarılı',
-            "msg": ' %s adlı öğrencinin kaydı daha önceden silinmiştir.' % ogrenci
+            'type': 'warning', "title": _(u'Kayıt Silme Başarılı'),
+            "msg": _(u' %s adlı öğrencinin kaydı daha önceden silinmiştir.') % ogrenci
 
         }
 
@@ -131,8 +132,8 @@ class KayitSil(CrudView):
 
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         _form = JsonForm(current=self.current,
-                         title='Kayıt Silme İşlemini Onaylayınız.')
-        _form.help_text = '%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?' % (
+                         title=_(u'Kayıt Silme İşlemini Onaylayınız.'))
+        _form.help_text = _(u'%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?') % (
         ogrenci, '-'.join(
             name for name in self.current.task_data['roles']))
         _form.kaydet = fields.Button('Onayla', flow='fakulte_yonetim_karari')
@@ -147,8 +148,8 @@ class KayitSil(CrudView):
         """
 
         self.current.output['msgbox'] = {
-            'type': 'warning', "title": 'Kayıt Silme İşlemi',
-            "msg": 'Kayıt silme işlemi iptal edilmiştir.'
+            'type': 'warning', "title": _(u'Kayıt Silme İşlemi'),
+            "msg": _(u'Kayıt silme işlemi iptal edilmiştir.')
 
         }
 
@@ -160,9 +161,9 @@ class KayitSil(CrudView):
 
         # TODO: Fakülte yönetim kurulunun kararı loglanacak.
         _form = JsonForm(current=self.current,
-                         title='Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.')
-        _form.karar = fields.String('Karar No', index=True)
-        _form.kaydet = fields.Button('Kaydet')
+                         title=_(u'Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.'))
+        _form.karar = fields.String(_(u'Karar No'), index=True)
+        _form.kaydet = fields.Button(_(u'Kaydet'))
         self.form_out(_form)
 
     def ayrilma_nedeni_sec(self):
@@ -172,10 +173,10 @@ class KayitSil(CrudView):
 
         """
 
-        _form = JsonForm(current=self.current, title='Öğrencinin Ayrılma Nedenini Seçiniz')
+        _form = JsonForm(current=self.current, title=_(u'Öğrencinin Ayrılma Nedenini Seçiniz'))
         _form.ayrilma_nedeni = fields.Integer(choices=self.object.get_choices_for('ayrilma_nedeni'))
-        _form.aciklama = fields.Text("Açıklama Yazınız", required=True)
-        _form.sec = fields.Button("Seç")
+        _form.aciklama = fields.Text(_(u"Açıklama Yazınız"), required=True)
+        _form.sec = fields.Button(_(u"Seç"))
         self.form_out(_form)
 
     def ogrenci_program_sec(self):
@@ -228,9 +229,9 @@ class KayitSil(CrudView):
         ogrenci_rolleri = Role.objects.filter(user=ogrenci.user)
         for role in ogrenci_rolleri:
             if role.abstract_role.name not in ABSTRACT_ROLE_LIST_SILINMIS:
-                title = 'Kayıt Silme'
-                msg = """%s adlı öğrencinin kaydı silinmiştir.
-                         Öğrenci farklı rollere sahiptir.""" % ogrenci
+                title = _(u'Kayıt Silme')
+                msg = _(u"""%s adlı öğrencinin kaydı silinmiştir.
+                            Öğrenci farklı rollere sahiptir.""") % ogrenci
 
                 # TODO: sistem yoneticisine bilgi ver.
                 usr = User.objects.get(username='ulakbus')
@@ -246,12 +247,12 @@ class KayitSil(CrudView):
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
         self.current.output['msgbox'] = {
-            'type': 'warning', "title": 'Kayıt Silme',
-            "msg": 'Öğrencinin kaydı %s nedeniyle silinmiştir.' % self.current.input['form'][
+            'type': 'warning', "title": _(u'Kayıt Silme'),
+            "msg": _(u'Öğrencinin kaydı %s nedeniyle silinmiştir.') % self.current.input['form'][
                 'aciklama']
         }
-        title = 'Kayıt Silme'
-        msg = '%s adlı öğrencinin kaydı %s nedeniyle silinmiştir.' % (
+        title = _(u'Kayıt Silme')
+        msg = _(u'%s adlı öğrencinin kaydı %s nedeniyle silinmiştir.') % (
             ogrenci, self.current.input['form']['aciklama'])
 
         for program in ogrenci_program:

@@ -15,6 +15,7 @@ from ulakbus.views.ders_programi.ders_programi import AramaForm
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _, get_day_names, format_datetime
 
 
 class SinavProgramiYap(CrudView):
@@ -37,30 +38,30 @@ class SinavProgramiYap(CrudView):
         if published_count > 0:
             self.current.task_data['cmd'] = 'kayit_var'
             msg = {"type": 'info',
-                   "title": 'Yayınlanmış Sınav Programı Var!',
-                   "msg": 'Yayınlanan sınav programınız bulunmaktadır. Tekrardan sınav programı oluşturamazsınız.'}
+                   "title": _(u'Yayınlanmış Sınav Programı Var!'),
+                   "msg": _(u'Yayınlanan sınav programınız bulunmaktadır. Tekrardan sınav programı oluşturamazsınız.')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
         elif solved_count == sinav_etkinligi_count and solved_count > 0:
             self.current.task_data['cmd'] = 'hatasiz_sonuc'
             msg = {"type": 'info',
-                   "title": 'Yayınlanmamış Sınav Programı Var!',
-                   "msg": 'Yayınlanmayan sınav programını inceleyip yayınlayabilirsiniz.'}
+                   "title": _(u'Yayınlanmamış Sınav Programı Var!'),
+                   "msg": _(u'Yayınlanmayan sınav programını inceleyip yayınlayabilirsiniz.')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
         elif solved_count != sinav_etkinligi_count and solved_count > 0:
             msg = {"type": 'warning',
-                   "title": 'Hatalı Sonuçlar Var!',
-                   "msg": 'Oluşturulan sınav programınızda hatalı sonuçlar bulunmaktadır.'
-                          'Lütfen tekrardan sınav programı oluşturunuz.'}
+                   "title": _(u'Hatalı Sonuçlar Var!'),
+                   "msg": _(u'Oluşturulan sınav programınızda hatalı sonuçlar bulunmaktadır.'
+                            u'Lütfen tekrardan sınav programı oluşturunuz.')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def sinav_programi_hesaplama_baslat(self):
         if 'LANE_CHANGE_MSG' in self.current.task_data:
-            if self.current.task_data['LANE_CHANGE_MSG']['title'] == 'Hatalı Sonuçlar Var!':
+            if self.current.task_data['LANE_CHANGE_MSG']['title'] == _(u'Hatalı Sonuçlar Var!'):
                 self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
-        _form = JsonForm(title="Sınav Programı Oluştur")
-        _form.button = fields.Button('Başlat')
+        _form = JsonForm(title=_(u"Sınav Programı Oluştur"))
+        _form.button = fields.Button(_(u'Başlat'))
         self.form_out(_form)
 
     def sinav_programi_hesapla(self):
@@ -73,18 +74,18 @@ class SinavProgramiYap(CrudView):
 
         if response:
             msg = {"type": 'info',
-                   "title": 'Sınav Programı Oluşturuluyor',
-                   "msg": 'Sınav programı için yaptığınız taleb başarıyla alınmıştır.'}
+                   "title": _(u'Sınav Programı Oluşturuluyor'),
+                   "msg": _(u'Sınav programı için yaptığınız taleb başarıyla alınmıştır.')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
         else:
             msg = {"type": 'warning',
-                   "title": 'Sistemde Sorun Oluştu',
-                   "msg": 'Lütfen tekrardan sınav programı oluşturmayı çalıştırnız!'}
+                   "title": _(u'Sistemde Sorun Oluştu'),
+                   "msg": _(u'Lütfen tekrardan sınav programı oluşturmayı çalıştırnız!')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def servis_bilgi_mesaji(self):
 
-        if self.current.task_data['LANE_CHANGE_MSG']['title'] == 'Sınav Programı Oluşturuluyor':
+        if self.current.task_data['LANE_CHANGE_MSG']['title'] == _(u'Sınav Programı Oluşturuluyor'):
             self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
         else:
             self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
@@ -93,22 +94,22 @@ class SinavProgramiYap(CrudView):
         sinav_etkinligi_count, solved_count, published_count = self.sinav_etkinligi_sayisi()
         if solved_count != sinav_etkinligi_count:
             msg = {"type": 'warning',
-                   "title": 'Hatalı Sonuçlar Var!',
-                   "msg": 'Oluşturulan sınav programınızda hatalı sonuçlar bulunmaktadır.'
-                          'Lütfen tekrardan sınav programı oluşturunuz.'}
+                   "title": _(u'Hatalı Sonuçlar Var!'),
+                   "msg": _(u'Oluşturulan sınav programınızda hatalı sonuçlar bulunmaktadır.'
+                            u'Lütfen tekrardan sınav programı oluşturunuz.')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
             self.current.task_data['cmd'] = 'hata'
         else:
             msg = {"type": 'info',
-                   "title": 'Sına Programı Başarıyla Oluşturuldu!',
-                   "msg": 'Yayınlanmayan sınav programını inceleyip yayınlayabilirsiniz.'}
+                   "title": _(u'Sınav Programı Başarıyla Oluşturuldu!'),
+                   "msg": _(u'Yayınlanmayan sınav programını inceleyip yayınlayabilirsiniz.')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def hatasiz(self):
-        _form = JsonForm(title="Derslik veya Öğretim Elemanı İncele")
-        _form.incele = fields.Button("İncele", cmd='incele')
-        _form.yayinla = fields.Button("Yayınla", cmd='bitir')
+        _form = JsonForm(title=_(U"Derslik veya Öğretim Elemanı İncele"))
+        _form.incele = fields.Button(_(u"İncele"), cmd='incele')
+        _form.yayinla = fields.Button(_(u"Yayınla"), cmd='bitir')
         self.form_out(_form)
         self.current.output['msgbox'] = self.current.task_data['LANE_CHANGE_MSG']
 
@@ -141,23 +142,23 @@ class SinavProgramiYap(CrudView):
                     raise
         except:
             msg = {
-                'type': 'warning', "title": 'Kayıt Bulunamadı',
-                "msg": 'İlgili kayıt bulunamadı.'
+                'type': 'warning', "title": _(u'Kayıt Bulunamadı'),
+                "msg": _(u'İlgili kayıt bulunamadı.')
             }
             self.current.task_data["LANE_CHANGE_MSG"] = msg
 
     def coklu_sonuc(self):
 
-        self.output['objects'] = [['Ad', 'Soyad']]
+        self.output['objects'] = [[_(U'Ad'), _(u'Soyad')]]
         for data in self.current.search:
             data_list = OrderedDict({})
-            data_list['Ad'] = data.ad
-            data_list['Soyad'] = data.soyad
+            data_list[_(u'Ad')] = data.ad
+            data_list[_(u'Soyad')] = data.soyad
             item = {
                 'type': "table-multiRow",
                 'fields': data_list,
                 'actions': [
-                    {'name': 'Goster', 'cmd': 'tek_sonuc', 'show_as': 'button',
+                    {'name': _(u'Göster'), 'cmd': 'tek_sonuc', 'show_as': 'button',
                      'object_key': 'ogretim_elemani'}
                 ],
                 'key': data.key
@@ -168,7 +169,7 @@ class SinavProgramiYap(CrudView):
 
         if "LANE_CHANGE_MSG" in self.current.task_data and \
                         'title' in self.current.task_data["LANE_CHANGE_MSG"] and \
-                        self.current.task_data["LANE_CHANGE_MSG"]['title'] == "Kayıt Bulunamadı":
+                        self.current.task_data["LANE_CHANGE_MSG"]['title'] == _(u"Kayıt Bulunamadı"):
 
             self.current.output['msgbox'] = self.current.task_data["LANE_CHANGE_MSG"]
             self.current.task_data["LANE_CHANGE_MSG"] = ''
@@ -183,7 +184,7 @@ class SinavProgramiYap(CrudView):
                                                                 okutman_id=obj_key, donem=Donem.guncel_donem()))
                 obj = Okutman.objects.get(obj_key)
 
-            days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+            days = list(get_day_names())
 
             self.output['objects'] = [days]
 
@@ -194,7 +195,7 @@ class SinavProgramiYap(CrudView):
                 :param de: ders etkinligi
                 :return: ders adi ve zamani
                 """
-                aralik = de.tarih.strftime('%H.%M, %d.%m.%Y')
+                aralik = format_datetime(de.tarih)
                 return "\n\n**%s**\n%s\n\n" % (aralik, de.ders.ad)
 
             data_list = []
@@ -204,20 +205,20 @@ class SinavProgramiYap(CrudView):
                                                                   ders_etkinligi)]))
 
             item = {
-                "title": "%s - Detaylı Zaman Tablosu" % obj.__unicode__(),
+                "title": _(u"%s - Detaylı Zaman Tablosu") % obj.__unicode__(),
                 'type': "table-multiRow",
                 'fields': data_list,
                 "actions": False,
             }
             self.output['objects'].append(item)
-        _json = JsonForm(title="Detaylı Zaman Tablosu")
-        _json.tamamla = fields.Button("Bitir")
+        _json = JsonForm(title=_(u"Detaylı Zaman Tablosu"))
+        _json.tamamla = fields.Button(_(u"Bitir"))
         self.form_out(_json)
 
     def hatali(self):
         msg = {"type": 'info',
-               "title": 'Yayınlanmamış Sınav Programı Var!',
-               "msg": 'Yayınlanmayan sınav programını inceleyip yayınlayabilirsiniz.'}
+               "title": _(u'Yayınlanmamış Sınav Programı Var!'),
+               "msg": _(u'Yayınlanmayan sınav programını inceleyip yayınlayabilirsiniz.')}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def yayinla(self):
@@ -227,13 +228,13 @@ class SinavProgramiYap(CrudView):
                 de.published = True
                 de.save()
             msg = {"type": 'info',
-                   "title": 'Sınav Programı Yayınlandı!',
-                   "msg": 'Oluşturulan Sınav Programı Başarıyla Yayınlandı'}
+                   "title": _(u'Sınav Programı Yayınlandı!'),
+                   "msg": _(u'Oluşturulan Sınav Programı Başarıyla Yayınlandı')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
         except:
             msg = {"type": 'warning',
-                   "title": '!!HATA!!',
-                   "msg": 'Sınav Programı yayınlanırken hata oluştu lütfen tekrar yayınlayınç'}
+                   "title": _(u'!!HATA!!'),
+                   "msg": _(u'Sınav Programı yayınlanırken hata oluştu lütfen tekrar yayınlayın.')}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def bilgilendirme(self):
