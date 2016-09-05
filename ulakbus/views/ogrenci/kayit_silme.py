@@ -204,9 +204,15 @@ class KayitSil(CrudView):
             roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
             for role in roles:
                 if role.abstract_role.name in ABSTRACT_ROLE_LIST:
-                    if role.unit.unit_type == 'Program':
+                    if role.unit.unit_type == 'Program' and role.unit.learning_duration == 4:
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[0])
+                        role.abstract_role = abstract_role
+                        role.save()
+
+                    elif role.unit.unit_type == 'Program' and role.unit.learning_duration == 2:
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[1])
                         role.abstract_role = abstract_role
                         role.save()
                     elif role.unit.unit_type == 'Yüksek Lisans Programı':

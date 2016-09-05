@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
-from ulakbus.models import OgrenciProgram, Donem, DonemDanisman, Ogrenci
+from ulakbus.models import OgrenciProgram, Donem, DonemDanisman, Ogrenci, Personel
 from zengine.lib.test_utils import BaseTestCase
 
 
@@ -69,7 +69,7 @@ class TestCase(BaseTestCase):
 
         # Danışman seçilir.
         resp = self.client.post(model='OgrenciProgram',
-                                form={'donem_danisman': 'Ids7zUWiSyeTC1qHmAFfqFCIWBV', 'sec': 1})
+                                form={'donem_danisman': 'Js2goP48yA183oMDAN8uM5GOExM', 'sec': 1})
 
         ogrenci = Ogrenci.objects.get('RnKyAoVDT9Hc89KEZecz0kSRXRF')
         assert ogrenci.ad + ' ' + ogrenci.soyad in resp.json['msgbox']['msg']

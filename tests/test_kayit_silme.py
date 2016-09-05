@@ -117,12 +117,21 @@ class TestCase(BaseTestCase):
             # Rolün değişip değişmediğini test eder.
             for role in roles:
                 if role.abstract_role.name in ABSTRACT_ROLE_LIST_SILINMIS:
-                    if role.unit.unit_type == 'Program':
+                    if role.unit.unit_type == 'Program' and role.unit.learning_duration == 4:
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[0])
                         assert role.abstract_role == abstract_role
                         previous_abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST[1])
+
+                    elif role.unit.unit_type == 'Program' and role.unit.learning_duration == 2:
+                        abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST_SILINMIS[1])
+                        role.abstract_role = abstract_role
+                        previous_abstract_role = AbstractRole.objects.get(
+                            name=ABSTRACT_ROLE_LIST[2])
+                        role.save()
+
                     elif role.unit.unit_type == 'Yüksek Lisans Programı':
                         abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST_SILINMIS[2])
@@ -136,11 +145,7 @@ class TestCase(BaseTestCase):
                         previous_abstract_role = AbstractRole.objects.get(
                             name=ABSTRACT_ROLE_LIST[7])
                     else:
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[1])
-                        assert role.abstract_role == abstract_role
-                        previous_abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST[3])
+                        pass
 
                     # test ile degisen rolu geri donduruyoruz.
                     role.abstract_role = previous_abstract_role
