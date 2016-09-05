@@ -428,7 +428,17 @@ class Role(Model):
     @classmethod
     @role_getter("Bölüm Başkanları")
     def get_bolum_baskanlari(cls):
+        """fake"""
         return []
+
+
+    def send_notification(self, title, message, typ=1, url=None):
+        """
+        sends a message to user of this role's private mq exchange
+
+        """
+        self.user.send_notification(title=title, message=message, typ=typ, url=url)
+
 
 
 class LimitedPermissions(Model):
