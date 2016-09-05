@@ -7,12 +7,13 @@
 from datetime import time
 from pyoko import Model, field, ListNode
 from ulakbus.lib.date_time_helper import gun_dilimi_listele, HAFTA, gun_listele
-from ulakbus.models import RoomType, Okutman, Sube, Donem, Unit, Ders, Room
+from ulakbus.models import RoomType, Sube, Donem, Ders
 from zengine.forms import fields
 from zengine.lib.translation import gettext_lazy as _, gettext, format_time, format_datetime
 from .buildings_rooms import Room
 from .auth import Unit
 from .ogrenci import Okutman
+
 
 def uygunluk_durumu_listele():
     return [
@@ -20,6 +21,7 @@ def uygunluk_durumu_listele():
         (2, gettext(u"Mümkünse Uygun Değil")),
         (3, gettext(u"Kesinlikle Uygun Değil"))
     ]
+
 
 def derslik_durumu_listele():
     return [
@@ -93,7 +95,11 @@ class ZamanCetveli(Model):
     birim = Unit(_(u"Birim"))
     gun = field.Integer(_(u"Gün"), choices=gun_listele, index=True)
     zaman_dilimi = ZamanDilimleri(_(u"Zaman Dilimi"))
-    durum = field.Integer(_(u"Uygunluk Durumu"), choices=uygunluk_durumu_listele, default=1, index=True)
+    durum = field.Integer(
+        _(u"Uygunluk Durumu"),
+        choices=uygunluk_durumu_listele,
+        default=1, index=True
+    )
     ogretim_elemani_zaman_plani = OgElemaniZamanPlani(_(u"Öğretim Elemanı"))
 
     def __unicode__(self):
@@ -201,8 +207,12 @@ class SinavEtkinligi(Model):
 
         """
         donem = donem or Donem.guncel_donem()
-        return [e for e in cls.objects.filter(published=True, sube=sube,  archived=archived,
-                                                  donem=donem).order_by('-tarih')]
+        return [e for e in cls.objects.filter(
+            published=True,
+            sube=sube,
+            archived=archived,
+            donem=donem
+        ).order_by('-tarih')]
 
     def __unicode__(self):
         return '{} {} {}'.format(self.ders.ad, self.sube.ad, self.sinav_zamani())

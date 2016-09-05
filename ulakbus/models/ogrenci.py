@@ -9,7 +9,6 @@
 Bu modül Ulakbüs uygulaması için öğrenci modeli ve öğrenciyle ilişkili data modellerini içerir.
 
 """
-from datetime import date
 
 import six
 
@@ -143,8 +142,6 @@ class Donem(Model):
         Args:
             yil (int): takvim yili
             ay (int): takvim ayi
-            takvim (tuple): ayın ilk günününö haftanın hangi gününe
-            denk geldiği ve ayin kac gün sürdüğü integerlarından oluşan tuple. e.g (4, 29)
 
         Returns:
             (list) donem nesneleri listesi
@@ -179,7 +176,8 @@ class HariciOkutman(Model):
     soyad = field.String(_(u"Soyadı"), index=True)
     cinsiyet = field.Integer(_(u"Cinsiyet"), index=True, choices='cinsiyet')
     uyruk = field.String(_(u"Uyruk"), index=True)
-    medeni_hali = field.Integer(_(u"Medeni Hali"), index=True, choices="medeni_hali", required=False)
+    medeni_hali = field.Integer(_(u"Medeni Hali"), index=True, choices="medeni_hali",
+                                required=False)
     ikamet_adresi = field.String(_(u"İkamet Adresi"), index=True, required=False)
     ikamet_il = field.String(_(u"İkamet İl"), index=True, required=False)
     ikamet_ilce = field.String(_(u"İkamet İlçe"), index=True, required=False)
@@ -296,7 +294,7 @@ class Okutman(Model):
         return self.personel if self.personel.exist else self.harici_okutman
 
     def __unicode__(self):
-        return gettext('%(ad)s %(soyad)s') % {'ad': self.ad, 'soyad': self.soyad}
+        return gettext(u'%(ad)s %(soyad)s') % {'ad': self.ad, 'soyad': self.soyad}
 
     def is_not_unique(self):
         """Personel veya Harici Okutman sayısını bulur.
@@ -353,7 +351,8 @@ class Program(Model):
     yil = field.String(_(u"Yıl"), index=True)
     adi = field.String(_(u"Adı"), index=True)
     tanim = field.String(_(u"Tanım"), index=True)
-    yeterlilik_kosullari_aciklamasi = field.String(_(u"Yeterlilik Koşulları Açıklaması"), index=True)
+    yeterlilik_kosullari_aciklamasi = field.String(_(u"Yeterlilik Koşulları Açıklaması"),
+                                                   index=True)
     program_ciktilari = field.String(_(u"Program Çıktıları"), index=True)
     mezuniyet_kosullari = field.String(_(u"Mezuniyet Koşulları"), index=True)
     kabul_kosullari = field.String(_(u"Kabul Koşulları"), index=True)
@@ -409,7 +408,8 @@ class Ders(Model):
     ders_kategorisi = field.Integer(_(u"Ders Kategorisi"), index=True, choices="ders_kategorileri")
     ders_kaynaklari = field.String(_(u"Ders Kaynakları"), index=True)
     ders_mufredati = field.String(_(u"Ders Müfredatı"), index=True)
-    verilis_bicimi = field.Integer(_(u"Veriliş Biçimi"), index=True, choices="ders_verilis_bicimleri")
+    verilis_bicimi = field.Integer(_(u"Veriliş Biçimi"), index=True,
+                                   choices="ders_verilis_bicimleri")
     katilim_sarti = field.Integer(_(u"Katılım Şartı"), index=True)
     ontanimli_kontenjan = field.Integer(_(u'Kontenjan'), default=30)
     ontanimli_dis_kontenjan = field.Integer(_(u'Dış Kontenjan'), default=5)
@@ -961,7 +961,8 @@ class Odeme(Model):
         search_fields = ['miktar', 'odeme_tarihi']
 
     def __unicode__(self):
-        return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep, format_date(self.son_odeme_tarihi))
+        return '%s %s %s %s' % (self.miktar, self.para_birimi, self.sebep,
+                                format_date(self.son_odeme_tarihi))
 
 
 class BankaAuth(Model):
@@ -1161,8 +1162,10 @@ class AkademikTakvim(Model):
 
 class Takvim(Model):
     """
-    olay, bir zaman araliginda gerceklesiyorsa(ayni gunun saat araliklari dahil), baslangic ve bitis zamanlari ayri ayri verilir,
-    olay, bir gun icinde ancak kesin zaman bagimsiz/belirsiz gerceklesiyorsa, baslangic ve bitis zamanlari ayni verilir,
+    olay, bir zaman araliginda gerceklesiyorsa(ayni gunun saat araliklari dahil),
+                                                    baslangic ve bitis zamanlari ayri ayri verilir,
+    olay, bir gun icinde ancak kesin zaman bagimsiz/belirsiz gerceklesiyorsa,
+                                                    baslangic ve bitis zamanlari ayni verilir,
     olay, belirsiz bir baslangic yani son gun belirtilmisse, sadece bitis tarihi verilir,
     olay, belirsiz bir son yani baslama gun belirtilmisse, sadece baslangic tarihi verilir,
     """

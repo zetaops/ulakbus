@@ -13,7 +13,6 @@ import hashlib
 
 from pyoko import field
 from pyoko import Model, ListNode
-from passlib.hash import pbkdf2_sha512
 from pyoko import LinkProxy
 from pyoko.conf import settings
 from pyoko.lib.utils import lazy_property
@@ -47,7 +46,11 @@ class User(Model, BaseUser):
     name = field.String(_(u"First Name"), index=True)
     surname = field.String(_(u"Surname"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
-    locale_language = field.String(_(u"Preferred Language"), index=False, default=settings.DEFAULT_LANG)
+    locale_language = field.String(
+        _(u"Preferred Language"),
+        index=False,
+        default=settings.DEFAULT_LANG
+    )
     locale_datetime = field.String(_(u"Preferred Date and Time Format"), index=False,
                                    default=settings.DEFAULT_LOCALIZATION_FORMAT)
     locale_number = field.String(_(u"Preferred Number Format"), index=False,

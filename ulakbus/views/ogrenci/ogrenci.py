@@ -50,8 +50,8 @@ class KimlikBilgileriForm(forms.JsonForm):
                    "kimlik_cuzdani_verilis_nedeni", "kimlik_cuzdani_kayit_no",
                    "kimlik_cuzdani_verilis_tarihi"]
 
-    kaydet = fields.Button(gettext_lazy("Kaydet"), cmd="save")
-    mernis_sorgula = fields.Button(gettext_lazy("Mernis Sorgula"), cmd="mernis_sorgula")
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="save")
+    mernis_sorgula = fields.Button(gettext_lazy(u"Mernis Sorgula"), cmd="mernis_sorgula")
 
 
 class KimlikBilgileri(CrudView):
@@ -382,7 +382,8 @@ class DanismanAtama(CrudView):
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Danışman Ataması Yapıldı'),
-            "msg": _(u'%(ogrenci)s adlı öğrenciye %(danisman)s adlı personel danışman olarak atandı') % {
+            "msg": _(u'%(ogrenci)s adlı öğrenciye %(danisman)s adlı personel \
+                        danışman olarak atandı') % {
                 'ogrenci': ogrenci,
                 'danisman': personel,
             }
@@ -584,16 +585,19 @@ class KayitDondurma(CrudView):
             # öğrencinin danışmanına bilgilendirme geçilir
             try:
                 danisman_key = ogrenci_program.danisman.user.key
-                ogrenci_program.danisman.user.send_notification(title=_(u"Öğrenci Kaydı Donduruldu"),
-                                                 message=notify_message, typ=111)
+                ogrenci_program.danisman.user.send_notification(
+                    title=_(u"Öğrenci Kaydı Donduruldu"),
+                    message=notify_message, typ=111
+                )
                 self.current.output['msgbox'] = {
                     'type': 'info', "title": _(u'Öğrenci Kayıt Dondurma Başarılı'),
-                    "msg": '%s' % (notify_message)
+                    "msg": notify_message
                 }
             except Exception as e:
                 self.current.output['msgbox'] = {
                     'type': 'warning', "title": _(u'Bir Hata Oluştu'),
-                    "msg": _(u'Öğrenci Danışmanı Bilgilendirme Başarısız. Hata Kodu : %s') % (e.message)
+                    "msg": _(u'Öğrenci Danışmanı Bilgilendirme Başarısız. \
+                               Hata Kodu : %s') % e.message
                 }
 
 
@@ -739,7 +743,8 @@ class OgrenciDersAtama(CrudView):
             self.current.task_data['program_key'] = program_key
             guncel_donem = Donem.guncel_donem()
             ogrenci_program = OgrenciProgram.objects.get(program_key)
-            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program, donem=guncel_donem)
+            ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program,
+                                                           donem=guncel_donem)
             _form = DersSecimForm(current=self.current, title=_(u"Ders Seçiniz"))
             for ogrenci_dersi in ogrenci_dersleri:
                 ogrenci_dersi_lst.append(ogrenci_dersi.key)
@@ -751,8 +756,10 @@ class OgrenciDersAtama(CrudView):
             _form = DersSecimForm(current=self.current, title=_(u"Ders Seçiniz"))
             for ders in self.current.task_data['dersler']:
                 try:
-                    ogrenci_dersi = OgrenciDersi.objects.get(sube_id=ders['key'],
-                                                             ogrenci_id=self.current.session['ogrenci_id'])
+                    ogrenci_dersi = OgrenciDersi.objects.get(
+                        sube_id=ders['key'],
+                        ogrenci_id=self.current.session['ogrenci_id']
+                    )
                     if ogrenci_dersi.key not in self.current.task_data['ogrenci_dersi_lst']:
                         self.current.task_data['ogrenci_dersi_lst'].append(ogrenci_dersi.key)
 
@@ -812,8 +819,10 @@ class OgrenciDersAtama(CrudView):
 
         is_new_lst = []
         for ders in self.current.task_data['dersler']:
-            ogrenci_dersi, is_new = OgrenciDersi.objects.get_or_create(sube_id=ders['key'],
-                                                                       ogrenci_id=self.current.session['ogrenci_id'])
+            ogrenci_dersi, is_new = OgrenciDersi.objects.get_or_create(
+                sube_id=ders['key'],
+                ogrenci_id=self.current.session['ogrenci_id']
+            )
             is_new_lst.append(is_new)
             if is_new:
                 ogrenci_dersi.sube = Sube.objects.get(ders['key'])
@@ -914,7 +923,7 @@ class MazeretliDersKaydi(CrudView):
         ogrenci = ogrenci_program.ogrenci
         ogrenci_ad_soyad = ogrenci.ad + " " + ogrenci.soyad
         self.current.output['msgbox'] = {
-            'type': 'info', "title": _('Öğrenci Ders Kayıt Durumu Değiştirme Başarılı'),
+            'type': 'info', "title": _(u'Öğrenci Ders Kayıt Durumu Değiştirme Başarılı'),
             "msg": _(u'%s nolu %s adlı Öğrencinin %s Programına Ait Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi') % (
                 ogrenci_program.ogrenci_no, ogrenci_ad_soyad, ogrenci_program.program.adi)
         }

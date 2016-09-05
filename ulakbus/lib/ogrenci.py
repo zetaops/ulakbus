@@ -7,7 +7,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import Ogrenci, SinavEtkinligi
+from ulakbus.models import Ogrenci
 
 
 def diploma_no_uret(ogrenci_program):

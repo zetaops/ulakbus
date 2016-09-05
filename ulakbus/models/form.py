@@ -10,11 +10,11 @@ Bu modül `Form` modeli ve bu modelle ilintili data modellerini içerir.
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from pyoko import Model, field, Node
+from pyoko import Model, field
 from zengine.lib.translation import gettext_lazy as _
 from .auth import Role, Permission, User
+
+__author__ = 'H.İbrahim Yılmaz (drlinux)'
 
 
 class Form(Model):

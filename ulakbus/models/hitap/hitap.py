@@ -44,7 +44,7 @@ class NufusKayitlari(Model):
         hitap_service_prefix = "HitapNufus"
 
     def __unicode__(self):
-        return gettext('%(ad)s %(soyad)s %(sicil_no)s') % {
+        return gettext(u'%(ad)s %(soyad)s %(sicil_no)s') % {
             'ad': self.ad,
             'soyad': self.soyad,
             'sicil_no': self.emekli_sicil_no
@@ -238,12 +238,23 @@ class HizmetAcikSure(Model):
     husus_aciklama = field.String(_(u"Husus Açıklaması"), index=True)
     aciga_alinma_tarih = field.Date(_(u"Açığa Alınma Tarihi"), index=True, format="%d.%m.%Y")
     goreve_son_tarih = field.Date(_(u"Göreve Son Tarih"), index=True, format="%d.%m.%Y")
-    goreve_iade_istem_tarih = field.Date(_(u"Göreve İade İstem Tarihi"), index=True, format="%d.%m.%Y")
+    goreve_iade_istem_tarih = field.Date(
+        _(u"Göreve İade İstem Tarihi"),
+        index=True,
+        format="%d.%m.%Y"
+    )
     goreve_iade_tarih = field.Date(_(u"Göreve İade Tarihi"), index=True, format="%d.%m.%Y")
-    acik_aylik_bas_tarih = field.Date(_(u"Açık Aylık Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    acik_aylik_bas_tarih = field.Date(
+        _(u"Açık Aylık Başlama Tarihi"),
+        index=True,
+        format="%d.%m.%Y"
+    )
     acik_aylik_bit_tarih = field.Date(_(u"Açık Aylık Bitiş Tarihi"), index=True, format="%d.%m.%Y")
-    goreve_son_aylik_bas_tarih = field.Date(_(u"Göreve Sonlandırma Aylık Başlangıç Tarihi"), index=True,
-                                            format="%d.%m.%Y")
+    goreve_son_aylik_bas_tarih = field.Date(
+        _(u"Göreve Sonlandırma Aylık Başlangıç Tarihi"),
+        index=True,
+        format="%d.%m.%Y"
+    )
     goreve_son_aylik_bit_tarih = field.Date(_(u"Göreve Sonlandırma Aylık Bitiş Tarihi"), index=True,
                                             format="%d.%m.%Y")
     s_yonetim_kald_tarih = field.Date(_(u"Sıkı Yönetim Kaldırıldığı Tarih"), index=True,
@@ -441,7 +452,11 @@ class AskerlikKayitlari(Model):
     sinif_okulu_sicil = field.String(_(u"Sınıf Okulu Sicil"), index=True)
     subayliktan_erlige_gecis_tarihi = field.Date(_(u"Subaylıktan Erliğe Geçiş Tarihi"), index=True,
                                                  format="%d.%m.%Y")
-    subay_okulu_giris_tarihi = field.Date(_(u"Subay Okulu Giriş Tarihi"), index=True, format="%d.%m.%Y")
+    subay_okulu_giris_tarihi = field.Date(
+        _(u"Subay Okulu Giriş Tarihi"),
+        index=True,
+        format="%d.%m.%Y"
+    )
     tckn = field.String(_(u"TC Kimlik No"), index=True)
     tegmen_nasp_tarihi = field.Date(_(u"Teğmen Nasp Tarihi"), index=True, format="%d.%m.%Y")
     gorev_yeri = field.String(_(u"Görev Yeri"), index=True)
