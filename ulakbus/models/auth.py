@@ -223,8 +223,8 @@ class Unit(Model):
     is_academic = field.Boolean("Akademik")
     is_active = field.Boolean("Aktif")
     uid = field.Integer(index=True)
-    # parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
-    parent = field.String(verbose_name='Üst Birim') # fake
+    parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
+    # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
     def get_user_keys(cls, unit_key):
