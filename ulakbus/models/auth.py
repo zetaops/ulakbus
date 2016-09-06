@@ -19,6 +19,7 @@ from pyoko.lib.utils import lazy_property
 
 from zengine.auth.permissions import get_all_permissions
 from zengine.dispatch.dispatcher import receiver
+from zengine.lib.decorators import role_getter
 
 from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
@@ -232,9 +233,11 @@ class Unit(Model):
     is_active = field.Boolean(_(u"Aktif"))
     uid = field.Integer(index=True)
     parent = LinkProxy('Unit', verbose_name=_(u'Üst Birim'), reverse_name='alt_birimler')
+    # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
     def get_user_keys(cls, unit_key):
+        """recursively gets all roles (keys) under given unit"""
         return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
         stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
         for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
@@ -276,6 +279,9 @@ class PermissionCache(Cache):
 
     def __init__(self, role_id):
         super(PermissionCache, self).__init__(role_id)
+
+
+
 
 
 class Role(Model):
@@ -426,6 +432,22 @@ class Role(Model):
         çağırarak oluşturur.
         """
         self.name = self._make_name()
+
+
+    @classmethod
+    @role_getter("Bölüm Başkanları")
+    def get_bolum_baskanlari(cls):
+        """fake"""
+        return []
+
+
+    def send_notification(self, title, message, typ=1, url=None):
+        """
+        sends a message to user of this role's private mq exchange
+
+        """
+        self.user.send_notification(title=title, message=message, typ=typ, url=url)
+
 
 
 class LimitedPermissions(Model):
