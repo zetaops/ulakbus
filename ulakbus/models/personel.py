@@ -238,6 +238,7 @@ class KurumIciGorevlendirmeBilgileri(Model):
     kurum_ici_gorev_bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
     birim = Unit()
     soyut_rol = AbstractRole()
+    gorev = field.Integer("Görev", choices="gorevler")
     aciklama = field.String(_(u"Açıklama"))
     resmi_yazi_sayi = field.String(_(u"Resmi Yazı Sayı"))
     resmi_yazi_tarih = field.Date(_(u"Resmi Yazı Tarihi"), format="%d.%m.%Y")

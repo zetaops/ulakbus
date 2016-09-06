@@ -86,5 +86,351 @@
       "tr": "Ücretsiz İzin",
       "en": "Unpaid Vacation"
     }
+  },
+  "gorevler": {
+    "73": {
+      "tr" : "Şube Müdürü Vekili",
+      "en" : ""
+    },
+    "74": {
+      "tr" : "İmam",
+      "en" : ""
+    },
+    "75": {
+      "tr" : "Sağlık Teknisyeni",
+      "en" : ""
+    },
+    "86" : {
+      "tr" : "Yüksekokul Sekreteri",
+      "en" : ""
+    },
+    "71" : {
+      "tr": "Merkez Müdür Vekili",
+      "en" : ""
+    },
+    "72" : {
+      "tr" : "Merkez Başkan Vekili",
+      "en" : ""
+    },
+    "1" : {
+      "tr" : "Rektör",
+      "en" : ""
+    },
+    "3" : {
+      "tr" : "Dekan",
+      "en" : ""
+    },
+    "4" : {
+      "tr" : "Dekan Yardımcısı",
+      "en" : ""
+    },
+    "2" : {
+      "tr" : "Rektör Yardımcısı",
+      "en" : ""
+    },
+    "5" : {
+      "tr" : "Yüksekokul Müdürü",
+      "en" : ""
+    },
+    "6" : {
+      "tr" : "Yüksekokul Müdür Yardımcısı",
+      "en" : ""
+    },
+    "7" : {
+      "tr" : "Devlet Konservatuvarı Müdürü",
+      "en" : ""
+    },
+    "8" : {
+      "tr" : "Devlet Konservatuvarı Müdür Yardımcısı",
+      "en" : ""
+    },
+    "9" : {
+      "tr" : "Meslek Yüksek Okulu Müdürü",
+      "en" : ""
+    },
+    "10" : {
+      "tr" : "Meslek Yüksek Okulu Müdür Yardımcısı",
+      "en" : ""
+    },
+    "11" : {
+      "tr" : "Enstitü Müdürü",
+      "en" : ""
+    },
+    "12" : {
+      "tr" : "Enstitü Müdür Yardımcısı",
+      "en" : ""
+    },
+    "13" : {
+      "tr" : "Merkez Müdürü",
+      "en" : ""
+    },
+    "14" : {
+      "tr" : "Merkez Müdür Yardımcısı",
+      "en" : ""
+    },
+    "15" : {
+      "tr" : "Merkez Başkanı",
+      "en" : ""
+    },
+    "16" : {
+      "tr" : "Merkez Başkan Yardımcısı",
+      "en" : ""
+    },
+    "17" : {
+      "tr" : "Rektör Danışmanı",
+      "en" : ""
+    },
+    "18" : {
+      "tr" : "K.N.E.Ü. Senato Üyesi",
+      "en" : ""
+    },
+    "19" : {
+      "tr" : "K.N.E.Ü. Yönetim Kurulu Üyesi",
+      "en" : ""
+    },
+    "20" : {
+      "tr" : "Fakülte Yönetim Kurulu Üyesi",
+      "en" : ""
+    },
+    "21" : {
+      "tr" : "Fakülte Kurulu Üyesi",
+      "en" : ""
+    },
+    "22" : {
+      "tr" : "Bölüm Başkanı",
+      "en" : ""
+    },
+    "23" : {
+      "tr" : "Bölüm Başkan Yardımcısı",
+      "en" : ""
+    },
+    "24" : {
+      "tr" : "Anabilim Dalı Başkanı",
+      "en" : ""
+    },
+    "25" : {
+      "tr" : "Enstitü Kadrosunda Birimde Görevli",
+      "en" : ""
+    },
+    "0" : {
+      "tr" : "Diğer",
+      "en" : ""
+    },
+    "27" : {
+      "tr" : "Anasanat Dalı Başkanı",
+      "en" : ""
+    },
+    "28" : {
+      "tr" : "Yüksekokul Yönetim Kurulu Üyesi",
+      "en" : ""
+    },
+    "29" : {
+      "tr" : "Yüksekokul Kurul Üyesi",
+      "en" : ""
+    },
+    "30" : {
+      "tr" : "Enstitü Yönetim Kurulu Üyesi",
+      "en" : ""
+    },
+    "31" : {
+      "tr" : "Enstitü Kurul Üyesi",
+      "en" : ""
+    },
+    "32" : {
+      "tr" : "Dekan Vekili",
+      "en" : ""
+    },
+    "33" : {
+      "tr" : "13. Madde Görevlendirme",
+      "en" : ""
+    },
+    "34" : {
+      "tr" : "Hastahane Müdürü",
+      "en" : ""
+    },
+    "35" : {
+      "tr" : "Hastahane Müdür Yardımcısı",
+      "en" : ""
+    },
+    "36" : {
+      "tr" : "Koordinator",
+      "en" : ""
+    },
+    "37" : {
+      "tr" : "Yüksekokul Müdür Vekili",
+      "en" : ""
+    },
+    "38" : {
+      "tr" : "Devlet Konservatuvarı Müdür Vekili",
+      "en" : ""
+    },
+    "39" : {
+      "tr" : "Başhekim",
+      "en" : ""
+    },
+    "40" : {
+      "tr" : "Başhekim Yardımcısı",
+      "en" : ""
+    },
+    "41" : {
+      "tr" : "Yüksekokul Sekreter Vekili",
+      "en" : ""
+    },
+    "42" : {
+      "tr" : "Fakülte Sekreter Vekili",
+      "en" : ""
+    },
+    "43" : {
+      "tr" : "Merkez Yönetim Kurulu Üyeliği",
+      "en" : ""
+    },
+    "44" : {
+      "tr" : "Meslek Yüksek Okulu Müdür Vekili",
+      "en" : ""
+    },
+    "45" : {
+      "tr" : "Meslek Yüksek Okulu Sekreter Vekili",
+      "en" : ""
+    },
+    "46" : {
+      "tr" : "Meslek Yüksek Okulu Sekreteri",
+      "en" : ""
+    },
+    "47" : {
+      "tr" : "Basın Müşaviri",
+      "en" : ""
+    },
+    "48" : {
+      "tr" : "Genel Sekreter Vekili",
+      "en" : ""
+    },
+    "49" : {
+      "tr" : "Üniversiteler Arası Kurul Üyesi",
+      "en" : ""
+    },
+    "50" : {
+      "tr" : "Başhekim Vekili",
+      "en" : ""
+    },
+    "52" : {
+      "tr" : "Bölüm Başkan Vekili",
+      "en" : ""
+    },
+    "53" : {
+      "tr" : "Meslek Yüksek Okulu Yönetim Kurulu Üyesi",
+      "en" : ""
+    },
+    "54" : {
+      "tr" : "Meslek Yüksek Okulu Kurulu Üyesi",
+      "en" : ""
+    },
+    "55" : {
+      "tr" : "Yayın Komisyonu Üyesi",
+      "en" : ""
+    },
+    "56" : {
+      "tr" : "Döner Sermaye Yürütme Kurulu Üyesi",
+      "en" : ""
+    },
+    "57" : {
+      "tr" : "Vakıf Müdürü",
+      "en" : ""
+    },
+    "58" : {
+      "tr" : "Daire Başkan Vekili",
+      "en" : ""
+    },
+    "59" : {
+      "tr" : "Merk. Başk. Yön. Kur. Üyesi",
+      "en" : ""
+    },
+    "60" : {
+      "tr" : "Müdür",
+      "en" : ""
+    },
+    "61" : {
+      "tr" : "Müdür Vekili",
+      "en" : ""
+    },
+    "62" : {
+      "tr" : "Hastahane Başmüdür Vekili",
+      "en" : ""
+    },
+    "63" : {
+      "tr" : "Rektör Vekili",
+      "en" : ""
+    },
+    "69" : {
+      "tr" : "Rotasyon",
+      "en" : ""
+    },
+    "70" : {
+      "tr" : "Tedviren",
+      "en" : ""
+    },
+    "65" : {
+      "tr" : "Hastahaneler Genel Direktörü",
+      "en" : ""
+    },
+    "66" : {
+      "tr" : "Hastahaneler Yönetim Kurulu Üyeliği",
+      "en" : ""
+    },
+    "64" : {
+      "tr" : "Koordinatör Yardımcısı",
+      "en" : ""
+    },
+    "68" : {
+      "tr" : "Anabilim Dalı Başkan Vekili",
+      "en" : ""
+    },
+    "76" : {
+      "tr" : "Tekniker",
+      "en" : ""
+    },
+    "77" : {
+      "tr" : "Bilgisayar İşletmeni",
+      "en" : ""
+    },
+    "78" : {
+      "tr" : "Şef",
+      "en" : ""
+    },
+    "79" : {
+      "tr" : "Sekreter",
+      "en" : ""
+    },
+    "80" : {
+      "tr" : "Enstitü Sekreteri Vekili",
+      "en" : ""
+    },
+    "81" : {
+      "tr" : "Psikolog",
+      "en" : ""
+    },
+    "82" : {
+      "tr" : "Hemşire",
+      "en" : ""
+    },
+    "83" : {
+      "tr" : "Şube Müdürü",
+      "en" : ""
+    },
+    "84" : {
+      "tr" : "Kimyager",
+      "en" : ""
+    },
+    "85" : {
+      "tr" : "Memur",
+      "en" : ""
+    },
+    "87" : {
+      "tr" : "Bakıcı Anne",
+      "en" : ""
+    },
+    "88" : {
+      "tr" : "Kontrolör",
+      "en" : ""
+    }
   }
 }
