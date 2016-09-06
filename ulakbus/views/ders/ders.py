@@ -254,8 +254,8 @@ class DersSubelendirme(CrudView):
 
         """
 
-        _form = ProgramForm(current=self.current)
-        choices = prepare_choices_for_model(Program)
+        _form = ProgramForm(title=_(u"Program Seçiniz."), current=self.current)
+        choices = prepare_choices_for_model(Program, yoksis_no=self.current.role.unit.yoksis_no)
         _form.program = fields.Integer(choices=choices)
         self.form_out(_form)
 
@@ -394,7 +394,7 @@ class DersSubelendirme(CrudView):
 
         title = _(u"Şubelendirme")
         bolum_baskani = "%s %s" % (self.current.user.name, self.current.user.surname)
-        msg = _(u"Bölum Başkanı %s tarafından şubelerinizde degisiklikler yapilmistir.") % bolum_baskani
+        msg = _(u"Bölüm Başkanı %s tarafından şubelerinizde değişiklikler yapılmıştır.") % bolum_baskani
         okutmanlar = []
 
         def notify(okutman):

@@ -45,7 +45,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
 
         # Veritabanından kayıtlı olan programların sayısını tutar.
-        count_of_program = Program.objects.count()
+        count_of_program = Program.objects.filter(yoksis_no=self.client.current.role.unit.yoksis_no).count()
 
         assert count_of_program == len(resp.json['forms']['form'][2]['titleMap'])
 

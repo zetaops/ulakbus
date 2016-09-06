@@ -4,14 +4,13 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import SinavEtkinligi, Room
-from ulakbus.models.ders_sinav_programi import gun_listele
+from ulakbus.models import SinavEtkinligi, Room, Donem
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _, gettext_lazy, get_day_names, format_datetime
 from collections import OrderedDict
-import calendar
+from ulakbus.lib.date_time_helper import map_sinav_etkinlik_hafta_gunleri, HAFTA
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 
 class DerslikSecimFormu(JsonForm):
@@ -27,7 +26,13 @@ class DerslikSinavProgramlari(CrudView):
     Derslik Sınav Programları iş akışı, seçilen dersliğe ait sınav programlarını gösterip kullanıcının
     yazdırabilmesine olanak sağlar.
 
-    İş akışı 2 adımdan oluşur.
+    İş akışı 4 adımdan oluşur.
+
+    Sınav Etkinliklerini Kontrol Et:
+    Yayınlanmış sınav etkinlikleri var mı yok mu diye kontrol eder.
+
+    Bilgi Ver:
+    Yayınlananmış sınavlar yok ise bilgi mesajı  ekrana basılır.
 
     Derslik Seç:
     Derslik Seçilir.
@@ -40,15 +45,37 @@ class DerslikSinavProgramlari(CrudView):
     class Meta:
         model = "SinavEtkinligi"
 
+    def sinav_etkinliklerini_kontrol_et(self):
+        """
+        Yayınlanmış sınav etkinlikleri var mı yok mu diye kontrol eder.
+
+        """
+        sinav_etkinlikleri = SinavEtkinligi.objects.filter(published=True, donem=Donem.guncel_donem(),
+                                                           bolum=self.current.role.unit)
+        self.current.task_data['yayinlanmamis_sinav_sayisi'] = len(sinav_etkinlikleri)
+
+    def bilgi_ver(self):
+        """
+        Yayınlananmış sınavlar yok ise bilgi mesajı  ekrana basılır.
+
+        """
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": _(u'Yayınlanmamış Sınavlar'),
+            'msg': _(u"Yayınlanmış sınavlar bulunmamaktadır.")
+        }
+
     def derslik_sec(self):
         """
         Derslik Seçilir.
 
         """
         _form = DerslikSecimFormu(title=_(u"Derslik Seçiniz"), current=self.current)
-        _choices = [(s_yerleri.room.key, s_yerleri.room.__unicode__()) for s_etkinlik in
-                    SinavEtkinligi.objects.filter(solved=True)
-                    for s_yerleri in s_etkinlik.SinavYerleri if s_etkinlik.SinavYerleri]
+        _choices = []
+        for s_etkinlik in SinavEtkinligi.objects.filter(published=True, donem=Donem.guncel_donem(),
+                                                        bolum=self.current.role.unit):
+            for s_yerleri in s_etkinlik.SinavYerleri:
+                if s_etkinlik.SinavYerleri:
+                    _choices.append((s_yerleri.room.key, s_yerleri.room.__unicode__()))
         _form.derslik = fields.Integer(choices=_choices)
         self.form_out(_form)
 
@@ -57,50 +84,27 @@ class DerslikSinavProgramlari(CrudView):
         Seçilen dersliğe ait sınavlar etkinliklerinin ders adını ve tarihi gösterir.
 
         """
-        def hafta_gun_olustur(HAFTA):
-            hafta_dict = {}
-            for i in range(len(HAFTA)):
-                hafta_dict[HAFTA[i][0]] = HAFTA[i][1]
-
-            return hafta_dict
-
-        def sinav_etkinlik_olustur(sinav_etkinlikleri):
-            sinav_etkinlik = {}
-            for s_e in sinav_etkinlikleri:
-                try:
-                    tarih = s_e.tarih
-                    gun = calendar.weekday(tarih.year, tarih.month, tarih.day) + 1
-
-                    if gun in sinav_etkinlik:
-                        sinav_etkinlik[gun].append(s_e)
-                    else:
-                        sinav_etkinlik[gun] = [s_e]
-                except:
-                    pass
-            return sinav_etkinlik
 
         room = Room.objects.get(self.current.input['form']['derslik'])
-        object_list = list(get_day_names())
-        self.output['objects'] = [object_list]
-        s_etkinlikleri = [s for s in SinavEtkinligi.objects if room in s.SinavYerleri and s.solved]
-        sinav_etkinlikleri = sinav_etkinlik_olustur(s_etkinlikleri)
-        hafta_dict = hafta_gun_olustur(gun_listele())
-        for i in range(max(map(len, sinav_etkinlikleri.values()))):
+        s_etkinlikleri = [s for s in SinavEtkinligi.objects.order_by('tarih') if room in s.SinavYerleri]
+        sinav_etkinlikleri = map_sinav_etkinlik_hafta_gunleri(s_etkinlikleri)
+        hafta = dict(HAFTA)
+        self.output['objects'] = [hafta]
+
+        # Bir güne ait maximum etkinlik sayısı.
+        max_etkinlik = max(map(len, sinav_etkinlikleri.values()))
+        for i in range(max_etkinlik):
             sinav_etkinlik_list = OrderedDict({})
-            for hafta_gun in hafta_dict.keys():
+            for hafta_gun in hafta.keys():
                     if hafta_gun in sinav_etkinlikleri:
                         try:
                             etkinlik = sinav_etkinlikleri[hafta_gun][i]
-                            sinav_saat = "**%02d**" % etkinlik.tarih.time().hour + ':' + "**%02d**" % etkinlik.tarih.time().minute
-                            sinav_etkinlik_list[hafta_dict[hafta_gun]] = '{tarih} {ders}'.format(
-                                tarih=format_datetime(etkinlik.tarih),
-                                ders=etkinlik.sube.ders_adi,
-                            )
+                            sinav_etkinlik_list[hafta[hafta_gun]] = etkinlik
                         except IndexError:
-                            sinav_etkinlik_list[hafta_dict[hafta_gun]] = ''
+                            sinav_etkinlik_list[hafta[hafta_gun]] = ''
 
                     else:
-                        sinav_etkinlik_list[hafta_dict[hafta_gun]] = ''
+                        sinav_etkinlik_list[hafta[hafta_gun]] = ''
             item = {
                 "type": "table-multiRow",
                 "fields": sinav_etkinlik_list,

@@ -160,10 +160,16 @@ class NotDuzenleme(CrudView):
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Not Düzeltme Tamamlandı'),
-            "msg": _(u'%(ogrenci)s adlı öğrencinin, %(sinav)s sınavına ait %(onceki_puan)s olan notu, %(yeni_puan)s ile değiştilmiştir.') % {
+            "msg": _(u'%(ogrenci)s adlı öğrencinin, %(sinav)s sınavına ait %(onceki_puan)s olan notu, '
+                     u'%(yeni_puan)s ile değiştilmiştir.') % {
                 'ogrenci': ogrenci,
                 'sinav': sinav,
                 'onceki_puan': onceki_puan,
                 'yeni_puan': yeni_puan,
             }
         }
+        user = ogrenci.user
+        title = _(u"Not Düzenleme")
+        message = _(u"%(sinav)s sınavına ait %(onceki_puan)s olan notu, %(yeni_puan)s ile değiştirilmiştir.") \
+                  % {'sinav': sinav, 'onceki_puan': onceki_puan, 'yeni_puan': yeni_puan}
+        user.send_notification(message=message, title=title)

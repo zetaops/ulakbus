@@ -581,7 +581,7 @@ class Sinav(Model):
         search_fields = ['aciklama', 'tarih']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.get_tur_display(), self.ders, self.sube)
+        return '%s %s' % (self.get_tur_display(), self.sube)
 
 
 class DersProgrami(Model):

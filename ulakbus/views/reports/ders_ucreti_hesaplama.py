@@ -32,9 +32,8 @@ class TarihForm(JsonForm):
     Puantaj tablosu hazırlanırken ay ve yıl seçiminde
     kullanılan form.
     """
-
     yil_sec = fields.String(gettext_lazy(u'Yıl Seçiniz'), choices=yil_secenekleri, default=guncel_yil)
-    ay_sec = fields.String(gettext_lazy(u'Ay Seçiniz'), choices=ay_listele, default=guncel_ay)
+    ay_sec = fields.String(_(u'Ay Seçiniz'), choices=ay_listele, default=guncel_ay)
 
 
 class OkutmanListelemeForm(JsonForm):
@@ -45,6 +44,7 @@ class OkutmanListelemeForm(JsonForm):
 
     class Meta:
         inline_edit = ['secim']
+        allow_add_listnode = False
 
     class OkutmanListesi(ListNode):
         secim = fields.Boolean(gettext_lazy(u"Seçim"), type="checkbox")

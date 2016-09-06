@@ -22,7 +22,7 @@ def gun_dilimi_listele():
     ]
 
 
-def _liste_hazirla(fn, keep_fn=False):
+def _liste_hazirla(fn, make_choices=False):
     """Babel'ın `get_day_names` ve `get_month_names` özelliklerini Ulakbus'e uyarlar.
 
     Babel'ın `get_day_names` ve `get_month_names` methodları, gün ve ayları 0-indeksli
@@ -34,21 +34,30 @@ def _liste_hazirla(fn, keep_fn=False):
     Bunu sağlamak adına, LazyProxy ile listenin oluşturulması kullanım anına ertelenmiş,
     yardımcı fonksiyon ile de indeksler beklenen sayılara kaydırılmıştır.
     """
-    def hazirlik():
+    def choices_title_map():
         liste = []
         for i, eleman in fn().items():
-            liste.append((i + 1, eleman))
+            liste.append({'name': eleman, 'value': i})
         return liste
-    if not keep_fn:
-        return LazyProxy(hazirlik, enable_cache=False)
+    if not make_choices:
+        return LazyProxy(lambda: fn().items(), enable_cache=False)
     else:
-        return hazirlik
+        return choices_title_map
 
-HAFTA = _liste_hazirla(get_day_names)
-gun_listele = _liste_hazirla(get_day_names, keep_fn=True)
+
+def _get_day_names():
+    modified_days = {}
+    days = get_day_names().items()
+    for i, name in days:
+        modified_days[i + 1] = name
+    return modified_days
+
+
+HAFTA = _liste_hazirla(_get_day_names)
+gun_listele = _liste_hazirla(_get_day_names, make_choices=True)
 
 AYLAR = _liste_hazirla(get_month_names)
-ay_listele = _liste_hazirla(get_month_names, keep_fn=True)
+ay_listele = _liste_hazirla(get_month_names, make_choices=True)
 
 
 def map_sinav_etkinlik_hafta_gunleri(sinavlar):
