@@ -11,6 +11,7 @@ from ulakbus.models import HizmetKayitlari
 from zengine.lib.test_utils import BaseTestCase
 from dateutil.relativedelta import relativedelta
 import datetime
+from ulakbus.lib.role import AbsRole
 
 __author__ = 'Mithat Raşit Özçıkrıkcı'
 
@@ -85,7 +86,7 @@ class TestCase(BaseTestCase):
         """
 
         # Dekan Soyut Rol
-        soyut_rol_id = "EsDTPb8K5e7HlocpZPlVvX2VDAI"
+        soyut_rol_id = AbsRole.FAKULTE_DEKANI.name
         # soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         # Görevlendirme yapılacak personel
@@ -146,60 +147,6 @@ class TestCase(BaseTestCase):
         # Hizmet cetveli kontrolü
         assert HizmetKayitlari.objects.filter().count() > 0
 
-    def kurum_disi_gorevlendirme_standart(self):
-        """
-            Herhangi bir personelin kurum dışı görevlendirilmesi durumudur.
-        """
-
-        # Görevlendirme işlemini yapacak olan personel işleri dairesi personeli
-        user = User.objects.get(username="personel_isleri_1")
-        self.prepare_client("/gorevlendirme", user=user)
-
-        # Görevlendirmesi yapılacak soyut rol
-        soyut_rol_id = "AGTuBwCYUzDF5axgV3h7oDSCwyl"
-        # soyut_rol = AbstractRole.objects.get(soyut_rol_id)
-
-        # Görevlendirmesi yapılacak personel
-        personel_id = "YpMvzcYw3msFu79V7BfSzvNjAng"
-        # personel = Personel.objects.get(personel_id)
-
-        # Kurum dışı görevlendirme bilgilerinin test sonunda kontrol
-        # edilebilmesi için önceki kayıtlar siliniyor
-        KurumDisiGorevlendirmeBilgileri.objects.delete()
-
-        # Görevlendirilecek personel seçilir.
-        self.client.post(id=personel_id, model="Personel", param="personel_id", wf="gorevlendirme")
-
-        # Görevlendirme türü kaydedilir.
-        self.client.post(cmd="gorevlendirme_tur_kaydet", wf="gorevlendirme",
-                         form=dict(gorevlendirme_tur=1))
-
-        # Görevlendirme bilgileri girilir ve görevlendirme kaydedilir.
-        baslangic = datetime.date.today()
-        bitis = baslangic + relativedelta(years=1)
-        resmi_yazi_tarih = baslangic + relativedelta(days=-3)
-        self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            kurum_disi_gorev_baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
-            kurum_disi_gorev_bitis_tarihi=bitis.strftime("%d.%m.%Y"),
-            aciklama="Standart kurum dışı görevlendirme",
-            resmi_yazi_sayi="234234",
-            resmi_yazi_tarih=resmi_yazi_tarih,
-            maas=False,
-            yevmiye=False,
-            yolluk=True,
-            ulke=90,
-            soyut_rol_id=soyut_rol_id
-        ))
-
-        # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
-        assert KurumDisiGorevlendirmeBilgileri.objects.filter().count() > 0
-        gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
-        assert gorevlendirme.personel.key == personel_id
-
-        assert gorevlendirme.kurum_disi_gorev_baslama_tarihi == baslangic
-
-        assert gorevlendirme.kurum_disi_gorev_bitis_tarihi == bitis
-
     def test_kurum_disi_gorevlendirme_rektor(self):
         """
             Bir personelin kurum dışına rektör olarak görevlendirilmesi durumudur.
@@ -210,7 +157,7 @@ class TestCase(BaseTestCase):
         self.prepare_client("/gorevlendirme", user=user)
 
         # Rektör Soyut Rol
-        soyut_rol_id = "H6h6y7gIdX1JprWlljJniCgXtjU"
+        soyut_rol_id = AbsRole.REKTOR.name
         # soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         # Görevlendirilecek personel
@@ -275,72 +222,7 @@ class TestCase(BaseTestCase):
         self.prepare_client("/gorevlendirme", user=user)
 
         # Dekan Soyut Rol
-        soyut_rol_id = "EsDTPb8K5e7HlocpZPlVvX2VDAI"
-        # soyut_rol = AbstractRole.objects.get(soyut_rol_id)
-
-        # Görevlendirilecek personel
-        personel_id = "XFLlsTdqyOV07kgQCbJiIGIvC0v"
-        # personel = Personel.objects.get(personel_id)
-
-        # Kurum dışı görevlendirme bilgilerinin test sonunda
-        # kontrol edilebilmesi için önceki kayıtlar siliniyor
-        KurumDisiGorevlendirmeBilgileri.objects.delete()
-
-        # Veritabanındaki hizmet kayıtları test sonunda kontrol edebilmek amacıyla silinir.
-        HizmetKayitlari.objects.delete()
-
-        # Görevlendirilecek personel seçilir.
-        self.client.post(id=personel_id, model="Personel", param="personel_id", wf="gorevlendirme")
-
-        # Görevlendirme türü kaydedilir.
-        self.client.post(cmd="gorevlendirme_tur_kaydet", wf="gorevlendirme",
-                         form=dict(gorevlendirme_tur=1))
-
-        # Görevlendirme bilgileri girilir ve görevlendirme kaydedilir.
-        baslangic = datetime.date.today()
-        bitis = baslangic + relativedelta(years=1)
-        resmi_yazi_tarih = baslangic + relativedelta(days=-3)
-        self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            kurum_disi_gorev_baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
-            kurum_disi_gorev_bitis_tarihi=bitis.strftime("%d.%m.%Y"),
-            aciklama="Rektör kurum dışı görevlendirme",
-            resmi_yazi_sayi="234234",
-            resmi_yazi_tarih=resmi_yazi_tarih.strftime("%d.%m.%Y"),
-            maas=False,
-            yevmiye=False,
-            yolluk=True,
-            ulke=90,
-            soyut_rol_id=soyut_rol_id
-        ))
-
-        # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
-        assert KurumDisiGorevlendirmeBilgileri.objects.filter().count() > 0
-        gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
-        assert gorevlendirme.personel.key == personel_id
-
-        assert gorevlendirme.kurum_disi_gorev_baslama_tarihi == baslangic
-
-        assert gorevlendirme.kurum_disi_gorev_bitis_tarihi == bitis
-
-        self.client.post(cmd="hizmet_cetveli_giris", wf="gorevlendirme", form=dict(
-            baslama_tarihi="23.03.2017",
-            bitis_tarihi="28.09.2017"
-        ))
-
-        # Hizmet cetveli kontrolü
-        assert HizmetKayitlari.objects.filter().count() > 0
-
-    def kurum_disi_gorevlendirme_rektor(self):
-        """
-         Bir personelin başka bir kuruma rektör olarak görevlendirilmesi durumudur.
-        """
-
-        # Görevlendirme işlemini yapacak olan personel işleri dairesi personeli
-        user = User.objects.get(username="personel_isleri_1")
-        self.prepare_client("/gorevlendirme", user=user)
-
-        # Rektör Soyut Rol
-        soyut_rol_id = "H6h6y7gIdX1JprWlljJniCgXtjU"
+        soyut_rol_id = AbsRole.FAKULTE_DEKANI.name
         # soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         # Görevlendirilecek personel

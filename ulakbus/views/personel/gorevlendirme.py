@@ -21,6 +21,7 @@ from zengine.views.crud import CrudView
 from ulakbus.models import Personel, HizmetKayitlari
 from ulakbus.models import KurumDisiGorevlendirmeBilgileri, KurumIciGorevlendirmeBilgileri
 from zengine.lib.translation import gettext_lazy as __
+from ulakbus.lib.role import AbsRole
 
 
 class GorevlendirmeTurSecForm(JsonForm):
@@ -81,11 +82,8 @@ class KurumIciGorevlendirme(CrudView):
 
         gorevlendirme.blocking_save()
 
-        if form_data["soyut_rol_id"] in ["EsDTPb8K5e7HlocpZPlVvX2VDAI",
-                                         "H6h6y7gIdX1JprWlljJniCgXtjU"]:
-            self.current.task_data["hizmet_cetvel_giris"] = True
-        else:
-            self.current.task_data["hizmet_cetvel_giris"] = False
+        self.current.task_data["hizmet_cetvel_giris"] = form_data["soyut_rol_id"] in [
+            AbsRole.FAKULTE_DEKANI.name, AbsRole.REKTOR.name]
 
 
 class KurumDisiGorevlendirmeForm(JsonForm):
@@ -122,13 +120,8 @@ class KurumDisiGorevlendirme(CrudView):
         )
         gorevlendirme.blocking_save()
 
-        if (
-                    (form_data["soyut_rol_id"] == "EsDTPb8K5e7HlocpZPlVvX2VDAI") or
-                    (form_data["soyut_rol_id"] == "H6h6y7gIdX1JprWlljJniCgXtjU")
-        ):
-            self.current.task_data["hizmet_cetvel_giris"] = True
-        else:
-            self.current.task_data["hizmet_cetvel_giris"] = False
+        self.current.task_data["hizmet_cetvel_giris"] = form_data["soyut_rol_id"] in [
+            AbsRole.FAKULTE_DEKANI.name, AbsRole.REKTOR.name]
 
 
 class HizmetCetveliForm(JsonForm):
