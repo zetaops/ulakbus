@@ -392,7 +392,7 @@ class DanismanAtama(CrudView):
                 user.send_notification(message=message, title=title)
 
         title = _(u"Danışman Atama")
-        message = _(u"%s(ogrenci) adlı öğrenciye danışman olarak atandınız.") % {'ogrenci':ogrenci}
+        message = _(u"%(ogrenci)s adlı öğrenciye danışman olarak atandınız.") % {'ogrenci': ogrenci}
         notify(personel.user, message, title)
 
 

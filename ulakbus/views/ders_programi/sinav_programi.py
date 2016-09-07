@@ -184,7 +184,7 @@ class SinavProgramiYap(CrudView):
                                                                 okutman_id=obj_key, donem=Donem.guncel_donem()))
                 obj = Okutman.objects.get(obj_key)
 
-            days = list(get_day_names())
+            days = list(get_day_names().values())
 
             self.output['objects'] = [days]
 
