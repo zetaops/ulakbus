@@ -150,7 +150,7 @@ class Reporter(BaseView):
 
     @classmethod
     def get_title(cls):
-        return cls.TITLE
+        return six.text_type(cls.TITLE)
 
     def get_objects(self):
         raise NotImplementedError
