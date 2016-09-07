@@ -1,0 +1,912 @@
+{
+  "ulke_kodlari" : {
+    "1" : {
+      "tr" : "A.B.D.",
+      "en" : ""
+    },
+    "1907" : {
+      "tr" : "A.B.D. (ALASKA)",
+      "en" : ""
+    },
+    "1808" : {
+      "tr" : "ABD (HAVAI)",
+      "en" : ""
+    },
+    "93" : {
+      "tr" : "AFGANISTAN",
+      "en" : ""
+    },
+    "49" : {
+      "tr" : "ALMANYA",
+      "en" : ""
+    },
+    "1684" : {
+      "tr" : "AMERIKAN SAMOA",
+      "en" : ""
+    },
+    "376" : {
+      "tr" : "ANDORRA",
+      "en" : ""
+    },
+    "244" : {
+      "tr" : "ANGOLA",
+      "en" : ""
+    },
+    "1264" : {
+      "tr" : "ANGUILLA",
+      "en" : ""
+    },
+    "1268" : {
+      "tr" : "ANTIGUA",
+      "en" : ""
+    },
+    "54" : {
+      "tr" : "ARJANTIN",
+      "en" : ""
+    },
+    "355" : {
+      "tr" : "ARNAVUTLUK",
+      "en" : ""
+    },
+    "297" : {
+      "tr" : "ARUBA",
+      "en" : ""
+    },
+    "247" : {
+      "tr" : "ASENSIYON",
+      "en" : ""
+    },
+    "61" : {
+      "tr" : "AVUSTRALYA",
+      "en" : ""
+    },
+    "43" : {
+      "tr" : "AVUSTURYA",
+      "en" : ""
+    },
+    "994" : {
+      "tr" : "AZERBAYCAN",
+      "en" : ""
+    },
+    "971" : {
+      "tr" : "BAE",
+      "en" : ""
+    },
+    "1242" : {
+      "tr" : "BAHAMA",
+      "en" : ""
+    },
+    "973" : {
+      "tr" : "BAHREYN",
+      "en" : ""
+    },
+    "880" : {
+      "tr" : "BANGLADES",
+      "en" : ""
+    },
+    "1246" : {
+      "tr" : "BARBADOS",
+      "en" : ""
+    },
+    "685" : {
+      "tr" : "BATI SAMOA",
+      "en" : ""
+    },
+    "32" : {
+      "tr" : "BELCIKA",
+      "en" : ""
+    },
+    "501" : {
+      "tr" : "BELIZE",
+      "en" : ""
+    },
+    "229" : {
+      "tr" : "BENIN",
+      "en" : ""
+    },
+    "1441" : {
+      "tr" : "BERMUDA",
+      "en" : ""
+    },
+    "375" : {
+      "tr" : "BEYAZ RUSYA",
+      "en" : ""
+    },
+    "591" : {
+      "tr" : "BOLIVYA",
+      "en" : ""
+    },
+    "387" : {
+      "tr" : "BOSNA HERSEK",
+      "en" : ""
+    },
+    "267" : {
+      "tr" : "BOTSVANA",
+      "en" : ""
+    },
+    "55" : {
+      "tr" : "BREZILYA",
+      "en" : ""
+    },
+    "673" : {
+      "tr" : "BRUNEY",
+      "en" : ""
+    },
+    "359" : {
+      "tr" : "BULGARISTAN",
+      "en" : ""
+    },
+    "226" : {
+      "tr" : "BURKINA FASO",
+      "en" : ""
+    },
+    "95" : {
+      "tr" : "BURMA",
+      "en" : ""
+    },
+    "257" : {
+      "tr" : "BURUNDI",
+      "en" :  ""
+    },
+    "975" : {
+      "tr" : "BUTAN",
+      "en" : ""
+    },
+    "235" : {
+      "tr" : "CAD",
+      "en" : ""
+    },
+    "350" : {
+      "tr" : "CEBELITARIK",
+      "en" : ""
+    },
+    "420" : {
+      "tr" : "CEK CUM.",
+      "en" : ""
+    },
+    "213" : {
+      "tr" : "CEZAYIR",
+      "en" : ""
+    },
+    "253" : {
+      "tr" : "CIBUTI",
+      "en" : ""
+    },
+    "86" : {
+      "tr" : "CIN",
+      "en" : ""
+    },
+    "45" : {
+      "tr" : "DANIMARKA",
+      "en" : ""
+    },
+    "246" : {
+      "tr" : "DIEGO GARSIA",
+      "en" : ""
+    },
+    "1767" : {
+      "tr" : "DOMINIK",
+      "en" : ""
+    },
+    "1809" : {
+      "tr" : "DOMINIK CUM.",
+      "en" : ""
+    },
+    "593" : {
+      "tr" : "EKVATOR",
+      "en" : ""
+    },
+    "240" : {
+      "tr" : "EKVATOR GINE",
+      "en" : ""
+    },
+    "503" : {
+      "tr" : "EL SALVADOR",
+      "en" : ""
+    },
+    "62" : {
+      "tr" : "ENDONEZYA",
+      "en" : ""
+    },
+    "291" : {
+      "tr" : "ERITRE",
+      "en" : ""
+    },
+    "374" : {
+      "tr" : "ERMENISTAN",
+      "en" : ""
+    },
+    "372" : {
+      "tr" : "ESTONYA",
+      "en" : ""
+    },
+    "251" : {
+      "tr" : "ETIYOPYA",
+      "en" : ""
+    },
+    "500" : {
+      "tr" : "FALKLAND ADL.",
+      "en" : ""
+    },
+    "298" : {
+      "tr" : "FAROE ADALARI",
+      "en" : ""
+    },
+    "212" : {
+      "tr" : "FAS",
+      "en" : ""
+    },
+    "679" : {
+      "tr" : "FIJI",
+      "en" : ""
+    },
+    "225" : {
+      "tr" : "FILDISI SAHILI",
+      "en" : ""
+    },
+    "63" : {
+      "tr" : "FILIPINLER",
+      "en" : ""
+    },
+    "970" : {
+      "tr" : "FILISTIN",
+      "en" : ""
+    },
+    "358" : {
+      "tr" : "FINLANDIYA",
+      "en" : ""
+    },
+    "33" : {
+      "tr" : "FRANSA",
+      "en" : ""
+    },
+    "594" : {
+      "tr" : "FRANSIZ GUYANASI",
+      "en" : ""
+    },
+    "689" : {
+      "tr" : "FRANSIZ POLINEZYASI",
+      "en" : ""
+    },
+    "241" : {
+      "tr" : "GABON",
+      "en" : ""
+    },
+    "220" : {
+      "tr" : "GAMBIA",
+      "en" : ""
+    },
+    "233" : {
+      "tr" : "GANA",
+      "en" : ""
+    },
+    "224" : {
+      "tr" : "GINE",
+      "en" : ""
+    },
+    "245" : {
+      "tr" : "GINE BISSAU",
+      "en" : ""
+    },
+    "1473" : {
+      "tr" : "GRENADA",
+      "en" : ""
+    },
+    "299" : {
+      "tr" : "GRONLAND",
+      "en" : ""
+    },
+    "590" : {
+      "tr" : "GUADALUP",
+      "en" : ""
+    },
+    "1671" : {
+      "tr" : "GUAM",
+      "en" : ""
+    },
+    "502" : {
+      "tr" : "GUATEMALA",
+      "en" : ""
+    },
+    "27" : {
+      "tr" : "GUNEY AFRIKA CUM.",
+      "en" : ""
+    },
+    "357" : {
+      "tr" : "GUNEY KIBRIS RUM YONETIMI",
+      "en" : ""
+    },
+    "82" : {
+      "tr" : "GUNEY KORE",
+      "en" : ""
+    },
+    "995" : {
+      "tr" : "GURCISTAN",
+      "en" : ""
+    },
+    "592" : {
+      "tr" : "GUYANA",
+      "en" : ""
+    },
+    "509" : {
+      "tr" : "HAITI",
+      "en" : ""
+    },
+    "91" : {
+      "tr" : "HINDISTAN",
+      "en" : ""
+    },
+    "385" : {
+      "tr" : "HIRVATISTAN",
+      "en" : ""
+    },
+    "31" : {
+      "tr" : "HOLLANDA",
+      "en" : ""
+    },
+    "599" : {
+      "tr" : "HOLLANDA ANTILLERI",
+      "en" : ""
+    },
+    "504" : {
+      "tr" : "HONDURAS",
+      "en" : ""
+    },
+    "1284" : {
+      "tr" : "INGILIZ VIRJIN ADL.",
+      "en" : ""
+    },
+    "44" : {
+      "tr" : "INGILTERE",
+      "en" : ""
+    },
+    "964" : {
+      "tr" : "IRAK",
+      "en" : ""
+    },
+    "98" : {
+      "tr" : "IRAN",
+      "en" : ""
+    },
+    "353" : {
+      "tr" : "IRLANDA",
+      "en" : ""
+    },
+    "34" : {
+      "tr" : "ISPANYA",
+      "en" : ""
+    },
+    "972" : {
+      "tr" : "ISRAIL",
+      "en" : ""
+    },
+    "46" : {
+      "tr" : "ISVEC",
+      "en" : ""
+    },
+    "41" : {
+      "tr" : "ISVICRE",
+      "en" : ""
+    },
+    "39" : {
+      "tr" : "ITALYA",
+      "en" : ""
+    },
+    "354" : {
+      "tr" : "IZLANDA",
+      "en" : ""
+    },
+    "1876" : {
+      "tr" : "JAMAIKA",
+      "en" : ""
+    },
+    "81" : {
+      "tr" : "JAPONYA",
+      "en" : ""
+    },
+    "855" : {
+      "tr" : "KAMBOCYA",
+      "en" : ""
+    },
+    "237" : {
+      "tr" : "KAMERUN",
+      "en" : ""
+    },
+    "1": {
+      "tr" : "KANADA",
+      "en" : ""
+    },
+    "238" : {
+      "tr" : "KAP VERD",
+      "en" : ""
+    },
+    "382" : {
+      "tr" : "KARADAG",
+      "en" : ""
+    },
+    "974" : {
+      "tr" : "KATAR",
+      "en" : ""
+    },
+    "1345" : {
+      "tr" : "KAYMAN ADALARI",
+      "en" : ""
+    },
+    "7" : {
+      "tr" : "KAZAKISTAN",
+      "en" : ""
+    },
+    "254" : {
+      "tr" : "KENYA",
+      "en" : ""
+    },
+    "996" : {
+      "tr" : "KIRGIZISTAN",
+      "en" : ""
+    },
+    "686" : {
+      "tr" : "KIRIBATI",
+      "en" : ""
+    },
+    "57" : {
+      "tr" : "KOLOMBIYA",
+      "en" : ""
+    },
+    "2693" : {
+      "tr" : "KOMOR ADALARI",
+      "en" : ""
+    },
+    "242" : {
+      "tr" : "KONGO CUM.",
+      "en" : ""
+    },
+    "243" : {
+      "tr" : "KONGO DEM. CUM.",
+      "en" : ""
+    },
+    "506" : {
+      "tr" : "KOSTA RIKA",
+      "en" : ""
+    },
+    "53" : {
+      "tr" : "KUBA",
+      "en" : ""
+    },
+    "682" : {
+      "tr" : "KUK ADASI",
+      "en" : ""
+    },
+    "965"  :{
+      "tr" : "KUVEYT",
+      "en" : ""
+    },
+    "850" : {
+      "tr" : "KUZEY KORE",
+      "en" : ""
+    },
+    "856" : {
+      "tr" : "LAO DEM. HALK CUM.",
+      "en" : ""
+    },
+    "266" : {
+      "tr" : "LESOTHO",
+      "en" : ""
+    },
+    "371" : {
+      "tr" : "LETONYA",
+      "en"  :""
+    },
+    "231" : {
+      "tr" : "LIBERYA",
+      "en" : ""
+    },
+    "218" : {
+      "tr" : "LIBYA",
+      "en" : ""
+    },
+    "423" : {
+      "tr" : "LIHTENSTAYN",
+      "en" : ""
+    },
+    "370" : {
+      "tr" : "LITVANYA",
+      "en" : ""
+    },
+    "961" : {
+      "tr" : "LUBNAN",
+      "en" : ""
+    },
+    "352" : {
+      "tr" : "LUKSEMBURG",
+      "en" : ""
+    },
+    "36" : {
+      "tr" : "MACARISTAN",
+      "en" : ""
+    },
+    "261" : {
+      "tr" : "MADAGASKAR",
+      "en" : ""
+    },
+    "853" : {
+      "tr" : "MAKAO",
+      "en" : ""
+    },
+    "389" : {
+      "tr" : "MAKEDONYA",
+      "en" : ""
+    },
+    "265" : {
+      "tr" : "MALAVI",
+      "en" : ""
+    },
+    "960" : {
+      "tr" : "MALDIV ADALARI",
+      "en" : ""
+    },
+    "60" : {
+      "tr" : "MALEZYA",
+      "en" : ""
+    },
+    "223" : {
+      "tr" : "MALI",
+      "en" : ""
+    },
+    "356" : {
+      "tr" : "MALTA",
+      "en" : ""
+    },
+    "1670" : {
+      "tr" : "MARIYAN ADALARI",
+      "en" : ""
+    },
+    "692" : {
+      "tr" : "MARSAL ADALARI",
+      "en" : ""
+    },
+    "596" : {
+      "tr" : "MARTINIK",
+      "en" : ""
+    },
+    "262" : {
+      "tr" : "MAYOTTE ADALARI",
+      "en" : ""
+    },
+    "52" : {
+      "tr" : "MEKSIKA",
+      "en" : ""
+    },
+    "236" : {
+      "tr" : "MERKEZI AFRIKA CUM.",
+      "en" : ""
+    },
+    "691" : {
+      "tr" : "MIKRONEZYA",
+      "en" : ""
+    },
+    "20" : {
+      "tr" : "MISIR",
+      "en" : ""
+    },
+    "976" : {
+      "tr" : "MOGOLISTAN",
+      "en" : ""
+    },
+    "373" : {
+      "tr" : "MOLDOVYA",
+      "en" : ""
+    },
+    "377" : {
+      "tr" : "MONACO",
+      "en" : ""
+    },
+    "1664" : {
+      "tr" : "MONTSERRAT",
+      "en" : ""
+    },
+    "230" : {
+      "tr" : "MORIS ADALARI",
+      "en" : ""
+    },
+    "222" : {
+      "tr" : "MORITANYA",
+      "en" : ""
+    },
+    "258" : {
+      "tr" : "MOZAMBIK",
+      "en" : ""
+    },
+    "264" : {
+      "tr" : "NAMIBYA",
+      "en" : ""
+    },
+    "674" : {
+      "tr" : "NAURU ADASI",
+      "en" : ""
+    },
+    "977" : {
+      "tr" : "NEPAL",
+      "en" : ""
+    },
+    "227" : {
+      "tr" : "NIJER",
+      "en" : ""
+    },
+    "234" : {
+      "tr" : "NIJERYA",
+      "en" : ""
+    },
+    "505" : {
+      "tr" : "NIKARAGUA",
+      "en" : ""
+    },
+    "683" : {
+      "tr" : "NIUE ADALARI",
+      "en" : ""
+    },
+    "672" : {
+      "tr" : "NORFOLK ADALARI",
+      "en" : ""
+    },
+    "47" : {
+      "tr" : "NORVEC",
+      "en" : ""
+    },
+    "998" : {
+      "tr" : "OZBEKISTAN",
+      "en" : ""
+    },
+    "92" : {
+      "tr" : "PAKISTAN",
+      "en" : ""
+    },
+    "507" : {
+      "tr" : "PANAMA",
+      "en" : ""
+    },
+    "675" : {
+      "tr" : "PAPUA YENI GINE",
+      "en" : ""
+    },
+    "595" : {
+      "tr" : "PARAGUAY",
+      "en" : ""
+    },
+    "51" : {
+      "tr" : "PERU",
+      "en" : ""
+    },
+    "48" : {
+      "tr" : "POLONYA",
+      "en" : ""
+    },
+    "351" : {
+      "tr" : "PORTEKIZ",
+      "en" : ""
+    },
+    "1787" : {
+      "tr" : "PORTO RIKO",
+      "en" : ""
+    },
+    "262" : {
+      "tr" : "REUNYON",
+      "en" : ""
+    },
+    "40" : {
+      "tr" : "ROMANYA",
+      "en" : ""
+    },
+    "250" : {
+      "tr" : "RUANDA",
+      "en" : ""
+    },
+    "7" : {
+      "tr" : "RUSYA FEDERASYONU",
+      "en" : ""
+    },
+    "378" : {
+      "tr" : "SAN MARINO",
+      "en" : ""
+    },
+    "239" : {
+      "tr" : "SAO TOME & PRINCIPE",
+      "en" : ""
+    },
+    "221" : {
+      "tr" : "SENEGAL",
+      "en" : ""
+    },
+    "248" : {
+      "tr" : "SEYSEL",
+      "en" : ""
+    },
+    "232" : {
+      "tr" : "SIERRA LEONE",
+      "en" : ""
+    },
+    "56" : {
+      "tr" : "SILI",
+      "en" : ""
+    },
+    "65" : {
+      "tr" : "SINGAPUR",
+      "en" : ""
+    },
+    "381" : {
+      "tr" : "SIRBISTAN",
+      "en" : ""
+    },
+    "421" : {
+      "tr" : "SLOVAK CUM.",
+      "en" : ""
+    },
+    "386" : {
+      "tr" : "SLOVENYA",
+      "en" : ""
+    },
+    "677" : {
+      "tr" : "SOLOMON ADALARI",
+      "en" : ""
+    },
+    "252" : {
+      "tr" : "SOMALI",
+      "en" : ""
+    },
+    "94" : {
+      "tr" : "SRI LANKA",
+      "en" : ""
+    },
+    "290" : {
+      "tr" : "ST.HELENA",
+      "en" : ""
+    },
+    "1869" : {
+      "tr" : "ST.KITTIS & NEVIS",
+      "en" : ""
+    },
+    "1758" : {
+      "tr" : "ST.LUCIA",
+      "en" : ""
+    },
+    "508" : {
+      "tr" : "ST.PIYER & MIKELON",
+      "en" : ""
+    },
+    "1784" : {
+      "tr" : "ST.VINCENT & GRENADA",
+      "en" : ""
+    },
+    "249" : {
+      "tr" : "SUDAN",
+      "en" : ""
+    },
+    "597" : {
+      "tr" : "SURINAM",
+      "en" : ""
+    },
+    "963" : {
+      "tr" : "SURIYE",
+      "en" : ""
+    },
+    "966" : {
+      "tr" : "SUUDI ARABISTAN",
+      "en" : ""
+    },
+    "268" : {
+      "tr" : "SVAZILAND",
+      "en" : ""
+    },
+    "992" : {
+      "tr" : "TACIKISTAN",
+      "en" : ""
+    },
+    "TACIKISTAN" : {
+      "tr" : "TANZANYA",
+      "en" : ""
+    },
+    "66" : {
+      "tr" : "TAYLAND",
+      "en" : ""
+    },
+    "886" : {
+      "tr" : "TAYVAN",
+      "en" : ""
+    },
+    "228" : {
+      "tr" : "228",
+      "en" : ""
+    },
+    "676" : {
+      "tr" : "TONGA",
+      "en" : ""
+    },
+    "1868" : {
+      "tr" : "TRINIDAD & TOBAGO",
+      "en" : ""
+    },
+    "216" : {
+      "tr" : "TUNUS",
+      "en" : ""
+    },
+    "90": {
+      "tr" : "TURKIYE",
+      "en" : ""
+    },
+    "993" : {
+      "tr" : "TURKMENISTAN",
+      "en" : ""
+    },
+    "1649" : {
+      "tr" : "TURKS & CAICOS ADL.",
+      "en" : ""
+    },
+    "688" : {
+      "tr" : "TUVALU",
+      "en" : ""
+    },
+    "1340" : {
+      "tr" : "U.S. VIRJIN ADASI",
+      "en" : ""
+    },
+    "256" : {
+      "tr" : "UGANDA",
+      "en" : ""
+    },
+    "380" : {
+      "tr" : "UKRAYNA",
+      "en" : ""
+    },
+    "968" : {
+      "tr" : "UMMAN",
+      "en" : ""
+    },
+    "962" : {
+      "tr" : "URDUN",
+      "en" : ""
+    },
+    "598" : {
+      "tr" : "URUGUAY",
+      "en" : ""
+    },
+    "681" : {
+      "tr" : "VALLIS FUTUNA ADALARI",
+      "en" : ""
+    },
+    "58" : {
+      "tr" : "VENEZUELA",
+      "en" : ""
+    },
+    "84" : {
+      "tr" : "VIETNAM",
+      "en" : ""
+    },
+    "967" : {
+      "tr" : "YEMEN ARAP CUM.",
+      "en" : ""
+    },
+    "678" : {
+      "tr" : "YENI HEBRITLER",
+      "en" : ""
+    },
+    "687" : {
+      "tr" : "YENI KALEDONYA",
+      "en" : ""
+    },
+    "64" : {
+      "tr" : "YENI ZELANDA",
+      "en" : ""
+    },
+    "30" : {
+      "tr" : "YUNANISTAN",
+      "en" : ""
+    },
+    "260" : {
+      "tr" : "ZAMBIYA",
+      "en" : ""
+    },
+    "263" : {
+      "tr" : "ZIMBABVE",
+      "en" : ""
+    }
+  }
+}
