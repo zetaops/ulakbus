@@ -12,8 +12,8 @@ from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy, get_day_names
 from collections import OrderedDict
-from ulakbus.services.zato_wrapper import DersProgramiOlustur, SinavProgramiOlustur
-from ulakbus.models import Room, Okutman, DersEtkinligi, Donem, SinavEtkinligi
+from ulakbus.services.zato_wrapper import DersProgramiOlustur
+from ulakbus.models import Room, Okutman, DersEtkinligi, Donem
 
 ARAMA_TURU = [
     (1, gettext_lazy(u'Derslik')),
@@ -194,7 +194,7 @@ class DersProgramiYap(CrudView):
                 ders_etkinligi = DersEtkinligi.objects.filter(okutman_id=obj_key)
                 obj = Okutman.objects.get(obj_key)
 
-            days = list(get_day_names())
+            days = list(get_day_names().values())
             self.output['objects'] = [days]
 
             def etkinlik(de):
