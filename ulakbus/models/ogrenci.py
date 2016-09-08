@@ -15,6 +15,7 @@ import six
 from pyoko import Model, field, ListNode, LinkProxy
 from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
+from ulakbus.lib.ogrenci import HarfNotu
 from zengine.lib.translation import gettext_lazy as _, gettext, format_date
 from .auth import Role, User
 from .auth import Unit
@@ -493,6 +494,7 @@ class Sube(Model):
     ders_adi = field.String(_(u"Ders Adi"), index=True)
 
     class NotDonusumTablosu(ListNode):
+
         """Not Donusum Tablosu
 
         Bu tablo, settings seklinde universite geneli icin tanimlanmistir.
@@ -502,8 +504,8 @@ class Sube(Model):
 
         """
 
-        harf = field.String(_(u"Harf"), index=True, choices="harf_notlari")
-        dortluk_katsayi = field.Float("", choices="dortluk_katsayilari")
+        harf = field.String(_(u"Harf"), index=True, choices=HarfNotu.generate_choices())
+        dortluk_katsayi = field.Float("", choices=HarfNotu.generate_choices_for_4())
         yuzluk_not_baslangic = field.Float(_(u"Başlangıç"), index=True)
         yuzluk_not_bitis = field.Float(_(u"Bitis"), index=True)
 
