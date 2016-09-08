@@ -233,7 +233,7 @@ class KurumIciGorevlendirmeBilgileri(Model):
 
     """
 
-    gorev_tipi = field.String(_(u"Görev Tipi"), choices="gorev_tipi")
+    gorev_tip = field.String(_(u"Görev Tipi"), choices="kurum_ici_gorev_tip")
     kurum_ici_gorev_baslama_tarihi = field.Date(_(u"Başlama Tarihi"), format="%d.%m.%Y")
     kurum_ici_gorev_bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
     birim = Unit()
@@ -296,7 +296,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
     """
 
-    gorev_tipi = field.Integer(_(u"Görev Tipi"))
+    gorev_tip = field.Integer(_(u"Görev Tipi"), choices="kurum_disi_gorev_tip")
     kurum_disi_gorev_baslama_tarihi = field.Date(_(u"Başlama Tarihi"), format="%d.%m.%Y")
     kurum_disi_gorev_bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
     aciklama = field.Text(_(u"Açıklama"))
