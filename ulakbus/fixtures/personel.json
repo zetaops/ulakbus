@@ -432,5 +432,87 @@
       "tr" : "Kontrolör",
       "en" : ""
     }
+  },
+  "kurum_disi_gorev_tip" : {
+    "1" : {
+      "tr" : "37. Madde (2547 S.K.)",
+      "en" : ""
+    },
+    "2" : {
+      "tr" : "Kurumlar Arası Geçici Görevlendirme",
+      "en" : ""
+    },
+    "3" : {
+      "tr" : "40 - A",
+      "en" : ""
+    },
+    "4" : {
+      "tr" : "40 - B",
+      "en" : ""
+    },
+    "5" : {
+      "tr" : "38. Madde",
+      "en" : ""
+    },
+    "6" : {
+      "tr" : "39. Madde",
+      "en" : ""
+    },
+    "7" : {
+      "tr" : "Yandal",
+      "en" : ""
+    },
+    "8" : {
+      "tr" : "33. Madde",
+      "en" : ""
+    },
+    "9" : {
+      "tr" : "Rotasyon",
+      "en" : ""
+    },
+    "10" : {
+      "tr" : "Danışmanlık",
+      "en" : ""
+    },
+    "11" : {
+      "tr" : "Bakanlıklararası Ortak Kültür Kom.",
+      "en" : ""
+    },
+    "12" : {
+      "tr" : "2919 S.K. 12/3 mad.",
+      "en" : ""
+    },
+    "13" : {
+      "tr" : "16/a",
+      "en" : ""
+    },
+    "14" : {
+      "tr" : "40/d",
+      "en" : ""
+    },
+    "15" : {
+      "tr" : "Farabi Programı",
+      "en" : ""
+    },
+    "16" : {
+      "tr" : "2547 S.K. 6/b Yükseköğretim Kurulu Üyeliği",
+      "en" : ""
+    },
+    "17" : {
+      "tr" : "36.Madde",
+      "en" : ""
+    },
+    "18" : {
+      "tr" : "Erasmus",
+      "en" : ""
+    },
+    "19" : {
+      "tr" : "40/C",
+      "en" : ""
+    },
+    "20" : {
+      "tr" : "663 SKHK 32. Madde",
+      "en" : ""
+    }
   }
 }
