@@ -514,5 +514,23 @@
       "tr" : "663 SKHK 32. Madde",
       "en" : ""
     }
+  },
+  "kurum_ici_gorevlendirme_tip" : {
+    "1" : {
+      "tr" : "13. MAD. GÖREV.",
+      "en" : ""
+    },
+    "2" : {
+      "tr" : "ROTASYON",
+      "en" : ""
+    },
+    "3" : {
+      "tr" : "TEDVİREN",
+      "en" : ""
+    },
+    "4" : {
+      "tr" : "DİĞER",
+      "en" : ""
+    }
   }
 }
