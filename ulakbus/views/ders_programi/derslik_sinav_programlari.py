@@ -9,7 +9,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from collections import OrderedDict
-from ulakbus.lib.date_time_helper import map_sinav_etkinlik_hafta_gunleri, HAFTA
+from ulakbus.lib.date_time_helper import map_etkinlik_hafta_gunleri, HAFTA
 from zengine.lib.translation import gettext as _, gettext_lazy
 
 
@@ -87,7 +87,7 @@ class DerslikSinavProgramlari(CrudView):
 
         room = Room.objects.get(self.current.input['form']['derslik'])
         s_etkinlikleri = [s for s in SinavEtkinligi.objects.order_by('tarih') if room in s.SinavYerleri]
-        sinav_etkinlikleri = map_sinav_etkinlik_hafta_gunleri(s_etkinlikleri)
+        sinav_etkinlikleri = map_etkinlik_hafta_gunleri(s_etkinlikleri)
         hafta = dict(HAFTA)
         self.output['objects'] = [hafta]
 

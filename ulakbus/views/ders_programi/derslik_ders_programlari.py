@@ -9,13 +9,11 @@
 #
 from collections import OrderedDict
 
-import time
-
 from ulakbus.models import DersEtkinligi, Room, Donem
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
-from ulakbus.lib.date_time_helper import map_ders_etkinlik_hafta_gunleri, HAFTA
-from zengine.lib.translation import gettext as _, gettext_lazy, get_day_names
+from ulakbus.lib.date_time_helper import map_etkinlik_hafta_gunleri, HAFTA
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 
 class DerslikSecimFormu(JsonForm):
@@ -87,7 +85,7 @@ class DerslikDersProgrami(CrudView):
         hafta = dict(HAFTA)
         self.output['objects'] = [hafta]
         d_etkinlikleri = DersEtkinligi.objects.filter(room=room, published=True, donem=Donem.guncel_donem())
-        ders_etkinlikleri = map_ders_etkinlik_hafta_gunleri(d_etkinlikleri.order_by('gun', 'baslangic_saat', 'bitis_saat','baslangic_dakika','bitis_dakika'))
+        ders_etkinlikleri = map_etkinlik_hafta_gunleri(d_etkinlikleri.order_by('gun', 'baslangic_saat', 'bitis_saat','baslangic_dakika','bitis_dakika'))
         # Bir güne ait maximum etkinlik sayısı.
         max_etkinlik = max(map(len, ders_etkinlikleri.values()))
         for i in range(max_etkinlik):

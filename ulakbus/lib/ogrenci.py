@@ -7,14 +7,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from operator import attrgetter
+from ulakbus.lib.role import AbsRole
 from ulakbus.models import Ogrenci, AbstractRole
-
-ABSTRACT_ROLE_LIST_DONDURULMUS = [
-    "Doktora Programı Öğrencisi - Kayıt Dondurmuş",
-    "Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş",
-    "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
-    "Lisans Programı Öğrencisi - Kayıt Dondurmuş"
-]
 
 
 def diploma_no_uret(ogrenci_program):
@@ -51,16 +46,37 @@ def aktif_sinav_listesi(obj):
     return sinavlar
 
 
-def dondurulacak_kayitin_abstract_rolu(unit):
-    abstract_role = None
-    if unit.unit_type == "Program" and unit.learning_duration == 4:
-        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_DONDURULMUS[3])
-    elif unit.unit_type == "Program" and unit.learning_duration == 2:
-        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_DONDURULMUS[2])
-    elif unit.unit_type == "Yüksek Lisans Programı":
-        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_DONDURULMUS[1])
-    elif unit.unit_type == "Doktora Programı":
-        abstract_role = AbstractRole.objects.get(name=ABSTRACT_ROLE_LIST_DONDURULMUS[0])
+def kayidin_abstract_rolu(role, sil=None, dondur=None):
+    """
+    Sil True kaydı silinecek kaydın abstract rolünü getirir, Dondur True ise
+    dondurulacak kaydın abstract rolünü getirir.
+    Args:
+     sil(Bool) Kaydı silinecek kaydın abstract rolü
+     dondur(Bool) Kaydı dondurulacak kaydın abstract rolü
+    """
+    func = attrgetter("unit.unit_type", "unit.learning_duration")
+    unit_type, learning_duration = func(role)
+    if unit_type == "Program" and learning_duration == 4:
+        if dondur:
+            AbstractRole.objects.get(AbsRole.LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
+            return
+        if sil:
+            return AbstractRole.objects.get(AbsRole.LISANS_OGRENCISI_KAYIT_SILINMIS.name)
+    elif unit_type == "Program" and learning_duration == 2:
+        if dondur:
+            return AbstractRole.objects.get(AbsRole.ON_LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
+        if sil:
+            return AbstractRole.objects.get(AbsRole.ON_LISANS_OGRENCISI_KAYIT_SILINMIS.name)
+
+    elif unit_type == "Yüksek Lisans Programı":
+        if dondur:
+            return AbstractRole.objects.get(AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
+        if sil:
+            return AbstractRole.objects.get(AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS.name)
+    elif unit_type == "Doktora Programı":
+        if dondur:
+            return AbstractRole.objects.get(AbsRole.DOKTORA_OGRENCISI_KAYIT_DONDURMUS.name)
+        if sil:
+            AbstractRole.objects.get(AbsRole.DOKTORA_OGRENCISI_KAYIT_SILINMIS.name)
     else:
-        abstract_role = AbstractRole()
-    return abstract_role
+        return AbstractRole()

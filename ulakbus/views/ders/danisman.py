@@ -13,14 +13,14 @@ Dönem bazlı danışman atanmasını sağlayan iş akışını yönetir.
 """
 
 from pyoko import ListNode
-from pyoko.db.adapter.db_riak import BlockSave, BlockDelete
-from pyoko.exceptions import IntegrityError
+from pyoko.db.adapter.db_riak import BlockSave
+from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.lib.common import notify
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
 from ulakbus.models.auth import Unit
-from collections import OrderedDict
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine.lib.translation import gettext as _, gettext_lazy
 
@@ -105,17 +105,14 @@ class DonemDanismanAtama(CrudView):
         okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
         donem = Donem.guncel_donem()
         _form = DonemDanismanListForm(current=self, title=_(u"Okutman Seçiniz"))
-
         for okt in okutmanlar:
             try:
-                if DonemDanisman.objects.filter(donem=donem, okutman=okt, bolum=unit):
-                    _form.Okutmanlar(secim=True, ad_soyad='%s %s' % (okt.ad, okt.soyad),
-                                     key=okt.key)
-                else:
-                    _form.Okutmanlar(secim=False, ad_soyad='%s %s' % (okt.ad, okt.soyad),
-                                     key=okt.key)
-            except:
-                pass
+                DonemDanisman.objects.get(donem=donem, okutman=okt, bolum=unit)
+                _form.Okutmanlar(secim=True, ad_soyad='%s %s' % (okt.ad, okt.soyad),
+                                 key=okt.key)
+            except ObjectDoesNotExist:
+                _form.Okutmanlar(secim=False, ad_soyad='%s %s' % (okt.ad, okt.soyad),
+                                 key=okt.key)
 
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
@@ -157,14 +154,9 @@ class DonemDanismanAtama(CrudView):
             "msg": _(u'%(donem)s dönemi için %(donem)s programına ait danışman listesi kaydedilmiştir') % {
                 'donem': donem, 'unit': unit}}
 
-        def notify(user, message, title):
-            try:
-                user.send_notification(message=message, title=title)
-            except IntegrityError:
-                pass
-
         title = _(u"Danışman Atama")
         message = _(u"%s dönemi için  danışman olarak atandınız.") % donem
         for okutman_key in self.current.task_data['okutmanlar']:
             okutman = Okutman.objects.get(okutman_key)
-            notify(okutman.personel.user, message, title)
+            notify(okutman.personel.user if okutman.personel else okutman.harici_okutman.user, message, title)
+            print "dslkjk"

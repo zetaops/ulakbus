@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-from ulakbus.lib.date_time_helper import map_sinav_etkinlik_hafta_gunleri
+from ulakbus.lib.date_time_helper import map_etkinlik_hafta_gunleri
 from zengine.forms import JsonForm
 from zengine.views.crud import CrudView
 from collections import OrderedDict
@@ -20,7 +20,7 @@ class SinavProgramiGoruntule(CrudView):
 
         if len(sinav_etkinlikleri) > 0:
             self.current.task_data['sinav_kontrol'] = True
-            self.current.task_data['sinav_etkinlikleri'] = map_sinav_etkinlik_hafta_gunleri(
+            self.current.task_data['sinav_etkinlikleri'] = map_etkinlik_hafta_gunleri(
                 sinav_etkinlikleri)
         else:
             self.current.task_data['sinav_kontrol'] = False

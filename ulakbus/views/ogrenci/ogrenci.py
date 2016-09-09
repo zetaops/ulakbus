@@ -14,11 +14,13 @@ iş akışlarının yürütülmesini sağlar.
 """
 from collections import OrderedDict
 
-import time
+from six import text_type
 
 from pyoko import ListNode
 from pyoko.exceptions import ObjectDoesNotExist
-from ulakbus.models.auth import Role, AbstractRole, Unit
+from ulakbus.lib.common import notify
+from ulakbus.lib.role import AbsRole
+from ulakbus.models.auth import Role, Unit
 from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
 from ulakbus.models.ogrenci import DonemDanisman
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, Sube
@@ -30,7 +32,7 @@ from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from ulakbus.lib.ogrenci import dondurulacak_kayitin_abstract_rolu
+from ulakbus.lib.ogrenci import kayidin_abstract_rolu
 from zengine.lib.translation import gettext as _, gettext_lazy, format_date
 
 
@@ -387,10 +389,6 @@ class DanismanAtama(CrudView):
         }
         }
 
-        def notify(user, message, title):
-            if user:
-                user.send_notification(message=message, title=title)
-
         title = _(u"Danışman Atama")
         message = _(u"%(ogrenci)s adlı öğrenciye danışman olarak atandınız.") % {'ogrenci': ogrenci}
         notify(personel.user, message, title)
@@ -458,6 +456,13 @@ class OgrenciMezuniyet(CrudView):
                 "msg": _(u'Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s') % e.message
             }
 
+
+ABSTRACT_ROLE_LIST = [
+    text_type(AbsRole.LISANS_OGRENCISI_AKTIF.value),
+    text_type(AbsRole.ON_LISANS_OGRENCISI_AKTIF.value),
+    text_type(AbsRole.YUKSEK_LISANS_OGRENCISI_AKTIF.value),
+    text_type(AbsRole.DOKTORA_OGRENCISI_AKTIF.value)
+]
 
 class KayitDondurmaForm(forms.JsonForm):
     """
@@ -585,22 +590,22 @@ class KayitDondurma(CrudView):
                     dk.baslangic_tarihi = baslangic_tarihi
                     dk.blocking_save()
                     unit = Unit.objects.get(yoksis_no=ogrenci_program.program.yoksis_no)
-                    current_role = Role.objects.get(user=ogrenci.user, unit=unit)
-                    current_role.abstract_role = dondurulacak_kayitin_abstract_rolu(unit)
-                    current_role.save()
+                    current_roles = Role.objects.filter(user=ogrenci.user, unit=unit)
+                    for role in current_roles:
+                        if role.abstract_role.name in ABSTRACT_ROLE_LIST:
+                           role.abstract_role = kayidin_abstract_rolu(role, dondur=True)
+                           role.save()
 
             danisman_message = _(u'%s numaralı, %s adlı öğrencinin %s programındaki kaydı '
                                  u'dondurulmuştur.') % (ogrenci_program.ogrenci_no, ogrenci_ad_soyad,
                                                         ogrenci_program.program.adi)
 
             # Öğrencinin danışmanına bilgilendirme geçilir
-            ogrenci_program.danisman.user.send_notification(title=_(u"Öğrenci Kaydı Donduruldu"),
-                                                            message=danisman_message, typ=111)
+            notify(ogrenci_program.danisman.user, title=_(u"Öğrenci Kaydı Donduruldu"), message=danisman_message)
             donemler = "-".join([donem['donem']for donem in dondurulan_donemler])
             ogrenci_message = _(u"%s dönemleri için kaydınız dondurulmuştur.") % donemler
 
-            ogrenci_program.ogrenci.user.send_notification(title=_(u"Kayıt Dondurma"),
-                                                           message=ogrenci_message)
+            notify(ogrenci_program.ogrenci.user, title=_(u"Kayıt Dondurma"), message=ogrenci_message)
 
             self.current.output['msgbox'] = {
                 'type': 'info', "title": _(u'Öğrenci Kayıt Dondurma Başarılı'),

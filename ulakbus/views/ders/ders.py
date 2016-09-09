@@ -13,9 +13,7 @@ Ders Ekle ve Ders Şubelendirme iş akışlarının yürütülmesini sağlar.
 """
 
 from collections import OrderedDict
-
-import time
-
+from ulakbus.lib.common import notify
 from pyoko import ListNode
 from pyoko.db.adapter.db_riak import BlockSave, BlockDelete
 from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
@@ -396,19 +394,17 @@ class DersSubelendirme(CrudView):
         bolum_baskani = "%s %s" % (self.current.user.name, self.current.user.surname)
         msg = _(u"Bölüm Başkanı %s tarafından şubelerinizde değişiklikler yapılmıştır.") % bolum_baskani
         okutmanlar = []
-
-        def notify(okutman):
-            okutman.okutman.user.send_notification(title=title, message=msg)
-            okutmanlar.append(okutman.__unicode__())
-
         for ders, sube_key in just_created:
             if ders == ders_key:
-                notify(Sube.objects.get(sube_key).okutman)
+                sube = Sube.objects.get(sube_key)
+                okutman = sube.okutman
+                okutmanlar.append(okutman.__unicode__())
+                notify(okutman.personel.user if okutman.personel else okutman.harici_okutman.user, title=title, message=msg)
 
         sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
         for s in sbs:
             if s.key not in just_deleted:
-                notify(s.okutman)
+                notify(s.okutman.personel.user if s.okutman.personel else s.okutman.harici_okutman.user)
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Mesaj İletildi'),

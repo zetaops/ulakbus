@@ -4,8 +4,10 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import OgrenciProgram, Ogrenci, Role, AbstractRole
-from ulakbus.views.ogrenci.kayit_silme import ABSTRACT_ROLE_LIST, ABSTRACT_ROLE_LIST_SILINMIS
+from six import text_type
+
+from ulakbus.models import OgrenciProgram, Ogrenci, Role
+from ulakbus.lib.ogrenci import kayidin_abstract_rolu
 from zengine.lib.test_utils import BaseTestCase
 
 
@@ -72,6 +74,13 @@ class TestCase(BaseTestCase):
                          filters={'ogrenci_id': {'values': ["RnKyAoVDT9Hc89KEZecz0kSRXRF"],
                                                  'type': "check"}})
 
+        # Bahtinur Zengin adlı öğrenci veritabanından çekilir.
+        ogrenci = Ogrenci.objects.get('RnKyAoVDT9Hc89KEZecz0kSRXRF')
+
+        user = ogrenci.user
+
+        _roles = {role.key: role.abstract_role for role in Role.objects.filter(user=user)}
+
         # Kayıt silme işleminden onaylanır.
         self.client.post(form={'vazgecme': 'null', 'kaydet': 1}, flow='fakulte_yonetim_karari')
 
@@ -88,9 +97,6 @@ class TestCase(BaseTestCase):
 
         # Kaydı silinecek öğrencinin ayrılma nedeni seçilir ve açıklama yazılır.
         resp = self.client.post(form=dict(ayrilma_nedeni=11, sec=1, aciklama='Yatay Geçiş'))
-
-        # Bahtinur Zengin adlı öğrenci veritabanından çekilir.
-        ogrenci = Ogrenci.objects.get('RnKyAoVDT9Hc89KEZecz0kSRXRF')
 
         # Öğrencinin kayıtlı olduğu program
         ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
@@ -111,46 +117,17 @@ class TestCase(BaseTestCase):
             # Öğrencilik statüsüne atanan değerin doğruluğunu test eder.
             assert program.ogrencilik_statusu == 21
 
-            # Öğrenciin rolleri.
-            roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
-
-            # Rolün değişip değişmediğini test eder.
-            for role in roles:
-                if role.abstract_role.name in ABSTRACT_ROLE_LIST_SILINMIS:
-                    if role.unit.unit_type == 'Program' and role.unit.learning_duration == 4:
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[0])
-                        assert role.abstract_role == abstract_role
-                        previous_abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST[1])
-
-                    elif role.unit.unit_type == 'Program' and role.unit.learning_duration == 2:
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[1])
-                        role.abstract_role = abstract_role
-                        previous_abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST[2])
-                        role.save()
-
-                    elif role.unit.unit_type == 'Yüksek Lisans Programı':
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[2])
-                        assert role.abstract_role == abstract_role
-                        previous_abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST[5])
-                    elif role.unit.unit_type == 'Doktora Programı':
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[3])
-                        assert role.abstract_role == abstract_role
-                        previous_abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST[7])
-                    else:
-                        pass
-
-                    # test ile degisen rolu geri donduruyoruz.
-                    role.abstract_role = previous_abstract_role
-                    role.save()
-
             program.ayrilma_nedeni = 0
             program.ogrencilik_statusu = 0
             program.save()
+
+        # Rolün değişip değişmediğini test eder
+        for key in _roles:
+            role = Role.objects.get(key)
+            assert role.abstract_role == kayidin_abstract_rolu(role, sil=True)
+            role.abstract_role = _roles[key]
+            role.save()
+
+
+
+

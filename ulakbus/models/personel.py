@@ -16,6 +16,8 @@ from zengine.lib.translation import gettext_lazy as _, gettext
 from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
 from ulakbus.settings import SICIL_PREFIX
+from .auth import AbstractRole
+
 
 class Personel(Model):
     """Personel Modeli
@@ -235,6 +237,7 @@ class KurumIciGorevlendirmeBilgileri(Model):
     kurum_ici_gorev_baslama_tarihi = field.Date(_(u"Başlama Tarihi"), format="%d.%m.%Y")
     kurum_ici_gorev_bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
     birim = Unit()
+    soyut_rol = AbstractRole()
     aciklama = field.String(_(u"Açıklama"))
     resmi_yazi_sayi = field.String(_(u"Resmi Yazı Sayı"))
     resmi_yazi_tarih = field.Date(_(u"Resmi Yazı Tarihi"), format="%d.%m.%Y")
@@ -302,6 +305,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     yevmiye = field.Boolean(_(u"Yevmiye"), default=False)
     yolluk = field.Boolean(_(u"Yolluk"), default=False)
     ulke = field.Integer(_(u"Ülke"), default="90", choices="ulke")
+    soyut_rol = AbstractRole()
     personel = Personel()
 
     class Meta:
@@ -380,7 +384,7 @@ class Kadro(Model):
         list_filters = ['durum']
 
     def __unicode__(self):
-        #tn: Kadro bilgileri gösterilirken kullanılan mesaj
+        # tn: Kadro bilgileri gösterilirken kullanılan mesaj
         return gettext(u"%(no)s - %(unvan)s %(derece)s. derece") % {
             'no': self.kadro_no,
             'unvan': self.get_unvan_display(),
@@ -424,7 +428,7 @@ class UcretsizIzin(Model):
 
     tip = field.Integer(_(u"Tip"), choices="ucretsiz_izin")
     baslangic = field.Date(_(u"İzin Başlangıç Tarihi"), format="%d.%m.%Y")
-    bitis= field.Date(_(u"İzin Bitiş Tarihi"), format="%d.%m.%Y")
+    bitis = field.Date(_(u"İzin Bitiş Tarihi"), format="%d.%m.%Y")
     donus_tarihi = field.Date(_(u"Dönüş Tarihi"), format="%d.%m.%Y")
     donus_tip = field.Integer(_(u"Dönüş Tip"))
     onay_tarihi = field.Date(_(u"Onay Tarihi"), format="%d.%m.%Y")

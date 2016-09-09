@@ -8,6 +8,7 @@ import subprocess
 import shutil
 import os
 import httplib
+from ulakbus.lib.common import notify
 
 
 class StartExamSolver(Service):
@@ -101,5 +102,5 @@ class ExecuteExamSolver(Service):
         kullanici = User.objects.get(key=kullanici_key)
         baslik = self.request.payload.get('baslik', 'Sınav planlaması tamamlandı')
         mesaj = self.request.payload.get('mesaj', 'Sınav planlaması işlemi tamamlandı.')
-        kullanici.send_notification(baslik, mesaj, url=url)
+        notify(kullanici, baslik, mesaj, url=url)
         return httplib.OK, mesaj

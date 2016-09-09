@@ -5,7 +5,7 @@ from ulakbus.models import User
 import xml.etree.ElementTree as ET
 import subprocess
 import os
-from ulakbus.lib.common import ders_programi_doldurma
+from ulakbus.lib.common import ders_programi_doldurma, notify
 import shutil
 import httplib
 
@@ -106,5 +106,5 @@ class ExecuteSolver(Service):
         kullanici = User.objects.get(key=kullanici_key)
         baslik = self.request.payload.get('baslik', 'Ders planlaması tamamlandı')
         mesaj = self.request.payload.get('mesaj', 'Ders planlaması işlemi tamamlandı.')
-        kullanici.send_notification(baslik, mesaj, url=url)
+        notify(kullanici, baslik, mesaj, url=url)
         return httplib.OK, mesaj

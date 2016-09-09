@@ -4,10 +4,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import Personel, Ogrenci, User
+from ulakbus.models import Ogrenci, User
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.lib.ogrenci import aktif_sinav_listesi
-from ulakbus.lib.date_time_helper import map_sinav_etkinlik_hafta_gunleri
+from ulakbus.lib.date_time_helper import map_etkinlik_hafta_gunleri
 import time
 
 
@@ -60,7 +60,7 @@ class TestCase(BaseTestCase):
                 # kontrol edilir.
                 assert sinav_etkinlikleri[0].tarih <= sinav_etkinlikleri[-1].tarih
 
-                etkinlikler = map_sinav_etkinlik_hafta_gunleri(sinav_etkinlikleri)
+                etkinlikler = map_etkinlik_hafta_gunleri(sinav_etkinlikleri)
 
                 # Sınav etkinliklerinin etkinlikler sözlüğü içerisinde istenildiği
                 # gibi yerleştirildiği kontrol edilir.

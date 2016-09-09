@@ -43,7 +43,7 @@ class TestCase(BaseTestCase):
         usr = User.objects.get(username='personel_isleri_1')
 
         # '/menu' yolunu çağırır, kullanıcıya giriş yaptırılır.
-        self.prepare_client('/menu', user=usr)
+        self.prepare_client('/dashboard', user=usr)
         resp = self.client.post()
 
         # Kullanıcın sahip olduğu izinler.

@@ -60,55 +60,32 @@ AYLAR = _liste_hazirla(get_month_names)
 ay_listele = _liste_hazirla(get_month_names, make_choices=True)
 
 
-def map_sinav_etkinlik_hafta_gunleri(sinavlar):
+def map_etkinlik_hafta_gunleri(etkinlikler):
     """
-    Sinav nesnelerini tarihlerine gore haftanin gunlerine dagitir.
-
-    Haftanin gunlerinin key olarak kullanildigi bir dict uretir.
-
-    ..code_block
-    {
-        1: ["Matematik Ara Sinav -1", "Fizik Ara Sinav -1"],
-        2: ["Edebiyat", ]
-        ...
-
-    }
-
-    Args:
-         sinavlar (list): sinav etkinligi objeleri listesi
-
-    Returns:
-        (dict)
-    """
-    r = {}
-    for e in sinavlar:
-        weekday = e.tarih.isoweekday()
-        etkinlik_listesi = r.get(weekday, [])
-        etkinlik_listesi.append(e.__unicode__())
-        r[weekday] = etkinlik_listesi
-    return r
-
-
-def map_ders_etkinlik_hafta_gunleri(ders_etkinlikleri):
-    """
-    Ders Etkinliği  nesnelerini tarihlerine göre haftanın günlerine dağıtır.
+    Ders ve Sinav Etkinliği  nesnelerini tarihlerine göre haftanın günlerine dağıtır.
 
     Haftanınn günlerinin key olarak kullanıldığı  bir dict üretir.
 
     Args:
-        ders_etkinlikleri(list) : ders etkinliği objeleri listesi
+        etkinlikler(list) : Sinav ya da ders etkinliği objeleri listesi
 
     Returns:
         dict
     """
 
-    d_etkinlikleri = defaultdict(list)
-    for ders in ders_etkinlikleri:
-        weekday = ders.gun
-        ders_etkinlikleri = d_etkinlikleri[weekday]
-        ders_etkinlikleri.append(ders.__unicode__())
-        d_etkinlikleri[weekday] = ders_etkinlikleri
-    return d_etkinlikleri
+    d = defaultdict(list)
+    for etkinlik in etkinlikler:
+        if hasattr(etkinlik, "tarih"):
+            weekday = etkinlik.tarih.isoweekday()
+            etkinlik_listesi = d.get(weekday, [])
+            etkinlik_listesi.append(etkinlik.__unicode__())
+            d[weekday] = etkinlik_listesi
+        else:
+            weekday = etkinlik.gun
+            ders_etkinlikleri = d[weekday]
+            ders_etkinlikleri.append(etkinlik.__unicode__())
+            d[weekday] = ders_etkinlikleri
+    return d
 
 
 def zaman_araligi(baslangic, bitis):
