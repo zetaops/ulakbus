@@ -97,3 +97,4 @@ class AbsRole(Enum):
     BASEABSROLE = __(u"BaseAbsRole")
     GENEL_SEKRETER = __(u"Genel Sekreter")
     OGRENCI = __(u"Öğrenci")
+    MUTEMET = __(u"Mutemet")
