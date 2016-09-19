@@ -9,7 +9,7 @@ from pyoko import ListNode
 from zengine.views.crud import CrudView
 from zengine.forms import fields
 from zengine.forms import JsonForm
-from ulakbus.models.ogrenci import Okutman, Donem, Takvim, Unit
+from ulakbus.models.ogrenci import Okutman, Donem, Takvim
 from ulakbus.lib.personel import personel_izin_gunlerini_getir
 from ulakbus.models.ders_sinav_programi import DersEtkinligi
 from datetime import datetime, date
@@ -33,7 +33,7 @@ class TarihForm(JsonForm):
     kullanılan form.
     """
     yil_sec = fields.String(gettext_lazy(u'Yıl Seçiniz'), choices=yil_secenekleri, default=guncel_yil)
-    ay_sec = fields.String(_(u'Ay Seçiniz'), choices=ay_listele, default=guncel_ay)
+    ay_sec = fields.String(gettext_lazy(u'Ay Seçiniz'), choices=ay_listele, default=guncel_ay)
 
 
 class OkutmanListelemeForm(JsonForm):

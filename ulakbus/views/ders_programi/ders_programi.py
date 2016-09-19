@@ -52,7 +52,8 @@ class DersProgramiYap(CrudView):
             self.current.task_data['cmd'] = 'kayit_var'
             msg = {"type": 'info',
                    "title": _(u'Yayınlanmış Ders Programı Var!'),
-                   "msg": _(u'Yayınlanan ders programınız bulunmaktadır. Tekrardan ders programı oluşturamazsınız.')}
+                   "msg": _(u"""Yayınlanan ders programınız bulunmaktadır. Yeni
+                             ders programı oluşturamazsınız.""")}
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
         elif solved_count == ders_etkinligi_count and solved_count > 0:
@@ -142,7 +143,8 @@ class DersProgramiYap(CrudView):
             else:
                 ad = text.split()[0]
                 soyad = text.split()[1]
-                okutman_search = Okutman.objects.filter(birim_no=self.current.role.unit.yoksis_no, ad=ad, soyad=soyad)
+                okutman_search = Okutman.objects.filter(
+                    birim_no=self.current.role.unit.yoksis_no, ad=ad, soyad=soyad)
                 if len(okutman_search) > 1:
                     self.current.search = okutman_search
                     self.current.task_data['cmd'] = 'coklu'
