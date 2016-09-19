@@ -5,10 +5,11 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models import SinavEtkinligi, Room
-from ulakbus.models.ders_programi import HAFTA
+from ulakbus.models.ders_sinav_programi import gun_listele
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _, gettext_lazy, get_day_names, format_datetime
 from collections import OrderedDict
 import calendar
 
@@ -18,7 +19,7 @@ class DerslikSecimFormu(JsonForm):
     Derslik Sınav ProgramLaı iş akışının sınav seç adımında kullanılan form.
     """
 
-    ileri = fields.Button("İleri")
+    ileri = fields.Button(gettext_lazy(u"İleri"))
 
 
 class DerslikSinavProgramlari(CrudView):
@@ -44,7 +45,7 @@ class DerslikSinavProgramlari(CrudView):
         Derslik Seçilir.
 
         """
-        _form = DerslikSecimFormu(title="Derslik Seçiniz", current=self.current)
+        _form = DerslikSecimFormu(title=_(u"Derslik Seçiniz"), current=self.current)
         _choices = [(s_yerleri.room.key, s_yerleri.room.__unicode__()) for s_etkinlik in
                     SinavEtkinligi.objects.filter(solved=True)
                     for s_yerleri in s_etkinlik.SinavYerleri if s_etkinlik.SinavYerleri]
@@ -79,11 +80,11 @@ class DerslikSinavProgramlari(CrudView):
             return sinav_etkinlik
 
         room = Room.objects.get(self.current.input['form']['derslik'])
-        object_list = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']
+        object_list = list(get_day_names())
         self.output['objects'] = [object_list]
         s_etkinlikleri = [s for s in SinavEtkinligi.objects if room in s.SinavYerleri and s.solved]
         sinav_etkinlikleri = sinav_etkinlik_olustur(s_etkinlikleri)
-        hafta_dict = hafta_gun_olustur(HAFTA)
+        hafta_dict = hafta_gun_olustur(gun_listele())
         for i in range(max(map(len, sinav_etkinlikleri.values()))):
             sinav_etkinlik_list = OrderedDict({})
             for hafta_gun in hafta_dict.keys():
@@ -91,8 +92,10 @@ class DerslikSinavProgramlari(CrudView):
                         try:
                             etkinlik = sinav_etkinlikleri[hafta_gun][i]
                             sinav_saat = "**%02d**" % etkinlik.tarih.time().hour + ':' + "**%02d**" % etkinlik.tarih.time().minute
-                            sinav_etkinlik_list[hafta_dict[hafta_gun]] = "**%s**" % etkinlik.tarih.strftime(
-                                '%d.%m.%Y') + ' - ' + sinav_saat + ' ' + etkinlik.sube.ders_adi
+                            sinav_etkinlik_list[hafta_dict[hafta_gun]] = '{tarih} {ders}'.format(
+                                tarih=format_datetime(etkinlik.tarih),
+                                ders=etkinlik.sube.ders_adi,
+                            )
                         except IndexError:
                             sinav_etkinlik_list[hafta_dict[hafta_gun]] = ''
 
@@ -105,8 +108,8 @@ class DerslikSinavProgramlari(CrudView):
                 'key': ''
             }
             self.output['objects'].append(item)
-        _form = JsonForm(title="%s Dersliğine Ait Sınav Programlar" % room.__unicode__())
-        _form.yazdir = fields.Button("Pdf Yazdır")
+        _form = JsonForm(title=_(u"%s Dersliğine Ait Sınav Programlar") % room.__unicode__())
+        _form.yazdir = fields.Button(_(u"Pdf Yazdır"))
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
 

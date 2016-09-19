@@ -10,8 +10,9 @@ from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman,
 from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
 from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.personel import Personel
-from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri,\
-    HAFTA, UYGUNLUK_DURUMU, GUN_DILIMI, DerslikZamanPlani
+from ulakbus.models.ders_sinav_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri,\
+    HAFTA, uygunluk_durumu_listele, DerslikZamanPlani
+from ulakbus.lib.date_time_helper import gun_dilimi_listele
 from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
 from .general import ints, gender, marital_status, blood_type, create_fake_geo_data
 from .general import driver_license_class, id_card_serial, birth_date
@@ -118,7 +119,7 @@ class FakeDataGenerator:
         zaman_dilimleri = []
         saat = random.randint(7, 9)
         dakika = random.choice(['00', '00', '30'])
-        for dilim, dilim_adi in GUN_DILIMI:
+        for dilim, dilim_adi in gun_dilimi_listele():
             z = ZamanDilimleri()
             z.birim = bolum
             z.gun_dilimi = dilim
@@ -419,7 +420,7 @@ class FakeDataGenerator:
                     cetvel.birim = birim
                     cetvel.gun = gun
                     cetvel.zaman_dilimi = zaman_dilimi
-                    cetvel.durum = random.choice(dict(UYGUNLUK_DURUMU).keys())
+                    cetvel.durum = random.choice(dict(uygunluk_durumu_listele()).keys())
                     cetvel.ogretim_elemani_zaman_plani = plan
                     cetvel.save()
                     cetveller.append(cetvel)
@@ -567,7 +568,7 @@ class FakeDataGenerator:
         return program_list
 
     @staticmethod
-    def yeni_ders(program, personel, donem, ders_say=1):
+    def yeni_ders(program, personel, donem, ders_say=1, ontanimli_sube=False):
         """
         Rastgele verileri ve parametre olarak verilen veriyi
         kullanarak yeni ders kaydı oluştururup kaydeder.
@@ -588,7 +589,8 @@ class FakeDataGenerator:
         ders_list = []
         room_type_list = list(RoomType.objects)
         sube_olustur = Ders.ontanimli_sube_olustur
-        Ders.ontanimli_sube_olustur = lambda x: None
+        if not ontanimli_sube:
+            Ders.ontanimli_sube_olustur = lambda x: None
         for i in range(ders_say):
             d = Ders()
             d.ad = fake.lecture()

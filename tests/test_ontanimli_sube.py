@@ -5,8 +5,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models import Ders, Sube
+from zengine.messaging.model import Channel
 import time
 from zengine.lib.test_utils import BaseTestCase
+import random
 
 
 class TestCase(BaseTestCase):
@@ -37,16 +39,21 @@ class TestCase(BaseTestCase):
         default değeri atanır.
 
         """
+
+        channel_sayisi = len(Channel.objects)
         ders = Ders()
         ders.ad = 'Havacılık'
-        ders.kod = '555'
+        ders.kod = str(random.randrange(1, 100000))
         ders.save()
         time.sleep(1)
         assert ders.just_created
         sube = Sube.objects.get(ders_id=ders.key)
+
         assert sube.ad == 'Varsayılan Şube'
         assert sube.kontenjan == 30
         assert sube.dis_kontenjan == 5
+        assert len(Channel.objects) == channel_sayisi + 1
+        assert Channel.objects.get(name="%s %s" % (ders.kod, sube.ad))
 
         ders.delete()
         sube.delete()

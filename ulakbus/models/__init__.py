@@ -13,5 +13,5 @@ from .ogrenci import *
 from .hitap.hitap import *
 from .buildings_rooms import *
 from .form import *
-from .ders_programi import *
-from .ders_programi_data import *
+from .ders_sinav_programi import *
+from zengine.models.workflow_manager import DiagramXML, WFInstance, Task, BPMNWorkflow

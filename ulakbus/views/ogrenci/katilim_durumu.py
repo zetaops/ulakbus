@@ -14,6 +14,7 @@ from ulakbus.models import Sube, OgrenciDersi, DersKatilimi
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 __author__ = 'Ali Riza Keles'
 
@@ -21,26 +22,26 @@ __author__ = 'Ali Riza Keles'
 class DevamsizlikForm(forms.JsonForm):
     class Meta:
         inline_edit = ['katilim_durumu', 'aciklama']
-        title = "Ders Seçim Formu"
+        title = gettext_lazy(u"Ders Seçim Formu")
 
     class Ogrenciler(ListNode):
-        ogrenci_no = fields.String('Öğrenci No')
-        ad_soyad = fields.String('Ad Soyad')
-        katilim_durumu = fields.Integer('Katılım Durumu')
-        aciklama = fields.String('Açıklama')
+        ogrenci_no = fields.String(gettext_lazy(u'Öğrenci No'))
+        ad_soyad = fields.String(gettext_lazy(u'Ad Soyad'))
+        katilim_durumu = fields.Integer(gettext_lazy(u'Katılım Durumu'))
+        aciklama = fields.String(gettext_lazy(u'Açıklama'))
         ogrenci_key = fields.String('ogrenci_key', hidden=True)
         sube_key = fields.String('ders_key', hidden=True)
 
 
 class OnizlemeForm(forms.JsonForm):
     class Meta:
-        title = "Katılım Durumu Bilgileri Önizleme Ekranı"
+        title = gettext_lazy(u"Katılım Durumu Bilgileri Önizleme Ekranı")
 
     class Ogrenciler(ListNode):
-        ogrenci_no = fields.String('Öğrenci No')
-        ad_soyad = fields.String('Ad Soyad')
-        katilim_durumu = fields.Integer('Katılım Durumu')
-        aciklama = fields.String('Açıklama')
+        ogrenci_no = fields.String(gettext_lazy(u'Öğrenci No'))
+        ad_soyad = fields.String(gettext_lazy(u'Ad Soyad'))
+        katilim_durumu = fields.Integer(gettext_lazy(u'Katılım Durumu'))
+        aciklama = fields.String(gettext_lazy(u'Açıklama'))
         ogrenci_key = fields.String('ogrenci_key', hidden=True)
         sube_key = fields.String('ders_key', hidden=True)
 
@@ -83,11 +84,12 @@ class KatilimDurumu(CrudView):
         Okutmanın kayıtlı olduğu şubelerden biri seçilir.
 
         """
-        _form = forms.JsonForm(current=self.current, title="Şube Seçiniz.")
-        _form.sube = fields.Integer("Sube Seçiniz",
-                                    choices=prepare_choices_for_model(Sube,
-                                                                      okutman_id=self.get_okutman_key))
-        _form.sec = fields.Button("Seç")
+        _form = forms.JsonForm(current=self.current, title=_(u"Şube Seçiniz."))
+        _form.sube = fields.Integer(
+            _(u"Sube Seçiniz"),
+            choices=prepare_choices_for_model(Sube, okutman_id=self.get_okutman_key)
+        )
+        _form.sec = fields.Button(_(u"Seç"))
         self.form_out(_form)
 
     def katilim_durumu(self):
@@ -97,7 +99,7 @@ class KatilimDurumu(CrudView):
 
         """
 
-        _form = DevamsizlikForm(current=self.current, title="Ders Katılımı Giriş Formu")
+        _form = DevamsizlikForm(current=self.current, title=_(u"Ders Katılımı Giriş Formu"))
 
         try:
             sube_key = self.current.input['form']['sube']
@@ -116,12 +118,14 @@ class KatilimDurumu(CrudView):
                 katilim_durumu = ""
                 aciklama = ""
 
-            _form.Ogrenciler(ad_soyad='%s %s' % (ogrenci_dersi.ogrenci.ad, ogrenci_dersi.ogrenci.soyad),
-                             ogrenci_no=ogrenci_dersi.ogrenci_program.ogrenci_no,
-                             katilim_durumu=katilim_durumu, ogrenci_key=ogrenci_dersi.ogrenci.key,
-                             sube_key=ogrenci_dersi.sube.key, aciklama=aciklama)
+            _form.Ogrenciler(
+                ad_soyad='%s %s' % (ogrenci_dersi.ogrenci.ad, ogrenci_dersi.ogrenci.soyad),
+                ogrenci_no=ogrenci_dersi.ogrenci_program.ogrenci_no,
+                katilim_durumu=katilim_durumu, ogrenci_key=ogrenci_dersi.ogrenci.key,
+                sube_key=ogrenci_dersi.sube.key, aciklama=aciklama
+            )
 
-        _form.onizleme = fields.Button("Önizleme", cmd="kontrol")
+        _form.onizleme = fields.Button(_(u"Önizleme"), cmd="kontrol")
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
 
@@ -135,13 +139,16 @@ class KatilimDurumu(CrudView):
 
         ogrenci_katilim_durumlari = self.current.input['form']['Ogrenciler']
         _form = OnizlemeForm(current=self.current)
-        _form.duzenle = fields.Button("Geri Dön ve Düzenle", flow="katilim_durumu")
+        _form.duzenle = fields.Button(_(u"Geri Dön ve Düzenle"), flow="katilim_durumu")
         for katilim_durumu in ogrenci_katilim_durumlari:
-            _form.Ogrenciler(ad_soyad=katilim_durumu['ad_soyad'],
-                             ogrenci_no=katilim_durumu['ogrenci_no'],
-                             katilim_durumu=katilim_durumu['katilim_durumu'], ogrenci_key=katilim_durumu['ogrenci_key'],
-                             sube_key=katilim_durumu['sube_key'], aciklama=katilim_durumu['aciklama'])
-        _form.kaydet = fields.Button("Kaydet")
+            _form.Ogrenciler(
+                ad_soyad=katilim_durumu['ad_soyad'],
+                ogrenci_no=katilim_durumu['ogrenci_no'],
+                katilim_durumu=katilim_durumu['katilim_durumu'],
+                ogrenci_key=katilim_durumu['ogrenci_key'],
+                sube_key=katilim_durumu['sube_key'], aciklama=katilim_durumu['aciklama']
+            )
+        _form.kaydet = fields.Button(_(u"Kaydet"))
         self.current.output["meta"]["allow_actions"] = False
         self.form_out(_form)
 
@@ -165,8 +172,9 @@ class KatilimDurumu(CrudView):
         sube = Sube.objects.get(self.current.task_data['sube_key'])
 
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Devamsızlıklar Kaydedildi',
-            "msg": '%s dersine ait öğrencilerin katılım bilgileri  başarıyla kaydedildi' % sube.ders.ad}
+            'type': 'info', "title": _(u'Devamsızlıklar Kaydedildi'),
+            "msg": _(u'%s dersine ait öğrencilerin katılım bilgileri \
+                           başarıyla kaydedildi') % sube.ders.ad}
 
     @property
     def get_okutman_key(self):
@@ -177,5 +185,5 @@ class KatilimDurumu(CrudView):
             Okutman nesnesinin keyini
 
         """
-
-        return self.current.user.personel.okutman.key if self.current.user.personel.key else self.current.user.harici_okutman.okutman.key
+        u = self.current.user
+        return u.personel.okutman.key if u.personel.key else u.harici_okutman.okutman.key

@@ -7,7 +7,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from io import BytesIO
-
+from zengine.lib.translation import gettext as _, gettext_lazy
 import six
 from zengine.forms import JsonForm
 from zengine.forms import fields
@@ -78,7 +78,7 @@ class Reporter(BaseView):
             self.printout()
 
     class ReportForm(JsonForm):
-        printout = fields.Button("Yazdır", cmd="printout")
+        printout = fields.Button(gettext_lazy(u"Yazdır"), cmd="printout")
 
     def show(self):
         objects = self.get_objects()
@@ -91,7 +91,7 @@ class Reporter(BaseView):
                 self.output['object'] = dict(objects)
 
         else:
-            frm.help_text = 'Kayıt bulunamadı'
+            frm.help_text = _(u'Kayıt bulunamadı')
             self.output['object'] = {}
 
         self.set_client_cmd('form', 'show')
@@ -150,7 +150,7 @@ class Reporter(BaseView):
 
     @classmethod
     def get_title(cls):
-        return cls.TITLE
+        return six.text_type(cls.TITLE)
 
     def get_objects(self):
         raise NotImplementedError

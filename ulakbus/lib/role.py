@@ -7,88 +7,90 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from enum import Enum
+from zengine.lib.translation import gettext_lazy as __
 
-__author__ = "H.İbrahim Yılmaz (drlinux)"
 
+class AbsRole(Enum):
+    """
+    Abstract roller icin enumerated data. Veritabani keyleri ozellik adi ile eslesir.
+    Kod icinde su sekilde kullanilabilir:
 
-class RoleHelper():
-    """RoleHelper Class
+    ... code-block:: python
+        hitap_kaydi = form_data["soyut_rol_id"] in [AbsRole.FAKULTE_DEKANI, AbsRole.REKTOR]
+
+    kod icinde translation ile birlikte kullanilabilir.
+
+    .. code-block:: python
+        __("%s degistirildi..") % AbsRole.FAKULTE_YONETIM_KURULU_UYESI
 
     """
 
-    def get_abstract_role_name(self, role_key):
-        """Verilen role keyine uygun değeri döndürür.
-
-        :param role_key:
-        :return: string
-
-        """
-
-        role_dict = {"yukselokul-kurulu-baskani": "Yükselokul Kurulu Başkanı",
-                     "enstitu-muduru": "Enstitü Müdürü",
-                     "yukselokul-yonetim-kurulu-baskani": "Yükselokul Yönetim Kurulu Başkanı",
-                     "fakulte-yonetim-kurulu-uyesi": "Fakülte Yönetim Kurulu Üyesi",
-                     "lisans-ogrencisi-kayit-silinmis": "Lisans Programı Öğrencisi - Kayıt Silinmiş",
-                     "fakulte-yonetim-kurulu-baskani-dekan": "Fakülte Yönetim Kurulu Başkanı (Dekan)",
-                     "fakulte-dekan-sekreteri": "Fakülte Dekan Sekreteri",
-                     "fakulte-dekani": "Fakülte Dekanı",
-                     "enstitu-ogrenci-isleri-sefi": "Enstitü Öğrenci İşleri Şefi",
-                     "enstitu-mudur-yardimcisi": "Enstitü Müdür Yardımcısı",
-                     "fakulte-ogrenci-isleri-sefi": "Fakülte Öğrenci İşleri Şefi",
-                     "fakulte-kurulu-uyesi": "Fakülte Kurulu Üyesi",
-                     "enstitu-muhasebe-isleri-personeli": "Enstitü Muhasebe İşleri Personeli",
-                     "on-lisans-ogrencisi-kayit-silinmis": "Ön Lisans Programı Öğrencisi - Kayıt Silinmiş",
-                     "yukselokul-birim-koordinatoru": "Yükselokul Birim Koordinatörü",
-                     "yukselokul-yonetim-kurulu-uyesi": "Yükselokul Yönetim Kurulu Üyesi",
-                     "tip-fakultesi-egitim-komisyonu-uyesi": "Tıp Fakültesi Eğitim Komisyonu Üyesi",
-                     "yukselokul-muduru": "Yükselokul Müdürü",
-                     "ana-bilim-dali-baskani": "Ana Bilim Dalı Başkanı",
-                     "fakulte-sekreteri": "Fakülte Sekreteri",
-                     "bolum-kurulu-uyesi": "Bölüm Kurulu Üyesi",
-                     "tip-fakultesi-bas-koordinator-yardimcisi": "Tıp Fakültesi Baş Koordinatör Yardımcısı",
-                     "fakulte-etik-kurulu-baskani": "Fakülte Etik Kurulu Başkanı",
-                     "on-lisans-ogrencisi-kayit-dondurmus": "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
-                     "yukselokul-sekreteri": "Yükselokul Sekreteri",
-                     "yuksek-lisans-ogrencisi-aktif": "Yüksek Lisans Programı Öğrencisi - Aktif",
-                     "fakulte-ogrenci-isleri-personeli": "Fakülte Öğrenci İşleri Personeli",
-                     "yukselokul-muhasebe-isleri-sefi": "Yükselokul Muhasebe İşleri Şefi",
-                     "ogretim-elemani": "Öğretim Elemanı",
-                     "bolum-kurulu-baskani": "Bölüm Kurulu Başkanı",
-                     "yuksek-lisans-ogrencisi-kayit-silinmis": "Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş",
-                     "doktora-ogrencisi-kayit-dondurmus": "Doktora Programı Öğrencisi - Kayıt Dondurmuş",
-                     "yukselokul-kurulu-uyesi": "Yükselokul Kurulu Üyesi",
-                     "fakulte-etik-kurulu-uyesi": "Fakülte Etik Kurulu Üyesi",
-                     "lisans-ogrencisi-aktif": "Lisans Programı Öğrencisi - Aktif",
-                     "yuksek-lisans-ogrencisi-kayit-dondurmus": "Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş",
-                     "yukselokul-ogrenci-isleri-sefi": "Yükselokul Öğrenci İşleri Şefi",
-                     "enstitu-kurulu-uyesi": "Enstitü Kurulu Üyesi",
-                     "bilim-dali-uyesi": "Bilim Dalı Üyesi",
-                     "enstitu-muhasebe-isleri-sefi": "Enstitü Muhasebe İşleri Şefi",
-                     "lisans-ogrencisi-kayit-dondurmus": "Lisans Programı Öğrencisi - Kayıt Dondurmuş",
-                     "enstitu-kurulu-baskani": "Enstitü Kurulu Başkanı",
-                     "bolum-sekreteri": "Bölüm Sekreteri",
-                     "fakulte-dekan-yardimcisi": "Fakülte Dekan Yardımcısı",
-                     "daire-sube-muduru": "Daire Şube Müdürü",
-                     "bilim-dali-baskani": "Bilim Dalı Başkanı",
-                     "yukselokul-muhasebe-isleri-personeli": "Yükselokul Muhasebe İşleri Personeli",
-                     "daire-baskani": "Daire Başkanı",
-                     "enstitu-ogrenci-isleri-personeli": "Enstitü Öğrenci İşleri Personeli",
-                     "doktora-ogrencisi-aktif": "Doktora Programı Öğrencisi - Aktif",
-                     "fakulte-kurulu-baskani-dekan": "Fakülte Kurulu Başkanı (Dekan)",
-                     "enstitu-sekreteri": "Enstitü Sekreteri",
-                     "tip-fakultesi-egitim-komisyonu-baskani": "Tıp Fakültesi Eğitim Komisyonu Başkanı",
-                     "yukselokul-mudur-yardimcisi": "Yükselokul Müdür Yardımcısı",
-                     "ana-bilim-dali-uyesi": "Ana Bilim Dalı Üyesi",
-                     "daire-personeli": "Daire Personeli",
-                     "yukselokul-ogrenci-isleri-personeli": "Yükselokul Öğrenci İşleri Personeli",
-                     "enstitu-yonetim-kurulu-baskani": "Enstitü Yönetim Kurulu Başkanı",
-                     "tip-fakultesi-bas-koordinatoru": "Tıp Fakültesi Baş Koordinatörü",
-                     "bolum-baskani": "Bölüm Başkanı",
-                     "enstitu-yonetim-kurulu-uyesi": "Enstitü Yönetim Kurulu Üyesi",
-                     "tip-fakultesi-donem-koordinatoru": "Tıp Fakültesi Dönem Koordinatörü",
-                     "sube-sefi": "Şube Şefı",
-                     "doktora-ogrencisi-kayit-silinmis": "Doktora Programı Öğrencisi - Kayıt Silinmiş",
-                     "on-lisans-ogrencisi-aktif": "Ön Lisans Programı Öğrencisi - Aktif"}
-
-        if role_key in role_dict:
-            return role_dict[role_key]
+    FAKULTE_YONETIM_KURULU_UYESI = __(u"Fakülte Yönetim Kurulu Üyesi")
+    FAKULTE_YONETIM_KURULU_BASKANI_DEKAN = __(u"Fakülte Yönetim Kurulu Başkanı (Dekan)")
+    FAKULTE_DEKAN_SEKRETERI = __(u"Fakülte Dekan Sekreteri")
+    FAKULTE_DEKANI = __(u"Fakülte Dekanı")
+    FAKULTE_OGRENCI_ISLERI_SEFI = __(u"Fakülte Öğrenci İşleri Şefi")
+    FAKULTE_KURULU_UYESI = __(u"Fakülte Kurulu Üyesi")
+    FAKULTE_SEKRETERI = __(u"Fakülte Sekreteri")
+    FAKULTE_ETIK_KURULU_BASKANI = __(u"Fakülte Etik Kurulu Başkanı")
+    FAKULTE_ETIK_KURULU_UYESI = __(u"Fakülte Etik Kurulu Üyesi")
+    FAKULTE_OGRENCI_ISLERI_PERSONELI = __(u"Fakülte Öğrenci İşleri Personeli")
+    FAKULTE_DEKAN_YARDIMCISI = __(u"Fakülte Dekan Yardımcısı")
+    FAKULTE_KURULU_BASKANI = __(u"Fakülte Kurulu Başkanı (Dekan)")
+    ENSTITU_MUDURU = __(u"Enstitü Müdürü")
+    ENSTITU_YONETIM_KURULU_BASKANI = __(u"Enstitü Yönetim Kurulu Başkanı")
+    ENSTITU_OGRENCI_ISLERI_PERSONELI = __(u"Enstitü Öğrenci İşleri Personeli")
+    ENSTITU_YONETIM_KURULU_UYESI = __(u"Enstitü Yönetim Kurulu Üyesi")
+    ENSTITU_SEKRETERI = __(u"Enstitü Sekreteri")
+    ENSTITU_OGRENCI_ISLERI_SEFI = __(u"Enstitü Öğrenci İşleri Şefi")
+    ENSTITU_MUDUR_YARDIMCISI = __(u"Enstitü Müdür Yardımcısı")
+    ENSTITU_MUHASEBE_ISLERI_PERSONELI = __(u"Enstitü Muhasebe İşleri Personeli")
+    ENSTITU_KURULU_UYESI = __(u"Enstitü Kurulu Üyesi")
+    ENSTITU_MUHASEBE_ISLERI_SEFI = __(u"Enstitü Muhasebe İşleri Şefi")
+    ENSTITU_KURULU_BASKANI = __(u"Enstitü Kurulu Başkanı")
+    YUKSELOKUL_KURULU_BASKANI = __(u"Yükselokul Kurulu Başkanı")
+    YUKSELOKUL_YONETIM_KURULU_BASKANI = __(u"Yükselokul Yönetim Kurulu Başkanı")
+    YUKSELOKUL_BIRIM_KOORDINATORU = __(u"Yükselokul Birim Koordinatörü")
+    YUKSELOKUL_YONETIM_KURULU_UYESI = __(u"Yükselokul Yönetim Kurulu Üyesi")
+    YUKSELOKUL_MUDURU = __(u"Yükselokul Müdürü")
+    YUKSELOKUL_MUDUR_YARDIMCISI = __(u"Yükselokul Müdür Yardımcısı")
+    YUKSELOKUL_SEKRETERI = __(u"Yükselokul Sekreteri")
+    YUKSELOKUL_OGRENCI_ISLERI_SEFI = __(u"Yükselokul Öğrenci İşleri Şefi")
+    YUKSELOKUL_KURULU_UYESI = __(u"Yükselokul Kurulu Üyesi")
+    YUKSELOKUL_MUHASEBE_ISLERI_SEFI = __(u"Yükselokul Muhasebe İşleri Şefi")
+    YUKSELOKUL_MUHASEBE_ISLERI_PERSONELI = __(u"Yükselokul Muhasebe İşleri Personeli")
+    YUKSELOKUL_OGRENCI_ISLERI_PERSONELI = __(u"Yükselokul Öğrenci İşleri Personeli")
+    TIP_FAKULTESI_EGITIM_KOMISYONU_UYESI = __(u"Tıp Fakültesi Eğitim Komisyonu Üyesi")
+    TIP_FAKULTESI_BAS_KOORDINATOR_YARDIMCISI = __(u"Tıp Fakültesi Baş Koordinatör Yardımcısı")
+    TIP_FAKULTESI_EGITIM_KOMISYONU_BASKANI = __(u"Tıp Fakültesi Eğitim Komisyonu Başkanı")
+    TIP_FAKULTESI_DONEM_KOORDINATORU = __(u"Tıp Fakültesi Dönem Koordinatörü")
+    TIP_FAKULTESI_BAS_KOORDINATORU = __(u"Tıp Fakültesi Baş Koordinatörü")
+    ON_LISANS_OGRENCISI_AKTIF = __(u"Ön Lisans Programı Öğrencisi - Aktif")
+    ON_LISANS_OGRENCISI_KAYIT_SILINMIS = __(u"Ön Lisans Programı Öğrencisi - Kayıt Silinmiş")
+    ON_LISANS_OGRENCISI_KAYIT_DONDURMUS = __(u"Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş")
+    LISANS_OGRENCISI_AKTIF = __(u"Lisans Programı Öğrencisi - Aktif")
+    LISANS_OGRENCISI_KAYIT_SILINMIS = __(u"Lisans Programı Öğrencisi - Kayıt Silinmiş")
+    LISANS_OGRENCISI_KAYIT_DONDURMUS = __(u"Lisans Programı Öğrencisi - Kayıt Dondurmuş")
+    YUKSEK_LISANS_OGRENCISI_AKTIF = __(u"Yüksek Lisans Programı Öğrencisi - Aktif")
+    YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS = __(
+        u"Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş")
+    YUKSEK_LISANS_OGRENCISI_KAYIT_DONDURMUS = __(
+        u"Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş")
+    DOKTORA_OGRENCISI_AKTIF = __(u"Doktora Programı Öğrencisi - Aktif")
+    DOKTORA_OGRENCISI_KAYIT_SILINMIS = __(u"Doktora Programı Öğrencisi - Kayıt Silinmiş")
+    DOKTORA_OGRENCISI_KAYIT_DONDURMUS = __(u"Doktora Programı Öğrencisi - Kayıt Dondurmuş")
+    OGRETIM_ELEMANI = __(u"Öğretim Elemanı")
+    ANA_BILIM_DALI_UYESI = __(u"Ana Bilim Dalı Üyesi")
+    ANA_BILIM_DALI_BASKANI = __(u"Ana Bilim Dalı Başkanı")
+    BILIM_DALI_UYESI = __(u"Bilim Dalı Üyesi")
+    BILIM_DALI_BASKANI = __(u"Bilim Dalı Başkanı")
+    BOLUM_BASKANI = __(u"Bölüm Başkanı")
+    BOLUM_KURULU_BASKANI = __(u"Bölüm Kurulu Başkanı")
+    BOLUM_KURULU_UYESI = __(u"Bölüm Kurulu Üyesi")
+    BOLUM_SEKRETERI = __(u"Bölüm Sekreteri")
+    DAIRE_BASKANI = __(u"Daire Başkanı")
+    DAIRE_SUBE_SEFI = __(u"Şube Şefi")
+    DAIRE_SUBE_MUDURU = __(u"Daire Şube Müdürü")
+    DAIRE_PERSONELI = __(u"Daire Personeli")
+    REKTOR = __(u"Rektör")

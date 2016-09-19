@@ -1,118 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.0.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_0jqtmlj">
-    <bpmn:participant id="OgretimElemaniSinavProgrami" name="Öğretim Elemanı" processRef="okutman_sinav_programi_goruntule" />
+    <bpmn:participant id="OgrenciSinavProgrami" name="Öğrenci" processRef="okutman_sinav_programi_goruntule" />
   </bpmn:collaboration>
   <bpmn:process id="okutman_sinav_programi_goruntule" name="Sınav Programı" isExecutable="false">
     <bpmn:sequenceFlow id="SequenceFlow_0bro10m" sourceRef="SinavProgramiGoruntule" targetRef="EndEvent_0wartdq" />
-    <bpmn:userTask id="SinavProgramiGoruntule" name="Sınav Programı Görüntüle" camunda:assignee="sinav_programi.okutman_sinav_programi_goruntule.Okutman_Sinav_Programi_Goruntule.sinav_programi_goruntule">
-      <bpmn:incoming>SequenceFlow_0y5zeod</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0bro10m</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>SequenceFlow_1e7wu11</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1e7wu11" sourceRef="StartEvent_1" targetRef="SinavProgramiKontrol" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_064f5n1" default="SequenceFlow_1240vgr">
-      <bpmn:incoming>SequenceFlow_1yvwrm0</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0y5zeod</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_1240vgr</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1m62r5e" sourceRef="SinavProgramiUyari" targetRef="EndEvent_0wartdq" />
     <bpmn:endEvent id="EndEvent_0wartdq">
       <bpmn:incoming>SequenceFlow_0bro10m</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1994ews</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1m62r5e</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1994ews" sourceRef="SinavProgramiUyari" targetRef="EndEvent_0wartdq" />
-    <bpmn:userTask id="SinavProgramiUyari" name="Sınav Programı Uyarı" camunda:assignee="sinav_programi.okutman_sinav_programi_goruntule.Okutman_Sinav_Programi_Goruntule.sinav_programi_uyari">
-      <bpmn:incoming>SequenceFlow_1240vgr</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1994ews</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:serviceTask id="SinavProgramiKontrol" name="Sınav Programı Kontrol" camunda:class="sinav_programi.okutman_sinav_programi_goruntule.Okutman_Sinav_Programi_Goruntule.sinav_programi_kontrol">
-      <bpmn:incoming>SequenceFlow_1e7wu11</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1yvwrm0</bpmn:outgoing>
+    <bpmn:serviceTask id="SinavProgramiKontrol" name="Sınav Programı Kontrol" camunda:class="sinav_programi.sinav_programi_goruntule.SinavProgramiGoruntule.okutman_sinav_listesi">
+      <bpmn:incoming>SequenceFlow_0mrbb76</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0mmg01b</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_1yvwrm0" sourceRef="SinavProgramiKontrol" targetRef="ExclusiveGateway_064f5n1" />
-    <bpmn:sequenceFlow id="SequenceFlow_0y5zeod" sourceRef="ExclusiveGateway_064f5n1" targetRef="SinavProgramiGoruntule">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0mrbb76</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0mrbb76" sourceRef="StartEvent_1" targetRef="SinavProgramiKontrol" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1jaapkz" default="SequenceFlow_1q2r90l">
+      <bpmn:incoming>SequenceFlow_0mmg01b</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1q2r90l</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0lmsuy3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0mmg01b" sourceRef="SinavProgramiKontrol" targetRef="ExclusiveGateway_1jaapkz" />
+    <bpmn:sequenceFlow id="SequenceFlow_1q2r90l" sourceRef="ExclusiveGateway_1jaapkz" targetRef="SinavProgramiUyari" />
+    <bpmn:sequenceFlow id="SequenceFlow_0lmsuy3" sourceRef="ExclusiveGateway_1jaapkz" targetRef="SinavProgramiGoruntule">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">sinav_kontrol == True</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1240vgr" sourceRef="ExclusiveGateway_064f5n1" targetRef="SinavProgramiUyari" />
+    <bpmn:userTask id="SinavProgramiUyari" name="Sınav Programı Uyarı" camunda:assignee="sinav_programi.sinav_programi_goruntule.SinavProgramiGoruntule.sinav_programi_uyari">
+      <bpmn:incoming>SequenceFlow_1q2r90l</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1m62r5e</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="SinavProgramiGoruntule" name="Sınav Programı Görüntüle" camunda:assignee="sinav_programi.sinav_programi_goruntule.SinavProgramiGoruntule.sinav_programi_goruntule">
+      <bpmn:incoming>SequenceFlow_0lmsuy3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0bro10m</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0jqtmlj">
-      <bpmndi:BPMNShape id="Participant_0an1mes_di" bpmnElement="OgretimElemaniSinavProgrami">
-        <dc:Bounds x="145" y="105" width="810" height="249" />
+      <bpmndi:BPMNShape id="Participant_0an1mes_di" bpmnElement="OgrenciSinavProgrami">
+        <dc:Bounds x="161" y="114" width="725" height="301" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="193" y="214" width="36" height="36" />
+        <dc:Bounds x="205" y="244" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="166" y="250" width="90" height="20" />
+          <dc:Bounds x="178" y="280" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_0kiit6r_di" bpmnElement="SinavProgramiGoruntule">
-        <dc:Bounds x="617" y="262" width="100" height="80" />
+        <dc:Bounds x="540" y="303" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_0wartdq_di" bpmnElement="EndEvent_0wartdq">
-        <dc:Bounds x="865" y="214" width="36" height="36" />
+        <dc:Bounds x="750" y="244" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="838" y="250" width="90" height="20" />
+          <dc:Bounds x="723" y="280" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0bro10m_di" bpmnElement="SequenceFlow_0bro10m">
-        <di:waypoint xsi:type="dc:Point" x="717" y="302" />
-        <di:waypoint xsi:type="dc:Point" x="883" y="302" />
-        <di:waypoint xsi:type="dc:Point" x="883" y="250" />
+        <di:waypoint xsi:type="dc:Point" x="640" y="343" />
+        <di:waypoint xsi:type="dc:Point" x="768" y="343" />
+        <di:waypoint xsi:type="dc:Point" x="768" y="285" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="755" y="277" width="90" height="20" />
+          <dc:Bounds x="640.5" y="318" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1e7wu11_di" bpmnElement="SequenceFlow_1e7wu11">
-        <di:waypoint xsi:type="dc:Point" x="229" y="232" />
-        <di:waypoint xsi:type="dc:Point" x="264" y="232" />
+      <bpmndi:BPMNEdge id="SequenceFlow_1m62r5e_di" bpmnElement="SequenceFlow_1m62r5e">
+        <di:waypoint xsi:type="dc:Point" x="640" y="179" />
+        <di:waypoint xsi:type="dc:Point" x="768" y="179" />
+        <di:waypoint xsi:type="dc:Point" x="768" y="244" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="201.5" y="207" width="90" height="20" />
+          <dc:Bounds x="577.5" y="143" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ExclusiveGateway_064f5n1_di" bpmnElement="ExclusiveGateway_064f5n1" isMarkerVisible="true">
-        <dc:Bounds x="455" y="207" width="50" height="50" />
+      <bpmndi:BPMNShape id="UserTask_0gn15ay_di" bpmnElement="SinavProgramiUyari">
+        <dc:Bounds x="540" y="139" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1c0ed1p_di" bpmnElement="SinavProgramiKontrol">
+        <dc:Bounds x="268" y="222" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0mrbb76_di" bpmnElement="SequenceFlow_0mrbb76">
+        <di:waypoint xsi:type="dc:Point" x="241" y="262" />
+        <di:waypoint xsi:type="dc:Point" x="268" y="262" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="435" y="257" width="90" height="20" />
+          <dc:Bounds x="209.5" y="237" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1jaapkz_di" bpmnElement="ExclusiveGateway_1jaapkz" isMarkerVisible="true">
+        <dc:Bounds x="403" y="237" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="383" y="287" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1994ews_di" bpmnElement="SequenceFlow_1994ews">
-        <di:waypoint xsi:type="dc:Point" x="717" y="157" />
-        <di:waypoint xsi:type="dc:Point" x="883" y="157" />
-        <di:waypoint xsi:type="dc:Point" x="883" y="214" />
+      <bpmndi:BPMNEdge id="SequenceFlow_0mmg01b_di" bpmnElement="SequenceFlow_0mmg01b">
+        <di:waypoint xsi:type="dc:Point" x="368" y="262" />
+        <di:waypoint xsi:type="dc:Point" x="403" y="262" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="755" y="132" width="90" height="20" />
+          <dc:Bounds x="340.5" y="237" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_1kkp53i_di" bpmnElement="SinavProgramiUyari">
-        <dc:Bounds x="617" y="117" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_172k4nu_di" bpmnElement="SinavProgramiKontrol">
-        <dc:Bounds x="264" y="192" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1yvwrm0_di" bpmnElement="SequenceFlow_1yvwrm0">
-        <di:waypoint xsi:type="dc:Point" x="364" y="232" />
-        <di:waypoint xsi:type="dc:Point" x="455" y="232" />
+      <bpmndi:BPMNEdge id="SequenceFlow_1q2r90l_di" bpmnElement="SequenceFlow_1q2r90l">
+        <di:waypoint xsi:type="dc:Point" x="428" y="237" />
+        <di:waypoint xsi:type="dc:Point" x="428" y="179" />
+        <di:waypoint xsi:type="dc:Point" x="540" y="179" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="364.5" y="207" width="90" height="20" />
+          <dc:Bounds x="398" y="196.5" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0y5zeod_di" bpmnElement="SequenceFlow_0y5zeod">
-        <di:waypoint xsi:type="dc:Point" x="480" y="257" />
-        <di:waypoint xsi:type="dc:Point" x="480" y="302" />
-        <di:waypoint xsi:type="dc:Point" x="617" y="302" />
+      <bpmndi:BPMNEdge id="SequenceFlow_0lmsuy3_di" bpmnElement="SequenceFlow_0lmsuy3">
+        <di:waypoint xsi:type="dc:Point" x="428" y="287" />
+        <di:waypoint xsi:type="dc:Point" x="428" y="343" />
+        <di:waypoint xsi:type="dc:Point" x="540" y="343" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="450" y="269.5" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1240vgr_di" bpmnElement="SequenceFlow_1240vgr">
-        <di:waypoint xsi:type="dc:Point" x="480" y="207" />
-        <di:waypoint xsi:type="dc:Point" x="480" y="157" />
-        <di:waypoint xsi:type="dc:Point" x="617" y="157" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="450" y="172" width="90" height="20" />
+          <dc:Bounds x="398" y="305" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

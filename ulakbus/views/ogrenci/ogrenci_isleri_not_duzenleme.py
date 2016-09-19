@@ -11,6 +11,7 @@ from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _, gettext_lazy
 
 
 class NotDuzenlemeForm(forms.JsonForm):
@@ -23,7 +24,7 @@ class NotDuzenlemeForm(forms.JsonForm):
     class Meta:
         include = ['puan']
 
-    kaydet = fields.Button('Kaydet')
+    kaydet = fields.Button(gettext_lazy(u'Kaydet'))
 
 
 class NotDuzenleme(CrudView):
@@ -77,9 +78,9 @@ class NotDuzenleme(CrudView):
         # TODO: Fakülte yönetim kurulunun kararı loglanacak.
         self.current.task_data['ogrenci_id'] = self.current.input['id']
         _form = forms.JsonForm(current=self.current,
-                               title='Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.')
-        _form.karar = fields.String('Karar No', index=True)
-        _form.kaydet = fields.Button('Kaydet')
+                               title=_(u'Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.'))
+        _form.karar = fields.String(_(u'Karar No'), index=True)
+        _form.kaydet = fields.Button(_(u'Kaydet'))
         self.form_out(_form)
 
     def program_sec(self):
@@ -88,7 +89,7 @@ class NotDuzenleme(CrudView):
 
         """
 
-        _form = forms.JsonForm(current=self.current, title='Program Seçiniz.')
+        _form = forms.JsonForm(current=self.current, title=_(u'Program Seçiniz.'))
         _choices = prepare_choices_for_model(OgrenciProgram,
                                              ogrenci_id=self.current.task_data['ogrenci_id'])
         _form.program = fields.Integer(choices=_choices)
@@ -102,10 +103,10 @@ class NotDuzenleme(CrudView):
         """
 
         program_id = self.current.input['form']['program']
-        _form = forms.JsonForm(current=self.current, title='Ders Seçiniz.')
+        _form = forms.JsonForm(current=self.current, title=_(u'Ders Seçiniz.'))
         _choices = prepare_choices_for_model(OgrenciDersi, ogrenci_program_id=program_id)
         _form.ders = fields.Integer(choices=_choices)
-        _form.onayla = fields.Button('Seç')
+        _form.onayla = fields.Button(_(u'Seç'))
         self.form_out(_form)
 
     def sinav_sec(self):
@@ -117,10 +118,10 @@ class NotDuzenleme(CrudView):
         self.current.task_data['ders_id'] = self.current.input['form']['ders']
         ogrenci_dersi = OgrenciDersi.objects.get(self.current.task_data['ders_id'])
 
-        _form = forms.JsonForm(current=self.current, title='Sınav Seçiniz.')
+        _form = forms.JsonForm(current=self.current, title=_(u'Sınav Seçiniz.'))
         _choices = prepare_choices_for_model(Sinav, sube_id=ogrenci_dersi.sube.key)
         _form.sinav = fields.Integer(choices=_choices)
-        _form.onayla = fields.Button('Seç')
+        _form.onayla = fields.Button(_(u'Seç'))
         self.form_out(_form)
 
     def not_duzenle(self):
@@ -137,8 +138,10 @@ class NotDuzenleme(CrudView):
             DegerlendirmeNot.objects.get(sinav_id=sinav_id, ogrenci_id=ogrenci_id)
         self.current.task_data['onceki_puan'] = degerlendirme_not.puan
 
-        title = '%s adlı öğrencinin % sınava ait notunu düzenleyiniz.' % (
-            degerlendirme_not.ogrenci, degerlendirme_not.sinav)
+        title = _(u'%(ogrenci)s adlı öğrencinin %(sinav)s sınava ait notunu düzenleyiniz.') % {
+            'ogrenci': degerlendirme_not.ogrenci,
+            'sinav': degerlendirme_not.sinav,
+        }
         _form = NotDuzenlemeForm(degerlendirme_not, current=self.current, title=title)
 
         self.form_out(_form)
@@ -156,7 +159,11 @@ class NotDuzenleme(CrudView):
         onceki_puan = self.current.task_data['onceki_puan']
 
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Not Düzeltme Tamamlandı',
-            "msg": '%s adlı öğrencinin, %s sınavına ait %s olan notu, %s ile değiştilmiştir.' % (
-                ogrenci, sinav, onceki_puan, yeni_puan)
+            'type': 'info', "title": _(u'Not Düzeltme Tamamlandı'),
+            "msg": _(u'%(ogrenci)s adlı öğrencinin, %(sinav)s sınavına ait %(onceki_puan)s olan notu, %(yeni_puan)s ile değiştilmiştir.') % {
+                'ogrenci': ogrenci,
+                'sinav': sinav,
+                'onceki_puan': onceki_puan,
+                'yeni_puan': yeni_puan,
+            }
         }

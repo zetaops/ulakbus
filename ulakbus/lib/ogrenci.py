@@ -7,25 +7,40 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from enum import Enum
-
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.models import Ogrenci, OgrenciProgram, OgrenciDersi
 from pyoko.exceptions import ObjectDoesNotExist
 
 
-class OgrenciHelper():
+class OgrenciHelper:
     """OgrenciHelper Class
 
     """
 
-    def diploma_notu_uret(self, ogrenci_no):
+    @staticmethod
+    def diploma_notu_uret(ogrenci_no):
         try:
+            from ulakbus.models import OgrenciProgram
             ogrenci_program = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no)
             return "%s-%s-%s" % (ogrenci_program.giris_tarihi,
                                  ogrenci_program.program.yoksis_no, ogrenci_program.ogrenci_no)
         except ObjectDoesNotExist:
             return "Öğrenci Bulunamadı"
+
+
+def aktif_sinav_listesi(obj):
+    """
+    obj (öğrenci veya okutman) için aktif sınavlarının listesini üretir.
+
+    Args:
+       obj (Ogrenci): öğrenci veya okutman nesnesi
+    Returns:
+        sinav listesi (list)
+    """
+
+    from ulakbus.models.ders_sinav_programi import SinavEtkinligi
+    sinavlar = []
+    for sube in obj.donem_subeleri():
+        sinavlar.extend(SinavEtkinligi.sube_sinav_listesi(sube=sube))
+    return sinavlar
 
 
 class HarfNotu(Enum):
@@ -104,6 +119,26 @@ class HarfNotu(Enum):
             if puan in range(bas, bit + 1):
                 return name
 
+    @classmethod
+    def generate_choices_for_4(cls):
+        """
+        4 luk notlar icin choices uretir
+
+        Returns:
+            list of tuples
+        """
+        return [(obj.get_4(), obj.get_4()) for name, obj in cls.__members__.items()]
+
+    @classmethod
+    def generate_choices(cls):
+        """
+        Harf notlari icin choices uretir
+
+        Returns:
+            list of tuples
+        """
+        return [(name, name) for name, obj in cls.__members__.items()]
+
 
 class AkademikTakvimEtkinlikleri(Enum):
     YENI_OGRENCI_ON_KAYIT = "Yeni Öğrenci Ön Kayıt"
@@ -135,8 +170,10 @@ class AkademikTakvimEtkinlikleri(Enum):
     GUZ_YARIYIL_SINAVI_NOT_GIRIS = "Yarıyıl Sınavı Not Giriş"
     GUZ_YARIYIL_SINAVI_NO_YAYINLAMA = "Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi"
     GUZ_BUT_VE_YARIYIL_SONU_MAZERET_SINAVI = "Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı"
-    GUZ_BUT_VE_YARIYIL_SONU_MAZERET_SINAVI_NOT_GIRIS = "Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Not Giriş"
-    GUZ_BUT_VE_YARIYIL_SONU_MAZERET_SINAVI_NOT_YAYINLAMA = "Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye Yayınlanması"
+    GUZ_BUT_VE_YARIYIL_SONU_MAZERET_SINAVI_NOT_GIRIS = "Bütünleme ve \
+                                                        Yarı Yıl Sonu Mazeret Sınavı Not Giriş"
+    GUZ_BUT_VE_YARIYIL_SONU_MAZERET_SINAVI_NOT_YAYINLAMA = "Bütünleme ve Yarı Yıl Sonu Mazeret \
+                                                         Sınavı Notlarının Öğrenciye Yayınlanması"
     GUZ_HARF_NOT_YAYINLAMA = "Harf Notlarının Öğrenciye Yayınlanması"
     GUZ_BUT_HARF_NOT_YAYINLAMA = "Bütünleme Harf Notlarının Öğrenciye Yayınlanması"
     GUZ_OGRETIM_ELEMANI_YOKLAMA_GIRISI = "Öğretim Elemanı Yoklama Girişi"

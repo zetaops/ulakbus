@@ -1,21 +1,26 @@
 # -*-  coding: utf-8 -*-
+"""
+"""
 
-from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi
-# todo: remove
-#from ulakbus.models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi
-from math import floor
+# Copyright (C) 2015 ZetaOps Inc.
+#
+# This file is licensed under the GNU General Public License v3
+# (GPLv3).  See LICENSE.txt for details.
+
 import datetime
+from math import floor
+from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi
 
 # Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
 SLOT_SURESI = 5
+
 # CPSolver'ın ID alanlarında kabul ettiği maximum değer
 SOLVER_MAX_ID = 900000000000000000
 
-AYLAR = [(1, 'Ocak'),( 2, 'Şubat'), (3, 'Mart'), (4, 'Nisan'), (5, 'Mayıs'), (6, 'Haziran'), (7, 'Temmuz'),
-(8, 'Ağustos'), (9, 'Eylül'), (10, 'Ekim'), (11, 'Kasım'), (12, 'Aralık')]
 
 def saat2slot(saat):
     return saat * 60 / SLOT_SURESI
+
 
 def timedelta2slot(td):
     """timedelta cinsinden süreyi slot cinsine dönüştürür.
@@ -30,6 +35,7 @@ def timedelta2slot(td):
     """
     dakika = td.seconds / 60
     return dakika / SLOT_SURESI
+
 
 def datetime2timestamp(dt):
     """Bir datetime objesini, saat dilimi bilgisi olmayan bir POSIX timestamp'ine dönüştürür.
@@ -51,16 +57,17 @@ def datetime2timestamp(dt):
     """
     return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
 
-def get_akademik_takvim(unit,ogretim_yili):
-    #verilen ogretim yilina gore guncel akademik
+
+def get_akademik_takvim(unit, ogretim_yili):
+    # verilen ogretim yilina gore guncel akademik
     # dondurmesi icin ogretim_yili parametresi eklenmistir.
     try:
-        akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key,ogretim_yili = ogretim_yili)
+        akademik_takvim = AkademikTakvim.objects.get(birim_id=unit.key, ogretim_yili=ogretim_yili)
         return akademik_takvim
     except ObjectDoesNotExist:
         yoksis_key = unit.parent_unit_no
         birim = Unit.objects.get(yoksis_no=yoksis_key)
-        return get_akademik_takvim(birim,ogretim_yili)
+        return get_akademik_takvim(birim, ogretim_yili)
 
 
 def ders_programi_doldurma(root):
@@ -70,7 +77,8 @@ def ders_programi_doldurma(root):
 
     # time = [child for child in root.iter('time') if child.get('solution') == 'true']
 
-    cls = [child for child in root.iter('class') for i in child.iter('instructor') if i.get('solution') == 'true']
+    cls = [child for child in root.iter('class') for i in child.iter('instructor') if
+           i.get('solution') == 'true']
 
     for child in cls:
         ders_etkinlik = DersEtkinligi.objects.get(unitime_key=child.get('id'))
@@ -106,6 +114,7 @@ def ders_programi_doldurma(root):
                 ders_etkinlik.bitis_dakika = dakika
 
         ders_etkinlik.save()
+
 
 def sinav_etkinlikleri_oku(root):
     """CPSolver tarafından çözülen bir sınav planını okur.
