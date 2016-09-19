@@ -190,20 +190,22 @@ class FakeDataGenerator:
 
         unit_list = list(Unit.objects.filter(parent_unit_no=parent_unit_no, unit_type="Bölüm"))
         room_types = list(RoomType.objects.filter())
-        for i in range(1, count+1):
-            room = Room(
-                code=fake.classroom_code()+str(i),
-                name=fake.classroom(),
-                building=building,
-                room_type=random.choice(room_types),
-                floor=ints(2),
-                capacity=random.choice(range(30, 100)),
-                is_active=True
-            )
-            for unit in unit_list:
-                room.RoomDepartments.add(unit=unit)
-            room.save()
-            FakeDataGenerator.yeni_derslik_zaman_plani(room, random.choice(unit_list))
+        for unit in unit_list:
+            for i in range(1, count+1):
+                capacity = random.choice(range(30, 100))
+                room = Room(
+                    code=fake.classroom_code()+str(i),
+                    name=fake.classroom(),
+                    unit=unit,
+                    building=building,
+                    room_type=random.choice(room_types),
+                    floor=ints(2),
+                    capacity=capacity,
+                    is_active=True,
+                    exam_capacity=random.choice(range(20, capacity))
+                )
+
+                room.save()
 
     @staticmethod
     def yeni_oda_tipi(oda_tip="Derslik", sinav_uygun=False):
@@ -231,7 +233,7 @@ class FakeDataGenerator:
             saat = random.randint(7,9)
             while saat < 18:
                 d = DerslikZamanPlani()
-                d.unit = bolum
+                d.birim = bolum
                 d.derslik = derslik
                 d.gun = gun
                 d.baslangic_saat = str(saat)
@@ -240,7 +242,7 @@ class FakeDataGenerator:
                 d.bitis_saat = str(saat)
                 d.bitis_dakika = dakika
                 saat += random.choice([0, 0, 0, 1])
-                d.derslik_durum = random.choice([1, 1, 1, 1, 2, 3])
+                d.durum = random.choice([1, 1, 1, 1, 2, 3])
                 d.save()
 
     @staticmethod

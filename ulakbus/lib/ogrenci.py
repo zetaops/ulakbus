@@ -10,7 +10,7 @@
 from enum import Enum
 from operator import attrgetter
 from ulakbus.lib.role import AbsRole
-from ulakbus.models import Ogrenci, AbstractRole
+from ulakbus.models import AbstractRole
 
 
 def diploma_no_uret(ogrenci_program):

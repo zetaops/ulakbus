@@ -12,42 +12,28 @@ import time
 class TestCase(BaseTestCase):
 
     def test_ders_programi_yap(self):
-        """
-        Derslik Ders Programı iş akışı aşağıdaki adımdan oluşur.
-        İlk adımda ders etkinlikleri kontrol edilir.
-        Yayınlanlanmamış ders etkinlikleri varsa;
-        Bilgi ver wf adımına geçer. Bu adımda yayınlanmamış derslerin
-        olduğuna dair bilgi mesajı ekrana basılır.
-
-        Yayınlanmış ders etkinlikleri varsa;
-        İlk adımda, derslikler listelenir.
-        Veritabanından çekilen derslik sayısı ile response'dan derslik sayısı karşılaştılıp test edilir.
-
-        İkinci adımda ise,
-        Seçilen dersliğe ait ders programları ekrana basılır.
-        Veritabanından çekilen dersliğe ait ders programi sayısı ile response'dan derslik ders programi syaısı
-        karşılaştılıp test edilir.
-
-        """
 
         usr = User.objects.get(username='ders_programi_koordinatoru_1')
         unit = usr.role_set[0].role.unit()
-        published_false_count = DersEtkinligi.objects.filter(bolum=unit, published=False, donem=Donem.guncel_donem()).count()
+        ders_etkinligi = DersEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem())
+        published_true = ders_etkinligi.filter(published=True)
+        with BlockSave(DersEtkinligi, query_dict={'published': False}):
+            for pt in published_true:
+                pt.published = False
+                pt.save()
+        published_false_count = DersEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem(),
+                                                             published=False).count()
 
         self.prepare_client("/ders_programi_hazirla", user=usr)
         resp = self.client.post()
 
-        assert resp.json['msgbox']['title'] == "Yayınlanmamış Ders Programı Var!"
+        assert resp.json['msgbox']['title'] == "Yayınlanmamış Program Var!"
 
-        self.client.set_path("/derslik_ders_programlari")
-        resp = self.client.post()
-        assert 'msgbox' in resp.json
+        self.client.post(form={'devam': 1})
 
-        self.client.set_path("/ders_programi_hazirla")
-        resp = self.client.post()
+        self.client.post(cmd='incele')
+
         for i in range(2):
-
-            self.client.post(cmd='incele')
 
             if i == 0:
                 # Derslik Arama Kayit Yok
@@ -65,10 +51,7 @@ class TestCase(BaseTestCase):
             resp = self.client.post(form=ara_form)
             assert resp.json['msgbox']['title'] == title
 
-            resp = self.client.post(form={'tamamla': 1})
-            assert 'incele' and 'yayinla' in resp.json['forms']['model'].keys()
-
-            self.client.post(cmd='incele')
+            self.client.post(form={'devam': 1})
 
             if i == 0:
                 # Derslik Arama Kayit Var
@@ -88,17 +71,21 @@ class TestCase(BaseTestCase):
             resp = self.client.post(form=ara_form)
             assert resp.json['objects'][1]['title'] == title
 
-            resp = self.client.post(form={'tamamla': 1})
+            self.client.post(form={'tamamla': 1})
+
+        resp = self.client.post(cmd='vazgec')
+
+        assert 'incele' and 'yayinla' in resp.json['forms']['model'].keys()
 
         resp = self.client.post(cmd='bitir')
 
-        assert resp.json['msgbox']['title'] == "Ders Programı Yayınlandı!"
+        assert resp.json['msgbox']['title'] == "Program Yayınlandı!"
 
         time.sleep(1)
 
         resp = self.client.post()
 
-        assert resp.json['msgbox']['title'] == "Yayınlanmış Ders Programı Var!"
+        assert resp.json['msgbox']['title'] == "Yayınlanmış Program Var!"
 
         published_true = DersEtkinligi.objects.filter(bolum=unit, published=True, donem=Donem.guncel_donem())
 
@@ -117,12 +104,10 @@ class TestCase(BaseTestCase):
                 if resp.json['objects'][i]['fields'][day]:
                     count_of_ders_etkinlikleri += 1
         assert len(num_of_ders_etkinlikleri) == count_of_ders_etkinlikleri
-
-        for de in published_true:
-            de.published = False
-            de.save()
-
-        time.sleep(1)
+        with BlockSave(DersEtkinligi, query_dict={'published': False}):
+            for de in published_true:
+                de.published = False
+                de.save()
 
         assert published_false_count == DersEtkinligi.objects.filter(bolum=unit, published=False, donem=Donem.guncel_donem()).count()
 
@@ -145,12 +130,20 @@ class TestCase(BaseTestCase):
         """
         usr = User.objects.get(username='ders_programi_koordinatoru_1')
         unit = usr.role_set[0].role.unit()
-        published_false_count = SinavEtkinligi.objects.filter(bolum=unit, published=False, donem=Donem.guncel_donem()).count()
+        sinav_etkinligi = SinavEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem())
+        published_true = sinav_etkinligi.filter(published=True)
+        with BlockSave(SinavEtkinligi, query_dict={'published': False}):
+            for pt in published_true:
+                pt.published = False
+                pt.save()
+
+        published_false_count = SinavEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem(),
+                                                              published=False).count()
 
         self.prepare_client('/sinav_programi_hazirla', user=usr)
         resp = self.client.post()
 
-        assert resp.json['msgbox']['title'] == u"Yayınlanmamış Sınav Programı Var!"
+        assert resp.json['msgbox']['title'] == "Yayınlanmamış Program Var!"
 
         self.client.set_path("/derslik_sinav_programlari")
         resp = self.client.post()
@@ -159,9 +152,11 @@ class TestCase(BaseTestCase):
         self.client.set_path('/sinav_programi_hazirla')
         self.client.post()
 
-        for i in range(2):
+        self.client.post(form={'devam': 1})
 
-            self.client.post(cmd='incele')
+        self.client.post(cmd='incele')
+
+        for i in range(2):
 
             if i == 0:
                 # Derslik Arama Kayit Yok
@@ -179,10 +174,7 @@ class TestCase(BaseTestCase):
             resp = self.client.post(form=ara_form)
             assert resp.json['msgbox']['title'] == title
 
-            resp = self.client.post(form={'tamamla': 1})
-            assert 'incele' and 'yayinla' in resp.json['forms']['model'].keys()
-
-            self.client.post(cmd='incele')
+            self.client.post(form={'devam': 1})
 
             if i == 0:
                 # Derslik Arama Kayit Var
@@ -202,17 +194,21 @@ class TestCase(BaseTestCase):
             resp = self.client.post(form=ara_form)
             assert resp.json['objects'][1]['title'] == title
 
-            resp = self.client.post(form={'tamamla': 1})
+            self.client.post(form={'tamamla': 1})
+
+        resp = self.client.post(cmd='vazgec')
+
+        assert 'incele' and 'yayinla' in resp.json['forms']['model'].keys()
 
         resp = self.client.post(cmd='bitir')
 
-        assert resp.json['msgbox']['title'] == "Sınav Programı Yayınlandı!"
+        assert resp.json['msgbox']['title'] == "Program Yayınlandı!"
 
         time.sleep(1)
 
         resp = self.client.post()
 
-        assert resp.json['msgbox']['title'] == "Yayınlanmış Sınav Programı Var!"
+        assert resp.json['msgbox']['title'] == "Yayınlanmış Program Var!"
 
         published_true = SinavEtkinligi.objects.filter(bolum=unit, published=True, donem=Donem.guncel_donem())
 
@@ -223,8 +219,8 @@ class TestCase(BaseTestCase):
         derslikler = [s_yerleri.room for s_etkinlik in published_true
                       for s_yerleri in s_etkinlik.SinavYerleri if s_etkinlik.SinavYerleri]
         assert len(derslikler) == len(resp.json['forms']['form'][2]['titleMap'])
-        resp = self.client.post(form={"ileri": 1, "derslik": 'XJUW0J9xEiOUqBWUtHAkky0yPjk'})
-        room = Room.objects.get("XJUW0J9xEiOUqBWUtHAkky0yPjk")
+        resp = self.client.post(form={"ileri": 1, "derslik": 'Jju1xbrWBsMoFb9fPyNpLnwPuW9'})
+        room = Room.objects.get("Jju1xbrWBsMoFb9fPyNpLnwPuW9")
         num_of_sinav_etkinlikleri = [s for s in SinavEtkinligi.objects if room in s.SinavYerleri]
         count_of_sinav_etkinlikleri = 0
         for i in range(1, len(resp.json['objects'])):
@@ -232,11 +228,8 @@ class TestCase(BaseTestCase):
                 if resp.json['objects'][i]['fields'][day]:
                     count_of_sinav_etkinlikleri += 1
         assert len(num_of_sinav_etkinlikleri) == count_of_sinav_etkinlikleri
-
-        for se in published_true:
-            se.published = False
-            se.save()
-
-        time.sleep(1)
-
+        with BlockSave(SinavEtkinligi, query_dict={'published': False}):
+            for se in published_true:
+                se.published = False
+                se.save()
         assert published_false_count == SinavEtkinligi.objects.filter(bolum=unit, published=False, donem=Donem.guncel_donem()).count()

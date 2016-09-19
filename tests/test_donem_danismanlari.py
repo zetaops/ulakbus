@@ -7,10 +7,9 @@
 
 import time
 
-from ulakbus.models import DonemDanisman, Donem, Okutman
+from ulakbus.models import DonemDanisman, Donem
 from ulakbus.models.auth import User
 from zengine.lib.test_utils import BaseTestCase
-from zengine.messaging.model import Message
 
 
 class TestCase(BaseTestCase):
@@ -35,15 +34,10 @@ class TestCase(BaseTestCase):
         seçilenen danışmanlar kaydedildikten sonra, sunucudan dönen cevapta danışman
         kayıt sayılarında degişiklik olup olmadığı test edilir.
 
-        Doğru mesaj nesnesi sayısının oluştrulup oluşturulmadığını test eder.
-
         """
 
         # Veritabanından bölüm başkanı kullanıcısı seçilir.
         usr = User.objects.get(username='bolum_baskani_1')
-
-        # Bütün mesaj nesneleri silinir.
-        Message.objects.delete()
 
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/donem_danismanlari', user=usr)

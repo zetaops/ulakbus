@@ -33,6 +33,8 @@ except ImportError:
         pass
 
 from pyoko.exceptions import  IntegrityError
+
+
 class User(Model, BaseUser):
     """User modeli
 

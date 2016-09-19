@@ -3,18 +3,23 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
-from ulakbus.models import Ogrenci, User
+from pyoko.db.adapter.db_riak import BlockSave
+from ulakbus.models import Ogrenci, User, Donem, SinavEtkinligi
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.lib.ogrenci import aktif_sinav_listesi
 from ulakbus.lib.date_time_helper import map_etkinlik_hafta_gunleri
-import time
 
 
 class TestCase(BaseTestCase):
     def test_okutman_sinav_programi_goruntule(self):
 
         user = User.objects.get(username='ogrenci_3')
+        unit = user.role_set[0].role.unit
+        sinav_etkinligi = SinavEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem())
+        with BlockSave(SinavEtkinligi, query_dict={'published': True}):
+            for se in sinav_etkinligi:
+                se.published = True
+                se.save()
         # İlgili öğrenci bulunur.
         ogrenci = Ogrenci.objects.get(user=user)
         ogrenci_adi = ogrenci.__unicode__()
@@ -32,12 +37,10 @@ class TestCase(BaseTestCase):
 
             # İkinci test yayınlanmış sınav etkinliğinin olması durumudur.
             # Bu yüzden Sınav Etkinliği modelinin published fieldı True yapılır.
-
-            for etkinlik in sinav_etkinlikleri:
-                etkinlik.published = cond
-                etkinlik.save()
-
-            time.sleep(1)
+            with BlockSave(SinavEtkinligi, query_dict={'published': cond}):
+                for etkinlik in sinav_etkinlikleri:
+                    etkinlik.published = cond
+                    etkinlik.save()
 
             resp = self.client.post()
 
@@ -85,3 +88,9 @@ class TestCase(BaseTestCase):
                 # Ekranda gösterilen sınav etkinliklerinin sayısının veri tabanından
                 # dönen etkinlik sayısıyla eşit olduğu kontrol edilir.
                 assert etkinlik_sayisi == len(sinav_etkinlikleri)
+
+        sinav_etkinligi = SinavEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem())
+        with BlockSave(SinavEtkinligi, query_dict={'published': False}):
+            for se in sinav_etkinligi:
+                se.published = False
+                se.save()

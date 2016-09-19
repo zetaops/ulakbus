@@ -159,4 +159,3 @@ class DonemDanismanAtama(CrudView):
         for okutman_key in self.current.task_data['okutmanlar']:
             okutman = Okutman.objects.get(okutman_key)
             notify(okutman.personel.user if okutman.personel else okutman.harici_okutman.user, message, title)
-            print "dslkjk"

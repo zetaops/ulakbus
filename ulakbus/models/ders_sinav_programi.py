@@ -33,6 +33,8 @@ def derslik_durumu_listele():
 
 class ZamanDilimleri(Model):
     class Meta:
+        verbose_name = _(u"Zaman Dilimi")
+        verbose_name_plural = _(u"Zaman Dilimleri")
         unique_together = [('birim', 'gun_dilimi')]
         search_fields = ['birim', 'gun_dilimi']
 
@@ -89,6 +91,8 @@ class ZamanCetveli(Model):
 
     class Meta:
         verbose_name = _(u'Zaman Cetveli')
+        verbose_name_plural = _(u'Zaman Cetvelleri')
+
         unique_together = [('zaman_dilimi', 'ogretim_elemani_zaman_plani', 'gun')]
         search_fields = ['zaman_dilimi', 'ogretim_elemani_zaman_plani', 'birim', 'gun', 'durum']
 
@@ -110,18 +114,20 @@ class ZamanCetveli(Model):
 class DerslikZamanPlani(Model):
     class Meta:
         verbose_name = _(u'Derslik Zaman Planı')
+        verbose_name_plural = _(u'Derslik Zaman Planları')
+
         unique_together = [
             ('derslik', 'gun', 'baslangic_saat', 'baslangic_dakika', 'bitis_saat', 'bitis_dakika')]
         search_fields = ['unit', 'derslik', 'gun', 'derslik_durum']
 
-    unit = Unit()
+    birim = Unit()
     derslik = Room()
     gun = field.Integer(_(u"Gün"), choices=gun_listele, index=True)
     baslangic_saat = field.String(_(u'Başlangıç Saati'), default='08', index=True)
     baslangic_dakika = field.String(_(u'Başlangıç Dakikası'), default='30', index=True)
     bitis_saat = field.String(_(u"Bitiş Saati"), default='12', index=True)
     bitis_dakika = field.String(_(u"Bitiş Dakikası"), default='00', index=True)
-    derslik_durum = field.Integer(_(u"Durum"), choices=derslik_durumu_listele, index=True)
+    durum = field.Integer(_(u"Durum"), choices=derslik_durumu_listele, index=True)
 
     def __unicode__(self):
         return '%s %s %s|%s %s' % (
@@ -132,10 +138,24 @@ class DerslikZamanPlani(Model):
             dict(derslik_durumu_listele())[int(self.derslik_durum)]
         )
 
+    @staticmethod
+    def kullanabilen_bolumler(derslik, **kwargs):
+        units = set(DerslikZamanPlani.objects.filter(derslik=derslik, **kwargs).values_list('unit_id'))
+        return units
+
+    @staticmethod
+    def kullanabildigi_derslikler(unit, make_object=True, **kwargs):
+        rooms = set(DerslikZamanPlani.objects.filter(unit=unit, **kwargs).values_list('derslik_id'))
+        if make_object:
+            return map(Room.objects.get, rooms)
+        else:
+            return rooms
+
 
 class DersEtkinligi(Model):
     class Meta:
         verbose_name = _(u"Ders Etkinliği")
+        verbose_name_plural = _(u"Ders Etkinlikleri")
         search_fields = ['unit_yoksis_no', 'room', 'okutman']
 
     solved = fields.Boolean(_(u'Ders Planı Çözüm Durumu'), index=True)
@@ -179,6 +199,7 @@ class DersEtkinligi(Model):
 class SinavEtkinligi(Model):
     class Meta:
         verbose_name = _(u'Sınav Etkinliği')
+        verbose_name_plural = _(u'Sınav Etkinlikleri')
         search_field = ['bolum', 'ders', 'sube', 'donem']
 
     sube = Sube(_(u'Şube'), index=True)
@@ -219,3 +240,42 @@ class SinavEtkinligi(Model):
 
     def sinav_zamani(self):
         return format_datetime(self.tarih) if self.tarih else _(u'Henüz zamanlanmadi')
+
+
+class SinavZamanDilimi(Model):
+    class Meta:
+        verbose_name = _(u'Sınav Zaman Dilimi')
+        verbose_name_plural = _(u'Sınav Zaman Dilimleri')
+        unique_together = [('birim', 'gun_dilimi')]
+        search_fields = ['birim', 'gun_dilimi']
+
+    birim = Unit(_(u'Bölüm'))
+    gun_dilimi = field.Integer(_(u'Gün Dilimi'), choices=gun_dilimi_listele)
+    baslama_saat = field.String(_(u"Başlama Saati"))
+    baslama_dakika = field.String(_(u"Başlama Dakikası"))
+
+    bitis_saat = field.String(_(u"Bitiş Saati"))
+    bitis_dakika = field.String(_(u"Bitiş Dakikası"))
+
+    def __unicode__(self):
+        return '{}/{}:{}-{}:{}'.format(dict(gun_dilimi_listele())[self.gun_dilimi], self.baslama_saat, self.baslama_dakika,
+                                       self.bitis_saat, self.bitis_dakika)
+
+
+class DerslikSinavPlani(Model):
+    class META:
+        verbose_name = _(u'Derslik Sınav Planı')
+        verbose_name_plural = _(u'Derslik Sınav Planları')
+        unique_together = [('derslik', 'zaman_dilimi', 'birim', 'gun')]
+        search_fields = ['derslik', 'birim', 'zaman_dilimi', 'gun', 'durum']
+
+    derslik = Room(_(u'Derslik'))
+    birim = Unit(_(u'Bölüm'))
+    donem = Donem(_(u'Güncel Dönem'))
+    zaman_dilimi = SinavZamanDilimi(_(u'Sınav Zaman Dilimi'))
+    durum = field.Integer(_(u"Uygunluk Durumu"), choices=uygunluk_durumu_listele(), default=1, index=True)
+    gun = field.Integer(_(u"Gün"), choices=HAFTA)
+
+    def __unicode__(self):
+        return '{}/{}/{}'.format(dict(HAFTA)[self.gun], self.zaman_dilimi,
+                                 dict(uygunluk_durumu_listele())[self.durum])

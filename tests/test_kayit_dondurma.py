@@ -28,8 +28,9 @@ class TestCase(BaseTestCase):
         İş akışının ikinci adımında dönemler ve kayıt dondurma tarihi seçilir.
         İş akışının üçüncü aşamasında öğrencinin soyut rolü dondurulmus_kayit olarak güncellenir ve
         danışmanına bildirim gönderilir.
-        Yollanan kayıtların `DondurulmusKayit` modeline kayıt edilip edilmediği ve öğrenci kayıtlı
-        olduğu programın öğrencilik statüsünün değiştirilip değiştirilmediği test edilir.
+        Yollanan kayıtların `DondurulmusKayit` modeline kayıt edilip edilmediği ve öğrencinin kayıtlı
+        olduğu programın öğrencilik statüsünün değiştirilip değiştirilmediği ve dondurulmuş kayıt olup
+        olmadığını test edilir.
         """
 
         # Veritabanından ogrenci_isleri_1 seçilir
