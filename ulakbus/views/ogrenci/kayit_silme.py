@@ -12,7 +12,7 @@ from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 from ulakbus.lib.common import notify
 from ulakbus.lib.role import AbsRole
-from ulakbus.lib.ogrenci import kayidin_abstract_rolu
+from ulakbus.lib.ogrenci import kaydi_silinmis_abs_role
 
 ABSTRACT_ROLE_LIST = [
     AbsRole.LISANS_OGRENCISI_AKTIF.name,
@@ -207,7 +207,7 @@ class KayitSil(CrudView):
             roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
             for role in roles:
                 if role.abstract_role.key in ABSTRACT_ROLE_LIST:
-                        abstract_role = kayidin_abstract_rolu(role, sil=True)
+                        abstract_role = kaydi_silinmis_abs_role(role)
                         role.abstract_role = abstract_role
                         role.save()
 

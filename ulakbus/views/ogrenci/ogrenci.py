@@ -32,7 +32,7 @@ from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from ulakbus.lib.ogrenci import kayidin_abstract_rolu
+from ulakbus.lib.ogrenci import kaydi_dondurulmus_abs_role
 from zengine.lib.translation import gettext as _, gettext_lazy, format_date
 
 
@@ -593,7 +593,7 @@ class KayitDondurma(CrudView):
                     current_roles = Role.objects.filter(user=ogrenci.user, unit=unit)
                     for role in current_roles:
                         if role.abstract_role.name in ABSTRACT_ROLE_LIST:
-                           role.abstract_role = kayidin_abstract_rolu(role, dondur=True)
+                           role.abstract_role = kaydi_dondurulmus_abs_role(role)
                            role.save()
 
             danisman_message = _(u"""%s numaralı, %s adlı öğrencinin %s programındaki kaydı

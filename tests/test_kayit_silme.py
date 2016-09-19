@@ -4,10 +4,9 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from six import text_type
 
 from ulakbus.models import OgrenciProgram, Ogrenci, Role
-from ulakbus.lib.ogrenci import kayidin_abstract_rolu
+from ulakbus.lib.ogrenci import kaydi_silinmis_abs_role
 from zengine.lib.test_utils import BaseTestCase
 
 
@@ -124,7 +123,7 @@ class TestCase(BaseTestCase):
         # Rolün değişip değişmediğini test eder
         for key in _roles:
             role = Role.objects.get(key)
-            assert role.abstract_role == kayidin_abstract_rolu(role, sil=True)
+            assert role.abstract_role == kaydi_silinmis_abs_role(role)
             role.abstract_role = _roles[key]
             role.save()
 
