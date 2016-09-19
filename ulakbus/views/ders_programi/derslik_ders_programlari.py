@@ -52,7 +52,9 @@ class DerslikDersProgrami(CrudView):
         Yayınlanmış ders etkinlikleri var mı yok mu diye kontrol eder.
 
         """
-        length = len(DersEtkinligi.objects.filter(published=True, donem=Donem.guncel_donem(), bolum=self.current.role.unit))
+        length = len(DersEtkinligi.objects.filter(published=True,
+                                                  donem=Donem.guncel_donem(),
+                                                  bolum=self.current.role.unit))
         self.current.task_data['yayinlanmamis_ders_sayisi'] = length
 
     def bilgi_ver(self):
@@ -71,8 +73,11 @@ class DerslikDersProgrami(CrudView):
 
         """
         _form = DerslikSecimFormu(title=_(u'Derslik Seçiniz'), current=self.current)
-        ders_etkinlikleri = DersEtkinligi.objects.filter(published=True, donem=Donem.guncel_donem(), bolum=self.current.role.unit)
-        _choices = [(_etkinlik.room.key, _etkinlik.room.__unicode__()) for _etkinlik in ders_etkinlikleri]
+        ders_etkinlikleri = DersEtkinligi.objects.filter(published=True,
+                                                         donem=Donem.guncel_donem(),
+                                                         bolum=self.current.role.unit)
+        _choices = [(_etkinlik.room.key, _etkinlik.room.__unicode__())
+                    for _etkinlik in ders_etkinlikleri]
         _form.derslik = fields.Integer(choices=_choices)
         self.form_out(_form)
 
@@ -84,8 +89,13 @@ class DerslikDersProgrami(CrudView):
         room = Room.objects.get(self.current.input['form']['derslik'])
         hafta = dict(HAFTA)
         self.output['objects'] = [hafta]
-        d_etkinlikleri = DersEtkinligi.objects.filter(room=room, published=True, donem=Donem.guncel_donem())
-        ders_etkinlikleri = map_etkinlik_hafta_gunleri(d_etkinlikleri.order_by('gun', 'baslangic_saat', 'bitis_saat','baslangic_dakika','bitis_dakika'))
+        d_etkinlikleri = DersEtkinligi.objects.filter(room=room,
+                                                      published=True,
+                                                      donem=Donem.guncel_donem())
+        ders_etkinlikleri = map_etkinlik_hafta_gunleri(
+            d_etkinlikleri.order_by(
+                'gun', 'baslangic_saat',
+                'bitis_saat','baslangic_dakika', 'bitis_dakika'))
         # Bir güne ait maximum etkinlik sayısı.
         max_etkinlik = max(map(len, ders_etkinlikleri.values()))
         for i in range(max_etkinlik):

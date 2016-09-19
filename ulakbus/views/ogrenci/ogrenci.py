@@ -564,7 +564,7 @@ class KayitDondurma(CrudView):
         dondurulan_donemler = [donem for donem in donemler if donem['secim']]
         self.current.task_data['kayit_dondurma_help_text'] = None
         if len(dondurulan_donemler) > 2 or len(dondurulan_donemler) < 1:
-            text = _(u"%s dönem seçtiniz. Minimum 1 dönem, maximum 2 dönem kayıt dondurabilir.") % len(dondurulan_donemler)
+            text = _(u"%s dönem seçtiniz. En az 1 dönem, en çok 2 dönem kayıt dondurabilir.") % len(dondurulan_donemler)
             self.current.task_data['kayit_dondurma_help_text'] = text
         else:
             ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['ogrenci_program_id'])
@@ -596,20 +596,23 @@ class KayitDondurma(CrudView):
                            role.abstract_role = kayidin_abstract_rolu(role, dondur=True)
                            role.save()
 
-            danisman_message = _(u'%s numaralı, %s adlı öğrencinin %s programındaki kaydı '
-                                 u'dondurulmuştur.') % (ogrenci_program.ogrenci_no, ogrenci_ad_soyad,
-                                                        ogrenci_program.program.adi)
+            danisman_message = _(u"""%s numaralı, %s adlı öğrencinin %s programındaki kaydı
+                                 dondurulmuştur.""") % (ogrenci_program.ogrenci_no,
+                                                         ogrenci_ad_soyad,
+                                                         ogrenci_program.program.adi)
 
             # Öğrencinin danışmanına bilgilendirme geçilir
-            notify(ogrenci_program.danisman.user, title=_(u"Öğrenci Kaydı Donduruldu"), message=danisman_message)
+            notify(ogrenci_program.danisman.user, title=_(u"Öğrenci Kaydı Donduruldu"),
+                   message=danisman_message)
             donemler = "-".join([donem['donem']for donem in dondurulan_donemler])
             ogrenci_message = _(u"%s dönemleri için kaydınız dondurulmuştur.") % donemler
 
-            notify(ogrenci_program.ogrenci.user, title=_(u"Kayıt Dondurma"), message=ogrenci_message)
+            notify(ogrenci_program.ogrenci.user, title=_(u"Kayıt Dondurma"),
+                   message=ogrenci_message)
 
             self.current.output['msgbox'] = {
                 'type': 'info', "title": _(u'Öğrenci Kayıt Dondurma Başarılı'),
-                "msg": '%s' % danisman_message
+                "msg": danisman_message
             }
 
 
@@ -936,7 +939,7 @@ class MazeretliDersKaydi(CrudView):
         ogrenci_ad_soyad = ogrenci.ad + " " + ogrenci.soyad
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Öğrenci Ders Kayıt Durumu Değiştirme Başarılı'),
-            "msg": _(
-                u'%s nolu %s adlı Öğrencinin %s Programına Ait Ders Kayıt Durumu "Mazeretli" Olarak Güncellendi') % (
+            "msg": _(u"""%s nolu %s adlı öğrencinin %s programına ait ders
+                          kayıt durumu "Mazeretli" olarak güncellendi""") % (
                 ogrenci_program.ogrenci_no, ogrenci_ad_soyad, ogrenci_program.program.adi)
         }
