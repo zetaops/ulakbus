@@ -32,7 +32,7 @@ except ImportError:
     class PermissionDenied(Exception):
         pass
 
-from pyoko.exceptions import  IntegrityError
+from pyoko.exceptions import IntegrityError
 
 
 class User(Model, BaseUser):
@@ -70,7 +70,6 @@ class User(Model, BaseUser):
         return "%s %s" % (self.name, self.surname)
 
     def pre_save(self):
-        print('%s %s'.format(self.username, self.password))
         if not self.username or not self.password:
             raise IntegrityError
         self.encrypt_password()
@@ -286,8 +285,6 @@ class PermissionCache(Cache):
         super(PermissionCache, self).__init__(role_id)
 
 
-
-
 class Role(Model):
     """Role modeli
     Kullanıcıların rol ile ilişkilendiği modeldir. Kullanıcıların birden
@@ -443,6 +440,13 @@ class Role(Model):
     def get_bolum_baskanlari(cls):
         """fake"""
         return []
+
+    def send_notification(self, title, message, typ=1, url=None):
+        """
+        sends a message to user of this role's private mq exchange
+
+        """
+        self.user.send_notification(title=title, message=message, typ=typ, url=url)
 
 
 class LimitedPermissions(Model):
