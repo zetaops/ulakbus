@@ -13,7 +13,7 @@ from zengine.views.crud import CrudView
 from collections import OrderedDict
 from ulakbus.services.zato_wrapper import DersProgramiOlustur
 from ulakbus.services.zato_wrapper import SinavProgramiOlustur
-from ulakbus.models import Room, Okutman, DersEtkinligi, Donem, SinavEtkinligi, Sube
+from ulakbus.models import Room, Okutman, DersEtkinligi, Donem, DerslikZamanPlani, SinavEtkinligi, Sube
 from zengine.lib.translation import gettext_lazy as __, gettext as _, format_time, format_datetime
 from datetime import time
 

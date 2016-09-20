@@ -133,8 +133,8 @@ class DerslikZamanPlani(Model):
         return '%s %s %s|%s %s' % (
             self.derslik,
             dict(HAFTA)[self.gun],
-            format_time(time(self.baslangic_saat, self.baslangic_dakika)),
-            format_time(time(self.bitis_saat, self.bitis_dakika)),
+            format_time(time(int(self.baslangic_saat), int(self.baslangic_dakika))),
+            format_time(time(int(self.bitis_saat), int(self.bitis_dakika))),
             dict(derslik_durumu_listele())[int(self.derslik_durum)]
         )
 
