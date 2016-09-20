@@ -9,7 +9,7 @@ from pyoko import ListNode
 from zengine.views.crud import CrudView
 from zengine.forms import fields
 from zengine.forms import JsonForm
-from ulakbus.models.ogrenci import Okutman, Donem, Takvim, Unit
+from ulakbus.models.ogrenci import Okutman, Donem, Takvim
 from ulakbus.lib.personel import personel_izin_gunlerini_getir
 from ulakbus.models.ders_sinav_programi import DersEtkinligi
 from datetime import datetime, date
@@ -45,6 +45,7 @@ class OkutmanListelemeForm(JsonForm):
 
     class Meta:
         inline_edit = ['secim']
+        allow_add_listnode = False
 
     class OkutmanListesi(ListNode):
         secim = fields.Boolean(gettext_lazy(u"Seçim"), type="checkbox")

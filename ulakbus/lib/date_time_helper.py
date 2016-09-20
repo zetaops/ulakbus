@@ -6,7 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
+from collections import defaultdict
 from datetime import timedelta, date
 import calendar
 from zengine.lib.translation import gettext_lazy, gettext as _, LazyProxy, get_day_names, get_month_names
@@ -22,7 +22,7 @@ def gun_dilimi_listele():
     ]
 
 
-def _liste_hazirla(fn, keep_fn=False):
+def _liste_hazirla(fn, make_choices=False):
     """Babel'ın `get_day_names` ve `get_month_names` özelliklerini Ulakbus'e uyarlar.
 
     Babel'ın `get_day_names` ve `get_month_names` methodları, gün ve ayları 0-indeksli
@@ -34,50 +34,58 @@ def _liste_hazirla(fn, keep_fn=False):
     Bunu sağlamak adına, LazyProxy ile listenin oluşturulması kullanım anına ertelenmiş,
     yardımcı fonksiyon ile de indeksler beklenen sayılara kaydırılmıştır.
     """
-    def hazirlik():
+    def choices_title_map():
         liste = []
         for i, eleman in fn().items():
-            liste.append((i + 1, eleman))
+            liste.append({'name': eleman, 'value': i})
         return liste
-    if not keep_fn:
-        return LazyProxy(hazirlik, enable_cache=False)
+    if not make_choices:
+        return LazyProxy(lambda: fn().items(), enable_cache=False)
     else:
-        return hazirlik
+        return choices_title_map
 
-HAFTA = _liste_hazirla(get_day_names)
-gun_listele = _liste_hazirla(get_day_names, keep_fn=True)
+
+def _get_day_names():
+    modified_days = {}
+    days = get_day_names().items()
+    for i, name in days:
+        modified_days[i + 1] = name
+    return modified_days
+
+
+HAFTA = _liste_hazirla(_get_day_names)
+gun_listele = _liste_hazirla(_get_day_names, make_choices=True)
 
 AYLAR = _liste_hazirla(get_month_names)
-ay_listele = _liste_hazirla(get_month_names, keep_fn=True)
+ay_listele = _liste_hazirla(get_month_names, make_choices=True)
 
 
-def map_sinav_etkinlik_hafta_gunleri(sinavlar):
+def map_etkinlik_hafta_gunleri(etkinlikler):
     """
-    Sinav nesnelerini tarihlerine gore haftanin gunlerine dagitir.
+    Ders ve Sinav Etkinliği  nesnelerini tarihlerine göre haftanın günlerine dağıtır.
 
-    Haftanin gunlerinin key olarak kullanildigi bir dict uretir.
-
-    ..code_block
-    {
-        1: ["Matematik Ara Sinav -1", "Fizik Ara Sinav -1"],
-        2: ["Edebiyat", ]
-        ...
-
-    }
+    Haftanınn günlerinin key olarak kullanıldığı  bir dict üretir.
 
     Args:
-         sinavlar (list): sinav etkinligi objeleri listesi
+        etkinlikler(list) : Sinav ya da ders etkinliği objeleri listesi
 
     Returns:
-        (dict)
+        dict
     """
-    r = {}
-    for e in sinavlar:
-        weekday = e.tarih.isoweekday()
-        etkinlik_listesi = r.get(weekday, [])
-        etkinlik_listesi.append(e.__unicode__())
-        r[weekday] = etkinlik_listesi
-    return r
+
+    d = defaultdict(list)
+    for etkinlik in etkinlikler:
+        if hasattr(etkinlik, "tarih"):
+            weekday = etkinlik.tarih.isoweekday()
+            etkinlik_listesi = d.get(weekday, [])
+            etkinlik_listesi.append(etkinlik.__unicode__())
+            d[weekday] = etkinlik_listesi
+        else:
+            weekday = etkinlik.gun
+            ders_etkinlikleri = d[weekday]
+            ders_etkinlikleri.append(etkinlik.__unicode__())
+            d[weekday] = ders_etkinlikleri
+    return d
 
 
 def zaman_araligi(baslangic, bitis):

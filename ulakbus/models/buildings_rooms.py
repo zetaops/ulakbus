@@ -126,11 +126,13 @@ class Room(Model):
     code = field.String(_(u"Kod"), index=True)
     name = field.String(_(u"İsim"), index=True)
     room_type = RoomType(_(u"Oda Tipi"), index=True)
+    unit = Unit(_(u"Bölüm"))
 
     #: Bina içerisindeki kat bilgisi
     floor = field.String(_(u"Kat"), index=True)
     capacity = field.Integer(_(u"Kapasite"), index=True)
     building = Building()
+    exam_capacity = field.Integer(_(u"Sınav Kapasitesi"))
 
     is_active = field.Boolean(_(u"Aktif"), index=True)
     unitime_key = field.String()  # Ders/Sınav programları hazırlanırken id'leri eşleştirmek için
@@ -140,15 +142,6 @@ class Room(Model):
         verbose_name_plural = _(u"Odalar")
         search_fields = ['code', 'name']
         list_fields = ['code', 'name']
-
-    class RoomDepartments(ListNode):
-        """Oda Departman ListNode
-
-        Bu odayı kullanabilecek birimlerin listesi saklanır.
-
-        """
-
-        unit = Unit()
 
     def __unicode__(self):
         return '%s %s %s' % (self.code, self.name, self.capacity)

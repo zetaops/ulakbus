@@ -10,27 +10,29 @@ from ulakbus.models import OgrenciProgram, Ogrenci, Role, User, AbstractRole
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
+from ulakbus.lib.common import notify
+from ulakbus.lib.role import AbsRole
+from ulakbus.lib.ogrenci import kaydi_silinmis_abs_role
 
 ABSTRACT_ROLE_LIST = [
-    "Lisans Programı Öğrencisi - Aktif",
-    "Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+    AbsRole.LISANS_OGRENCISI_AKTIF.name,
+    AbsRole.LISANS_OGRENCISI_KAYIT_DONDURMUS.name,
 
-    "Ön Lisans Programı Öğrencisi - Aktif",
-    "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+    AbsRole.ON_LISANS_OGRENCISI_AKTIF.name,
+    AbsRole.ON_LISANS_OGRENCISI_KAYIT_DONDURMUS.name,
 
-    "Yüksek Lisans Programı Öğrencisi - Aktif",
-    "Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+    AbsRole.YUKSEK_LISANS_OGRENCISI_AKTIF.name,
+    AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_DONDURMUS.name,
 
-    "Doktora Programı Öğrencisi - Aktif",
-    "Doktora Programı Öğrencisi - Kayıt Dondurmuş",
-
+    AbsRole.DOKTORA_OGRENCISI_AKTIF.name,
+    AbsRole.DOKTORA_OGRENCISI_KAYIT_DONDURMUS.name
 ]
 
 ABSTRACT_ROLE_LIST_SILINMIS = [
-    "Lisans Programı Öğrencisi - Kayıt Silinmiş",
-    "Ön Lisans Programı Öğrencisi - Kayıt Silinmiş",
-    "Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş",
-    "Doktora Programı Öğrencisi - Kayıt Silinmiş",
+    AbsRole.LISANS_OGRENCISI_KAYIT_SILINMIS.name,
+    AbsRole.ON_LISANS_OGRENCISI_KAYIT_SILINMIS.name,
+    AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS.value,
+    AbsRole.DOKTORA_OGRENCISI_KAYIT_SILINMIS.value
 ]
 
 
@@ -105,7 +107,7 @@ class KayitSil(CrudView):
             roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
             for role in roles:
                 self.current.task_data['roles'].append(role.abstract_role.name)
-                name = role.abstract_role.name
+                name = role.abstract_role.key
                 if name not in ABSTRACT_ROLE_LIST_SILINMIS and name in ABSTRACT_ROLE_LIST:
                     self.current.task_data['command'] = 'kayit_silme_islemini_onayla'
                     break
@@ -204,39 +206,21 @@ class KayitSil(CrudView):
             program.save()
             roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
             for role in roles:
-                if role.abstract_role.name in ABSTRACT_ROLE_LIST:
-                    if role.unit.unit_type == 'Program':
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[0])
-                        role.abstract_role = abstract_role
-                        role.save()
-                    elif role.unit.unit_type == 'Yüksek Lisans Programı':
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[2])
-                        role.abstract_role = abstract_role
-                        role.save()
-                    elif role.unit.unit_type == 'Doktora Programı':
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[3])
-                        role.abstract_role = abstract_role
-                        role.save()
-                    else:
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[1])
+                if role.abstract_role.key in ABSTRACT_ROLE_LIST:
+                        abstract_role = kaydi_silinmis_abs_role(role)
                         role.abstract_role = abstract_role
                         role.save()
 
         ogrenci_rolleri = Role.objects.filter(user=ogrenci.user)
         for role in ogrenci_rolleri:
-            if role.abstract_role.name not in ABSTRACT_ROLE_LIST_SILINMIS:
+            if role.abstract_role.key not in ABSTRACT_ROLE_LIST_SILINMIS:
                 title = _(u'Kayıt Silme')
                 msg = _(u"""%s adlı öğrencinin kaydı silinmiştir.
                             Öğrenci farklı rollere sahiptir.""") % ogrenci
 
                 # TODO: sistem yoneticisine bilgi ver.
                 usr = User.objects.get(username='ulakbus')
-                self.notify(usr, msg=msg, title=title)
-                break
+                notify(usr, message=msg, title=title)
 
     def bilgi_ver(self):
         """
@@ -256,12 +240,7 @@ class KayitSil(CrudView):
             ogrenci, self.current.input['form']['aciklama'])
 
         for program in ogrenci_program:
-            self.notify(program.danisman.user, title=title, msg=msg)
+            notify(program.danisman.user, title=title, message=msg)
 
-        self.notify(ogrenci.user, title=title, msg=msg)
-
-    @staticmethod
-    def notify(user, msg, title):
-        if user:
-            user.send_notification(message=msg, title=title)
+        notify(ogrenci.user, title=title, message=msg)
 

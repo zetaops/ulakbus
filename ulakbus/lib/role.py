@@ -73,10 +73,8 @@ class AbsRole(Enum):
     LISANS_OGRENCISI_KAYIT_SILINMIS = __(u"Lisans Programı Öğrencisi - Kayıt Silinmiş")
     LISANS_OGRENCISI_KAYIT_DONDURMUS = __(u"Lisans Programı Öğrencisi - Kayıt Dondurmuş")
     YUKSEK_LISANS_OGRENCISI_AKTIF = __(u"Yüksek Lisans Programı Öğrencisi - Aktif")
-    YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS = __(
-        u"Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş")
-    YUKSEK_LISANS_OGRENCISI_KAYIT_DONDURMUS = __(
-        u"Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş")
+    YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS = __(u"Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş")
+    YUKSEK_LISANS_OGRENCISI_KAYIT_DONDURMUS = __(u"Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş")
     DOKTORA_OGRENCISI_AKTIF = __(u"Doktora Programı Öğrencisi - Aktif")
     DOKTORA_OGRENCISI_KAYIT_SILINMIS = __(u"Doktora Programı Öğrencisi - Kayıt Silinmiş")
     DOKTORA_OGRENCISI_KAYIT_DONDURMUS = __(u"Doktora Programı Öğrencisi - Kayıt Dondurmuş")
@@ -94,3 +92,9 @@ class AbsRole(Enum):
     DAIRE_SUBE_MUDURU = __(u"Daire Şube Müdürü")
     DAIRE_PERSONELI = __(u"Daire Personeli")
     REKTOR = __(u"Rektör")
+    DANISMAN = __(u"Danışman")
+    DERS_PROGRAMI_KOORDINATORU = __(u"Ders Programı Koordinatörü")
+    BASEABSROLE = __(u"BaseAbsRole")
+    GENEL_SEKRETER = __(u"Genel Sekreter")
+    OGRENCI = __(u"Öğrenci")
+    MUTEMET = __(u"Mutemet")

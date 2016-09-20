@@ -6,6 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.lib.common import notify
 from ulakbus.models import OgrenciProgram, OgrenciDersi, Sinav, DegerlendirmeNot, Ogrenci
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
@@ -160,10 +161,20 @@ class NotDuzenleme(CrudView):
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Not Düzeltme Tamamlandı'),
-            "msg": _(u'%(ogrenci)s adlı öğrencinin, %(sinav)s sınavına ait %(onceki_puan)s olan notu, %(yeni_puan)s ile değiştilmiştir.') % {
+            "msg": _(u"""%(ogrenci)s adlı öğrencinin, %(sinav)s sınavına ait
+            %(onceki_puan)s olan notu, %(yeni_puan)s ile değiştilmiştir.""") % {
                 'ogrenci': ogrenci,
                 'sinav': sinav,
                 'onceki_puan': onceki_puan,
                 'yeni_puan': yeni_puan,
             }
         }
+        user = ogrenci.user
+        title = _(u"Not Düzenleme")
+        message = _(u"""%(sinav)s sınavına ait %(onceki_puan)s olan notu,
+                        %(yeni_puan)s ile değiştirilmiştir.""") % {
+            'sinav': sinav,
+            'onceki_puan': onceki_puan,
+            'yeni_puan': yeni_puan
+        }
+        notify(user, message=message, title=title)

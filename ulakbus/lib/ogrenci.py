@@ -6,24 +6,26 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+
 from enum import Enum
-from pyoko.exceptions import ObjectDoesNotExist
+from operator import attrgetter
+from ulakbus.lib.role import AbsRole
+from ulakbus.models import AbstractRole
 
 
-class OgrenciHelper:
-    """OgrenciHelper Class
+def diploma_no_uret(ogrenci_program):
+    """
+    Öğrenci programı için diploma no üretir.
+
+    Args:
+        ogrenci_program (): öğrenci program nesnesi
+
+    Returns:
+        diploama no (string)
 
     """
-
-    @staticmethod
-    def diploma_notu_uret(ogrenci_no):
-        try:
-            from ulakbus.models import OgrenciProgram
-            ogrenci_program = OgrenciProgram.objects.get(ogrenci_no=ogrenci_no)
-            return "%s-%s-%s" % (ogrenci_program.giris_tarihi,
-                                 ogrenci_program.program.yoksis_no, ogrenci_program.ogrenci_no)
-        except ObjectDoesNotExist:
-            return "Öğrenci Bulunamadı"
+    return "%s-%s-%s" % (ogrenci_program.giris_tarihi,
+                         ogrenci_program.program.yoksis_no, ogrenci_program.ogrenci_no)
 
 
 def aktif_sinav_listesi(obj):
@@ -41,6 +43,58 @@ def aktif_sinav_listesi(obj):
     for sube in obj.donem_subeleri():
         sinavlar.extend(SinavEtkinligi.sube_sinav_listesi(sube=sube))
     return sinavlar
+
+
+def kaydi_silinmis_abs_role(role):
+    """
+    Kaydı silinecek kaydın abstract rolünü getirir.
+    Args:
+        role: role nesnesi
+
+    Returns:
+        Abstract Role nesnesi
+
+    """
+    func = attrgetter("unit.unit_type", "unit.learning_duration")
+    unit_type, learning_duration = func(role)
+
+    if unit_type == "Program" and learning_duration == 4:
+        return AbstractRole.objects.get(AbsRole.LISANS_OGRENCISI_KAYIT_SILINMIS.name)
+    elif unit_type == "Program" and learning_duration == 2:
+        return AbstractRole.objects.get(AbsRole.ON_LISANS_OGRENCISI_KAYIT_SILINMIS.name)
+    elif unit_type == "Yüksek Lisans Programı":
+        return AbstractRole.objects.get(AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS.name)
+    elif unit_type == "Doktora Programı":
+        AbstractRole.objects.get(AbsRole.DOKTORA_OGRENCISI_KAYIT_SILINMIS.name)
+    else:
+        # TODO: Boş bir abstract role nesnesi yaratılmalı
+        return AbstractRole()
+
+
+def kaydi_dondurulmus_abs_role(role):
+    """
+    Dondurulacak kaydın abstract rolünü getirir.
+
+    Args:
+        role: role nesnesi
+
+    Returns:
+        Abstract Role nesnesi
+
+    """
+    func = attrgetter("unit.unit_type", "unit.learning_duration")
+    unit_type, learning_duration = func(role)
+    if unit_type == "Program" and learning_duration == 4:
+        AbstractRole.objects.get(AbsRole.LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
+    elif unit_type == "Program" and learning_duration == 2:
+        return AbstractRole.objects.get(AbsRole.ON_LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
+    elif unit_type == "Yüksek Lisans Programı":
+        return AbstractRole.objects.get(AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
+    elif unit_type == "Doktora Programı":
+        return AbstractRole.objects.get(AbsRole.DOKTORA_OGRENCISI_KAYIT_DONDURMUS.name)
+    else:
+        # TODO: Boş bir abstract role nesnesi yaratılmalı.
+        return AbstractRole()
 
 
 class HarfNotu(Enum):

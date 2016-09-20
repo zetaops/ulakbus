@@ -44,16 +44,16 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
 
         # Kullanıcının kayıtlı olduğu bolum seçilir.
-        resp = self.client.post(form={'ileri': 1, 'program': "BpmGHdZo8sQC85cL6wffYr4CEKh"})
+        resp = self.client.post(form={'ileri': 1, 'program': "Yc3eIPoneLFphvLagAhWKCz1YvY"})
 
         # Kullanıcının kayıtlı olduğu bölüm.
         bolum = usr.role_set[0].role.unit
 
-        donem = Donem.objects.get(guncel=True)
+        donem = Donem.guncel_donem()
 
         # Db'den varolan danışman  kayıtları seçilir.
         count_of_danisman = len(DonemDanisman.objects.filter(donem=donem, bolum=bolum))
-        time.sleep(1)
+
         num_of_danisman = 0
         for okutman in resp.json['forms']['model']['Okutmanlar']:
             if okutman['secim']:
@@ -63,32 +63,25 @@ class TestCase(BaseTestCase):
         # danışman kayıtlarının sayısının eşitliği karşılşatılırıp test edilir.
         assert num_of_danisman == count_of_danisman
 
-        # 3 tane daha danışman seçilir.
+        # 2 tane daha danışman seçilir.
         okutmanlar = [
             {'ad_soyad': "Yalın Seven", 'secim': "true", 'key': "Bf1CPIKs6txfhvlBQ7jqhy0iwv"},
-            {'ad_soyad': "Meşhur Ertaş", 'secim': "true", 'key': "O88eWBlnA579TqHs1oYuZITeHsg"},
-            {'ad_soyad': "Mengi Bilgin", 'secim': "true", 'key': "180kVRsM8JR7Aql8xVRC9L0L4HW"},
-            {'ad_soyad': "Sevla Demirel", 'secim': "", 'key': "8oS60wq2nhZLuZ4Dqsn4YtofPSF"},
-            {'ad_soyad': "Uluğbey Bilgin", 'secim': "", 'key': "YhkwdYaGFnVzWMpULy6unvuON1A"},
-            {'ad_soyad': "Anka Çorlu", 'secim': "", 'key': "O7M6ndhCp4FhAZiYQHr52IasJSG"},
-            {'ad_soyad': "Övün Alemdar", 'secim': "", 'key': "4O7Nxt64EQumUzettWGyPHU9r3C"},
-            {'ad_soyad': "Safura Kısakürek", 'secim': "", 'key': "9YivWjZb4iPp2O6eQq1X4bqkfIW"},
-            {'ad_soyad': "Veis Güçlü", 'secim': 'true', 'key': "JdH5RzwbmhIBTAU4ec6J4fgNu4z"},
-            {'ad_soyad': "Öge Fırat", 'secim': "", 'key': "22Y0VMB98avgMjSbbH1KXkZrdLL"}]
+            {'ad_soyad': "Uluğbey Bilgin", 'secim': "true", 'key': "YhkwdYaGFnVzWMpULy6unvuON1A"},
+            {'ad_soyad': "Umuşan Gül", 'secim': 'true', 'key': "VYpVNI9vfWYIz3uGIBl81srlnrZ"}]
 
         # Seçilen dönem danışmanları kaydedilir.
         self.client.post(form={'kaydet': 1, 'Okutmanlar': okutmanlar})
         time.sleep(1)
 
         # Eklenen danışman kayıtlarının veritabanına kaydedilip kaydedilmediğini test eder.
-        assert len(DonemDanisman.objects.filter(donem=donem, bolum=bolum)) == count_of_danisman + 3
+        assert len(DonemDanisman.objects.filter(donem=donem, bolum=bolum)) == 3
 
         # İş akışı tekrardan başlatılır.
         self.client.set_path('/donem_danismanlari')
         resp = self.client.post()
 
         # Kullanıcının kayıtlı olduğu bolum seçilir.
-        resp = self.client.post(form={'ileri': 1, 'program': "BpmGHdZo8sQC85cL6wffYr4CEKh"})
+        resp = self.client.post(form={'ileri': 1, 'program': "Yc3eIPoneLFphvLagAhWKCz1YvY"})
 
         num_of_danisman = 0
         for okutman in resp.json['forms']['model']['Okutmanlar']:
@@ -97,7 +90,7 @@ class TestCase(BaseTestCase):
 
         # Eklenen danışmanlar kaydedildikten sonra, sunucudan dönen cevapta danışman kayıt sayıların
         # doğruluğu test edilir.
-        assert num_of_danisman == count_of_danisman + 3
+        assert num_of_danisman == 3
 
         for dd in DonemDanisman.objects.filter(donem=donem, bolum=bolum):
             if not dd.okutman.key == 'Bf1CPIKs6txfhvlBQ7jqhy0iwv':
