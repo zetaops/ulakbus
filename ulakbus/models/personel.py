@@ -204,21 +204,16 @@ class Personel(Model):
     def __unicode__(self):
         return gettext(u"%(ad)s %(soyad)s") % {'ad': self.ad, 'soyad': self.soyad}
 
-<<<<<<< ed4904449859116c80ff3d6036dc09ad19d732ff
     def post_save(self):
         # Personel oluştuğunda User Otomatik olarak Oluşturulacaktır
-<<<<<<< HEAD
         if not self.user:
-=======
-         if not self.user:
->>>>>>> ff67599... User post_save metodu düzenlendi
             self.user = User()
             self.user.username = self.tckn
             self.user.password = self.tckn
             self.user.name = self.ad
             self.user.surname = self.soyad
             self.user.save()
-=======
+
     def izin_guncelle(self):
         """
             Personelin içinde bulunulan yıla ve önceki yıla ait olan izin hakkını günceller
@@ -233,8 +228,6 @@ class Personel(Model):
             self.bu_yil_kalan_izin -= (self.mazeret_izin - 10)
 
         self.mazeret_izin = 0
-
->>>>>>> a73f1783d867617c45b5ee6e1e397dda00efeb28
 
 class AdresBilgileri(Model):
     """Adres Bilgileri Modeli
