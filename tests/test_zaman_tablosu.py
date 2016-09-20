@@ -79,7 +79,6 @@ class TestCase(BaseTestCase):
         Message.objects.filter().delete()
 
     def test_derslik_zaman_tablosu(self):
-        Message.objects.filter()._clear()
         for loop in range(2):
             time.sleep(1)
             if loop == 1:
@@ -126,7 +125,6 @@ class TestCase(BaseTestCase):
             token, user = self.get_user_token('bolum_baskani_2')
             self.prepare_client('/derslik_zaman_tablosu', user=user, token=token)
             resp = self.client.post()
-            Message.objects.filter().delete()
             assert len(resp.json['derslik_zaman_tablosu']) == 6
 
             resp = self.client.post(cmd='kontrol', secili_derslik=item_key)
