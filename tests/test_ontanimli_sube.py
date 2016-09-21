@@ -57,3 +57,4 @@ class TestCase(BaseTestCase):
 
         ders.delete()
         sube.delete()
+        Channel.objects.get(name="%s %s" % (ders.kod, sube.ad)).delete()
