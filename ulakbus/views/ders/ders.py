@@ -354,12 +354,14 @@ class DersSubelendirme(CrudView):
         with BlockSave(Sube):
             for s in sb:
                 okutman = s['okutman']
-                sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders)
-                # çıkarılanlan şubeyi mevcut_subelerden cikar
+                kontenjan = s['kontenjan']
+                ad = s['ad']
+                sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders,
+                                                          kontenjan=kontenjan, ad=ad)
+                # mevcut_subelerden cikar
+
                 mevcut_subeler = list(set(mevcut_subeler) - {sube})
-                sube.kontenjan = s['kontenjan']
                 sube.dis_kontenjan = s['dis_kontenjan']
-                sube.ad = s['ad']
                 sube.donem = Donem.guncel_donem()
                 sube.save()
                 if is_new:
