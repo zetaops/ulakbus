@@ -6,13 +6,14 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.lib.common import notify
-from ulakbus.models import OgrenciProgram, OgrenciDersi, Sinav, DegerlendirmeNot, Ogrenci
+from ulakbus.models import OgrenciProgram, OgrenciDersi, Sinav, DegerlendirmeNot, Ogrenci, Role
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy
+from ulakbus.lib.role import AbsRole
+from ulakbus.views.ogrenci.ogrenci import ABSTRACT_ROLE_LIST
 
 
 class NotDuzenlemeForm(forms.JsonForm):
@@ -104,6 +105,7 @@ class NotDuzenleme(CrudView):
         """
 
         program_id = self.current.input['form']['program']
+        self.current.task_data['program_id'] = self.current.input['form']['program']
         _form = forms.JsonForm(current=self.current, title=_(u'Ders Seçiniz.'))
         _choices = prepare_choices_for_model(OgrenciDersi, ogrenci_program_id=program_id)
         _form.ders = fields.Integer(choices=_choices)
@@ -169,12 +171,16 @@ class NotDuzenleme(CrudView):
                 'yeni_puan': yeni_puan,
             }
         }
-        user = ogrenci.user
         title = _(u"Not Düzenleme")
-        message = _(u"""%(sinav)s sınavına ait %(onceki_puan)s olan notu,
+        message = _(u"""%(sinav)s sınavınıza ait %(onceki_puan)s olan notu,
                         %(yeni_puan)s ile değiştirilmiştir.""") % {
             'sinav': sinav,
             'onceki_puan': onceki_puan,
             'yeni_puan': yeni_puan
         }
-        notify(user, message=message, title=title)
+        ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['program_id'])
+        birim = ogrenci_program.program.birim
+        for role in Role.objects.filter(user=ogrenci.user, unit=birim):
+            if role.abstract_role.name in ABSTRACT_ROLE_LIST:
+                role.send_notification(message=message, title=title, sender=self.current.user)
+

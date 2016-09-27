@@ -18,14 +18,12 @@ from six import text_type
 
 from pyoko import ListNode
 from pyoko.exceptions import ObjectDoesNotExist
-from ulakbus.lib.common import notify
 from ulakbus.lib.role import AbsRole
-from ulakbus.models.auth import Role, Unit
+from ulakbus.models.auth import Role, Unit, AbstractRole
 from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
 from ulakbus.models.ogrenci import DonemDanisman
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, Sube
 from ulakbus.models.ogrenci import OgrenciDersi
-from ulakbus.models.personel import Personel
 from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
 from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.views.ders.ders import prepare_choices_for_model
@@ -359,13 +357,10 @@ class DanismanAtama(CrudView):
         Seçilen danışman  öğrencinin danışamanı olarak kaydedilir.
 
         """
-        donem_danisman = DonemDanisman.objects.get(self.input['form']['donem_danisman'])
-        personel = donem_danisman.okutman.personel
-
-        self.current.task_data['personel_id'] = personel.key
-
+        danisman = DonemDanisman.objects.get(self.input['form']['donem_danisman'])
+        self.current.task_data["dd_key"] = self.input['form']['donem_danisman']
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data['program_id'])
-        ogrenci_program.danisman = personel
+        ogrenci_program.danisman = danisman.okutman.personel if danisman.okutman.personel else danisman.okutman.harici_okutman
         ogrenci_program.save()
 
     def kayit_bilgisi_ver(self):
@@ -374,11 +369,9 @@ class DanismanAtama(CrudView):
         Danışmana bilgi mesajı yollanır.
 
         """
-        ogrenci_id = self.current.task_data['ogrenci_id']
-        personel_id = self.current.task_data['personel_id']
-
-        ogrenci = Ogrenci.objects.get(ogrenci_id)
-        personel = Personel.objects.get(personel_id)
+        ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
+        danisman = DonemDanisman.objects.get(self.current.task_data["dd_key"])
+        personel = danisman.okutman.personel if danisman.okutman.personel else danisman.okutman.harici_okutman
 
         self.current.output['msgbox'] = {
         'type': 'info', "title": _(u'Danışman Ataması Yapıldı'),
@@ -391,7 +384,12 @@ class DanismanAtama(CrudView):
 
         title = _(u"Danışman Atama")
         message = _(u"%(ogrenci)s adlı öğrenciye danışman olarak atandınız.") % {'ogrenci': ogrenci}
-        notify(personel.user, message, title)
+        abstract_role = AbstractRole.objects.get("DANISMAN")
+        try:
+            role = Role.objects.get(unit=danisman.bolum, user=personel.user, abstract_role=abstract_role)
+            role.send_notification(message, title, sender=self.current.user)
+        except ObjectDoesNotExist:
+            raise Exception("Role nesnesi tanımlı olmadığından notification yolllanamadı.")
 
 
 class OgrenciMezuniyet(CrudView):
@@ -463,6 +461,12 @@ ABSTRACT_ROLE_LIST = [
     text_type(AbsRole.YUKSEK_LISANS_OGRENCISI_AKTIF.value),
     text_type(AbsRole.DOKTORA_OGRENCISI_AKTIF.value)
 ]
+
+ABSTRACT_ROLE_LIST_DONDURULMUS = [AbsRole.LISANS_OGRENCISI_KAYIT_DONDURMUS.name,
+                                  AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_DONDURMUS.name,
+                                  AbsRole.DOKTORA_OGRENCISI_KAYIT_DONDURMUS.name,
+                                  AbsRole.ON_LISANS_OGRENCISI_KAYIT_DONDURMUS.name]
+
 
 class KayitDondurmaForm(forms.JsonForm):
     """
@@ -602,13 +606,19 @@ class KayitDondurma(CrudView):
                                                          ogrenci_program.program.adi)
 
             # Öğrencinin danışmanına bilgilendirme geçilir
-            notify(ogrenci_program.danisman.user, title=_(u"Öğrenci Kaydı Donduruldu"),
-                   message=danisman_message)
+            abstract_role = AbstractRole.objects.get("DANISMAN")
+            for role in ogrenci_program.danisman.user.role_set:
+                if role.role.abstract_role == abstract_role:
+                    role.role.send_notification(title=_(u"Öğrenci Kaydı Donduruldu"), message=danisman_message,
+                                                sender=self.current.user)
             donemler = "-".join([donem['donem']for donem in dondurulan_donemler])
             ogrenci_message = _(u"%s dönemleri için kaydınız dondurulmuştur.") % donemler
 
-            notify(ogrenci_program.ogrenci.user, title=_(u"Kayıt Dondurma"),
-                   message=ogrenci_message)
+            for role in ogrenci_program.ogrenci.user.role_set:
+
+                if role.role.abstract_role.key in ABSTRACT_ROLE_LIST_DONDURULMUS:
+                    role.role.send_notification(title=_(u"Kayıt Dondurma"), message=ogrenci_message,
+                                                sender=self.current.user)
 
             self.current.output['msgbox'] = {
                 'type': 'info', "title": _(u'Öğrenci Kayıt Dondurma Başarılı'),

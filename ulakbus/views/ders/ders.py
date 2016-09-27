@@ -13,9 +13,10 @@ Ders Ekle ve Ders Şubelendirme iş akışlarının yürütülmesini sağlar.
 """
 
 from collections import OrderedDict
-from ulakbus.lib.common import notify
 from pyoko import ListNode
 from pyoko.db.adapter.db_riak import BlockSave, BlockDelete
+from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.models import AbstractRole, Role
 from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
 from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciDersi, Donem
 from zengine import forms
@@ -394,17 +395,30 @@ class DersSubelendirme(CrudView):
         bolum_baskani = "%s %s" % (self.current.user.name, self.current.user.surname)
         msg = _(u"Bölüm Başkanı %s tarafından şubelerinizde değişiklikler yapılmıştır.") % bolum_baskani
         okutmanlar = []
+        abstract_role = AbstractRole.objects.get("OGRETIM_ELEMANI")
         for ders, sube_key in just_created:
             if ders == ders_key:
                 sube = Sube.objects.get(sube_key)
                 okutman = sube.okutman
                 okutmanlar.append(okutman.__unicode__())
-                notify(okutman.personel.user if okutman.personel else okutman.harici_okutman.user, title=title, message=msg)
+                user = okutman.personel.user if okutman.personel else okutman.harici_okutman.user
+                try:
+                    birim = Program.objects.get(self.current.task_data['program']).birim
+                    role = Role.objects.get(abstract_role=abstract_role, user=user, unit=birim)
+                    role.send_notification(title=title, message=msg)
+                except ObjectDoesNotExist:
+                    pass
 
         sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
         for s in sbs:
             if s.key not in just_deleted:
-                notify(s.okutman.personel.user if s.okutman.personel else s.okutman.harici_okutman.user)
+                user = s.okutman.personel.user if s.okutman.personel else s.okutman.harici_okutman.user
+                try:
+                    birim = Program.objects.get(self.current.task_data['program']).birim
+                    role = Role.objects.get(abstract_role=abstract_role, user=user, unit=birim)
+                    role.send_notification(title=title, message=msg)
+                except ObjectDoesNotExist:
+                    pass
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Mesaj İletildi'),
