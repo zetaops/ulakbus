@@ -3,6 +3,7 @@
 from zato.common import SMTPMessage
 from zato.server.service import Service
 from zengine.lib.cache import Cache
+import httplib
 
 class E_PostaYolla(Service):
 
@@ -23,10 +24,13 @@ class E_PostaYolla(Service):
         msg.from_ = 'postmaster@mg.ulakbus.net'
         msg.body = 'E-Posta adresinizi doğrulamak için ' \
                     'aşağıdaki linke tıklayınız:\n\n %s' \
-                    % ('http://dev.zetaops.io/#/%s/object_id=%s'
+                    % ('http://dev.zetaops.io/#/%s/dogrulama=%s'
                        %(wf_name,aktivasyon_kodu) )
 
         Cache(aktivasyon_kodu).set(bilgi,7200)
 
         # Send the message
         conn.send(msg)
+
+        self.response.status_code = httplib.OK
+        self.response.payload = {'status': 'ok', 'result': 'Success'}
