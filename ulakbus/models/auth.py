@@ -25,6 +25,7 @@ from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
 from zengine.lib.translation import gettext_lazy as _, gettext
 from zengine.messaging.lib import BaseUser
+from zengine.lib import translation
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -43,22 +44,25 @@ class User(Model, BaseUser):
     ait bir ve tek kullanıcı olması zorunludur.
 
     """
+    avatar = field.File(_(u"Profile Photo"), random_name=True, required=False)
     username = field.String(_(u"Username"), index=True)
     password = field.String(_(u"Password"))
-    avatar = field.File(_(u"Profile Photo"), random_name=True, required=False)
+    e_mail = field.String(_(u"E-Mail"), index=True)
     name = field.String(_(u"First Name"), index=True)
     surname = field.String(_(u"Surname"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
     locale_language = field.String(
         _(u"Preferred Language"),
         index=False,
-        default=settings.DEFAULT_LANG
+        default=settings.DEFAULT_LANG,
+        choices=translation.available_translations.items()
     )
     locale_datetime = field.String(_(u"Preferred Date and Time Format"), index=False,
-                                   default=settings.DEFAULT_LOCALIZATION_FORMAT)
+                                   default=settings.DEFAULT_LOCALIZATION_FORMAT,
+                                   choices= translation.available_datetimes.items())
     locale_number = field.String(_(u"Preferred Number Format"), index=False,
-                                 default=settings.DEFAULT_LOCALIZATION_FORMAT)
-
+                                 default=settings.DEFAULT_LOCALIZATION_FORMAT,
+                                 choices=translation.available_numbers.items())
 
     class Meta:
         app = 'Sistem'
@@ -301,7 +305,7 @@ class Role(Model):
     unit = Unit()
     typ = field.Integer(_(u"Rol Tipi"), choices=ROL_TIPI)
     name = field.String(_(u"Rol Adı"), hidden=True)
-
+    
     class Meta:
         app = 'Sistem'
         verbose_name = _(u"Rol")
@@ -541,7 +545,7 @@ class AuthBackend(object):
             user = User()
         return user
 
-    def set_user(self, user):
+    def set_user(self, user,role=None):
         """
         Kullanıcı datasını session'a yazar.
 
@@ -556,7 +560,7 @@ class AuthBackend(object):
         self.session['user_data'] = user.clean_value()
 
         # TODO: this should be remembered from previous login
-        default_role = user.role_set[0].role
+        default_role = role or user.role_set[0].role
         # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
         self.current.role_id = default_role.key
