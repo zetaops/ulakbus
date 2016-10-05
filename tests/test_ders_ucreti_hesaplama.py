@@ -61,7 +61,8 @@ class TestCase(BaseTestCase):
                 # aynı olması beklenir.
                 birim_no = self.client.current.role.unit.yoksis_no
                 assert len(resp.json['forms']['model']["OkutmanListesi"]) == len(
-                    Okutman.objects.filter(birim_no=birim_no))
+                    [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi if
+                     gorev_birimi.yoksis_no == birim_no and gorev_birimi.donem == Donem.guncel_donem()])
 
                 okutman_listesi = resp.json['forms']['model']["OkutmanListesi"]
 

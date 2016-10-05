@@ -145,13 +145,3 @@ def sinav_etkinlikleri_oku(root):
             etkinlik.save()
 
 
-def notify(user, message="", title=""):
-    """
-    Args:
-        user (User) Notification yollanacak user nesnesi
-        message (str)  Gönderilecek mesajın içeriği
-        title (str) Gönderilecek mesajın başlığı
-
-    """
-
-    user.send_notification(message=message, title=title)

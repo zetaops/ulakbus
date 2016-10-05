@@ -135,7 +135,8 @@ class DersUcretiHesaplama(CrudView):
         _form = OkutmanListelemeForm(current=self.current, title=_(u"Okutman Seçiniz"))
 
         # TODO: ilgili doneme ait okutmanlar listelenmeli.
-        okutmanlar = Okutman.objects.filter(birim_no=birim_no)
+        okutmanlar = [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi if
+                      gorev_birimi.yoksis_no == birim_no and gorev_birimi.donem == Donem.guncel_donem()]
 
         for okutman in okutmanlar:
             _form.OkutmanListesi(secim=True, okutman=okutman.__unicode__(), key=okutman.key)

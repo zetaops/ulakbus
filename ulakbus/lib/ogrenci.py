@@ -85,7 +85,7 @@ def kaydi_dondurulmus_abs_role(role):
     func = attrgetter("unit.unit_type", "unit.learning_duration")
     unit_type, learning_duration = func(role)
     if unit_type == "Program" and learning_duration == 4:
-        AbstractRole.objects.get(AbsRole.LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
+        return AbstractRole.objects.get(AbsRole.LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
     elif unit_type == "Program" and learning_duration == 2:
         return AbstractRole.objects.get(AbsRole.ON_LISANS_OGRENCISI_KAYIT_DONDURMUS.name)
     elif unit_type == "Yüksek Lisans Programı":

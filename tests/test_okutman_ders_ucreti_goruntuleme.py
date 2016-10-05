@@ -78,7 +78,7 @@ class TestCase(BaseTestCase):
                 # Personel izin listesi getirilir.
                 personel_izin_list = personel_izin_gunlerini_getir(okutman, 2016, 11)
 
-                birim_unit = Unit.objects.get(yoksis_no = okutman.birim_no)
+                birim_unit = Unit.objects.get(yoksis_no=okutman.donemdeki_gorev_yeri(donem_list[0]))
                 resmi_tatil_list = resmi_tatil_gunleri_getir(birim_unit,2016,5)
                 assert 19 and 1 in resmi_tatil_list[0]
 

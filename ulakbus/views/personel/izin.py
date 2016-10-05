@@ -221,6 +221,7 @@ class IzinBasvuru(CrudView):
     TOPLAM_IZIN_SAYISI = 10
 
     def izin_kontrol(self):
+        self.current.task_data['sicil_no'] = self.current.user.personel.kurum_sicil_no
         lst_form_data = FormData.objects.filter(user_id=self.current.user.key)
         guncel_yil = date.today().year
         onceki_yil = guncel_yil - 1
@@ -259,12 +260,12 @@ class IzinBasvuru(CrudView):
                                               'yol_izni', 'personel_birim',
                                               'personel_sicil_no'])
 
-        _form.help_text = _(u"""
-                          {onceki} yılına ait izinli gün sayınız {onceki_izin}, Kalan gün sayınız {onceki_kalan}
-                          {guncel} yılına ait izinli gün sayınız {guncel_izin}, Toplam izinli gün sayınız  {guncel_kalan}
+        _form.help_text = _(u"""{onceki} yılına ait izinli gün sayınız {onceki_izin}, Kalan gün sayınız {onceki_kalan}
+                          {guncel} yılına ait izinli gün sayınız {guncel_izin},Toplam izinli gün sayınız  {guncel_kalan}
+                          'dir.
                           """).format(onceki=onceki_yil, onceki_izin=onceki_yil_izin[0], onceki_kalan=onceki_yil_izin[1],
-                                     guncel=guncel_yil, guncel_izin=guncel_yil_izin[0], guncel_kalan=guncel_yil_izin[1],
-                          )
+                                      guncel=guncel_yil, guncel_izin=guncel_yil_izin[0], guncel_kalan=guncel_yil_izin[1],
+                           )
         self.form_out(_form)
 
     @staticmethod
@@ -376,6 +377,7 @@ class IzinBasvuru(CrudView):
         _form.izin_baslangic = basvuru_data['izin_baslangic']
         _form.izin_bitis = basvuru_data['izin_bitis']
         _form.izin_adres = basvuru_data['izin_adres']
+        _form.personel_sicil_no = self.current.task_data['sicil_no']
         _form.toplam_izin_gun = delta.days
         _form.toplam_kalan_izin = IzinBasvuru.TOPLAM_IZIN_SAYISI - delta.days
         _form.personel_ad_soyad = "%s %s" % (personel.ad, personel.soyad)
