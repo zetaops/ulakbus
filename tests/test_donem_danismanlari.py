@@ -67,7 +67,8 @@ class TestCase(BaseTestCase):
         okutmanlar = [
             {'ad_soyad': "Yalın Seven", 'secim': "true", 'key': "Bf1CPIKs6txfhvlBQ7jqhy0iwv"},
             {'ad_soyad': "Uluğbey Bilgin", 'secim': "true", 'key': "YhkwdYaGFnVzWMpULy6unvuON1A"},
-            {'ad_soyad': "Umuşan Gül", 'secim': 'true', 'key': "VYpVNI9vfWYIz3uGIBl81srlnrZ"}]
+            {'ad_soyad': "Umuşan Gül", 'secim': 'true', 'key': "VYpVNI9vfWYIz3uGIBl81srlnrZ"},
+            {'ad_soyad': "Henife Şener", 'secim': '', 'key': "G2XjlaJMX0FUZX84aoIeiVCqZMR"}]
 
         # Seçilen dönem danışmanları kaydedilir.
         self.client.post(form={'kaydet': 1, 'Okutmanlar': okutmanlar})

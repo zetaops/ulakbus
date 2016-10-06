@@ -15,12 +15,11 @@ Dönem bazlı danışman atanmasını sağlayan iş akışını yönetir.
 from pyoko import ListNode
 from pyoko.db.adapter.db_riak import BlockSave
 from pyoko.exceptions import ObjectDoesNotExist
-from ulakbus.lib.common import notify
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from ulakbus.models.ogrenci import Donem, DonemDanisman, Okutman
-from ulakbus.models.auth import Unit
+from ulakbus.models.auth import Unit, Role, AbstractRole
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine.lib.translation import gettext as _, gettext_lazy
 
@@ -102,8 +101,9 @@ class DonemDanismanAtama(CrudView):
 
         unit = Unit.objects.get(self.current.input['form']['program'])
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
-        okutmanlar = Okutman.objects.filter(birim_no=unit.yoksis_no)
         donem = Donem.guncel_donem()
+        okutmanlar = [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi if
+                      gorev_birimi.yoksis_no == unit.yoksis_no and gorev_birimi.donem == donem]
         _form = DonemDanismanListForm(current=self, title=_(u"Okutman Seçiniz"))
         for okt in okutmanlar:
             try:
@@ -135,7 +135,15 @@ class DonemDanismanAtama(CrudView):
                 if danisman['secim']:
                     key = danisman['key']
                     okutman = Okutman.objects.get(key)
-                    DonemDanisman.objects.get_or_create(okutman=okutman, donem=donem, bolum=unit)
+                    donem_danisman, is_new = DonemDanisman.objects.get_or_create(okutman=okutman, donem=donem,
+                                                                                 bolum=unit)
+                    if is_new:
+                        user = okutman.personel.user if okutman.personel.user else okutman.harici_okutman.user
+                        abstract_role = AbstractRole.objects.get("DANISMAN")
+                        unit = Unit.objects.get(yoksis_no=self.current.task_data['unit_yoksis_no'])
+                        role = Role(user=user, unit=unit, abstract_role=abstract_role)
+                        role.save()
+
                     self.current.task_data['okutmanlar'].append(okutman.key)
 
     def kayit_bilgisi_ver(self):
@@ -158,4 +166,10 @@ class DonemDanismanAtama(CrudView):
         message = _(u"%s dönemi için  danışman olarak atandınız.") % donem
         for okutman_key in self.current.task_data['okutmanlar']:
             okutman = Okutman.objects.get(okutman_key)
-            notify(okutman.personel.user if okutman.personel else okutman.harici_okutman.user, message, title)
+            user = okutman.personel.user if okutman.personel else okutman.harici_okutman.user
+            abstract_role = AbstractRole.objects.get("OGRETIM_ELEMANI")
+            try:
+                role = Role.objects.get(user=user, abstract_role=abstract_role, unit=unit)
+                role.send_notification(message=message, title=title, sender=self.current.user)
+            except ObjectDoesNotExist:
+                pass

@@ -96,5 +96,4 @@ class AbsRole(Enum):
     DERS_PROGRAMI_KOORDINATORU = __(u"Ders Programı Koordinatörü")
     BASEABSROLE = __(u"BaseAbsRole")
     GENEL_SEKRETER = __(u"Genel Sekreter")
-    OGRENCI = __(u"Öğrenci")
     MUTEMET = __(u"Mutemet")

@@ -10,7 +10,6 @@ from ulakbus.models import OgrenciProgram, Ogrenci, Role, User, AbstractRole
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
-from ulakbus.lib.common import notify
 from ulakbus.lib.role import AbsRole
 from ulakbus.lib.ogrenci import kaydi_silinmis_abs_role
 
@@ -31,8 +30,8 @@ ABSTRACT_ROLE_LIST = [
 ABSTRACT_ROLE_LIST_SILINMIS = [
     AbsRole.LISANS_OGRENCISI_KAYIT_SILINMIS.name,
     AbsRole.ON_LISANS_OGRENCISI_KAYIT_SILINMIS.name,
-    AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS.value,
-    AbsRole.DOKTORA_OGRENCISI_KAYIT_SILINMIS.value
+    AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS.name,
+    AbsRole.DOKTORA_OGRENCISI_KAYIT_SILINMIS.name
 ]
 
 
@@ -219,8 +218,9 @@ class KayitSil(CrudView):
                             Öğrenci farklı rollere sahiptir.""") % ogrenci
 
                 # TODO: sistem yoneticisine bilgi ver.
-                usr = User.objects.get(username='ulakbus')
-                notify(usr, message=msg, title=title)
+                abstract_role = AbstractRole.objects.get("BASEABSROLE")
+                role = Role.objects.get(abstract_role=abstract_role)
+                role.send_notification(message=msg, title=title, sender=self.current.user)
 
     def bilgi_ver(self):
         """
@@ -240,7 +240,14 @@ class KayitSil(CrudView):
             ogrenci, self.current.input['form']['aciklama'])
 
         for program in ogrenci_program:
-            notify(program.danisman.user, title=title, message=msg)
+            abstract_role = AbstractRole.objects.get("DANISMAN")
+            for role in program.danisman.user.role_set:
+                if role.role.abstract_role == abstract_role:
+                    role.role.send_notification(title=title, message=msg, sender=self.current.user)
 
-        notify(ogrenci.user, title=title, message=msg)
+        for role in ogrenci.user.role_set:
+                abstract_role = kaydi_silinmis_abs_role(role.role)
+                if abstract_role.key in ABSTRACT_ROLE_LIST_SILINMIS:
+                    role.role.send_notification(title=title, message=msg, sender=self.current.user)
+
 

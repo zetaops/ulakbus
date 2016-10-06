@@ -268,9 +268,12 @@ class Okutman(Model):
     ad = field.String(_(u"Ad"), index=True, required=False)
     soyad = field.String(_(u"Soyad"), index=True, required=False)
     unvan = field.String(_(u"Unvan"), index=True, required=False)
-    birim_no = field.String(_(u"Birim ID"), index=True, required=False)
     personel = Personel(one_to_one=True)
     harici_okutman = HariciOkutman(one_to_one=True)
+
+    class GorevBirimi(ListNode):
+        donem = Donem()
+        yoksis_no = field.String(_(u"Yoksis No"), index=True, required=False)
 
     class Meta:
         app = 'Ogrenci'
@@ -336,6 +339,11 @@ class Okutman(Model):
     def donem_subeleri(self, donem=None):
         donem = donem or Donem.guncel_donem()
         return [s for s in Sube.objects.filter(okutman=self, donem=donem)]
+
+    def donemdeki_gorev_yeri(self, donem):
+        gorev_birimi_dct = {gorev_birimi.donem.key: gorev_birimi.yoksis_no for gorev_birimi in self.GorevBirimi}
+        if donem.key in gorev_birimi_dct:
+            return gorev_birimi_dct[donem.key]
 
 
 class Program(Model):

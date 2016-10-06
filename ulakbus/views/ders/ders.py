@@ -13,9 +13,10 @@ Ders Ekle ve Ders Şubelendirme iş akışlarının yürütülmesini sağlar.
 """
 
 from collections import OrderedDict
-from ulakbus.lib.common import notify
 from pyoko import ListNode
 from pyoko.db.adapter.db_riak import BlockSave, BlockDelete
+from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.models import AbstractRole, Role
 from ulakbus.models.ogrenci import DegerlendirmeNot, OgrenciProgram
 from ulakbus.models.ogrenci import Program, Okutman, Ders, Sube, Sinav, OgrenciDersi, Donem
 from zengine import forms
@@ -277,22 +278,15 @@ class DersSubelendirme(CrudView):
 
         self.set_client_cmd('form')
         self.output['objects'] = [[_(u'Dersler')], ]
-
         if 'program' in self.current.input['form']:
             self.current.task_data['program'] = self.current.input['form']['program']
-
-        p = Program.objects.get(key=self.current.task_data['program'])
-        dersler = Ders.objects.filter(program=p)
-        # dersler = Ders.objects.filter()
-        just_created = self.current.task_data.get('just_created', [])
-        just_deleted = self.current.task_data.get('just_deleted', [])
+        dersler = Ders.objects.filter(program_id=self.current.task_data['program'])
         for d in dersler:
             ders = "%s - %s (%s ECTS)" % (d.kod, d.ad, d.ects_kredisi)
             ders_subeleri = Sube.objects.filter(ders=d)
             subeler = []
 
             def sube_append(sube):
-                if sube.key not in just_deleted:
                     subeler.append(
                         {
                             "sube_ad": sube.ad,
@@ -305,9 +299,6 @@ class DersSubelendirme(CrudView):
 
             for sube in ders_subeleri:
                 sube_append(sube)
-            for ders_key, sube_key in just_created:
-                if ders_key == d.key:
-                    sube_append(Sube.objects.get(sube_key))
 
             ders_subeleri = [_(u"""* **%(unvan)s %(ad)s %(soyad)s**
                                 Sube: %(sube)s - Kontenjan: %(kontenjan)s""") % {
@@ -360,24 +351,43 @@ class DersSubelendirme(CrudView):
         sb = self.input['form']['Subeler']
         ders = self.current.task_data['ders_key']
         mevcut_subeler = Sube.objects.filter(ders_id=ders)
-        # self.current.task_data['just_created'] = []
         with BlockSave(Sube):
             for s in sb:
                 okutman = s['okutman']
-                sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders)
+                kontenjan = s['kontenjan']
+                ad = s['ad']
+                sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders,
+                                                          kontenjan=kontenjan, ad=ad)
                 # mevcut_subelerden cikar
+
                 mevcut_subeler = list(set(mevcut_subeler) - {sube})
-                sube.kontenjan = s['kontenjan']
                 sube.dis_kontenjan = s['dis_kontenjan']
-                sube.ad = s['ad']
                 sube.donem = Donem.guncel_donem()
                 sube.save()
-            # if is_new:
-            #     self.current.task_data['just_created'].append((ders, sube.key))
-        # mevcut subelerde kalanlari sil
+                if is_new:
+                    self.bilgilendirme_mesaji_yolla(sube)
+        # çıkarılan şubey
         with BlockDelete(Sube):
             for s in mevcut_subeler:
+                self.bilgilendirme_mesaji_yolla(s)
                 s.delete()
+
+    def bilgilendirme_mesaji_yolla(self,sube):
+        title = _(u"Şubelendirme")
+        bolum_baskani = "%s %s" % (self.current.user.name, self.current.user.surname)
+        msg = _(u"Bölüm Başkanı %s tarafından şubelerinizde değişiklikler yapılmıştır.") % bolum_baskani
+        self.current.task_data['yeni_okutmanlar'] = []
+        abstract_role = AbstractRole.objects.get("OGRETIM_ELEMANI")
+        okutman = sube.okutman
+        self.current.task_data['yeni_okutmanlar'].append(okutman.__unicode__())
+        user = okutman.personel.user if okutman.personel else okutman.harici_okutman
+        try:
+            birim = Program.objects.get(self.current.task_data['program']).birim
+            role = Role.objects.get(abstract_role=abstract_role, user=user, unit=birim)
+            role.send_notification(title=title, message=msg, sender=self.current.user)
+        except ObjectDoesNotExist:
+            pass
+
 
     def bilgi_ver(self):
         """Bilgi ver
@@ -385,30 +395,15 @@ class DersSubelendirme(CrudView):
         Şubelendirme bilgileri ilgili okutmanlara iletilir.
 
         """
-
-        just_created = self.current.task_data.get('just_created', [])
-        just_deleted = self.current.task_data.get('just_deleted', [])
-        ders_key = self.current.task_data['ders_key']
-
-        title = _(u"Şubelendirme")
-        bolum_baskani = "%s %s" % (self.current.user.name, self.current.user.surname)
-        msg = _(u"Bölüm Başkanı %s tarafından şubelerinizde değişiklikler yapılmıştır.") % bolum_baskani
-        okutmanlar = []
-        for ders, sube_key in just_created:
-            if ders == ders_key:
-                sube = Sube.objects.get(sube_key)
-                okutman = sube.okutman
-                okutmanlar.append(okutman.__unicode__())
-                notify(okutman.personel.user if okutman.personel else okutman.harici_okutman.user, title=title, message=msg)
-
-        sbs = Sube.objects.filter(ders_id=self.current.task_data['ders_key'])
-        for s in sbs:
-            if s.key not in just_deleted:
-                notify(s.okutman.personel.user if s.okutman.personel else s.okutman.harici_okutman.user)
-
-        self.current.output['msgbox'] = {
-            'type': 'info', "title": _(u'Mesaj İletildi'),
-            "msg": _(u'Şubelendirme bilgileri şu hocalara iletildi: %s') % format_list(okutmanlar)}
+        if self.current.task_data['yeni_okutmanlar']:
+            self.current.output['msgbox'] = {
+                'type': 'info', "title": _(u'Mesaj İletildi'),
+                "msg": _(u'Şubelendirme bilgileri şu hocalara iletildi: %s') % format_list(
+                    self.current.task_data['yeni_okutmanlar'])}
+        else:
+            self.current.output['msgbox'] = {
+                'type': 'info', "title": _(u'Mesaj İletildi'),
+                "msg": _(u'Derse ait şubelerde değişiklik yapmadınız.')}
 
 
 class NotGirisi(CrudView):

@@ -6,7 +6,8 @@
 # (GPLv3).  See LICENSE.txt for details.
 import time
 
-from ulakbus.models import Program, Ders, Sube
+from ulakbus.models import Program, Ders, Sube, Sinav
+from zengine.messaging.model import Channel
 from zengine.lib.test_utils import *
 
 
@@ -81,7 +82,13 @@ class TestCase(BaseTestCase):
         assert len(subeler) + 1 == len(_derse_ait_subeler)
 
         yeni_sube_1_key = list(set([d.key for d in _derse_ait_subeler]) - set([d.key for d in subeler]))[0]
+        ders = Ders.objects.get("XERlRTgNiNwwm3P00sMoLv48hLh")
         yeni_sube_1 = Sube.objects.get(yeni_sube_1_key)
+
+        assert len(ders.Degerlendirme) == len(Sinav.objects.filter(sube=yeni_sube_1_key, ders=ders))
+        assert yeni_sube_1.ders_adi == "%s - %s %s" % (ders.ad, yeni_sube_1.ad, str(yeni_sube_1.kontenjan))
+        assert len(Channel.objects.filter(name="%s %s"%(ders.kod, yeni_sube_1.ad))) == 1
+        Channel.objects.filter(name="%s %s" % (ders.kod, yeni_sube_1.ad)).delete()
         yeni_sube_1.blocking_delete()
 
         assert len(Sube.objects.filter(ders_id="XERlRTgNiNwwm3P00sMoLv48hLh")) == len(subeler)
@@ -90,20 +97,24 @@ class TestCase(BaseTestCase):
         sube = [{'okutman': "6Hb5xCkqfbRnysVyTW15qB4rWL8", 'kontenjan': 30, 'dis_kontenjan': 5, 'ad': "Sube 2"}]
 
         # Şubelenilecek ders seçilir.
-        resp = self.client.post(cmd='ders_okutman_formu',
-                                sube='XERlRTgNiNwwm3P00sMoLv48hLh')
+        self.client.post(cmd='ders_okutman_formu',
+                         sube='XERlRTgNiNwwm3P00sMoLv48hLh')
 
         # Hocalara bilgilendirme mesajı gönderilir.
         # İş akışı bu adımdan sonra sona erer.
-        resp = self.client.post(cmd='subelendirme_kaydet',
-                                flow='bilgi_ver',
-                                form=dict(program_sec='null', kaydet_ders='null', bilgi_ver=1, Subeler=sube))
+        self.client.post(cmd='subelendirme_kaydet',
+                         flow='bilgi_ver',
+                         form=dict(program_sec='null', kaydet_ders='null', bilgi_ver=1, Subeler=sube))
 
         _derse_ait_subeler_2 = Sube.objects.filter(ders_id="XERlRTgNiNwwm3P00sMoLv48hLh")
         assert len(subeler) + 1 == len(_derse_ait_subeler_2)
 
         yeni_sube_2_key = list(set([d.key for d in _derse_ait_subeler_2]) - set([d.key for d in subeler]))[0]
         yeni_sube_2 = Sube.objects.get(yeni_sube_2_key)
+        assert len(ders.Degerlendirme) == len(Sinav.objects.filter(sube=yeni_sube_2_key, ders=ders))
+        assert yeni_sube_2.ders_adi == "%s - %s %s" % (ders.ad, yeni_sube_2.ad, str(yeni_sube_2.kontenjan))
+        assert len(Channel.objects.filter(name="%s %s"%(ders.kod, yeni_sube_2.ad))) == 1
+        Channel.objects.filter(name="%s %s" % (ders.kod, yeni_sube_2.ad)).delete()
         yeni_sube_2.blocking_delete()
         assert len(Sube.objects.filter(ders_id="XERlRTgNiNwwm3P00sMoLv48hLh")) == len(subeler)
 
