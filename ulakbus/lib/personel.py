@@ -6,39 +6,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from pyoko.exceptions import ObjectDoesNotExist
 import datetime
-from ulakbus.lib.date_time_helper import zaman_araligi
 
 __author__ = 'Ali Riza Keles'
-
-
-def personel_izin_gunlerini_getir(okutman, yil, ay):
-    """
-    Args:
-        okutman: okutman object
-        yil: 2016
-        ay: 7
-
-    Returns: Seçilen yıl ve ay içinde
-    okutmanın izin ve ücretsiz izinlerini
-    gün şeklinde döndüren liste.
-
-    """
-    from ulakbus.models.personel import Izin, UcretsizIzin
-    from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
-
-    baslangic, bitis = yil_ve_aya_gore_ilk_ve_son_gun(yil, ay)
-    personel_izin_list = []
-    for i in range(2):
-        model = Izin if i == 0 else UcretsizIzin
-
-        for personel_izin in model.objects.filter(personel=okutman.personel,
-                                                  baslangic__gte=baslangic,
-                                                  bitis__lte=bitis):
-            for gun in zaman_araligi(personel_izin.baslangic, personel_izin.bitis):
-                    personel_izin_list.append(gun.day)
-
-    return personel_izin_list
 
 
 def gorunen_kademe_hesapla(derece, kademe):
@@ -59,7 +30,7 @@ def gorunen_kademe_hesapla(derece, kademe):
         return 0
 
 
-def derece_ilerlet(pkd, der, kad):
+def derece_ilerlet(pkd, der, kad, terfi_tikanma):
     """
     Derece 3 kademede bir artar. Eger kademe 4 gelmise, derece 1 arttirilir
     Args:
@@ -72,26 +43,27 @@ def derece_ilerlet(pkd, der, kad):
 
     """
     if pkd < der:
-        if kad == 4:
+        kad += 1
+        if (not terfi_tikanma) & (kad == 4):
             kad = 1
             der -= 1
     return der, kad
 
 
-def suren_terfi_var_mi(p):
+def suren_terfi_var_mi(personel_id):
     """
     Mevcut wfler icinde arama yaparak personel hakkinda, devam eden terfi isleminin
     olup olmadigi kontrol edilir.
 
     Args:
-        p (str): personel key
+        personel_id (str): personel key
 
     Returns:
         Devam eden islem varsa True, yoksa False
 
     """
 
-    # TODO: wf ler icinde arama yap
+    # TODO: wfler icinde arama yap
     return False
 
 
@@ -194,3 +166,49 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
             personeller[personel.key] = p_data
 
     return personeller
+
+
+def terfi_durum_kontrol(personel_id):
+    """
+    Args:
+    personel_id (str): Personel key
+
+    Returns:
+    terfi_kontrol (bool) : İlgili personelin terfisinin durup durmadığını
+
+    """
+
+    from ulakbus.models import Personel, AskerlikKayitlari, UcretsizIzin
+
+    personel = Personel.objects.get(personel_id)
+    baslangic_tarih = datetime.date.today() - datetime.timedelta(days=1)
+    bitis_tarih = datetime.date.today() + datetime.timedelta(days=1)
+    askerlik_kontrol = False
+    ucretsiz_izin_kontrol = False
+    aday_memur_kontrol = True if not personel.aday_memur else False
+    try:
+        AskerlikKayitlari.objects.get(personel_id=personel_id,
+                                      baslama_tarihi__gte=baslangic_tarih,
+                                      bitis_tarihi__lte=bitis_tarih
+                                      )
+    except ObjectDoesNotExist:
+        askerlik_kontrol = True
+
+    try:
+        UcretsizIzin.objects.get(personel_id=personel_id,
+                                 baslangic_tarih__gte=baslangic_tarih,
+                                 bitis_tarihi__lte=bitis_tarih
+                                 )
+    except ObjectDoesNotExist:
+        ucretsiz_izin_kontrol = True
+
+    # TODO : Personelin ceza durumu kontrol edilecek
+    return askerlik_kontrol and ucretsiz_izin_kontrol and aday_memur_kontrol
+
+
+def terfi_tikanma_kontrol(personel_id):
+
+    from ulakbus.models import Personel
+
+    personel = Personel.objects.get(personel_id)
+    return True if personel.gorev_ayligi_derece == personel.kadro_derece else False

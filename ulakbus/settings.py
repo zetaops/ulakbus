@@ -87,6 +87,9 @@ OBJECT_MENU = {
 
         {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri', 'field': 'personel_id'},
 
+        {'name': 'Personel', 'wf': 'tekil_personel_terfi', 'verbose_name': 'Personel Terfi',
+         'field': 'personel_id'},
+
         {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri',
          'field': 'personel_id'},
 
@@ -99,12 +102,6 @@ OBJECT_MENU = {
         {'name': 'Atama', 'verbose_name': 'Atama İşlemleri', "wf": 'personel_atama',
          'field': 'personel_id'},
 
-        {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
-         'field': 'personel_id'},
-
-        {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
-         'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
-        {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme', 'field': 'personel_id'},
 
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
@@ -144,8 +141,9 @@ OBJECT_MENU = {
          'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
     ],
     'ogrenci': [
+        {'name': 'DersKatilimi', 'verbose_name': 'Devam Durumu', 'field': 'ogrenci_id'},
         {'name': 'Borc', 'verbose_name': 'Harç Bilgileri', 'field': 'ogrenci_id'},
-        {'name': 'OgrenciProgram', 'verbose_name': 'Öğrenci Mezuniyet', 'wf': 'ogrenci_mezuniyet',
+        {'name': 'OgrenciProgram', 'verbose_name': 'Oğrenci Mezuniyet', 'wf': 'ogrenci_mezuniyet',
          'field': 'ogrenci_id'},
         {'name': 'DegerlendirmeNot', 'field': 'ogrenci_id'},
         {'name': 'OgrenciDersi', 'field': 'ogrenci_id'},
@@ -161,14 +159,10 @@ OBJECT_MENU = {
          'verbose_name': 'Danışman Atama'},
         {'name': 'DondurulmusKayit', 'verbose_name': 'Kayıt Dondurma', 'wf': 'kayit_dondur',
          'field': 'ogrenci_id'},
-        {'name': 'OgrenciProgram', 'verbose_name': 'Mazaretli Öğrenci',
+        {'name': 'OgrenciProgram', 'verbose_name': 'Mazeretli Öğrenci',
          'wf': 'mazeretli_ders_kaydi', 'field': 'ogrenci_id'},
         {'name': 'DegerlendirmeNot', 'verbose_name': 'Not Düzenleme',
          'wf': 'ogrenci_isleri_not_duzenleme',
-         'field': 'ogrenci_id'},
-        {'name': 'OgrenciProgram', 'verbose_name': 'Kayıt Sil', 'wf': 'kayit_sil',
-         'field': 'ogrenci_id'},
-        {'name': 'OgrenciDersi', 'verbose_name': 'Ders Ekle', 'wf': 'ogrenci_ders_atama',
          'field': 'ogrenci_id'}
     ],
 }
