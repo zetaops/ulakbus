@@ -8,8 +8,38 @@
 
 from pyoko.exceptions import ObjectDoesNotExist
 import datetime
+from ulakbus.lib.date_time_helper import zaman_araligi
 
 __author__ = 'Ali Riza Keles'
+
+
+def personel_izin_gunlerini_getir(okutman, yil, ay):
+    """
+    Args:
+        okutman: okutman object
+        yil: 2016
+        ay: 7
+
+    Returns: Seçilen yıl ve ay içinde
+    okutmanın izin ve ücretsiz izinlerini
+    gün şeklinde döndüren liste.
+
+    """
+    from ulakbus.models.personel import Izin, UcretsizIzin
+    from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
+
+    baslangic, bitis = yil_ve_aya_gore_ilk_ve_son_gun(yil, ay)
+    personel_izin_list = []
+    for i in range(2):
+        model = Izin if i == 0 else UcretsizIzin
+
+        for personel_izin in model.objects.filter(personel=okutman.personel,
+                                                  baslangic__gte=baslangic,
+                                                  bitis__lte=bitis):
+            for gun in zaman_araligi(personel_izin.baslangic, personel_izin.bitis):
+                    personel_izin_list.append(gun.day)
+
+    return personel_izin_list
 
 
 def gorunen_kademe_hesapla(derece, kademe):
@@ -138,19 +168,19 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
                 "terfi_sonrasi_gorev_ayligi_kademe"] = derece_ilerlet(
                 pkd,
                 personel.gorev_ayligi_derece,
-                personel.gorev_ayligi_kademe + 1)
+                personel.gorev_ayligi_kademe + 1, terfi_tikanma=terfi_durum_kontrol(personel.key))
 
             p_data["terfi_sonrasi_kazanilmis_hak_derece"], p_data[
                 "terfi_sonrasi_kazanilmis_hak_kademe"] = derece_ilerlet(
                 pkd,
                 personel.kazanilmis_hak_derece,
-                personel.kazanilmis_hak_kademe + 1)
+                personel.kazanilmis_hak_kademe + 1, terfi_tikanma=terfi_tikanma_kontrol(personel.key))
 
             p_data["terfi_sonrasi_emekli_muktesebat_derece"], p_data[
                 "terfi_sonrasi_emekli_muktesebat_kademe"] = derece_ilerlet(
                 pkd,
                 personel.gorev_ayligi_derece,
-                personel.gorev_ayligi_kademe + 1)
+                personel.gorev_ayligi_kademe + 1, terfi_tikanma=terfi_tikanma_kontrol(personel.key))
 
             # terfi sonrasi gorunen kademeler
             p_data["terfi_sonrasi_gorunen_gorev_ayligi_kademe"] = gorunen_kademe_hesapla(

@@ -19,6 +19,9 @@ class TestCase(BaseTestCase):
     def test_tekil_personel(self):
         """
             Tekil personel terfi (Kanunla verilen terfi) için hazırlanmış test metodudur.
+            Terfi değişikliği yapılacak kişi akademik personel ise bildirimler rektor'e gider.
+            Terfi değişikliği yapılacak kişi idari personel ise bildirimler genel sekretere gider.
+            İletilen mesajların sayısı ve basılan msgboxlar test edilmiştir.
         """
 
         # Notification kontrolü yapabilmek için öncelikle tüm notificationlar temizlenir.

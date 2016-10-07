@@ -34,7 +34,7 @@ class TestCase(BaseTestCase):
 
         idari_per_db = len(Personel.objects.filter(personel_turu=2))
 
-        assert idari_per_db - len(ter_gel_id_per) == 17
+        assert idari_per_db - len(ter_gel_id_per) == 16
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,

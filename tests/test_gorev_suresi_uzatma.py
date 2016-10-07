@@ -30,7 +30,7 @@ class TestCase(BaseTestCase):
         # Görev süresi uzatılacak personel seçilir.
         self.client.post(
             id=personel_id,
-            model="Perosnel",
+            model="Personel",
             param="personel_id",
             wf="gorev_suresi_uzatma"
         )

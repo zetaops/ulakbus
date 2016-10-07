@@ -59,16 +59,17 @@ Kadro Sil Onay
    Silme işlemi için onay adımıdır.
 
 """
-import datetime
-from dateutil.relativedelta import relativedelta
-from pyoko import ListNode
 from pyoko.exceptions import ObjectDoesNotExist
-from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi, suren_terfi_var_mi
-from ulakbus.lib.personel import terfi_durum_kontrol, derece_ilerlet, terfi_tikanma_kontrol, gorunen_kademe_hesapla
-from ulakbus.models import Personel, Permission, User
+from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi, suren_terfi_var_mi, terfi_durum_kontrol, \
+    terfi_tikanma_kontrol, derece_ilerlet, gorunen_kademe_hesapla
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
+from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
+from ulakbus.models import Personel, Permission
+from pyoko import ListNode
+from dateutil.relativedelta import relativedelta
+import datetime
 
 
 class KadroObjectForm(JsonForm):
@@ -89,7 +90,7 @@ class KadroObjectForm(JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": "Ünvan ve Derece",
+                        "group_title": gettext_lazy(u"Ünvan ve Derece"),
                         "items": ['unvan', 'derece', 'unvan_aciklama'],
                         "collapse": True,
                     }
@@ -99,7 +100,7 @@ class KadroObjectForm(JsonForm):
                 "layout": "4",
                 "groups": [
                     {
-                        "group_title": "Diğer",
+                        "group_title": gettext_lazy(u"Diğer"),
                         "items": ['kadro_no', 'aciklama', 'birim_id']
                     }
                 ]
@@ -114,7 +115,7 @@ class KadroObjectForm(JsonForm):
             }
         ]
 
-    save_edit = fields.Button("Kaydet")
+    save_edit = fields.Button(gettext_lazy(u"Kaydet"))
 
 
 class KadroIslemleri(CrudView):
@@ -179,8 +180,8 @@ class KadroIslemleri(CrudView):
         self.reset()
 
     class SilOnayForm(JsonForm):
-        evet = fields.Button("Evet", cmd='kadro_sil')
-        hayir = fields.Button("Hayır")
+        evet = fields.Button(gettext_lazy(u"Evet"), cmd='kadro_sil')
+        hayir = fields.Button(gettext_lazy(u"Hayır"))
 
     def kadro_sil_onay_form(self):
         """
@@ -196,12 +197,13 @@ class KadroIslemleri(CrudView):
         self.current.task_data['object_id'] = self.object.key
 
         _form = self.SilOnayForm(title=" ")
-        _form.help_text = """Akademik unvanı: **%s**
-        Kadro numarası: **%s**
-        Açıklaması: **%s**
+        _form.help_text = _(u"""Akademik unvanı: **%(unvan)s**
+        Kadro numarası: **%(kadro)s**
+        Açıklaması: **%(aciklama)s**
 
-        bilgilerine sahip kadroyu silmek istiyor musunuz ?""" % (
-            unvan, kadro_no, aciklama)
+        bilgilerine sahip kadroyu silmek istiyor musunuz ?""") % {
+            'unvan': unvan, 'kadro': kadro_no, 'aciklama': aciklama,
+        }
         self.form_out(_form)
 
     def kadro_sil(self):
@@ -241,8 +243,8 @@ class KadroIslemleri(CrudView):
 
         if obj.durum == self.SAKLI:
             result['actions'].extend([
-                {'name': 'Sil', 'cmd': 'kadro_sil_onay_form', 'show_as': 'button'},
-                {'name': 'İzinli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'}])
+                {'name': _(u'Sil'), 'cmd': 'kadro_sil_onay_form', 'show_as': 'button'},
+                {'name': _(u'İzinli Yap'), 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'}])
 
     @obj_filter
     def izinli_kadro(self, obj, result):
@@ -259,7 +261,7 @@ class KadroIslemleri(CrudView):
 
         if obj.durum == self.IZINLI:
             result['actions'].append(
-                {'name': 'Sakli Yap', 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
+                {'name': _(u'Sakli Yap'), 'cmd': 'sakli_izinli_degistir', 'show_as': 'button'})
 
     @obj_filter
     def duzenlenebilir_veya_silinebilir_kadro(self, obj, result):
@@ -276,7 +278,7 @@ class KadroIslemleri(CrudView):
 
         if obj.durum in [self.SAKLI, self.IZINLI]:
             result['actions'].extend([
-                {'name': 'Düzenle', 'cmd': 'add_edit_form', 'show_as': 'button'},
+                {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'show_as': 'button'},
             ])
 
 
@@ -286,18 +288,24 @@ class TerfiForm(JsonForm):
 
     class Personel(ListNode):
         key = fields.String("Key", hidden=True)
-        sec = fields.Boolean("Seç", type="checkbox")
-        tckn = fields.String("TCK No")
-        ad_soyad = fields.String("Ad")
-        kadro_derece = fields.String("Kadro Derece")
+        sec = fields.Boolean(gettext_lazy(u"Seç"), type="checkbox")
+        tckn = fields.String(gettext_lazy(u"TCK No"))
+        ad_soyad = fields.String(gettext_lazy(u"Ad"))
+        kadro_derece = fields.String(gettext_lazy(u"Kadro Derece"))
 
-        gorev_ayligi = fields.String("GA")
-        kazanilmis_hak = fields.String("KH")
-        emekli_muktesebat = fields.String("EM")
+        # tn: Görev Aylığı
+        gorev_ayligi = fields.String(gettext_lazy(u"GA"))
+        # tn: Kazanılmış Hak
+        kazanilmis_hak = fields.String(gettext_lazy(u"KH"))
+        # tn: Emekli Muktesebat
+        emekli_muktesebat = fields.String(gettext_lazy(u"EM"))
 
-        yeni_gorev_ayligi = fields.String("Yeni GA")
-        yeni_kazanilmis_hak = fields.String("Yeni KH")
-        yeni_emekli_muktesebat = fields.String("Yeni EM")
+        # tn: Yeni Görev Aylığı
+        yeni_gorev_ayligi = fields.String(gettext_lazy(u"Yeni GA"))
+        # tn: Yeni Kazanılmış Hak
+        yeni_kazanilmis_hak = fields.String(gettext_lazy(u"Yeni KH"))
+        # tn: Yeni Emekli Muktesebat
+        yeni_emekli_muktesebat = fields.String(gettext_lazy(u"Yeni EM"))
 
     def generate_form(self):
         """
@@ -351,7 +359,7 @@ class TerfiDuzenleForm(JsonForm):
             'yeni_kazanilmis_hak_gorunen', 'yeni_emekli_muktesebat_derece',
             'yeni_emekli_muktesebat_kademe', 'yeni_emekli_muktesebat_gorunen']
 
-        help_text = """
+        help_text = gettext_lazy(u"""
         GA: Görev Aylığı
         KH: Kazanılmış Hak
         EM: Emekli Muktesebat
@@ -359,44 +367,57 @@ class TerfiDuzenleForm(JsonForm):
         D: Derece
         K: Kademe
         G: Gorunen
-        """
+        """)
 
     class Personel(ListNode):
         key = fields.String("Key", hidden=True)
-        tckn = fields.String("T.C. No")
-        ad_soyad = fields.String("İsim")
-        kadro_derece = fields.String("Kadro Derece")
+        tckn = fields.String(gettext_lazy(u"T.C. No"))
+        ad_soyad = fields.String(gettext_lazy(u"İsim"))
+        kadro_derece = fields.String(gettext_lazy(u"Kadro Derece"))
 
-        gorev_ayligi = fields.String("GA")
-        kazanilmis_hak = fields.String("KH")
-        emekli_muktesebat = fields.String("EM")
+        # tn: Görev Aylığı
+        gorev_ayligi = fields.String(gettext_lazy(u"GA"))
+        # tn: Kazanılmış Hak
+        kazanilmis_hak = fields.String(gettext_lazy(u"KH"))
+        # tn: Emekli Muktesebat
+        emekli_muktesebat = fields.String(gettext_lazy(u"EM"))
 
-        yeni_gorev_ayligi_derece = fields.Integer("GAD")
-        yeni_gorev_ayligi_kademe = fields.Integer("GAK")
-        yeni_gorev_ayligi_gorunen = fields.Integer("GAG")
+        # tn: Yeni Görev Aylığı Derece
+        yeni_gorev_ayligi_derece = fields.Integer(gettext_lazy(u"GAD"))
+        # tn: Yeni Görev Aylığı Kademe
+        yeni_gorev_ayligi_kademe = fields.Integer(gettext_lazy(u"GAK"))
+        # tn: Yeni Görev Aylığı Görünen
+        yeni_gorev_ayligi_gorunen = fields.Integer(gettext_lazy(u"GAG"))
 
-        yeni_kazanilmis_hak_derece = fields.Integer("KHD")
-        yeni_kazanilmis_hak_kademe = fields.Integer("KHK")
-        yeni_kazanilmis_hak_gorunen = fields.Integer("KHG")
+        # tn: Kazanılmış Görev Aylığı Derece
+        yeni_kazanilmis_hak_derece = fields.Integer(gettext_lazy(u"KHD"))
+        # tn: Kazanılmış Görev Aylığı Derece
+        yeni_kazanilmis_hak_kademe = fields.Integer(gettext_lazy(u"KHK"))
+        # tn: Kazanılmış Görev Aylığı Derece
+        yeni_kazanilmis_hak_gorunen = fields.Integer(gettext_lazy(u"KHG"))
 
-        yeni_emekli_muktesebat_derece = fields.Integer("EMD")
-        yeni_emekli_muktesebat_kademe = fields.Integer("EMK")
-        yeni_emekli_muktesebat_gorunen = fields.Integer("EMG")
+        # tn: Emekli Muktesebat Derece
+        yeni_emekli_muktesebat_derece = fields.Integer(gettext_lazy(u"EMD"))
+        # tn: Emekli Muktesebat Derece
+        yeni_emekli_muktesebat_kademe = fields.Integer(gettext_lazy(u"EMK"))
+        # tn: Emekli Muktesebat Derece
+        yeni_emekli_muktesebat_gorunen = fields.Integer(gettext_lazy(u"EMG"))
 
-    devam = fields.Button("Devam Et", cmd="kaydet")
+    devam = fields.Button(gettext_lazy(u"Devam Et"), cmd="kaydet")
 
 
 class PersonelTerfiKriterleri(JsonForm):
-    baslangic_tarihi = fields.Date("Başlangıç Tarihi",
+    baslangic_tarihi = fields.Date(gettext_lazy(u"Başlangıç Tarihi"),
                                    default=datetime.date.today().strftime('d.%m.%Y'))
 
-    bitis_tarihi = fields.Date("Bitiş Tarihi", default=(
+    bitis_tarihi = fields.Date(gettext_lazy(u"Bitiş Tarihi"), default=(
         datetime.date.today() + datetime.timedelta(days=15)).strftime('d.%m.%Y'))
 
-    personel_turu = fields.Integer("Personel Türü", choices=[(1, "Akademik"), (2, "Idari")],
+    personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"),
+                                   choices=[(1, gettext_lazy(u"Akademik")), (2, gettext_lazy(u"İdari"))],
                                    default=2)
 
-    devam = fields.Button("Sorgula")
+    devam = fields.Button(gettext_lazy(u"Sorgula"))
 
 
 class TerfiListe(CrudView):
@@ -405,7 +426,7 @@ class TerfiListe(CrudView):
 
     def personel_kriterleri(self):
         _form = PersonelTerfiKriterleri(current=self.current,
-                                        title="Terfisi Yapılacak Personel Kriterleri")
+                                        title=_(u"Terfisi Yapılacak Personel Kriterleri"))
         self.form_out(_form)
 
     def terfisi_gelen_personel_liste(self):
@@ -424,11 +445,11 @@ class TerfiListe(CrudView):
                 personel_turu=personel_turu)
 
         if self.current.task_data["personeller"]:
-            _form = TerfiForm(current=self.current, title="Terfi İşlemi")
+            _form = TerfiForm(current=self.current, title=_(u"Terfi İşlemi"))
             _form.generate_form()
 
-            _form.kaydet = fields.Button("Onaya Gönder", cmd="onaya_gonder")
-            _form.duzenle = fields.Button("Terfi Düzenle", cmd="terfi_liste_duzenle")
+            _form.kaydet = fields.Button(_(u"Onaya Gönder"), cmd="onaya_gonder")
+            _form.duzenle = fields.Button(_(u"Terfi Düzenle"), cmd="terfi_liste_duzenle")
 
             self.form_out(_form)
             self.current.output["meta"]["allow_actions"] = False
@@ -436,10 +457,11 @@ class TerfiListe(CrudView):
         else:
             datetime.datetime.today()
             self.current.output['msgbox'] = {
-                'type': 'info', "title": 'Terfi Bekleyen Personel Bulunamadı',
-                "msg": '%s - %s tarih aralığında terfi bekleyen personel bulunamadı.' % (
-                    baslangic_tarihi.strftime('%d-%m-%Y'),
-                    bitis_tarihi.strftime('%d-%m-%Y'))
+                'type': 'info', "title": _(u'Terfi Bekleyen Personel Bulunamadı'),
+                "msg": _(u'%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen personel bulunamadı.') % {
+                    'baslangic': format_datetime(baslangic_tarihi),
+                    'bitis': format_datetime(bitis_tarihi),
+                }
             }
 
     def terfi_liste_duzenle(self):
@@ -505,30 +527,30 @@ class TerfiListe(CrudView):
     # todo: lane geicisi
     def mesaj_goster(self):
 
-        msg = {"title": 'Personeller Onay Icin Gonderildi!',
-               "body": 'Talebiniz Basariyla iletildi.'}
+        msg = {"title": _(u'Personeller Onay Icin Gonderildi!'),
+               "body": _(u'Talebiniz Basariyla iletildi.')}
         # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
 
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def onay_kontrol(self):
-        _form = TerfiForm(current=self.current, title="Terfi İşlemi")
+        _form = TerfiForm(current=self.current, title=_(u"Terfi İşlemi"))
         _form.generate_form()
         _form.Meta.inline_edit = []
 
-        _form.kaydet = fields.Button(title="Onayla", cmd="terfi_yap")
-        _form.duzenle = fields.Button(title="Reddet", cmd="red_aciklamasi_yaz")
+        _form.kaydet = fields.Button(title=_(u"Onayla"), cmd="terfi_yap")
+        _form.duzenle = fields.Button(title=_(u"Reddet"), cmd="red_aciklamasi_yaz")
 
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def red_aciklamasi_yaz(self):
-        _form = JsonForm(title="Terfi Islemi Reddedildi.")
-        _form.Meta.help_text = """Terfi işlemini onaylamadınız. İlgili personele bir açıklama
-                                  yazmak ister misiniz?"""
-        _form.red_aciklama = fields.String("Açıklama")
-        _form.devam = fields.Button("Devam Et")
+        _form = JsonForm(title=_(u"Terfi İşlemi Reddedildi."))
+        _form.Meta.help_text = _(u"""Terfi işlemini onaylamadınız. İlgili personele bir açıklama
+                                  yazmak ister misiniz?""")
+        _form.red_aciklama = fields.String(_(u"Açıklama"))
+        _form.devam = fields.Button(_(u"Devam Et"))
         self.form_out(_form)
 
     def red_aciklamasi_kaydet(self):
@@ -559,17 +581,107 @@ class TerfiListe(CrudView):
 
     # todo: lane geicisi
     def taraflari_bilgilendir(self):
-        msg = {"title": 'Personel Terfi Islemi Onaylandi!',
-               "body": 'Onay Belgesi icin Personel Islerine Gonderildi.'}
+        msg = {"title": _(u'Personel Terfi Islemi Onaylandi!'),
+               "body": _(u'Onay Belgesi icin Personel Islerine Gonderildi.')}
         self.current.output['msgbox'] = msg
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def onay_belgesi_uret(self):
         self.current.output['msgbox'] = {
             'type': 'info',
-            'title': 'Terfi İşlemleri Onay Belgesi!',
-            'msg': 'Toplu terfi İşleminiz Onaylandı'
+            'title': _(u'Terfi İşlemleri Onay Belgesi!'),
+            'msg': _(u'Toplu terfi İşleminiz Onaylandı')
         }
+
+
+class GorevSuresiForm(JsonForm):
+    """
+        Akademik personel görev süresini uzatma işlemi için kullanılan
+        JsonForm dan türetilmiş bir form sınıfıdır.
+    """
+
+    def __init__(self, **kwargs):
+        """
+            form nesnesi üretilirken girilen parametrelerin form elemanlarının
+            default değeri olarak kullanıla bilmesi amacıyla yazılan constructor
+            metoddur. Akademik personelin görev süresi Atama modelinde tutulduğu
+            için form nesnesi instance üretilirken ilgili atama nın id ne
+            ihtiyacımız bulunmaktadır.
+        """
+
+        self.gorev_suresi_bitis = fields.Date(_(u"Görev Süresi Bitiş Tarihi"),
+                                              default=kwargs.pop('gorev_suresi_bitis_tarihi'))
+        self.personel_id = fields.String("personel_id", hidden=True,
+                                         default=kwargs.pop('personel_id'))
+
+        # Üst sınıfın constructor metodu çağrılmaktadır.
+        super(GorevSuresiForm, self).__init__()
+
+    kaydet = fields.Button(gettext_lazy(u"Kaydet"), cmd="kaydet")
+
+
+class GorevSuresiUzat(CrudView):
+    class Meta:
+        model = "Personel"
+
+    """
+        Görev süresi uzatma işlemini gerçekleştiren CrudView den türetilmiş
+        bir sınıftır.
+    """
+
+    def gorev_suresi_form(self):
+        """
+        Öncelikle anasayfadaki personel seçim formundan seçilen personelin
+        id si elde edilir. Personel id ile atama kaydı elde edilir.
+        Eğer personel akademik personel değilse hata mesajı görüntülenir.
+        Her akademik personele ait sadece bir adet atama kaydı bulunabilir.
+        Elde edilen atama nesnesinden çekilen görev süresi bitiş tarihi
+        form nesnesi instance üretilirken parametre olarak verilir.
+        Son olarak da form görüntülenir.
+        """
+
+        try:
+            personel = Personel.objects.get(self.current.input["id"])
+
+            if personel.personel_turu == 1:
+                if type(personel.gorev_suresi_bitis) is datetime.date:
+                    gorev_suresi_bitis = format_date(personel.gorev_suresi_bitis)
+                else:
+                    gorev_suresi_bitis = None
+
+                _form = GorevSuresiForm(current=self.current, title=_(u"Görev Süresi Uzat"),
+                                        gorev_suresi_bitis_tarihi=gorev_suresi_bitis,
+                                        personel_id=personel.key)
+                self.form_out(_form)
+            else:
+                self.current.output['msgbox'] = {
+                    'type': 'info', "title": _(u'HATA !'),
+                    "msg": _(u'%(ad)s %(soyad)s akademik bir personel değildir.') % {
+                        'ad': personel.ad,
+                        'soyad': personel.soyad,
+                    }
+                }
+
+        except ObjectDoesNotExist:
+            self.current.output["msgbox"] = {
+                'type': "info", "title": _(u"HATA !"),
+                "msg": _(u"%(ad)s %(soyad)s e ait bir atama kaydı bulunamadı") % {
+                    'ad': personel.ad,
+                    'soyad': personel.soyad,
+                }
+            }
+
+    def kaydet(self):
+        """
+        Formdan gelen personel id ile personel kaydı elde edilir. Sonrasındada
+        görev süresi başlama ve bitiş tarihleri değiştirilerek kaydedilir.
+        Yeni görev süresi başlama tarihi işlemin yapıldığı tarih,
+        yeni görev süresi bitiş tarihi formdan gelen tarih olur.
+        """
+        personel = Personel.objects.get(self.current.input["form"]["personel_id"])
+        personel.gorev_suresi_baslama = datetime.date.today()
+        personel.gorev_suresi_bitis = self.current.input["form"]["gorev_suresi_bitis"]
+        personel.save()
 
 
 class TerfiIslemForm(JsonForm):
@@ -578,31 +690,30 @@ class TerfiIslemForm(JsonForm):
         JsonForm class dan extend edilerek oluşturulmuş bir class dır.
 
     """
-    yeni_gorev_ayligi_gorunen = fields.Integer("Görünen Görev Aylığı Kademe")
-    key = fields.String("Key", hidden=True)
-    tckn = fields.String("T.C. No")
-    ad_soyad = fields.String("İsim")
-    kadro_derece = fields.Integer("Kadro Derece")
+    yeni_gorev_ayligi_gorunen = fields.Integer(gettext_lazy(u"Görünen Görev Aylığı Kademe"))
+    key = fields.String(gettext_lazy(u"Key"), hidden=True)
+    tckn = fields.String(gettext_lazy(u"T.C. No"))
+    ad_soyad = fields.String(gettext_lazy(u"İsim"))
+    kadro_derece = fields.Integer(gettext_lazy(u"Kadro Derece"))
 
     # Burada personelin şimdiki kadro ve dereceleride gösterilir.
-    gorev_ayligi = fields.String("Görev Aylığı")
-    kazanilmis_hak = fields.String("Kazanılmış Hak")
-    emekli_muktesebat = fields.String("Emekli Müktesebat")
+    gorev_ayligi = fields.String(gettext_lazy(u"Görev Aylığı"))
+    kazanilmis_hak = fields.String(gettext_lazy(u"Kazanılmış Hak"))
+    emekli_muktesebat = fields.String(gettext_lazy(u"Emekli Müktesebat"))
 
     # Burada da personelin terfiden sonraki kademe ve derece durumlarının sistem tarafından hesaplanmış hali vardır.
-    yeni_gorev_ayligi_derece = fields.Integer("Yeni Görev Aylığı Derece")
-    yeni_gorev_ayligi_kademe = fields.Integer("Yeni Görev Aylığı Kademe")
+    yeni_gorev_ayligi_derece = fields.Integer(gettext_lazy(u"Yeni Görev Aylığı Derece"))
+    yeni_gorev_ayligi_kademe = fields.Integer(gettext_lazy(u"Yeni Görev Aylığı Kademe"))
 
+    yeni_kazanilmis_hak_derece = fields.Integer(gettext_lazy(u"Yeni Kazanılmış Hak Derece"))
+    yeni_kazanilmis_hak_kademe = fields.Integer(gettext_lazy(u"Yeni Kazanılmış Hak Kademe"))
+    yeni_kazanilmis_hak_gorunen = fields.Integer(gettext_lazy(u"Görünen Kazanılmış Hak Kademe"))
 
-    yeni_kazanilmis_hak_derece = fields.Integer("Yeni Kazanılmış Hak Derece")
-    yeni_kazanilmis_hak_kademe = fields.Integer("Yeni Kazanılmış Hak Kademe")
-    yeni_kazanilmis_hak_gorunen = fields.Integer("Görünen Kazanılmış Hak Kademe")
+    yeni_emekli_muktesebat_derece = fields.Integer(gettext_lazy(u"Yeni Emekli Müktesebat Derece"))
+    yeni_emekli_muktesebat_kademe = fields.Integer(gettext_lazy(u"Yeni Emekli Müktesebat Kademe"))
+    yeni_emekli_muktesebat_gorunen = fields.Integer(gettext_lazy(u"Görünen Emekli Müktesebat Kademe"))
 
-    yeni_emekli_muktesebat_derece = fields.Integer("Yeni Emekli Müktesebat Derece")
-    yeni_emekli_muktesebat_kademe = fields.Integer("Yeni Emekli Müktesebat Kademe")
-    yeni_emekli_muktesebat_gorunen = fields.Integer("Görünen Emekli Müktesebat Kademe")
-
-    devam = fields.Button("Devam Et", cmd="kaydet")
+    devam = fields.Button(gettext_lazy(u"Devam Et"), cmd="kaydet")
 
 
 class TerfiOnayForm(JsonForm):
@@ -612,23 +723,23 @@ class TerfiOnayForm(JsonForm):
         rektör tarafından görüntülendiği formdur.
 
     """
-    key = fields.String("Key", hidden=True)
-    tckn = fields.String("TCK No")
-    ad_soyad = fields.String("Ad")
-    kadro_derece = fields.String("Kadro Derece")
+    key = fields.String(gettext_lazy(u"Key"), hidden=True)
+    tckn = fields.String(gettext_lazy(u"TCK No"))
+    ad_soyad = fields.String(gettext_lazy(u"Ad"))
+    kadro_derece = fields.String(gettext_lazy(u"Kadro Derece"))
 
     # TerfiIslemForm class da olduğu gibi personelin terfiden önceki derece ve kademe durumunu ifade eder.
-    gorev_ayligi = fields.String("Görev Aylığı")
-    kazanilmis_hak = fields.String("Kazanılmış Hak")
-    emekli_muktesebat = fields.String("Emekli Müktesebat")
+    gorev_ayligi = fields.String(gettext_lazy(u"Görev Aylığı"))
+    kazanilmis_hak = fields.String(gettext_lazy(u"Kazanılmış Hak"))
+    emekli_muktesebat = fields.String(gettext_lazy(u"Emekli Müktesebat"))
 
     # Personelin terfiden sonraki kademe ve derece durumunu ifade eder.
-    yeni_gorev_ayligi = fields.String("Yeni Görev Aylığı")
-    yeni_kazanilmis_hak = fields.String("Yeni Kazanılmış Hak")
-    yeni_emekli_muktesebat = fields.String("Yeni Emekli Müktesebat")
+    yeni_gorev_ayligi = fields.String(gettext_lazy(u"Yeni Görev Aylığı"))
+    yeni_kazanilmis_hak = fields.String(gettext_lazy(u"Yeni Kazanılmış Hak"))
+    yeni_emekli_muktesebat = fields.String(gettext_lazy(u"Yeni Emekli Müktesebat"))
 
-    onay_buton = fields.Button("Onayla", cmd="terfi_onay")
-    red_buton = fields.Button("Red", cmd="terfi_red")
+    onay_buton = fields.Button(gettext_lazy(u"Onayla"), cmd="terfi_onay")
+    red_buton = fields.Button(gettext_lazy(u"Red"), cmd="terfi_red")
 
 
 class TerfiIslemleri(CrudView):
@@ -658,9 +769,11 @@ class TerfiIslemleri(CrudView):
         self.current.task_data["ad_soyad"] = "%s %s" % (personel.ad, personel.soyad)
         if suren_terfi_var_mi(personel.key):
             self.current.output['msgbox'] = {
-                'type': 'error', "title": 'HATA !',
-                "msg": '%s %s isim soyisimli personelin devam eden bir terfi süreci bulunmaktadır' % (
-                    personel.ad, personel.soyad)
+                'type': 'error', "title": _(u'HATA !'),
+                "msg": _(u'%(ad)s %(soyad)s isimli personelin devam eden bir terfi süreci bulunmaktadır') % {
+                        'ad': personel.ad,
+                        'soyad': personel.soyad
+                    }
             }
         else:
             if terfi_durum_kontrol(personel.key):
@@ -698,7 +811,7 @@ class TerfiIslemleri(CrudView):
                     False
                 )
                 # Form nesnesi oluşturulur ve attribute lerin değerleri verilir.
-                _form = TerfiIslemForm(current=self.current, title="Terfi İşlemleri")
+                _form = TerfiIslemForm(current=self.current, title=_(u"Terfi İşlemleri"))
                 _form.key = personel.key
                 _form.ad_soyad = "%s %s" % (personel.ad, personel.soyad)
                 _form.tckn = personel.tckn
@@ -724,9 +837,11 @@ class TerfiIslemleri(CrudView):
             else:
                 # Terfisi duran personel için terfi işlemi yapılamayacağına yönelik uyarı mesajı
                 self.current.output['msgbox'] = {
-                    'type': 'error', "title": 'HATA !',
-                    "msg": '%s %s isim soyisimli personelin terfisi durdurulmuştur' % (
-                        personel.ad, personel.soyad)
+                    'type': 'error', "title": _(u'HATA !'),
+                    "msg": _(u'%(ad)s %(soyad)s isimli personelin terfisi durdurulmuştur') % {
+                        'ad': personel.ad,
+                        'soyad': personel.soyad
+                    }
                 }
 
     def kaydet_onaya_gonder(self):
@@ -760,8 +875,8 @@ class TerfiIslemleri(CrudView):
             user_permission = Permission.objects.get(name="idari_personel_terfi_onay")
         user_list = user_permission.get_permitted_users()
         self.current.invite_other_parties(user_list)
-        msg = {"title": 'İşlem Gerçekleştirildi!',
-               "body": 'Terfi işlemi, onay sürecine girmiştir.'}
+        msg = {"title": _(u'İşlem Gerçekleştirildi!'),
+               "body": _(u'Terfi işlemi, onay sürecine girmiştir.')}
         self.current.task_data["LANE_CHANGE_MSG"] = msg
 
     def terfi_kontrol(self):
@@ -772,7 +887,7 @@ class TerfiIslemleri(CrudView):
 
         """
         personel = Personel.objects.get(self.current.task_data["personel_id"])
-        _form = TerfiOnayForm(current=self.current, title="Terfi Kontrol")
+        _form = TerfiOnayForm(current=self.current, title=_(u"Terfi Kontrol"))
         _form.tckn = personel.tckn
         _form.ad_soyad = "%s/%s" % (personel.ad, personel.soyad)
         _form.kadro_derece = personel.kadro_derece
@@ -807,11 +922,11 @@ class TerfiIslemleri(CrudView):
         personel.emekli_muktesebat_kademe = self.current.task_data["yeni_emekli_muktesebat_kademe"]
         personel.save()
         msg = {
-            "title": "TERFİ İŞLEMİ SONUÇ BİLGİSİ",
-            "body": "%s T.C. No %s isim soyisimli personelin terfisi gerçekleştirilmiştir" % (
-                self.current.task_data["tckn"],
-                self.current.task_data["ad_soyad"]
-            )
+            "title": _(u"TERFİ İŞLEMİ SONUÇ BİLGİSİ"),
+            "body": _(u"%(tckn)s T.C. Nolu %(ad_soyad)s isimli personelin terfisi gerçekleştirilmiştir") % {
+                'tckn': self.current.task_data["tckn"],
+                'ad_soyad': self.current.task_data["ad_soyad"],
+            }
         }
         self.current.task_data["LANE_CHANGE_MSG"] = msg
 
@@ -821,11 +936,11 @@ class TerfiIslemleri(CrudView):
             Burada yeni bir JsonForm nesnesi türetilerek attributeleri belirlenmektedir.
             Son olarakda form ekrana basılmaktadır.
         """
-        _form = JsonForm(title="Terfi İşleminiz Reddedildi.")
-        _form.Meta.help_text = """Terfi işlemini onaylamadınız. İlgili personele bir açıklama
-                                  yazmak ister misiniz?"""
-        _form.red_aciklama = fields.String("Açıklama")
-        _form.devam = fields.Button("Devam Et")
+        _form = JsonForm(title=_(u"Terfi İşleminiz Reddedildi."))
+        _form.Meta.help_text = _(u"""Terfi işlemini onaylamadınız. İlgili personele bir açıklama
+                                  yazmak ister misiniz?""")
+        _form.red_aciklama = fields.String(_(u"Açıklama"))
+        _form.devam = fields.Button(_(u"Devam Et"))
         self.form_out(_form)
 
     def red_aciklama_kaydet(self):
@@ -835,8 +950,8 @@ class TerfiIslemleri(CrudView):
         """
         self.current.task_data["red_aciklama"] = self.current.input["form"]["red_aciklama"]
         msg = {
-            "title": "TERFİ İŞLEMİ SONUÇ BİLGİSİ",
-            "body": "Terfi işlemi reddedildi"
+            "title": _(u"TERFİ İŞLEMİ SONUÇ BİLGİSİ"),
+            "body": _(u"Terfi işlemi reddedildi")
         }
         self.current.task_data["LANE_CHANGE_MSG"] = msg
 
@@ -848,10 +963,12 @@ class TerfiIslemleri(CrudView):
          göstermektir.
         """
         self.current.output['msgbox'] = {
-            'type': 'error', "title": 'Terfi İŞLEMİ SONUÇ BİLGİSİ !',
-            "msg": '%s T.C. No ve %s isim soyisimli personelin terfi işlemi reddedilmiştir. %s' % (
-                self.current.task_data["tckn"], self.current.task_data["ad_soyad"],
-                self.current.task_data["red_aciklama"])
+            'type': 'error', "title": _(u'Terfi İŞLEMİ SONUÇ BİLGİSİ !'),
+            "msg": _(u'%(tckn)s T.C. Nolu %(ad_soyad)s isimli personelin terfi işlemi reddedilmiştir.'
+                     u' %(red_aciklama)s') % {'tckn': self.current.task_data["tckn"],
+                                              'ad_soyad': self.current.task_data["ad_soyad"],
+                                              'red_aciklama': self.current.task_data["red_aciklama"]
+            }
         }
 
     def taraflari_bilgilendir(self):
@@ -859,12 +976,12 @@ class TerfiIslemleri(CrudView):
             Terfi işlemini gerçekleştiren personele terfi onay mesajını gösteren metoddur.
         """
         self.current.output["msgbox"] = {
-            "type": "info",
-            "title": "TERFİ İŞLEMİ SONUÇ BİLGİSİ",
-            "msg": "%s T.C. No %s isim soyisimli personelin terfisi gerçekleştirilmiştir" % (
-                self.current.task_data["tckn"],
-                self.current.task_data["ad_soyad"]
-            )
+            "type": _(u"info"),
+            "title": _(u"TERFİ İŞLEMİ SONUÇ BİLGİSİ"),
+            "msg": _(u"%(tckn)s T.C. Nolu %(ad_soyad)s isimli personelin terfisi gerçekleştirilmiştir") % {
+                'tckn': self.current.task_data["tckn"],
+                'ad_soyad': self.current.task_data["ad_soyad"],
+            }
         }
 
     def onay_belgesi_uret(self):
@@ -872,11 +989,10 @@ class TerfiIslemleri(CrudView):
             Terfi Onay belgesi üreten metod.
         """
         # TODO : Belge üretme işlemi daha sonra tamamlanacak.
-        _form = JsonForm(title="Onay Belgesi")
-        _form.Meta.help_text = "Onay Belgesi Üretmek İster misiniz ?"
-        _form.evet = fields.Button("Evet")
-        _form.hayir = fields.Button("Hayır")
+        _form = JsonForm(title=_(u"Onay Belgesi"))
+        _form.Meta.help_text = _(u"Onay Belgesi Üretmek İster misiniz ?")
+        _form.evet = fields.Button(_(u"Evet"))
+        _form.hayir = fields.Button(_(u"Hayır"))
         self.form_out(_form)
-
 
 
