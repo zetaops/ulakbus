@@ -8,6 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 # Yeni Personel Ekle WF adimlarini icerir.
+from collections import OrderedDict
 from datetime import date
 
 from ulakbus.lib.view_helpers import prepare_choices_for_model
@@ -44,16 +45,11 @@ class PersonelAtama(CrudView):
         if 'hata_msg' in self.current.task_data:
             _form.help_text = self.current.task_data['hata_msg']
 
-        son_personel = Personel.objects.set_params(sort='kurum_sicil_no_int desc')[0]
+        # son_personel = Personel.objects.set_params(sort='kurum_sicil_no_int desc')[0]
         personel = Personel.objects.get(self.current.task_data['personel_id'])
-
-        _form.kurum_sicil_no_int = fields.Integer(_("Kurum Sicil No (Sıradaki Sicil No : KON-%s)") %
-                                                  str(son_personel.kurum_sicil_no_int + 1),
-                                                  required=True,
-                                                  default=son_personel.kurum_sicil_no_int + 1)
-
+        _form.kurum_sicil_no_int = fields.Integer(_(u"Kurum Sicil No"), default=personel.kurum_sicil_no_int)
         _form.personel_turu = fields.Integer(_(u"Personel Tipi"), choices="personel_turu",
-                                            default=personel.personel_turu)
+                                             default=personel.personel_turu)
         _form.unvan = fields.Integer(_(u"Personel Unvan"), choices="unvan_kod", required=False,
                                      default=personel.unvan)
         _form.emekli_sicil_no = fields.String(_(u"Emekli Sicil No"), default=personel.emekli_sicil_no)
@@ -68,10 +64,10 @@ class PersonelAtama(CrudView):
         _form.goreve_baslama_tarihi = fields.Date(_(u"Göreve Başlama Tarihi"),
                                                   default=str(personel.goreve_baslama_tarihi))
 
-        _form.baslama_sebep = fields.String(_(u"Durum"), type='typeahead')
+        _form.baslama_sebep = fields.String(_(u"Durum")) #typeahead olacak
         _form.baslama_sebep.default = str(personel.baslama_sebep)
         # TODO: Set choices key error fırlatıyor. düzeltilecek
-        # _form.set_choices_of('baslama_sebep', choices=prepare_choices_for_model(HitapSebep, nevi=1))
+        _form.set_choices_of('baslama_sebep', choices=prepare_choices_for_model(HitapSebep, nevi=1))
 
         _form.mecburi_hizmet_suresi = fields.Date(_(u"Mecburi Hizmet Süresi"),
                                                   default=str(personel.mecburi_hizmet_suresi))
@@ -100,7 +96,7 @@ class PersonelAtama(CrudView):
 
     def kadro_bilgileri_form(self):
         _form = KadroBilgiForm(current=self.current,
-                               title="%(ad)s %(soyad)s için Atama Yapılacak Kadroyu Seçin" % {
+                               title="%(ad)s %(soyad)s adlı personelin kadro bilgilerini doldurunuz." % {
                                    'ad': self.current.task_data['personel_ad'],
                                    'soyad': self.current.task_data['personel_soyad'],
                                })
@@ -112,29 +108,26 @@ class PersonelAtama(CrudView):
 
     def kadro_bilgileri_goster(self):
         genel_bilgiler = _("""**Adı**: {ad}
-                           **Soyad**: {soyad}
-                           **Personel Tipi**: {personel_turu}""").format(
-            **self.current.task_data['personel'])
+                              **Soyadı**: {soyad}
+                              **Personel Tipi**: {personel_turu}""").format(**self.current.task_data['personel'])
         atama = Atama.objects.get(self.current.task_data['guncel_atama'])
-        atama_data = atama.clean_value()
+        atama_verileri = atama.clean_value()
+        birim = Kadro.objects.get(atama_verileri["kadro_id"]).birim()
+        atama_bilgileri = _("**Hizmet Sınıfı**: {hizmet_sinifi}\n**Birim**:{0}\n").format(birim, **atama_verileri)
 
-        atama_bilgileri = _("**Hizmet Sınıfı**:\n" \
-                            "**Birim**: \n").format(**atama_data)
-
-        output = [{_('Genel Bilgiler'): genel_bilgiler,
-                   _('Atama Bilgileri'): atama_bilgileri}]
-
-        self.current.output['object'] = {
+        output = [{0: _(u'Genel Bilgiler'),
+                   1: _(u'Atama Bilgileri')}]
+        self.current.output['objects'] = output
+        bilgiler = OrderedDict([(0, genel_bilgiler), (1, atama_bilgileri)])
+        item = {
             "type": "table-multiRow",
-            "title": _("Personel Atama Bilgileri"),
-            "fields": output,
+            "fields": bilgiler,
             "actions": False
         }
-
-        _form = JsonForm(current=self.current)
+        self.current.output['objects'].append(item)
+        _form = JsonForm(current=self.current, title=_(u"Personel Atama Bilgileri"))
         _form.edit = fields.Button(_("Düzenle"), cmd="edit")
-        _form.yeni_atama = fields.Button(_("Atama Yap"), cmd="yeni_atama", flow="yeni_atama",
-                                         form_validation=False)
+        _form.yeni_atama = fields.Button(_("Atama Yap"), cmd="yeni_atama", form_validation=False)
         self.form_out(_form)
 
     def atama_kaydet(self):
@@ -153,7 +146,7 @@ class PersonelAtama(CrudView):
             try:
                 atama.kadro = atanacak_kadro
                 atama.ibraz_tarihi = self.current.input['form']['ibraz_tarihi']
-                atama.durum_id = self.current.input['form']['durum']
+                atama.durum = HitapSebep.objects.get(self.current.input['form']['durum'])
                 atama.nereden = self.current.input['form']['nereden']
                 atama.atama_aciklama = self.current.input['form']['atama_aciklama']
                 atama.goreve_baslama_tarihi = self.current.input['form']['goreve_baslama_tarihi']
@@ -162,57 +155,48 @@ class PersonelAtama(CrudView):
                 atama.save()
 
                 personel = Personel.objects.get(self.current.task_data['personel_id'])
-
                 hk = HizmetKayitlari(personel=personel)
                 hk.baslama_tarihi = date.today()
-
-                # TODO: Hizmet Kayitlari Model post_save düzgün çalışmadığı için eklendi. #5277
-                # Düzeltildiğinde kaldırılacak
-                hk.tckn = personel.tckn
-                hk.hizmet_sinifi = personel.hizmet_sinifi
-                hk.kadro_derece = atanacak_kadro.derece
-                hk.odeme_derece = personel.gorev_ayligi_derece
-                hk.odeme_kademe = personel.gorev_ayligi_kademe
-                hk.odeme_ekgosterge = personel.gorev_ayligi_ekgosterge
-                hk.kazanilmis_hak_ayligi_derece = personel.kazanilmis_hak_derece
-                hk.kazanilmis_hak_ayligi_kademe = personel.kazanilmis_hak_kademe
-                hk.kazanilmis_hak_ayligi_ekgosterge = personel.kazanilmis_hak_ekgosterge
-                hk.emekli_derece = personel.emekli_muktesebat_derece
-                hk.emekli_kademe = personel.emekli_muktesebat_kademe
-                hk.emekli_ekgosterge = personel.emekli_muktesebat_ekgosterge
-
-                hk.sebep_kod = atama.durum.sebep_no
                 hk.kurum_onay_tarihi = self.current.input['form']['kurum_onay_tarihi']
                 hk.sync = 1  # TODO: Düzeltilecek, beta boyunca senkronize etmemesi için 1 yapıldı
-                hk.personel = personel
                 hk.save()
-            except:
+            except Exception as e:
                 # Herhangi bir hata oluşursa atama silinecek
-                atama.delete(True)
+                atama.delete()
+                self.current.output['msgbox'] = {
+                    'type': 'warning', "title": _(u'Bir Hata Oluştu'),
+                    "msg": _(u'%s') % e.message
+                }
 
     def atama_goster(self):
         kisi_bilgileri = _("""**Adı**: {ad}
                               **Soyad**: {soyad}""").format(**self.current.task_data['personel'])
 
-        atama_bilgileri = _("**kadro**: {kadro}\n" \
+        atama_bilgileri = _("**Kadro**: {kadro}\n" \
                             "**İlçe**: \n").format(**self.current.task_data)
 
-        output = [{_(u'Kişi Bilgileri'): kisi_bilgileri,
-                   _(u'Atama Bilgileri'): atama_bilgileri}]
+        # output = [{_(u'Kişi Bilgileri'): kisi_bilgileri,
+        #            _(u'Atama Bilgileri'): atama_bilgileri}]
 
-        self.current.output['object'] = {
+        output = [{0: _(u'Kişi Bilgileri'),
+                   1: _(u'Atama Bilgileri')}]
+        self.current.output['objects'] = output
+        bilgiler = OrderedDict([(0, kisi_bilgileri), (1, atama_bilgileri)])
+        item = {
             "type": "table-multiRow",
             "title": _(u"Personel Ataması Başarı ile Tamamlandı"),
-            "fields": output,
+            "fields": bilgiler,
             "actions": False
         }
+        self.current.output['objects'].append(item)
 
-        _form = JsonForm(current=self.current)
+        _form = JsonForm(current=self.current, title="Kişi ve Atama Bilgileri")
 
         _form.hitap = fields.Button(_(u"Hitap ile Eşleştir"), cmd="hitap_getir", btn='hitap')
         _form.bitir = fields.Button(_(u"İşlemi Bitir"), cmd="bitir", flow="bitir",
                                     form_validation=False)
         self.form_out(_form)
+        self.current.output["meta"]["allow_actions"] = False
 
     def atama_iptal(self):
         self.current.output['msgbox'] = {
@@ -316,15 +300,14 @@ class EksikBilgiForm(JsonForm):
 class KadroBilgiForm(JsonForm):
     class Meta:
         title = gettext_lazy(u'Atama Bilgileri')
-        help_text = gettext_lazy(u"Yeni Personelin Iletisim Bilgilerini Duzenle.")
 
-    kadro = fields.String(_(u"Atanacak Kadro Seçiniz"), type='typeahead')
+    kadro = fields.String(_(u"Atanacak Kadro Seçiniz"))  # typeahead olacak
     ibraz_tarihi = fields.Date(_(u"İbraz Tarihi"))
-    durum = fields.String(_(u"Durum"), type='typeahead')
+    durum = fields.String(_(u"Durum"))  # typeahead olacak
     nereden = fields.Integer(_(u"Nereden"))
     atama_aciklama = fields.Text(_(u"Atama Açıklama"))
-    goreve_baslama_tarihi = fields.Date(_(u"Birimde Göreve Başlama Tarihi"))
-    goreve_baslama_aciklama = fields.String(_(u"Birimde Göreve Başlama Açıklama"))
+    goreve_baslama_tarihi = fields.Date(_(u"Göreve Başlama Tarihi"))
+    goreve_baslama_aciklama = fields.String(_(u"Göreve Başlama Açıklama"))
     kurum_onay_tarihi = fields.Date(_(u"Kurum Onay Tarihi"))
 
     kaydet = fields.Button(_(u"Kaydet"), cmd="kaydet", style="btn-success")
