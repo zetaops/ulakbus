@@ -356,17 +356,18 @@ class DersSubelendirme(CrudView):
                 okutman = s['okutman']
                 kontenjan = s['kontenjan']
                 ad = s['ad']
+                dis_kontenjan = s['dis_kontenjan']
+                donem = Donem.guncel_donem()
                 sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders,
-                                                          kontenjan=kontenjan, ad=ad)
+                                                          kontenjan=kontenjan, ad=ad, dis_kontenjan=dis_kontenjan,
+                                                          donem=donem)
                 # mevcut_subelerden cikar
-
                 mevcut_subeler = list(set(mevcut_subeler) - {sube})
-                sube.dis_kontenjan = s['dis_kontenjan']
-                sube.donem = Donem.guncel_donem()
-                sube.save()
                 if is_new:
                     self.bilgilendirme_mesaji_yolla(sube)
-        # çıkarılan şubey
+                else:
+                    self.current.task_data['yeni_okutmanlar'] = []
+        # çıkarılan şube
         with BlockDelete(Sube):
             for s in mevcut_subeler:
                 self.bilgilendirme_mesaji_yolla(s)

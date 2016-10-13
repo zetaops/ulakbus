@@ -87,9 +87,9 @@ class DonemDanismanAtama(CrudView):
 
         """
 
-        _unit = self.current.role.unit
+        role_set = self.current.user.role_set
         _form = DonemDanismanForm(current=self, title=_(u"Bölüm Seçiniz"))
-        _choices = prepare_choices_for_model(Unit, yoksis_no=_unit.yoksis_no)
+        _choices = [(r_set.role.unit.key, r_set.role.unit.__unicode__()) for r_set in role_set]
         _form.program = fields.Integer(choices=_choices)
         self.form_out(_form)
 
