@@ -38,7 +38,7 @@ class OgretimYili(Model):
         self.save()
 
     def __unicode__(self):
-        return self.ad
+        return "%s" % self.ad
 
 
 class Donem(Model):
@@ -1193,10 +1193,10 @@ class Takvim(Model):
         app = 'Ogrenci'
         verbose_name = _(u"Takvim")
         verbose_name_plural = _(u"Takvimler")
+        list_filters = ["etkinlik", "baslangic", "bitis", 'resmi_tatil']
 
     def __unicode__(self):
-        return '%s %s %s' % (
-            self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
+        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
 
 
 class DonemDanisman(Model):
