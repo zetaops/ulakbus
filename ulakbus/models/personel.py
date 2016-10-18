@@ -115,7 +115,6 @@ class Personel(Model):
     # bunu tarih ve durum_degisikligi fieldlarindan olusan bir listnode seklinde tutabiliriz.
     goreve_baslama_tarihi = field.Date(_(u"Göreve Başlama Tarihi"), index=True, format="%d.%m.%Y")
     baslama_sebep = HitapSebep()
-    baslama_sebep.title = "Durum"
 
     # aday ve idari memurlar icin mecburi hizmet suresi
     mecburi_hizmet_suresi = field.Date(_(u"Mecburi Hizmet Süresi"), index=True, format="%d.%m.%Y")
@@ -454,11 +453,11 @@ class Atama(Model):
 
     ibraz_tarihi = field.Date(_(u"İbraz Tarihi"), index=True, format="%d.%m.%Y")
     durum = HitapSebep()
-    durum.title = "Durum"
     nereden = field.Integer(_(u"Nereden"), index=True)  # modele baglanacak.
     atama_aciklama = field.String(_(u"Atama Açıklama"), index=True)
     goreve_baslama_tarihi = field.Date(_(u"Göreve Başlama Tarihi"), index=True, format="%d.%m.%Y")
     goreve_baslama_aciklama = field.String(_(u"Göreve Başlama Açıklama"), index=True)
+    sicil_no = field.String(_(u"Sicil No"))
     kadro = Kadro()
     personel = Personel()
     # Arama için eklendi, Orjinali personelde tutulacak
@@ -468,13 +467,13 @@ class Atama(Model):
         app = 'Personel'
         verbose_name = _(u"Atama")
         verbose_name_plural = _(u"Atamalar")
-        list_fields = ['hizmet_sinif', 'gorev_suresi_baslama', 'ibraz_tarihi',
+        list_fields = ['hizmet_sinifi', 'goreve_baslama_tarihi', 'ibraz_tarihi',
                        'durum']
         search_fields = ['hizmet_sinif', 'statu']
 
     def __unicode__(self):
         return '%s %s %s' % (self.personel.kurum_sicil_no,
-                             self.gorev_suresi_baslama, self.ibraz_tarihi)
+                             self.goreve_baslama_tarihi, self.ibraz_tarihi)
 
     @classmethod
     def personel_guncel_atama(cls, personel):
