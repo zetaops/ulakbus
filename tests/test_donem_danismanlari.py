@@ -22,8 +22,6 @@ class TestCase(BaseTestCase):
         """
         Dönem danışmanları iş akışı başlattıktan sonra;
 
-        İş akışının ilk adımında bölüm başkanın kayıtlı olduğu bölüm seçilir.
-
         Sunucudan dönen bölüme ait dönem danışmanlarının sayısı ile
         veritabanından çekilen dönem danışmanlarının sayısı
         karşılaştırılıp test edilir.
@@ -42,9 +40,6 @@ class TestCase(BaseTestCase):
         # Kullanıcıya login yaptırılır.
         self.prepare_client('/donem_danismanlari', user=usr)
         resp = self.client.post()
-
-        # Kullanıcının kayıtlı olduğu bolum seçilir.
-        resp = self.client.post(form={'ileri': 1, 'program': "Yc3eIPoneLFphvLagAhWKCz1YvY"})
 
         # Kullanıcının kayıtlı olduğu bölüm.
         bolum = usr.role_set[0].role.unit
@@ -80,9 +75,6 @@ class TestCase(BaseTestCase):
         # İş akışı tekrardan başlatılır.
         self.client.set_path('/donem_danismanlari')
         resp = self.client.post()
-
-        # Kullanıcının kayıtlı olduğu bolum seçilir.
-        resp = self.client.post(form={'ileri': 1, 'program': "Yc3eIPoneLFphvLagAhWKCz1YvY"})
 
         num_of_danisman = 0
         for okutman in resp.json['forms']['model']['Okutmanlar']:
