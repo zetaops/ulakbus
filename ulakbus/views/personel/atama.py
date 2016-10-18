@@ -210,7 +210,7 @@ class PersonelAtama(CrudView):
         bilgiler = OrderedDict([(0, kisi_bilgileri), (1, atama_bilgileri)])
         item = {
             "type": "table-multiRow",
-            "title": _(u"Personel Ataması Başarı ile Tamamlandı")
+            "title": _(u"Personel Ataması Başarı ile Tamamlandı"),
             "fields": bilgiler,
             "actions": False
         }
