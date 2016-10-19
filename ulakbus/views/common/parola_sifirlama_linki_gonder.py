@@ -31,9 +31,11 @@ class ParolaSifirlamaLinkiGonder(CrudView):
         linki gönderilecektir. Eğer gösterilecek bir mesaj varsa (yanlış
         kullanıcı adı girişi gibi) mesaj ekrana basılır.
         """
-
-        if self.current.task_data['msg']:
-            mesaj_goster(self, self.current.task_data['title'])
+        try:
+            if self.current.task_data['msg']:
+                mesaj_goster(self, self.current.task_data['title'])
+        except KeyError:
+            pass
 
         _form = JsonForm(current=self.current, title=_(u'Parola Sıfırlama'))
         _form.help_text = _(u"""Girdiğiniz kullanıcı adınıza kayıtlı birincil e-posta

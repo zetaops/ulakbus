@@ -27,9 +27,11 @@ class ParolaDegistir(CrudView):
         gösterilir.
 
         """
-
-        if self.current.task_data['msg']:
-            mesaj_goster(self, _(u'Parola Hatalı'))
+        try:
+            if self.current.task_data['msg']:
+                mesaj_goster(self, _(u'Parola Hatalı'))
+        except KeyError:
+            pass
 
         _form = JsonForm(current=self.current, title=_(u'Parola Değiştirme'))
         _form.help_text = _((u"Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:\n"

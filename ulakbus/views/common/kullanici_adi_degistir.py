@@ -25,8 +25,11 @@ class KullaniciAdiDegistir(CrudView):
         hata mesajı gösterilir.
 
         """
-        if self.current.task_data['msg']:
-            mesaj_goster(self, _(u'Kullanıcı Adı Hatalı'))
+        try:
+            if self.current.task_data['msg']:
+                mesaj_goster(self, _(u'Kullanıcı Adı Hatalı'))
+        except KeyError:
+            pass
 
         _form = JsonForm(current=self.current, title=_(u'Kullanıcı Adı Değiştirme'))
         _form.eski_k_adi = fields.String(_(u"Şu an kullandığınız kullanıcı adınızı giriniz."))
