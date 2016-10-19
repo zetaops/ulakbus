@@ -22,6 +22,55 @@ from ulakbus.models.personel import Personel, Atama, Kadro
 
 
 class PersonelAtama(CrudView):
+    """Personel Atama İş Akışı
+    Personel atama işlemlerinin gerçekleştiği iş akışıdır.
+
+    Personel atama iş akışı aşağıdaki adımlardan oluşur.
+
+    Kadro Durumunu Kontrol Et:
+    Açık kadroların olup olmadığını kontrol eder.
+
+    Eksik Bilgileri Kontrol Et:
+    Personelin eksik bilgileri olup olmadığını kontrol eder.
+
+    Eksik Bilgi Form:
+    Personele ait eksik bilgiler düzenlenir.
+
+    Eksik Bilgi Kaydet:
+    Personele ait eksik bilgiler kaydedilir.
+
+    Atama Durumunu Kontrol Et:
+    Personele daha önceden atama yapılıp yapılmadığını kontrol eder.
+
+    Kadro Bilgileri Form:
+    Personelin atama bilgileri doldurulur.
+
+    Kadro Bilgileri Göster:
+    Personelin kişi bilgilerini ve atama bilgilerini gösterir.
+
+    Atama Kaydet:
+    Personel atama bilgileri ve hizmet kayıtları bilgileri kaydedilir.
+
+    Aatama Göster:
+    Personelin atama ve kişi bilgileri gösterilir.
+
+    Atama İptal:
+    Atama işleminin iptal edildiğine dair bilgi mesajı ekrana basılır.
+
+    Sonuç Bilgisi Göster:
+    Personelin bilgilerinin  hitap bilgileri ile  eşlenip eşlenmediğinin sonucu ekrana basar.
+
+    Hitap Bilgilerini Getir:
+    Personelin hitap bilgilerini getirir.
+
+
+
+
+
+
+
+    """
+
     class Meta:
         model = 'Personel'
 
@@ -92,20 +141,33 @@ class PersonelAtama(CrudView):
 
     def eksik_bilgi_kaydet(self):
         """
-        Düzenlenen eksik bilgiler kaydedilir.
+        Personele ait eksik bilgiler kaydedilir.
 
         """
+        from datetime import datetime
+
+        def date_time_object(date_string):
+            try:
+                datetime.strptime(str(date_string), '%Y-%m-%d')
+                return True
+            except ValueError:
+                return False
+
         personel = Personel.objects.get(self.current.task_data['personel_id'])
         for value in self.current.input['form']:
             if hasattr(personel, value):
                 try:
-                    setattr(personel, value, self.current.input['form'][value])
+                    if not date_time_object(self.current.input['form'][value]):
+                        setattr(personel, value, self.current.input['form'][value])
+                    else:
+                        date_str = datetime.strptime(self.current.input['form'][value], '%Y-%m-%d').strftime("%d.%m.%Y")
+                        setattr(personel, value, datetime.strptime(date_str, "%d.%m.%Y"))
                 except ValidationError:
                     setattr(personel, value + "_id", str(self.current.input['form'][value]))
             else:
                 continue
 
-        personel.save()
+        personel.blocking_save()
 
     def atama_durumunu_kontrol_et(self):
         """
@@ -166,33 +228,44 @@ class PersonelAtama(CrudView):
         Personel atama bilgileri ve hizmet kayıtları bilgileri kaydedilir.
 
         """
-        atanacak_kadro = Kadro.objects.get(self.current.input['form']['kadro'])
-        atama = Atama(personel_id=self.current.task_data['personel_id'])
-        try:
-            atama.kadro = atanacak_kadro
-            atama.ibraz_tarihi = self.current.input['form']['ibraz_tarihi']
-            atama.durum = HitapSebep.objects.get(self.current.input['form']['durum'])
-            atama.nereden = self.current.input['form']['nereden']
-            atama.atama_aciklama = self.current.input['form']['atama_aciklama']
-            atama.goreve_baslama_tarihi = self.current.input['form']['goreve_baslama_tarihi']
-            atama.goreve_baslama_aciklama = self.current.input['form'][
-                'goreve_baslama_aciklama']
-            atama.blocking_save()
-            self.current.task_data['atama_bilgileri'] = atama.clean_value()
 
-            personel = Personel.objects.get(self.current.task_data['personel_id'])
-            hk = HizmetKayitlari(personel=personel)
-            hk.baslama_tarihi = date.today()
-            hk.kurum_onay_tarihi = self.current.input['form']['kurum_onay_tarihi']
-            hk.sync = 1  # TODO: Düzeltilecek, beta boyunca senkronize etmemesi için 1 yapıldı
-            hk.save()
-        except Exception as e:
-            # Herhangi bir hata oluşursa atama silinecek
-            atama.delete()
+        if not prepare_choices_for_model(Kadro, durum=2):
+            self.current.task_data['atama_basarili'] = False
             self.current.output['msgbox'] = {
-                'type': 'warning', "title": _(u'Hata Oluştu'),
-                "msg": _(u'%s') % e.message
+                'type': 'info', "title": _(u'Personel Atama Başarısız'),
+                "msg": _(u"Kadrolar dolu olduğu için atama yapılamaz.")
             }
+        else:
+            self.current.task_data['atama_basarili'] = True
+            atanacak_kadro = Kadro.objects.get(self.current.input['form']['kadro'])
+            atama = Atama(personel_id=self.current.task_data['personel_id'])
+            try:
+                atama.kadro = atanacak_kadro
+                atama.ibraz_tarihi = self.current.input['form']['ibraz_tarihi']
+                atama.durum = HitapSebep.objects.get(self.current.input['form']['durum'])
+                atama.nereden = self.current.input['form']['nereden']
+                atama.atama_aciklama = self.current.input['form']['atama_aciklama']
+                atama.goreve_baslama_tarihi = self.current.input['form']['goreve_baslama_tarihi']
+                atama.goreve_baslama_aciklama = self.current.input['form'][
+                    'goreve_baslama_aciklama']
+                atama.blocking_save()
+                self.current.task_data['atama_bilgileri'] = atama.clean_value()
+
+                personel = Personel.objects.get(self.current.task_data['personel_id'])
+                hk = HizmetKayitlari(personel=personel)
+                hk.baslama_tarihi = date.today()
+                hk.kurum_onay_tarihi = self.current.input['form']['kurum_onay_tarihi']
+                hk.sync = 1  # TODO: Düzeltilecek, beta boyunca senkronize etmemesi için 1 yapıldı
+                hk.blocking_save()
+                self.current.task_data['h_k'] = hk.key
+                print  "dskshskj"
+            except Exception as e:
+                # Herhangi bir hata oluşursa atama silinecek
+                atama.delete()
+                self.current.output['msgbox'] = {
+                    'type': 'warning', "title": _(u'Hata Oluştu'),
+                    "msg": _(u'%s') % e.message
+                }
 
     def atama_goster(self):
         """
@@ -224,9 +297,12 @@ class PersonelAtama(CrudView):
         self.current.output["meta"]["allow_actions"] = False
 
     def atama_iptal(self):
+        """
+        Atama işleminin iptal edildiğine dair bilgi mesajı ekrana basılır.
+        """
         self.current.output['msgbox'] = {
             'type': 'error', "title": _(u'Atama İptal Edildi'),
-            "msg": _(u'Personel atama işlemi İptal edildi.'),
+            "msg": _(u'Personel atama işlemi iptal edildi.'),
         }
 
     def sonuc_bilgisi_goster(self):
@@ -246,7 +322,7 @@ class PersonelAtama(CrudView):
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Personel Atama Başarılı'),
-            "msg": _(u'Atama İşlemi Başarıyla gerçekleştirildi. ') + hitap_sonuc
+            "msg": _(u'Atama İşlemi başarıyla gerçekleştirildi. ') + hitap_sonuc
         }
 
     def hitap_bilgi_getir(self):
@@ -264,11 +340,12 @@ class PersonelAtama(CrudView):
         except:
             self.current.task_data['hitap_tamam'] = False
 
-        self.current.set_message(
-            title=_(u'%s TC no için Hitap Hizmet cetveli eşitlendi') % personel.tckn, msg='', typ=1)
-
 
 class EksikBilgiForm(JsonForm):
+    """
+    Personel Atama wf için form olarak kullanılır.
+
+    """
     class Meta:
         title = _(u'Personelin Eksik Bilgileri')
         help_text = _(u"Atama Öncesi Personelin Eksik Bilgilerini Düzenlenleyiniz.")
@@ -314,6 +391,10 @@ class EksikBilgiForm(JsonForm):
 
 
 class KadroBilgiForm(JsonForm):
+    """
+    Personel Atama wf  için form olarak kullanılır.
+
+    """
     class Meta:
         title = gettext_lazy(u'Atama Bilgileri')
 
@@ -327,4 +408,4 @@ class KadroBilgiForm(JsonForm):
     kurum_onay_tarihi = fields.Date(_(u"Kurum Onay Tarihi"))
 
     kaydet = fields.Button(_(u"Kaydet"), cmd="kaydet", style="btn-success")
-    iptal = fields.Button(_(u"İptal"), cmd="iptal", flow="iptal", form_validation=False)
+    iptal = fields.Button(_(u"İptal"), cmd="iptal", form_validation=False)
