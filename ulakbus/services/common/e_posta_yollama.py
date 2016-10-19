@@ -27,8 +27,6 @@ class E_PostaYolla(Service):
                     % ('http://dev.zetaops.io/#/%s/dogrulama=%s'
                        %(wf_name,aktivasyon_kodu) )
 
-        Cache(aktivasyon_kodu).set(bilgi,7200)
-
         # Send the message
         conn.send(msg)
 
