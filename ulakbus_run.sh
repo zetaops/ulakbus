@@ -1,7 +1,7 @@
 PYTHON="python"
 PIP="pip"
 ULAKBUS_PATH=/worker/build/ulakbus
-cd $ULAKBUS_PATH && $PIP install -r requirements/develop.txt
+cd $ULAKBUS_PATH && $PIP install -r $ULAKBUS_PATH/requirements/develop.txt
 cd $ULAKBUS_PATH/ulakbus
 $PYTHON manage.py migrate --model all
 $PYTHON manage.py load_diagrams
