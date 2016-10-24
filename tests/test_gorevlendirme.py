@@ -50,7 +50,7 @@ class TestCase(BaseTestCase):
                          form=dict(gorevlendirme_tur=2))
 
         # Görevlendirmesi yapılacak soyut rol
-        soyut_rol_id = "AGTuBwCYUzDF5axgV3h7oDSCwyl"
+        soyut_rol_id = AbsRole.DAIRE_PERSONELI.name
         # soyut_rol = AbstractRole.objects.get(soyut_rol_id)
 
         # Görevlendirme bilgileri girilir ve görevlendirme kaydedilir.
