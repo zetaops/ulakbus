@@ -7,7 +7,7 @@
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm
 from zengine.forms import fields
-from ulakbus.models import User
+from ulakbus.models import User, Personel
 from zengine.lib.translation import gettext as _
 from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster, uygunluk_testi
 
@@ -17,6 +17,7 @@ class KullaniciAdiDegistir(CrudView):
     Kullanıcıların kullanıcı adlarını değiştirebilmelerini sağlar.
 
     """
+
 
     def yeni_kullanici_adi_girisi(self):
         """

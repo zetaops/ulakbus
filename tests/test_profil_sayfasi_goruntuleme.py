@@ -73,7 +73,7 @@ class TestCase(BaseTestCase):
         assert user.check_password('Parola3*')
         # Parola tekrardan varsayılan hale getirilir.
         user.password = "123"
-        user.blocking_save()
+        user.save()
         # Parola değişikliğinden sonra 'Çıkış Yapmadan Devam Et' seçeneği seçilir.
         resp = self.client.post(form={'devam': 1})
         # Tekrardan profil sayfası görüntüleme ekranına gelindiği test edilir.
@@ -114,7 +114,7 @@ class TestCase(BaseTestCase):
         assert resp.json["forms"]["model"]['username'] == 'deneme_kullanici_adi'
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user.username = 'ulakbus'
-        user.blocking_save()
+        user.save()
 
         # E-Posta değiştirme iş akışına geçiş yapılır.
         resp = self.client.post(flow="e_posta_degistir")
@@ -158,6 +158,4 @@ class TestCase(BaseTestCase):
         assert user.e_mail == 'ulakbus_mail@ulakbus_mail.com'
         # E-postası eski haline döndürülür.
         user.e_mail = birincil_e_posta
-        user.blocking_save()
-        # E-Posta bilgisi başarılı işlem sonucunda cache den silinir.
-        assert EMailVerification('2fd1deed4653f40107571368cd46411088c7d988').get() == None
+        user.save()

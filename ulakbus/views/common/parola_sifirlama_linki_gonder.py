@@ -71,11 +71,13 @@ class ParolaSifirlamaLinkiGonder(CrudView):
     def kullanici_bilgilerini_kaydet(self):
         """
         Doğrulama linki gönderilecek kullanıcının keyi, oluşturulan aktivasyon kodu ile cache'e kaydedilir.
-
+        Gönderilecek e-postanın içeriği ve linki hazırlanır.
         """
 
         user = User.objects.get(username=self.input['form']['kullanici_adi'])
         self.current.task_data['e_posta'] = user.e_mail
-        self.current.task_data['bilgi'] = user.key
         self.current.task_data["aktivasyon"] = aktivasyon_kodu_uret()
-        PasswordReset(self.current.task_data["aktivasyon"]).set(self.current.task_data["bilgi"], 7200)
+        PasswordReset(self.current.task_data["aktivasyon"]).set(user.key, 7200)
+        self.current.task_data["message"] = 'http://dev.zetaops.io/#/%s/dogrulama=%s' \
+                                            % (self.current.task_data['wf_name'],
+                                               self.current.task_data["aktivasyon"])

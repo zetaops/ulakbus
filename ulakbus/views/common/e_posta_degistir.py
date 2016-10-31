@@ -42,12 +42,15 @@ class EPostaDegistir(CrudView):
     def e_posta_bilgisini_kaydet(self):
         """
         Doğrulama linki gönderilecek e_posta adresi oluşturulan aktivasyon kodu ile cache'e kaydedilir.
-
+        Gönderilecek e-postanın içeriği ve linki hazırlanır.
         """
 
-        self.current.task_data["bilgi"] = self.current.task_data["e_posta"] = self.input['form']['e_posta']
+        self.current.task_data["e_posta"] = self.input['form']['e_posta']
         self.current.task_data["aktivasyon"] = aktivasyon_kodu_uret()
-        EMailVerification(self.current.task_data["aktivasyon"]).set(self.current.task_data["bilgi"], 7200)
+        EMailVerification(self.current.task_data["aktivasyon"]).set(self.current.task_data["e_posta"], 7200)
+        self.current.task_data["message"] = 'http://dev.zetaops.io/#/%s/dogrulama=%s'\
+                                        % (self.current.task_data['wf_name'],
+                                           self.current.task_data["aktivasyon"])
 
     def aktivasyon_maili_yolla(self):
         """
@@ -57,10 +60,8 @@ class EPostaDegistir(CrudView):
         """
 
         posta_gonder = E_PostaYolla(service_payload={
-            "wf_name": self.current.task_data['wf_name'],
             "e_posta": self.current.task_data["e_posta"],
-            "aktivasyon_kodu": self.current.task_data["aktivasyon"],
-            "bilgi": self.current.task_data["bilgi"]})
+            "message": self.current.task_data["message"]})
 
         posta_gonder.zato_request()
 

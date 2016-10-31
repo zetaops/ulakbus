@@ -9,10 +9,8 @@ class E_PostaYolla(Service):
 
     def handle(self):
 
-        wf_name = self.request.payload['wf_name']
         e_posta =self.request.payload['e_posta']
-        bilgi = self.request.payload['bilgi']
-        aktivasyon_kodu = self.request.payload['aktivasyon_kodu']
+        message = self.request.payload['message']
 
         # Obtain a connection
         conn = self.email.smtp.get('Ulakbus-Mail').conn
@@ -23,9 +21,7 @@ class E_PostaYolla(Service):
         msg.to = e_posta
         msg.from_ = 'postmaster@mg.ulakbus.net'
         msg.body = 'E-Posta adresinizi doğrulamak için ' \
-                    'aşağıdaki linke tıklayınız:\n\n %s' \
-                    % ('http://dev.zetaops.io/#/%s/dogrulama=%s'
-                       %(wf_name,aktivasyon_kodu) )
+                    'aşağıdaki linke tıklayınız:\n\n %s' % message
 
         # Send the message
         conn.send(msg)
