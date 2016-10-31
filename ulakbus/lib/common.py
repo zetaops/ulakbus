@@ -143,3 +143,5 @@ def sinav_etkinlikleri_oku(root):
                 room = Room.objects.get(unitime_key=period.get('id'))
                 etkinlik.SinavYerleri.add(room=room)
             etkinlik.save()
+
+

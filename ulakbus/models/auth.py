@@ -13,16 +13,17 @@ import hashlib
 
 from pyoko import field
 from pyoko import Model, ListNode
-from passlib.hash import pbkdf2_sha512
 from pyoko import LinkProxy
 from pyoko.conf import settings
 from pyoko.lib.utils import lazy_property
 
 from zengine.auth.permissions import get_all_permissions
 from zengine.dispatch.dispatcher import receiver
+from zengine.lib.decorators import role_getter
 
 from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
+from zengine.lib.translation import gettext_lazy as _, gettext
 from zengine.messaging.lib import BaseUser
 
 try:
@@ -30,6 +31,8 @@ try:
 except ImportError:
     class PermissionDenied(Exception):
         pass
+
+from pyoko.exceptions import IntegrityError
 
 
 class User(Model, BaseUser):
@@ -40,17 +43,26 @@ class User(Model, BaseUser):
     ait bir ve tek kullanıcı olması zorunludur.
 
     """
-    username = field.String("Username", index=True)
-    password = field.String("Password")
-    avatar = field.File("Profile Photo", random_name=True, required=False)
-    name = field.String("First Name", index=True)
-    surname = field.String("Surname", index=True)
-    superuser = field.Boolean("Super user", default=False)
+    username = field.String(_(u"Username"), index=True)
+    password = field.String(_(u"Password"))
+    avatar = field.File(_(u"Profile Photo"), random_name=True, required=False)
+    name = field.String(_(u"First Name"), index=True)
+    surname = field.String(_(u"Surname"), index=True)
+    superuser = field.Boolean(_(u"Super user"), default=False)
+    locale_language = field.String(
+        _(u"Preferred Language"),
+        index=False,
+        default=settings.DEFAULT_LANG
+    )
+    locale_datetime = field.String(_(u"Preferred Date and Time Format"), index=False,
+                                   default=settings.DEFAULT_LOCALIZATION_FORMAT)
+    locale_number = field.String(_(u"Preferred Number Format"), index=False,
+                                 default=settings.DEFAULT_LOCALIZATION_FORMAT)
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Kullanıcı"
-        verbose_name_plural = "Kullanıcılar"
+        verbose_name = _(u"Kullanıcı")
+        verbose_name_plural = _(u"Kullanıcılar")
         search_fields = ['username', 'name', 'surname']
 
     @lazy_property
@@ -58,6 +70,8 @@ class User(Model, BaseUser):
         return "%s %s" % (self.name, self.surname)
 
     def pre_save(self):
+        if not self.username or not self.password:
+            raise IntegrityError
         self.encrypt_password()
 
     def post_creation(self):
@@ -78,14 +92,14 @@ class Permission(Model):
     Kullanıcı yetkilerinin tanımlandığı bilgilerin bulunguğu modeldir.
 
     """
-    name = field.String("İsim", index=True)
-    code = field.String("Kod Adı", index=True)
-    description = field.String("Tanım", index=True)
+    name = field.String(_(u"İsim"), index=True)
+    code = field.String(_(u"Kod Adı"), index=True)
+    description = field.String(_(u"Tanım"), index=True)
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Yetki"
-        verbose_name_plural = "Yetkiler"
+        verbose_name = _(u"Yetki")
+        verbose_name_plural = _(u"Yetkiler")
         list_fields = ["name", "code", "description"]
         search_fields = ["name", "code", "description"]
 
@@ -129,14 +143,14 @@ class AbstractRole(Model):
     Soyut Rol modeli yetkilerin gruplandığı temel role modelidir.
 
     """
-    id = field.Integer("ID No", index=True)
-    name = field.String("İsim", index=True)
-    read_only = field.Boolean("Read Only")
+    id = field.Integer(_(u"ID No"), index=True)
+    name = field.String(_(u"İsim"), index=True)
+    read_only = field.Boolean(_(u"Read Only"))
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Soyut Rol"
-        verbose_name_plural = "Soyut Roller"
+        verbose_name = _(u"Soyut Rol")
+        verbose_name_plural = _(u"Soyut Roller")
         search_fields = ['id', 'name']
 
     def __unicode__(self):
@@ -202,30 +216,32 @@ class Unit(Model):
     Akademik ve idari birimlerin özelliklerini taşır.
 
     """
-    name = field.String("İsim", index=True)
-    long_name = field.String("Uzun İsim", index=True)
-    yoksis_no = field.Integer("Yoksis ID", index=True)
-    unit_type = field.String("Birim Tipi", index=True)
-    parent_unit_no = field.Integer("Üst Birim ID", index=True)
-    current_situation = field.String("Guncel Durum", index=True)
-    language = field.String("Öğrenim Dili", index=True)
-    learning_type = field.String("Öğrenme Tipi", index=True)
-    osym_code = field.String("ÖSYM Kodu", index=True)
-    opening_date = field.Date("Açılış Tarihi", index=True)
-    learning_duration = field.Integer("Öğrenme Süresi", index=True)
-    english_name = field.String("İngilizce Birim Adı.", index=True)
-    quota = field.Integer("Birim Kontenjan", index=True)
-    city_code = field.Integer("Şehir Kodu", index=True)
-    district_code = field.Integer("Semt Kodu", index=True)
-    unit_group = field.Integer("Birim Grup", index=True)
-    foet_code = field.Integer("FOET Kodu", index=True)  # yoksis KILAVUZ_KODU mu?
-    is_academic = field.Boolean("Akademik")
-    is_active = field.Boolean("Aktif")
+    name = field.String(_(u"İsim"), index=True)
+    long_name = field.String(_(u"Uzun İsim"), index=True)
+    yoksis_no = field.Integer(_(u"Yoksis ID"), index=True)
+    unit_type = field.String(_(u"Birim Tipi"), index=True)
+    parent_unit_no = field.Integer(_(u"Üst Birim ID"), index=True)
+    current_situation = field.String(_(u"Guncel Durum"), index=True)
+    language = field.String(_(u"Öğrenim Dili"), index=True)
+    learning_type = field.String(_(u"Öğrenme Tipi"), index=True)
+    osym_code = field.String(_(u"ÖSYM Kodu"), index=True)
+    opening_date = field.Date(_(u"Açılış Tarihi"), index=True)
+    learning_duration = field.Integer(_(u"Öğrenme Süresi"), index=True)
+    english_name = field.String(_(u"İngilizce Birim Adı."), index=True)
+    quota = field.Integer(_(u"Birim Kontenjan"), index=True)
+    city_code = field.Integer(_(u"Şehir Kodu"), index=True)
+    district_code = field.Integer(_(u"Semt Kodu"), index=True)
+    unit_group = field.Integer(_(u"Birim Grup"), index=True)
+    foet_code = field.Integer(_(u"FOET Kodu"), index=True)  # yoksis KILAVUZ_KODU mu?
+    is_academic = field.Boolean(_(u"Akademik"))
+    is_active = field.Boolean(_(u"Aktif"))
     uid = field.Integer(index=True)
-    parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
+    parent = LinkProxy('Unit', verbose_name=_(u'Üst Birim'), reverse_name='alt_birimler')
+    # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
     def get_user_keys(cls, unit_key):
+        """recursively gets all roles (keys) under given unit"""
         return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
         stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
         for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
@@ -242,8 +258,8 @@ class Unit(Model):
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Unit"
-        verbose_name_plural = "Units"
+        verbose_name = _(u"Unit")
+        verbose_name_plural = _(u"Units")
         search_fields = ['name', 'yoksis_no']
         list_fields = ['name', 'unit_type']
 
@@ -252,9 +268,9 @@ class Unit(Model):
 
 
 ROL_TIPI = [
-    (1, 'Personel'),
-    (2, 'Ogrenci'),
-    (3, 'Harici')
+    (1, _(u'Personel')),
+    (2, _(u'Ogrenci')),
+    (3, _(u'Harici'))
 ]
 
 
@@ -280,16 +296,16 @@ class Role(Model):
     abstract_role = AbstractRole()
     user = User()
     unit = Unit()
-    typ = field.Integer("Rol Tipi", choices=ROL_TIPI)
-    name = field.String("Rol Adı", hidden=True)
+    typ = field.Integer(_(u"Rol Tipi"), choices=ROL_TIPI)
+    name = field.String(_(u"Rol Adı"), hidden=True)
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Rol"
-        verbose_name_plural = "Roller"
+        verbose_name = _(u"Rol")
+        verbose_name_plural = _(u"Roller")
         search_fields = ['name']
         list_fields = []
-        crud_extra_actions = [{'name': 'İzinleri Düzenle', 'wf': 'permissions', 'show_as': 'button'}]
+        crud_extra_actions = [{'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
 
     @property
     def is_staff(self):
@@ -307,7 +323,7 @@ class Role(Model):
         return self.user
 
     def __unicode__(self):
-        return "Role %s" % self.name or (self.key if self.is_in_db() else '')
+        return gettext(u"Role %s") % self.name or (self.key if self.is_in_db() else '')
 
     class Permissions(ListNode):
         permission = Permission()
@@ -419,6 +435,20 @@ class Role(Model):
         self.name = self._make_name()
 
 
+    @classmethod
+    @role_getter("Bölüm Başkanları")
+    def get_bolum_baskanlari(cls):
+        """fake"""
+        return []
+
+    def send_notification(self, title, message, typ=1, url=None, sender=None):
+        """
+        sends a message to user of this role's private mq exchange
+
+        """
+        self.user.send_notification(title=title, message=message, typ=typ, url=url, sender=sender)
+
+
 class LimitedPermissions(Model):
     """LimitedPermissions modeli
     Bu modelde tutulan bilgilerle mevcut yetkilere sınırlandırmalar
@@ -431,14 +461,14 @@ class LimitedPermissions(Model):
     ip'lerden gelen requestlere cevap verecek şekilde kısıtlanır.
 
     """
-    restrictive = field.Boolean("Sınırlandırıcı", default=False)
-    time_start = field.String("Başlama Tarihi", index=True)
-    time_end = field.String("Bitiş Tarihi", index=True)
+    restrictive = field.Boolean(_(u"Sınırlandırıcı"), default=False)
+    time_start = field.String(_(u"Başlama Tarihi"), index=True)
+    time_end = field.String(_(u"Bitiş Tarihi"), index=True)
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Sınırlandırılmış Yetki"
-        verbose_name_plural = "Sınırlandırılmış Yetkiler"
+        verbose_name = _(u"Sınırlandırılmış Yetki")
+        verbose_name_plural = _(u"Sınırlandırılmış Yetkiler")
 
     def __unicode__(self):
         return "%s - %s" % (self.time_start, self.time_end)

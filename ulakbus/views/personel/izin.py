@@ -8,6 +8,7 @@ from ulakbus.models.personel import Personel, Izin
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _, gettext_lazy
 import time
 
 class IzinIslemleri(CrudView):
@@ -52,7 +53,7 @@ class IzinIslemleri(CrudView):
                 },
                 {
                     "gun": izin_gun,
-                    "durum": "Aktif" if self.personel_aktif else "Pasif"
+                    "durum": _(u"Aktif") if self.personel_aktif else _(u"Pasif")
                 }, {
                     "izinler": kalan_izin,
                     "hizmet_sure": izin_gun
@@ -193,29 +194,34 @@ class IzinBasvuru(CrudView):
 
         """
 
-        izin_turleri = ((1, "Yıllık İzin"), (2, "Mazeret İzni"), (3, "Refakat İzni"),
-                        (4, "Fazla Mesai İzni"), (5, "Ücretsiz İzin"))
+        izin_turleri = ((1, gettext_lazy("Yıllık İzin")),
+                        (2, gettext_lazy("Mazeret İzni")),
+                        (3, gettext_lazy("Refakat İzni")),
+                        (4, gettext_lazy("Fazla Mesai İzni")),
+                        (5, gettext_lazy("Ücretsiz İzin")),
+        )
         gecerli_yil = date.today().year
         yillar = ((gecerli_yil, gecerli_yil),)
 
-        izin_turu = fields.Integer("İzin Türü Seçiniz", choices=izin_turleri)
-        izin_ait_yil = fields.Integer("Ait Olduğu Yıl", choices=yillar)
-        izin_baslangic = fields.Date("İzin Başlangıç Tarihi")
-        izin_bitis = fields.Date("İzin Bitiş Tarihi")
-        izin_adres = fields.Text("İzindeki Adres")
-        personel_ad_soyad = fields.String("İzin Talep Eden")
-        personel_gorev = fields.String("Görevi")
-        personel_sicil_no = fields.String("Sicil no")
-        personel_birim = fields.String("Birimi")
-        yol_izni = fields.Boolean("Yol İzni")
-        toplam_izin_gun = fields.Integer("Kullanacağı İzin Süresi(Gün)")
-        toplam_kalan_izin = fields.Integer("Kalan İzin Süresi(Gün)")
+        izin_turu = fields.Integer(gettext_lazy(u"İzin Türü Seçiniz"), choices=izin_turleri)
+        izin_ait_yil = fields.Integer(gettext_lazy(u"Ait Olduğu Yıl"), choices=yillar)
+        izin_baslangic = fields.Date(gettext_lazy(u"İzin Başlangıç Tarihi"))
+        izin_bitis = fields.Date(gettext_lazy(u"İzin Bitiş Tarihi"))
+        izin_adres = fields.Text(gettext_lazy(u"İzindeki Adres"))
+        personel_ad_soyad = fields.String(gettext_lazy(u"İzin Talep Eden"))
+        personel_gorev = fields.String(gettext_lazy(u"Görevi"))
+        personel_sicil_no = fields.String(gettext_lazy(u"Sicil no"))
+        personel_birim = fields.String(gettext_lazy(u"Birimi"))
+        yol_izni = fields.Boolean(gettext_lazy(u"Yol İzni"))
+        toplam_izin_gun = fields.Integer(gettext_lazy(u"Kullanacağı İzin Süresi(Gün)"))
+        toplam_kalan_izin = fields.Integer(gettext_lazy(u"Kalan İzin Süresi(Gün)"))
 
-        ileri = fields.Button("İleri")
+        ileri = fields.Button(gettext_lazy(u"İleri"))
 
     TOPLAM_IZIN_SAYISI = 10
 
     def izin_kontrol(self):
+        self.current.task_data['sicil_no'] = self.current.user.personel.kurum_sicil_no
         lst_form_data = FormData.objects.filter(user_id=self.current.user.key)
         guncel_yil = date.today().year
         onceki_yil = guncel_yil - 1
@@ -224,8 +230,8 @@ class IzinBasvuru(CrudView):
                                                                     onceki_yil_izin_bilgileri[1])
         if guncel_yil_izin_bilgileri[1] <= 0:
             self.current.output['msgbox'] = {
-                'type': 'info', "title": 'İzin Başvuru',
-                "msg": '%s yılı için izin kullanımlarınız bitmiştir.' % guncel_yil}
+                'type': 'info', "title": _(u'İzin Başvuru'),
+                "msg": _(u'%s yılı için izin kullanımlarınız bitmiştir.') % guncel_yil}
             self.current.task_data['cmd'] = 'end'
         else:
             self.current.task_data['cmd'] = 'izin_basvuru_formu_goster'
@@ -248,17 +254,18 @@ class IzinBasvuru(CrudView):
         guncel_yil_izin = IzinBasvuru.guncel_izinleri_bul(lst_form_data, guncel_yil, onceki_yil_izin[1])
 
         _form = self.IzinBasvuruForm(current=self.current,
-                                     title="İzin Talep Formu",
+                                     title=_(u"İzin Talep Formu"),
                                      exclude=['personel_ad_soyad', 'personel_gorev',
                                               'toplam_kalan_izin', 'toplam_izin_gun',
                                               'yol_izni', 'personel_birim',
                                               'personel_sicil_no'])
 
-        _form.help_text = """
-                          {} yılına ait izinli gün sayınız {}, Kalan gün sayınız {}
-                          {} yılına ait izinli gün sayınız {}, Toplam izinli gün sayınız  {}
-                          """.format(onceki_yil, onceki_yil_izin[0], onceki_yil_izin[1], guncel_yil, guncel_yil_izin[0],
-                                     guncel_yil_izin[1])
+        _form.help_text = _(u"""{onceki} yılına ait izinli gün sayınız {onceki_izin}, Kalan gün sayınız {onceki_kalan}
+                          {guncel} yılına ait izinli gün sayınız {guncel_izin},Toplam izinli gün sayınız  {guncel_kalan}
+                          'dir.
+                          """).format(onceki=onceki_yil, onceki_izin=onceki_yil_izin[0], onceki_kalan=onceki_yil_izin[1],
+                                      guncel=guncel_yil, guncel_izin=guncel_yil_izin[0], guncel_kalan=guncel_yil_izin[1],
+                           )
         self.form_out(_form)
 
     @staticmethod
@@ -311,8 +318,8 @@ class IzinBasvuru(CrudView):
         time.sleep(1)
         self.current.task_data['izin_form_data_key'] = form_data.key
 
-        msg = {"title": 'İzin Başvurusu Yapıldı',
-               "body": '%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.' % (
+        msg = {"title": _(u'İzin Başvurusu Yapıldı'),
+               "body": _(u'%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır.') % (
                    self.input['form']['izin_baslangic'], self.input['form']['izin_bitis'])}
         # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
         self.current.task_data['LANE_CHANGE_MSG'] = msg
@@ -337,8 +344,8 @@ class IzinBasvuru(CrudView):
         izin.personel = personel
         izin.save()
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'İzin Başvurusu Onaylandı',
-            "msg": 'İzin talebi başarıyla onaylanmıştır.'
+            'type': 'info', "title": _(u'İzin Başvurusu Onaylandı'),
+            "msg": _(u'İzin talebi başarıyla onaylanmıştır.')
         }
 
     def izin_basvuru_goster(self):
@@ -349,7 +356,7 @@ class IzinBasvuru(CrudView):
         """
         form_data = FormData.objects.get(self.current.task_data['izin_form_data_key'])
         _form = self.IzinBasvuruForm(current=self.current,
-                                     title="İzin Talep Önizleme Formu",
+                                     title=_(u"İzin Talep Önizleme Formu"),
                                      )
         basvuru_data = form_data.data
         personel = form_data.user.personel
@@ -370,6 +377,7 @@ class IzinBasvuru(CrudView):
         _form.izin_baslangic = basvuru_data['izin_baslangic']
         _form.izin_bitis = basvuru_data['izin_bitis']
         _form.izin_adres = basvuru_data['izin_adres']
+        _form.personel_sicil_no = self.current.task_data['sicil_no']
         _form.toplam_izin_gun = delta.days
         _form.toplam_kalan_izin = IzinBasvuru.TOPLAM_IZIN_SAYISI - delta.days
         _form.personel_ad_soyad = "%s %s" % (personel.ad, personel.soyad)

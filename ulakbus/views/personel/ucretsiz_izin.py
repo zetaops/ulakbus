@@ -3,6 +3,7 @@
 from zengine.views.crud import CrudView, obj_filter
 from zengine.forms import JsonForm
 from zengine.forms import fields
+from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel, UcretsizIzin
 from ulakbus.models.hitap.hitap import HizmetKayitlari
 from datetime import timedelta, date
@@ -21,20 +22,20 @@ class UcretsizIzinIslemleri(CrudView):
         ]
 
     class ListForm(JsonForm):
-        btn = fields.Button("Ücretsiz İzine Ayır", next="izine_ayir", cmd="save")  # default
+        btn = fields.Button(gettext_lazy(u"Ücretsiz İzine Ayır"), next="izine_ayir", cmd="save")  # default
 
     class IzinForm(JsonForm):
         class Meta:
-            include = ['tip', 'baslangic_tarihi', 'bitis_tarihi', 'onay_tarihi', 'personel']
-            title = "İzine Ayır"
+            include = ['tip', 'baslangic', 'bitis', 'onay_tarihi', 'personel']
+            title = gettext_lazy(u"İzine Ayır")
 
-        kaydet = fields.Button("Kaydet", next="izine_ayir", cmd="izine_ayir")
+        kaydet = fields.Button(gettext_lazy(u"Kaydet"), next="izine_ayir", cmd="izine_ayir")
 
     class DonusForm(JsonForm):
         class Meta:
             include = ['donus_tarihi', 'donus_tip']
 
-        kaydet = fields.Button("Kaydet", next="izin_donus", cmd="izin_donus")
+        kaydet = fields.Button(gettext_lazy(u"Kaydet"), next="izin_donus", cmd="izin_donus")
 
     def goster(self):
         if 'id' in self.input:
@@ -50,10 +51,10 @@ class UcretsizIzinIslemleri(CrudView):
                     break
 
             if ucretsiz_izinde:
-                self.ListForm.btn = fields.Button("Ücretsiz İzin Dönüşü", cmd="izin_donus",
+                self.ListForm.btn = fields.Button(_(u"Ücretsiz İzin Dönüşü"), cmd="izin_donus",
                                                 object_id=self.current.task_data['izin_id'])
             else:
-                self.ListForm.btn = fields.Button("Ücretsiz İzine Ayır", cmd="izine_ayir")
+                self.ListForm.btn = fields.Button(_(u"Ücretsiz İzine Ayır"), cmd="izine_ayir")
         else:
             pass
 
@@ -118,5 +119,5 @@ class UcretsizIzinIslemleri(CrudView):
         """
         if izin.donus_tarihi == None or izin.donus_tarihi == "":
             result['actions'].append(
-                    {'name': 'Sil', 'cmd': 'delete', 'show_as': 'button'})
+                    {'name': _(u'Sil'), 'cmd': 'delete', 'show_as': 'button'})
         return result
