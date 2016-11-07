@@ -200,6 +200,14 @@ class Personel(Model):
     def __unicode__(self):
         return gettext(u"%(ad)s %(soyad)s") % {'ad': self.ad, 'soyad': self.soyad}
 
+    def post_save(self):
+        # Personel oluştuğunda User Otomatik olarak Oluşturulacaktır
+        if not self.user:
+            self.user = User()
+            self.user.username = self.tckn
+            self.user.name = self.ad
+            self.user.surname = self.soyad
+            self.user.save()
 
 class AdresBilgileri(Model):
     """Adres Bilgileri Modeli
