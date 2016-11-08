@@ -132,10 +132,12 @@ class ProfilGoruntule(CrudView):
         ya da çıkış yapmadan devam etmesi, bunu seçebileceği ekran gösterilir.
 
         """
-        _form = JsonForm(current=self.current, title=_(u"İşlem Bilgilendirme"))
-        _form.help_text = _(u"""%s ya da çıkış yapmadan devam edebilirsiniz.
+        self.current.task_data['msg'] = _(u"""%s ya da çıkış yapmadan devam edebilirsiniz.
                             Eğer eski bilgilerinizin bilindiği şüphesine sahipseniz 'Çıkış Yap'
                             seçeneğini seçmenizi öneririz.""") % self.current.task_data['islem_mesaji']
+        mesaj_goster(self, 'İşlem Bilgilendirme', 'info')
+
+        _form = JsonForm(current=self.current, title=_(u"İşlem Seçeneği"))
         _form.cikis = fields.Button(_(u"Çıkış Yap"), flow='cikis_yap')
         _form.devam = fields.Button(_(u"Çıkış Yapmadan Devam Et"))
         self.form_out(_form)

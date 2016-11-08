@@ -13,7 +13,7 @@
       <bpmn:incoming>SequenceFlow_1rc7lpo</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_08os77y</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="YeniParolaylaGirisYap" name="Yeni Parolayla Giriş Yap" camunda:class="auth.logout">
+    <bpmn:serviceTask id="YeniParolaylaGirisYap" name="Yeni Parolayla Giriş Yap" camunda:type="external" camunda:topic="logout">
       <bpmn:incoming>SequenceFlow_08os77y</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1y7qj3n</bpmn:outgoing>
     </bpmn:serviceTask>

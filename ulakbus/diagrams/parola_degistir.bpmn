@@ -43,7 +43,7 @@
       <bpmn:incoming>SequenceFlow_1pzs3o4</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0e323k6</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="CikisYapma" name="Çıkış Yapma" camunda:class="auth.logout">
+    <bpmn:serviceTask id="CikisYapma" name="Çıkış Yapma" camunda:type="external" camunda:topic="logout">
       <bpmn:incoming>SequenceFlow_1yz81le</bpmn:incoming>
     </bpmn:serviceTask>
     <bpmn:userTask id="BeklenmeyenHataMesaji" name="Beklenmeyen Hata Mesajı" camunda:assignee="common.profil_sayfasi_goruntuleme.ProfilGoruntule.hata_mesaji_goster">

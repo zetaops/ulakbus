@@ -45,8 +45,8 @@ class KullaniciAdiDegistir(CrudView):
 
         """
         kullanici_adi = self.current.user.username
-        self.current.task_data['eski_k_adi']= self.input['form']['eski_k_adi']
-        self.current.task_data['yeni_k_adi']= self.input['form']['yeni_k_adi']
+        self.current.task_data['eski_k_adi'] = self.input['form']['eski_k_adi']
+        self.current.task_data['yeni_k_adi'] = self.input['form']['yeni_k_adi']
         kullanici_adi_uygunluk, hata_mesaji = \
             kullanici_adi_kontrolleri(self.current.task_data['eski_k_adi'],
                                       self.current.task_data['yeni_k_adi'], kullanici_adi)
@@ -63,9 +63,14 @@ class KullaniciAdiDegistir(CrudView):
         yapmak istediği işlem gerçekleştirilmez ve çıkış yaptırılır.
 
         """
+
         self.current.task_data['deneme_hakki'] = True
         if self.current.task_data['deneme_sayisi'] == 0:
             self.current.task_data['deneme_hakki'] = False
+            self.current.task_data['show_logout_message'] = True
+            self.current.task_data['logout_title'] = 'Hatalı Parola Girişi'
+            self.current.task_data['logout_message'] = """Parolanızı üst üste üç kez yanlış
+                                                    girdiğiniz için çıkışa yönlendiriliyorsunuz."""
 
     def islem_onayi_icin_parola_girisi(self):
         """
@@ -113,8 +118,8 @@ class KullaniciAdiDegistir(CrudView):
             self.current.user.username = yeni_kullanici_adi
             self.current.user.save()
             self.current.task_data['islem_mesaji'] = _(u"""'%s' olan kullanıcı adınız
-                                                    '%s' olarak değiştirilmiştir.Çıkış yapıp yeni kullanıcı
-                                                     adınızla giriş yapabilirsiniz.""") \
+                                                     '%s' olarak değiştirilmiştir.Çıkış yapıp yeni kullanıcı
+                                                     adınızla giriş yapabilirsiniz """) \
                                                      % (eski_kullanici_adi, yeni_kullanici_adi)
             self.current.task_data['islem'] = True
             self.current.task_data['msg'] = None

@@ -21,7 +21,7 @@
       <bpmn:outgoing>SequenceFlow_1xcgfni</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1gpff50</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="CikisYapma" name="Çıkış Yapma" camunda:class="auth.logout">
+    <bpmn:serviceTask id="CikisYapma" name="Çıkış Yapma" camunda:type="external" camunda:topic="logout">
       <bpmn:incoming>SequenceFlow_03in4po</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0racnq7</bpmn:incoming>
     </bpmn:serviceTask>
