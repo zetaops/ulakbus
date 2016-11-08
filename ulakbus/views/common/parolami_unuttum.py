@@ -10,11 +10,11 @@ from zengine.forms import fields
 from ulakbus.models import User
 from zengine.lib.translation import gettext as _
 from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster
-from ulakbus.views.common.profil_sayfasi_goruntuleme import aktivasyon_kodu_uret
-from zengine.lib.cache import PasswordReset
+from ulakbus.lib.common import aktivasyon_kodu_uret, kullanici_adi_uygunlugu
+from ulakbus.lib.common import ParolaSifirlama
 
 
-class ParolaSifirlamaLinkiGonder(CrudView):
+class ParolamiUnuttum(CrudView):
     """
     Kullanıcının parolasını sıfırlamak için bilgilerini girmesini ve
     birincil e-posta adreslerine doğrulama linki gönderilmesini sağlar.
@@ -52,11 +52,7 @@ class ParolaSifirlamaLinkiGonder(CrudView):
         kullanıcı adını tekrar girmesi istenir.
 
         """
-
-        user = User.objects.filter(username=self.input['form']['kullanici_adi'])
-        self.current.task_data['bilgi_kontrol'] = False
-        if user:
-            self.current.task_data['bilgi_kontrol'] = True
+        self.current.task_data['bilgi_kontrol'] = not kullanici_adi_uygunlugu(self.input['form']['kullanici_adi'])[0]
 
     def hata_mesaji_olustur(self):
         """
@@ -71,13 +67,13 @@ class ParolaSifirlamaLinkiGonder(CrudView):
     def kullanici_bilgilerini_kaydet(self):
         """
         Doğrulama linki gönderilecek kullanıcının keyi, oluşturulan aktivasyon kodu ile cache'e kaydedilir.
-        Gönderilecek e-postanın içeriği ve linki hazırlanır.
+        Gönderilecek e-postanın içeriği ve linki wf ismi ve aktivasyon kodu ile hazırlanır.
         """
 
         user = User.objects.get(username=self.input['form']['kullanici_adi'])
         self.current.task_data['e_posta'] = user.e_mail
         self.current.task_data["aktivasyon"] = aktivasyon_kodu_uret()
-        PasswordReset(self.current.task_data["aktivasyon"]).set(user.key, 7200)
+        ParolaSifirlama(self.current.task_data["aktivasyon"]).set(user.key, 7200)
         self.current.task_data["message"] = 'http://dev.zetaops.io/#/%s/dogrulama=%s' \
                                             % (self.current.task_data['wf_name'],
                                                self.current.task_data["aktivasyon"])
