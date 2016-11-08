@@ -55,7 +55,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1oyioaf" sourceRef="YeniParolaGirisi" targetRef="YeniParolaKontrol" />
     <bpmn:sequenceFlow id="SequenceFlow_1bk2vb7" sourceRef="YeniParolaKontrol" targetRef="ExclusiveGateway_1yzee2g" />
     <bpmn:sequenceFlow id="SequenceFlow_1gikpz9" sourceRef="ExclusiveGateway_1yzee2g" targetRef="YeniParolaKaydet">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[msg == 'ok']]></bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">uygunluk == True</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_09svqct" sourceRef="YeniParolaKaydet" targetRef="ExclusiveGateway_0r3is8i" />
     <bpmn:sequenceFlow id="SequenceFlow_11z7m3z" sourceRef="ExclusiveGateway_0r3is8i" targetRef="BeklenmeyenHataMesaji" />

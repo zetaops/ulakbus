@@ -8,15 +8,13 @@ from zengine.views.crud import CrudView
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from ulakbus.models import User
-import random
-import datetime
-import hashlib
-from zengine.lib.cache import EMailVerification, PasswordReset
+from ulakbus.lib.common import EPostaDogrulama, ParolaSifirlama
 from zengine.lib import translation
 import re
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 
 rgx = re.compile('dogrulama=[a-z0-9]{40}')
+
 
 class KullaniciForm(JsonForm):
     class Meta:
@@ -65,14 +63,13 @@ class ProfilGoruntule(CrudView):
         aktivasyon_kodu = self.current.input['model'].split('=')[1]
         self.current.task_data['gecerli'] = False
 
-        self.current.task_data['bilgi'] = EMailVerification(aktivasyon_kodu).get()\
+        self.current.task_data['bilgi'] = EPostaDogrulama(aktivasyon_kodu).get() \
             if 'profil' in self.current.workflow.name else \
-            PasswordReset(aktivasyon_kodu).get() if 'parola' in self.current.workflow.name else None
+            ParolaSifirlama(aktivasyon_kodu).get() if 'parola' in self.current.workflow.name else None
 
         if self.current.task_data['bilgi']:
             self.current.task_data['gecerli'] = True
             self.current.task_data['kod'] = aktivasyon_kodu
-
 
     def gecersiz_link_mesaji(self):
         """
@@ -95,15 +92,15 @@ class ProfilGoruntule(CrudView):
         user = User.objects.get(self.current.user_id)
         user.e_mail = self.current.task_data['bilgi']
         user.save()
-        EMailVerification(self.current.task_data['kod']).delete()
+        EPostaDogrulama(self.current.task_data['kod']).delete()
         self.current.task_data['title'] = _(u'E-Posta Değişikliği')
         self.current.task_data['msg'] = _(u'E-Posta değiştirme işleminiz başarıyla gerçekleştirilmiştir.')
         self.current.task_data['type'] = 'info'
 
     def profil_sayfasi_goruntule(self):
         """
-        Profil sayfasının ana görüntülenme ekranını oluşturur, eğer görüntülenecek mesaj varsa,
-        geçersiz link uyarısı, başarılı işlem, hatalı işlem gibi burada gösterilir.
+        Profil sayfasının ana görüntülenme ekranını oluşturur, eğer geçersiz link uyarısı,
+        başarılı işlem, hatalı işlem gibi görüntülenecek mesaj varsa burada gösterilir.
 
         """
 
@@ -112,7 +109,7 @@ class ProfilGoruntule(CrudView):
 
         u = User.objects.get(self.current.user_id)
         _form = KullaniciForm(u, current=self.current, title=_(u'%s %s Profil Sayfası') % (u.name, u.surname))
-        _form.sifre_degistir = fields.Button(_(u"Parola Değiştir"),flow="parola_degistir")
+        _form.sifre_degistir = fields.Button(_(u"Parola Değiştir"), flow="parola_degistir")
         _form.k_adi_degistir = fields.Button(_(u"Kullanıcı Adı Değiştir"), flow="kullanici_adi_degistir")
         _form.e_posta_degistir = fields.Button(_(u"E-Posta Değiştir"), flow="e_posta_degistir")
         _form.kaydet = fields.Button(_(u"Kaydet"), flow="kaydet")
@@ -120,8 +117,10 @@ class ProfilGoruntule(CrudView):
 
     def hata_mesaji_goster(self):
         """
-        Eğer parola kaydederken parola kontrolünden geçemezse bu beklenmeyen
-        bir durumdur ve beklenmeyen hata mesajı gösterilir.
+        Parola kaydetme işlemi yapılırken güvenlik nedeniyle iki defa kontrol yapılır.
+        Bu kontroller aynı kontrollerdir. Birincisi parolalar girildiğinde yapılır.
+        Diğeri ise kaydederken yapılır. Bir kontrolden geçip, diğerinden geçmemesi
+        beklenmeyen bir durumdur. Böyle bir durum oluşursa gösterilecek hata mesajı oluşturulur.
 
         """
         self.current.task_data['msg'] = _(u'Beklenmeyen bir hata oluştu, lütfen işleminizi tekrarlayınız.')
@@ -141,7 +140,7 @@ class ProfilGoruntule(CrudView):
         _form.devam = fields.Button(_(u"Çıkış Yapmadan Devam Et"))
         self.form_out(_form)
 
-    def kaydet(self):
+    def dil_sayi_zaman_ayarlari_degistir(self):
         """
         Profil sayfasında dil seçenekleri, sayı ve zaman formatları kullanıcı tarafından
         değiştirilebilir. Bu değişiklikler kaydedilir ve bu bilgiler session da tutulduğu için
@@ -159,47 +158,6 @@ class ProfilGoruntule(CrudView):
             self.current.session[k] = ''
 
 
-def aktivasyon_kodu_uret():
-    """
-    Unique olması açısından iki tane 12 karakterli random sayı ile anlık zaman bilgisinin
-    birleşiminden rastgele bir string oluşturulur. Bu string sha1 ile hashlenir ve 40
-    karakterli bir aktivasyon kodu üretilir.
-
-    """
-    rastgele_sayi = "%s%s%s" % (str(random.randrange(100000000000)),
-                                str(datetime.datetime.now()),
-                                str(random.randrange(100000000000)))
-
-    hash_objesi = hashlib.sha1(rastgele_sayi)
-    aktivasyon_kodu = hash_objesi.hexdigest()
-
-    return aktivasyon_kodu
-
-def uygunluk_testi(kontrol_listesi, degiskenler, hata_listesi):
-    """
-    Kontrol listesi verilen değişkenler ile sırayla kontrol edilir,
-    eğer bir hata ile karşılaşılırsa döngüden çıkılır ve hata mesajı
-    döndürülür. Eğer hepsi kontrolden geçerse 'ok' mesajı döndürülür.
-
-    Args:
-        kontrol_listesi (list): lambda methodlarının bulunduğu bir liste
-        degiskenler (list): methodları çalıştırmak için gerekli olan
-                            değişkenlerin bulunduğu liste
-        hata_listesi (list): her bir methodun çalışmaması halinde karşılık
-                             gelen hata mesajlarından oluşan liste
-
-    Returns:
-         (string): 'ok' ya da hata mesajı
-
-    """
-    msg = 'ok'
-    for i, fonksiyon in enumerate(kontrol_listesi):
-        if not fonksiyon(degiskenler[i]):
-            msg = hata_listesi[i]
-            break
-
-    return msg
-
 def mesaj_goster(self, title, type='warning'):
     """
     Hatalı işlem, başarılı işlem gibi bir çok yerde kullanılan mesaj kutularını
@@ -214,6 +172,3 @@ def mesaj_goster(self, title, type='warning'):
         'type': type, "title": title,
         "msg": self.current.task_data['msg']}
     self.current.task_data['msg'] = None
-
-
-

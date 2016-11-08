@@ -7,9 +7,9 @@
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm
 from zengine.forms import fields
-from ulakbus.models import User, Personel
 from zengine.lib.translation import gettext as _
-from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster, uygunluk_testi
+from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster
+from ulakbus.lib.common import kullanici_adi_kontrolleri
 
 
 class KullaniciAdiDegistir(CrudView):
@@ -18,7 +18,6 @@ class KullaniciAdiDegistir(CrudView):
 
     """
 
-
     def yeni_kullanici_adi_girisi(self):
         """
         Kullanıcı adı değişikliğini yapabileceği ekran oluşturulur ve yeni kullanıcı adı belirlerken
@@ -26,6 +25,7 @@ class KullaniciAdiDegistir(CrudView):
         hata mesajı gösterilir.
 
         """
+        self.current.task_data['deneme_sayisi'] = 3
         try:
             if self.current.task_data['msg']:
                 mesaj_goster(self, _(u'Kullanıcı Adı Hatalı'))
@@ -44,9 +44,56 @@ class KullaniciAdiDegistir(CrudView):
         ekranına, uyulmamışsa hata mesajıyla birlikte bir önceki adıma gönderilir.
 
         """
+        kullanici_adi = self.current.user.username
+        self.current.task_data['eski_k_adi']= self.input['form']['eski_k_adi']
+        self.current.task_data['yeni_k_adi']= self.input['form']['yeni_k_adi']
+        kullanici_adi_uygunluk, hata_mesaji = \
+            kullanici_adi_kontrolleri(self.current.task_data['eski_k_adi'],
+                                      self.current.task_data['yeni_k_adi'], kullanici_adi)
+        self.current.task_data['uygunluk'] = kullanici_adi_uygunluk
+        self.current.task_data['msg'] = None
 
-        self.current.task_data['msg'] = kullanici_adi_kontrolu(self, self.input['form']['eski_k_adi'],
-                                                               self.input['form']['yeni_k_adi'])
+        if not kullanici_adi_uygunluk:
+            self.current.task_data['msg'] = hata_mesaji
+
+    def parola_giris_sayisi_kontrol(self):
+        """
+        Değişiklik işlemi yapılırken güvenlik açısından kullanıcının parolasını girmesi
+        istenir. Üç kez deneme hakkı verilir. Parola üç kez yanlış girildiğinde kullanıcının
+        yapmak istediği işlem gerçekleştirilmez ve çıkış yaptırılır.
+
+        """
+        self.current.task_data['deneme_hakki'] = True
+        if self.current.task_data['deneme_sayisi'] == 0:
+            self.current.task_data['deneme_hakki'] = False
+
+    def islem_onayi_icin_parola_girisi(self):
+        """
+        Kullanıcının parolasını girdiği form oluşturulur.
+
+        """
+
+        if self.current.task_data['msg']:
+            mesaj_goster(self, _(u'Hatalı Parola Girişi'))
+
+        _form = JsonForm(current=self.current, title=_(u'İşlem Onayı İçin Parola Doğrulama'))
+        _form.parola = fields.String(_(u"Bu işlemi gerçekleştirebilmek için güncel parolanızı girmeniz gerekmektedir."))
+        _form.dogrula = fields.Button(_(u"Parola Doğrula"))
+        self.form_out(_form)
+
+    def parola_kontrol(self):
+        """
+        Parola kontrol edilir. Doğruysa kullanıcı adı değiştirme ekranına gidilir.
+        Yanlış ise deneme hak sayısı bir azaltılarak tekrardan parolasını girmesi
+        istenir.
+
+        """
+
+        self.current.task_data['gecerli_sifre'] = True
+        if not self.current.user.check_password(self.current.input['form']['parola']):
+            self.current.task_data['gecerli_sifre'] = False
+            self.current.task_data['deneme_sayisi'] -= 1
+            self.current.task_data['msg'] = _(u'Parolanızı yanlış girdiniz. Lütfen tekrar deneyiniz.')
 
     def yeni_kullanici_adi_kaydet(self):
         """
@@ -55,43 +102,19 @@ class KullaniciAdiDegistir(CrudView):
         durumdur. Beklenmeyen hata adımına gönderilir.
 
         """
+        kullanici_adi = self.current.user.username
+        eski_kullanici_adi = self.current.task_data['eski_k_adi']
+        yeni_kullanici_adi = self.current.task_data['yeni_k_adi']
         self.current.task_data['islem'] = False
-        if kullanici_adi_kontrolu(self, self.input['form']['eski_k_adi'], self.input['form']['yeni_k_adi']):
-            self.current.user.username = self.input['form']['yeni_k_adi']
+        kullanici_adi_uygunluk, hata_mesaji = \
+            kullanici_adi_kontrolleri(eski_kullanici_adi, yeni_kullanici_adi, kullanici_adi)
+
+        if kullanici_adi_uygunluk:
+            self.current.user.username = yeni_kullanici_adi
             self.current.user.save()
             self.current.task_data['islem_mesaji'] = _(u"""'%s' olan kullanıcı adınız
-            '%s' olarak değiştirilmiştir.
-            Çıkış yapıp yeni kullanıcı adınızla giriş yapabilirsiniz.""") \
-                                                     % (
-                                                     self.input['form']['eski_k_adi'], self.input['form']['yeni_k_adi'])
+                                                    '%s' olarak değiştirilmiştir.Çıkış yapıp yeni kullanıcı
+                                                     adınızla giriş yapabilirsiniz.""") \
+                                                     % (eski_kullanici_adi, yeni_kullanici_adi)
             self.current.task_data['islem'] = True
             self.current.task_data['msg'] = None
-
-
-def kullanici_adi_kontrolu(self, eski_kullanici_adi, yeni_kullanici_adi):
-    """
-    Kullanıcının şu an kullandığı kullanıcı adı bilgisini doğru girip
-    girmediği, şu an kullandığı kullanıcı adı ile yeni belirlediği kullanıcı
-    adının aynı olmadığı ve yeni belirlediği kullanıcı adının başka bir kullanıcı
-    tarafından alınmadığı kontrol edilir. Eğer kontrollerden geçerse 'ok',
-    geçmezse hata mesajı döndürülür.
-
-    Args:
-        eski_kullanici_adi (string): Kullanıcının eski kullanıcı adı bilgisi
-        yeni_kullanici_adi (string): Kullanıcının yeni kullanıcı adı bilgisi
-
-    Returns:
-        (string): 'ok' ya da hata mesajı
-
-    """
-    kullanici_adlari = [u.username for u in User.objects.filter()]
-    kontrol_listesi = [lambda x: x == self.current.user.username,
-                       lambda (x, y): not (x == y), lambda x: not (x in kullanici_adlari)]
-
-    hata_listesi = [_(u'Kullanıcı adınızı yanlış girdiniz. Lütfen tekrar deneyiniz.'),
-                    _(u'Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır.'),
-                    _(u'Böyle bir kullanıcı adı bulunmaktadır. Lütfen başka bir kullanıcı adı deneyiniz.')]
-
-    degiskenler = [eski_kullanici_adi, (eski_kullanici_adi, yeni_kullanici_adi), yeni_kullanici_adi]
-
-    return uygunluk_testi(kontrol_listesi, degiskenler, hata_listesi)

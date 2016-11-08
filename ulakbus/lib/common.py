@@ -9,7 +9,12 @@
 
 import datetime
 from math import floor
-from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi
+from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi, User
+from zengine.lib.translation import gettext as _
+from zengine.lib.cache import Cache
+import random
+import hashlib
+import re
 
 # Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
 SLOT_SURESI = 5
@@ -17,6 +22,14 @@ SLOT_SURESI = 5
 # CPSolver'ın ID alanlarında kabul ettiği maximum değer
 SOLVER_MAX_ID = 900000000000000000
 
+# En az bir büyük harf, (?=.*?[A-Z])
+# En az bir küçük harf, (?=.*?[a-z])
+# En az bir sayı, (?=.*?[0-9])
+# En az bir özel karakter, (*&^%$@!?#.:/><; )
+# En az 8 en fazla 100 karakter .{8,100}
+# Türkçe karakter içermemesi (?=.*?^[^ıöüşçğ]*$)
+
+parola_kalibi = re.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[*&^%$@!?#.:/><; ])(?=.*?^[^ıöüşçğ]*$).{8,100}$")
 
 def saat2slot(saat):
     return saat * 60 / SLOT_SURESI
@@ -145,3 +158,232 @@ def sinav_etkinlikleri_oku(root):
             etkinlik.save()
 
 
+def aktivasyon_kodu_uret():
+    """
+    İki tane 12 karakterli random sayı ile anlık zaman bilgisinin birleşiminden
+    rastgele bir string oluşturulur. Bu string sha1 ile hashlenir ve 40
+    karakterli bir aktivasyon kodu üretilir.
+
+    """
+    rastgele_sayi = "%s%s%s" % (str(random.randrange(100000000000)),
+                                str(datetime.datetime.now()),
+                                str(random.randrange(100000000000)))
+
+    hash_objesi = hashlib.sha1(rastgele_sayi)
+    aktivasyon_kodu = hash_objesi.hexdigest()
+
+    return aktivasyon_kodu
+
+
+def guncel_parola_kontrolu(user, parola):
+    """
+    Kullanıcının güncel parolası ile girdiği parolanın aynı olup
+    olmadığını kontrol eden method.
+
+    Args:
+        user : Kullanıcı nesnesi
+        parola (str): Kullanıcının güncel kullanıcı adını doğrulamak
+                      için girdiği kullanıcı adı
+
+    Returns:
+
+        (bool) True ya da False
+
+    """
+    return user.check_password(parola), _(u'Kullanmakta olduğunuz parolanızı yanlış girdiniz.')
+
+
+def yeni_parola_ve_tekrari_kontrolu(parola, parola_tekrar):
+    """
+    Kullanıcının girdiği yeni parolanın ve tekrarının aynı olup
+    olmadığını kontrol eden method.
+
+    Args:
+        parola(str): Yeni Parola
+        parola_tekrar(str): Yeni Parolanın tekrarı
+
+    Returns:
+
+        (bool) True ya da False
+
+    """
+    return parola == parola_tekrar, _(u'Yeni parolanız ve tekrarı uyuşmamaktadır.')
+
+
+def yeni_parola_eski_parola_ayni_olmamasi_kontrolu(eski_parola, yeni_parola):
+    """
+    Kullanıcının girdiği yeni parolanın, güncel parola ile aynı olup olmadığını
+    kontrol eden method. Aynı ise hatalı olduğu anlamında
+    False, değil ise True yollanır.
+
+    Args:
+        eski_parola(str): Güncel parola
+        yeni_parola(str): Yeni parola
+
+    Returns:
+
+        (bool) True ya da False
+
+    """
+    return not eski_parola == yeni_parola, _(u'Yeni parolanız ile eski parolanız aynı olmamalıdır.')
+
+def guncel_kullanici_adi_kontrolu(guncel_kullanici_adi, kullanici_adi):
+    """
+    Kullanıcının güncel kullanıcı adı ile girilen kullanıcı adının
+    aynı olup olmadığı kontrol edilir.
+
+    Args:
+        guncel_kullanici_adi(str): Kullanıcının güncel kullanıcı adı
+        kullanici_adi(str): Kullanıcının güncel kullanıcı adını doğrulamak
+                            için girdiği kullanıcı adı
+
+    Returns:
+
+        (bool) True ya da False
+        msg(str): hata mesajı
+
+    """
+    return guncel_kullanici_adi == kullanici_adi, _(u'Kullanıcı adınızı yanlış girdiniz. Lütfen tekrar deneyiniz.')
+
+
+def yeni_kullanici_adi_eskisiyle_ayni_olmamasi_kontrolu(eski_kullanici_adi, yeni_kullanici_adi):
+    """
+    Kullanıcının yeni kullanıcı adı ile eski kullanıcı adının aynı olmaması
+    kontrol edilir.
+
+    Args:
+        eski_kullanici_adi: Güncel kullanıcı adı
+        yeni_kullanici_adi: Yeni kullanıcı adı
+
+    Returns:
+        (bool) True ya da False
+        msg(str): hata mesajı
+
+    """
+    return eski_kullanici_adi != yeni_kullanici_adi, \
+           _(u'Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır.')
+
+
+def kullanici_adi_uygunlugu(yeni_kullanici_adi):
+    """
+    Kullanıcının yeni kullanıcı adının başka bir kullanıcı
+    tarafından kullanıp kullanmadığını kontrol eden method.
+    Eğer kullanılıyorsa False, kullanılmıyorsa uygundur
+    anlamında True gönderilir.
+
+    Args:
+        yeni_kullanici_adi: Yeni kullanıcı adı
+
+    Returns:
+        (bool) True ya da False
+        msg(str): hata mesajı
+
+    """
+    kullanici_adlari = [u.username for u in User.objects.filter()]
+    return not yeni_kullanici_adi in kullanici_adlari, \
+           _(u'Böyle bir kullanıcı adı bulunmaktadır. Lütfen başka bir kullanıcı adı deneyiniz.')
+
+def parola_uygunlugu(parola):
+    """
+    Belirlenen parola kalıbına göre verilen parolanın uyup uymadığı test edilir.
+    Parolanın en az bir sayı, bir büyük harf, bir küçük harf, bir özel karakter içerdiği ve
+    Türkçe karakter içermediği test edilir.
+
+    Args:
+        parola: Yeni parola
+
+    Returns:
+        (bool): True ya da False
+        msg(str): Sonuç False ise hata mesajı yollanır
+
+    """
+    hata_mesaji = _(u"""Girmiş olduğunuz parola kurallara uymamaktadır.
+                    Lütfen parola kural setini dikkate alarak tekrar deneyiniz.""")
+    return (True, '') if parola_kalibi.match(parola) else (False, hata_mesaji)
+
+
+def kullanici_adi_kontrolleri(eski_kullanici_adi, yeni_kullanici_adi, guncel_kullanici_adi):
+    """
+    Kullanıcı adı kontrol listesi içerisinde bulunan methodlar tek tek denenir ve uygun
+    olmayan bir durumla karşılaşıldığında False ve o durumun hata mesajı gönderilir.
+    Eğer tüm durumlara uygunsa True gönderilir.
+
+    Args:
+        guncel_kullanici_adi(str): güncel kullanıcı adı
+        eski_kullanici_adi(str): Kullanıcının güncel kullanıcı adını doğrulaması için girdiği kullanıcı adı.
+        yeni_kullanici_adi(str): yeni kullanıcı adı
+
+
+    Returns:
+        (bool) True ya da False
+        msg(str): hata mesajı
+
+    """
+    kullanici_adi_uygunluk = True
+    hata_mesaji = ''
+    kullanici_adi_kontrol = [guncel_kullanici_adi_kontrolu(guncel_kullanici_adi, eski_kullanici_adi),
+                             yeni_kullanici_adi_eskisiyle_ayni_olmamasi_kontrolu(eski_kullanici_adi,
+                                                                                 yeni_kullanici_adi),
+                             kullanici_adi_uygunlugu(yeni_kullanici_adi)]
+
+    for uygunluk, hata_mesaji in kullanici_adi_kontrol:
+        if not uygunluk:
+            kullanici_adi_uygunluk = uygunluk
+            break
+
+    return kullanici_adi_uygunluk, hata_mesaji
+
+
+def parola_kontrolleri(yeni_parola, yeni_parola_tekrar, kullanici=None, eski_parola=None):
+    """
+    Parola kontrol listesi içerisinde bulunan methodlar tek tek denenir ve uygun
+    olmayan bir durumla karşılaşıldığında False ve o durumun hata mesajı gönderilir.
+    Eğer tüm durumlara uygunsa True gönderilir.
+
+    Args:
+        yeni_parola(str): yeni parola
+        yeni_parola_tekrar(str): yeni parolanın tekrarı
+        kullanici: User objesi
+        eski_parola(str): güncel parola
+
+
+    Returns:
+        (bool) True ya da False
+        msg(str): hata mesajı
+
+    """
+    parola_uygunluk = True
+    hata_mesaji = ''
+    parola_kontrol = [yeni_parola_ve_tekrari_kontrolu(yeni_parola, yeni_parola_tekrar),
+                      parola_uygunlugu(yeni_parola)]
+
+    # Eğer eski_parola parametresi doluysa, eski parola kontrolleri için gerekli olan methodlar
+    # parola_kontrol listesine eklenir ve kontrol etme işlemi öyle yapılır.
+    if eski_parola:
+        parola_kontrol.insert(0, guncel_parola_kontrolu(kullanici, eski_parola))
+        parola_kontrol.insert(2, yeni_parola_eski_parola_ayni_olmamasi_kontrolu(eski_parola, yeni_parola))
+
+    for uygunluk, hata_mesaji in parola_kontrol:
+        if not uygunluk:
+            parola_uygunluk = uygunluk
+            break
+
+    return parola_uygunluk, hata_mesaji
+
+
+class ParolaSifirlama(Cache):
+    """
+    Parola sıfırlamak için kullanılan cache objesi.
+
+    """
+    PREFIX = 'PARE'
+    SERIALIZE = False
+
+
+class EPostaDogrulama(Cache):
+    """
+    E-Posta doğrulamak için kullanılan cache objesi.
+
+    """
+    PREFIX = 'EMVR'
+    SERIALIZE = False
