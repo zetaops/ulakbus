@@ -10,7 +10,7 @@ from zengine.forms import fields
 from ulakbus.models import User
 from zengine.lib.translation import gettext as _
 from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster
-from ulakbus.lib.common import aktivasyon_kodu_uret, kullanici_adi_uygunlugu
+from ulakbus.lib.common import aktivasyon_kodu_uret
 from ulakbus.lib.common import ParolaSifirlama
 
 
@@ -52,7 +52,8 @@ class ParolamiUnuttum(CrudView):
         kullanıcı adını tekrar girmesi istenir.
 
         """
-        self.current.task_data['bilgi_kontrol'] = not kullanici_adi_uygunlugu(self.input['form']['kullanici_adi'])[0]
+        kullanici_adlari = [u.username for u in User.objects.filter()]
+        self.current.task_data['bilgi_kontrol'] = self.input['form']['kullanici_adi'] in kullanici_adlari
 
     def hata_mesaji_olustur(self):
         """

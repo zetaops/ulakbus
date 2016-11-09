@@ -13,12 +13,14 @@ from ulakbus.lib.common import ParolaSifirlama
 from zengine.lib.translation import gettext as _
 from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster
 
+
 class YeniParolaBelirle(CrudView):
     """
     Kullanıcıların parola sıfırlamaları için e-posta adreslerini doğruladıklarında,
     yeni parola belirlemelerini sağlar.
 
     """
+
     def e_posta_dogrulama_mesaji_olustur(self):
         try:
             if self.current.task_data['wf_name']:
@@ -100,10 +102,7 @@ class YeniParolaBelirle(CrudView):
         parola ile giriş yapması istenir.
 
         """
-        kullanici = User.objects.get(self.current.task_data['bilgi'])
-        _form = JsonForm(current=self.current, title=_(u'İşlem Bilgilendirme'))
-        _form.help_text = _(u"""Sayın %s %s, parola sıfırlama işleminiz başarıyla gerçekleştirilmiştir.
-                             Belirlediğiniz yeni parolanızla giriş yapmak için
-                             'Giriş Ekranına Git' butonunu kullanabilirsiniz.""") % (kullanici.name, kullanici.surname)
-        _form.giris_yap = fields.Button(_(u"Giriş Ekranına Git"))
-        self.form_out(_form)
+        self.current.task_data['show_logout_message'] = True
+        self.current.task_data['logout_title'] = 'Parolanız Başarıyla Sıfırlandı'
+        self.current.task_data['logout_message'] = """Yeni parolanızla giriş yapmak için
+                                                    giriş ekranına yönlendiriliyorsunuz."""
