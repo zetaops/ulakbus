@@ -65,8 +65,8 @@ class EPostaDegistir(UlakbusView):
         self.current.task_data["aktivasyon"] = aktivasyon_kodu_uret()
         EPostaDogrulama(self.current.task_data["aktivasyon"]).set(self.current.task_data["e_posta"],
                                                                   7200)
-        self.current.task_data["message"] = """E-Posta adresinizi doğrulamak için
-         aşağıdaki linke tıklayınız:\n\n %s/#/%s/dogrulama=%s""" % (
+        self.current.task_data["message"] = "E-Posta adresinizi doğrulamak için aşağıdaki linke" \
+                                            " tıklayınız:\n\n %s/#/%s/dogrulama=%s" % (
         DEMO_URL, self.current.task_data['wf_name'], self.current.task_data["aktivasyon"])
         self.current.task_data['subject'] = 'Ulakbüs Aktivasyon Maili'
 
