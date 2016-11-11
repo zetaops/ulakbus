@@ -26,11 +26,8 @@ class KullaniciAdiDegistir(CrudView):
 
         """
         self.current.task_data['deneme_sayisi'] = 3
-        try:
-            if self.current.task_data['msg']:
-                mesaj_goster(self, _(u'Kullanıcı Adı Hatalı'))
-        except KeyError:
-            pass
+        if self.current.task_data.get('msg',None):
+            mesaj_goster(self, _(u'Kullanıcı Adı Hatalı'))
 
         _form = JsonForm(current=self.current, title=_(u'Kullanıcı Adı Değiştirme'))
         _form.eski_k_adi = fields.String(_(u"Şu an kullandığınız kullanıcı adınızı giriniz."))
@@ -47,30 +44,10 @@ class KullaniciAdiDegistir(CrudView):
         kullanici_adi = self.current.user.username
         self.current.task_data['eski_k_adi'] = self.input['form']['eski_k_adi']
         self.current.task_data['yeni_k_adi'] = self.input['form']['yeni_k_adi']
-        kullanici_adi_uygunluk, hata_mesaji = \
+
+        self.current.task_data['uygunluk'], self.current.task_data['msg'] = \
             kullanici_adi_kontrolleri(self.current.task_data['eski_k_adi'],
                                       self.current.task_data['yeni_k_adi'], kullanici_adi)
-        self.current.task_data['uygunluk'] = kullanici_adi_uygunluk
-        self.current.task_data['msg'] = None
-
-        if not kullanici_adi_uygunluk:
-            self.current.task_data['msg'] = hata_mesaji
-
-    def parola_giris_sayisi_kontrol(self):
-        """
-        Değişiklik işlemi yapılırken güvenlik açısından kullanıcının parolasını girmesi
-        istenir. Üç kez deneme hakkı verilir. Parola üç kez yanlış girildiğinde kullanıcının
-        yapmak istediği işlem gerçekleştirilmez ve çıkış yaptırılır.
-
-        """
-
-        self.current.task_data['deneme_hakki'] = True
-        if self.current.task_data['deneme_sayisi'] == 0:
-            self.current.task_data['deneme_hakki'] = False
-            self.current.task_data['show_logout_message'] = True
-            self.current.task_data['logout_title'] = 'Hatalı Parola Girişi'
-            self.current.task_data['logout_message'] = """Parolanızı üst üste üç kez yanlış
-                                                    girdiğiniz için çıkışa yönlendiriliyorsunuz."""
 
     def islem_onayi_icin_parola_girisi(self):
         """
@@ -94,11 +71,22 @@ class KullaniciAdiDegistir(CrudView):
 
         """
 
-        self.current.task_data['gecerli_sifre'] = True
-        if not self.current.user.check_password(self.current.input['form']['parola']):
-            self.current.task_data['gecerli_sifre'] = False
-            self.current.task_data['deneme_sayisi'] -= 1
-            self.current.task_data['msg'] = _(u'Parolanızı yanlış girdiniz. Lütfen tekrar deneyiniz.')
+        self.current.task_data['deneme_sayisi'] -= 1
+        self.current.task_data['msg'] = _(u'Parolanızı yanlış girdiniz. Lütfen tekrar deneyiniz.')
+        self.current.task_data['gecerli_sifre'] = self.current.user.check_password(self.current.input['form']['parola'])
+
+    def cikis_mesaji_olustur(self):
+        """
+        Değişiklik işlemi yapılırken güvenlik açısından kullanıcının parolasını girmesi
+        istenir. Üç kez deneme hakkı verilir. Parola üç kez yanlış girildiğinde kullanıcının
+        yapmak istediği işlem gerçekleştirilmez ve çıkış yaptırılır.
+
+        """
+
+        self.current.task_data['show_logout_message'] = True
+        self.current.task_data['logout_title'] = 'Hatalı Parola Girişi'
+        self.current.task_data['logout_message'] = """Parolanızı üst üste üç kez yanlış
+                                                girdiğiniz için çıkışa yönlendiriliyorsunuz."""
 
     def yeni_kullanici_adi_kaydet(self):
         """
@@ -107,19 +95,11 @@ class KullaniciAdiDegistir(CrudView):
         durumdur. Beklenmeyen hata adımına gönderilir.
 
         """
-        kullanici_adi = self.current.user.username
-        eski_kullanici_adi = self.current.task_data['eski_k_adi']
-        yeni_kullanici_adi = self.current.task_data['yeni_k_adi']
-        self.current.task_data['islem'] = False
-        kullanici_adi_uygunluk, hata_mesaji = \
-            kullanici_adi_kontrolleri(eski_kullanici_adi, yeni_kullanici_adi, kullanici_adi)
 
-        if kullanici_adi_uygunluk:
-            self.current.user.username = yeni_kullanici_adi
-            self.current.user.save()
-            self.current.task_data['islem_mesaji'] = _(u"""'%s' olan kullanıcı adınız
-                                                     '%s' olarak değiştirilmiştir.Çıkış yapıp yeni kullanıcı
-                                                     adınızla giriş yapabilirsiniz """) \
-                                                     % (eski_kullanici_adi, yeni_kullanici_adi)
-            self.current.task_data['islem'] = True
-            self.current.task_data['msg'] = None
+        self.current.user.username = self.current.task_data['yeni_k_adi']
+        self.current.user.save()
+        self.current.task_data['islem_mesaji'] = _(u"""'%s' olan kullanıcı adınız
+                                                 '%s' olarak değiştirilmiştir.Çıkış yapıp yeni kullanıcı
+                                                 adınızla giriş yapabilirsiniz """) \
+                                                 % (self.current.task_data['eski_k_adi'],
+                                                    self.current.task_data['yeni_k_adi'])

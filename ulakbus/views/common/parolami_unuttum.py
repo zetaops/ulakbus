@@ -9,10 +9,11 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from ulakbus.models import User
 from zengine.lib.translation import gettext as _
+from ulakbus.settings import DEMO_URL
 from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster
 from ulakbus.lib.common import aktivasyon_kodu_uret
 from ulakbus.lib.common import ParolaSifirlama
-
+from ulakbus.lib.common import kullanici_adi_uygunlugu
 
 class ParolamiUnuttum(CrudView):
     """
@@ -23,6 +24,17 @@ class ParolamiUnuttum(CrudView):
     class Meta:
         model = "User"
 
+    def link_gecerliligi_kontrolu(self):
+        """
+
+        Eğer linkle başlatıldıysa, doğrulama linkinin
+        geçerli olup olmadığı kontrol edilir.
+
+        """
+        self.current.task_data['kod'] = aktivasyon_kodu = self.current.input['model'].split('=')[1]
+
+        self.current.task_data['kullanici_key'] = ParolaSifirlama(aktivasyon_kodu).get()
+
     def kullanici_adi_girisi(self):
         """
 
@@ -31,11 +43,8 @@ class ParolamiUnuttum(CrudView):
         linki gönderilecektir. Eğer gösterilecek bir mesaj varsa (yanlış
         kullanıcı adı girişi gibi) mesaj ekrana basılır.
         """
-        try:
-            if self.current.task_data['msg']:
-                mesaj_goster(self, self.current.task_data['title'])
-        except KeyError:
-            pass
+        if self.current.task_data.get('msg',None):
+            mesaj_goster(self, self.current.task_data.get('title',_(u"Hatalı Bilgi")))
 
         _form = JsonForm(current=self.current, title=_(u'Parola Sıfırlama'))
         _form.help_text = _(u"""Girdiğiniz kullanıcı adınıza kayıtlı birincil e-posta
@@ -52,29 +61,24 @@ class ParolamiUnuttum(CrudView):
         kullanıcı adını tekrar girmesi istenir.
 
         """
-        kullanici_adlari = [u.username for u in User.objects.filter()]
-        self.current.task_data['bilgi_kontrol'] = self.input['form']['kullanici_adi'] in kullanici_adlari
 
-    def hata_mesaji_olustur(self):
-        """
+        self.current.task_data['kullanici_adi'] = kullanici_adi = self.input['form']['kullanici_adi']
+        self.current.task_data['dogruluk'] = not kullanici_adi_uygunlugu(kullanici_adi)
+        if not self.current.task_data['dogruluk']:
+            self.current.task_data['msg'] = _(u"Böyle bir kullanıcı bulunmamaktadır. Lütfen tekrar deneyiniz.")
 
-        Girilen kullanıcı adına ait bir kullanıcı adı yoksa hata mesajı yaratılır
-         ve kullanıcı adı girişi ekranına tekrar gidilerek hata mesajı gösterilir.
-        """
-
-        self.current.task_data['msg'] = _(u"Böyle bir kullanıcı bulunmamaktadır. Lütfen tekrar deneyiniz.")
-        self.current.task_data['title'] = _(u"Hatalı Bilgi")
-
-    def kullanici_bilgilerini_kaydet(self):
+    def kullanici_bilgisi_cache_koy_e_posta_hazirla(self):
         """
         Doğrulama linki gönderilecek kullanıcının keyi, oluşturulan aktivasyon kodu ile cache'e kaydedilir.
         Gönderilecek e-postanın içeriği ve linki wf ismi ve aktivasyon kodu ile hazırlanır.
         """
 
-        user = User.objects.get(username=self.input['form']['kullanici_adi'])
+        user = User.objects.get(username=self.current.task_data['kullanici_adi'])
         self.current.task_data['e_posta'] = user.e_mail
         self.current.task_data["aktivasyon"] = aktivasyon_kodu_uret()
         ParolaSifirlama(self.current.task_data["aktivasyon"]).set(user.key, 7200)
-        self.current.task_data["message"] = 'http://dev.zetaops.io/#/%s/dogrulama=%s' \
-                                            % (self.current.task_data['wf_name'],
-                                               self.current.task_data["aktivasyon"])
+
+        self.current.task_data["message"] = """E-Posta adresinizi doğrulamak için aşağıdaki linke tıklayınız:\n\n
+        %s/#/%s/dogrulama=%s""" % (DEMO_URL, self.current.task_data['wf_name'], self.current.task_data["aktivasyon"])
+
+        self.current.task_data['subject'] = 'Ulakbüs Aktivasyon Maili'

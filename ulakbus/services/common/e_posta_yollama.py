@@ -2,26 +2,26 @@
 
 from zato.common import SMTPMessage
 from zato.server.service import Service
-from zengine.lib.cache import Cache
 import httplib
 
 class E_PostaYolla(Service):
 
     def handle(self):
 
+        default_e_mail = self.request.payload['default_e_mail']
         e_posta =self.request.payload['e_posta']
         message = self.request.payload['message']
+        subject = self.request.payload['subject']
 
         # Obtain a connection
         conn = self.email.smtp.get('Ulakbus-Mail').conn
 
         # Create a regular e-mail
         msg = SMTPMessage()
-        msg.subject = 'Ulakbüs Aktivasyon Maili'
+        msg.subject = subject
         msg.to = e_posta
-        msg.from_ = 'postmaster@mg.ulakbus.net'
-        msg.body = 'E-Posta adresinizi doğrulamak için ' \
-                    'aşağıdaki linke tıklayınız:\n\n %s' % message
+        msg.from_ = default_e_mail
+        msg.body = message
 
         # Send the message
         conn.send(msg)

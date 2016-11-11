@@ -45,9 +45,9 @@ class User(Model, BaseUser):
 
     """
     avatar = field.File(_(u"Profile Photo"), random_name=True, required=False)
-    username = field.String(_(u"Username"), index=True)
+    username = field.String(_(u"Username"), index=True, unique=True)
     password = field.String(_(u"Password"))
-    e_mail = field.String(_(u"E-Mail"), index=True)
+    e_mail = field.String(_(u"E-Mail"), index=True, unique=True)
     name = field.String(_(u"First Name"), index=True)
     surname = field.String(_(u"Surname"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)

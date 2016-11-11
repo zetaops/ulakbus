@@ -13,7 +13,7 @@ from zengine.lib import translation
 import re
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 
-rgx = re.compile('dogrulama=[a-z0-9]{40}')
+aktivasyon_kalibi = re.compile('dogrulama=[a-z0-9]{40}')
 
 
 class KullaniciForm(JsonForm):
@@ -44,14 +44,10 @@ class ProfilGoruntule(CrudView):
         girmez ise linkle gelmemiştir iş akışı menüden başlatılmıştır.
 
         """
-        self.current.task_data['wf_name'] = self.current.workflow.name
         self.current.task_data['msg'] = None
-        self.current.task_data['title'] = None
-        try:
-            if rgx.search(self.current.input['model']):
-                self.current.task_data['link'] = True
-        except KeyError:
-            self.current.task_data['link'] = False
+        self.current.task_data['wf_name'] = self.current.workflow.name
+        dogrulama = self.current.input.get('model', '')
+        self.current.task_data['link'] = bool(re.match(aktivasyon_kalibi, dogrulama))
 
     def link_gecerliligi_kontrolu(self):
         """
@@ -60,16 +56,8 @@ class ProfilGoruntule(CrudView):
         geçerli olup olmadığı kontrol edilir.
 
         """
-        aktivasyon_kodu = self.current.input['model'].split('=')[1]
-        self.current.task_data['gecerli'] = False
-
-        self.current.task_data['bilgi'] = EPostaDogrulama(aktivasyon_kodu).get() \
-            if 'profil' in self.current.workflow.name else \
-            ParolaSifirlama(aktivasyon_kodu).get() if 'parola' in self.current.workflow.name else None
-
-        if self.current.task_data['bilgi']:
-            self.current.task_data['gecerli'] = True
-            self.current.task_data['kod'] = aktivasyon_kodu
+        self.current.task_data['kod'] = aktivasyon_kodu = self.current.input['model'].split('=')[1]
+        self.current.task_data['e_posta'] = EPostaDogrulama(aktivasyon_kodu).get()
 
     def gecersiz_link_mesaji(self):
         """
@@ -89,9 +77,9 @@ class ProfilGoruntule(CrudView):
 
         """
 
-        user = User.objects.get(self.current.user_id)
-        user.e_mail = self.current.task_data['bilgi']
-        user.save()
+        kullanici = User.objects.get(self.current.user_id)
+        kullanici.e_mail = self.current.task_data['e_posta']
+        kullanici.save()
         EPostaDogrulama(self.current.task_data['kod']).delete()
         self.current.task_data['title'] = _(u'E-Posta Değişikliği')
         self.current.task_data['msg'] = _(u'E-Posta değiştirme işleminiz başarıyla gerçekleştirilmiştir.')
@@ -104,7 +92,7 @@ class ProfilGoruntule(CrudView):
 
         """
 
-        if self.current.task_data['msg']:
+        if self.current.task_data.get('msg', None):
             mesaj_goster(self, self.current.task_data['title'], self.current.task_data['type'])
 
         u = User.objects.get(self.current.user_id)
@@ -114,17 +102,6 @@ class ProfilGoruntule(CrudView):
         _form.e_posta_degistir = fields.Button(_(u"E-Posta Değiştir"), flow="e_posta_degistir")
         _form.kaydet = fields.Button(_(u"Kaydet"), flow="kaydet")
         self.form_out(_form)
-
-    def hata_mesaji_goster(self):
-        """
-        Parola kaydetme işlemi yapılırken güvenlik nedeniyle iki defa kontrol yapılır.
-        Bu kontroller aynı kontrollerdir. Birincisi parolalar girildiğinde yapılır.
-        Diğeri ise kaydederken yapılır. Bir kontrolden geçip, diğerinden geçmemesi
-        beklenmeyen bir durumdur. Böyle bir durum oluşursa gösterilecek hata mesajı oluşturulur.
-
-        """
-        self.current.task_data['msg'] = _(u'Beklenmeyen bir hata oluştu, lütfen işleminizi tekrarlayınız.')
-        mesaj_goster(self, _(u'Hatalı İşlem'))
 
     def degisiklik_sonrasi_islem(self):
         """
@@ -150,14 +127,17 @@ class ProfilGoruntule(CrudView):
         olmak üzere modelden değişmiş halini alır ve en son halini sessiona koyar.
 
         """
-        self.set_form_data_to_object()
-        self.object.blocking_save()
-        self.current.task_data['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir.')
-        self.current.task_data['title'] = _(u'Bilgilendirme Mesajı')
-        self.current.task_data['type'] = 'info'
+
+        kullanici = self.current.user
 
         for k in translation.DEFAULT_PREFS.keys():
             self.current.session[k] = ''
+            setattr(kullanici, k, self.input['form'][k])
+        kullanici.save()
+
+        self.current.task_data['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir.')
+        self.current.task_data['title'] = _(u'Bilgilendirme Mesajı')
+        self.current.task_data['type'] = 'info'
 
 
 def mesaj_goster(self, title, type='warning'):

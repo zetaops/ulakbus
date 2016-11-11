@@ -13,6 +13,7 @@ from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster
 from ulakbus.lib.common import aktivasyon_kodu_uret
 from ulakbus.lib.common import EPostaDogrulama
 import re
+from ulakbus.settings import DEMO_URL, MAIL_ADDRESS
 
 e_posta_kalibi = re.compile('[^@]+@[^@]+\.[^@]+')
 
@@ -34,11 +35,8 @@ class EPostaDegistir(CrudView):
         istediği e_posta adresini girmesi istenir. Bu işlem sonunda girdiği adrese doğrulama linki gönderilecektir.
 
         """
-        try:
-            if self.current.task_data['msg']:
-                mesaj_goster(self, _(u'Geçersiz E-Posta Adresi'))
-        except KeyError:
-            pass
+        if self.current.task_data.get('msg', None):
+            mesaj_goster(self, _(u'Geçersiz E-Posta Adresi'))
 
         self.current.task_data['deneme_sayisi'] = 3
         _form = EPostaForm(current=self.current, title=_(u'Yeni E-Posta Girişi'))
@@ -53,24 +51,23 @@ class EPostaDegistir(CrudView):
         """
         Girilen e-posta adresinin doğruluğu belirlenen kalıpla kontrol edilir.
         """
-        self.current.task_data['uygunluk'] = True
         self.current.task_data["e_posta"] = self.input['form']['e_posta']
-        if not e_posta_kalibi.search(self.current.task_data["e_posta"]):
-            self.current.task_data['uygunluk'] = False
-            self.current.task_data['msg'] = _(u"""Girmiş olduğunuz e-posta adresi geçersizdir.
-                                            Lütfen düzelterek tekrar deneyiniz.""")
+        self.current.task_data['uygunluk'] = bool(re.match(e_posta_kalibi, self.current.task_data["e_posta"]))
+        self.current.task_data['msg'] = _(u"""Girmiş olduğunuz e-posta adresi geçersizdir.
+                                        Lütfen düzelterek tekrar deneyiniz.""")
 
-    def e_posta_bilgisini_kaydet(self):
+    def e_posta_bilgisi_cache_koy_e_posta_hazirla(self):
         """
         Doğrulama linki gönderilecek e_posta adresi, oluşturulan aktivasyon kodu ile cache'e kaydedilir.
         Gönderilecek e-postanın içeriği ve linki wf ismi ve aktivasyon kodu ile hazırlanır.
         """
-
+        self.current.task_data['msg'] = None
         self.current.task_data["aktivasyon"] = aktivasyon_kodu_uret()
         EPostaDogrulama(self.current.task_data["aktivasyon"]).set(self.current.task_data["e_posta"], 7200)
-        self.current.task_data["message"] = 'http://dev.zetaops.io/#/%s/dogrulama=%s' \
-                                            % (self.current.task_data['wf_name'],
-                                               self.current.task_data["aktivasyon"])
+        self.current.task_data["message"] = """E-Posta adresinizi doğrulamak için aşağıdaki linke tıklayınız:\n\n
+        %s/#/%s/dogrulama=%s""" %(DEMO_URL,self.current.task_data['wf_name'], self.current.task_data["aktivasyon"])
+        self.current.task_data['subject'] = 'Ulakbüs Aktivasyon Maili'
+
 
     def aktivasyon_maili_yolla(self):
         """
@@ -80,8 +77,10 @@ class EPostaDegistir(CrudView):
         """
 
         posta_gonder = E_PostaYolla(service_payload={
+            "default_e_mail":MAIL_ADDRESS,
             "e_posta": self.current.task_data["e_posta"],
-            "message": self.current.task_data["message"]})
+            "message": self.current.task_data["message"],
+            "subject": self.current.task_data["subject"]})
 
         posta_gonder.zato_request()
 

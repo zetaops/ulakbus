@@ -22,14 +22,12 @@ class YeniParolaBelirle(CrudView):
     """
 
     def e_posta_dogrulama_mesaji_olustur(self):
-        try:
-            if self.current.task_data['wf_name']:
-                self.current.task_data['msg'] = """E-Posta adresiniz başarıyla doğrulanmıştır.
-                                                   Lütfen yeni parolanızı belirleyiniz."""
-                self.current.task_data['title'] = 'E-Posta Adresi Doğrulama İşlemi'
-                self.current.task_data['type'] = 'info'
-        except KeyError:
-            self.current.task_data['msg'] = None
+
+        if self.current.task_data.get('msg', None):
+            self.current.task_data['msg'] = """E-Posta adresiniz başarıyla doğrulanmıştır.
+                                               Lütfen yeni parolanızı belirleyiniz."""
+            self.current.task_data['title'] = 'E-Posta Adresi Doğrulama İşlemi'
+            self.current.task_data['type'] = 'info'
 
     def yeni_parola_belirle(self):
         """
@@ -38,7 +36,7 @@ class YeniParolaBelirle(CrudView):
 
         """
 
-        if self.current.task_data['msg']:
+        if 'msg' in self.current.task_data:
             mesaj_goster(self, self.current.task_data['title'], self.current.task_data['type'])
 
         _form = JsonForm(current=self.current, title=_(u'Yeni Parola Girişi'))
@@ -66,13 +64,11 @@ class YeniParolaBelirle(CrudView):
         self.current.task_data['type'] = 'warning'
 
         yeni_parola = self.input['form']['yeni_parola']
+        self.current.task_data['yeni_parola'] = yeni_parola
         yeni_parola_tekrar = self.input['form']['yeni_parola_tekrar']
 
-        parola_uygunluk, hata_mesaji = parola_kontrolleri(yeni_parola, yeni_parola_tekrar)
-
-        self.current.task_data['uygunluk'] = parola_uygunluk
-        if not parola_uygunluk:
-            self.current.task_data['msg'] = hata_mesaji
+        self.current.task_data['uygunluk'], self.current.task_data['msg'] = parola_kontrolleri(yeni_parola,
+                                                                                               yeni_parola_tekrar)
 
     def yeni_parola_kaydet(self):
         """
@@ -82,18 +78,10 @@ class YeniParolaBelirle(CrudView):
         durumdur. Beklenmeyen hata adımına giderek bu hata mesajı
         kullanıcıya gösterilir.
         """
-        self.current.task_data['islem'] = False
-
-        yeni_parola = self.input['form']['yeni_parola']
-        yeni_parola_tekrar = self.input['form']['yeni_parola_tekrar']
-
-        parola_uygunluk, hata_mesaji = parola_kontrolleri(yeni_parola, yeni_parola_tekrar)
-        if parola_uygunluk:
-            kullanici = User.objects.get(self.current.task_data['bilgi'])
-            kullanici.set_password(self.input['form']['yeni_parola'])
-            kullanici.save()
-            ParolaSifirlama(self.current.task_data['kod']).delete()
-            self.current.task_data['islem'] = True
+        kullanici = User.objects.get(self.current.task_data['kullanici_key'])
+        kullanici.set_password(self.current.task_data['yeni_parola'])
+        kullanici.save()
+        ParolaSifirlama(self.current.task_data['kod']).delete()
 
     def parola_degisikligi_bilgilendir(self):
         """

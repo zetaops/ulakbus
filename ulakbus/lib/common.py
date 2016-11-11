@@ -175,130 +175,97 @@ def aktivasyon_kodu_uret():
     return aktivasyon_kodu
 
 
-class ParolaK_AdiKontrol():
-    def parola_uygunlugu(self, parola):
-        """
-        Belirlenen parola kalıbına göre verilen parolanın uyup uymadığı test edilir.
-        Parolanın en az bir sayı, bir büyük harf, bir küçük harf, bir özel karakter içerdiği ve
-        Türkçe karakter içermediği test edilir.
+def parola_uygunlugu(parola):
+    """
+    Belirlenen parola kalıbına göre verilen parolanın uyup uymadığı test edilir.
+    Parolanın en az bir sayı, bir büyük harf, bir küçük harf, bir özel karakter içerdiği ve
+    Türkçe karakter içermediği test edilir.
 
-        Args:
-            parola: Yeni parola
+    Args:
+        parola: Yeni parola
 
-        Returns:
-            (bool): True ya da False
+    Returns:
+        (bool): True ya da False
 
-        """
-        return True if parola_kalibi.match(parola) else False
+    """
+    return bool(re.match(parola_kalibi, parola))
 
-    def kullanici_adi_uygunlugu(self, yeni_k_adi):
-        """
-        Kullanıcının yeni kullanıcı adının başka bir kullanıcı
-        tarafından kullanıp kullanmadığını kontrol eden method.
-        Eğer kullanılıyorsa False, kullanılmıyorsa uygundur
-        anlamında True gönderilir.
 
-        Args:
-            yeni_kullanici_adi: Yeni kullanıcı adı
+def kullanici_adi_uygunlugu(yeni_k_adi):
+    """
+    Kullanıcının yeni kullanıcı adının başka bir kullanıcı
+    tarafından kullanıp kullanmadığını kontrol eden method.
+    Eğer kullanılıyorsa False, kullanılmıyorsa uygundur
+    anlamında True gönderilir.
 
-        Returns:
-            (bool) True ya da False
+    Args:
+        yeni_kullanici_adi: Yeni kullanıcı adı
 
-        """
-        kullanici_adlari = [u.username for u in User.objects.filter()]
-        return not yeni_k_adi in kullanici_adlari
+    Returns:
+        (bool) True ya da False
+
+    """
+    try:
+        User.objects.get(username=yeni_k_adi)
+        return False
+    except ObjectDoesNotExist:
+        return True
 
 
 def kullanici_adi_kontrolleri(eski_k_adi, yeni_k_adi, guncel_k_adi):
     """
-    Kullanıcı adı kontrol setine kontrol edilmesi istenen durumlar yazılır. Eğer kontrol iki
-    stringin karşılaştırılması ise tuple'ın ilk iki kısmına bu stringler yazılır. Eğer kontrol
-    bir method yardımıyla yapılacaksa tuple'ın ilk kısmına method ismi, ikinci kısmına liste içine
-    method içinde kullanılacak parametreler, beşinci kısma ise hangi object ile kullanılacaksa
-    o yazılır. Üçüncü kısma bu kontrollerden hangi sonucun dönülmesinin beklendiği yazılır. Dördüncü
-    kısıma ise beklenen durum karşılanmadığında döndürülecek hata mesajı yazılır.
+    Kullanıcı adı uygunluk kontrolleri.
 
     Args:
-        guncel_k_adi(str): güncel kullanıcı adı
-        eski_k_adi(str): Kullanıcının güncel kullanıcı adını doğrulaması için girdiği kullanıcı adı.
-        yeni_k_adi(str): yeni belirlenecek olan kullanıcı adı.
+        guncel_k_adi(str): current nesnesi altindaki güncel kullanıcı adı
+        eski_k_adi(str): formdan gelen kullanıcı adı.
+        yeni_k_adi(str): formdan gelen yeni belirlenecek olan kullanıcı adı.
 
     Returns:
         (bool) True ya da False
         msg(str): hata mesajı
 
     """
-    k_adi_kontrol_set = [
-        (guncel_k_adi, eski_k_adi, True, _(u'Kullanıcı adınızı yanlış girdiniz. Lütfen tekrar deneyiniz.')),
-        (eski_k_adi, yeni_k_adi, False, _(u'Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır.')),
-        ('kullanici_adi_uygunlugu', [yeni_k_adi], True, _(u"""Böyle bir kullanıcı adı bulunmaktadır.
-         Lütfen başka bir kullanıcı adı deneyiniz."""), ParolaK_AdiKontrol())]
+    if guncel_k_adi != eski_k_adi:
+        return False, _(u'Kullanıcı adınızı yanlış girdiniz. Lütfen tekrar deneyiniz.')
 
-    return kontrol_seti_uygunluk_testi(k_adi_kontrol_set)
+    if eski_k_adi == yeni_k_adi:
+        return False, _(u'Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır.')
+
+    if not kullanici_adi_uygunlugu(yeni_k_adi):
+        return False, _(u"""Böyle bir kullanıcı adı bulunmaktadır.
+        Lütfen başka bir kullanıcı adı deneyiniz.""")
+
+    return True, None
 
 
 def parola_kontrolleri(yeni_parola, yeni_parola_tekrar, kullanici=None, eski_parola=None):
     """
-    Parola kontrol setine kontrol edilmesi istenen durumlar yazılır. Eğer kontrol iki
-    stringin karşılaştırılması ise tuple'ın ilk iki kısmına bu stringler yazılır. Eğer kontrol
-    bir method yardımıyla yapılacaksa tuple'ın ilk kısmına method ismi, ikinci kısmına liste içine
-    method içinde kullanılacak parametreler, beşinci kısma ise hangi object ile kullanılacaksa
-    o yazılır. Üçüncü kısma bu kontrollerden hangi sonucun dönülmesinin beklendiği yazılır. Dördüncü
-    kısıma ise beklenen durum karşılanmadığında döndürülecek hata mesajı yazılır.
+    Parola uygunluk kontrolleri.
 
     Args:
-        yeni_parola(str): yeni belirlenecek olan parola
-        yeni_parola_tekrar(str): yeni parolanın tekrarı
+        yeni_parola(str): formdan gelen yeni belirlenecek olan parola
+        yeni_parola_tekrar(str): formdan gelen yeni parolanın tekrarı
         kullanici: User objesi
-        eski_parola(str): kullanının güncel parolası
+        eski_parola(str): formdan gelen kullanının güncel olarak girdigi parolası
 
     Returns:
         (bool) True ya da False
         msg(str): hata mesajı
 
     """
-    parola_kural_set = [
-        ('check_password', [eski_parola], True, _(u'Kullanmakta olduğunuz parolanızı yanlış girdiniz.'), kullanici),
-        (yeni_parola, yeni_parola_tekrar, True, _(u'Yeni parolanız ve tekrarı uyuşmamaktadır.')),
-        (eski_parola, yeni_parola, False, _(u'Yeni parolanız ile eski parolanız aynı olmamalıdır.')),
-        ('parola_uygunlugu', [yeni_parola], True, _(u"""Girmiş olduğunuz parola kurallara uymamaktadır.
-        Lütfen parola kural setini dikkate alarak tekrar deneyiniz."""), ParolaK_AdiKontrol())]
 
-    # Eğer eski_parola parametresi doluysa, eski parola kontrolleri için gerekli olan kontroller
-    # kontrol listesinden kaldırılır.
-    if not eski_parola:
-        parola_kural_set = [parola_kural_set[1], parola_kural_set[3]]
+    if eski_parola and not kullanici.check_password(eski_parola):
+        return False, _(u'Kullanmakta olduğunuz parolanızı yanlış girdiniz.')
+    if yeni_parola != yeni_parola_tekrar:
+        return False, _(u'Yeni parolanız ve tekrarı uyuşmamaktadır.')
+    if eski_parola and eski_parola == yeni_parola:
+        return False, _(u'Yeni parolanız ile eski parolanız aynı olmamalıdır.')
+    if not parola_uygunlugu(yeni_parola):
+        return False, _(u"""Girmiş olduğunuz parola kurallara uymamaktadır.
+        Lütfen parola kural setini dikkate alarak tekrar deneyiniz.""")
 
-    return kontrol_seti_uygunluk_testi(parola_kural_set)
-
-
-def kontrol_seti_uygunluk_testi(kontrol_set):
-    """
-    kural[0] = method adı ya da karşılaştırılma yapılacak birinci parametre
-    kural[1] = kural[0] method adı ise methodda çalıştırılacak parametre listesi
-               değilse karşılaştırılma yapılacak ikinci parametre
-    kural[2] = kontrolden gelmesi beklenen yanıt True ya da False
-    kural[3] = kontrolden geçmemesi durumunda gösterilecek hata mesajı
-    kural[4] = kural[0] method adı ise o methodun çalıştırılacağı obje
-
-    Args:
-        kontrol_set(list of tuple): Kontrol edecek durumlarin listesi
-
-    Returns:
-        uygunluk(bool): True ya da False
-        hata mesajı(str): uygunluk False olduğunda gösterilecek hata mesajı
-
-    """
-    uygunluk = True
-    hata_mesaji = ''
-    for kural in kontrol_set:
-        result = (kural[0] == kural[1]) if not isinstance(kural[1], list) else getattr(kural[4], kural[0])(*kural[1])
-        if not (result == kural[2]):
-            uygunluk = False
-            hata_mesaji = kural[3]
-            break
-
-    return uygunluk, hata_mesaji
+    return True, None
 
 
 class ParolaSifirlama(Cache):
@@ -317,92 +284,3 @@ class EPostaDogrulama(Cache):
     """
     PREFIX = 'EMVR'
     SERIALIZE = False
-
-# def guncel_parola_kontrolu(user, parola):
-#     """
-#     Kullanıcının güncel parolası ile girdiği parolanın aynı olup
-#     olmadığını kontrol eden method.
-#
-#     Args:
-#         user : Kullanıcı nesnesi
-#         parola (str): Kullanıcının güncel kullanıcı adını doğrulamak
-#                       için girdiği kullanıcı adı
-#
-#     Returns:
-#
-#         (bool) True ya da False
-#
-#     """
-#     return user.check_password(parola), _(u'Kullanmakta olduğunuz parolanızı yanlış girdiniz.')
-#
-#
-# def yeni_parola_ve_tekrari_kontrolu(parola, parola_tekrar):
-#     """
-#     Kullanıcının girdiği yeni parolanın ve tekrarının aynı olup
-#     olmadığını kontrol eden method.
-#
-#     Args:
-#         parola(str): Yeni Parola
-#         parola_tekrar(str): Yeni Parolanın tekrarı
-#
-#     Returns:
-#
-#         (bool) True ya da False
-#
-#     """
-#     return parola == parola_tekrar, _(u'Yeni parolanız ve tekrarı uyuşmamaktadır.')
-#
-#
-# def yeni_parola_eski_parola_ayni_olmamasi_kontrolu(eski_parola, yeni_parola):
-#     """
-#     Kullanıcının girdiği yeni parolanın, güncel parola ile aynı olup olmadığını
-#     kontrol eden method. Aynı ise hatalı olduğu anlamında
-#     False, değil ise True yollanır.
-#
-#     Args:
-#         eski_parola(str): Güncel parola
-#         yeni_parola(str): Yeni parola
-#
-#     Returns:
-#
-#         (bool) True ya da False
-#
-#     """
-#     return not eski_parola == yeni_parola, _(u'Yeni parolanız ile eski parolanız aynı olmamalıdır.')
-#
-#
-# def guncel_kullanici_adi_kontrolu(guncel_kullanici_adi, kullanici_adi):
-#     """
-#     Kullanıcının güncel kullanıcı adı ile girilen kullanıcı adının
-#     aynı olup olmadığı kontrol edilir.
-#
-#     Args:
-#         guncel_kullanici_adi(str): Kullanıcının güncel kullanıcı adı
-#         kullanici_adi(str): Kullanıcının güncel kullanıcı adını doğrulamak
-#                             için girdiği kullanıcı adı
-#
-#     Returns:
-#
-#         (bool) True ya da False
-#         msg(str): hata mesajı
-#
-#     """
-#     return guncel_kullanici_adi == kullanici_adi, _(u'Kullanıcı adınızı yanlış girdiniz. Lütfen tekrar deneyiniz.')
-#
-#
-# def yeni_kullanici_adi_eskisiyle_ayni_olmamasi_kontrolu(eski_kullanici_adi, yeni_kullanici_adi):
-#     """
-#     Kullanıcının yeni kullanıcı adı ile eski kullanıcı adının aynı olmaması
-#     kontrol edilir.
-#
-#     Args:
-#         eski_kullanici_adi: Güncel kullanıcı adı
-#         yeni_kullanici_adi: Yeni kullanıcı adı
-#
-#     Returns:
-#         (bool) True ya da False
-#         msg(str): hata mesajı
-#
-#     """
-#     return eski_kullanici_adi != yeni_kullanici_adi, \
-#            _(u'Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır.')

@@ -24,11 +24,8 @@ class ParolaDegistir(CrudView):
         gösterilir.
 
         """
-        try:
-            if self.current.task_data['msg']:
+        if self.current.task_data.get('msg',None):
                 mesaj_goster(self, _(u'Parola Hatalı'))
-        except KeyError:
-            pass
 
         _form = JsonForm(current=self.current, title=_(u'Parola Değiştirme'))
         _form.help_text = _((u"Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:\n"
@@ -56,15 +53,12 @@ class ParolaDegistir(CrudView):
         """
         eski_parola = self.input['form']['eski_parola']
         yeni_parola = self.input['form']['yeni_parola']
+        self.current.task_data['yeni_parola'] = yeni_parola
         yeni_parola_tekrar = self.input['form']['yeni_parola_tekrar']
         kullanici = self.current.user
 
-        parola_uygunluk, hata_mesaji = parola_kontrolleri(yeni_parola, yeni_parola_tekrar, kullanici, eski_parola)
-
-        self.current.task_data['uygunluk'] = parola_uygunluk
-
-        if not parola_uygunluk:
-            self.current.task_data['msg'] = hata_mesaji
+        self.current.task_data['uygunluk'], self.current.task_data['msg'] = \
+            parola_kontrolleri(yeni_parola, yeni_parola_tekrar, kullanici, eski_parola)
 
     def yeni_parola_kaydet(self):
         """
@@ -74,18 +68,9 @@ class ParolaDegistir(CrudView):
         ve hata gösterilir.
 
         """
-        eski_parola = self.input['form']['eski_parola']
-        yeni_parola = self.input['form']['yeni_parola']
-        yeni_parola_tekrar = self.input['form']['yeni_parola_tekrar']
-        kullanici = self.current.user
-        self.current.task_data['islem'] = False
-
-        parola_uygunluk, hata_mesaji = parola_kontrolleri(yeni_parola, yeni_parola_tekrar, kullanici, eski_parola)
-
-        if parola_uygunluk:
-            self.current.user.set_password(yeni_parola)
-            self.current.user.save()
-            self.current.task_data['islem'] = True
-            self.current.task_data['msg'] = None
-            self.current.task_data['islem_mesaji'] = _(u"""Parolanız başarıyla değiştirildi. Çıkış
-                                                                 yapıp yeni parolanızla giriş yapabilirsiniz""")
+        self.current.user.set_password(self.current.task_data['yeni_parola'])
+        self.current.user.save()
+        self.current.task_data['islem'] = True
+        self.current.task_data['msg'] = None
+        self.current.task_data['islem_mesaji'] = _(u"""Parolanız başarıyla değiştirildi. Çıkış
+                                                             yapıp yeni parolanızla giriş yapabilirsiniz""")
