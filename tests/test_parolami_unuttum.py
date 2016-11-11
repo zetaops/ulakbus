@@ -7,7 +7,7 @@
 from ulakbus.models import User
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.lib.common import ParolaSifirlama
-from .test_profil_sayfasi_goruntuleme import parola_hatalari
+from .test_profil_islemleri import parola_hatalari
 
 
 class TestCase(BaseTestCase):
