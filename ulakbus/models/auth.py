@@ -257,6 +257,7 @@ class Unit(Model):
     is_active = field.Boolean(_(u"Aktif"))
     uid = field.Integer(index=True)
     parent = LinkProxy('Unit', verbose_name=_(u'Üst Birim'), reverse_name='alt_birimler')
+
     # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
@@ -271,6 +272,7 @@ class Unit(Model):
     @classmethod
     def get_role_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
+
         stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('key', flatten=True)
         for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
             stack.extend(cls.get_role_keys_by_yoksis(yoksis_no))
@@ -325,7 +327,8 @@ class Role(Model):
         verbose_name_plural = _(u"Roller")
         search_fields = ['name']
         list_fields = []
-        crud_extra_actions = [{'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
+        crud_extra_actions = [
+            {'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
 
     @property
     def is_staff(self):
@@ -359,8 +362,13 @@ class Role(Model):
             list: yetki listesi
 
         """
-        return [p.permission.code for p in self.Permissions if p.permission.code] + (
-            self.abstract_role.get_permissions() if self.abstract_role.key else [])
+        role_perms = [p.permission.code for p in self.Permissions if p.permission.code]
+        abstract_role_perms = self.abstract_role.get_permissions() if self.abstract_role.key else []
+        allow, ban = PermissionsRestrictions.get_role_restrictions(self)
+
+        perms = role_perms + abstract_role_perms + allow
+
+        return [p for p in perms if p not in ban]
 
     def _cache_permisisons(self, pcache):
         """
@@ -454,7 +462,6 @@ class Role(Model):
         """
         self.name = self._make_name()
 
-
     @classmethod
     @role_getter("Bölüm Başkanları")
     def get_bolum_baskanlari(cls):
@@ -476,39 +483,72 @@ class PermissionsRestrictions(Model):
     Başlangıç ve bitiş tarihleri kuralın geçerli olduğu zaman aralığını
     belirler.
 
-    `allow` ise kuralın yetkileri genişleteceğini mi yoksa
+    `allow_or_ban` ise kuralın yetkileri genişleteceğini mi yoksa
     sınırlandıracağını mı belirler.
 
     IPList kuralın geçerli olacağı IP adreslerini belirtir.
 
     Permissions ve AbstractRoles kuralın hangi yetkilere uygulanacağını belirtir.
 
-    Roles ise kuralın kimleri etkileyeceğini belirtir.
+    Roles ise kuralın kimi etkileyeceğini belirtir.
 
     """
-    allow = field.Boolean(_(u"Sınırlandırıcı"), default=False)
-    time_start = field.String(_(u"Başlama Tarihi"), index=True)
-    time_end = field.String(_(u"Bitiş Tarihi"), index=True)
+    allow_or_ban = field.Boolean(_(u"Yasakla / İzin Ver"), default=False)
+    time_start = field.DateTime(_(u"Başlangıç"), index=True)
+    time_end = field.DateTime(_(u"Bitiş"), index=True)
+    role_code = field.String("Role")
+    permission_code = field.String()
+    abstract_role_code = AbstractRole()
+    ip_address = field.String("IP")
 
     class Meta:
         app = 'Sistem'
         verbose_name = _(u"Sınırlandırılmış Yetki")
         verbose_name_plural = _(u"Sınırlandırılmış Yetkiler")
+        unique_together = [
+            ('role', 'permission_code'),
+            ('role', 'abstract_role_code'),
+        ]
 
     def __unicode__(self):
         return "%s - %s" % (self.time_start, self.time_end)
 
-    class IPList(ListNode):
-        ip = field.String()
+    def pre_save(self):
+        if self.permission_code and self.abstract_role_code:
+            raise IntegrityError(
+                "Only one of Permission and Group of Permission(AbstractRole) can be saved!")
 
-    class Permissions(ListNode):
-        permission = Permission()
+    @classmethod
+    def get_role_restrictions(cls, role):
+        """
+        Args:
+            role (Role): role instance
+        Returns:
+            tuple: allowed and banned permissions
 
-    class AbstractRoles(ListNode):
-        abstract_role = AbstractRole()
+        """
+        allow, ban = [], []
+        for rule in cls.objects.filter(role=role):
+            permissions = []
+            if rule.abstract_role_code:
+                permissions = AbstractRole.objects.get(rule.abstract_role_code).get_permissions()
+            elif rule.abstract_role_code:
+                permissions = [rule.permission_code]
+            allow.extend(permissions) if rule.allow_or_ban else ban.extend(permissions)
 
-    class Roles(ListNode):
-        role = Role()
+        return allow, ban
+
+        # class IPList(ListNode):
+        #     ip = field.String()
+        #
+        # class Permissions(ListNode):
+        #     permission = Permission()
+        #
+        # class AbstractRoles(ListNode):
+        #     abstract_role = AbstractRole()
+        #
+        # class Roles(ListNode):
+        #     role = Role()
 
 
 class AuthBackend(object):
