@@ -24,6 +24,11 @@ TRANSLATIONS_DIR = os.path.join(BASE_DIR, 'locale')
 # The language of messages in Ulakbus
 TRANSLATION_DOMAINS['messages'] = 'tr'
 
+# Default mail address
+MAIL_ADDRESS = 'postmaster@mg.ulakbus.net'
+# Demo main url
+DEMO_URL = 'http://dev.zetaops.io'
+
 # path of the activity modules which will be invoked by workflow tasks
 ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
 # absolute path to the workflow packages
