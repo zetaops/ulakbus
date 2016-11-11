@@ -469,19 +469,24 @@ class Role(Model):
         self.user.send_notification(title=title, message=message, typ=typ, url=url, sender=sender)
 
 
-class LimitedPermissions(Model):
-    """LimitedPermissions modeli
-    Bu modelde tutulan bilgilerle mevcut yetkilere sınırlandırmalar
-    getirilir.
+class PermissionsRestrictions(Model):
+    """PermissionsRestrictions yetki sınırlandırması ile ilgili kuralların
+    saklandığı data modelidir.
 
-    - Başlangıç ve bitiş tarihine göre sınırlandırma uygulanan yetkiler
-    o tarih aralığında geçerli olur.
+    Başlangıç ve bitiş tarihleri kuralın geçerli olduğu zaman aralığını
+    belirler.
 
-    - Verilen IPList özelliğine göre bu IPList listesi içindeki
-    ip'lerden gelen requestlere cevap verecek şekilde kısıtlanır.
+    `allow` ise kuralın yetkileri genişleteceğini mi yoksa
+    sınırlandıracağını mı belirler.
+
+    IPList kuralın geçerli olacağı IP adreslerini belirtir.
+
+    Permissions ve AbstractRoles kuralın hangi yetkilere uygulanacağını belirtir.
+
+    Roles ise kuralın kimleri etkileyeceğini belirtir.
 
     """
-    restrictive = field.Boolean(_(u"Sınırlandırıcı"), default=False)
+    allow = field.Boolean(_(u"Sınırlandırıcı"), default=False)
     time_start = field.String(_(u"Başlama Tarihi"), index=True)
     time_end = field.String(_(u"Bitiş Tarihi"), index=True)
 
