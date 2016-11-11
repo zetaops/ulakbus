@@ -305,7 +305,7 @@ class Role(Model):
     unit = Unit()
     typ = field.Integer(_(u"Rol Tipi"), choices=ROL_TIPI)
     name = field.String(_(u"Rol Adı"), hidden=True)
-    
+
     class Meta:
         app = 'Sistem'
         verbose_name = _(u"Rol")
@@ -545,7 +545,7 @@ class AuthBackend(object):
             user = User()
         return user
 
-    def set_user(self, user,role=None):
+    def set_user(self, user):
         """
         Kullanıcı datasını session'a yazar.
 
@@ -560,7 +560,7 @@ class AuthBackend(object):
         self.session['user_data'] = user.clean_value()
 
         # TODO: this should be remembered from previous login
-        default_role = role or user.role_set[0].role
+        default_role = user.role_set[0].role
         # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = default_role.key
         self.current.role_id = default_role.key
