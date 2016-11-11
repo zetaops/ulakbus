@@ -4,15 +4,14 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-from zengine.views.crud import CrudView
+from ulakbus.lib.views import UlakbusView
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.lib.translation import gettext as _
 from ulakbus.lib.common import parola_kontrolleri
-from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster
 
 
-class ParolaDegistir(CrudView):
+class ParolaDegistir(UlakbusView):
     """
     Kullanıcıların parolalarını değiştirebilmelerini sağlar.
     """
@@ -24,18 +23,19 @@ class ParolaDegistir(CrudView):
         gösterilir.
 
         """
-        if self.current.task_data.get('msg',None):
-                mesaj_goster(self, _(u'Parola Hatalı'))
+        if self.current.task_data.get('msg', None):
+            self.mesaj_kutusu_goster(_(u'Parola Hatalı'))
 
         _form = JsonForm(current=self.current, title=_(u'Parola Değiştirme'))
-        _form.help_text = _((u"Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:\n"
-                             u"\n"
-                             u"* Türkçe karakter içermemeli,\n"
-                             u"* 8 karakterden büyük olmalı,\n"
-                             u"* En az bir küçük harf, bir büyük harf, bir sayı ve bir özel karakter içermeli,\n"
-                             u"* Eski şifrenizle aynı olmamalıdır.\n"
-                             u"* Özel karakterler = [\* & ^ % $ @ ! ? . : / > < ; ]\n"
-                             u"* Örnek parola = Ulakbüs3\*\n"))
+        _form.help_text = _(
+            (u"Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:\n"
+             u"\n"
+             u"* Türkçe karakter içermemeli,\n"
+             u"* 8 karakterden büyük olmalı,\n"
+             u"* En az bir küçük harf, bir büyük harf, bir sayı ve bir özel karakter içermeli,\n"
+             u"* Eski şifrenizle aynı olmamalıdır.\n"
+             u"* Özel karakterler = [\* & ^ % $ @ ! ? . : / > < ; ]\n"
+             u"* Örnek parola = Ulakbüs3\*\n"))
 
         _form.eski_parola = fields.String(_(u"Şu an kullandığınız parolanızı giriniz."))
         _form.yeni_parola = fields.String(_(u"Yeni parolanızı giriniz."))
@@ -73,4 +73,4 @@ class ParolaDegistir(CrudView):
         self.current.task_data['islem'] = True
         self.current.task_data['msg'] = None
         self.current.task_data['islem_mesaji'] = _(u"""Parolanız başarıyla değiştirildi. Çıkış
-                                                             yapıp yeni parolanızla giriş yapabilirsiniz""")
+                                                    yapıp yeni parolanızla giriş yapabilirsiniz""")

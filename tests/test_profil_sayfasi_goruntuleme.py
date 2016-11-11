@@ -12,29 +12,30 @@ from ulakbus.lib.common import EPostaDogrulama
 
 k_adi_parametreleri = ['eski_k_adi', 'yeni_k_adi']
 k_adi_hatalari = [('yanlis_k_adi', 'yanlis_k_adi', 'Kullanıcı adınızı yanlış girdiniz'),
-                  ('ulakbus', 'ulakbus', 'Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır'),
+                  ('ulakbus', 'ulakbus',
+                   'Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır'),
                   ('ulakbus', 'personel_isleri_1', 'Böyle bir kullanıcı adı bulunmaktadır')]
 
 parola_parametreleri = ['eski_parola', 'yeni_parola', 'yeni_parola_tekrar']
-parola_hatalari = [('parola', 'parola', 'parola', 'Kullanmakta olduğunuz parolanızı yanlış girdiniz.'),
-                   ('123', 'paro', 'parola', 'Yeni parolanız ve tekrarı uyuşmamaktadır.'),
-                   ('123', '123', '123', 'Yeni parolanız ile eski parolanız aynı olmamalıdır.'),
-                   ('123', 'paro', 'paro', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'parolapar', 'parolapar', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'PAROLAPAR', 'PAROLAPAR', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'PaRoLaPaR', 'PaRoLaPaR', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'parola33', 'parola33', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'PAROLA33', 'PAROLA33', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'parola**', 'parola**', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'PAROLA**', 'PAROLA**', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', '*#&&*$%^&()', '*#&&*$%^&()', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', '123456789', '123456789', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'PaRoLaPaR', 'PaRoLaPaR', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
-                   ('123', 'yanliŞ*par3', 'yanliŞ*par3', 'Girmiş olduğunuz parola kurallara uymamaktadır.')]
+parola_hatalari = [
+    ('parola', 'parola', 'parola', 'Kullanmakta olduğunuz parolanızı yanlış girdiniz.'),
+    ('123', 'paro', 'parola', 'Yeni parolanız ve tekrarı uyuşmamaktadır.'),
+    ('123', '123', '123', 'Yeni parolanız ile eski parolanız aynı olmamalıdır.'),
+    ('123', 'paro', 'paro', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'parolapar', 'parolapar', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'PAROLAPAR', 'PAROLAPAR', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'PaRoLaPaR', 'PaRoLaPaR', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'parola33', 'parola33', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'PAROLA33', 'PAROLA33', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'parola**', 'parola**', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'PAROLA**', 'PAROLA**', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', '*#&&*$%^&()', '*#&&*$%^&()', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', '123456789', '123456789', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'PaRoLaPaR', 'PaRoLaPaR', 'Girmiş olduğunuz parola kurallara uymamaktadır.'),
+    ('123', 'yanliŞ*par3', 'yanliŞ*par3', 'Girmiş olduğunuz parola kurallara uymamaktadır.')]
 
 
 class TestCase(BaseTestCase):
-
     user_key = 'iG4mvjQrfkvTDvM6Jk56X5ILoJ'
     user = User.objects.get(user_key)
     user.e_mail = 'ulakbus_deneme_birincil_maili@ulakbus.com'
@@ -81,8 +82,9 @@ class TestCase(BaseTestCase):
         # Parola hataları için her bir parametre denenir.
         # Doğru hatanın ekranda gösterildiği test edilir.
         for hata in parola_hatalari:
-            resp = self.client.post(form={parola_parametreleri[0]: hata[0], parola_parametreleri[1]: hata[1],
-                                          parola_parametreleri[2]: hata[2]})
+            resp = self.client.post(
+                form={parola_parametreleri[0]: hata[0], parola_parametreleri[1]: hata[1],
+                      parola_parametreleri[2]: hata[2]})
             assert hata[3] in resp.json["msgbox"]["msg"]
 
     def test_parola_degistir_basarili_cikis_yapmadan_devam(self):
@@ -120,18 +122,22 @@ class TestCase(BaseTestCase):
         resp = self.client.post(form={'e_posta': 'ulakbus_mail@ulakbus_mail.com'})
         self.parola_deneme_basarisiz(resp)
 
-    def test_e_posta_degistir_link_yolla_basarili(self):
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
-        self.client.post()
-        # E-posta değiştirme iş akışına geçiş yapılır.
-        self.client.post(flow="e_posta_degistir")
-        # Geçerli e-posta adresi girilir.
-        resp = self.client.post(form={'e_posta': 'ulakbus_mail@ulakbus_mail.com'})
-        # Kullanıcının parolası doğru girilir.
-        resp = self.client.post(form={'parola': '123'})
-        # Girilen e-posta adresine doğrulama linki yollanılır ve kullanıcı bilgilendirilir.
-        # Mail yollandıktan sonra bilgilendirmenin olduğu test edilir.
-        assert 'E-Posta Doğrulama' == resp.json["msgbox"]["title"]
+
+    # Test edilecek kısım zato servisini kullandığından yoruma alınmıştır.
+    # Zato mock oluştuğunda test edilecektir.
+
+    # def test_e_posta_degistir_link_yolla_basarili(self):
+    #     self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+    #     self.client.post()
+    #     # E-posta değiştirme iş akışına geçiş yapılır.
+    #     self.client.post(flow="e_posta_degistir")
+    #     # Geçerli e-posta adresi girilir.
+    #     resp = self.client.post(form={'e_posta': 'ulakbus_mail@ulakbus_mail.com'})
+    #     # Kullanıcının parolası doğru girilir.
+    #     resp = self.client.post(form={'parola': '123'})
+    #     # Girilen e-posta adresine doğrulama linki yollanılır ve kullanıcı bilgilendirilir.
+    #     # Mail yollandıktan sonra bilgilendirmenin olduğu test edilir.
+    #     assert 'E-Posta Doğrulama' == resp.json["msgbox"]["title"]
 
     def test_parola_degistir_basarili_cikis(self):
         self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
@@ -196,7 +202,8 @@ class TestCase(BaseTestCase):
 
     def test_gecerli_link_basarili_islem(self):
         # Değiştirilecek e_posta adresi doğrulama kodu keyi ile cache e kaydedilir.
-        EPostaDogrulama('2fd1deed4653f40107571368cd46411088c7d988').set('ulakbus_mail@ulakbus_mail.com')
+        EPostaDogrulama('2fd1deed4653f40107571368cd46411088c7d988').set(
+            'ulakbus_mail@ulakbus_mail.com')
         # Linkle gelerek iş akışı tekrardan başlatılır.
         self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
         resp = self.client.post(model='dogrulama=2fd1deed4653f40107571368cd46411088c7d988')
@@ -214,7 +221,7 @@ class TestCase(BaseTestCase):
         user.e_mail = self.user.e_mail
         user.save()
 
-    def parola_deneme_basarisiz(self,resp):
+    def parola_deneme_basarisiz(self, resp):
         # Kullanıcıdan işlemin tammalanması için parolasının istendiği ekranın geldiği test edilir.
         assert "İşlem Onayı İçin Parola Doğrulama" == resp.json["forms"]["schema"]['title']
         # Kullanıcının parolasını yanlış girmesi durumunda hata mesajının gösterilmesi test edilir.
@@ -222,11 +229,11 @@ class TestCase(BaseTestCase):
             resp = self.client.post(form={'parola': 'yanlis_parola'})
             assert 'Hatalı Parola Girişi' in resp.json["msgbox"]["title"]
             assert 'Parolanızı yanlış' in resp.json["msgbox"]["msg"]
-        # Parolanın üç kez yanlış girilmesi halinde kullanıcıya zorla çıkış yaptırıldığı test edilir.
+        # Parolanın üç kez yanlış girilmesi halinde kullanıcıya
+        # zorla çıkış yaptırıldığı test edilir.
         resp = self.client.post(form={'parola': 'yanlis_parola'})
         assert resp.json["cmd"] == 'reload'
         assert 'Hatalı Parola' in resp.json["title"]
-
 
     def kullanici_adi_basarili_degisim(self):
         self.client.post(flow="kullanici_adi_degistir")
@@ -238,13 +245,13 @@ class TestCase(BaseTestCase):
         # Başarılı işlemden sonra 'İşlem Seçeneği' başlığı olduğu test edilir.
         assert "İşlem Seçeneği" == resp.json["forms"]["schema"]['title']
 
-
     def parola_basarili_degisim(self):
         # Kurallara uygun şekilde parola değiştirme işlemi yapılır.
         # Uygun parola en az bir büyük harf, bir küçük harf, bir sayı
         # ve bir özel karakterin bulunduğu 'Parola3*' parolasıdır.
-        resp = self.client.post(form={parola_parametreleri[0]: '123', parola_parametreleri[1]: 'Parola3*',
-                                      parola_parametreleri[2]: 'Parola3*'})
+        resp = self.client.post(
+            form={parola_parametreleri[0]: '123', parola_parametreleri[1]: 'Parola3*',
+                  parola_parametreleri[2]: 'Parola3*'})
 
         # Başarılı işlemden sonra 'İşlem Seçeneği' başlığı olduğu test edilir.
         assert "İşlem Seçeneği" == resp.json["forms"]["schema"]['title']

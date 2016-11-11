@@ -4,15 +4,14 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-from zengine.views.crud import CrudView
+from ulakbus.lib.views import UlakbusView
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.lib.translation import gettext as _
-from ulakbus.views.common.profil_sayfasi_goruntuleme import mesaj_goster
 from ulakbus.lib.common import kullanici_adi_kontrolleri
 
 
-class KullaniciAdiDegistir(CrudView):
+class KullaniciAdiDegistir(UlakbusView):
     """
     Kullanıcıların kullanıcı adlarını değiştirebilmelerini sağlar.
 
@@ -26,8 +25,8 @@ class KullaniciAdiDegistir(CrudView):
 
         """
         self.current.task_data['deneme_sayisi'] = 3
-        if self.current.task_data.get('msg',None):
-            mesaj_goster(self, _(u'Kullanıcı Adı Hatalı'))
+        if self.current.task_data.get('msg', None):
+            self.mesaj_kutusu_goster(_(u'Kullanıcı Adı Hatalı'))
 
         _form = JsonForm(current=self.current, title=_(u'Kullanıcı Adı Değiştirme'))
         _form.eski_k_adi = fields.String(_(u"Şu an kullandığınız kullanıcı adınızı giriniz."))
@@ -56,10 +55,10 @@ class KullaniciAdiDegistir(CrudView):
         """
 
         if self.current.task_data['msg']:
-            mesaj_goster(self, _(u'Hatalı Parola Girişi'))
-
+            self.mesaj_kutusu_goster(_(u'Hatalı Parola Girişi'))
         _form = JsonForm(current=self.current, title=_(u'İşlem Onayı İçin Parola Doğrulama'))
-        _form.parola = fields.String(_(u"Bu işlemi gerçekleştirebilmek için güncel parolanızı girmeniz gerekmektedir."))
+        _form.parola = fields.String(
+            _(u"Bu işlemi gerçekleştirebilmek için güncel parolanızı girmeniz gerekmektedir."))
         _form.dogrula = fields.Button(_(u"Parola Doğrula"))
         self.form_out(_form)
 
@@ -73,7 +72,8 @@ class KullaniciAdiDegistir(CrudView):
 
         self.current.task_data['deneme_sayisi'] -= 1
         self.current.task_data['msg'] = _(u'Parolanızı yanlış girdiniz. Lütfen tekrar deneyiniz.')
-        self.current.task_data['gecerli_sifre'] = self.current.user.check_password(self.current.input['form']['parola'])
+        self.current.task_data['gecerli_sifre'] = self.current.user.check_password(
+            self.current.input['form']['parola'])
 
     def cikis_mesaji_olustur(self):
         """

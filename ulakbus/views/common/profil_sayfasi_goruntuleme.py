@@ -4,11 +4,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-from zengine.views.crud import CrudView
+from ulakbus.lib.views import UlakbusView
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from ulakbus.models import User
-from ulakbus.lib.common import EPostaDogrulama, ParolaSifirlama
+from ulakbus.lib.common import EPostaDogrulama
 from zengine.lib import translation
 import re
 from zengine.lib.translation import gettext as _, gettext_lazy as __
@@ -25,7 +25,7 @@ class EPostaForm(JsonForm):
     birincil_e_posta = fields.String(__(u"Birincil e-postanız"))
 
 
-class ProfilGoruntule(CrudView):
+class ProfilGoruntule(UlakbusView):
     """
     Kullanıcıların profil sayfalarını görüntüleyebilmelerini,
     kullanıcı adı, şifre, e-posta, dil seçeneği gibi değişiklikleri
@@ -82,7 +82,8 @@ class ProfilGoruntule(CrudView):
         kullanici.save()
         EPostaDogrulama(self.current.task_data['kod']).delete()
         self.current.task_data['title'] = _(u'E-Posta Değişikliği')
-        self.current.task_data['msg'] = _(u'E-Posta değiştirme işleminiz başarıyla gerçekleştirilmiştir.')
+        self.current.task_data['msg'] = _(
+            u'E-Posta değiştirme işleminiz başarıyla gerçekleştirilmiştir.')
         self.current.task_data['type'] = 'info'
 
     def profil_sayfasi_goruntule(self):
@@ -93,26 +94,29 @@ class ProfilGoruntule(CrudView):
         """
 
         if self.current.task_data.get('msg', None):
-            mesaj_goster(self, self.current.task_data['title'], self.current.task_data['type'])
+            self.mesaj_kutusu_goster(self.current.task_data['title'], self.current.task_data['type'])
 
         u = User.objects.get(self.current.user_id)
-        _form = KullaniciForm(u, current=self.current, title=_(u'%s %s Profil Sayfası') % (u.name, u.surname))
+        _form = KullaniciForm(u, current=self.current,
+                              title=_(u'%s %s Profil Sayfası') % (u.name, u.surname))
         _form.sifre_degistir = fields.Button(_(u"Parola Değiştir"), flow="parola_degistir")
-        _form.k_adi_degistir = fields.Button(_(u"Kullanıcı Adı Değiştir"), flow="kullanici_adi_degistir")
+        _form.k_adi_degistir = fields.Button(_(u"Kullanıcı Adı Değiştir"),
+                                             flow="kullanici_adi_degistir")
         _form.e_posta_degistir = fields.Button(_(u"E-Posta Değiştir"), flow="e_posta_degistir")
         _form.kaydet = fields.Button(_(u"Kaydet"), flow="kaydet")
         self.form_out(_form)
 
     def degisiklik_sonrasi_islem(self):
         """
-        Kullanıcı adı veya parola değişikliğinden sonra kullanıcıya iki seçenek sunulur. Çıkış yapması
-        ya da çıkış yapmadan devam etmesi, bunu seçebileceği ekran gösterilir.
+        Kullanıcı adı veya parola değişikliğinden sonra kullanıcıya iki seçenek sunulur.
+        Çıkış yapması ya da çıkış yapmadan devam etmesi, bunu seçebileceği ekran gösterilir.
 
         """
         self.current.task_data['msg'] = _(u"""%s ya da çıkış yapmadan devam edebilirsiniz.
                             Eğer eski bilgilerinizin bilindiği şüphesine sahipseniz 'Çıkış Yap'
-                            seçeneğini seçmenizi öneririz.""") % self.current.task_data['islem_mesaji']
-        mesaj_goster(self, 'İşlem Bilgilendirme', 'info')
+                            seçeneğini seçmenizi öneririz.""") % self.current.task_data[
+            'islem_mesaji']
+        self.mesaj_kutusu_goster('İşlem Bilgilendirme', 'info')
 
         _form = JsonForm(current=self.current, title=_(u"İşlem Seçeneği"))
         _form.cikis = fields.Button(_(u"Çıkış Yap"), flow='cikis_yap')
@@ -138,19 +142,3 @@ class ProfilGoruntule(CrudView):
         self.current.task_data['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir.')
         self.current.task_data['title'] = _(u'Bilgilendirme Mesajı')
         self.current.task_data['type'] = 'info'
-
-
-def mesaj_goster(self, title, type='warning'):
-    """
-    Hatalı işlem, başarılı işlem gibi bir çok yerde kullanılan mesaj kutularını
-    her defasında tanımlamak yerine bu method yardımıyla kullanılmasını sağlar.
-
-    Args:
-        title (string): Mesaj kutusunun başlığı
-        type (string): Mesaj kutusunun tipi (warning, info)
-
-    """
-    self.current.output['msgbox'] = {
-        'type': type, "title": title,
-        "msg": self.current.task_data['msg']}
-    self.current.task_data['msg'] = None

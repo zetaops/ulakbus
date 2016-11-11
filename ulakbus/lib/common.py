@@ -19,16 +19,18 @@ SLOT_SURESI = 5
 # CPSolver'ın ID alanlarında kabul ettiği maximum değer
 SOLVER_MAX_ID = 900000000000000000
 
-# En az bir büyük harf, (?=.*?[A-Z])
-# En az bir küçük harf, (?=.*?[a-z])
-# En az bir sayı, (?=.*?[0-9])
-# En az bir özel karakter, (*&^%$@!?#.:/><; )
-# En az 8 en fazla 100 karakter .{8,100}
-# Türkçe karakter içermemesi (?=.*?^[^ıöüşçğ]*$)
+# En az bir büyük harf
+# En az bir küçük harf
+# En az bir sayı
+# En az bir özel karakter
+# En az 8 en fazla 100 karakter
+# Türkçe karakter içermemesi
 
 parola_kalibi = re.compile(
     "^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[\(\)\[\]\{\}!@#\$%\^&\*\+=\-§±_~\/|\\"
     "><\.,:;≤≥])[A-Za-z\d\(\)\[\]\{\}!@#\$%\^&\*\+=\-§±_~\/|\\><\.,:;≤≥]{8,100}$")
+
+e_posta_kalibi = re.compile('[^@]+@[^@]+\.[^@]+')
 
 
 def saat2slot(saat):
@@ -190,13 +192,26 @@ def parola_uygunlugu(parola):
     """
     return bool(re.match(parola_kalibi, parola))
 
-
-def kullanici_adi_uygunlugu(yeni_k_adi):
+def e_posta_uygunlugu(e_posta):
     """
-    Kullanıcının yeni kullanıcı adının başka bir kullanıcı
-    tarafından kullanıp kullanmadığını kontrol eden method.
-    Eğer kullanılıyorsa False, kullanılmıyorsa uygundur
-    anlamında True gönderilir.
+    Belirlenen e_posta adresi kalıbına göre verilen parolanın uyup uymadığı test edilir.
+
+    Args:
+        e_posta: Test edilecek e_posta adresi
+
+    Returns:
+        (bool): True ya da False
+
+    """
+    return bool(re.match(e_posta_kalibi, e_posta))
+
+
+
+def kullanici_adi_var_mi(yeni_k_adi):
+    """
+    Verilen kullanıcı adının başka bir kullanıcı
+    tarafından kullanıp kullanılmadığını kontrol eden method.
+    Eğer kullanılıyorsa True, kullanılmıyorsa False döndürülür.
 
     Args:
         yeni_kullanici_adi: Yeni kullanıcı adı
@@ -207,9 +222,9 @@ def kullanici_adi_uygunlugu(yeni_k_adi):
     """
     try:
         User.objects.get(username=yeni_k_adi)
-        return False
-    except ObjectDoesNotExist:
         return True
+    except ObjectDoesNotExist:
+        return False
 
 
 def kullanici_adi_kontrolleri(eski_k_adi, yeni_k_adi, guncel_k_adi):
@@ -232,7 +247,7 @@ def kullanici_adi_kontrolleri(eski_k_adi, yeni_k_adi, guncel_k_adi):
     if eski_k_adi == yeni_k_adi:
         return False, _(u'Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır.')
 
-    if not kullanici_adi_uygunlugu(yeni_k_adi):
+    if kullanici_adi_var_mi(yeni_k_adi):
         return False, _(u"""Böyle bir kullanıcı adı bulunmaktadır.
         Lütfen başka bir kullanıcı adı deneyiniz.""")
 
