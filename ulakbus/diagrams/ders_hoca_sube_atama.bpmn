@@ -4,7 +4,7 @@
     <bpmn2:participant id="_Participant_2" name="Ders Subelendirme" processRef="ders_hoca_sube_atama"/>
   </bpmn2:collaboration>
   <bpmn2:process id="ders_hoca_sube_atama" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_3" name="Lane Set 3">
+    <bpmn2:laneSet id="LaneSet_3" name="Ders Hoca Sube Atama">
       <bpmn2:lane id="Lane_1" name="Bolum Baskani">
         <bpmn2:flowNodeRef>ders_okutman_subelendir</bpmn2:flowNodeRef>
         <bpmn2:flowNodeRef>kaydet</bpmn2:flowNodeRef>

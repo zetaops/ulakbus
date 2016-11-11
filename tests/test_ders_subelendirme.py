@@ -87,9 +87,9 @@ class TestCase(BaseTestCase):
 
         assert len(ders.Degerlendirme) == len(Sinav.objects.filter(sube=yeni_sube_1_key, ders=ders))
         assert yeni_sube_1.ders_adi == "%s - %s %s" % (ders.ad, yeni_sube_1.ad, str(yeni_sube_1.kontenjan))
-        assert len(Channel.objects.filter(name="%s %s"%(ders.kod, yeni_sube_1.ad))) == 1
-        Channel.objects.filter(name="%s %s" % (ders.kod, yeni_sube_1.ad)).delete()
         yeni_sube_1.blocking_delete()
+        assert len(Channel.objects.filter(name="%s %s" % (ders.kod, yeni_sube_1.ad))) == 1
+        Channel.objects.filter(name="%s %s" % (ders.kod, yeni_sube_1.ad)).delete()
 
         assert len(Sube.objects.filter(ders_id="XERlRTgNiNwwm3P00sMoLv48hLh")) == len(subeler)
 
@@ -113,7 +113,7 @@ class TestCase(BaseTestCase):
         yeni_sube_2 = Sube.objects.get(yeni_sube_2_key)
         assert len(ders.Degerlendirme) == len(Sinav.objects.filter(sube=yeni_sube_2_key, ders=ders))
         assert yeni_sube_2.ders_adi == "%s - %s %s" % (ders.ad, yeni_sube_2.ad, str(yeni_sube_2.kontenjan))
-        assert len(Channel.objects.filter(name="%s %s"%(ders.kod, yeni_sube_2.ad))) == 1
+        assert len(Channel.objects.filter(name="%s %s" % (ders.kod, yeni_sube_2.ad))) == 1
         Channel.objects.filter(name="%s %s" % (ders.kod, yeni_sube_2.ad)).delete()
         yeni_sube_2.blocking_delete()
         assert len(Sube.objects.filter(ders_id="XERlRTgNiNwwm3P00sMoLv48hLh")) == len(subeler)
