@@ -409,10 +409,10 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
                 zamanlar = self._zamanlar(bolum, writer)
             with writer.element('rooms'):
                 odalar = self._odalar(bolum, writer)
-            with writer.element('exams'):
-                self._sinavlar(bolum, sinav_turleri, zamanlar, odalar, writer)
             with writer.element('students'):
-                self._ogrenciler(bolum, sinav_turleri, writer)
+                ogrenci_dersler = self._ogrenciler(bolum, sinav_turleri, writer)
+            with writer.element('exams'):
+                self._sinavlar(bolum, sinav_turleri, zamanlar, odalar, ogrenci_dersler, writer)
             with writer.element('instructors'):
                 self._sinirlandirmalar(bolum, writer)
 
@@ -505,7 +505,7 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
     def _sinav_id(self, sube, sinav):
         return '%i' % self._key2id('%s %i' % (sube.key, sinav.tur))
 
-    def _sinavlar(self, bolum, sinav_turleri, zamanlar, odalar, writer):
+    def _sinavlar(self, bolum, sinav_turleri, zamanlar, odalar, ogrenci_dersler, writer):
         """Sınavları, sınav planı çıktısına ekler.
 
         Args:
@@ -537,8 +537,11 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
                                                  # Sınavın en çok kaç odaya bölünebileceği
                                                  'maxRooms': '%i' % self._SINAV_MAX_ODA,
                                                  }):
-                            SinavEtkinligi(ders=ders, sube=sube, donem=donem, bolum=bolum,
-                                           unitime_key=sinav_id, published=False).save()
+                            etkinlik = SinavEtkinligi(ders=ders, sube=sube, donem=donem, bolum=bolum,
+                                           unitime_key=sinav_id, published=False)
+                            for ogrenci_id in ogrenci_dersler[ders.key]:
+                                etkinlik.Ogrenciler.add(ogrenci_id=ogrenci_id)
+                            etkinlik.save()
                             uygun_zamanlar = filter(lambda z: z[0] >= sinav.sinav_suresi, zamanlar.items())
                             for zaman, zaman_idleri in uygun_zamanlar:
                                 # Kısa süreli sınavların uzun zaman dilimlerine ayrılmasını önlemek için
@@ -573,17 +576,20 @@ class ExportExamTimetable(UnitimeEntityXMLExport):
                    OgrenciDersi.objects.filter(ders=ders, donem=donem).exclude(katilim_durumu=False)}
             ogrenciler.update(ods)
 
+        ders_ogrenciler = defaultdict(set)
         for ogrenci in ogrenciler:
             with writer.element('student', {'id': '%i' % self._key2id(ogrenci.key)}):
                 # Öğrencinin bu dönem aldığı ve devamsızlıktan kalmadığı dersleri
                 dersleri = list(OgrenciDersi.objects.filter(ogrenci=ogrenci, donem=donem).exclude(katilim_durumu=False))
                 sinav_idleri = set()
                 for ders in dersleri:
+                    ders_ogrenciler[ders.ders.key].add(ogrenci.key)
                     for sinav in ders.ders.Degerlendirme:
                         if sinav.tur not in sinav_turleri: continue
                         sinav_idleri.add(self._sinav_id(ders.sube, sinav))
                 for id_ in sinav_idleri:
                     writer.text_element('exam', attrs={'id': id_})
+        return ders_ogrenciler
 
     def _sinirlandirmalar(self, bolum, constraints):
         pass
