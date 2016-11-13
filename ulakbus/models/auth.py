@@ -51,6 +51,7 @@ class User(Model, BaseUser):
     name = field.String(_(u"First Name"), index=True)
     surname = field.String(_(u"Surname"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
+    last_login_role_key = field.String(_(u"Last Login Role Key"))
     locale_language = field.String(
         _(u"Preferred Language"),
         index=False,
@@ -59,7 +60,7 @@ class User(Model, BaseUser):
     )
     locale_datetime = field.String(_(u"Preferred Date and Time Format"), index=False,
                                    default=settings.DEFAULT_LOCALIZATION_FORMAT,
-                                   choices= translation.available_datetimes.items())
+                                   choices=translation.available_datetimes.items())
     locale_number = field.String(_(u"Preferred Number Format"), index=False,
                                  default=settings.DEFAULT_LOCALIZATION_FORMAT,
                                  choices=translation.available_numbers.items())
@@ -73,6 +74,10 @@ class User(Model, BaseUser):
     @lazy_property
     def full_name(self):
         return "%s %s" % (self.name, self.surname)
+
+    def last_login_role(self):
+
+        return Role.objects.get(self.last_login_role_key)
 
     def pre_save(self):
         if not self.username or not self.password:
@@ -258,8 +263,10 @@ class Unit(Model):
     @classmethod
     def get_user_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('user_id', flatten=True)
-        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list(
+            'user_id', flatten=True)
+        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no',
+                                                                                  flatten=True):
             stack.extend(cls.get_user_keys_by_yoksis(yoksis_no))
         return stack
 
@@ -312,7 +319,8 @@ class Role(Model):
         verbose_name_plural = _(u"Roller")
         search_fields = ['name']
         list_fields = []
-        crud_extra_actions = [{'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
+        crud_extra_actions = [
+            {'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
 
     @property
     def is_staff(self):
@@ -441,7 +449,6 @@ class Role(Model):
         """
         self.name = self._make_name()
 
-
     @classmethod
     @role_getter("Bölüm Başkanları")
     def get_bolum_baskanlari(cls):
@@ -545,28 +552,43 @@ class AuthBackend(object):
             user = User()
         return user
 
-    def set_user(self, user):
+    def set_user(self, user, role):
         """
         Kullanıcı datasını session'a yazar.
 
         Args:
             user: User nesnesi
+            role: Kullanıcının son aktif olduğu rolü varsa o
+                  yoksa default rolü
 
-        Returns:
 
         """
-        user = user
         self.session['user_id'] = user.key
         self.session['user_data'] = user.clean_value()
 
         # TODO: this should be remembered from previous login
-        default_role = user.role_set[0].role
         # self.session['role_data'] = default_role.clean_value()
-        self.session['role_id'] = default_role.key
-        self.current.role_id = default_role.key
+        self.session['role_id'] = role.key
+        self.current.role_id = role.key
         self.current.user_id = user.key
-        self.perm_cache = PermissionCache(default_role.key)
-        self.session['permissions'] = default_role.get_permissions()
+        self.perm_cache = PermissionCache(role.key)
+        self.session['permissions'] = role.get_permissions()
+
+    def find_user_role(self, user):
+        """
+        Eğer kullanıcı rol geçişi yaparsa, kullanıcının last_login_role_key
+        field'ına geçiş yaptığı rolün keyi yazılır. Kullanıcı çıkış yaptığında
+         ve tekrardan giriş yaptığında son rolü bu field'dan öğrenilir. Eğer
+        kullanıcının last_login_role_key field'ı dolu ise rol bilgisi oradan alınır.
+        Yoksa kullanıcının role_set'inden default rolü alınır.
+
+        Args:
+            user: User nesnesi
+
+        """
+        user_role = user.last_login_role() if user.last_login_role_key else user.role_set[0].role
+
+        self.set_user(user, user_role)
 
     def get_role(self):
         """session'da bir role_id varsa bu id'deki Role nesnesini döner.
@@ -606,7 +628,7 @@ class AuthBackend(object):
         user = User.objects.get(username=username)
         is_login_ok = user.check_password(password)
         if is_login_ok:
-            self.set_user(user)
+            self.find_user_role(user)
         else:
             pass
             # TODO: failed login attempts for a user should be counted
