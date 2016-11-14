@@ -263,10 +263,8 @@ class Unit(Model):
     @classmethod
     def get_user_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list(
-            'user_id', flatten=True)
-        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no',
-                                                                                  flatten=True):
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('user_id', flatten=True)
+        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
             stack.extend(cls.get_user_keys_by_yoksis(yoksis_no))
         return stack
 
@@ -319,8 +317,7 @@ class Role(Model):
         verbose_name_plural = _(u"Roller")
         search_fields = ['name']
         list_fields = []
-        crud_extra_actions = [
-            {'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
+        crud_extra_actions = [{'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
 
     @property
     def is_staff(self):
@@ -448,6 +445,7 @@ class Role(Model):
         çağırarak oluşturur.
         """
         self.name = self._make_name()
+
 
     @classmethod
     @role_getter("Bölüm Başkanları")
