@@ -223,8 +223,8 @@ class SinavEtkinligi(Model):
         room = Room(_(u'Sınav Yeri'), index=True)
 
     class Ogrenciler(ListNode):
-        ogrenci = Ogrenci('Öğrenci')
-        room = Room('Sınav Yeri')
+        ogrenci = Ogrenci(_(u'Öğrenci'))
+        room = Room(_(u'Sınav Yeri'), index=True)
 
     @classmethod
     def aktif_bolum_sinav_etkinlik_listesi(cls, donem, bolum):
@@ -233,7 +233,8 @@ class SinavEtkinligi(Model):
         listesini döndürür.
 
         """
-        return [e for e in cls.objects.filter(published=True, archived=False, donem=donem, bolum=bolum)]
+        return [e for e in
+                cls.objects.filter(published=True, archived=False, donem=donem, bolum=bolum)]
 
     def sinav_ogrenci_listesi(self):
         """
@@ -306,8 +307,12 @@ class SinavEtkinligi(Model):
 
         """
         donem = donem or Donem.guncel_donem()
-        return [e for e in cls.objects.filter(published=True, sube=sube, archived=archived,
-                                              donem=donem).order_by('-tarih')]
+        return [e for e in cls.objects.filter(
+            published=True,
+            sube=sube,
+            archived=archived,
+            donem=donem
+        ).order_by('-tarih')]
 
     def __unicode__(self):
         return '{} {} {}'.format(self.ders.ad, self.sube.ad, self.sinav_zamani())
@@ -351,5 +356,5 @@ class DerslikSinavPlani(Model):
     gun = field.Integer(_(u"Gün"), choices=HAFTA)
 
     def __unicode__(self):
-        return '{:%Y.%m.%d - %H:%M}'.format(self.tarih) if self.tarih else 'Henüz zamanlanmadi'
-    
+        return '{}/{}/{}'.format(dict(HAFTA)[self.gun], self.zaman_dilimi,
+                                 dict(uygunluk_durumu_listele())[self.durum])

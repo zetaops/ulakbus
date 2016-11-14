@@ -14,6 +14,37 @@ class TestCase(BaseTestCase):
 
     """
 
+    # s = Sube()
+    # s.donem = Donem.guncel_donem()
+    # s.blocking_save()
+    # sinav_etkinligi = SinavEtkinligi()
+    # sinav_etkinligi.sube = s
+    # sinav_etkinligi.donem = s.donem
+    # # sinav_etkinligi = SinavEtkinligi.objects.get('XHTfo0wYYxkWSv9YNTlG0XddL1l')
+    # sinav_etkinligi.SinavYerleri.clear()
+    # sinav_etkinligi.blocking_save()
+    # for i in range(11):
+    #     o = Ogrenci()
+    #     o.blocking_save()
+    #     od = OgrenciDersi()
+    #     od.ogrenci = o
+    #     od.sube = sinav_etkinligi.sube
+    #     od.blocking_save()
+    #
+    # cp = [3,5,5]
+    # for a in range(3):
+    #     r = Room()
+    #     r.capacity = cp[a]
+    #     r.blocking_save()
+    #     sinav_etkinligi.SinavYerleri(room = r)
+    #     sinav_etkinligi.blocking_save()
+    #
+    # for og in  OgrenciDersi.objects.filter(sube=sinav_etkinligi.sube, donem=sinav_etkinligi.donem):
+    #     sinav_etkinligi.Ogrenciler(ogrenci = og.ogrenci)
+    #     sinav_etkinligi.blocking_save()
+    #
+    #
+
     def test_ogrencileri_odalara_dagitma(self):
         """
         Sınav etkinliklerine katılacak öğrencilerin sınavlara girecekleri odalara
@@ -23,7 +54,13 @@ class TestCase(BaseTestCase):
         """
 
         # Sınav etkinliği seçilir.
-        sinav_etkinligi = SinavEtkinligi.objects.get('XHTfo0wYYxkWSv9YNTlG0XddL1l')
+        sinav_etkinligi = SinavEtkinligi.objects.get('H9mqfdqqnnBxKHgSCuX3cg0DPrI')
+
+        # Testin düzgün çalışabilmesi için,
+        # eğer varsa öğrencilerin atandığı sınav yerleri None yapılır.
+        # for room in sinav_etkinligi.Ogrenciler:
+        #     room.room = None
+        #     room.save()
 
         # Ogrenciler list node'unda bulunan obje sayısı, veritabanındaki kayıt sayısı ile
         # aynı olup olmadığı test edilir.
@@ -43,7 +80,7 @@ class TestCase(BaseTestCase):
         # Toplam öğrenci sayısının toplam kontenjan sayısına bölümüyle
         # her bir sınıfın dengeli olmasını sağlamak için gereken doluluk oranı
         # bulunur.
-        oran = SinavEtkinligi.doluluk_orani_hesapla(sinav_etkinligi)
+        oran = sinav_etkinligi.doluluk_orani_hesapla()
 
         # Bulunan bu oranın 1'e eşit ya da küçük olması kontrol edilir.
         assert oran <= 1
