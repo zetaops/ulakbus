@@ -26,6 +26,7 @@ from zengine.lib.cache import Cache
 from zengine.lib.translation import gettext_lazy as _, gettext
 from zengine.messaging.lib import BaseUser
 from zengine.lib import translation
+from datetime import datetime
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -498,7 +499,7 @@ class PermissionsRestrictions(Model):
     time_end = field.DateTime(_(u"Bitiş"), index=True)
     role_code = field.String("Role")
     permission_code = field.String()
-    abstract_role_code = AbstractRole()
+    abstract_role_code = field.String("Abstract Role")
     ip_address = field.String("IP")
 
     class Meta:
@@ -506,8 +507,8 @@ class PermissionsRestrictions(Model):
         verbose_name = _(u"Sınırlandırılmış Yetki")
         verbose_name_plural = _(u"Sınırlandırılmış Yetkiler")
         unique_together = [
-            ('role', 'permission_code'),
-            ('role', 'abstract_role_code'),
+            ('role_code', 'permission_code'),
+            ('role_code', 'abstract_role_code'),
         ]
 
     def __unicode__(self):
@@ -528,27 +529,22 @@ class PermissionsRestrictions(Model):
 
         """
         allow, ban = [], []
-        for rule in cls.objects.filter(role=role):
+        for rule in cls.objects.filter(role_code=role.key, time_end__lt=datetime.now()):
             permissions = []
             if rule.abstract_role_code:
                 permissions = AbstractRole.objects.get(rule.abstract_role_code).get_permissions()
-            elif rule.abstract_role_code:
+            elif rule.permission_code:
                 permissions = [rule.permission_code]
             allow.extend(permissions) if rule.allow_or_ban else ban.extend(permissions)
 
         return allow, ban
 
-        # class IPList(ListNode):
-        #     ip = field.String()
-        #
-        # class Permissions(ListNode):
-        #     permission = Permission()
-        #
-        # class AbstractRoles(ListNode):
-        #     abstract_role = AbstractRole()
-        #
-        # class Roles(ListNode):
-        #     role = Role()
+    @classmethod
+    def clean_up_expired_rules(cls):
+        """
+        cleans expired rules
+        """
+        cls.objects.filter(time_end__lt=datetime.now()).delete()
 
 
 class AuthBackend(object):
