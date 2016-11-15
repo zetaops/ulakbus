@@ -25,6 +25,7 @@ from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
 from zengine.lib.translation import gettext_lazy as _, gettext
 from zengine.messaging.lib import BaseUser
+from zengine.lib import translation
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -43,21 +44,25 @@ class User(Model, BaseUser):
     ait bir ve tek kullanıcı olması zorunludur.
 
     """
-    username = field.String(_(u"Username"), index=True)
-    password = field.String(_(u"Password"))
     avatar = field.File(_(u"Profile Photo"), random_name=True, required=False)
+    username = field.String(_(u"Username"), index=True, unique=True)
+    password = field.String(_(u"Password"))
+    e_mail = field.String(_(u"E-Mail"), index=True, unique=True)
     name = field.String(_(u"First Name"), index=True)
     surname = field.String(_(u"Surname"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
     locale_language = field.String(
         _(u"Preferred Language"),
         index=False,
-        default=settings.DEFAULT_LANG
+        default=settings.DEFAULT_LANG,
+        choices=translation.available_translations.items()
     )
     locale_datetime = field.String(_(u"Preferred Date and Time Format"), index=False,
-                                   default=settings.DEFAULT_LOCALIZATION_FORMAT)
+                                   default=settings.DEFAULT_LOCALIZATION_FORMAT,
+                                   choices= translation.available_datetimes.items())
     locale_number = field.String(_(u"Preferred Number Format"), index=False,
-                                 default=settings.DEFAULT_LOCALIZATION_FORMAT)
+                                 default=settings.DEFAULT_LOCALIZATION_FORMAT,
+                                 choices=translation.available_numbers.items())
 
     class Meta:
         app = 'Sistem'
@@ -85,6 +90,8 @@ class User(Model, BaseUser):
             return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
                 "%s@gmail.com" % self.username).hexdigest()
 
+    def __unicode__(self):
+        return "%s %s" % (self.name, self.surname)
 
 class Permission(Model):
     """Permission modeli

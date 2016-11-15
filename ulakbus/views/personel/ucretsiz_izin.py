@@ -70,14 +70,14 @@ class UcretsizIzinIslemleri(CrudView):
     def kontrol(self):
         self.set_form_data_to_object()
         if self.current.task_data['cmd'] == 'izine_ayir':
-            if self.object.baslangic_tarihi > self.object.bitis_tarihi:
+            if self.object.baslangic > self.object.bitis:
                 self.current.task_data['cmd'] = 'izne_ayir'
             else:
                 hitap_kaydi = HizmetKayitlari()
                 personel = self.object.personel
                 hitap_kaydi.personel = personel
                 hitap_kaydi.tckn = personel.tckn
-                hitap_kaydi.bitis_tarihi = self.object.baslangic_tarihi
+                hitap_kaydi.bitis_tarihi = self.object.baslangic
                 hitap_kaydi.gorev = ".."
                 hitap_kaydi.hizmet_sinifi = personel.hizmet_sinifi
                 hitap_kaydi.unvan_kod = personel.kadro().unvan_kod
