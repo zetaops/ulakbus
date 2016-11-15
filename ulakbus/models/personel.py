@@ -202,12 +202,13 @@ class Personel(Model):
 
     def post_save(self):
         # Personel oluştuğunda User Otomatik olarak Oluşturulacaktır
-        if not self.user:
-            self.user = User()
-            self.user.username = self.tckn
-            self.user.name = self.ad
-            self.user.surname = self.soyad
-            self.user.save()
+#        if not self.user:
+#            self.user = User()
+        self.user.username = self.tckn
+        self.user.password = self.tckn
+        self.user.name = self.ad
+        self.user.surname = self.soyad
+        self.user.save()
 
 class AdresBilgileri(Model):
     """Adres Bilgileri Modeli

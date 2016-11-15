@@ -10,7 +10,7 @@ sınıf ve metotları içeren modüldür.
 Kimlik ve İletişim Bilgileri iş akışının yürütülmesini sağlar.
 
 """
-
+from ulakbus.models import Personel
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.lib.translation import gettext as _, gettext_lazy
@@ -29,7 +29,7 @@ class KimlikBilgileriForm(JsonForm):
 
     class Meta:
         include = ['tckn', 'ad', 'soyad', 'cinsiyet', 'uyruk', 'medeni_hali', 'cuzdan_seri',
-                   'cuzdan_seri_no', 'baba_adi', 'ana_adi', 'dogum_tarihi', 'dogum_tarihi',
+                   'cuzdan_seri_no', 'baba_adi', 'ana_adi', 'dogum_tarihi',
                    'dogum_yeri', 'medeni_hali', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
                    'kayitli_oldugu_mahalle_koy',
                    'kayitli_oldugu_cilt_no', 'kayitli_oldugu_aile_sira_no',
@@ -129,6 +129,10 @@ class KimlikIletisim(CrudView):
     Adımlar arası geçiş manuel yürütülmektedir.
 
     """
+
+    def __init__(self, current=None):
+        super(KimlikIletisim, self).__init__(current)
+        self.object = Personel.objects.get(self.input['id'])
 
     class Meta:
         model = 'Personel'
