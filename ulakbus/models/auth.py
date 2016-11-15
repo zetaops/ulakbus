@@ -550,20 +550,18 @@ class AuthBackend(object):
             user = User()
         return user
 
-    def set_user(self, user, role):
+    def set_user(self, user):
         """
         Kullanıcı datasını session'a yazar.
 
         Args:
             user: User nesnesi
-            role: Kullanıcının son aktif olduğu rolü varsa o
-                  yoksa default rolü
 
 
         """
         self.session['user_id'] = user.key
         self.session['user_data'] = user.clean_value()
-
+        role = self.get_last_role()
         # TODO: this should be remembered from previous login
         # self.session['role_data'] = default_role.clean_value()
         self.session['role_id'] = role.key
@@ -572,7 +570,7 @@ class AuthBackend(object):
         self.perm_cache = PermissionCache(role.key)
         self.session['permissions'] = role.get_permissions()
 
-    def find_user_role(self, user):
+    def get_last_role(self):
         """
         Eğer kullanıcı rol geçişi yaparsa, kullanıcının last_login_role_key
         field'ına geçiş yaptığı rolün keyi yazılır. Kullanıcı çıkış yaptığında
@@ -580,13 +578,11 @@ class AuthBackend(object):
         kullanıcının last_login_role_key field'ı dolu ise rol bilgisi oradan alınır.
         Yoksa kullanıcının role_set'inden default rolü alınır.
 
-        Args:
-            user: User nesnesi
-
         """
-        user_role = user.last_login_role() if user.last_login_role_key else user.role_set[0].role
 
-        self.set_user(user, user_role)
+        user = self.get_user()
+        user_role = user.last_login_role() if user.last_login_role_key else user.role_set[0].role
+        return user_role
 
     def get_role(self):
         """session'da bir role_id varsa bu id'deki Role nesnesini döner.
@@ -626,7 +622,7 @@ class AuthBackend(object):
         user = User.objects.get(username=username)
         is_login_ok = user.check_password(password)
         if is_login_ok:
-            self.find_user_role(user)
+            self.set_user(user)
         else:
             pass
             # TODO: failed login attempts for a user should be counted
