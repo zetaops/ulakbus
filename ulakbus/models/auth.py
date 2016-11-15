@@ -562,8 +562,7 @@ class AuthBackend(object):
         self.session['user_id'] = user.key
         self.session['user_data'] = user.clean_value()
         role = self.get_last_role()
-        # TODO: this should be remembered from previous login
-        # self.session['role_data'] = default_role.clean_value()
+
         self.session['role_id'] = role.key
         self.current.role_id = role.key
         self.current.user_id = user.key
@@ -594,12 +593,6 @@ class AuthBackend(object):
             PermissionDenied:
 
         """
-        # if 'role_data' in self.session:
-        #     role = Role()
-        #     role.set_data(self.session['role_data'])
-        # if 'role_id' in self.session:
-        #     role.key = self.session['role_id']
-        # return role
         if 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
