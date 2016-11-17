@@ -84,8 +84,8 @@ class User(Model, BaseUser):
         Yoksa kullanıcının role_set'inden default rolü alınır.
 
         """
-        user_role = self.last_login_role() if self.last_login_role_key else self.role_set[0].role
-        return user_role
+        last_key = self.last_login_role_key
+        return Role.objects.get(last_key) if last_key else self.role_set[0].role
 
     def pre_save(self):
         if not self.username or not self.password:
