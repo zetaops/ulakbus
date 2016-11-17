@@ -76,8 +76,16 @@ class User(Model, BaseUser):
         return "%s %s" % (self.name, self.surname)
 
     def last_login_role(self):
+        """
+        Eğer kullanıcı rol geçişi yaparsa, kullanıcının last_login_role_key
+        field'ına geçiş yaptığı rolün keyi yazılır. Kullanıcı çıkış yaptığında
+         ve tekrardan giriş yaptığında son rolü bu field'dan öğrenilir. Eğer
+        kullanıcının last_login_role_key field'ı dolu ise rol bilgisi oradan alınır.
+        Yoksa kullanıcının role_set'inden default rolü alınır.
 
-        return Role.objects.get(self.last_login_role_key)
+        """
+        user_role = self.last_login_role() if self.last_login_role_key else self.role_set[0].role
+        return user_role
 
     def pre_save(self):
         if not self.username or not self.password:
@@ -561,27 +569,12 @@ class AuthBackend(object):
         """
         self.session['user_id'] = user.key
         self.session['user_data'] = user.clean_value()
-        role = self.get_last_role()
-
+        role = user.last_login_role()
         self.session['role_id'] = role.key
         self.current.role_id = role.key
         self.current.user_id = user.key
         self.perm_cache = PermissionCache(role.key)
         self.session['permissions'] = role.get_permissions()
-
-    def get_last_role(self):
-        """
-        Eğer kullanıcı rol geçişi yaparsa, kullanıcının last_login_role_key
-        field'ına geçiş yaptığı rolün keyi yazılır. Kullanıcı çıkış yaptığında
-         ve tekrardan giriş yaptığında son rolü bu field'dan öğrenilir. Eğer
-        kullanıcının last_login_role_key field'ı dolu ise rol bilgisi oradan alınır.
-        Yoksa kullanıcının role_set'inden default rolü alınır.
-
-        """
-
-        user = self.get_user()
-        user_role = user.last_login_role() if user.last_login_role_key else user.role_set[0].role
-        return user_role
 
     def get_role(self):
         """session'da bir role_id varsa bu id'deki Role nesnesini döner.
