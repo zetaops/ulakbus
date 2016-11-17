@@ -9,8 +9,8 @@
 
 __author__ = 'Mithat Raşit Özçıkrıkcı'
 
-from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import User, Personel
+from zengine.lib.test_utils import BaseTestCase
 import datetime
 
 

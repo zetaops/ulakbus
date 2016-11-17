@@ -21,21 +21,24 @@ class TestCase(BaseTestCase):
     """
 
     def test_ogrenci_mezuniyet(self):
-        """personel_isleri_1 kullanıcısı giriş yapar ve RnKyAoVDT9Hc89KEZecz0kSRXRF keyine sahip öğrencinin
-        kayıtlı olduğu UEGET7qn9CDj9VEj4n0nbQ7m89d keyine sahip proggramdan mezuniyet kaydını yapar.
+        """ogrenci_isleri_1 kullanıcısı giriş yapar ve
+        RnKyAoVDT9Hc89KEZecz0kSRXRF keyine sahip öğrencinin
+        kayıtlı olduğu UEGET7qn9CDj9VEj4n0nbQ7m89d keyine sahip
+        proggramdan mezuniyet kaydını yapar.
 
         Bu iş akışı iki adımadan oluşmaktadır:
 
         İlk adımda öğrencinin kayıtlı olduğu bölümler listelenir.
 
-        İkinci adımda ise seçilen bölüm üzerinden mezuniyet kaydı yapılır ve ekrana yapılan işlemle
-        ilgi özet bilgi basılır. Mezuniyet tarihi olarak, öğrencinin en son girdiği sınav tarihi
-        eklenir.
+        İkinci adımda ise seçilen bölüm üzerinden mezuniyet kaydı
+        yapılır ve ekrana yapılan işlemle ilgi özet bilgi basılır.
+        Mezuniyet tarihi olarak, öğrencinin en son girdiği sınav
+        tarihi eklenir.
 
-        Öğrencinin en son girdiği sınavın tarihi ile `OgrenciProgram` modelinden dönen mezuniyet
-        tarihinin aynı olması beklenir.
+        Öğrencinin en son girdiği sınavın tarihi ile `OgrenciProgram`
+        modelinden dönen mezuniyet tarihinin aynı olması beklenir.
 
-        personel_isleri_1 adlı kullanıcıya çıkış yaptırılır.
+        ogrenci_isleri_1 adlı kullanıcıya çıkış yaptırılır.
 
         """
 
@@ -44,7 +47,7 @@ class TestCase(BaseTestCase):
         program_id = "7GPhFaFbPqysh7mnkkd9Bq3cmCh"
 
         # veritabanından personel_isleri_1 seçilir
-        usr = User.objects.get(username='personel_isleri_1')
+        usr = User.objects.get(username='ogrenci_isleri_1')
         ogrenci = Ogrenci.objects.get(ogrenci_id)
         ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci)
         time.sleep(1)

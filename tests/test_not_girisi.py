@@ -7,7 +7,7 @@
 
 import time
 
-from ulakbus.models import OgrenciDersi
+from ulakbus.models import OgrenciDersi, Sinav
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import User
 
@@ -67,29 +67,26 @@ class TestCase(BaseTestCase):
 
         # Ders şubesi seçilir.
         self.client.post(cmd='Ders Şubesi Seçin',
-                         form=dict(sube='S7z8bvdNCBFSd9iCvQrb7O1pQ75', sec=1))
+                         form=dict(sube='PRGgozMfVXSrAqyO2aMnjS6aBQo', sec=1))
         # Seçilen şubeye ait sınav seçilir.
         resp = self.client.post(cmd='Sınav Seçin',
-                                form=dict(sinav='7isfBEsi96AVDZdp2o33mQoWemJ', sec=1))
+                                form=dict(sinav='L1gyNxQ39rGpAvdA0zYEEpAdslh', sec=1))
 
         assert resp.json['msgbox']['title'] == 'Notlar Onaylandı'
 
         # Veritabanından çekilen öğrenci bilgisi ile sunucudan gelen öğrenci bilgisi
         # karşılaştırılarak test edilir.
         for i in range(0, len(resp.json['object']['fields'])):
-            ogrenci_ders = OgrenciDersi.objects.filter(sube_id='S7z8bvdNCBFSd9iCvQrb7O1pQ75')
-            ogrenci_ad = ogrenci_ders[i].ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders[
-                i].ogrenci_program.ogrenci.soyad
-            assert ogrenci_ad == resp.json['object']['fields'][i]['Adı Soyadı']
+            ogrenci_ders = OgrenciDersi.objects.filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')[i]
+            ogrenci_ad = "%s %s" % (ogrenci_ders.ogrenci_program.ogrenci.ad,
+                                    ogrenci_ders.ogrenci_program.ogrenci.soyad)
+            assert ogrenci_ad == resp.json['object']['fields'][i][u'Adı Soyadı']
 
-        # Ders seçim ekranına geri döner
+        # Sınav seçim ekranına geri döner
         self.client.post(cmd='ders_sec',
-                         form=dict(sinav_secim='null', ders_secim=1),
-                         flow='ders_secim_adimina_don')
-        # Ders şubesi seçilir.
-        self.client.post(cmd='Ders Şubesi Seçin',
-                         form=dict(sube='PRGgozMfVXSrAqyO2aMnjS6aBQo', sec=1))
-        # Sınav seçilir.
+                         form=dict(sinav_secim=1, ders_secim='null'),
+                         flow='sinav_secim_adimina_don')
+
         resp = self.client.post(cmd='Sınav Seçin',
                                 form=dict(sinav='IvXH1cqyYoHznv0iRV4FjLvXWwz', sec=1))
 
@@ -101,7 +98,8 @@ class TestCase(BaseTestCase):
         # karşılaştırılarak test edilir.
         for i in range(0, len(resp.json['forms']['model']['Ogrenciler'])):
             ogrenci_ders = OgrenciDersi.objects.filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')[i]
-            ogrenci_ad = ogrenci_ders.ogrenci_program.ogrenci.ad + ' ' + ogrenci_ders.ogrenci_program.ogrenci.soyad
+            ogrenci_ad = "%s %s" % (ogrenci_ders.ogrenci_program.ogrenci.ad,
+                                    ogrenci_ders.ogrenci_program.ogrenci.soyad)
             assert ogrenci_ad == resp.json['forms']['model']['Ogrenciler'][i]['ad_soyad']
 
         # Öğrencilerin sayısı.
@@ -122,7 +120,7 @@ class TestCase(BaseTestCase):
         assert resp.json['msgbox']['title'] == 'Notlar Kaydedildi'
 
         # İş akışı tekrardan başlatılır.
-        resp = self.client.set_path('/okutman_not_girisi')
+        self.client.set_path('/okutman_not_girisi')
         self.client.post()
 
         # Ders şubesi seçilir.
@@ -135,3 +133,9 @@ class TestCase(BaseTestCase):
 
         assert num_of_ogrenci == len(resp.json['object']['fields'])
         assert resp.json['msgbox']['title'] == 'Notlar Onaylandı'
+
+        # Ilgili Sinav tekrardan degerlendirilebilir
+        sinav = Sinav.objects.get('IvXH1cqyYoHznv0iRV4FjLvXWwz')
+        sinav.degerlendirme = False
+        sinav.save()
+

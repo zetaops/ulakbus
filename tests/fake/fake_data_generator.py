@@ -10,6 +10,9 @@ from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman,
 from ulakbus.models.ogrenci import OgrenciProgram, OgrenciDersi, DersKatilimi
 from ulakbus.models.ogrenci import Borc, DegerlendirmeNot, HariciOkutman, DonemDanisman
 from ulakbus.models.personel import Personel
+from ulakbus.models.ders_sinav_programi import OgElemaniZamanPlani, ZamanCetveli, ZamanDilimleri,\
+    HAFTA, uygunluk_durumu_listele, DerslikZamanPlani
+from ulakbus.lib.date_time_helper import gun_dilimi_listele
 from ulakbus.models.buildings_rooms import Campus, Building, Room, RoomType
 from .general import ints, gender, marital_status, blood_type, create_fake_geo_data
 from .general import driver_license_class, id_card_serial, birth_date
@@ -17,11 +20,15 @@ from .general import fake
 from user import new_user
 import random
 import datetime
+import time
 
 __author__ = 'Halil İbrahim Yılmaz'
 
 
 class FakeDataGenerator:
+    def __init__(self):
+        pass
+
     @staticmethod
     def yeni_kampus(kampus_say=2):
         """
@@ -87,7 +94,7 @@ class FakeDataGenerator:
 
             if Donem.objects.filter(ad="%s - %s" % (ad, year)).count() < 1:
                 if guncel:
-                    for d in Donem.objects.filter():
+                    for d in list(Donem.objects.filter()):
                         d.guncel = False
                         d.save()
                     donem.guncel = True
@@ -100,7 +107,37 @@ class FakeDataGenerator:
 
         return donem_list
 
-    def yeni_bina(self):
+    def yeni_zaman_dilimleri(self, bolum):
+        """Bölüm için rastgele ders programı zaman dilimleri oluşturur.
+
+        Args:
+            bolum (Unit): Zaman dilimleri oluşturulacak bölüm.
+
+        Returns:
+            `list` of `ZamanDilimleri`: Oluşturulan zaman dilimleri.
+        """
+        zaman_dilimleri = []
+        saat = random.randint(7, 9)
+        dakika = random.choice(['00', '00', '30'])
+        for dilim, dilim_adi in gun_dilimi_listele():
+            z = ZamanDilimleri()
+            z.birim = bolum
+            z.gun_dilimi = dilim
+            z.baslama_saat = str(saat)
+            z.baslama_dakika = dakika
+            # Her bir zaman dilimi 3-4 saat sürer
+            saat += random.randint(3, 4)
+            z.bitis_saat = str(saat)
+            z.bitis_dakika = dakika
+            z.ders_araligi = random.choice([30, 60, 60, 60, 90])
+            z.ara_suresi = random.choice([5, 10, 10, 15])
+            z.save()
+            zaman_dilimleri.append(z)
+            # İki zaman dilimi arasında boşluk olabilir
+            saat += random.choice([0, 0, 0, 1])
+        return zaman_dilimleri
+
+    def yeni_bina(self,fakulte= None):
         """
         Her bir fakulte icin, fakulte adi ile bir bina kaydı oluşturup kaydeder.
         Olusturulan her bir bina icin rastgele oda kayitlari olusturur.
@@ -111,18 +148,20 @@ class FakeDataGenerator:
 
         """
         import time
-
-        building_list = []
-        room_list = []
-        uni = Unit.objects.filter(parent_unit_no=0)[0]
+        uni = Unit.objects.get(parent_unit_no=0)
         campus = random.choice(Campus.objects.filter())
-
+        # campus = Campus.objects.filter()[0]
         # Eğer daha önceden oluşturulmuş oda tipi yoksa
         if RoomType.objects.count() < 1:
-            self.yeni_oda_tipi()
+            self.yeni_oda_tipi('Derslik', sinav_uygun=True)
+            self.yeni_oda_tipi('Laboratuvar')
+            self.yeni_oda_tipi('Studyo')
             time.sleep(3)
 
-        faculty_list = Unit.objects.filter(parent_unit_no=uni.yoksis_no)
+        if fakulte is None:
+            faculty_list = list(Unit.objects.filter(parent_unit_no=uni.yoksis_no, unit_type = "Fakülte"))
+        else:
+            faculty_list = [fakulte]
 
         for faculty in faculty_list:
             b = Building()
@@ -132,16 +171,9 @@ class FakeDataGenerator:
             b.coordinate_y = campus.coordinate_y
             b.campus = campus
             b.save()
-            building_list.append(b.name)
-            time.sleep(1)
-            new_room = self.yeni_derslik(building=b, parent_unit_no=faculty.yoksis_no,
-                                         count=random.choice(range(10, 20)))
-            room_list.append(new_room)
+            self.yeni_derslik(building=b, parent_unit_no=faculty.yoksis_no, count=random.choice(range(10, 20)))
 
-        return building_list, room_list
-
-    @staticmethod
-    def yeni_derslik(building, parent_unit_no, count=1):
+    def yeni_derslik(self, building, parent_unit_no, count=1):
         """
         Rastgele verileri ve parametre olarak verilen verileri kullanarak
         yeni derslik kaydı oluştururup kaydeder.
@@ -156,42 +188,62 @@ class FakeDataGenerator:
 
         """
 
-        room_list = []
-        unit_list = Unit.objects.filter(parent_unit_no=parent_unit_no, unit_type="Bölüm")
-        room_types = RoomType.objects.filter()
-        for i in range(1, count):
-            room = Room(
-                code=fake.classroom_code(),
-                name=fake.classroom(),
-                building=building,
-                room_type=random.choice(room_types),
-                floor=ints(2),
-                capacity=random.choice(range(30, 100)),
-                is_active=True
-            )
-            for unit in unit_list:
-                room.RoomDepartments(unit=unit)
-            room.save()
-            room_list.append("%s - %s" % (room.code, room.name))
-        return room_list
+        unit_list = list(Unit.objects.filter(parent_unit_no=parent_unit_no, unit_type="Bölüm"))
+        room_types = list(RoomType.objects.filter())
+        for unit in unit_list:
+            for i in range(1, count+1):
+                capacity = random.choice(range(30, 100))
+                room = Room(
+                    code=fake.classroom_code()+str(i),
+                    name=fake.classroom(),
+                    unit=unit,
+                    building=building,
+                    room_type=random.choice(room_types),
+                    floor=ints(2),
+                    capacity=capacity,
+                    is_active=True,
+                    exam_capacity=random.choice(range(20, capacity))
+                )
+
+                room.save()
 
     @staticmethod
-    def yeni_oda_tipi(oda_tip="Derslik"):
+    def yeni_oda_tipi(oda_tip="Derslik", sinav_uygun=False):
         """
         RoomType modeli için verilen tipte oda tipi oluşturur. Varsayılan tip Derslik'tir
 
         Args:
             oda_tip (str) : Oluşturulacak oda tipinin adı
+            sinav_uygun (bool) : Odanın sınav yapmak için uygunluğu
 
         Returns:
              room_type (RoomType) : RoomType nesnesi
 
         """
 
-        room_type = RoomType(type=oda_tip)
+        room_type = RoomType(type=oda_tip, exam_available=sinav_uygun)
         room_type.save()
 
         return room_type
+
+    @staticmethod
+    def yeni_derslik_zaman_plani(derslik, bolum):
+        dakika = random.choice(['0', '0', '30'])
+        for gun, gun_adi in HAFTA:
+            saat = random.randint(7,9)
+            while saat < 18:
+                d = DerslikZamanPlani()
+                d.birim = bolum
+                d.derslik = derslik
+                d.gun = gun
+                d.baslangic_saat = str(saat)
+                d.baslangic_dakika = dakika
+                saat += random.randint(4, 6)
+                d.bitis_saat = str(saat)
+                d.bitis_dakika = dakika
+                saat += random.choice([0, 0, 0, 1])
+                d.durum = random.choice([1, 1, 1, 1, 2, 3])
+                d.save()
 
     @staticmethod
     def yeni_personel(personel_turu=1, unit='', personel_say=1, user=None):
@@ -224,7 +276,6 @@ class FakeDataGenerator:
             p.ikamet_il = fake.state()
             p.ikamet_ilce = fake.state()
             p.adres_2 = fake.address()
-            # p.adres_2_posta_kodu = fake.postcode()
             p.oda_no = fake.classroom_code()
             p.oda_tel_no = fake.phone_number()
             p.cep_telefonu = fake.phone_number()
@@ -251,18 +302,18 @@ class FakeDataGenerator:
             p.hizmet_sinifi = random.choice(range(1, 30))
             p.birim = unit
             p.gorev_suresi_baslama = (datetime.datetime.now() - datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
             p.goreve_baslama_tarihi = p.gorev_suresi_baslama
 
             p.gorev_suresi_bitis = (datetime.datetime.now() + datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
 
             p.kh_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
             p.ga_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
             p.em_sonraki_terfi_tarihi = (datetime.datetime.now() + datetime.timedelta(
-                                        days=random.choice(range(1, 30))))
+                days=random.choice(range(1, 30))))
 
             p.kazanilmis_hak_derece = random.randint(1, 7)
             p.kazanilmis_hak_kademe = random.randint(1, 8)
@@ -276,12 +327,16 @@ class FakeDataGenerator:
             p.emekli_muktesebat_kademe = random.randint(1, 8)
             p.emekli_muktesebat_ekgosterge = random.randint(1000, 3000)
 
+            p.gorunen_gorev_ayligi_kademe = random.randint(1, 8)
+            p.gorunen_kazanilmis_hak_kademe = random.randint(1, 8)
+
+
             if user:
                 p.user = user
             else:
                 username = fake.slug(u'%s-%s' % (p.ad, p.soyad))
-                user = new_user(username=username)
-                p.user = user
+                n_user = new_user(username=username)
+                p.user = n_user
 
             p.save()
             personel_list.append(p)
@@ -318,6 +373,60 @@ class FakeDataGenerator:
             except:
                 pass
         return okutman_list
+
+    @staticmethod
+    def yeni_zaman_planlari(okutman, bolum):
+        """Okutmanın, verilen bölüm için zaman planını oluşturur.
+
+        Args:
+            okutman (Okutman): Zaman planı oluşturulacak olan öğretim görevlisi.
+            bolum (Unit): Oluşturulacak zaman planı, okutmanın bu bölümde
+                verdiği derslerde geçerli olacaktır.
+
+        Returns:
+           `list` of `OgElemaniZamanPlani`: Oluşturulan zaman planı.
+        """
+        # Okutmanın bilgilerini topla
+        dersler = {sube.ders() for sube in Sube.objects.filter(okutman=okutman)}
+        programlar = {ders.program() for ders in dersler}
+        bolumler = {program.bolum() for program in programlar}
+
+        planlar = []
+        for bolum in bolumler:
+            plan = OgElemaniZamanPlani()
+            plan.okutman = okutman
+            plan.birim = bolum
+            plan.toplam_ders_saati = sum([ders.teori_saati + ders.uygulama_saati
+                                          for ders in dersler
+                                          if ders.program().bolum() == bolum])
+            plan.save()
+            planlar.append(plan)
+        return planlar
+
+    @staticmethod
+    def yeni_zaman_cetvelleri(planlar):
+        """Zaman planları için zaman cetvellerini oluşturur.
+
+        Args:
+            planlar (`list` of `OgElemaniZamanPlani`): Zaman cetvellerinin bağlı olduğu zaman planları
+
+        Returns:
+            `list` of `ZamanCetveli`: Oluşturulan zaman cetvelleri
+        """
+        cetveller = []
+        for plan in planlar:
+            birim = plan.birim()
+            for gun, gun_adi in HAFTA:
+                for zaman_dilimi in ZamanDilimleri.objects.filter(birim=birim):
+                    cetvel = ZamanCetveli()
+                    cetvel.birim = birim
+                    cetvel.gun = gun
+                    cetvel.zaman_dilimi = zaman_dilimi
+                    cetvel.durum = random.choice(dict(uygunluk_durumu_listele()).keys())
+                    cetvel.ogretim_elemani_zaman_plani = plan
+                    cetvel.save()
+                    cetveller.append(cetvel)
+        return cetveller
 
     @staticmethod
     def yeni_harici_okutman(harici_okutman_say=1):
@@ -382,6 +491,7 @@ class FakeDataGenerator:
             ogrenci_say (int): Oluşturulacak ogrenci sayısı
             program (object): Ogrencinin kaydedilecegi program
             personel (object): Ogrencinin programdaki danisamani
+            user (object): Ogrencinin atanacagi user
 
         Returns:
             Ogrenci (list): Yeni öğrenci kaydı
@@ -460,7 +570,7 @@ class FakeDataGenerator:
         return program_list
 
     @staticmethod
-    def yeni_ders(program, personel, donem, ders_say=1):
+    def yeni_ders(program, personel, donem, ders_say=1, ontanimli_sube=False):
         """
         Rastgele verileri ve parametre olarak verilen veriyi
         kullanarak yeni ders kaydı oluştururup kaydeder.
@@ -479,6 +589,10 @@ class FakeDataGenerator:
         yerel_kredi = random.choice([2, 2, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 6, 6, 6, 8, 8])
 
         ders_list = []
+        room_type_list = list(RoomType.objects)
+        sube_olustur = Ders.ontanimli_sube_olustur
+        if not ontanimli_sube:
+            Ders.ontanimli_sube_olustur = lambda x: None
         for i in range(ders_say):
             d = Ders()
             d.ad = fake.lecture()
@@ -490,10 +604,21 @@ class FakeDataGenerator:
             d.uygulama_saati = yerel_kredi / 2
             d.teori_saati = yerel_kredi / 2
             d.program = program
+            # Güz dönemi ise program dönemleri tek, bahar dönemi ise çift
+            d.program_donemi = random.choice([1, 3, 5, 7] if donem.baslangic_tarihi in range(8, 11)
+                                             else [2, 4, 6, 8])
             d.donem = donem
             d.ders_koordinatoru = personel
+            for derslik_turu in random.sample(room_type_list, random.randint(1, len(room_type_list))):
+                d.DerslikTurleri.add(sinif_turu = derslik_turu,ders_saati = random.randint(1,5))
+
+            for degerlendirme_turu in [1, 2, 3, 4, 5, 6, 7]:
+                d.Degerlendirme(tur=degerlendirme_turu,
+                                sinav_suresi=random.choice([60, 90, 120]),
+                                toplam_puana_etki_yuzdesi=random.choice([20, 30, 40, 50]))
             d.save()
             ders_list.append(d)
+        Ders.ontanimli_sube_olustur = sube_olustur
         return ders_list
 
     @staticmethod
@@ -517,8 +642,8 @@ class FakeDataGenerator:
         for i in range(sube_say):
             s = Sube()
             s.ad = fake.classroom_code()
-            s.kontenjan = random.randint(1, 500)
-            s.dis_kontenjan = random.randint(1, 500)
+            s.kontenjan = random.randint(10, 80)
+            s.dis_kontenjan = random.randint(10, 80)
             s.okutman = okutman
             s.ders = ders
             s.donem = ders.donem
@@ -556,15 +681,16 @@ class FakeDataGenerator:
             sinav_list.append(s)
         return sinav_list
 
-    def yeni_ogrenci_program(self, ogrenci, program, personel):
+    @staticmethod
+    def yeni_ogrenci_program(ogrenci, program, personel):
         """
         Rastgele verileri ve parametre olarak verilen verileri
         kullanarak yeni öğrenci programı kaydı oluştururup kaydeder.
 
         Args:
             ogrenci (Ogrenci): Öğrenci nesnesi
-            personel (Personel): Personel nesnesi
-            program (Program): Program nesnesi
+            personel (object): Personel nesnesi
+            program (object): Program nesnesi
 
         Returns:
             OgrenciProgram: Yeni öğrenci program kaydı
@@ -591,7 +717,8 @@ class FakeDataGenerator:
 
         Args:
             sube (Sube): Şube nesnesi
-            ogrenci_program (OgrenciProgram): Öğrenci Programı nesnesi
+            ogrenci_program (object): Öğrenci Programı nesnesi
+            donem (object): Donem nesnesi
 
         Returns:
             OgrenciDersi: Yeni öğrenci ders kaydı
@@ -605,9 +732,8 @@ class FakeDataGenerator:
             od.ogrenci = ogrenci_program.ogrenci
             if donem:
                 od.donem = donem
-
+            od.katilim_durumu = random.choice(([True] * 9 ) + [False])
             od.save()
-            return od
         except Exception as e:
             print(e.message)
 
@@ -632,9 +758,7 @@ class FakeDataGenerator:
             dk.ders = sube
             dk.ogrenci = ogrenci
             dk.okutman = okutman
-
             dk.save()
-            return dk
         except Exception as e:
             print(e.message)
 
@@ -666,7 +790,6 @@ class FakeDataGenerator:
             dn.ogrenci = ogrenci_program.ogrenci
             dn.ders = sinav.ders
             dn.save()
-            return dn
         except Exception as e:
             print(e.message)
 
@@ -694,9 +817,7 @@ class FakeDataGenerator:
         b.aciklama = '\n'.join(fake.paragraphs(1))
         b.ogrenci = ogrenci
         b.donem = donem
-
         b.save()
-        return b
 
     @staticmethod
     def yeni_donem_danismani(donem, okutman, bolum):
@@ -722,8 +843,8 @@ class FakeDataGenerator:
         d.save()
         return d
 
-    def fake_data(self, donem_say=1, kampus_say=2, personel_say=50, okutman_say=30, program_say=1,
-                  ders_say=24, sinav_say=3, sube_say=3, ogrenci_say=20):
+    def fake_data(self, donem_say=1, kampus_say=2, personel_say=5, okutman_say=5, program_say=1,
+                  ders_say=3, sinav_say=3, sube_say=3, ogrenci_say=10):
         """
         Rastgele verileri ve parametre olarak verilen verileri kullanarak
         yeni okutman, program, ders, şube, sınav, borc ve ders katılımı kayıtları
@@ -751,7 +872,6 @@ class FakeDataGenerator:
         # print("Oluşturulan bina listesi : %s\n" % buildings)
         # print("Oluşturulan oda listesi : %s\n" % rooms)
 
-
         donem_list = self.yeni_donem(donem_say=donem_say, guncel=True)
         print("Oluşturulan donem listesi : %s\n" % donem_list)
         time.sleep(3)
@@ -765,25 +885,48 @@ class FakeDataGenerator:
         print("Oluşturulan oda listesi : %s\n" % rooms)
 
         # yoksis uzerindeki program birimleri
-        yoksis_program_list = random.sample(Unit.objects.filter(unit_type='Program'), program_say)
+        yoksis_program_list = random.sample(list(Unit.objects.filter(unit_type='Program')), program_say)
         print(
             "Oluşturulan program listesi : %s - %s\n" % (
                 yoksis_program_list, len(yoksis_program_list)))
         time.sleep(3)
 
         # yoksis program listesinden program olustur
-        for yoksis_program in yoksis_program_list:
-            program = self.yeni_program(yoksis_program=yoksis_program)[0]
+        # for yoksis_program in yoksis_program_list:
+
+    def program_data_olustur(self,yoksis_no,personel_say = 30,okutman_say = 20,ogrenci_say =50,ders_say=48,sube_say=2,sinav_say=1,bina_say=4):
+        """
+        bolum parametresi bolumun unit objesi olarak verilir.
+        O bolume bagli olan programlardan 2 tanesini generate eder.
+
+        """
+        bolum = Unit.objects.get(yoksis_no=yoksis_no)
+        zaman_dilimleri = self.yeni_zaman_dilimleri(bolum)
+        print('Oluşturulan zaman dilimleri : %s\n' % zaman_dilimleri)
+        fakulte = Unit.objects.get(yoksis_no = bolum.parent_unit_no)
+        for i in range(bina_say):
+            self.yeni_bina(fakulte)
+        if not Donem.objects.filter(guncel = True):
+            self.yeni_donem(guncel=True)
+
+        time.sleep(1)
+        program_unit = list(Unit.objects.filter(parent_unit_no = yoksis_no))
+        programlar = []
+        for p in program_unit[:2]:
+            programlar.extend(self.yeni_program(p,1))
+        for program in programlar:
+
+
             print("Oluşturulan program : %s\n" % program)
 
-            personel_list = self.yeni_personel(unit=yoksis_program, personel_say=personel_say)
+            personel_list = self.yeni_personel(unit=bolum, personel_say=personel_say)
             print("Oluşturulan personel listesi : %s\n" % personel_list)
 
             random_personel_list = random.sample(personel_list, okutman_say)
             # okutman olmayan personellerden okutman olustur.
 
             okutman_list = self.yeni_okutman(random_personel_list,
-                                             birim_no=yoksis_program.yoksis_no)
+                                             birim_no=bolum.yoksis_no)
             print("Oluşturulan okutman listesi : %s\n" % okutman_list)
 
             donem = random.choice(Donem.objects.filter(guncel=True))
@@ -796,8 +939,8 @@ class FakeDataGenerator:
                         okt, donem,
                         okt.personel.birim))
             # Öğrencileri Oluştur
-            ogrenci_liste = self.yeni_ogrenci(ogrenci_say=ogrenci_say, program=program,
-                                              personel=random.choice(personel_list))
+            ogrenci_liste = list(self.yeni_ogrenci(ogrenci_say=ogrenci_say, program=program,
+                                                   personel=random.choice(personel_list)))
             print("Oluşturulan ogrenci listesi: %s\n" % ogrenci_liste)
 
             # programa ait dersler
@@ -807,6 +950,7 @@ class FakeDataGenerator:
                 print("%s programı için oluşturulan ders : %s\n" % (program, ders))
 
                 # derse ait subeler
+
                 for sc in range(sube_say):
                     okutman = random.choice(okutman_list)
                     sb = self.yeni_sube(ders, okutman)[0]
@@ -816,14 +960,12 @@ class FakeDataGenerator:
                     sinav_liste = self.yeni_sinav(sube=sb, sinav_say=sinav_say)
                     print("Oluşturulan sınav listesi : %s\n" % sinav_liste)
 
-                    n = dc / (ders_say / 4) + 1
-
-                    for ogrenci in random.sample(ogrenci_liste[0:75 * n], 70 * n):
+                    for ogrenci in random.sample(ogrenci_liste, random.randint(1, ogrenci_say)):
                         personel = okutman.personel
-
                         # ogrencinin program, ders, devamsizlik, borc bilgileri
-                        ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci,
-                                                                     program=program)
+                        ogrenci_program = self.yeni_ogrenci_program(ogrenci=ogrenci, program=program, personel=personel)
+
+                        # ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci,
 
                         self.yeni_ogrenci_dersi(sb, ogrenci_program, donem)
                         print("%s adlı öğrenciye yeni ders atandı: %s\n" % (ogrenci, sb.ad))
@@ -840,3 +982,12 @@ class FakeDataGenerator:
                             print(
                                 "%s sınavı için %s adlı öğrencinin değerlendirme notu girildi.\n" %
                                 (sinav, ogrenci))
+
+            time.sleep(3)
+
+            for okutman in okutman_list:
+                planlar = self.yeni_zaman_planlari(okutman, bolum)
+                cetveller = self.yeni_zaman_cetvelleri(planlar)
+                print('%s adlı okutman için %i zaman planı ve %i zaman cetveli oluşturuldu.'
+                      % (okutman.ad, len(planlar), len(cetveller)))
+

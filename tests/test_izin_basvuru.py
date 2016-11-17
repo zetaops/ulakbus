@@ -4,11 +4,11 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import time
 
 from ulakbus.models import FormData
 from ulakbus.models.auth import User
 from zengine.lib.test_utils import BaseTestCase
-
 
 class TestCase(BaseTestCase):
     """
@@ -41,22 +41,22 @@ class TestCase(BaseTestCase):
         count_of_form_data = FormData.objects.filter(user=user).count()
 
         if self.client.current.task_data['cmd'] == 'izin_basvuru_formu_goster':
-            # İş akışının ilk yolunu başlatan kullanıcın token değeri.
-            token = self.client.token
 
             # İzin başvuru formu doldurulur ve kaydedilir.
             self.client.post(form=form)
+
+            # Notification  mesajının  gönderilmesi için 1 saniye beklenir.
+            time.sleep(1)
 
             # Giriş yapan personel kullanıcısına ait Form Data sayısı
             num_of_form_data = FormData.objects.filter(user=user).count()
 
             assert num_of_form_data == count_of_form_data + 1
 
-            # İş akışının ilk yolunu başlatacak kullanıcı seçilir.
-            usr = User.objects.get(username='personel_isleri_2')
+            token, user = self.get_user_token('personel_isleri_2')
 
             # Kullanıcıya login yaptırılır, iş akışı başlatılır.
-            self.prepare_client('/izin_basvuru', user=usr, token=token)
+            self.prepare_client('/izin_basvuru', user=user, token=token)
             resp = self.client.post()
             form = {'ileri': 1, 'izin_adres': "Urla", 'izin_ait_yil': 2016, 'izin_baslangic': "15.05.2016",
                     'izin_bitis': "20.05.2016",
