@@ -14,37 +14,6 @@ class TestCase(BaseTestCase):
 
     """
 
-    # s = Sube()
-    # s.donem = Donem.guncel_donem()
-    # s.blocking_save()
-    # sinav_etkinligi = SinavEtkinligi()
-    # sinav_etkinligi.sube = s
-    # sinav_etkinligi.donem = s.donem
-    # # sinav_etkinligi = SinavEtkinligi.objects.get('XHTfo0wYYxkWSv9YNTlG0XddL1l')
-    # sinav_etkinligi.SinavYerleri.clear()
-    # sinav_etkinligi.blocking_save()
-    # for i in range(11):
-    #     o = Ogrenci()
-    #     o.blocking_save()
-    #     od = OgrenciDersi()
-    #     od.ogrenci = o
-    #     od.sube = sinav_etkinligi.sube
-    #     od.blocking_save()
-    #
-    # cp = [3,5,5]
-    # for a in range(3):
-    #     r = Room()
-    #     r.capacity = cp[a]
-    #     r.blocking_save()
-    #     sinav_etkinligi.SinavYerleri(room = r)
-    #     sinav_etkinligi.blocking_save()
-    #
-    # for og in  OgrenciDersi.objects.filter(sube=sinav_etkinligi.sube, donem=sinav_etkinligi.donem):
-    #     sinav_etkinligi.Ogrenciler(ogrenci = og.ogrenci)
-    #     sinav_etkinligi.blocking_save()
-    #
-    #
-
     def test_ogrencileri_odalara_dagitma(self):
         """
         Sınav etkinliklerine katılacak öğrencilerin sınavlara girecekleri odalara
@@ -57,10 +26,10 @@ class TestCase(BaseTestCase):
         sinav_etkinligi = SinavEtkinligi.objects.get('H9mqfdqqnnBxKHgSCuX3cg0DPrI')
 
         # Testin düzgün çalışabilmesi için,
-        # eğer varsa öğrencilerin atandığı sınav yerleri None yapılır.
-        # for room in sinav_etkinligi.Ogrenciler:
-        #     room.room = None
-        #     room.save()
+        # eğer varsa öğrencilerin atandığı sınav yerleri boşaltılır.
+        for room in sinav_etkinligi.Ogrenciler:
+            room.room = Room()
+            sinav_etkinligi.save()
 
         # Ogrenciler list node'unda bulunan obje sayısı, veritabanındaki kayıt sayısı ile
         # aynı olup olmadığı test edilir.
