@@ -6,16 +6,11 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-import random
-from uuid import uuid4
 
 from pyoko.modelmeta import model_registry
 from pyoko.conf import settings
 
 from ulakbus.views.reports import ReporterRegistry
-# from zengine.views import basic_view
-from zengine.models import WFCache
-from zengine.models import WFInstance
 from zengine.views.base import SysView
 from ulakbus.models import Personel, Ogrenci
 from zengine.views.menu import Menu
@@ -98,6 +93,8 @@ class UlakbusMenu(Menu):
         # add data of current logged in user
         usr = self.current.user
         role = self.current.role
+        usr_total_roles = [{"role": roleset.role.__unicode__()} for roleset in
+                      self.current.user.role_set]
         self.output['current_user'] = {
             "name": usr.name,
             "surname": usr.surname,
@@ -106,8 +103,10 @@ class UlakbusMenu(Menu):
             "avatar": usr.get_avatar_url(),
             "is_staff": role.is_staff,
             "is_student": role.is_student,
-            "roles": [{"role": roleset.role.__unicode__()} for roleset in
-                      self.current.user.role_set]
+            "roles": usr_total_roles,
+            "role_details": {'unit_name': role.unit.name,
+                             'abs_name': role.abstract_role.name,
+                             'role_count': len(usr_total_roles)}
         }
         if role.is_student:
             # insert student specific data here

@@ -51,6 +51,7 @@ class User(Model, BaseUser):
     name = field.String(_(u"First Name"), index=True)
     surname = field.String(_(u"Surname"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
+    last_login_role_key = field.String(_(u"Last Login Role Key"))
     locale_language = field.String(
         _(u"Preferred Language"),
         index=False,
@@ -59,7 +60,7 @@ class User(Model, BaseUser):
     )
     locale_datetime = field.String(_(u"Preferred Date and Time Format"), index=False,
                                    default=settings.DEFAULT_LOCALIZATION_FORMAT,
-                                   choices= translation.available_datetimes.items())
+                                   choices=translation.available_datetimes.items())
     locale_number = field.String(_(u"Preferred Number Format"), index=False,
                                  default=settings.DEFAULT_LOCALIZATION_FORMAT,
                                  choices=translation.available_numbers.items())
@@ -73,6 +74,10 @@ class User(Model, BaseUser):
     @lazy_property
     def full_name(self):
         return "%s %s" % (self.name, self.surname)
+
+    def last_login_role(self):
+
+        return Role.objects.get(self.last_login_role_key)
 
     def pre_save(self):
         if not self.username or not self.password:
@@ -552,21 +557,31 @@ class AuthBackend(object):
         Args:
             user: User nesnesi
 
-        Returns:
 
         """
-        user = user
         self.session['user_id'] = user.key
         self.session['user_data'] = user.clean_value()
+        role = self.get_last_role()
 
-        # TODO: this should be remembered from previous login
-        default_role = user.role_set[0].role
-        # self.session['role_data'] = default_role.clean_value()
-        self.session['role_id'] = default_role.key
-        self.current.role_id = default_role.key
+        self.session['role_id'] = role.key
+        self.current.role_id = role.key
         self.current.user_id = user.key
-        self.perm_cache = PermissionCache(default_role.key)
-        self.session['permissions'] = default_role.get_permissions()
+        self.perm_cache = PermissionCache(role.key)
+        self.session['permissions'] = role.get_permissions()
+
+    def get_last_role(self):
+        """
+        Eğer kullanıcı rol geçişi yaparsa, kullanıcının last_login_role_key
+        field'ına geçiş yaptığı rolün keyi yazılır. Kullanıcı çıkış yaptığında
+         ve tekrardan giriş yaptığında son rolü bu field'dan öğrenilir. Eğer
+        kullanıcının last_login_role_key field'ı dolu ise rol bilgisi oradan alınır.
+        Yoksa kullanıcının role_set'inden default rolü alınır.
+
+        """
+
+        user = self.get_user()
+        user_role = user.last_login_role() if user.last_login_role_key else user.role_set[0].role
+        return user_role
 
     def get_role(self):
         """session'da bir role_id varsa bu id'deki Role nesnesini döner.
@@ -578,12 +593,6 @@ class AuthBackend(object):
             PermissionDenied:
 
         """
-        # if 'role_data' in self.session:
-        #     role = Role()
-        #     role.set_data(self.session['role_data'])
-        # if 'role_id' in self.session:
-        #     role.key = self.session['role_id']
-        # return role
         if 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
