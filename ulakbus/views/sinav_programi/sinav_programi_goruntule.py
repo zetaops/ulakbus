@@ -4,13 +4,14 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 #
-from ulakbus.lib.date_time_helper import map_sinav_etkinlik_hafta_gunleri, GUN_LISTESI
+from ulakbus.lib.date_time_helper import map_etkinlik_hafta_gunleri
 from zengine.forms import JsonForm
 from zengine.views.crud import CrudView
 from collections import OrderedDict
 from ulakbus.models import Personel, Donem, Ogrenci
 from ulakbus.models.ders_sinav_programi import HAFTA
 from ...lib.ogrenci import aktif_sinav_listesi
+from zengine.lib.translation import gettext as _, get_day_names
 
 
 class SinavProgramiGoruntule(CrudView):
@@ -19,7 +20,7 @@ class SinavProgramiGoruntule(CrudView):
 
         if len(sinav_etkinlikleri) > 0:
             self.current.task_data['sinav_kontrol'] = True
-            self.current.task_data['sinav_etkinlikleri'] = map_sinav_etkinlik_hafta_gunleri(
+            self.current.task_data['sinav_etkinlikleri'] = map_etkinlik_hafta_gunleri(
                 sinav_etkinlikleri)
         else:
             self.current.task_data['sinav_kontrol'] = False
@@ -51,8 +52,8 @@ class SinavProgramiGoruntule(CrudView):
         Eğer yayınlanmış sınav programı yoksa uyarı verir.
         """
         self.current.output['msgbox'] = {
-            'type': 'info', "title": 'Uyarı!',
-            "msg": 'Bulunduğunuz döneme ait, güncel yayınlanmış sınav programı bulunmamaktadır.'
+            'type': 'info', "title": _(u'Uyarı!'),
+            "msg": _(u'Bulunduğunuz döneme ait, güncel yayınlanmış sınav programı bulunmamaktadır.')
         }
 
     def sinav_programi_goruntule(self):
@@ -65,7 +66,7 @@ class SinavProgramiGoruntule(CrudView):
         sinav_etkinlikleri = self.current.task_data['sinav_etkinlikleri']
         donem = Donem.tarihe_gore_donem(self.current.wfinstance.task.start_date)
 
-        self.output['objects'] = [GUN_LISTESI]
+        self.output['objects'] = [list(get_day_names().values())]
         hafta = dict(HAFTA)
 
         # Öğretim görevlisinin bir günde maksimum kaç tane sınavı olduğu bulunur
@@ -96,7 +97,7 @@ class SinavProgramiGoruntule(CrudView):
             self.output['objects'].append(item)
 
         _form = JsonForm(current=self.current)
-        _form.title = "%s / %s / Yarıyıl Sınav Programı" % (
-            self.current.task_data['user_ad'], donem.ad)
+        _form.title = _(u"%(ad)s / %(donem)s / Yarıyıl Sınav Programı") % \
+                      {'ad': self.current.task_data['user_ad'], 'donem': Donem.guncel_donem().ad}
 
         self.form_out(_form)

@@ -16,18 +16,13 @@ from boto.s3.key import Key
 from pyoko.conf import settings
 
 
-
-
-
-
 class S3FileManager(object):
-
     def __init__(self):
         self.conn = s3(aws_access_key_id=settings.S3_ACCESS_KEY,
-                  aws_secret_access_key=settings.S3_SECRET_KEY,
-                  proxy=settings.S3_PROXY_URL,
-                  proxy_port=settings.S3_PROXY_PORT,
-                  is_secure=False)
+                       aws_secret_access_key=settings.S3_SECRET_KEY,
+                       proxy=settings.S3_PROXY_URL,
+                       proxy_port=settings.S3_PROXY_PORT,
+                       is_secure=False)
 
     def store_file(self, **kwargs):
         bucket = self.conn.get_bucket(settings.S3_BUCKET_NAME)

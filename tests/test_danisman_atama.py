@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
-from ulakbus.models import OgrenciProgram, Donem, DonemDanisman, Ogrenci
+from ulakbus.models import OgrenciProgram, Donem, DonemDanisman, Ogrenci, Personel
 from zengine.lib.test_utils import BaseTestCase
 
 
@@ -17,6 +17,7 @@ class TestCase(BaseTestCase):
 
     def test_danisman_atama(self):
         """
+        Danışmanı atanamayan öğrenciler öğrenci işleri tarafından atılır.
         Danışman atama iş akışının ilk adımında öğrenci programı seçilir.
 
         Seçilen öğrenciye ait veritabanından dönen öğrenci programı sayısı ile
@@ -35,7 +36,7 @@ class TestCase(BaseTestCase):
         """
 
         # Kullanıcıya login yaptırılır.
-        self.prepare_client('/danisman_atama', username='bolum_baskani_1')
+        self.prepare_client('/danisman_atama', username='ogrenci_isleri_1')
 
         resp = self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
                                 model="OgrenciProgram",
@@ -55,7 +56,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post(model='OgrenciProgram',
                                 form={'program': "UEGET7qn9CDj9VEj4n0nbQ7m89d", 'sec': 1})
 
-        guncel_donem = Donem.objects.filter(guncel=True)[0]
+        guncel_donem = Donem.guncel_donem()
         # Öğrencinin kayıtlı olduğu öğrenci programlarından biri seçilir.
         program = op[0]
         # Döneme ve birime kayıtlı olan danışmanların listesini tutar.
@@ -68,7 +69,7 @@ class TestCase(BaseTestCase):
 
         # Danışman seçilir.
         resp = self.client.post(model='OgrenciProgram',
-                                form={'donem_danisman': 'Ids7zUWiSyeTC1qHmAFfqFCIWBV', 'sec': 1})
+                                form={'donem_danisman': 'Js2goP48yA183oMDAN8uM5GOExM', 'sec': 1})
 
         ogrenci = Ogrenci.objects.get('RnKyAoVDT9Hc89KEZecz0kSRXRF')
         assert ogrenci.ad + ' ' + ogrenci.soyad in resp.json['msgbox']['msg']
