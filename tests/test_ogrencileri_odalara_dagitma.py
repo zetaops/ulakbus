@@ -25,13 +25,21 @@ class TestCase(BaseTestCase):
         # Sınav etkinliği seçilir.
         sinav_etkinligi = SinavEtkinligi.objects.get('H9mqfdqqnnBxKHgSCuX3cg0DPrI')
 
+        # ogrenci_sinav_oda_getir methodu test edilir.
+        # Öğrenciye atanan oda ile methoddan dönen odanın aynı olduğu kontrol edilir.
+        room = sinav_etkinligi.SinavYerleri[0].room
+        sinav_etkinligi.Ogrenciler[0].room = room
+        sinav_etkinligi.save()
+        assert room.key == sinav_etkinligi.ogrenci_sinav_oda_getir(
+            sinav_etkinligi.Ogrenciler[0].ogrenci).key
+
         # Testin düzgün çalışabilmesi için,
-        # eğer varsa öğrencilerin atandığı sınav yerleri boşaltılır.
+        # öğrencilerin atandığı sınav yerleri boşaltılır.
         for room in sinav_etkinligi.Ogrenciler:
             room.room = Room()
             sinav_etkinligi.save()
 
-        # Ogrenciler list node'unda bulunan obje sayısı, veritabanındaki kayıt sayısı ile
+        # Ogrenciler list node'unda bulunan obje sayısının, veritabanındaki kayıt sayısı ile
         # aynı olup olmadığı test edilir.
         assert len(sinav_etkinligi.Ogrenciler) == OgrenciDersi.objects.filter(
             sube=sinav_etkinligi.sube, donem=sinav_etkinligi.donem).count()
@@ -42,8 +50,8 @@ class TestCase(BaseTestCase):
         # Etkinliğin yapılacağı odaların toplam kontenjanı bulunur.
         toplam_kontenjan = sum([e.room.capacity for e in sinav_etkinligi.SinavYerleri])
 
-        # Toplam kontenjanın etkinliğe katılacak toplam öğrenci sayısından fazla olması
-        # kontrol edilir.
+        # Toplam kontenjanın etkinliğe katılacak toplam öğrenci sayısından eşit veya
+        # fazla olması kontrol edilir.
         assert toplam_kontenjan >= len(sinav_etkinligi.Ogrenciler)
 
         # Toplam öğrenci sayısının toplam kontenjan sayısına bölümüyle
@@ -55,7 +63,7 @@ class TestCase(BaseTestCase):
         assert oran <= 1
 
         # Odalar öğrencilere rastgele atanır.
-        SinavEtkinligi.ogrencileri_odalara_dagit(sinav_etkinligi, oran)
+        sinav_etkinligi.ogrencileri_odalara_dagit(oran)
 
         # Sınavın yapılacağı sınıfların listesi elde edilir.
         sinav_yerleri_listesi = []
@@ -66,10 +74,11 @@ class TestCase(BaseTestCase):
         for etkinlik in sinav_etkinligi.Ogrenciler:
             # Her bir öğrencinin bir sınıfa atandığı kontrol edilir.
             assert etkinlik.room is not None
-            # Atanan odaların doğru odalar olduğu kontrol edilir.
+            # Atanan odaların doğru odalar yani sinavın yapılacağı odalar olduğu kontrol edilir.
             assert etkinlik.room in sinav_yerleri_listesi
             # ogrenci_sinav_oda_getir methodunun çalışması kontrol edilir.
-            assert sinav_etkinligi.ogrenci_sinav_oda_getir(etkinlik.ogrenci) in sinav_yerleri_listesi
+            assert sinav_etkinligi.ogrenci_sinav_oda_getir(
+                etkinlik.ogrenci) in sinav_yerleri_listesi
 
             # Hangi odanın kaç öğrenciye atandığı bulunur.
             # sınav_yerleri_key = room.key
