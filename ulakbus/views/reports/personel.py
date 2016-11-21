@@ -133,9 +133,22 @@ class GorevSuresiBitenPersonel(Reporter):
             personel["Ad"] = p.ad
             personel["Soyad"] = p.soyad
             personel["Birim"] = p.birim.name
-            personel["Görev Süresi Başlangıç"] = p.gorev_suresi_baslama.strftime("%d.%m.%Y")
-            personel["Görev Süresi Bitiş"] = p.gorev_suresi_bitis.strftime("%d.%m.%Y")
-            personel["Göreve Başlama Tarihi"] = p.goreve_baslama_tarihi.strftime("%d.%m.%Y")
+
+            if (p.gorev_suresi_baslama != '') and (p.gorev_suresi_baslama != None):
+                personel["Görev Süresi Başlangıç"] = p.gorev_suresi_baslama.strftime("%d.%m.%Y")
+            else:
+                personel["Görev Süresi Başlangıç"] = ''
+
+            if (p.gorev_suresi_bitis != '') and (p.gorev_suresi_bitis != None):
+                personel["Görev Süresi Bitiş"] = p.gorev_suresi_bitis.strftime("%d.%m.%Y")
+            else:
+                personel["Gorev Süresi Bitiş"] = ''
+
+            if (p.goreve_baslama_tarihi != '') and (p.goreve_baslama_tarihi != None):
+                personel["Göreve Başlama Tarihi"] = p.goreve_baslama_tarihi.strftime("%d.%m.%Y")
+            else:
+                personel["Göreve Başlama Tarihi"] = ''
+
             personel_list.append(personel)
 
         return personel_list
