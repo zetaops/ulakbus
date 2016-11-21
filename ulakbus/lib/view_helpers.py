@@ -2,12 +2,13 @@
 """
 """
 
-
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from datetime import datetime
+from ulakbus.models.ogrenci import Donem
 def prepare_choices_for_model(model, **kwargs):
     """Model için Seçenekler Hazırla
 
@@ -37,3 +38,12 @@ def convert_model_object_titlemap_item(m):
 
     """
     return {"name": m.__unicode__(), "value": m.key}
+
+class WFValues(object):
+    def assign_wf_initial_values(self,current):
+        current.task_data['wf_initial_values'] = {'guncel_donem': Donem.guncel_donem().key,
+                                                  'started': True,
+                                                  'start_date': datetime.now().strftime(
+                                                      "%Y-%m-%d %H:%M:%S"),
+                                                  'finish_date': None,
+                                                  'finished': False}

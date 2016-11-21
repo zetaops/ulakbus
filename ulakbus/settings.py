@@ -38,6 +38,8 @@ LOG_FILE = os.environ.get('LOG_FILE', './ulakbus.log')
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 
+WF_INITIAL_VALUES = 'ulakbus.lib.view_helpers.WFValues'
+
 PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
 ROLE_MODEL = 'ulakbus.models.auth.Role'

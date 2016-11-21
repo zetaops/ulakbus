@@ -15,6 +15,7 @@ import six
 from pyoko import Model, field, ListNode, LinkProxy
 from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
+from ulakbus.lib.cache import GuncelDonem
 from ulakbus.lib.ogrenci import HarfNotu
 from zengine.lib.translation import gettext_lazy as _, gettext, format_date
 from .auth import Role, User
@@ -57,8 +58,13 @@ class Donem(Model):
     ogretim_yili = OgretimYili(_(u"Öğretim Yılı"), index=True)
 
     @classmethod
-    def guncel_donem(cls):
-        return cls.objects.get(guncel=True)
+    def guncel_donem(cls, current=None):
+
+        if current and current.task_data['wf_initial_values']['guncel_donem']:
+            return Donem.objects.get(current.task_data['wf_initial_values']['guncel_donem'])
+        else:
+            guncel_donem = GuncelDonem('guncel_donem')
+            return guncel_donem.get_or_create()
 
     def pre_save(self):
 
@@ -346,7 +352,8 @@ class Okutman(Model):
         return [s for s in Sube.objects.filter(okutman=self, donem=donem)]
 
     def donemdeki_gorev_yeri(self, donem):
-        gorev_birimi_dct = {gorev_birimi.donem.key: gorev_birimi.yoksis_no for gorev_birimi in self.GorevBirimi}
+        gorev_birimi_dct = {gorev_birimi.donem.key: gorev_birimi.yoksis_no for gorev_birimi in
+                            self.GorevBirimi}
         if donem.key in gorev_birimi_dct:
             return gorev_birimi_dct[donem.key]
 
@@ -507,7 +514,6 @@ class Sube(Model):
     ders_adi = field.String(_(u"Ders Adi"), index=True)
 
     class NotDonusumTablosu(ListNode):
-
         """Not Donusum Tablosu
 
         Bu tablo, settings seklinde universite geneli icin tanimlanmistir.
@@ -1201,7 +1207,8 @@ class Takvim(Model):
         list_filters = ["etkinlik", "baslangic", "bitis", 'resmi_tatil']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
+        return '%s %s %s' % (
+            self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
 
 
 class DonemDanisman(Model):
