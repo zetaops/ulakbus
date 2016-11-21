@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,9 +11,7 @@ Hitap'a personelin Tazminat bilgilerinin guncellemesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from .hitap_guncelle import HITAPGuncelle
 
 
 class HizmetTazminatGuncelle(HITAPGuncelle):
@@ -23,6 +19,14 @@ class HizmetTazminatGuncelle(HITAPGuncelle):
     HITAP Guncelleme servisinden kalıtılmış Hizmet Tazminat Bilgi Guncelleme servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.tazminat.guncelle"
+    URL_PATH = '/personel/hitap/hizmet-tazminat-guncelle'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

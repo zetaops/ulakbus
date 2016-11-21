@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,9 +11,7 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from .hitap_ekle import HITAPEkle
 
 
 class HizmetBorclanmaEkle(HITAPEkle):
@@ -23,6 +19,14 @@ class HizmetBorclanmaEkle(HITAPEkle):
     HITAP Ekleme servisinden kalıtılmış Hizmet Borçlanma Bilgisi Ekleme servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.borclanma.ekle"
+    URL_PATH = '/personel/hitap/hizmet-borclanma-ekle'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

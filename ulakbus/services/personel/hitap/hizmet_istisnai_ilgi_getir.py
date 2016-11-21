@@ -15,7 +15,7 @@ Note:
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
+from .hitap_sorgula import HITAPSorgula
 
 
 class HizmetIstisnaiIlgiGetir(HITAPSorgula):
@@ -24,6 +24,14 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
     İstisnai İlgi Bilgisi Sorgulama servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.istisnai.ilgi.getir"
+    URL_PATH = '/personel/hitap/hizmet-istisnai-ilgi-getir'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """

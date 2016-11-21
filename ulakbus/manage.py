@@ -98,6 +98,7 @@ class GenerateBuildingList(Command):
         print("%s adet bina oluşturuldu, oluşturulan binalar: %s\n" % (len(bina_list), bina_list))
         print("%s adet oda oluşturuldu, oluşturulan odalar: %s\n" % (len(room_list), room_list))
 
+
 class GenerateRandomPersonel(Command):
     CMD_NAME = 'random_personel'
     HELP = 'Generates Random Personel'
@@ -191,6 +192,40 @@ class GenerateDersList(Command):
         program = self.manager.args.program
         fake = FakeDataGenerator()
         fake.yeni_ders(program=program, personel=personel, ders_say=length)
+
+
+class GenerateZatoServiceJson(Command):
+    # CMD_NAME = 'generate_zato_json'
+    # HELP = ''
+    # PARAMS = [
+    #     {'name': 'path', 'required': True, 'help': 'service file or directory'},
+    # ]
+    #
+    # CONNECTION = "channel"
+    # DATA_FORMAT = "json"
+    # NAME = "hizmet.acik.sure.ekle"
+    # URL_PATH = '/personel/hitap/hizmet-acik-sure-ekle'
+    # TRANSPORT = "plain_http"
+    # IS_ACTIVE = True
+    # IS_INTERNAL = False
+    #
+    # def run(self):
+    #     from glob import glob
+    #     import importlib
+    #
+    #     current_dir = self.manager.args.path
+    #     current_module_name = "zato.server.service"
+    #     services = []
+    #     for f in glob("%s/*.py" % current_dir):
+    #         name = os.path.splitext(os.path.basename(f))[0]
+    #         # Ignore __ files
+    #         print name
+    #         if name.startswith("__"):
+    #             continue
+    #         module = importlib.import_module(current_module_name)
+    #         if module:
+    #             services.append(name)
+    pass
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'

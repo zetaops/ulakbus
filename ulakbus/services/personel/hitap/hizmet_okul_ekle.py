@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,9 +11,7 @@ Hitap'a personelin Okul bilgilerinin eklenmesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from .hitap_ekle import HITAPEkle
 
 
 class HizmetOkulEkle(HITAPEkle):
@@ -23,6 +19,14 @@ class HizmetOkulEkle(HITAPEkle):
     HITAP Ekleme servisinden kalıtılmış Hizmet Okul Bilgi Ekleme servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.okul.ekle"
+    URL_PATH = '/personel/hitap/hizmet-okul-ekle'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

@@ -11,7 +11,7 @@ Hitap üzerinden personelin hizmet birleştirme bilgilerinin sorgulamasını yap
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
+from .hitap_sorgula import HITAPSorgula
 
 
 class HizmetBirlestirmeGetir(HITAPSorgula):
@@ -20,6 +20,14 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
     Hizmet Birleştirme Bilgisi Sorgulama servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.birlestirme.getir"
+    URL_PATH = '/personel/hitap/hizmet-birlestirme-getir'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """

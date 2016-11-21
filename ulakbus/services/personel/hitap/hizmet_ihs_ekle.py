@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,9 +11,7 @@ Hitap'a personelin IHS bilgilerinin eklenmesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from .hitap_ekle import HITAPEkle
 
 
 class HizmetIhsEkle(HITAPEkle):
@@ -23,6 +19,14 @@ class HizmetIhsEkle(HITAPEkle):
     HITAP Ekleme servisinden kalıtılmış Hizmet IHS Bilgisi Ekleme servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.ihs.ekle"
+    URL_PATH = '/personel/hitap/hizmet-ihs-ekle'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

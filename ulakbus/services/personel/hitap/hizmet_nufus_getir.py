@@ -15,7 +15,7 @@ Note:
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
+from .hitap_sorgula import HITAPSorgula
 
 
 class HizmetNufusGetir(HITAPSorgula):
@@ -23,6 +23,14 @@ class HizmetNufusGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Nüfus Bilgisi Sorgulama servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.nufus.getir"
+    URL_PATH = '/personel/hitap/hizmet-nufus-getir'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """

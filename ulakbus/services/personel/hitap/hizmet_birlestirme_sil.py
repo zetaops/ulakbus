@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,9 +11,7 @@ Hitap'da personelin Hizmet Birleştirme bilgilerinin silinmesi sağlayan class.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
+from .hitap_sil import HITAPSil
 
 
 class HizmetBirlestirmeSil(HITAPSil):
@@ -23,6 +19,14 @@ class HizmetBirlestirmeSil(HITAPSil):
     HITAP Silme servisinden kalıtılmış Hizmet Birleştirme Bilgisi Silme servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.birlestirme.sil"
+    URL_PATH = '/personel/hitap/hizmet-birlestirme-sil'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

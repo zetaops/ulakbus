@@ -11,7 +11,7 @@ Hitap üzerinden personelin mahkeme bilgilerinin sorgulamasını yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
+from .hitap_sorgula import HITAPSorgula
 
 
 class HizmetMahkemeGetir(HITAPSorgula):
@@ -19,6 +19,14 @@ class HizmetMahkemeGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Mahkeme Bilgisi Sorgulama servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.mahkeme.getir"
+    URL_PATH = '/personel/hitap/hizmet-mahkeme-getir'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """

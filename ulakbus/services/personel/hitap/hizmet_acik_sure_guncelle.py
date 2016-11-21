@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,9 +11,7 @@ Hitap'a personelin açık süre bilgilerinin güncellemesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from .hitap_guncelle import HITAPGuncelle
 
 
 class HizmetAcikSureGuncelle(HITAPGuncelle):
@@ -23,6 +19,13 @@ class HizmetAcikSureGuncelle(HITAPGuncelle):
     HITAP Güncelleme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Güncelleme servisi
 
     """
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.acik.sure.guncelle"
+    URL_PATH = '/personel/hitap/hizmet-acik-sure-guncelle'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

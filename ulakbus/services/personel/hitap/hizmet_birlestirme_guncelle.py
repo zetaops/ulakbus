@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,9 +11,7 @@ Hitap'a personelin hizmet birlestirme bilgilerinin eklenmesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from .hitap_guncelle import HITAPGuncelle
 
 
 class HizmetBirlestirmeGuncelle(HITAPGuncelle):
@@ -23,6 +19,14 @@ class HizmetBirlestirmeGuncelle(HITAPGuncelle):
     HITAP Guncelleme servisinden kalıtılmış Hizmet Birlestirme Bilgisi Guncelleme servisi
 
     """
+
+    CONNECTION = "channel"
+    DATA_FORMAT = "json"
+    NAME = "hizmet.birlestirme.guncelle"
+    URL_PATH = '/personel/hitap/hizmet-birlestirme-guncelle'
+    TRANSPORT = "plain_http"
+    IS_ACTIVE = True
+    IS_INTERNAL = False
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.
