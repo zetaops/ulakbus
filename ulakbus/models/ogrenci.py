@@ -61,6 +61,11 @@ class Donem(Model):
         return cls.objects.get(guncel=True)
 
     def pre_save(self):
+
+        if not self.bitis_tarihi > self.baslangic_tarihi:
+            raise Exception("Bitiş tarihi başlangıç tarihinden büyük olmalıdır.")
+        if not self.baslangic_tarihi > self.onceki_donem().bitis_tarihi:
+            raise Exception("Başlangıç tarihi önceki dönemin bitiş tarihinden büyük olmalıdır.")
         if self.guncel:
             try:
                 old = self.guncel_donem()
