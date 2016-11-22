@@ -8,6 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from zengine.lib.cache import Cache
 
+
 class RolePermissionCache(Cache):
     PREFIX = 'PERM'
 
@@ -25,25 +26,18 @@ class GuncelDonem(Cache):
 
     PREFIX = 'GUNDON'
 
-    def __init__(self, guncel_donem):
-        super(GuncelDonem, self).__init__(guncel_donem)
+    def __init__(self):
+        super(GuncelDonem, self).__init__('guncel_donem')
 
-    def get_or_create(self):
+    def get_or_set(self):
 
         from ulakbus.models.ogrenci import Donem
-        from common import guncel_donem_degiskenlerini_getir
 
-        if self.get():
-            return Donem(**self.get())
-        else:
+        cache_data = self.get()
+
+        if not cache_data:
             guncel_donem = Donem.objects.get(guncel=True)
-            donem_fields = guncel_donem_degiskenlerini_getir(guncel_donem)
-            self.set(donem_fields, 3600)
-            return guncel_donem
+            cache_data = guncel_donem.donem_fields_to_dict()
+            self.set(cache_data, 360000)
 
-# class Cache(Cache):
-#     PREFIX = ''
-#
-#     overriding of init optional but helpful
-#     def __init__(self, ):
-#         super(, self).__init__()
+        return cache_data

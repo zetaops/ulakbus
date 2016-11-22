@@ -8,8 +8,9 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from datetime import datetime
-from ulakbus.lib.common import guncel_donem_degiskenlerini_getir
-from ulakbus.models.ogrenci import Donem
+from ulakbus.lib.cache import GuncelDonem
+
+
 def prepare_choices_for_model(model, **kwargs):
     """Model için Seçenekler Hazırla
 
@@ -40,15 +41,16 @@ def convert_model_object_titlemap_item(m):
     """
     return {"name": m.__unicode__(), "value": m.key}
 
+
 class WFValues(object):
     """
     WF çalıştırılırken wf current'ının task_data'sına başlangıçta istenilen dataların konulmasını
     sağlayan method. Böylelikle tüm adımlar aynı datayı kullanır tutarsızlık ortadan kalkar.
     """
-    def assign_wf_initial_values(self,current):
 
-        donem_fields = guncel_donem_degiskenlerini_getir(Donem.guncel_donem())
-        current.task_data['wf_initial_values'] = {'guncel_donem': donem_fields,
+    @staticmethod
+    def assign_wf_initial_values(current):
+        current.task_data['wf_initial_values'] = {'guncel_donem': GuncelDonem().get_or_set(),
                                                   'started': True,
                                                   'start_date': datetime.now().strftime(
                                                       "%Y-%m-%d %H:%M:%S"),

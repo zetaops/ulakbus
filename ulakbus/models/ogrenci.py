@@ -57,14 +57,33 @@ class Donem(Model):
     guncel = field.Boolean(index=True)
     ogretim_yili = OgretimYili(_(u"Öğretim Yılı"), index=True)
 
+    def donem_fields_to_dict(self):
+        """
+        Güncel dönem objesinin fieldlarını dict haline döndüren method.
+
+        Args:
+            guncel_donem: (object) güncel dönem objesi
+
+        Returns:
+            donem_fields(dict): güncel dönemin fieldlarının dict hali.
+
+        """
+        return {
+            'ad': self.ad,
+            'baslangic_tarihi': self.baslangic_tarihi.strftime("%d.%m.%Y"),
+            'bitis_tarihi': self.bitis_tarihi.strftime("%d.%m.%Y"),
+            'guncel': self.guncel,
+            'ogretim_yili_id': self.ogretim_yili.key,
+            'key': self.key
+        }
+
     @classmethod
     def guncel_donem(cls, current=None):
 
-        if current and current.task_data['wf_initial_values']['guncel_donem']:
+        if current:
             return Donem(**current.task_data['wf_initial_values']['guncel_donem'])
         else:
-            guncel_donem = GuncelDonem('guncel_donem')
-            return guncel_donem.get_or_create()
+            return Donem(**GuncelDonem().get_or_set())
 
     def pre_save(self):
 
@@ -77,7 +96,7 @@ class Donem(Model):
                 old = Donem.objects.get(guncel=True)
                 old.guncel = False
                 old.save()
-                GuncelDonem('guncel_donem').delete()
+                GuncelDonem().delete()
             except ObjectDoesNotExist:
                 pass
 
