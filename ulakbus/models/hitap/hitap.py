@@ -383,7 +383,7 @@ class HizmetKayitlari(Model):
     emekli_derece = field.Integer(_(u"Emekli Derecesi"), index=True)  # personelden gelecek
     emekli_kademe = field.Integer(_(u"Emekli Kademe"), index=True)  # personelden gelecek (gorunen)
     emekli_ekgosterge = field.Integer(_(u"Emekli Ek Göstergesi"), index=True)  # personelden gelecek
-    sebep_kod = HitapSebep(_(u"Hitap Sebep Kodu"))
+    sebep_kod = field.Integer(_(u"Hitap Sebep Kodu"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
