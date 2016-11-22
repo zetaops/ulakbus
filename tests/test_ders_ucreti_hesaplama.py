@@ -62,7 +62,7 @@ class TestCase(BaseTestCase):
                 birim_no = self.client.current.role.unit.yoksis_no
                 assert len(resp.json['forms']['model']["OkutmanListesi"]) == len(
                     [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi if
-                     gorev_birimi.yoksis_no == birim_no and gorev_birimi.donem == Donem.guncel_donem()])
+                     gorev_birimi.yoksis_no == birim_no and gorev_birimi.donem.key == Donem.guncel_donem().key])
 
                 okutman_listesi = resp.json['forms']['model']["OkutmanListesi"]
 

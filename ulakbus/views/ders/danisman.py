@@ -86,7 +86,7 @@ class DonemDanismanAtama(CrudView):
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
         donem = Donem.guncel_donem()
         okutmanlar = [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi if
-                      gorev_birimi.yoksis_no == unit.yoksis_no and gorev_birimi.donem == donem]
+                      gorev_birimi.yoksis_no == unit.yoksis_no and gorev_birimi.donem.key == donem.key]
         _form = DonemDanismanListForm(current=self, title=_(u"Okutman Seçiniz"))
         for okt in okutmanlar:
             try:

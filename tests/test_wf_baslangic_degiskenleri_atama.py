@@ -32,7 +32,8 @@ class TestCase(BaseTestCase):
         # guncel_donem hesaplanırken parametre olarak current verilirse ve
         # 'wf_init_variables' içerisinde guncel_donem bilgisi varsa bu bilgi kullanılır.
         assert Donem.guncel_donem(self.client.current).key == \
-               self.client.current.task_data['wf_initial_values']['guncel_donem']
+               self.client.current.task_data['wf_initial_values']['guncel_donem']['key']==\
+               Donem.objects.get(guncel = True).key
 
         # Test başlamadan önce cache içerisinde bulunan data yedeklenir.
         cache_data = GuncelDonem('guncel_donem').get()

@@ -61,7 +61,7 @@ class Donem(Model):
     def guncel_donem(cls, current=None):
 
         if current and current.task_data['wf_initial_values']['guncel_donem']:
-            return Donem.objects.get(current.task_data['wf_initial_values']['guncel_donem'])
+            return Donem(**current.task_data['wf_initial_values']['guncel_donem'])
         else:
             guncel_donem = GuncelDonem('guncel_donem')
             return guncel_donem.get_or_create()
@@ -69,9 +69,10 @@ class Donem(Model):
     def pre_save(self):
         if self.guncel:
             try:
-                old = self.guncel_donem()
+                old = Donem.objects.get(guncel=True)
                 old.guncel = False
                 old.save()
+                GuncelDonem('guncel_donem').delete()
             except ObjectDoesNotExist:
                 pass
 

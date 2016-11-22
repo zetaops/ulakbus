@@ -282,6 +282,28 @@ def parola_kontrolleri(yeni_parola, yeni_parola_tekrar, kullanici=None, eski_par
 
     return True, None
 
+def guncel_donem_degiskenlerini_getir(guncel_donem):
+    """
+    Güncel dönem objesinin fieldlarını dict haline döndüren method.
+
+    Args:
+        guncel_donem: (object) güncel dönem objesi
+
+    Returns:
+        donem_fields(dict): güncel dönemin fieldlarının dict hali.
+
+    """
+    donem_fields = {'ad': guncel_donem.ad,
+                    'baslangic_tarihi': guncel_donem.baslangic_tarihi.strftime(
+                        "%d.%m.%Y"),
+                    'bitis_tarihi': guncel_donem.bitis_tarihi.strftime(
+                        "%d.%m.%Y"),
+                    'guncel': guncel_donem.guncel,
+                    'ogretim_yili_id': guncel_donem.ogretim_yili.key,
+                    'key': guncel_donem.key}
+
+    return donem_fields
+
 
 class ParolaSifirlama(Cache):
     """

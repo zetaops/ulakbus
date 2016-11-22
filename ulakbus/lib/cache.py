@@ -8,7 +8,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 from zengine.lib.cache import Cache
 
-
 class RolePermissionCache(Cache):
     PREFIX = 'PERM'
 
@@ -32,19 +31,13 @@ class GuncelDonem(Cache):
     def get_or_create(self):
 
         from ulakbus.models.ogrenci import Donem
+        from common import guncel_donem_degiskenlerini_getir
 
         if self.get():
             return Donem(**self.get())
         else:
             guncel_donem = Donem.objects.get(guncel=True)
-            donem_fields = {'ad': guncel_donem.ad,
-                            'baslangic_tarihi': guncel_donem.baslangic_tarihi.strftime(
-                                "%d.%m.%Y"),
-                            'bitis_tarihi': guncel_donem.baslangic_tarihi.strftime(
-                                "%d.%m.%Y"),
-                            'guncel': guncel_donem.guncel,
-                            'key': guncel_donem.key}
-
+            donem_fields = guncel_donem_degiskenlerini_getir(guncel_donem)
             self.set(donem_fields, 3600)
             return guncel_donem
 
