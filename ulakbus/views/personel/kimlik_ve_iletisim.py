@@ -132,7 +132,10 @@ class KimlikIletisim(CrudView):
 
     def __init__(self, current=None):
         super(KimlikIletisim, self).__init__(current)
-        self.object = Personel.objects.get(self.input['id'])
+        if 'id' in self.current.input.keys():
+            self.current.task_data['personel_id'] = self.current.input['id']
+
+        self.object = Personel.objects.get(self.current.task_data['personel_id'])
 
     class Meta:
         model = 'Personel'
