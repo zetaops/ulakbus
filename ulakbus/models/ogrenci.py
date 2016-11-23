@@ -59,7 +59,7 @@ class Donem(Model):
 
     def donem_fields_to_dict(self):
         """
-        Güncel dönem objesinin fieldlarını dict haline döndüren method.
+        Güncel dönem nesnesinin fieldlarını dict haline döndüren method.
 
         Args:
             guncel_donem: (object) güncel dönem objesi

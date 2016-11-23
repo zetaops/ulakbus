@@ -97,6 +97,7 @@ class SinavProgramiGoruntule(CrudView):
 
         _form = JsonForm(current=self.current)
         _form.title = _(u"%(ad)s / %(donem)s / Yarıyıl Sınav Programı") % \
-                      {'ad': self.current.task_data['user_ad'], 'donem': Donem.guncel_donem().ad}
+                      {'ad': self.current.task_data['user_ad'],
+                       'donem': Donem.guncel_donem(self.current).ad}
 
         self.form_out(_form)

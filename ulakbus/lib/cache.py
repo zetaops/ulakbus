@@ -18,10 +18,7 @@ class RolePermissionCache(Cache):
 
 class GuncelDonem(Cache):
     """
-    Güncel dönemin tutulduğu cache objesi.
-    Cache'de güncel dönem datası varsa datalardan dönem objesi döndürür.
-    Yoksa veritabanından güncel dönemi döndürür ve cache'e 1 saatlik güncel dönem datasını koyar.
-
+    Güncel dönemin tutulduğu cache nesnesi.
     """
 
     PREFIX = 'GUNDON'
@@ -30,6 +27,15 @@ class GuncelDonem(Cache):
         super(GuncelDonem, self).__init__('guncel_donem')
 
     def get_or_set(self):
+        """
+        Cache'de güncel dönem datası varsa döndürür.
+        Yoksa veritabanından güncel dönemi alıp cache'e set eder.
+        Güncel dönem objesi dönemlik değişeceği için, set edilirken
+        expire olma süresi 360000 yani 100 saat olarak belirlenmiştir.
+
+        Returns: cache_data(dict): Güncel dönem nesnesinin fieldlarının dict hali.
+
+        """
 
         from ulakbus.models.ogrenci import Donem
 

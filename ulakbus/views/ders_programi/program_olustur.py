@@ -63,7 +63,7 @@ class ProgramOlustur(CrudView):
                  published_count >> yayınlanan model sayısı
 
         """
-        model_object = obj.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem())
+        model_object = obj.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem(self.current))
 
         solved_count = model_object.filter(solved=True).count()
 
@@ -284,7 +284,7 @@ class ProgramOlustur(CrudView):
 
         else:
             sinav_etkinligi = map(lambda s: SinavEtkinligi.objects.get(sube=s), Sube.objects.filter(
-                                                            okutman_id=obj_key, donem=Donem.guncel_donem()))
+                                                            okutman_id=obj_key, donem=Donem.guncel_donem(self.current)))
             obj = Okutman.objects.get(obj_key)
 
         days = [_(u"Pazartesi"), _(u"Salı"), _(u"Çarşamba"), _(u"Perşembe"), _(u"Cuma"), _(u"Cumartesi"), _(u"Pazar")]
@@ -336,13 +336,13 @@ class ProgramOlustur(CrudView):
         self.current.output['msgbox'] = MESSAGE['kayit_var']
 
     def sinav_yayinla(self):
-        se = SinavEtkinligi.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem())
+        se = SinavEtkinligi.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem(self.current))
         for s in se:
             s.published = True
             s.save()
 
     def ders_yayinla(self):
-        de = DersEtkinligi.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem())
+        de = DersEtkinligi.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem(self.current))
         for d in de:
             d.published = True
             d.save()

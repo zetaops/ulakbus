@@ -84,7 +84,7 @@ class DonemDanismanAtama(CrudView):
         """
         unit = self.current.role.unit
         self.current.task_data['unit_yoksis_no'] = unit.yoksis_no
-        donem = Donem.guncel_donem()
+        donem = Donem.guncel_donem(self.current)
         okutmanlar = [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi if
                       gorev_birimi.yoksis_no == unit.yoksis_no and gorev_birimi.donem.key == donem.key]
         _form = DonemDanismanListForm(current=self, title=_(u"Okutman Seçiniz"))
@@ -109,7 +109,7 @@ class DonemDanismanAtama(CrudView):
         """
         yoksis_no = self.current.task_data['unit_yoksis_no']
         unit = Unit.objects.get(yoksis_no=yoksis_no)
-        donem = Donem.guncel_donem()
+        donem = Donem.guncel_donem(self.current)
         danismanlar = self.current.input['form']['Okutmanlar']
 
         self.current.task_data['okutmanlar'] = []
@@ -118,7 +118,8 @@ class DonemDanismanAtama(CrudView):
                 if danisman['secim']:
                     key = danisman['key']
                     okutman = Okutman.objects.get(key)
-                    donem_danisman, is_new = DonemDanisman.objects.get_or_create(okutman=okutman, donem=donem,
+                    donem_danisman, is_new = DonemDanisman.objects.get_or_create(okutman=okutman,
+                                                                                 donem=donem,
                                                                                  bolum=unit)
                     if is_new:
                         user = okutman.personel.user if okutman.personel.user else okutman.harici_okutman.user
@@ -138,12 +139,13 @@ class DonemDanismanAtama(CrudView):
         """
         yoksis_no = self.current.task_data['unit_yoksis_no']
         unit = Unit.objects.get(yoksis_no=yoksis_no)
-        donem = Donem.objects.get(guncel=True)
+        donem = Donem.guncel_donem(self.current)
 
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Danismanlar Kaydedildi'),
-            "msg": _(u'%(donem)s dönemi için %(donem)s programına ait danışman listesi kaydedilmiştir') % {
-                'donem': donem, 'unit': unit}}
+            "msg": _(
+                u'%(donem)s dönemi için %(donem)s programına ait danışman listesi kaydedilmiştir') % {
+                       'donem': donem, 'unit': unit}}
 
         title = _(u"Danışman Atama")
         message = _(u"%s dönemi için  danışman olarak atandınız.") % donem

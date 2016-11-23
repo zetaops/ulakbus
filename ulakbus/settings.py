@@ -111,7 +111,8 @@ OBJECT_MENU = {
 
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
-        {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme', 'field': 'personel_id'},
+        {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme',
+         'field': 'personel_id'},
 
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
@@ -240,12 +241,11 @@ ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabi
 
 SICIL_PREFIX = "KON"
 
-
 #: User search method of messaging subsystem will work on these fields
 MESSAGING_USER_SEARCH_FIELDS = ['name', 'surname']
 
 #: Unit search method of messaging subsystem will work on these fields
-MESSAGING_UNIT_SEARCH_FIELDS = ['name',]
+MESSAGING_UNIT_SEARCH_FIELDS = ['name', ]
 
 MESSAGES = {
     'lane_change_invite_title': 'Etkinlik gerekiyor!',

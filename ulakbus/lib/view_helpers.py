@@ -44,15 +44,19 @@ def convert_model_object_titlemap_item(m):
 
 class WFValues(object):
     """
-    WF çalıştırılırken wf current'ının task_data'sına başlangıçta istenilen dataların konulmasını
-    sağlayan method. Böylelikle tüm adımlar aynı datayı kullanır tutarsızlık ortadan kalkar.
+    WF başlangıcında, tüm iş akışı boyunca kullanılacak dataların
+    set edilmesini sağlayan methodları içeren class.
     """
 
     @staticmethod
     def assign_wf_initial_values(current):
-        current.task_data['wf_initial_values'] = {'guncel_donem': GuncelDonem().get_or_set(),
-                                                  'started': True,
-                                                  'start_date': datetime.now().strftime(
-                                                      "%Y-%m-%d %H:%M:%S"),
-                                                  'finish_date': None,
-                                                  'finished': False}
+        """
+        WF çalıştırılırken wf current'ının task_data'sına başlangıçta istenilen
+        dataların konulmasını ve tüm adımlarda bu dataların kullanılmasını sağlar.
+        """
+        current.task_data['wf_initial_values'] = {
+            'guncel_donem': GuncelDonem().get_or_set(),
+            'started': True,
+            'start_date': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'finish_date': None,
+            'finished': False}

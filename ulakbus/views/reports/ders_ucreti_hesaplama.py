@@ -19,7 +19,6 @@ from ulakbus.lib.common import get_akademik_takvim
 from ulakbus.lib.date_time_helper import yil_ve_aya_gore_ilk_ve_son_gun
 from zengine.lib.translation import gettext as _, gettext_lazy
 
-
 guncel_yil = datetime.now().year
 guncel_ay = datetime.now().month
 
@@ -33,7 +32,8 @@ class TarihForm(JsonForm):
     kullanılan form.
     """
 
-    yil_sec = fields.String(gettext_lazy(u'Yıl Seçiniz'), choices=yil_secenekleri, default=guncel_yil)
+    yil_sec = fields.String(gettext_lazy(u'Yıl Seçiniz'), choices=yil_secenekleri,
+                            default=guncel_yil)
     ay_sec = fields.String(gettext_lazy(u'Ay Seçiniz'), choices=ay_listele, default=guncel_ay)
 
 
@@ -135,8 +135,9 @@ class DersUcretiHesaplama(CrudView):
         _form = OkutmanListelemeForm(current=self.current, title=_(u"Okutman Seçiniz"))
 
         # TODO: ilgili doneme ait okutmanlar listelenmeli.
-        okutmanlar = [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi if
-                      gorev_birimi.yoksis_no == birim_no and gorev_birimi.donem.key == Donem.guncel_donem().key]
+        okutmanlar = [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi
+                      if gorev_birimi.yoksis_no == birim_no and gorev_birimi.donem.key
+                      == Donem.guncel_donem(self.current).key]
 
         for okutman in okutmanlar:
             _form.OkutmanListesi(secim=True, okutman=okutman.__unicode__(), key=okutman.key)
