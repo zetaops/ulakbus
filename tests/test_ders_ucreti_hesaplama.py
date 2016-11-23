@@ -38,7 +38,8 @@ class TestCase(BaseTestCase):
                     if i == 0:
                         # İlk döngüde hata mesajından sonra eğer geriye dönülmesi seçilirse,
                         # tarih seçme ekranına geri dönmesi beklenir.
-                        resp = self.client.post(form={"iptal": "null", "geri_don": 1, "sec": 1}, flow="tarih_sec")
+                        resp = self.client.post(form={"iptal": "null", "geri_don": 1, "sec": 1},
+                                                flow="tarih_sec")
                         assert resp.json['forms']['schema'][
                                    "title"] == "Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz"
 
@@ -47,7 +48,10 @@ class TestCase(BaseTestCase):
                         # mesajı çıkması beklenir.
                         resp = self.client.post(form={"iptal": 1, "geri_don": "null", "sec": 1},
                                                 flow="islem_iptali_bilgilendir")
-                        assert resp.json["msgbox"]["title"] == "Durum Mesajı" and "iptal" in resp.json["msgbox"]["msg"]
+                        assert resp.json["msgbox"]["title"] == "Durum Mesajı" and "iptal" in \
+                                                                                  resp.json[
+                                                                                      "msgbox"][
+                                                                                      "msg"]
 
             if loop == 1:
 
@@ -62,7 +66,7 @@ class TestCase(BaseTestCase):
                 birim_no = self.client.current.role.unit.yoksis_no
                 assert len(resp.json['forms']['model']["OkutmanListesi"]) == len(
                     [o for o in Okutman.objects for gorev_birimi in o.GorevBirimi if
-                     gorev_birimi.yoksis_no == birim_no and gorev_birimi.donem == Donem.guncel_donem()])
+                     gorev_birimi.yoksis_no == birim_no and gorev_birimi.donem.key == Donem.guncel_donem().key])
 
                 okutman_listesi = resp.json['forms']['model']["OkutmanListesi"]
 
@@ -80,7 +84,8 @@ class TestCase(BaseTestCase):
                     if i == 0:
                         # İlk döngüde hata mesajından sonra eğer geriye dönülmesi seçilirse,
                         # öğretim görevlisi seçme ekranına geri dönmesi beklenir.
-                        resp = self.client.post(form={"iptal": "null", "geri_don": 1, "sec": 1}, flow="okutman_sec")
+                        resp = self.client.post(form={"iptal": "null", "geri_don": 1, "sec": 1},
+                                                flow="okutman_sec")
                         assert resp.json['forms']['schema']["title"] == \
                                "Okutman Seçiniz"
                     if i == 1:
@@ -88,7 +93,10 @@ class TestCase(BaseTestCase):
                         # mesajı çıkması beklenir.
                         resp = self.client.post(form={"iptal": 1, "geri_don": "null", "sec": 1},
                                                 flow="islem_iptali_bilgilendir")
-                        assert resp.json["msgbox"]["title"] == "Durum Mesajı" and "iptal" in resp.json["msgbox"]["msg"]
+                        assert resp.json["msgbox"]["title"] == "Durum Mesajı" and "iptal" in \
+                                                                                  resp.json[
+                                                                                      "msgbox"][
+                                                                                      "msg"]
 
             if loop == 2:
                 # Geçerli bir tarih ve öğretim görevlisi seçilmesi senaryosu.
@@ -106,7 +114,8 @@ class TestCase(BaseTestCase):
                         donem_list = Donem.takvim_ayina_rastlayan_donemler(2016, 2)
                         assert len(donem_list) == 1
 
-                        tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, 2016, 2, birim_unit)
+                        tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, 2016, 2,
+                                                                            birim_unit)
                         assert tarih_araligi == [(21, 29)]
 
                     # 2016 yılı Temmuz ayı verilir. Temmuz ayı Bahar dönemi bitişi ve Yaz dönemi başlangıcıdır.
@@ -117,7 +126,8 @@ class TestCase(BaseTestCase):
                         donem_list = Donem.takvim_ayina_rastlayan_donemler(2016, 7)
                         assert len(donem_list) == 2
 
-                        tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, 2016, 7, birim_unit)
+                        tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, 2016, 7,
+                                                                            birim_unit)
 
                         assert tarih_araligi == [(1, 0), (15, 31)]
 
@@ -130,7 +140,8 @@ class TestCase(BaseTestCase):
                         resmi_tatil_list = resmi_tatil_gunleri_getir(birim_unit, 2016, 5)
 
                         assert 19 and 1 in resmi_tatil_list[0]
-                        tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, 2016, 5, birim_unit)
+                        tarih_araligi = ders_etkinligine_gore_tarih_araligi(donem_list, 2016, 5,
+                                                                            birim_unit)
 
                         assert tarih_araligi == [(1, 31)]
 
@@ -151,10 +162,12 @@ class TestCase(BaseTestCase):
                 for j, okutman in enumerate(okutman_listesi):
                     okutman = Okutman.objects.get(okutman['key'])
 
-                    ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman, False)
+                    ders_etkinlik_list = doneme_gore_okutman_etkinlikleri(donem_list, okutman,
+                                                                          False)
 
                     # Etkinlik olan günlerin etkinlik listede olduğu kontrol edilir.
-                    for etkinlik in DersEtkinligi.objects.filter(donem=donem_list[0], okutman=okutman, ek_ders=False):
+                    for etkinlik in DersEtkinligi.objects.filter(donem=donem_list[0],
+                                                                 okutman=okutman, ek_ders=False):
                         assert etkinlik.gun in ders_etkinlik_list[0]
 
                     # Personel izin listesi getirilir.
@@ -178,7 +191,8 @@ class TestCase(BaseTestCase):
 
                             assert resp.json['objects'][j + 1]['fields'][" %i" % (i + 1)] == str(
                                 ders_etkinlik_list[0][hafta_gun])
-                            assert resp.json['objects'][j + 1]['fields'][" %i" % (i + 1)] == str(aylik_plan[0][i + 1])
+                            assert resp.json['objects'][j + 1]['fields'][" %i" % (i + 1)] == str(
+                                aylik_plan[0][i + 1])
 
                     # Tür seçildikten sonra ekrana Puantaj Tablosu çıkarılması beklenir.
                     assert "PUANTAJ TABLOSU" in resp.json['forms']['schema']["title"]
