@@ -260,20 +260,20 @@ class Unit(Model):
     # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
-    def get_user_keys(cls, unit_key):
+    def get_role_keys(cls, unit_key):
         """recursively gets all roles (keys) under given unit"""
-        return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
-        stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
-        for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
-            stack.extend(cls.get_user_keys(unit_key))
-        return stack
+        return cls.get_role_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
+        # stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
+        # for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
+        #     stack.extend(cls.get_role_keys(unit_key))
+        # return stack
 
     @classmethod
-    def get_user_keys_by_yoksis(cls, yoksis_no):
+    def get_role_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('user_id', flatten=True)
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('key', flatten=True)
         for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
-            stack.extend(cls.get_user_keys_by_yoksis(yoksis_no))
+            stack.extend(cls.get_role_keys_by_yoksis(yoksis_no))
         return stack
 
     class Meta:
