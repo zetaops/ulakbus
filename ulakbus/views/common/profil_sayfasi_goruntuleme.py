@@ -18,7 +18,8 @@ aktivasyon_kalibi = re.compile('dogrulama=[a-z0-9]{40}')
 
 class KullaniciForm(JsonForm):
     class Meta:
-        exclude = ['password', 'superuser', 'harici_okutman', 'ogrenci', 'personel']
+        exclude = ['password', 'superuser', 'harici_okutman', 'ogrenci', 'personel',
+                   'last_login_role_key']
 
 
 class EPostaForm(JsonForm):

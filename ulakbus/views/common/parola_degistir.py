@@ -37,9 +37,11 @@ class ParolaDegistir(UlakbusView):
              u"* Özel karakterler = [\* & ^ % $ @ ! ? . : / > < ; ]\n"
              u"* Örnek parola = Ulakbüs3\*\n"))
 
-        _form.eski_parola = fields.String(_(u"Şu an kullandığınız parolanızı giriniz."))
-        _form.yeni_parola = fields.String(_(u"Yeni parolanızı giriniz."))
-        _form.yeni_parola_tekrar = fields.String(_(u"Yeni parolanızı tekrar giriniz."))
+        _form.eski_parola = fields.String(_(u"Şu an kullandığınız parolanızı giriniz."),
+                                          type="password")
+        _form.yeni_parola = fields.String(_(u"Yeni parolanızı giriniz."), type="password")
+        _form.yeni_parola_tekrar = fields.String(_(u"Yeni parolanızı tekrar giriniz."),
+                                                 type="password")
         _form.degistir = fields.Button(_(u"Parola Değiştir"))
         self.form_out(_form)
 
