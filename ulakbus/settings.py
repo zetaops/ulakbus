@@ -55,7 +55,11 @@ ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # diagrams that does not require logged in user
-ANONYMOUS_WORKFLOWS.extend(['login', 'logout'])
+ANONYMOUS_WORKFLOWS.extend(['login', 'logout','parolami_unuttum','yeni_parola_belirle'])
+
+#: Ortak kullanılan workflowlar
+COMMON_WORKFLOWS.extend(['profil_sayfasi_goruntuleme','e_posta_degistir','kullanici_adi_degistir',
+                         'parola_degistir'])
 
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
