@@ -89,7 +89,7 @@ class Donem(Model):
 
         if not self.bitis_tarihi > self.baslangic_tarihi:
             raise Exception("Bitiş tarihi başlangıç tarihinden büyük olmalıdır.")
-        if not self.baslangic_tarihi > self.onceki_donem().bitis_tarihi:
+        if self.onceki_donem() and not self.baslangic_tarihi >= self.onceki_donem().bitis_tarihi:
             raise Exception("Başlangıç tarihi önceki dönemin bitiş tarihinden büyük olmalıdır.")
         if self.guncel:
             try:
