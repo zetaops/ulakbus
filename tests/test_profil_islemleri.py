@@ -41,6 +41,7 @@ class TestCase(BaseTestCase):
     user.e_mail = 'ulakbus_deneme_birincil_maili@ulakbus.com'
     user.username = 'ulakbus'
     user.password = '123'
+    user.locale_language = 'tr'
     user.save()
 
     def test_profil_sayfasi(self):
@@ -55,23 +56,17 @@ class TestCase(BaseTestCase):
         assert 'Profil Sayfası' in resp.json['forms']['schema']["title"]
 
     def test_dil_sayi_zaman_ayarlari_degistir(self):
-        # Dil, sayı ve zaman seçenekleri alınır.
-        diller = translation.available_translations.keys()
-        zamanlar = translation.available_datetimes.keys()
-        sayilar = translation.available_numbers.keys()
-        # Bu alınan seçeneklerden rastgele bir tane seçilerek bir sözlük içerisine koyulur.
-        ornek_degerler = {}
-        ornek_degerler['locale_language'] = random.choice(diller)
-        ornek_degerler['locale_datetime'] = random.choice(zamanlar)
-        ornek_degerler['locale_number'] = random.choice(sayilar)
-        # Rastgele seçilen bu değerler seçilir ve kaydet butonuna basılır.
-        # Seçilen değerin kaydedilip ekranda gösterilmesi test edilir.
-        # Kaydetme işleminden sonra mesaj kutusunun çıkması ve bu mesaj
-        # kutusunun başlığının 'Bilgilendirme Mesajı' olması test edilir.
-        for k, v in ornek_degerler.items():
-            resp = self.client.post(form={k: v}, flow="kaydet")
-            assert resp.json["msgbox"]["title"] == "Bilgilendirme Mesajı"
-            assert resp.json["forms"]["model"][k] == v
+
+        resp = self.client.post(form={'locale_language': 'en'}, flow="kaydet")
+        user = User.objects.get(self.user_key)
+        assert user.locale_language == 'en'
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        resp = self.client.post()
+        assert 'Profile Page' in resp.json['forms']['schema']["title"]
+        user.locale_language = 'tr'
+        user.save()
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        self.client.post()
 
     def test_parola_degistir_basarisiz(self):
         # Parola değiştirme iş akışına geçiş yapılır.
