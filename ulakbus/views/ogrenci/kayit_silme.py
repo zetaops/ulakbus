@@ -173,7 +173,7 @@ class KayitSil(CrudView):
         kullanıcı tarafından seçilir.
 
         """
-
+        self.current.task_data['karar_no'] = self.input['form']['karar']
         _form = JsonForm(current=self.current, title=_(u'Öğrencinin Ayrılma Nedenini Seçiniz'))
         _form.ayrilma_nedeni = fields.Integer(choices=self.object.get_choices_for('ayrilma_nedeni'))
         _form.aciklama = fields.Text(_(u"Açıklama Yazınız"), required=True)
@@ -195,6 +195,13 @@ class KayitSil(CrudView):
         admine bilgi mesajı yollanır.
 
         """
+        meta = {'user': self.current.user_id,
+                'role': self.current.role_id,
+                'wf_name': self.current.workflow_name,
+                'task_name': self.current.task_name,
+                'reason': 'FAKÜLTE_KARAR_NO_%s' %self.current.task_data['karar_no']}
+
+        index_fields = [('user','bin'),('role','bin'),('wf_name','bin'),('task_name','bin'),('reason','bin')]
 
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         programlar = OgrenciProgram.objects.filter(ogrenci_id=self.current.task_data['ogrenci_id'])
@@ -202,13 +209,13 @@ class KayitSil(CrudView):
             program.ayrilma_nedeni = self.current.input['form']['ayrilma_nedeni']
             # todo: elle vermek yerine daha iyi bir yol dusunelim
             program.ogrencilik_statusu = 21
-            program.save()
+            program.save(meta = meta, index_fields=index_fields)
             roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
             for role in roles:
                 if role.abstract_role.key in ABSTRACT_ROLE_LIST:
                         abstract_role = kaydi_silinmis_abs_role(role)
                         role.abstract_role = abstract_role
-                        role.save()
+                        role.save(meta = meta,index_fields=index_fields)
 
         ogrenci_rolleri = Role.objects.filter(user=ogrenci.user)
         for role in ogrenci_rolleri:

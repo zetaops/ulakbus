@@ -8,6 +8,9 @@
 from ulakbus.models import OgrenciProgram, Ogrenci, Role
 from ulakbus.lib.ogrenci import kaydi_silinmis_abs_role
 from zengine.lib.test_utils import BaseTestCase
+from pyoko.db.connection import version_bucket, log_bucket
+
+from ulakbus.views.ogrenci.kayit_silme import ABSTRACT_ROLE_LIST, ABSTRACT_ROLE_LIST_SILINMIS
 
 
 class TestCase(BaseTestCase):
@@ -51,6 +54,9 @@ class TestCase(BaseTestCase):
         Dönen cevapta kaydın daha önceden silindiğine dair mesajın olup olmadığı test edilir.
 
         """
+        log_bucket_count = len(log_bucket.get_keys())
+        log_bucket_keys = log_bucket.get_keys()
+        version_bucket_keys = version_bucket.get_keys()
 
         # Öğrenci İşleri personeline login yaptırılır.
         self.prepare_client('/kayit_sil', username='ogrenci_isleri_1')
@@ -78,12 +84,26 @@ class TestCase(BaseTestCase):
 
         user = ogrenci.user
 
+        # Öğrencinin kayıtlı olduğu programlar
+        ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
+
+        # Her bir program için değiştirilecek rol sayısı bulunur.
+        role_count = 0
+        for program in ogrenci_program:
+            roles = Role.objects.filter(user=user, unit=program.program.birim)
+            for role in roles:
+                if role.abstract_role.key in ABSTRACT_ROLE_LIST:
+                    role_count += 1
+
+        # Öğrenci programı ve rol değişiklikleri toplamı bulunur.
+        yeni_kayit_sayisi = len(ogrenci_program) + role_count
+
         _roles = {role.key: role.abstract_role for role in Role.objects.filter(user=user)}
 
         # Kayıt silme işleminden onaylanır.
         self.client.post(form={'vazgecme': 'null', 'kaydet': 1}, flow='fakulte_yonetim_karari')
 
-        # Fakülte kara no girilir.
+        # Fakülte karar no girilir.
         resp = self.client.post(form={'karar': "455", 'kaydet': 1})
 
         # Ayrılma nedenlerini tutan list.
@@ -97,8 +117,39 @@ class TestCase(BaseTestCase):
         # Kaydı silinecek öğrencinin ayrılma nedeni seçilir ve açıklama yazılır.
         resp = self.client.post(form=dict(ayrilma_nedeni=11, sec=1, aciklama='Yatay Geçiş'))
 
-        # Öğrencinin kayıtlı olduğu program
-        ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
+        # Save işlemi meta_data parametresi ile yapıldığından aktivite logunun tutulması ve
+        # sayısının yeni_kayit_sayisi kada rolması beklenir.
+        assert len(log_bucket.get_keys()) == log_bucket_count + yeni_kayit_sayisi
+        # Yeni log kayıtlarının keyleri bulunur.
+        yeni_log_keyleri = list(set(log_bucket.get_keys()) - set(log_bucket_keys))
+        # Bu log kayıtlarının içinde bulunan version_key leri bulunur.
+        yeni_versiyon_keyleri = [log_bucket.get(x).data['version_key'] for x in yeni_log_keyleri]
+        # Versiyon kayıtlarından 'ogrenci_program' modeline ait olanlar süzülür.
+        ogrenci_program_kayitlari = list(
+            filter(lambda x: version_bucket.get(x).data['model'] == 'ogrenci_program', yeni_versiyon_keyleri))
+        # Versiyon kayıtlarından 'role' modeline ait olanlar süzülür.
+        rol_kayitlari = list(
+            filter(lambda x: version_bucket.get(x).data['model'] == 'role', yeni_versiyon_keyleri))
+        # Aktivite log kayıtlarının '455' fakülte karar numarasıyla yapıldığı kontrol edilir.
+        # WF isminin 'kayit_sil' olduğu kontrol edilir.
+        for kayit in yeni_log_keyleri:
+            assert log_bucket.get(kayit).data['reason'] == 'FAKÜLTE_KARAR_NO_455'
+            assert log_bucket.get(kayit).data['wf_name'] == 'kayit_sil'
+        # Öğrenci program sayısı kadar ogrenci_program versiyon kaydı tutulduğu kontrol edilir.
+        assert len(ogrenci_program_kayitlari) == len(ogrenci_program)
+        # Program versiyon kayıtlarının ayrılma nedeni, ogrencilik statusu fieldlarının belirtildiği
+        # gibi olduğu kontrol edilir.
+        for kayit in ogrenci_program_kayitlari:
+            assert version_bucket.get(kayit).data['data']['ayrilma_nedeni'] == 11
+            assert version_bucket.get(kayit).data['data']['ogrencilik_statusu'] == 21
+            assert version_bucket.get(kayit).data['model'] == 'ogrenci_program'
+        # Değişiklik yapılan rol sayısı kadar role versiyon kaydı tutulduğu kontrol edilir.
+        assert len(rol_kayitlari) == role_count
+        # Role versiyon kayıtlarının abstract_role_id bölümlerinin silinmiş olarak işaretlendiği kontrol edilir.
+        # Role versiyon kayıtlarının model bölümünün 'role' oldğu kontrol edilir.
+        for kayit in rol_kayitlari:
+            assert version_bucket.get(kayit).data['model'] == 'role'
+            assert version_bucket.get(kayit).data['data']['abstract_role_id'] in ABSTRACT_ROLE_LIST_SILINMIS
 
         # İş akışı tekrardan başlatılır.
         self.client.set_path('/kayit_sil')

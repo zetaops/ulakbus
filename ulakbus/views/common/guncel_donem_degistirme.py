@@ -84,7 +84,11 @@ class GuncelDonemDegistirme(CrudView):
 
         donem.ogretim_yili = ogretim_yili
         donem.guncel = True
-        donem.save()
+        meta = {'user_id': self.current.user_id,
+                'role_id': self.current.role_id,
+                'wf_name': self.current.workflow_name,
+                'task_name': self.current.task_name}
+        donem.save(meta=meta)
 
     def bilgi_ver(self):
         """
