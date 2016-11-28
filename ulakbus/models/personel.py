@@ -12,6 +12,7 @@ from .hitap.hitap_sebep import HitapSebep
 from pyoko.lib.utils import lazy_property
 
 from pyoko import Model, field
+from pyoko.exceptions import IntegrityError
 from zengine.lib.translation import gettext_lazy as _, gettext
 from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
@@ -202,7 +203,11 @@ class Personel(Model):
 
     def post_save(self):
         # Personel oluştuğunda User Otomatik olarak Oluşturulacaktır
+<<<<<<< HEAD
         if not self.user:
+=======
+         if not self.user:
+>>>>>>> ff67599... User post_save metodu düzenlendi
             self.user = User()
             self.user.username = self.tckn
             self.user.password = self.tckn
