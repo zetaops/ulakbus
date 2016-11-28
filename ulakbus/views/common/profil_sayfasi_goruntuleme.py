@@ -132,15 +132,12 @@ class ProfilGoruntule(UlakbusView):
 
         """
 
-        kullanici = User.objects.get(self.current.user.key)
+        kullanici = self.current.user
 
         for k in translation.DEFAULT_PREFS.keys():
             self.current.session[k] = ''
             setattr(kullanici, k, self.input['form'][k])
         kullanici.blocking_save()
-        # self.current.task_data['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir.')
-        # self.current.task_data['title'] = _(u'Bilgilendirme Mesajı')
-        # self.current.task_data['type'] = 'info'
         self.current.output['cmd'] = 'reload'
         self.current.output['title'] = _(u'Dil, Sayı, Zaman Formatı Değişikliği')
         self.current.output['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir. Ana sayfaya yönlendiriliyorsunuz.')
