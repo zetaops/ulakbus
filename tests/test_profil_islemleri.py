@@ -42,13 +42,14 @@ class TestCase(BaseTestCase):
     user.username = 'ulakbus'
     user.password = '123'
     user.locale_language = 'tr'
-    user.save()
+    user.blocking_save()
 
     def test_profil_sayfasi(self):
 
         # Test edilecek iş akışı seçilir.
         # ulakbus kullanıcısıyla giriş yapılır.
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         resp = self.client.post()
         # Linkle gelinmenin olmadığı test edilir.
         assert self.client.current.task_data['link'] == False
@@ -57,15 +58,16 @@ class TestCase(BaseTestCase):
 
     def test_dil_sayi_zaman_ayarlari_degistir(self):
 
-        resp = self.client.post(form={'locale_language': 'en'}, flow="kaydet")
+        self.client.post(form={'locale_language': 'en'}, flow="kaydet")
         user = User.objects.get(self.user_key)
         assert user.locale_language == 'en'
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         resp = self.client.post()
         assert 'Profile Page' in resp.json['forms']['schema']["title"]
         user.locale_language = 'tr'
-        user.save()
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        user.blocking_save()
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()
 
     def test_parola_degistir_basarisiz(self):
@@ -122,7 +124,8 @@ class TestCase(BaseTestCase):
     # Zato mock oluştuğunda test edilecektir.
 
     # def test_e_posta_degistir_link_yolla_basarili(self):
-    #     self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+    #     user = User.objects.get(self.user_key)
+    #     self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
     #     self.client.post()
     #     # E-posta değiştirme iş akışına geçiş yapılır.
     #     self.client.post(flow="e_posta_degistir")
@@ -135,7 +138,8 @@ class TestCase(BaseTestCase):
     #     assert 'E-Posta Doğrulama' == resp.json["msgbox"]["title"]
 
     def test_parola_degistir_basarili_cikis(self):
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()
         self.client.post(flow="parola_degistir")
         self.parola_basarili_degisim()
@@ -145,10 +149,11 @@ class TestCase(BaseTestCase):
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user = User.objects.get(self.user_key)
         user.username = 'ulakbus'
-        user.save()
+        user.blocking_save()
 
     def test_kullanici_adi_degistir_basarili_cikis(self):
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()
         self.client.post(flow="kullanici_adi_degistir")
         self.kullanici_adi_basarili_degisim()
@@ -158,10 +163,12 @@ class TestCase(BaseTestCase):
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user = User.objects.get(self.user_key)
         user.username = 'ulakbus'
-        user.save()
+        user.password = '123'
+        user.blocking_save()
 
     def test_kullanici_adi_degistir_parola_denemesi_basarisiz(self):
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()
         # Kullanıcı adı değiştirme iş akışına geçiş yapılır.
         resp = self.client.post(flow="kullanici_adi_degistir")
@@ -184,7 +191,8 @@ class TestCase(BaseTestCase):
 
     def test_gecersiz_link(self):
         # İş akışı dışarıdan linkle gelinecek şekilde tekrardan başlatılır.
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         resp = self.client.post(model='dogrulama=2fd1deed4653f40107571368cd46411088c7d988')
         # Linkle gelindiği test edilir.
         assert self.client.current.task_data['link'] == True
@@ -200,7 +208,8 @@ class TestCase(BaseTestCase):
         EPostaDogrulama('2fd1deed4653f40107571368cd46411088c7d988').set(
             'ulakbus_mail@ulakbus_mail.com')
         # Linkle gelerek iş akışı tekrardan başlatılır.
-        self.prepare_client('/profil_sayfasi_goruntuleme', user=self.user)
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         resp = self.client.post(model='dogrulama=2fd1deed4653f40107571368cd46411088c7d988')
         # Başarılı işlem mesajı oluştuğu test edilir.
         assert resp.json['msgbox']['title'] == 'E-Posta Değişikliği'
@@ -214,7 +223,7 @@ class TestCase(BaseTestCase):
         assert user.e_mail == 'ulakbus_mail@ulakbus_mail.com'
         # E-postası eski haline döndürülür.
         user.e_mail = self.user.e_mail
-        user.save()
+        user.blocking_save()
 
     def parola_deneme_basarisiz(self, resp):
         # Kullanıcıdan işlemin tammalanması için parolasının istendiği ekranın geldiği test edilir.
@@ -256,4 +265,4 @@ class TestCase(BaseTestCase):
         assert user.check_password('Parola3*')
         # Parola tekrardan varsayılan hale getirilir.
         user.password = "123"
-        user.save()
+        user.blocking_save()
