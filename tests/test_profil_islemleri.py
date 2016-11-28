@@ -107,7 +107,7 @@ class TestCase(BaseTestCase):
         assert resp.json["forms"]["model"]['username'] == 'deneme_kullanici_adi'
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user.username = 'ulakbus'
-        user.save()
+        user.blocking_save()
 
     def test_e_posta_degistir_parola_denemesi_basarisiz(self):
         # E-posta değiştirme iş akışına geçiş yapılır.
