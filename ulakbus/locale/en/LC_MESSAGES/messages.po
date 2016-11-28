@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-11-25 00:04+0200\n"
+"POT-Creation-Date: 2016-11-28 13:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -3140,27 +3140,18 @@ msgstr "Log Out"
 msgid "Çıkış Yapmadan Devam Et"
 msgstr "Continue Without Exiting"
 
-#: views/common/profil_sayfasi_goruntuleme.py:141
-msgid "Değişiklikleriniz başarıyla kaydedilmiştir."
-msgstr "Your changes have been successfully saved."
-
 #: views/common/profil_sayfasi_goruntuleme.py:142
-msgid "Bilgilendirme Mesajı"
-msgstr "Information Message"
-
-#: views/common/profil_sayfasi_goruntuleme.py:145
 msgid "Dil, Sayı, Zaman Formatı Değişikliği"
 msgstr "Language, Number, Time Format Change"
 
-#: views/common/profil_sayfasi_goruntuleme.py:146
+#: views/common/profil_sayfasi_goruntuleme.py:143
 #, fuzzy
 msgid ""
 "Değişiklikleriniz başarıyla kaydedilmiştir. Ana sayfaya "
 "yönlendiriliyorsunuz."
-
 msgstr ""
-"Your changes have been successfully saved. You are redirected "
-"to the main page"
+"Your changes have been successfully saved. You are redirected to the main"
+" page"
 
 #: views/common/yeni_donem_olusturma.py:34
 msgid "Güz Dönemi"
@@ -3242,9 +3233,9 @@ msgstr "Advisors Saved"
 #: views/ders/danisman.py:146
 #, fuzzy, python-format
 msgid ""
-"%(donem)s dönemi için %(donem)s programına ait danışman listesi "
+"%(donem)s dönemi için %(unit)s programına ait danışman listesi "
 "kaydedilmiştir"
-msgstr "Advisor list of program %(program)s for term %(donem)shas been saved"
+msgstr "Advisor list of program %(unit)s for term %(donem)shas been saved"
 
 #: views/ders/danisman.py:150 views/ogrenci/ogrenci.py:385
 msgid "Danışman Atama"
@@ -4896,197 +4887,4 @@ msgstr ""
 #, python-format
 msgid "%(ad)s / %(donem)s / Yarıyıl Sınav Programı"
 msgstr ""
-
-#~ msgid "Birim ID"
-#~ msgstr ""
-
-#~ msgid "Varsayılan Şube"
-#~ msgstr ""
-
-#~ msgid "Bölüm Seçiniz"
-#~ msgstr "Select a Department"
-
-#~ msgid "Yayınlanmış Ders Programı Var!"
-#~ msgstr ""
-
-#~ msgid ""
-#~ msgstr ""
-
-#~ msgid "Yayınlanmamış Ders Programı Var!"
-#~ msgstr ""
-
-#~ msgid "Yayınlanmayan ders programını inceleyip yayınlayabilirsiniz."
-#~ msgstr ""
-
-#~ msgid "Ders Programı Oluştur"
-#~ msgstr ""
-
-#~ msgid "Ders Programı Oluşturuluyor"
-#~ msgstr ""
-
-#~ msgid "Ders programı için yaptığınız taleb başarıyla alınmıştır."
-#~ msgstr ""
-
-#~ msgid "Lütfen tekrardan ders programı oluşturmayı çalıştırnız!"
-#~ msgstr ""
-
-#~ msgid "Ders Programı Başarıyla Oluşturuldu!"
-#~ msgstr ""
-
-#~ msgid "Derslik veya Öğretim Elemanı İncele"
-#~ msgstr ""
-
-#~ msgid "Göster"
-#~ msgstr ""
-
-#~ msgid "%s - Detaylı Zaman Tablosu"
-#~ msgstr ""
-
-#~ msgid "Ders Programı Yayınlandı!"
-#~ msgstr ""
-
-#~ msgid "Oluşturulan Ders Programı Başarıyla Yayınlandı"
-#~ msgstr ""
-
-#~ msgid "!!HATA!!"
-#~ msgstr ""
-
-#~ msgid "Ders Programı yayınlanırken hata oluştu lütfen tekrar yayınlayın."
-#~ msgstr ""
-
-#~ msgid "%s - Ders Programı"
-#~ msgstr ""
-
-#~ msgid "Ders Programı Bulunamadı"
-#~ msgstr ""
-
-#~ msgid "Ders Programı Henüz Oluşturulmadı."
-#~ msgstr ""
-
-#~ msgid "Yayınlanmış Sınav Programı Var!"
-#~ msgstr ""
-
-#~ msgid "Yayınlanmamış Sınav Programı Var!"
-#~ msgstr ""
-
-#~ msgid "Yayınlanmayan sınav programını inceleyip yayınlayabilirsiniz."
-#~ msgstr ""
-
-#~ msgid "Sınav Programı Oluştur"
-#~ msgstr ""
-
-#~ msgid "Sınav Programı Oluşturuluyor"
-#~ msgstr ""
-
-#~ msgid "Sınav programı için yaptığınız taleb başarıyla alınmıştır."
-#~ msgstr ""
-
-#~ msgid "Lütfen tekrardan sınav programı oluşturmayı çalıştırnız!"
-#~ msgstr ""
-
-#~ msgid "Sınav Programı Başarıyla Oluşturuldu!"
-#~ msgstr ""
-
-#~ msgid "Detaylı Zaman Tablosu"
-#~ msgstr ""
-
-#~ msgid "Sınav Programı Yayınlandı!"
-#~ msgstr ""
-
-#~ msgid "Oluşturulan Sınav Programı Başarıyla Yayınlandı"
-#~ msgstr ""
-
-#~ msgid "Sınav Programı yayınlanırken hata oluştu lütfen tekrar yayınlayın."
-#~ msgstr ""
-
-#~ msgid "Onay İçin Gonderildi!"
-#~ msgstr ""
-
-#~ msgid "İşleminiz başarıyla gerçekleşmiştir"
-#~ msgstr ""
-
-#~ msgid "Öğretim Elemani Zaman Tablosunu Onayladınız!"
-#~ msgstr ""
-
-#~ msgid "Derslik Ders Programını Bölüm Başkanına yollamak istiyor musunuz?"
-#~ msgstr ""
-
-#~ msgid "Derslik Zaman Tablosunu Onayladınız!"
-#~ msgstr ""
-
-#~ msgid "Gönderdiğiniz derslik zaman tablosu Bölüm Başkanı tarafından onaylandı"
-#~ msgstr ""
-
-#~ msgid "%s dersine ait öğrencilerin katılım bilgileri başarıyla kaydedildi"
-#~ msgstr ""
-
-#~ msgid "Hata Kodu : %s"
-#~ msgstr ""
-
-#~ msgid "Öğrenci Rol Değişim Kaydı Başarısız. Hata Kodu : %s"
-#~ msgstr ""
-
-#~ msgid "Öğrenci Danışmanı Bilgilendirme Başarısız. Hata Kodu : %s"
-#~ msgstr ""
-
-#~ msgid "Kurum Sicil No (Sıradaki Sicil No : KON-%s)"
-#~ msgstr ""
-
-#~ msgid "Kadro Dolu olduğu için atama yapılamaz."
-#~ msgstr ""
-
-#~ msgid "Personel atama işlemi İptal edildi."
-#~ msgstr ""
-
-#~ msgid "Atama İşlemi Başarıyla gerçekleştirildi. "
-#~ msgstr ""
-
-#~ msgid "%s TC no için Hitap Hizmet cetveli eşitlendi"
-#~ msgstr ""
-
-#~ msgid "Eksik Personel Bilgileri"
-#~ msgstr ""
-
-#~ msgid "Atama Öncesi Personelin Eksik Bilgilerini Düzenle."
-#~ msgstr ""
-
-#~ msgid "Çalıştığı birimde işe başlama"
-#~ msgstr ""
-
-#~ msgid "Birimde Göreve Başlama Tarihi"
-#~ msgstr ""
-
-#~ msgid "Birimde Göreve Başlama Açıklama"
-#~ msgstr ""
-
-#~ msgid "%(birim)s %(yil)s-%(ay)s AYI DERS PUANTAJ TABLOSU"
-#~ msgstr ""
-
-#~ msgid "Profile Photo"
-#~ msgid "Profile Photo"
-#~ msgstr ""
-
-#~ msgid "E-Mail"
-#~ msgstr ""
-
-#~ msgid "First Name"
-#~ msgstr ""
-
-#~ msgid "Surname"
-#~ msgstr ""
-
-#~ msgid "Last Login Role Key"
-#~ msgstr ""
-
-#~ msgid "Preferred Language"
-#~ msgstr ""
-
-#~ msgid "Preferred Date and Time Format"
-#~ msgstr ""
-
-#~ msgid "Preferred Number Format"
-#~ msgstr ""
-
-#~ msgid "Incorrect Information"
-#~ msgstr ""
 
