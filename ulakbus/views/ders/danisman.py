@@ -144,7 +144,7 @@ class DonemDanismanAtama(CrudView):
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Danismanlar Kaydedildi'),
             "msg": _(
-                u'%(donem)s dönemi için %(donem)s programına ait danışman listesi kaydedilmiştir') % {
+                u'%(donem)s dönemi için %(unit)s programına ait danışman listesi kaydedilmiştir') % {
                        'donem': donem, 'unit': unit}}
 
         title = _(u"Danışman Atama")
