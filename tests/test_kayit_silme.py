@@ -150,6 +150,13 @@ class TestCase(BaseTestCase):
         for kayit in rol_kayitlari:
             assert version_bucket.get(kayit).data['model'] == 'role'
             assert version_bucket.get(kayit).data['data']['abstract_role_id'] in ABSTRACT_ROLE_LIST_SILINMIS
+        # Yeni log kaydının indexleri getirilir.
+        indexes = log_bucket.get(yeni_log_keyleri[0]).indexes
+        # Belirtilen indexlerin doğru tutulduğu kontrol edilir.
+        assert ('wf_name_bin', self.client.current.workflow_name) in indexes
+        # wf_name indexi ile log kaydının getirildiği kontrol edilir.
+        assert yeni_log_keyleri[0] in log_bucket.get_index('wf_name_bin',
+                                                           self.client.current.workflow_name).results
 
         # İş akışı tekrardan başlatılır.
         self.client.set_path('/kayit_sil')

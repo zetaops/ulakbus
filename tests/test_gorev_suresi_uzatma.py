@@ -51,9 +51,14 @@ class TestCase(BaseTestCase):
         # ve aynı kalması beklenir.
         assert len(log_bucket.get_keys()) == log_bucket_count
         # Yeni versiyon keyleri getirilir.
-        yeni_versiyon_key = list(set(version_bucket.get_keys()) - set(version_bucket_keys))[0]
-        # Versiyon kaydındaki model datasının 'personel' olmasi kontrol edilir.
-        assert version_bucket.get(yeni_versiyon_key).data['model'] == 'personel'
+        versiyon_keyleri = list(set(version_bucket.get_keys()) - set(version_bucket_keys))
+        # Personel kaydı ile ilgili versiyon kaydı bulunur.
+        key = ''
+        for key in versiyon_keyleri:
+            if version_bucket.get(key).data['model'] == 'personel':
+                break
+        yeni_versiyon_key = key
+
         # Versiyon kaydındaki görev_suresi_bitis field'ınin belirlenen tarihle ayni olmasi kontrol edilir.
         assert version_bucket.get(yeni_versiyon_key).data['data']['gorev_suresi_bitis'] ==\
                yeni_gorev_suresi_bitis.strftime("%Y-%m-%dT%H:%M:%SZ")

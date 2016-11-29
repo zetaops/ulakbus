@@ -11,7 +11,6 @@ from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy, format_date
-import datetime
 
 
 class DonemForm(forms.JsonForm):

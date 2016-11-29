@@ -67,7 +67,12 @@ class TestCase(BaseTestCase):
         # Bir önceki dönem kaydının guncel field'ının False olduğu kontrol edilir.
         # Bunun anlamı yeni güncel dönem kaydedilirken, öncelikle güncel olan dönemin güncel fieldı
         # False yapılır ardından yeni istenilen dönem güncel olarak kaydedilir.
-        assert version_bucket.get(sirali_donem_kayitlari[0]).data['data']['guncel'] == False
+        assert version_bucket.get(sirali_donem_kayitlari[-2]).data['data']['guncel'] == False
+        # Yeni log kaydının indexleri getirilir.
+        indexes = log_bucket.get(yeni_log_key).indexes
+        # Belirtilen indexlerin doğru tutulduğu kontrol edilir.
+        assert ('user_id_bin', self.client.current.user_id) in indexes
+        assert yeni_log_key in log_bucket.get_index('user_id_bin', self.client.current.user_id).results
 
         # Güncel dönem olarak kaydedilip kaydedilmediği test edilir.
         assert Donem.guncel_donem().key == secilen_guncel_donem_key
