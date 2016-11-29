@@ -46,9 +46,10 @@ class HizmetCetveli(Reporter):
             self.current.task_data['personel_id'] = self.input['id']
             self.current.task_data['personel_tckn'] = Personel.objects.get(self.input['id']).tckn
 
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
         hk_list = []
         for hk in HizmetKayitlari.objects.filter(
-                personel_id=self.current.task_data['personel_id']).order_by('order_date'):
+                tckn=personel.tckn).order_by('order_date'):
             hk_record = OrderedDict({})
             hk_record['Görev'] = hk.gorev.title() if hk.gorev else ''
             hk_record['H. Sınıf'] = hk.get_hizmet_sinifi_display()
