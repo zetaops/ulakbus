@@ -135,8 +135,8 @@ class KayitSil(CrudView):
         _form = JsonForm(current=self.current,
                          title=_(u'Kayıt Silme İşlemini Onaylayınız.'))
         _form.help_text = _(u'%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?') % (
-        ogrenci, '-'.join(
-            name for name in self.current.task_data['roles']))
+            ogrenci, '-'.join(
+                name for name in self.current.task_data['roles']))
         _form.kaydet = fields.Button('Onayla', flow='fakulte_yonetim_karari')
         _form.vazgecme = fields.Button('Vazgeç', flow='kayit_silme_isleminden_vazgec')
         self.form_out(_form)
@@ -199,9 +199,9 @@ class KayitSil(CrudView):
                 'role': self.current.role_id,
                 'wf_name': self.current.workflow_name,
                 'task_name': self.current.task_name,
-                'reason': 'FAKÜLTE_KARAR_NO_%s' %self.current.task_data['karar_no']}
+                'reason': 'FAKÜLTE_KARAR_NO_%s' % self.current.task_data['karar_no']}
 
-        index_fields = [('user','bin'),('role','bin'),('wf_name','bin'),('task_name','bin'),('reason','bin')]
+        index_fields = [('user', 'bin'), ('role', 'bin'), ('wf_name', 'bin'), ('reason', 'bin')]
 
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         programlar = OgrenciProgram.objects.filter(ogrenci_id=self.current.task_data['ogrenci_id'])
@@ -209,13 +209,13 @@ class KayitSil(CrudView):
             program.ayrilma_nedeni = self.current.input['form']['ayrilma_nedeni']
             # todo: elle vermek yerine daha iyi bir yol dusunelim
             program.ogrencilik_statusu = 21
-            program.save(meta = meta, index_fields=index_fields)
+            program.save(meta=meta, index_fields=index_fields)
             roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
             for role in roles:
                 if role.abstract_role.key in ABSTRACT_ROLE_LIST:
-                        abstract_role = kaydi_silinmis_abs_role(role)
-                        role.abstract_role = abstract_role
-                        role.save(meta = meta,index_fields=index_fields)
+                    abstract_role = kaydi_silinmis_abs_role(role)
+                    role.abstract_role = abstract_role
+                    role.save(meta=meta, index_fields=index_fields)
 
         ogrenci_rolleri = Role.objects.filter(user=ogrenci.user)
         for role in ogrenci_rolleri:
@@ -253,8 +253,6 @@ class KayitSil(CrudView):
                     role.role.send_notification(title=title, message=msg, sender=self.current.user)
 
         for role in ogrenci.user.role_set:
-                abstract_role = kaydi_silinmis_abs_role(role.role)
-                if abstract_role.key in ABSTRACT_ROLE_LIST_SILINMIS:
-                    role.role.send_notification(title=title, message=msg, sender=self.current.user)
-
-
+            abstract_role = kaydi_silinmis_abs_role(role.role)
+            if abstract_role.key in ABSTRACT_ROLE_LIST_SILINMIS:
+                role.role.send_notification(title=title, message=msg, sender=self.current.user)

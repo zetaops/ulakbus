@@ -79,10 +79,11 @@ class TestCase(BaseTestCase):
         # ve aynı kalması beklenir.
         assert len(log_bucket.get_keys()) == log_bucket_count
         # Yeni versiyon kayıt keyleri alınır.
-        yeni_versiyon_keyleri = list(set(version_bucket.get_keys())-set(version_bucket_keys))
+        yeni_versiyon_keyleri = list(set(version_bucket.get_keys()) - set(version_bucket_keys))
         # ogrenci_program modeline ait olan versiyon keyi alınır.
         op_versiyon_key = list(
-            filter(lambda x: version_bucket.get(x).data['model'] == 'ogrenci_program', yeni_versiyon_keyleri))[0]
+            filter(lambda x: version_bucket.get(x).data['model'] == 'ogrenci_program',
+                   yeni_versiyon_keyleri))[0]
         # Seçilen danışmanın personel keyi bulunur.
         danisman_key = DonemDanisman.objects.get('Js2goP48yA183oMDAN8uM5GOExM').okutman.personel.key
         # Versiyon loglarındaki danışman id si ile seçilen danısmanın id sinin uyuştuğu kontrol edilir.

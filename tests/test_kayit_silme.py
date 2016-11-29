@@ -56,7 +56,6 @@ class TestCase(BaseTestCase):
         """
         log_bucket_count = len(log_bucket.get_keys())
         log_bucket_keys = log_bucket.get_keys()
-        version_bucket_keys = version_bucket.get_keys()
 
         # Öğrenci İşleri personeline login yaptırılır.
         self.prepare_client('/kayit_sil', username='ogrenci_isleri_1')
@@ -126,7 +125,8 @@ class TestCase(BaseTestCase):
         yeni_versiyon_keyleri = [log_bucket.get(x).data['version_key'] for x in yeni_log_keyleri]
         # Versiyon kayıtlarından 'ogrenci_program' modeline ait olanlar süzülür.
         ogrenci_program_kayitlari = list(
-            filter(lambda x: version_bucket.get(x).data['model'] == 'ogrenci_program', yeni_versiyon_keyleri))
+            filter(lambda x: version_bucket.get(x).data['model'] == 'ogrenci_program',
+                   yeni_versiyon_keyleri))
         # Versiyon kayıtlarından 'role' modeline ait olanlar süzülür.
         rol_kayitlari = list(
             filter(lambda x: version_bucket.get(x).data['model'] == 'role', yeni_versiyon_keyleri))
@@ -149,7 +149,8 @@ class TestCase(BaseTestCase):
         # Role versiyon kayıtlarının model bölümünün 'role' oldğu kontrol edilir.
         for kayit in rol_kayitlari:
             assert version_bucket.get(kayit).data['model'] == 'role'
-            assert version_bucket.get(kayit).data['data']['abstract_role_id'] in ABSTRACT_ROLE_LIST_SILINMIS
+            assert version_bucket.get(kayit).data['data'][
+                       'abstract_role_id'] in ABSTRACT_ROLE_LIST_SILINMIS
         # Yeni log kaydının indexleri getirilir.
         indexes = log_bucket.get(yeni_log_keyleri[0]).indexes
         # Belirtilen indexlerin doğru tutulduğu kontrol edilir.
@@ -184,7 +185,3 @@ class TestCase(BaseTestCase):
             assert role.abstract_role == kaydi_silinmis_abs_role(role)
             role.abstract_role = _roles[key]
             role.save()
-
-
-
-

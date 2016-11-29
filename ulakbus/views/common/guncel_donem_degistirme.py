@@ -88,8 +88,8 @@ class GuncelDonemDegistirme(CrudView):
                 'role_id': self.current.role_id,
                 'wf_name': self.current.workflow_name,
                 'task_name': self.current.task_name}
-        index_fields = [('user_id', 'bin')]
-        donem.save(meta=meta,index_fields = index_fields)
+        index_fields = [('user_id', 'bin'), ('wf_name', 'bin')]
+        donem.save(meta=meta, index_fields=index_fields)
 
     def bilgi_ver(self):
         """

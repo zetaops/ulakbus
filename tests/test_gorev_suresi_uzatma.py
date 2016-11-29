@@ -60,10 +60,10 @@ class TestCase(BaseTestCase):
         yeni_versiyon_key = key
 
         # Versiyon kaydındaki görev_suresi_bitis field'ınin belirlenen tarihle ayni olmasi kontrol edilir.
-        assert version_bucket.get(yeni_versiyon_key).data['data']['gorev_suresi_bitis'] ==\
+        assert version_bucket.get(yeni_versiyon_key).data['data']['gorev_suresi_bitis'] == \
                yeni_gorev_suresi_bitis.strftime("%Y-%m-%dT%H:%M:%SZ")
         # Versiyon kaydındaki görev_suresi_baslama field'ınin bugünün tarihiyle ayni olması kontrol edilir.
-        assert version_bucket.get(yeni_versiyon_key).data['data']['gorev_suresi_baslama'] ==\
+        assert version_bucket.get(yeni_versiyon_key).data['data']['gorev_suresi_baslama'] == \
                datetime.date.today().strftime("%Y-%m-%dT%H:%M:%SZ")
 
         # Personelin görev süresi bitiş tarihinin belirlediğimiz
