@@ -92,8 +92,8 @@ class TerfisiTikananPersonel(Reporter):
             personel_record = OrderedDict({})
             personel_record["TCK No"] = p.tckn
             personel_record["Ad"] = "%s %s" % (p.ad, p.soyad)
-            personel_record["Personel Tür"] = p.personel_turu
-            personel_record["Kadro Derece"] = p.kadro.derece
+            personel_record["Personel Tür"] = str(p.personel_turu)
+            personel_record["Kadro Derece"] = str(p.kadro.derece if p.kadro.derece else 0)
 
             personel_record["Görev Aylığı"] = "%i/%i" % (
                 p.gorev_ayligi_derece, p.gorev_ayligi_kademe)
