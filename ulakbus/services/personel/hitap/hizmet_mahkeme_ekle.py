@@ -11,7 +11,7 @@ Hitap'a personelin Mahkeme bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetMahkemeEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetMahkemeEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_mahkeme_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.mahkeme.ekle"
+    CHANNEL_NAME = "hizmet.mahkeme.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-mahkeme-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetMahkemeEkle(HITAPEkle):
 
         """
 
-        self.service_name = 'HizmetMahkemeInsert'
         self.service_dict = {
             'fields': {
                 'tckn': self.request.payload.get('tckn', ''),

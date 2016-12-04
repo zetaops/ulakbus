@@ -11,7 +11,7 @@ Hitap'a personelin Okul bilgilerinin guncellemesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetOkulGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetOkulGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_okul_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.okul.guncelle"
+    CHANNEL_NAME = "hizmet.okul.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-okul-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetOkulGuncelle(HITAPGuncelle):
 
         """
 
-        self.service_name = 'HizmetOkulUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

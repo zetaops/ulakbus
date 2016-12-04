@@ -11,7 +11,7 @@ Hitap'a personelin askerlik bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetAskerlikEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetAskerlikEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_askerlik_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.askerlik.ekle"
+    CHANNEL_NAME = "hizmet.askerlik.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-askerlik-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -38,7 +44,6 @@ class HizmetAskerlikEkle(HITAPEkle):
                     Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
 
-        self.service_name = 'HizmetAskerlikInsert'
         self.service_dict = {
             'fields': {
                 'askerlikNevi': self.request.payload.get('askerlik_nevi', ''),

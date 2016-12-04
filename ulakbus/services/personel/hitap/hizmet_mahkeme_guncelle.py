@@ -11,7 +11,7 @@ Hitap'a personelin Mahkeme bilgilerinin guncellemesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetMahkemeGuncelle(HITAPGuncelle):
@@ -19,9 +19,15 @@ class HizmetMahkemeGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_mahkeme_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.mahkeme.guncelle"
+    CHANNEL_NAME = "hizmet.mahkeme.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-mahkeme-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -39,7 +45,6 @@ class HizmetMahkemeGuncelle(HITAPGuncelle):
 
         """
 
-        self.service_name = 'HizmetMahkemeUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

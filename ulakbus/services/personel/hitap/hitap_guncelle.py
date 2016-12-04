@@ -52,6 +52,10 @@ class HITAPGuncelle(Service):
         self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
         super(HITAPGuncelle, self).__init__()
 
+    @staticmethod
+    def get_name():
+        return 'hitap_guncelle'
+
     def handle(self):
         """
         Servis çağrıldığında tetiklenen metod.

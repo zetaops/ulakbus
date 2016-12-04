@@ -13,6 +13,7 @@ from zengine.management_commands import *
 from ulakbus.lib.unitime import *
 from ulakbus.lib.fake import *
 
+
 class CreateUser(Command):
     CMD_NAME = 'create_user'
     HELP = 'Creates a new user'
@@ -195,37 +196,122 @@ class GenerateDersList(Command):
 
 
 class GenerateZatoServiceJson(Command):
-    # CMD_NAME = 'generate_zato_json'
-    # HELP = ''
-    # PARAMS = [
-    #     {'name': 'path', 'required': True, 'help': 'service file or directory'},
-    # ]
-    #
-    # CONNECTION = "channel"
-    # DATA_FORMAT = "json"
-    # NAME = "hizmet.acik.sure.ekle"
-    # URL_PATH = '/personel/hitap/hizmet-acik-sure-ekle'
-    # TRANSPORT = "plain_http"
-    # IS_ACTIVE = True
-    # IS_INTERNAL = False
-    #
-    # def run(self):
-    #     from glob import glob
-    #     import importlib
-    #
-    #     current_dir = self.manager.args.path
-    #     current_module_name = "zato.server.service"
-    #     services = []
-    #     for f in glob("%s/*.py" % current_dir):
-    #         name = os.path.splitext(os.path.basename(f))[0]
-    #         # Ignore __ files
-    #         print name
-    #         if name.startswith("__"):
-    #             continue
-    #         module = importlib.import_module(current_module_name)
-    #         if module:
-    #             services.append(name)
-    pass
+    CMD_NAME = 'deploy_services'
+    HELP = "Creates new channels and uploads services to Zato."
+    PARAMS = [
+        {'name': 'path', 'required': True,
+         'help': 'The zato service file or folder to be installed.'},
+    ]
+    py_files_path = []
+
+    def get_py_files_path(self, path):
+        """
+        servicelerin bulundugu klasorlerde arama yaparak .py dosyalarini bulur.
+        Args:
+            path: management komutunun --path parametresinden gelir
+
+        Returns: path parametresine e gore servis veya servislerin path uzantilarini
+        py_files_path dizisine ekler.
+
+        """
+        from glob import glob
+
+        for g in glob(path+'/*'):
+            file_name_extension = os.path.splitext(os.path.basename(g))[1]
+            if file_name_extension == '.py':
+                self.py_files_path.append(g)
+            elif not file_name_extension:
+                self.get_py_files_path(g)
+
+    def run(self):
+        import importlib
+        import inspect
+        import json
+        from zato.server.service import Service
+
+        services = []
+        path = self.manager.args.path
+        self.get_py_files_path(path)
+        paths = self.py_files_path
+        for p in paths:
+            name = os.path.splitext(os.path.basename(p))[0]
+            # Ignore __ files
+            if name.startswith("__"):
+                continue
+            pth = os.path.splitext(p)[0]
+            module_name = '.'.join(pth.split('/'))
+            module = importlib.import_module(module_name)
+            for obj_name in dir(module):
+                obj = getattr(module, obj_name)
+                # Eger obj bir class ise, zato `Service`  inherited ise,
+                #  ve Service in kendisi degilse
+                if inspect.isclass(obj) and issubclass(obj, Service) and obj is not Service \
+                        and hasattr(obj, "DEPLOY") and obj.DEPLOY:
+                    services.append([obj_name, obj, p])
+                    continue
+
+        zato_json = dict()
+        zato_json['cluster_id'] = 1
+
+        for name, service, path in services:
+            payload_service = self.get_service_payload_data(path)
+            time.sleep(0.3)
+            payload_channel = self.get_channel_payload_data(service, path)
+
+            payload_channel['deploy'] = service.DEPLOY
+
+            zato_json[name] = {
+                "CHANNEL": payload_channel,
+                "SERVICE": payload_service}
+
+        with open(os.getcwd()+'/services/zato_json.json', 'w') as outfile:
+            json.dump(zato_json, outfile, indent=4)
+
+    def get_service_payload_data(self, path):
+        import base64
+        import requests
+
+        url_service = 'http://127.0.0.1:11223/upload/services'
+
+        with open(path, 'r') as f:
+            text = f.read()
+            payload = base64.b64encode(text)
+
+        service_payload = dict()
+        service_payload["cluster_id"] = 1
+        service_payload["payload_name"] = os.path.basename(path)
+        service_payload["payload"] = payload
+
+        data_service = json.dumps(service_payload)
+        requests.post(url=url_service, data=data_service)
+
+        del service_payload['cluster_id']
+
+        return service_payload
+
+    def get_channel_payload_data(self, service, path):
+        import requests
+
+        url_channel = 'http://127.0.0.1:11223/create/service/channel'
+
+        payload_channel = dict()
+        payload_channel['cluster_id'] = 1
+        payload_channel['name'] = service.CHANNEL_NAME
+        payload_channel['connection'] = service.CONNECTION
+        payload_channel['data_format'] = service.DATA_FORMAT
+        payload_channel['url_path'] = service.URL_PATH
+        payload_channel['transport'] = service.TRANSPORT
+        payload_channel['is_active'] = service.IS_ACTIVE
+        payload_channel['is_internal'] = service.IS_INTERNAL
+        payload_channel['service'] = os.path.splitext(os.path.basename(path))[0]
+
+        data_channel = json.dumps(payload_channel)
+        requests.post(url=url_channel, data=data_channel)
+
+        del payload_channel['cluster_id']
+
+        return payload_channel
+
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'

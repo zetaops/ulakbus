@@ -15,7 +15,7 @@ Note:
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetNufusGetir(HITAPSorgula):
@@ -24,9 +24,15 @@ class HizmetNufusGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_nufus_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.nufus.getir"
+    CHANNEL_NAME = "hizmet.nufus.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-nufus-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -46,7 +52,6 @@ class HizmetNufusGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetNufusSorgula'
         self.bean_name = 'HizmetNufusServisBean'
         self.service_dict = {
             'fields': {

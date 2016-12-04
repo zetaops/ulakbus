@@ -11,7 +11,7 @@ Hitap'a personelin hizmet birlestirme bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetBirlestirmeGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetBirlestirmeGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_birlestirme_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.birlestirme.guncelle"
+    CHANNEL_NAME = "hizmet.birlestirme.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-birlestirme-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -37,8 +43,6 @@ class HizmetBirlestirmeGuncelle(HITAPGuncelle):
                     HizmetBirlestirmeUpdate servisinin alanlarıyla eşlenmektedir.
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
-
-        self.service_name = 'HizmetBirlestirmeUpdate'
 
         self.service_dict = {
             'fields': {

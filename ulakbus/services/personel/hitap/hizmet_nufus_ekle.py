@@ -11,7 +11,7 @@ Hitap'a personelin Nufus bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetNufusEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetNufusEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_nufus_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizme.nufus.ekle"
+    CHANNEL_NAME = "hizme.nufus.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-nufus-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetNufusEkle(HITAPEkle):
 
         """
 
-        self.service_name = 'HizmetNufusInsert'
         self.service_dict = {
             'fields': {
                 'ad': self.request.payload.get('ad', ''),

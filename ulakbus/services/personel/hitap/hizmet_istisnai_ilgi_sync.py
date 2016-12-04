@@ -16,7 +16,7 @@ Note:
 
 """
 
-from .hitap_sync import HITAPSync
+from ulakbus.services.personel.hitap.hitap_sync import HITAPSync
 from ulakbus.models.hitap.hitap import HizmetIstisnaiIlgi
 
 
@@ -25,6 +25,11 @@ class HizmetIstisnaiIlgiSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış İstisnai İlgi Bilgisi Senkronizasyon servisi
 
     """
+
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_istisnai_ilgi_sync"
 
     def handle(self):
         """

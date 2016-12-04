@@ -11,7 +11,7 @@ Hitap üzerinden personelin askerlik bilgilerinin sorgulamasını yapar.
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetAskerlikGetir(HITAPSorgula):
@@ -20,9 +20,15 @@ class HizmetAskerlikGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_askerlik_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.askerlik.getir"
+    CHANNEL_NAME = "hizmet.askerlik.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-askerlik-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -41,7 +47,6 @@ class HizmetAskerlikGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetAskerlikSorgula'
         self.bean_name = 'HizmetAskerlikServisBean'
         self.service_dict = {
             'fields': {

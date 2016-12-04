@@ -11,7 +11,7 @@ Hitap üzerinden personelin ünvan bilgilerinin sorgulamasını yapar.
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetUnvanGetir(HITAPSorgula):
@@ -20,9 +20,15 @@ class HizmetUnvanGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_unvan_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.unvan.getir"
+    CHANNEL_NAME = "hizmet.unvan.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-unvan-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -42,7 +48,6 @@ class HizmetUnvanGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetUnvanSorgula'
         self.bean_name = 'HizmetUnvanServisBean'
         self.service_dict = {
             'fields': {

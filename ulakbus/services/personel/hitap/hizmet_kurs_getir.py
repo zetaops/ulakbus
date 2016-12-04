@@ -11,7 +11,7 @@ Hitap üzerinden personelin kurs bilgilerinin sorgulamasını yapar.
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetKursGetir(HITAPSorgula):
@@ -20,9 +20,15 @@ class HizmetKursGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_kurs_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.kurs.getir"
+    CHANNEL_NAME = "hizmet.kurs.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-kurs-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -42,7 +48,6 @@ class HizmetKursGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetKursSorgula'
         self.bean_name = 'HizmetEgitimKursServisBean'
         self.service_dict = {
             'fields': {

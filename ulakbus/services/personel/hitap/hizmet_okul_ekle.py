@@ -11,7 +11,7 @@ Hitap'a personelin Okul bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetOkulEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetOkulEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_okul_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.okul.ekle"
+    CHANNEL_NAME = "hizmet.okul.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-okul-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetOkulEkle(HITAPEkle):
 
         """
 
-        self.service_name = 'HizmetOkulInsert'
         self.service_dict = {
             'fields': {
                 'bolum': self.request.payload.get('bolum', ''),

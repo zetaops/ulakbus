@@ -11,7 +11,7 @@ Hitap'da personelin Hizmet Tazminat bilgilerinin silinmesi sağlayan class.
 
 """
 
-from .hitap_sil import HITAPSil
+from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
 
 
 class HizmetTazminatSil(HITAPSil):
@@ -20,9 +20,15 @@ class HizmetTazminatSil(HITAPSil):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_tazminat_sil"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.tazminat.sil"
+    CHANNEL_NAME = "hizmet.tazminat.sil.channel"
     URL_PATH = '/personel/hitap/hizmet-tazminat-sil'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -36,8 +42,6 @@ class HizmetTazminatSil(HITAPSil):
             service_dict (dict): ''HizmetTazminat'' modelinden gelen kayıtların alanları,
                     HizmetTazminatDelete servisinin alanlarıyla eşlenmektedir.
         """
-
-        self.service_name = 'HizmetTazminatDelete'
 
         self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
         self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')

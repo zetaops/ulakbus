@@ -11,7 +11,7 @@ Hitap'a personelin Kurs bilgilerinin guncellemesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetKursGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetKursGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_kurs_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.kurs.guncelle"
+    CHANNEL_NAME = "hizmet.kurs.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-kurs-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetKursGuncelle(HITAPGuncelle):
 
         """
 
-        self.service_name = 'HizmetKursUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

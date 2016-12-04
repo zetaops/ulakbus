@@ -11,7 +11,7 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetAcikSureEkle(HITAPEkle):
@@ -19,10 +19,15 @@ class HizmetAcikSureEkle(HITAPEkle):
     HITAP Ekleme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Ekleme servisi
 
     """
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_acik_sure_ekle"
 
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.acik.sure.ekle"
+    CHANNEL_NAME = "hizmet.acik.sure.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-acik-sure-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -39,7 +44,6 @@ class HizmetAcikSureEkle(HITAPEkle):
                     tutulmaktadır.
 
         """
-        self.service_name = 'HizmetAcikSureInsert'
 
         self.service_dict = {
             'fields': {

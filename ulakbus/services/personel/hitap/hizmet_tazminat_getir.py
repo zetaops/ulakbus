@@ -11,7 +11,7 @@ Hitap üzerinden personelin tazminat bilgilerinin sorgulamasını yapar.
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetTazminatGetir(HITAPSorgula):
@@ -20,9 +20,15 @@ class HizmetTazminatGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_tazminat_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.tazminat.getir"
+    CHANNEL_NAME = "hizmet.tazminat.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-tazminat-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -41,7 +47,6 @@ class HizmetTazminatGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetTazminatSorgula'
         self.bean_name = 'HizmetTazminatServisBean'
         self.service_dict = {
             'fields': {

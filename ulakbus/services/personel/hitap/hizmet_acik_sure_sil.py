@@ -11,7 +11,7 @@ Hitap'da personelin açık süre bilgilerinin silinmesi sağlayan class.
 
 """
 
-from .hitap_sil import HITAPSil
+from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
 
 
 class HizmetAcikSureSil(HITAPSil):
@@ -19,9 +19,16 @@ class HizmetAcikSureSil(HITAPSil):
     HITAP Silme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Silme servisi
 
     """
+
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_acik_sure_sil"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.acik.sure.sil"
+    CHANNEL_NAME = "hizmet.acik.sure.sil.channel"
     URL_PATH = '/personel/hitap/hizmet-acik-sure-sil'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -37,7 +44,6 @@ class HizmetAcikSureSil(HITAPSil):
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
 
         """
-        self.service_name = 'HizmetAcikSureDelete'
 
         self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
         self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')

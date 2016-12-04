@@ -12,7 +12,7 @@ yereldeki kayıtlarla senkronizasyonunu yapar.
 
 """
 
-from .hitap_sync import HITAPSync
+from ulakbus.services.personel.hitap.hitap_sync import HITAPSync
 from ulakbus.models.hitap.hitap import HizmetIHS
 
 
@@ -22,6 +22,11 @@ class HizmetIHSSync(HITAPSync):
     Bilgisi Senkronizasyon servisi
 
     """
+
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_ihs_sync"
 
     def handle(self):
         """

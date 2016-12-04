@@ -11,7 +11,7 @@ Hitap'a personelin Hizmet Cetvel  Kayit bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetCetveliEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetCetveliEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_cetveli_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.cetveli.ekle"
+    CHANNEL_NAME = "hizmet.cetveli.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-cetveli-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -38,7 +44,6 @@ class HizmetCetveliEkle(HITAPEkle):
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
 
-        self.service_name = 'HizmetCetvelInsert'
         self.service_dict = {
             'fields': {
                 'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),

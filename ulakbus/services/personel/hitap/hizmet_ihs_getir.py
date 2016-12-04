@@ -11,7 +11,7 @@ Hitap üzerinden personelin itibari hizmet süresi zammı bilgilerinin sorgulama
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetIHSGetir(HITAPSorgula):
@@ -20,9 +20,15 @@ class HizmetIHSGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_ihs_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.ihs.getir"
+    CHANNEL_NAME = "hizmet.ihs.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-ihs-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -41,7 +47,6 @@ class HizmetIHSGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetIHSSorgula'
         self.bean_name = 'HizmetIHSServisBean'
         self.service_dict = {
             'fields': {

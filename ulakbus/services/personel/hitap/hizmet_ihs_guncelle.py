@@ -11,7 +11,7 @@ Hitap'a personelin IHS bilgilerinin guncellemesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 # todo: from ulakbus.models.hitap.hitap import HizmetIHS
 
 
@@ -21,9 +21,15 @@ class HizmetIhsGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_ihs_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.ihs.guncelle"
+    CHANNEL_NAME = "hizmet.ihs.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-ihs-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetIhsGuncelle(HITAPGuncelle):
 
         """
 
-        self.service_name = 'HizmetIHSUpdate'
         self.service_dict = {
             'fields': {
                 'ihzID': self.request.payload.get('kayit_no', ''),

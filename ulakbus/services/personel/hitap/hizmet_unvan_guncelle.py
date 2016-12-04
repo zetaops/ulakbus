@@ -11,7 +11,7 @@ Hitap'a personelin Unvan bilgilerinin guncellenmesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetUnvanGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetUnvanGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_unvan_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.unvan.guncelle"
+    CHANNEL_NAME = "hizmet.unvan.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-unvan-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetUnvanGuncelle(HITAPGuncelle):
 
         """
 
-        self.service_name = 'HizmetUnvanUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

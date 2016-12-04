@@ -11,7 +11,7 @@ Hitap'a personelin Hizmet Cetvel Kayit bilgilerinin güncellemesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetCetveliGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetCetveliGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_cetveli_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.cetveli.guncelle"
+    CHANNEL_NAME = "hizmet.cetveli.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-cetveli-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -38,7 +44,6 @@ class HizmetCetveliGuncelle(HITAPGuncelle):
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
 
-        self.service_name = 'HizmetCetvelUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

@@ -11,7 +11,7 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetBirlestirmeEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetBirlestirmeEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_birlestirme_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.birlestirme.ekle"
+    CHANNEL_NAME = "hizmet.birlestirme.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-birlestirme-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -38,7 +44,6 @@ class HizmetBirlestirmeEkle(HITAPEkle):
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
 
         """
-        self.service_name = 'HizmetBirlestirmeInsert'
 
         self.service_dict = {
             'fields': {

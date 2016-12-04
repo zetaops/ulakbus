@@ -11,7 +11,7 @@ Hitap'da personelin Hizmet Okul bilgilerinin silinmesi sağlayan class.
 
 """
 
-from .hitap_sil import HITAPSil
+from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
 
 
 class HizmetOkulSil(HITAPSil):
@@ -20,9 +20,15 @@ class HizmetOkulSil(HITAPSil):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_okul_sil"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.okul.sil"
+    CHANNEL_NAME = "hizmet.okul.sil.channel"
     URL_PATH = '/personel/hitap/hizmet-okul-sil'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -37,8 +43,6 @@ class HizmetOkulSil(HITAPSil):
                     HizmetOkulDelete servisinin alanlarıyla eşlenmektedir.
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
-
-        self.service_name = 'HizmetOkulDelete'
 
         self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
         self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')

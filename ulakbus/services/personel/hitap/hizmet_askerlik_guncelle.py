@@ -11,7 +11,7 @@ Hitap'a personelin askerlik bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetAskerlikGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetAskerlikGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_askerlik_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.askerlik.guncelle"
+    CHANNEL_NAME = "hizmet.askerlik.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-askerlik-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -38,7 +44,6 @@ class HizmetAskerlikGuncelle(HITAPGuncelle):
                     Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
 
-        self.service_name = 'HizmetAskerlikUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

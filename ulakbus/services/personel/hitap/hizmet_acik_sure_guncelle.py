@@ -11,7 +11,7 @@ Hitap'a personelin açık süre bilgilerinin güncellemesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetAcikSureGuncelle(HITAPGuncelle):
@@ -19,9 +19,16 @@ class HizmetAcikSureGuncelle(HITAPGuncelle):
     HITAP Güncelleme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Güncelleme servisi
 
     """
+
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_acik_sure_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.acik.sure.guncelle"
+    CHANNEL_NAME = "hizmet.acik.sure.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-acik-sure-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -37,7 +44,6 @@ class HizmetAcikSureGuncelle(HITAPGuncelle):
                     Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
 
-        self.service_name = 'HizmetAcikSureUpdate'
         hizmet_acik_sure = HizmetAcikSure.objects.get(key)
         self.service_dict = {
             'fields': {

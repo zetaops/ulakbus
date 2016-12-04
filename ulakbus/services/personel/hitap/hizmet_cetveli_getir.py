@@ -11,7 +11,7 @@ Hitap üzerinden personelin hizmet kaydı bilgilerinin sorgulamasını yapar.
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetCetveliGetir(HITAPSorgula):
@@ -21,9 +21,15 @@ class HizmetCetveliGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_cetveli_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.cetveli.getir"
+    CHANNEL_NAME = "hizmet.cetveli.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-cetveli-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -42,7 +48,6 @@ class HizmetCetveliGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetCetvelSorgula'
         self.bean_name = 'HizmetCetveliServisBean'
         self.service_dict = {
             'fields': {

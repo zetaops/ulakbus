@@ -11,7 +11,7 @@ Hitap'a personelin hizmet borclanma bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetBorclanmaGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetBorclanmaGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_borclanma_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.borclanma.guncelle"
+    CHANNEL_NAME = "hizmet.borclanma.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-borclanma-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -39,7 +45,6 @@ class HizmetBorclanmaGuncelle(HITAPGuncelle):
 
         """
 
-        self.service_name = 'HizmetBorclanmaUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

@@ -11,7 +11,7 @@ Hitap üzerinden personelin borçlanma bilgilerinin sorgulamasını yapar.
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetBorclanmaGetir(HITAPSorgula):
@@ -20,9 +20,15 @@ class HizmetBorclanmaGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_borclanma_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.borclanma.getir"
+    CHANNEL_NAME = "hizmet.borclanma.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-borclanma-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -41,7 +47,6 @@ class HizmetBorclanmaGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetBorclanmaSorgula'
         self.bean_name = 'HizmetBorclanmaServisBean'
         self.service_dict = {
             'fields': {

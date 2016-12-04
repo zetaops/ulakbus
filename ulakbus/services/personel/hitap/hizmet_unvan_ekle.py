@@ -11,7 +11,7 @@ Hitap'a personelin Unvan bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetUnvanEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetUnvanEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_unvan_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.unvan.ekle"
+    CHANNEL_NAME = "hizmet.unvan.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-unvan-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetUnvanEkle(HITAPEkle):
 
         """
 
-        self.service_name = 'HizmetUnvanInsert'
         self.service_dict = {
             'fields': {
                 'asilVekil': self.request.payload.get('asil_vekil', ''),

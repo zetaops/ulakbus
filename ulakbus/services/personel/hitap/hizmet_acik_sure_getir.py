@@ -12,7 +12,7 @@ açık süre hizmet bilgilerinin sorgulamasını yapar.
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetAcikSureGetir(HITAPSorgula):
@@ -22,9 +22,15 @@ class HizmetAcikSureGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_acik_sure_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.acik.sure.getir"
+    CHANNEL_NAME = "hizmet.acik.sure.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-acik-sure-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -43,7 +49,6 @@ class HizmetAcikSureGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetAcikSureSorgula'
         self.bean_name = 'HizmetAcikSureServisBean'
         self.service_dict = {
             'fields': {

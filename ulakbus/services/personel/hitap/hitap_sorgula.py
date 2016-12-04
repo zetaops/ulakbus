@@ -84,6 +84,10 @@ class HITAPSorgula(Service):
         self.service_dict = {}
         super(HITAPSorgula, self).__init__()
 
+    @staticmethod
+    def get_name():
+        return 'hitap_sorgula'
+
     def handle(self):
         """
         Servis çağrıldığında tetiklenen metod.

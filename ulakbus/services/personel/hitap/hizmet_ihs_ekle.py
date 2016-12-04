@@ -11,7 +11,7 @@ Hitap'a personelin IHS bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetIhsEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetIhsEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_ihs_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.ihs.ekle"
+    CHANNEL_NAME = "hizmet.ihs.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-ihs-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -39,7 +45,6 @@ class HizmetIhsEkle(HITAPEkle):
 
         """
 
-        self.service_name = 'HizmetIHSInsert'
         self.service_dict = {
             'fields': {
                 'tckn': self.request.payload.get('tckn', ''),

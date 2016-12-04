@@ -71,6 +71,10 @@ class HITAPSync(Service):
         self.model = None
         super(HITAPSync, self).__init__()
 
+    @staticmethod
+    def get_name():
+        return 'hitap_sync'
+
     def handle(self):
         """
         Servis çağrıldığında tetiklenen metod.

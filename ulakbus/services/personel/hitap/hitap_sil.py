@@ -50,6 +50,10 @@ class HITAPSil(Service):
         self.service_dict = {'fields': {'kayitNo': "", 'tckn': ""}}
         super(HITAPSil, self).__init__()
 
+    @staticmethod
+    def get_name():
+        return 'hitap_sil'
+
     def handle(self):
         """
         Servis çağrıldığında tetiklenen metod.

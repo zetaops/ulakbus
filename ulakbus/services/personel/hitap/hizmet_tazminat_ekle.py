@@ -11,7 +11,7 @@ Hitap'a personelin Tazminat bilgilerinin eklenmesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetTazminatEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetTazminatEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_tazminat_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.tazminat.ekle"
+    CHANNEL_NAME = "hizmet.tazminat.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-tazminat-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -39,7 +45,6 @@ class HizmetTazminatEkle(HITAPEkle):
                     alanlar listede tutulmaktadır.
 
         """
-        self.service_name = 'HizmetTazminatInsert'
         self.service_dict = {
             'fields': {
                 'gorev': self.request.payload.get('gorev', ''),

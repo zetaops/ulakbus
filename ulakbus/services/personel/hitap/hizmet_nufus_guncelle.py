@@ -11,7 +11,7 @@ Hitap'a personelin Nufus bilgilerinin guncellenmesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetNufusGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetNufusGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_nufus_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.nufus.guncelle"
+    CHANNEL_NAME = "hizmet.nufus.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-nufus-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetNufusGuncelle(HITAPGuncelle):
 
         """
 
-        self.service_name = 'HizmetNufusUpdate'
         self.service_dict = {
             'fields': {
                 'ad': self.request.payload.get('ad', ''),

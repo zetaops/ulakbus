@@ -11,7 +11,7 @@ Hitap'da personelin Hizmet Borçlanma bilgilerinin silinmesi sağlayan class.
 
 """
 
-from .hitap_sil import HITAPSil
+from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
 
 
 class HizmetBorclanmaSil(HITAPSil):
@@ -20,9 +20,15 @@ class HizmetBorclanmaSil(HITAPSil):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_borclanma_sil"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.borclanma.sil"
+    CHANNEL_NAME = "hizmet.borclanma.sil.channel"
     URL_PATH = '/personel/hitap/hizmet-borclanma-sil'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -37,8 +43,6 @@ class HizmetBorclanmaSil(HITAPSil):
                     HizmetBorclanmaDelete servisinin alanlarıyla eşlenmektedir.
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
-
-        self.service_name = 'HizmetBorclanmaDelete'
 
         self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
         self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')

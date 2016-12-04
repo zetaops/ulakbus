@@ -11,7 +11,7 @@ Hitap'a personelin Istisnai Ilgi bilgilerinin eklemesini yapar.
 
 """
 
-from .hitap_ekle import HITAPEkle
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetIstisnaiIlgiEkle(HITAPEkle):
@@ -20,9 +20,15 @@ class HizmetIstisnaiIlgiEkle(HITAPEkle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_istisnai_ilgi_ekle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.istisnai.ilgi.ekle"
+    CHANNEL_NAME = "hizmet.istisnai.ilgi.ekle.channel"
     URL_PATH = '/personel/hitap/hizmet-istisnai-ilgi-ekle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetIstisnaiIlgiEkle(HITAPEkle):
 
         """
 
-        self.service_name = 'hizmetIstisnaiIlgiInsert'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

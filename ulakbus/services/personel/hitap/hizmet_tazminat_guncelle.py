@@ -11,7 +11,7 @@ Hitap'a personelin Tazminat bilgilerinin guncellemesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetTazminatGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetTazminatGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_tazminat_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.tazminat.guncelle"
+    CHANNEL_NAME = "hizmet.tazminat.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-tazminat-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -38,7 +44,6 @@ class HizmetTazminatGuncelle(HITAPGuncelle):
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
 
-        self.service_name = 'HizmetTazminatUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

@@ -11,7 +11,7 @@ Hitap üzerinden personelin hizmet birleştirme bilgilerinin sorgulamasını yap
 
 """
 
-from .hitap_sorgula import HITAPSorgula
+from ulakbus.services.personel.hitap.hitap_sorgula import HITAPSorgula
 
 
 class HizmetBirlestirmeGetir(HITAPSorgula):
@@ -21,9 +21,15 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_birlestirme_getir"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.birlestirme.getir"
+    CHANNEL_NAME = "hizmet.birlestirme.getir.channel"
     URL_PATH = '/personel/hitap/hizmet-birlestirme-getir'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -42,7 +48,6 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
 
         """
 
-        self.service_name = 'HizmetBirlestirmeSorgula'
         self.bean_name = 'HizmetBirlestirmeServisBean'
         self.service_dict = {
             'fields': {

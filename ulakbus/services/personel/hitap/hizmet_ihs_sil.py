@@ -11,7 +11,7 @@ Hitap'da personelin IHS bilgilerinin silinmesi sağlayan class.
 
 """
 
-from .hitap_sil import HITAPSil
+from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
 
 
 class HizmetIHSSil(HITAPSil):
@@ -20,9 +20,15 @@ class HizmetIHSSil(HITAPSil):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_ihs_sil"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.ihs.sil"
+    CHANNEL_NAME = "hizmet.ihs.sil.channel"
     URL_PATH = '/personel/hitap/hizmet-ihs-sil'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -38,8 +44,6 @@ class HizmetIHSSil(HITAPSil):
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
 
         """
-
-        self.service_name = 'HizmetIHSDelete'
 
         self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
         self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')

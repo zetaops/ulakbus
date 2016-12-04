@@ -51,6 +51,10 @@ class HITAPEkle(Service):
         self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
         super(HITAPEkle, self).__init__()
 
+    @staticmethod
+    def get_name():
+        return 'hitap_ekle'
+
     def handle(self):
         """
         Servis çağrıldığında tetiklenen metod.

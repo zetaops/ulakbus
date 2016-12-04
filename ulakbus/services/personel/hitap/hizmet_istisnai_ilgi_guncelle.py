@@ -11,7 +11,7 @@ Hitap'a personelin Istisnai Ilgi bilgilerinin guncellemesini yapar.
 
 """
 
-from .hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
 class HizmetIstisnaiIlgiGuncelle(HITAPGuncelle):
@@ -20,9 +20,15 @@ class HizmetIstisnaiIlgiGuncelle(HITAPGuncelle):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_istisnai_ilgi_guncelle"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.istisnai.ilgi.guncelle"
+    CHANNEL_NAME = "hizmet.istisnai.ilgi.guncelle.channel"
     URL_PATH = '/personel/hitap/hizmet-istisnai-ilgi-guncelle'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -40,7 +46,6 @@ class HizmetIstisnaiIlgiGuncelle(HITAPGuncelle):
 
         """
 
-        self.service_name = 'hizmetIstisnaiIlgiUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

@@ -11,7 +11,7 @@ Hitap'da personelin Hizmet Cetveli bilgilerinin silinmesi sağlayan class.
 
 """
 
-from .hitap_sil import HITAPSil
+from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
 
 
 class HizmetCetvelSil(HITAPSil):
@@ -20,9 +20,15 @@ class HizmetCetvelSil(HITAPSil):
 
     """
 
+    @staticmethod
+    def get_name():
+        # Zato service ismi
+        return "hizmet_cetveli_sil"
+
+    DEPLOY = True
     CONNECTION = "channel"
     DATA_FORMAT = "json"
-    NAME = "hizmet.cetveli.sil"
+    CHANNEL_NAME = "hizmet.cetveli.sil.channel"
     URL_PATH = '/personel/hitap/hizmet-cetveli-sil'
     TRANSPORT = "plain_http"
     IS_ACTIVE = True
@@ -37,8 +43,6 @@ class HizmetCetvelSil(HITAPSil):
                     HizmetBorclanmaDelete servisinin alanlarıyla eşlenmektedir.
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
-
-        self.service_name = 'HizmetCetvelDelete'
 
         self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
         self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')
