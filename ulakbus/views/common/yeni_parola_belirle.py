@@ -36,19 +36,23 @@ class YeniParolaBelirle(UlakbusView):
         """
 
         if 'msg' in self.current.task_data:
-            self.mesaj_kutusu_goster(self.current.task_data['title'], self.current.task_data['type'])
+            self.mesaj_kutusu_goster(self.current.task_data['title'],
+                                     self.current.task_data['type'])
 
         _form = JsonForm(current=self.current, title=_(u'Yeni Parola Girişi'))
         _form.help_text = _(
-            (u"Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:\n"
-             u"\n"
-             u"* Türkçe karakter içermemeli,\n"
-             u"* 8 karakterden büyük olmalı,\n"
-             u"* En az bir küçük harf, bir büyük harf, bir sayı ve bir özel karakter içermeli,\n"
-             u"* Özel karakterler = [\* & ^ % $ @ ! ? . : / > < ; ]\n"
-             u"* Örnek parola = Ulakbüs3\*\n"))
-        _form.yeni_parola = fields.String(_(u"Yeni parolanızı giriniz."))
-        _form.yeni_parola_tekrar = fields.String(_(u"Yeni parolanızı tekrar giriniz."))
+u"""Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:
+
+* Türkçe karakter içermemeli,
+* 8 karakterden büyük olmalı,
+* En az bir küçük harf, bir büyük harf, bir sayı ve bir özel karakter içermeli,
+* Eski şifrenizle aynı olmamalıdır,
+* Özel karakterler = ()[]{}!@#$%^&*+=-§±_~/|"><\.,:;≤≥
+* Örnek parola = Ulakbüs3\*""")
+
+        _form.yeni_parola = fields.String(_(u"Yeni parolanızı giriniz."), type="password")
+        _form.yeni_parola_tekrar = fields.String(_(u"Yeni parolanızı tekrar giriniz."),
+                                                 type="password")
         _form.onayla = fields.Button(_(u"Onayla"))
         self.form_out(_form)
 

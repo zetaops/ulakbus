@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_TZMSkOYEEeWL97xP2c-lYg" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="_Collaboration_2" name="ogrenci_mezuniyet">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_TZMSkOYEEeWL97xP2c-lYg" targetNamespace="http://activiti.org/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:collaboration id="_Collaboration_2">
     <bpmn2:extensionElements>
       <camunda:properties>
         <camunda:property name="menu_category" value="hidden" />
+        <camunda:property name="init" value="True" />
       </camunda:properties>
     </bpmn2:extensionElements>
-    <bpmn2:participant id="ogrenci_mezuniyet" name="Öğrenci Mezuniyet" processRef="ogrenci_mezuniyet" />
+    <bpmn2:participant id="OgrenciMezuniyet" name="Öğrenci Mezuniyet" processRef="ogrenci_mezuniyet" />
   </bpmn2:collaboration>
   <bpmn2:process id="ogrenci_mezuniyet" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">

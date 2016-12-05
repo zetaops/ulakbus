@@ -5,13 +5,13 @@ from setuptools import find_packages
 
 setup(
     name='Ulakbus',
-    version='0.8.7',
+    version='0.8.8',
     description='Ulakbus Butunlesik Universite Sistemi',
     author='Zetaops',
     license='GPL v3',
     author_email='info@zetaops.io',
     install_requires=[
-        'zengine==0.7.5',
+        'zengine==0.7.6',
         'requests',
         'boto',
         'reportlab',
