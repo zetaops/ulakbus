@@ -14,5 +14,5 @@ from .hitap.hitap import *
 from .buildings_rooms import *
 from .form import *
 from .ders_sinav_programi import *
-from zengine.models.workflow_manager import DiagramXML, WFInstance
-from zengine.models.workflow_manager import  Task, BPMNWorkflow, TaskInvitation
+from zengine.models.workflow_manager import DiagramXML, WFInstance, Task, BPMNWorkflow
+from ulakbus.services.models.ulakbus_services import UlakbusService
