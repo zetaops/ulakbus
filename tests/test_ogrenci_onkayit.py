@@ -105,7 +105,7 @@ class TestCase(BaseTestCase):
             resp = self.client.post(wf='ogrenci_isleri_onkayit_onay', id="Ik8SEGcDdJnHUvA7MKHpBBlwrJr",
                                     model="OgrenciProgram", param="ogrenci_id")
             if resp.json['reload_cmd'] == 'kayitli':
-                assert resp.json['msgbox']['title'] == "Bu Kayit Zaten Var!"
+                assert resp.json['msgbox']['title'] == "Bu Kayıt Zaten Var!"
             else:
                 assert resp.json['forms']['model']['unicode'] == "Hürmet Sezer - BİYOKİMYA ANABİLİM DALI / 2014"
 
@@ -124,5 +124,8 @@ class TestCase(BaseTestCase):
                                                             'unicode': "Hürmet Sezer - BİYOKİMYA ANABİLİM DALI / 2014"})
 
                 ogrenci_program.ogrencilik_statusu = 2
-                assert resp.json['msgbox']['title'] == "On Kayit Islemi Gerceklestirildi!"
+                assert resp.json['msgbox']['title'] == "Ön Kayıt İşlemi Gerçekleştirildi!"
+
+            ogrenci_program.ogrencilik_statusu = 1
+            ogrenci_program.save()
 

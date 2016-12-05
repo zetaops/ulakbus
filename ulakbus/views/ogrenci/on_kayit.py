@@ -72,8 +72,8 @@ class OnKayit(CrudView):
         self.object.save()
 
     def kaydet(self):
-        msg = {"title": 'On Kayit Islemi Gonderildi!',
-               "body": 'Onay icin ilgili memura gonderildi.'}
+        msg = {"title": _(u'Ön Kayıt İşlemi Gönderildi!'),
+               "body": _(u'Onay için ilgili memura gönderildi.')}
 
         self.current.output['msgbox'] = msg
         self.current.task_data['LANE_CHANGE_MSG'] = msg
@@ -121,16 +121,16 @@ class KayitBelgeler(CrudView):
     def on_kayit_tamamlandi(self):
 
         msg = {"type": 'info',
-               "title": 'On Kayit Islemi Gerceklestirildi!',
-               "msg": 'Ilgili ogrencinin on kaydini basariyla gerceklestirdiniz.'}
+               "title": _(u'Ön Kayıt İşlemi Gerçekleştirildi!'),
+               "msg": _(u'İlgili öğrencinin ön kaydını başarıyla gerçekleştirdiniz.')}
 
         self.current.output['msgbox'] = msg
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def kayitli(self):
         msg = {"type": 'info',
-               "title": 'Bu Kayit Zaten Var!',
-               "msg": 'Ilgili ogrencinin on kaydi daha onceden yapilmistir.'}
+               "title": _(u'Bu Kayıt Zaten Var!'),
+               "msg": _(u'İlgili öğrencinin ön kaydı daha önceden yapılmıştır.')}
 
         self.current.output['msgbox'] = msg
         self.current.task_data['LANE_CHANGE_MSG'] = msg

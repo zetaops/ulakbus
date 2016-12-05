@@ -12,6 +12,8 @@ from ulakbus.models import User, Personel
 from zengine.lib.test_utils import BaseTestCase
 from zengine.messaging.model import Message
 import time
+from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi
+from datetime import datetime
 
 
 class TestCase(BaseTestCase):
@@ -29,12 +31,13 @@ class TestCase(BaseTestCase):
                        'devam': 1,
                        'personel_turu': 2}
         resp = self.client.post(form=idari_forms)
+        baslangic_tarihi = datetime.strptime('20.05.2016', '%d.%m.%Y')
+        bitis_tarihi = datetime.strptime('30.05.2016', '%d.%m.%Y')
+        personeller = terfi_tarhine_gore_personel_listesi(
+            baslangic_tarihi=baslangic_tarihi, bitis_tarihi=bitis_tarihi,
+            personel_turu=2)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
-        assert len(ter_gel_id_per) == 3
-
-        idari_per_db = len(Personel.objects.filter(personel_turu=2))
-
-        assert idari_per_db - len(ter_gel_id_per) == 17
+        assert len(ter_gel_id_per) == len(personeller)
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
