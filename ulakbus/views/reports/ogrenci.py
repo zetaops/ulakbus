@@ -54,7 +54,7 @@ class OgrenciHarc(Reporter):
         result = defaultdict(lambda: 0)
         for b in Borc.objects.filter():
             result["%s %s" % (b.get_sebep_display(), 'Borç')] += int(b.miktar or 0)
-            result["%s %s" % (b.get_sebep_display(), 'Ödenen')] += int(b.odenen_miktar or 0)
+            # result["%s %s" % (b.get_sebep_display(), 'Ödenen')] += int(b.odenen_miktar or 0)
 
         return [(k, format_currency(v, 'TRY')) for k, v in result.items()]
 
@@ -63,6 +63,6 @@ class RoomCapacities(Reporter):
     TITLE = gettext_lazy(u'Kapasitesine Göre Mekanlar')
 
     def get_objects(self):
-        return [{'Kapasite': k, 'Oda Sayısı': v} for k, v in
-                     Room.objects.distinct_values_of('capacity').items()]
+        return sorted([{'Kapasite': k, 'Oda Sayısı': str(v)} for k, v in
+                       Room.objects.distinct_values_of('capacity').items()])
         # return Room.objects.distinct_values_of('capacity').items()

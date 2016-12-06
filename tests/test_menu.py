@@ -77,7 +77,7 @@ class TestCase(BaseTestCase):
                         {'kategori', 'param', 'text', 'url', 'wf', 'model'})
                 except AttributeError:
                     assert value in ['username', 'surname', 'name', 'roles', 'is_staff', 'role',
-                                     'avatar',
+                                     'role_details', 'avatar',
                                      'is_student', 'static_url'], 'The %s is not in the given list ' % value
 
         # Kullanıcının bilgilerini, sunucudan dönen kullanıcı bilgileriyle

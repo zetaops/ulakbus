@@ -28,18 +28,20 @@ class ParolaDegistir(UlakbusView):
 
         _form = JsonForm(current=self.current, title=_(u'Parola Değiştirme'))
         _form.help_text = _(
-            (u"Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:\n"
-             u"\n"
-             u"* Türkçe karakter içermemeli,\n"
-             u"* 8 karakterden büyük olmalı,\n"
-             u"* En az bir küçük harf, bir büyük harf, bir sayı ve bir özel karakter içermeli,\n"
-             u"* Eski şifrenizle aynı olmamalıdır.\n"
-             u"* Özel karakterler = [\* & ^ % $ @ ! ? . : / > < ; ]\n"
-             u"* Örnek parola = Ulakbüs3\*\n"))
+u"""Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:
 
-        _form.eski_parola = fields.String(_(u"Şu an kullandığınız parolanızı giriniz."))
-        _form.yeni_parola = fields.String(_(u"Yeni parolanızı giriniz."))
-        _form.yeni_parola_tekrar = fields.String(_(u"Yeni parolanızı tekrar giriniz."))
+* Türkçe karakter içermemeli,
+* 8 karakterden büyük olmalı,
+* En az bir küçük harf, bir büyük harf, bir sayı ve bir özel karakter içermeli,
+* Eski şifrenizle aynı olmamalıdır,
+* Özel karakterler = ()[]{}!@#$%^&*+=-§±_~/|"><\.,:;≤≥
+* Örnek parola = Ulakbüs3\*""")
+
+        _form.eski_parola = fields.String(_(u"Şu an kullandığınız parolanızı giriniz."),
+                                          type="password")
+        _form.yeni_parola = fields.String(_(u"Yeni parolanızı giriniz."), type="password")
+        _form.yeni_parola_tekrar = fields.String(_(u"Yeni parolanızı tekrar giriniz."),
+                                                 type="password")
         _form.degistir = fields.Button(_(u"Parola Değiştir"))
         self.form_out(_form)
 

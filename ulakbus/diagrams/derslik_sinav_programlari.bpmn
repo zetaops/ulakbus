@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_0t75u2l">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="init" value="True" />
+      </camunda:properties>
+    </bpmn:extensionElements>
     <bpmn:participant id="Participant_06s773a" name="Ders Programı Bölüm Koordinatörü" processRef="derslik_sinav_programlari">
       <bpmn:extensionElements>
         <camunda:properties>
@@ -10,40 +15,40 @@
     </bpmn:participant>
   </bpmn:collaboration>
   <bpmn:process id="derslik_sinav_programlari" name="Derslik Sınav Programları" isExecutable="false">
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>SequenceFlow_17tluzk</bpmn:outgoing>
-    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0avaez0" sourceRef="ExclusiveGateway_1bj6kc6" targetRef="bilgi_ver">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">yayinlanmamis_sinav_sayisi == 0</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1uxldgw" sourceRef="sinav_etkinliklerini_kontrol_et" targetRef="ExclusiveGateway_1bj6kc6" />
+    <bpmn:sequenceFlow id="SequenceFlow_1txqeib" sourceRef="ExclusiveGateway_1bj6kc6" targetRef="derslik_sec" />
     <bpmn:sequenceFlow id="SequenceFlow_0hcw8xy" sourceRef="derslik_sec" targetRef="derslik_sinav_programlarini_goster" />
     <bpmn:sequenceFlow id="SequenceFlow_1j45s8j" sourceRef="derslik_sinav_programlarini_goster" targetRef="EndEvent_0dgkrzu" />
-    <bpmn:endEvent id="EndEvent_0dgkrzu">
-      <bpmn:incoming>SequenceFlow_1j45s8j</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:userTask id="derslik_sinav_programlarini_goster" name="Derslik Sınav Programlarını Gösyer" camunda:assignee="ders_programi.derslik_sinav_programlari.DerslikSinavProgramlari.derslik_sinav_programlarini_goster">
-      <bpmn:incoming>SequenceFlow_0hcw8xy</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1j45s8j</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:userTask id="derslik_sec" name="Derslik Seç" camunda:assignee="ders_programi.derslik_sinav_programlari.DerslikSinavProgramlari.derslik_sec">
-      <bpmn:incoming>SequenceFlow_1txqeib</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0hcw8xy</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_17tluzk" sourceRef="StartEvent_1" targetRef="sinav_etkinliklerini_kontrol_et" />
-    <bpmn:serviceTask id="sinav_etkinliklerini_kontrol_et" name="Sınav Etkinliklerini Kontrol Et" camunda:class="ders_programi.derslik_sinav_programlari.DerslikSinavProgramlari.sinav_etkinliklerini_kontrol_et">
-      <bpmn:incoming>SequenceFlow_17tluzk</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1uxldgw</bpmn:outgoing>
-    </bpmn:serviceTask>
+    <bpmn:userTask id="bilgi_ver" name="Bilgi Ver" camunda:assignee="ders_programi.derslik_sinav_programlari.DerslikSinavProgramlari.bilgi_ver">
+      <bpmn:incoming>SequenceFlow_0avaez0</bpmn:incoming>
+    </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1bj6kc6" default="SequenceFlow_1txqeib">
       <bpmn:incoming>SequenceFlow_1uxldgw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1txqeib</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0avaez0</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_1uxldgw" sourceRef="sinav_etkinliklerini_kontrol_et" targetRef="ExclusiveGateway_1bj6kc6" />
-    <bpmn:sequenceFlow id="SequenceFlow_1txqeib" sourceRef="ExclusiveGateway_1bj6kc6" targetRef="derslik_sec" />
-    <bpmn:sequenceFlow id="SequenceFlow_0avaez0" sourceRef="ExclusiveGateway_1bj6kc6" targetRef="bilgi_ver">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">yayinlanmamis_sinav_sayisi == 0</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:userTask id="bilgi_ver" name="Bilgi Ver" camunda:assignee="ders_programi.derslik_sinav_programlari.DerslikSinavProgramlari.bilgi_ver">
-      <bpmn:incoming>SequenceFlow_0avaez0</bpmn:incoming>
+    <bpmn:serviceTask id="sinav_etkinliklerini_kontrol_et" name="Sınav Etkinliklerini Kontrol Et" camunda:class="ders_programi.derslik_sinav_programlari.DerslikSinavProgramlari.sinav_etkinliklerini_kontrol_et">
+      <bpmn:incoming>SequenceFlow_17tluzk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1uxldgw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="derslik_sec" name="Derslik Seç" camunda:assignee="ders_programi.derslik_sinav_programlari.DerslikSinavProgramlari.derslik_sec">
+      <bpmn:incoming>SequenceFlow_1txqeib</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0hcw8xy</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:userTask id="derslik_sinav_programlarini_goster" name="Derslik Sınav Programlarını Gösyer" camunda:assignee="ders_programi.derslik_sinav_programlari.DerslikSinavProgramlari.derslik_sinav_programlarini_goster">
+      <bpmn:incoming>SequenceFlow_0hcw8xy</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1j45s8j</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_0dgkrzu">
+      <bpmn:incoming>SequenceFlow_1j45s8j</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_17tluzk</bpmn:outgoing>
+    </bpmn:startEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0t75u2l">
@@ -60,7 +65,7 @@
         <di:waypoint xsi:type="dc:Point" x="658" y="199" />
         <di:waypoint xsi:type="dc:Point" x="759" y="199" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="455.5" y="189" width="90" height="20" />
+          <dc:Bounds x="456" y="189" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0dgkrzu_di" bpmnElement="EndEvent_0dgkrzu">
@@ -86,7 +91,7 @@
         <di:waypoint xsi:type="dc:Point" x="206" y="199" />
         <di:waypoint xsi:type="dc:Point" x="281" y="199" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="198.5" y="189" width="90" height="20" />
+          <dc:Bounds x="199" y="189" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1sloty6_di" bpmnElement="sinav_etkinliklerini_kontrol_et">
@@ -109,7 +114,7 @@
         <di:waypoint xsi:type="dc:Point" x="483" y="199" />
         <di:waypoint xsi:type="dc:Point" x="558" y="199" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="475.5" y="189" width="90" height="20" />
+          <dc:Bounds x="476" y="189" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0avaez0_di" bpmnElement="SequenceFlow_0avaez0">
@@ -117,7 +122,7 @@
         <di:waypoint xsi:type="dc:Point" x="458" y="347" />
         <di:waypoint xsi:type="dc:Point" x="476" y="347" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="413" y="275.5" width="90" height="20" />
+          <dc:Bounds x="413" y="276" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_1gsw6u1_di" bpmnElement="bilgi_ver">

@@ -347,7 +347,7 @@ class DanismanAtama(CrudView):
 
         program = OgrenciProgram.objects.get(self.current.input['form']['program'])
         _form = DanismanSecimForm(current=self.current, title=_(u"Danışman Seçiniz"))
-        _choices = prepare_choices_for_model(DonemDanisman, donem=Donem.guncel_donem(),
+        _choices = prepare_choices_for_model(DonemDanisman, donem=Donem.guncel_donem(self.current),
                                              bolum=program.program.birim)
         _form.donem_danisman = fields.Integer(choices=_choices)
         self.form_out(_form)
@@ -410,7 +410,7 @@ class OgrenciMezuniyet(CrudView):
         doldurulur.
 
         """
-        guncel_donem = Donem.objects.filter(guncel=True)[0]
+        guncel_donem = Donem.guncel_donem(self.current)
         ogrenci_id = self.current.input['id']
         self.current.task_data['ogrenci_id'] = ogrenci_id
         self.current.task_data['donem_id'] = guncel_donem.key
@@ -766,7 +766,7 @@ class OgrenciDersAtama(CrudView):
             ogrenci_dersi_lst = []
             program_key = self.input['form']['program']
             self.current.task_data['program_key'] = program_key
-            guncel_donem = Donem.guncel_donem()
+            guncel_donem = Donem.guncel_donem(self.current)
             ogrenci_program = OgrenciProgram.objects.get(program_key)
             ogrenci_dersleri = OgrenciDersi.objects.filter(ogrenci_program=ogrenci_program,
                                                            donem=guncel_donem)

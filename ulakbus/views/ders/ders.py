@@ -357,7 +357,7 @@ class DersSubelendirme(CrudView):
                 kontenjan = s['kontenjan']
                 ad = s['ad']
                 dis_kontenjan = s['dis_kontenjan']
-                donem = Donem.guncel_donem()
+                donem = Donem.guncel_donem(self.current)
                 sube, is_new = Sube.objects.get_or_create(okutman_id=okutman, ders_id=ders,
                                                           kontenjan=kontenjan, ad=ad, dis_kontenjan=dis_kontenjan,
                                                           donem=donem)
@@ -660,7 +660,7 @@ class NotGirisi(CrudView):
 
         """
 
-        term = Donem.objects.filter(guncel=True)[0]
+        term = Donem.guncel_donem(self.current)
         sinav_key = self.current.task_data["sinav_key"]
         sube_key = self.current.task_data["sube"]
 

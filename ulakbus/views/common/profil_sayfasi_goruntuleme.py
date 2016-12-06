@@ -18,7 +18,8 @@ aktivasyon_kalibi = re.compile('dogrulama=[a-z0-9]{40}')
 
 class KullaniciForm(JsonForm):
     class Meta:
-        exclude = ['password', 'superuser', 'harici_okutman', 'ogrenci', 'personel']
+        exclude = ['password', 'superuser', 'harici_okutman', 'ogrenci', 'personel',
+                   'last_login_role_key']
 
 
 class EPostaForm(JsonForm):
@@ -92,7 +93,6 @@ class ProfilGoruntule(UlakbusView):
         başarılı işlem, hatalı işlem gibi görüntülenecek mesaj varsa burada gösterilir.
 
         """
-
         if self.current.task_data.get('msg', None):
             self.mesaj_kutusu_goster(self.current.task_data['title'], self.current.task_data['type'])
 
@@ -137,8 +137,7 @@ class ProfilGoruntule(UlakbusView):
         for k in translation.DEFAULT_PREFS.keys():
             self.current.session[k] = ''
             setattr(kullanici, k, self.input['form'][k])
-        kullanici.save()
-
-        self.current.task_data['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir.')
-        self.current.task_data['title'] = _(u'Bilgilendirme Mesajı')
-        self.current.task_data['type'] = 'info'
+        kullanici.blocking_save()
+        self.current.output['cmd'] = 'reload'
+        self.current.output['title'] = _(u'Dil, Sayı, Zaman Formatı Değişikliği')
+        self.current.output['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir. Ana sayfaya yönlendiriliyorsunuz.')

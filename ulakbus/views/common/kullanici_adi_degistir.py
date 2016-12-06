@@ -58,7 +58,8 @@ class KullaniciAdiDegistir(UlakbusView):
             self.mesaj_kutusu_goster(_(u'Hatalı Parola Girişi'))
         _form = JsonForm(current=self.current, title=_(u'İşlem Onayı İçin Parola Doğrulama'))
         _form.parola = fields.String(
-            _(u"Bu işlemi gerçekleştirebilmek için güncel parolanızı girmeniz gerekmektedir."))
+            _(u"Bu işlemi gerçekleştirebilmek için güncel parolanızı girmeniz gerekmektedir."),
+            type="password")
         _form.dogrula = fields.Button(_(u"Parola Doğrula"))
         self.form_out(_form)
 

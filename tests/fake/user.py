@@ -28,6 +28,8 @@ def new_user(username=None, password=None, superuser=False):
     """
     
     user = User(
+        name=fake.first_name(),
+        surname=fake.last_name(),
         username=username or fake.user_name(),
         password=password or fake.password(),
         superuser=superuser

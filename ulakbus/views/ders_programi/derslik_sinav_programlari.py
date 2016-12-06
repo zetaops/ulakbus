@@ -50,7 +50,8 @@ class DerslikSinavProgramlari(CrudView):
         Yayınlanmış sınav etkinlikleri var mı yok mu diye kontrol eder.
 
         """
-        sinav_etkinlikleri = SinavEtkinligi.objects.filter(published=True, donem=Donem.guncel_donem(),
+        sinav_etkinlikleri = SinavEtkinligi.objects.filter(published=True,
+                                                           donem=Donem.guncel_donem(self.current),
                                                            bolum=self.current.role.unit)
         self.current.task_data['yayinlanmamis_sinav_sayisi'] = len(sinav_etkinlikleri)
 
@@ -71,7 +72,8 @@ class DerslikSinavProgramlari(CrudView):
         """
         _form = DerslikSecimFormu(title=_(u"Derslik Seçiniz"), current=self.current)
         _choices = []
-        for s_etkinlik in SinavEtkinligi.objects.filter(published=True, donem=Donem.guncel_donem(),
+        for s_etkinlik in SinavEtkinligi.objects.filter(published=True,
+                                                        donem=Donem.guncel_donem(self.current),
                                                         bolum=self.current.role.unit):
             for s_yerleri in s_etkinlik.SinavYerleri:
                 if s_etkinlik.SinavYerleri:
@@ -86,7 +88,8 @@ class DerslikSinavProgramlari(CrudView):
         """
 
         room = Room.objects.get(self.current.input['form']['derslik'])
-        s_etkinlikleri = [s for s in SinavEtkinligi.objects.order_by('tarih') if room in s.SinavYerleri]
+        s_etkinlikleri = [s for s in SinavEtkinligi.objects.order_by('tarih') if
+                          room in s.SinavYerleri]
         sinav_etkinlikleri = map_etkinlik_hafta_gunleri(s_etkinlikleri)
         hafta = dict(HAFTA)
         self.output['objects'] = [hafta]
@@ -96,15 +99,15 @@ class DerslikSinavProgramlari(CrudView):
         for i in range(max_etkinlik):
             sinav_etkinlik_list = OrderedDict({})
             for hafta_gun in hafta.keys():
-                    if hafta_gun in sinav_etkinlikleri:
-                        try:
-                            etkinlik = sinav_etkinlikleri[hafta_gun][i]
-                            sinav_etkinlik_list[hafta[hafta_gun]] = etkinlik
-                        except IndexError:
-                            sinav_etkinlik_list[hafta[hafta_gun]] = ''
-
-                    else:
+                if hafta_gun in sinav_etkinlikleri:
+                    try:
+                        etkinlik = sinav_etkinlikleri[hafta_gun][i]
+                        sinav_etkinlik_list[hafta[hafta_gun]] = etkinlik
+                    except IndexError:
                         sinav_etkinlik_list[hafta[hafta_gun]] = ''
+
+                else:
+                    sinav_etkinlik_list[hafta[hafta_gun]] = ''
             item = {
                 "type": "table-multiRow",
                 "fields": sinav_etkinlik_list,
@@ -116,4 +119,3 @@ class DerslikSinavProgramlari(CrudView):
         _form.yazdir = fields.Button(_(u"Pdf Yazdır"))
         self.form_out(_form)
         self.current.output["meta"]["allow_actions"] = False
-

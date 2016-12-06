@@ -53,7 +53,7 @@ class DerslikDersProgrami(CrudView):
 
         """
         length = len(DersEtkinligi.objects.filter(published=True,
-                                                  donem=Donem.guncel_donem(),
+                                                  donem=Donem.guncel_donem(self.current),
                                                   bolum=self.current.role.unit))
         self.current.task_data['yayinlanmamis_ders_sayisi'] = length
 
@@ -74,7 +74,7 @@ class DerslikDersProgrami(CrudView):
         """
         _form = DerslikSecimFormu(title=_(u'Derslik Seçiniz'), current=self.current)
         ders_etkinlikleri = DersEtkinligi.objects.filter(published=True,
-                                                         donem=Donem.guncel_donem(),
+                                                         donem=Donem.guncel_donem(self.current),
                                                          bolum=self.current.role.unit)
         _choices = [(_etkinlik.room.key, _etkinlik.room.__unicode__())
                     for _etkinlik in ders_etkinlikleri]
@@ -91,7 +91,7 @@ class DerslikDersProgrami(CrudView):
         self.output['objects'] = [hafta]
         d_etkinlikleri = DersEtkinligi.objects.filter(room=room,
                                                       published=True,
-                                                      donem=Donem.guncel_donem())
+                                                      donem=Donem.guncel_donem(self.current))
         ders_etkinlikleri = map_etkinlik_hafta_gunleri(
             d_etkinlikleri.order_by(
                 'gun', 'baslangic_saat',

@@ -35,8 +35,8 @@ class TestCase(BaseTestCase):
         onceki_donem_keyleri = [d.key for d in Donem.objects.filter()]
         # Güz ve Bahar dönemi formları doldurulur, request yapılır.
         resp = self.client.post(
-            form={'kaydet': 1, 'guz_baslangic_tarihi': '02.09.2015', 'guz_bitis_tarihi': '15.02.2016',
-                  'bahar_baslangic_tarihi': '01.03.2016', 'bahar_bitis_tarihi': '17.06.2016'})
+            form={'kaydet': 1, 'guz_baslangic_tarihi': '02.09.2017', 'guz_bitis_tarihi': '01.02.2018',
+                  'bahar_baslangic_tarihi': '02.02.2018', 'bahar_bitis_tarihi': '01.07.2018'})
 
         # Solr ve Riak arasındaki gecikmeden dolayı 1 saniye bekletilir.
         time.sleep(1)

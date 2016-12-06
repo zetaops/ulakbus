@@ -108,8 +108,8 @@ class YeniDonemOlusturma(CrudView):
         def yeni_donem(ad, baslangic, bitis):
             d = Donem(
                 ad='%s - %s' % (ad, baslangic.split('.')[2]),
-                baslangic=baslangic,
-                bitis=bitis
+                baslangic_tarihi=baslangic,
+                bitis_tarihi=bitis
             )
             d.save()
 

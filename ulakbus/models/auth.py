@@ -44,23 +44,24 @@ class User(Model, BaseUser):
     ait bir ve tek kullanıcı olması zorunludur.
 
     """
-    avatar = field.File(_(u"Profile Photo"), random_name=True, required=False)
-    username = field.String(_(u"Username"), index=True, unique=True)
-    password = field.String(_(u"Password"))
-    e_mail = field.String(_(u"E-Mail"), index=True, unique=True)
-    name = field.String(_(u"First Name"), index=True)
-    surname = field.String(_(u"Surname"), index=True)
+    avatar = field.File(_(u"Profil Fotoğrafı"), random_name=True, required=False)
+    username = field.String(_(u"Kullanıcı Adı"), index=True, unique=True)
+    password = field.String(_(u"Parola"))
+    e_mail = field.String(_(u"E-Posta"), index=True, unique=True)
+    name = field.String(_(u"Ad"), index=True)
+    surname = field.String(_(u"Soyad"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
+    last_login_role_key = field.String(_(u"Son Giriş Yapılan Rol"))
     locale_language = field.String(
-        _(u"Preferred Language"),
+        _(u"Tercih Edilen Dil Formatı"),
         index=False,
         default=settings.DEFAULT_LANG,
         choices=translation.available_translations.items()
     )
-    locale_datetime = field.String(_(u"Preferred Date and Time Format"), index=False,
+    locale_datetime = field.String(_(u"Tercih Edilen Gün ve Zaman Formatı"), index=False,
                                    default=settings.DEFAULT_LOCALIZATION_FORMAT,
-                                   choices= translation.available_datetimes.items())
-    locale_number = field.String(_(u"Preferred Number Format"), index=False,
+                                   choices=translation.available_datetimes.items())
+    locale_number = field.String(_(u"Tercih Edilen Sayı Formatı"), index=False,
                                  default=settings.DEFAULT_LOCALIZATION_FORMAT,
                                  choices=translation.available_numbers.items())
 
@@ -73,6 +74,18 @@ class User(Model, BaseUser):
     @lazy_property
     def full_name(self):
         return "%s %s" % (self.name, self.surname)
+
+    def last_login_role(self):
+        """
+        Eğer kullanıcı rol geçişi yaparsa, kullanıcının last_login_role_key
+        field'ına geçiş yaptığı rolün keyi yazılır. Kullanıcı çıkış yaptığında
+         ve tekrardan giriş yaptığında son rolü bu field'dan öğrenilir. Eğer
+        kullanıcının last_login_role_key field'ı dolu ise rol bilgisi oradan alınır.
+        Yoksa kullanıcının role_set'inden default rolü alınır.
+
+        """
+        last_key = self.last_login_role_key
+        return Role.objects.get(last_key) if last_key else self.role_set[0].role
 
     def pre_save(self):
         if not self.username or not self.password:
@@ -247,20 +260,20 @@ class Unit(Model):
     # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
-    def get_user_keys(cls, unit_key):
+    def get_role_keys(cls, unit_key):
         """recursively gets all roles (keys) under given unit"""
-        return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
-        stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
-        for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
-            stack.extend(cls.get_user_keys(unit_key))
-        return stack
+        return cls.get_role_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
+        # stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
+        # for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
+        #     stack.extend(cls.get_role_keys(unit_key))
+        # return stack
 
     @classmethod
-    def get_user_keys_by_yoksis(cls, yoksis_no):
+    def get_role_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('user_id', flatten=True)
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('key', flatten=True)
         for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
-            stack.extend(cls.get_user_keys_by_yoksis(yoksis_no))
+            stack.extend(cls.get_role_keys_by_yoksis(yoksis_no))
         return stack
 
     class Meta:
@@ -552,21 +565,16 @@ class AuthBackend(object):
         Args:
             user: User nesnesi
 
-        Returns:
 
         """
-        user = user
         self.session['user_id'] = user.key
         self.session['user_data'] = user.clean_value()
-
-        # TODO: this should be remembered from previous login
-        default_role = user.role_set[0].role
-        # self.session['role_data'] = default_role.clean_value()
-        self.session['role_id'] = default_role.key
-        self.current.role_id = default_role.key
+        role = user.last_login_role()
+        self.session['role_id'] = role.key
+        self.current.role_id = role.key
         self.current.user_id = user.key
-        self.perm_cache = PermissionCache(default_role.key)
-        self.session['permissions'] = default_role.get_permissions()
+        self.perm_cache = PermissionCache(role.key)
+        self.session['permissions'] = role.get_permissions()
 
     def get_role(self):
         """session'da bir role_id varsa bu id'deki Role nesnesini döner.
@@ -578,12 +586,6 @@ class AuthBackend(object):
             PermissionDenied:
 
         """
-        # if 'role_data' in self.session:
-        #     role = Role()
-        #     role.set_data(self.session['role_data'])
-        # if 'role_id' in self.session:
-        #     role.key = self.session['role_id']
-        # return role
         if 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:

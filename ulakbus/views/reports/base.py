@@ -88,7 +88,8 @@ class Reporter(BaseView):
             if isinstance(objects[0], dict):
                 self.output['object'] = {'fields': objects, 'type': 'table-multiRow'}
             else:
-                self.output['object'] = dict(objects)
+                objects = dict((k, str(v)) for k, v in objects)
+                self.output['object'] = objects
 
         else:
             frm.help_text = _(u'Kayıt bulunamadı')
