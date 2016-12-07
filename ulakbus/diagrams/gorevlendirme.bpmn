@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_cuS90DhjEeaBAIhk23C6Og" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:collaboration id="_Collaboration_6">
-    <bpmn2:participant id="gorevlendirme_pool" name="Görevlendirme (Pool)" processRef="gorevlendirme"/>
-  </bpmn2:collaboration>
-  <bpmn2:process id="gorevlendirme" name="Görevlendirme" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
-      <bpmn2:lane id="personel_lane" name="Personel">
-        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>gorevlendirme_turu_sec</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kurum_ici_gorevlendirme_form</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>gorevlendirme_tur_kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>hizmet_cetvel_form</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>hizmet_cetveli_giris</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kurum_ici_gorevlendirme_kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kurum_disi_gorevlendirme_form</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kurum_disi_gorevlendirme_kaydet</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:userTask id="gorevlendirme_turu_sec" camunda:assignee="personel.gorevlendirme.Gorevlendirme.gorevlendirme_tur_sec" name="Görevlendirme Türü Seç">
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="StartEvent_1" targetRef="gorevlendirme_turu_sec"/>
-    <bpmn2:userTask id="kurum_ici_gorevlendirme_form" camunda:assignee="personel.gorevlendirme.KurumIciGorevlendirme.gorevlendirme_form" name="Kurum İçi Görevlendirme Form">
-      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="kurum_ici_gorevlendirme_form" targetRef="kurum_ici_gorevlendirme_kaydet"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1">
-      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_1" targetRef="kurum_ici_gorevlendirme_form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">gorevlendirme_tur==2</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="kurum_disi_gorevlendirme_form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">gorevlendirme_tur==1</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="gorevlendirme_tur_kaydet" camunda:class="personel.gorevlendirme.Gorevlendirme.gorevlendirme_tur_kaydet" name="Görevlendirme Tür Kaydet">
-      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="gorevlendirme_turu_sec" targetRef="gorevlendirme_tur_kaydet"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="gorevlendirme_tur_kaydet" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" default="SequenceFlow_15">
-      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_6">
+    <bpmn:participant id="gorevlendirme_pool" name="Görevlendirme (Pool)" processRef="gorevlendirme"/>
+  </bpmn:collaboration>
+  <bpmn:process id="gorevlendirme" name="Görevlendirme" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn:lane id="personel_lane" name="Personel">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>gorevlendirme_turu_sec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kurum_ici_gorevlendirme_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>gorevlendirme_tur_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>hizmet_cetvel_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>hizmet_cetveli_giris</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kurum_ici_gorevlendirme_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kurum_disi_gorevlendirme_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kurum_disi_gorevlendirme_kaydet</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="gorevlendirme_turu_sec" camunda:assignee="personel.gorevlendirme.Gorevlendirme.gorevlendirme_tur_sec" name="Görevlendirme Türü Seç">
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_5" name="" sourceRef="StartEvent_1" targetRef="gorevlendirme_turu_sec"/>
+    <bpmn:userTask id="kurum_ici_gorevlendirme_form" camunda:assignee="personel.gorevlendirme.KurumIciGorevlendirme.gorevlendirme_form" name="Kurum İçi Görevlendirme Form">
+      <bpmn:incoming>SequenceFlow_7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_10</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_10" name="" sourceRef="kurum_ici_gorevlendirme_form" targetRef="kurum_ici_gorevlendirme_kaydet"/>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1">
+      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_1" targetRef="kurum_ici_gorevlendirme_form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">gorevlendirme_tur==2</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="kurum_disi_gorevlendirme_form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">gorevlendirme_tur==1</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="gorevlendirme_tur_kaydet" camunda:class="personel.gorevlendirme.Gorevlendirme.gorevlendirme_tur_kaydet" name="Görevlendirme Tür Kaydet">
+      <bpmn:incoming>SequenceFlow_12</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_12" name="" sourceRef="gorevlendirme_turu_sec" targetRef="gorevlendirme_tur_kaydet"/>
+    <bpmn:sequenceFlow id="SequenceFlow_13" name="" sourceRef="gorevlendirme_tur_kaydet" targetRef="ExclusiveGateway_1"/>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_2" default="SequenceFlow_15">
+      <bpmn:incoming>SequenceFlow_14</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_15</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_16</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="client_message">
             <camunda:map>
@@ -67,40 +67,40 @@
             </camunda:map>
           </camunda:inputParameter>
         </camunda:inputOutput>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="ExclusiveGateway_2" targetRef="EndEvent_1"/>
-    <bpmn2:userTask id="hizmet_cetvel_form" camunda:assignee="personel.gorevlendirme.HizmetCetveli.giris_form" name="Hizmet Cetvel Form">
-      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="ExclusiveGateway_2" targetRef="hizmet_cetvel_form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">hizmet_cetvel_giris == True</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="hizmet_cetveli_giris" camunda:class="personel.gorevlendirme.HizmetCetveli.kaydet" name="Hizmet Cetveli kaydet">
-      <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_17" name="" sourceRef="hizmet_cetvel_form" targetRef="hizmet_cetveli_giris"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="hizmet_cetveli_giris" targetRef="EndEvent_1"/>
-    <bpmn2:serviceTask id="kurum_ici_gorevlendirme_kaydet" camunda:class="personel.gorevlendirme.KurumIciGorevlendirme.kaydet" name="Kaydet">
-      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="kurum_ici_gorevlendirme_kaydet" targetRef="ExclusiveGateway_2"/>
-    <bpmn2:userTask id="kurum_disi_gorevlendirme_form" camunda:assignee="personel.gorevlendirme.KurumDisiGorevlendirme.gorevlendirme_form" name="Kurum Dışı Görevlendirme Form">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:serviceTask id="kurum_disi_gorevlendirme_kaydet" camunda:class="personel.gorevlendirme.KurumDisiGorevlendirme.kaydet" name="Kaydet">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="kurum_disi_gorevlendirme_form" targetRef="kurum_disi_gorevlendirme_kaydet"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="kurum_disi_gorevlendirme_kaydet" targetRef="ExclusiveGateway_2"/>
-  </bpmn2:process>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_15</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_18</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_15" name="" sourceRef="ExclusiveGateway_2" targetRef="EndEvent_1"/>
+    <bpmn:userTask id="hizmet_cetvel_form" camunda:assignee="personel.gorevlendirme.HizmetCetveli.giris_form" name="Hizmet Cetvel Form">
+      <bpmn:incoming>SequenceFlow_16</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_17</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_16" name="" sourceRef="ExclusiveGateway_2" targetRef="hizmet_cetvel_form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">hizmet_cetvel_giris == True</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="hizmet_cetveli_giris" camunda:class="personel.gorevlendirme.HizmetCetveli.kaydet" name="Hizmet Cetveli kaydet">
+      <bpmn:incoming>SequenceFlow_17</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_18</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_17" name="" sourceRef="hizmet_cetvel_form" targetRef="hizmet_cetveli_giris"/>
+    <bpmn:sequenceFlow id="SequenceFlow_18" name="" sourceRef="hizmet_cetveli_giris" targetRef="EndEvent_1"/>
+    <bpmn:serviceTask id="kurum_ici_gorevlendirme_kaydet" camunda:class="personel.gorevlendirme.KurumIciGorevlendirme.kaydet" name="Kaydet">
+      <bpmn:incoming>SequenceFlow_10</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_14" name="" sourceRef="kurum_ici_gorevlendirme_kaydet" targetRef="ExclusiveGateway_2"/>
+    <bpmn:userTask id="kurum_disi_gorevlendirme_form" camunda:assignee="personel.gorevlendirme.KurumDisiGorevlendirme.gorevlendirme_form" name="Kurum Dışı Görevlendirme Form">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="kurum_disi_gorevlendirme_kaydet" camunda:class="personel.gorevlendirme.KurumDisiGorevlendirme.kaydet" name="Kaydet">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="kurum_disi_gorevlendirme_form" targetRef="kurum_disi_gorevlendirme_kaydet"/>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="kurum_disi_gorevlendirme_kaydet" targetRef="ExclusiveGateway_2"/>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_6">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_12" bpmnElement="gorevlendirme_pool" isHorizontal="true">
@@ -253,4 +253,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

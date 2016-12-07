@@ -1,140 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_TNFPUGBkEeWiWJUlA5rr9A" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:collaboration id="_Collaboration_3" name="Yeni Personel Ekle">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_3" name="Yeni Personel Ekle">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property value="Personel" name="menu_category"/>
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="_Participant_3" name="Yeni Personel Ekle (pool)" processRef="personel_yeni_personel"/>
-  </bpmn2:collaboration>
-  <bpmn2:process id="personel_yeni_personel" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_2" name="Lane Set 2">
-      <bpmn2:lane id="personel" name="personel">
-        <bpmn2:flowNodeRef>basla</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kimlik_no_gir</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>hatayi_gozden_gecir</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>bitis</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>mernis_kimlik_bilgileri</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_4</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>aks_bilgileri</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_6</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_5</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kontrol_et</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_8</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>UserTask_3</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>personel_atama</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>iptal</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:startEvent id="basla">
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="kimlik_no_gir"/>
-    <bpmn2:userTask id="kimlik_no_gir" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.yeni_personel_form" name="Kimlik No Gir">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_26</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:userTask id="hatayi_gozden_gecir" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.hata_goster" name="Hatayi Gozden Gecir">
-      <bpmn2:incoming>mernis_hata</bpmn2:incoming>
-      <bpmn2:incoming>adres_hata</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_11" name="" sourceRef="hatayi_gozden_gecir" targetRef="ExclusiveGateway_6"/>
-    <bpmn2:endEvent id="bitis">
-      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
-      <bpmn2:incoming>islemi_bitir</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="kimlik_no_gir" targetRef="mernis_kimlik_bilgileri"/>
-    <bpmn2:serviceTask id="mernis_kimlik_bilgileri" camunda:class="personel.yeni_personel.YeniPersonelEkle.mernis_kimlik_bilgileri_getir" name="Mernis Bilgileri&#xA;Getir">
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="mernis_kimlik_bilgileri" targetRef="ExclusiveGateway_4"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_4" default="mernis_hata">
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
-      <bpmn2:outgoing>mernis_hata</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_19" name="" sourceRef="ExclusiveGateway_4" targetRef="aks_bilgileri">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">mernis_tamam</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="mernis_hata" name="" sourceRef="ExclusiveGateway_4" targetRef="hatayi_gozden_gecir"/>
-    <bpmn2:serviceTask id="aks_bilgileri" camunda:class="personel.yeni_personel.YeniPersonelEkle.mernis_adres_bilgileri_getir" name="Adres Bilgileri&#xA;Getir">
-      <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="aks_bilgileri" targetRef="ExclusiveGateway_5"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_6" default="iptal_hata">
-      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
-      <bpmn2:outgoing>iptal_hata</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="iptal_hata" name="" sourceRef="ExclusiveGateway_6" targetRef="iptal"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_26" name="" sourceRef="ExclusiveGateway_6" targetRef="kimlik_no_gir">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'tekrar'</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_25" name="" sourceRef="ExclusiveGateway_6" targetRef="bitis">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_5" default="adres_hata">
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-      <bpmn2:outgoing>adres_hata</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="adres_hata" name="" sourceRef="ExclusiveGateway_5" targetRef="hatayi_gozden_gecir"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="ExclusiveGateway_5" targetRef="kontrol_et">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">adres_tamam</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:userTask id="kontrol_et" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.yeni_ekle_kontrol" name="Yeni Eklenen Personel Bilgilerini Kontrol Et">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="kontrol_et" targetRef="ExclusiveGateway_2"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_8" default="islemi_bitir">
-      <bpmn2:incoming>SequenceFlow_31</bpmn2:incoming>
-      <bpmn2:outgoing>islemi_bitir</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_33</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="islemi_bitir" name="" sourceRef="ExclusiveGateway_8" targetRef="bitis">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="bitir"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_33" name="" sourceRef="ExclusiveGateway_8" targetRef="UserTask_3">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="atama_yap"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="UserTask_3" name="Atama Yap">
-      <bpmn2:incoming>SequenceFlow_33</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="UserTask_3" targetRef="bitis"/>
-    <bpmn2:userTask id="personel_atama" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.kaydet" name="Kaydet ve Bilgi Göster">
-      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_31</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_31" name="" sourceRef="personel_atama" targetRef="ExclusiveGateway_8"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" default="yeni_personel_iptal">
-      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
-      <bpmn2:outgoing>yeni_personel_iptal</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_2" targetRef="personel_atama">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="kaydet"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="yeni_personel_iptal" name="" sourceRef="ExclusiveGateway_2" targetRef="iptal">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="iptal" camunda:class="personel.yeni_personel.Atama.iptal" name="Iptal">
-      <bpmn2:incoming>iptal_hata</bpmn2:incoming>
-      <bpmn2:incoming>yeni_personel_iptal</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="iptal" targetRef="bitis"/>
-  </bpmn2:process>
+    </bpmn:extensionElements>
+    <bpmn:participant id="_Participant_3" name="Yeni Personel Ekle (pool)" processRef="personel_yeni_personel"/>
+  </bpmn:collaboration>
+  <bpmn:process id="personel_yeni_personel" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
+      <bpmn:lane id="personel" name="personel">
+        <bpmn:flowNodeRef>basla</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kimlik_no_gir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>hatayi_gozden_gecir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>bitis</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mernis_kimlik_bilgileri</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>aks_bilgileri</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kontrol_et</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>personel_atama</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>iptal</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="basla">
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="kimlik_no_gir"/>
+    <bpmn:userTask id="kimlik_no_gir" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.yeni_personel_form" name="Kimlik No Gir">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_26</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="hatayi_gozden_gecir" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.hata_goster" name="Hatayi Gozden Gecir">
+      <bpmn:incoming>mernis_hata</bpmn:incoming>
+      <bpmn:incoming>adres_hata</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_11" name="" sourceRef="hatayi_gozden_gecir" targetRef="ExclusiveGateway_6"/>
+    <bpmn:endEvent id="bitis">
+      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_25</bpmn:incoming>
+      <bpmn:incoming>islemi_bitir</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_6" name="" sourceRef="kimlik_no_gir" targetRef="mernis_kimlik_bilgileri"/>
+    <bpmn:serviceTask id="mernis_kimlik_bilgileri" camunda:class="personel.yeni_personel.YeniPersonelEkle.mernis_kimlik_bilgileri_getir" name="Mernis Bilgileri&#xA;Getir">
+      <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="mernis_kimlik_bilgileri" targetRef="ExclusiveGateway_4"/>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_4" default="mernis_hata">
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19</bpmn:outgoing>
+      <bpmn:outgoing>mernis_hata</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_19" name="" sourceRef="ExclusiveGateway_4" targetRef="aks_bilgileri">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">mernis_tamam</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="mernis_hata" name="" sourceRef="ExclusiveGateway_4" targetRef="hatayi_gozden_gecir"/>
+    <bpmn:serviceTask id="aks_bilgileri" camunda:class="personel.yeni_personel.YeniPersonelEkle.mernis_adres_bilgileri_getir" name="Adres Bilgileri&#xA;Getir">
+      <bpmn:incoming>SequenceFlow_19</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_5" name="" sourceRef="aks_bilgileri" targetRef="ExclusiveGateway_5"/>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_6" default="iptal_hata">
+      <bpmn:incoming>SequenceFlow_11</bpmn:incoming>
+      <bpmn:outgoing>iptal_hata</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_26</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_25</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="iptal_hata" name="" sourceRef="ExclusiveGateway_6" targetRef="iptal"/>
+    <bpmn:sequenceFlow id="SequenceFlow_26" name="" sourceRef="ExclusiveGateway_6" targetRef="kimlik_no_gir">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'tekrar'</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_25" name="" sourceRef="ExclusiveGateway_6" targetRef="bitis">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_5" default="adres_hata">
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>adres_hata</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="adres_hata" name="" sourceRef="ExclusiveGateway_5" targetRef="hatayi_gozden_gecir"/>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="ExclusiveGateway_5" targetRef="kontrol_et">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">adres_tamam</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="kontrol_et" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.yeni_ekle_kontrol" name="Yeni Eklenen Personel Bilgilerini Kontrol Et">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_9" name="" sourceRef="kontrol_et" targetRef="ExclusiveGateway_2"/>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_8" default="islemi_bitir">
+      <bpmn:incoming>SequenceFlow_31</bpmn:incoming>
+      <bpmn:outgoing>islemi_bitir</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_33</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="islemi_bitir" name="" sourceRef="ExclusiveGateway_8" targetRef="bitis">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="bitir"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_33" name="" sourceRef="ExclusiveGateway_8" targetRef="UserTask_3">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="atama_yap"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="UserTask_3" name="Atama Yap">
+      <bpmn:incoming>SequenceFlow_33</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_7" name="" sourceRef="UserTask_3" targetRef="bitis"/>
+    <bpmn:userTask id="personel_atama" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.kaydet" name="Kaydet ve Bilgi Göster">
+      <bpmn:incoming>SequenceFlow_10</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_31</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_31" name="" sourceRef="personel_atama" targetRef="ExclusiveGateway_8"/>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_2" default="yeni_personel_iptal">
+      <bpmn:incoming>SequenceFlow_9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_10</bpmn:outgoing>
+      <bpmn:outgoing>yeni_personel_iptal</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_2" targetRef="personel_atama">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="kaydet"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="yeni_personel_iptal" name="" sourceRef="ExclusiveGateway_2" targetRef="iptal">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="iptal" camunda:class="personel.yeni_personel.Atama.iptal" name="Iptal">
+      <bpmn:incoming>iptal_hata</bpmn:incoming>
+      <bpmn:incoming>yeni_personel_iptal</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_13" name="" sourceRef="iptal" targetRef="bitis"/>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_4" bpmnElement="basla">
@@ -374,4 +374,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

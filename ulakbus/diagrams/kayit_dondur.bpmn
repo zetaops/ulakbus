@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_kyp5YOLlEeSUK4Us7CT9mg" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="_Collaboration_5" name="Kayıt Dondur">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_5" name="Kayıt Dondur">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property name="menu_category" value="hidden" />
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="_Participant_5" name="Öğrenci Kayıt Dondur" processRef="kayit_dondur" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="kayit_dondur" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
-      <bpmn2:lane id="Lane_1" name="Fakülte Öğrenci İşleri">
-        <bpmn2:flowNodeRef>EndEvent_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_13fo7oy</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ogrenci_kayit_dondur</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>program_sec</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>donem_secimi</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>fakulte_yonetim_karar_no_gir</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="program_sec" targetRef="donem_secimi" />
-    <bpmn2:sequenceFlow id="SequenceFlow_1j2ntvv" sourceRef="ExclusiveGateway_13fo7oy" targetRef="EndEvent_2" />
-    <bpmn2:sequenceFlow id="SequenceFlow_1ha94g7" sourceRef="ExclusiveGateway_13fo7oy" targetRef="donem_secimi">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">kayit_dondurma_help_text</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:endEvent id="EndEvent_2">
-      <bpmn2:incoming>SequenceFlow_1j2ntvv</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_1blw29e" sourceRef="ogrenci_kayit_dondur" targetRef="ExclusiveGateway_13fo7oy" />
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="donem_secimi" targetRef="ogrenci_kayit_dondur" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_13fo7oy" default="SequenceFlow_1j2ntvv">
-      <bpmn2:incoming>SequenceFlow_1blw29e</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1j2ntvv</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_1ha94g7</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:serviceTask id="ogrenci_kayit_dondur" name="Kayıt Dondur ve Danismana Bilgi Ver" camunda:class="ogrenci.ogrenci.KayitDondurma.ogrenci_kayit_dondur">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1blw29e</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:userTask id="program_sec" name="Program Sec" camunda:assignee="ogrenci.ogrenci.KayitDondurma.program_sec">
-      <bpmn2:incoming>SequenceFlow_1ypgec9</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:userTask id="donem_secimi" name="Donem ve Tarih Secimi" camunda:assignee="ogrenci.ogrenci.KayitDondurma.donem_sec">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1ha94g7</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:startEvent id="StartEvent_1" name="">
-      <bpmn2:outgoing>SequenceFlow_0se71b3</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_0se71b3" sourceRef="StartEvent_1" targetRef="fakulte_yonetim_karar_no_gir" />
-    <bpmn2:sequenceFlow id="SequenceFlow_1ypgec9" sourceRef="fakulte_yonetim_karar_no_gir" targetRef="program_sec" />
-    <bpmn2:userTask id="fakulte_yonetim_karar_no_gir" name="Fakülte Karar No Gir" camunda:assignee="ogrenci.ogrenci.KayitDondurma.fakulte_yonetim_karar_no_gir">
-      <bpmn2:incoming>SequenceFlow_0se71b3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1ypgec9</bpmn2:outgoing>
-    </bpmn2:userTask>
-  </bpmn2:process>
+    </bpmn:extensionElements>
+    <bpmn:participant id="_Participant_5" name="Öğrenci Kayıt Dondur" processRef="kayit_dondur" />
+  </bpmn:collaboration>
+  <bpmn:process id="kayit_dondur" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn:lane id="Lane_1" name="Fakülte Öğrenci İşleri">
+        <bpmn:flowNodeRef>EndEvent_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_13fo7oy</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ogrenci_kayit_dondur</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>program_sec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>donem_secimi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>fakulte_yonetim_karar_no_gir</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="program_sec" targetRef="donem_secimi" />
+    <bpmn:sequenceFlow id="SequenceFlow_1j2ntvv" sourceRef="ExclusiveGateway_13fo7oy" targetRef="EndEvent_2" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ha94g7" sourceRef="ExclusiveGateway_13fo7oy" targetRef="donem_secimi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">kayit_dondurma_help_text</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_2">
+      <bpmn:incoming>SequenceFlow_1j2ntvv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1blw29e" sourceRef="ogrenci_kayit_dondur" targetRef="ExclusiveGateway_13fo7oy" />
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="donem_secimi" targetRef="ogrenci_kayit_dondur" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_13fo7oy" default="SequenceFlow_1j2ntvv">
+      <bpmn:incoming>SequenceFlow_1blw29e</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1j2ntvv</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1ha94g7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ogrenci_kayit_dondur" name="Kayıt Dondur ve Danismana Bilgi Ver" camunda:class="ogrenci.ogrenci.KayitDondurma.ogrenci_kayit_dondur">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1blw29e</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="program_sec" name="Program Sec" camunda:assignee="ogrenci.ogrenci.KayitDondurma.program_sec">
+      <bpmn:incoming>SequenceFlow_1ypgec9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="donem_secimi" name="Donem ve Tarih Secimi" camunda:assignee="ogrenci.ogrenci.KayitDondurma.donem_sec">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1ha94g7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_1" name="">
+      <bpmn:outgoing>SequenceFlow_0se71b3</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0se71b3" sourceRef="StartEvent_1" targetRef="fakulte_yonetim_karar_no_gir" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ypgec9" sourceRef="fakulte_yonetim_karar_no_gir" targetRef="program_sec" />
+    <bpmn:userTask id="fakulte_yonetim_karar_no_gir" name="Fakülte Karar No Gir" camunda:assignee="ogrenci.ogrenci.KayitDondurma.fakulte_yonetim_karar_no_gir">
+      <bpmn:incoming>SequenceFlow_0se71b3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ypgec9</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_5">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_5" bpmnElement="_Participant_5" isHorizontal="true">
@@ -149,4 +149,4 @@
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

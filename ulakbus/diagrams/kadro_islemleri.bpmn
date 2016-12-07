@@ -1,96 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_TNFPUGBkEeWiWJUlA5rr9A" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="_Collaboration_3" name="Kadro İşlemleri">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_3" name="Kadro İşlemleri">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property name="menu_category" value="Kadro İşlemleri" />
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="_Participant_3" name="Kadro İşlemleri" processRef="kadro_islemleri" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="kadro_islemleri" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_2" name="Lane Set 2">
-      <bpmn2:lane id="personel" name="personel">
-        <bpmn2:flowNodeRef>kadro_ekle</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>basla</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kadro_listele</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>sakli_izinli_yap</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kadro_s</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_0qd86ei</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kadro_sil_onay</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:userTask id="kadro_ekle" name="Sakli Kadro Ekle" camunda:assignee="personel.kadro.KadroIslemleri.add_edit_form" camunda:class="personel.kadro.KadroIslemleri.form">
-      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:startEvent id="basla">
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:userTask id="kadro_listele" name="Kadro Listele" camunda:assignee="personel.kadro.KadroIslemleri.list" camunda:class="personel.kadro.KadroIslemleri.list">
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-      <bpmn2:incoming>listele</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1jnw700</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" default="listele">
-      <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
-      <bpmn2:outgoing>listele</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_07ujori</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:serviceTask id="kaydet" name="Kaydet" camunda:class="personel.kadro.KadroIslemleri.kadro_kaydet">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:serviceTask id="sakli_izinli_yap" name="Sakli Izinli Yap" camunda:class="personel.kadro.KadroIslemleri.sakli_izinli_degistir">
-      <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="ExclusiveGateway_2" targetRef="kadro_ekle">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'add_edit_form']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="kadro_ekle" targetRef="kaydet" />
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="basla" targetRef="kadro_listele" />
-    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="sakli_izinli_yap" targetRef="kadro_listele" />
-    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="kadro_s" targetRef="kadro_listele" />
-    <bpmn2:sequenceFlow id="listele" name="" sourceRef="ExclusiveGateway_2" targetRef="kadro_listele" />
-    <bpmn2:sequenceFlow id="SequenceFlow_22" name="" sourceRef="kadro_listele" targetRef="ExclusiveGateway_2" />
-    <bpmn2:sequenceFlow id="SequenceFlow_21" name="" sourceRef="ExclusiveGateway_2" targetRef="sakli_izinli_yap">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'sakli_izinli_degistir']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="kaydet" targetRef="EndEvent_1" />
-    <bpmn2:serviceTask id="kadro_s" name="Kadro Sil" camunda:class="personel.kadro.KadroIslemleri.kadro_sil">
-      <bpmn2:incoming>SequenceFlow_005yzgl</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_0qd86ei" default="SequenceFlow_1jnw700">
-      <bpmn2:incoming>SequenceFlow_03uku9c</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_005yzgl</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_1jnw700</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_07ujori" sourceRef="ExclusiveGateway_2" targetRef="kadro_sil_onay">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'kadro_sil_onay_form']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_03uku9c" sourceRef="kadro_sil_onay" targetRef="ExclusiveGateway_0qd86ei" />
-    <bpmn2:sequenceFlow id="SequenceFlow_005yzgl" sourceRef="ExclusiveGateway_0qd86ei" targetRef="kadro_s">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd == 'kadro_sil']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_1jnw700" sourceRef="ExclusiveGateway_0qd86ei" targetRef="kadro_listele" />
-    <bpmn2:userTask id="kadro_sil_onay" name="Kadro Sil Onay" camunda:assignee="personel.kadro.KadroIslemleri.kadro_sil_onay_form">
-      <bpmn2:incoming>SequenceFlow_07ujori</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_03uku9c</bpmn2:outgoing>
-    </bpmn2:userTask>
-  </bpmn2:process>
+    </bpmn:extensionElements>
+    <bpmn:participant id="_Participant_3" name="Kadro İşlemleri" processRef="kadro_islemleri" />
+  </bpmn:collaboration>
+  <bpmn:process id="kadro_islemleri" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
+      <bpmn:lane id="personel" name="personel">
+        <bpmn:flowNodeRef>kadro_ekle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>basla</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kadro_listele</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>sakli_izinli_yap</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kadro_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0qd86ei</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kadro_sil_onay</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="kadro_ekle" name="Sakli Kadro Ekle" camunda:assignee="personel.kadro.KadroIslemleri.add_edit_form" camunda:class="personel.kadro.KadroIslemleri.form">
+      <bpmn:incoming>SequenceFlow_9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="basla">
+      <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="kadro_listele" name="Kadro Listele" camunda:assignee="personel.kadro.KadroIslemleri.list" camunda:class="personel.kadro.KadroIslemleri.list">
+      <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_14</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_15</bpmn:incoming>
+      <bpmn:incoming>listele</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1jnw700</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_22</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_2" default="listele">
+      <bpmn:incoming>SequenceFlow_22</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_21</bpmn:outgoing>
+      <bpmn:outgoing>listele</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_07ujori</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="kaydet" name="Kaydet" camunda:class="personel.kadro.KadroIslemleri.kadro_kaydet">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="sakli_izinli_yap" name="Sakli Izinli Yap" camunda:class="personel.kadro.KadroIslemleri.sakli_izinli_degistir">
+      <bpmn:incoming>SequenceFlow_21</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:incoming>SequenceFlow_16</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_9" name="" sourceRef="ExclusiveGateway_2" targetRef="kadro_ekle">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'add_edit_form']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="kadro_ekle" targetRef="kaydet" />
+    <bpmn:sequenceFlow id="SequenceFlow_6" name="" sourceRef="basla" targetRef="kadro_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_14" name="" sourceRef="sakli_izinli_yap" targetRef="kadro_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_15" name="" sourceRef="kadro_s" targetRef="kadro_listele" />
+    <bpmn:sequenceFlow id="listele" name="" sourceRef="ExclusiveGateway_2" targetRef="kadro_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_22" name="" sourceRef="kadro_listele" targetRef="ExclusiveGateway_2" />
+    <bpmn:sequenceFlow id="SequenceFlow_21" name="" sourceRef="ExclusiveGateway_2" targetRef="sakli_izinli_yap">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'sakli_izinli_degistir']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_16" name="" sourceRef="kaydet" targetRef="EndEvent_1" />
+    <bpmn:serviceTask id="kadro_s" name="Kadro Sil" camunda:class="personel.kadro.KadroIslemleri.kadro_sil">
+      <bpmn:incoming>SequenceFlow_005yzgl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_15</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0qd86ei" default="SequenceFlow_1jnw700">
+      <bpmn:incoming>SequenceFlow_03uku9c</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_005yzgl</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1jnw700</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_07ujori" sourceRef="ExclusiveGateway_2" targetRef="kadro_sil_onay">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'kadro_sil_onay_form']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_03uku9c" sourceRef="kadro_sil_onay" targetRef="ExclusiveGateway_0qd86ei" />
+    <bpmn:sequenceFlow id="SequenceFlow_005yzgl" sourceRef="ExclusiveGateway_0qd86ei" targetRef="kadro_s">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'kadro_sil']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1jnw700" sourceRef="ExclusiveGateway_0qd86ei" targetRef="kadro_listele" />
+    <bpmn:userTask id="kadro_sil_onay" name="Kadro Sil Onay" camunda:assignee="personel.kadro.KadroIslemleri.kadro_sil_onay_form">
+      <bpmn:incoming>SequenceFlow_07ujori</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_03uku9c</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_4" bpmnElement="basla">
@@ -238,4 +238,4 @@
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

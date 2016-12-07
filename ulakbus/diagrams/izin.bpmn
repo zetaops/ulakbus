@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_TNFPUGBkEeWiWJUlA5rr9A" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:collaboration id="_Collaboration_3" name="İzin İşlemleri">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_3" name="İzin İşlemleri">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property value="hidden" name="menu_category"/>
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="_Participant_3" name="İzin İşlemleri" processRef="izin"/>
-  </bpmn2:collaboration>
-  <bpmn2:process id="izin" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_2" name="Lane Set 2">
-      <bpmn2:lane id="personel" name="personel">
-        <bpmn2:flowNodeRef>basla</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ServiceTask_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ServiceTask_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>izin_bilgileri_goster</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_3</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>UserTask_2</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:startEvent id="basla">
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="izin_bilgileri_goster"/>
-    <bpmn2:serviceTask id="ServiceTask_2" camunda:class="personel.izin.IzinIslemleri.delete" name="İzin Sil">
-      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_20</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ServiceTask_2" targetRef="izin_bilgileri_goster"/>
-    <bpmn2:serviceTask id="ServiceTask_1" camunda:class="personel.izin.IzinIslemleri.save" name="Kaydet">
-      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_25" name="" sourceRef="ServiceTask_1" targetRef="izin_bilgileri_goster"/>
-    <bpmn2:userTask id="izin_bilgileri_goster" camunda:assignee="personel.izin.IzinIslemleri.goster" name="İzin Bilgileri Listele">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="izin_bilgileri_goster" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_24">
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_24</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="UserTask_2">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'add_edit_form'</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_2">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'delete'</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_24" name="" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_3"/>
-    <bpmn2:endEvent id="EndEvent_3">
-      <bpmn2:incoming>SequenceFlow_24</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:userTask id="UserTask_2" camunda:assignee="personel.izin.IzinIslemleri.add_edit_form" name="İzin Ekle">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="UserTask_2" targetRef="ServiceTask_1"/>
-  </bpmn2:process>
+    </bpmn:extensionElements>
+    <bpmn:participant id="_Participant_3" name="İzin İşlemleri" processRef="izin"/>
+  </bpmn:collaboration>
+  <bpmn:process id="izin" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
+      <bpmn:lane id="personel" name="personel">
+        <bpmn:flowNodeRef>basla</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>izin_bilgileri_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="basla">
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="izin_bilgileri_goster"/>
+    <bpmn:serviceTask id="ServiceTask_2" camunda:class="personel.izin.IzinIslemleri.delete" name="İzin Sil">
+      <bpmn:incoming>SequenceFlow_18</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_20</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ServiceTask_2" targetRef="izin_bilgileri_goster"/>
+    <bpmn:serviceTask id="ServiceTask_1" camunda:class="personel.izin.IzinIslemleri.save" name="Kaydet">
+      <bpmn:incoming>SequenceFlow_12</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_25</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_25" name="" sourceRef="ServiceTask_1" targetRef="izin_bilgileri_goster"/>
+    <bpmn:userTask id="izin_bilgileri_goster" camunda:assignee="personel.izin.IzinIslemleri.goster" name="İzin Bilgileri Listele">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_20</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_25</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_5" name="" sourceRef="izin_bilgileri_goster" targetRef="ExclusiveGateway_1"/>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_24">
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_18</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_24</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="UserTask_2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'add_edit_form'</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'delete'</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_24" name="" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_3"/>
+    <bpmn:endEvent id="EndEvent_3">
+      <bpmn:incoming>SequenceFlow_24</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="UserTask_2" camunda:assignee="personel.izin.IzinIslemleri.add_edit_form" name="İzin Ekle">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_12" name="" sourceRef="UserTask_2" targetRef="ServiceTask_1"/>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_4" bpmnElement="basla">
@@ -170,4 +170,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

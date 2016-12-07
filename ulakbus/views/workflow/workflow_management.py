@@ -8,13 +8,13 @@
 # (GPLv3).  See LICENSE.txt for details.
 from datetime import datetime
 from ulakbus.lib.view_helpers import prepare_choices_for_model
-from ulakbus.models import Okutman, Unit, AbstractRole
 from zengine.views.crud import CrudView
-from zengine.forms.json_form import JsonForm
-from zengine.forms.fields import Integer, DateTime, Button, String
+from zengine.forms import JsonForm
+from zengine.forms.fields import Integer, Button
 from zengine.models import BPMNWorkflow, Task
-from zengine.lib.translation import gettext as _
-from pyoko.exceptions import ObjectDoesNotExist
+from zengine.lib.translation import gettext as _, gettext_lazy as __
+from ulakbus.models import AbstractRole, Role, Unit
+
 
 MESAJ = {
     'type': 'info', "title": _(u'İşlem Başarılı'),
@@ -40,40 +40,57 @@ def format_date(start_date, finish_date):
 
 
 class FormTask(JsonForm):
-        tarih_baslangic = DateTime(_(u'Tarih Aralığı - Başlangıç'))
-        tarih_bitis = DateTime(_(u'Tarih Aralığı - Bitis'))
-        gonder = Button(_(u"Onayla"))
-
-
-class FormTaskTypeA(FormTask):
     class Meta:
-        include = ['abstract_role', 'unit', 'object_query_code', 'object_type', 'recursive_unit']
+        include = ['abstract_role', 'start_date', 'finish_date']
+
+    gonder = Button(__(u"Onayla"))
+    geri = Button(__(u"Geri"), cmd='geri')
 
 
-class FormTaskTypeB(FormTask):
-    class Meta:
-        include = ['abstract_role', 'get_roles_from', 'unit', 'object_query_code',
-                   'object_type', 'recursive_unit']
+form_include_A = ['unit', 'object_query_code', 'object_type', 'recursive_units']
+form_include_B = ['get_roles_from', 'unit', 'object_query_code', 'object_type', 'recursive_units']
+form_include_C = ['get_roles_from']
+form_include_D = ['get_roles_from', 'unit', 'recursive_units']
 
+help_text_A = __(
+u"""Modelin seçildiği, role özel atanan iş akışı atama formu:
+* Model tipi seçilmesi zorunludur.
+* Soyut rol secilmesi zorunludur.
+* Arama sorgusu yazılması zorunludur ve "role" ile başlamalıdır.
+Örnek: Şube modelini kullanan bir iş akışının okutmanlara özel gitmesi için sorgunun;
+okutman=role.user.personel.okutman şeklinde olmalıdır.
+* Birim seçilmesi zorunludur. Eğer seçilen birim Fakülte ise
+alt birimlerde ki rolleri getir seçeneği işaretlenmesi zorunludur.
+* İş akışının başlangıç ve bitiş zamanlari girilmesi zorunludur.
+""")
 
-class FormTaskTypeC(FormTask):
-    class Meta:
-        include = ['abstract_role', 'get_roles_from']
+help_text_B = __(
+u"""Modelin seçildiği, aynı soyut role sahip kişilere aynı iş akışı atama formu:
+* Model tipi seçilmesi zorunludur.
+* Arama sorgusu yapılması zorunlu değildir.
+Eğer bir sorgu yapılacak ise sorgu kodu "role" ile başlamamalıdır.
+Örnek: personel modelini kullanan bir iş akışı için sorgu şu şekilde olabilir; personel_turu=2
+* Eğer rolleri getir secenegi kullanılırsa, birim ile soyut rol kullanılmaz.
+Bu tam tersi durum içinde geçerlidir.
+* İş akışının başlangıç ve bitiş zamanlari girilmesi zorunludur.
 
-
-class FormTaskTypeD(FormTask):
-    class Meta:
-        include = ['abstract_role', 'get_roles_from', 'unit', 'recursive_unit']
+""")
+help_text_C = __(
+u"""Modelin olmadığı, aynı soyut role sahip kişilere aynı iş akışı atama formu:
+* Burada iki seçenek vardır. Ya rolleri getir secenegi kullanılır ya da soyut rol seçeneği.
+""")
+help_text_D = __(
+u"""Modelin olmadığı aynı soyut role sahip, role özel atanan iş akışı atama formu:
+ * Birim secilirse, soyut rol seceneğininde secilmezi zorunludur.
+ Eğer birim fakülte ise alt birimlerde ki rolleri getir seçeneğinin de seçilmesi zorunludur.
+ get_roles_from seçenegi boş bırakılır.
+ * rolleri getir seçeneği seçilirse, diger seçenekler boş bırakılır
+""")
 
 
 class WorkflowManagement(CrudView):
     class Meta:
-        model = 'BPMNWorkflow'
-
-    """
-        Oluşturulan workflowları, workflow'a göre uygun role sahip kişilere atama işlemi yapan workflowdur.
-        Buradakı Bütün iş akışları sistem_yoneticisi_1 tarafından yapılır.
-    """
+        model = 'Task'
 
     def wf_sec(self):
         _secim_wf = prepare_choices_for_model(BPMNWorkflow, programmable=True)
@@ -81,185 +98,28 @@ class WorkflowManagement(CrudView):
         _form.workflow = Integer(title=_(u"Workflow Seçiniz"), choices=_secim_wf)
         _form.gonder = Button(_(u"İlerle"))
 
+        self.form_out(_form)
+
     def wf_zamanla(self):
-        workflow = self.input['form']['workflow']
-        form = 'FormTaskType%s' % workflow.task_type
-        _form = globals()[form]()
-
-    def sistem_is_akisi_atama_form(self):
-        """
-
-            Sistem Yöneticisine iş akışı atanacak bölümüdür.
-            Burada Sistem yöneticisi kendisinin yapması gereken iş akışını seçer.
-            İş akışının yapılacağı başlangıç ve bitiş tarihi'ni seçerek iş akısını bitirir.
-
-            Example:
-                login: sistem_yoneticisi_1
-                Workflow Seçiniz: guncel_donem_degistirme
-                Tarih Aralığı - Başlangıç: 01.09.2016
-                Tarih Aralığı - Bitiş: 08.09.2016
-        """
-
-        workflow = self.input['form']['workflow']
-        baslangic_tarihi, bitis_tarihi = format_date(self.input['form']['tarih_baslangic'],
-                                                     self.input['form']['tarih_bitis'])
-
-        _secim_wf = prepare_choices_for_model(BPMNWorkflow, programmable=True)
-        _form = JsonForm(title="Sistem Yöneticisi İş Akışı Atama")
-        _form.workflow = Integer(title="Workflow Seçiniz", choices=_secim_wf)
-        _form.tarih_baslangic = DateTime('Tarih Aralığı - Başlangıç')
-        _form.tarih_bitis = DateTime('Tarih Aralığı - Bitis')
-        _form.gonder = Button("Gönder")
+        self.current.task_data['wf_key'] = self.input['form']['workflow']
+        workflow = BPMNWorkflow.objects.get(self.current.task_data['wf_key'])
+        include_fields = 'form_include_%s' % workflow.task_type
+        help_text = 'help_text_%s' % workflow.task_type
+        _form = FormTask(self.object, current=self.current)
+        _form.Meta.include.extend(globals()[include_fields])
+        _form.title = workflow.title
+        _form.help_text = globals()[help_text]
         self.form_out(_form)
 
-    def sistem_yon_kaydet(self):
-        """
-            Json Formun'da doldurulan bilgilere göre Task modeli doldurulur ve secilen is akışı
-            Sistem Yöneticisi rolüne sahip kişilere gönderilir.
+    def bilgi_ekrani(self):
+        wf = BPMNWorkflow.objects.get(self.current.task_data['wf_key'])
 
-            Check User:
-                Login: sistem_yoneticisi_1
-        """
-        baslangic_tarihi, bitis_tarihi = format_date(self.input['form']['tarih_baslangic'],
-                                                     self.input['form']['tarih_bitis'])
-        task = Task()
-        task.wf = BPMNWorkflow.objects.get(self.input['form']['workflow'])
-        task.abstract_role = AbstractRole.objects.get(name='Sistem Yöneticisi')
-        task.name = task.wf.title
-        task.start_date = baslangic_tarihi
-        task.finish_date = bitis_tarihi
-        task.run = True
-        task.save()
+        self.set_form_data_to_object()
+        self.object.wf = wf
+        self.object.name = wf.title or wf.name
+        self.object.run = True
+        self.save_object()
 
-        self.current.output['msgbox'] = MESAJ
-    # sistem_is_akisi_atama -- finish -- #
-
-    # oe_not_girisi_is_akisi_atama -- start -- #
-    def not_girisi_is_akisi_atama_formu(self):
-        """
-            Öğretim Elemanı'na özel not girişi iş akışı atama formudur.
-            Atanacak workflow bilindiği için sistem yöneticisinden workflow istenmez.
-            Bunun yerine Okutmanın birimi, adı, soyadı, sınav türü, not girisinin yapılması gereken
-            tarih aralıkları belirlenir.
-
-            Examples:
-                login: sistem_yoneticisi_1
-                Birim Seçiniz: ULUSLARARASI İLİŞKİLER BÖLÜMÜ
-                Sınav Türünü Seçiniz: Ara Sınav
-                Okutman Adını Giriniz: İsmet
-                Okutman Soyadını Giriniz: Tarhan
-                Tarih Aralığı - Başlangıç: 10.10.2016
-                Tarih Aralığı - Bitiş: 21.10.2016
-        """
-
-        _secim_unit = prepare_choices_for_model(Unit, unit_type="Bölüm")
-        _form = JsonForm(title="Öğretim Elemanı Not Girişi İş Akışı Atama")
-        _form.secim_unit = Integer(title="Birim Seçiniz", choices=_secim_unit)
-        _form.sinav_turu = Integer("Sınav Türünü Seçiniz", choices="sinav_turleri")
-        _form.okutman_ad = String('Okutman Adını Giriniz')
-        _form.okutman_soyad = String('Okutman Soyadını Giriniz')
-        _form.tarih_baslangic = DateTime('Tarih Aralığı - Başlangıç')
-        _form.tarih_bitis = DateTime('Tarih Aralığı - Bitis')
-        _form.gonder = Button("Gönder")
-        self.form_out(_form)
-
-    def ogretim_elemani_kontrol(self):
-        """
-            Form Ekranında yazılan ögretim elemanı adı ve soyadını kontrol eder.
-            Eğer bu ad ve soyad a sahip öğretim elemanı varsa işlem devam eder.
-            Yoksa tekrardan Form ekranına dönüş yapar.
-
-        """
-        try:
-            self.current.task_data['okutman_key'] = Okutman.objects.get(
-                ad=self.input['form']['okutman_ad'],
-                soyad=self.input['form']['okutman_soyad']).key
-        except ObjectDoesNotExist:
-            msg = {
-                'type': 'warn', "title": _(u'Böyle Bir Kayıt Yok'),
-                "msg": _(u'İlgili Birime Ait Öğretim Elemanı Bulunamadı.')
-            }
-            self.current.output['msgbox'] = msg
-            self.current.task_data['cmd'] = 'yok'
-
-    def kaydet(self):
-        """
-            ogretim_elemani_kontrol ünde eğer ilgili ögretim elemanı varsa, bulunan öğretim elemanına
-            not girişi iş akışı atama işlemi yapılır.
-
-            Check User:
-                Login: ogretim_uyesi_3
-        """
-        from pyoko.fields import DATE_FORMAT
-        baslangic_tarihi, bitis_tarihi = format_date(self.input['form']['tarih_baslangic'],
-                                                     self.input['form']['tarih_bitis'])
-        bas_tarih = baslangic_tarihi.strftime(DATE_FORMAT)
-
-        okutman = Okutman.objects.get(self.current.task_data['okutman_key'])
-        role = okutman.personel.user.role_set[0].role
-        task = Task()
-        task.wf = BPMNWorkflow.objects.get(name='okutman_not_girisi')
-        task.name = task.wf.title
-        task.unit = Unit.objects.get(self.input['form']['secim_unit'])
-        task.abstract_role = AbstractRole.objects.get(name='Öğretim Elemanı')
-        task.role = role
-        task.object_type = 'Sinav'
-        task.object_query_code = {'okutman_id': self.current.task_data['okutman_key'],
-                                  'tur': self.input['form']['sinav_turu'],
-                                  'tarih__lt': bas_tarih}
-        task.start_date = baslangic_tarihi
-        task.finish_date = bitis_tarihi
-        task.run = True
-        task.save()
-
-        self.current.output['msgbox'] = MESAJ
-
-    # oe_not_girisi_is_akisi_atama -- finish -- #
-
-    # workflow_management -- start -- #
-    def is_akisi_atama_form(self):
-        """
-            Belli is akışlarını görevlendirmek üzere,
-            ilgili bölüme ait role sahip kişi veya kişilere atanacak iş akışıdır.
-
-            Examples:
-                Login: sistem_yoneticisi_1
-                Workflow Seçiniz: zaman_dilimi_duzenle
-                Birim Seçiniz: ULUSLARARASI İLİŞKİLER BÖLÜMÜ
-                Görevli Seçiniz: Ders Programı Koordinatörü
-                Başlangıç Tarihi: 13.10.2016
-                Bitiş Tarihi: 15.10.2016
-
-        """
-        _form = WorkflowJson(title="İş Akışı Atama")
-        _form.tarih_baslangic = DateTime("Başlangıç Tarihi")
-        _form.tarih_bitis = DateTime("Bitiş Tarihi")
-        _form.gonder = Button("Gönder")
-        self.form_out(_form)
-
-    def kaydet_ve_gonder(self):
-        """
-            Secilen AbstractRole sahip kişilere atanmak üzere yeni bir task oluşturulup,
-            Formdan gelen datalarla model doldurulur.
-
-            Check User:
-                Login: ders_programi_koordinatoru_1
-        """
-        workflow = self.input['form']['secim_workflow']
-        unit = self.input['form']['secim_unit']
-        gorev = self.input['form']['secim_gorev']
-        baslangic_tarihi, bitis_tarihi = format_date(self.input['form']['tarih_baslangic'],
-                                                     self.input['form']['tarih_bitis'])
-
-        task = Task()
-        task.wf = BPMNWorkflow.objects.get(workflow)
-        task.name = task.wf.title
-        task.unit = Unit.objects.get(key=unit)
-        task.abstract_role = AbstractRole.objects.get(key=gorev)
-        task.start_date = baslangic_tarihi
-        task.finish_date = bitis_tarihi
-        task.run = True
-        task.save()
-
-        self.current.output['msgbox'] = MESAJ
-        # workflow_management -- finish -- #
+        self.current.output['msgbox'] = {"type": _(u"info"),
+                                         "title": _(u"İşlem Başarılı"),
+                                         "msg": _(u"İş akışı ilgili rollere aktarıldı.")}
