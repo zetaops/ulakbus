@@ -9,7 +9,7 @@
     </bpmn:extensionElements>
     <bpmn:participant id="_Participant_2" name="Ogrenci Ders Atama" processRef="ogrenci_ders_atama" />
   </bpmn:collaboration>
-  <bpmn:process id="ogrenci_ders_atama" isExecutable="false">
+  <bpmn:process id="ogrenci_ders_atama" name="Öğrenci Ders Atama" isExecutable="false">
     <bpmn:laneSet id="LaneSet_3" name="Lane Set 3">
       <bpmn:lane id="Lane_1" name="Ogrenci İsleri">
         <bpmn:flowNodeRef>program_sec</bpmn:flowNodeRef>

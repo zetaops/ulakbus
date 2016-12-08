@@ -8,7 +8,7 @@
     </bpmn:extensionElements>
     <bpmn:participant id="_Participant_3" name="Kadro İşlemleri" processRef="kadro_islemleri" />
   </bpmn:collaboration>
-  <bpmn:process id="kadro_islemleri" isExecutable="false">
+  <bpmn:process id="kadro_islemleri" name="Kadro İşlemleri" isExecutable="false">
     <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
       <bpmn:lane id="personel" name="personel">
         <bpmn:flowNodeRef>kadro_ekle</bpmn:flowNodeRef>

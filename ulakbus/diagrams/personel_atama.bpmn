@@ -3,7 +3,7 @@
   <bpmn:collaboration id="PersonelAtama" name="Personel Atama">
     <bpmn:participant id="_Participant_3" name="Personel Atama (pool)" processRef="personel_atama" />
   </bpmn:collaboration>
-  <bpmn:process id="personel_atama" isExecutable="false">
+  <bpmn:process id="personel_atama" name="Personel Atama" isExecutable="false">
     <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
       <bpmn:lane id="personel" name="personel">
         <bpmn:extensionElements>

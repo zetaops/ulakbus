@@ -8,7 +8,7 @@
     </bpmn:extensionElements>
     <bpmn:participant id="_Participant_6" name="NotDuzenleme" processRef="ogrenci_isleri_not_duzenleme" />
   </bpmn:collaboration>
-  <bpmn:process id="ogrenci_isleri_not_duzenleme" isExecutable="false">
+  <bpmn:process id="ogrenci_isleri_not_duzenleme" name="Öğrenci İşleri Not Düzenleme" isExecutable="false">
     <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
       <bpmn:lane id="Lane_2" name="Personel">
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>

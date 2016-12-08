@@ -8,7 +8,7 @@
     </bpmn:extensionElements>
     <bpmn:participant id="ogrenci_kayit_silme" name="KayitSil" processRef="kayit_sil" />
   </bpmn:collaboration>
-  <bpmn:process id="kayit_sil" isExecutable="false">
+  <bpmn:process id="kayit_sil" name="Kayıt Sil" isExecutable="false">
     <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn:lane id="Lane_1" name="Personel">
         <bpmn:flowNodeRef>kaydi_silinmis_ogrenci</bpmn:flowNodeRef>

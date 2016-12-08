@@ -8,7 +8,7 @@
     </bpmn:extensionElements>
     <bpmn:participant id="Maz_Ogrenci_Isleri" name="Ogrenci Isleri" processRef="mazeretli_ders_kaydi" />
   </bpmn:collaboration>
-  <bpmn:process id="mazeretli_ders_kaydi" isExecutable="false">
+  <bpmn:process id="mazeretli_ders_kaydi" name="Mazeretli Ders Kaydı" isExecutable="false">
     <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn:lane id="Mazeretli_ogrenci_secimi_lane" name="Mazeretli Ogrenci Secimi">
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
