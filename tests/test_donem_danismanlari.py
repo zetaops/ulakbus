@@ -42,7 +42,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
 
         # Kullanıcının kayıtlı olduğu bölüm.
-        bolum = usr.role_set[0].role.unit
+        bolum = usr.role_user_set[0].role.unit
 
         donem = Donem.guncel_donem()
 

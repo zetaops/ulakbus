@@ -14,7 +14,7 @@ class TestCase(BaseTestCase):
     def test_ders_programi_yap(self):
 
         usr = User.objects.get(username='ders_programi_koordinatoru_1')
-        unit = usr.role_set[0].role.unit()
+        unit = usr.role_user_set[0].role.unit()
         ders_etkinligi = DersEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem())
         published_true = ders_etkinligi.filter(published=True)
         with BlockSave(DersEtkinligi, query_dict={'published': False}):
@@ -129,7 +129,7 @@ class TestCase(BaseTestCase):
 
         """
         usr = User.objects.get(username='ders_programi_koordinatoru_1')
-        unit = usr.role_set[0].role.unit()
+        unit = usr.role_user_set[0].role.unit()
         sinav_etkinligi = SinavEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem())
         published_true = sinav_etkinligi.filter(published=True)
         with BlockSave(SinavEtkinligi, query_dict={'published': False}):

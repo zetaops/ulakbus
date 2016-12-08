@@ -401,10 +401,8 @@ class Program(Model):
     farkli_programdan_ders_secebilme = field.Boolean(_(u"Farklı Bir Programdan Ders Seçebilme"),
                                                      default=False, index=True)
     bolum_baskani = Role(verbose_name=_(u'Bölüm Başkanı'), reverse_name='bolum_baskani_program')
-    ects_bolum_kordinator = Role(verbose_name=_(u'ECTS Bölüm Koordinator'),
-                                 reverse_name='ects_koordinator_program')
-    akademik_kordinator = Role(verbose_name=_(u'Akademik Koordinator'),
-                               reverse_name='akademik_koordinator_program')
+    ects_bolum_kordinator = Role(verbose_name=_(u'ECTS Bölüm Koordinator'))
+    akademik_kordinator = Role(verbose_name=_(u'Akademik Koordinator'))
     birim = Unit(reverse_name="yoksis_program_program", verbose_name=_(u"YÖKSİS Program"))
 
     bolum = Unit(reverse_name="bolum_program", verbose_name=_(u"Bölüm"))

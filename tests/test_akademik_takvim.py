@@ -68,7 +68,7 @@ class TestCase(BaseTestCase):
         user = User.objects.get(username='ogrenci_1')
 
         # Rol'ün kayıtlı olduğu birim getirilir.
-        unit = user.role_set[0].role.unit
+        unit = user.role_user_set[0].role.unit
 
         ogretim_yili = OgretimYili.objects.get(yil=Donem.guncel_donem().baslangic_tarihi.year)
 
@@ -105,7 +105,7 @@ class TestCase(BaseTestCase):
         response = self.client.post()
 
         # Rol'ün kayıtlı olduğu birim getirilir.
-        unit = usr.role_set[0].role.unit
+        unit = usr.role_user_set[0].role.unit
 
         # Birimin kayıtlı olduğu akademik takvim kayıtını getirir.
         akademik_takvim = get_akademik_takvim(unit, ogretim_yili)

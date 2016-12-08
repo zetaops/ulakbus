@@ -14,7 +14,7 @@ class TestCase(BaseTestCase):
     def test_okutman_sinav_programi_goruntule(self):
 
         user = User.objects.get(username='ogrenci_3')
-        unit = user.role_set[0].role.unit
+        unit = user.role_user_set[0].role.unit
         sinav_etkinligi = SinavEtkinligi.objects.filter(bolum=unit, donem=Donem.guncel_donem())
         with BlockSave(SinavEtkinligi, query_dict={'published': True}):
             for se in sinav_etkinligi:

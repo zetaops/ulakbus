@@ -118,7 +118,7 @@ class UlakbusMenu(Menu):
         usr = self.current.user
         role = self.current.role
         usr_total_roles = [{"role": roleset.role.__unicode__()} for roleset in
-                      self.current.user.role_set]
+                      self.current.user.role_user_set]
         self.output['current_user'] = {
             "name": usr.name,
             "surname": usr.surname,

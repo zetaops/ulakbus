@@ -248,11 +248,11 @@ class KayitSil(CrudView):
 
         for program in ogrenci_program:
             abstract_role = AbstractRole.objects.get("DANISMAN")
-            for role in program.danisman.user.role_set:
+            for role in program.danisman.user.role_user_set:
                 if role.role.abstract_role == abstract_role:
                     role.role.send_notification(title=title, message=msg, sender=self.current.user)
 
-        for role in ogrenci.user.role_set:
+        for role in ogrenci.user.role_user_set:
             abstract_role = kaydi_silinmis_abs_role(role.role)
             if abstract_role.key in ABSTRACT_ROLE_LIST_SILINMIS:
                 role.role.send_notification(title=title, message=msg, sender=self.current.user)

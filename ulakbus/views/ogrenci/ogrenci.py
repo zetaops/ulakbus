@@ -607,14 +607,14 @@ class KayitDondurma(CrudView):
 
             # Öğrencinin danışmanına bilgilendirme geçilir
             abstract_role = AbstractRole.objects.get("DANISMAN")
-            for role in ogrenci_program.danisman.user.role_set:
+            for role in ogrenci_program.danisman.user.role_user_set:
                 if role.role.abstract_role == abstract_role:
                     role.role.send_notification(title=_(u"Öğrenci Kaydı Donduruldu"), message=danisman_message,
                                                 sender=self.current.user)
             donemler = "-".join([donem['donem']for donem in dondurulan_donemler])
             ogrenci_message = _(u"%s dönemleri için kaydınız dondurulmuştur.") % donemler
 
-            for role in ogrenci_program.ogrenci.user.role_set:
+            for role in ogrenci_program.ogrenci.user.role_user_set:
 
                 if role.role.abstract_role.key in ABSTRACT_ROLE_LIST_DONDURULMUS:
                     role.role.send_notification(title=_(u"Kayıt Dondurma"), message=ogrenci_message,

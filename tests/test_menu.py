@@ -47,19 +47,19 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
 
         # Kullanıcın sahip olduğu izinler.
-        first_permissions = self.client.user.role_set[0].role.get_db_permissions()
+        first_permissions = self.client.user.role_user_set[0].role.get_db_permissions()
 
         # Kullanıcıya izinler eklenir.
-        self.client.user.role_set[0].role.add_permission_by_name('Borc', save=True)
+        self.client.user.role_user_set[0].role.add_permission_by_name('Borc', save=True)
 
         # Kullanıcıya permisionlar eklendikten sonraki izinleri.
-        last_permissions = self.client.user.role_set[0].role.get_db_permissions()
+        last_permissions = self.client.user.role_user_set[0].role.get_db_permissions()
 
         # İzinlerin eklenip eklenmediği test edilir.
         assert len(last_permissions) == len(first_permissions) + len(PERMISSION_LST)
 
         # Kullanıcın rolünün keyi.
-        user_role_key = self.client.user.role_set[0].role.key
+        user_role_key = self.client.user.role_user_set[0].role.key
         # Permission değişikliklerini görmek için role çekilir.
         user_role = Role.objects.get(user_role_key)
 

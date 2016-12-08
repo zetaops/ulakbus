@@ -86,7 +86,7 @@ class User(Model, BaseUser):
 
         """
         last_key = self.last_login_role_key
-        return Role.objects.get(last_key) if last_key else self.role_set[0].role
+        return Role.objects.get(last_key) if last_key else self.role_user_set[0].role
 
     def pre_save(self):
         if not self.username or not self.password:
@@ -136,10 +136,10 @@ class Permission(Model):
             User list
         """
         users = set()
-        for ars in self.abstract_role_set.objects.filter():
+        for ars in self.abstract_role_permissions_permission_set.objects.filter():
             for r in ars.role_set.objects.filter():
                 users.add(r.user)
-        for r in self.role_set.objects.filter():
+        for r in self.role_permissions_permission_set.objects.filter():
             users.add(r.user)
         return users
 
@@ -227,7 +227,7 @@ class AbstractRole(Model):
             self.save()
 
     class Permissions(ListNode):
-        permission = Permission()
+        permission = Permission(reverse_link= True)
 
 
 class Unit(Model):
@@ -319,7 +319,7 @@ class Role(Model):
 
     """
     abstract_role = AbstractRole()
-    user = User()
+    user = User(reverse_link=True)
     unit = Unit()
     typ = field.Integer(_(u"Rol Tipi"), choices=ROL_TIPI)
     name = field.String(_(u"Rol Adı"), hidden=True)
@@ -352,7 +352,7 @@ class Role(Model):
         return gettext(u"Role %s") % self.name or (self.key if self.is_in_db() else '')
 
     class Permissions(ListNode):
-        permission = Permission()
+        permission = Permission(reverse_link=True)
 
         def __unicode__(self):
             return "%s" % self.permission
