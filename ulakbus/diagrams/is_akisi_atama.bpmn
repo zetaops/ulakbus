@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="Collaboration_0z7fore">
+    <bpmn:participant id="Participant_087mmkd" name="Is Yoneticisi Is Akisi Atama" processRef="is_akisi_atama">
+      <bpmn:documentation>İş Yöneticisi iş akışı atama</bpmn:documentation>
+    </bpmn:participant>
+  </bpmn:collaboration>
+  <bpmn:process id="is_akisi_atama" name="İş Yönetimi" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1hgn9fc</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_1ut5h8s">
+      <bpmn:incoming>SequenceFlow_003cksp</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1hgn9fc" sourceRef="StartEvent_1" targetRef="wf_sec" />
+    <bpmn:sequenceFlow id="SequenceFlow_03i5jmk" sourceRef="ExclusiveGateway_04kc0l5" targetRef="wf_sec">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='geri']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_14b6nad" sourceRef="wf_sec" targetRef="wf_zamanla" />
+    <bpmn:sequenceFlow id="SequenceFlow_0sxfead" sourceRef="wf_zamanla" targetRef="ExclusiveGateway_04kc0l5" />
+    <bpmn:sequenceFlow id="SequenceFlow_15pdugj" sourceRef="ExclusiveGateway_04kc0l5" targetRef="bilgi_ekrani" />
+    <bpmn:sequenceFlow id="SequenceFlow_003cksp" sourceRef="bilgi_ekrani" targetRef="EndEvent_1ut5h8s" />
+    <bpmn:userTask id="wf_sec" name="Workflow Seç" camunda:assignee="workflow.workflow_management.WorkflowManagement.wf_sec">
+      <bpmn:incoming>SequenceFlow_1hgn9fc</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_03i5jmk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14b6nad</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="wf_zamanla" name="Workflow Formunu Doldur" camunda:assignee="workflow.workflow_management.WorkflowManagement.wf_zamanla">
+      <bpmn:incoming>SequenceFlow_14b6nad</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0sxfead</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_04kc0l5" default="SequenceFlow_15pdugj">
+      <bpmn:incoming>SequenceFlow_0sxfead</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_15pdugj</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_03i5jmk</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="bilgi_ekrani" name="Bilgi Ekrani" camunda:assignee="workflow.workflow_management.WorkflowManagement.bilgi_ekrani">
+      <bpmn:incoming>SequenceFlow_15pdugj</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_003cksp</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0z7fore">
+      <bpmndi:BPMNShape id="Participant_087mmkd_di" bpmnElement="Participant_087mmkd">
+        <dc:Bounds x="475" y="268" width="908" height="356" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="549" y="437" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="522" y="473" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1hgn9fc_di" bpmnElement="SequenceFlow_1hgn9fc">
+        <di:waypoint xsi:type="dc:Point" x="585" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="651" y="455" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="573" y="430" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_06l8bt2_di" bpmnElement="wf_sec">
+        <dc:Bounds x="651" y="415" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_14b6nad_di" bpmnElement="SequenceFlow_14b6nad">
+        <di:waypoint xsi:type="dc:Point" x="751" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="852" y="455" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="756.5" y="430" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0bk12kc_di" bpmnElement="wf_zamanla">
+        <dc:Bounds x="852" y="415" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1ut5h8s_di" bpmnElement="EndEvent_1ut5h8s">
+        <dc:Bounds x="1261.2292849035189" y="437" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1234.2292849035189" y="473" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sxfead_di" bpmnElement="SequenceFlow_0sxfead">
+        <di:waypoint xsi:type="dc:Point" x="952" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="1018" y="455" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="940" y="430" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_04kc0l5_di" bpmnElement="ExclusiveGateway_04kc0l5" isMarkerVisible="true">
+        <dc:Bounds x="1018.2292849035189" y="430" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="998.2292849035189" y="480" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_15pdugj_di" bpmnElement="SequenceFlow_15pdugj">
+        <di:waypoint xsi:type="dc:Point" x="1068" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="1122" y="455" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1050" y="430" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_03i5jmk_di" bpmnElement="SequenceFlow_03i5jmk">
+        <di:waypoint xsi:type="dc:Point" x="1043" y="430" />
+        <di:waypoint xsi:type="dc:Point" x="1043" y="353" />
+        <di:waypoint xsi:type="dc:Point" x="701" y="353" />
+        <di:waypoint xsi:type="dc:Point" x="701" y="415" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="827" y="328" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_003cksp_di" bpmnElement="SequenceFlow_003cksp">
+        <di:waypoint xsi:type="dc:Point" x="1222" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="1261" y="455" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1196.5" y="430" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_18p4rng_di" bpmnElement="bilgi_ekrani">
+        <dc:Bounds x="1122" y="415" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

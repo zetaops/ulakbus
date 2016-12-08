@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_h7-b0BHQEea2oaCMxGGyNA" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="_Collaboration_3">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_3">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property name="menu_category" value="hidden" />
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="gorev_suresi_uzatma_pool" name="Görev Süresi Uzatma (pool)" processRef="gorev_suresi_uzatma" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="gorev_suresi_uzatma" name="Akademik Personel Görev Süresi Uzatma" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
-      <bpmn2:lane id="personel" name="Personel">
-        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>form_goruntule</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="StartEvent_1" targetRef="form_goruntule" />
-    <bpmn2:userTask id="form_goruntule" name="Form Görüntüle" camunda:assignee="personel.kadro.GorevSuresiUzat.gorev_suresi_form">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:serviceTask id="kaydet" name="Kaydet" camunda:class="personel.kadro.GorevSuresiUzat.kaydet">
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="form_goruntule" targetRef="kaydet" />
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:extensionElements>
+    </bpmn:extensionElements>
+    <bpmn:participant id="gorev_suresi_uzatma_pool" name="Görev Süresi Uzatma (pool)" processRef="gorev_suresi_uzatma" />
+  </bpmn:collaboration>
+  <bpmn:process id="gorev_suresi_uzatma" name="Akademik Personel Görev Süresi Uzatma" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn:lane id="personel" name="Personel">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>form_goruntule</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="StartEvent_1" targetRef="form_goruntule" />
+    <bpmn:userTask id="form_goruntule" name="Form Görüntüle" camunda:assignee="personel.kadro.GorevSuresiUzat.gorev_suresi_form">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="kaydet" name="Kaydet" camunda:class="personel.kadro.GorevSuresiUzat.kaydet">
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="form_goruntule" targetRef="kaydet" />
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="client_message">
             <camunda:map>
@@ -41,11 +41,11 @@
             </camunda:map>
           </camunda:inputParameter>
         </camunda:inputOutput>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="kaydet" targetRef="EndEvent_1" />
-  </bpmn2:process>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="kaydet" targetRef="EndEvent_1" />
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_3" bpmnElement="gorev_suresi_uzatma_pool" isHorizontal="true">
@@ -89,4 +89,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>
