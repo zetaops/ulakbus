@@ -22,11 +22,7 @@ class HizmetIHSSync(HITAPSync):
     Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_ihs_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """

@@ -21,11 +21,7 @@ class HizmetBorclanmaSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Borçlanma Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_borclanma_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """

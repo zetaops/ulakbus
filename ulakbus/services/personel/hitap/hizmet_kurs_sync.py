@@ -21,11 +21,7 @@ class HizmetKursSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Kurs Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_kurs_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """

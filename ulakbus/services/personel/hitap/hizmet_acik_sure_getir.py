@@ -21,20 +21,7 @@ class HizmetAcikSureGetir(HITAPSorgula):
     Açık Süre Hizmet Bilgisi Sorgulama servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_acik_sure_getir"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.acik.sure.getir.channel"
-    URL_PATH = '/personel/hitap/hizmet-acik-sure-getir'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """

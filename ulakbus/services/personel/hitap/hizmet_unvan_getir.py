@@ -19,20 +19,7 @@ class HizmetUnvanGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Ünvan Bilgisi Sorgulama servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_unvan_getir"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.unvan.getir.channel"
-    URL_PATH = '/personel/hitap/hizmet-unvan-getir'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """

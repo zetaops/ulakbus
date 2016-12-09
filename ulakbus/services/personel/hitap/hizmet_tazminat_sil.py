@@ -19,20 +19,7 @@ class HizmetTazminatSil(HITAPSil):
     HITAP Silme servisinden kalıtılmış Hizmet Mahkeme Bilgisi Silme servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_tazminat_sil"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.tazminat.sil.channel"
-    URL_PATH = '/personel/hitap/hizmet-tazminat-sil'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

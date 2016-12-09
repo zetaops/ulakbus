@@ -21,11 +21,7 @@ class HizmetTazminatSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Tazminat Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_tazminat_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """

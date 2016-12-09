@@ -22,11 +22,7 @@ class HizmetAcikSureSync(HITAPSync):
     Açık Süre Hizmet Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_acik_sure_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """
@@ -39,7 +35,7 @@ class HizmetAcikSureSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-acik-sure-getir.hizmet-acik-sure-getir'
+        self.sorgula_service = 'hizmet_acik_sure_getir'
         self.model = HizmetAcikSure
 
         super(HizmetAcikSureSync, self).handle()

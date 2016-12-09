@@ -14,6 +14,7 @@ banka yetkilendirme kontrolü fonksiyonunu içeren modül.
 
 from zato.server.service import Service
 from ulakbus.models.ogrenci import Banka, BankaAuth
+from pyoko.lib.utils import dash_camel
 
 
 class AuthException(Exception):
@@ -72,10 +73,17 @@ class BankaService(Service):
 
     """
 
+    HAS_CHANNEL = False
+
     def __init__(self):
         #: Banka: Servisleri kullanacak olan yetkilendirilecek banka.
         self.banka = None
         super(BankaService, self).__init__()
+
+    @classmethod
+    def get_name(cls):
+        super(BankaService, cls)
+        return dash_camel(cls.__name__)
 
     class SimpleIO:
         """

@@ -3,8 +3,17 @@
 from zato.common import SMTPMessage
 from zato.server.service import Service
 import httplib
+from pyoko.lib.utils import dash_camel
 
-class E_PostaYolla(Service):
+
+class EPostaYolla(Service):
+
+    HAS_CHANNEL = True
+
+    @classmethod
+    def get_name(cls):
+        super(EPostaYolla, cls)
+        return dash_camel(cls.__name__)
 
     def handle(self):
 

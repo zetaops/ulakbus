@@ -20,20 +20,7 @@ class HizmetIhsGuncelle(HITAPGuncelle):
     HITAP Ekleme servisinden kalıtılmış Hizmet IHS Bilgisi Guncelleme servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_ihs_guncelle"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.ihs.guncelle.channel"
-    URL_PATH = '/personel/hitap/hizmet-ihs-guncelle'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

@@ -21,11 +21,7 @@ class HizmetBirlestirmeSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Hizmet Birleştirme Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_birlestirme_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """

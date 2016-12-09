@@ -19,20 +19,7 @@ class HizmetAskerlikGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Askerlik Bilgisi Sorgulama servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_askerlik_getir"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.askerlik.getir.channel"
-    URL_PATH = '/personel/hitap/hizmet-askerlik-getir'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """

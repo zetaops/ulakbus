@@ -19,20 +19,7 @@ class HizmetMahkemeGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Mahkeme Bilgisi Sorgulama servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_mahkeme_getir"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.mahkeme.getir.channel"
-    URL_PATH = '/personel/hitap/hizmet-mahkeme-getir'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """

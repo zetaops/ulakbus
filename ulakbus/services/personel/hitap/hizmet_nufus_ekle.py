@@ -19,20 +19,7 @@ class HizmetNufusEkle(HITAPEkle):
     HITAP Ekleme servisinden kalıtılmış Hizmet Nufus Bilgi Ekleme servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_nufus_ekle"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizme.nufus.ekle.channel"
-    URL_PATH = '/personel/hitap/hizmet-nufus-ekle'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

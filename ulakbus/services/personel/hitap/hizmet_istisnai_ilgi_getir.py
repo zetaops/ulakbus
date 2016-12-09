@@ -24,20 +24,7 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
     İstisnai İlgi Bilgisi Sorgulama servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_istisnai_ilgi_getir"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.istisnai.ilgi.getir.channel"
-    URL_PATH = '/personel/hitap/hizmet-istisnai-ilgi-getir'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """

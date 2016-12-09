@@ -26,6 +26,7 @@ import os
 import urllib2
 from json import dumps
 from six import iteritems
+from pyoko.lib.utils import dash_camel
 
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
@@ -45,15 +46,17 @@ class HITAPEkle(Service):
             ve tarih filtresi uygulanacak alanların listesini içerir.
 
     """
+    HAS_CHANNEL = False
 
     def __init__(self):
         self.service_name = ''
         self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
         super(HITAPEkle, self).__init__()
 
-    @staticmethod
-    def get_name():
-        return 'hitap_ekle'
+    @classmethod
+    def get_name(cls):
+        super(HITAPEkle, cls)
+        return dash_camel(cls.__name__)
 
     def handle(self):
         """

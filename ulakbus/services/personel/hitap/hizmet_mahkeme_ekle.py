@@ -19,20 +19,7 @@ class HizmetMahkemeEkle(HITAPEkle):
     HITAP Ekleme servisinden kalıtılmış Hizmet Mahkeme Bilgi Ekleme servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_mahkeme_ekle"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.mahkeme.ekle.channel"
-    URL_PATH = '/personel/hitap/hizmet-mahkeme-ekle'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

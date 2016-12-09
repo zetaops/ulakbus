@@ -9,8 +9,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
-from zengine.management_commands import *
-from ulakbus.lib.unitime import *
 from ulakbus.lib.fake import *
 
 
@@ -196,7 +194,7 @@ class GenerateDersList(Command):
 
 
 class GenerateZatoServiceJson(Command):
-    CMD_NAME = 'generate_services_json'
+    CMD_NAME = 'create_ulakbus_service_object'
     HELP = "Creates new channels and uploads services to Zato."
     PARAMS = [
         {'name': 'path', 'required': True,
@@ -226,14 +224,13 @@ class GenerateZatoServiceJson(Command):
     def run(self):
         import importlib
         import inspect
-        import json
         from zato.server.service import Service
 
-        services = []
         path = self.manager.args.path
         self.get_py_files_path(path)
         paths = self.py_files_path
         for p in paths:
+            bool_create_service_object = False
             name = os.path.splitext(os.path.basename(p))[0]
             # Ignore __ files
             if name.startswith("__"):
@@ -242,28 +239,49 @@ class GenerateZatoServiceJson(Command):
             module_name = '.'.join(pth.split('/'))
             module = importlib.import_module(module_name)
             for obj_name in dir(module):
+                if obj_name.startswith("__"):
+                    continue
                 obj = getattr(module, obj_name)
                 # Eger obj bir class ise, zato `Service`  inherited ise,
                 #  ve Service in kendisi degilse
-                if inspect.isclass(obj) and issubclass(obj, Service) and obj is not Service \
-                        and hasattr(obj, "DEPLOY") and obj.DEPLOY:
-                    services.append([obj_name, obj, p])
-                    continue
+                if inspect.isclass(obj) and issubclass(obj, Service) \
+                        and Service in inspect.getmro(obj) and hasattr(obj, "HAS_CHANNEL"):
+                    if not obj.HAS_CHANNEL and not bool_create_service_object:
+                        self.create_service_file_object(p)
+                        bool_create_service_object = True
+                    elif obj.HAS_CHANNEL and not bool_create_service_object:
+                        self.create_channel_and_service_object(obj, p)
+                        self.create_service_file_object(p)
+                        bool_create_service_object = True
+                    elif obj.HAS_CHANNEL and bool_create_service_object:
+                        self.create_channel_and_service_object(obj, p)
 
-        zato_json = dict()
-        zato_json['cluster_id'] = 1
-        zato_json['SERVICES'] = []
-        for name, service, path in services:
-            payload_service = self.get_service_payload_data(path)
-            payload_channel = self.get_channel_payload_data(service)
+    def create_channel_and_service_object(self, service, path):
+        from ulakbus.models.ulakbus_services import UlakbusZatoChannelService
+        from pyoko.lib.utils import dash_camel
 
-            zato_json['SERVICES'].append({
-                "DEPLOY": service.DEPLOY,
-                "CHANNEL": payload_channel,
-                "SERVICE": payload_service})
+        create_channel = UlakbusZatoChannelService()
+        create_channel.cluster_id = 1
+        create_channel.service_name = service.get_name()
+        create_channel.channel_name = service.get_name() + "-channel"
+        create_channel.channel_url_path = '/'+'/'.join(path.split('/')[:-1])+'/'+dash_camel(service.__name__)
+        create_channel.channel_connection = "channel"
+        create_channel.channel_data_format = "json"
+        create_channel.channel_is_internal = False
+        create_channel.channel_is_active = True
+        create_channel.channel_transport = "plain_http"
+        create_channel.save()
 
-        with open(os.getcwd()+'/services/json/zato.json', 'w') as outfile:
-            json.dump(zato_json, outfile, indent=4)
+    def create_service_file_object(self, path):
+        from ulakbus.models.ulakbus_services import UlakbusUploadZatoServiceFile
+
+        service_payload = self.get_service_payload_data(path)
+
+        upload_service = UlakbusUploadZatoServiceFile()
+        upload_service.cluster_id = 1
+        upload_service.service_payload_name = service_payload["payload_name"]
+        upload_service.service_payload = service_payload["payload"]
+        upload_service.save()
 
     def get_service_payload_data(self, path):
         import base64
@@ -273,54 +291,10 @@ class GenerateZatoServiceJson(Command):
             payload = base64.b64encode(text)
 
         service_payload = dict()
-        service_payload["name"] = os.path.splitext(os.path.basename(path))[0]
         service_payload["payload_name"] = os.path.basename(path)
         service_payload["payload"] = payload
 
         return service_payload
-
-    def get_channel_payload_data(self, service):
-
-        payload_channel = dict()
-        payload_channel['name'] = service.CHANNEL_NAME
-        payload_channel['connection'] = service.CONNECTION
-        payload_channel['data_format'] = service.DATA_FORMAT
-        payload_channel['url_path'] = service.URL_PATH
-        payload_channel['transport'] = service.TRANSPORT
-        payload_channel['is_active'] = service.IS_ACTIVE
-        payload_channel['is_internal'] = service.IS_INTERNAL
-
-        return payload_channel
-
-
-class CreateUlakbusServiceModel(Command):
-    CMD_NAME = 'create_ulakbus_services_model'
-    HELP = "Creates new channels and uploads services to Zato."
-
-    def run(self):
-        import json
-        from ulakbus.services.models.ulakbus_services import UlakbusService
-
-        with open(os.getcwd()+'/services/json/zato.json', 'r') as f:
-            json_data = f.read()
-            data = json.loads(json_data)
-            cluster_id = data['cluster_id']
-            for d in data['SERVICES']:
-                ulakbus_service = UlakbusService()
-                ulakbus_service.cluster_id = cluster_id
-                ulakbus_service.service_name = d["SERVICE"]["name"]
-                ulakbus_service.service_payload_name = d["SERVICE"]["payload_name"]
-                ulakbus_service.service_payload = d["SERVICE"]["payload"]
-                ulakbus_service.channel_name = d["CHANNEL"]["name"]
-                ulakbus_service.channel_connection = d["CHANNEL"]["connection"]
-                ulakbus_service.channel_url_path = d["CHANNEL"]["url_path"]
-                ulakbus_service.channel_connection = d["CHANNEL"]["connection"]
-                ulakbus_service.channel_data_format = d["CHANNEL"]["data_format"]
-                ulakbus_service.channel_is_active = d["CHANNEL"]["is_active"]
-                ulakbus_service.channel_transport = d["CHANNEL"]["transport"]
-                ulakbus_service.channel_is_internal = d["CHANNEL"]["is_internal"]
-                ulakbus_service.deploy = d["DEPLOY"]
-                ulakbus_service.save()
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'

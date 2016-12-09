@@ -25,6 +25,7 @@ from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
+from pyoko.lib.utils import dash_camel
 from six import iteritems
 
 H_USER = os.environ["HITAP_USER"]
@@ -46,15 +47,17 @@ class HITAPGuncelle(Service):
             listesini içerir.
 
     """
+    HAS_CHANNEL = False
 
     def __init__(self):
         self.service_name = ''
         self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
         super(HITAPGuncelle, self).__init__()
 
-    @staticmethod
-    def get_name():
-        return 'hitap_guncelle'
+    @classmethod
+    def get_name(cls):
+        super(HITAPGuncelle, cls)
+        return dash_camel(cls.__name__)
 
     def handle(self):
         """

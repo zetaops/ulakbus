@@ -8,19 +8,28 @@ import subprocess
 import shutil
 import os
 import httplib
+from pyoko.lib.utils import dash_camel
 
 
-class StartExamSolver(Service):
+class SinavPlaniStartExamSolver(Service):
     """Sınav programı planlamasını arka planda başlatır."""
+
+    HAS_CHANNEL = True
+
+    @classmethod
+    def get_name(cls):
+        super(SinavPlaniStartExamSolver, cls)
+        return dash_camel(cls.__name__)
+
     def handle(self):
-        solver_service = ExecuteExamSolver().name
+        solver_service = SinavPlaniExecuteExamSolver().name
         # Bize verilen payload'u Exam Solver servisine aktararak çalıştırıyoruz
         self.invoke_async(solver_service, payload=self.request.payload)
         self.response.status_code = httplib.OK
         self.response.payload = {'status': 'ok', 'result': 'Sınav planlaması başlatıldı'}
 
 
-class ExecuteExamSolver(Service):
+class SinavPlaniExecuteExamSolver(Service):
     """Bir bölüm için sınav planı hesaplaması yapar.
 
     Bu servisi çalıştırmak için sınav planı hesaplanacak olan bölümün
@@ -46,7 +55,14 @@ class ExecuteExamSolver(Service):
     Kullanıcıya gönderilecek olan mesajı değiştirmek için, servise gönderilen istekte 'baslik' ve 'mesaj'
     alanları kullanılabilir.
     """
+    HAS_CHANNEL = False
+
     _SOLVER_DIR = '/opt/zato/solver'
+
+    @classmethod
+    def get_name(cls):
+        super(SinavPlaniExecuteExamSolver, cls)
+        return dash_camel(cls.__name__)
 
     def handle(self):
         bolum_yoksis_no = int(self.request.payload['bolum'])

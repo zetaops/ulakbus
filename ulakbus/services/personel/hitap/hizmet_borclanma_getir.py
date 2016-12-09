@@ -19,20 +19,7 @@ class HizmetBorclanmaGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Borçlanma Bilgisi Sorgulama servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_borclanma_getir"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.borclanma.getir.channel"
-    URL_PATH = '/personel/hitap/hizmet-borclanma-getir'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """

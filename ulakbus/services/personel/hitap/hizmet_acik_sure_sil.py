@@ -19,20 +19,7 @@ class HizmetAcikSureSil(HITAPSil):
     HITAP Silme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Silme servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_acik_sure_sil"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.acik.sure.sil.channel"
-    URL_PATH = '/personel/hitap/hizmet-acik-sure-sil'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

@@ -26,6 +26,7 @@ import os
 import urllib2
 from json import dumps
 from six import iteritems
+from pyoko.lib.utils import dash_camel
 
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
@@ -44,15 +45,17 @@ class HITAPSil(Service):
             Servise gönderilecek verinin alanlarına ait sözlüğü içerir.
 
     """
+    HAS_CHANNEL = False
 
     def __init__(self):
         self.service_name = ''
         self.service_dict = {'fields': {'kayitNo': "", 'tckn': ""}}
         super(HITAPSil, self).__init__()
 
-    @staticmethod
-    def get_name():
-        return 'hitap_sil'
+    @classmethod
+    def get_name(cls):
+        super(HITAPSil, cls)
+        return dash_camel(cls.__name__)
 
     def handle(self):
         """

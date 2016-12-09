@@ -46,6 +46,7 @@ import socket
 from json import loads, dumps
 from six import iteritems
 from ulakbus.models.personel import Personel
+from pyoko.lib.utils import dash_camel
 
 
 H_USER = os.environ["HITAP_USER"]
@@ -65,15 +66,17 @@ class HITAPSync(Service):
         model (Model): Hitap'taki kaydın karşılığı olan Model
 
     """
+    HAS_CHANNEL = False
 
     def __init__(self):
         self.sorgula_service = ''
         self.model = None
         super(HITAPSync, self).__init__()
 
-    @staticmethod
-    def get_name():
-        return 'hitap_sync'
+    @classmethod
+    def get_name(cls):
+        super(HITAPSync, cls)
+        return dash_camel(cls.__name__)
 
     def handle(self):
         """

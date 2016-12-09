@@ -10,6 +10,7 @@ import json
 import uuid
 import httplib
 import os
+from pyoko.lib.utils import dash_camel
 
 """
 UYARI : Lütfen bu kod içerisindeki uzun satırları formatlamayın. Gönderilen xml içersindeki
@@ -29,11 +30,19 @@ if DEBUG:
 
 
 class NVIService(Service):
+
+    HAS_CHANNEL = False
+
     def __init__(self):
         self.service_action = ""
         self.service_xml_body = ""
         self.sso_data = {}
         super(NVIService, self).__init__()
+
+    @classmethod
+    def get_name(cls):
+        super(NVIService, cls)
+        return dash_camel(cls.__name__)
 
     def handle(self):
         keys = ['nvi_sso_encrypted_data', 'nvi_sso_key_identifier_path',
@@ -135,6 +144,8 @@ class KisiSorgulaTCKimlikNo(NVIService):
     NVI Kimlik Bilgileri Servisi
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         tckn = self.request.payload['tckn']
         self.service_action = "/2011/01/01/KisiSorgulaTCKimlikNoServis/ListeleCoklu"
@@ -155,6 +166,8 @@ class CuzdanSorgulaTCKimlikNo(NVIService):
     """
     NVI Kimlik Bilgileri Servisi
     """
+
+    HAS_CHANNEL = True
 
     def handle(self):
         tckn = self.request.payload['tckn']
@@ -178,6 +191,8 @@ class YabanciKisiSorgula(NVIService):
     NVI Kimlik Bilgileri Servisi
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         tckn = self.request.payload['tckn']
         self.service_action = "/2013/06/01/YbKisiSorgulaYbKimlikNoServis/ListeleCoklu"
@@ -199,6 +214,8 @@ class AdresSorgula(NVIService):
     Adres Sorgulama
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         tckn = self.request.payload['tckn']
         self.service_action = "/2015/07/01/KimlikNoSorgulaAdresServis/Sorgula"
@@ -219,6 +236,8 @@ class AileBireySorgula(NVIService):
     """
     Aile Birey Sorgulama
     """
+
+    HAS_CHANNEL = True
 
     def handle(self):
         tckn = self.request.payload['tckn']

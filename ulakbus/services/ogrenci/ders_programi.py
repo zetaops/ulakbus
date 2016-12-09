@@ -8,18 +8,27 @@ import os
 from ulakbus.lib.common import ders_programi_doldurma
 import shutil
 import httplib
+from pyoko.lib.utils import dash_camel
 
 
-class StartSolver(Service):
+class DersProgramiStartSolver(Service):
     """Ders programı planlamasını arka planda başlatır."""
+
+    HAS_CHANNEL = True
+
+    @classmethod
+    def get_name(cls):
+        super(DersProgramiStartSolver, cls)
+        return dash_camel(cls.__name__)
+
     def handle(self):
-        solver_service = ExecuteSolver().name
+        solver_service = DersProgramiExecuteSolver().name
         self.invoke_async(solver_service, payload=self.request.payload)
         self.response.status_code = httplib.OK
         self.response.payload = {'status': 'ok', 'result': 'Ders planlaması başlatıldı'}
 
 
-class ExecuteSolver(Service):
+class DersProgramiExecuteSolver(Service):
     """Bir bölüm için ders programı hesaplaması yapar.
 
     Bu servisi çalıştırmak için ders programı hesaplanacak olan bölümün
@@ -44,7 +53,15 @@ class ExecuteSolver(Service):
     Kullanıcıya gönderilecek olan mesajı değiştirmek için, servise gönderilen istekte 'baslik' ve 'mesaj'
     alanları kullanılabilir.
     """
+
+    HAS_CHANNEL = False
+
     _SOLVER_DIR = '/opt/zato/solver'
+
+    @classmethod
+    def get_name(cls):
+        super(DersProgramiExecuteSolver, cls)
+        return dash_camel(cls.__name__)
 
     def handle(self):
         bolum_yoksis_no = int(self.request.payload['bolum'])

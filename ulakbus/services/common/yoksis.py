@@ -8,6 +8,7 @@
 
 from zato.server.service import Service
 from ulakbus import settings
+from pyoko.lib.utils import dash_camel
 
 __author__ = 'Ali Riza Keles'
 
@@ -25,10 +26,18 @@ if DEBUG:
 
 
 class YOKSIS(Service):
+
+    HAS_CHANNEL = False
+
     def __init__(self):
         super(YOKSIS, self).__init__()
         self.cli = self.connection()
         self.birim = 0
+
+    @classmethod
+    def get_name(cls):
+        super(YOKSIS, cls)
+        return dash_camel(cls.__name__)
 
     @staticmethod
     def connection():
@@ -101,6 +110,8 @@ class BirimDetay(YOKSIS):
     YOKSIS Birim Detay Zato Servisi
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         birim_id = self.request.payload['birim_id']
         self.birim = self.cli.service.IDdenBirimAdiGetir(birim_id)
@@ -111,6 +122,8 @@ class BirimAgaci(YOKSIS):
     """
     YOKSIS BirimAgaci Kaydet Servisi
     """
+
+    HAS_CHANNEL = True
 
     def bir(self, conn, root_unit):
         # walk through alt birimler
@@ -139,6 +152,8 @@ class DumpAllUnitsToRiak(BirimAgaci):
     This service runs every night at 03.14 am to sync yoksis data for all universities.
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         if self.request.raw_request:
             root_unit = self.request.raw_request
@@ -152,6 +167,8 @@ class DumpUnitsToUlakbusUnitModel(BirimAgaci):
     """
      Dump All Units To Ulakbus auth.Unit Model by UID.
      """
+
+    HAS_CHANNEL = True
 
     def handle(self):
 

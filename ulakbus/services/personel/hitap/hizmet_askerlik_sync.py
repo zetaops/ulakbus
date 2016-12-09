@@ -21,11 +21,7 @@ class HizmetAskerlikSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Askerlik Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_askerlik_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """
@@ -38,7 +34,7 @@ class HizmetAskerlikSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-askerlik-getir.hizmet-askerlik-getir'
+        self.sorgula_service = 'hizmet_askerlik_getir'
         self.model = AskerlikKayitlari
 
         super(HizmetAskerlikSync, self).handle()

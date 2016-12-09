@@ -21,11 +21,7 @@ class HizmetCetveliSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Hizmet Kaydı Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_cetveli_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """

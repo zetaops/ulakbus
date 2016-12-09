@@ -21,11 +21,7 @@ class HizmetUnvanSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Ünvan Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_unvan_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """

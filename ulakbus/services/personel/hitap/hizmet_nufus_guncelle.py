@@ -19,20 +19,7 @@ class HizmetNufusGuncelle(HITAPGuncelle):
     HITAP Ekleme servisinden kalıtılmış Hizmet Nufus Bilgi Guncelleme servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_nufus_guncelle"
-
-    DEPLOY = True
-    CONNECTION = "channel"
-    DATA_FORMAT = "json"
-    CHANNEL_NAME = "hizmet.nufus.guncelle.channel"
-    URL_PATH = '/personel/hitap/hizmet-nufus-guncelle'
-    TRANSPORT = "plain_http"
-    IS_ACTIVE = True
-    IS_INTERNAL = False
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

@@ -25,11 +25,7 @@ class HizmetIstisnaiIlgiSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış İstisnai İlgi Bilgisi Senkronizasyon servisi
 
     """
-
-    @staticmethod
-    def get_name():
-        # Zato service ismi
-        return "hizmet_istisnai_ilgi_sync"
+    HAS_CHANNEL = True
 
     def handle(self):
         """
