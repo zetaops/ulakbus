@@ -7,7 +7,6 @@
 from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.lib.view_helpers import convert_model_object_titlemap_item
 from ulakbus.models import Donem, OgretimYili
-from ulakbus.models import Sube
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
@@ -61,10 +60,6 @@ class GuncelDonemDegistirme(CrudView):
         dönemden sonraki iki dönem  ve güncel dönem sıralanır.
 
         """
-
-
-        d = Donem.objects.get('GRc6D86egPKSrXv1eDWs39FnJpV')
-        Sube(donem = d).save()
 
         _form = DonemSecForm(title=_(u'Güncel Dönem Seçiniz'), current=self.current)
 
