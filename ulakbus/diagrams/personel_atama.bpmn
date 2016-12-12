@@ -1,199 +1,199 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_TNFPUGBkEeWiWJUlA5rr9A" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="PersonelAtama" name="Personel Atama">
-    <bpmn2:participant id="_Participant_3" name="Personel Atama (pool)" processRef="personel_atama" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="personel_atama" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_2" name="Lane Set 2">
-      <bpmn2:lane id="personel" name="personel">
-        <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="PersonelAtama" name="Personel Atama">
+    <bpmn:participant id="_Participant_3" name="Personel Atama (pool)" processRef="personel_atama" />
+  </bpmn:collaboration>
+  <bpmn:process id="personel_atama" name="Personel Atama" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
+      <bpmn:lane id="personel" name="personel">
+        <bpmn:extensionElements>
           <camunda:properties>
             <camunda:property name="menu_category" value="hiddden" />
           </camunda:properties>
-        </bpmn2:extensionElements>
-        <bpmn2:flowNodeRef>eksik_bilgi_form</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_10</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>eksik_bilgi_kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_9</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>atama_durumunu_kontrol_et</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_12</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_3</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>atama_goster</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>atama_iptal</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_8</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kadro_bilgileri_form</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kadro_bilgileri_goster</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>bitir</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>eksik_bilgileri_kontrol_et</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>basla</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kadro_durumunu_kontrol_et</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_0hhq15t</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>atama_kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_0bbp65k</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>sonuc_bilgisi_goster</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>hitap_bilgi_getir</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:userTask id="eksik_bilgi_form" name="Eksik Bilgi Form Göster" camunda:assignee="personel.atama.PersonelAtama.eksik_bilgi_form">
-      <bpmn2:incoming>eksik_bilgi_form_git</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_10" default="SequenceFlow_20">
-      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_20</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="eksik_bilgi_form" targetRef="ExclusiveGateway_10" />
-    <bpmn2:serviceTask id="eksik_bilgi_kaydet" name="Eksik Bilgi Kaydet" camunda:class="personel.atama.PersonelAtama.eksik_bilgi_kaydet">
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="ExclusiveGateway_10" targetRef="eksik_bilgi_kaydet">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="kaydet"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="eksik_bilgi_kaydet" targetRef="eksik_bilgileri_kontrol_et" />
-    <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ExclusiveGateway_10" targetRef="atama_iptal">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="eksik_bilgileri_kontrol_et" targetRef="ExclusiveGateway_9" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_9" default="eksik_bilgi_form_git">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>eksik_bilgi_form_git</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="eksik_bilgi_form_git" name="" sourceRef="ExclusiveGateway_9" targetRef="eksik_bilgi_form" />
-    <bpmn2:sequenceFlow id="SequenceFlow_21" name="" sourceRef="ExclusiveGateway_9" targetRef="atama_durumunu_kontrol_et">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">eksik_bilgi_yok</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="atama_durumunu_kontrol_et" name="Atama Durumunu Kontrol Et" camunda:class="personel.atama.PersonelAtama.atama_durumunu_kontrol_et">
-      <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_46</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_46" name="" sourceRef="atama_durumunu_kontrol_et" targetRef="ExclusiveGateway_12" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_12" default="tekrar_atama">
-      <bpmn2:incoming>SequenceFlow_46</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_47</bpmn2:outgoing>
-      <bpmn2:outgoing>tekrar_atama</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_47" name="" sourceRef="ExclusiveGateway_12" targetRef="kadro_bilgileri_form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">ilk_atama</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="tekrar_atama" name="" sourceRef="ExclusiveGateway_12" targetRef="kadro_bilgileri_goster" />
-    <bpmn2:sequenceFlow id="SequenceFlow_38" name="" sourceRef="sonuc_bilgisi_goster" targetRef="bitir" />
-    <bpmn2:sequenceFlow id="SequenceFlow_24" name="" sourceRef="hitap_bilgi_getir" targetRef="sonuc_bilgisi_goster" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_3" default="SequenceFlow_22">
-      <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_3" targetRef="hitap_bilgi_getir">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="hitap_getir"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_22" name="" sourceRef="ExclusiveGateway_3" targetRef="sonuc_bilgisi_goster" />
-    <bpmn2:userTask id="atama_goster" name="Atama Bilgilerini Kontrol Et" camunda:assignee="personel.atama.PersonelAtama.atama_goster">
-      <bpmn2:incoming>SequenceFlow_1f1qb2a</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_17" name="" sourceRef="atama_goster" targetRef="ExclusiveGateway_3" />
-    <bpmn2:serviceTask id="atama_iptal" name="Iptal" camunda:class="personel.atama.PersonelAtama.atama_iptal">
-      <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_35</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="atama_iptal" targetRef="bitir" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_8">
-      <bpmn2:incoming>SequenceFlow_32</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_35</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_37</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_35" name="" sourceRef="ExclusiveGateway_8" targetRef="atama_iptal">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_37" name="" sourceRef="ExclusiveGateway_8" targetRef="atama_kaydet">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="kaydet"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:userTask id="kadro_bilgileri_form" name="Kadro Seç ve Bilgileri Doldur" camunda:assignee="personel.atama.PersonelAtama.kadro_bilgileri_form">
-      <bpmn2:incoming>SequenceFlow_47</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_32</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_32" name="" sourceRef="kadro_bilgileri_form" targetRef="ExclusiveGateway_8" />
-    <bpmn2:userTask id="kadro_bilgileri_goster" name="Kadro Bilgilerini Göster" camunda:assignee="personel.atama.PersonelAtama.kadro_bilgileri_goster">
-      <bpmn2:incoming>tekrar_atama</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="kadro_bilgileri_goster" targetRef="ExclusiveGateway_1" />
-    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ExclusiveGateway_1" targetRef="kadro_bilgileri_form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="yeni_atama"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="ExclusiveGateway_1" targetRef="eksik_bilgi_form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=="edit"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:endEvent id="bitir">
-      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_38</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1sasqxy</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1i6a6sl</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_18rtxzl" sourceRef="basla" targetRef="kadro_durumunu_kontrol_et" />
-    <bpmn2:serviceTask id="eksik_bilgileri_kontrol_et" name="Eksik Bilgileri Kontrol Et" camunda:class="personel.atama.PersonelAtama.eksik_bilgileri_kontrol_et" camunda:assignee="personel.atama.PersonelAtama.eksik_bilgileri_kontrol_et">
-      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1n1k02u</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:startEvent id="basla">
-      <bpmn2:outgoing>SequenceFlow_18rtxzl</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:serviceTask id="kadro_durumunu_kontrol_et" name="Kadro Durumu Kontrol Et" camunda:class="personel.atama.PersonelAtama.kadro_durumunu_kontrol_et">
-      <bpmn2:incoming>SequenceFlow_18rtxzl</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1dtpvo3</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_0hhq15t" default="SequenceFlow_1sasqxy">
-      <bpmn2:incoming>SequenceFlow_1dtpvo3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1n1k02u</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_1sasqxy</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_1dtpvo3" sourceRef="kadro_durumunu_kontrol_et" targetRef="ExclusiveGateway_0hhq15t" />
-    <bpmn2:sequenceFlow id="SequenceFlow_1n1k02u" sourceRef="ExclusiveGateway_0hhq15t" targetRef="eksik_bilgileri_kontrol_et">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">kadro_bos</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_1sasqxy" sourceRef="ExclusiveGateway_0hhq15t" targetRef="bitir" />
-    <bpmn2:serviceTask id="atama_kaydet" name="Atama Kaydet" camunda:class="personel.atama.PersonelAtama.atama_kaydet">
-      <bpmn2:incoming>SequenceFlow_37</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1r8wiho</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_0bbp65k" default="SequenceFlow_1i6a6sl">
-      <bpmn2:incoming>SequenceFlow_1r8wiho</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1f1qb2a</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_1i6a6sl</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_1r8wiho" sourceRef="atama_kaydet" targetRef="ExclusiveGateway_0bbp65k" />
-    <bpmn2:sequenceFlow id="SequenceFlow_1f1qb2a" sourceRef="ExclusiveGateway_0bbp65k" targetRef="atama_goster">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">atama_basarili</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_1i6a6sl" sourceRef="ExclusiveGateway_0bbp65k" targetRef="bitir" />
-    <bpmn2:serviceTask id="sonuc_bilgisi_goster" name="Sonuc Bilgisi Goster" camunda:class="personel.atama.PersonelAtama.sonuc_bilgisi_goster">
-      <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_24</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_38</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:serviceTask id="hitap_bilgi_getir" name="Hitap Bilgileri Getir ve Kaydet" camunda:async="true" camunda:class="personel.atama.PersonelAtama.hitap_bilgi_getir">
-      <bpmn2:extensionElements>
+        </bpmn:extensionElements>
+        <bpmn:flowNodeRef>eksik_bilgi_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>eksik_bilgi_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_9</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>atama_durumunu_kontrol_et</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>atama_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>atama_iptal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kadro_bilgileri_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kadro_bilgileri_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>bitir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>eksik_bilgileri_kontrol_et</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>basla</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kadro_durumunu_kontrol_et</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0hhq15t</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>atama_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0bbp65k</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>sonuc_bilgisi_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>hitap_bilgi_getir</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="eksik_bilgi_form" name="Eksik Bilgi Form Göster" camunda:assignee="personel.atama.PersonelAtama.eksik_bilgi_form">
+      <bpmn:incoming>eksik_bilgi_form_git</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_10" default="SequenceFlow_20">
+      <bpmn:incoming>SequenceFlow_14</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_15</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_20</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_14" name="" sourceRef="eksik_bilgi_form" targetRef="ExclusiveGateway_10" />
+    <bpmn:serviceTask id="eksik_bilgi_kaydet" name="Eksik Bilgi Kaydet" camunda:class="personel.atama.PersonelAtama.eksik_bilgi_kaydet">
+      <bpmn:incoming>SequenceFlow_15</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_15" name="" sourceRef="ExclusiveGateway_10" targetRef="eksik_bilgi_kaydet">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="kaydet"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_16" name="" sourceRef="eksik_bilgi_kaydet" targetRef="eksik_bilgileri_kontrol_et" />
+    <bpmn:sequenceFlow id="SequenceFlow_20" name="" sourceRef="ExclusiveGateway_10" targetRef="atama_iptal">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="eksik_bilgileri_kontrol_et" targetRef="ExclusiveGateway_9" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_9" default="eksik_bilgi_form_git">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>eksik_bilgi_form_git</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_21</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="eksik_bilgi_form_git" name="" sourceRef="ExclusiveGateway_9" targetRef="eksik_bilgi_form" />
+    <bpmn:sequenceFlow id="SequenceFlow_21" name="" sourceRef="ExclusiveGateway_9" targetRef="atama_durumunu_kontrol_et">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">eksik_bilgi_yok</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="atama_durumunu_kontrol_et" name="Atama Durumunu Kontrol Et" camunda:class="personel.atama.PersonelAtama.atama_durumunu_kontrol_et">
+      <bpmn:incoming>SequenceFlow_21</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_46</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_46" name="" sourceRef="atama_durumunu_kontrol_et" targetRef="ExclusiveGateway_12" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_12" default="tekrar_atama">
+      <bpmn:incoming>SequenceFlow_46</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_47</bpmn:outgoing>
+      <bpmn:outgoing>tekrar_atama</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_47" name="" sourceRef="ExclusiveGateway_12" targetRef="kadro_bilgileri_form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">ilk_atama</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="tekrar_atama" name="" sourceRef="ExclusiveGateway_12" targetRef="kadro_bilgileri_goster" />
+    <bpmn:sequenceFlow id="SequenceFlow_38" name="" sourceRef="sonuc_bilgisi_goster" targetRef="bitir" />
+    <bpmn:sequenceFlow id="SequenceFlow_24" name="" sourceRef="hitap_bilgi_getir" targetRef="sonuc_bilgisi_goster" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_3" default="SequenceFlow_22">
+      <bpmn:incoming>SequenceFlow_17</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_18</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_22</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_3" targetRef="hitap_bilgi_getir">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="hitap_getir"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_22" name="" sourceRef="ExclusiveGateway_3" targetRef="sonuc_bilgisi_goster" />
+    <bpmn:userTask id="atama_goster" name="Atama Bilgilerini Kontrol Et" camunda:assignee="personel.atama.PersonelAtama.atama_goster">
+      <bpmn:incoming>SequenceFlow_1f1qb2a</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_17</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_17" name="" sourceRef="atama_goster" targetRef="ExclusiveGateway_3" />
+    <bpmn:serviceTask id="atama_iptal" name="Iptal" camunda:class="personel.atama.PersonelAtama.atama_iptal">
+      <bpmn:incoming>SequenceFlow_20</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_35</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_13" name="" sourceRef="atama_iptal" targetRef="bitir" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_8">
+      <bpmn:incoming>SequenceFlow_32</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_35</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_37</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_35" name="" sourceRef="ExclusiveGateway_8" targetRef="atama_iptal">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_37" name="" sourceRef="ExclusiveGateway_8" targetRef="atama_kaydet">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="kaydet"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="kadro_bilgileri_form" name="Kadro Seç ve Bilgileri Doldur" camunda:assignee="personel.atama.PersonelAtama.kadro_bilgileri_form">
+      <bpmn:incoming>SequenceFlow_47</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_32</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_32" name="" sourceRef="kadro_bilgileri_form" targetRef="ExclusiveGateway_8" />
+    <bpmn:userTask id="kadro_bilgileri_goster" name="Kadro Bilgilerini Göster" camunda:assignee="personel.atama.PersonelAtama.kadro_bilgileri_goster">
+      <bpmn:incoming>tekrar_atama</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="kadro_bilgileri_goster" targetRef="ExclusiveGateway_1" />
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ExclusiveGateway_1" targetRef="kadro_bilgileri_form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="yeni_atama"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_5" name="" sourceRef="ExclusiveGateway_1" targetRef="eksik_bilgi_form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="edit"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="bitir">
+      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_38</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1sasqxy</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1i6a6sl</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_18rtxzl" sourceRef="basla" targetRef="kadro_durumunu_kontrol_et" />
+    <bpmn:serviceTask id="eksik_bilgileri_kontrol_et" name="Eksik Bilgileri Kontrol Et" camunda:class="personel.atama.PersonelAtama.eksik_bilgileri_kontrol_et" camunda:assignee="personel.atama.PersonelAtama.eksik_bilgileri_kontrol_et">
+      <bpmn:incoming>SequenceFlow_16</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1n1k02u</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="basla">
+      <bpmn:outgoing>SequenceFlow_18rtxzl</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="kadro_durumunu_kontrol_et" name="Kadro Durumu Kontrol Et" camunda:class="personel.atama.PersonelAtama.kadro_durumunu_kontrol_et">
+      <bpmn:incoming>SequenceFlow_18rtxzl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1dtpvo3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0hhq15t" default="SequenceFlow_1sasqxy">
+      <bpmn:incoming>SequenceFlow_1dtpvo3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1n1k02u</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1sasqxy</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1dtpvo3" sourceRef="kadro_durumunu_kontrol_et" targetRef="ExclusiveGateway_0hhq15t" />
+    <bpmn:sequenceFlow id="SequenceFlow_1n1k02u" sourceRef="ExclusiveGateway_0hhq15t" targetRef="eksik_bilgileri_kontrol_et">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">kadro_bos</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1sasqxy" sourceRef="ExclusiveGateway_0hhq15t" targetRef="bitir" />
+    <bpmn:serviceTask id="atama_kaydet" name="Atama Kaydet" camunda:class="personel.atama.PersonelAtama.atama_kaydet">
+      <bpmn:incoming>SequenceFlow_37</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1r8wiho</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0bbp65k" default="SequenceFlow_1i6a6sl">
+      <bpmn:incoming>SequenceFlow_1r8wiho</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1f1qb2a</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1i6a6sl</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1r8wiho" sourceRef="atama_kaydet" targetRef="ExclusiveGateway_0bbp65k" />
+    <bpmn:sequenceFlow id="SequenceFlow_1f1qb2a" sourceRef="ExclusiveGateway_0bbp65k" targetRef="atama_goster">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">atama_basarili</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1i6a6sl" sourceRef="ExclusiveGateway_0bbp65k" targetRef="bitir" />
+    <bpmn:serviceTask id="sonuc_bilgisi_goster" name="Sonuc Bilgisi Goster" camunda:class="personel.atama.PersonelAtama.sonuc_bilgisi_goster">
+      <bpmn:incoming>SequenceFlow_22</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_24</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_38</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="hitap_bilgi_getir" name="Hitap Bilgileri Getir ve Kaydet" camunda:async="true" camunda:class="personel.atama.PersonelAtama.hitap_bilgi_getir">
+      <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="retry" value="3" />
         </camunda:properties>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_24</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-  </bpmn2:process>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_18</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_24</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PersonelAtama">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_4" bpmnElement="basla">
@@ -512,4 +512,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

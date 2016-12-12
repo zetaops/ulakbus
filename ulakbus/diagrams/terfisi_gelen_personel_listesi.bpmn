@@ -1,125 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_Q_jE0ACWEeaZqZcGEULq4g" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="terfisi_gelen_personeller" name="Terfisi Gelen Personeller">
-    <bpmn2:participant id="terfisi_gelen_personel" name="Terfisi Gelen Personel (Pool)" processRef="terfisi_gelen_personel_listesi" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="terfisi_gelen_personel_listesi" name="Terfisi Gelen Personel Listesi" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
-      <bpmn2:lane id="personel_lane" name="Sube Muduru">
-        <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="terfisi_gelen_personeller" name="Terfisi Gelen Personeller">
+    <bpmn:participant id="terfisi_gelen_personel" name="Terfisi Gelen Personel (Pool)" processRef="terfisi_gelen_personel_listesi">
+      <bpmn:documentation>Terfisi Gelen Personel İş Akışı</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="programmable" value="True" />
+          <camunda:property name="task_type" value="B" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:participant>
+  </bpmn:collaboration>
+  <bpmn:process id="terfisi_gelen_personel_listesi" name="Terfisi Gelen Personel Listesi" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn:lane id="personel_lane" name="Sube Muduru">
+        <bpmn:extensionElements>
           <camunda:properties>
             <camunda:property name="permissions" value="idari_personel_terfi_onay_belge" />
           </camunda:properties>
-        </bpmn2:extensionElements>
-        <bpmn2:flowNodeRef>terfi_duzenle</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>terfisi_gelen_personel_listes</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>terfi_duzenlemelerini_kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_3</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>onay_belgesi_uret</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>Personel_Kriterleri</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>mesaj_goster</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-      <bpmn2:lane id="Lane_2" name="Genel Sekreter veya Rektor Yardimcisi">
-        <bpmn2:extensionElements>
+        </bpmn:extensionElements>
+        <bpmn:flowNodeRef>terfi_duzenle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>terfisi_gelen_personel_listes</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>terfi_duzenlemelerini_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>onay_belgesi_uret</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Personel_Kriterleri</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mesaj_goster</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_2" name="Genel Sekreter veya Rektor Yardimcisi">
+        <bpmn:extensionElements>
           <camunda:properties>
             <camunda:property name="permissions" value="idari_personel_terfi_onay" />
           </camunda:properties>
-        </bpmn2:extensionElements>
-        <bpmn2:flowNodeRef>aciklama_yaz_ve_geri_gonder</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>terfi_islemlerini_kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>terfileri_kontrol_et</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>taraflari_bilgilendir</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_3</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>aciklama_gonder</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:userTask id="terfi_duzenle" name="Terfi Duzenle" camunda:assignee="personel.kadro.TerfiListe.terfi_liste_duzenle">
-      <bpmn2:incoming>SequenceFlow_21</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_22" name="" sourceRef="terfi_duzenle" targetRef="terfi_duzenlemelerini_kaydet" />
-    <bpmn2:userTask id="terfisi_gelen_personel_listes" name="Terfisi Gelen Personel Listesi" camunda:assignee="personel.kadro.TerfiListe.terfisi_gelen_personel_liste">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="terfisi_gelen_personel_listes" targetRef="ExclusiveGateway_1" />
-    <bpmn2:serviceTask id="terfi_duzenlemelerini_kaydet" name="Terfi Duzenlemelerini Kaydet" camunda:class="personel.kadro.TerfiListe.terfi_duzenle_kaydet">
-      <bpmn2:incoming>SequenceFlow_22</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="terfi_duzenlemelerini_kaydet" targetRef="terfisi_gelen_personel_listes" />
-    <bpmn2:sequenceFlow id="SequenceFlow_21" name="" sourceRef="ExclusiveGateway_1" targetRef="terfi_duzenle">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=='terfi_liste_duzenle']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:endEvent id="EndEvent_3">
-      <bpmn2:incoming>SequenceFlow_24</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:userTask id="onay_belgesi_uret" name="Onay Belgesi Uret" camunda:assignee="personel.kadro.TerfiListe.onay_belgesi_uret">
-      <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_24</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_24" name="" sourceRef="onay_belgesi_uret" targetRef="EndEvent_3" />
-    <bpmn2:userTask id="aciklama_yaz_ve_geri_gonder" name="Aciklama Yaz ve Geri Gonder" camunda:assignee="personel.kadro.TerfiListe.red_aciklamasi_yaz">
-      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="aciklama_yaz_ve_geri_gonder" targetRef="aciklama_gonder" />
-    <bpmn2:serviceTask id="terfi_islemlerini_kaydet" name="Terfi Islemlerini Kaydet" camunda:class="personel.kadro.TerfiListe.terfi_yap">
-      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_20</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_20" name="" sourceRef="terfi_islemlerini_kaydet" targetRef="taraflari_bilgilendir" />
-    <bpmn2:userTask id="terfileri_kontrol_et" name="Terfileri Konrtol Et" camunda:assignee="personel.kadro.TerfiListe.onay_kontrol">
-      <bpmn2:incoming>SequenceFlow_19kbyaa</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="terfileri_kontrol_et" targetRef="ExclusiveGateway_3" />
-    <bpmn2:userTask id="taraflari_bilgilendir" name="Tarafları Bilgilendir" camunda:assignee="personel.kadro.TerfiListe.taraflari_bilgilendir">
-      <bpmn2:incoming>SequenceFlow_20</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_23" name="" sourceRef="taraflari_bilgilendir" targetRef="onay_belgesi_uret" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_3">
-      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="ExclusiveGateway_3" targetRef="aciklama_yaz_ve_geri_gonder">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=='red_aciklamasi_yaz']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="ExclusiveGateway_3" targetRef="terfi_islemlerini_kaydet">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[cmd=='terfi_yap']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="aciklama_gonder" name="Aciklama Gonder" camunda:class="personel.kadro.TerfiListe.red_aciklamasi_kaydet">
-      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_25" name="" sourceRef="aciklama_gonder" targetRef="terfisi_gelen_personel_listes" />
-    <bpmn2:userTask id="Personel_Kriterleri" name="Personel Kriterleri Gir" camunda:assignee="personel.kadro.TerfiListe.personel_kriterleri">
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="Personel_Kriterleri" targetRef="terfisi_gelen_personel_listes" />
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="StartEvent_1" targetRef="Personel_Kriterleri" />
-    <bpmn2:sequenceFlow id="SequenceFlow_07wlipz" sourceRef="ExclusiveGateway_1" targetRef="mesaj_goster" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_07wlipz">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_07wlipz</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_19kbyaa" sourceRef="mesaj_goster" targetRef="terfileri_kontrol_et" />
-    <bpmn2:userTask id="mesaj_goster" name="Mesaj Goster" camunda:assignee="personel.kadro.TerfiListe.mesaj_goster">
-      <bpmn2:incoming>SequenceFlow_07wlipz</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_19kbyaa</bpmn2:outgoing>
-    </bpmn2:userTask>
-  </bpmn2:process>
+        </bpmn:extensionElements>
+        <bpmn:flowNodeRef>aciklama_yaz_ve_geri_gonder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>terfi_islemlerini_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>terfileri_kontrol_et</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>taraflari_bilgilendir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>aciklama_gonder</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="terfi_duzenle" name="Terfi Duzenle" camunda:assignee="personel.kadro.TerfiListe.terfi_liste_duzenle">
+      <bpmn:incoming>SequenceFlow_21</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_22</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_22" name="" sourceRef="terfi_duzenle" targetRef="terfi_duzenlemelerini_kaydet" />
+    <bpmn:userTask id="terfisi_gelen_personel_listes" name="Terfisi Gelen Personel Listesi" camunda:assignee="personel.kadro.TerfiListe.terfisi_gelen_personel_liste">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_25</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="terfisi_gelen_personel_listes" targetRef="ExclusiveGateway_1" />
+    <bpmn:serviceTask id="terfi_duzenlemelerini_kaydet" name="Terfi Duzenlemelerini Kaydet" camunda:class="personel.kadro.TerfiListe.terfi_duzenle_kaydet">
+      <bpmn:incoming>SequenceFlow_22</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="terfi_duzenlemelerini_kaydet" targetRef="terfisi_gelen_personel_listes" />
+    <bpmn:sequenceFlow id="SequenceFlow_21" name="" sourceRef="ExclusiveGateway_1" targetRef="terfi_duzenle">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='terfi_liste_duzenle']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_3">
+      <bpmn:incoming>SequenceFlow_24</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="onay_belgesi_uret" name="Onay Belgesi Uret" camunda:assignee="personel.kadro.TerfiListe.onay_belgesi_uret">
+      <bpmn:incoming>SequenceFlow_23</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_24</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_24" name="" sourceRef="onay_belgesi_uret" targetRef="EndEvent_3" />
+    <bpmn:userTask id="aciklama_yaz_ve_geri_gonder" name="Aciklama Yaz ve Geri Gonder" camunda:assignee="personel.kadro.TerfiListe.red_aciklamasi_yaz">
+      <bpmn:incoming>SequenceFlow_9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_12" name="" sourceRef="aciklama_yaz_ve_geri_gonder" targetRef="aciklama_gonder" />
+    <bpmn:serviceTask id="terfi_islemlerini_kaydet" name="Terfi Islemlerini Kaydet" camunda:class="personel.kadro.TerfiListe.terfi_yap">
+      <bpmn:incoming>SequenceFlow_16</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_20</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_20" name="" sourceRef="terfi_islemlerini_kaydet" targetRef="taraflari_bilgilendir" />
+    <bpmn:userTask id="terfileri_kontrol_et" name="Terfileri Konrtol Et" camunda:assignee="personel.kadro.TerfiListe.onay_kontrol">
+      <bpmn:incoming>SequenceFlow_19kbyaa</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_14" name="" sourceRef="terfileri_kontrol_et" targetRef="ExclusiveGateway_3" />
+    <bpmn:userTask id="taraflari_bilgilendir" name="Tarafları Bilgilendir" camunda:assignee="personel.kadro.TerfiListe.taraflari_bilgilendir">
+      <bpmn:incoming>SequenceFlow_20</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_23</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_23" name="" sourceRef="taraflari_bilgilendir" targetRef="onay_belgesi_uret" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_3">
+      <bpmn:incoming>SequenceFlow_14</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_16</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_9" name="" sourceRef="ExclusiveGateway_3" targetRef="aciklama_yaz_ve_geri_gonder">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='red_aciklamasi_yaz']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_16" name="" sourceRef="ExclusiveGateway_3" targetRef="terfi_islemlerini_kaydet">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='terfi_yap']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="aciklama_gonder" name="Aciklama Gonder" camunda:class="personel.kadro.TerfiListe.red_aciklamasi_kaydet">
+      <bpmn:incoming>SequenceFlow_12</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_25</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_25" name="" sourceRef="aciklama_gonder" targetRef="terfisi_gelen_personel_listes" />
+    <bpmn:userTask id="Personel_Kriterleri" name="Personel Kriterleri Gir" camunda:assignee="personel.kadro.TerfiListe.personel_kriterleri">
+      <bpmn:incoming>SequenceFlow_15</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_5" name="" sourceRef="Personel_Kriterleri" targetRef="terfisi_gelen_personel_listes" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_15</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_15" name="" sourceRef="StartEvent_1" targetRef="Personel_Kriterleri" />
+    <bpmn:sequenceFlow id="SequenceFlow_07wlipz" sourceRef="ExclusiveGateway_1" targetRef="mesaj_goster" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_07wlipz">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_21</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_07wlipz</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_19kbyaa" sourceRef="mesaj_goster" targetRef="terfileri_kontrol_et" />
+    <bpmn:userTask id="mesaj_goster" name="Mesaj Goster" camunda:assignee="personel.kadro.TerfiListe.mesaj_goster">
+      <bpmn:incoming>SequenceFlow_07wlipz</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19kbyaa</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="terfisi_gelen_personeller">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_2" bpmnElement="terfisi_gelen_personel" isHorizontal="true">
@@ -306,4 +314,4 @@
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

@@ -3,6 +3,12 @@
   <bpmn:collaboration id="Collaboration_09j68dn">
     <bpmn:participant id="yeni_donem_olusturma_" name="Yeni Dönem Oluşturma" processRef="yeni_donem_olusturma">
       <bpmn:documentation>Güz ve Bahar Dönemi Oluşturma iş akışı</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="programmable" value="True" />
+          <camunda:property name="task_type" value="C" />
+        </camunda:properties>
+      </bpmn:extensionElements>
     </bpmn:participant>
   </bpmn:collaboration>
   <bpmn:process id="yeni_donem_olusturma" name="Yeni Dönem Oluştur" isExecutable="false">

@@ -6,7 +6,15 @@
         <camunda:property name="init" value="True" />
       </camunda:properties>
     </bpmn:extensionElements>
-    <bpmn:participant id="guncel_donem_degistir" name="Öğrenci işleri" processRef="guncel_donem_degistirme" />
+    <bpmn:participant id="guncel_donem_degistir" name="Öğrenci işleri" processRef="guncel_donem_degistirme">
+      <bpmn:documentation>Güncel Dönem Değiştirme İş Akışı</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="programmable" value="True" />
+          <camunda:property name="task_type" value="C" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:participant>
   </bpmn:collaboration>
   <bpmn:process id="guncel_donem_degistirme" name="Güncel Dönem Değiştir" isExecutable="false">
     <bpmn:startEvent id="StartEvent_1">
