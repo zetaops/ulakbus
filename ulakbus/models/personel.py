@@ -437,7 +437,7 @@ class UcretsizIzin(Model):
         app = 'Personel'
         verbose_name = _(u"Ücretsiz İzin")
         verbose_name_plural = _(u"Ücretsiz İzinler")
-        list_fields = ['tip', 'baslangic_tarihi', 'bitis_tarihi', 'donus_tarihi']
+        list_fields = ['tip', 'baslangic', 'bitis', 'donus_tarihi']
         search_fields = ['tip', 'onay_tarihi']
 
     def __unicode__(self):

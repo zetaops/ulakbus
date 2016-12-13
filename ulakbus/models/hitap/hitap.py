@@ -412,7 +412,7 @@ class HizmetKayitlari(Model):
         önce bitiş tarihi olan kayıt gürüntülenmelidir. Bu yüzden
         başlangıç tarihine +1 saat eklendi.
         """
-        if self.baslama_tarihi != datetime.date(1900, 1, 1):
+        if self.baslama_tarihi is not None and self.baslama_tarihi != datetime.date(1900, 1, 1):
             self.order_date = datetime.datetime.combine(self.baslama_tarihi, datetime.time(1))
         else:
             self.order_date = self.bitis_tarihi
