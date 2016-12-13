@@ -80,7 +80,7 @@ class TestCase(BaseTestCase):
             ogrenci_ders = OgrenciDersi.objects.filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')[i]
             ogrenci_ad = "%s %s" % (ogrenci_ders.ogrenci_program.ogrenci.ad,
                                     ogrenci_ders.ogrenci_program.ogrenci.soyad)
-            assert ogrenci_ad == resp.json['object']['fields'][i]['Adı Soyadı']
+            assert ogrenci_ad == resp.json['object']['fields'][i][u'Adı Soyadı']
 
         # Sınav seçim ekranına geri döner
         self.client.post(cmd='ders_sec',

@@ -7,67 +7,72 @@
 
 from ..personel import Personel
 from pyoko import Model, field
+from zengine.lib.translation import gettext_lazy as _, gettext
 import datetime
 from .hitap_sebep import HitapSebep
 
 
 class NufusKayitlari(Model):
-    tckn = field.String("Sigortalının TC Kimlik No", index=True)
-    ad = field.String("Adı", index=True)
-    soyad = field.String("Soyadı", index=True)
-    ilk_soy_ad = field.String("Memuriyete Girişteki İlk Soyadı", index=True)
-    dogum_tarihi = field.Date("Doğum Tarihi", index=True, format="%d.%m.%Y")
-    cinsiyet = field.String("Cinsiyet", index=True)
-    emekli_sicil_no = field.Integer("Emekli Sicil No", index=True)
-    memuriyet_baslama_tarihi = field.Date("Memuriyete İlk Başlama Tarihi", index=True,
+    tckn = field.String(_(u"Sigortalının TC Kimlik No"), index=True)
+    ad = field.String(_(u"Adı"), index=True)
+    soyad = field.String(_(u"Soyadı"), index=True)
+    ilk_soy_ad = field.String(_(u"Memuriyete Girişteki İlk Soyadı"), index=True)
+    dogum_tarihi = field.Date(_(u"Doğum Tarihi"), index=True, format="%d.%m.%Y")
+    cinsiyet = field.String(_(u"Cinsiyet"), index=True)
+    emekli_sicil_no = field.Integer(_(u"Emekli Sicil No"), index=True)
+    memuriyet_baslama_tarihi = field.Date(_(u"Memuriyete İlk Başlama Tarihi"), index=True,
                                           format="%d.%m.%Y")
-    kurum_sicil = field.String("Kurum Sicili", index=True)
-    maluliyet_kod = field.Integer("Malul Kod", index=True, choices="maluliyet_kod")
-    yetki_seviyesi = field.String("Yetki Seviyesi", index=True)
-    aciklama = field.String("Açıklama", index=True)
-    kuruma_baslama_tarihi = field.Date("Kuruma Başlama Tarihi", index=True, format="%d.%m.%Y")
-    gorev_tarihi_6495 = field.Date("Emeklilik Sonrası Göreve Başlama Tarihi", index=True,
+    kurum_sicil = field.String(_(u"Kurum Sicili"), index=True)
+    maluliyet_kod = field.Integer(_(u"Malul Kod"), index=True, choices="maluliyet_kod")
+    yetki_seviyesi = field.String(_(u"Yetki Seviyesi"), index=True)
+    aciklama = field.String(_(u"Açıklama"), index=True)
+    kuruma_baslama_tarihi = field.Date(_(u"Kuruma Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    gorev_tarihi_6495 = field.Date(_(u"Emeklilik Sonrası Göreve Başlama Tarihi"), index=True,
                                    format="%d.%m.%Y")
-    emekli_sicil_6495 = field.Integer("2. Emekli Sicil No", index=True)
-    durum = field.Boolean("Durum", index=True)
-    sebep = field.Integer("Sebep", index=True)
-    sync = field.Integer("Senkronize", index=True)
+    emekli_sicil_6495 = field.Integer(_(u"2. Emekli Sicil No"), index=True)
+    durum = field.Boolean(_(u"Durum"), index=True)
+    sebep = field.Integer(_(u"Sebep"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel(one_to_one=True)
 
     # TODO: Personele gore unique olmali
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Nüfus Bilgisi"
-        verbose_name_plural = "Nüfus Bilgileri"
+        verbose_name = _(u"Nüfus Bilgisi")
+        verbose_name_plural = _(u"Nüfus Bilgileri")
         hitap_service_prefix = "HitapNufus"
 
     def __unicode__(self):
-        return '%s %s %s' % (self.ad, self.soyad, self.emekli_sicil_no)
+        return gettext(u'%(ad)s %(soyad)s %(sicil_no)s') % {
+            'ad': self.ad,
+            'soyad': self.soyad,
+            'sicil_no': self.emekli_sicil_no
+        }
 
 
 class HizmetKurs(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kursa Kayıt No", index=True)
-    kurs_ogrenim_suresi = field.Integer("Kurs Öğrenim Süresi", index=True)
-    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
-    kurs_nevi = field.Integer("Kurs Nevi", index=True, choices="kurs_nevi")
-    bolum_ad = field.Integer("Bölüm Adı", index=True,
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kursa Kayıt No"), index=True)
+    kurs_ogrenim_suresi = field.Integer(_(u"Kurs Öğrenim Süresi"), index=True)
+    mezuniyet_tarihi = field.Date(_(u"Mezuniyet Tarihi"), index=True, format="%d.%m.%Y")
+    kurs_nevi = field.Integer(_(u"Kurs Nevi"), index=True, choices="kurs_nevi")
+    bolum_ad = field.Integer(_(u"Bölüm Adı"), index=True,
                              choices="bolum_adi")  # TODO: serviste karsiligi yok
-    okul_ad = field.Integer("Okul Adı", index=True,
+    okul_ad = field.Integer(_(u"Okul Adı"), index=True,
                             choices="okul_adi")  # TODO: servisten gelen string
-    ogrenim_yeri = field.String("Öğrenim Yeri", index=True)
-    denklik_tarihi = field.Date("Denklik Tarihi", index=True, format="%d.%m.%Y")
-    denklik_okulu = field.String("Denklik Okulu", index=True)
-    denklik_bolum = field.String("Denklik Bölüm", index=True)
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    ogrenim_yeri = field.String(_(u"Öğrenim Yeri"), index=True)
+    denklik_tarihi = field.Date(_(u"Denklik Tarihi"), index=True, format="%d.%m.%Y")
+    denklik_okulu = field.String(_(u"Denklik Okulu"), index=True)
+    denklik_bolum = field.String(_(u"Denklik Bölüm"), index=True)
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Kurs"
-        verbose_name_plural = "Kurslar"
+        verbose_name = _(u"Kurs")
+        verbose_name_plural = _(u"Kurslar")
         list_fields = ['kayit_no', 'bolum_ad', 'okul_ad']
         search_fields = ['tckn', 'okul_ad', 'bolum_ad']
         hitap_service_prefix = "HitapKurs"
@@ -77,26 +82,26 @@ class HizmetKurs(Model):
 
 
 class HizmetOkul(Model):
-    kayit_no = field.String("Kayıt No", index=True)
-    tckn = field.String("TC Kimlik No", index=True)
-    ogrenim_durumu = field.Integer("Öğrenim Durumu", index=True, choices="ogrenim_durumu")
-    mezuniyet_tarihi = field.Date("Mezuniyet Tarihi", index=True, format="%d.%m.%Y")
-    okul_ad = field.String("Okul Adı", index=True)
-    bolum = field.String("Bölüm", index=True)
-    ogrenim_yeri = field.Integer("Öğrenim Yeri", index=True, choices="ogrenim_yeri")
-    denklik_tarihi = field.Date("Denklik Tarihi", index=True, format="%d.%m.%Y")
-    denklik_okul = field.String("Denklik Okul", index=True)
-    denklik_bolum = field.String("Denklik Bölüm", index=True)
-    ogrenim_suresi = field.Integer("Öğrenim Süresi", index=True)
-    hazirlik = field.Integer("Hazırlık", index=True, choices="hazirlik_bilgisi")
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    ogrenim_durumu = field.Integer(_(u"Öğrenim Durumu"), index=True, choices="ogrenim_durumu")
+    mezuniyet_tarihi = field.Date(_(u"Mezuniyet Tarihi"), index=True, format="%d.%m.%Y")
+    okul_ad = field.String(_(u"Okul Adı"), index=True)
+    bolum = field.String(_(u"Bölüm"), index=True)
+    ogrenim_yeri = field.Integer(_(u"Öğrenim Yeri"), index=True, choices="ogrenim_yeri")
+    denklik_tarihi = field.Date(_(u"Denklik Tarihi"), index=True, format="%d.%m.%Y")
+    denklik_okul = field.String(_(u"Denklik Okul"), index=True)
+    denklik_bolum = field.String(_(u"Denklik Bölüm"), index=True)
+    ogrenim_suresi = field.Integer(_(u"Öğrenim Süresi"), index=True)
+    hazirlik = field.Integer(_(u"Hazırlık"), index=True, choices="hazirlik_bilgisi")
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Okul"
-        verbose_name_plural = "Okullar"
+        verbose_name = _(u"Okul")
+        verbose_name_plural = _(u"Okullar")
         list_fields = ['okul_ad', 'bolum', 'hazirlik', 'kayit_no']
         search_fields = ['okul_ad', 'bolum', 'tckn']
         hitap_service_prefix = "HitapOkul"
@@ -106,30 +111,30 @@ class HizmetOkul(Model):
 
 
 class HizmetMahkeme(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kayıt No", index=True)
-    mahkeme_ad = field.String("Mahkeme Adı", index=True)
-    sebep = field.Integer("Mahkeme Sebebi", index=True, choices="mahkeme_sebep")
-    karar_tarihi = field.Date("Mahkeme Karar Tarihi", index=True, format="%d.%m.%Y")
-    karar_sayisi = field.Integer("Karar Sayısı", index=True)
-    kesinlesme_tarihi = field.Date("Kesinleşme Tarihi", index=True, format="%d.%m.%Y")
-    asil_dogum_tarihi = field.Date("Asıl Doğum Tarihi", index=True, format="%d.%m.%Y")
-    tashih_dogum_tarihi = field.Date("Tashih Doğum Tarihi", index=True, format="%d.%m.%Y")
-    asil_ad = field.String("Asıl Ad", index=True)
-    tashih_ad = field.String("Tashih Ad", index=True)
-    asil_soyad = field.String("Asıl Soyad", index=True)
-    tashih_soyad = field.String("Tashih Soyad", index=True)
-    gecerli_dogum_tarihi = field.Date("Geçerli Doğum Tarihi", index=True, format="%d.%m.%Y")
-    aciklama = field.String("Açıklama", index=True)
-    gun_sayisi = field.Integer("Gün Sayısı", index=True)
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    mahkeme_ad = field.String(_(u"Mahkeme Adı"), index=True)
+    sebep = field.Integer(_(u"Mahkeme Sebebi"), index=True, choices="mahkeme_sebep")
+    karar_tarihi = field.Date(_(u"Mahkeme Karar Tarihi"), index=True, format="%d.%m.%Y")
+    karar_sayisi = field.Integer(_(u"Karar Sayısı"), index=True)
+    kesinlesme_tarihi = field.Date(_(u"Kesinleşme Tarihi"), index=True, format="%d.%m.%Y")
+    asil_dogum_tarihi = field.Date(_(u"Asıl Doğum Tarihi"), index=True, format="%d.%m.%Y")
+    tashih_dogum_tarihi = field.Date(_(u"Tashih Doğum Tarihi"), index=True, format="%d.%m.%Y")
+    asil_ad = field.String(_(u"Asıl Ad"), index=True)
+    tashih_ad = field.String(_(u"Tashih Ad"), index=True)
+    asil_soyad = field.String(_(u"Asıl Soyad"), index=True)
+    tashih_soyad = field.String(_(u"Tashih Soyad"), index=True)
+    gecerli_dogum_tarihi = field.Date(_(u"Geçerli Doğum Tarihi"), index=True, format="%d.%m.%Y")
+    aciklama = field.String(_(u"Açıklama"), index=True)
+    gun_sayisi = field.Integer(_(u"Gün Sayısı"), index=True)
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Mahkeme"
-        verbose_name_plural = "Mahkemeler"
+        verbose_name = _(u"Mahkeme")
+        verbose_name_plural = _(u"Mahkemeler")
         list_fields = ['mahkeme_ad', 'karar_sayisi', 'aciklama', 'kurum_onay_tarihi']
         search_fields = ['kayit_no', 'mahkeme_ad', 'karar_sayisi']
         hitap_service_prefix = "HitapMahkeme"
@@ -139,30 +144,30 @@ class HizmetMahkeme(Model):
 
 
 class HizmetBirlestirme(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kayıt No", index=True)
-    sgk_nevi = field.Integer("SGK Nevi", index=True, choices="sgk_nevi")
-    sgk_sicil_no = field.String("SGK Sicil No", index=True)
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    sure = field.Integer("Süre", index=True)
-    kamu_isyeri_ad = field.String("Kamu İşyeri Adı", index=True)
-    ozel_isyeri_ad = field.String("Özel İşyeri Adı", index=True)
-    bag_kur_meslek = field.String("Bağ-Kur Meslek", index=True)
-    ulke_kod = field.Integer("Ülke Kodu", index=True)
-    banka_sandik_kod = field.Integer("Banka Sandık Kodu", index=True, choices="banka_kod")
-    kidem_tazminat_odeme_durumu = field.String("Kıdem Tazminat Ödeme Durumu", index=True,
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    sgk_nevi = field.Integer(_(u"SGK Nevi"), index=True, choices="sgk_nevi")
+    sgk_sicil_no = field.String(_(u"SGK Sicil No"), index=True)
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    sure = field.Integer(_(u"Süre"), index=True)
+    kamu_isyeri_ad = field.String(_(u"Kamu İşyeri Adı"), index=True)
+    ozel_isyeri_ad = field.String(_(u"Özel İşyeri Adı"), index=True)
+    bag_kur_meslek = field.String(_(u"Bağ-Kur Meslek"), index=True)
+    ulke_kod = field.Integer(_(u"Ülke Kodu"), index=True)
+    banka_sandik_kod = field.Integer(_(u"Banka Sandık Kodu"), index=True, choices="banka_kod")
+    kidem_tazminat_odeme_durumu = field.String(_(u"Kıdem Tazminat Ödeme Durumu"), index=True,
                                                choices="kidem_tazminat_odeme_durumu")
-    ayrilma_nedeni = field.String("Ayrılma Nedeni", index=True)
-    kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    ayrilma_nedeni = field.String(_(u"Ayrılma Nedeni"), index=True)
+    kha_durum = field.Integer(_(u"KHA Durum"), index=True, choices="kha_durum")
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Birleştirme"
-        verbose_name_plural = "Birleştirmeler"
+        verbose_name = _(u"Birleştirme")
+        verbose_name_plural = _(u"Birleştirmeler")
         list_fields = ['sgk_sicil_no', 'baslama_tarihi', 'bitis_tarihi', 'kamu_isyeri_ad']
         search_fields = ['kayit_no', 'sgk_sicil_no', 'kamu_isyeri_ad']
         hitap_service_prefix = "HitapBirlestirme"
@@ -172,23 +177,23 @@ class HizmetBirlestirme(Model):
 
 
 class HizmetTazminat(Model):
-    kayit_no = field.String("Kayıt No", index=True)
-    tckn = field.String("TC Kimlik No", index=True)
-    unvan_kod = field.Integer("Ünvan Kodu", index=True)
-    makam = field.Integer("Makam", index=True)
-    gorev = field.Integer("Görev", index=True)
-    temsil = field.Integer("Temsil", index=True)
-    tazminat_tarihi = field.Date("Tazminat Tarihi", index=True, format="%d.%m.%Y")
-    tazminat_bitis_tarihi = field.Date("Tazminat Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    kadrosuzluk = field.Integer("Kadrosuzluk", index=True)
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    unvan_kod = field.Integer(_(u"Ünvan Kodu"), index=True)
+    makam = field.Integer(_(u"Makam"), index=True)
+    gorev = field.Integer(_(u"Görev"), index=True)
+    temsil = field.Integer(_(u"Temsil"), index=True)
+    tazminat_tarihi = field.Date(_(u"Tazminat Tarihi"), index=True, format="%d.%m.%Y")
+    tazminat_bitis_tarihi = field.Date(_(u"Tazminat Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    kadrosuzluk = field.Integer(_(u"Kadrosuzluk"), index=True)
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Tazminat"
-        verbose_name_plural = "Tazminatlar"
+        verbose_name = _(u"Tazminat")
+        verbose_name_plural = _(u"Tazminatlar")
         list_fields = ['unvan_kod', 'makam', 'gorev']
         search_fields = ['makam', 'gorev', 'temsil']
         hitap_service_prefix = "HitapTazminat"
@@ -198,23 +203,23 @@ class HizmetTazminat(Model):
 
 
 class HizmetUnvan(Model):
-    kayit_no = field.String("Hizmet Kayıt No", index=True)
-    tckn = field.String("TC Kimlik No", index=True)
-    unvan_kod = field.Integer("Ünvan Kodu", index=True)
-    unvan_tarihi = field.Date("Ünvan Tarihi", index=True, format="%d.%m.%Y")
-    unvan_bitis_tarihi = field.Date("Ünvan Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    hizmet_sinifi = field.String("Hizmet Sınıfı", index=True)
-    asil_vekil = field.String("Asıl Vekil", index=True)
-    atama_sekli = field.String("Atama Sekli", index=True)
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    fhz_orani = field.Float("FHZ Oranı", index=True)
-    sync = field.Integer("Senkronize", index=True)
+    kayit_no = field.String(_(u"Hizmet Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    unvan_kod = field.Integer(_(u"Ünvan Kodu"), index=True)
+    unvan_tarihi = field.Date(_(u"Ünvan Tarihi"), index=True, format="%d.%m.%Y")
+    unvan_bitis_tarihi = field.Date(_(u"Ünvan Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    hizmet_sinifi = field.String(_(u"Hizmet Sınıfı"), index=True)
+    asil_vekil = field.String(_(u"Asıl Vekil"), index=True)
+    atama_sekli = field.String(_(u"Atama Sekli"), index=True)
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    fhz_orani = field.Float(_(u"FHZ Oranı"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Ünvan"
-        verbose_name_plural = "Ünvanlar"
+        verbose_name = _(u"Ünvan")
+        verbose_name_plural = _(u"Ünvanlar")
         list_fields = ['unvan_kod', 'hizmet_sinifi', 'kurum_onay_tarihi']
         search_fields = ['unvan_kod', 'hizmet_sinifi']
         hitap_service_prefix = "HitapUnvan"
@@ -224,34 +229,45 @@ class HizmetUnvan(Model):
 
 
 class HizmetAcikSure(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kayıt No", index=True)
-    acik_sekil = field.Integer("Açığa Alınma Şekli", index=True, choices="acik_sekli")
-    iade_sekil = field.Integer("İade Şekil", index=True)
-    hizmet_durum = field.Integer("Hizmet Durumu", index=True, choices="hizmet_durumu")
-    husus = field.Integer("Husus", index=True, choices="husus")
-    husus_aciklama = field.String("Husus Açıklaması", index=True)
-    aciga_alinma_tarih = field.Date("Açığa Alınma Tarihi", index=True, format="%d.%m.%Y")
-    goreve_son_tarih = field.Date("Göreve Son Tarih", index=True, format="%d.%m.%Y")
-    goreve_iade_istem_tarih = field.Date("Göreve İade İstem Tarihi", index=True, format="%d.%m.%Y")
-    goreve_iade_tarih = field.Date("Göreve İade Tarihi", index=True, format="%d.%m.%Y")
-    acik_aylik_bas_tarih = field.Date("Açık Aylık Başlama Tarihi", index=True, format="%d.%m.%Y")
-    acik_aylik_bit_tarih = field.Date("Açık Aylık Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    goreve_son_aylik_bas_tarih = field.Date("Göreve Sonlandırma Aylık Başlangıç Tarihi", index=True,
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    acik_sekil = field.Integer(_(u"Açığa Alınma Şekli"), index=True, choices="acik_sekli")
+    iade_sekil = field.Integer(_(u"İade Şekil"), index=True)
+    hizmet_durum = field.Integer(_(u"Hizmet Durumu"), index=True, choices="hizmet_durumu")
+    husus = field.Integer(_(u"Husus"), index=True, choices="husus")
+    husus_aciklama = field.String(_(u"Husus Açıklaması"), index=True)
+    aciga_alinma_tarih = field.Date(_(u"Açığa Alınma Tarihi"), index=True, format="%d.%m.%Y")
+    goreve_son_tarih = field.Date(_(u"Göreve Son Tarih"), index=True, format="%d.%m.%Y")
+    goreve_iade_istem_tarih = field.Date(
+        _(u"Göreve İade İstem Tarihi"),
+        index=True,
+        format="%d.%m.%Y"
+    )
+    goreve_iade_tarih = field.Date(_(u"Göreve İade Tarihi"), index=True, format="%d.%m.%Y")
+    acik_aylik_bas_tarih = field.Date(
+        _(u"Açık Aylık Başlama Tarihi"),
+        index=True,
+        format="%d.%m.%Y"
+    )
+    acik_aylik_bit_tarih = field.Date(_(u"Açık Aylık Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    goreve_son_aylik_bas_tarih = field.Date(
+        _(u"Göreve Sonlandırma Aylık Başlangıç Tarihi"),
+        index=True,
+        format="%d.%m.%Y"
+    )
+    goreve_son_aylik_bit_tarih = field.Date(_(u"Göreve Sonlandırma Aylık Bitiş Tarihi"), index=True,
                                             format="%d.%m.%Y")
-    goreve_son_aylik_bit_tarih = field.Date("Göreve Sonlandırma Aylık Bitiş Tarihi", index=True,
-                                            format="%d.%m.%Y")
-    s_yonetim_kald_tarih = field.Date("Sıkı Yönetim Kaldırıldığı Tarih", index=True,
+    s_yonetim_kald_tarih = field.Date(_(u"Sıkı Yönetim Kaldırıldığı Tarih"), index=True,
                                       format="%d.%m.%Y")
-    aciktan_atanma_tarih = field.Date("Açıktan Atanma Tarihi", index=True, format="%d.%m.%Y")
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    aciktan_atanma_tarih = field.Date(_(u"Açıktan Atanma Tarihi"), index=True, format="%d.%m.%Y")
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Açığa Alınma"
-        verbose_name_plural = "Açığa Alınmalar"
+        verbose_name = _(u"Açığa Alınma")
+        verbose_name_plural = _(u"Açığa Alınmalar")
         list_fields = ['acik_sekil', 'aciga_alinma_tarih', 'kurum_onay_tarihi']
         search_fields = ['hizmet_durum', 'acik_sekil', 'aciga_alinma_tarih']
         hitap_service_prefix = "HitapAcikSure"
@@ -261,35 +277,35 @@ class HizmetAcikSure(Model):
 
 
 class HizmetBorclanma(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kayıt No", index=True)
-    ad = field.String("Ad", index=True)
-    soyad = field.String("Soyad", index=True)
-    emekli_sicil = field.String("Emekli Sicili", index=True)
-    derece = field.Integer("Derece", index=True)
-    kademe = field.Integer("Kademe", index=True)
-    ekgosterge = field.Integer("Ek Gösterge", index=True)
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    gun_sayisi = field.Integer("Gün Sayısı", index=True)
-    kanun_kod = field.Integer("Kanun Kodu", index=True, choices="kanun_kod")
-    borc_nevi = field.Integer("Borç Nevi", index=True, choices="borc_nevi")
-    toplam_tutar = field.Float("Toplam Tutar", index=True)
-    odenen_miktar = field.Float("Ödenen Miktar", index=True)
-    calistigi_kurum = field.String("çalıştığı Kurum", index=True)
-    isyeri_il = field.String("İşyeri İli", index=True)
-    isyeri_ilce = field.String("İşyeri İlçesi", index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    ad = field.String(_(u"Ad"), index=True)
+    soyad = field.String(_(u"Soyad"), index=True)
+    emekli_sicil = field.String(_(u"Emekli Sicili"), index=True)
+    derece = field.Integer(_(u"Derece"), index=True)
+    kademe = field.Integer(_(u"Kademe"), index=True)
+    ekgosterge = field.Integer(_(u"Ek Gösterge"), index=True)
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    gun_sayisi = field.Integer(_(u"Gün Sayısı"), index=True)
+    kanun_kod = field.Integer(_(u"Kanun Kodu"), index=True, choices="kanun_kod")
+    borc_nevi = field.Integer(_(u"Borç Nevi"), index=True, choices="borc_nevi")
+    toplam_tutar = field.Float(_(u"Toplam Tutar"), index=True)
+    odenen_miktar = field.Float(_(u"Ödenen Miktar"), index=True)
+    calistigi_kurum = field.String(_(u"çalıştığı Kurum"), index=True)
+    isyeri_il = field.String(_(u"İşyeri İli"), index=True)
+    isyeri_ilce = field.String(_(u"İşyeri İlçesi"), index=True)
 
-    borclanma_tarihi = field.Date("Borçlanma Tarihi", index=True, format="%d.%m.%Y")
-    odeme_tarihi = field.Date("Ödeme Tarihi", index=True, format="%d.%m.%Y")
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    borclanma_tarihi = field.Date(_(u"Borçlanma Tarihi"), index=True, format="%d.%m.%Y")
+    odeme_tarihi = field.Date(_(u"Ödeme Tarihi"), index=True, format="%d.%m.%Y")
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Borçlanma"
-        verbose_name_plural = "Borçlanmalar"
+        verbose_name = _(u"Borçlanma")
+        verbose_name_plural = _(u"Borçlanmalar")
         list_fields = ['ad', 'soyad', 'toplam_tutar', 'odenen_miktar', 'borclanma_tarihi']
         search_fields = ['tckn', 'ad', 'soyad']
         hitap_service_prefix = "HitapBorclanma"
@@ -299,18 +315,18 @@ class HizmetBorclanma(Model):
 
 
 class HizmetIHS(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kayıt No", index=True)
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    ihz_nevi = field.Integer("İHZ Nevi", index=True)
-    sync = field.Integer("Senkronize", index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    ihz_nevi = field.Integer(_(u"İHZ Nevi"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "İtibari Hizmet Süresi"
-        verbose_name_plural = "İtibari Hizmet Süreleri"
+        verbose_name = _(u"İtibari Hizmet Süresi")
+        verbose_name_plural = _(u"İtibari Hizmet Süreleri")
         list_fields = ['kayit_no', 'ihz_nevi']
         search_fields = ['tckn', 'ihz_nevi']
         hitap_service_prefix = "HitapIHS"
@@ -320,21 +336,21 @@ class HizmetIHS(Model):
 
 
 class HizmetIstisnaiIlgi(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kayıt No", index=True)
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    gun_sayisi = field.Integer("Gün Sayısı", index=True)
-    istisnai_ilgi_nevi = field.Integer("İstisnai İlgi Nevi", index=True)
-    kha_durum = field.Integer("KHA Durum", index=True, choices="kha_durum")
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    gun_sayisi = field.Integer(_(u"Gün Sayısı"), index=True)
+    istisnai_ilgi_nevi = field.Integer(_(u"İstisnai İlgi Nevi"), index=True)
+    kha_durum = field.Integer(_(u"KHA Durum"), index=True, choices="kha_durum")
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "İstisnai İlgi"
-        verbose_name_plural = "İstisnai İlgiler"
+        verbose_name = _(u"İstisnai İlgi")
+        verbose_name_plural = _(u"İstisnai İlgiler")
         list_fields = ['baslama_tarihi', 'bitis_tarihi', 'istisnai_ilgi_nevi', 'kha_durum']
         search_fields = ['istisnai_ilgi_nevi', 'kha_durum']
         hitap_service_prefix = "HitapIstisnaiIlgi"
@@ -344,32 +360,32 @@ class HizmetIstisnaiIlgi(Model):
 
 
 class HizmetKayitlari(Model):
-    tckn = field.String("TC Kimlik No", index=True)
-    kayit_no = field.String("Kayıt No", index=True)
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    gorev = field.String("Görev", index=True)  # birim + kadro unvanı
-    unvan_kod = field.Integer("Unvan Kod", index=True)  # kadro unvan kodu
-    yevmiye = field.String("Yevmiye", index=True)
-    ucret = field.String("Ücret", index=True)
-    hizmet_sinifi = field.Integer("Hizmet Sınıfı", index=True,
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    gorev = field.String(_(u"Görev"), index=True)  # birim + kadro unvanı
+    unvan_kod = field.Integer(_(u"Unvan Kod"), index=True)  # kadro unvan kodu
+    yevmiye = field.String(_(u"Yevmiye"), index=True)
+    ucret = field.String(_(u"Ücret"), index=True)
+    hizmet_sinifi = field.Integer(_(u"Hizmet Sınıfı"), index=True,
                                   choices="hizmet_sinifi")  # atama modelinden gelecek
-    kadro_derece = field.Integer("Kadro Derecesi", index=True)  # personelden gelecek
-    odeme_derece = field.Integer("Ödeme Derecesi", index=True)  # personelden gelecek
-    odeme_kademe = field.Integer("Ödeme Kademesi", index=True)  # personelden gelecek (gorunen)
-    odeme_ekgosterge = field.Integer("Ödeme Ek Göstergesi", index=True)  # personelden gelecek
-    kazanilmis_hak_ayligi_derece = field.Integer("Kazanılmış Hak Aylığı Derecesi",
+    kadro_derece = field.Integer(_(u"Kadro Derecesi"), index=True)  # personelden gelecek
+    odeme_derece = field.Integer(_(u"Ödeme Derecesi"), index=True)  # personelden gelecek
+    odeme_kademe = field.Integer(_(u"Ödeme Kademesi"), index=True)  # personelden gelecek (gorunen)
+    odeme_ekgosterge = field.Integer(_(u"Ödeme Ek Göstergesi"), index=True)  # personelden gelecek
+    kazanilmis_hak_ayligi_derece = field.Integer(_(u"Kazanılmış Hak Aylığı Derecesi"),
                                                  index=True)  # personelden gelecek
-    kazanilmis_hak_ayligi_kademe = field.Integer("Kazanılmış Hak Aylığı Kademesi",
+    kazanilmis_hak_ayligi_kademe = field.Integer(_(u"Kazanılmış Hak Aylığı Kademesi"),
                                                  index=True)  # personelden gelecek (gorunen)
-    kazanilmis_hak_ayligi_ekgosterge = field.Integer("Kazanılmış Hak Aylığı Ek Göstergesi",
+    kazanilmis_hak_ayligi_ekgosterge = field.Integer(_(u"Kazanılmış Hak Aylığı Ek Göstergesi"),
                                                      index=True)  # personelden gelecek
-    emekli_derece = field.Integer("Emekli Derecesi", index=True)  # personelden gelecek
-    emekli_kademe = field.Integer("Emekli Kademe", index=True)  # personelden gelecek (gorunen)
-    emekli_ekgosterge = field.Integer("Emekli Ek Göstergesi", index=True)  # personelden gelecek
-    sebep_kod = HitapSebep("Hitap Sebep Kodu")
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    emekli_derece = field.Integer(_(u"Emekli Derecesi"), index=True)  # personelden gelecek
+    emekli_kademe = field.Integer(_(u"Emekli Kademe"), index=True)  # personelden gelecek (gorunen)
+    emekli_ekgosterge = field.Integer(_(u"Emekli Ek Göstergesi"), index=True)  # personelden gelecek
+    sebep_kod = field.Integer(_(u"Hitap Sebep Kodu"), index=True)
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     # hizmet cetveline birden cok modelden veri girilmektedir. bu alanda, hizmet
@@ -381,8 +397,8 @@ class HizmetKayitlari(Model):
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Kayıt"
-        verbose_name_plural = "Kayıtlar"
+        verbose_name = _(u"Kayıt")
+        verbose_name_plural = _(u"Kayıtlar")
         list_fields = ['unvan_kod', 'gorev', 'yevmiye', 'ucret', 'hizmet_sinifi']
         search_fields = ['unvan_kod', 'gorev', 'yevmiye']
         hitap_service_prefix = "HitapHizmetCetveli"
@@ -396,7 +412,7 @@ class HizmetKayitlari(Model):
         önce bitiş tarihi olan kayıt gürüntülenmelidir. Bu yüzden
         başlangıç tarihine +1 saat eklendi.
         """
-        if self.baslama_tarihi != datetime.date(1900, 1, 1):
+        if self.baslama_tarihi is not None and self.baslama_tarihi != datetime.date(1900, 1, 1):
             self.order_date = datetime.datetime.combine(self.baslama_tarihi, datetime.time(1))
         else:
             self.order_date = self.bitis_tarihi
@@ -425,30 +441,34 @@ class HizmetKayitlari(Model):
 
 
 class AskerlikKayitlari(Model):
-    askerlik_nevi = field.Integer("Askerlik Nevi", index=True, choices="askerlik_nevi")
-    baslama_tarihi = field.Date("Başlama Tarihi", index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date("Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    kayit_no = field.String("Kayıt No", index=True)
-    kita_baslama_tarihi = field.Date("Kıta Başlama Tarihi", index=True, format="%d.%m.%Y")
-    kita_bitis_tarihi = field.Date("Kıta Bitiş Tarihi", index=True, format="%d.%m.%Y")
-    muafiyet_neden = field.String("Muafiyet Neden", index=True)
-    sayilmayan_gun_sayisi = field.Integer("Sayılmayan Gün Sayısı", index=True)
-    sinif_okulu_sicil = field.String("Sınıf Okulu Sicil", index=True)
-    subayliktan_erlige_gecis_tarihi = field.Date("Subaylıktan Erliğe Geçiş Tarihi", index=True,
+    askerlik_nevi = field.Integer(_(u"Askerlik Nevi"), index=True, choices="askerlik_nevi")
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    kita_baslama_tarihi = field.Date(_(u"Kıta Başlama Tarihi"), index=True, format="%d.%m.%Y")
+    kita_bitis_tarihi = field.Date(_(u"Kıta Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    muafiyet_neden = field.String(_(u"Muafiyet Neden"), index=True)
+    sayilmayan_gun_sayisi = field.Integer(_(u"Sayılmayan Gün Sayısı"), index=True)
+    sinif_okulu_sicil = field.String(_(u"Sınıf Okulu Sicil"), index=True)
+    subayliktan_erlige_gecis_tarihi = field.Date(_(u"Subaylıktan Erliğe Geçiş Tarihi"), index=True,
                                                  format="%d.%m.%Y")
-    subay_okulu_giris_tarihi = field.Date("Subay Okulu Giriş Tarihi", index=True, format="%d.%m.%Y")
-    tckn = field.String("TC Kimlik No", index=True)
-    tegmen_nasp_tarihi = field.Date("Teğmen Nasp Tarihi", index=True, format="%d.%m.%Y")
-    gorev_yeri = field.String("Görev Yeri", index=True)
-    kurum_onay_tarihi = field.Date("Kurum Onay Tarihi", index=True, format="%d.%m.%Y")
-    astegmen_nasp_tarihi = field.Date("Asteğmen Nasp Tarihi", index=True, format="%d.%m.%Y")
-    sync = field.Integer("Senkronize", index=True)
+    subay_okulu_giris_tarihi = field.Date(
+        _(u"Subay Okulu Giriş Tarihi"),
+        index=True,
+        format="%d.%m.%Y"
+    )
+    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    tegmen_nasp_tarihi = field.Date(_(u"Teğmen Nasp Tarihi"), index=True, format="%d.%m.%Y")
+    gorev_yeri = field.String(_(u"Görev Yeri"), index=True)
+    kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
+    astegmen_nasp_tarihi = field.Date(_(u"Asteğmen Nasp Tarihi"), index=True, format="%d.%m.%Y")
+    sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
 
     class Meta:
         app = 'Personel'
-        verbose_name = "Kayıt"
-        verbose_name_plural = "Kayıtlar"
+        verbose_name = _(u"Kayıt")
+        verbose_name_plural = _(u"Kayıtlar")
         list_fields = ['askerlik_nevi', 'kita_baslama_tarihi', 'gorev_yeri']
         search_fields = ['askerlik_nevi', 'gorev_yeri', 'tckn']
         hitap_service_prefix = "HitapAskerlik"

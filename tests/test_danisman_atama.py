@@ -6,8 +6,9 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
-from ulakbus.models import OgrenciProgram, Donem, DonemDanisman, Ogrenci
+from ulakbus.models import OgrenciProgram, Donem, DonemDanisman, Ogrenci, Personel
 from zengine.lib.test_utils import BaseTestCase
+from pyoko.db.connection import log_bucket, version_bucket
 
 
 class TestCase(BaseTestCase):
@@ -17,6 +18,7 @@ class TestCase(BaseTestCase):
 
     def test_danisman_atama(self):
         """
+        Danışmanı atanamayan öğrenciler öğrenci işleri tarafından atılır.
         Danışman atama iş akışının ilk adımında öğrenci programı seçilir.
 
         Seçilen öğrenciye ait veritabanından dönen öğrenci programı sayısı ile
@@ -35,7 +37,10 @@ class TestCase(BaseTestCase):
         """
 
         # Kullanıcıya login yaptırılır.
-        self.prepare_client('/danisman_atama', username='bolum_baskani_1')
+        log_bucket_count = len(log_bucket.get_keys())
+        version_bucket_keys = version_bucket.get_keys()
+
+        self.prepare_client('/danisman_atama', username='ogrenci_isleri_1')
 
         resp = self.client.post(id="RnKyAoVDT9Hc89KEZecz0kSRXRF",
                                 model="OgrenciProgram",
@@ -55,7 +60,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post(model='OgrenciProgram',
                                 form={'program': "UEGET7qn9CDj9VEj4n0nbQ7m89d", 'sec': 1})
 
-        guncel_donem = Donem.objects.filter(guncel=True)[0]
+        guncel_donem = Donem.guncel_donem()
         # Öğrencinin kayıtlı olduğu öğrenci programlarından biri seçilir.
         program = op[0]
         # Döneme ve birime kayıtlı olan danışmanların listesini tutar.
@@ -68,7 +73,21 @@ class TestCase(BaseTestCase):
 
         # Danışman seçilir.
         resp = self.client.post(model='OgrenciProgram',
-                                form={'donem_danisman': 'Ids7zUWiSyeTC1qHmAFfqFCIWBV', 'sec': 1})
+                                form={'donem_danisman': 'Js2goP48yA183oMDAN8uM5GOExM', 'sec': 1})
+
+        # save() işlemi meta paremetresi olmadan çalıştırıldığı için aktivite kaydının tutulmaması
+        # ve aynı kalması beklenir.
+        assert len(log_bucket.get_keys()) == log_bucket_count
+        # Yeni versiyon kayıt keyleri alınır.
+        yeni_versiyon_keyleri = list(set(version_bucket.get_keys()) - set(version_bucket_keys))
+        # ogrenci_program modeline ait olan versiyon keyi alınır.
+        op_versiyon_key = list(
+            filter(lambda x: version_bucket.get(x).data['model'] == 'ogrenci_program',
+                   yeni_versiyon_keyleri))[0]
+        # Seçilen danışmanın personel keyi bulunur.
+        danisman_key = DonemDanisman.objects.get('Js2goP48yA183oMDAN8uM5GOExM').okutman.personel.key
+        # Versiyon loglarındaki danışman id si ile seçilen danısmanın id sinin uyuştuğu kontrol edilir.
+        assert version_bucket.get(op_versiyon_key).data['data']['danisman_id'] == danisman_key
 
         ogrenci = Ogrenci.objects.get('RnKyAoVDT9Hc89KEZecz0kSRXRF')
         assert ogrenci.ad + ' ' + ogrenci.soyad in resp.json['msgbox']['msg']

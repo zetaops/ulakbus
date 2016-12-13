@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_bEzKEOKPEeS7M8UkBUcISA" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:collaboration id="_Collaboration_3" name="Akademik Takvim">
-    <bpmn2:participant id="_Participant_2" name="Akademik Takvim" processRef="akademik_takvim"/>
-  </bpmn2:collaboration>
-  <bpmn2:process id="akademik_takvim" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_3" name="Lane Set 3">
-      <bpmn2:lane id="Lane_1">
-        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>goster</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="StartEvent_1" targetRef="goster"/>
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:serviceTask id="goster" camunda:class="common.akademik_takvim.AkademikTakvimView.goster" name="Akademik Takvim Goster">
-      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="goster" targetRef="EndEvent_1"/>
-  </bpmn2:process>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_3" name="Akademik Takvim">
+    <bpmn:participant id="_Participant_2" name="Akademik Takvim" processRef="akademik_takvim" />
+  </bpmn:collaboration>
+  <bpmn:process id="akademik_takvim" name="Akademik Takvim" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_3" name="Lane Set 3">
+      <bpmn:lane id="Lane_1">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>goster</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_7" name="" sourceRef="StartEvent_1" targetRef="goster" />
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="goster" name="Akademik Takvim Goster" camunda:class="common.akademik_takvim.AkademikTakvimView.goster">
+      <bpmn:incoming>SequenceFlow_7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="goster" targetRef="EndEvent_1" />
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_5" bpmnElement="_Participant_2" isHorizontal="true">
-        <dc:Bounds height="169.0" width="457.0" x="0.0" y="180.0"/>
+        <dc:Bounds x="0" y="180" width="457" height="169" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Lane_7" bpmnElement="Lane_1" isHorizontal="true">
-        <dc:Bounds height="169.0" width="427.0" x="30.0" y="180.0"/>
+        <dc:Bounds x="30" y="180" width="427" height="169" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_7" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="84.0" y="254.0"/>
+        <dc:Bounds x="84" y="254" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="102.0" y="295.0"/>
+          <dc:Bounds x="102" y="295" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_EndEvent_11" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="336.0" y="254.0"/>
+        <dc:Bounds x="336" y="254" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="354.0" y="295.0"/>
+          <dc:Bounds x="354" y="295" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_7" bpmnElement="goster">
-        <dc:Bounds height="80.0" width="100.0" x="180.0" y="232.0"/>
+        <dc:Bounds x="180" y="232" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="_BPMNShape_StartEvent_7" targetElement="_BPMNShape_ServiceTask_7">
-        <di:waypoint xsi:type="dc:Point" x="120.0" y="272.0"/>
-        <di:waypoint xsi:type="dc:Point" x="180.0" y="272.0"/>
+        <di:waypoint xsi:type="dc:Point" x="120" y="272" />
+        <di:waypoint xsi:type="dc:Point" x="180" y="272" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="147.0" y="273.0"/>
+          <dc:Bounds x="147" y="273" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="_BPMNShape_ServiceTask_7" targetElement="_BPMNShape_EndEvent_11">
-        <di:waypoint xsi:type="dc:Point" x="280.0" y="272.0"/>
-        <di:waypoint xsi:type="dc:Point" x="336.0" y="272.0"/>
+        <di:waypoint xsi:type="dc:Point" x="280" y="272" />
+        <di:waypoint xsi:type="dc:Point" x="336" y="272" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="6.0" width="6.0" x="305.0" y="276.0"/>
+          <dc:Bounds x="305" y="276" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

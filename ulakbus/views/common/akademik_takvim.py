@@ -21,6 +21,7 @@ from ulakbus.models.ogrenci import AKADEMIK_TAKVIM_ETKINLIKLERI, Donem, OgretimY
 from ulakbus.models.ogrenci import Takvim
 from ulakbus.lib.common import get_akademik_takvim
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _, format_datetime
 
 __author__ = 'Ali Riza Keles'
 
@@ -72,9 +73,9 @@ class AkademikTakvimView(CrudView):
 
         for e in Takvim.objects.filter(akademik_takvim=akademik_takvim):
             etkinlik = OrderedDict({})
-            etkinlik['Etkinlik'] = dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(e.etkinlik), '')
-            etkinlik['Başlangıç'] = '{:%d.%m.%Y}'.format(e.baslangic) if e.baslangic else ''
-            etkinlik['Bitiş'] = '{:%d.%m.%Y}'.format(e.bitis) if e.bitis else ''
+            etkinlik[_(u'Etkinlik')] = dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(e.etkinlik), '')
+            etkinlik[_(u'Başlangıç')] = format_datetime(e.baslangic) if e.baslangic else ''
+            etkinlik[_(u'Bitiş')] = format_datetime(e.bitis) if e.bitis else ''
             etkinlikler.append(etkinlik)
 
         # cikti multirow table seklindedir.

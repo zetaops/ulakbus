@@ -8,13 +8,20 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 
+from datetime import time
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
-from ulakbus.models.ders_programi import OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, ZamanDilimleri
-from ulakbus.models import Room
+from zengine.lib.translation import gettext as _, format_time, gettext_lazy
+from ulakbus.models.ders_sinav_programi import OgElemaniZamanPlani, ZamanCetveli, DerslikZamanPlani, ZamanDilimleri
+from ulakbus.models import Room, DerslikSinavPlani
 
 
-class ZamanTablo(CrudView):
+class OnayForm(JsonForm):
+    onayla = fields.Button(gettext_lazy(u'Onayla'), cmd='onay')
+    reddet = fields.Button(gettext_lazy(u'Reddet'), cmd='reddet')
+
+
+class ZamanTablosu(CrudView):
     """
     .. code-block:: python
         # default_request:
@@ -39,45 +46,6 @@ class ZamanTablo(CrudView):
         }
 
     """
-
-    def ogretim_elemani_listele(self):
-        oe_zaman_plani = OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)
-        ogretim_elemanlari = list()
-
-        for oe in oe_zaman_plani:
-            ogretim_elemani = dict()
-            ogretim_elemani['name'] = oe.okutman.ad + ' ' + oe.okutman.soyad
-            ogretim_elemani['key'] = oe.key
-            ogretim_elemanlari.append(ogretim_elemani)
-
-        return ogretim_elemanlari
-
-    def ogretim_elemani_zaman_tablosu(self):
-
-        self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
-        zaman_cetveli = sorted(ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=self.current.ogretim_elemani),
-                               key=lambda z: (z.zaman_dilimi, z.gun))
-
-        uygunluk_durumu = list()
-
-        for zc in zaman_cetveli:
-            durum = dict()
-            durum['key'] = zc.key
-            durum['saat'] = zc.zaman_dilimi.baslama_saat + ':' + zc.zaman_dilimi.baslama_dakika + '-' + \
-                            zc.zaman_dilimi.bitis_saat + ':' + zc.zaman_dilimi.bitis_dakika
-            durum['gun'] = zc.gun
-            durum['durum'] = zc.durum
-            uygunluk_durumu.append(durum)
-
-        item = {'avatar': self.current.ogretim_elemani.okutman.personel.user.get_avatar_url(),
-                'oe_key': self.current.ogretim_elemani.key,
-                'name': self.current.ogretim_elemani.okutman.ad + ' ' + self.current.ogretim_elemani.okutman.soyad,
-                'toplam_ders_saati': self.current.ogretim_elemani.toplam_ders_saati,
-                'uygunluk_durumu': uygunluk_durumu,
-                'ogretim_elemanlari': self.ogretim_elemani_listele()}
-
-        self.output['ogretim_elemani_zt'] = item
-
     def ogretim_gorevlisi_sec(self):
         """
         Switch lecturer or select default one
@@ -96,241 +64,33 @@ class ZamanTablo(CrudView):
 
         """
         # default select first person
-        try:
-            if self.current.task_data['cmd'] == 'personel_sec':
-                zaman_dilimleri = ZamanDilimleri.objects.filter(birim=self.current.role.unit)
-                ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
-                zaman_cetveli = ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=ogretim_elemani, durum=3)
+        if self.current.task_data['cmd'] == 'personel_sec':
+            zaman_dilimleri = ZamanDilimleri.objects.filter(birim=self.current.role.unit)
+            ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
+            zaman_cetveli = ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=ogretim_elemani, durum=3)
 
-                toplam_ders_saat = 0
-                for zd in zaman_dilimleri:
-                    toplam_ders_saat += (zd.zaman_dilimi_suresi * 5)
+            toplam_ders_saat = 0
+            for zd in zaman_dilimleri:
+                toplam_ders_saat += (zd.zaman_dilimi_suresi * 5)
 
-                time = 0
-                for zc in zaman_cetveli:
-                    if zc.gun not in [6, 7]:
-                        time += zc.zaman_dilimi.zaman_dilimi_suresi
-                oe_ders_saati = int(ogretim_elemani.toplam_ders_saati + (ogretim_elemani.toplam_ders_saati/2))
-                if time <= (toplam_ders_saat - oe_ders_saati):
-                    self.current.task_data['ogretim_elemani_key'] = self.current.input['secili_og_elemani']['key']
-                    self.current.output['ders_saati_durum'] = True
-                else:
-                    self.current.output['ders_saati_durum'] = False
-
-            elif self.current.task_data['cmd'] == 'hayir':
-                pass
-            else:
-                self.current.task_data['ogretim_elemani_key'] = \
-                    (OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)[0]).key
-        except:
-            self.current.task_data['ogretim_elemani_key'] = \
-                (OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)[0]).key
-
-    def zaman_tablosu_listele(self):
-        """
-        show & edit timetable for lecturer
-
-        .. code-block:: python
-            # response:
-            {
-                'ogretim_elemani_zt': {
-                    'avatar': string,
-                    'oe_key': string   # ogretim_elemani_key
-                    'name': string,     # name surname,
-                    'toplam_ders_saati': int,   # hours,
-                    'uygunluk_durumu': [{
-                        'key': string,     # zaman_cetveli_key
-                        'saat': string,  # 10:00-12:00,
-                        'gun': int,     # 1 = pazartesi,
-                        'durum': int    # 2 = mumkunse uygun degil,
-                        }],
-                    'ogretim_elemanlari': [{
-                        'name': string,
-                        'key': string}]}
-            }
-        """
-        try:
-            if self.current.task_data['red_aciklamasi']:
-                self.current.output['msgbox'] = {"type": "warning",
-                                                 "title": "Talebiniz Bölüm Başkanı Tarafından Reddedildi",
-                                                 "msg": self.current.task_data['red_aciklamasi']}
-        except KeyError:
-            pass
-
-        self.ogretim_elemani_zaman_tablosu()
-
-        _form = JsonForm()
-        _form.gonder = fields.Button('Onaya Gönder', cmd='onaya_gonder')
-        self.form_out(_form)
-
-    def zaman_degisiklik_kaydet(self):
-        """"
-        save timetable state when user switches lecturer's availability  options
-
-        .. code-block:: python
-            # request:
-            {
-                'change':{
-                    'key': string   # key,
-                    'durum': int    # 1 = uygun,
-                    'cmd': 'degistir'}
-            }
-
-            # response:
-            {
-                'kayit_durum': Boolean
-            }
-
-        """
-        try:
-            change = self.current.input['change']
-            key = change['key']
-            zc = ZamanCetveli.objects.get(key)
-            zc.durum = change['durum']
-            zc.save()
-            kayit_durum = True
-        except:
-            kayit_durum = False
-
-        self.current.output['kayit_durum'] = kayit_durum
-
-    def onaya_gonder(self):
-        _form = JsonForm(title='Öğretim Elemanı Ders Programını Bölüm Başkanına yollamak istiyor musunuz?')
-        _form.evet = fields.Button('Evet', cmd='evet')
-        _form.hayir = fields.Button('Hayır', cmd='hayir')
-        self.form_out(_form)
-
-    def mesaj(self):
-        msg = {"title": 'Onay İçin Gonderildi!',
-               "body": 'Talebiniz Başarıyla iletildi.'}
-        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
-
-        self.current.task_data['LANE_CHANGE_MSG'] = msg
-
-    def bilgilendirme(self):
-        msg = {"type": "info",
-               "title": 'Talebiniz Onaylandı!',
-               "msg": 'Gönderdiğiniz öğretim elemanı zaman tablosu Bölüm Başkanı tarafından onaylandı.'}
-        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
-
-        self.current.output['msgbox'] = msg
-
-    # Lane Gecisi Bolum Baskani
-    def onay_ekrani(self):
-        """
-        read only control and approve screen
-
-        .. code-block:: python
-            # response:
-            {
-                default_response,
-                'ogretim_elemani_zt': {
-                    'oe_key': string   # ogretim_elemani_key
-                    'name': string,     # name surname,
-                    'toplam_ders_saati': int,   # hours,
-                    'uygunluk_durumu': [{
-                        'key': string,     # zaman_cetveli_key
-                        'saat': string,  # 10:00-12:00,
-                        'gun': int,     # 1 = pazartesi,
-                        'durum': int    # 2 = mumkunse uygun degil,
-                        }],
-                    'ogretim_elemanlari': [{
-                        'name': string,
-                        'key': string}]}
-            }
-        """
-
-        self.ogretim_elemani_zaman_tablosu()
-        self.output['ogretim_elemani_zt']['readonly'] = True
-
-        _form = JsonForm()
-        _form.onayla = fields.Button('Onayla', cmd='onay')
-        _form.reddet = fields.Button('Reddet', cmd='reddet')
-        self.form_out(_form)
-
-    def kontrol_et(self):
-        """
-        Switch lecturer or select default one
-
-        .. code-block:: python
-            # request:
-            {
-                'secili_og_elemani':{
-                    'key': string   #  personel key,
-                    'cmd': string}
-            }
-
-        """
-        # default select first person
-        try:
-            if self.current.task_data['cmd'] == 'kontrol':
+            time = 0
+            for zc in zaman_cetveli:
+                if zc.gun not in [6, 7]:
+                    time += zc.zaman_dilimi.zaman_dilimi_suresi
+            oe_ders_saati = int(ogretim_elemani.toplam_ders_saati + (ogretim_elemani.toplam_ders_saati/2))
+            if time <= (toplam_ders_saat - oe_ders_saati):
                 self.current.task_data['ogretim_elemani_key'] = self.current.input['secili_og_elemani']['key']
+                self.current.output['ders_saati_durum'] = True
             else:
-                self.current.task_data['ogretim_elemani_key'] = \
-                    (OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)[0]).key
-        except:
+                self.current.output['ders_saati_durum'] = False
+
+        elif self.current.task_data['cmd'] == 'hayir':
+            pass
+        else:
             self.current.task_data['ogretim_elemani_key'] = \
                 (OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)[0]).key
 
-    def aciklama_yaz(self):
-        _form = JsonForm()
-        _form.mesaj = fields.String('Açıklama')
-        _form.gonder = fields.Button('gonder')
-        self.form_out(_form)
-
-    def red_aciklamasini_gonder(self):
-        self.current.task_data['red_aciklamasi'] = self.current.input['form']['mesaj']
-        msg = {"title": 'Red Açıklaması Gönderildi!',
-               "body": 'İşleminiz başarıyla gerçekleşmiştir'}
-        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
-
-        self.current.task_data['LANE_CHANGE_MSG'] = msg
-
-    def onayla(self):
-        msg = {"title": 'Öğretim Elemani Zaman Tablosunu Onayladınız!',
-               "body": 'Bölüm ders programı koordinatörüne onaylama iletildi.'}
-        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
-
-        self.current.task_data['LANE_CHANGE_MSG'] = msg
-
-
-class DerslikZamanTablosu(CrudView):
-    """
-    .. code-block:: python
-        # default_response:
-        {
-            'callbackID': string,
-            'client_cmd':['string',],
-            'forms': {},
-            'meta': {},
-            'reload_cmd': string,
-            'reply_timestamp': float
-            'token': string
-        },
-
-        # default_request
-        {
-            'callbackID': string,
-            'data': {
-                'form': {},
-                'cmd': string,
-                'token': string,
-                'wf': string,
-        }
-
-    """
-
-    def derslik_listele(self):
-        rooms = Room.objects.raw("room_departments.unit_id:" + self.current.role.unit.key)
-        derslikler = list()
-        for room in rooms:
-            derslik = dict()
-            derslik['name'] = room.name
-            derslik['key'] = room.key
-            derslikler.append(derslik)
-        return derslikler
-
-    def derslik_sec_kontrol(self, cmd=''):
+    def derslik_sec_kontrol(self, cmd='', obj=None):
         """
         Switch room or select default one
 
@@ -349,37 +109,48 @@ class DerslikZamanTablosu(CrudView):
             elif self.current.task_data['cmd'] == 'hayir':
                 pass
             else:
-                self.current.task_data['room_key'] = Room.objects.raw("room_departments.unit_id:" +
-                                                                      self.current.role.unit.key)[0].key
+                self.current.task_data['rooms'] = list(set(obj.objects.filter(
+                                                        birim=self.current.role.unit).values_list('derslik_id')))
+                self.current.task_data['room_key'] = self.current.task_data['rooms'][0]
         except:
-            self.current.task_data['room_key'] = Room.objects.raw("room_departments.unit_id:" +
-                                                                  self.current.role.unit.key)[0].key
-
-    def derslik_zaman_tablosu(self):
-        self.current.room = Room.objects.get(self.current.task_data['room_key'])
-        dzps = sorted(DerslikZamanPlani.objects.filter(derslik=self.current.room),
-                      key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
-
-        zaman_plani = list()
-
-        for dz in dzps:
-            durum = dict()
-            durum['key'] = dz.key
-            durum['saat'] = dz.baslangic_saat + ':' + dz.baslangic_dakika + '-' + dz.bitis_saat + ':' + dz.bitis_dakika
-            durum['gun'] = dz.gun
-            durum['durum'] = dz.derslik_durum
-            zaman_plani.append(durum)
-
-        item = {'derslik_key': self.current.room.key,
-                'name': self.current.room.name,
-                'kapasite': self.current.room.capacity,
-                'zaman_plani': zaman_plani,
-                'derslikler': self.derslik_listele()}
-
-        self.output['derslik_zaman_tablosu'] = item
+            self.current.task_data['rooms'] = list(set(obj.objects.filter(
+                                                        birim=self.current.role.unit).values_list('derslik_id')))
+            self.current.task_data['room_key'] = self.current.task_data['rooms'][0]
 
     def derslik_sec(self):
-        self.derslik_sec_kontrol('derslik_degistir')
+        self.derslik_sec_kontrol('derslik_degistir', DerslikZamanPlani)
+
+    def sinav_derslik_sec(self):
+        self.derslik_sec_kontrol('derslik_degistir', DerslikSinavPlani)
+
+    def ogretim_elemani_listele(self):
+        oe_zaman_plani = OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)
+        ogretim_elemanlari = list()
+        for oe in oe_zaman_plani:
+            ogretim_elemani = dict()
+            ogretim_elemani['name'] = oe.okutman.ad + ' ' + oe.okutman.soyad
+            ogretim_elemani['key'] = oe.key
+            ogretim_elemanlari.append(ogretim_elemani)
+
+        return ogretim_elemanlari
+
+    def sinav_derslik_listele(self):
+        rooms = self.current.task_data['rooms']
+        return self.derslikler(rooms)
+
+    def derslik_listele(self):
+        rooms = self.current.task_data['rooms']
+        return self.derslikler(rooms)
+
+    def derslikler(self, rooms):
+        derslikler_list = list()
+        for room in rooms:
+            r = Room.objects.get(room)
+            derslik = dict()
+            derslik['name'] = r.name
+            derslik['key'] = r.key
+            derslikler_list.append(derslik)
+        return derslikler_list
 
     def listele(self):
         """
@@ -404,21 +175,108 @@ class DerslikZamanTablosu(CrudView):
             }
         """
 
-        try:
-            if self.current.task_data['red_aciklamasi']:
-                self.current.output['msgbox'] = {"type": "warning",
-                                                 "title": "Talebiniz Bölüm Başkanı Tarafından Reddedildi",
-                                                 "msg": self.current.task_data['red_aciklamasi']}
-        except KeyError:
-            pass
-
-        self.derslik_zaman_tablosu()
-
+        if 'red_aciklamasi' in self.current.task_data:
+            self.current.output['msgbox'] = {"type": "warning",
+                                             "title": _(u"Talebiniz Bölüm Başkanı Tarafından Reddedildi"),
+                                             "msg": self.current.task_data['red_aciklamasi']}
         _form = JsonForm()
-        _form.gonder = fields.Button('Onaya Gönder', cmd='gonder')
+        _form.gonder = fields.Button(_(u'Onaya Gönder'), cmd='gonder')
         self.form_out(_form)
 
-    def degisiklikleri_kaydet(self):
+    def ogretim_elemani_zt(self):
+
+        self.current.ogretim_elemani = OgElemaniZamanPlani.objects.get(self.current.task_data['ogretim_elemani_key'])
+        zaman_cetveli = sorted(ZamanCetveli.objects.filter(ogretim_elemani_zaman_plani=self.current.ogretim_elemani),
+                               key=lambda z: (z.zaman_dilimi, z.gun))
+
+        uygunluk_durumu = list()
+
+        for zc in zaman_cetveli:
+            durum = dict()
+            durum['key'] = zc.key
+            durum['saat'] = zc.zaman_dilimi.baslama_saat + ':' + zc.zaman_dilimi.baslama_dakika + '-' + \
+                            zc.zaman_dilimi.bitis_saat + ':' + zc.zaman_dilimi.bitis_dakika
+            durum['gun'] = zc.gun
+            durum['durum'] = zc.durum
+            uygunluk_durumu.append(durum)
+
+        item = {'avatar': self.current.ogretim_elemani.okutman.personel.user.get_avatar_url(),
+                'oe_key': self.current.ogretim_elemani.key,
+                'name': self.current.ogretim_elemani.okutman.ad + ' ' + self.current.ogretim_elemani.okutman.soyad,
+                'toplam_ders_saati': self.current.ogretim_elemani.toplam_ders_saati,
+                'uygunluk_durumu': uygunluk_durumu,
+                'ogretim_elemanlari': self.ogretim_elemani_listele()}
+
+        self.output['ogretim_elemani_zt'] = item
+        self.listele()
+
+    def derslik_zt(self):
+        self.current.room = Room.objects.get(self.current.task_data['room_key'])
+        dzps = sorted(DerslikZamanPlani.objects.filter(derslik=self.current.room),
+                      key=lambda d: (d.gun, d.baslangic_saat, d.baslangic_dakika))
+
+        zaman_plani = list()
+
+        for dz in dzps:
+            durum = dict()
+            durum['key'] = dz.key
+            durum['saat'] = '{baslangic}-{bitis}'.format(
+                baslangic=format_time(time(int(dz.baslangic_saat), int(dz.baslangic_dakika))),
+                bitis=format_time(time(int(dz.bitis_saat), int(dz.bitis_dakika))),
+            )
+            durum['gun'] = dz.gun
+            durum['durum'] = dz.durum
+            zaman_plani.append(durum)
+
+        item = {'derslik_key': self.current.room.key,
+                'name': self.current.room.name,
+                'kapasite': self.current.room.capacity,
+                'zaman_plani': zaman_plani,
+                'derslikler': self.derslik_listele()}
+
+        self.output['derslik_zaman_tablosu'] = item
+        self.listele()
+
+    def sinav_derslik_zt(self):
+        room = Room.objects.get(self.current.task_data['room_key'])
+        dsp = DerslikSinavPlani.objects.filter(derslik=room)
+        zaman_plani = list()
+
+        for dz in dsp:
+            durum = dict()
+            durum['key'] = dz.key
+            durum['saat'] = dz.zaman_dilimi.baslama_saat + ':' + dz.zaman_dilimi.baslama_dakika + '-' + \
+                            dz.zaman_dilimi.bitis_saat + ':' + dz.zaman_dilimi.bitis_dakika
+            durum['gun'] = dz.gun
+            durum['durum'] = dz.durum
+            zaman_plani.append(durum)
+
+        item = {'derslik_key': room.key,
+                'name': room.name,
+                'kapasite': room.exam_capacity,
+                'zaman_plani': zaman_plani,
+                'derslikler': self.sinav_derslik_listele()}
+
+        self.output['derslik_zaman_tablosu'] = item
+        self.listele()
+
+
+    def sinav_degisiklik_kaydet(self):
+        self.save_changes(DerslikSinavPlani, self.current.input['change'])
+        kayit_durum = True
+        self.current.output['kayit_durum'] = kayit_durum
+
+    def zaman_degisiklik_kaydet(self):
+        self.save_changes(ZamanCetveli, self.current.input['change'])
+        kayit_durum = True
+        self.current.output['kayit_durum'] = kayit_durum
+
+    def derslik_degisiklik_kaydet(self):
+        self.save_changes(DerslikZamanPlani, self.current.input['change'])
+        kayit_durum = True
+        self.current.output['kayit_durum'] = kayit_durum
+
+    def save_changes(self, model, change):
         """"
         save timetable state when user switches room's availability  options
 
@@ -437,36 +295,55 @@ class DerslikZamanTablosu(CrudView):
             }
 
         """
-
-        try:
-            change = self.current.input['change']
-            key = change['key']
-            dz = DerslikZamanPlani.objects.get(key)
-            dz.derslik_durum = change['durum']
-            dz.save()
-            kayit_durum = True
-        except:
-            kayit_durum = False
-
-        self.current.output['kayit_durum'] = kayit_durum
+        obj = model.objects.get(change['key'])
+        obj.durum = change['durum']
+        obj.save()
 
     def onaya_gonder(self):
-        _form = JsonForm(title='Derslik Ders Programını Bölüm Başkanına yollamak istiyor musunuz?')
-        _form.evet = fields.Button('Evet', cmd='evet')
-        _form.hayir = fields.Button('Hayir', cmd='hayir')
+        _form = JsonForm(title=_(u'Programı Bölüm Başkanına yollamak istiyor musunuz?'))
+        _form.evet = fields.Button(_(u'Evet'), cmd='evet')
+        _form.hayir = fields.Button(_(u'Hayır'), cmd='hayir')
         self.form_out(_form)
 
     def mesaj(self):
-        msg = {"title": 'Onay İçin Gönderildi!',
-               "body": 'Talebiniz Başarıyla iletildi.'}
-        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
-
+        msg = {"title": _(u'Onay İçin Gönderildi!'),
+               "body": _(u'Talebiniz Başarıyla iletildi.')}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
-    def kontrol_et(self):
-        self.derslik_sec_kontrol('kontrol')
+    def ogretim_gorevlisi_kontrol_et(self):
+        """
+        Switch lecturer or select default one
 
-    def onay_ekrani(self):
+        .. code-block:: python
+            # request:
+            {
+                'secili_og_elemani':{
+                    'key': string   #  personel key,
+                    'cmd': string}
+            }
+
+        """
+        # default select first person
+        if 'cmd' in self.current.task_data and self.current.task_data['cmd'] == 'kontrol':
+            self.current.task_data['ogretim_elemani_key'] = self.current.input['secili_og_elemani']['key']
+        else:
+            self.current.task_data['ogretim_elemani_key'] = \
+                (OgElemaniZamanPlani.objects.filter(birim=self.current.role.unit)[0]).key
+
+    def derslik_kontrol_et(self):
+        self.derslik_sec_kontrol('kontrol', DerslikZamanPlani)
+
+    def sinav_derslik_kontrol_et(self):
+        self.derslik_sec_kontrol('kontrol', DerslikSinavPlani)
+
+    def ogretim_elemani_onay_ekrani(self):
+        if 'red_aciklamasi' in self.current.task_data:
+            del(self.current.task_data['red_aciklamasi'])
+        self.ogretim_elemani_zt()
+        self.output['ogretim_elemani_zt']['readonly'] = True
+        self.form_out(OnayForm())
+
+    def derslik_onay_ekrani(self):
         """
         read only control and approve screen
 
@@ -489,41 +366,40 @@ class DerslikZamanTablosu(CrudView):
             }
         """
 
-
-        self.derslik_zaman_tablosu()
+        if 'red_aciklamasi' in self.current.task_data:
+            del(self.current.task_data['red_aciklamasi'])
+        self.derslik_zt()
         self.output['derslik_zaman_tablosu']['readonly'] = True
+        self.form_out(OnayForm())
 
-        _form = JsonForm()
-        _form.onayla = fields.Button('Onayla', cmd='onay')
-        _form.reddet = fields.Button('Reddet', cmd='reddet')
-        self.form_out(_form)
+    def sinav_derslik_onay_ekrani(self):
+        if 'red_aciklamasi' in self.current.task_data:
+            del(self.current.task_data['red_aciklamasi'])
+        self.sinav_derslik_zt()
+        self.output['derslik_zaman_tablosu']['readonly'] = True
+        self.form_out(OnayForm())
 
     def red_aciklama_yaz(self):
         _form = JsonForm()
-        _form.mesaj = fields.String('Açıklama')
-        _form.gonder = fields.Button('gonder')
+        _form.mesaj = fields.String(_(u'Açıklama'))
+        _form.gonder = fields.Button(_(u'Gönder'))
         self.form_out(_form)
 
-    def geri_gonder(self):
+    def red_aciklamasini_gonder(self):
         self.current.task_data['red_aciklamasi'] = self.current.input['form']['mesaj']
-        msg = {"title": 'Red Açıklaması Gönderildi!',
-               "body": 'İşleminiz başarıyla gerçeklesmistir'}
-        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
-
-        self.current.task_data['LANE_CHANGE_MSG'] = msg
-
-    def onayla(self):
-        msg = {"title": 'Derslik Zaman Tablosunu Onayladınız!',
-               "body": 'Bölüm ders programı koordinatörüne onaylama iletildi.'}
-        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
-
+        msg = {"title": _(u'Red Açıklaması Gönderildi!'),
+               "body": _(u'İşleminiz başarıyla gerçeklesmistir')}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def bilgilendirme(self):
         msg = {"type": "info",
-               "title": 'Talebiniz Onaylandı!',
-               "msg": 'Gönderdiğiniz derslik zaman tablosu Bölüm Başkanı tarafından onaylandı'}
-        # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
+               "title": _(u'Talebiniz Onaylandı!'),
+               "msg": _(u'Gönderdiğiniz zaman tablosu Bölüm Başkanı tarafından onaylandı.')}
 
         self.current.output['msgbox'] = msg
 
+    def onayla(self):
+        msg = {"title": _(u'Zaman Tablosunu Onayladınız!'),
+               "body": _(u'Bölüm ders programı koordinatörüne onaylama iletildi.')}
+
+        self.current.task_data['LANE_CHANGE_MSG'] = msg

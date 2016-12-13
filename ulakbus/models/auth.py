@@ -13,23 +13,27 @@ import hashlib
 
 from pyoko import field
 from pyoko import Model, ListNode
-from passlib.hash import pbkdf2_sha512
 from pyoko import LinkProxy
 from pyoko.conf import settings
 from pyoko.lib.utils import lazy_property
 
 from zengine.auth.permissions import get_all_permissions
 from zengine.dispatch.dispatcher import receiver
+from zengine.lib.decorators import role_getter
 
 from zengine.signals import crud_post_save
 from zengine.lib.cache import Cache
+from zengine.lib.translation import gettext_lazy as _, gettext
 from zengine.messaging.lib import BaseUser
+from zengine.lib import translation
 
 try:
     from zengine.lib.exceptions import PermissionDenied
 except ImportError:
     class PermissionDenied(Exception):
         pass
+
+from pyoko.exceptions import IntegrityError
 
 
 class User(Model, BaseUser):
@@ -40,24 +44,52 @@ class User(Model, BaseUser):
     ait bir ve tek kullanıcı olması zorunludur.
 
     """
-    username = field.String("Username", index=True)
-    password = field.String("Password")
-    avatar = field.File("Profile Photo", random_name=True, required=False)
-    name = field.String("First Name", index=True)
-    surname = field.String("Surname", index=True)
-    superuser = field.Boolean("Super user", default=False)
+    avatar = field.File(_(u"Profil Fotoğrafı"), random_name=True, required=False)
+    username = field.String(_(u"Kullanıcı Adı"), index=True, unique=True)
+    password = field.String(_(u"Parola"))
+    e_mail = field.String(_(u"E-Posta"), index=True, unique=True)
+    name = field.String(_(u"Ad"), index=True)
+    surname = field.String(_(u"Soyad"), index=True)
+    superuser = field.Boolean(_(u"Super user"), default=False)
+    last_login_role_key = field.String(_(u"Son Giriş Yapılan Rol"))
+    locale_language = field.String(
+        _(u"Tercih Edilen Dil Formatı"),
+        index=False,
+        default=settings.DEFAULT_LANG,
+        choices=translation.available_translations.items()
+    )
+    locale_datetime = field.String(_(u"Tercih Edilen Gün ve Zaman Formatı"), index=False,
+                                   default=settings.DEFAULT_LOCALIZATION_FORMAT,
+                                   choices=translation.available_datetimes.items())
+    locale_number = field.String(_(u"Tercih Edilen Sayı Formatı"), index=False,
+                                 default=settings.DEFAULT_LOCALIZATION_FORMAT,
+                                 choices=translation.available_numbers.items())
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Kullanıcı"
-        verbose_name_plural = "Kullanıcılar"
+        verbose_name = _(u"Kullanıcı")
+        verbose_name_plural = _(u"Kullanıcılar")
         search_fields = ['username', 'name', 'surname']
 
     @lazy_property
     def full_name(self):
         return "%s %s" % (self.name, self.surname)
 
+    def last_login_role(self):
+        """
+        Eğer kullanıcı rol geçişi yaparsa, kullanıcının last_login_role_key
+        field'ına geçiş yaptığı rolün keyi yazılır. Kullanıcı çıkış yaptığında
+         ve tekrardan giriş yaptığında son rolü bu field'dan öğrenilir. Eğer
+        kullanıcının last_login_role_key field'ı dolu ise rol bilgisi oradan alınır.
+        Yoksa kullanıcının role_set'inden default rolü alınır.
+
+        """
+        last_key = self.last_login_role_key
+        return Role.objects.get(last_key) if last_key else self.role_set[0].role
+
     def pre_save(self):
+        if not self.username or not self.password:
+            raise IntegrityError
         self.encrypt_password()
 
     def post_creation(self):
@@ -71,6 +103,8 @@ class User(Model, BaseUser):
             return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
                 "%s@gmail.com" % self.username).hexdigest()
 
+    def __unicode__(self):
+        return "%s %s" % (self.name, self.surname)
 
 class Permission(Model):
     """Permission modeli
@@ -78,14 +112,14 @@ class Permission(Model):
     Kullanıcı yetkilerinin tanımlandığı bilgilerin bulunguğu modeldir.
 
     """
-    name = field.String("İsim", index=True)
-    code = field.String("Kod Adı", index=True)
-    description = field.String("Tanım", index=True)
+    name = field.String(_(u"İsim"), index=True)
+    code = field.String(_(u"Kod Adı"), index=True)
+    description = field.String(_(u"Tanım"), index=True)
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Yetki"
-        verbose_name_plural = "Yetkiler"
+        verbose_name = _(u"Yetki")
+        verbose_name_plural = _(u"Yetkiler")
         list_fields = ["name", "code", "description"]
         search_fields = ["name", "code", "description"]
 
@@ -129,14 +163,14 @@ class AbstractRole(Model):
     Soyut Rol modeli yetkilerin gruplandığı temel role modelidir.
 
     """
-    id = field.Integer("ID No", index=True)
-    name = field.String("İsim", index=True)
-    read_only = field.Boolean("Read Only")
+    id = field.Integer(_(u"ID No"), index=True)
+    name = field.String(_(u"İsim"), index=True)
+    read_only = field.Boolean(_(u"Read Only"))
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Soyut Rol"
-        verbose_name_plural = "Soyut Roller"
+        verbose_name = _(u"Soyut Rol")
+        verbose_name_plural = _(u"Soyut Roller")
         search_fields = ['id', 'name']
 
     def __unicode__(self):
@@ -202,48 +236,50 @@ class Unit(Model):
     Akademik ve idari birimlerin özelliklerini taşır.
 
     """
-    name = field.String("İsim", index=True)
-    long_name = field.String("Uzun İsim", index=True)
-    yoksis_no = field.Integer("Yoksis ID", index=True)
-    unit_type = field.String("Birim Tipi", index=True)
-    parent_unit_no = field.Integer("Üst Birim ID", index=True)
-    current_situation = field.String("Guncel Durum", index=True)
-    language = field.String("Öğrenim Dili", index=True)
-    learning_type = field.String("Öğrenme Tipi", index=True)
-    osym_code = field.String("ÖSYM Kodu", index=True)
-    opening_date = field.Date("Açılış Tarihi", index=True)
-    learning_duration = field.Integer("Öğrenme Süresi", index=True)
-    english_name = field.String("İngilizce Birim Adı.", index=True)
-    quota = field.Integer("Birim Kontenjan", index=True)
-    city_code = field.Integer("Şehir Kodu", index=True)
-    district_code = field.Integer("Semt Kodu", index=True)
-    unit_group = field.Integer("Birim Grup", index=True)
-    foet_code = field.Integer("FOET Kodu", index=True)  # yoksis KILAVUZ_KODU mu?
-    is_academic = field.Boolean("Akademik")
-    is_active = field.Boolean("Aktif")
+    name = field.String(_(u"İsim"), index=True)
+    long_name = field.String(_(u"Uzun İsim"), index=True)
+    yoksis_no = field.Integer(_(u"Yoksis ID"), index=True)
+    unit_type = field.String(_(u"Birim Tipi"), index=True)
+    parent_unit_no = field.Integer(_(u"Üst Birim ID"), index=True)
+    current_situation = field.String(_(u"Guncel Durum"), index=True)
+    language = field.String(_(u"Öğrenim Dili"), index=True)
+    learning_type = field.String(_(u"Öğrenme Tipi"), index=True)
+    osym_code = field.String(_(u"ÖSYM Kodu"), index=True)
+    opening_date = field.Date(_(u"Açılış Tarihi"), index=True)
+    learning_duration = field.Integer(_(u"Öğrenme Süresi"), index=True)
+    english_name = field.String(_(u"İngilizce Birim Adı."), index=True)
+    quota = field.Integer(_(u"Birim Kontenjan"), index=True)
+    city_code = field.Integer(_(u"Şehir Kodu"), index=True)
+    district_code = field.Integer(_(u"Semt Kodu"), index=True)
+    unit_group = field.Integer(_(u"Birim Grup"), index=True)
+    foet_code = field.Integer(_(u"FOET Kodu"), index=True)  # yoksis KILAVUZ_KODU mu?
+    is_academic = field.Boolean(_(u"Akademik"))
+    is_active = field.Boolean(_(u"Aktif"))
     uid = field.Integer(index=True)
-    parent = LinkProxy('Unit', verbose_name='Üst Birim', reverse_name='alt_birimler')
+    parent = LinkProxy('Unit', verbose_name=_(u'Üst Birim'), reverse_name='alt_birimler')
+    # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
-    def get_user_keys(cls, unit_key):
-        return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
-        stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
-        for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
-            stack.extend(cls.get_user_keys(unit_key))
-        return stack
+    def get_role_keys(cls, unit_key):
+        """recursively gets all roles (keys) under given unit"""
+        return cls.get_role_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
+        # stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
+        # for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
+        #     stack.extend(cls.get_role_keys(unit_key))
+        # return stack
 
     @classmethod
-    def get_user_keys_by_yoksis(cls, yoksis_no):
+    def get_role_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('user_id', flatten=True)
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('key', flatten=True)
         for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
-            stack.extend(cls.get_user_keys_by_yoksis(yoksis_no))
+            stack.extend(cls.get_role_keys_by_yoksis(yoksis_no))
         return stack
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Unit"
-        verbose_name_plural = "Units"
+        verbose_name = _(u"Unit")
+        verbose_name_plural = _(u"Units")
         search_fields = ['name', 'yoksis_no']
         list_fields = ['name', 'unit_type']
 
@@ -252,9 +288,9 @@ class Unit(Model):
 
 
 ROL_TIPI = [
-    (1, 'Personel'),
-    (2, 'Ogrenci'),
-    (3, 'Harici')
+    (1, _(u'Personel')),
+    (2, _(u'Ogrenci')),
+    (3, _(u'Harici'))
 ]
 
 
@@ -280,15 +316,16 @@ class Role(Model):
     abstract_role = AbstractRole()
     user = User()
     unit = Unit()
-    typ = field.Integer("Rol Tipi", choices=ROL_TIPI)
-    name = field.String("Rol Adı", hidden=True)
+    typ = field.Integer(_(u"Rol Tipi"), choices=ROL_TIPI)
+    name = field.String(_(u"Rol Adı"), hidden=True)
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Rol"
-        verbose_name_plural = "Roller"
+        verbose_name = _(u"Rol")
+        verbose_name_plural = _(u"Roller")
         search_fields = ['name']
         list_fields = []
+        crud_extra_actions = [{'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
 
     @property
     def is_staff(self):
@@ -306,7 +343,7 @@ class Role(Model):
         return self.user
 
     def __unicode__(self):
-        return "Role %s" % self.name or (self.key if self.is_in_db() else '')
+        return gettext(u"Role %s") % self.name or (self.key if self.is_in_db() else '')
 
     class Permissions(ListNode):
         permission = Permission()
@@ -359,6 +396,17 @@ class Role(Model):
         PermissionCache(self.key).delete()
         self.save()
 
+    def remove_permission(self, perm):
+        """
+        Removes a :class:`Permission` from the role
+
+        Args:
+             perm: :class:`Permission` object.
+        """
+        del self.Permissions[perm.key]
+        PermissionCache(self.key).delete()
+        self.save()
+
     def add_permission_by_name(self, code, save=False):
         """
         Role nesnesine Permission eklemek veya eklenebilecek Permission
@@ -407,6 +455,20 @@ class Role(Model):
         self.name = self._make_name()
 
 
+    @classmethod
+    @role_getter("Bölüm Başkanları")
+    def get_bolum_baskanlari(cls):
+        """fake"""
+        return []
+
+    def send_notification(self, title, message, typ=1, url=None, sender=None):
+        """
+        sends a message to user of this role's private mq exchange
+
+        """
+        self.user.send_notification(title=title, message=message, typ=typ, url=url, sender=sender)
+
+
 class LimitedPermissions(Model):
     """LimitedPermissions modeli
     Bu modelde tutulan bilgilerle mevcut yetkilere sınırlandırmalar
@@ -419,14 +481,14 @@ class LimitedPermissions(Model):
     ip'lerden gelen requestlere cevap verecek şekilde kısıtlanır.
 
     """
-    restrictive = field.Boolean("Sınırlandırıcı", default=False)
-    time_start = field.String("Başlama Tarihi", index=True)
-    time_end = field.String("Bitiş Tarihi", index=True)
+    restrictive = field.Boolean(_(u"Sınırlandırıcı"), default=False)
+    time_start = field.String(_(u"Başlama Tarihi"), index=True)
+    time_end = field.String(_(u"Bitiş Tarihi"), index=True)
 
     class Meta:
         app = 'Sistem'
-        verbose_name = "Sınırlandırılmış Yetki"
-        verbose_name_plural = "Sınırlandırılmış Yetkiler"
+        verbose_name = _(u"Sınırlandırılmış Yetki")
+        verbose_name_plural = _(u"Sınırlandırılmış Yetkiler")
 
     def __unicode__(self):
         return "%s - %s" % (self.time_start, self.time_end)
@@ -503,21 +565,16 @@ class AuthBackend(object):
         Args:
             user: User nesnesi
 
-        Returns:
 
         """
-        user = user
         self.session['user_id'] = user.key
         self.session['user_data'] = user.clean_value()
-
-        # TODO: this should be remembered from previous login
-        default_role = user.role_set[0].role
-        # self.session['role_data'] = default_role.clean_value()
-        self.session['role_id'] = default_role.key
-        self.current.role_id = default_role.key
+        role = user.last_login_role()
+        self.session['role_id'] = role.key
+        self.current.role_id = role.key
         self.current.user_id = user.key
-        self.perm_cache = PermissionCache(default_role.key)
-        self.session['permissions'] = default_role.get_permissions()
+        self.perm_cache = PermissionCache(role.key)
+        self.session['permissions'] = role.get_permissions()
 
     def get_role(self):
         """session'da bir role_id varsa bu id'deki Role nesnesini döner.
@@ -529,12 +586,6 @@ class AuthBackend(object):
             PermissionDenied:
 
         """
-        # if 'role_data' in self.session:
-        #     role = Role()
-        #     role.set_data(self.session['role_data'])
-        # if 'role_id' in self.session:
-        #     role.key = self.session['role_id']
-        # return role
         if 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:

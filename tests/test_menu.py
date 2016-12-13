@@ -43,7 +43,7 @@ class TestCase(BaseTestCase):
         usr = User.objects.get(username='personel_isleri_1')
 
         # '/menu' yolunu çağırır, kullanıcıya giriş yaptırılır.
-        self.prepare_client('/menu', user=usr)
+        self.prepare_client('/dashboard', user=usr)
         resp = self.client.post()
 
         # Kullanıcın sahip olduğu izinler.
@@ -77,7 +77,7 @@ class TestCase(BaseTestCase):
                         {'kategori', 'param', 'text', 'url', 'wf', 'model'})
                 except AttributeError:
                     assert value in ['username', 'surname', 'name', 'roles', 'is_staff', 'role',
-                                     'avatar',
+                                     'role_details', 'avatar',
                                      'is_student', 'static_url'], 'The %s is not in the given list ' % value
 
         # Kullanıcının bilgilerini, sunucudan dönen kullanıcı bilgileriyle

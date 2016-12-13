@@ -1,113 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_bEzKEOKPEeS7M8UkBUcISA" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="_Collaboration_3" name="Not Girisi">
-    <bpmn2:participant id="_Participant_2" name="Not Girişi" processRef="okutman_not_girisi" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="okutman_not_girisi" name="Not Girişi" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_3" name="Lane Set 3">
-      <bpmn2:lane id="Lane_1" name="Okutman">
-        <bpmn2:flowNodeRef>ders_secim</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>sinav_sec</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>not_kontrol</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>not_gir</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ServiceTask_2</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kayit_bilgisi_ver</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ServiceTask_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_3</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:userTask id="ders_secim" name="Ders Sec" camunda:assignee="ders.ders.NotGirisi.ders_secim">
-      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_18</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="ders_secim" targetRef="sinav_sec" />
-    <bpmn2:userTask id="sinav_sec" name="Sinav Sec" camunda:assignee="ders.ders.NotGirisi.sinav_sec">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="sinav_sec" targetRef="ServiceTask_2" />
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="StartEvent_1" targetRef="ders_secim" />
-    <bpmn2:userTask id="not_kontrol" name="Kontrol Et" camunda:assignee="ders.ders.NotGirisi.not_kontrol" camunda:class="ders.ders.NotGirisi.not_kontrol">
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_17" name="" sourceRef="not_kontrol" targetRef="ExclusiveGateway_3" />
-    <bpmn2:userTask id="not_gir" name="Not Girisi" camunda:assignee="ders.ders.NotGirisi.not_girisi">
-      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="not_gir" targetRef="not_kontrol" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" default="SequenceFlow_3">
-      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="ExclusiveGateway_2" targetRef="not_gir" />
-    <bpmn2:sequenceFlow id="SequenceFlow_11" name="" sourceRef="ExclusiveGateway_2" targetRef="not_kontrol">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">sinav_degerlendirme==True</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="ServiceTask_2" name="Sinav Kontrol" camunda:class="ders.ders.NotGirisi.sinav_kontrol">
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="ServiceTask_2" targetRef="ExclusiveGateway_2" />
-    <bpmn2:userTask id="kayit_bilgisi_ver" name="Kayıt Bilgisi Ver" camunda:assignee="ders.ders.NotGirisi.kayit_bilgisi_ver">
-      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="kayit_bilgisi_ver" targetRef="EndEvent_1" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_10">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="ExclusiveGateway_1" targetRef="not_gir">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "not_giris_formuna_don"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="ExclusiveGateway_1" targetRef="sinav_sec">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "sinav_adimina_don"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_1" targetRef="ders_secim">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "ders_adimina_don"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_1" targetRef="kayit_bilgisi_ver" />
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:serviceTask id="ServiceTask_1" name="Kaydet" camunda:class="ders.ders.NotGirisi.not_kaydet">
-      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ServiceTask_1" targetRef="ExclusiveGateway_1" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_3" default="SequenceFlow_13">
-      <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_18</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_1" />
-    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="ExclusiveGateway_3" targetRef="sinav_sec">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "sinav_secim_adimina_don"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_3" targetRef="ders_secim">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "ders_secim_adimina_don"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-  </bpmn2:process>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_3" name="Not Girisi">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="init" value="True" />
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:participant id="_Participant_2" name="Not Girişi" processRef="okutman_not_girisi">
+      <bpmn:documentation>Not Girişi İş Akışı</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="programmable" value="True" />
+          <camunda:property name="task_type" value="A" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:participant>
+  </bpmn:collaboration>
+  <bpmn:process id="okutman_not_girisi" name="Not Girişi" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_3" name="Lane Set 3">
+      <bpmn:lane id="Lane_1" name="Okutman">
+        <bpmn:flowNodeRef>ders_secim</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>sinav_sec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>not_kontrol</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>not_gir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kayit_bilgisi_ver</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_3</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="ders_secim" name="Ders Sec" camunda:assignee="ders.ders.NotGirisi.ders_secim">
+      <bpmn:incoming>SequenceFlow_9</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_7</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_18</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="ders_secim" targetRef="sinav_sec" />
+    <bpmn:userTask id="sinav_sec" name="Sinav Sec" camunda:assignee="ders.ders.NotGirisi.sinav_sec">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_15</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="sinav_sec" targetRef="ServiceTask_2" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_9" name="" sourceRef="StartEvent_1" targetRef="ders_secim" />
+    <bpmn:userTask id="not_kontrol" name="Kontrol Et" camunda:assignee="ders.ders.NotGirisi.not_kontrol" camunda:class="ders.ders.NotGirisi.not_kontrol">
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_11</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_17</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_17" name="" sourceRef="not_kontrol" targetRef="ExclusiveGateway_3" />
+    <bpmn:userTask id="not_gir" name="Not Girisi" camunda:assignee="ders.ders.NotGirisi.not_girisi">
+      <bpmn:incoming>SequenceFlow_14</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_5" name="" sourceRef="not_gir" targetRef="not_kontrol" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_2" default="SequenceFlow_3">
+      <bpmn:incoming>SequenceFlow_12</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="ExclusiveGateway_2" targetRef="not_gir" />
+    <bpmn:sequenceFlow id="SequenceFlow_11" name="" sourceRef="ExclusiveGateway_2" targetRef="not_kontrol">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">sinav_degerlendirme==True</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="ServiceTask_2" name="Sinav Kontrol" camunda:class="ders.ders.NotGirisi.sinav_kontrol">
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_12" name="" sourceRef="ServiceTask_2" targetRef="ExclusiveGateway_2" />
+    <bpmn:userTask id="kayit_bilgisi_ver" name="Kayıt Bilgisi Ver" camunda:assignee="ders.ders.NotGirisi.kayit_bilgisi_ver">
+      <bpmn:incoming>SequenceFlow_10</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_6" name="" sourceRef="kayit_bilgisi_ver" targetRef="EndEvent_1" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_10">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_14" name="" sourceRef="ExclusiveGateway_1" targetRef="not_gir">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "not_giris_formuna_don"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="ExclusiveGateway_1" targetRef="sinav_sec">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "sinav_adimina_don"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_1" targetRef="ders_secim">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "ders_adimina_don"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_1" targetRef="kayit_bilgisi_ver" />
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_1" name="Kaydet" camunda:class="ders.ders.NotGirisi.not_kaydet">
+      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ServiceTask_1" targetRef="ExclusiveGateway_1" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_3" default="SequenceFlow_13">
+      <bpmn:incoming>SequenceFlow_17</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_15</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_18</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_13" name="" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_1" />
+    <bpmn:sequenceFlow id="SequenceFlow_15" name="" sourceRef="ExclusiveGateway_3" targetRef="sinav_sec">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "sinav_secim_adimina_don"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_18" name="" sourceRef="ExclusiveGateway_3" targetRef="ders_secim">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "ders_secim_adimina_don"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_5" bpmnElement="_Participant_2" isHorizontal="true">
@@ -311,4 +324,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

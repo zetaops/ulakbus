@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.0.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_0jqtmlj">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="init" value="True" />
+      </camunda:properties>
+    </bpmn:extensionElements>
     <bpmn:participant id="OgrenciSinavProgrami" name="Öğrenci" processRef="ogrenci_sinav_programi_goruntule" />
   </bpmn:collaboration>
   <bpmn:process id="ogrenci_sinav_programi_goruntule" name="Sınav Programı" isExecutable="false">
@@ -10,7 +15,7 @@
       <bpmn:incoming>SequenceFlow_0bro10m</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1m62r5e</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="SinavProgramiKontrol" name="Sınav Programı Kontrol" camunda:class="sinav_programi.ogrenci_sinav_programi_goruntule.Ogrenci_Sinav_Programi_Goruntule.sinav_programi_kontrol">
+    <bpmn:serviceTask id="SinavProgramiKontrol" name="Sınav Programı Kontrol" camunda:class="sinav_programi.sinav_programi_goruntule.SinavProgramiGoruntule.ogrenci_sinav_listesi">
       <bpmn:incoming>SequenceFlow_0mrbb76</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0mmg01b</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -28,11 +33,11 @@
     <bpmn:sequenceFlow id="SequenceFlow_0lmsuy3" sourceRef="ExclusiveGateway_1jaapkz" targetRef="SinavProgramiGoruntule">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">sinav_kontrol == True</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="SinavProgramiUyari" name="Sınav Programı Uyarı" camunda:assignee="sinav_programi.ogrenci_sinav_programi_goruntule.Ogrenci_Sinav_Programi_Goruntule.sinav_programi_uyari">
+    <bpmn:userTask id="SinavProgramiUyari" name="Sınav Programı Uyarı" camunda:assignee="sinav_programi.sinav_programi_goruntule.SinavProgramiGoruntule.sinav_programi_uyari">
       <bpmn:incoming>SequenceFlow_1q2r90l</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1m62r5e</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="SinavProgramiGoruntule" name="Sınav Programı Görüntüle" camunda:assignee="sinav_programi.ogrenci_sinav_programi_goruntule.Ogrenci_Sinav_Programi_Goruntule.sinav_programi_goruntule">
+    <bpmn:userTask id="SinavProgramiGoruntule" name="Sınav Programı Görüntüle" camunda:assignee="sinav_programi.sinav_programi_goruntule.SinavProgramiGoruntule.sinav_programi_goruntule">
       <bpmn:incoming>SequenceFlow_0lmsuy3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0bro10m</bpmn:outgoing>
     </bpmn:userTask>

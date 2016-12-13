@@ -9,27 +9,29 @@ from zengine.forms import JsonForm
 from ulakbus.models import OgrenciProgram, Ogrenci, Role, User, AbstractRole
 from zengine.forms import fields
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _
+from ulakbus.lib.role import AbsRole
+from ulakbus.lib.ogrenci import kaydi_silinmis_abs_role
 
 ABSTRACT_ROLE_LIST = [
-    "Lisans Programı Öğrencisi - Aktif",
-    "Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+    AbsRole.LISANS_OGRENCISI_AKTIF.name,
+    AbsRole.LISANS_OGRENCISI_KAYIT_DONDURMUS.name,
 
-    "Ön Lisans Programı Öğrencisi - Aktif",
-    "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+    AbsRole.ON_LISANS_OGRENCISI_AKTIF.name,
+    AbsRole.ON_LISANS_OGRENCISI_KAYIT_DONDURMUS.name,
 
-    "Yüksek Lisans Programı Öğrencisi - Aktif",
-    "Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş",
+    AbsRole.YUKSEK_LISANS_OGRENCISI_AKTIF.name,
+    AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_DONDURMUS.name,
 
-    "Doktora Programı Öğrencisi - Aktif",
-    "Doktora Programı Öğrencisi - Kayıt Dondurmuş",
-
+    AbsRole.DOKTORA_OGRENCISI_AKTIF.name,
+    AbsRole.DOKTORA_OGRENCISI_KAYIT_DONDURMUS.name
 ]
 
 ABSTRACT_ROLE_LIST_SILINMIS = [
-    "Lisans Programı Öğrencisi - Kayıt Silinmiş",
-    "Ön Lisans Programı Öğrencisi - Kayıt Silinmiş",
-    "Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş",
-    "Doktora Programı Öğrencisi - Kayıt Silinmiş",
+    AbsRole.LISANS_OGRENCISI_KAYIT_SILINMIS.name,
+    AbsRole.ON_LISANS_OGRENCISI_KAYIT_SILINMIS.name,
+    AbsRole.YUKSEK_LISANS_OGRENCISI_KAYIT_SILINMIS.name,
+    AbsRole.DOKTORA_OGRENCISI_KAYIT_SILINMIS.name
 ]
 
 
@@ -104,7 +106,7 @@ class KayitSil(CrudView):
             roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
             for role in roles:
                 self.current.task_data['roles'].append(role.abstract_role.name)
-                name = role.abstract_role.name
+                name = role.abstract_role.key
                 if name not in ABSTRACT_ROLE_LIST_SILINMIS and name in ABSTRACT_ROLE_LIST:
                     self.current.task_data['command'] = 'kayit_silme_islemini_onayla'
                     break
@@ -118,8 +120,8 @@ class KayitSil(CrudView):
 
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         self.current.output['msgbox'] = {
-            'type': 'warning', "title": 'Kayıt Silme Başarılı',
-            "msg": ' %s adlı öğrencinin kaydı daha önceden silinmiştir.' % ogrenci
+            'type': 'warning', "title": _(u'Kayıt Silme Başarılı'),
+            "msg": _(u' %s adlı öğrencinin kaydı daha önceden silinmiştir.') % ogrenci
 
         }
 
@@ -131,10 +133,10 @@ class KayitSil(CrudView):
 
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         _form = JsonForm(current=self.current,
-                         title='Kayıt Silme İşlemini Onaylayınız.')
-        _form.help_text = '%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?' % (
-        ogrenci, '-'.join(
-            name for name in self.current.task_data['roles']))
+                         title=_(u'Kayıt Silme İşlemini Onaylayınız.'))
+        _form.help_text = _(u'%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?') % (
+            ogrenci, '-'.join(
+                name for name in self.current.task_data['roles']))
         _form.kaydet = fields.Button('Onayla', flow='fakulte_yonetim_karari')
         _form.vazgecme = fields.Button('Vazgeç', flow='kayit_silme_isleminden_vazgec')
         self.form_out(_form)
@@ -147,8 +149,8 @@ class KayitSil(CrudView):
         """
 
         self.current.output['msgbox'] = {
-            'type': 'warning', "title": 'Kayıt Silme İşlemi',
-            "msg": 'Kayıt silme işlemi iptal edilmiştir.'
+            'type': 'warning', "title": _(u'Kayıt Silme İşlemi'),
+            "msg": _(u'Kayıt silme işlemi iptal edilmiştir.')
 
         }
 
@@ -160,9 +162,9 @@ class KayitSil(CrudView):
 
         # TODO: Fakülte yönetim kurulunun kararı loglanacak.
         _form = JsonForm(current=self.current,
-                         title='Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.')
-        _form.karar = fields.String('Karar No', index=True)
-        _form.kaydet = fields.Button('Kaydet')
+                         title=_(u'Fakülte Yönetim Kurulunun Karar Numarasını Giriniz.'))
+        _form.karar = fields.String(_(u'Karar No'), index=True)
+        _form.kaydet = fields.Button(_(u'Kaydet'))
         self.form_out(_form)
 
     def ayrilma_nedeni_sec(self):
@@ -171,11 +173,11 @@ class KayitSil(CrudView):
         kullanıcı tarafından seçilir.
 
         """
-
-        _form = JsonForm(current=self.current, title='Öğrencinin Ayrılma Nedenini Seçiniz')
+        self.current.task_data['karar_no'] = self.input['form']['karar']
+        _form = JsonForm(current=self.current, title=_(u'Öğrencinin Ayrılma Nedenini Seçiniz'))
         _form.ayrilma_nedeni = fields.Integer(choices=self.object.get_choices_for('ayrilma_nedeni'))
-        _form.aciklama = fields.Text("Açıklama Yazınız", required=True)
-        _form.sec = fields.Button("Seç")
+        _form.aciklama = fields.Text(_(u"Açıklama Yazınız"), required=True)
+        _form.sec = fields.Button(_(u"Seç"))
         self.form_out(_form)
 
     def ogrenci_program_sec(self):
@@ -193,6 +195,13 @@ class KayitSil(CrudView):
         admine bilgi mesajı yollanır.
 
         """
+        meta = {'user': self.current.user_id,
+                'role': self.current.role_id,
+                'wf_name': self.current.workflow_name,
+                'task_name': self.current.task_name,
+                'reason': 'FAKÜLTE_KARAR_NO_%s' % self.current.task_data['karar_no']}
+
+        index_fields = [('user', 'bin'), ('role', 'bin'), ('wf_name', 'bin'), ('reason', 'bin')]
 
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         programlar = OgrenciProgram.objects.filter(ogrenci_id=self.current.task_data['ogrenci_id'])
@@ -200,42 +209,25 @@ class KayitSil(CrudView):
             program.ayrilma_nedeni = self.current.input['form']['ayrilma_nedeni']
             # todo: elle vermek yerine daha iyi bir yol dusunelim
             program.ogrencilik_statusu = 21
-            program.save()
+            program.save(meta=meta, index_fields=index_fields)
             roles = Role.objects.filter(user=ogrenci.user, unit=program.program.birim)
             for role in roles:
-                if role.abstract_role.name in ABSTRACT_ROLE_LIST:
-                    if role.unit.unit_type == 'Program':
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[0])
-                        role.abstract_role = abstract_role
-                        role.save()
-                    elif role.unit.unit_type == 'Yüksek Lisans Programı':
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[2])
-                        role.abstract_role = abstract_role
-                        role.save()
-                    elif role.unit.unit_type == 'Doktora Programı':
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[3])
-                        role.abstract_role = abstract_role
-                        role.save()
-                    else:
-                        abstract_role = AbstractRole.objects.get(
-                            name=ABSTRACT_ROLE_LIST_SILINMIS[1])
-                        role.abstract_role = abstract_role
-                        role.save()
+                if role.abstract_role.key in ABSTRACT_ROLE_LIST:
+                    abstract_role = kaydi_silinmis_abs_role(role)
+                    role.abstract_role = abstract_role
+                    role.save(meta=meta, index_fields=index_fields)
 
         ogrenci_rolleri = Role.objects.filter(user=ogrenci.user)
         for role in ogrenci_rolleri:
-            if role.abstract_role.name not in ABSTRACT_ROLE_LIST_SILINMIS:
-                title = 'Kayıt Silme'
-                msg = """%s adlı öğrencinin kaydı silinmiştir.
-                         Öğrenci farklı rollere sahiptir.""" % ogrenci
+            if role.abstract_role.key not in ABSTRACT_ROLE_LIST_SILINMIS:
+                title = _(u'Kayıt Silme')
+                msg = _(u"""%s adlı öğrencinin kaydı silinmiştir.
+                            Öğrenci farklı rollere sahiptir.""") % ogrenci
 
                 # TODO: sistem yoneticisine bilgi ver.
-                usr = User.objects.get(username='ulakbus')
-                self.notify(usr, msg=msg, title=title)
-                break
+                abstract_role = AbstractRole.objects.get("BASEABSROLE")
+                role = Role.objects.get(abstract_role=abstract_role)
+                role.send_notification(message=msg, title=title, sender=self.current.user)
 
     def bilgi_ver(self):
         """
@@ -246,21 +238,21 @@ class KayitSil(CrudView):
         ogrenci = Ogrenci.objects.get(self.current.task_data['ogrenci_id'])
         ogrenci_program = OgrenciProgram.objects.filter(ogrenci=ogrenci)
         self.current.output['msgbox'] = {
-            'type': 'warning', "title": 'Kayıt Silme',
-            "msg": 'Öğrencinin kaydı %s nedeniyle silinmiştir.' % self.current.input['form'][
+            'type': 'warning', "title": _(u'Kayıt Silme'),
+            "msg": _(u'Öğrencinin kaydı %s nedeniyle silinmiştir.') % self.current.input['form'][
                 'aciklama']
         }
-        title = 'Kayıt Silme'
-        msg = '%s adlı öğrencinin kaydı %s nedeniyle silinmiştir.' % (
+        title = _(u'Kayıt Silme')
+        msg = _(u'%s adlı öğrencinin kaydı %s nedeniyle silinmiştir.') % (
             ogrenci, self.current.input['form']['aciklama'])
 
         for program in ogrenci_program:
-            self.notify(program.danisman.user, title=title, msg=msg)
+            abstract_role = AbstractRole.objects.get("DANISMAN")
+            for role in program.danisman.user.role_set:
+                if role.role.abstract_role == abstract_role:
+                    role.role.send_notification(title=title, message=msg, sender=self.current.user)
 
-        self.notify(ogrenci.user, title=title, msg=msg)
-
-    @staticmethod
-    def notify(user, msg, title):
-        if user:
-            user.send_notification(message=msg, title=title)
-
+        for role in ogrenci.user.role_set:
+            abstract_role = kaydi_silinmis_abs_role(role.role)
+            if abstract_role.key in ABSTRACT_ROLE_LIST_SILINMIS:
+                role.role.send_notification(title=title, message=msg, sender=self.current.user)

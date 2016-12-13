@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_XuD5UJK7EeW_SI1UTVEYCw" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:collaboration id="_Collaboration_4" name="Ders Ekle">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_4" name="Ders Ekle">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property value="hidden" name="menu_category"/>
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="_Participant_4" name="Ders Ekle" processRef="ders_ekle"/>
-  </bpmn2:collaboration>
-  <bpmn2:process id="ders_ekle" isExecutable="false">
-    <bpmn2:ioSpecification id="InputOutputSpecification_1"/>
-    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
-      <bpmn2:lane id="personel" name="personel">
-        <bpmn2:flowNodeRef>basla</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>program_giris</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>UserTask_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>programsecim</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ders_bilgileri_giris</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>degerlendirme_giris</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>kaydet</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:dataObject id="DataObject_1" name="Data Object 1"/>
-    <bpmn2:dataObject id="DataObject_2" name="Data Object 2"/>
-    <bpmn2:startEvent id="basla">
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="basla" targetRef="program_giris"/>
-    <bpmn2:userTask id="program_giris" camunda:assignee="ders.ders.DersEkle.program_bilgisi" name="Program Giriş">
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_11" name="" sourceRef="program_giris" targetRef="programsecim"/>
-    <bpmn2:serviceTask id="UserTask_1" camunda:assignee="ders.ders.DersEkle.kaydet" camunda:class="ders.ders.DersEkle.kaydet" name="Kaydet">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:serviceTask id="programsecim" camunda:class="ders.ders.DersEkle.program_sec" name="secim kaydet">
-      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="programsecim" targetRef="ders_bilgileri_giris"/>
-    <bpmn2:userTask id="ders_bilgileri_giris" camunda:assignee="ders.ders.DersEkle.ders_bilgileri" name="Ders Bilgileri Gir">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="ders_bilgileri_giris" targetRef="UserTask_1"/>
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:extensionElements>
+    </bpmn:extensionElements>
+    <bpmn:participant id="_Participant_4" name="Ders Ekle" processRef="ders_ekle"/>
+  </bpmn:collaboration>
+  <bpmn:process id="ders_ekle" isExecutable="false">
+    <bpmn:ioSpecification id="InputOutputSpecification_1"/>
+    <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn:lane id="personel" name="personel">
+        <bpmn:flowNodeRef>basla</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>program_giris</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>programsecim</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ders_bilgileri_giris</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>degerlendirme_giris</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kaydet</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:dataObject id="DataObject_1" name="Data Object 1"/>
+    <bpmn:dataObject id="DataObject_2" name="Data Object 2"/>
+    <bpmn:startEvent id="basla">
+      <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_6" name="" sourceRef="basla" targetRef="program_giris"/>
+    <bpmn:userTask id="program_giris" camunda:assignee="ders.ders.DersEkle.program_bilgisi" name="Program Giriş">
+      <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_12</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_11" name="" sourceRef="program_giris" targetRef="programsecim"/>
+    <bpmn:serviceTask id="UserTask_1" camunda:assignee="ders.ders.DersEkle.kaydet" camunda:class="ders.ders.DersEkle.kaydet" name="Kaydet">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="programsecim" camunda:class="ders.ders.DersEkle.program_sec" name="secim kaydet">
+      <bpmn:incoming>SequenceFlow_11</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="programsecim" targetRef="ders_bilgileri_giris"/>
+    <bpmn:userTask id="ders_bilgileri_giris" camunda:assignee="ders.ders.DersEkle.ders_bilgileri" name="Ders Bilgileri Gir">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="ders_bilgileri_giris" targetRef="UserTask_1"/>
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="client_message">
             <camunda:map>
@@ -60,30 +60,30 @@
             </camunda:map>
           </camunda:inputParameter>
         </camunda:inputOutput>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_10">
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="ExclusiveGateway_1" targetRef="program_giris">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "start"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:userTask id="degerlendirme_giris" camunda:assignee="ders.ders.DersEkle.degerlendirme_form" name="Değerlendirme Giriş">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="UserTask_1" targetRef="degerlendirme_giris"/>
-    <bpmn2:serviceTask id="kaydet" camunda:class="ders.ders.DersEkle.save" name="Kaydet">
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="degerlendirme_giris" targetRef="kaydet"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="kaydet" targetRef="ExclusiveGateway_1"/>
-  </bpmn2:process>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_10">
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_10</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_1"/>
+    <bpmn:sequenceFlow id="SequenceFlow_12" name="" sourceRef="ExclusiveGateway_1" targetRef="program_giris">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "start"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="degerlendirme_giris" camunda:assignee="ders.ders.DersEkle.degerlendirme_form" name="Değerlendirme Giriş">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="UserTask_1" targetRef="degerlendirme_giris"/>
+    <bpmn:serviceTask id="kaydet" camunda:class="ders.ders.DersEkle.save" name="Kaydet">
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="degerlendirme_giris" targetRef="kaydet"/>
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="kaydet" targetRef="ExclusiveGateway_1"/>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_4">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_4" bpmnElement="_Participant_4" isHorizontal="true">
@@ -188,4 +188,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

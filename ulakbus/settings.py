@@ -12,7 +12,22 @@ __author__ = 'Evren Esat Ozkan'
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
+# Localization/Internationalization settings defaults
 DEFAULT_LANG = 'tr'
+DEFAULT_LOCALIZATION_FORMAT = 'tr_TR'
+# Available translations
+TRANSLATIONS = ['tr', 'en']
+# Locale options that should be given to the users for formatting of dates, numbers etc.
+LOCALIZATION_FORMATS = ['en_US', 'en_GB', 'tr_TR']
+# The directory containing the translations
+TRANSLATIONS_DIR = os.path.join(BASE_DIR, 'locale')
+# The language of messages in Ulakbus
+TRANSLATION_DOMAINS['messages'] = 'tr'
+
+# Default mail address
+MAIL_ADDRESS = 'postmaster@mg.ulakbus.net'
+# Demo main url
+DEMO_URL = 'http://dev.zetaops.io'
 
 # path of the activity modules which will be invoked by workflow tasks
 ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
@@ -23,10 +38,13 @@ LOG_FILE = os.environ.get('LOG_FILE', './ulakbus.log')
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
 
+WF_INITIAL_VALUES = 'ulakbus.lib.view_helpers.WFValues'
+
 PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
 ROLE_MODEL = 'ulakbus.models.auth.Role'
 UNIT_MODEL = 'ulakbus.models.auth.Unit'
+ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
 
 # # left blank to use StreamHandler aka stderr
 # LOG_HANDLER = os.environ.get('LOG_HANDLER', 'file')
@@ -37,13 +55,17 @@ UNIT_MODEL = 'ulakbus.models.auth.Unit'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # diagrams that does not require logged in user
-ANONYMOUS_WORKFLOWS.extend(['login', 'logout'])
+ANONYMOUS_WORKFLOWS.extend(['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle'])
+
+#: Ortak kullanılan workflowlar
+COMMON_WORKFLOWS.extend(['profil_sayfasi_goruntuleme', 'e_posta_degistir', 'kullanici_adi_degistir',
+                         'parola_degistir'])
 
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
 
 DATE_DEFAULT_FORMAT = "%d.%m.%Y"
-DATETIME_DEFAULT_FORMAT = "%d.%m.%Y %H:%S"
+DATETIME_DEFAULT_FORMAT = "%d.%m.%Y %H:%M:%S"
 
 DEFAULT_WF_CATEGORY_NAME = 'Genel'
 DEFAULT_OBJECT_CATEGORY_NAME = 'Seçime Uygun Görevler'
@@ -67,7 +89,7 @@ OBJECT_MENU = {
         {'name': 'Campus', 'category': 'Genel'},
         {'name': 'Building', 'category': 'Genel'},
         {'name': 'Room', 'category': 'Genel'},
-        {'name': 'AkademikTakvim', 'category': 'Genel'},
+        # {'name': 'AkademikTakvim', 'category': 'Genel'},
         {'name': 'OgrenciProgram', 'category': 'Genel'},
     ],
     'personel': [
@@ -93,6 +115,8 @@ OBJECT_MENU = {
 
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
+        {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme',
+         'field': 'personel_id'},
 
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
@@ -164,16 +188,9 @@ OBJECT_MENU = {
     ],
 }
 
-VIEW_URLS.update({
-    # ('falcon URI template', 'python path to view method/class')
-    'ogrenci_ara': 'ulakbus.views.system.SearchStudent',
-    'personel_ara': 'ulakbus.views.system.SearchPerson',
-    'notify': 'ulakbus.views.system.Notification',
-    'get_current_user': 'ulakbus.views.system.GetCurrentUser',
-    'dashboard': 'ulakbus.views.system.UlakbusMenu',
-    'menu': 'ulakbus.views.system.UlakbusMenu',
-    'ders_arama': 'ulakbus.views.ogrenci.ogrenci.ders_arama'
-})
+AUTO_IMPORT_MODULES.extend([
+    'ulakbus.views.system',
+])
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
@@ -231,14 +248,11 @@ ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabi
 
 SICIL_PREFIX = "KON"
 
-#: These models will not flushed when running tests
-TEST_FLUSHING_EXCLUDES = 'Unit,Permission,User,AbstractRole,Role'
-
 #: User search method of messaging subsystem will work on these fields
 MESSAGING_USER_SEARCH_FIELDS = ['name', 'surname']
 
 #: Unit search method of messaging subsystem will work on these fields
-MESSAGING_UNIT_SEARCH_FIELDS = ['name',]
+MESSAGING_UNIT_SEARCH_FIELDS = ['name', ]
 
 MESSAGES = {
     'lane_change_invite_title': 'Etkinlik gerekiyor!',

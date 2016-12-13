@@ -11,10 +11,11 @@ from ulakbus.models import *
 from ulakbus.views.reports.base import Reporter
 from collections import OrderedDict
 import datetime
+from zengine.lib.translation import gettext_lazy
 
 
 class PersonelByGender(Reporter):
-    TITLE = 'Cinsiyete göre personel sayıları'
+    TITLE = gettext_lazy(u'Cinsiyete göre personel sayıları')
 
     def get_objects(self):
         genders = self.convert_choices(Personel().get_choices_for('cinsiyet'))
@@ -29,7 +30,7 @@ class PersonelByGender(Reporter):
 
 
 class PersonelByAkademikIdari(Reporter):
-    TITLE = 'Akademik / İdari Personel Sayısı'
+    TITLE = gettext_lazy(u'Akademik / İdari Personel Sayısı')
 
     def get_objects(self):
         choices = self.convert_choices(Personel().get_choices_for('personel_turu'))
@@ -44,7 +45,7 @@ class PersonelByAkademikIdari(Reporter):
 
 
 class Kadrolar(Reporter):
-    TITLE = 'Genel Kadro Durumları'
+    TITLE = gettext_lazy(u'Genel Kadro Durumları')
 
     def get_objects(self):
         choices = self.convert_choices(Kadro().get_choices_for('durum'))
@@ -59,7 +60,7 @@ class Kadrolar(Reporter):
 
 
 class TerfisiTikananPersonel(Reporter):
-    TITLE = "Terfisi Tıkanan Personel Listesi"
+    TITLE = gettext_lazy(u"Terfisi Tıkanan Personel Listesi")
 
     def get_objects(self):
         """
@@ -91,8 +92,8 @@ class TerfisiTikananPersonel(Reporter):
             personel_record = OrderedDict({})
             personel_record["TCK No"] = p.tckn
             personel_record["Ad"] = "%s %s" % (p.ad, p.soyad)
-            personel_record["Personel Tür"] = p.personel_turu
-            personel_record["Kadro Derece"] = p.kadro.derece
+            personel_record["Personel Tür"] = str(p.personel_turu)
+            personel_record["Kadro Derece"] = str(p.kadro.derece if p.kadro.derece else 0)
 
             personel_record["Görev Aylığı"] = "%i/%i" % (
                 p.gorev_ayligi_derece, p.gorev_ayligi_kademe)
@@ -109,7 +110,7 @@ class TerfisiTikananPersonel(Reporter):
 
 
 class GorevSuresiBitenPersonel(Reporter):
-    TITLE = "Görev Süresi Dolan Personel Listesi"
+    TITLE = gettext_lazy(u"Görev Süresi Dolan Personel Listesi")
 
     def get_objects(self):
         """ 
