@@ -13,6 +13,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.base import BaseView
 import re
+import base64
 
 try:
     from ulakbus.lib.pdfdocument.document import PDFDocument, register_fonts_from_paths
@@ -129,17 +130,18 @@ class Reporter(BaseView):
         pdf.generate()
         download_url = self.generate_temp_file(
             name=FILENAME_RE.sub('-', self.get_title()),
-            content=f.getvalue(),
-            file_type='application/pdf'
+            content=base64.b64encode(f.getvalue()),
+            file_type='application/pdf',
+            ext='pdf'
         )
         self.set_client_cmd('show')
         self.output['meta'] = {}
         self.output['http_get'] = download_url
 
     @staticmethod
-    def generate_temp_file(name, content, file_type):
+    def generate_temp_file(name, content, file_type, ext):
         f = S3FileManager()
-        key = f.store_file(name=name, content=content, type=file_type)
+        key = f.store_file(name=name, content=content, type=file_type, ext=ext)
         return f.get_url(key)
 
     @staticmethod
