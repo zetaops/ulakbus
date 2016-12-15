@@ -13,10 +13,14 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.base import BaseView
 import re
+
 try:
     from ulakbus.lib.pdfdocument.document import PDFDocument, register_fonts_from_paths
 except:
     print("Warning: Reportlab module not found")
+
+from ulakbus.lib.s3_file_manager import S3FileManager
+
 
 class ReporterRegistry(type):
     registry = {}
@@ -42,10 +46,10 @@ class ReporterRegistry(type):
     @staticmethod
     def get_reporters():
         return [{"text": v.get_title(),
-                "wf": 'generic_reporter',
-                "model": k,
-                "kategori": 'Raporlar',
-                "param": 'id'} for k, v in ReporterRegistry.registry.items()]
+                 "wf": 'generic_reporter',
+                 "model": k,
+                 "kategori": 'Raporlar',
+                 "param": 'id'} for k, v in ReporterRegistry.registry.items()]
 
     @staticmethod
     def get_permissions():
@@ -54,7 +58,6 @@ class ReporterRegistry(type):
     @staticmethod
     def get_reporter(name):
         return ReporterRegistry.registry[name]
-
 
 
 FILENAME_RE = re.compile(r'[^A-Za-z0-9\-\.]+')
@@ -101,14 +104,6 @@ class Reporter(BaseView):
         self.output['forms']['grouping'] = []
         self.output['meta'] = {}
 
-
-    def set_headers(self, as_attachment=True):
-        self.current.response.set_header('Content-Type', 'application/pdf')
-        self.current.response.set_header('Content-Disposition', '%s; filename="%s.pdf"' % (
-            'attachment' if as_attachment else 'inline',
-            FILENAME_RE.sub('-', self.get_title()),
-        ))
-
     def printout(self):
         register_fonts_from_paths('Vera.ttf',
                                   'VeraIt.ttf',
@@ -116,13 +111,11 @@ class Reporter(BaseView):
                                   'VeraBI.ttf',
                                   'Vera')
         objects = self.get_objects()
-        self.set_headers()
         f = BytesIO()
         pdf = PDFDocument(f, font_size=14)
         pdf.init_report()
         pdf.h1(self.tr2ascii(self.get_title()))
 
-        # pdf.story.append(Table(objects))
         ascii_objects = []
         if isinstance(objects[0], dict):
             headers = objects[0].keys()
@@ -133,16 +126,30 @@ class Reporter(BaseView):
             for o in objects:
                 ascii_objects.append((self.tr2ascii(o[0]), self.tr2ascii(o[1])))
         pdf.table(ascii_objects)
-        #     else:
-        #         pdf.table(o)
         pdf.generate()
-        self.current.response.body = f.getvalue()
+        download_url = self.generate_temp_file(
+            name=FILENAME_RE.sub('-', self.get_title()),
+            content=f.getvalue(),
+            file_type='application/pdf'
+        )
+        self.set_client_cmd('show')
+        self.output['meta'] = {}
+        self.output['http_get'] = download_url
 
-    def convert_choices(self, choices_dict_list):
+    @staticmethod
+    def generate_temp_file(name, content, file_type):
+        f = S3FileManager()
+        key = f.store_file(name=name, content=content, type=file_type)
+        return f.get_url(key)
+
+    @staticmethod
+    def convert_choices(choices_dict_list):
         result = []
         for d in choices_dict_list:
-            try: k = int(d[0])
-            except: k = d[0]
+            try:
+                k = int(d[0])
+            except:
+                k = d[0]
             result.append((k, d[1]))
         return dict(result)
 
@@ -159,23 +166,23 @@ class Reporter(BaseView):
     def tr2ascii(self, inp):
         inp = six.text_type(inp)
         shtlst = [
-            ('ğ','g'),
-            ('ı','i'),
-            ('İ','I'),
-            ('ç','c'),
-            ('ö','o'),
-            ('ü','u'),
-            ('ş','s'),
-            ('Ğ','G'),
-            ('Ş','S'),
-            ('Ö','O'),
-            ('Ü','U'),
-            ('Ç','C'),
+            ('ğ', 'g'),
+            ('ı', 'i'),
+            ('İ', 'I'),
+            ('ç', 'c'),
+            ('ö', 'o'),
+            ('ü', 'u'),
+            ('ş', 's'),
+            ('Ğ', 'G'),
+            ('Ş', 'S'),
+            ('Ö', 'O'),
+            ('Ü', 'U'),
+            ('Ç', 'C'),
         ]
-        for t,a in shtlst:
+        for t, a in shtlst:
             inp = inp.replace(t, a)
         return inp
 
 
 def ReportDispatcher(current):
-        ReporterRegistry.get_reporter(current.input['model'])(current)
+    ReporterRegistry.get_reporter(current.input['model'])(current)
