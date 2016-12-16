@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_3rBuAEbdEea0nbfM4rczSw" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="personel_isten_ayrilma_wf" name="Personel İşten Ayrılma">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="personel_isten_ayrilma_wf" name="Personel İşten Ayrılma">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property name="menu_category" value="hidden" />
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="personel_isten_ayrilma_pool" name="Personel İşten Ayrılma" processRef="personel_isten_ayrilma" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="personel_isten_ayrilma" name="Personel İşten Ayrılma" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
-      <bpmn2:lane id="personel_lane" name="Personel">
-        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>personel_id_kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>onayla</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>isten_ayrilma_onay</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_1xn8lup</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>iptal_islemi</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>anasayfa_yonlendirme</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>wf_devir</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>wf_devir_onay</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:serviceTask id="personel_id_kaydet" name="Personel Id Kaydet" camunda:class="personel.isten_ayrilma.IstenAyrilma.personel_id_kaydet">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="personel_id_kaydet" />
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="personel_id_kaydet" targetRef="isten_ayrilma_onay" />
-    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="isten_ayrilma_onay" targetRef="ExclusiveGateway_1xn8lup" />
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="onayla" targetRef="wf_devir" />
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="wf_devir" targetRef="wf_devir_onay" />
-    <bpmn2:serviceTask id="onayla" name="Onayla" camunda:class="personel.isten_ayrilma.IstenAyrilma.onayla">
-      <bpmn2:incoming>SequenceFlow_0qpgloa</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:userTask id="isten_ayrilma_onay" name="İşten Ayrılma Onay" camunda:assignee="personel.isten_ayrilma.IstenAyrilma.onay_form">
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1xn8lup" default="SequenceFlow_0qpgloa">
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_0qpgloa</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_04xpnbl</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_0qpgloa" sourceRef="ExclusiveGateway_1xn8lup" targetRef="onayla" />
-    <bpmn2:sequenceFlow id="SequenceFlow_04xpnbl" sourceRef="ExclusiveGateway_1xn8lup" targetRef="iptal_islemi">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == "geri"]]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_014krbe" sourceRef="iptal_islemi" targetRef="anasayfa_yonlendirme" />
-    <bpmn2:userTask id="iptal_islemi" name="İptal İşlemi" camunda:assignee="personel.isten_ayrilma.IstenAyrilma.iptal_islemi">
-      <bpmn2:incoming>SequenceFlow_04xpnbl</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_014krbe</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:serviceTask id="anasayfa_yonlendirme" name="Anasayfa yonlendirme" camunda:class="personel.isten_ayrilma.IstenAyrilma.anasayfa_yonlendirme">
-      <bpmn2:incoming>SequenceFlow_014krbe</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_1x23y6t</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_1x23y6t" sourceRef="anasayfa_yonlendirme" targetRef="EndEvent_1" />
-    <bpmn2:userTask id="wf_devir" name="Workflow Devir" camunda:assignee="personel.isten_ayrilma.IstenAyrilma.wf_devir">
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:extensionElements>
+    </bpmn:extensionElements>
+    <bpmn:participant id="personel_isten_ayrilma_pool" name="Personel İşten Ayrılma" processRef="personel_isten_ayrilma" />
+  </bpmn:collaboration>
+  <bpmn:process id="personel_isten_ayrilma" name="Personel İşten Ayrılma" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn:lane id="personel_lane" name="Personel">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>personel_id_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>onayla</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>isten_ayrilma_onay</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1xn8lup</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>iptal_islemi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>anasayfa_yonlendirme</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>wf_devir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>wf_devir_onay</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="personel_id_kaydet" name="Personel Id Kaydet" camunda:class="personel.isten_ayrilma.IstenAyrilma.personel_id_kaydet">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="personel_id_kaydet" />
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="personel_id_kaydet" targetRef="isten_ayrilma_onay" />
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="isten_ayrilma_onay" targetRef="ExclusiveGateway_1xn8lup" />
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="onayla" targetRef="wf_devir" />
+    <bpmn:sequenceFlow id="SequenceFlow_6" name="" sourceRef="wf_devir" targetRef="wf_devir_onay" />
+    <bpmn:serviceTask id="onayla" name="Onayla" camunda:class="personel.isten_ayrilma.IstenAyrilma.onayla">
+      <bpmn:incoming>SequenceFlow_0qpgloa</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="isten_ayrilma_onay" name="İşten Ayrılma Onay" camunda:assignee="personel.isten_ayrilma.IstenAyrilma.onay_form">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1xn8lup" default="SequenceFlow_0qpgloa">
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0qpgloa</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_04xpnbl</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0qpgloa" sourceRef="ExclusiveGateway_1xn8lup" targetRef="onayla" />
+    <bpmn:sequenceFlow id="SequenceFlow_04xpnbl" sourceRef="ExclusiveGateway_1xn8lup" targetRef="iptal_islemi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == "geri"]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_014krbe" sourceRef="iptal_islemi" targetRef="anasayfa_yonlendirme" />
+    <bpmn:userTask id="iptal_islemi" name="İptal İşlemi" camunda:assignee="personel.isten_ayrilma.IstenAyrilma.iptal_islemi">
+      <bpmn:incoming>SequenceFlow_04xpnbl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_014krbe</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="anasayfa_yonlendirme" name="Anasayfa yonlendirme" camunda:class="personel.isten_ayrilma.IstenAyrilma.anasayfa_yonlendirme">
+      <bpmn:incoming>SequenceFlow_014krbe</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1x23y6t</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1x23y6t" sourceRef="anasayfa_yonlendirme" targetRef="EndEvent_1" />
+    <bpmn:userTask id="wf_devir" name="Workflow Devir" camunda:assignee="personel.isten_ayrilma.IstenAyrilma.wf_devir">
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="client_message">
             <camunda:map>
@@ -77,16 +77,16 @@
             </camunda:map>
           </camunda:inputParameter>
         </camunda:inputOutput>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_1x23y6t</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_0hc5ibq</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_0hc5ibq" sourceRef="wf_devir_onay" targetRef="EndEvent_1" />
-    <bpmn2:serviceTask id="wf_devir_onay" name="İş Akışlarını İlgili Rollere Ata" camunda:class="personel.isten_ayrilma.IstenAyrilma.wf_devir_onay">
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_0hc5ibq</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-  </bpmn2:process>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1x23y6t</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0hc5ibq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0hc5ibq" sourceRef="wf_devir_onay" targetRef="EndEvent_1" />
+    <bpmn:serviceTask id="wf_devir_onay" name="İş Akışlarını İlgili Rollere Ata" camunda:class="personel.isten_ayrilma.IstenAyrilma.wf_devir_onay">
+      <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0hc5ibq</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="personel_isten_ayrilma_wf">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_13" bpmnElement="personel_isten_ayrilma_pool" isHorizontal="true">
@@ -207,4 +207,4 @@
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>
