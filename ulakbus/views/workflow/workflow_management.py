@@ -101,8 +101,8 @@ class WorkflowManagement(CrudView):
         self.form_out(_form)
 
     def wf_zamanla(self):
-        self.current.task_data['wf_key'] = self.input['form']['workflow']
-        workflow = BPMNWorkflow.objects.get(self.current.task_data['wf_key'])
+        self.current.task_data['wf_name'] = self.input['form']['workflow']
+        workflow = BPMNWorkflow.objects.get(name=self.current.task_data['wf_name'])
         include_fields = 'form_include_%s' % workflow.task_type
         help_text = 'help_text_%s' % workflow.task_type
         _form = FormTask(self.object, current=self.current)
@@ -112,7 +112,7 @@ class WorkflowManagement(CrudView):
         self.form_out(_form)
 
     def bilgi_ekrani(self):
-        wf = BPMNWorkflow.objects.get(self.current.task_data['wf_key'])
+        wf = BPMNWorkflow.objects.get(name=self.current.task_data['wf_name'])
 
         self.set_form_data_to_object()
         self.object.wf = wf
