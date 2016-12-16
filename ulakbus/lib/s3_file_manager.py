@@ -41,7 +41,11 @@ class S3FileManager(object):
             filename = None
         k.key = "%s.%s" % (filename or uuid4().hex, ext)
         k.content_type = typ
-        content = base64.decodestring(content.split('base64,')[1])
+        try:
+            content = base64.decodestring(content.split('base64,')[1])
+        except IndexError:
+            content = base64.decodestring(content)
+
         k.set_contents_from_string(content)
         bucket.set_acl('public-read', k.key)
         return k.key
