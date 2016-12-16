@@ -14,6 +14,7 @@ from zengine.forms import fields
 from zengine.views.base import BaseView
 import re
 import base64
+from datetime import datetime
 
 try:
     from ulakbus.lib.pdfdocument.document import PDFDocument, register_fonts_from_paths
@@ -129,20 +130,25 @@ class Reporter(BaseView):
         pdf.table(ascii_objects)
         pdf.generate()
         download_url = self.generate_temp_file(
-            name=FILENAME_RE.sub('-', self.get_title()),
+            name=self.generate_file_name(),
             content=base64.b64encode(f.getvalue()),
             file_type='application/pdf',
             ext='pdf'
         )
-        self.set_client_cmd('show')
-        self.output['meta'] = {}
-        self.output['http_get'] = download_url
+        self.set_client_cmd('download')
+        self.output['download_url'] = download_url
 
     @staticmethod
     def generate_temp_file(name, content, file_type, ext):
         f = S3FileManager()
         key = f.store_file(name=name, content=content, type=file_type, ext=ext)
         return f.get_url(key)
+
+    def generate_file_name(self):
+        return "{0}-{1}".format(
+            FILENAME_RE.sub('-', self.tr2ascii(self.get_title()).lower()),
+            datetime.now().strftime("%d.%m.%Y-%H.%M.%S")
+        )
 
     @staticmethod
     def convert_choices(choices_dict_list):
