@@ -18,7 +18,6 @@ from ulakbus.models import Personel, Role
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from zengine.models import WFInstance, TaskInvitation
 from ulakbus.lib.view_helpers import prepare_choices_for_model
-import time
 
 
 class IstenAyrilmaOnayForm(JsonForm):
@@ -26,6 +25,7 @@ class IstenAyrilmaOnayForm(JsonForm):
         Personel işten ayrılma işleminin onaylanması ve açıklama girilmesi
         amacıyla JsonForm class dan türetilmiş bir classdır.
     """
+
     class Meta:
         help_text = __(u"Personel İşten ayrılma işlemini onaylıyormusunuz?")
         title = __(u"Personel İşten Ayrılma")
@@ -76,6 +76,7 @@ class IstenAyrilma(CrudView):
         Personel işten ayrılma wf adımlarının metodlarını içeren
         CrudView dan türetilmiş classdır.
     """
+
     class Meta:
         model = "Personel"
 
@@ -118,18 +119,18 @@ class IstenAyrilma(CrudView):
                 silinecek_roller.append(eski_rol)
                 wf_name = yr['wf_name']
                 instances = []
-                for wfi in WFInstance.objects.filter(current_actor=eski_rol, name=wf_name):
 
+                for wfi in WFInstance.objects.filter(current_actor=eski_rol, name=wf_name):
                     wfi.current_actor = yeni_rol
-                    wfi.blocking_save()
+                    wfi.blocking_save(query_dict={'current_actor': yeni_rol})
                     instances.append(wfi.key)
 
-                for ti in TaskInvitation.objects.filter(progress__in=[20, 30],
-                                                        role=eski_rol,
-                                                        wf_name=wf_name,
-                                                        instance_id__in=instances):
-                    ti.role = yeni_rol
-                    ti.blocking_save()
+                for inv in TaskInvitation.objects.filter(progress__in=[20, 30],
+                                                         role=eski_rol,
+                                                         wf_name=wf_name,
+                                                         instance_id__in=instances):
+                    inv.role_id = yeni_rol.key
+                    inv.blocking_save(query_dict={'role_id': yeni_rol.key})
 
         for r in silinecek_roller:
             r.blocking_delete()

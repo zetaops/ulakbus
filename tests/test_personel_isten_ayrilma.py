@@ -4,7 +4,6 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-import time
 
 from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.models import Personel, Role
@@ -40,7 +39,8 @@ class TestCase(BaseTestCase):
         assert task_inv.role == deleted_role
 
         # İşten ayrılacak olan personel seçilir
-        self.client.post(id=personel_id, model="Personel", param="personel_id", wf="personel_isten_ayrilma")
+        self.client.post(id=personel_id, model="Personel", param="personel_id",
+                         wf="personel_isten_ayrilma")
 
         # İşten ayrılma onayı
         aciklama = "İlgili personel işten ayrılmıştır. Onaylanmıştır"
@@ -60,9 +60,6 @@ class TestCase(BaseTestCase):
             'bitir_buton': 1,
 
         })
-
-        time.sleep(3)
-
 
         yeni_role = Role.objects.get('LTTdUyzC62KdGoP770GhTlOZq5p')
 
