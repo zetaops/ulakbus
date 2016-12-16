@@ -49,7 +49,7 @@ class Personel(Model):
     ehliyet = field.String(_(u"Ehliyet"))
     verdigi_dersler = field.String(_(u"Verdiği Dersler"))
     biyografi = field.Text(_(u"Biyografi"))
-    notlar = field.Text(_(u"Notlar"))
+    notlar = field.Text(_(u"Notlar"), required=False)
     engelli_durumu = field.String(_(u"Engellilik"))
     engel_grubu = field.String(_(u"Engel Grubu"))
     engel_derecesi = field.String(_(u"Engel Derecesi"))
