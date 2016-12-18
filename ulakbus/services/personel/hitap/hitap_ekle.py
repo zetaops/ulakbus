@@ -1,13 +1,18 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-"""HITAP Ekle Servisi
+
+from ulakbus.services.ulakbus_service import UlakbusService
+from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
+import os
+import urllib2
+from json import dumps
+
+"""ITAP Ekle Servisi
 
 Hitap ekle (insert) servislerinin kalıtılacağı
 abstract HITAP Ekle servisini içeren modül.
@@ -18,21 +23,11 @@ Attributes:
     H_PASS (str): Hitap kullanıcı şifresi
 
 """
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from zato.server.service import Service
-from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
-import os
-import urllib2
-from json import dumps
-from six import iteritems
-from pyoko.lib.utils import dash_camel
-
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPEkle(Service):
+class HITAPEkle(UlakbusService):
     """
     Hitap Ekleme servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -52,11 +47,6 @@ class HITAPEkle(Service):
         self.service_name = ''
         self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
         super(HITAPEkle, self).__init__()
-
-    @classmethod
-    def get_name(cls):
-        super(HITAPEkle, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
         """

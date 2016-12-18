@@ -31,6 +31,8 @@ class HizmetKursSil(HITAPSil):
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
         """
 
+        self.service_name = 'HizmetKursDelete'
+
         self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
         self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')
         self.service_dict['required_fields'] = ['tckn', 'kayitNo']

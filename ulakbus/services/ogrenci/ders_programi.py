@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from zato.server.service import Service
+# from zato.server.service import Service
 from ulakbus.lib.unitime import ExportCourseTimetable
 from ulakbus.models import User
 import xml.etree.ElementTree as ET
@@ -8,18 +8,13 @@ import os
 from ulakbus.lib.common import ders_programi_doldurma
 import shutil
 import httplib
-from pyoko.lib.utils import dash_camel
+from ulakbus.services.ulakbus_service import UlakbusService
 
 
-class DersProgramiStartSolver(Service):
+class DersProgramiStartSolver(UlakbusService):
     """Ders programı planlamasını arka planda başlatır."""
 
     HAS_CHANNEL = True
-
-    @classmethod
-    def get_name(cls):
-        super(DersProgramiStartSolver, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
         solver_service = DersProgramiExecuteSolver().name
@@ -28,7 +23,7 @@ class DersProgramiStartSolver(Service):
         self.response.payload = {'status': 'ok', 'result': 'Ders planlaması başlatıldı'}
 
 
-class DersProgramiExecuteSolver(Service):
+class DersProgramiExecuteSolver(UlakbusService):
     """Bir bölüm için ders programı hesaplaması yapar.
 
     Bu servisi çalıştırmak için ders programı hesaplanacak olan bölümün
@@ -57,11 +52,6 @@ class DersProgramiExecuteSolver(Service):
     HAS_CHANNEL = False
 
     _SOLVER_DIR = '/opt/zato/solver'
-
-    @classmethod
-    def get_name(cls):
-        super(DersProgramiExecuteSolver, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
         bolum_yoksis_no = int(self.request.payload['bolum'])

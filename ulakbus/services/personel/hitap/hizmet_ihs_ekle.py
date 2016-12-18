@@ -32,6 +32,7 @@ class HizmetIhsEkle(HITAPEkle):
 
         """
 
+        self.service_name = 'HizmetIHSInsert'
         self.service_dict = {
             'fields': {
                 'tckn': self.request.payload.get('tckn', ''),

@@ -33,6 +33,7 @@ class HizmetOkulEkle(HITAPEkle):
 
         """
 
+        self.service_name = 'HizmetOkulInsert'
         self.service_dict = {
             'fields': {
                 'bolum': self.request.payload.get('bolum', ''),

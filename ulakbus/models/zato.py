@@ -9,7 +9,7 @@ from pyoko import Model, field
 from zengine.lib.translation import gettext_lazy as __
 
 
-class UlakbusUploadZatoServiceFile(Model):
+class ZatoServiceFile(Model):
 
     cluster_id = field.Integer(__(u'Zato cluster'))
     service_payload_name = field.String(__(u"Module’s file name"))
@@ -20,7 +20,7 @@ class UlakbusUploadZatoServiceFile(Model):
         return self.service_payload_name
 
 
-class UlakbusZatoChannelService(Model):
+class ZatoServiceChannel(Model):
     cluster_id = field.Integer(__(u'Zato cluster'))
     channel_id = field.Integer(__(u"Channel id"))
     channel_name = field.String(__(u"Channel name"))

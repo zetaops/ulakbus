@@ -5,13 +5,13 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+
 """HITAP Açık Süre Ekle
 
 Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 
 """
-
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
 class HizmetAcikSureEkle(HITAPEkle):
@@ -32,6 +32,7 @@ class HizmetAcikSureEkle(HITAPEkle):
                     tutulmaktadır.
 
         """
+        self.service_name = 'HizmetAcikSureInsert'
 
         self.service_dict = {
             'fields': {

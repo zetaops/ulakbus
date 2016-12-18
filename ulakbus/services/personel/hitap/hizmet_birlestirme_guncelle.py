@@ -31,6 +31,8 @@ class HizmetBirlestirmeGuncelle(HITAPGuncelle):
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
 
+        self.service_name = 'HizmetBirlestirmeUpdate'
+
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

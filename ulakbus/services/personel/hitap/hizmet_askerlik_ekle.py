@@ -31,6 +31,7 @@ class HizmetAskerlikEkle(HITAPEkle):
                     Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
 
+        self.service_name = 'HizmetAskerlikInsert'
         self.service_dict = {
             'fields': {
                 'askerlikNevi': self.request.payload.get('askerlik_nevi', ''),

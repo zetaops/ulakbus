@@ -31,6 +31,7 @@ class HizmetAskerlikGuncelle(HITAPGuncelle):
                     Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
 
+        self.service_name = 'HizmetAskerlikUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

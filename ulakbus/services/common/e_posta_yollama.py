@@ -1,19 +1,13 @@
 #-*- coding: utf-8 -*-
 
 from zato.common import SMTPMessage
-from zato.server.service import Service
 import httplib
-from pyoko.lib.utils import dash_camel
+from ulakbus.services.ulakbus_service import UlakbusService
 
 
-class EPostaYolla(Service):
+class EPostaYolla(UlakbusService):
 
     HAS_CHANNEL = True
-
-    @classmethod
-    def get_name(cls):
-        super(EPostaYolla, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
 

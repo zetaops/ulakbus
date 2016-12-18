@@ -5,12 +5,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from zato.server.service import Service
+from ulakbus.services.ulakbus_service import UlakbusService
 import json
 import uuid
 import httplib
 import os
-from pyoko.lib.utils import dash_camel
 
 """
 UYARI : Lütfen bu kod içerisindeki uzun satırları formatlamayın. Gönderilen xml içersindeki
@@ -29,7 +28,7 @@ if DEBUG:
     logging.getLogger().setLevel(logging.DEBUG)
 
 
-class NVIService(Service):
+class NVIService(UlakbusService):
 
     HAS_CHANNEL = False
 
@@ -38,11 +37,6 @@ class NVIService(Service):
         self.service_xml_body = ""
         self.sso_data = {}
         super(NVIService, self).__init__()
-
-    @classmethod
-    def get_name(cls):
-        super(NVIService, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
         keys = ['nvi_sso_encrypted_data', 'nvi_sso_key_identifier_path',

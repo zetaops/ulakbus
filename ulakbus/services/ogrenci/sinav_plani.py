@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*
-from zato.server.service import Service
 from ulakbus.lib.unitime import ExportExamTimetable
 from ulakbus.lib.common import sinav_etkinlikleri_oku
 from ulakbus.models import User
@@ -8,18 +7,13 @@ import subprocess
 import shutil
 import os
 import httplib
-from pyoko.lib.utils import dash_camel
+from ulakbus.services.ulakbus_service import UlakbusService
 
 
-class SinavPlaniStartExamSolver(Service):
+class SinavPlaniStartExamSolver(UlakbusService):
     """Sınav programı planlamasını arka planda başlatır."""
 
     HAS_CHANNEL = True
-
-    @classmethod
-    def get_name(cls):
-        super(SinavPlaniStartExamSolver, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
         solver_service = SinavPlaniExecuteExamSolver().name
@@ -29,7 +23,7 @@ class SinavPlaniStartExamSolver(Service):
         self.response.payload = {'status': 'ok', 'result': 'Sınav planlaması başlatıldı'}
 
 
-class SinavPlaniExecuteExamSolver(Service):
+class SinavPlaniExecuteExamSolver(UlakbusService):
     """Bir bölüm için sınav planı hesaplaması yapar.
 
     Bu servisi çalıştırmak için sınav planı hesaplanacak olan bölümün
@@ -58,11 +52,6 @@ class SinavPlaniExecuteExamSolver(Service):
     HAS_CHANNEL = False
 
     _SOLVER_DIR = '/opt/zato/solver'
-
-    @classmethod
-    def get_name(cls):
-        super(SinavPlaniExecuteExamSolver, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
         bolum_yoksis_no = int(self.request.payload['bolum'])

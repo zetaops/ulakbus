@@ -31,6 +31,7 @@ class HizmetAcikSureGuncelle(HITAPGuncelle):
                     Filtreden geçecek tarih alanları ve gerekli alanlar listede tutulmaktadır.
         """
 
+        self.service_name = 'HizmetAcikSureUpdate'
         hizmet_acik_sure = HizmetAcikSure.objects.get(key)
         self.service_dict = {
             'fields': {

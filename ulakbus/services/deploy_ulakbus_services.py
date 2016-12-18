@@ -8,7 +8,7 @@
 import time
 
 from zato.server.service import Service
-from ulakbus.models.ulakbus_services import UlakbusUploadZatoServiceFile, UlakbusZatoChannelService
+from ulakbus.models.zato import ZatoServiceChannel, ZatoServiceFile
 
 
 class ServiceManagement(Service):
@@ -18,7 +18,7 @@ class ServiceManagement(Service):
         return "Service Management"
 
     def handle(self):
-        ulakbus_service_files = UlakbusUploadZatoServiceFile.objects.filter(deploy=False)
+        ulakbus_service_files = ZatoServiceFile.objects.filter(deploy=False)
         if ulakbus_service_files:
             for ulakbus_service_file in ulakbus_service_files:
 
@@ -31,7 +31,8 @@ class ServiceManagement(Service):
                 ulakbus_service_file.save()
                 time.sleep(0.3)
 
-        ulakbus_channels = UlakbusZatoChannelService.objects.filter(deploy=False)
+        ulakbus_channels = ZatoServiceChannel.objects.filter(deploy=False)
+
         if ulakbus_channels:
             for ulakbus_channel in ulakbus_channels:
                 resp_service_name = self.invoke('zato.service.get-by-name',

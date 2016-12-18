@@ -35,6 +35,7 @@ class HizmetUnvanGetir(HITAPSorgula):
 
         """
 
+        self.service_name = 'HizmetUnvanSorgula'
         self.bean_name = 'HizmetUnvanServisBean'
         self.service_dict = {
             'fields': {

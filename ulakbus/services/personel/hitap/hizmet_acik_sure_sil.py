@@ -31,6 +31,7 @@ class HizmetAcikSureSil(HITAPSil):
                     Servis tarafında gerekli olan alanlar listede tutulmaktadır.
 
         """
+        self.service_name = 'HizmetAcikSureDelete'
 
         self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
         self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')

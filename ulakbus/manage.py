@@ -193,8 +193,8 @@ class GenerateDersList(Command):
         fake.yeni_ders(program=program, personel=personel, ders_say=length)
 
 
-class GenerateZatoServiceJson(Command):
-    CMD_NAME = 'create_ulakbus_service_object'
+class DeployZatoServices(Command):
+    CMD_NAME = 'deploy_zato_services'
     HELP = "Creates new channels and uploads services to Zato."
     PARAMS = [
         {'name': 'path', 'required': True,
@@ -224,11 +224,20 @@ class GenerateZatoServiceJson(Command):
     def run(self):
         import importlib
         import inspect
-        from zato.server.service import Service
+
+        try:
+            from zato.server.service import Service
+        except ImportError:
+            print "Fake zato kütüphanesini yüklemeniz gerekiyor"
+            raise
 
         path = self.manager.args.path
-        self.get_py_files_path(path)
-        paths = self.py_files_path
+        if os.path.splitext(os.path.basename(path))[1] == '.py':
+            paths = [path]
+        else:
+            self.get_py_files_path(path)
+            paths = self.py_files_path
+
         for p in paths:
             bool_create_service_object = False
             name = os.path.splitext(os.path.basename(p))[0]
@@ -244,27 +253,24 @@ class GenerateZatoServiceJson(Command):
                 obj = getattr(module, obj_name)
                 # Eger obj bir class ise, zato `Service`  inherited ise,
                 #  ve Service in kendisi degilse
-                if inspect.isclass(obj) and issubclass(obj, Service) \
-                        and Service in inspect.getmro(obj) and hasattr(obj, "HAS_CHANNEL"):
-                    if not obj.HAS_CHANNEL and not bool_create_service_object:
+                if inspect.isclass(obj) and issubclass(obj, Service) and hasattr(obj, "HAS_CHANNEL"):
+
+                    if obj.HAS_CHANNEL:
+                        self.create_channel_and_service_object(obj, p)
+
+                    if not bool_create_service_object:
                         self.create_service_file_object(p)
                         bool_create_service_object = True
-                    elif obj.HAS_CHANNEL and not bool_create_service_object:
-                        self.create_channel_and_service_object(obj, p)
-                        self.create_service_file_object(p)
-                        bool_create_service_object = True
-                    elif obj.HAS_CHANNEL and bool_create_service_object:
-                        self.create_channel_and_service_object(obj, p)
 
     def create_channel_and_service_object(self, service, path):
-        from ulakbus.models.ulakbus_services import UlakbusZatoChannelService
-        from pyoko.lib.utils import dash_camel
+        from ulakbus.models.zato import ZatoServiceChannel
+        from pyoko.lib.utils import un_camel
 
-        create_channel = UlakbusZatoChannelService()
+        create_channel = ZatoServiceChannel()
         create_channel.cluster_id = 1
         create_channel.service_name = service.get_name()
         create_channel.channel_name = service.get_name() + "-channel"
-        create_channel.channel_url_path = '/'+'/'.join(path.split('/')[:-1])+'/'+dash_camel(service.__name__)
+        create_channel.channel_url_path = '/'+'/'.join(path.split('/')[:-1])+'/'+un_camel(service.__name__, dash='-')
         create_channel.channel_connection = "channel"
         create_channel.channel_data_format = "json"
         create_channel.channel_is_internal = False
@@ -273,11 +279,11 @@ class GenerateZatoServiceJson(Command):
         create_channel.save()
 
     def create_service_file_object(self, path):
-        from ulakbus.models.ulakbus_services import UlakbusUploadZatoServiceFile
+        from ulakbus.models.zato import ZatoServiceFile
 
         service_payload = self.get_service_payload_data(path)
 
-        upload_service = UlakbusUploadZatoServiceFile()
+        upload_service = ZatoServiceFile()
         upload_service.cluster_id = 1
         upload_service.service_payload_name = service_payload["payload_name"]
         upload_service.service_payload = service_payload["payload"]

@@ -31,6 +31,7 @@ class HizmetCetveliEkle(HITAPEkle):
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
 
+        self.service_name = 'HizmetCetvelInsert'
         self.service_dict = {
             'fields': {
                 'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),

@@ -32,6 +32,7 @@ class HizmetTazminatEkle(HITAPEkle):
                     alanlar listede tutulmaktadır.
 
         """
+        self.service_name = 'HizmetTazminatInsert'
         self.service_dict = {
             'fields': {
                 'gorev': self.request.payload.get('gorev', ''),

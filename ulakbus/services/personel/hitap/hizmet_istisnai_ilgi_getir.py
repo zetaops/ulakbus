@@ -40,6 +40,7 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
 
         """
 
+        self.service_name = 'hizmetIstisnaiIlgiSorgu'
         self.bean_name = 'HizmetIstisnaiIlgiServisBean'
         self.service_dict = {
             'fields': {

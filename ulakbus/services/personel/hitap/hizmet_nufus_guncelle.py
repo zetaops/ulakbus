@@ -33,6 +33,7 @@ class HizmetNufusGuncelle(HITAPGuncelle):
 
         """
 
+        self.service_name = 'HizmetNufusUpdate'
         self.service_dict = {
             'fields': {
                 'ad': self.request.payload.get('ad', ''),

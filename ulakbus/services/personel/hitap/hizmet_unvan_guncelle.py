@@ -33,6 +33,7 @@ class HizmetUnvanGuncelle(HITAPGuncelle):
 
         """
 
+        self.service_name = 'HizmetUnvanUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

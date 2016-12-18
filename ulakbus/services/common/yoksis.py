@@ -5,10 +5,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-
-from zato.server.service import Service
+from ulakbus.services.ulakbus_service import UlakbusService
 from ulakbus import settings
-from pyoko.lib.utils import dash_camel
 
 __author__ = 'Ali Riza Keles'
 
@@ -25,7 +23,7 @@ if DEBUG:
     logging.getLogger('suds.wsdl').setLevel(logging.DEBUG)
 
 
-class YOKSIS(Service):
+class YOKSIS(UlakbusService):
 
     HAS_CHANNEL = False
 
@@ -33,11 +31,6 @@ class YOKSIS(Service):
         super(YOKSIS, self).__init__()
         self.cli = self.connection()
         self.birim = 0
-
-    @classmethod
-    def get_name(cls):
-        super(YOKSIS, cls)
-        return dash_camel(cls.__name__)
 
     @staticmethod
     def connection():

@@ -33,6 +33,7 @@ class HizmetIstisnaiIlgiEkle(HITAPEkle):
 
         """
 
+        self.service_name = 'hizmetIstisnaiIlgiInsert'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),

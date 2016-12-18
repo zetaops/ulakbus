@@ -33,6 +33,7 @@ class HizmetNufusEkle(HITAPEkle):
 
         """
 
+        self.service_name = 'HizmetNufusInsert'
         self.service_dict = {
             'fields': {
                 'ad': self.request.payload.get('ad', ''),

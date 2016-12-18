@@ -36,6 +36,7 @@ class HizmetAcikSureGetir(HITAPSorgula):
 
         """
 
+        self.service_name = 'HizmetAcikSureSorgula'
         self.bean_name = 'HizmetAcikSureServisBean'
         self.service_dict = {
             'fields': {

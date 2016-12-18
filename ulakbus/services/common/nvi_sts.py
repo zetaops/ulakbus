@@ -8,7 +8,7 @@
 
 __author__ = 'Ali Riza Keles'
 
-from zato.server.service import Service
+from ulakbus.services.ulakbus_service import UlakbusService
 import os
 import httplib
 import xml.etree.ElementTree as ET
@@ -18,7 +18,6 @@ import hmac
 import datetime
 import json
 import uuid
-from pyoko.lib.utils import dash_camel
 
 DEBUG = os.environ.get('DEBUG', False)
 if DEBUG:
@@ -29,17 +28,12 @@ if DEBUG:
     logging.getLogger().setLevel(logging.DEBUG)
 
 
-class STSGetToken(Service):
+class STSGetToken(UlakbusService):
     """
     NVI STS SSO Token
     """
 
     HAS_CHANNEL = True
-
-    @classmethod
-    def get_name(cls):
-        super(STSGetToken, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
         # tckn = self.request.payload['tckn']

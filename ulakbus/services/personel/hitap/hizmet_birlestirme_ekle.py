@@ -31,6 +31,7 @@ class HizmetBirlestirmeEkle(HITAPEkle):
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
 
         """
+        self.service_name = 'HizmetBirlestirmeInsert'
 
         self.service_dict = {
             'fields': {

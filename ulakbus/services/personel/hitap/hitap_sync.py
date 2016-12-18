@@ -5,6 +5,15 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from ulakbus.services.ulakbus_service import UlakbusService
+from zato.common import DATA_FORMAT
+import os
+import urllib2
+import socket
+from json import loads, dumps
+from six import iteritems
+from ulakbus.models.personel import Personel
+
 """HITAP Senkronizasyon Servisi
 
 Hitap senkronizasyon servislerinin kalıtılacağı
@@ -38,22 +47,11 @@ Example:
 
 """
 
-from zato.server.service import Service
-from zato.common import DATA_FORMAT
-import os
-import urllib2
-import socket
-from json import loads, dumps
-from six import iteritems
-from ulakbus.models.personel import Personel
-from pyoko.lib.utils import dash_camel
-
-
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPSync(Service):
+class HITAPSync(UlakbusService):
     """
     Hitap Sync servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -72,11 +70,6 @@ class HITAPSync(Service):
         self.sorgula_service = ''
         self.model = None
         super(HITAPSync, self).__init__()
-
-    @classmethod
-    def get_name(cls):
-        super(HITAPSync, cls)
-        return dash_camel(cls.__name__)
 
     def handle(self):
         """

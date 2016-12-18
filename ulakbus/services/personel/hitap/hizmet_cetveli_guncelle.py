@@ -31,6 +31,7 @@ class HizmetCetveliGuncelle(HITAPGuncelle):
                     Filtreden geçecek tarih alanları listede tutulmaktadır.
         """
 
+        self.service_name = 'HizmetCetvelUpdate'
         self.service_dict = {
             'fields': {
                 'kayitNo': self.request.payload.get('kayit_no', ''),
