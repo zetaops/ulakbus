@@ -133,7 +133,8 @@ class GenerateRandomHariciOkutman(Command):
     HELP = 'Generates Random Okutman From Personel Objects'
     PARAMS = [
 
-        {'name': 'length', 'required': True, 'help': 'Amount of random harici okutman', 'default': 1},
+        {'name': 'length', 'required': True,
+         'help': 'Amount of random harici okutman', 'default': 1},
 
     ]
 
@@ -156,7 +157,8 @@ class GenerateRandomOgrenci(Command):
         length = int(self.manager.args.length)
         fake = FakeDataGenerator()
         ogrenci_list = fake.yeni_ogrenci(ogrenci_say=length)
-        print("Toplam %s adet ogrenci oluşturuldu, oluşturulan öğrenci listesi : %s" % (length, ogrenci_list))
+        print("""Toplam %s adet ogrenci oluşturuldu, oluşturulan öğrenci listesi:
+                  %s""" % (length, ogrenci_list))
 
 
 class GenerateProgramList(Command):
@@ -194,8 +196,9 @@ class GenerateDersList(Command):
 
 
 class DeployZatoServices(Command):
-    CMD_NAME = 'deploy_zato_services'
-    HELP = "Creates new channels and uploads services to Zato."
+    CMD_NAME = 'load_zato_services'
+    HELP = """Read --path, discover services and load them into Database
+    as Service Files and Channels."""
     PARAMS = [
         {'name': 'path', 'required': True,
          'help': 'The zato service file or folder to be installed.'},
@@ -214,7 +217,7 @@ class DeployZatoServices(Command):
         """
         from glob import glob
 
-        for g in glob(path+'/*'):
+        for g in glob(path + '/*'):
             file_name_extension = os.path.splitext(os.path.basename(g))[1]
             if file_name_extension == '.py':
                 self.py_files_path.append(g)
@@ -228,7 +231,8 @@ class DeployZatoServices(Command):
         try:
             from zato.server.service import Service
         except ImportError:
-            print "Fake zato kütüphanesini yüklemeniz gerekiyor"
+            print ("""Please install zato fake lib:
+                      pip install git+https://github.com/zetaops/fake_zato.git""")
             raise
 
         path = self.manager.args.path
@@ -253,16 +257,18 @@ class DeployZatoServices(Command):
                 obj = getattr(module, obj_name)
                 # Eger obj bir class ise, zato `Service`  inherited ise,
                 #  ve Service in kendisi degilse
-                if inspect.isclass(obj) and issubclass(obj, Service) and hasattr(obj, "HAS_CHANNEL"):
-
-                    if obj.HAS_CHANNEL:
-                        self.create_channel_and_service_object(obj, p)
+                if inspect.isclass(obj) and issubclass(obj, Service) and hasattr(obj,
+                                                                                 "HAS_CHANNEL"):
 
                     if not bool_create_service_object:
                         self.create_service_file_object(p)
                         bool_create_service_object = True
 
-    def create_channel_and_service_object(self, service, path):
+                    if obj.HAS_CHANNEL:
+                        self.create_channel_and_service_object(obj, p)
+
+    @staticmethod
+    def create_channel_and_service_object(service, path):
         from ulakbus.models.zato import ZatoServiceChannel
         from pyoko.lib.utils import un_camel
 
@@ -270,7 +276,8 @@ class DeployZatoServices(Command):
         create_channel.cluster_id = 1
         create_channel.service_name = service.get_name()
         create_channel.channel_name = service.get_name() + "-channel"
-        create_channel.channel_url_path = '/'+'/'.join(path.split('/')[:-1])+'/'+un_camel(service.__name__, dash='-')
+        create_channel.channel_url_path = '/%s/%s' % ('/'.join(path.split('/')[:-1]),
+                                                      un_camel(service.__name__, dash='-'))
         create_channel.channel_connection = "channel"
         create_channel.channel_data_format = "json"
         create_channel.channel_is_internal = False
@@ -289,7 +296,8 @@ class DeployZatoServices(Command):
         upload_service.service_payload = service_payload["payload"]
         upload_service.save()
 
-    def get_service_payload_data(self, path):
+    @staticmethod
+    def get_service_payload_data(path):
         import base64
 
         with open(path, 'r') as f:

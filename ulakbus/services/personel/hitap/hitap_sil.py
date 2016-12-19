@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.services.ulakbus_service import UlakbusService
-from hitap_helper import HitapHelper
+from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
