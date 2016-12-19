@@ -25,6 +25,7 @@ class HizmetNufusSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Nüfus Bilgisi Senkronizasyon servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

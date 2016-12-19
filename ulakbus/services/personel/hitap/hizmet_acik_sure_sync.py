@@ -22,6 +22,7 @@ class HizmetAcikSureSync(HITAPSync):
     Açık Süre Hizmet Bilgisi Senkronizasyon servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

@@ -4,6 +4,7 @@ git+https://github.com/basho/riak-python-client.git#egg=riak
 git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
 git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 git+https://github.com/zetaops/faker.git#egg=faker
+git+https://github.com/zetaops/fake_zato.git
 beaker
 falcon
 redis

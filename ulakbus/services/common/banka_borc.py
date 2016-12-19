@@ -133,6 +133,8 @@ class BankaBorcGetir(BankaService):
 
     """
 
+    HAS_CHANNEL = True
+
     def __init__(self):
         super(BankaBorcGetir, self).__init__()
 

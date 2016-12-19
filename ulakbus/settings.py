@@ -34,6 +34,8 @@ ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
 # absolute path to the workflow packages
 WORKFLOW_PACKAGES_PATHS.append(os.path.join(BASE_DIR, 'diagrams'))
 
+SERVICE_PACKAGES_PATH = os.path.join(BASE_DIR, 'services')
+
 LOG_FILE = os.environ.get('LOG_FILE', './ulakbus.log')
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'

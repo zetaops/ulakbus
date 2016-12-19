@@ -21,6 +21,7 @@ class HizmetCetveliSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Hizmet Kaydı Bilgisi Senkronizasyon servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

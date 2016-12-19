@@ -23,6 +23,7 @@ class HizmetNufusGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Nüfus Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

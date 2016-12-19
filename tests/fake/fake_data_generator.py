@@ -570,7 +570,7 @@ class FakeDataGenerator:
         return program_list
 
     @staticmethod
-    def yeni_ders(program, personel, donem, ders_say=1, ontanimli_sube=False):
+    def yeni_ders(program, personel, donem=None, ders_say=1, ontanimli_sube=False):
         """
         Rastgele verileri ve parametre olarak verilen veriyi
         kullanarak yeni ders kaydı oluştururup kaydeder.
@@ -607,7 +607,7 @@ class FakeDataGenerator:
             # Güz dönemi ise program dönemleri tek, bahar dönemi ise çift
             d.program_donemi = random.choice([1, 3, 5, 7] if donem.baslangic_tarihi in range(8, 11)
                                              else [2, 4, 6, 8])
-            d.donem = donem
+            d.donem = donem or Donem.guncel_donem()
             d.ders_koordinatoru = personel
             for derslik_turu in random.sample(room_type_list, random.randint(1, len(room_type_list))):
                 d.DerslikTurleri.add(sinif_turu = derslik_turu,ders_saati = random.randint(1,5))

@@ -5,8 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-
-from zato.server.service import Service
+from ulakbus.services.ulakbus_service import UlakbusService
 from ulakbus import settings
 
 __author__ = 'Ali Riza Keles'
@@ -24,7 +23,10 @@ if DEBUG:
     logging.getLogger('suds.wsdl').setLevel(logging.DEBUG)
 
 
-class YOKSIS(Service):
+class YOKSIS(UlakbusService):
+
+    HAS_CHANNEL = False
+
     def __init__(self):
         super(YOKSIS, self).__init__()
         self.cli = self.connection()
@@ -101,6 +103,8 @@ class BirimDetay(YOKSIS):
     YOKSIS Birim Detay Zato Servisi
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         birim_id = self.request.payload['birim_id']
         self.birim = self.cli.service.IDdenBirimAdiGetir(birim_id)
@@ -111,6 +115,8 @@ class BirimAgaci(YOKSIS):
     """
     YOKSIS BirimAgaci Kaydet Servisi
     """
+
+    HAS_CHANNEL = True
 
     def bir(self, conn, root_unit):
         # walk through alt birimler
@@ -139,6 +145,8 @@ class DumpAllUnitsToRiak(BirimAgaci):
     This service runs every night at 03.14 am to sync yoksis data for all universities.
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         if self.request.raw_request:
             root_unit = self.request.raw_request
@@ -152,6 +160,8 @@ class DumpUnitsToUlakbusUnitModel(BirimAgaci):
     """
      Dump All Units To Ulakbus auth.Unit Model by UID.
      """
+
+    HAS_CHANNEL = True
 
     def handle(self):
 

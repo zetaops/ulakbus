@@ -19,6 +19,7 @@ class HizmetIHSGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış IHS Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

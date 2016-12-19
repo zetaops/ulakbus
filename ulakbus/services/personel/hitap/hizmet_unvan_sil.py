@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,8 +11,6 @@ Hitap'da personelin Hizmet Unvan bilgilerinin silinmesi sağlayan class.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
 from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
 
 
@@ -23,6 +19,7 @@ class HizmetUnvanSil(HITAPSil):
     HITAP Silme servisinden kalıtılmış Hizmet Mahkeme Bilgisi Silme servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

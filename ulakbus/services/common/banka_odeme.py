@@ -136,6 +136,8 @@ class BankaBorcOdeme(BankaService):
 
     """
 
+    HAS_CHANNEL = True
+
     def __init__(self):
         super(BankaBorcOdeme, self).__init__()
 
