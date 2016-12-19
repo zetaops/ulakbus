@@ -28,7 +28,7 @@ class TestCase(BaseTestCase):
 
         personel = Personel.objects.get(personel_id)
 
-        deleted_role = personel.user.role_set[0].role
+        deleted_role = personel.user.role_user_set[0].role
 
         assert not deleted_role.deleted
 
@@ -68,7 +68,7 @@ class TestCase(BaseTestCase):
         wf_instance.reload()
         task_inv.reload()
         personel.reload()
-        deleted_role = personel.user.role_set[0].role
+        deleted_role = personel.user.role_user_set[0].role
 
         assert wf_instance.current_actor.key == yeni_role.key
         assert task_inv.role.key == yeni_role.key

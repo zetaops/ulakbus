@@ -58,7 +58,7 @@ class WorkflowAtamaForm(JsonForm):
         """
         user = Personel.objects.get(self.context.task_data["personel_id"]).user
 
-        for rs in user.role_set:
+        for rs in user.role_user_set:
             wf_instances = [ins.key for ins in WFInstance.objects.filter(
                 current_actor=rs.role)]
             queryset = TaskInvitation.objects.filter(progress__in=[20, 30], role=rs.role)

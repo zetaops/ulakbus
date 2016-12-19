@@ -137,7 +137,7 @@ class Permission(Model):
         """
         users = set()
         for ars in self.abstract_role_permissions_permission_set.objects.filter():
-            for r in ars.role_set.objects.filter():
+            for r in ars.role_abstract_role_set.objects.filter():
                 users.add(r.user)
         for r in self.role_permissions_permission_set.objects.filter():
             users.add(r.user)
@@ -151,10 +151,10 @@ class Permission(Model):
             Role list
         """
         roles = set()
-        for ars in self.abstract_role_set.objects.filter():
-            for r in ars.role_set.objects.filter():
+        for ars in self.abstract_role_permissions_permission_set.objects.filter():
+            for r in ars.role_abstract_role_set.objects.filter():
                 roles.add(r)
-        for r in self.role_set.objects.filter():
+        for r in self.role_permissions_permission_set.objects.filter():
             roles.add(r)
         return roles
 
@@ -318,7 +318,7 @@ class Role(Model):
     araya getirilerek kullanıcının yetkileri belirlenir.
 
     """
-    abstract_role = AbstractRole()
+    abstract_role = AbstractRole(reverse_link=True)
     user = User(reverse_link=True)
     unit = Unit()
     typ = field.Integer(_(u"Rol Tipi"), choices=ROL_TIPI)

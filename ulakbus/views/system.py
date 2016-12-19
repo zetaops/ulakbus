@@ -84,7 +84,7 @@ class GetCurrentUser(SysView):
             "name": userObject.name,
             "surname": userObject.surname,
             "username": userObject.username,
-            "roles": [{"role": role.__unicode__()} for role in userObject.role_set]
+            "roles": [{"role": role.__unicode__()} for role in userObject.role_user_set]
         }
         self.output['current_user'] = currentUser
 
