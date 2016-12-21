@@ -60,9 +60,9 @@ class IzinIslemleri(CrudView):
             }
 
             # İzin listeleme ekranına geçiş butonları için form oluşturuldu
-            _form = JsonForm()
-            _form.button = fields.Button("Yeni İzin", cmd="yeni_izin")
-            _form.listele_buton = fields.Button("Kullanılan İzinler", cmd="izin_listele")
+            _form = JsonForm(title="İzin işlemleri")
+            _form.button = fields.Button("Yeni İzin", flow="yeni_izin")
+            _form.listele_buton = fields.Button("Kullanılan İzinler", flow="izin_listele")
             self.form_out(_form)
         else:
             self.current.output["msgbox"] = {

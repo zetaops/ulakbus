@@ -16,6 +16,7 @@ import datetime
 
 __author__ = 'Mithat Raşit Özçıkrıkcı'
 
+
 class TestCase(BaseTestCase):
     """
         İzin wf için BaseTestCase extend edilerek oluşturulmuştur.
@@ -48,7 +49,7 @@ class TestCase(BaseTestCase):
         vekil_personel_id = "YpMvzcYw3msFu79V7BfSzvNjAng"
         vekil_personel = Personel.objects.get(vekil_personel_id)
 
-        self.client.post(cmd="yeni_izin", wf="izin")
+        self.client.post(flow="yeni_izin", wf="izin")
 
         # Test için gerekli querylerde kullanılmak üzere oluşturulan izin başlama ve bitiş tarihleri
         test_baslangic_tarih = datetime.date.today()
@@ -97,7 +98,7 @@ class TestCase(BaseTestCase):
         vekil_personel_id = "YpMvzcYw3msFu79V7BfSzvNjAng"
         vekil_personel = Personel.objects.get(vekil_personel_id)
 
-        self.client.post(cmd="yeni_izin", wf="izin")
+        self.client.post(flow="yeni_izin", wf="izin")
 
         # Test için gerekli querylerde kullanılmak üzere oluşturulan izin başlama ve bitiş tarihleri
         test_baslangic_tarih = datetime.date.today()
