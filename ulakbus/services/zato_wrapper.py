@@ -28,7 +28,7 @@ Example:
 
 """
 
-from ulakbus import settings
+from pyoko.conf import settings
 import requests
 import json
 from .zato_url_paths import service_url_paths
