@@ -32,6 +32,7 @@ from pyoko.conf import settings
 import requests
 import json
 from .zato_url_paths import service_url_paths
+import urlparse
 
 
 class ZatoService(object):
@@ -74,7 +75,7 @@ class ZatoService(object):
 
         """
 
-        return '/'.join([settings.ZATO_SERVER, self.service_uri])
+        return urlparse.urljoin(settings.ZATO_SERVER, self.service_uri)
 
     def zato_request(self):
         """
