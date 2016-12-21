@@ -1,0 +1,14 @@
+{
+    "status": "ok",
+    "result": {
+        "KimlikNoileKisiAdresBilgileri": {
+            "YerlesimYeriAdresi": {
+                "AcikAdres": "Test acik adres",
+                "IlIlceMerkezAdresi": {
+                    "Il": "Izmir",
+                    "Ilce": "Urla"
+                }
+            }
+        }
+    }
+}

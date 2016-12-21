@@ -1,0 +1,42 @@
+{
+    "status": "ok",
+    "result": {
+        "KisiBilgisi": {
+            "TCKimlikNo": "12345678911",
+            "TemelBilgisi": {
+                "Ad": "Ali",
+                "Soyad": "Atabak",
+                "Cinsiyet": {
+                    "Kod": 1
+                },
+                "DogumTarih": {
+                    "Gun": "01",
+                    "Ay": "01",
+                    "Yil": "1992"
+                },
+                "DogumYer": "Urla",
+                "BabaAd": "Ahmet",
+                "AnneAd": "Ayse"
+            },
+            "DurumBilgisi": {
+                "MedeniHal": {
+                    "Kod": 1
+                }
+            },
+            "KayitYeriBilgisi": {
+                "Il": {
+                    "Aciklama": "Izmir"
+                },
+                "Ilce": {
+                    "Aciklama": "Urla"
+                },
+                "Cilt": {
+                    "Aciklama": "Gulbahce",
+                    "Kod": "123456"
+                },
+                "AileSiraNo": "1234",
+                "BireySiraNo": "1234"
+            }
+        }
+    }
+}

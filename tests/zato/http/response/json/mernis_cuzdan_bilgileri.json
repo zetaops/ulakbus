@@ -1,0 +1,21 @@
+{
+    "status": "ok",
+    "result": {
+        "CuzdanBilgisi": {
+            "TCKimlikNo": "12345678911",
+            "SeriNo": "A10123456",
+            "VerildigiIlce": {
+                "b:Aciklama": "Urla"
+            },
+            "CuzdanVerilmeNeden": {
+                "b:Aciklama": "Kayip"
+            },
+            "KayitNo": "123456",
+            "VerilmeTarih": {
+                "b:Gun": "01",
+                "b:Ay": "01",
+                "b:Yil": "2016"
+            }
+        }
+    }
+}
