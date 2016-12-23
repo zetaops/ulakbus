@@ -1,10 +1,13 @@
 #-*- coding: utf-8 -*-
 
 from zato.common import SMTPMessage
-from zato.server.service import Service
 import httplib
+from ulakbus.services.ulakbus_service import UlakbusService
 
-class E_PostaYolla(Service):
+
+class EPostaYolla(UlakbusService):
+
+    HAS_CHANNEL = True
 
     def handle(self):
 

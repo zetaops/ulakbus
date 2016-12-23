@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-09-01 13:35+0300\n"
+"POT-Creation-Date: 2016-12-07 12:17+0300\n"
 "PO-Revision-Date: 2016-09-01 13:35+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: tr\n"
@@ -18,9 +18,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
+#: ../../zengine/zengine/management_commands.py:565
+msgid "Checking migration and solr ..."
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:570
+msgid "{0}Error not connected, open redis and rabbitmq{1}"
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:586
+msgid "{0}Redis is not working{1} "
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:600
+msgid "{0}Riak is working{1}"
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:602
+#: ../../zengine/zengine/management_commands.py:604
+msgid "{0}Riak is not working{1}"
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:620
+msgid "{0}RabbitMQ is working{1}"
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:622
+#: ../../zengine/zengine/management_commands.py:624
+msgid "{0}RabbitMQ is not working!{1}"
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:626
+msgid "{0}RabbitMQ username and password wrong{1}"
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:638
+msgid "{0}File system encoding correct{1}"
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:641
+msgid "{0}File system encoding wrong!!{1}"
+msgstr ""
+
+#: ../../zengine/zengine/management_commands.py:650
+msgid "{0}{1} : {2}{3}"
+msgstr ""
+
 #: ../../zengine/zengine/models/auth.py:24
-#: ../../zengine/zengine/models/auth.py:50
-#: ../../zengine/zengine/models/auth.py:128
+#: ../../zengine/zengine/models/auth.py:59
+#: ../../zengine/zengine/models/auth.py:144
+#: ../../zengine/zengine/models/workflow_manager.py:40
 msgid "Name"
 msgstr "İsim"
 
@@ -36,100 +83,535 @@ msgstr "Birim"
 msgid "Units"
 msgstr "Birimler"
 
-#: ../../zengine/zengine/models/auth.py:51
+#: ../../zengine/zengine/models/auth.py:60
 msgid "Code Name"
 msgstr "Kod Adı"
 
-#: ../../zengine/zengine/models/auth.py:52
+#: ../../zengine/zengine/models/auth.py:61
+#: ../../zengine/zengine/models/workflow_manager.py:140
 msgid "Description"
 msgstr "Açıklama"
 
-#: ../../zengine/zengine/models/auth.py:55
+#: ../../zengine/zengine/models/auth.py:64
 #, python-format
 msgid "Permission %s"
 msgstr "İzin %s"
 
-#: ../../zengine/zengine/models/auth.py:80
+#: ../../zengine/zengine/models/auth.py:89
 msgid "Username"
 msgstr "Kullanıcı Adı"
 
-#: ../../zengine/zengine/models/auth.py:81
+#: ../../zengine/zengine/models/auth.py:90
 msgid "Password"
 msgstr "Şifre"
 
-#: ../../zengine/zengine/models/auth.py:82
+#: ../../zengine/zengine/models/auth.py:91
 msgid "Super user"
 msgstr "Super user"
 
-#: ../../zengine/zengine/models/auth.py:83
+#: ../../zengine/zengine/models/auth.py:92
 msgid "Avatar"
 msgstr "Avatar"
 
-#: ../../zengine/zengine/models/auth.py:84
+#: ../../zengine/zengine/models/auth.py:93
 msgid "Preferred Language"
 msgstr "Tercih Edilen Dil"
 
-#: ../../zengine/zengine/models/auth.py:85
+#: ../../zengine/zengine/models/auth.py:95
 msgid "Preferred Date and Time Format"
 msgstr "Tercih Edilen Tarih ve Zaman Formatı"
 
-#: ../../zengine/zengine/models/auth.py:87
+#: ../../zengine/zengine/models/auth.py:97
 msgid "Preferred Number Format"
 msgstr "Tercih Edilen Sayı Formatı"
 
-#: ../../zengine/zengine/models/auth.py:129
+#: ../../zengine/zengine/models/auth.py:99
+msgid "Last Login Role Key"
+msgstr ""
+
+#: ../../zengine/zengine/models/auth.py:105
+msgid "User"
+msgstr ""
+
+#: ../../zengine/zengine/models/auth.py:106
+msgid "Users"
+msgstr ""
+
+#: ../../zengine/zengine/models/auth.py:145
 msgid "Archived"
 msgstr "Arşivlenmiş"
 
-#: ../../zengine/zengine/models/auth.py:132
+#: ../../zengine/zengine/models/auth.py:148
+#: ../../zengine/zengine/models/workflow_manager.py:249
 msgid "Abstract Role"
 msgstr "Soyut Rol"
 
-#: ../../zengine/zengine/models/auth.py:133
+#: ../../zengine/zengine/models/auth.py:149
 msgid "Abstract Roles"
 msgstr "Soyut Roller"
 
-#: ../../zengine/zengine/models/auth.py:201
+#: ../../zengine/zengine/models/auth.py:220
 msgid "Role"
 msgstr "Rol"
 
-#: ../../zengine/zengine/models/auth.py:202
+#: ../../zengine/zengine/models/auth.py:221
 msgid "Roles"
 msgstr "Roller"
 
-#: ../../zengine/zengine/models/auth.py:203
+#: ../../zengine/zengine/models/auth.py:223
 msgid "Edit Permissions"
 msgstr "İzinleri Düzenle"
+
+#: ../../zengine/zengine/models/workflow_manager.py:39
+msgid "XML content"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:138
+msgid "File name"
+msgstr "Dosya ismi"
+
+#: ../../zengine/zengine/models/workflow_manager.py:139
+msgid "Workflow Title"
+msgstr "İş Akışı Başlığı"
+
+#: ../../zengine/zengine/models/workflow_manager.py:143
+msgid "Object field name"
+msgstr "Nesne adı"
+
+#: ../../zengine/zengine/models/workflow_manager.py:156
+msgid "Lane order"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:157
+msgid "Actor name"
+msgstr "Kullanıcı ismi"
+
+#: ../../zengine/zengine/models/workflow_manager.py:158
+msgid "Actor specific name of WF"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:159
+msgid "Lane relations"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:160
+msgid "Possible owners"
+msgstr "Olası sahipler"
+
+#: ../../zengine/zengine/models/workflow_manager.py:161
+#, fuzzy
+msgid "Permissions"
+msgstr "İzin %s"
+
+#: ../../zengine/zengine/models/workflow_manager.py:193
+msgid "No repeat"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:194
+msgid "Hourly"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:195
+msgid "Daily"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:196
+msgid "Weekly"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:197
+msgid "Monthly"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:198
+msgid "Yearly"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:202
+msgid "None"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:203
+msgid "15 day before, once in 3 days"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:204
+msgid "1 week before, daily"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:205
+msgid "Day before start time"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:209
+msgid "Selected unit"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:210
+msgid "Selected unit and all sub-units of it"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:246
+msgid "Create tasks now!"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:248
+msgid "Name of task"
+msgstr "Görev İsmi"
+
+#: ../../zengine/zengine/models/workflow_manager.py:252
+msgid "Get roles from"
+msgstr "Rolleri getir"
+
+#: ../../zengine/zengine/models/workflow_manager.py:253
+msgid "Role query dict"
+msgstr "Role arama sorgusu"
+
+#: ../../zengine/zengine/models/workflow_manager.py:254
+msgid "Object query dict"
+msgstr "Nesne arama sorgusu"
+
+#: ../../zengine/zengine/models/workflow_manager.py:255
+#: ../../zengine/zengine/models/workflow_manager.py:558
+#: ../../zengine/zengine/models/workflow_manager.py:560
+msgid "Subject ID"
+msgstr "Konu ID"
+
+#: ../../zengine/zengine/models/workflow_manager.py:256
+#: ../../zengine/zengine/models/workflow_manager.py:561
+msgid "Object type"
+msgstr "Nesne tipi"
+
+#: ../../zengine/zengine/models/workflow_manager.py:257
+#: ../../zengine/zengine/models/workflow_manager.py:566
+#: ../../zengine/zengine/models/workflow_manager.py:629
+msgid "Start time"
+msgstr "Başlangıç zamanı"
+
+#: ../../zengine/zengine/models/workflow_manager.py:258
+#: ../../zengine/zengine/models/workflow_manager.py:567
+#: ../../zengine/zengine/models/workflow_manager.py:630
+msgid "Finish time"
+msgstr "Bitiş zamanı"
+
+#: ../../zengine/zengine/models/workflow_manager.py:259
+msgid "Repeating period"
+msgstr "Tekrarlama"
+
+#: ../../zengine/zengine/models/workflow_manager.py:260
+msgid "Notification density"
+msgstr "Bildirim sıklığı"
+
+#: ../../zengine/zengine/models/workflow_manager.py:262
+msgid "Get roles from all sub-units"
+msgstr "Tüm alt birimlerden rolleri getir"
+
+#: ../../zengine/zengine/models/workflow_manager.py:557
+#: ../../zengine/zengine/models/workflow_manager.py:626
+msgid "WF Name"
+msgstr "İş Akışı İsmi"
+
+#: ../../zengine/zengine/models/workflow_manager.py:559
+msgid "Current Actor"
+msgstr "Şu anki kullanıcı"
+
+#: ../../zengine/zengine/models/workflow_manager.py:562
+msgid "Last activation"
+msgstr "Son aktivasyon"
+
+#: ../../zengine/zengine/models/workflow_manager.py:568
+msgid "Last executed WF Step"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:569
+msgid "Task Data"
+msgstr "Görev Verisi"
+
+#: ../../zengine/zengine/models/workflow_manager.py:570
+msgid "Pool Data"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:603
+msgid "Unclaimed"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:604
+msgid "Claimed"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:605
+msgid "Assigned"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:606
+msgid "Transferred"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:609
+msgid "Future"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:610
+msgid "Waiting"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:611
+msgid "In Progress"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:612
+#, fuzzy
+msgid "Finished"
+msgstr "Bitiş zamanı"
+
+#: ../../zengine/zengine/models/workflow_manager.py:613
+msgid "Expired"
+msgstr ""
+
+#: ../../zengine/zengine/models/workflow_manager.py:627
+msgid "Task Name"
+msgstr "Görev İsmi"
+
+#: ../../zengine/zengine/models/workflow_manager.py:628
+msgid "Combined full-text search data"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:30
+#: ../../zengine/zengine/views/channel_management.py:40
+msgid "Choice"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:31
+#, fuzzy
+msgid "Subscriber Name"
+msgstr "Kullanıcı Adı"
+
+#: ../../zengine/zengine/views/channel_management.py:41
+msgid "Channel Name"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:42
+msgid "Channel Owner"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:46
+msgid ""
+"Please choose channel or channels you want to do operation.\n"
+"You should choose at least one channel for merging operation and\n"
+"you should choose just one channel to split."
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:69
+#, fuzzy
+msgid "Successful Operation"
+msgstr "Başarısız"
+
+#: ../../zengine/zengine/views/channel_management.py:76
+msgid "Public Channel List"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:82
+msgid "Merge At New Channel"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:83
+msgid "Merge With An Existing Channel"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:85
+msgid "Split Channel"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:109
+msgid "Specify Features of New Channel to Create"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:110
+msgid "Create"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:135
+msgid "Choose a Channel Which Will Be Merged With Chosen Channels"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:143
+msgid "Choose"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:152
+msgid "You should choose just one channel to do operation."
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:170
+msgid "Choose Subscribers to Migrate"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:176
+msgid "Move to a New Channel"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:177
+msgid "Move to an Existing Channel"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:217
+#, python-format
+msgid "Chosen channels(%s) have been merged to '%s' channel successfully."
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:238
+#, python-format
+msgid ""
+"Chosen subscribers and messages of them migrated from '%s' channel to "
+"'%s' channel successfully."
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:257
+msgid "Incorrect Operation"
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:306
+msgid ""
+"You should choose at least two channel to merge operation at a new "
+"channel."
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:309
+msgid ""
+"You should choose at least one channel to merge operation with existing "
+"channel."
+msgstr ""
+
+#: ../../zengine/zengine/views/channel_management.py:312
+msgid "You should choose one channel for split operation."
+msgstr ""
 
 #: ../../zengine/zengine/views/crud.py:37
 msgid "Add"
 msgstr "Ekle"
 
 #: ../../zengine/zengine/views/crud.py:47
-#: ../../zengine/zengine/views/crud.py:256
+#: ../../zengine/zengine/views/crud.py:255
 msgid "Save"
 msgstr "Kaydet"
 
 #: ../../zengine/zengine/views/crud.py:48
-#: ../../zengine/zengine/views/crud.py:257
+#: ../../zengine/zengine/views/crud.py:256
 msgid "Save and List"
 msgstr "Kaydet ve Listele"
 
 #: ../../zengine/zengine/views/crud.py:49
-#: ../../zengine/zengine/views/crud.py:259
+#: ../../zengine/zengine/views/crud.py:258
 msgid "Save as New"
 msgstr "Yeni Olarak Kaydet"
 
 #: ../../zengine/zengine/views/crud.py:51
-#: ../../zengine/zengine/views/crud.py:261
+#: ../../zengine/zengine/views/crud.py:260
 msgid "Save as New and List"
 msgstr "Yeni Olarak Kaydet ve Listele"
 
-#: ../../zengine/zengine/views/crud.py:246
+#: ../../zengine/zengine/views/crud.py:245
 msgid "Delete"
 msgstr "Sil"
 
-#: ../../zengine/zengine/views/crud.py:247
+#: ../../zengine/zengine/views/crud.py:246
 msgid "Edit"
 msgstr "Düzenle"
+
+#: ../../zengine/zengine/views/role_switching.py:26
+msgid "Switch Role"
+msgstr ""
+
+#: ../../zengine/zengine/views/role_switching.py:30
+msgid "Please, choose the role you want to switch:"
+msgstr ""
+
+#: ../../zengine/zengine/views/role_switching.py:33
+msgid "Switch"
+msgstr ""
+
+#: ../../zengine/zengine/views/system.py:95
+msgid "Assign Someone Else"
+msgstr "Başkasına Ata"
+
+#: ../../zengine/zengine/views/system.py:96
+msgid "Suspend"
+msgstr "Askıya Al"
+
+#: ../../zengine/zengine/views/system.py:97
+msgid "Postpone"
+msgstr "Ertele"
+
+#: ../../zengine/zengine/views/system.py:99
+msgid "Assign Yourself"
+msgstr "Üzerime Al"
+
+#: ../../zengine/zengine/views/task_manager_actions.py:54
+#: ../../zengine/zengine/views/task_manager_actions.py:106
+#: ../../zengine/zengine/views/task_manager_actions.py:156
+#: ../../zengine/zengine/views/task_manager_actions.py:194
+msgid "Successful"
+msgstr "Başarılı"
+
+#: ../../zengine/zengine/views/task_manager_actions.py:55
+msgid "You have successfully assigned the job to yourself."
+msgstr "İşi kendinize başarıyla atadınız."
+
+#: ../../zengine/zengine/views/task_manager_actions.py:57
+#: ../../zengine/zengine/views/task_manager_actions.py:88
+#: ../../zengine/zengine/views/task_manager_actions.py:109
+#: ../../zengine/zengine/views/task_manager_actions.py:159
+#: ../../zengine/zengine/views/task_manager_actions.py:197
+msgid "Unsuccessful"
+msgstr "Başarısız"
+
+#: ../../zengine/zengine/views/task_manager_actions.py:58
+msgid "Unfortunately, this job is already taken by someone else."
+msgstr "Ne yazık ki, bu iş başkası tarafından zaten alınmış durumda."
+
+#: ../../zengine/zengine/views/task_manager_actions.py:82
+msgid "Assign to workflow"
+msgstr "İş Akışını Ata"
+
+#: ../../zengine/zengine/views/task_manager_actions.py:83
+msgid "Chose Role"
+msgstr "Rol Seç"
+
+#: ../../zengine/zengine/views/task_manager_actions.py:84
+msgid "Explain Text"
+msgstr "Açıklama"
+
+#: ../../zengine/zengine/views/task_manager_actions.py:85
+msgid "Send"
+msgstr "Gönder"
+
+#: ../../zengine/zengine/views/task_manager_actions.py:89
+msgid "Assign role not found"
+msgstr "Atanacak rol bulunamadı"
+
+#: ../../zengine/zengine/views/task_manager_actions.py:107
+msgid "The workflow was assigned to someone else with success."
+msgstr "İş akışı başarıyla başkasına atandı."
+
+#: ../../zengine/zengine/views/task_manager_actions.py:110
+msgid ""
+"This workflow does not belong to you, you cannot assign it to someone "
+"else."
+msgstr "Bu iş akışı size ait değil, başkasına atayamazsınız."
+
+#: ../../zengine/zengine/views/task_manager_actions.py:157
+msgid "You've extended the workflow time."
+msgstr "İş akışının zamanı değişti."
+
+#: ../../zengine/zengine/views/task_manager_actions.py:160
+msgid "This workflow does not belong to you."
+msgstr "Bu iş akışı size ait değil."
+
+#: ../../zengine/zengine/views/task_manager_actions.py:195
+msgid "You left the workflow."
+msgstr "İş akışından ayrıldın."
+
+#: ../../zengine/zengine/views/task_manager_actions.py:198
+msgid "Unfortunately, this workflow does not belong to you or is already idle."
+msgstr "Ne yazık ki, bu iş akışı size ait değil veya zaten boşta."
 

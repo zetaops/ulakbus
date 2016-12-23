@@ -1,11 +1,11 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+
+from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 """HITAP Açık Süre Ekle
 
@@ -13,16 +13,13 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-
 
 class HizmetAcikSureEkle(HITAPEkle):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Ekleme servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

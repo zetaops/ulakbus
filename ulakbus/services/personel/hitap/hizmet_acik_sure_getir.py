@@ -21,6 +21,7 @@ class HizmetAcikSureGetir(HITAPSorgula):
     Açık Süre Hizmet Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

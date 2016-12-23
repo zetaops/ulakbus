@@ -34,9 +34,13 @@ ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
 # absolute path to the workflow packages
 WORKFLOW_PACKAGES_PATHS.append(os.path.join(BASE_DIR, 'diagrams'))
 
+SERVICE_PACKAGES_PATH = os.path.join(BASE_DIR, 'services')
+
 LOG_FILE = os.environ.get('LOG_FILE', './ulakbus.log')
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
+
+WF_INITIAL_VALUES = 'ulakbus.lib.view_helpers.WFValues'
 
 PERMISSION_MODEL = 'ulakbus.models.auth.Permission'
 USER_MODEL = 'ulakbus.models.auth.User'
@@ -53,7 +57,11 @@ ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # diagrams that does not require logged in user
-ANONYMOUS_WORKFLOWS.extend(['login', 'logout'])
+ANONYMOUS_WORKFLOWS.extend(['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle'])
+
+#: Ortak kullanılan workflowlar
+COMMON_WORKFLOWS.extend(['profil_sayfasi_goruntuleme', 'e_posta_degistir', 'kullanici_adi_degistir',
+                         'parola_degistir'])
 
 # #PYOKO SETTINGS
 DEFAULT_BUCKET_TYPE = os.environ.get('DEFAULT_BUCKET_TYPE', 'models')
@@ -109,7 +117,12 @@ OBJECT_MENU = {
 
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
-        {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme', 'field': 'personel_id'},
+
+        {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme',
+         'field': 'personel_id'},
+
+        {'name': 'Personel', 'verbose_name': 'Personel İşten Ayrılma', 'field': 'personel_id',
+         'wf': 'personel_isten_ayrilma'},
 
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
@@ -238,12 +251,11 @@ ERROR_MESSAGE_500 = "DEMO Sisteminde güncelleme nedeniyle kesinti ve hata olabi
 
 SICIL_PREFIX = "KON"
 
-
 #: User search method of messaging subsystem will work on these fields
 MESSAGING_USER_SEARCH_FIELDS = ['name', 'surname']
 
 #: Unit search method of messaging subsystem will work on these fields
-MESSAGING_UNIT_SEARCH_FIELDS = ['name',]
+MESSAGING_UNIT_SEARCH_FIELDS = ['name', ]
 
 MESSAGES = {
     'lane_change_invite_title': 'Etkinlik gerekiyor!',

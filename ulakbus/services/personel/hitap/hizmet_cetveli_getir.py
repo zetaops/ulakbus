@@ -20,6 +20,7 @@ class HizmetCetveliGetir(HITAPSorgula):
     Hizmet Kaydı Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

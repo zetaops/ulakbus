@@ -21,6 +21,7 @@ class HizmetKursSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Kurs Bilgisi Senkronizasyon servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

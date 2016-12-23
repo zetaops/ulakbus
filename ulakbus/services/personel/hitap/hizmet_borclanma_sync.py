@@ -21,6 +21,7 @@ class HizmetBorclanmaSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Borçlanma Bilgisi Senkronizasyon servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

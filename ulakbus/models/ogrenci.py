@@ -15,6 +15,7 @@ import six
 from pyoko import Model, field, ListNode, LinkProxy
 from pyoko.exceptions import ObjectDoesNotExist
 from pyoko.lib.utils import lazy_property
+from ulakbus.lib.cache import GuncelDonem
 from ulakbus.lib.ogrenci import HarfNotu
 from zengine.lib.translation import gettext_lazy as _, gettext, format_date
 from .auth import Role, User
@@ -56,16 +57,46 @@ class Donem(Model):
     guncel = field.Boolean(index=True)
     ogretim_yili = OgretimYili(_(u"Öğretim Yılı"), index=True)
 
+    def donem_fields_to_dict(self):
+        """
+        Güncel dönem nesnesinin fieldlarını dict haline döndüren method.
+
+        Args:
+            guncel_donem: (object) güncel dönem objesi
+
+        Returns:
+            donem_fields(dict): güncel dönemin fieldlarının dict hali.
+
+        """
+        return {
+            'ad': self.ad,
+            'baslangic_tarihi': self.baslangic_tarihi.strftime("%d.%m.%Y"),
+            'bitis_tarihi': self.bitis_tarihi.strftime("%d.%m.%Y"),
+            'guncel': self.guncel,
+            'ogretim_yili_id': self.ogretim_yili.key,
+            'key': self.key
+        }
+
     @classmethod
-    def guncel_donem(cls):
-        return cls.objects.get(guncel=True)
+    def guncel_donem(cls, current=None):
+
+        if current:
+            return Donem(**current.task_data['wf_initial_values']['guncel_donem'])
+        else:
+            return Donem(**GuncelDonem().get_or_set())
 
     def pre_save(self):
+
+        if not self.bitis_tarihi > self.baslangic_tarihi:
+            raise Exception("Bitiş tarihi başlangıç tarihinden büyük olmalıdır.")
+        if self.onceki_donem() and not self.baslangic_tarihi >= self.onceki_donem().bitis_tarihi:
+            raise Exception("Başlangıç tarihi önceki dönemin bitiş tarihinden büyük olmalıdır.")
         if self.guncel:
             try:
-                old = self.guncel_donem()
+                old = Donem.objects.get(guncel=True)
                 old.guncel = False
                 old.save()
+                GuncelDonem().delete()
             except ObjectDoesNotExist:
                 pass
 
@@ -341,7 +372,8 @@ class Okutman(Model):
         return [s for s in Sube.objects.filter(okutman=self, donem=donem)]
 
     def donemdeki_gorev_yeri(self, donem):
-        gorev_birimi_dct = {gorev_birimi.donem.key: gorev_birimi.yoksis_no for gorev_birimi in self.GorevBirimi}
+        gorev_birimi_dct = {gorev_birimi.donem.key: gorev_birimi.yoksis_no for gorev_birimi in
+                            self.GorevBirimi}
         if donem.key in gorev_birimi_dct:
             return gorev_birimi_dct[donem.key]
 
@@ -502,7 +534,6 @@ class Sube(Model):
     ders_adi = field.String(_(u"Ders Adi"), index=True)
 
     class NotDonusumTablosu(ListNode):
-
         """Not Donusum Tablosu
 
         Bu tablo, settings seklinde universite geneli icin tanimlanmistir.
@@ -582,6 +613,7 @@ class Sinav(Model):
     # arama amacli
     ders = Ders()
     puan = field.Integer(_(u"Puan"), index=True)
+    okutman = Okutman()
 
     class Meta:
         app = 'Ogrenci'
@@ -589,6 +621,10 @@ class Sinav(Model):
         verbose_name_plural = _(u"Sınavlar")
         list_fields = ['tarih', 'yapilacagi_yer']
         search_fields = ['aciklama', 'tarih']
+
+    def pre_save(self):
+        if not self.okutman:
+            self.okutman = self.sube.okutman
 
     def __unicode__(self):
         return '%s %s' % (self.get_tur_display(), self.sube)
@@ -1196,7 +1232,8 @@ class Takvim(Model):
         list_filters = ["etkinlik", "baslangic", "bitis", 'resmi_tatil']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
+        return '%s %s %s' % (
+            self.akademik_takvim.birim, self.akademik_takvim.ogretim_yili, self.etkinlik)
 
 
 class DonemDanisman(Model):

@@ -19,6 +19,7 @@ class HizmetTazminatGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Tazminat Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_TZMSkOYEEeWL97xP2c-lYg" targetNamespace="http://activiti.org/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="_Collaboration_2" name="ogrenci_mezuniyet">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_2">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property name="menu_category" value="hidden" />
+        <camunda:property name="init" value="True" />
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="ogrenci_mezuniyet" name="Öğrenci Mezuniyet" processRef="ogrenci_mezuniyet" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="ogrenci_mezuniyet" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
-      <bpmn2:lane id="personel_lane" name="Personel">
-        <bpmn2:flowNodeRef>ogrenci_secim</bpmn2:flowNodeRef>
-        <bpmn2:childLaneSet xsi:type="bpmn2:tLaneSet">
-          <bpmn2:lane id="Lane_01q3y2v" />
-        </bpmn2:childLaneSet>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="StartEvent_1" targetRef="ogrenci_secim" />
-    <bpmn2:userTask id="ogrenci_secim" name="Program Seç" camunda:assignee="ogrenci.ogrenci.OgrenciMezuniyet.program_sec">
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ogrenci_secim" targetRef="mezuniyet_kaydet" />
-    <bpmn2:sequenceFlow id="SequenceFlow_11" name="" sourceRef="mezuniyet_kaydet" targetRef="EndEvent_1" />
-    <bpmn2:serviceTask id="mezuniyet_kaydet" name="Kaydet ve Mezun Durumuna Geçir" camunda:class="ogrenci.ogrenci.OgrenciMezuniyet.mezuniyet_kaydet">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
-    </bpmn2:endEvent>
-  </bpmn2:process>
+    </bpmn:extensionElements>
+    <bpmn:participant id="OgrenciMezuniyet" name="Öğrenci Mezuniyet" processRef="ogrenci_mezuniyet" />
+  </bpmn:collaboration>
+  <bpmn:process id="ogrenci_mezuniyet" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn:lane id="personel_lane" name="Personel">
+        <bpmn:flowNodeRef>ogrenci_secim</bpmn:flowNodeRef>
+        <bpmn:childLaneSet xsi:type="bpmn:tLaneSet">
+          <bpmn:lane id="Lane_01q3y2v" />
+        </bpmn:childLaneSet>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="SequenceFlow_6" name="" sourceRef="StartEvent_1" targetRef="ogrenci_secim" />
+    <bpmn:userTask id="ogrenci_secim" name="Program Seç" camunda:assignee="ogrenci.ogrenci.OgrenciMezuniyet.program_sec">
+      <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ogrenci_secim" targetRef="mezuniyet_kaydet" />
+    <bpmn:sequenceFlow id="SequenceFlow_11" name="" sourceRef="mezuniyet_kaydet" targetRef="EndEvent_1" />
+    <bpmn:serviceTask id="mezuniyet_kaydet" name="Kaydet ve Mezun Durumuna Geçir" camunda:class="ogrenci.ogrenci.OgrenciMezuniyet.mezuniyet_kaydet">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:incoming>SequenceFlow_11</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_2">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_2" bpmnElement="ogrenci_mezuniyet" isHorizontal="true">
@@ -89,4 +90,4 @@
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

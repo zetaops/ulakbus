@@ -19,6 +19,7 @@ class HizmetUnvanGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Ünvan Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

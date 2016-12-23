@@ -44,24 +44,24 @@ class User(Model, BaseUser):
     ait bir ve tek kullanıcı olması zorunludur.
 
     """
-    avatar = field.File(_(u"Profile Photo"), random_name=True, required=False)
-    username = field.String(_(u"Username"), index=True, unique=True)
-    password = field.String(_(u"Password"))
-    e_mail = field.String(_(u"E-Mail"), index=True, unique=True)
-    name = field.String(_(u"First Name"), index=True)
-    surname = field.String(_(u"Surname"), index=True)
+    avatar = field.File(_(u"Profil Fotoğrafı"), random_name=True, required=False)
+    username = field.String(_(u"Kullanıcı Adı"), index=True, unique=True)
+    password = field.String(_(u"Parola"))
+    e_mail = field.String(_(u"E-Posta"), index=True, unique=True)
+    name = field.String(_(u"Ad"), index=True)
+    surname = field.String(_(u"Soyad"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
-    last_login_role_key = field.String(_(u"Last Login Role Key"))
+    last_login_role_key = field.String(_(u"Son Giriş Yapılan Rol"))
     locale_language = field.String(
-        _(u"Preferred Language"),
+        _(u"Tercih Edilen Dil Formatı"),
         index=False,
         default=settings.DEFAULT_LANG,
         choices=translation.available_translations.items()
     )
-    locale_datetime = field.String(_(u"Preferred Date and Time Format"), index=False,
+    locale_datetime = field.String(_(u"Tercih Edilen Gün ve Zaman Formatı"), index=False,
                                    default=settings.DEFAULT_LOCALIZATION_FORMAT,
                                    choices=translation.available_datetimes.items())
-    locale_number = field.String(_(u"Preferred Number Format"), index=False,
+    locale_number = field.String(_(u"Tercih Edilen Sayı Formatı"), index=False,
                                  default=settings.DEFAULT_LOCALIZATION_FORMAT,
                                  choices=translation.available_numbers.items())
 
@@ -260,20 +260,20 @@ class Unit(Model):
     # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
-    def get_user_keys(cls, unit_key):
+    def get_role_keys(cls, unit_key):
         """recursively gets all roles (keys) under given unit"""
-        return cls.get_user_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
-        stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
-        for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
-            stack.extend(cls.get_user_keys(unit_key))
-        return stack
+        return cls.get_role_keys_by_yoksis(Unit.objects.get(unit_key).yoksis_no)
+        # stack = Role.objects.filter(unit_id=unit_key).values_list('user_id', flatten=True)
+        # for unit_key in cls.objects.filter(parent_id=unit_key).values_list('key', flatten=True):
+        #     stack.extend(cls.get_role_keys(unit_key))
+        # return stack
 
     @classmethod
-    def get_user_keys_by_yoksis(cls, yoksis_no):
+    def get_role_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('user_id', flatten=True)
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('key', flatten=True)
         for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
-            stack.extend(cls.get_user_keys_by_yoksis(yoksis_no))
+            stack.extend(cls.get_role_keys_by_yoksis(yoksis_no))
         return stack
 
     class Meta:

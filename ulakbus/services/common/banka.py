@@ -12,8 +12,8 @@ banka yetkilendirme kontrolü fonksiyonunu içeren modül.
 
 """
 
-from zato.server.service import Service
 from ulakbus.models.ogrenci import Banka, BankaAuth
+from ulakbus.services.ulakbus_service import UlakbusService
 
 
 class AuthException(Exception):
@@ -55,7 +55,7 @@ def authenticate(func):
     return auth
 
 
-class BankaService(Service):
+class BankaService(UlakbusService):
     """
     Banka servislerinin kalıtılacağı abstract Zato Servisi.
 
@@ -71,6 +71,8 @@ class BankaService(Service):
             Çıktı parametrelerini saklamak için `self.response.payload` kullanılır.
 
     """
+
+    HAS_CHANNEL = False
 
     def __init__(self):
         #: Banka: Servisleri kullanacak olan yetkilendirilecek banka.
