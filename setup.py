@@ -5,7 +5,7 @@ from setuptools import find_packages
 
 setup(
     name='Ulakbus',
-    version='0.9.0',
+    version='0.9.1',
     description='Ulakbus Butunlesik Universite Sistemi',
     author='Zetaops',
     license='GPL v3',
