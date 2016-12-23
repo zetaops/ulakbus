@@ -8,7 +8,7 @@
       <bpmn:lane id="personel" name="personel">
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="menu_category" value="hiddden" />
+            <camunda:property name="menu_category" value="hidden" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:flowNodeRef>eksik_bilgi_form</bpmn:flowNodeRef>
