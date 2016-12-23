@@ -11,7 +11,7 @@ setup(
     license='GPL v3',
     author_email='info@zetaops.io',
     install_requires=[
-        'zengine==0.7.6',
+        'zengine==0.7.7',
         'requests',
         'boto',
         'reportlab',
