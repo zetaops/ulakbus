@@ -95,8 +95,11 @@ OBJECT_MENU = {
         {'name': 'OgrenciProgram', 'category': 'Genel'},
     ],
     'personel': [
+        {'name': 'Personel', 'wf': 'personel_bilgileri',
+         'verbose_name': 'Personel Kartı', 'field': 'personel_id'},
+
         {'name': 'Personel', 'wf': 'kimlik_ve_iletisim_bilgileri',
-         'verbose_name': 'Kimlik ve Iletisim Bilgileri', 'field': 'personel_id'},
+         'verbose_name': 'Kimlik ve Iletisim Bilgileri Düzenle', 'field': 'personel_id'},
 
         {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri', 'field': 'personel_id'},
 

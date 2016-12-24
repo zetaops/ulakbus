@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="Collaboration_1i3vjfg">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="hidden" />
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:participant id="personel_isleri_personel_bilgi" name="Personel Bilgileri" processRef="personel_bilgileri" />
+  </bpmn:collaboration>
+  <bpmn:process id="personel_bilgileri" name="Personel Bilgileri" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1q1twix</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="personel_bilgileri_goster" name="Personel Bilgileri Goster" camunda:assignee="personel.personel_bilgileri.PersonelBilgileri.goster">
+      <bpmn:incoming>SequenceFlow_1q1twix</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_01if0k7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1jq0h6g">
+      <bpmn:incoming>SequenceFlow_01if0k7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1q1twix" sourceRef="StartEvent_1" targetRef="personel_bilgileri_goster" />
+    <bpmn:sequenceFlow id="SequenceFlow_01if0k7" sourceRef="personel_bilgileri_goster" targetRef="EndEvent_1jq0h6g" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1i3vjfg">
+      <bpmndi:BPMNShape id="Participant_153zsbz_di" bpmnElement="personel_isleri_personel_bilgi">
+        <dc:Bounds x="218" y="105" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="270" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="243" y="248" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1q1twix_di" bpmnElement="SequenceFlow_1q1twix">
+        <di:waypoint xsi:type="dc:Point" x="306" y="230" />
+        <di:waypoint xsi:type="dc:Point" x="390" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="303" y="205" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0nrk5y1_di" bpmnElement="personel_bilgileri_goster">
+        <dc:Bounds x="390" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1jq0h6g_di" bpmnElement="EndEvent_1jq0h6g">
+        <dc:Bounds x="620" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="593" y="248" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_01if0k7_di" bpmnElement="SequenceFlow_01if0k7">
+        <di:waypoint xsi:type="dc:Point" x="490" y="230" />
+        <di:waypoint xsi:type="dc:Point" x="620" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510" y="205" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
