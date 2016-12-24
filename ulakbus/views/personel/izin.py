@@ -51,9 +51,9 @@ class IzinIslemleri(CrudView):
         # arsiv field eğer true ise personel aktif değildir. Aktif olmayan personele de izin yazılamaz.
         if not personel.arsiv:
             field_dict = OrderedDict({})
-            field_dict["%i Kalan Yıllık İzin"%bu_yil] = str(personel.bu_yil_kalan_izin)
-            field_dict["%i Kalan Yıllık İzin"%gecen_yil] = str(personel.gecen_yil_kalan_izin)
-            field_dict["%i Kullanılan Mazeret İzni"%(bu_yil)] = str(personel.mazeret_izin)
+            field_dict["%i Kalan Yıllık İzin"%bu_yil] = str(personel.izinler["bu_yil_kalan_izin"])
+            field_dict["%i Kalan Yıllık İzin"%gecen_yil] = str(personel.izinler["gecen_yil_kalan_izin"])
+            field_dict["%i Kullanılan Mazeret İzni"%(bu_yil)] = str(personel.izinler["mazeret_izin"])
             self.output['object'] = {
                 "type": "table",
                 "fields": field_dict
@@ -158,6 +158,10 @@ class IzinIslemleri(CrudView):
             else:
                 izin_dict["Vekil Personel"] = "%s %s"%(izin.vekil.ad, izin.vekil.soyad)
             izin_list.append(izin_dict)
+
+        _form = JsonForm(title="İzin işlemleri")
+        _form.button = fields.Button("Geri")
+        self.form_out(_form)
 
         self.output["object"] = {
             "title" : "Personelin Kullandığı İzinler",

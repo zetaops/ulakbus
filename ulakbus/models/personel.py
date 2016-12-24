@@ -126,10 +126,10 @@ class Personel(Model):
     kadro_derece = field.Integer(default=0)
     aday_memur = field.Boolean()
     arsiv = field.Boolean()  # ayrilmis personeller icin gecerlidir.
-    bu_yil_kalan_izin = field.Integer("Bu Yıl Kalan İzin", index=True)
-    gecen_yil_kalan_izin = field.Integer("Geçen Yıl Kalan İzin", index=True)
+    bu_yil_kalan_izin = field.Integer("Bu Yıl Kalan İzin", index=True, default=0)
+    gecen_yil_kalan_izin = field.Integer("Geçen Yıl Kalan İzin", index=True, default=0)
     # İçinde bulunulan yıl kullanılan mazeret izin gün sayısını tutar. Bir sonraki yıla geçildiğinde 0 yapılmalıdır.
-    mazeret_izin = field.Integer("Mazeret İzni", index=True)
+    mazeret_izin = field.Integer("Mazeret İzni", index=True, default=0)
     user = User(one_to_one=True)
 
     class Meta:
@@ -235,6 +235,31 @@ class Personel(Model):
         )
 
         return gorevlendirme
+
+    @lazy_property
+    def izinler(self):
+        """izinler
+            Personele ait izinleri getirir. İzin bilgisi boş olduğu takdirde 0 değerini döndürür.
+        Returns:
+            kalan yıllık izin ve kullanılan mazeret izin gün sayısı (dictionary)
+        """
+        izin_dict = {}
+        if (self.bu_yil_kalan_izin == None) or (self.bu_yil_kalan_izin == ""):
+            izin_dict["bu_yil_kalan_izin"] = 0
+        else:
+            izin_dict["bu_yil_kalan_izin"] = self.bu_yil_kalan_izin
+
+        if (self.gecen_yil_kalan_izin == None) or (self.gecen_yil_kalan_izin == ""):
+            izin_dict["gecen_yil_kalan_izin"] = 0
+        else:
+            izin_dict["gecen_yil_kalan_izin"] = self.gecen_yil_kalan_izin
+
+        if(self.mazeret_izin == None) or (self.mazeret_izin == ""):
+            izin_dict["mazeret_izin"] = 0
+        else:
+            izin_dict["mazeret_izin"] = self.mazeret_izin
+
+        return izin_dict
 
     @property
     def kurum_sicil_no(self):
