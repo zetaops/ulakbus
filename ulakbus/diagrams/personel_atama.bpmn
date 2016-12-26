@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+
   <bpmn:collaboration id="PersonelAtama" name="Personel Atama">
     <bpmn:participant id="_Participant_3" name="Personel Atama (pool)" processRef="personel_atama" />
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="hidden" />
+      </camunda:properties>
+    </bpmn:extensionElements>
   </bpmn:collaboration>
   <bpmn:process id="personel_atama" name="Personel Atama" isExecutable="false">
     <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
       <bpmn:lane id="personel" name="personel">
-        <bpmn:extensionElements>
-          <camunda:properties>
-            <camunda:property name="menu_category" value="hidden" />
-          </camunda:properties>
-        </bpmn:extensionElements>
         <bpmn:flowNodeRef>eksik_bilgi_form</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_10</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>eksik_bilgi_kaydet</bpmn:flowNodeRef>
