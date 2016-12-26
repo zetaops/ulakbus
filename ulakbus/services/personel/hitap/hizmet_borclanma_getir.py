@@ -19,6 +19,7 @@ class HizmetBorclanmaGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Borçlanma Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from zato.server.service import Service
+from ulakbus.services.ulakbus_service import UlakbusService
 import json
 import uuid
 import httplib
@@ -28,7 +28,10 @@ if DEBUG:
     logging.getLogger().setLevel(logging.DEBUG)
 
 
-class NVIService(Service):
+class NVIService(UlakbusService):
+
+    HAS_CHANNEL = False
+
     def __init__(self):
         self.service_action = ""
         self.service_xml_body = ""
@@ -135,6 +138,8 @@ class KisiSorgulaTCKimlikNo(NVIService):
     NVI Kimlik Bilgileri Servisi
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         tckn = self.request.payload['tckn']
         self.service_action = "/2011/01/01/KisiSorgulaTCKimlikNoServis/ListeleCoklu"
@@ -155,6 +160,8 @@ class CuzdanSorgulaTCKimlikNo(NVIService):
     """
     NVI Kimlik Bilgileri Servisi
     """
+
+    HAS_CHANNEL = True
 
     def handle(self):
         tckn = self.request.payload['tckn']
@@ -178,6 +185,8 @@ class YabanciKisiSorgula(NVIService):
     NVI Kimlik Bilgileri Servisi
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         tckn = self.request.payload['tckn']
         self.service_action = "/2013/06/01/YbKisiSorgulaYbKimlikNoServis/ListeleCoklu"
@@ -199,6 +208,8 @@ class AdresSorgula(NVIService):
     Adres Sorgulama
     """
 
+    HAS_CHANNEL = True
+
     def handle(self):
         tckn = self.request.payload['tckn']
         self.service_action = "/2015/07/01/KimlikNoSorgulaAdresServis/Sorgula"
@@ -219,6 +230,8 @@ class AileBireySorgula(NVIService):
     """
     Aile Birey Sorgulama
     """
+
+    HAS_CHANNEL = True
 
     def handle(self):
         tckn = self.request.payload['tckn']

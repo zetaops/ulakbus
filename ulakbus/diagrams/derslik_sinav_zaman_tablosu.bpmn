@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_07mtcmi">
-    <bpmn:participant id="Participant_1l69iza" processRef="derslik_sinav_zaman_tablosu" />
+    <bpmn:participant id="Participant_1l69iza" processRef="derslik_sinav_zaman_tablosu">
+      <bpmn:documentation>Derslikler Sınav Zaman Tablosu İş Akışı</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="programmable" value="True" />
+          <camunda:property name="task_type" value="D" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:participant>
   </bpmn:collaboration>
   <bpmn:process id="derslik_sinav_zaman_tablosu" name="Derslik Sınav Zaman Tablosu" isExecutable="false">
     <bpmn:laneSet>

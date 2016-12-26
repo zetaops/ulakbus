@@ -1,86 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_ULp1QB_KEeWBgv8ICzr-mg" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:process id="crud_hitap" name="Crud Hitap VIEW" isExecutable="false">
-    <bpmn2:documentation>Crud + HITAP</bpmn2:documentation>
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:process id="crud_hitap" name="Crud Hitap VIEW" isExecutable="false">
+    <bpmn:documentation>Crud + HITAP</bpmn:documentation>
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property value="other" name="object"/>
         <camunda:property value="hidden" name="menu_category"/>
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:userTask id="form" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="add/edit form">
-      <bpmn2:incoming>save_then_add_arrow</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="form" targetRef="save_object"/>
-    <bpmn2:userTask id="delete_object" camunda:class="personel.crud_hitap.CrudHitap.call" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="delete_object">
-      <bpmn2:extensionElements>
+    </bpmn:extensionElements>
+    <bpmn:userTask id="form" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="add/edit form">
+      <bpmn:incoming>save_then_add_arrow</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_13" name="" sourceRef="form" targetRef="save_object"/>
+    <bpmn:userTask id="delete_object" camunda:class="personel.crud_hitap.CrudHitap.call" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="delete_object">
+      <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="list">1</camunda:inputParameter>
         </camunda:inputOutput>
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>fin_to_delete</bpmn2:incoming>
-      <bpmn2:outgoing>del_to_finish</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="del_to_finish" name="" sourceRef="delete_object" targetRef="FINISH_XOR"/>
-    <bpmn2:serviceTask id="save_object" camunda:class="personel.crud_hitap.CrudHitap.call" name="save_object">
-      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="save_object" targetRef="FINISH_XOR"/>
-    <bpmn2:exclusiveGateway id="FINISH_XOR" default="fin_list_arrow">
-      <bpmn2:incoming>del_to_finish</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
-      <bpmn2:incoming>list_to_finish</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
-      <bpmn2:outgoing>fin_list_arrow</bpmn2:outgoing>
-      <bpmn2:outgoing>save_then_add_arrow</bpmn2:outgoing>
-      <bpmn2:outgoing>fin_to_delete</bpmn2:outgoing>
-      <bpmn2:outgoing>fin_to_show</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="fin_list_arrow" name="save_then_list" sourceRef="FINISH_XOR" targetRef="list_objects">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'list'</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="save_then_add_arrow" name="save_then_add&#xA;" sourceRef="FINISH_XOR" targetRef="form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'form'</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="fin_to_delete" name="fin_to_delete" sourceRef="FINISH_XOR" targetRef="delete_object">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'delete'</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="fin_to_show" name="fin_to_show" sourceRef="FINISH_XOR" targetRef="show_object">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'show' and object_id</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:userTask id="list_objects" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="list_objects">
-      <bpmn2:incoming>fin_list_arrow</bpmn2:incoming>
-      <bpmn2:outgoing>list_to_finish</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="list_to_finish" name="" sourceRef="list_objects" targetRef="FINISH_XOR"/>
-    <bpmn2:userTask id="show_object" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="show_object">
-      <bpmn2:incoming>fin_to_show</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_9" name="" sourceRef="show_object" targetRef="FINISH_XOR"/>
-    <bpmn2:serviceTask id="init" name="init">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="init" targetRef="FINISH_XOR"/>
-    <bpmn2:startEvent id="StartEvent_1" name="start">
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="init"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="FINISH_XOR" targetRef="ServiceTask_1">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'sync'</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:serviceTask id="ServiceTask_1" camunda:class="personel.crud_hitap.CrudHitap.call" name="sync_object">
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ServiceTask_1" targetRef="FINISH_XOR"/>
-  </bpmn2:process>
+      </bpmn:extensionElements>
+      <bpmn:incoming>fin_to_delete</bpmn:incoming>
+      <bpmn:outgoing>del_to_finish</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="del_to_finish" name="" sourceRef="delete_object" targetRef="FINISH_XOR"/>
+    <bpmn:serviceTask id="save_object" camunda:class="personel.crud_hitap.CrudHitap.call" name="save_object">
+      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="save_object" targetRef="FINISH_XOR"/>
+    <bpmn:exclusiveGateway id="FINISH_XOR" default="fin_list_arrow">
+      <bpmn:incoming>del_to_finish</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_9</bpmn:incoming>
+      <bpmn:incoming>list_to_finish</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>fin_list_arrow</bpmn:outgoing>
+      <bpmn:outgoing>save_then_add_arrow</bpmn:outgoing>
+      <bpmn:outgoing>fin_to_delete</bpmn:outgoing>
+      <bpmn:outgoing>fin_to_show</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="fin_list_arrow" name="save_then_list" sourceRef="FINISH_XOR" targetRef="list_objects">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'list'</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="save_then_add_arrow" name="save_then_add&#xA;" sourceRef="FINISH_XOR" targetRef="form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'form'</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="fin_to_delete" name="fin_to_delete" sourceRef="FINISH_XOR" targetRef="delete_object">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'delete'</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="fin_to_show" name="fin_to_show" sourceRef="FINISH_XOR" targetRef="show_object">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'show' and object_id</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="list_objects" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="list_objects">
+      <bpmn:incoming>fin_list_arrow</bpmn:incoming>
+      <bpmn:outgoing>list_to_finish</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="list_to_finish" name="" sourceRef="list_objects" targetRef="FINISH_XOR"/>
+    <bpmn:userTask id="show_object" camunda:assignee="personel.crud_hitap.CrudHitap.call" name="show_object">
+      <bpmn:incoming>fin_to_show</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_9" name="" sourceRef="show_object" targetRef="FINISH_XOR"/>
+    <bpmn:serviceTask id="init" name="init">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="init" targetRef="FINISH_XOR"/>
+    <bpmn:startEvent id="StartEvent_1" name="start">
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="init"/>
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="FINISH_XOR" targetRef="ServiceTask_1">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'sync'</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="ServiceTask_1" camunda:class="personel.crud_hitap.CrudHitap.call" name="sync_object">
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ServiceTask_1" targetRef="FINISH_XOR"/>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="crud_hitap">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_3" bpmnElement="StartEvent_1">
@@ -218,4 +218,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

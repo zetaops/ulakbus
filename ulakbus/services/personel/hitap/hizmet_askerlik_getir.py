@@ -19,6 +19,7 @@ class HizmetAskerlikGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Askerlik Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

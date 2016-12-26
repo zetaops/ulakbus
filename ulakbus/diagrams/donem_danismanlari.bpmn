@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_eV6_8NlNEeWh0OWIuhX8CA" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="_Collaboration_4" name="Dönem Danışman Atama">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_4" name="Dönem Danışman Atama">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property name="init" value="True" />
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="_Participant_3" name="Donem Danismanlari Atama" processRef="donem_danismanlari">
-      <bpmn2:documentation>Dönem Danışman Atama İş Akışı</bpmn2:documentation>
-    </bpmn2:participant>
-  </bpmn2:collaboration>
-  <bpmn2:process id="donem_danismanlari" isExecutable="false">
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_1wa54d7</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="UserTask_3" targetRef="ServiceTask_1" />
-    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ServiceTask_1" targetRef="UserTask_4" />
-    <bpmn2:endEvent id="EndEvent_1">
-      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
-    </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_11" name="" sourceRef="UserTask_4" targetRef="EndEvent_1" />
-    <bpmn2:serviceTask id="ServiceTask_1" name="Danismanlari Kaydet" camunda:class="ders.danisman.DonemDanismanAtama.danisman_kaydet">
-      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:userTask id="UserTask_4" name="Kayıt Bilgisi Ver" camunda:assignee="ders.danisman.DonemDanismanAtama.kayit_bilgisi_ver">
-      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:userTask id="UserTask_3" name="Danisman Sec" camunda:assignee="ders.danisman.DonemDanismanAtama.danisman_sec">
-      <bpmn2:incoming>SequenceFlow_1wa54d7</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_1wa54d7" sourceRef="StartEvent_1" targetRef="UserTask_3" />
-  </bpmn2:process>
+    </bpmn:extensionElements>
+    <bpmn:participant id="_Participant_3" name="Donem Danismanlari Atama" processRef="donem_danismanlari">
+      <bpmn:documentation>Dönem Danışman Atama İş Akışı</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="programmable" value="True" />
+          <camunda:property name="task_type" value="D" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:participant>
+  </bpmn:collaboration>
+  <bpmn:process id="donem_danismanlari" name="Dönem Danışman Atama" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1wa54d7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_6" name="" sourceRef="UserTask_3" targetRef="ServiceTask_1" />
+    <bpmn:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ServiceTask_1" targetRef="UserTask_4" />
+    <bpmn:endEvent id="EndEvent_1">
+      <bpmn:incoming>SequenceFlow_11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_11" name="" sourceRef="UserTask_4" targetRef="EndEvent_1" />
+    <bpmn:serviceTask id="ServiceTask_1" name="Danismanlari Kaydet" camunda:class="ders.danisman.DonemDanismanAtama.danisman_kaydet">
+      <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="UserTask_4" name="Kayıt Bilgisi Ver" camunda:assignee="ders.danisman.DonemDanismanAtama.kayit_bilgisi_ver">
+      <bpmn:incoming>SequenceFlow_7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="UserTask_3" name="Danisman Sec" camunda:assignee="ders.danisman.DonemDanismanAtama.danisman_sec">
+      <bpmn:incoming>SequenceFlow_1wa54d7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1wa54d7" sourceRef="StartEvent_1" targetRef="UserTask_3" />
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_4">
       <bpmndi:BPMNShape id="_BPMNShape_Participant_6" bpmnElement="_Participant_3" isHorizontal="true">
@@ -84,4 +90,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

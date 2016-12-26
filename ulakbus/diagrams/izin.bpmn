@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_TNFPUGBkEeWiWJUlA5rr9A" targetNamespace="http://activiti.org/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:collaboration id="_Collaboration_3" name="İzin İşlemleri">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="_Collaboration_3" name="İzin İşlemleri">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property name="menu_category" value="hidden" />
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:participant id="_Participant_3" name="İzin İşlemleri" processRef="izin" />
-  </bpmn2:collaboration>
-  <bpmn2:process id="izin" name="İzin İşlemleri" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_2" name="Lane Set 2">
-      <bpmn2:lane id="personel" name="personel">
-        <bpmn2:flowNodeRef>kaydet</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>izin_bilgileri_goster</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>izin_ekle_form</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>personel_izin_listele</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>basla</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>ExclusiveGateway_1</bpmn2:flowNodeRef>
-        <bpmn2:flowNodeRef>EndEvent_3</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="izin_bilgileri_goster" />
-    <bpmn2:serviceTask id="kaydet" name="Kaydet" camunda:class="personel.izin.IzinIslemleri.kaydet">
-      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_25</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_25" name="" sourceRef="kaydet" targetRef="izin_bilgileri_goster" />
-    <bpmn2:userTask id="izin_bilgileri_goster" name="İzin Bilgileri Listele" camunda:assignee="personel.izin.IzinIslemleri.goster">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_25</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="izin_bilgileri_goster" targetRef="ExclusiveGateway_1" />
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="izin_ekle_form">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow == 'yeni_izin']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_24" name="" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_3" />
-    <bpmn2:userTask id="izin_ekle_form" name="İzin Ekle" camunda:assignee="personel.izin.IzinIslemleri.izin_form">
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="" sourceRef="izin_ekle_form" targetRef="kaydet" />
-    <bpmn2:userTask id="personel_izin_listele" name="İzin Listele" camunda:assignee="personel.izin.IzinIslemleri.izin_listele">
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="personel_izin_listele" targetRef="izin_bilgileri_goster" />
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="ExclusiveGateway_1" targetRef="personel_izin_listele">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[flow=='izin_listele']]></bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:startEvent id="basla">
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_24">
-      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_24</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:endEvent id="EndEvent_3">
-      <bpmn2:incoming>SequenceFlow_24</bpmn2:incoming>
-    </bpmn2:endEvent>
-  </bpmn2:process>
+    </bpmn:extensionElements>
+    <bpmn:participant id="_Participant_3" name="İzin İşlemleri" processRef="izin" />
+  </bpmn:collaboration>
+  <bpmn:process id="izin" name="İzin İşlemleri" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_2" name="Lane Set 2">
+      <bpmn:lane id="personel" name="personel">
+        <bpmn:flowNodeRef>kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>izin_bilgileri_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>izin_ekle_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>personel_izin_listele</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>basla</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_3</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="izin_bilgileri_goster" />
+    <bpmn:serviceTask id="kaydet" name="Kaydet" camunda:class="personel.izin.IzinIslemleri.kaydet">
+      <bpmn:incoming>SequenceFlow_12</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_25</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_25" name="" sourceRef="kaydet" targetRef="izin_bilgileri_goster" />
+    <bpmn:userTask id="izin_bilgileri_goster" name="İzin Bilgileri Listele" camunda:assignee="personel.izin.IzinIslemleri.goster">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_25</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_5" name="" sourceRef="izin_bilgileri_goster" targetRef="ExclusiveGateway_1" />
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="ExclusiveGateway_1" targetRef="izin_ekle_form">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow == 'yeni_izin']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_24" name="" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_3" />
+    <bpmn:userTask id="izin_ekle_form" name="İzin Ekle" camunda:assignee="personel.izin.IzinIslemleri.izin_form">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_12" name="" sourceRef="izin_ekle_form" targetRef="kaydet" />
+    <bpmn:userTask id="personel_izin_listele" name="İzin Listele" camunda:assignee="personel.izin.IzinIslemleri.izin_listele">
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="personel_izin_listele" targetRef="izin_bilgileri_goster" />
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="ExclusiveGateway_1" targetRef="personel_izin_listele">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[flow=='izin_listele']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:startEvent id="basla">
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1" default="SequenceFlow_24">
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_24</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_3">
+      <bpmn:incoming>SequenceFlow_24</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_4" bpmnElement="basla">
@@ -168,4 +168,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

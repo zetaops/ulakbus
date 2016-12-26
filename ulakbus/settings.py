@@ -34,6 +34,8 @@ ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
 # absolute path to the workflow packages
 WORKFLOW_PACKAGES_PATHS.append(os.path.join(BASE_DIR, 'diagrams'))
 
+SERVICE_PACKAGES_PATH = os.path.join(BASE_DIR, 'services')
+
 LOG_FILE = os.environ.get('LOG_FILE', './ulakbus.log')
 
 AUTH_BACKEND = 'ulakbus.models.auth.AuthBackend'
@@ -118,8 +120,12 @@ OBJECT_MENU = {
 
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
+
         {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme',
          'field': 'personel_id'},
+
+        {'name': 'Personel', 'verbose_name': 'Personel İşten Ayrılma', 'field': 'personel_id',
+         'wf': 'personel_isten_ayrilma'},
 
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',

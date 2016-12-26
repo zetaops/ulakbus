@@ -80,7 +80,7 @@ class UcretsizIzinIslemleri(CrudView):
                 hitap_kaydi.bitis_tarihi = self.object.baslangic
                 hitap_kaydi.gorev = ".."
                 hitap_kaydi.hizmet_sinifi = personel.hizmet_sinifi
-                hitap_kaydi.unvan_kod = personel.kadro().unvan_kod
+                hitap_kaydi.unvan_kod = personel.kadro.unvan
 
                 ## TODO: Sebep Kodları fixtures eklenecek
                 hitap_kaydi.sebep_kod = 269
@@ -97,7 +97,7 @@ class UcretsizIzinIslemleri(CrudView):
             hitap_kaydi.baslama_tarihi = self.object.donus_tarihi
             hitap_kaydi.gorev = ".."
             hitap_kaydi.hizmet_sinifi = personel.hizmet_sinifi
-            hitap_kaydi.unvan_kod = personel.kadro().unvan_kod
+            hitap_kaydi.unvan_kod = personel.kadro.unvan
 
             ## TODO: Sebep Kodları fixtures eklenecek, form içerisinden seçilecek
             hitap_kaydi.sebep_kod = 269

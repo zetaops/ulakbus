@@ -6,7 +6,14 @@
         <camunda:property name="init" value="True" />
       </camunda:properties>
     </bpmn:extensionElements>
-    <bpmn:participant id="Participant_0r4june" name="Mutemet" processRef="ders_ucreti_hesaplama" />
+    <bpmn:participant id="Participant_0r4june" name="Mutemet" processRef="ders_ucreti_hesaplama">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="programmable" value="True" />
+          <camunda:property name="task_type" value="D" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:participant>
   </bpmn:collaboration>
   <bpmn:process id="ders_ucreti_hesaplama" name="Puantaj Tablosu Hazırla" isExecutable="false">
     <bpmn:userTask id="DonemSecimUyari" name="Donem Secim Uyari" camunda:assignee="reports.ders_ucreti_hesaplama.DersUcretiHesaplama.donem_secim_uyari">

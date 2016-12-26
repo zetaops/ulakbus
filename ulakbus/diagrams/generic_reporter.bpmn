@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_I1tKIKhVEeW0bbHkvk4fZw" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:process id="generic_reporter" name="" isExecutable="false">
-    <bpmn2:extensionElements>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:process id="generic_reporter" name="" isExecutable="false">
+    <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property value="hidden" name="menu_category"/>
       </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:startEvent id="StartEvent_1">
-      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:userTask id="show" camunda:assignee="reports.base.ReportDispatcher" name="show">
-      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
-      <bpmn2:incoming>return</bpmn2:incoming>
-      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="show"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" default="return">
-      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
-      <bpmn2:outgoing>goto_printout</bpmn2:outgoing>
-      <bpmn2:outgoing>return</bpmn2:outgoing>
-    </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="show" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:sequenceFlow id="goto_printout" name="" sourceRef="ExclusiveGateway_1" targetRef="printout">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">cmd == 'printout'</bpmn2:conditionExpression>
-    </bpmn2:sequenceFlow>
-    <bpmn2:userTask id="printout" camunda:assignee="reports.base.ReportDispatcher" name="printout">
-      <bpmn2:incoming>goto_printout</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="return" name="" sourceRef="ExclusiveGateway_1" targetRef="show"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_8" name="" sourceRef="printout" targetRef="show"/>
-  </bpmn2:process>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="show" camunda:assignee="reports.base.ReportDispatcher" name="show">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:incoming>return</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="show"/>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1" default="return">
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>goto_printout</bpmn:outgoing>
+      <bpmn:outgoing>return</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="show" targetRef="ExclusiveGateway_1"/>
+    <bpmn:sequenceFlow id="goto_printout" name="" sourceRef="ExclusiveGateway_1" targetRef="printout">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">cmd == 'printout'</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="printout" camunda:assignee="reports.base.ReportDispatcher" name="printout">
+      <bpmn:incoming>goto_printout</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="return" name="" sourceRef="ExclusiveGateway_1" targetRef="show"/>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="" sourceRef="printout" targetRef="show"/>
+  </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="rapor_personel_cinsiyet">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_7" bpmnElement="StartEvent_1">
@@ -84,4 +84,4 @@
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+</bpmn:definitions>

@@ -20,6 +20,7 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
     Hizmet Birleştirme Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

@@ -6,7 +6,15 @@
         <camunda:property name="init" value="True" />
       </camunda:properties>
     </bpmn:extensionElements>
-    <bpmn:participant id="Participant_0nwlcc9" name="Sinav Programi Hazirla" processRef="sinav_programi_hazirla" />
+    <bpmn:participant id="Participant_0nwlcc9" name="Sinav Programi Hazirla" processRef="sinav_programi_hazirla">
+      <bpmn:documentation>Sınav Programı Hazırlama İş Akışı</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="programmable" value="True" />
+          <camunda:property name="task_type" value="D" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+    </bpmn:participant>
   </bpmn:collaboration>
   <bpmn:process id="sinav_programi_hazirla" name="Sınav Programı Hazırla" isExecutable="false">
     <bpmn:startEvent id="StartEvent_1">

@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,8 +11,6 @@ Hitap'a personelin Nufus bilgilerinin guncellenmesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
 from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
 
 
@@ -23,6 +19,7 @@ class HizmetNufusGuncelle(HITAPGuncelle):
     HITAP Ekleme servisinden kalıtılmış Hizmet Nufus Bilgi Guncelleme servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.
