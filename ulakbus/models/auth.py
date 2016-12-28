@@ -26,6 +26,7 @@ from zengine.lib.cache import Cache
 from zengine.lib.translation import gettext_lazy as _, gettext
 from zengine.messaging.lib import BaseUser
 from zengine.lib import translation
+from datetime import datetime
 
 try:
     from zengine.lib.exceptions import PermissionDenied
@@ -105,6 +106,7 @@ class User(Model, BaseUser):
 
     def __unicode__(self):
         return "%s %s" % (self.name, self.surname)
+
 
 class Permission(Model):
     """Permission modeli
@@ -257,6 +259,7 @@ class Unit(Model):
     is_active = field.Boolean(_(u"Aktif"))
     uid = field.Integer(index=True)
     parent = LinkProxy('Unit', verbose_name=_(u'Üst Birim'), reverse_name='alt_birimler')
+
     # parent = field.String(verbose_name='Üst Birim') # fake
 
     @classmethod
@@ -271,8 +274,10 @@ class Unit(Model):
     @classmethod
     def get_role_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('key', flatten=True)
-        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list(
+            'key', flatten=True)
+        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no',
+                                                                                  flatten=True):
             stack.extend(cls.get_role_keys_by_yoksis(yoksis_no))
         return stack
 
@@ -325,7 +330,8 @@ class Role(Model):
         verbose_name_plural = _(u"Roller")
         search_fields = ['name']
         list_fields = []
-        crud_extra_actions = [{'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
+        crud_extra_actions = [
+            {'name': _(u'İzinleri Düzenle'), 'wf': 'permissions', 'show_as': 'button'}]
 
     @property
     def is_staff(self):
@@ -359,8 +365,23 @@ class Role(Model):
             list: yetki listesi
 
         """
-        return [p.permission.code for p in self.Permissions if p.permission.code] + (
-            self.abstract_role.get_permissions() if self.abstract_role.key else [])
+
+        role_perms = [p.permission.code for p in self.Permissions if p.permission.code]
+
+        # restrictions of role
+        allow, ban = PermissionsRestrictions.get_restrictions_by_role(self)
+
+        if self.abstract_role.exist:
+            role_perms.extend(self.abstract_role.get_permissions())
+
+            # restrictions of abstract role
+            abs_role_allow, abs_role_ban = PermissionsRestrictions.get_restrictions_by_role(
+                self.abstract_role)
+            allow.extend(abs_role_allow)
+            ban.extend(abs_role_ban)
+
+        perms = set(role_perms + allow)
+        return [p for p in perms if p not in ban]
 
     def _cache_permisisons(self, pcache):
         """
@@ -454,7 +475,6 @@ class Role(Model):
         """
         self.name = self._make_name()
 
-
     @classmethod
     @role_getter("Bölüm Başkanları")
     def get_bolum_baskanlari(cls):
@@ -469,41 +489,92 @@ class Role(Model):
         self.user.send_notification(title=title, message=message, typ=typ, url=url, sender=sender)
 
 
-class LimitedPermissions(Model):
-    """LimitedPermissions modeli
-    Bu modelde tutulan bilgilerle mevcut yetkilere sınırlandırmalar
-    getirilir.
+class PermissionsRestrictions(Model):
+    """PermissionsRestrictions yetki sınırlandırması ile ilgili kuralların
+    saklandığı data modelidir.
 
-    - Başlangıç ve bitiş tarihine göre sınırlandırma uygulanan yetkiler
-    o tarih aralığında geçerli olur.
+    Başlangıç ve bitiş tarihleri kuralın geçerli olduğu zaman aralığını
+    belirler.
 
-    - Verilen IPList özelliğine göre bu IPList listesi içindeki
-    ip'lerden gelen requestlere cevap verecek şekilde kısıtlanır.
+    `allow_or_ban` ise kuralın yetkileri genişleteceğini mi yoksa
+    sınırlandıracağını mı belirler.
+
+    IPList kuralın geçerli olacağı IP adreslerini belirtir.
+
+    Permissions kuralın hangi yetkilere uygulanacağını belirtir.
+
+    Roles ve AbstractRoles ise kuralın kimi etkileyeceğini belirtir.
 
     """
-    restrictive = field.Boolean(_(u"Sınırlandırıcı"), default=False)
-    time_start = field.String(_(u"Başlama Tarihi"), index=True)
-    time_end = field.String(_(u"Bitiş Tarihi"), index=True)
+    allow_or_ban = field.Boolean(_(u"Yasakla / İzin Ver"), default=False)
+    time_start = field.DateTime(_(u"Başlangıç"), index=True)
+    time_end = field.DateTime(_(u"Bitiş"), index=True)
+    role_code = field.String("Role")
+    permission_code = field.String()
+    abstract_role_code = field.String("Abstract Role")
+    ip_address = field.String("IP")
 
     class Meta:
         app = 'Sistem'
         verbose_name = _(u"Sınırlandırılmış Yetki")
         verbose_name_plural = _(u"Sınırlandırılmış Yetkiler")
+        unique_together = [
+            ('role_code', 'permission_code'),
+            ('abstract_role_code', 'permission_code'),
+        ]
 
     def __unicode__(self):
         return "%s - %s" % (self.time_start, self.time_end)
 
-    class IPList(ListNode):
-        ip = field.String()
+    def pre_save(self):
+        if not self.permission_code:
+            raise IntegrityError("Izin belirtilmelidir!")
 
-    class Permissions(ListNode):
-        permission = Permission()
+        if self.role_code and self.abstract_role_code:
+            raise IntegrityError(
+                "Rol veya Rol Gruplarindan (Role / Abstract Role)sadece biri seçili olmalıdır.")
 
-    class AbstractRoles(ListNode):
-        abstract_role = AbstractRole()
+    @classmethod
+    def get_active_restrictions_by_filter(cls, **kw):
+        """
+        Gets query filter args from **kw and add time_end__lt=datetime.now()
 
-    class Roles(ListNode):
-        role = Role()
+        Args:
+            **kw: keyword arguments
+
+        Returns:
+            tuple: allowed and banned permissions
+
+        """
+        allow, ban = [], []
+
+        for rule in cls.objects.filter(time_end__lt=datetime.now(), **kw):
+            perm = rule.permission_code
+            allow.append(perm) if rule.allow_or_ban else ban.append(perm)
+
+        return allow, ban
+
+    @classmethod
+    def get_restrictions_by_role(cls, role):
+        """
+        Args:
+            role (Role, Abstract Role): role or abtract role instance
+
+        Returns:
+            tuple: allowed and banned permissions
+
+        """
+        if isinstance(role, AbstractRole):
+            return cls.get_active_restrictions_by_filter(abstract_role_code=role.key)
+        else:
+            return cls.get_active_restrictions_by_filter(role_code=role.key)
+
+    @classmethod
+    def clean_up_expired_rules(cls):
+        """
+        cleans expired rules
+        """
+        cls.objects.filter(time_end__lt=datetime.now()).delete()
 
 
 class AuthBackend(object):
