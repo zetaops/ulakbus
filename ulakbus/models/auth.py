@@ -107,6 +107,7 @@ class User(Model, BaseUser):
     def __unicode__(self):
         return "%s %s" % (self.name, self.surname)
 
+
 class Permission(Model):
     """Permission modeli
 
@@ -273,8 +274,10 @@ class Unit(Model):
     @classmethod
     def get_role_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('key', flatten=True)
-        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
+        stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list(
+            'key', flatten=True)
+        for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no',
+                                                                                  flatten=True):
             stack.extend(cls.get_role_keys_by_yoksis(yoksis_no))
         return stack
 
@@ -362,12 +365,22 @@ class Role(Model):
             list: yetki listesi
 
         """
+
         role_perms = [p.permission.code for p in self.Permissions if p.permission.code]
-        abstract_role_perms = self.abstract_role.get_permissions() if self.abstract_role.key else []
+
+        # restrictions of role
         allow, ban = PermissionsRestrictions.get_restrictions_by_role(self)
 
-        perms = role_perms + abstract_role_perms + allow
+        if self.abstract_role.exist:
+            role_perms.extend(self.abstract_role.get_permissions())
 
+            # restrictions of abstract role
+            abs_role_allow, abs_role_ban = PermissionsRestrictions.get_restrictions_by_role(
+                self.abstract_role)
+            allow.extend(abs_role_allow)
+            ban.extend(abs_role_ban)
+
+        perms = set(role_perms + allow)
         return [p for p in perms if p not in ban]
 
     def _cache_permisisons(self, pcache):
@@ -507,7 +520,7 @@ class PermissionsRestrictions(Model):
         verbose_name_plural = _(u"Sınırlandırılmış Yetkiler")
         unique_together = [
             ('role_code', 'permission_code'),
-            ('role_code', 'abstract_role_code'),
+            ('abstract_role_code', 'permission_code'),
         ]
 
     def __unicode__(self):
