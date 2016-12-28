@@ -273,7 +273,6 @@ class Unit(Model):
     @classmethod
     def get_role_keys_by_yoksis(cls, yoksis_no):
         # because we don't refactor our data to use Unit.parent, yet!
-
         stack = Role.objects.filter(unit_id=Unit.objects.get(yoksis_no=yoksis_no).key).values_list('key', flatten=True)
         for yoksis_no in cls.objects.filter(parent_unit_no=yoksis_no).values_list('yoksis_no', flatten=True):
             stack.extend(cls.get_role_keys_by_yoksis(yoksis_no))
@@ -365,7 +364,7 @@ class Role(Model):
         """
         role_perms = [p.permission.code for p in self.Permissions if p.permission.code]
         abstract_role_perms = self.abstract_role.get_permissions() if self.abstract_role.key else []
-        allow, ban = PermissionsRestrictions.get_role_restrictions(self)
+        allow, ban = PermissionsRestrictions.get_restrictions_by_role(self)
 
         perms = role_perms + abstract_role_perms + allow
 
@@ -489,9 +488,9 @@ class PermissionsRestrictions(Model):
 
     IPList kuralın geçerli olacağı IP adreslerini belirtir.
 
-    Permissions ve AbstractRoles kuralın hangi yetkilere uygulanacağını belirtir.
+    Permissions kuralın hangi yetkilere uygulanacağını belirtir.
 
-    Roles ise kuralın kimi etkileyeceğini belirtir.
+    Roles ve AbstractRoles ise kuralın kimi etkileyeceğini belirtir.
 
     """
     allow_or_ban = field.Boolean(_(u"Yasakla / İzin Ver"), default=False)
@@ -515,29 +514,47 @@ class PermissionsRestrictions(Model):
         return "%s - %s" % (self.time_start, self.time_end)
 
     def pre_save(self):
-        if self.permission_code and self.abstract_role_code:
+        if not self.permission_code:
+            raise IntegrityError("Izin belirtilmelidir!")
+
+        if self.role_code and self.abstract_role_code:
             raise IntegrityError(
-                "Only one of Permission and Group of Permission(AbstractRole) can be saved!")
+                "Rol veya Rol Gruplarindan (Role / Abstract Role)sadece biri seçili olmalıdır.")
 
     @classmethod
-    def get_role_restrictions(cls, role):
+    def get_active_restrictions_by_filter(cls, **kw):
         """
+        Gets query filter args from **kw and add time_end__lt=datetime.now()
+
         Args:
-            role (Role): role instance
+            **kw: keyword arguments
+
         Returns:
             tuple: allowed and banned permissions
 
         """
         allow, ban = [], []
-        for rule in cls.objects.filter(role_code=role.key, time_end__lt=datetime.now()):
-            permissions = []
-            if rule.abstract_role_code:
-                permissions = AbstractRole.objects.get(rule.abstract_role_code).get_permissions()
-            elif rule.permission_code:
-                permissions = [rule.permission_code]
-            allow.extend(permissions) if rule.allow_or_ban else ban.extend(permissions)
+
+        for rule in cls.objects.filter(time_end__lt=datetime.now(), **kw):
+            perm = rule.permission_code
+            allow.append(perm) if rule.allow_or_ban else ban.append(perm)
 
         return allow, ban
+
+    @classmethod
+    def get_restrictions_by_role(cls, role):
+        """
+        Args:
+            role (Role, Abstract Role): role or abtract role instance
+
+        Returns:
+            tuple: allowed and banned permissions
+
+        """
+        if isinstance(role, AbstractRole):
+            return cls.get_active_restrictions_by_filter(abstract_role_code=role.key)
+        else:
+            return cls.get_active_restrictions_by_filter(role_code=role.key)
 
     @classmethod
     def clean_up_expired_rules(cls):
