@@ -8,7 +8,7 @@ from zengine.views.crud import CrudView
 
 __author__ = 'Ali Riza Keles'
 
-personel = """__Sicil No__: {sicil_no} | __Vatandaşlık No__: {tckn}
+personel_karti = """__Sicil No__: {sicil_no} | __Vatandaşlık No__: {tckn}
 
 ### Kimlik Bilgileri
 
@@ -46,13 +46,6 @@ __Address__: {adres}
 
 class PersonelBilgileri(CrudView):
 
-    def __init__(self, current=None):
-        super(PersonelBilgileri, self).__init__(current)
-        if 'id' in self.current.input.keys():
-            self.current.task_data['personel_id'] = self.current.input['id']
-
-        self.object = Personel.objects.get(self.current.task_data['personel_id'])
-
     class Meta:
         model = 'Personel'
 
@@ -60,41 +53,24 @@ class PersonelBilgileri(CrudView):
         p = self.object
         self.output['object_title'] = "Personel: {0} {1}".format(p.ad, p.soyad)
 
-        """
-            Migration sırasında Doğum Tarihi bilgisi boş gelebilmektedir. Boş gelen verinin
-            programı kırmaması için kontrolü yapılmaktadır.
-        """
-
-        dogum_tarihi = ""
-        if (p.dogum_tarihi != None) and (p.dogum_tarihi != ""):
-            dogum_tarihi = "%i.%i.%i"%(
-                p.dogum_tarihi.day,
-                p.dogum_tarihi.month,
-                p.dogum_tarihi.year
-            )
-
-        kurum_ici_gorevlendirme = ""
-        if p.kurum_ici_gorevlendirme.count() > 0:
-            kurum_ici_gorevlendirme = p.kurum_ici_gorevlendirme[0].birim.name
-
-        kurum_disi_gorevlendirme = ""
-        if p.kurum_disi_gorevlendirme.count() > 0:
-            kurum_disi_gorevlendirme = p.kurum_disi_gorevlendirme[0].get_ulke_display()
+        kig = p.kurum_ici_gorevlendirme.birim.name if p.kurum_ici_gorevlendirme else ""
+        kdg = p.kurum_disi_gorevlendirme.get_ulke_display() if p.kurum_disi_gorevlendirme else ""
 
         self.output['object'] = {
-            "": personel.format(
-                sicil_no = p.kurum_sicil_no_int,
-                tckn = p.tckn,
-                ana_adi = p.ana_adi,
-                baba_adi = p.baba_adi,
-                dogum_yeri = p.dogum_yeri,
-                dogum_tarihi = dogum_tarihi,
-                kadro = p.kadro.birim.name,
-                kurum_ici_gorevlendirme = kurum_ici_gorevlendirme,
-                kurum_disi_gorevlendirme = kurum_disi_gorevlendirme,
-                oda_telefon = p.oda_tel_no,
-                gsm = p.cep_telefonu,
-                mail = p.e_posta,
-                adres = p.ikamet_adresi
+            "": personel_karti.format(
+                sicil_no=p.kurum_sicil_no_int,
+                tckn=p.tckn,
+                ana_adi=p.ana_adi,
+                baba_adi=p.baba_adi,
+                dogum_yeri=p.dogum_yeri,
+                dogum_tarihi=p.dogum_tarihi.strftime(
+                    "%d.%m.%Y") if p.dogum_tarihi is not None else "",
+                kadro=p.kadro.birim.name,
+                kurum_ici_gorevlendirme=kig,
+                kurum_disi_gorevlendirme=kdg,
+                oda_telefon=p.oda_tel_no,
+                gsm=p.cep_telefonu,
+                mail=p.e_posta,
+                adres=p.ikamet_adresi
             )
         }
