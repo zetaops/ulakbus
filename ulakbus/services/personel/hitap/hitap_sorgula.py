@@ -5,6 +5,13 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from ulakbus.services.ulakbus_service import UlakbusService
+from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
+import os
+import urllib2
+from json import dumps
+from six import iteritems
+
 """HITAP Sorgu Servisi
 
 Hitap sorgulama servislerinin kalıtılacağı
@@ -51,18 +58,11 @@ Example:
 
 """
 
-from zato.server.service import Service
-from hitap_helper import HitapHelper
-import os
-import urllib2
-from json import dumps
-from six import iteritems
-
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPSorgula(Service):
+class HITAPSorgula(UlakbusService):
     """
     Hitap Sorgulama servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -77,6 +77,7 @@ class HITAPSorgula(Service):
             ve tarih filtresi uygulanacak alanların listesini içerir.
 
     """
+    HAS_CHANNEL = False
 
     def __init__(self):
         self.service_name = ''

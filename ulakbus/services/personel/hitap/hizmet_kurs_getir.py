@@ -19,6 +19,7 @@ class HizmetKursGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Kurs Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

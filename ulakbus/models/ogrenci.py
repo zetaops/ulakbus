@@ -613,6 +613,7 @@ class Sinav(Model):
     # arama amacli
     ders = Ders()
     puan = field.Integer(_(u"Puan"), index=True)
+    okutman = Okutman()
 
     class Meta:
         app = 'Ogrenci'
@@ -620,6 +621,10 @@ class Sinav(Model):
         verbose_name_plural = _(u"Sınavlar")
         list_fields = ['tarih', 'yapilacagi_yer']
         search_fields = ['aciklama', 'tarih']
+
+    def pre_save(self):
+        if not self.okutman:
+            self.okutman = self.sube.okutman
 
     def __unicode__(self):
         return '%s %s' % (self.get_tur_display(), self.sube)

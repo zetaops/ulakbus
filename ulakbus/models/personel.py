@@ -22,6 +22,7 @@ from dateutil.relativedelta import relativedelta
 import datetime
 
 
+
 class Personel(Model):
     """Personel Modeli
 
@@ -52,7 +53,7 @@ class Personel(Model):
     ehliyet = field.String(_(u"Ehliyet"))
     verdigi_dersler = field.String(_(u"Verdiği Dersler"))
     biyografi = field.Text(_(u"Biyografi"))
-    notlar = field.Text(_(u"Notlar"))
+    notlar = field.Text(_(u"Notlar"), required=False)
     engelli_durumu = field.String(_(u"Engellilik"))
     engel_grubu = field.String(_(u"Engel Grubu"))
     engel_derecesi = field.String(_(u"Engel Derecesi"))
@@ -530,7 +531,7 @@ class UcretsizIzin(Model):
         app = 'Personel'
         verbose_name = _(u"Ücretsiz İzin")
         verbose_name_plural = _(u"Ücretsiz İzinler")
-        list_fields = ['tip', 'baslangic_tarihi', 'bitis_tarihi', 'donus_tarihi']
+        list_fields = ['tip', 'baslangic', 'bitis', 'donus_tarihi']
         search_fields = ['tip', 'onay_tarihi']
 
     def __unicode__(self):

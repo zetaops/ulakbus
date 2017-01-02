@@ -1,6 +1,4 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
@@ -13,8 +11,6 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 
 """
 
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
 
 
@@ -23,6 +19,7 @@ class HizmetBirlestirmeEkle(HITAPEkle):
     HITAP Ekleme servisinden kalıtılmış Hizmet Birlestirme Bilgisi Ekleme servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """Servis çağrıldığında tetiklenen metod.

@@ -8,16 +8,17 @@
 
 __author__ = 'Ali Riza Keles'
 
-from zato.server.service import Service
-import urllib2
 import json
+from ulakbus.services.ulakbus_service import UlakbusService
 
 
-class GetIPAddress(Service):
+class GetIPAddress(UlakbusService):
     """
     Informative service for development purpose
     Returns IP address of zato server's public interface
     """
+
+    HAS_CHANNEL = True
 
     def handle(self):
         service = self.outgoing.plain_http.get('IPIFY')

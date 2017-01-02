@@ -21,6 +21,7 @@ class HizmetMahkemeSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Mahkeme Bilgisi Senkronizasyon servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

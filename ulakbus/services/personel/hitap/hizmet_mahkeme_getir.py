@@ -19,6 +19,7 @@ class HizmetMahkemeGetir(HITAPSorgula):
     HITAP Sorgulama servisinden kalıtılmış Mahkeme Bilgisi Sorgulama servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """

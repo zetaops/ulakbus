@@ -29,11 +29,35 @@ class Search(SysView):
     def do_search(self):
         try:
             tckn = int(self.query.strip())
-            objects = self.SEARCH_ON.objects.filter(tckn__startswith=tckn)
+            objects = self.SEARCH_ON.objects.filter(
+                tckn__startswith=tckn).values('ad', 'soyad', 'tckn', 'key')
         except ValueError:
-            objects = self.SEARCH_ON.objects.search_on('ad', 'soyad', contains=self.query)
-        for o in objects:
-            self.output['results'].append(("%s %s" % (o.ad, o.soyad), o.tckn, o.key, ''))
+            q = self.query.split(" ")
+            objects = []
+            if len(q) == 1:
+                # query Ali, Ayşe, Demir gibi boşluksuz bir string
+                # içeriyorsa, ad ve soyad içerisinde aranmalıdır.
+                objects = self.SEARCH_ON.objects.search_on(
+                    'ad', 'soyad', contains=q[0]).values('ad', 'soyad', 'tckn', 'key')
+
+            if len(q) > 1:
+                # query Ali Rıza, Ayşe Han Demir, Neşrin Hasibe Gül Yakuphanoğullarından
+                # gibi boşluklu cok parçali bir string ise, öncelikle son parça soyad ile
+                # `contains`, önceki parçalar ise isim ile `contains` şeklinde
+                # aranmalıdır. Sonuç bulunamaz ise tüm parçalar isim ile
+                # `contains` şeklinde aranmalıdır.
+
+                objects = self.SEARCH_ON.objects.search_on(
+                    'ad', contains=" ".join(q[:-1])).search_on(
+                    'soyad', contains=q[-1]).values('ad', 'soyad', 'tckn', 'key')
+
+                objects_by_name = []
+                if not objects:
+                    objects = self.SEARCH_ON.objects.search_on(
+                        'ad', contains=" ".join(q)).values('ad', 'soyad', 'tckn', 'key')
+
+        self.output['results'] = [("{ad} {soyad}".format(**o), o['tckn'], o['key'], '') for o in
+                                  objects]
 
 
 # @basic_view('ogrenci_ara')

@@ -1,11 +1,15 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
 
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+
+from ulakbus.services.ulakbus_service import UlakbusService
+from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
+import os
+import urllib2
+from json import dumps
 
 """HITAP Guncelle Servisi
 
@@ -18,20 +22,12 @@ Attributes:
     H_PASS (str): Hitap kullanıcı şifresi
 
 """
-__author__ = 'H.İbrahim Yılmaz (drlinux)'
-
-from zato.server.service import Service
-from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
-import os
-import urllib2
-from json import dumps
-from six import iteritems
 
 H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPGuncelle(Service):
+class HITAPGuncelle(UlakbusService):
     """
     Hitap Güncelleme servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -46,6 +42,7 @@ class HITAPGuncelle(Service):
             listesini içerir.
 
     """
+    HAS_CHANNEL = False
 
     def __init__(self):
         self.service_name = ''

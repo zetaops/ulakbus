@@ -21,6 +21,7 @@ class HizmetUnvanSync(HITAPSync):
     HITAP Sync servisinden kalıtılmış Ünvan Bilgisi Senkronizasyon servisi
 
     """
+    HAS_CHANNEL = True
 
     def handle(self):
         """
