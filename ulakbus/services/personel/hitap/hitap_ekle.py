@@ -7,7 +7,6 @@
 
 
 from ulakbus.services.ulakbus_service import UlakbusService
-from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
@@ -42,11 +41,7 @@ class HITAPEkle(UlakbusService):
 
     """
     HAS_CHANNEL = False
-
-    def __init__(self):
-        self.service_name = ''
-        self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
-        super(HITAPEkle, self).__init__()
+    service_dict = {"fields": {}, "date_filter": [], "required_fields": [], "service_name": ''}
 
     def handle(self):
         """
@@ -59,10 +54,10 @@ class HITAPEkle(UlakbusService):
 
         self.logger.info("zato service started to work.")
         conn = self.outgoing.soap['HITAP'].conn
+        request_payload = self.request.payload
+        self.request_json(conn, request_payload)
 
-        self.request_json(conn)
-
-    def request_json(self, conn):
+    def request_json(self, conn, request_payload):
         """
         Connection bilgisi ve gerekli veriler ile Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
@@ -75,6 +70,8 @@ class HITAPEkle(UlakbusService):
 
         Args:
             conn (zato.outgoing.soap.conn): Zato soap outgoing bağlantısı
+            request_payload: Zato servisine bagli kanala gonderilen parametreler ve degerleri.
+                             Örnek: {'tckn':112343214, 'karar_no': 666 }
 
         Raises:
             AttributeError: İlgili servis veya bean Hitap'ta bulunmayabilir.
@@ -83,16 +80,23 @@ class HITAPEkle(UlakbusService):
         """
 
         status = "error"
-        hitap_dict = []
-
+        hitap_service = ""
+        service_name = self.service_dict['service_name']
         try:
             # connection for hitap
             with conn.client() as client:
                 # hitap response
-                service_call_name = self.service_mapper(self.service_name)
+
+                self.logger.info("HITAP EKLE SERVICE NAME : %s" % service_name)
+                service_call_name = self.service_mapper(service_name)
+
+                self.logger.info("Service Call Name: %s" % service_call_name)
 
                 if service_call_name:
                     request_data = client.factory.create(service_call_name)
+
+                    self.logger.info("Request data: %s", request_data)
+                    self.logger.info("Request data TYPE: %s", type(request_data))
 
                     if hasattr(request_data, 'kayitNo'):
                         del request_data.kayitNo
@@ -101,20 +105,20 @@ class HITAPEkle(UlakbusService):
 
                     # filtering for some fields
                     if 'date_filter' in self.service_dict:
-                        self.date_filter(hitap_dict)
-                    self.custom_filter(hitap_dict)
+                        self.date_filter(self.service_dict['date_filter'], request_payload)
 
                     if 'required_fields' in self.service_dict:
-                        required_field_check = HitapHelper()
-                        required_field_check.check_required_data(self.service_dict)
+                        self.check_required_fields(self.service_dict, request_payload)
 
                     for dict_element in self.service_dict['fields']:
-                        request_data[dict_element] = self.service_dict[dict_element]
+                        self.logger.info("Dict element : %s", dict_element)
+                        setattr(request_data, dict_element, request_payload[self.service_dict['fields'][dict_element]])
 
-                    service_name = self.service_name
-                    hitap_service = getattr(client.service, self.service_name)(request_data,
-                                                                               kullaniciAd=H_USER,
-                                                                               sifre=H_PASS)
+                    self.logger.info("Request data: %s", request_data)
+                    self.logger.info("HITAP EKLE SERVICE NAME: %s", service_name)
+                    hitap_service = getattr(client.service, service_name)(request_data,
+                                                                          kullaniciAd=H_USER,
+                                                                          sifre=H_PASS)
             status = "ok"
 
         except AttributeError:
@@ -125,7 +129,10 @@ class HITAPEkle(UlakbusService):
             self.logger.exception("Service unavailable!")
             status = "error"
 
+        except Exception as e:
+            self.logger.exception("Bilinmeyen hata: %s" % e)
         finally:
+            self.logger.info("Hitap servis: %s" % hitap_service)
             self.response.payload = {'status': status,
                                      'result': self.create_hitap_json(hitap_service)}
 
@@ -141,7 +148,7 @@ class HITAPEkle(UlakbusService):
 
         return dumps(dict_result)
 
-    def date_filter(self, hitap_dict):
+    def date_filter(self, date_filter_fields, request_payload):
         """
         Yerel kayıttaki tarih alanlarını HITAP servisine uygun biçime getirir.
 
@@ -152,18 +159,17 @@ class HITAPEkle(UlakbusService):
         şeklindedir.
 
         Args:
-            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
+            date_filter_fields (List[]): Zato servisinde bulunan ve tarih formatinda olan field isimleri listesi
 
         """
-        if hitap_dict['date_filter']:
-            from datetime import datetime
-            for record in hitap_dict:
-                for field in hitap_dict['date_filter']:
-                    if record[field] == "01.01.1900":
-                        record[field] = '0001-01-01'
-                    else:
-                        date_format = datetime.strptime(record[field], "%d.%m.%Y")
-                        record[field] = date_format.strftime("%Y-%m-%d")
+        from datetime import datetime
+        for field in date_filter_fields:
+            date_field = self.service_dict['fields'][field]
+            if request_payload[date_field] == "01.01.1900":
+                request_payload[date_field] = '0001-01-01'
+            else:
+                date_format = datetime.strptime(request_payload[date_field], "%d.%m.%Y")
+                request_payload[date_field] = date_format.strftime("%Y-%m-%d")
 
     def custom_filter(self, hitap_dict):
         """

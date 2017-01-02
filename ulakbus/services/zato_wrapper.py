@@ -55,6 +55,10 @@ class ZatoService(object):
 
     """
 
+    payload = ''
+    service_uri = ''
+    model = ''
+
     def __init__(self):
         self.payload = "{}"
         self.service_uri = "ping"
@@ -243,10 +247,10 @@ class HitapAcikSureGuncelle(HitapService):
 
     """
 
-    def __init__(self, service_payload={}):
+    def __init__(self, kayit):
         super(HitapAcikSureGuncelle, self).__init__()
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
-        self.payload = json.dump(service_payload)
+        self.payload = json.dump(kayit)
 
 
 class HitapAcikSureSil(HitapService):
@@ -604,7 +608,7 @@ class HitapHizmetCetveliSenkronizeEt(HitapService):
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
-class HitapHizmetCetveliEkle(HitapService):
+class HitapHizmetCetveliEkle(ZatoService):
     """
     Personelin hizmet kaydı bilgilerinin Hitap'a
     eklemesini yapar.
@@ -618,10 +622,8 @@ class HitapHizmetCetveliEkle(HitapService):
 
     """
 
-    def __init__(self, service_payload={}):
+    def __init__(self, kayit):
         super(HitapHizmetCetveliEkle, self).__init__()
-        self.service_uri = service_url_paths[self.__class__.__name__]["url"]
-        self.payload = json.dump(service_payload)
 
 
 class HitapHizmetCetveliGuncelle(HitapService):
@@ -895,7 +897,7 @@ class HitapKursSenkronizeEt(HitapService):
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
 
 
-class HitapKursEkle(HitapService):
+class HitapKursEkle(ZatoService):
     """Hitap'a personelin kurs bilgilerini ekler.
 
     Args:
@@ -907,10 +909,19 @@ class HitapKursEkle(HitapService):
 
     """
 
-    def __init__(self, service_payload={}):
+    def __init__(self, kayit):
         super(HitapKursEkle, self).__init__()
+        from ulakbus.services.personel.hitap.hizmet_kurs_ekle import HizmetKursEkle
+        import datetime
+        payload_object = dict()
+        for key in HizmetKursEkle.fields.values():
+            value = getattr(kayit, key)
+            if type(value) == datetime.date:
+                value = value.strftime("%d.%m.%Y")
+            payload_object[key] = value
+
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
-        self.payload = json.dump(service_payload)
+        self.payload = json.dumps(payload_object)
 
 
 class HitapKursGuncelle(HitapService):
@@ -942,11 +953,12 @@ class HitapKursSil(HitapService):
         payload (str): Servis verisi
 
     """
+    data = "Hello i am kurs sil"
 
     def __init__(self, service_payload={}):
         super(HitapKursSil, self).__init__()
         self.service_uri = service_url_paths[self.__class__.__name__]["url"]
-        self.payload = json.dump(service_payload)
+        self.payload = json.dumps(service_payload)
 
 
 class HitapMahkemeGetir(HitapService):

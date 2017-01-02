@@ -34,7 +34,7 @@ class HizmetKursSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-kurs-getir.hizmet-kurs-getir'
+        self.sorgula_service = 'hizmet-kurs-getir'
         self.model = HizmetKurs
 
         super(HizmetKursSync, self).handle()

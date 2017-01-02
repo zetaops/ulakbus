@@ -34,7 +34,7 @@ class HizmetUnvanSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-unvan-getir.hizmet-unvan-getir'
+        self.sorgula_service = 'hizmet-unvan-getir'
         self.model = HizmetUnvan
 
         super(HizmetUnvanSync, self).handle()

@@ -6,7 +6,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.services.ulakbus_service import UlakbusService
-from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
@@ -41,11 +40,7 @@ class HITAPSil(UlakbusService):
 
     """
     HAS_CHANNEL = False
-
-    def __init__(self):
-        self.service_name = ''
-        self.service_dict = {'fields': {'kayitNo': "", 'tckn': ""}}
-        super(HITAPSil, self).__init__()
+    service_dict = {"fields": {}, "service_name": '', 'required_fields': []}
 
     def handle(self):
         """
@@ -58,10 +53,10 @@ class HITAPSil(UlakbusService):
 
         self.logger.info("zato service started to work.")
         conn = self.outgoing.soap['HITAP'].conn
+        request_payload = self.request.payload
+        self.request_json(conn, request_payload)
 
-        self.request_json(conn)
-
-    def request_json(self, conn):
+    def request_json(self, conn, request_payload):
         """Connection bilgisi ve gerekli veriler ile Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
 
@@ -81,26 +76,24 @@ class HITAPSil(UlakbusService):
         """
 
         status = "error"
-        hitap_dict = []
-
+        hitap_service = ''
+        service_name = self.service_dict['service_name']
         try:
             # connection for hitap
             with conn.client() as client:
 
-                request_data = client.factory.create(self.service_name)
+                request_data = client.factory.create(service_name)
 
                 request_data.kullaniciAd = H_USER
                 request_data.sifre = H_PASS
 
-                for dict_element in self.service_dict['fields']:
-                    request_data[dict_element] = self.service_dict[dict_element]
+                for dict_element in self.service_dict["fields"]:
+                    setattr(request_data, dict_element, request_payload[self.service_dict['fields'][dict_element]])
 
                 if 'required_fields' in self.service_dict:
-                    required_field_check = HitapHelper()
-                    required_field_check.check_required_data(self.service_dict)
+                    self.check_required_fields(self.service_dict, request_payload)
 
-                service_name = self.service_name
-                hitap_service = getattr(client.service, self.service_name)(request_data)
+                hitap_service = getattr(client.service, service_name)(request_data)
 
             status = "ok"
 

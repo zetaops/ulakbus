@@ -34,7 +34,7 @@ class HizmetTazminatSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-tazminat-getir.hizmet-tazminat-getir'
+        self.sorgula_service = 'hizmet-tazminat-getir'
         self.model = HizmetTazminat
 
         super(HizmetTazminatSync, self).handle()

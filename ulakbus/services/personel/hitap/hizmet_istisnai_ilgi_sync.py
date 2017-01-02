@@ -38,7 +38,7 @@ class HizmetIstisnaiIlgiSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-istisnai-ilgi-getir.hizmet-istisnai-ilgi-getir'
+        self.sorgula_service = 'hizmet-istisnai-ilgi-getir'
         self.model = HizmetIstisnaiIlgi
 
         super(HizmetIstisnaiIlgiSync, self).handle()

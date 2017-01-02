@@ -34,7 +34,7 @@ class HizmetCetveliSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-cetveli-getir.hizmet-cetveli-getir'
+        self.sorgula_service = 'hizmet-cetveli-getir'
         self.model = HizmetKayitlari
 
         super(HizmetCetveliSync, self).handle()

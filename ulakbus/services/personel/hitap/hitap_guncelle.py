@@ -43,11 +43,7 @@ class HITAPGuncelle(UlakbusService):
 
     """
     HAS_CHANNEL = False
-
-    def __init__(self):
-        self.service_name = ''
-        self.service_dict = {'fields': {}, 'date_filter': [], 'required_fields': []}
-        super(HITAPGuncelle, self).__init__()
+    service_dict = {'fields': {}, 'date_filter': [], 'required_fields': [], 'service_name': ''}
 
     def handle(self):
         """

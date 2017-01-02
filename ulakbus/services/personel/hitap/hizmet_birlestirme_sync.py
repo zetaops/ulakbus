@@ -34,7 +34,7 @@ class HizmetBirlestirmeSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-birlestirme-getir.hizmet-birlestirme-getir'
+        self.sorgula_service = 'hizmet-birlestirme-getir'
         self.model = HizmetBirlestirme
 
         super(HizmetBirlestirmeSync, self).handle()

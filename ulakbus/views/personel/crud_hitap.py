@@ -8,6 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 from zengine.forms import fields, JsonForm
+from zengine.views.base import BaseView
 from zengine.views.crud import CrudView, view_method, list_query
 from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel
@@ -90,7 +91,7 @@ class CrudHitap(CrudView):
     def __init__(self, current=None):
         super(CrudHitap, self).__init__(current)
         self.ListForm = ListFormHitap
-        if 'id' in self.input:
+        if current and 'id' in self.input:
             self.current.task_data['personel_id'] = self.input['id']
             self.current.task_data['personel_tckn'] = Personel.objects.get(self.input['id']).tckn
 
@@ -106,6 +107,7 @@ class CrudHitap(CrudView):
         hs = hitap_service(tckn=str(self.current.task_data['personel_tckn']))
         hs.zato_request()
 
+    @view_method
     def save(self):
         """Crud Hitap Kaydet
 
@@ -135,6 +137,7 @@ class CrudHitap(CrudView):
         if self.next_cmd and obj_is_new:
             self.current.task_data['added_obj'] = self.object.key
 
+    @view_method
     def delete(self):
         """Crud Hitap Sil
 
@@ -150,7 +153,7 @@ class CrudHitap(CrudView):
 
         self.object.sync = 3
         hitap_service = zato_service_selector(self.model_class, 'delete')
-        hs = hitap_service(kayit=self.object)
+        hs = hitap_service(service_payload={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no})
 
         try:
             response = hs.zato_request()

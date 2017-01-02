@@ -38,7 +38,7 @@ class HizmetNufusSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-nufus-getir.hizmet-nufus-getir'
+        self.sorgula_service = 'hizmet-nufus-getir'
         self.model = NufusKayitlari
 
         super(HizmetNufusSync, self).handle()

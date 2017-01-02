@@ -65,11 +65,7 @@ class HITAPSync(UlakbusService):
 
     """
     HAS_CHANNEL = False
-
-    def __init__(self):
-        self.sorgula_service = ''
-        self.model = None
-        super(HITAPSync, self).__init__()
+    service_dict = {'fields': {}, 'date_filter': [], 'required_fields': [], 'sorgula_service': '', 'model': None}
 
     def handle(self):
         """

@@ -35,7 +35,7 @@ class HizmetIHSSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-ihs-getir.hizmet-ihs-getir'
+        self.sorgula_service = 'hizmet-ihs-getir'
         self.model = HizmetIHS
 
         super(HizmetIHSSync, self).handle()

@@ -34,7 +34,7 @@ class HizmetAskerlikSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-askerlik-getir.hizmet-askerlik-getir'
+        self.sorgula_service = 'hizmet-askerlik-getir'
         self.model = AskerlikKayitlari
 
         super(HizmetAskerlikSync, self).handle()

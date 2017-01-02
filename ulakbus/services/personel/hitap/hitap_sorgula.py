@@ -6,7 +6,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.services.ulakbus_service import UlakbusService
-from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
 import os
 import urllib2
 from json import dumps
@@ -78,12 +77,7 @@ class HITAPSorgula(UlakbusService):
 
     """
     HAS_CHANNEL = False
-
-    def __init__(self):
-        self.service_name = ''
-        self.bean_name = ''
-        self.service_dict = {}
-        super(HITAPSorgula, self).__init__()
+    service_dict = {'fields': {}, 'date_filter': [], 'required_fields': [], 'service_name': '', 'bean_name': ''}
 
     def handle(self):
         """
@@ -99,7 +93,6 @@ class HITAPSorgula(UlakbusService):
         self.logger.info("zato service started to work.")
         tckn = self.request.payload['tckn']
         conn = self.outgoing.soap['HITAP'].conn
-
         self.request_json(tckn, conn)
 
     def request_json(self, tckn, conn):
@@ -125,21 +118,19 @@ class HITAPSorgula(UlakbusService):
 
         status = "error"
         hitap_dict = []
-
+        service_name = self.service_dict['service_name']
+        bean_name = self.service_dict['bean_name']
         try:
             # connection for hitap
             with conn.client() as client:
 
-                if 'required_fields' in self.service_dict:
-                    required_field_check = HitapHelper()
-                    required_field_check.check_required_data(self.service_dict)
-
                 # hitap response
-                hitap_service = getattr(client.service, self.service_name)(H_USER, H_PASS, tckn)
+                self.logger.info("SORGULA SERVIS NAME : %s" % service_name)
+                hitap_service = getattr(client.service, service_name)(H_USER, H_PASS, tckn)
                 # get bean object
-                service_bean = getattr(hitap_service, self.bean_name)
+                service_bean = getattr(hitap_service, bean_name)
 
-                self.logger.info("%s started to work." % self.service_name)
+                self.logger.info("%s started to work." % service_name)
                 hitap_dict = self.create_hitap_dict(service_bean, self.service_dict['fields'])
 
                 # filtering for some fields
@@ -159,7 +150,6 @@ class HITAPSorgula(UlakbusService):
 
         finally:
             self.response.payload = {'status': status, 'result': dumps(hitap_dict)}
-
 
     def create_hitap_dict(self, service_bean, fields):
         """

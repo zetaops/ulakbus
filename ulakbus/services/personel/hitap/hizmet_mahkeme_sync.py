@@ -34,7 +34,7 @@ class HizmetMahkemeSync(HITAPSync):
 
         """
 
-        self.sorgula_service = 'hizmet-mahkeme-getir.hizmet-mahkeme-getir'
+        self.sorgula_service = 'hizmet-mahkeme-getir'
         self.model = HizmetMahkeme
 
         super(HizmetMahkemeSync, self).handle()
