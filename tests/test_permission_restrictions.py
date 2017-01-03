@@ -27,7 +27,7 @@ class TestCase(BaseTestCase):
         user = User.objects.get(username='personel_isleri_1')
 
         # Kullanıcın sahip olduğu izinler.
-        role = user.role_set[0].role
+        role = user.role_user_set[0].role
         permissions = role.get_db_permissions()
 
         number_of_initial_perm = len(permissions)

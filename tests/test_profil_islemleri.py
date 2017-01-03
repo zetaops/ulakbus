@@ -145,7 +145,7 @@ class TestCase(BaseTestCase):
         self.parola_basarili_degisim()
         # Kullanıcı adı değişikliğinden sonra 'Çıkış Yap' seçeneği seçilir.
         resp = self.client.post(flow="cikis_yap")
-        assert resp.json["cmd"] == 'reload'
+        assert resp.json["cmd"] == 'logout'
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user = User.objects.get(self.user_key)
         user.username = 'ulakbus'
@@ -159,7 +159,7 @@ class TestCase(BaseTestCase):
         self.kullanici_adi_basarili_degisim()
         # Kullanıcı adı değişikliğinden sonra 'Çıkış Yap' seçeneği seçilir.
         resp = self.client.post(flow="cikis_yap")
-        assert resp.json["cmd"] == 'reload'
+        assert resp.json["cmd"] == 'logout'
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user = User.objects.get(self.user_key)
         user.username = 'ulakbus'
@@ -236,7 +236,7 @@ class TestCase(BaseTestCase):
         # Parolanın üç kez yanlış girilmesi halinde kullanıcıya
         # zorla çıkış yaptırıldığı test edilir.
         resp = self.client.post(form={'parola': 'yanlis_parola'})
-        assert resp.json["cmd"] == 'reload'
+        assert resp.json["cmd"] == 'logout'
         assert 'Hatalı Parola' in resp.json["title"]
 
     def kullanici_adi_basarili_degisim(self):
