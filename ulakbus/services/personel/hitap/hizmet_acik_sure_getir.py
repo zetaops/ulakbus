@@ -22,49 +22,34 @@ class HizmetAcikSureGetir(HITAPSorgula):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            bean_name (str): Hitap'tan gelen bean nesnesinin adı
-            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
-                    ``HizmetAcikSure`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetAcikSureSorgula'
-        self.bean_name = 'HizmetAcikSureServisBean'
-        self.service_dict = {
-            'fields': {
-                'tckn': 'tckn',
-                'kayit_no': 'kayitNo',
-                'acik_sekil': 'acikSekil',
-                'iade_sekil': 'iadeSekil',
-                'hizmet_durum': 'hizmetDurum',
-                'husus': 'husus',
-                'aciga_alinma_tarih': 'acigaAlinmaTarih',
-                'goreve_son_tarih': 'goreveSonTarih',
-                'goreve_iade_istem_tarih': 'goreveIadeIstemTarih',
-                'goreve_iade_tarih': 'goreveIadeTarih',
-                'acik_aylik_bas_tarih': 'acikAylikBasTarih',
-                'acik_aylik_bit_tarih': 'acikAylikBitTarih',
-                'goreve_son_aylik_bas_tarih': 'goreveSonAylikBasTarih',
-                'goreve_son_aylik_bit_tarih': 'goreveSonAylikBitTarih',
-                's_yonetim_kald_tarih': 'SYonetimKaldTarih',
-                'aciktan_atanma_tarih': 'aciktanAtanmaTarih',
-                'kurum_onay_tarihi': 'kurumOnayTarihi'
-            },
-            'date_filter': ['aciga_alinma_tarih', 'goreve_son_tarih', 'goreve_iade_istem_tarih',
-                            'goreve_iade_tarih', 'acik_aylik_bas_tarih', 'acik_aylik_bit_tarih',
-                            'goreve_son_aylik_bas_tarih', 'goreve_son_aylik_bit_tarih',
-                            's_yonetim_kald_tarih', 'aciktan_atanma_tarih', 'kurum_onay_tarihi'],
-            'required_fields': ['tckn']
-        }
-        super(HizmetAcikSureGetir, self).handle()
+    service_dict = {
+        'service_name': 'HizmetAcikSureSorgula',
+        'bean_name': 'HizmetAcikSureServisBean',
+        'fields': {
+            'tckn': 'tckn',
+            'kayit_no': 'kayitNo',
+            'acik_sekil': 'acikSekil',
+            'iade_sekil': 'iadeSekil',
+            'hizmet_durum': 'hizmetDurum',
+            'husus': 'husus',
+            'aciga_alinma_tarih': 'acigaAlinmaTarih',
+            'goreve_son_tarih': 'goreveSonTarih',
+            'goreve_iade_istem_tarih': 'goreveIadeIstemTarih',
+            'goreve_iade_tarih': 'goreveIadeTarih',
+            'acik_aylik_bas_tarih': 'acikAylikBasTarih',
+            'acik_aylik_bit_tarih': 'acikAylikBitTarih',
+            'goreve_son_aylik_bas_tarih': 'goreveSonAylikBasTarih',
+            'goreve_son_aylik_bit_tarih': 'goreveSonAylikBitTarih',
+            's_yonetim_kald_tarih': 'SYonetimKaldTarih',
+            'aciktan_atanma_tarih': 'aciktanAtanmaTarih',
+            'kurum_onay_tarihi': 'kurumOnayTarihi'
+        },
+        'date_filter': ['aciga_alinma_tarih', 'goreve_son_tarih', 'goreve_iade_istem_tarih',
+                        'goreve_iade_tarih', 'acik_aylik_bas_tarih', 'acik_aylik_bit_tarih',
+                        'goreve_son_aylik_bas_tarih', 'goreve_son_aylik_bit_tarih',
+                        's_yonetim_kald_tarih', 'aciktan_atanma_tarih', 'kurum_onay_tarihi'],
+        'required_fields': ['tckn']
+    }
 
     def custom_filter(self, hitap_dict):
         """

@@ -22,19 +22,7 @@ class HizmetUnvanSync(HITAPSync):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            sorgula_service (str): İlgili Hitap sorgu servisinin adı
-            model (Model): Hitap'taki kaydın yereldeki karşılığı olan
-                        ``HizmetUnvan`` modeli
-
-        """
-
-        self.sorgula_service = 'hizmet-unvan-getir'
-        self.model = HizmetUnvan
-
-        super(HizmetUnvanSync, self).handle()
+    service_dict = {
+        'sorgula_service': 'hizmet-unvan-getir',
+        'model': HizmetUnvan
+    }

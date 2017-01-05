@@ -22,19 +22,7 @@ class HizmetCetveliSync(HITAPSync):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            sorgula_service (str): İlgili Hitap sorgu servisinin adı
-            model (Model): Hitap'taki kaydın yereldeki karşılığı olan
-                        ``HizmetKayitlari`` modeli
-
-        """
-
-        self.sorgula_service = 'hizmet-cetveli-getir'
-        self.model = HizmetKayitlari
-
-        super(HizmetCetveliSync, self).handle()
+    service_dict = {
+        'sorgula_service': 'hizmet-cetveli-getir',
+        'model': HizmetKayitlari
+    }

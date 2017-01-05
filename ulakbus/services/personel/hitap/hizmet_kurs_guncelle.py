@@ -20,37 +20,23 @@ class HizmetKursGuncelle(HITAPGuncelle):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): Request yoluyla gelen kayıtlar,
-                    hizmetKursUpdate servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
-                    alanlar listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetKursUpdate'
-        self.service_dict = {
-            'fields': {
-                'kayitNo': self.request.payload.get('kayit_no', ''),
-                'tckn': self.request.payload.get('tckn', ''),
-                'kursOgrenimSuresi': self.request.payload.get('kurs_ogrenim_suresi', ''),
-                'mezuniyetTarihi': self.request.payload.get('mezuniyet_tarihi', ''),
-                'kursNevi': self.request.payload.get('kurs_nevi', ''),
-                'bolumAd': self.request.payload.get('bolum_ad', ''),
-                'okulAd': self.request.payload.get('okul_ad', ''),
-                'ogrenimYeri': self.request.payload.get('ogrenim_yeri', ''),
-                'denklikTarihi': self.request.payload.get('denklik_tarihi', ''),
-                'denklikOkul': self.request.payload.get('denklik_okulu', ''),
-                'denklikBolum': self.request.payload.get('denklik_bolum', ''),
-                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
-            },
-            'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
-            'required_fields': ['tckn', 'kayitNo', 'kursOgrenimSuresi', 'mezuniyetTarihi',
-                                'kursNevi', 'okulAd', 'kurumOnayTarihi']
-        }
-        super(HizmetKursGuncelle, self).handle()
+    service_dict = {
+        'service_name': 'HizmetKursUpdate',
+        'fields': {
+            'kayitNo': 'kayit_no',
+            'tckn': 'tckn',
+            'kursOgrenimSuresi': 'kurs_ogrenim_suresi',
+            'mezuniyetTarihi': 'mezuniyet_tarihi',
+            'kursNevi': 'kurs_nevi',
+            'bolumAd': 'bolum_ad',
+            'okulAd': 'okul_ad',
+            'ogrenimYeri': 'ogrenim_yeri',
+            'denklikTarihi': 'denklik_tarihi',
+            'denklikOkul': 'denklik_okulu',
+            'denklikBolum': 'denklik_bolum',
+            'kurumOnayTarihi': 'kurum_onay_tarihi'
+        },
+        'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
+        'required_fields': ['tckn', 'kayitNo', 'kursOgrenimSuresi', 'mezuniyetTarihi',
+                            'kursNevi', 'okulAd', 'kurumOnayTarihi']
+    }

@@ -23,7 +23,8 @@ class HizmetKursSil(HITAPSil):
     service_dict = {
         'fields': {
             'tckn': 'tckn',
-            'kayitNo': 'kayit_no'},
+            'kayitNo': 'kayit_no'
+        },
         'service_name': 'HizmetKursDelete',
         'required_fields': ['tckn', 'kayitNo']
     }

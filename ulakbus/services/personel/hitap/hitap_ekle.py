@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 
-from ulakbus.services.ulakbus_service import UlakbusService
+from ulakbus.services.ulakbus_service import ZatoHitapService
 import os
 import urllib2
 from json import dumps
@@ -26,7 +26,7 @@ H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPEkle(UlakbusService):
+class HITAPEkle(ZatoHitapService):
     """
     Hitap Ekleme servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -41,7 +41,6 @@ class HITAPEkle(UlakbusService):
 
     """
     HAS_CHANNEL = False
-    service_dict = {"fields": {}, "date_filter": [], "required_fields": [], "service_name": ''}
 
     def handle(self):
         """
@@ -108,7 +107,7 @@ class HITAPEkle(UlakbusService):
                         self.date_filter(self.service_dict['date_filter'], request_payload)
 
                     if 'required_fields' in self.service_dict:
-                        self.check_required_fields(self.service_dict, request_payload)
+                        self.check_required_fields(request_payload)
 
                     for dict_element in self.service_dict['fields']:
                         self.logger.info("Dict element : %s", dict_element)

@@ -22,19 +22,7 @@ class HizmetMahkemeSync(HITAPSync):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            sorgula_service (str): İlgili Hitap sorgu servisinin adı
-            model (Model): Hitap'taki kaydın yereldeki karşılığı olan
-                        ``HizmetMahkeme`` modeli
-
-        """
-
-        self.sorgula_service = 'hizmet-mahkeme-getir'
-        self.model = HizmetMahkeme
-
-        super(HizmetMahkemeSync, self).handle()
+    service_dict = {
+        'sorgula_service': 'hizmet-mahkeme-getir',
+        'model': HizmetMahkeme
+    }

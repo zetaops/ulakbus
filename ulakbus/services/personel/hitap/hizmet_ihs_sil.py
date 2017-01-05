@@ -20,22 +20,11 @@ class HizmetIHSSil(HITAPSil):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): Request yolula gelen kayıtlar,
-                    HizmetIHSDelete servisinin alanlarıyla eşlenmektedir.
-                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetIHSDelete'
-
-        self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
-        self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')
-        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
-
-        super(HizmetIHSSil, self).handle()
+    service_dict = {
+        'service_name': 'HizmetIHSDelete',
+        'fields': {
+            'tckn': 'tckn',
+            'kayitNo': 'kayit_no'
+        },
+        'required_fields': ['tckn', 'kayit_no']
+    }

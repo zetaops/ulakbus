@@ -20,33 +20,19 @@ class HizmetIstisnaiIlgiEkle(HITAPEkle):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): Request yoluyla gelen kayıtlar,
-                    hizmetIstisnaiIlgiUpdate servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
-                    alanlar listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'hizmetIstisnaiIlgiInsert'
-        self.service_dict = {
-            'fields': {
-                'kayitNo': self.request.payload.get('kayit_no', ''),
-                'tckn': self.request.payload.get('tckn', ''),
-                'istisnaiIlgiNevi': self.request.payload.get('istisnai_ilgi_nevi', ''),
-                'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),
-                'bitisTarihi': self.request.payload.get('bitis_tarihi', ''),
-                'gunSayisi': self.request.payload.get('gun_sayisi', ''),
-                'khaDurum': self.request.payload.get('kha_durum', ''),
-                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
-            },
-            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
-            'required_fields': ['tckn', 'istisnaiIlgiNevi', 'baslamaTarihi',
-                                'bitisTarihi', 'gunSayisi', 'khaDurum', 'kurumOnayTarihi']
-        }
-        super(HizmetIstisnaiIlgiEkle, self).handle()
+    service_dict = {
+        'service_name': 'hizmetIstisnaiIlgiInsert',
+        'fields': {
+            'kayitNo': 'kayit_no',
+            'tckn': 'tckn',
+            'istisnaiIlgiNevi': 'istisnai_ilgi_nevi',
+            'baslamaTarihi': 'baslama_tarihi',
+            'bitisTarihi': 'bitis_tarihi',
+            'gunSayisi': 'gun_sayisi',
+            'khaDurum': 'kha_durum',
+            'kurumOnayTarihi': 'kurum_onay_tarihi'
+        },
+        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+        'required_fields': ['tckn', 'istisnaiIlgiNevi', 'baslamaTarihi',
+                            'bitisTarihi', 'gunSayisi', 'khaDurum', 'kurumOnayTarihi']
+    }

@@ -20,37 +20,21 @@ class HizmetUnvanGetir(HITAPSorgula):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            bean_name (str): Hitap'tan gelen bean nesnesinin adı
-            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
-                    ``HizmetUnvan`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
-                    alanlar listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetUnvanSorgula'
-        self.bean_name = 'HizmetUnvanServisBean'
-        self.service_dict = {
-            'fields': {
-                'tckn': 'tckn',
-                'kayit_no': 'kayitNo',
-                'unvan_kod': 'unvanKod',
-                'unvan_tarihi': 'unvanTarihi',
-                'unvan_bitis_tarihi': 'unvanBitisTarihi',
-                'hizmet_sinifi': 'hizmetSinifi',
-                'asil_vekil': 'asilVekil',
-                'atama_sekli': 'atamaSekli',
-                'fhz_orani': 'fhzOrani',
-                'kurum_onay_tarihi': 'kurumOnayTarihi'
-            },
-            'date_filter': ['unvan_tarihi', 'unvan_bitis_tarihi', 'kurum_onay_tarihi'],
-            'required_fields': ['tckn']
-        }
-        super(HizmetUnvanGetir, self).handle()
+    service_dict = {
+        'service_name': 'HizmetUnvanSorgula',
+        'bean_name': 'HizmetUnvanServisBean',
+        'fields': {
+            'tckn': 'tckn',
+            'kayit_no': 'kayitNo',
+            'unvan_kod': 'unvanKod',
+            'unvan_tarihi': 'unvanTarihi',
+            'unvan_bitis_tarihi': 'unvanBitisTarihi',
+            'hizmet_sinifi': 'hizmetSinifi',
+            'asil_vekil': 'asilVekil',
+            'atama_sekli': 'atamaSekli',
+            'fhz_orani': 'fhzOrani',
+            'kurum_onay_tarihi': 'kurumOnayTarihi'
+        },
+        'date_filter': ['unvan_tarihi', 'unvan_bitis_tarihi', 'kurum_onay_tarihi'],
+        'required_fields': ['tckn']
+    }

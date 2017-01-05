@@ -20,38 +20,24 @@ class HizmetOkulEkle(HITAPEkle):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): Request yoluyla gelen kayıtlar,
-                    HizmetOkulInsert servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
-                    alanlar listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetOkulInsert'
-        self.service_dict = {
-            'fields': {
-                'bolum': self.request.payload.get('bolum', ''),
-                'kayitNo': self.request.payload.get('kayit_no', ''),
-                'mezuniyetTarihi': self.request.payload.get('mezuniyet_tarihi', ''),
-                'ogrenimDurumu': self.request.payload.get('ogrenim_durumu', ''),
-                'ogrenimSuresi': self.request.payload.get('ogrenim_suresi', ''),
-                'okulAd': self.request.payload.get('okul_ad', ''),
-                'tckn': self.request.payload.get('tckn', ''),
-                'denklikTarihi': self.request.payload.get('denklik_tarihi', ''),
-                'ogrenimYer': self.request.payload.get('ogrenim_yeri', ''),
-                'denklikBolum': self.request.payload.get('denklik_bolum', ''),
-                'denklikOkul': self.request.payload.get('denklik_okul', ''),
-                'hazirlik': self.request.payload.get('hazirlik', ''),
-                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
-            },
-            'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
-            'required_fields': ['tckn', 'ogrenimDurumu', 'mezuniyetTarihi', 'ogrenimSuresi',
-                                'hazirlik', 'kurumOnayTarihi']
-        }
-        super(HizmetOkulEkle, self).handle()
+    service_dict = {
+        'service_name': 'HizmetOkulInsert',
+        'fields': {
+            'bolum': 'bolum',
+            'kayitNo': 'kayit_no',
+            'mezuniyetTarihi': 'mezuniyet_tarihi',
+            'ogrenimDurumu': 'ogrenim_durumu',
+            'ogrenimSuresi': 'ogrenim_suresi',
+            'okulAd': 'okul_ad',
+            'tckn': 'tckn',
+            'denklikTarihi': 'denklik_tarihi',
+            'ogrenimYer': 'ogrenim_yeri',
+            'denklikBolum': 'denklik_bolum',
+            'denklikOkul': 'denklik_okul',
+            'hazirlik': 'hazirlik',
+            'kurumOnayTarihi': 'kurum_onay_tarihi'
+        },
+        'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
+        'required_fields': ['tckn', 'ogrenimDurumu', 'mezuniyetTarihi', 'ogrenimSuresi',
+                            'hazirlik', 'kurumOnayTarihi']
+    }

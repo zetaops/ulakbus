@@ -121,7 +121,7 @@ class CrudHitap(CrudView):
         self.set_form_data_to_object()
         obj_is_new = not self.object.is_in_db()
         action, self.object.sync = ('add', 4) if obj_is_new else ('update', 2)
-        self.object.save()
+        # self.object.save()
 
         hitap_service = zato_service_selector(self.model_class, action)
         hs = hitap_service(kayit=self.object)

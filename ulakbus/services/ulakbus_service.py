@@ -15,20 +15,24 @@ class UlakbusService(Service):
     def get_name(cls):
         return un_camel(cls.__name__, dash='-')
 
-    @staticmethod
-    def check_required_fields(service_dict, request_payload):
+
+class ZatoHitapService(UlakbusService):
+
+    service_dict = {}
+
+    def check_required_fields(self, request_payload):
         """Gelen ``service_dict` içindeki ``required_fields`` sözlük listesi içinde belirtilen servis
         tarafında servis tarafında gerekli olarak tanımlanmış alanların hem ``fields`` sözlüğü
         içinde tanımlı olup olmadığını hem de bu alanların değerinin null olmadığını kontrol
         eder.
 
         Args:
-            service_dict (dict) : HITAP servisine gönderilmek üzere hazırlanmış sözlük listesi.
+            request_payload (dict) : HITAP servisine gönderilmek üzere hazırlanmış sözlük listesi.
 
         """
-        for required_field in service_dict['required_fields']:
+        for required_field in self.service_dict['required_fields']:
             try:
-                if not request_payload[service_dict['fields'][required_field]]:
+                if not request_payload[self.service_dict['fields'][required_field]]:
                     raise ValueError("required %s field's value is null" % required_field)
             except KeyError:
                 raise KeyError("required field %s not found in hitap service dict" % required_field)

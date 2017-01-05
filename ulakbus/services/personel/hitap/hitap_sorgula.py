@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.ulakbus_service import UlakbusService
+from ulakbus.services.ulakbus_service import ZatoHitapService
 import os
 import urllib2
 from json import dumps
@@ -61,7 +61,7 @@ H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPSorgula(UlakbusService):
+class HITAPSorgula(ZatoHitapService):
     """
     Hitap Sorgulama servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -77,7 +77,6 @@ class HITAPSorgula(UlakbusService):
 
     """
     HAS_CHANNEL = False
-    service_dict = {'fields': {}, 'date_filter': [], 'required_fields': [], 'service_name': '', 'bean_name': ''}
 
     def handle(self):
         """
@@ -91,11 +90,12 @@ class HITAPSorgula(UlakbusService):
         """
 
         self.logger.info("zato service started to work.")
+        request_payload = self.request.payload
         tckn = self.request.payload['tckn']
         conn = self.outgoing.soap['HITAP'].conn
-        self.request_json(tckn, conn)
+        self.request_json(tckn, conn, request_payload)
 
-    def request_json(self, tckn, conn):
+    def request_json(self, tckn, conn, request_payload):
         """
         Kimlik numarası ve kullanıcı bilgileriyle birlikte Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
@@ -123,6 +123,9 @@ class HITAPSorgula(UlakbusService):
         try:
             # connection for hitap
             with conn.client() as client:
+
+                if 'required_fields' in self.service_dict:
+                    self.check_required_fields(request_payload)
 
                 # hitap response
                 self.logger.info("SORGULA SERVIS NAME : %s" % service_name)

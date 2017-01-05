@@ -39,4 +39,3 @@ class HizmetKursEkle(HITAPEkle):
         'required_fields': ['tckn', 'kursOgrenimSuresi', 'mezuniyetTarihi', 'kursNevi',
                             'okulAd', 'kurumOnayTarihi']
     }
-

@@ -26,19 +26,7 @@ class HizmetNufusSync(HITAPSync):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            sorgula_service (str): İlgili Hitap sorgu servisinin adı
-            model (Model): Hitap'taki kaydın yereldeki karşılığı olan
-                        ``NufusKayitlari`` modeli
-
-        """
-
-        self.sorgula_service = 'hizmet-nufus-getir'
-        self.model = NufusKayitlari
-
-        super(HizmetNufusSync, self).handle()
+    service_dict = {
+        'sorgula_service': 'hizmet-nufus-getir',
+        'model': NufusKayitlari
+    }

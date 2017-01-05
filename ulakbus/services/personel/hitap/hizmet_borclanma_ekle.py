@@ -20,47 +20,33 @@ class HizmetBorclanmaEkle(HITAPEkle):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): Request yoluyla gelen kayıtlar,
-                    HizmetBorclanmaInsert servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetBorclanmaInsert'
-
-        self.service_dict = {
-            'fields': {
-                'tckn': self.request.payload.get('tckn', ''),
-                'ad': self.request.payload.get('ad', ''),
-                'soyad': self.request.payload.get('soyad', ''),
-                'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),
-                'bitisTarihi': self.request.payload.get('bitis_tarihi', ''),
-                'gunSayisi': self.request.payload.get('gun_sayisi', ''),
-                'odenenMiktar': self.request.payload.get('odenen_miktar', ''),
-                'toplamTutar': self.request.payload.get('toplam_tutar', ''),
-                'kanunKod': self.request.payload.get('kanun_kod', ''),
-                'borcNevi': self.request.payload.get('borc_nevi', ''),
-                'borclanmaTarihi': self.request.payload.get('borclanma_tarihi', ''),
-                'odemeTarihi': self.request.payload.get('odeme_tarihi', ''),
-                'derece': self.request.payload.get('derece', ''),
-                'kademe': self.request.payload.get('kademe', ''),
-                'ekgosterge': self.request.payload.get('ekgosterge', ''),
-                'emekliSicil': self.request.payload.get('emekli_sicil', ''),
-                'calistigiKurum': self.request.payload.get('calistigi_kurum', ''),
-                'isyeriIl': self.request.payload.get('isyeri_il', ''),
-                'isyeriIlce': self.request.payload.get('isyeri_ilce', ''),
-                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
-            },
-            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'borclanmaTarihi', 'kurumOnayTarihi'],
-            'required_fields': ['tckn', 'ad', 'soyad', 'emekliSicil', 'derece', 'kademe',
-                                'ekgosterge', 'baslamaTarihi', 'bitisTarihi', 'gunSayisi',
-                                'kanunKod', 'borcNevi', 'toplamTutar', 'calistigiKurum', 'isyeriIl',
-                                'isyeriIlce', 'kurumOnayTarihi']
-        }
-        super(HizmetBorclanmaEkle, self).handle()
+    service_dict = {
+        'service_name': 'HizmetBorclanmaInsert',
+        'fields': {
+            'tckn': 'tckn',
+            'ad': 'ad',
+            'soyad': 'soyad',
+            'baslamaTarihi': 'baslama_tarihi',
+            'bitisTarihi': 'bitis_tarihi',
+            'gunSayisi': 'gun_sayisi',
+            'odenenMiktar': 'odenen_miktar',
+            'toplamTutar': 'toplam_tutar',
+            'kanunKod': 'kanun_kod',
+            'borcNevi': 'borc_nevi',
+            'borclanmaTarihi': 'borclanma_tarihi',
+            'odemeTarihi': 'odeme_tarihi',
+            'derece': 'derece',
+            'kademe': 'kademe',
+            'ekgosterge': 'ekgosterge',
+            'emekliSicil': 'emekli_sicil',
+            'calistigiKurum': 'calistigi_kurum',
+            'isyeriIl': 'isyeri_il',
+            'isyeriIlce': 'isyeri_ilce',
+            'kurumOnayTarihi': 'kurum_onay_tarihi'
+        },
+        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'borclanmaTarihi', 'kurumOnayTarihi'],
+        'required_fields': ['tckn', 'ad', 'soyad', 'emekliSicil', 'derece', 'kademe',
+                            'ekgosterge', 'baslamaTarihi', 'bitisTarihi', 'gunSayisi',
+                            'kanunKod', 'borcNevi', 'toplamTutar', 'calistigiKurum', 'isyeriIl',
+                            'isyeriIlce', 'kurumOnayTarihi']
+    }

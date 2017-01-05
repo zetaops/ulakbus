@@ -5,8 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.ulakbus_service import UlakbusService
-from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
+from ulakbus.services.ulakbus_service import ZatoHitapService
 import os
 import urllib2
 from json import dumps
@@ -27,7 +26,7 @@ H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPGuncelle(UlakbusService):
+class HITAPGuncelle(ZatoHitapService):
     """
     Hitap Güncelleme servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -43,7 +42,6 @@ class HITAPGuncelle(UlakbusService):
 
     """
     HAS_CHANNEL = False
-    service_dict = {'fields': {}, 'date_filter': [], 'required_fields': [], 'service_name': ''}
 
     def handle(self):
         """
@@ -82,12 +80,12 @@ class HITAPGuncelle(UlakbusService):
         status = "error"
         hitap_response = False
         request_data = {}
-
+        service_name = self.service_dict['service_name']
         try:
             # connection for hitap
             with conn.client() as client:
                 # hitap response
-                service_call_name = self.service_mapper(self.service_name)
+                service_call_name = self.service_mapper(service_name)
 
                 if service_call_name:
                     request_data = client.factory.create(service_call_name)
@@ -98,17 +96,16 @@ class HITAPGuncelle(UlakbusService):
                 self.custom_filter(self.service_dict)
 
                 if 'required_fields' in self.service_dict:
-                    required_field_check = HitapHelper()
-                    required_field_check.check_required_data(self.service_dict)
+                    self.check_required_fields(request_data)
 
                 for dict_element in self.service_dict['fields']:
                     request_data[dict_element] = self.service_dict[dict_element]
 
-                self.logger.info("%s started to work." % self.service_name)
+                self.logger.info("%s started to work." % service_name)
 
-                hitap_response = getattr(client.service, self.service_name)(request_data,
-                                                                            kullaniciAd=H_USER,
-                                                                            sifre=H_PASS)
+                hitap_response = getattr(client.service, service_name)(request_data,
+                                                                       kullaniciAd=H_USER,
+                                                                       sifre=H_PASS)
                 if hitap_response:
                     hitap_response = self.create_hitap_json(hitap_response)
 

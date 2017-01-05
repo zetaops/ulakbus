@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.ulakbus_service import UlakbusService
+from ulakbus.services.ulakbus_service import ZatoHitapService
 from zato.common import DATA_FORMAT
 import os
 import urllib2
@@ -51,7 +51,7 @@ H_USER = os.environ["HITAP_USER"]
 H_PASS = os.environ["HITAP_PASS"]
 
 
-class HITAPSync(UlakbusService):
+class HITAPSync(ZatoHitapService):
     """
     Hitap Sync servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -65,7 +65,6 @@ class HITAPSync(UlakbusService):
 
     """
     HAS_CHANNEL = False
-    service_dict = {'fields': {}, 'date_filter': [], 'required_fields': [], 'sorgula_service': '', 'model': None}
 
     def handle(self):
         """
@@ -79,8 +78,6 @@ class HITAPSync(UlakbusService):
 
         self.logger.info("zato service started to work.")
         tckn = self.request.payload['tckn']
-        self.personel = Personel.objects.filter(tckn=tckn)[0]
-
         self.sync_hitap_data(tckn)
 
     def get_hitap_dict(self, tckn):
@@ -98,7 +95,7 @@ class HITAPSync(UlakbusService):
 
         """
 
-        response = self.invoke(self.sorgula_service, dumps({'tckn': tckn}),
+        response = self.invoke(self.service_dict['sorgula_service'], dumps({'tckn': tckn}),
                                data_format=DATA_FORMAT.JSON, as_bunch=True)
 
         has_error = True if response["status"] == 'error' else False
@@ -106,7 +103,7 @@ class HITAPSync(UlakbusService):
 
         return hitap_dict, has_error
 
-    def save_hitap_data_db(self, hitap_data):
+    def save_hitap_data_db(self, hitap_data, personel):
         """
         Hitap servisinden gelen kayıt yerelde yoksa, sync değeri 1 (senkronize)
         olacak şekilde kaydı veritabanına kaydeder.
@@ -116,12 +113,12 @@ class HITAPSync(UlakbusService):
 
         """
 
-        obj = self.model()
+        obj = self.service_dict['model']()
         for hk, hv in iteritems(hitap_data):
             setattr(obj, hk, hv)
 
         obj.sync = 1
-        obj.personel = self.personel
+        obj.personel = personel
         obj.save()
         self.logger.info("hitaptaki kayit yerele kaydedildi. kayit no => "
                          + str(obj.kayit_no))
@@ -136,7 +133,7 @@ class HITAPSync(UlakbusService):
 
         """
 
-        obj = self.model.objects.get(kayit_no=kayit_no)
+        obj = self.service_dict['model'].objects.get(kayit_no=kayit_no)
 
         if obj.sync == 1:
             obj.delete()
@@ -165,7 +162,7 @@ class HITAPSync(UlakbusService):
 
         # get hitap data
         hitap_dict, has_error = self.get_hitap_dict(tckn)
-
+        personel = Personel.objects.filter(tckn=tckn)[0]
         if has_error:
             self.logger.info("Hitap kaydi sorgulama hatasi.")
             status = "error"
@@ -174,7 +171,7 @@ class HITAPSync(UlakbusService):
             try:
                 # get kayit no list from db
                 kayit_no_list = [record.kayit_no for record in
-                                 self.model.objects.filter(tckn=tckn)]
+                                 self.service_dict['model'].objects.filter(tckn=tckn)]
                 self.logger.info("yereldeki kayit sayisi: " + str(len(kayit_no_list)))
                 self.logger.info("hitaptan gelen kayit sayisi: " + str(len(hitap_dict)))
 
@@ -184,7 +181,7 @@ class HITAPSync(UlakbusService):
 
                     # if hitap data is not in db, create an object and save to db.
                     if hitap_kayit_no not in kayit_no_list:
-                        self.save_hitap_data_db(hitap_record)
+                        self.save_hitap_data_db(hitap_record, personel)
                     # if in db, don't touch.
                     else:
                         kayit_no_list.remove(hitap_kayit_no)
