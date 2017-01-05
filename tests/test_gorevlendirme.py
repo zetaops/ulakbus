@@ -45,6 +45,7 @@ class TestCase(BaseTestCase):
         # Veritabanındaki görevlendirme bilgileri test
         # sonunda kontrol edebilmek amacıyla silinir.
         KurumIciGorevlendirmeBilgileri.objects.delete()
+        KurumDisiGorevlendirmeBilgileri.objects.delete()
 
         self.client.post(cmd='tur_sec', wf="gorevlendirme")
 
@@ -104,6 +105,7 @@ class TestCase(BaseTestCase):
 
         # Veritabanındaki görevlendirme bilgileri test sonunda kontrol edebilmek amacıyla silinir.
         KurumIciGorevlendirmeBilgileri.objects.delete()
+        KurumDisiGorevlendirmeBilgileri.objects.delete()
 
         # Görevlendirme işlemini yapacak olan personel işleri dairesi personeli
         user = User.objects.get(username="personel_isleri_1")
@@ -170,6 +172,7 @@ class TestCase(BaseTestCase):
         # Kurum dışı görevlendirme bilgilerinin test sonunda kontrol
         # edilebilmesi için önceki kayıtlar siliniyor
         KurumDisiGorevlendirmeBilgileri.objects.delete()
+        KurumIciGorevlendirmeBilgileri.objects.delete()
 
         # Veritabanındaki hizmet kayıtları test sonunda kontrol edebilmek amacıyla silinir.
         HizmetKayitlari.objects.delete()
@@ -239,6 +242,7 @@ class TestCase(BaseTestCase):
         # Kurum dışı görevlendirme bilgilerinin test sonunda
         # kontrol edilebilmesi için önceki kayıtlar siliniyor
         KurumDisiGorevlendirmeBilgileri.objects.delete()
+        KurumIciGorevlendirmeBilgileri.objects.delete()
 
         # Veritabanındaki hizmet kayıtları test sonunda kontrol edebilmek amacıyla silinir.
         HizmetKayitlari.objects.delete()

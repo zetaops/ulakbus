@@ -194,6 +194,28 @@ class Personel(Model):
 
         return self.atama.kurum_sicil_no
 
+    def gorevlendirme_tarih_kontrol(self, baslama_tarihi, bitis_tarihi):
+        if baslama_tarihi > bitis_tarihi:
+            raise Exception("Bitiş tarihi başlangıç tarihinden büyük olmalıdır.")
+        illegal_gorevlendirme_kurum_ici = KurumIciGorevlendirmeBilgileri.objects.filter(
+            kurum_ici_gorev_baslama_tarihi__lte=bitis_tarihi,
+            kurum_ici_gorev_bitis_tarihi__gte=baslama_tarihi,
+            personel=self
+        )
+        illegal_gorevlendirme_kurum_disi = KurumDisiGorevlendirmeBilgileri.objects.filter(
+            kurum_disi_gorev_baslama_tarihi__lte=bitis_tarihi,
+            kurum_disi_gorev_bitis_tarihi__gte=baslama_tarihi,
+            personel=self
+        )
+
+        # todo: testleri geçirmek için koyduk, alternatif bulmak gerekiyor
+        import time
+        time.sleep(1)
+
+        if illegal_gorevlendirme_kurum_ici or illegal_gorevlendirme_kurum_disi:
+            raise Exception("Belirtilen tarihlerde, belirtilen personel başka bir görevlendirmede olmamalıdır.")
+
+
     @lazy_property
     def kurum_ici_gorevlendirme(self):
         """kurum_ici_gorevlendirme
@@ -333,6 +355,18 @@ class KurumIciGorevlendirmeBilgileri(Model):
     def __unicode__(self):
         return "%s %s" % (self.gorev_tipi, self.aciklama)
 
+    def pre_save(self):
+        if self.exist:
+            changed_fields = self.changed_fields()
+            if "kurum_ici_gorev_baslama_tarihi" in changed_fields or "kurum_ici_gorev_bitis_tarihi" in changed_fields:
+                self.personel.gorevlendirme_tarih_kontrol(self.kurum_ici_gorev_baslama_tarihi,
+                                                          self.kurum_ici_gorev_bitis_tarihi)
+
+    def pre_creation(self):
+        self.personel.gorevlendirme_tarih_kontrol(self.kurum_ici_gorev_baslama_tarihi,
+                                                  self.kurum_ici_gorev_bitis_tarihi)
+
+
 
 class KurumDisiGorevlendirmeBilgileri(Model):
     """Kurum Dışı Görevlendirme Bilgileri Modeli
@@ -394,6 +428,17 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
     def __unicode__(self):
         return "%s %s %s" % (self.gorev_tipi, self.aciklama, self.ulke)
+
+    def pre_save(self):
+        if self.exist:
+            changed_fields = self.changed_fields()
+            if "kurum_disi_gorev_baslama_tarihi" in changed_fields or "kurum_disi_gorev_bitis_tarihi" in changed_fields:
+                self.personel.gorevlendirme_tarih_kontrol(self.kurum_disi_gorev_baslama_tarihi,
+                                                          self.kurum_disi_gorev_bitis_tarihi)
+
+    def pre_creation(self):
+        self.personel.gorevlendirme_tarih_kontrol(self.kurum_disi_gorev_baslama_tarihi,
+                                                  self.kurum_disi_gorev_bitis_tarihi)
 
 
 class Kadro(Model):
