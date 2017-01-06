@@ -6,8 +6,7 @@
 
 from ulakbus.models import User
 from zengine.lib.test_utils import BaseTestCase
-from zengine.lib import translation
-import random
+import time
 from ulakbus.lib.common import EPostaDogrulama
 
 k_adi_parametreleri = ['eski_k_adi', 'yeni_k_adi']
@@ -110,6 +109,9 @@ class TestCase(BaseTestCase):
         user.blocking_save()
 
     def test_e_posta_degistir_parola_denemesi_basarisiz(self):
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
+        self.client.post()
         # E-posta değiştirme iş akışına geçiş yapılır.
         self.client.post(flow="e_posta_degistir")
         # Hatali e_posta adresi girilir.
@@ -167,6 +169,7 @@ class TestCase(BaseTestCase):
         user.blocking_save()
 
     def test_kullanici_adi_degistir_parola_denemesi_basarisiz(self):
+        time.sleep(1)
         user = User.objects.get(self.user_key)
         self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()

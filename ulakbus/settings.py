@@ -27,7 +27,7 @@ TRANSLATION_DOMAINS['messages'] = 'tr'
 # Default mail address
 MAIL_ADDRESS = 'postmaster@mg.ulakbus.net'
 # Demo main url
-DEMO_URL = 'http://dev.zetaops.io'
+DEMO_URL = 'http://ulakbus.net'
 
 # path of the activity modules which will be invoked by workflow tasks
 ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
