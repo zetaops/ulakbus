@@ -50,17 +50,12 @@ class ZatoService(object):
     ``service_uri`` and ``payload`` parameters especially is
     set by extending class' __init__.
 
-    Attributes:
-        payload (str): an empty dict as default
-        service_uri (str): "ping" as default
-
     """
 
-    service_class_path = ''
-    service_class_name = ''
     payload = "{}"
 
-    def get_uri(self, service_uri):
+    @staticmethod
+    def get_uri(service_uri):
         """
         Simply returns full uri of zato service object.
         It uses ``ZATO_SERVER`` from settings module.
@@ -102,7 +97,7 @@ class ZatoService(object):
             r.close()
             try:
                 if response['status'] == 'ok':
-                    return self.rebuild_response(response['result'])
+                    return self.rebuild_response(response)
                 else:
                     # all zato internal errors will be handled here,
                     # riak error, connection error etc..
@@ -138,6 +133,8 @@ class ZatoService(object):
 
 class TcknService(ZatoService):
 
+    payload = "{}"
+
     def __init__(self, tckn=""):
         super(ZatoService, self).__init__()
         self.payload = '{"tckn":"%s"}' % self.check_turkish_identity_number(tckn)
@@ -170,9 +167,15 @@ class TcknService(ZatoService):
 
 class HitapService(ZatoService):
 
+    payload = "{}"
+
+    service_class_path = ''
+    service_class_name = ''
+
     def __init__(self, kayit):
         module = importlib.import_module(self.service_class_path)
         model = getattr(module, self.service_class_name)
+
         self.payload = get_payload_object(model, kayit)
 
 
@@ -224,7 +227,8 @@ class HitapAcikSureEkle(HitapHizmetEkle):
     eklemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_acik_sure_ekle.HizmetAcikSureEkle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_acik_sure_ekle'
+    service_class_name = 'HizmetAcikSureEkle'
 
 
 class HitapAcikSureGuncelle(HitapHizmetGuncelle):
@@ -233,7 +237,8 @@ class HitapAcikSureGuncelle(HitapHizmetGuncelle):
     guncellemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_acik_sure_guncelle.HizmetAcikSureGuncelle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_acik_sure_guncelle'
+    service_class_name = 'HizmetAcikSureGuncelle'
 
 
 class HitapAcikSureSil(HitapHizmetSil):
@@ -242,7 +247,8 @@ class HitapAcikSureSil(HitapHizmetSil):
     silme işlemini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_acik_sure_sil.HizmetAcikSureSil'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_acik_sure_sil'
+    service_class_name = 'HizmetAcikSureSil'
 
 
 class HitapAskerlikGetir(HitapHizmetSorgula):
@@ -268,7 +274,8 @@ class HitapAskerlikEkle(HitapHizmetEkle):
 
     """
 
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_askerlik_ekle.HizmetAskerlikEkle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_askerlik_ekle'
+    service_class_name = 'HizmetAskerlikEkle'
 
 
 class HitapAskerlikGuncelle(HitapHizmetGuncelle):
@@ -277,7 +284,8 @@ class HitapAskerlikGuncelle(HitapHizmetGuncelle):
     guncellemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_askerlik_guncelle.HizmetAskerlikGuncelle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_askerlik_guncelle'
+    service_class_name = 'HizmetAskerlikGuncelle'
 
 
 class HitapAskerlikSil(HitapHizmetSil):
@@ -286,7 +294,8 @@ class HitapAskerlikSil(HitapHizmetSil):
     silme işlemini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_askerlik_sil.HizmetAskerlikSil'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_askerlik_sil'
+    service_class_name = 'HizmetAskerlikSil'
 
 
 class HitapBirlestirmeGetir(HitapHizmetSorgula):
@@ -312,7 +321,8 @@ class HitapBirlestirmeEkle(HitapHizmetEkle):
     eklemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_birlestirme_ekle.HizmetBirlestirmeEkle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_birlestirme_ekle'
+    service_class_name = 'HizmetBirlestirmeEkle'
 
 
 class HitapBirlestirmeGuncelle(HitapHizmetGuncelle):
@@ -321,7 +331,8 @@ class HitapBirlestirmeGuncelle(HitapHizmetGuncelle):
     güncellemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_birlestirme_guncelle.HizmetBirlestirmeGuncelle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_birlestirme_guncelle'
+    service_class_name = 'HizmetBirlestirmeGuncelle'
 
 
 class HitapBirlestirmeSil(HitapHizmetSil):
@@ -330,7 +341,8 @@ class HitapBirlestirmeSil(HitapHizmetSil):
     silme işlemini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_birlestirme_sil.HizmetBirlestirmeSil'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_birlestirme_sil'
+    service_class_name = 'HizmetBirlestirmeSil'
 
 
 class HitapBorclanmaGetir(HitapHizmetSorgula):
@@ -356,7 +368,8 @@ class HitapBorclanmaEkle(HitapHizmetEkle):
     eklemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_borclanma_ekle.HizmetBorclanmaEkle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_borclanma_ekle'
+    service_class_name = 'HizmetBorclanmaEkle'
 
 
 class HitapBorclanmaGuncelle(HitapHizmetGuncelle):
@@ -365,7 +378,8 @@ class HitapBorclanmaGuncelle(HitapHizmetGuncelle):
     güncellemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_borclanma_guncelle.HizmetBorclanmaGuncelle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_borclanma_guncelle'
+    service_class_name = 'HizmetBorclanmaGuncelle'
 
 
 class HitapBorclanmaSil(HitapHizmetSil):
@@ -374,7 +388,8 @@ class HitapBorclanmaSil(HitapHizmetSil):
     silme işlemini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_borclanma_sil.HizmetBorclanmaSil'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_borclanma_sil'
+    service_class_name = 'HizmetBorclanmaSil'
 
 
 class HitapHizmetCetveliGetir(HitapHizmetSorgula):
@@ -400,8 +415,8 @@ class HitapHizmetCetveliEkle(HitapHizmetEkle):
     eklemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_cetveli_ekle.HizmetCetveliEkle'
-
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_cetveli_ekle'
+    service_class_name = 'HizmetCetveliEkle'
 
 
 class HitapHizmetCetveliGuncelle(HitapHizmetGuncelle):
@@ -410,7 +425,8 @@ class HitapHizmetCetveliGuncelle(HitapHizmetGuncelle):
     güncellemesini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_cetveli_guncelle.HizmetCetveliGuncelle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_cetveli_guncelle'
+    service_class_name = 'HizmetCetveliGuncelle'
 
 
 class HitapHizmetCetveliSil(HitapHizmetSil):
@@ -419,7 +435,8 @@ class HitapHizmetCetveliSil(HitapHizmetSil):
     silme işlemini yapar.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_cetveli_sil.HizmetCetvelSil'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_cetveli_sil'
+    service_class_name = 'HizmetCetvelSil'
 
 
 class HitapIHSGetir(HitapHizmetSorgula):
@@ -445,7 +462,8 @@ class HitapIHSEkle(HitapHizmetEkle):
     bilgisi ekler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_ihs_ekle'
+    service_class_name = 'HizmetIHSEkle'
 
 
 class HitapIHSGuncelle(HitapHizmetGuncelle):
@@ -453,7 +471,8 @@ class HitapIHSGuncelle(HitapHizmetGuncelle):
     bilgilerini günceller.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_ihs_guncelle'
+    service_class_name = 'HizmetIHSGuncelle'
 
 
 class HitapIHSSil(HitapHizmetSil):
@@ -461,7 +480,8 @@ class HitapIHSSil(HitapHizmetSil):
     bilgilerini siler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_ihs_sil'
+    service_class_name = 'HizmetIHSSil'
 
 
 class HitapIstisnaiIlgiGetir(HitapHizmetSorgula):
@@ -487,7 +507,8 @@ class HitapIstisnaiIlgiEkle(HitapHizmetEkle):
     Hitap'a personelin istisnai ilgi bilgilerini ekler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_istisnai_ilgi_ekle'
+    service_class_name = 'HizmetIstisnaiIlgiEkle'
 
 
 class HitapIstisnaiIlgiGuncelle(HitapHizmetGuncelle):
@@ -496,7 +517,8 @@ class HitapIstisnaiIlgiGuncelle(HitapHizmetGuncelle):
     günceller.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_istisnai_ilgi_guncelle'
+    service_class_name = 'HizmetIstisnaiIlgiGuncelle'
 
 
 class HitapIstisnaiIlgiSil(HitapHizmetSil):
@@ -504,7 +526,8 @@ class HitapIstisnaiIlgiSil(HitapHizmetSil):
     Hitap üzerinde personelin istisnai ilgi bilgilerini siler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_istisnai_ilgi_sil'
+    service_class_name = 'HizmetIstisnaiIlgiSil'
 
 
 class HitapKursGetir(HitapHizmetSorgula):
@@ -529,7 +552,8 @@ class HitapKursEkle(HitapHizmetEkle):
     Hitap'a personelin kurs bilgilerini ekler.
 
     """
-    service_class_path = 'ulakbus.services.personel.hitap.hizmet_kurs_ekle.HizmetKursEkle'
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_kurs_ekle'
+    service_class_name = 'HizmetKursEkle'
 
 
 class HitapKursGuncelle(HitapHizmetGuncelle):
@@ -537,7 +561,8 @@ class HitapKursGuncelle(HitapHizmetGuncelle):
     Personelin Hitap'taki kurs bilgilerini günceller.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_kurs_guncelle'
+    service_class_name = 'HizmetKursGuncelle'
 
 
 class HitapKursSil(HitapHizmetSil):
@@ -545,7 +570,8 @@ class HitapKursSil(HitapHizmetSil):
     Personelin Hitap'taki kurs bilgilerini siler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_kurs_sil'
+    service_class_name = 'HizmetKursSil'
 
 
 class HitapMahkemeGetir(HitapHizmetSorgula):
@@ -570,7 +596,8 @@ class HitapMahkemeGuncelle(HitapHizmetGuncelle):
     Personelin Hitap'taki mahkeme bilgilerini gunceller.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_mahkeme_guncelle'
+    service_class_name = 'HizmetMahkemeGuncelle'
 
 
 class HitapMahkemeEkle(HitapHizmetEkle):
@@ -578,7 +605,8 @@ class HitapMahkemeEkle(HitapHizmetEkle):
     Personelin mahkeme bilgilerini Hitap'a ekler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_mahkeme_ekle'
+    service_class_name = 'HizmetMahkemeEkle'
 
 
 class HitapMahkemeSil(HitapHizmetSil):
@@ -586,7 +614,8 @@ class HitapMahkemeSil(HitapHizmetSil):
     Personelin Hitap'taki mahkeme bilgilerini siler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_mahkeme_sil'
+    service_class_name = 'HizmetMahkemeSil'
 
 
 class HitapNufusGetir(HitapHizmetSorgula):
@@ -611,7 +640,8 @@ class HitapNufusEkle(HitapHizmetEkle):
     Personelin nufus bilgilerini Hitap'a ekler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_nufus_ekle'
+    service_class_name = 'HizmetNufusEkle'
 
 
 class HitapNufusGuncelle(HitapHizmetGuncelle):
@@ -619,7 +649,8 @@ class HitapNufusGuncelle(HitapHizmetGuncelle):
     Personelin  Hitap'ta bulunan nufus bilgilerini gunceller.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_nufus_guncelle'
+    service_class_name = 'HizmetNufusGuncelle'
 
 
 class HitapNufusSil(HitapHizmetSil):
@@ -648,7 +679,8 @@ class HitapOkulEkle(HitapHizmetEkle):
     Personelin okul bilgilerini Hitap'a ekler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_okul_ekle'
+    service_class_name = 'HizmetOkulEkle'
 
 
 class HitapOkulGuncelle(HitapHizmetGuncelle):
@@ -656,7 +688,8 @@ class HitapOkulGuncelle(HitapHizmetGuncelle):
     Personelin Hitap'ta bulunan okul bilgilerini gunceller.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_okul_guncelle'
+    service_class_name = 'HizmetOkulGuncelle'
 
 
 class HitapOkulSil(HitapHizmetSil):
@@ -664,7 +697,8 @@ class HitapOkulSil(HitapHizmetSil):
     Personelin Hitap'ta bulunan okul bilgilerini siler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_okul_sil'
+    service_class_name = 'HizmetOkulSil'
 
 
 class HitapTazminatGetir(HitapHizmetSorgula):
@@ -689,7 +723,8 @@ class HitapTazminatEkle(HitapHizmetEkle):
     Personelin tazminat bilgilerini Hitap'a ekler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_tazminat_ekle'
+    service_class_name = 'HizmetTazminatEkle'
 
 
 class HitapTazminatGuncelle(HitapHizmetGuncelle):
@@ -697,7 +732,8 @@ class HitapTazminatGuncelle(HitapHizmetGuncelle):
     Personelin Hitap'ta bulunan tazminat bilgilerini günceller.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_tazminat_guncelle'
+    service_class_name = 'HizmetTazminatGuncelle'
 
 
 class HitapTazminatSil(HitapHizmetSil):
@@ -705,7 +741,8 @@ class HitapTazminatSil(HitapHizmetSil):
     Personelin Hitap'ta bulunan tazminat bilgilerini siler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_tazminat_sil'
+    service_class_name = 'HizmetTazminatSil'
 
 
 class HitapUnvanGetir(HitapHizmetSorgula):
@@ -730,7 +767,8 @@ class HitapUnvanEkle(HitapHizmetEkle):
     Personelin ünvan bilgilerini Hitap'a ekler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_unvan_ekle'
+    service_class_name = 'HizmetUnvanEkle'
 
 
 class HitapUnvanGuncelle(HitapHizmetGuncelle):
@@ -738,7 +776,8 @@ class HitapUnvanGuncelle(HitapHizmetGuncelle):
     Personelin Hitap'ta bulunan ünvan bilgilerini günceller.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_unvan_guncelle'
+    service_class_name = 'HizmetUnvanGuncelle'
 
 
 class HitapUnvanSil(HitapHizmetSil):
@@ -746,7 +785,8 @@ class HitapUnvanSil(HitapHizmetSil):
     Personelin Hitap'ta bulunan ünvan bilgilerini siler.
 
     """
-    pass
+    service_class_path = 'ulakbus.services.personel.hitap.hizmet_unvan_sil'
+    service_class_name = 'HizmetUnvanSil'
 
 
 class MernisKimlikBilgileriGetir(TcknService):
@@ -766,6 +806,7 @@ class MernisKimlikBilgileriGetir(TcknService):
             response_data (dict): reformatted data compatible with our data models
 
         """
+        response_data = response_data['result']
         ret = {}
 
         try:
@@ -811,6 +852,7 @@ class MernisCuzdanBilgileriGetir(TcknService):
             response_data (dict): reformatted data compatible with our data models
 
         """
+        response_data = response_data['result']
         ret = {}
 
         try:
@@ -886,6 +928,7 @@ class SinavProgramiOlustur(ZatoService):
     #     self.payload = json.dumps(service_payload)
     pass
 
+
 class EPostaYolla(ZatoService):
     # def __init__(self, kayit):
     #     super(ZatoService, self).__init__()
@@ -898,10 +941,16 @@ def get_payload_object(hitap_model, kayit):
     import datetime
 
     payload_object = dict()
+
     for key in hitap_model.service_dict['fields'].values():
-        value = getattr(kayit, key)
-        if type(value) == datetime.date:
-            value = value.strftime("%d.%m.%Y")
+
+        if isinstance(kayit, dict):
+            value = kayit[key]
+        else:
+            value = getattr(kayit, key)
+            if type(value) == datetime.date:
+                value = value.strftime("%d.%m.%Y")
+
         payload_object[key] = value
 
     payload = json.dumps(payload_object)

@@ -50,11 +50,12 @@ class HITAPSil(ZatoHitapService):
 
         """
 
-        self.logger.info("zato service started to work.")
+        self.logger.info("zato Hitap Sil service started to work.")
         conn = self.outgoing.soap['HITAP'].conn
-        self.request_json(conn)
+        request_payload = self.request.payload
+        self.request_json(conn, request_payload)
 
-    def request_json(self, conn):
+    def request_json(self, conn, request_payload):
         """Connection bilgisi ve gerekli veriler ile Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
 
@@ -85,11 +86,13 @@ class HITAPSil(ZatoHitapService):
                 request_data.kullaniciAd = H_USER
                 request_data.sifre = H_PASS
 
-                for dict_element in self.service_dict["fields"]:
-                    setattr(request_data, dict_element, request_data[self.service_dict['fields'][dict_element]])
-
                 if 'required_fields' in self.service_dict:
-                    self.check_required_fields(request_data)
+                    self.check_required_fields(request_payload)
+
+                for dict_element in self.service_dict["fields"].keys():
+                    self.logger.info("dict_element: %s" % dict_element)
+                    self.logger.info("request_data_fields_dict_element: %s" % request_payload[self.service_dict['fields'][dict_element]])
+                    setattr(request_data, dict_element, request_payload[self.service_dict['fields'][dict_element]])
 
                 hitap_service = getattr(client.service, service_name)(request_data)
 
@@ -104,8 +107,10 @@ class HITAPSil(ZatoHitapService):
             status = "error"
 
         finally:
+            self.logger.info("status: %s" % status)
             self.response.payload = {'status': status,
                                      'result': self.create_hitap_json(hitap_service)}
+            self.logger.info("response payload: %s" % self.response.payload)
 
     def create_hitap_json(self, hitap_service):
         """Silme servisinden dönen veriyi JSON formatına döndürür.

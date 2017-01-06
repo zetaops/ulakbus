@@ -72,14 +72,14 @@
       <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="init" />
-    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="FINISH_XOR" targetRef="ServiceTask_1">
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="FINISH_XOR" targetRef="sync_object">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'sync']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="ServiceTask_1" name="sync_object" camunda:class="personel.crud_hitap.CrudHitap.call">
+    <bpmn:serviceTask id="sync_object" name="sync_object" camunda:class="personel.crud_hitap.CrudHitap.call">
       <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ServiceTask_1" targetRef="FINISH_XOR" />
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="sync_object" targetRef="FINISH_XOR" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="crud_hitap">
@@ -196,7 +196,7 @@
           <dc:Bounds x="386" y="377" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_43" bpmnElement="ServiceTask_1">
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_43" bpmnElement="sync_object">
         <dc:Bounds x="552" y="446" width="100" height="49" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_3" sourceElement="_BPMNShape_ExclusiveGateway_6" targetElement="_BPMNShape_ServiceTask_43">

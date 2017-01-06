@@ -8,10 +8,10 @@
 # (GPLv3).  See LICENSE.txt for details.
 #
 from zengine.forms import fields, JsonForm
-from zengine.views.base import BaseView
 from zengine.views.crud import CrudView, view_method, list_query
-from zengine.lib.translation import gettext as _, gettext_lazy
+from zengine.lib.translation import gettext_lazy
 from ulakbus.models.personel import Personel
+from zengine import signals
 
 
 def zato_service_selector(model, action):
@@ -121,7 +121,8 @@ class CrudHitap(CrudView):
         self.set_form_data_to_object()
         obj_is_new = not self.object.is_in_db()
         action, self.object.sync = ('add', 4) if obj_is_new else ('update', 2)
-        # self.object.save()
+        self.object.save()
+        self.current.task_data['object_id'] = self.object.key
 
         hitap_service = zato_service_selector(self.model_class, action)
         hs = hitap_service(kayit=self.object)
@@ -129,13 +130,9 @@ class CrudHitap(CrudView):
             response = hs.zato_request()
             if response['status'] == 'ok':
                 self.object.sync = 1
-                self.object.save()
         except:
             # try blogundaki islemleri background gondermek
             pass
-
-        if self.next_cmd and obj_is_new:
-            self.current.task_data['added_obj'] = self.object.key
 
     @view_method
     def delete(self):
@@ -147,13 +144,16 @@ class CrudHitap(CrudView):
 
         """
 
-        self.current.task_data['deleted_obj'] = self.object.key
+        signals.crud_pre_delete.send(self, current=self.current, object=self.object)
+
         if 'object_id' in self.current.task_data:
             del self.current.task_data['object_id']
-
+        object_data = self.object._data
         self.object.sync = 3
+        self.object.blocking_delete()
+
         hitap_service = zato_service_selector(self.model_class, 'delete')
-        hs = hitap_service(service_payload={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no})
+        hs = hitap_service(kayit={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no})
 
         try:
             response = hs.zato_request()
@@ -164,6 +164,7 @@ class CrudHitap(CrudView):
             # try blogundaki islemleri background gondermek
             pass
 
+        signals.crud_post_delete.send(self, current=self.current, object_data=object_data)
         self.set_client_cmd('reload')
 
     @list_query
