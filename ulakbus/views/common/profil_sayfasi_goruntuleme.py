@@ -133,11 +133,15 @@ class ProfilGoruntule(UlakbusView):
         """
 
         kullanici = self.current.user
-
+        reload_necessity = False
         for k in translation.DEFAULT_PREFS.keys():
-            self.current.session[k] = ''
-            setattr(kullanici, k, self.input['form'][k])
-        kullanici.blocking_save()
-        self.current.output['cmd'] = 'reload'
-        self.current.output['title'] = _(u'Dil, Sayı, Zaman Formatı Değişikliği')
-        self.current.output['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir. Ana sayfaya yönlendiriliyorsunuz.')
+            if self.input['form'][k] != getattr(kullanici,k):
+                self.current.session[k] = ''
+                setattr(kullanici, k, self.input['form'][k])
+                reload_necessity = True
+
+        if reload_necessity:
+            kullanici.blocking_save()
+            self.current.output['cmd'] = 'reload'
+            self.current.output['title'] = _(u'Dil, Sayı, Zaman Formatı Değişikliği')
+            self.current.output['msg'] = _(u'Değişiklikleriniz başarıyla kaydedilmiştir. Ana sayfaya yönlendiriliyorsunuz.')

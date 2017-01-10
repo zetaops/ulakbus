@@ -22,7 +22,6 @@ from dateutil.relativedelta import relativedelta
 import datetime
 
 
-
 class Personel(Model):
     """Personel Modeli
 
@@ -209,13 +208,13 @@ class Personel(Model):
             KurumIciGorevlendirmeBilgileri listesi (instance list)
         """
         simdiki_tarih = datetime.date.today()
-        gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.filter(
-            kurum_ici_gorev_baslama_tarihi__lte = simdiki_tarih,
-            kurum_ici_gorev_bitis_tarihi__gte = simdiki_tarih,
-            personel = self
+        gorevlendirmeler = KurumIciGorevlendirmeBilgileri.objects.filter(
+            kurum_ici_gorev_baslama_tarihi__lte=simdiki_tarih,
+            kurum_ici_gorev_bitis_tarihi__gte=simdiki_tarih,
+            personel=self
         )
 
-        return gorevlendirme
+        return gorevlendirmeler[0] if gorevlendirmeler.count() == 1 else None
 
     @lazy_property
     def kurum_disi_gorevlendirme(self):
@@ -229,13 +228,13 @@ class Personel(Model):
         """
 
         simdiki_tarih = datetime.date.today()
-        gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter(
-            kurum_disi_gorev_baslama_tarihi__lte = simdiki_tarih,
-            kurum_disi_gorev_bitis_tarihi__gte = simdiki_tarih,
-            personel = self
+        gorevlendirmeler = KurumDisiGorevlendirmeBilgileri.objects.filter(
+            kurum_disi_gorev_baslama_tarihi__lte=simdiki_tarih,
+            kurum_disi_gorev_bitis_tarihi__gte=simdiki_tarih,
+            personel=self
         )
 
-        return gorevlendirme
+        return gorevlendirmeler[0] if gorevlendirmeler.count() == 1 else None
 
     @lazy_property
     def izinler(self):

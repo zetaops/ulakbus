@@ -27,7 +27,7 @@ TRANSLATION_DOMAINS['messages'] = 'tr'
 # Default mail address
 MAIL_ADDRESS = 'postmaster@mg.ulakbus.net'
 # Demo main url
-DEMO_URL = 'http://dev.zetaops.io'
+DEMO_URL = 'http://ulakbus.net'
 
 # path of the activity modules which will be invoked by workflow tasks
 ACTIVITY_MODULES_IMPORT_PATHS.extend(['ulakbus.views', 'ulakbus.tasks'])
@@ -96,10 +96,10 @@ OBJECT_MENU = {
     ],
     'personel': [
         {'name': 'Personel', 'wf': 'personel_bilgileri',
-         'verbose_name': 'Personel Kartı', 'field': 'personel_id'},
+         'verbose_name': 'Personel Kartı', 'field': 'object_id'},
 
         {'name': 'Personel', 'wf': 'kimlik_ve_iletisim_bilgileri',
-         'verbose_name': 'Kimlik ve Iletisim Bilgileri Düzenle', 'field': 'personel_id'},
+         'verbose_name': 'Kimlik ve Iletisim Bilgileri Düzenle', 'field': 'object_id'},
 
         {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri', 'field': 'personel_id'},
 
