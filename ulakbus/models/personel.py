@@ -546,7 +546,7 @@ class Atama(Model):
 
     ibraz_tarihi = field.Date(_(u"İbraz Tarihi"), index=True, format="%d.%m.%Y")
     durum = HitapSebep()
-    nereden = field.Integer(_(u"Nereden"), index=True)  # modele baglanacak.
+    nereden = field.Integer(_(u"Nereden"), index=True, choices="universiteler")
     atama_aciklama = field.String(_(u"Atama Açıklama"), index=True)
     goreve_baslama_tarihi = field.Date(_(u"Göreve Başlama Tarihi"), index=True, format="%d.%m.%Y")
     goreve_baslama_aciklama = field.String(_(u"Göreve Başlama Açıklama"), index=True)
