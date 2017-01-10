@@ -232,7 +232,7 @@ S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
 S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
 S3_PUBLIC_URL = os.environ.get('S3_PUBLIC_URL')
 S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '80')
-S3_BUCKET_NAME = 'ulakbus'
+S3_BUCKET_NAME = 'neu'
 
 QUICK_MENU = [
     'kadro_islemleri',
