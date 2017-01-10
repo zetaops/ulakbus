@@ -81,7 +81,7 @@ OBJECT_MENU = {
     # 'field' defaults to 'personel' or 'ogrenci'
     # verbose_name can be specified to override the model's verbose_name_plural
     'other': [
-        {'name': 'Personel', 'category': 'Genel'},
+        # {'name': 'Personel', 'category': 'Genel'},
         {'name': 'Ogrenci', 'category': 'Genel'},
         {'name': 'Okutman', 'category': 'Genel'},
         {'name': 'HariciOkutman', 'category': 'Genel'},
