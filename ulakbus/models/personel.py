@@ -17,6 +17,7 @@ from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
 from ulakbus.settings import SICIL_PREFIX
 from .auth import AbstractRole
+import datetime
 
 
 class Personel(Model):
@@ -191,6 +192,44 @@ class Personel(Model):
         """
 
         return self.atama.kurum_sicil_no
+
+    @lazy_property
+    def kurum_ici_gorevlendirme(self):
+        """kurum_ici_gorevlendirme
+
+        Personelin varsa kurum içi görevlendirme bilgilerini getirir.
+
+        Returns:
+            KurumIciGorevlendirmeBilgileri listesi (instance list)
+        """
+        simdiki_tarih = datetime.date.today()
+        gorevlendirmeler = KurumIciGorevlendirmeBilgileri.objects.filter(
+            kurum_ici_gorev_baslama_tarihi__lte=simdiki_tarih,
+            kurum_ici_gorev_bitis_tarihi__gte=simdiki_tarih,
+            personel=self
+        )
+
+        return gorevlendirmeler[0] if gorevlendirmeler.count() == 1 else None
+
+    @lazy_property
+    def kurum_disi_gorevlendirme(self):
+        """kurum_disi_gorevlendirme
+
+        Personelin varsa kurum dışı görevlendirme bilgilerini getiri.
+
+        Returns:
+            KurumDisiGorevlendirmeBilgileri listesi (instance list)
+
+        """
+
+        simdiki_tarih = datetime.date.today()
+        gorevlendirmeler = KurumDisiGorevlendirmeBilgileri.objects.filter(
+            kurum_disi_gorev_baslama_tarihi__lte=simdiki_tarih,
+            kurum_disi_gorev_bitis_tarihi__gte=simdiki_tarih,
+            personel=self
+        )
+
+        return gorevlendirmeler[0] if gorevlendirmeler.count() == 1 else None
 
     @property
     def kurum_sicil_no(self):

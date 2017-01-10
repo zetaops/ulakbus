@@ -35,7 +35,7 @@ u"""Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız pa
 * En az bir küçük harf, bir büyük harf, bir sayı ve bir özel karakter içermeli,
 * Eski şifrenizle aynı olmamalıdır,
 * Özel karakterler = ()[]{}!@#$%^&*+=-§±_~/|"><\.,:;≤≥
-* Örnek parola = Ulakbüs3\*""")
+* Örnek parola = Ulakbus3\*""")
 
         _form.eski_parola = fields.String(_(u"Şu an kullandığınız parolanızı giriniz."),
                                           type="password")

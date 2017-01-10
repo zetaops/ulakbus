@@ -6,8 +6,7 @@
 
 from ulakbus.models import User
 from zengine.lib.test_utils import BaseTestCase
-from zengine.lib import translation
-import random
+import time
 from ulakbus.lib.common import EPostaDogrulama
 
 k_adi_parametreleri = ['eski_k_adi', 'yeni_k_adi']
@@ -110,6 +109,9 @@ class TestCase(BaseTestCase):
         user.blocking_save()
 
     def test_e_posta_degistir_parola_denemesi_basarisiz(self):
+        user = User.objects.get(self.user_key)
+        self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
+        self.client.post()
         # E-posta değiştirme iş akışına geçiş yapılır.
         self.client.post(flow="e_posta_degistir")
         # Hatali e_posta adresi girilir.
@@ -145,7 +147,7 @@ class TestCase(BaseTestCase):
         self.parola_basarili_degisim()
         # Kullanıcı adı değişikliğinden sonra 'Çıkış Yap' seçeneği seçilir.
         resp = self.client.post(flow="cikis_yap")
-        assert resp.json["cmd"] == 'reload'
+        assert resp.json["cmd"] == 'logout'
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user = User.objects.get(self.user_key)
         user.username = 'ulakbus'
@@ -159,7 +161,7 @@ class TestCase(BaseTestCase):
         self.kullanici_adi_basarili_degisim()
         # Kullanıcı adı değişikliğinden sonra 'Çıkış Yap' seçeneği seçilir.
         resp = self.client.post(flow="cikis_yap")
-        assert resp.json["cmd"] == 'reload'
+        assert resp.json["cmd"] == 'logout'
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user = User.objects.get(self.user_key)
         user.username = 'ulakbus'
@@ -167,6 +169,7 @@ class TestCase(BaseTestCase):
         user.blocking_save()
 
     def test_kullanici_adi_degistir_parola_denemesi_basarisiz(self):
+        time.sleep(1)
         user = User.objects.get(self.user_key)
         self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()
@@ -236,7 +239,7 @@ class TestCase(BaseTestCase):
         # Parolanın üç kez yanlış girilmesi halinde kullanıcıya
         # zorla çıkış yaptırıldığı test edilir.
         resp = self.client.post(form={'parola': 'yanlis_parola'})
-        assert resp.json["cmd"] == 'reload'
+        assert resp.json["cmd"] == 'logout'
         assert 'Hatalı Parola' in resp.json["title"]
 
     def kullanici_adi_basarili_degisim(self):
