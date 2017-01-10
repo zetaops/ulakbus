@@ -615,3 +615,9 @@ msgstr "İş akışından ayrıldın."
 msgid "Unfortunately, this workflow does not belong to you or is already idle."
 msgstr "Ne yazık ki, bu iş akışı size ait değil veya zaten boşta."
 
+#~ msgid "Assign Someone Else"
+#~ msgstr "Başkasına Ata"
+
+#~ msgid "Suspend"
+#~ msgstr "Askıya Al"
+

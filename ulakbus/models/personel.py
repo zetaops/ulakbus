@@ -408,7 +408,7 @@ class Kadro(Model):
     kadro_no = field.Integer(_(u"Kadro No"), required=False)
     derece = field.Integer(_(u"Derece"), required=False)
     durum = field.Integer(_(u"Durum"), choices="kadro_durumlari", required=False)
-    birim = Unit(_(u"Birim"), required=False)
+    birim = Unit(verbose_name=_(u"Birim"), required=False)
     aciklama = field.String(_(u"Açıklama"), index=True, required=False)
     unvan = field.Integer(_(u"Unvan"), index=True, choices="unvan_kod", required=False)
     unvan_aciklama = field.String(_(u"Unvan Aciklama"), index=True, required=False)
