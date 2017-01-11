@@ -175,7 +175,7 @@ class PersonelAtama(CrudView):
 
         """
         personel = Personel.objects.get(self.current.task_data['personel_id'])
-        if personel.atama.key:
+        if personel.atama.exist:
             self.current.task_data['ilk_atama'] = False
             self.current.task_data['guncel_atama'] = personel.atama.key
         else:
@@ -275,7 +275,10 @@ class PersonelAtama(CrudView):
         kisi_bilgileri = _(u"""**Adı**: {ad}
                               **Soyad**: {soyad}""").format(**self.current.task_data['personel'])
         personel = Personel.objects.get(self.current.task_data['personel_id'])
-        atama_bilgileri = _(u"**Atama**: {atama}\n").format(atama=personel.atama)
+        if personel.atama.exist:
+            atama_bilgileri = _(u"**Atama**: {atama}\n").format(atama=personel.atama)
+        else:
+            atama_bilgileri = _(u"**Atama**: Personel ataması bulunmamaktadır.\n")
 
         output = [{0: _(u'Kişi Bilgileri'),
                    1: _(u'Atama Bilgileri')}]

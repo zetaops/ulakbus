@@ -170,7 +170,7 @@ class Personel(Model):
         """
         # Mevcut pyoko API'i ile uyumlu olmasi icin, geriye bos bir Atama nesnesi dondurur.
         atamalar = Atama.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=self)
-        return atamalar[0] if atamalar else None
+        return atamalar[0] if atamalar else Atama()
 
     @lazy_property
     def kadro(self):
