@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-12-07 12:17+0300\n"
+"POT-Creation-Date: 2017-01-13 11:11+0300\n"
 "PO-Revision-Date: 2016-09-01 13:35+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: tr\n"
@@ -88,7 +88,7 @@ msgid "Code Name"
 msgstr "Kod Adı"
 
 #: ../../zengine/zengine/models/auth.py:61
-#: ../../zengine/zengine/models/workflow_manager.py:140
+#: ../../zengine/zengine/models/workflow_manager.py:145
 msgid "Description"
 msgstr "Açıklama"
 
@@ -142,7 +142,7 @@ msgid "Archived"
 msgstr "Arşivlenmiş"
 
 #: ../../zengine/zengine/models/auth.py:148
-#: ../../zengine/zengine/models/workflow_manager.py:249
+#: ../../zengine/zengine/models/workflow_manager.py:257
 msgid "Abstract Role"
 msgstr "Soyut Rol"
 
@@ -166,213 +166,213 @@ msgstr "İzinleri Düzenle"
 msgid "XML content"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:138
+#: ../../zengine/zengine/models/workflow_manager.py:143
 msgid "File name"
 msgstr "Dosya ismi"
 
-#: ../../zengine/zengine/models/workflow_manager.py:139
+#: ../../zengine/zengine/models/workflow_manager.py:144
 msgid "Workflow Title"
 msgstr "İş Akışı Başlığı"
 
-#: ../../zengine/zengine/models/workflow_manager.py:143
+#: ../../zengine/zengine/models/workflow_manager.py:148
 msgid "Object field name"
 msgstr "Nesne adı"
 
-#: ../../zengine/zengine/models/workflow_manager.py:156
+#: ../../zengine/zengine/models/workflow_manager.py:161
 msgid "Lane order"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:157
+#: ../../zengine/zengine/models/workflow_manager.py:162
 msgid "Actor name"
 msgstr "Kullanıcı ismi"
 
-#: ../../zengine/zengine/models/workflow_manager.py:158
+#: ../../zengine/zengine/models/workflow_manager.py:163
 msgid "Actor specific name of WF"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:159
+#: ../../zengine/zengine/models/workflow_manager.py:164
 msgid "Lane relations"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:160
+#: ../../zengine/zengine/models/workflow_manager.py:165
 msgid "Possible owners"
 msgstr "Olası sahipler"
 
-#: ../../zengine/zengine/models/workflow_manager.py:161
+#: ../../zengine/zengine/models/workflow_manager.py:166
 #, fuzzy
 msgid "Permissions"
 msgstr "İzin %s"
 
-#: ../../zengine/zengine/models/workflow_manager.py:193
+#: ../../zengine/zengine/models/workflow_manager.py:201
 msgid "No repeat"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:194
+#: ../../zengine/zengine/models/workflow_manager.py:202
 msgid "Hourly"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:195
+#: ../../zengine/zengine/models/workflow_manager.py:203
 msgid "Daily"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:196
+#: ../../zengine/zengine/models/workflow_manager.py:204
 msgid "Weekly"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:197
+#: ../../zengine/zengine/models/workflow_manager.py:205
 msgid "Monthly"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:198
+#: ../../zengine/zengine/models/workflow_manager.py:206
 msgid "Yearly"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:202
+#: ../../zengine/zengine/models/workflow_manager.py:210
 msgid "None"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:203
+#: ../../zengine/zengine/models/workflow_manager.py:211
 msgid "15 day before, once in 3 days"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:204
+#: ../../zengine/zengine/models/workflow_manager.py:212
 msgid "1 week before, daily"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:205
+#: ../../zengine/zengine/models/workflow_manager.py:213
 msgid "Day before start time"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:209
+#: ../../zengine/zengine/models/workflow_manager.py:217
 msgid "Selected unit"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:210
+#: ../../zengine/zengine/models/workflow_manager.py:218
 msgid "Selected unit and all sub-units of it"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:246
+#: ../../zengine/zengine/models/workflow_manager.py:254
 msgid "Create tasks now!"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:248
+#: ../../zengine/zengine/models/workflow_manager.py:256
 msgid "Name of task"
 msgstr "Görev İsmi"
 
-#: ../../zengine/zengine/models/workflow_manager.py:252
+#: ../../zengine/zengine/models/workflow_manager.py:260
 msgid "Get roles from"
 msgstr "Rolleri getir"
 
-#: ../../zengine/zengine/models/workflow_manager.py:253
+#: ../../zengine/zengine/models/workflow_manager.py:261
 msgid "Role query dict"
 msgstr "Role arama sorgusu"
 
-#: ../../zengine/zengine/models/workflow_manager.py:254
+#: ../../zengine/zengine/models/workflow_manager.py:262
 msgid "Object query dict"
 msgstr "Nesne arama sorgusu"
 
-#: ../../zengine/zengine/models/workflow_manager.py:255
-#: ../../zengine/zengine/models/workflow_manager.py:558
-#: ../../zengine/zengine/models/workflow_manager.py:560
+#: ../../zengine/zengine/models/workflow_manager.py:263
+#: ../../zengine/zengine/models/workflow_manager.py:565
+#: ../../zengine/zengine/models/workflow_manager.py:567
 msgid "Subject ID"
 msgstr "Konu ID"
 
-#: ../../zengine/zengine/models/workflow_manager.py:256
-#: ../../zengine/zengine/models/workflow_manager.py:561
+#: ../../zengine/zengine/models/workflow_manager.py:264
+#: ../../zengine/zengine/models/workflow_manager.py:568
 msgid "Object type"
 msgstr "Nesne tipi"
 
-#: ../../zengine/zengine/models/workflow_manager.py:257
-#: ../../zengine/zengine/models/workflow_manager.py:566
-#: ../../zengine/zengine/models/workflow_manager.py:629
+#: ../../zengine/zengine/models/workflow_manager.py:265
+#: ../../zengine/zengine/models/workflow_manager.py:573
+#: ../../zengine/zengine/models/workflow_manager.py:636
 msgid "Start time"
 msgstr "Başlangıç zamanı"
 
-#: ../../zengine/zengine/models/workflow_manager.py:258
-#: ../../zengine/zengine/models/workflow_manager.py:567
-#: ../../zengine/zengine/models/workflow_manager.py:630
+#: ../../zengine/zengine/models/workflow_manager.py:266
+#: ../../zengine/zengine/models/workflow_manager.py:574
+#: ../../zengine/zengine/models/workflow_manager.py:637
 msgid "Finish time"
 msgstr "Bitiş zamanı"
 
-#: ../../zengine/zengine/models/workflow_manager.py:259
+#: ../../zengine/zengine/models/workflow_manager.py:267
 msgid "Repeating period"
 msgstr "Tekrarlama"
 
-#: ../../zengine/zengine/models/workflow_manager.py:260
+#: ../../zengine/zengine/models/workflow_manager.py:268
 msgid "Notification density"
 msgstr "Bildirim sıklığı"
 
-#: ../../zengine/zengine/models/workflow_manager.py:262
+#: ../../zengine/zengine/models/workflow_manager.py:270
 msgid "Get roles from all sub-units"
 msgstr "Tüm alt birimlerden rolleri getir"
 
-#: ../../zengine/zengine/models/workflow_manager.py:557
-#: ../../zengine/zengine/models/workflow_manager.py:626
+#: ../../zengine/zengine/models/workflow_manager.py:564
+#: ../../zengine/zengine/models/workflow_manager.py:633
 msgid "WF Name"
 msgstr "İş Akışı İsmi"
 
-#: ../../zengine/zengine/models/workflow_manager.py:559
+#: ../../zengine/zengine/models/workflow_manager.py:566
 msgid "Current Actor"
 msgstr "Şu anki kullanıcı"
 
-#: ../../zengine/zengine/models/workflow_manager.py:562
+#: ../../zengine/zengine/models/workflow_manager.py:569
 msgid "Last activation"
 msgstr "Son aktivasyon"
 
-#: ../../zengine/zengine/models/workflow_manager.py:568
+#: ../../zengine/zengine/models/workflow_manager.py:575
 msgid "Last executed WF Step"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:569
+#: ../../zengine/zengine/models/workflow_manager.py:576
 msgid "Task Data"
 msgstr "Görev Verisi"
 
-#: ../../zengine/zengine/models/workflow_manager.py:570
+#: ../../zengine/zengine/models/workflow_manager.py:577
 msgid "Pool Data"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:603
+#: ../../zengine/zengine/models/workflow_manager.py:610
 msgid "Unclaimed"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:604
+#: ../../zengine/zengine/models/workflow_manager.py:611
 msgid "Claimed"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:605
+#: ../../zengine/zengine/models/workflow_manager.py:612
 msgid "Assigned"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:606
+#: ../../zengine/zengine/models/workflow_manager.py:613
 msgid "Transferred"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:609
+#: ../../zengine/zengine/models/workflow_manager.py:616
 msgid "Future"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:610
+#: ../../zengine/zengine/models/workflow_manager.py:617
 msgid "Waiting"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:611
+#: ../../zengine/zengine/models/workflow_manager.py:618
 msgid "In Progress"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:612
+#: ../../zengine/zengine/models/workflow_manager.py:619
 #, fuzzy
 msgid "Finished"
 msgstr "Bitiş zamanı"
 
-#: ../../zengine/zengine/models/workflow_manager.py:613
+#: ../../zengine/zengine/models/workflow_manager.py:620
 msgid "Expired"
 msgstr ""
 
-#: ../../zengine/zengine/models/workflow_manager.py:627
+#: ../../zengine/zengine/models/workflow_manager.py:634
 msgid "Task Name"
 msgstr "Görev İsmi"
 
-#: ../../zengine/zengine/models/workflow_manager.py:628
+#: ../../zengine/zengine/models/workflow_manager.py:635
 msgid "Combined full-text search data"
 msgstr ""
 
@@ -530,19 +530,19 @@ msgstr ""
 msgid "Switch"
 msgstr ""
 
-#: ../../zengine/zengine/views/system.py:95
+#: ../../zengine/zengine/views/system.py:102
 msgid "Assign Someone Else"
 msgstr "Başkasına Ata"
 
-#: ../../zengine/zengine/views/system.py:96
+#: ../../zengine/zengine/views/system.py:103
 msgid "Suspend"
 msgstr "Askıya Al"
 
-#: ../../zengine/zengine/views/system.py:97
+#: ../../zengine/zengine/views/system.py:104
 msgid "Postpone"
 msgstr "Ertele"
 
-#: ../../zengine/zengine/views/system.py:99
+#: ../../zengine/zengine/views/system.py:106
 msgid "Assign Yourself"
 msgstr "Üzerime Al"
 

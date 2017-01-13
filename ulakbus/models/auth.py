@@ -283,8 +283,8 @@ class Unit(Model):
 
     class Meta:
         app = 'Sistem'
-        verbose_name = _(u"Unit")
-        verbose_name_plural = _(u"Units")
+        verbose_name = _(u"Birim")
+        verbose_name_plural = _(u"Birimler")
         search_fields = ['name', 'yoksis_no']
         list_fields = ['name', 'unit_type']
 

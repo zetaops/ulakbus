@@ -527,19 +527,19 @@ msgstr ""
 
 #: models/auth.py:281
 msgid "Unit"
-msgstr ""
+msgstr "Birim"
 
 #: models/auth.py:282
 msgid "Units"
-msgstr ""
+msgstr "Birimler"
 
 #: models/auth.py:291 models/personel.py:131
 msgid "Personel"
-msgstr ""
+msgstr "Staff"
 
 #: models/auth.py:292
 msgid "Ogrenci"
-msgstr ""
+msgstr "Student"
 
 #: models/auth.py:293
 msgid "Harici"
