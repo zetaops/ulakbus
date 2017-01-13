@@ -117,6 +117,9 @@ class Personel(Model):
     goreve_baslama_tarihi = field.Date(_(u"Göreve Başlama Tarihi"), index=True, format="%d.%m.%Y")
     baslama_sebep = HitapSebep()
 
+    gorevden_ayrilma_tarihi = field.Date(_(u"Görevden Ayrılma Tarihi"), index=True, format="%d.%m.%Y")
+    gorevden_ayrilma_sebep = HitapSebep()
+
     # aday ve idari memurlar icin mecburi hizmet suresi
     mecburi_hizmet_suresi = field.Date(_(u"Mecburi Hizmet Süresi"), index=True, format="%d.%m.%Y")
 

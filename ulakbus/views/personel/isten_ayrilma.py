@@ -14,7 +14,7 @@ from pyoko import ListNode
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from ulakbus.models import Personel, Role
+from ulakbus.models import Personel, Role, HitapSebep
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from zengine.models import WFInstance, TaskInvitation
 from ulakbus.lib.view_helpers import prepare_choices_for_model
@@ -29,7 +29,7 @@ class IstenAyrilmaOnayForm(JsonForm):
     class Meta:
         help_text = __(u"Personel İşten ayrılma işlemini onaylıyormusunuz?")
         title = __(u"Personel İşten Ayrılma")
-        include = ["notlar"]
+        include = ["notlar", "gorevden_ayrilma_tarihi", "gorevden_ayrilma_sebep"]
 
     devam_buton = fields.Button(__(u"Onayla"))
     iptal_buton = fields.Button(__(u"İptal"), flow='geri')
@@ -93,6 +93,9 @@ class IstenAyrilma(CrudView):
         personel = Personel.objects.get(self.current.task_data["personel_id"])
         # Burada personelin işten ayrıldığına dair bir açıklama metni girişi yapılmaktadır.
         personel.notlar = self.current.input["form"]["notlar"]
+        sebep_id = self.current.input["form"]["gorevden_ayrilma_sebep_id"]
+        personel.gorevden_ayrilma_sebep = HitapSebep.objects.get(sebep_id)
+        personel.gorevden_ayrilma_tarihi = self.current.input["form"]["gorevden_ayrilma_tarihi"]
         personel.save()
 
     def wf_devir(self):
