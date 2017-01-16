@@ -6,6 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.lib.widgets import personel_istatistik_bilgileri
 from zengine.lib.cache import Cache
 
 
@@ -45,5 +46,24 @@ class GuncelDonem(Cache):
             guncel_donem = Donem.objects.get(guncel=True)
             cache_data = guncel_donem.donem_fields_to_dict()
             self.set(cache_data, 360000)
+
+        return cache_data
+
+class PersonelIstatistik(Cache):
+    """
+
+    """
+    PREFIX = "PERIST"
+
+    def __init__(self):
+        super(PersonelIstatistik, self).__init__('personel_istatistik')
+
+    def get_or_set(self):
+
+        cache_data = self.get()
+
+        if not cache_data:
+            cache_data = personel_istatistik_bilgileri()
+            self.set(cache_data, 8*60*60)
 
         return cache_data
