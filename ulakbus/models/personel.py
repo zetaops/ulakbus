@@ -53,7 +53,7 @@ class Personel(Model):
     notlar = field.Text(_(u"Notlar"), required=False)
     engelli_durumu = field.String(_(u"Engellilik"))
     engel_grubu = field.String(_(u"Engel Grubu"))
-    engel_derecesi = field.String(_(u"Engel Derecesi"))
+    engel_derecesi = field.Integer(_(u"Engel Derecesi"), choices="personel_engellilik")
     engel_orani = field.Integer(_(u"Engellilik Oranı"))
     cuzdan_seri = field.String(_(u"Seri"))
     cuzdan_seri_no = field.String(_(u"Seri No"))

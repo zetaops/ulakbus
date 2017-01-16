@@ -77,6 +77,10 @@ class IstenAyrilma(CrudView):
         CrudView dan türetilmiş classdır.
     """
 
+    # Engelli personel sayısı toplam personel sayısının %3 nün altına düşemez.
+    # engelli_personel_katsayisi değişkeni bunu ifade eder.
+    engelli_personel_katsayisi = 0.03
+
     class Meta:
         model = "Personel"
 
@@ -153,3 +157,28 @@ class IstenAyrilma(CrudView):
             Iptal isleminden sonra ana sayfa ekrani yuklenir.
         """
         self.current.output['cmd'] = 'reload'
+
+    def engelli_personel_kontrol(self):
+        engelli_personel_sayisi = Personel.objects.filter(engel_derecesi=None).count()
+        toplam_personel_sayisi = Personel.objects.filter().count()
+        engelli_personel_kontrol = toplam_personel_sayisi * self.engelli_personel_katsayisi
+        if engelli_personel_sayisi < engelli_personel_kontrol:
+            self.current.task_data["flow"] = "engelli"
+            self.current.task_data["toplam_personel_sayisi"] = toplam_personel_sayisi
+            self.current.task_data["engelli_personel_sayisi"] = engelli_personel_sayisi
+        else:
+            self.current.task_data["flow"] = "bitir"
+
+
+    def engelli_personel_uyari(self):
+        self.current.output["msgbox"] = {
+            "type" : "error", "title" : "Engelli personel sayısı yasal sınırın altında",
+            "msg" : "Engelli Personel Sayısı : %i \n Toplam Personel Sayısı : %i"%(
+                int(self.current.task_data["engelli_personel_sayisi"]),
+                int(self.current.task_data["toplam_personel_sayisi"])
+            )
+        }
+
+        _form = JsonForm(title="")
+        _form.tamam_buton = fields.Button("Tamam")
+        self.form_out(_form)
