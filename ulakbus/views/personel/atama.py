@@ -404,11 +404,11 @@ class KadroBilgiForm(JsonForm):
     kadro = fields.String(_(u"Atanacak Kadro Seçiniz"))  # typeahead olacak
     ibraz_tarihi = fields.Date(_(u"İbraz Tarihi"))
     durum = fields.String(_(u"Durum"))  # typeahead olacak
-    nereden = fields.Integer(_(u"Nereden"))
-    atama_aciklama = fields.Text(_(u"Atama Açıklama"))
+    nereden = fields.Integer(_(u"Nereden"),choices="universiteler")
+    atama_aciklama = fields.Text(_(u"Atama Açıklama"),required=False)
     goreve_baslama_tarihi = fields.Date(_(u"Göreve Başlama Tarihi"))
-    goreve_baslama_aciklama = fields.String(_(u"Göreve Başlama Açıklama"))
-    kurum_onay_tarihi = fields.Date(_(u"Kurum Onay Tarihi"))
+    goreve_baslama_aciklama = fields.String(_(u"Göreve Başlama Açıklama"),required=False)
+    kurum_onay_tarihi = fields.Date(_(u"Kurum Onay Tarihi"));
 
     kaydet = fields.Button(_(u"Kaydet"), cmd="kaydet", style="btn-success")
     iptal = fields.Button(_(u"İptal"), cmd="iptal", form_validation=False)

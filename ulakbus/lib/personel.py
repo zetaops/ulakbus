@@ -61,7 +61,7 @@ def gorunen_kademe_hesapla(derece, kademe):
         return 0
 
 
-def derece_ilerlet(pkd, der, kad, terfi_tikanma):
+def derece_ilerlet(pkd, der, kad, terfi_tikanma=False):
     """
     Derece 3 kademede bir artar. Eger kademe 4 gelmise, derece 1 arttirilir
     Args:
