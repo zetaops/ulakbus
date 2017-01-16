@@ -563,3 +563,25 @@ class Atama(Model):
         # personelin kadro derecesi 0 olacak
         self.personel.kadro_derece = 0
         self.personel.save()
+
+
+class SaglikRaporu(Model):
+    personel = Personel(_(u"Raporu Alan Personel"))
+    rapor_cesidi = field.Integer(_(u"Rapor Çeşidi"), choices='saglik_raporu_cesitleri', required=True)
+    sure = field.Integer(_(u"Gün"), required=True)
+    baslama_tarihi = field.Date(_(u"Rapor Başlanğıç Tarihi"), required=True)
+    bitis_tarihi = field.Date(_(u"Raporlu Olduğu Son Gün"), required=True)
+    onay_tarihi = field.Date(_(u"Onay Tarihi"), required=True)
+    raporun_alindigi_il = field.Integer(_(u"Raporun Alındığı İl"), choices='iller', required=False)
+    nerden_alindigi = field.String(_(u"Sağlık Raporunun Alındığı Kurum"), required=True)
+    gecirecegi_adres = field.Text(_(u"Geçireceği Adres"), required=False)
+    telefon = field.String(_(u"Telefon Numarası"), required=False)
+
+    class Meta:
+        verbose_name = _(u"Sağlık Raporu")
+        verbose_name_plural = _(u"Sağlık Raporları")
+        list_fields = ['rapor_cesidi', 'sure', 'bitis_tarihi']
+
+    def __unicode__(self):
+        return "%s %s - %s - %s" % (self.personel.ad, self.personel.soyad,
+                                    self.get_rapor_cesidi_display(), self.bitis_tarihi)
