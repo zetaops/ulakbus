@@ -94,9 +94,11 @@ class UlakbusMenu(Menu):
 
     def __init__(self, current):
         super(UlakbusMenu, self).__init__(current)
+        self.output['widgets'] = []
         self.add_reporters()
         self.add_user_data()
         self.add_settings()
+        self.add_widgets()
         self.add_admin_crud()
 
     def add_admin_crud(self):
@@ -132,6 +134,7 @@ class UlakbusMenu(Menu):
                              'abs_name': role.abstract_role.name,
                              'role_count': len(usr_total_roles)}
         }
+
         if role.is_student:
             # insert student specific data here
             self.output['current_user'].update({
@@ -140,6 +143,25 @@ class UlakbusMenu(Menu):
         elif role.is_staff:
             # insert staff specific data here
             self.output['current_user'].update({
+            })
+
+    def add_widgets(self):
+
+        if self.output.get('personel',False):
+            self.output['widgets'].append({
+                "view": "personel_ara",
+                "type": "searchbox",
+                "title": "Personel",
+                "checkboxes": [
+                    {"label": "pasif", "name": "active", "value": "false", "checked": 'false'}]
+            })
+        if self.output.get('ogrenci',False):
+            self.output['widgets'].append({
+                "view": "ogrenci_ara",
+                "type": "searchbox",
+                "title": "Ogrenci",
+                "checkboxes": [
+                    {"label": "pasif", "name": "active", "value": "false", "checked": 'false'}]
             })
 
     def add_reporters(self):
