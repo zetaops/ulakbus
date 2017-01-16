@@ -17,6 +17,14 @@ class HizmetSureleri():
             self.personel = Personel.objects.filter(tckn=tckn)[0]
 
     def fiili_hizmet_getir(self):
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn,sgk_nevi__in=[3, 7, 4, 1,2, 6 ])
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += hizmet.sure
+        sure += self._emekli_sandigi_hesapla()
+
+        return sure
         return self._emekli_sandigi_hesapla() + self._bagkur_tum_hesapla() \
                 + self._diger_hizmet_hesapla() + self._yurtdisi_tum_hesapla() \
                 + self._fiili_hizmet_hesapla() + self._ssk_tum_hesapla() \
@@ -70,52 +78,66 @@ class HizmetSureleri():
     """
 
     def _emekli_sandigi_hesapla(self):
-        pass
+        hizmetler = HizmetKayitlari.objects.filter(tckn=self.personel).order_by("order_date")
+
+        baslangic = None
+        sure = 0
+
+        for hizmet in hizmetler:
+            if hizmet.sebep_kod.nevi == 1:
+                baslangic = date(hizmet.baslama_tarihi)
+            elif hizmet.sebep_kod.nevi == 2:
+                sure += (baslangic - date(hizmet.bitis_tarihi)).days
+
+        if baslangic:
+            sure += (datetime.today() - date(hizmet.baslama_tarihi)).days
+
+        return sure
 
     def _diger_hizmet_hesapla(self):
-        pass
+        return 0
 
     def _yurtdisi_2_3_hesapla(self):
-        pass
+        return 0
 
     def _yurtdisi_3_4_hesapla(self):
-        pass
+        return 0
 
     def _yurtdisi_tum_hesapla(self):
-        pass
+        return 0
 
     def _fiili_hizmet_hesapla(self):
-        pass
+        return 0
 
     def _ssk_2_3_hesapla(self):
-        pass
+        return 0
 
     def _ssk_3_4_hesapla(self):
-        pass
+        return 0
 
     def _ssk_kamu_hesapla(self):
-        pass
+        return 0
 
     def _ssk_tum_hesapla(self):
-        pass
+        return 0
 
     def _bagkur_2_3_hesapla(self):
-        pass
+        return 0
 
     def _bagkur_3_4_hesapla(self):
-        pass
+        return 0
 
     def _bagkur_tum_hesapla(self):
-        pass
+        return 0
 
     def _askerlik_hesapla(self):
-        pass
+        return 0
 
     def _fahri_gorev_hesapla(self):
-        pass
+        return 0
 
     def _yurtdisi_egitim_hesapla(self):
-        pass
+        return 0
 
     def _ucretsiz_izin_hesapla(self):
-        pass
+        return 0
