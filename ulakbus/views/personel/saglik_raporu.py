@@ -58,16 +58,12 @@ class SaglikRaporuOlustur(CrudView):
 
         self.set_form_data_to_object()
         self.object.personel = personel
-        kontrol_msg = ''
-        if self.object.rapor_cesidi == 1:
-            if self.object.sure > 10:
-                kontrol_msg = _(u'10 günden fazla olamaz!')
-            elif tek_hekim_rapor_sayisi + self.object.sure > 40:
-                kontrol_msg = _(u'için diğer raporlarla birlikte toplam 40 günlük rapor sayısını geçemezsiniz!')
-            else:
-                self.object.save()
-        else:
+
+        kontrol_msg = self.rapor_kontrol(tek_hekim_rapor_sayisi)
+
+        if not kontrol_msg:
             self.object.save()
+
         msg = _(u"%s %s adlı personelin %s %s") % \
                (self.object.personel.ad, self.object.personel.soyad, self.object.get_rapor_cesidi_display(),
                 kontrol_msg if kontrol_msg else _(u"başarılı bir şekilde kaydedildi."))
@@ -88,3 +84,29 @@ class SaglikRaporuOlustur(CrudView):
         result['actions'].extend([
             {'name': _(u'Sil'), 'cmd': 'sil', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'}])
+
+    def rapor_kontrol(self, rapor_sayisi):
+        """
+        Formda girilen gun ve darihleri kontrol eder.
+        Args:
+            rapor_sayisi: rapor cesidi tek hekim olan raporlarin sayisi
+
+        Returns: str ("Gun negetif deger alamaz")
+
+        """
+        kontrol_msg = ''
+
+        if self.object.sure <= 0:
+            kontrol_msg = _(u'için girdiğiniz gün sayısı 0 veya negatif bir değer alamaz!')
+        elif self.object.baslama_tarihi > self.object.bitis_tarihi:
+            kontrol_msg = _(u'için girdiğiniz başlangıç tarihi bitiş tarihinden büyük olmamalıdır!')
+        elif not (self.object.bitis_tarihi - self.object.baslama_tarihi).days == self.object.sure:
+            kontrol_msg = _(u'için girdiğiniz gün süresi ile tarih aralıkları eşleşmiyor!')
+
+        if self.object.rapor_cesidi == 1 and not kontrol_msg:
+            if self.object.sure > 10:
+                kontrol_msg = _(u'10 günden fazla olamaz!')
+            elif rapor_sayisi + self.object.sure > 40:
+                kontrol_msg = _(u'için diğer raporlarla birlikte toplam 40 günlük rapor sayısını geçemezsiniz!')
+
+        return kontrol_msg
