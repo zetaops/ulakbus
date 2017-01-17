@@ -162,6 +162,12 @@ class UlakbusMenu(Menu):
                 "checkboxes": [
                     {"label": "pasif", "name": "arsiv", "value": "true", "checked": 'false'}]
             })
+            
+            self.output['widgets'].append({
+                "type":"table",
+                "title":"Genel Personel Istatistikleri ",
+                "rows": get_general_staff_stats()
+            })
 
         if self.output.get('ogrenci', False):
             self.output['widgets'].append({
@@ -177,30 +183,29 @@ class UlakbusMenu(Menu):
                 self.output['other'].append(mdl)
 
 
-@view()
-def get_general_staff_stats(current):
+def get_general_staff_stats():
     """
-               List the stats for all staff in the system.
+       List the stats for all staff in the system.
 
-               .. code-block:: python
+       .. code-block:: python
 
-                   #  request:
-                       {
-                       'view': '_zops_get_general_staff_stats',
-                       }
+           #  request:
+               {
+               'view': '_zops_get_general_staff_stats',
+               }
 
-                   #  response:
-                       {
-                       'stats': [
-                                    ['', 'Total', 'Female', 'Male'],
-                                    ['Staff', #-of-total-staff, #-of-female-staff, #-of-male-staff],
-                                     ...
-                                    ['Disabled', #-of-disabled-staff, #-of-female-disabled-staff, #-of-male-disabled-staff ]
-                                    ]
-                        }
+           #  response:
+               {
+               'stats': [
+                            ['', 'Total', 'Female', 'Male'],
+                            ['Staff', #-of-total-staff, #-of-female-staff, #-of-male-staff],
+                             ...
+                            ['Disabled', #-of-disabled-staff, #-of-female-disabled-staff, #-of-male-disabled-staff ]
+                            ]
+                }
     """
     d = PersonelIstatistik().get_or_set()
-    current.output['stats'] = [
+    stats = [
         ['', _(u"Toplam"), _(u"Kadın"), _(u"Erkek")],
         [_(u"Personel"), d['total_personel'], d['kadin_personel'], d['erkek_personel']],
         [_(u"Akademik"), d['akademik_personel'], d['akademik_personel_kadin'],
@@ -213,3 +218,5 @@ def get_general_staff_stats(current):
         [_(u"Engelli"), d['engelli_personel_total'], d['engelli_personel_kadin'],
          d['engelli_personel_erkek']]
     ]
+
+    return stats
