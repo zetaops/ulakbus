@@ -49,15 +49,6 @@ class SaglikRaporuOlustur(CrudView):
         form.hayir = fields.Button(__(u"Hayır"))
         self.form_out(form)
 
-    def delete(self):
-        self.current.task_data['deleted_obj'] = self.object.key
-        if 'object_id' in self.current.task_data:
-            del self.current.task_data['object_id']
-        self.object.delete()
-        # self.current.output['msgbox'] = {"type": "info",
-        #                                  "title": _(u"Sağlık Raporu Başarılı Bir Şekilde silindi."),
-        #                                  "msg": "Silme işlemi gerçekleştirildi."}
-        self.set_client_cmd('list')
 
     def saglik_raporunu_kaydet(self):
         self.set_form_data_to_object()
