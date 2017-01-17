@@ -121,7 +121,7 @@ class UlakbusMenu(Menu):
         usr = self.current.user
         role = self.current.role
         usr_total_roles = [{"role": roleset.role.__unicode__()} for roleset in
-                      self.current.user.role_set]
+                           self.current.user.role_set]
         self.output['current_user'] = {
             "name": usr.name,
             "surname": usr.surname,
@@ -151,6 +151,7 @@ class UlakbusMenu(Menu):
             if self.current.has_permission(perm):
                 self.output['other'].append(mdl)
 
+
 @view()
 def get_general_staff_stats(current):
     """
@@ -175,13 +176,15 @@ def get_general_staff_stats(current):
     """
     d = PersonelIstatistik().get_or_set()
     current.output['stats'] = [
-        ['', _(u"Toplam"), _(u"Kadın"), _(u"Erkek") ],
+        ['', _(u"Toplam"), _(u"Kadın"), _(u"Erkek")],
         [_(u"Personel"), d['total_personel'], d['kadin_personel'], d['erkek_personel']],
-        [_(u"Akademik"), d['akademik_personel'], d['akademik_personel_kadin'], d['akademik_personel_erkek']],
+        [_(u"Akademik"), d['akademik_personel'], d['akademik_personel_kadin'],
+         d['akademik_personel_erkek']],
         [_(u"İdari"), d['idari_personel'], d['idari_personel_kadin'], d['idari_personel_erkek']],
         [_(u"Yardımcı Doçent"), d['yar_doc_total'], d['yar_doc_kadin'], d['yar_doc_erkek']],
         [_(u"Doçent"), d['doc_total'], d['doc_kadin'], d['doc_erkek']],
         [_(u"Profesör"), d['prof_total'], d['prof_kadin'], d['prof_erkek']],
         [_(u"Araştırma Görevlisi"), d['ar_gor_total'], d['ar_gor_kadin'], d['ar_gor_erkek']],
-        [_(u"Engelli"), d['engelli_personel_total'], d['engelli_personel_kadin'], d['engelli_personel_erkek']]
+        [_(u"Engelli"), d['engelli_personel_total'], d['engelli_personel_kadin'],
+         d['engelli_personel_erkek']]
     ]

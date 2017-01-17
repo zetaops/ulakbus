@@ -49,6 +49,7 @@ class GuncelDonem(Cache):
 
         return cache_data
 
+
 class PersonelIstatistik(Cache):
     """
 
@@ -59,11 +60,10 @@ class PersonelIstatistik(Cache):
         super(PersonelIstatistik, self).__init__('personel_istatistik')
 
     def get_or_set(self):
-
         cache_data = self.get()
 
         if not cache_data:
             cache_data = personel_istatistik_bilgileri()
-            self.set(cache_data, 8*60*60)
+            self.set(cache_data, 8 * 60 * 60)
 
         return cache_data
