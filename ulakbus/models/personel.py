@@ -563,16 +563,3 @@ class Atama(Model):
         # personelin kadro derecesi 0 olacak
         self.personel.kadro_derece = 0
         self.personel.save()
-
-
-
-class AkademikFaaliyet(Model):
-    """
-
-    """
-    tur = field.Integer(_(u"Faaliyet Tipi"))
-    ad = field.String(_(u"Faaliyet Adı"))
-    baslama = field.Date(_(u"Başlama Tarihi"), format="%d.%m.%Y")
-    bitis = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
-    durum = field.Integer(_(u"Durum"), choices='durum')
-    kac_kisiyle_yapildi = field.Integer(_(u"Kaç kişiyle yapıldığı"))
