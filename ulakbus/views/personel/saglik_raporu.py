@@ -8,7 +8,7 @@
 from zengine.views.crud import CrudView, obj_filter
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
-from ulakbus.models.personel import Personel
+from ulakbus.models.personel import Personel, SaglikRaporu
 
 
 class SaglikRaporuForm(JsonForm):
@@ -49,16 +49,39 @@ class SaglikRaporuOlustur(CrudView):
         form.hayir = fields.Button(__(u"Hayır"))
         self.form_out(form)
 
-
     def saglik_raporunu_kaydet(self):
+
+        personel = Personel.objects.get(self.current.task_data['personel_id'])
+
+        saglik_raporlari = SaglikRaporu.objects.filter(personel=personel, rapor_cesidi=1)
+        tek_hekim_rapor_sayisi = reduce(lambda x, y: x + y, [rapor.sure for rapor in saglik_raporlari], 0)
+
         self.set_form_data_to_object()
-        self.object.personel = Personel.objects.get(self.current.task_data['personel_id'])
-        self.object.save()
-        self.current.output['msgbox'] = {"type": "info",
-                                         "title": _(u"Sağlık Raporu Oluşturuldu"),
-                                         "msg": _(u"%s %s adlı personelin %s günlük sağlık raporu oluşturuldu.") %
-                                                 (self.object.personel.ad, self.object.personel.soyad,
-                                                  self.object.sure)}
+        self.object.personel = personel
+        kontrol_msg = ''
+        if self.object.rapor_cesidi == 1:
+            if self.object.sure > 10:
+                kontrol_msg = _(u'10 günden fazla olamaz!')
+            elif tek_hekim_rapor_sayisi + self.object.sure > 40:
+                kontrol_msg = _(u'için diğer raporlarla birlikte toplam 40 günlük rapor sayısını geçemezsiniz!')
+            else:
+                self.object.save()
+        else:
+            self.object.save()
+        msg = _(u"%s %s adlı personelin %s %s") % \
+               (self.object.personel.ad, self.object.personel.soyad, self.object.get_rapor_cesidi_display(),
+                kontrol_msg if kontrol_msg else _(u"başarılı bir şekilde kaydedildi."))
+
+        # Düzenleme işleminden sonra yeni bir kayit eklemek istediğimizde,
+        # form ekranı düzenlenen modelin bilgileriyle
+        # geliyor. Bunu önlemek için aşağıdaki çözümü uyguladık
+        if 'object_id' in self.current.task_data:
+            del self.current.task_data['object_id']
+
+        form = JsonForm(title=_(u"Sağlık Raporu"))
+        form.help_text = msg
+        form.raporlar = fields.Button(_(u"Raporlar"))
+        self.form_out(form)
 
     @obj_filter
     def saglik_raporu_islem(self, obj, result):
