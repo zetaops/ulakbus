@@ -162,6 +162,37 @@ class UlakbusMenu(Menu):
                 "checkboxes": [
                     {"label": "pasif", "name": "arsiv", "value": "true", "checked": 'false'}]
             })
+            
+            self.output['widgets'].append({
+                "type":"table",
+                "title":"Genel Personel Istatistikleri ",
+                "rows":[
+                [
+                   "", "Toplam", "Kadin", "Erkek"
+                ],
+                [
+                   "Personel", 69, 31, 38
+                ],
+                [
+                   "Akademik", 49, 19, 30
+                ],
+                [
+                   "Idari", 20, 12, 8
+                ],
+                [
+                   "Yardimci Docent", 0, 0, 0
+                ],
+                [
+                   "Docent", 0, 0, 0
+                ],
+                [
+                   "Profesor", 0, 0, 0
+                ],
+                [
+                   "Engelli", 2, 0, 2
+                ]
+                    ]
+            })
 
         if self.output.get('ogrenci', False):
             self.output['widgets'].append({
