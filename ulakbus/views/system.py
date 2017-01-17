@@ -25,23 +25,26 @@ class Search(SysView):
 
     def __init__(self, *args, **kwargs):
         super(Search, self).__init__(*args, **kwargs)
-        self.query = self.current.input['query']
+        self.query = self.current.input['query_params']
         self.output['results'] = []
         self.do_search()
 
     def do_search(self):
         try:
-            tckn = int(self.query.strip())
-            objects = self.SEARCH_ON.objects.filter(
-                tckn__startswith=tckn).values('ad', 'soyad', 'tckn', 'key')
+            tckn = int(self.query['q'].strip())
+            self.query['tckn__startswith'] = tckn
+            del self.query['q']
+            objects = self.SEARCH_ON.objects.filter(**self.query).values('ad', 'soyad', 'tckn',
+                                                                         'key')
         except ValueError:
-            q = self.query.split(" ")
+            q = self.query.pop('q').split(" ")
             objects = []
             if len(q) == 1:
                 # query Ali, Ayşe, Demir gibi boşluksuz bir string
                 # içeriyorsa, ad ve soyad içerisinde aranmalıdır.
                 objects = self.SEARCH_ON.objects.search_on(
-                    'ad', 'soyad', contains=q[0]).values('ad', 'soyad', 'tckn', 'key')
+                    'ad', 'soyad', contains=q[0]).filter(**self.query).values('ad', 'soyad', 'tckn',
+                                                                              'key')
 
             if len(q) > 1:
                 # query Ali Rıza, Ayşe Han Demir, Neşrin Hasibe Gül Yakuphanoğullarından
@@ -49,15 +52,16 @@ class Search(SysView):
                 # `contains`, önceki parçalar ise isim ile `contains` şeklinde
                 # aranmalıdır. Sonuç bulunamaz ise tüm parçalar isim ile
                 # `contains` şeklinde aranmalıdır.
-
                 objects = self.SEARCH_ON.objects.search_on(
                     'ad', contains=" ".join(q[:-1])).search_on(
-                    'soyad', contains=q[-1]).values('ad', 'soyad', 'tckn', 'key')
+                    'soyad', contains=q[-1]).filter(**self.query).values('ad', 'soyad', 'tckn',
+                                                                         'key')
 
                 objects_by_name = []
                 if not objects:
                     objects = self.SEARCH_ON.objects.search_on(
-                        'ad', contains=" ".join(q)).values('ad', 'soyad', 'tckn', 'key')
+                        'ad', contains=" ".join(q)).filter(**self.query).values('ad', 'soyad',
+                                                                                'tckn', 'key')
 
         self.output['results'] = [("{ad} {soyad}".format(**o), o['tckn'], o['key'], '') for o in
                                   objects]
@@ -100,6 +104,7 @@ class UlakbusMenu(Menu):
         self.add_reporters()
         self.add_user_data()
         self.add_settings()
+        self.add_widgets()
         self.add_admin_crud()
 
     def add_admin_crud(self):
@@ -135,6 +140,7 @@ class UlakbusMenu(Menu):
                              'abs_name': role.abstract_role.name,
                              'role_count': len(usr_total_roles)}
         }
+
         if role.is_student:
             # insert student specific data here
             self.output['current_user'].update({
@@ -143,6 +149,25 @@ class UlakbusMenu(Menu):
         elif role.is_staff:
             # insert staff specific data here
             self.output['current_user'].update({
+            })
+
+    def add_widgets(self):
+        self.output['widgets'] = []
+
+        if self.output.get('personel', False):
+            self.output['widgets'].append({
+                "view": "personel_ara",
+                "type": "searchbox",
+                "title": "Personel",
+                "checkboxes": [
+                    {"label": "pasif", "name": "arsiv", "value": "true", "checked": 'false'}]
+            })
+
+        if self.output.get('ogrenci', False):
+            self.output['widgets'].append({
+                "view": "ogrenci_ara",
+                "type": "searchbox",
+                "title": "Ogrenci",
             })
 
     def add_reporters(self):
