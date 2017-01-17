@@ -31,7 +31,8 @@ class Search(SysView):
             tckn = int(self.query['q'].strip())
             self.query['tckn__startswith'] = tckn
             del self.query['q']
-            objects = self.SEARCH_ON.objects.filter(**self.query).values('ad', 'soyad', 'tckn', 'key')
+            objects = self.SEARCH_ON.objects.filter(**self.query).values('ad', 'soyad', 'tckn',
+                                                                         'key')
         except ValueError:
             q = self.query.pop('q').split(" ")
             objects = []
@@ -39,7 +40,8 @@ class Search(SysView):
                 # query Ali, Ayşe, Demir gibi boşluksuz bir string
                 # içeriyorsa, ad ve soyad içerisinde aranmalıdır.
                 objects = self.SEARCH_ON.objects.search_on(
-                    'ad', 'soyad', contains=q[0]).filter(**self.query).values('ad', 'soyad', 'tckn', 'key')
+                    'ad', 'soyad', contains=q[0]).filter(**self.query).values('ad', 'soyad', 'tckn',
+                                                                              'key')
 
             if len(q) > 1:
                 # query Ali Rıza, Ayşe Han Demir, Neşrin Hasibe Gül Yakuphanoğullarından
@@ -49,15 +51,18 @@ class Search(SysView):
                 # `contains` şeklinde aranmalıdır.
                 objects = self.SEARCH_ON.objects.search_on(
                     'ad', contains=" ".join(q[:-1])).search_on(
-                    'soyad', contains=q[-1]).filter(**self.query).values('ad', 'soyad', 'tckn', 'key')
+                    'soyad', contains=q[-1]).filter(**self.query).values('ad', 'soyad', 'tckn',
+                                                                         'key')
 
                 objects_by_name = []
                 if not objects:
                     objects = self.SEARCH_ON.objects.search_on(
-                        'ad', contains=" ".join(q)).filter(**self.query).values('ad', 'soyad', 'tckn', 'key')
+                        'ad', contains=" ".join(q)).filter(**self.query).values('ad', 'soyad',
+                                                                                'tckn', 'key')
 
         self.output['results'] = [("{ad} {soyad}".format(**o), o['tckn'], o['key'], '') for o in
                                   objects]
+
 
 # @basic_view('ogrenci_ara')
 class SearchStudent(Search):
@@ -93,7 +98,6 @@ class UlakbusMenu(Menu):
 
     def __init__(self, current):
         super(UlakbusMenu, self).__init__(current)
-        self.output['widgets'] = []
         self.add_reporters()
         self.add_user_data()
         self.add_settings()
@@ -119,7 +123,7 @@ class UlakbusMenu(Menu):
         usr = self.current.user
         role = self.current.role
         usr_total_roles = [{"role": roleset.role.__unicode__()} for roleset in
-                      self.current.user.role_set]
+                           self.current.user.role_set]
         self.output['current_user'] = {
             "name": usr.name,
             "surname": usr.surname,
@@ -145,8 +149,9 @@ class UlakbusMenu(Menu):
             })
 
     def add_widgets(self):
+        self.output['widgets'] = []
 
-        if self.output.get('personel',False):
+        if self.output.get('personel', False):
             self.output['widgets'].append({
                 "view": "personel_ara",
                 "type": "searchbox",
@@ -155,13 +160,11 @@ class UlakbusMenu(Menu):
                     {"label": "pasif", "name": "arsiv", "value": "true", "checked": 'false'}]
             })
 
-        if self.output.get('ogrenci',False):
+        if self.output.get('ogrenci', False):
             self.output['widgets'].append({
                 "view": "ogrenci_ara",
                 "type": "searchbox",
                 "title": "Ogrenci",
-                "checkboxes": [
-                    {"label": "pasif", "name": "arsiv", "value": "true", "checked": 'false'}]
             })
 
     def add_reporters(self):
