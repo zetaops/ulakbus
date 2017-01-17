@@ -31,7 +31,7 @@ class TestCase(BaseTestCase):
 
         tek_hekim_raporu_form = {
             'baslama_tarihi': "17.01.2017",
-            'bitis_tarihi': "30.01.2017",
+            'bitis_tarihi': "18.01.2017",
             'gecirecegi_adres': "Urla",
             'kaydet': 1,
             'nerden_alindigi': "Hastane",
@@ -44,9 +44,9 @@ class TestCase(BaseTestCase):
         resp = self.client.post(form=tek_hekim_raporu_form)
 
         if tek_hekim_toplam_gun_sayisi + 2 > 40:
-            assert resp.json['forms']['form'][0]['helpvalue'] == u"İsmet Tarhan adlı personelin " \
-                                                                 u"Tek Hekim Raporu için diğer raporlarla birlikte " \
-                                                                 u"toplam 40 günlük rapor sayısını geçemezsiniz!"
+            assert resp.json['msgbox']['title'] == u'Hatalı Veri Girişi'
+            assert resp.json['msgbox']['msg'] == u'Tek Hekim Raporu için yıl içerisinde ' \
+                                                 u'40 günden fazla rapor alamazsınız!'
             kayit = False
         else:
             assert resp.json['forms']['form'][0]['helpvalue'] == u"İsmet Tarhan adlı personelin " \

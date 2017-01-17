@@ -49,6 +49,16 @@ class SaglikRaporuOlustur(CrudView):
         form.hayir = fields.Button(__(u"Hayır"))
         self.form_out(form)
 
+    def add_edit_form(self):
+        if 'kontrol_msg' in self.current.task_data:
+            msg = _(u"%s") % self.current.task_data['kontrol_msg']
+            self.current.output['msgbox'] = {"type": "warning",
+                                             "title": _(u"Hatalı Veri Girişi"),
+                                             "msg": msg}
+            del self.current.task_data['kontrol_msg']
+            self.set_form_data_to_object()
+        CrudView.add_edit_form(self)
+
     def saglik_raporunu_kaydet(self):
 
         personel = Personel.objects.get(self.current.task_data['personel_id'])
@@ -63,10 +73,18 @@ class SaglikRaporuOlustur(CrudView):
 
         if not kontrol_msg:
             self.object.save()
+            self.current.task_data['object_id'] = self.object.key
+            cmd = 'bilgilendir'
+        else:
+            self.current.task_data['kontrol_msg'] = kontrol_msg
+            cmd = 'add_edit_form'
 
-        msg = _(u"%s %s adlı personelin %s %s") % \
-               (self.object.personel.ad, self.object.personel.soyad, self.object.get_rapor_cesidi_display(),
-                kontrol_msg if kontrol_msg else _(u"başarılı bir şekilde kaydedildi."))
+        self.current.task_data['cmd'] = cmd
+
+    def bilgilendirme(self):
+        # self.set_form_data_to_object()
+        msg = _(u"%s %s adlı personelin %s başarılı bir şekilde kaydedildi.") % \
+              (self.object.personel.ad, self.object.personel.soyad, self.object.get_rapor_cesidi_display())
 
         # Düzenleme işleminden sonra yeni bir kayit eklemek istediğimizde,
         # form ekranı düzenlenen modelin bilgileriyle
@@ -97,16 +115,17 @@ class SaglikRaporuOlustur(CrudView):
         kontrol_msg = ''
 
         if self.object.sure <= 0:
-            kontrol_msg = _(u'için girdiğiniz gün sayısı 0 veya negatif bir değer alamaz!')
+            kontrol_msg = _(u'Gün sayısı 0 veya negatif bir değer alamaz!')
         elif self.object.baslama_tarihi > self.object.bitis_tarihi:
-            kontrol_msg = _(u'için girdiğiniz başlangıç tarihi bitiş tarihinden büyük olmamalıdır!')
-        elif not (self.object.bitis_tarihi - self.object.baslama_tarihi).days == self.object.sure:
-            kontrol_msg = _(u'için girdiğiniz gün süresi ile tarih aralıkları eşleşmiyor!')
+            kontrol_msg = _(u'Başlangıç tarihi bitiş tarihinden büyük olmamalıdır!')
+        elif not (self.object.bitis_tarihi - self.object.baslama_tarihi).days + 1 == self.object.sure:
+            kontrol_msg = _(u'Gün süresi ile tarih aralıkları eşleşmiyor!')
 
         if self.object.rapor_cesidi == 1 and not kontrol_msg:
             if self.object.sure > 10:
-                kontrol_msg = _(u'10 günden fazla olamaz!')
+                kontrol_msg = _(u'%s süresi 10 günden fazla olamaz!') % self.object.get_rapor_cesidi_display()
             elif rapor_sayisi + self.object.sure > 40:
-                kontrol_msg = _(u'için diğer raporlarla birlikte toplam 40 günlük rapor sayısını geçemezsiniz!')
+                kontrol_msg = _(u'% s için yıl içerisinde 40 günden fazla rapor alamazsınız!') \
+                              % self.object.get_rapor_cesidi_display()
 
         return kontrol_msg
