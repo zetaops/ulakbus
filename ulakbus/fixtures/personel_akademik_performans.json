@@ -156,35 +156,38 @@
       "en": ""
     },
     "6": {
-      "tr": "Ansiklopedi konu/madde yazarı",
+      "tr": "Kitap tercümesinde editörlük",
       "en": ""
     },
     "7": {
-      "tr": "Dergi editörlüğü",
+      "tr": "Ansiklopedi konu/madde yazarı",
       "en": ""
     },
     "8": {
-      "tr": "Özgün/Derleme makale",
+      "tr": "Dergi editörlüğü",
       "en": ""
     },
     "9": {
-      "tr": "Diğer (Teknik not, kısa makale, yorum, vaka takdimi, editöre mektup, özet, kitap kritiği, araştırma notu)",
+      "tr": "Kitap/dergi editörler kurulu üyeliği",
       "en": ""
     },
     "10": {
-      "tr": "Uluslararası boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak",
+      "tr": "Özgün/Derleme makale",
       "en": ""
     },
     "11": {
-      "tr": "Ulusal boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak",
+      "tr": "Diğer (Teknik not, kısa makale, yorum, vaka takdimi, editöre mektup, özet, kitap kritiği, araştırma notu)",
       "en": ""
     },
     "12": {
-      "tr": "Hakemlik",
+      "tr": "Uluslararası boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak",
+      "en": ""
+    },
+    "13": {
+      "tr": "Ulusal boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak",
       "en": ""
     }
   },
-  // Bilimsel kitap, Ders kitabı, Kitapta editörlük, Kitap Bölümü, Ansiklopedi konu/madde yazarı
   "yayin_bilimsel_kitap_tur": {
     "1": {
       "tr": "Alanında uluslararası yayımlanan bilimsel kitap",
@@ -195,7 +198,36 @@
       "en": ""
     }
   },
-  // Yayın içindeki derindeki tüm seçeneklerde bu var
+  "yayin_ders_kitap_tur": {
+    "1": {
+      "tr": "Alanında uluslararası yayımlanan ders kitabı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Alanında ulusal yayımlanan ders kitabı",
+      "en": ""
+    }
+  },
+  "yayin_editorluk_tur": {
+    "1": {
+      "tr": "Alanında uluslararası yayımlanan kitap editörlüğü",
+      "en": ""
+    },
+    "2": {
+      "tr": "Alanında ulusal yayımlanan kitap editörlüğü",
+      "en": ""
+    }
+  },
+  "yayin_kitap_bolum_tur": {
+    "1": {
+      "tr": "Alanında uluslararası yayımlanan kitap bölümü",
+      "en": ""
+    },
+    "2": {
+      "tr": "Alanında ulusal yayımlanan kitap bölümü",
+      "en": ""
+    }
+  },
   "yayin_bilimsel_ulusal_uluslarasi": {
     "1": {
       "tr": "1. İsim",
@@ -222,6 +254,26 @@
     "1": {
       "tr": "Alanında yayımlamış tam kitap çevirisi",
       "en": ""
+    },
+    "2" : {
+      "tr": "Alanında yayımlanmış kitap bölümü çevirisi",
+      "en": ""
+    }
+  },
+  "yayin_kitap_tercume_editor": {
+    "1": {
+      "tr": "Alanında yayımlanan kitap çevirisi editörlüğü",
+      "en":""
+    }
+  },
+  "yayin_ansiklopedi": {
+    "1":{
+      "tr" : "Alanında uluslararası yayımlanan ansiklopedi konusu/maddesi",
+      "en" : ""
+    },
+    "2" : {
+      "tr" : "",
+      "en" : "Alanında ulusal yayımlanan ansiklopedi konusu/maddesi"
     }
   },
   "dergi_editorlugu": {
@@ -238,20 +290,30 @@
       "en": ""
     }
   },
+  "kitap_dergi_ed_kur_uyeligi":{
+    "1": {
+      "tr":"SSCI, SCI-Exp, AHCI kapsamındaki dergilerde editör kurulu üyeliği",
+      "en":""
+    },
+    "2": {
+      "tr":"SSCI, SCI-Exp, AHCI, ESCI dışındaki alan endekslerindeki dergilerde editör kurulu üyeliği",
+      "en":""
+    },
+    "3": {
+      "tr":"ESCI kapsamındaki dergilerde editör kurulu üyeliği",
+      "en":""
+    }
+  },
   "ozgun_derleme_makale": {
     "1": {
       "tr": "SSCI, SCI-Exp, AHCI dergilerinde yayımlanan tam makale",
       "en": ""
     },
     "2": {
-      "tr": "ESCI kapsamındaki dergilerde yayımlanan tam makale",
-      "en": ""
-    },
-    "3": {
       "tr": "SSCI, SCI-Exp, AHCI, ESCI dışındaki alan endekslerindeki dergilerde yayımlanan tam makale",
       "en": ""
     },
-    "4": {
+    "3": {
       "tr": "Diğer hakemli ulusal veya uluslararası dergilerde yayımlanan tam makale",
       "en": ""
     }
@@ -270,7 +332,6 @@
       "en": ""
     }
   },
-  //Uluslararası boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak, Ulusal boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak
   "yayin_goruntu_kaydi": {
     "1": {
       "tr": "Özgün kişisel kayıt",
@@ -331,6 +392,10 @@
     "2": {
       "tr": "Kamu kurumlan ile özel hukuk tüzel kişileri bünyesinde uygulanmış ve belgelenmiş tasarım",
       "en": ""
+    },
+    "3" : {
+      "tr": "Diğer",
+      "en":""
     }
   },
   "faydali_obje": {
@@ -373,11 +438,7 @@
 
   "patent": {
     "1": {
-      "tr": "Alanında uluslararası tescillenmiş patent",
-      "en": ""
-    },
-    "2": {
-      "tr": "Alanında ulusal tescillenmiş patent",
+      "tr": "Alanında ulusal veya uluslararası tescillenmiş patent",
       "en": ""
     }
   },
@@ -400,39 +461,25 @@
       "en": ""
     },
     "5": {
-      "tr": "ESCI tarafından taranan dergilerde, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
-      "en": ""
-    },
-    "6": {
-      "tr": "Hakemli ulusal dergilerdeki, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki her bir atıf",
-      "en": ""
-    },
-    "7": {
-      "tr": "Bestecinin kendisinin yer almadığı uluslararası konserde eserinin seslendirilmesi",
+      "tr": "Diğer hakemli uluslararası ve ulusal dergilerdeki, öğretim üyesi/elemanının yazar olarak yer almadığı makalelerde, öğretim üyesi/elemanının eserlerine yapılan her bir atıf",
       "en": ""
     }
   },
 
   "teblig": {
     "1": {
-      "tr": "Uluslararası kongre ve sempozyumlarda davetli olarak sunulan tebliğ",
-      "en": ""
-    },
-    "2": {
       "tr": "Uluslararası kongre ve sempozyumlarda sözlü olarak sunulan ve tam metin olarak yayımlanan tebliğ",
       "en": ""
     },
-    "3": {
-      "tr": "Uluslararası kongre ve sempozyumlarda poster olarak sunulan ve yayımlanan tebliğ",
+    "2": {
+      "tr": "Uluslararası kongre ve sempozyumlarda sözlü olarak sunulan ve özet metin olarak yayımlanan tebliğ",
       "en": ""
     },
-    "4": {
-      "tr": "Uluslararası kongre ve sempozyumlarda sözlü olarak sunulan ve özet metin olarak yayımlanan tebliğ",
+    "3": {
+      "tr": "Uluslararası kongre ve sempozyumlarda sözlü olarak sunulan ve poster olarak yayımlanan tebliğ",
       "en": ""
     }
   },
-  //ÖDÜL
-  //Alt menüsünün key'i "yayin_bilimsel_ulusal_uluslarasi"
   "odul": {
     "1": {
       "tr": "TÜBA veya TÜBİTAK'tan alınan bilim ödülü",

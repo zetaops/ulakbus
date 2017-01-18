@@ -16,9 +16,9 @@ __author__ = 'Ali Riza Keles'
 
 
 class AkademikFaaliyetTuru(Model):
-    faaliyet = String("Faalyet")
+    faaliyet = String("Faaliyet")
     puan = Integer("Puan")
-    alt_faaliyet = String("Alt Faalyet")
+    alt_faaliyet = String("Alt Faaliyet")
     detay = String("Detay")
     oran = Integer("Oran")
 
@@ -30,7 +30,7 @@ class AkademikFaaliyetTuru(Model):
         search_fields = ['faaliyet', 'alt_faaliyet', 'detay']
 
     def __unicode__(self):
-        return _(u"%(faaliyet)s | %(alt_faaliyet)s") % {'ad': self.faaliyet,
+        return _(u"%(ad)s | %(soyad)s") % {'ad': self.faaliyet,
                                                         'soyad': self.alt_faaliyet}
 
     @classmethod
@@ -46,12 +46,13 @@ class AkademikFaaliyet(Model):
     """
     Akademik Faalyet bilgilerinin saklandigi model
     """
-    tur = Integer(__(u"Faaliyet Tipi"))
+    tur = AkademikFaaliyetTuru(__(u"Faaliyet Tipi"))
     ad = String(__(u"Faaliyet Adı"))
     baslama = Date(__(u"Başlama Tarihi"), format="%d.%m.%Y")
     bitis = Date(__(u"Bitiş Tarihi"), format="%d.%m.%Y")
     durum = Integer(__(u"Durum"), choices='durum')
     kac_kisiyle_yapildi = Integer(__(u"Kaç kişiyle yapıldığı"))
+    gorev = String(__(u"Görev"))
     personel = Personel()
 
     class Meta:
