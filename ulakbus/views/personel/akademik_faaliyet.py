@@ -12,11 +12,30 @@ __author__ = 'Ali Riza Keles'
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from ulakbus.models import Personel, HizmetKayitlari
-from ulakbus.models import KurumDisiGorevlendirmeBilgileri, KurumIciGorevlendirmeBilgileri
 from zengine.lib.translation import gettext_lazy as __
-from ulakbus.lib.role import AbsRole
 
 
-def listele():
-    pass
+class AkademikFaaliyet(CrudView):
+    def listele(self):
+        pass
+
+    def goruntule(self):
+        pass
+
+    def faaliyet_sec(self):
+        pass
+
+    def alt_faaliyet_sec(self):
+        pass
+
+    def detay_sec(self):
+        pass
+
+    def gorev_sec(self):
+        pass
+
+    def kaydet(self):
+        pass
+
+    def kayit_bilgisi_ver(self):
+        pass
