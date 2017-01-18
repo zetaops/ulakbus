@@ -8,6 +8,7 @@
 Bu modül Ulakbüs uygulaması için personel modelini ve  personel ile ilişkili modelleri içerir.
 
 """
+from pyoko import ListNode
 from .hitap.hitap_sebep import HitapSebep
 from pyoko.lib.utils import lazy_property
 
@@ -585,3 +586,39 @@ class SaglikRaporu(Model):
     def __unicode__(self):
         return "%s %s - %s - %s" % (self.personel.ad, self.personel.soyad,
                                     self.get_rapor_cesidi_display(), self.bitis_tarihi)
+class Ceza(Model):
+    """
+    Ceza Modeli
+
+    Personelin ceza bilgilerini içeren modeldir.
+
+    """
+
+    dosya_sira_no = field.String(_(u"Dosya No"))
+    muhbir_musteki_ad_soyad = field.String(_(u"Muhbir veya Müştekinin Adı Soyadı"),required=False)
+    ihbar_sikayet_suc_ogrenildigi_tarih = field.Date(_(u"İhbar, Şikayet veya Suçun Öğrenildiği Tarih"))
+    personel = Personel(_(u"Soruşturma Yapılan Personel"))
+    sucun_nevi = field.String(_(u"Suçun Nev'i"),required=False)
+    af_kapsami = field.String(_(u"Af Kapsamı"),required=False)
+    kapsadigi_donem_tarihler = field.String(_(u"Kapsadığı Dönem Tarihler"),required=False)
+    acilis_tarihi = field.Date(_(u"Açılış Tarihi"))
+    baslama_tarihi = field.Date(_(u"Başlangıç Tarihi"))
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"))
+    teklif_edilen_ceza = field.Integer(_(u"Teklif Edilen Ceza"), choices="ceza_turleri",required=False)
+    takdir_edilen_ceza = field.Integer(_(u"Takdir Edilen Ceza"), choices="ceza_turleri",required=False)
+    kararin_teblig_tarihi= field.Date(_(u"Kararın Tebliğ Tarihi"))
+    itiraz_neticesi = field.String(_(u"İtiraz Edilmişse Neticesi"),required=False)
+    dusunceler = field.String(_(u"Düşünceler"),required=False)
+
+    class TayinEdilenSorusturmacilar(ListNode):
+        class Meta:
+            title = _(u"Tayin Edilen Soruşturmacılar")
+        sorusturmaci_adi_soyadi = field.String(_(u"Soruşturmacının Adı Soyadı"))
+
+    class Meta:
+        verbose_name = _(u"İdari Ceza")
+        verbose_name_plural = _(u"İdari Cezalar")
+        list_fields = ['dosya_sira_no','baslama_tarihi','bitis_tarihi','takdir_edilen_ceza']
+
+    def __unicode__(self):
+        return "%s %s - %s" % (self.personel.ad, self.personel.soyad, self.dosya_sira_no)
