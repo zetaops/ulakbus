@@ -30,8 +30,8 @@ class AkademikFaaliyetTuru(Model):
         search_fields = ['faaliyet', 'alt_faaliyet', 'detay']
 
     def __unicode__(self):
-        return _(u"%(ad)s | %(soyad)s") % {'ad': self.faaliyet,
-                                                        'soyad': self.alt_faaliyet}
+        return _(u"%(faaliyet)s | %(alt_faaliyet)s") % {'faaliyet': self.faaliyet,
+                                                        'alt_faaliyet': self.alt_faaliyet}
 
     @classmethod
     def get_alt_faaliyet_by_faaliyet(cls, faaliyet):
@@ -50,7 +50,7 @@ class AkademikFaaliyet(Model):
     ad = String(__(u"Faaliyet Adı"))
     baslama = Date(__(u"Başlama Tarihi"), format="%d.%m.%Y")
     bitis = Date(__(u"Bitiş Tarihi"), format="%d.%m.%Y")
-    durum = Integer(__(u"Durum"), choices='durum')
+    durum = Integer(__(u"Durum"), choices='akademik_faaliyet_durum')
     kac_kisiyle_yapildi = Integer(__(u"Kaç kişiyle yapıldığı"))
     gorev = String(__(u"Görev"))
     personel = Personel()
@@ -63,4 +63,4 @@ class AkademikFaaliyet(Model):
         search_fields = ['ad', ]
 
     def __unicode__(self):
-        return _(u"%(ad)s %(soyad)s") % {'ad': self.ad, 'soyad': self.soyad}
+        return _(u"%(ad)s %(tur)s") % {'ad': self.ad, 'tur': self.tur}

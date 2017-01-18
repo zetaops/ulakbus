@@ -1,5 +1,5 @@
 {
-  "faaliyet_tipi": {
+  "akademik_faaliyet_tipi": {
     "1": {
       "tr": "Proje",
       "en": ""
@@ -37,7 +37,7 @@
       "en": ""
     }
   },
-  "durum": {
+  "akademik_faaliyet_durum": {
     "1": {
       "tr": "Beklemede",
       "en": ""
