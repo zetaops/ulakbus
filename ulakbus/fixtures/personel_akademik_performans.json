@@ -505,5 +505,26 @@
       "tr": "Alanında özel kurum ve kuruluşlar tarafından verilen ödül",
       "en": ""
     }
+  },
+  "faaliyet_gorev_map": {
+    "proje" : ["Yürütücü",
+      "Araştırmacı öğretim üyesi",
+      "Araştırmacı; araştırma görevlisi, öğretim görevlisi, okutman ve uzman",
+      "Danışman; kamu kurum ve kuruluşları ile tüzel kişilerin yürütmüş olduğu projelerde",
+      "Danışman; yürütücünün gerçek kişi olduğu projelerde"],
+    "yayin" : [
+      "1. İsim",
+      "2. İsim",
+      "3. İsim",
+      "4. ve sonrası",
+      "Senior isim (makaledeki son isim) (yayının yapıldığı alanda daha önce en az on adet uluslararası yayın yapmış olmak şartıyla)"
+    ],
+    "odul" : [
+      "1. İsim",
+      "2. İsim",
+      "3. İsim",
+      "4. ve sonrası",
+      "Senior isim (makaledeki son isim) (yayının yapıldığı alanda daha önce en az on adet uluslararası yayın yapmış olmak şartıyla)"
+    ]
   }
 }
