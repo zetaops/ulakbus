@@ -98,37 +98,107 @@ class HizmetSureleri():
         return 0
 
     def _yurtdisi_2_3_hesapla(self):
-        return 0
+        # sgk_nevi = 4 / Yurt Dışı Hizmetleri / kha_durum = 1 - 2/3
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[4], kha_durum=1)
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _yurtdisi_3_4_hesapla(self):
-        return 0
+        # sgk_nevi = 4 / Yurt Dışı Hizmetleri / kha_durum = 2 - 3/4
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[4],kha_durum=2)
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _yurtdisi_tum_hesapla(self):
-        return 0
+        # sgk_nevi = 4 / Yurt Dışı Hizmetleri
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[4])
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _fiili_hizmet_hesapla(self):
         return 0
 
     def _ssk_2_3_hesapla(self):
-        return 0
+        # sgk_nevi = 1 / SSK Kamu - 2 / SSK Özel - 12 / SSK FHZ (01/10/2008 Sonrası İçin)
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[1, 2, 12],kha_durum=1)
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _ssk_3_4_hesapla(self):
-        return 0
+        # sgk_nevi = 1 / SSK Kamu - 2 / SSK Özel - 12 / SSK FHZ (01/10/2008 Sonrası İçin)
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[1, 2, 12],kha_durum=2)
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _ssk_kamu_hesapla(self):
-        return 0
+        # sgk_nevi = 1 / SSK Kamu
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi=1)
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _ssk_tum_hesapla(self):
-        return 0
+        # sgk_nevi = 1 / SSK Kamu - 2 / SSK Özel - 12 / SSK FHZ (01/10/2008 Sonrası İçin)
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[1, 2, 12])
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _bagkur_2_3_hesapla(self):
-        return 0
+        # sgk_nevi = 3 / Bağ-Kur
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[3],kha_durum=1)
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _bagkur_3_4_hesapla(self):
-        return 0
+        # sgk_nevi = 3 / Bağ-Kur
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[3],kha_durum=2)
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _bagkur_tum_hesapla(self):
-        return 0
+        # sgk_nevi = 3 / Bağ-Kur
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[3])
+
+        sure = 0
+        for hizmet in hizmetler:
+            sure += int(hizmet.sure)
+
+        return sure
 
     def _askerlik_hesapla(self):
         return 0
