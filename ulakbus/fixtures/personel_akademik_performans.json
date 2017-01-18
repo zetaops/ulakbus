@@ -1,259 +1,262 @@
-{ "faaliyet_tipi" : {
-    "1" : {
-      "tr" : "Proje",
-      "en" : ""
+{
+  "faaliyet_tipi": {
+    "1": {
+      "tr": "Proje",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Araştırma",
-      "en" : ""
+    "2": {
+      "tr": "Araştırma",
+      "en": ""
     },
-    "3" : {
-      "tr" : "Yayın",
-      "en" : ""
+    "3": {
+      "tr": "Yayın",
+      "en": ""
     },
-    "4" : {
-      "tr" : "Tasarım",
-      "en" : ""
+    "4": {
+      "tr": "Tasarım",
+      "en": ""
     },
-    "5" : {
-      "tr" : "Sergi",
-      "en" : ""
+    "5": {
+      "tr": "Sergi",
+      "en": ""
     },
-    "6" : {
-      "tr" : "Patent",
-      "en" : ""
+    "6": {
+      "tr": "Patent",
+      "en": ""
     },
-    "7" : {
-      "tr" : "Atıf",
-      "en" : ""
+    "7": {
+      "tr": "Atıf",
+      "en": ""
     },
-    "8" : {
-      "tr" : "Tebliğ",
-      "en" : ""
+    "8": {
+      "tr": "Tebliğ",
+      "en": ""
     },
-    "9" : {
-      "tr" : "Ödül (Çalışma/proje/yayın teşvik ödülü hariç) ",
-      "en" : ""
+    "9": {
+      "tr": "Ödül (Çalışma/proje/yayın teşvik ödülü hariç) ",
+      "en": ""
     }
   },
-  "durum" : {
-    "1" : {
-      "tr" : "Beklemede",
-      "en" : ""
+  "durum": {
+    "1": {
+      "tr": "Beklemede",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Devam Ediyor",
-      "en" : ""
+    "2": {
+      "tr": "Devam Ediyor",
+      "en": ""
     },
-    "3" : {
-      "tr" : "Ertelendi",
-      "en" : ""
+    "3": {
+      "tr": "Ertelendi",
+      "en": ""
     },
-    "4" : {
-      "tr" : "Tamamlandı",
-      "en" : ""
+    "4": {
+      "tr": "Tamamlandı",
+      "en": ""
     }
   },
-  "proje_destek_tipi" : {
-    "1" : {
-      "tr" : "Uluslararası destekli sonuçlandırılmış proje",
-      "en" : ""
+
+  "proje_destek_tipi": {
+    "1": {
+      "tr": "Uluslararası destekli sonuçlandırılmış proje",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Ulusal destekli sonuçlandırılmış proje",
-      "en" : ""
+    "2": {
+      "tr": "Ulusal destekli sonuçlandırılmış proje",
+      "en": ""
     }
   },
-  "uluslararasi_destek_alinan_kurulus" : {
-    "1" : {
-      "tr" : "Dünya Bankası, Avrupa Birliği ve Avrupa Konseyi destekli proje (Yalnızca Ar-Ge niteliğindeki projeler)",
-      "en" : ""
+  "uluslararasi_destek_alinan_kurulus": {
+    "1": {
+      "tr": "Dünya Bankası, Avrupa Birliği ve Avrupa Konseyi destekli proje (Yalnızca Ar-Ge niteliğindeki projeler)",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Diğer resmi kurum ve kruluşlar tarafından destekli proje (Yalnızca Ar-Ge niteliğindeki projeler)",
-      "en" : ""
+    "2": {
+      "tr": "Diğer resmi kurum ve kruluşlar tarafından destekli proje (Yalnızca Ar-Ge niteliğindeki projeler)",
+      "en": ""
     }
   },
-  "ulusal_destek_alinan_kurulus" : {
-    "1" : {
-      "tr" : "TÜBA ve TÜBİTAK destekli proje",
-      "en" : ""
+  "ulusal_destek_alinan_kurulus": {
+    "1": {
+      "tr": "TÜBA ve TÜBİTAK destekli proje",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Kalkınma Bakanlığı destekli proje (Yalnızca Ar-Ge niteliğindeki projeler)",
-      "en" : ""
+    "2": {
+      "tr": "Kalkınma Bakanlığı destekli proje (Yalnızca Ar-Ge niteliğindeki projeler)",
+      "en": ""
     },
-    "3" : {
-      "tr" : "Sanayi Tezleri Programı (SAN-TEZ) projesi",
-      "en" : ""
+    "3": {
+      "tr": "Sanayi Tezleri Programı (SAN-TEZ) projesi",
+      "en": ""
     },
-    "4" : {
-      "tr" : "Diğer kamu kuruluşları (Yükseköğretim kurumlan hariç) tarafından desteklenmiş projeler (Yalnızca Ar-Ge niteliğindeki projeler)",
-      "en" : ""
+    "4": {
+      "tr": "Diğer kamu kuruluşları (Yükseköğretim kurumlan hariç) tarafından desteklenmiş projeler (Yalnızca Ar-Ge niteliğindeki projeler)",
+      "en": ""
     },
-    "5" : {
-      "tr" : "Yükseköğretim kurumlan tarafından destekli bilimsel araştırma projesi (Yalnızca Ar-Ge niteliğindeki projeler)",
-      "en" : ""
+    "5": {
+      "tr": "Yükseköğretim kurumlan tarafından destekli bilimsel araştırma projesi (Yalnızca Ar-Ge niteliğindeki projeler)",
+      "en": ""
     },
-    "6" : {
-      "tr" : "Özel kuruluşlar (Ar-Ge, yenilik ve özgün tasarım projeleri)",
-      "en" : ""
+    "6": {
+      "tr": "Özel kuruluşlar (Ar-Ge, yenilik ve özgün tasarım projeleri)",
+      "en": ""
     }
   },
-  "proje_gorev_tipi" : {
-    "1" : {
-      "tr" : "Yürütücü",
-      "en" : ""
+  "proje_gorev_tipi": {
+    "1": {
+      "tr": "Yürütücü",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Araştırmacı öğretim üyesi",
-      "en" : ""
+    "2": {
+      "tr": "Araştırmacı öğretim üyesi",
+      "en": ""
     },
-    "3" : {
-      "tr" : "Araştırmacı; araştırma görevlisi, öğretim görevlisi, okutman ve uzman ",
-      "en" : ""
+    "3": {
+      "tr": "Araştırmacı; araştırma görevlisi, öğretim görevlisi, okutman ve uzman ",
+      "en": ""
     },
-    "4" : {
-      "tr" : "Danışman; kamu kurum ve kuruluşları ile tüzel kişilerin yürütmüş olduğu projelerde",
-      "en" : ""
+    "4": {
+      "tr": "Danışman; kamu kurum ve kuruluşları ile tüzel kişilerin yürütmüş olduğu projelerde",
+      "en": ""
     },
-    "5" : {
-      "tr" : " Danışman; yürütücünün gerçek kişi olduğu projelerde",
-      "en" : ""
+    "5": {
+      "tr": " Danışman; yürütücünün gerçek kişi olduğu projelerde",
+      "en": ""
     }
   },
-  "arastirma_hedef_lokasyon" : {
-    "1" : {
-      "tr" : "Yurtdışı",
-      "en" : ""
+
+  "arastirma_hedef_lokasyon": {
+    "1": {
+      "tr": "Yurtdışı",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Yurtiçi"
+    "2": {
+      "tr": "Yurtiçi"
     }
   },
-  "yayin_turleri" : {
-    "1" : {
-      "tr" : "Bilimsel (Tez hariç) kitap",
-      "en" : ""
+  "yayin_turleri": {
+    "1": {
+      "tr": "Bilimsel (Tez hariç) kitap",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Ders kitabı",
-      "en" : ""
+    "2": {
+      "tr": "Ders kitabı",
+      "en": ""
     },
-    "3" : {
-      "tr" : "Kitapta editörlük",
-      "en" : ""
+    "3": {
+      "tr": "Kitapta editörlük",
+      "en": ""
     },
-    "4" : {
-      "tr" : "Kitap bölümü",
-      "en" : ""
+    "4": {
+      "tr": "Kitap bölümü",
+      "en": ""
     },
-    "5" : {
-      "tr" : "Kitap tercümesi",
-      "en" : ""
+    "5": {
+      "tr": "Kitap tercümesi",
+      "en": ""
     },
-    "6" : {
-      "tr" : "Ansiklopedi konu/madde yazarı",
-      "en" : ""
+    "6": {
+      "tr": "Ansiklopedi konu/madde yazarı",
+      "en": ""
     },
-    "7" : {
-      "tr" : "Dergi editörlüğü",
-      "en" : ""
+    "7": {
+      "tr": "Dergi editörlüğü",
+      "en": ""
     },
-    "8" : {
-      "tr" : "Özgün/Derleme makale",
-      "en" : ""
+    "8": {
+      "tr": "Özgün/Derleme makale",
+      "en": ""
     },
-    "9" : {
-      "tr" : "Diğer (Teknik not, kısa makale, yorum, vaka takdimi, editöre mektup, özet, kitap kritiği, araştırma notu)",
-      "en" : ""
+    "9": {
+      "tr": "Diğer (Teknik not, kısa makale, yorum, vaka takdimi, editöre mektup, özet, kitap kritiği, araştırma notu)",
+      "en": ""
     },
-    "10" : {
-      "tr" : "Uluslararası boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak",
-      "en" : ""
+    "10": {
+      "tr": "Uluslararası boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak",
+      "en": ""
     },
-    "11" : {
-      "tr" : "Ulusal boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak",
-      "en" : ""
+    "11": {
+      "tr": "Ulusal boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak",
+      "en": ""
     },
-    "12" : {
-      "tr" : "Hakemlik",
-      "en" : ""
+    "12": {
+      "tr": "Hakemlik",
+      "en": ""
     }
   },
   // Bilimsel kitap, Ders kitabı, Kitapta editörlük, Kitap Bölümü, Ansiklopedi konu/madde yazarı
-  "yayin_bilimsel_kitap_tur" : {
-      "1" : {
-        "tr" : "Alanında uluslararası yayımlanan bilimsel kitap",
-        "en" : ""
-      },
-      "2" : {
-        "tr" : "Alanında ulusal yayımlanan bilimsel kitap",
-        "en" : ""
-      }
+  "yayin_bilimsel_kitap_tur": {
+    "1": {
+      "tr": "Alanında uluslararası yayımlanan bilimsel kitap",
+      "en": ""
     },
+    "2": {
+      "tr": "Alanında ulusal yayımlanan bilimsel kitap",
+      "en": ""
+    }
+  },
   // Yayın içindeki derindeki tüm seçeneklerde bu var
-  "yayin_bilimsel_ulusal_uluslarasi" : {
-    "1" : {
-      "tr" : "1. İsim",
-      "en" : ""
+  "yayin_bilimsel_ulusal_uluslarasi": {
+    "1": {
+      "tr": "1. İsim",
+      "en": ""
     },
-    "2" : {
-      "tr" : "2. İsim",
-      "en" : ""
+    "2": {
+      "tr": "2. İsim",
+      "en": ""
     },
-    "3" : {
-      "tr" : "3. İsim",
-      "en" : ""
+    "3": {
+      "tr": "3. İsim",
+      "en": ""
     },
-    "4" : {
-      "tr" : "4. İsim",
-      "en" : ""
+    "4": {
+      "tr": "4. İsim",
+      "en": ""
     },
-    "5" : {
-      "tr" : "Senior isim (makaledeki son isim) (yayının yapıldığı alanda daha önce en az on adet uluslararası yayın yapmış olmak şartıyla)",
-      "en" : ""
+    "5": {
+      "tr": "Senior isim (makaledeki son isim) (yayının yapıldığı alanda daha önce en az on adet uluslararası yayın yapmış olmak şartıyla)",
+      "en": ""
     }
   },
-  "kitap_tercumesi" : {
-    "1" : {
-      "tr" : "Alanında yayımlamış tam kitap çevirisi",
-      "en" : ""
+  "kitap_tercumesi": {
+    "1": {
+      "tr": "Alanında yayımlamış tam kitap çevirisi",
+      "en": ""
     }
   },
-  "dergi_editorlugu" : {
-    "1" : {
-      "tr" : "SSCI, SCI-Exp, AHCI kapsamındaki dergilerde editörlük",
-      "en" : ""
+  "dergi_editorlugu": {
+    "1": {
+      "tr": "SSCI, SCI-Exp, AHCI kapsamındaki dergilerde editörlük",
+      "en": ""
     },
-    "2" : {
-      "tr" : "SSCI, SCI-Exp, AHCI, ESCI dışındaki alan endekslerindeki dergilerde editörlük",
-      "en" : ""
+    "2": {
+      "tr": "SSCI, SCI-Exp, AHCI, ESCI dışındaki alan endekslerindeki dergilerde editörlük",
+      "en": ""
     },
-    "3" : {
-      "tr" : "ESCI kapsamındaki dergilerde editörlük",
-      "en" : ""
+    "3": {
+      "tr": "ESCI kapsamındaki dergilerde editörlük",
+      "en": ""
     }
   },
-  "ozgun_derleme_makale" : {
-      "1" : {
-        "tr" : "SSCI, SCI-Exp, AHCI dergilerinde yayımlanan tam makale",
-        "en" : ""
-      },
-      "2" : {
-        "tr" : "ESCI kapsamındaki dergilerde yayımlanan tam makale",
-        "en" : ""
-      },
-      "3" : {
-        "tr" : "SSCI, SCI-Exp, AHCI, ESCI dışındaki alan endekslerindeki dergilerde yayımlanan tam makale",
-        "en" : ""
-      },
-      "4" : {
-        "tr" : "Diğer hakemli ulusal veya uluslararası dergilerde yayımlanan tam makale",
-        "en" : ""
-      }
+  "ozgun_derleme_makale": {
+    "1": {
+      "tr": "SSCI, SCI-Exp, AHCI dergilerinde yayımlanan tam makale",
+      "en": ""
     },
-  "yayin_diger" : {
+    "2": {
+      "tr": "ESCI kapsamındaki dergilerde yayımlanan tam makale",
+      "en": ""
+    },
+    "3": {
+      "tr": "SSCI, SCI-Exp, AHCI, ESCI dışındaki alan endekslerindeki dergilerde yayımlanan tam makale",
+      "en": ""
+    },
+    "4": {
+      "tr": "Diğer hakemli ulusal veya uluslararası dergilerde yayımlanan tam makale",
+      "en": ""
+    }
+  },
+  "yayin_diger": {
     "1": {
       "tr": "SSCI, SCI-Exp, AHCI kapsamındaki yayımlanan makale",
       "en": ""
@@ -268,193 +271,192 @@
     }
   },
   //Uluslararası boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak, Ulusal boyutta performansa dayalı yayımlanmış ses ve/veya görüntü kaydı bulunmak
-  "yayin_goruntu_kaydi" : {
-    "1" : {
-      "tr" : "Özgün kişisel kayıt",
-      "en" : ""
+  "yayin_goruntu_kaydi": {
+    "1": {
+      "tr": "Özgün kişisel kayıt",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Karma kayıt",
-      "en" : ""
+    "2": {
+      "tr": "Karma kayıt",
+      "en": ""
     }
   },
-  "yayin_hakemlik" : {
-    "1" : {
-      "tr" : "SSCI, SCI-Exp, AHCI kapsamındaki dergilerde hakemlik",
-      "en" : ""
+  "yayin_hakemlik": {
+    "1": {
+      "tr": "SSCI, SCI-Exp, AHCI kapsamındaki dergilerde hakemlik",
+      "en": ""
     },
-    "2" : {
-      "tr" : "ESCI kapsamındaki dergilerde hakemlik",
-      "en" : ""
+    "2": {
+      "tr": "ESCI kapsamındaki dergilerde hakemlik",
+      "en": ""
     },
-    "3" : {
-      "tr" : "SSCI, SCI-Exp, AHCI, ESCI dışındaki alan endekslerindeki dergilerde hakemlik",
-      "en" : ""
+    "3": {
+      "tr": "SSCI, SCI-Exp, AHCI, ESCI dışındaki alan endekslerindeki dergilerde hakemlik",
+      "en": ""
     },
-    "4" : {
-      "tr" : "Diğer hakemli ulusal veya uluslararası dergilerde hakemlik",
-      "en" : ""
+    "4": {
+      "tr": "Diğer hakemli ulusal veya uluslararası dergilerde hakemlik",
+      "en": ""
     }
   },
-  //TASARIM
-  "tasarim" : {
-    "1" : {
-      "tr" : "Sanatsal tasarım (Bina, çevre, eser, yayın, mekan, obje)",
-      "en" : ""
-    },
-    "2" : {
-      "tr" : "Bilimsel tasarım",
-      "en" : ""
-    },
-    "3" : {
-      "tr" : "Faydalı obje",
-      "en" : ""
-    }
-  },
-  "sanatsal_tasarim" : {
-    "1" : {
-      "tr" : "Kamu kurumları ile özel hukuk tüzel kişileri bünyesinde uygulamaya konmuş sanatsal tasarım",
-      "en" : ""
-    },
-    "2" : {
-      "tr" : "Bilimsel yayınla tescillenmiş sanatsal tasarım"
-    }
-  },
-  "bilimsel_tasarim" : {
-    "1" : {
-      "tr" : "Bilimsel yayınla tescillenmiş bilimsel tasarım",
-      "en" : ""
-    },
-    "2" : {
-      "tr" : "Kamu kurumlan ile özel hukuk tüzel kişileri bünyesinde uygulanmış ve belgelenmiş tasarım",
-      "en" : ""
-    }
-  },
-  "faydali_obje" : {
-    "1" : {
-      "tr" : "TSE/TPE tarafından tescillenmiş faydalı proje",
-      "en" : ""
-    }
-  },
-  //SERGİ
-  "sergi" : {
-    "1" : {
-      "tr" : "Özgün kişisel etkinlik",
-      "en" : ""
-    },
-    "2" : {
-      "tr" : "Karma etkinlikler",
-      "en" : ""
-    }
-  },
-  "sergi_ozgun_kisisel_etkinlik" : {
-    "1" : {
-      "tr" : "Uluslararası özgün etkinlik",
-      "en" : ""
-    },
-    "2" : {
-      "tr" : " Ulusal özgün etkinlik",
-      "en" : ""
-    }
-  },
-  "sergi_karma_etkinlikler" : {
-    "1" : {
-      "tr" : "Davetli/yarışmalı uluslararası karma etkinlik",
-      "en" : ""
-    },
-    "2" : {
-      "tr" : "Davetli/yarışmalı ulusal karma etkinlik",
-      "en" : ""
-    }
-  },
-  //PATENT
-  "patent" : {
-    "1" : {
-      "tr" : "Alanında uluslararası tescillenmiş patent",
-      "en" : ""
-    },
-    "2" : {
-      "tr" : "Alanında ulusal tescillenmiş patent",
-      "en" : ""
-    }
-  },
-  //ATIF
-  "atif" : {
-    "1" : {
-      "tr" : "Öğretim elemanının yazar olarak yer almadığı uluslararası kitaplarda, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
-      "en" : ""
-    },
-    "2" : {
-      "tr" : "Öğretim elemanının yazar olarak yer almadığı ulusal kitaplarda, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
-      "en" : ""
-    },
-    "3" : {
-      "tr" : "SSCI, SCI-Exp, AHCI tarafından taranan dergilerde, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
-      "en" : ""
-    },
-    "4" : {
-      "tr" : "SSCI, SCI-Exp, AHCI, ESCI dışındaki uluslararası dergilerde, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
-      "en" : ""
-    },
-    "5" : {
-      "tr" : "ESCI tarafından taranan dergilerde, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
-      "en" : ""
-    },
-    "6" : {
-      "tr" : "Hakemli ulusal dergilerdeki, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki her bir atıf",
-      "en" : ""
-    },
-    "7" : {
-      "tr" : "Bestecinin kendisinin yer almadığı uluslararası konserde eserinin seslendirilmesi",
-      "en" : ""
-    }
 
+  "tasarim": {
+    "1": {
+      "tr": "Sanatsal tasarım (Bina, çevre, eser, yayın, mekan, obje)",
+      "en": ""
+    },
+    "2": {
+      "tr": "Bilimsel tasarım",
+      "en": ""
+    },
+    "3": {
+      "tr": "Faydalı obje",
+      "en": ""
+    }
   },
-  //TEBLİĞ
-  "teblig" : {
-    "1" : {
-      "tr" : "Uluslararası kongre ve sempozyumlarda davetli olarak sunulan tebliğ",
-      "en" : ""
+  "sanatsal_tasarim": {
+    "1": {
+      "tr": "Kamu kurumları ile özel hukuk tüzel kişileri bünyesinde uygulamaya konmuş sanatsal tasarım",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Uluslararası kongre ve sempozyumlarda sözlü olarak sunulan ve tam metin olarak yayımlanan tebliğ",
-      "en" : ""
+    "2": {
+      "tr": "Bilimsel yayınla tescillenmiş sanatsal tasarım"
+    }
+  },
+  "bilimsel_tasarim": {
+    "1": {
+      "tr": "Bilimsel yayınla tescillenmiş bilimsel tasarım",
+      "en": ""
     },
-    "3" : {
-      "tr" : "Uluslararası kongre ve sempozyumlarda poster olarak sunulan ve yayımlanan tebliğ",
-      "en" : ""
+    "2": {
+      "tr": "Kamu kurumlan ile özel hukuk tüzel kişileri bünyesinde uygulanmış ve belgelenmiş tasarım",
+      "en": ""
+    }
+  },
+  "faydali_obje": {
+    "1": {
+      "tr": "TSE/TPE tarafından tescillenmiş faydalı proje",
+      "en": ""
+    }
+  },
+
+  "sergi": {
+    "1": {
+      "tr": "Özgün kişisel etkinlik",
+      "en": ""
     },
-    "4" : {
-      "tr" : "Uluslararası kongre ve sempozyumlarda sözlü olarak sunulan ve özet metin olarak yayımlanan tebliğ",
-      "en" : ""
+    "2": {
+      "tr": "Karma etkinlikler",
+      "en": ""
+    }
+  },
+  "sergi_ozgun_kisisel_etkinlik": {
+    "1": {
+      "tr": "Uluslararası özgün etkinlik",
+      "en": ""
+    },
+    "2": {
+      "tr": " Ulusal özgün etkinlik",
+      "en": ""
+    }
+  },
+  "sergi_karma_etkinlikler": {
+    "1": {
+      "tr": "Davetli/yarışmalı uluslararası karma etkinlik",
+      "en": ""
+    },
+    "2": {
+      "tr": "Davetli/yarışmalı ulusal karma etkinlik",
+      "en": ""
+    }
+  },
+
+  "patent": {
+    "1": {
+      "tr": "Alanında uluslararası tescillenmiş patent",
+      "en": ""
+    },
+    "2": {
+      "tr": "Alanında ulusal tescillenmiş patent",
+      "en": ""
+    }
+  },
+
+  "atif": {
+    "1": {
+      "tr": "Öğretim elemanının yazar olarak yer almadığı uluslararası kitaplarda, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
+      "en": ""
+    },
+    "2": {
+      "tr": "Öğretim elemanının yazar olarak yer almadığı ulusal kitaplarda, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
+      "en": ""
+    },
+    "3": {
+      "tr": "SSCI, SCI-Exp, AHCI tarafından taranan dergilerde, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
+      "en": ""
+    },
+    "4": {
+      "tr": "SSCI, SCI-Exp, AHCI, ESCI dışındaki uluslararası dergilerde, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
+      "en": ""
+    },
+    "5": {
+      "tr": "ESCI tarafından taranan dergilerde, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki farklı eserlerine yapılan her bir atıf",
+      "en": ""
+    },
+    "6": {
+      "tr": "Hakemli ulusal dergilerdeki, öğretim elemanının yazar olarak yer almadığı makalelerde, öğretim elemanının eserlerine yapılan kaynakçadaki her bir atıf",
+      "en": ""
+    },
+    "7": {
+      "tr": "Bestecinin kendisinin yer almadığı uluslararası konserde eserinin seslendirilmesi",
+      "en": ""
+    }
+  },
+
+  "teblig": {
+    "1": {
+      "tr": "Uluslararası kongre ve sempozyumlarda davetli olarak sunulan tebliğ",
+      "en": ""
+    },
+    "2": {
+      "tr": "Uluslararası kongre ve sempozyumlarda sözlü olarak sunulan ve tam metin olarak yayımlanan tebliğ",
+      "en": ""
+    },
+    "3": {
+      "tr": "Uluslararası kongre ve sempozyumlarda poster olarak sunulan ve yayımlanan tebliğ",
+      "en": ""
+    },
+    "4": {
+      "tr": "Uluslararası kongre ve sempozyumlarda sözlü olarak sunulan ve özet metin olarak yayımlanan tebliğ",
+      "en": ""
     }
   },
   //ÖDÜL
   //Alt menüsünün key'i "yayin_bilimsel_ulusal_uluslarasi"
-  "odul" : {
-    "1" : {
-      "tr" : "TÜBA veya TÜBİTAK'tan alınan bilim ödülü",
-      "en" : ""
+  "odul": {
+    "1": {
+      "tr": "TÜBA veya TÜBİTAK'tan alınan bilim ödülü",
+      "en": ""
     },
-    "2" : {
-      "tr" : "Alanında yurtdışı kurum veya kuruluşlardan alınan bilim ödülü",
-      "en" : ""
+    "2": {
+      "tr": "Alanında yurtdışı kurum veya kuruluşlardan alınan bilim ödülü",
+      "en": ""
     },
-    "3" : {
-      "tr" : "Alanında yurtiçi kamu kurum ve kuruluşlarından alınan bilim ödülü",
-      "en" : ""
+    "3": {
+      "tr": "Alanında yurtiçi kamu kurum ve kuruluşlarından alınan bilim ödülü",
+      "en": ""
     },
-    "4" : {
-      "tr" : "Uluslararası kongre, kurultay, sempozyum, konferans ve festival gibi etkinliklerin bilim ve/veya sanat kurulu tarafından verilen ödül (Adına belge düzenlenen öğretim elemanı başvurabilir)",
-      "en" : ""
+    "4": {
+      "tr": "Uluslararası kongre, kurultay, sempozyum, konferans ve festival gibi etkinliklerin bilim ve/veya sanat kurulu tarafından verilen ödül (Adına belge düzenlenen öğretim elemanı başvurabilir)",
+      "en": ""
     },
-    "5" : {
-      "tr" : "Ulusal kongre, kurultay, sempozyum, konferans ve festival gibi etkinliklerin bilim ve/veya sanat kurulu tarafından verilen ödül (Adına belge düzenlenen öğretim elemanı başvurabilir)",
-      "en" : ""
+    "5": {
+      "tr": "Ulusal kongre, kurultay, sempozyum, konferans ve festival gibi etkinliklerin bilim ve/veya sanat kurulu tarafından verilen ödül (Adına belge düzenlenen öğretim elemanı başvurabilir)",
+      "en": ""
     },
-    "6" : {
-      "tr" : "Alanında özel kurum ve kuruluşlar tarafından verilen ödül",
-      "en" : ""
+    "6": {
+      "tr": "Alanında özel kurum ve kuruluşlar tarafından verilen ödül",
+      "en": ""
     }
   }
 }
