@@ -15,6 +15,33 @@ from ulakbus.models import Personel
 __author__ = 'Ali Riza Keles'
 
 
+class AkademikFaaliyetTuru(Model):
+    faaliyet = String("Faalyet")
+    puan = Integer("Puan")
+    alt_faaliyet = String("Alt Faalyet")
+    detay = String("Detay")
+    oran = Integer("Oran")
+
+    class Meta:
+        app = 'Personel'
+        verbose_name = _(u"Akademik Faaliyet Türü")
+        verbose_name_plural = _(u"Akademik Faaliyet Türleri")
+        list_fields = ['faaliyet', 'puan', 'alt_faaliyet', 'detay', 'oran']
+        search_fields = ['faaliyet', 'alt_faaliyet', 'detay']
+
+    def __unicode__(self):
+        return _(u"%(faaliyet)s | %(alt_faaliyet)s") % {'ad': self.faaliyet,
+                                                        'soyad': self.alt_faaliyet}
+
+    @classmethod
+    def get_alt_faaliyet_by_faaliyet(cls, faaliyet):
+        return cls.objects.filter(faaliyet=faaliyet).values('key', 'alt_faaliyet')
+
+    @classmethod
+    def get_faaliyet_list(cls, faaliyet):
+        return cls.objects.distinct_values_of('faaliyet').values('key', 'alt_faaliyet')
+
+
 class AkademikFaaliyet(Model):
     """
     Akademik Faalyet bilgilerinin saklandigi model
@@ -36,4 +63,3 @@ class AkademikFaaliyet(Model):
 
     def __unicode__(self):
         return _(u"%(ad)s %(soyad)s") % {'ad': self.ad, 'soyad': self.soyad}
-

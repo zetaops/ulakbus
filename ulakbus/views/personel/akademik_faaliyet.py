@@ -17,4 +17,6 @@ from ulakbus.models import KurumDisiGorevlendirmeBilgileri, KurumIciGorevlendirm
 from zengine.lib.translation import gettext_lazy as __
 from ulakbus.lib.role import AbsRole
 
+
 def listele():
+    pass
