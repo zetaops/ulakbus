@@ -78,19 +78,19 @@ class HizmetSureleri():
     """
 
     def _emekli_sandigi_hesapla(self):
-        hizmetler = HizmetKayitlari.objects.filter(tckn=self.personel).order_by("order_date")
+        hizmetler = HizmetKayitlari.objects.filter(tckn=self.personel.tckn).order_by("order_date")
 
         baslangic = None
         sure = 0
 
         for hizmet in hizmetler:
             if hizmet.sebep_kod.nevi == 1:
-                baslangic = date(hizmet.baslama_tarihi)
+                baslangic = hizmet.baslama_tarihi
             elif hizmet.sebep_kod.nevi == 2:
-                sure += (baslangic - date(hizmet.bitis_tarihi)).days
+                sure += (hizmet.bitis_tarihi - baslangic).days
 
         if baslangic:
-            sure += (datetime.today() - date(hizmet.baslama_tarihi)).days
+            sure += (date.today() - baslangic).days
 
         return sure
 
