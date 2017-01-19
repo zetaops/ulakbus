@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from zengine.views.crud import CrudView, obj_filter
+from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.models.personel import Personel, SaglikRaporu
@@ -102,6 +102,10 @@ class SaglikRaporuOlustur(CrudView):
         result['actions'].extend([
             {'name': _(u'Sil'), 'cmd': 'sil', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'}])
+
+    @list_query
+    def list_by_personel_id(self, queryset):
+        return queryset.filter(personel_id=self.current.task_data['personel_id'])
 
     def rapor_kontrol(self, rapor_sayisi):
         """
