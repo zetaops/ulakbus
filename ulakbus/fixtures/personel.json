@@ -94,6 +94,9 @@
     },
     "2": {
       "tr": "Heyet Raporu",
+      "en": ""
+    }
+  },
   "ceza_turleri": {
     "1": {
       "tr": "Uyarma",
@@ -152,15 +155,7 @@
       "en": ""
     },
     "15": {
-      "tr": "Diploma İptali (İntihal)",
-  "saglik_raporu_cesitleri": {
-    "1": {
-      "tr": "Tek Hekim Raporu",
-      "en": ""
-    },
-    "2": {
-      "tr": "Heyet Raporu",
-      "en": ""
+      "tr": "Diploma İptali (İntihal)"
     }
   }
 }
