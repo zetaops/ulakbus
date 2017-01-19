@@ -30,8 +30,8 @@ class AkademikFaaliyetTuru(Model):
         search_fields = ['faaliyet', 'alt_faaliyet', 'detay']
 
     def __unicode__(self):
-        return _(u"%(faaliyet)s | %(alt_faaliyet)s") % {'faaliyet': self.faaliyet,
-                                                        'alt_faaliyet': self.alt_faaliyet}
+        return _(u"%(faaliyet)s | %(detay)s") % {'faaliyet': self.faaliyet,
+                                                        'detay': self.detay}
 
     @classmethod
     def get_alt_faaliyet_by_faaliyet(cls, faaliyet):

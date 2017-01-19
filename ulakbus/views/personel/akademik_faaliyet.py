@@ -8,6 +8,9 @@
 # (GPLv3).  See LICENSE.txt for details.
 import six
 
+from ulakbus.lib.cache import AkademikPerformans
+from ulakbus.models.akademik_faaliyet import AkademikFaaliyetTuru
+
 __author__ = 'Ali Riza Keles'
 
 from zengine.forms import JsonForm
@@ -195,3 +198,23 @@ class AkademikFaaliyet(CrudView):
     @list_query
     def list_by_personel_id(self, queryset):
         return queryset.filter(personel_id=self.current.task_data['personel_id'])
+
+
+class HesaplamaSonucuGoster(CrudView):
+
+    def hesapla(self):
+        self.current.task_data['performans'] = AkademikPerformans().get_or_set()
+
+    def goster(self):
+        cached_data_with_db_keys = self.current.task_data['performans']
+        data_with_showable_keys = {}
+        for d in cached_data_with_db_keys.items():
+            key = AkademikFaaliyetTuru.objects.get(key=d[0]).__unicode__()
+            value = d[1]
+            data_with_showable_keys[key] = value
+
+        self.set_client_cmd('show')
+
+        self.output['object_title'] = 'Akademik Performans Hesapla'
+        self.output['object_key'] = self.object.key
+        self.output['object'] = data_with_showable_keys
