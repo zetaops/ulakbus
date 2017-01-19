@@ -5,7 +5,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+<<<<<<< 9ddd1a10f32e06bf14c31fff4fe610328adb2cf9
 from zengine.views.crud import CrudView, obj_filter, list_query
+=======
+from zengine.views.crud import CrudView, obj_filter
+>>>>>>> ADD, İdari ceza takibi son haline getirildi ve testi yazıldı. rref #5569
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.models.personel import Personel, SaglikRaporu

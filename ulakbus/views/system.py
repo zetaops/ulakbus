@@ -187,10 +187,8 @@ class UlakbusMenu(Menu):
 def get_general_staff_stats():
     """
        List the stats for all staff in the system.
-
        Returns:
            list of stats
-
     """
     d = PersonelIstatistik().get_or_set()
     rows = []

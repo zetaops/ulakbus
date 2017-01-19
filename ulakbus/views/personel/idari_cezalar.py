@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from zengine.views.crud import CrudView, obj_filter
+from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.models.personel import Personel
@@ -33,13 +33,12 @@ class IdariCezaTakibi(CrudView):
     def islem_turu_belirle(self):
         msg = ''
         if self.current.task_data['cmd'] == 'add_edit_form':
-            try:
-                if self.input['form'].get('add'):
+                if self.input.get('object_id',None):
+                    self.current.task_data['title'] = _(u"Değişiklikleriniz Kaydedildi")
+                    msg = "üzerinde yapılan değişiklikler başarıyla kaydedildi."
+                else:
                     self.current.task_data['title'] = _(u"İdari Ceza Oluşturuldu")
                     msg = 'oluşturuldu.'
-            except KeyError:
-                self.current.task_data['title'] = _(u"Değişiklikleriniz Kaydedildi")
-                msg = "üzerinde yapılan değişiklikler başarıyla kaydedildi."
 
         elif self.current.task_data['cmd'] == 'delete':
             self.current.task_data['title'] = _(u"Silme İşlemi Başarılı")
@@ -125,3 +124,7 @@ Bilgilerinin bulunduğu idari cezayı silme işlemini onaylıyor musunuz?"""
             {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'}
         ])
+
+    @list_query
+    def list_by_personel_id(self, queryset):
+        return queryset.filter(personel_id=self.current.task_data['personel_id'])
