@@ -84,6 +84,8 @@ class AkademikFaaliyet(CrudView):
         ]
 
     def listele(self):
+        personel_id = self.current.user.personel.key
+        self.current.task_data['personel_id'] = personel_id
         self.list()
 
     def goruntule(self):
