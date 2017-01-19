@@ -86,5 +86,15 @@
       "tr": "Ücretsiz İzin",
       "en": "Unpaid Vacation"
     }
+  },
+  "saglik_raporu_cesitleri": {
+    "1": {
+      "tr": "Tek Hekim Raporu",
+      "en": ""
+    },
+    "2": {
+      "tr": "Heyet Raporu",
+      "en": ""
+    }
   }
 }
