@@ -50,9 +50,9 @@ class AkademikFaaliyet(Model):
     ad = String(__(u"Faaliyet Adı"))
     baslama = Date(__(u"Başlama Tarihi"), format="%d.%m.%Y")
     bitis = Date(__(u"Bitiş Tarihi"), format="%d.%m.%Y")
-    durum = Integer(__(u"Durum"), choices='akademik_faaliyet_durum')
-    kac_kisiyle_yapildi = Integer(__(u"Kaç kişiyle yapıldığı"))
-    gorev = String(__(u"Görev"))
+    durum = Integer(__(u"Durum"), choices='akademik_faaliyet_durum', required=False, default=1)
+    kac_kisiyle_yapildi = Integer(__(u"Kaç kişiyle yapıldığı"), required=False)
+    gorev = String(__(u"Görev"), required=False)
     personel = Personel()
 
     class Meta:

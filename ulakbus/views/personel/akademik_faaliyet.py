@@ -6,16 +6,46 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import six
 
 __author__ = 'Ali Riza Keles'
 
 from zengine.forms import JsonForm
 from zengine.forms import fields
-from zengine.views.crud import CrudView
+from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.lib.translation import gettext_lazy as __
 from zengine.lib.translation import gettext as _
 from ulakbus.models.akademik_faaliyet import AkademikFaaliyetTuru as Aft
 from ulakbus.models.akademik_faaliyet import AkademikFaaliyet as Af
+
+
+def faaliyet_gorev_secenekler(faaliyet):
+    faaliyet_gorev_map = {
+        "Proje": [
+            "Yürütücü",
+            "Araştırmacı öğretim üyesi",
+            "Araştırmacı; araştırma görevlisi, öğretim görevlisi, okutman ve uzman",
+            "Danışman; kamu kurum ve kuruluşları ile tüzel kişilerin yürütmüş olduğu projelerde",
+            "Danışman; yürütücünün gerçek kişi olduğu projelerde"],
+        "Yayın": [
+            "1. İsim",
+            "2. İsim",
+            "3. İsim",
+            "4. ve sonrası",
+            "Senior isim (makaledeki son isim) (yayının yapıldığı alanda daha önce en az on adet uluslararası yayın yapmış olmak şartıyla)"
+        ],
+        "Ödül": [
+            "1. İsim",
+            "2. İsim",
+            "3. İsim",
+            "4. ve sonrası",
+            "Senior isim (makaledeki son isim) (yayının yapıldığı alanda daha önce en az on adet uluslararası yayın yapmış olmak şartıyla)"
+        ]
+    }
+    if faaliyet in faaliyet_gorev_map:
+        return [(g, g) for g in faaliyet_gorev_map[faaliyet]]
+    else:
+        return []
 
 
 def faaliyet_secenekler():
@@ -24,12 +54,14 @@ def faaliyet_secenekler():
 
 
 def alt_faaliyet_secenekler(faaliyet):
-    turler = Aft.objects.filter(faaliyet=faaliyet).distinct_values_of("alt_faaliyet")
-    return [(tur.title(), tur.title()) for tur in turler.keys()]
+    return [(s, s) for s in
+            set(Aft.objects.filter(faaliyet=faaliyet).values_list('alt_faaliyet')) if s is not None]
 
 
 class FaaliyetSec(JsonForm):
-    faaliyet = fields.String("Faaliyet Seçiniz", choices=faaliyet_secenekler())
+    faaliyetler = faaliyet_secenekler()
+    faaliyet = fields.String(__(u"Faaliyet Seçiniz"),
+                             choices=faaliyetler, default=faaliyetler[0][0])
     ileri = fields.Button(__(u"Ileri"))
 
 
@@ -37,15 +69,36 @@ class AltFaaliyetSec(JsonForm):
     ileri = fields.Button(__(u"Ileri"))
 
 
+class AkademikFaaliyetForm(JsonForm):
+    class Meta:
+        exclude = ['personel', 'gorev', 'tur']
+
+    kaydet = fields.Button(__(u"Kaydet"))
+
+
 class AkademikFaaliyet(CrudView):
     class Meta:
         model = "AkademikFaaliyet"
+        object_actions = [
+
+        ]
 
     def listele(self):
         self.list()
 
     def goruntule(self):
-        pass
+        self.show()
+        self.output['object'].update({
+            "Faaliyet": self.object.tur.faaliyet,
+            "Alt Faaliyet": self.object.tur.alt_faaliyet,
+            "Detay": self.object.tur.detay,
+            "Puan": six.text_type(self.object.tur.puan),
+            "Oran": six.text_type(self.object.tur.oran),
+        })
+
+        form = JsonForm()
+        form.geri = fields.Button(__(u"Listeye Dön"), cmd='iptal')
+        self.form_out(form)
 
     def faaliyet_sec(self):
         _form = FaaliyetSec(title=_("Faaliyet Türünü Seçiniz"))
@@ -57,10 +110,10 @@ class AkademikFaaliyet(CrudView):
             self.current.task_data['faaliyet'])
 
     def alt_faaliyet_sec(self):
-        _form = AltFaaliyetSec(title=_("Alt Faaliyet Seçiniz"))
-        _form.alt_faaliyet = fields.String("Alt Faaliyet Seçiniz", choices=alt_faaliyet_secenekler(
-            self.current.task_data['faaliyet']
-        ))
+        alt_faaliyetler = alt_faaliyet_secenekler(self.current.task_data['faaliyet'])
+        _form = AltFaaliyetSec(title=_(u"Alt Faaliyet Seçiniz"))
+        _form.alt_faaliyet = fields.String(_(u"Alt Faaliyet Seçiniz"),
+                                           choices=alt_faaliyetler, default=alt_faaliyetler[0][0])
         self.form_out(_form)
 
     def alt_faaliyet_kaydet(self):
@@ -78,32 +131,65 @@ class AkademikFaaliyet(CrudView):
 
         turler = q.values("key", "detay")
 
-        _form.detay = fields.String(choices=[(tur['key'], tur['detay']) for tur in turler])
+        detaylar = [(tur['key'], tur['detay']) for tur in turler]
+
+        _form.detay = fields.String(choices=detaylar, default=detaylar[0][0])
+        _form.ileri = fields.Button(__(u"Ileri"))
         self.form_out(_form)
 
     def detay_kaydet(self):
         self.current.task_data['detay'] = self.current.input['form']['detay']
+        self.current.task_data['gorevler'] = faaliyet_gorev_secenekler(
+            self.current.task_data['faaliyet'])
 
     def gorev_sec(self):
-        pass
+        _form = JsonForm(title=_("Görev Seçiniz"))
+        gorevler = self.current.task_data['gorevler']
+        _form.gorev = fields.String(choices=gorevler, default=gorevler[0][0])
+        _form.ileri = fields.Button(__(u"Ileri"))
+
+    def gorev_kaydet(self):
+        self.current.task_data['gorev'] = self.current.input['form']['gorev']
+
+    def proje_bilgileri(self):
+        _form = AkademikFaaliyetForm(Af(),
+                                     current=self.current, title=_(u"Faaliyet bilgilerini giriniz"))
+        self.form_out(_form)
 
     def kaydet(self):
-        tur = Aft.objects.get(
-            faaliyet=self.current.task_data['faaliyet'],
-            detay=self.current.task_data['detay']
-        )
+        fd = self.current.input['form']
 
         faaliyet = Af(
-            tur=tur,
+            ad=fd['ad'],
+            baslama=fd['baslama'],
+            bitis=fd['bitis'],
+            durum=fd['durum'],
+            kac_kisiyle_yapildi=fd['kac_kisiyle_yapildi'],
+            tur_id=self.current.task_data['detay'],
             personel=self.current.role.user.personel
         )
 
-        faaliyet.save()
+        faaliyet.blocking_save()
+
+        if 'object_id' in self.current.task_data:
+            del self.current.task_data['object_id']
 
     def kayit_bilgisi_ver(self):
         self.current.output['msgbox'] = {
             "type": "info",
             "title": _(u"Başarılı"),
-            "msg": """Yeni faaliyet aşağıdaki bilgiler ile kaydedilmiştir:
-            %s %s %s
-            """ % (self.current.task_data['detay'])}
+            "msg": "Yeni faaliyet başarıyla kaydedilmiştir"}
+        form = JsonForm()
+        form.geri = fields.Button(__(u"Tamam"), cmd='iptal')
+        self.form_out(form)
+
+    @obj_filter
+    def saglik_raporu_islem(self, obj, result):
+        result['actions'].extend([
+            {'name': _(u'Sil'), 'cmd': 'sil', 'mode': 'normal', 'show_as': 'button'},
+            {'name': _(u'Görüntüle'), 'cmd': 'goster', 'mode': 'normal', 'show_as': 'button'},
+        ])
+
+    @list_query
+    def list_by_personel_id(self, queryset):
+        return queryset.filter(personel_id=self.current.task_data['personel_id'])
