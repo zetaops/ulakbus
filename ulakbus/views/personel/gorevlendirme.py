@@ -51,8 +51,10 @@ class Gorevlendirme(CrudView):
         else:
             personel_id = self.current.task_data['personel_id']
 
-        kurum_ici_gorevlendirme_bilgileri = KurumIciGorevlendirmeBilgileri.objects.filter(personel_id=personel_id)
-        kurum_disi_gorevlendirme_bilgileri = KurumDisiGorevlendirmeBilgileri.objects.filter(personel_id=personel_id)
+        kurum_ici_gorevlendirme_bilgileri = KurumIciGorevlendirmeBilgileri.objects.filter(
+            personel_id=personel_id)
+        kurum_disi_gorevlendirme_bilgileri = KurumDisiGorevlendirmeBilgileri.objects.filter(
+            personel_id=personel_id)
 
         gorevler = [k for k in kurum_ici_gorevlendirme_bilgileri]
         gorevler += [k for k in kurum_disi_gorevlendirme_bilgileri]
@@ -120,7 +122,6 @@ Bilgilerin bulunduğu görevi silmek istiyor musunuz?"""
         form.evet = fields.Button(__(u"Evet"), cmd='delete')
         form.hayir = fields.Button(__(u"Hayır"))
         self.form_out(form)
-
 
     def gorevlendirme_tur_sec(self):
         """
@@ -220,10 +221,12 @@ class KurumDisiGorevlendirme(CrudView):
         alti_yil_onceki_tarih = baslangic_tarihi.replace(year=baslangic_tarihi.year-6)
         iki_yil_onceki_tarih = baslangic_tarihi.replace(year=baslangic_tarihi.year-2)
 
-        maasli_gorev = KurumDisiGorevlendirmeBilgileri.objects.filter(baslama_tarihi__gt=alti_yil_onceki_tarih,
-                                                                      maas=True)
-        maassiz_gorev = KurumDisiGorevlendirmeBilgileri.objects.filter(baslama_tarihi__gt=iki_yil_onceki_tarih,
-                                                                       maas=False)
+        maasli_gorev = KurumDisiGorevlendirmeBilgileri.objects.filter(
+            baslama_tarihi__gt=alti_yil_onceki_tarih,
+            maas=True)
+        maassiz_gorev = KurumDisiGorevlendirmeBilgileri.objects.filter(
+            baslama_tarihi__gt=iki_yil_onceki_tarih,
+            maas=False)
         sure = rrule(MONTHLY, dtstart=baslangic_tarihi, until=bitis_tarihi).count()
 
         if baslangic_tarihi > bitis_tarihi:
