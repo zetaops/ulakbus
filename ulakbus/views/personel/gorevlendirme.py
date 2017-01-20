@@ -168,7 +168,7 @@ class KurumIciGorevlendirme(CrudView):
         hata_msg = ''
 
         if form_data['baslama_tarihi'] > form_data['bitis_tarihi']:
-            hata_msg = __(u"Başlangıç tarihi, bitiş tarihinden büyük olamaz")
+            hata_msg = "Başlangıç tarihi, bitiş tarihinden büyük olamaz"
 
         if hata_msg:
             self.current.task_data['hata_msg'] = hata_msg
@@ -227,13 +227,13 @@ class KurumDisiGorevlendirme(CrudView):
         sure = rrule(MONTHLY, dtstart=baslangic_tarihi, until=bitis_tarihi).count()
 
         if baslangic_tarihi > bitis_tarihi:
-            hata_msg = _(u"Başlangıç tarihi, bitiş tarihinden büyük olamaz")
+            hata_msg = "Başlangıç tarihi, bitiş tarihinden büyük olamaz"
         if sure > 3:
             if maasli_gorev:
                 hata_msg = "6 yıl içerisinde alınmış maaşlı görev bulunmaktadır. " \
                            "Yeni görev süresi 3 aydan fazla olmamalıdır!"
             elif maassiz_gorev:
-                hata_msg = "2 yıl içerisinde alınmış maassiz görev bulunmaktadır. " \
+                hata_msg = "2 yıl içerisinde alınmış maaşsız görev bulunmaktadır. " \
                            "Yeni görev süresi 3 aydan fazla olmamalıdır!"
 
         if hata_msg:
