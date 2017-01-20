@@ -187,13 +187,12 @@ class UlakbusMenu(Menu):
 def get_general_staff_stats():
     """
        List the stats for all staff in the system.
-
        Returns:
            list of stats
-
     """
     d = PersonelIstatistik().get_or_set()
-    return [
+    rows = []
+    for row in [
         ['', _(u"Toplam"), _(u"Kadın"), _(u"Erkek")],
         [_(u"Personel"), d['total_personel'], d['kadin_personel'], d['erkek_personel']],
         [_(u"Akademik"), d['akademik_personel'], d['akademik_personel_kadin'],
@@ -204,5 +203,13 @@ def get_general_staff_stats():
         [_(u"Profesör"), d['prof_total'], d['prof_kadin'], d['prof_erkek']],
         [_(u"Araştırma Görevlisi"), d['ar_gor_total'], d['ar_gor_kadin'], d['ar_gor_erkek']],
         [_(u"Engelli"), d['engelli_personel_total'], d['engelli_personel_kadin'],
-         d['engelli_personel_erkek']]
-    ]
+         d['engelli_personel_erkek']]]:
+        cols = []
+        for col in row:
+            cols.append(
+                {"content": col}
+            )
+        rows.append({
+            "cols": cols
+        })
+    return rows

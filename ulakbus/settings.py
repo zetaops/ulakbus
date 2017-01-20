@@ -124,6 +124,9 @@ OBJECT_MENU = {
         {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme',
          'field': 'personel_id'},
 
+        {'name': 'Ceza', 'verbose_name': 'İdari Ceza Takibi', 'field': 'personel_id',
+         'wf': 'idari_cezalar_takibi'},
+
         {'name': 'Personel', 'verbose_name': 'Personel İşten Ayrılma', 'field': 'personel_id',
          'wf': 'personel_isten_ayrilma'},
 
