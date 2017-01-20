@@ -12,6 +12,7 @@ from zengine.lib.test_utils import BaseTestCase
 from dateutil.relativedelta import relativedelta
 import datetime
 from ulakbus.lib.role import AbsRole
+import time
 
 __author__ = 'Mithat Raşit Özçıkrıkcı'
 
@@ -45,6 +46,8 @@ class TestCase(BaseTestCase):
         # sonunda kontrol edebilmek amacıyla silinir.
         KurumIciGorevlendirmeBilgileri.objects.delete()
 
+        self.client.post(cmd='tur_sec', wf="gorevlendirme")
+
         # Görevlendirme türü kaydedilir.
         self.client.post(cmd="gorevlendirme_tur_kaydet", wf="gorevlendirme",
                          form=dict(gorevlendirme_tur=2))
@@ -59,9 +62,8 @@ class TestCase(BaseTestCase):
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet",
                          wf="gorevlendirme",
-                         form=dict(gorev_tipi=2,
-                                   kurum_ici_gorev_baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
-                                   kurum_ici_gorev_bitis_tarihi=bitis.strftime("%d.%m.%Y"),
+                         form=dict(baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
+                                   bitis_tarihi=bitis.strftime("%d.%m.%Y"),
                                    birim_id=birim_id,
                                    soyut_rol_id=soyut_rol_id,
                                    aciklama="Test Öğrenci İşleri Daire Başkanlığı Görevlendirme",
@@ -72,9 +74,9 @@ class TestCase(BaseTestCase):
         gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
-        assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
+        assert gorevlendirme.baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
+        assert gorevlendirme.bitis_tarihi == bitis
 
         assert gorevlendirme.birim.key == birim_id
 
@@ -110,6 +112,8 @@ class TestCase(BaseTestCase):
         # Görevlendirilecek personel seçilir.
         self.client.post(id=personel_id, model="Personel", param="personel_id", wf="gorevlendirme")
 
+        self.client.post(cmd='tur_sec', wf="gorevlendirme")
+
         # Görevlendirme türü kaydedilir.
         self.client.post(cmd="gorevlendirme_tur_kaydet", wf="gorevlendirme",
                          form=dict(gorevlendirme_tur=2))
@@ -119,9 +123,8 @@ class TestCase(BaseTestCase):
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            gorev_tipi=2,
-            kurum_ici_gorev_baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
-            kurum_ici_gorev_bitis_tarihi=bitis.strftime("%d.%m.%Y"),
+            baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
+            bitis_tarihi=bitis.strftime("%d.%m.%Y"),
             birim_id=birim_id,
             soyut_rol_id=soyut_rol_id,
             aciklama="Dekan olarak görevlendirme",
@@ -133,9 +136,9 @@ class TestCase(BaseTestCase):
         gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
-        assert gorevlendirme.kurum_ici_gorev_baslama_tarihi == baslangic
+        assert gorevlendirme.baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_ici_gorev_bitis_tarihi == bitis
+        assert gorevlendirme.bitis_tarihi == bitis
 
         assert gorevlendirme.birim.key == birim_id
 
@@ -171,8 +174,12 @@ class TestCase(BaseTestCase):
         # Veritabanındaki hizmet kayıtları test sonunda kontrol edebilmek amacıyla silinir.
         HizmetKayitlari.objects.delete()
 
+        time.sleep(1)
+
         # Görevlendirilecek personel seçilir.
         self.client.post(id=personel_id, model="Personel", param="personel_id", wf="gorevlendirme")
+
+        self.client.post(cmd='tur_sec', wf="gorevlendirme")
 
         # Görevlendirme türü kaydedilir.
         self.client.post(cmd="gorevlendirme_tur_kaydet", wf="gorevlendirme",
@@ -183,8 +190,8 @@ class TestCase(BaseTestCase):
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            kurum_disi_gorev_baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
-            kurum_disi_gorev_bitis_tarihi=bitis.strftime("%d.%m.%Y"),
+            baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
+            bitis_tarihi=bitis.strftime("%d.%m.%Y"),
             aciklama="Rektör kurum dışı görevlendirme",
             resmi_yazi_sayi="234234",
             resmi_yazi_tarih=resmi_yazi_tarih.strftime("%d.%m.%Y"),
@@ -200,9 +207,9 @@ class TestCase(BaseTestCase):
         gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
-        assert gorevlendirme.kurum_disi_gorev_baslama_tarihi == baslangic
+        assert gorevlendirme.baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_disi_gorev_bitis_tarihi == bitis
+        assert gorevlendirme.bitis_tarihi == bitis
 
         self.client.post(cmd="hizmet_cetveli_giris", wf="gorevlendirme", form=dict(
             baslama_tarihi="23.03.2017",
@@ -236,8 +243,12 @@ class TestCase(BaseTestCase):
         # Veritabanındaki hizmet kayıtları test sonunda kontrol edebilmek amacıyla silinir.
         HizmetKayitlari.objects.delete()
 
+        time.sleep(1)
+
         # Görevlendirilecek personel seçilir.
         self.client.post(id=personel_id, model="Personel", param="personel_id", wf="gorevlendirme")
+
+        self.client.post(cmd='tur_sec', wf="gorevlendirme")
 
         # Görevlendirme türü kaydedilir.
         self.client.post(cmd="gorevlendirme_tur_kaydet", wf="gorevlendirme",
@@ -248,8 +259,8 @@ class TestCase(BaseTestCase):
         bitis = baslangic + relativedelta(years=1)
         resmi_yazi_tarih = baslangic + relativedelta(days=-3)
         self.client.post(cmd="kaydet", wf="gorevlendirme", form=dict(
-            kurum_disi_gorev_baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
-            kurum_disi_gorev_bitis_tarihi=bitis.strftime("%d.%m.%Y"),
+            baslama_tarihi=baslangic.strftime("%d.%m.%Y"),
+            bitis_tarihi=bitis.strftime("%d.%m.%Y"),
             aciklama="Rektör kurum dışı görevlendirme",
             resmi_yazi_sayi="234234",
             resmi_yazi_tarih=resmi_yazi_tarih.strftime("%d.%m.%Y"),
@@ -265,9 +276,9 @@ class TestCase(BaseTestCase):
         gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
         assert gorevlendirme.personel.key == personel_id
 
-        assert gorevlendirme.kurum_disi_gorev_baslama_tarihi == baslangic
+        assert gorevlendirme.baslama_tarihi == baslangic
 
-        assert gorevlendirme.kurum_disi_gorev_bitis_tarihi == bitis
+        assert gorevlendirme.bitis_tarihi == bitis
 
         self.client.post(cmd="hizmet_cetveli_giris", wf="gorevlendirme", form=dict(
             baslama_tarihi="23.03.2017",

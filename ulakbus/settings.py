@@ -106,17 +106,13 @@ OBJECT_MENU = {
         {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri',
          'field': 'personel_id'},
 
-        {'name': 'KurumDisiGorevlendirmeBilgileri', 'field': 'personel_id'},
-
-        {'name': 'KurumIciGorevlendirmeBilgileri', 'field': 'personel_id'},
-
         {'name': 'AdresBilgileri', 'verbose_name': 'Adres Bilgileri', 'field': 'personel_id'},
 
         {'name': 'Atama', 'verbose_name': 'Atama İşlemleri', "wf": 'personel_atama',
          'field': 'personel_id'},
 
-        {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
-         'field': 'personel_id'},
+        # {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
+        #  'field': 'personel_id'},
 
         {'name': 'Personel', 'verbose_name': 'Personel Terfi', 'wf': 'tekil_personel_terfi',
          'field': 'personel_id'},

@@ -4,6 +4,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.models import AkademikFaaliyetTuru
+from ulakbus.models import AkademikFaaliyet
 
 from ulakbus.models.auth import Unit
 from ulakbus.models.ogrenci import Ogrenci, Donem, Program, Ders, Sube, Okutman, Sinav
@@ -363,7 +365,6 @@ class FakeDataGenerator:
             o.ad = fake.first_name()
             o.soyad = fake.last_name()
             o.unvan = person.unvan
-            o.birim_no = birim_no
             o.personel = person
 
             # duplicate data check
@@ -990,4 +991,62 @@ class FakeDataGenerator:
                 cetveller = self.yeni_zaman_cetvelleri(planlar)
                 print('%s adlı okutman için %i zaman planı ve %i zaman cetveli oluşturuldu.'
                       % (okutman.ad, len(planlar), len(cetveller)))
+
+    def akademik_faaliyet_generator(self):
+        #100 tane akademik personel ve her biri için 30'ar tane akademik faaliyet oluşturur.
+        personeller = FakeDataGenerator.yeni_personel(personel_turu=1, unit=Unit(), personel_say=100, user=None)
+        FakeDataGenerator.yeni_okutman(personeller)
+
+        gorev_tanimi = {
+            "proje": ["Yürütücü",
+              "Araştırmacı öğretim üyesi",
+              "Araştırmacı; araştırma görevlisi, öğretim görevlisi, okutman ve uzman",
+              "Danışman; kamu kurum ve kuruluşları ile tüzel kişilerin yürütmüş olduğu projelerde",
+              "Danışman; yürütücünün gerçek kişi olduğu projelerde"],
+            "yayin": [
+              "1. İsim",
+              "2. İsim",
+              "3. İsim",
+              "4. ve sonrası",
+              "Senior isim (makaledeki son isim) (yayının yapıldığı alanda daha önce en az on adet uluslararası yayın yapmış olmak şartıyla)"
+            ],
+            "odul": [
+              "1. İsim",
+              "2. İsim",
+              "3. İsim",
+              "4. ve sonrası",
+              "Senior isim (makaledeki son isim) (yayının yapıldığı alanda daha önce en az on adet uluslararası yayın yapmış olmak şartıyla)"
+            ]
+          }
+
+        for index, personel in enumerate(personeller):
+            for i in range(30):
+                random_index = random.randint(0, 63)
+                af_tur = AkademikFaaliyetTuru.objects.filter()[random_index]
+                ad = fake.lecture()
+                baslama = FakeDataGenerator().random_date()
+                bitis = FakeDataGenerator().random_date()
+                durum = random.randint(1, 4)
+                kac_kisi = random.randint(1, 9)
+                if random_index < 8:
+                    gorev = gorev_tanimi['proje'][random.randint(0, 4)]
+                elif 9 < random_index < 39:
+                    gorev = gorev_tanimi['yayin'][random.randint(0, 4)]
+                elif random_index > 58:
+                    gorev = gorev_tanimi['odul'][random.randint(0, 4)]
+                else:
+                    gorev = None
+                AkademikFaaliyet(tur=af_tur,
+                                 ad=ad,
+                                 baslama=baslama,
+                                 bitis=bitis,
+                                 durum=durum,
+                                 kac_kisiyle_yapildi=kac_kisi,
+                                 gorev=gorev).save()
+
+    def random_date(self):
+        year = random.randint(2000, 2023)
+        month = random.randint(1, 12)
+        day = random.randint(1, 28)
+        return datetime.date(year, month, day)
 
