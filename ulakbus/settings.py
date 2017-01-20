@@ -115,8 +115,8 @@ OBJECT_MENU = {
         {'name': 'Atama', 'verbose_name': 'Atama İşlemleri', "wf": 'personel_atama',
          'field': 'personel_id'},
 
-        {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
-         'field': 'personel_id'},
+        # {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
+        #  'field': 'personel_id'},
 
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},

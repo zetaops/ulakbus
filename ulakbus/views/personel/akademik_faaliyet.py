@@ -6,6 +6,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from collections import OrderedDict
+
 import six
 
 from ulakbus.lib.cache import AkademikPerformans
@@ -81,10 +83,10 @@ class AkademikFaaliyetForm(JsonForm):
 
 class AkademikFaaliyet(CrudView):
     class Meta:
-        model = "AkademikFaaliyet"
-        object_actions = [
 
-        ]
+        allow_search = False
+        model = "AkademikFaaliyet"
+        object_actions = []
 
     def listele(self):
         personel_id = self.current.user.personel.key
@@ -152,6 +154,7 @@ class AkademikFaaliyet(CrudView):
         gorevler = self.current.task_data['gorevler']
         _form.gorev = fields.String(choices=gorevler, default=gorevler[0][0])
         _form.ileri = fields.Button(__(u"Ileri"))
+        self.form_out(_form)
 
     def gorev_kaydet(self):
         self.current.task_data['gorev'] = self.current.input['form']['gorev']
@@ -163,12 +166,12 @@ class AkademikFaaliyet(CrudView):
 
     def kaydet(self):
         fd = self.current.input['form']
-
         faaliyet = Af(
             ad=fd['ad'],
             baslama=fd['baslama'],
             bitis=fd['bitis'],
             durum=fd['durum'],
+            gorev=self.current.task_data['gorev'],
             kac_kisiyle_yapildi=fd['kac_kisiyle_yapildi'],
             tur_id=self.current.task_data['detay'],
             personel=self.current.role.user.personel
@@ -180,13 +183,14 @@ class AkademikFaaliyet(CrudView):
             del self.current.task_data['object_id']
 
     def kayit_bilgisi_ver(self):
-        self.current.output['msgbox'] = {
-            "type": "info",
-            "title": _(u"Başarılı"),
-            "msg": "Yeni faaliyet başarıyla kaydedilmiştir"}
-        form = JsonForm()
-        form.geri = fields.Button(__(u"Tamam"), cmd='iptal')
-        self.form_out(form)
+        # self.current.output['msgbox'] = {
+        #     "type": "info",
+        #     "title": _(u"Başarılı"),
+        #     "msg": "Yeni faaliyet başarıyla kaydedilmiştir"}
+        _form = JsonForm(title=__(u"Akademik Faaliyet Kayit"))
+        _form.help_text = "Yeni faaliyet başarıyla kaydedilmiştir."
+        _form.geri = fields.Button(__(u"Listeye Geri Don"), cmd='iptal')
+        self.form_out(_form)
 
     @obj_filter
     def saglik_raporu_islem(self, obj, result):
@@ -207,14 +211,20 @@ class HesaplamaSonucuGoster(CrudView):
 
     def goster(self):
         cached_data_with_db_keys = self.current.task_data['performans']
-        data_with_showable_keys = {}
+        data_with_showable_keys = []
         for d in cached_data_with_db_keys.items():
             key = AkademikFaaliyetTuru.objects.get(key=d[0]).__unicode__()
             value = d[1]
-            data_with_showable_keys[key] = value
+            line = OrderedDict({})
+            line["Faaliyet"] = key
+            line["Toplam Sayı"] = value
+            data_with_showable_keys.append(line)
 
         self.set_client_cmd('show')
 
-        self.output['object_title'] = 'Akademik Performans Hesapla'
+        self.output['object_title'] = 'Akademik Performans Sayıları'
         self.output['object_key'] = self.object.key
-        self.output['object'] = data_with_showable_keys
+        self.output['object'] = {
+            "type": "table-multiRow",
+            "fields": data_with_showable_keys,
+            "actions": ""}
