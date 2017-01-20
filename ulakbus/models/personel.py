@@ -272,11 +272,11 @@ class KurumIciGorevlendirmeBilgileri(Model):
 
     """
 
-    gorev_tipi = field.String(_(u"Görev Tipi"), choices="gorev_tipi")
-    kurum_ici_gorev_baslama_tarihi = field.Date(_(u"Başlama Tarihi"), format="%d.%m.%Y")
-    kurum_ici_gorev_bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
-    birim = Unit()
-    soyut_rol = AbstractRole()
+    gorev_tipi = field.Integer(_(u"Görev Tipi"), choices="gorev_tipi")
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
+    birim = Unit(verbose_name=_(u"Birim"))
+    soyut_rol = AbstractRole(verbose_name=_(u"Görev"))
     aciklama = field.String(_(u"Açıklama"))
     resmi_yazi_sayi = field.String(_(u"Resmi Yazı Sayı"))
     resmi_yazi_tarih = field.Date(_(u"Resmi Yazı Tarihi"), format="%d.%m.%Y")
@@ -334,9 +334,9 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
     """
 
-    gorev_tipi = field.Integer(_(u"Görev Tipi"))
-    kurum_disi_gorev_baslama_tarihi = field.Date(_(u"Başlama Tarihi"), format="%d.%m.%Y")
-    kurum_disi_gorev_bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
+    gorev_tipi = field.Integer(_(u"Görev Tipi"), choices="gorev_tipi")
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), format="%d.%m.%Y")
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), format="%d.%m.%Y")
     aciklama = field.Text(_(u"Açıklama"))
     resmi_yazi_sayi = field.String(_(u"Resmi Yazı Sayı"))
     resmi_yazi_tarih = field.Date(_(u"Resmi Yazı Tarihi"), format="%d.%m.%Y")
@@ -344,7 +344,7 @@ class KurumDisiGorevlendirmeBilgileri(Model):
     yevmiye = field.Boolean(_(u"Yevmiye"), default=False)
     yolluk = field.Boolean(_(u"Yolluk"), default=False)
     ulke = field.Integer(_(u"Ülke"), default="90", choices="ulke")
-    soyut_rol = AbstractRole()
+    soyut_rol = AbstractRole(verbose_name=_(u"Görev"))
     personel = Personel()
 
     class Meta:

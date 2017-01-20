@@ -299,11 +299,11 @@
   },
   "gorev_tipi": {
     "1": {
-      "tr": "kurum dışı görev",
+      "tr": "Kurum Dışı Görev",
       "en": ""
     },
     "2": {
-      "tr": "kurum içi görev",
+      "tr": "Kurum İçi Görev",
       "en": ""
     }
   },
