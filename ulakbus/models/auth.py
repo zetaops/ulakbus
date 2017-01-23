@@ -45,12 +45,12 @@ class User(Model, BaseUser):
     ait bir ve tek kullanıcı olması zorunludur.
 
     """
-    avatar = field.File(_(u"Profil Fotoğrafı"), random_name=True, required=False)
-    username = field.String(_(u"Kullanıcı Adı"), index=True, unique=True)
+    avatar = field.File(_(u"Profil Fotoğrafı"), random_name=True, required=False, readonly=True)
+    username = field.String(_(u"Kullanıcı Adı"), index=True, unique=True, readonly=True)
     password = field.String(_(u"Parola"))
-    e_mail = field.String(_(u"E-Posta"), index=True, unique=True)
-    name = field.String(_(u"Ad"), index=True)
-    surname = field.String(_(u"Soyad"), index=True)
+    e_mail = field.String(_(u"E-Posta"), index=True, unique=True, readonly=True)
+    name = field.String(_(u"Ad"), index=True, readonly=True)
+    surname = field.String(_(u"Soyad"), index=True, readonly=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
     last_login_role_key = field.String(_(u"Son Giriş Yapılan Rol"))
     locale_language = field.String(

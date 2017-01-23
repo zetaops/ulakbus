@@ -16,7 +16,7 @@ from ulakbus.settings import DEMO_URL, MAIL_ADDRESS
 
 
 class EPostaForm(JsonForm):
-    birincil_e_posta = fields.String(__(u"Birincil e-postanız"))
+    birincil_e_posta = fields.String(__(u"Birincil e-postanız"), readonly=True)
 
 
 class EPostaDegistir(UlakbusView):
