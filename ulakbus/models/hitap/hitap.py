@@ -383,7 +383,7 @@ class HizmetKayitlari(Model):
     emekli_derece = field.Integer(_(u"Emekli Derecesi"), index=True)  # personelden gelecek
     emekli_kademe = field.Integer(_(u"Emekli Kademe"), index=True)  # personelden gelecek (gorunen)
     emekli_ekgosterge = field.Integer(_(u"Emekli Ek Göstergesi"), index=True)  # personelden gelecek
-    sebep_kod = field.Integer(_(u"Hitap Sebep Kodu"), index=True)
+    sebep_kod = HitapSebep(_(u"Hitap Sebep Kodu"))
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True)
     personel = Personel()
@@ -412,7 +412,7 @@ class HizmetKayitlari(Model):
         önce bitiş tarihi olan kayıt gürüntülenmelidir. Bu yüzden
         başlangıç tarihine +1 saat eklendi.
         """
-        if self.baslama_tarihi is not None and self.baslama_tarihi != datetime.date(1900, 1, 1):
+        if self.baslama_tarihi is not None and type(self.baslama_tarihi) is not str and self.baslama_tarihi != datetime.date(1900, 1, 1):
             self.order_date = datetime.datetime.combine(self.baslama_tarihi, datetime.time(1))
         else:
             self.order_date = self.bitis_tarihi
