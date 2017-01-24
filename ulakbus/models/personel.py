@@ -135,6 +135,10 @@ class Personel(Model):
     mazeret_izin = field.Integer("Mazeret İzni", index=True, default=0)
     user = User(one_to_one=True)
 
+    class AtamaBilgileri(ListNode):
+        tarih = field.Date(_(u"Atamanın Yapıldığı Tarih"), format="%d.%m.%Y")
+        atama_bilgisi = field.String(_(u"Atama Bilgisi"))
+
     class Meta:
         app = 'Personel'
         verbose_name = _(u"Personel")
@@ -608,7 +612,7 @@ class Atama(Model):
 
     ibraz_tarihi = field.Date(_(u"İbraz Tarihi"), index=True, format="%d.%m.%Y")
     durum = HitapSebep()
-    nereden = field.Integer(_(u"Nereden"), index=True, choices="universiteler")
+    nereden = field.Integer(_(u"Nereden"), index=True, choices="universiteler")  # modele baglanacak.
     atama_aciklama = field.String(_(u"Atama Açıklama"), index=True)
     goreve_baslama_tarihi = field.Date(_(u"Göreve Başlama Tarihi"), index=True, format="%d.%m.%Y")
     goreve_baslama_aciklama = field.String(_(u"Göreve Başlama Açıklama"), index=True)

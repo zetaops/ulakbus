@@ -1,0 +1,736 @@
+{
+  "universiteler": {
+    "1": {
+      "tr": "ABANT İZZET BAYSAL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "2": {
+      "tr": "ABDULLAH GÜL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "3": {
+      "tr": "ACIBADEM ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "4": {
+      "tr": "ADANA BİLİM VE TEKNOLOJİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "5": {
+      "tr": "ADIYAMAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "6": {
+      "tr": "ADNAN MENDERES ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "7": {
+      "tr": "AFYON KOCATEPE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "8": {
+      "tr": "AĞRI İBRAHİM ÇEÇEN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "9": {
+      "tr": "AHİ EVRAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "10": {
+      "tr": "AKDENİZ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "11": {
+      "tr": "AKSARAY ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "12": {
+      "tr": "ALANYA ALAADDİN KEYKUBAT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "13": {
+      "tr": "ALANYA HAMDULLAH EMİN PAŞA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "14": {
+      "tr": "AMASYA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "15": {
+      "tr": "ANADOLU ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "16": {
+      "tr": "ANKA TEKNOLOJİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "17": {
+      "tr": "ANKARA SOSYAL BİLİMLER ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "18": {
+      "tr": "ANKARA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "19": {
+      "tr": "ANKARA YILDIRIM BEYAZIT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "20": {
+      "tr": "ANTALYA AKEV ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "21": {
+      "tr": "ARDAHAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "22": {
+      "tr": "ARTVİN ÇORUH ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "23": {
+      "tr": "ATAŞEHİR ADIGÜZEL MESLEK YÜKSEKOKULU",
+      "en": ""
+    },
+    "24": {
+      "tr": "ATATÜRK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "25": {
+      "tr": "ATILIM ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "26": {
+      "tr": "AVRASYA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "27": {
+      "tr": "AVRUPA MESLEK YÜKSEKOKULU",
+      "en": ""
+    },
+    "28": {
+      "tr": "BAHÇEŞEHİR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "29": {
+      "tr": "BALIKESİR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "30": {
+      "tr": "BANDIRMA ONYEDİ EYLÜL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "31": {
+      "tr": "BARTIN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "32": {
+      "tr": "BAŞKENT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "33": {
+      "tr": "BATMAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "34": {
+      "tr": "BAYBURT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "35": {
+      "tr": "BEYKENT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "36": {
+      "tr": "BEYKOZ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "37": {
+      "tr": "BEZM-İ ÂLEM VAKIF ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "38": {
+      "tr": "BİLECİK ŞEYH EDEBALİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "39": {
+      "tr": "BİNGÖL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "40": {
+      "tr": "BİRUNİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "41": {
+      "tr": "BİTLİS EREN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "42": {
+      "tr": "BOĞAZİÇİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "43": {
+      "tr": "BOZOK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "44": {
+      "tr": "BURSA TEKNİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "45": {
+      "tr": "BÜLENT ECEVİT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "46": {
+      "tr": "CELÂL BAYAR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "47": {
+      "tr": "CUMHURİYET ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "48": {
+      "tr": "ÇAĞ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "49": {
+      "tr": "ÇANAKKALE ONSEKİZ MART ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "50": {
+      "tr": "ÇANKAYA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "51": {
+      "tr": "ÇANKIRI KARATEKİN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "52": {
+      "tr": "ÇUKUROVA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "53": {
+      "tr": "DİCLE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "54": {
+      "tr": "DOĞUŞ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "55": {
+      "tr": "DOKUZ EYLÜL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "56": {
+      "tr": "DUMLUPINAR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "57": {
+      "tr": "DÜZCE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "58": {
+      "tr": "EGE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "59": {
+      "tr": "ERCİYES ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "60": {
+      "tr": "ERZİNCAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "61": {
+      "tr": "ERZURUM TEKNİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "62": {
+      "tr": "ESKİŞEHİR OSMANGAZİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "63": {
+      "tr": "FARUK SARAÇ TASARIM MESLEK YÜKSEKOKULU",
+      "en": ""
+    },
+    "64": {
+      "tr": "FATİH SULTAN MEHMET VAKIF ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "65": {
+      "tr": "FENERBAHÇE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "66": {
+      "tr": "FIRAT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "67": {
+      "tr": "GALATASARAY ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "68": {
+      "tr": "GAZİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "69": {
+      "tr": "GAZİANTEP ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "70": {
+      "tr": "GAZİOSMANPAŞA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "71": {
+      "tr": "GEBZE TEKNİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "72": {
+      "tr": "GEDİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "73": {
+      "tr": "GİRESUN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "74": {
+      "tr": "GÜMÜŞHANE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "75": {
+      "tr": "HACETTEPE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "76": {
+      "tr": "HAKKARİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "77": {
+      "tr": "HALİÇ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "78": {
+      "tr": "HARRAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "79": {
+      "tr": "HASAN KALYONCU ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "80": {
+      "tr": "HİTİT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "81": {
+      "tr": "IĞDIR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "82": {
+      "tr": "IŞIK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "83": {
+      "tr": "İBN HALDUN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "84": {
+      "tr": "İHSAN DOĞRAMACI BİLKENT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "85": {
+      "tr": "İNÖNÜ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "86": {
+      "tr": "İSKENDERUN TEKNİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "87": {
+      "tr": "İSTANBUL AREL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "88": {
+      "tr": "İSTANBUL AYDIN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "89": {
+      "tr": "İSTANBUL AYVANSARAY ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "90": {
+      "tr": "İSTANBUL BİLGİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "91": {
+      "tr": "İSTANBUL BİLİM ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "92": {
+      "tr": "İSTANBUL ESENYURT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "93": {
+      "tr": "İSTANBUL GELİŞİM ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "94": {
+      "tr": "İSTANBUL KAVRAM MESLEK YÜKSEKOKULU",
+      "en": ""
+    },
+    "95": {
+      "tr": "İSTANBUL KEMERBURGAZ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "96": {
+      "tr": "İSTANBUL KENT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "97": {
+      "tr": "İSTANBUL KÜLTÜR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "98": {
+      "tr": "İSTANBUL MEDENİYET ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "99": {
+      "tr": "İSTANBUL MEDİPOL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "100": {
+      "tr": "İSTANBUL RUMELİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "101": {
+      "tr": "İSTANBUL SABAHATTİN ZAİM ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "102": {
+      "tr": "İSTANBUL ŞEHİR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "103": {
+      "tr": "İSTANBUL ŞİŞLİ MESLEK YÜKSEKOKULU",
+      "en": ""
+    },
+    "104": {
+      "tr": "İSTANBUL TEKNİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "105": {
+      "tr": "İSTANBUL TİCARET ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "106": {
+      "tr": "İSTANBUL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "107": {
+      "tr": "İSTANBUL 29 MAYIS ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "108": {
+      "tr": "İSTİNYE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "109": {
+      "tr": "İZMİR BAKIRÇAY ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "110": {
+      "tr": "İZMİR DEMOKRASİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "111": {
+      "tr": "İZMİR EKONOMİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "112": {
+      "tr": "İZMİR KATİP ÇELEBİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "113": {
+      "tr": "İZMİR YÜKSEK TEKNOLOJİ ENSTİTÜSÜ",
+      "en": ""
+    },
+    "114": {
+      "tr": "KADİR HAS ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "115": {
+      "tr": "KAFKAS ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "116": {
+      "tr": "KAHRAMANMARAŞ SÜTÇÜ İMAM ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "117": {
+      "tr": "KAPADOKYA MESLEK YÜKSEKOKULU",
+      "en": ""
+    },
+    "118": {
+      "tr": "KARABÜK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "119": {
+      "tr": "KARADENİZ TEKNİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "120": {
+      "tr": "KARAMANOĞLU MEHMETBEY ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "121": {
+      "tr": "KASTAMONU ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "122": {
+      "tr": "KIRIKKALE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "123": {
+      "tr": "KIRKLARELİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "124": {
+      "tr": "KİLİS 7 ARALIK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "125": {
+      "tr": "KOCAELİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "126": {
+      "tr": "KOÇ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "127": {
+      "tr": "KONYA GIDA VE TARIM ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "128": {
+      "tr": "KTO KARATAY ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "129": {
+      "tr": "MALTEPE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "130": {
+      "tr": "MARDİN ARTUKLU ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "131": {
+      "tr": "MARMARA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "132": {
+      "tr": "MEF ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "133": {
+      "tr": "MEHMET AKİF ERSOY ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "134": {
+      "tr": "MERSİN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "135": {
+      "tr": "MİLLİ SAVUNMA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "136": {
+      "tr": "MİMAR SİNAN GÜZEL SANATLAR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "137": {
+      "tr": "MUĞLA SITKI KOÇMAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "138": {
+      "tr": "MUNZUR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "139": {
+      "tr": "MUSTAFA KEMAL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "140": {
+      "tr": "MUŞ ALPARSLAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "141": {
+      "tr": "NAMIK KEMAL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "142": {
+      "tr": "NECMETTİN ERBAKAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "143": {
+      "tr": "NEVŞEHİR HACI BEKTAŞ VELİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "144": {
+      "tr": "NİŞANTAŞI ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "145": {
+      "tr": "NUH NACİ YAZGAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "146": {
+      "tr": "OKAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "147": {
+      "tr": "ONDOKUZ MAYIS ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "148": {
+      "tr": "ORDU ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "149": {
+      "tr": "ORTA DOĞU TEKNİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "150": {
+      "tr": "OSMANİYE KORKUT ATA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "151": {
+      "tr": "ÖMER HALİSDEMİR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "152": {
+      "tr": "ÖZYEĞİN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "153": {
+      "tr": "PAMUKKALE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "154": {
+      "tr": "PİRİ REİS ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "155": {
+      "tr": "RECEP TAYYİP ERDOĞAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "156": {
+      "tr": "SABANCI ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "157": {
+      "tr": "SAĞLIK BİLİMLERİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "158": {
+      "tr": "SAKARYA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "159": {
+      "tr": "SANKO ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "160": {
+      "tr": "SELÇUK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "161": {
+      "tr": "SİİRT ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "162": {
+      "tr": "SİNOP ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "163": {
+      "tr": "SÜLEYMAN DEMİREL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "164": {
+      "tr": "ŞIRNAK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "165": {
+      "tr": "TED ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "166": {
+      "tr": "TOBB EKONOMİ VE TEKNOLOJİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "167": {
+      "tr": "TOROS ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "168": {
+      "tr": "TRAKYA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "169": {
+      "tr": "TÜRK HAVA KURUMU ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "170": {
+      "tr": "TÜRK-ALMAN ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "171": {
+      "tr": "TÜRKİYE ULUSLARARASI İSLAM, BİLİM VE TEKNOLOJİ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "172": {
+      "tr": "UFUK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "173": {
+      "tr": "ULUDAĞ ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "174": {
+      "tr": "ULUSLARARASI ANTALYA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "175": {
+      "tr": "UŞAK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "176": {
+      "tr": "ÜSKÜDAR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "177": {
+      "tr": "YALOVA ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "178": {
+      "tr": "YAŞAR ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "179": {
+      "tr": "YEDİTEPE ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "180": {
+      "tr": "YENİ YÜZYIL ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "181": {
+      "tr": "YILDIZ TEKNİK ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "182": {
+      "tr": "YÜKSEK İHTİSAS ÜNİVERSİTESİ",
+      "en": ""
+    },
+    "183": {
+      "tr": "YÜZÜNCÜ YIL ÜNİVERSİTESİ",
+      "en": ""
+    }
+  }
+}

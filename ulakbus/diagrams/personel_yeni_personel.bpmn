@@ -22,7 +22,7 @@
         <bpmn:flowNodeRef>ExclusiveGateway_5</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>kontrol_et</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_8</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>UserTask_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AtamaYap</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>personel_atama</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>iptal</bpmn:flowNodeRef>
@@ -31,9 +31,8 @@
     <bpmn:startEvent id="basla">
       <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="kimlik_no_gir" />
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="basla" targetRef="kontrol_et" />
     <bpmn:userTask id="kimlik_no_gir" name="Kimlik No Gir" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.yeni_personel_form">
-      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_26</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
     </bpmn:userTask>
@@ -93,6 +92,7 @@
     </bpmn:sequenceFlow>
     <bpmn:userTask id="kontrol_et" name="Yeni Eklenen Personel Bilgilerini Kontrol Et" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.yeni_ekle_kontrol">
       <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_9" name="" sourceRef="kontrol_et" targetRef="ExclusiveGateway_2" />
@@ -104,14 +104,14 @@
     <bpmn:sequenceFlow id="islemi_bitir" name="" sourceRef="ExclusiveGateway_8" targetRef="bitis">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="bitir"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_33" name="" sourceRef="ExclusiveGateway_8" targetRef="UserTask_3">
+    <bpmn:sequenceFlow id="SequenceFlow_33" name="" sourceRef="ExclusiveGateway_8" targetRef="AtamaYap">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="atama_yap"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="UserTask_3" name="Atama Yap">
+    <bpmn:serviceTask id="AtamaYap" name="Atama Yap" camunda:type="external" camunda:topic="personel_atama">
       <bpmn:incoming>SequenceFlow_33</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_7" name="" sourceRef="UserTask_3" targetRef="bitis" />
+    <bpmn:sequenceFlow id="SequenceFlow_7" name="" sourceRef="AtamaYap" targetRef="bitis" />
     <bpmn:userTask id="personel_atama" name="Kaydet ve Bilgi Göster" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.kaydet">
       <bpmn:incoming>SequenceFlow_10</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_31</bpmn:outgoing>
@@ -147,10 +147,10 @@
         <dc:Bounds x="98" y="48" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_4" targetElement="_BPMNShape_UserTask_7">
-        <di:waypoint xsi:type="dc:Point" x="74" y="88" />
-        <di:waypoint xsi:type="dc:Point" x="98" y="88" />
+        <di:waypoint xsi:type="dc:Point" x="71" y="98" />
+        <di:waypoint xsi:type="dc:Point" x="537" y="395" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="77" y="88" width="6" height="6" />
+          <dc:Bounds x="259" y="228.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_5" bpmnElement="mernis_kimlik_bilgileri">
@@ -351,7 +351,7 @@
           <dc:Bounds x="1278" y="191" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_14" bpmnElement="UserTask_3">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_14" bpmnElement="AtamaYap">
         <dc:Bounds x="1464" y="289" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_38" bpmnElement="SequenceFlow_33" sourceElement="_BPMNShape_ExclusiveGateway_17" targetElement="_BPMNShape_UserTask_14">
