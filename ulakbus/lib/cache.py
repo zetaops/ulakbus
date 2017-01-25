@@ -6,6 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.lib.raporlama_eklentisi import raporlama_ekrani_secim_menulerini_hazirla
 from ulakbus.lib.widgets import personel_istatistik_bilgileri
 from ulakbus.lib.akademik_faaliyet import akademik_performans_hesapla
 from zengine.lib.cache import Cache
@@ -69,6 +70,7 @@ class PersonelIstatistik(Cache):
 
         return cache_data
 
+
 class AkademikPerformans(Cache):
     """
 
@@ -83,6 +85,25 @@ class AkademikPerformans(Cache):
 
         if not cache_data:
             cache_data = akademik_performans_hesapla()
+            self.set(cache_data, 8 * 60 * 60)
+
+        return cache_data
+
+
+class RaporlamaEklentisi(Cache):
+    """
+
+    """
+    PREFIX = "RAPEKL"
+
+    def __init__(self):
+        super(RaporlamaEklentisi, self).__init__('raporlama_eklentisi')
+
+    def get_or_set(self):
+        cache_data = self.get()
+
+        if not cache_data:
+            cache_data = raporlama_ekrani_secim_menulerini_hazirla()
             self.set(cache_data, 8 * 60 * 60)
 
         return cache_data
