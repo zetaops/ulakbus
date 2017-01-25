@@ -9,6 +9,11 @@ from ulakbus.models.hitap.hitap import HizmetKayitlari
 from datetime import timedelta, date
 
 
+class IzinListForm(JsonForm):
+    btn = fields.Button(gettext_lazy(u"Ücretsiz İzine Ayır"), next="izine_ayir",
+                        cmd="save")  # default
+
+
 class UcretsizIzinIslemleri(CrudView):
     class Meta:
         # CrudViev icin kullanilacak temel Model
@@ -21,8 +26,6 @@ class UcretsizIzinIslemleri(CrudView):
             #     # {'fields': [0, ], 'cmd': 'show', 'mode': 'normal', 'show_as': 'link'},
         ]
 
-    class ListForm(JsonForm):
-        btn = fields.Button(gettext_lazy(u"Ücretsiz İzine Ayır"), next="izine_ayir", cmd="save")  # default
 
     class IzinForm(JsonForm):
         class Meta:
@@ -38,6 +41,7 @@ class UcretsizIzinIslemleri(CrudView):
         kaydet = fields.Button(gettext_lazy(u"Kaydet"), next="izin_donus", cmd="izin_donus")
 
     def goster(self):
+        _form = JsonForm(current=self.current, title="Ücretsiz İzin")
         if 'id' in self.input:
             personel = Personel.objects.get(self.input['id'])
 
@@ -50,15 +54,16 @@ class UcretsizIzinIslemleri(CrudView):
                     self.current.task_data['izin_id'] = izin.key
                     break
 
+
             if ucretsiz_izinde:
-                self.ListForm.btn = fields.Button(_(u"Ücretsiz İzin Dönüşü"), cmd="izin_donus",
+                _form.btn = fields.Button(_(u"Ücretsiz İzin Dönüşü"), cmd="izin_donus",
                                                 object_id=self.current.task_data['izin_id'])
             else:
-                self.ListForm.btn = fields.Button(_(u"Ücretsiz İzine Ayır"), cmd="izine_ayir")
+                _form.btn = fields.Button(_(u"Ücretsiz İzine Ayır"), cmd="izine_ayir")
         else:
             pass
 
-        self.list()
+        self.list(custom_form=_form)
 
     def izine_ayir(self):
         self.form_out(self.IzinForm(self.object, current=self.current))

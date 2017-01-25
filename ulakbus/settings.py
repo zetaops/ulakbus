@@ -81,18 +81,18 @@ OBJECT_MENU = {
     # 'field' defaults to 'personel' or 'ogrenci'
     # verbose_name can be specified to override the model's verbose_name_plural
     'other': [
-        {'name': 'Personel', 'category': 'Genel'},
-        {'name': 'Ogrenci', 'category': 'Genel'},
-        {'name': 'Okutman', 'category': 'Genel'},
-        {'name': 'HariciOkutman', 'category': 'Genel'},
-        {'name': 'Donem', 'category': 'Genel'},
-        {'name': 'Program', 'category': 'Genel'},
-        {'name': 'Ders', 'category': 'Genel'},
-        {'name': 'Campus', 'category': 'Genel'},
-        {'name': 'Building', 'category': 'Genel'},
-        {'name': 'Room', 'category': 'Genel'},
+        # {'name': 'Personel', 'category': 'Genel'},
+        # {'name': 'Ogrenci', 'category': 'Genel'},
+        # {'name': 'Okutman', 'category': 'Genel'},
+        # {'name': 'HariciOkutman', 'category': 'Genel'},
+        # {'name': 'Donem', 'category': 'Genel'},
+        # {'name': 'Program', 'category': 'Genel'},
+        # {'name': 'Ders', 'category': 'Genel'},
+        # {'name': 'Campus', 'category': 'Genel'},
+        # {'name': 'Building', 'category': 'Genel'},
+        # {'name': 'Room', 'category': 'Genel'},
         # {'name': 'AkademikTakvim', 'category': 'Genel'},
-        {'name': 'OgrenciProgram', 'category': 'Genel'},
+        # {'name': 'OgrenciProgram', 'category': 'Genel'},
     ],
     'personel': [
         {'name': 'Personel', 'wf': 'personel_bilgileri',
@@ -106,17 +106,13 @@ OBJECT_MENU = {
         {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri',
          'field': 'personel_id'},
 
-        {'name': 'KurumDisiGorevlendirmeBilgileri', 'field': 'personel_id'},
-
-        {'name': 'KurumIciGorevlendirmeBilgileri', 'field': 'personel_id'},
-
         {'name': 'AdresBilgileri', 'verbose_name': 'Adres Bilgileri', 'field': 'personel_id'},
 
         {'name': 'Atama', 'verbose_name': 'Atama İşlemleri', "wf": 'personel_atama',
          'field': 'personel_id'},
 
-        {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
-         'field': 'personel_id'},
+        # {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
+        #  'field': 'personel_id'},
 
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
@@ -124,8 +120,14 @@ OBJECT_MENU = {
         {'name': 'Personel', 'verbose_name': 'Görevlendirme', 'wf': 'gorevlendirme',
          'field': 'personel_id'},
 
+        {'name': 'Ceza', 'verbose_name': 'İdari Ceza Takibi', 'field': 'personel_id',
+         'wf': 'idari_cezalar_takibi'},
+
         {'name': 'Personel', 'verbose_name': 'Personel İşten Ayrılma', 'field': 'personel_id',
          'wf': 'personel_isten_ayrilma'},
+
+        {'name': 'SaglikRaporu', 'verbose_name': 'Sağlık Raporu', 'field': 'personel_id',
+         'wf': 'saglik_raporu_olusturma'},
 
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
