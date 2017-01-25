@@ -166,7 +166,10 @@ class TestCase(BaseTestCase):
 
         resp = self.login_rapor(model_name='TerfisiTikananPersonel')
 
-        assert len(resp.json['object']['fields']) == len(terfisi_tikanan_personeller)
+        if 'fields' in resp.json['object']:
+            assert len(resp.json['object']['fields']) == len(terfisi_tikanan_personeller)
+        else:
+            assert len(terfisi_tikanan_personeller) == 0
 
     def test_gorev_suresi_dolan_personel_listesi(self):
         """
@@ -185,5 +188,9 @@ class TestCase(BaseTestCase):
 
         resp = self.login_rapor(model_name='GorevSuresiBitenPersonel')
 
-        assert len(resp.json['object']['fields']) == len(gorev_suresi_dolan_personeller)
+        if 'fields' in resp.json['object']:
+
+            assert len(resp.json['object']['fields']) == len(gorev_suresi_dolan_personeller)
+        else:
+            assert len(gorev_suresi_dolan_personeller) == 0
 
