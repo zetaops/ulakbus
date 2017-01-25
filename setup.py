@@ -30,7 +30,7 @@ def create_mo_files():
 
 setup(
     name='Ulakbus',
-    version='0.9.2',
+    version='0.9.3',
     description='Ulakbus Butunlesik Universite Sistemi',
     author='Zetaops',
     license='GPL v3',
