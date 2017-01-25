@@ -54,7 +54,7 @@ class Personel(Model):
     notlar = field.Text(_(u"Notlar"), required=False)
     engelli_durumu = field.String(_(u"Engellilik"))
     engel_grubu = field.String(_(u"Engel Grubu"))
-    engel_derecesi = field.String(_(u"Engel Derecesi"))
+    engel_derecesi = field.Integer(_(u"Engel Derecesi"), choices="personel_engellilik")
     engel_orani = field.Integer(_(u"Engellilik Oranı"))
     cuzdan_seri = field.String(_(u"Seri"))
     cuzdan_seri_no = field.String(_(u"Seri No"))
@@ -117,6 +117,9 @@ class Personel(Model):
     # bunu tarih ve durum_degisikligi fieldlarindan olusan bir listnode seklinde tutabiliriz.
     goreve_baslama_tarihi = field.Date(_(u"Göreve Başlama Tarihi"), index=True, format="%d.%m.%Y")
     baslama_sebep = HitapSebep()
+
+    gorevden_ayrilma_tarihi = field.Date(_(u"Görevden Ayrılma Tarihi"), index=True, format="%d.%m.%Y")
+    gorevden_ayrilma_sebep = HitapSebep()
 
     # aday ve idari memurlar icin mecburi hizmet suresi
     mecburi_hizmet_suresi = field.Date(_(u"Mecburi Hizmet Süresi"), index=True, format="%d.%m.%Y")

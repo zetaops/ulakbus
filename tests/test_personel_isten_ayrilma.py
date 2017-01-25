@@ -14,64 +14,61 @@ import pytest
 
 class TestCase(BaseTestCase):
     def test_personel_isten_ayrilma(self):
-        """
-            Bir personel seçilir ve işten ayrılma wf adımları işletilir.
-        """
-        # Personele ait workflow instance key
+        personel_id = "1goyiKX6pME423arQBIdrY6ETao"
+        task_invitation_key = '48hKXEfHUoHVr7Tcq3n0vwTJVGi'
         wf_instance_key = 'WAm11pIPnF5va2bBKpc19uT8t7z'
-        # Personele ait task invitation key
-        task_invitation_key = 'WfetcaKmDsIE6RrIeRUoBaj4ypQ'
-        # İşten ayrılacak personelin id si
-        personel_id = "RngBQlVfKwyFHcqcmXRvlxipK6x"
-
-        self.prepare_client("personel_isten_ayrilma", username='personel_isleri_2')
-
         personel = Personel.objects.get(personel_id)
+        silinecek_rol = personel.user.role_set[0].role
+        yeni_rol_key = 'LTTdUyzC62KdGoP770GhTlOZq5p'    # personel_isleri_2
 
-        deleted_role = personel.user.role_set[0].role
-
-        assert not deleted_role.deleted
+        assert not silinecek_rol.deleted
 
         wf_instance = WFInstance.objects.get(wf_instance_key)
-        assert wf_instance.current_actor == deleted_role
+
+        assert wf_instance.current_actor == silinecek_rol
 
         task_inv = TaskInvitation.objects.get(task_invitation_key)
-        assert task_inv.role == deleted_role
 
-        # İşten ayrılacak olan personel seçilir
-        self.client.post(id=personel_id, model="Personel", param="personel_id",
-                         wf="personel_isten_ayrilma")
+        assert task_inv.role == silinecek_rol
 
-        # İşten ayrılma onayı
-        aciklama = "İlgili personel işten ayrılmıştır. Onaylanmıştır"
-        self.client.post(wf="personel_isten_ayrilma", form=dict(notlar=aciklama,
-                                                                devam_buton=1))
+        for i in range(2):
+            self.prepare_client("personel_isten_ayrilma", username='personel_isleri_1')
+            self.client.post(id=personel_id, model="Personel", param="personel_id",
+                             wf="personel_isten_ayrilma")
 
-        # İlgili personelin bilgileri kontrol amacıyla veritabanından çekilir
-        personel.reload()
+            personel_ayrilma_form = {'notlar': 'Vasıfsız eleman',
+                                     'gorevden_ayrilma_tarihi': '25.01.2017',
+                                     'gorevden_ayrilma_sebep_id': 'Ss2cdtxjID1n9kV7dw0dDiAIIKf',
+                                     'devam_buton': 1}
 
-        # İşten ayrılma işleminin yapılıp yapılmadığının kontrolü
-        assert personel.notlar == aciklama
+            resp = self.client.post(wf="personel_isten_ayrilma", form=personel_ayrilma_form)
 
-        resp = self.client.post(wf="personel_isten_ayrilma", form={
-            'YeniRoller': [{'eski_role': "Daire Personeli | personel_isleri_1",
-                            'wf_name': "terfisi_gelen_personel_listesi",
-                            'yeni_role': "LTTdUyzC62KdGoP770GhTlOZq5p"}],
-            'bitir_buton': 1,
+            assert resp.json['forms']['schema']['title'] == u'Çisem Güçlü personelini silme işlemi'
 
-        })
+            if i == 0:
+                self.client.post(wf='personel_isten_ayrilma', form={'hayir': 1}, flow='iptal')
+            else:
+                self.client.post(wf='personel_isten_ayrilma', form={'evet': 1})
+                resp = self.client.post(wf="personel_isten_ayrilma", form={
+                    'YeniRoller': [{'eski_role': "Daire Personeli | personel_isleri_7",
+                                    'wf_name': "terfisi_gelen_personel_listesi",
+                                    'yeni_role': yeni_rol_key}],
+                    'bitir_buton': 1,
 
-        yeni_role = Role.objects.get('LTTdUyzC62KdGoP770GhTlOZq5p')
+                })
 
-        assert resp.json['msgbox']['msg'] == "Personel işten ayrıldı"
+                assert resp.json['msgbox']['title'] == u'Ayrılma İşlemi Başarıyla Gerçekleşti'
+                assert resp.json['msgbox']['msg'] == u'Çisem Güçlü adlı personel işten ayrıldı.'
 
         wf_instance.reload()
         task_inv.reload()
         personel.reload()
         deleted_role = personel.user.role_set[0].role
+        yeni_role = Role.objects.get(yeni_rol_key)
 
         assert wf_instance.current_actor.key == yeni_role.key
         assert task_inv.role.key == yeni_role.key
+
         with pytest.raises(ObjectDoesNotExist):
             Role.objects.get(deleted_role.key)
         assert personel.arsiv
