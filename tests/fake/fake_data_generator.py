@@ -269,8 +269,12 @@ class FakeDataGenerator:
         for i in range(personel_say):
             p = Personel()
             p.tckn = ints(length=11)
-            p.ad = fake.first_name()
-            p.soyad = fake.last_name()
+            if user:
+                p.ad = user.name
+                p.soyad = user.surname
+            else:
+                p.ad = fake.first_name()
+                p.soyad = fake.last_name()
             p.cinsiyet = gender()
             p.uyruk = fake.country()
             p.medeni_hali = marital_status(student=False)
