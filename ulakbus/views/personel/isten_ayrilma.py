@@ -21,6 +21,33 @@ from ulakbus.lib.view_helpers import prepare_choices_for_model
 from datetime import datetime
 
 
+class OncekiIstenAyrilmalari(JsonForm):
+
+    class Meta:
+        title = __(u"Personel İşten Ayrılma")
+
+    class IstenAyrilmaBilgileri(ListNode):
+        class Meta:
+            title = __(u"Personele Ait Silinmis Kayit Bilgileri")
+        ayrilma_sebeb = fields.String(__(u"Ayrılma Sebebi"), readonly=True)
+        ayrilma_tarih = fields.String(__(u"Ayrılma Tarihi"), readonly=True)
+        ayrilma_not = fields.String(__(u"Ayrılma Notu"), readonly=True)
+
+    def ayrilma_bilgilerini_doldur(self):
+        personel = Personel.objects.get(self.context.task_data['personel_id'])
+
+        if personel.IstenAyrilma:
+            for ia in personel.IstenAyrilma:
+                self.IstenAyrilmaBilgileri(ayrilma_sebeb=ia.gorevden_ayrilma_sebep.ad,
+                                           ayrilma_tarih=ia.gorevden_ayrilma_tarihi,
+                                           ayrilma_not=ia.gorevden_ayrilma_not)
+        else:
+            self.help_text = __(u"Personele ait silinmiş kayıt bulunmamaktadır.")
+            self.exclude = ["IstenAyrilmaBilgileri"]
+
+    isten_ayril = fields.Button(__(u"İşten Ayrıl"), style='btn-primary')
+
+
 class IstenAyrilmaOnayForm(JsonForm):
     """
         Personel işten ayrılma işleminin onaylanması ve açıklama girilmesi
@@ -28,9 +55,14 @@ class IstenAyrilmaOnayForm(JsonForm):
     """
 
     class Meta:
-        help_text = __(u"Personel İşten ayrılma işlemini onaylıyormusunuz?")
+        help_text = __(u"Personel işten ayrılma formu")
         title = __(u"Personel İşten Ayrılma")
-        include = ["gorevden_ayrilma_sebep", "gorevden_ayrilma_tarihi", "notlar"]
+
+    ayrilma_sebeb = fields.Integer(__(u"Ayrılma Sebebi"),
+                                   choices=prepare_choices_for_model(HitapSebep),
+                                   required=True)
+    ayrilma_tarih = fields.Date(__(u"Ayrılma Tarihi"), required=True)
+    ayrilma_not = fields.Text(__(u"Ayrılma Notu"), required=False)
 
     devam_buton = fields.Button(__(u"Devam"), style='btn-primary')
 
@@ -89,20 +121,28 @@ class IstenAyrilma(CrudView):
         # Seçilmiş olan personelin id'si task data da saklanır
         self.current.task_data["personel_id"] = self.current.input["id"]
 
+    def list(self, custom_form=None):
+        custom_form = OncekiIstenAyrilmalari(current=self.current)
+        custom_form.ayrilma_bilgilerini_doldur()
+        self.form_out(custom_form)
+        self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_selection"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
+
     def isten_ayrilma_form(self):
         # Onay form kullanıcıya gösteriliyor
-        self.form_out(IstenAyrilmaOnayForm(self.object, current=self.current))
+        self.form_out(IstenAyrilmaOnayForm(current=self.current))
 
     def kontrol(self):
         self.current.task_data['gorevden_ayrilma_sebep_id'] = \
-            self.current.input["form"]["gorevden_ayrilma_sebep_id"]
+            self.current.input["form"]["ayrilma_sebeb"]
         self.current.task_data['gorevden_ayrilma_tarihi'] = \
-            self.current.input["form"]["gorevden_ayrilma_tarihi"]
-        self.current.task_data['notlar'] = self.current.input["form"]["notlar"]
+            self.current.input["form"]["ayrilma_tarih"]
+        self.current.task_data['gorevden_ayrilma_not'] = self.current.input["form"]["ayrilma_not"]
 
         personel = Personel.objects.get(self.current.task_data["personel_id"])
         gorevden_ayrilma_tarihi = datetime.strptime(
-            self.current.input["form"]["gorevden_ayrilma_tarihi"], "%d.%m.%Y").date()
+            self.current.input["form"]["ayrilma_tarih"], "%d.%m.%Y").date()
 
         self.engelli_personel_kontrol(personel=personel)
         if personel.mecburi_hizmet_suresi:
@@ -129,10 +169,14 @@ class IstenAyrilma(CrudView):
         # Onaylanan işten ayrılma veritabanına işleniyor
         personel = Personel.objects.get(self.current.task_data["personel_id"])
         # Burada personelin işten ayrıldığına dair bir açıklama metni girişi yapılmaktadır.
-        personel.notlar = self.current.task_data['notlar']
         sebep_id = self.current.task_data['gorevden_ayrilma_sebep_id']
-        personel.gorevden_ayrilma_sebep = HitapSebep.objects.get(sebep_id)
-        personel.gorevden_ayrilma_tarihi = self.current.task_data['gorevden_ayrilma_tarihi']
+        personel.IstenAyrilma(
+            gorevden_ayrilma_sebep=HitapSebep.objects.get(sebep_id),
+            gorevden_ayrilma_tarihi=self.current.task_data['gorevden_ayrilma_tarihi'],
+            gorevden_ayrilma_not=self.current.task_data['gorevden_ayrilma_not']
+        )
+        personel.kadro.durum = 2
+        personel.kadro.save()
         personel.save()
 
     def wf_devir(self):
@@ -181,8 +225,9 @@ class IstenAyrilma(CrudView):
         else:
             silinecek_roller = personel.user.role_set
 
-        for r in silinecek_roller:
-            r.blocking_delete()
+        if len(silinecek_roller) > 0:
+            for r in silinecek_roller:
+                r.blocking_delete()
 
         personel.arsiv = True
         personel.save()

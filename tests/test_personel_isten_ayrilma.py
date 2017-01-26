@@ -18,6 +18,7 @@ class TestCase(BaseTestCase):
         task_invitation_key = '48hKXEfHUoHVr7Tcq3n0vwTJVGi'
         wf_instance_key = 'WAm11pIPnF5va2bBKpc19uT8t7z'
         personel = Personel.objects.get(personel_id)
+        onceki_isten_ayrilma_bilgileri_sayisi = len(personel.IstenAyrilma)
         silinecek_rol = personel.user.role_set[0].role
         yeni_rol_key = 'LTTdUyzC62KdGoP770GhTlOZq5p'    # personel_isleri_2
 
@@ -33,12 +34,20 @@ class TestCase(BaseTestCase):
 
         for i in range(2):
             self.prepare_client("personel_isten_ayrilma", username='personel_isleri_1')
-            self.client.post(id=personel_id, model="Personel", param="personel_id",
-                             wf="personel_isten_ayrilma")
+            resp = self.client.post(id=personel_id, model="Personel", param="personel_id",
+                                    wf="personel_isten_ayrilma")
+            if 'IstenAyrilmaBilgileri' in resp.json['forms']['model']:
+                assert len(resp.json['forms']['model']['IstenAyrilmaBilgileri']) == \
+                    onceki_isten_ayrilma_bilgileri_sayisi
+            else:
+                assert resp.json['forms']['form'][0]['helpvalue'] == \
+                       u"Personele ait silinmiş kayıt bulunmamaktadır."
+
+            self.client.post(form={'isten_ayril': 1})
 
             personel_ayrilma_form = {'notlar': 'Vasıfsız eleman',
-                                     'gorevden_ayrilma_tarihi': '25.01.2017',
-                                     'gorevden_ayrilma_sebep_id': 'Ss2cdtxjID1n9kV7dw0dDiAIIKf',
+                                     'ayrilma_tarih': '25.01.2017',
+                                     'ayrilma_sebeb': 'Ss2cdtxjID1n9kV7dw0dDiAIIKf',
                                      'devam_buton': 1}
 
             resp = self.client.post(wf="personel_isten_ayrilma", form=personel_ayrilma_form)
@@ -59,6 +68,13 @@ class TestCase(BaseTestCase):
 
                 assert resp.json['msgbox']['title'] == u'Ayrılma İşlemi Başarıyla Gerçekleşti'
                 assert resp.json['msgbox']['msg'] == u'Çisem Güçlü adlı personel işten ayrıldı.'
+
+        self.prepare_client("personel_isten_ayrilma", username='personel_isleri_1')
+        resp = self.client.post(id=personel_id, model="Personel", param="personel_id",
+                                wf="personel_isten_ayrilma")
+
+        assert len(resp.json['forms']['model']['IstenAyrilmaBilgileri']) == \
+            onceki_isten_ayrilma_bilgileri_sayisi + 1
 
         wf_instance.reload()
         task_inv.reload()
