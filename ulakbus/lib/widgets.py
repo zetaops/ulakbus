@@ -36,8 +36,12 @@ def personel_istatistik_bilgileri():
     ar_gor_kadin = ar_gor_total - ar_gor_erkek
 
     engelli_personel_total = Personel.objects.filter(engel_orani__gt=0).count()
-    engelli_personel_erkek = Personel.objects.filter(engel_orani__gt=0, cinsiyet=1).count()
-    engelli_personel_kadin = engelli_personel_total - engelli_personel_erkek
+    engelli_personel_akademik = Personel.objects.filter(engel_orani__gt=0, personel_turu=1).count()
+    engelli_personel_idari = engelli_personel_total - engelli_personel_akademik
+    engelli_personel_akademik_erkek = Personel.objects.filter(engel_orani__gt=0, cinsiyet=1, personel_turu=1).count()
+    engelli_personel_akademik_kadin = engelli_personel_akademik - engelli_personel_akademik_erkek
+    engelli_personel_idari_erkek = Personel.objects.filter(engel_orani__gt=0, cinsiyet=1, personel_turu=2).count()
+    engelli_personel_idari_kadin = engelli_personel_idari - engelli_personel_idari_erkek
 
     return {
         "total_personel": total_personel,
@@ -61,7 +65,10 @@ def personel_istatistik_bilgileri():
         "ar_gor_total": ar_gor_total,
         "ar_gor_erkek": ar_gor_erkek,
         "ar_gor_kadin": ar_gor_kadin,
-        "engelli_personel_total": engelli_personel_total,
-        "engelli_personel_erkek": engelli_personel_erkek,
-        "engelli_personel_kadin": engelli_personel_kadin
+        "engelli_personel_akademik": engelli_personel_akademik,
+        "engelli_personel_akademik_erkek": engelli_personel_akademik_erkek,
+        "engelli_personel_akademik_kadin": engelli_personel_akademik_kadin,
+        "engelli_personel_idari": engelli_personel_idari,
+        "engelli_personel_idari_erkek": engelli_personel_idari_erkek,
+        "engelli_personel_idari_kadin": engelli_personel_idari_kadin
     }

@@ -202,8 +202,10 @@ def get_general_staff_stats():
         [_(u"Doçent"), d['doc_total'], d['doc_kadin'], d['doc_erkek']],
         [_(u"Profesör"), d['prof_total'], d['prof_kadin'], d['prof_erkek']],
         [_(u"Araştırma Görevlisi"), d['ar_gor_total'], d['ar_gor_kadin'], d['ar_gor_erkek']],
-        [_(u"Engelli"), d['engelli_personel_total'], d['engelli_personel_kadin'],
-         d['engelli_personel_erkek']]]:
+        [_(u"Engelli(Akademik)"), d['engelli_personel_akademik'], d['engelli_personel_akademik_kadin'],
+         d['engelli_personel_akademik_erkek']],
+        [_(u"Engelli(İdari)"), d['engelli_personel_idari'], d['engelli_personel_idari_kadin'],
+         d['engelli_personel_idari_erkek']]]:
         cols = []
         for col in row:
             cols.append(
