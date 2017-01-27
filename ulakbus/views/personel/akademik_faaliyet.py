@@ -171,11 +171,13 @@ class AkademikFaaliyet(CrudView):
             baslama=fd['baslama'],
             bitis=fd['bitis'],
             durum=fd['durum'],
-            gorev=self.current.task_data['gorev'],
             kac_kisiyle_yapildi=fd['kac_kisiyle_yapildi'],
             tur_id=self.current.task_data['detay'],
             personel=self.current.role.user.personel
         )
+
+        if 'gorev' in self.current.task_data:
+            faaliyet.gorev = self.current.task_data['gorev']
 
         faaliyet.blocking_save()
 
