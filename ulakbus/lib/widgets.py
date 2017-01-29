@@ -7,11 +7,13 @@ from ulakbus.models import Personel
 
 
 def personel_istatistik_bilgileri():
-    total_personel = Personel.objects.count()
-    erkek_personel = Personel.objects.filter(cinsiyet=1).count()
-    kadin_personel = total_personel - erkek_personel
+    personel_d = Personel.objects.distinct_values_of('cinsiyet')
+    total_personel = personel_d['1'] + personel_d['2']
+    erkek_personel = personel_d['1']
+    kadin_personel = personel_d['2']
 
-    akademik_personel = Personel.objects.filter(personel_turu=1).count()
+    personel_turu_d = Personel.objects.distinct_values_of('personel_turu')
+    akademik_personel = personel_turu_d['1']
     akademik_personel_erkek = Personel.objects.filter(personel_turu=1, cinsiyet=1).count()
     akademik_personel_kadin = akademik_personel - akademik_personel_erkek
 
@@ -19,19 +21,20 @@ def personel_istatistik_bilgileri():
     idari_personel_erkek = erkek_personel - akademik_personel_erkek
     idari_personel_kadin = kadin_personel - akademik_personel_kadin
 
-    prof_total = Personel.objects.filter(unvan=1550).count()
+    unvan_d = Personel.objects.distinct_values_of('unvan')
+    prof_total = unvan_d['1550'] if '1550' in unvan_d else 0
     prof_erkek = Personel.objects.filter(unvan=1550, cinsiyet=1).count()
     prof_kadin = prof_total - prof_erkek
 
-    doc_total = Personel.objects.filter(unvan=1555).count()
+    doc_total = unvan_d['1555'] if '1555' in unvan_d else 0
     doc_erkek = Personel.objects.filter(unvan=1555, cinsiyet=1).count()
     doc_kadin = doc_total - doc_erkek
 
-    yar_doc_total = Personel.objects.filter(unvan=1565).count()
+    yar_doc_total = unvan_d['1565'] if '1565' in unvan_d else 0
     yar_doc_erkek = Personel.objects.filter(unvan=1565, cinsiyet=1).count()
     yar_doc_kadin = yar_doc_total - yar_doc_erkek
 
-    ar_gor_total = Personel.objects.filter(unvan=1590).count()
+    ar_gor_total = unvan_d['1590'] if '1590' in unvan_d else 0
     ar_gor_erkek = Personel.objects.filter(unvan=1590, cinsiyet=1).count()
     ar_gor_kadin = ar_gor_total - ar_gor_erkek
 
