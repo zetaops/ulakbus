@@ -13,7 +13,7 @@ from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel
-from ulakbus.services.zato_wrapper import TcknService
+import random
 
 """
 ``button`` nesnelerinin stillendirilmesi için bu nesnelere ``style`` anahtarı ile css class'ları
@@ -93,62 +93,76 @@ class YeniPersonelEkle(CrudView):
                       Kayıt işlemi geri döndürülemez.
                       """)
         }
-
-        _form.ikamet_adresi = self.current.task_data['adres_bilgileri']['ikamet_adresi']
-        _form.ikamet_il = self.current.task_data['adres_bilgileri']['ikamet_il']
-        _form.ikamet_ilce = self.current.task_data['adres_bilgileri']['ikamet_ilce']
+        #
+        # _form.ikamet_adresi = self.current.task_data['adres_bilgileri']['ikamet_adresi']
+        # _form.ikamet_il = self.current.task_data['adres_bilgileri']['ikamet_il']
+        # _form.ikamet_ilce = self.current.task_data['adres_bilgileri']['ikamet_ilce']
 
         _form.kaydet = fields.Button(_(u"Kaydet (Bu işlem geri alınamaz!)"), cmd="kaydet",
                                      btn='success')
         _form.iptal = fields.Button(_(u"İptal"), cmd="iptal", flow="iptal", form_validation=False)
 
-        kimlik_bilgileri = _(u"""**Adı**: {ad}
-                              **Soyad**: {soyad}
-                              **Doğum Tarihi**: {dogum_tarihi}
-                              """).format(**self.current.task_data['kimlik_bilgileri'])
+        # kimlik_bilgileri = _(u"""**Adı**: {ad}
+        #                       **Soyad**: {soyad}
+        #                       **Doğum Tarihi**: {dogum_tarihi}
+        #                       """).format(**self.current.task_data['kimlik_bilgileri'])
+        #
+        # adres_bilgileri = _(u"""**İl**: {ikamet_il}
+        #                      **İlçe**: {ikamet_ilce}
+        #                      **Adres**: {ikamet_adresi}
+        #                      """).format(**self.current.task_data['adres_bilgileri'])
+        #
+        # output = [{_(u'Kişi Bilgileri'): kimlik_bilgileri, _(u'Adres Bilgileri'): adres_bilgileri}]
+        #
+        # self.current.output['object'] = {
+        #     "type": "table-multiRow",
+        #     "title": _(u"Kişi Bilgileri"),
+        #     "fields": output,
+        #     "actions": False
+        # }
 
-        adres_bilgileri = _(u"""**İl**: {ikamet_il}
-                             **İlçe**: {ikamet_ilce}
-                             **Adres**: {ikamet_adresi}
-                             """).format(**self.current.task_data['adres_bilgileri'])
-
-        output = [{_(u'Kişi Bilgileri'): kimlik_bilgileri, _(u'Adres Bilgileri'): adres_bilgileri}]
-
-        self.current.output['object'] = {
-            "type": "table-multiRow",
-            "title": _(u"Kişi Bilgileri"),
-            "fields": output,
-            "actions": False
-        }
+        self.current.task_data['tckn'] = random.randrange(12345678909)
         self.form_out(_form)
 
     def kaydet(self):
         yeni_personel = Personel()
         yeni_personel.tckn = self.current.task_data['tckn']
 
+
         # Task data içinde gelen bilgiler birleştirilecek
         personel_data = {}
-        personel_data.update(self.current.task_data['kimlik_bilgileri'])
-        personel_data.update(self.current.task_data['cuzdan_bilgileri'])
-        personel_data.update(self.current.task_data['adres_bilgileri'])
+        # personel_data.update(self.current.task_data['kimlik_bilgileri'])
+        # personel_data.update(self.current.task_data['cuzdan_bilgileri'])
+        # personel_data.update(self.current.task_data['adres_bilgileri'])
 
         for key in personel_data:
             setattr(yeni_personel, key, personel_data[key])
 
+        yeni_personel.gorev_ayligi_derece = random.randrange(8)
+        yeni_personel.gorev_ayligi_kademe = random.randrange(8)
+        yeni_personel.kazanilmis_hak_derece = random.randrange(8)
+        yeni_personel.kazanilmis_hak_kademe = random.randrange(8)
+        yeni_personel.emekli_muktesebat_derece = random.randrange(8)
+        yeni_personel.emekli_muktesebat_kademe = random.randrange(8)
+        yeni_personel.ad = 'Yeni' + str(random.randrange(1000))
+        yeni_personel.soyad = 'Personel' + str(random.randrange(1000))
         yeni_personel.save()
 
+        self.current.task_data['personel_id'] = yeni_personel.key
+
         self.current.output['msgbox'] = {
-            'type': 'success',
+            'type': 'info',
             "title": _(u'%(ad)s %(soyad)s Başarı İle Kaydedildi') % {
                 'ad': yeni_personel.ad, 'soyad': yeni_personel.soyad,
             },
             "msg": _(u"""
-                      Personel Başarı ile Kaydedildi, Personele atama yapabilir veya daha sonra
-                      atama yapmak için "İşlemi Bitir" Butonuna tıklayabilirsiniz
+                      Personel başarı ile kaydedildi. Personele atama yapabilir veya daha sonra
+                      atama yapmak için "İşlemi Bitir" butonuna tıklayabilirsiniz.
                       """)
         }
 
         _form = JsonForm(current=self.current)
+        _form.title = _(u"Devam Etmek İstediğiniz İşlemi Seçiniz")
 
         # todo: bu buton ilgili personel secili olarak yeni bir wf baslatacak
         _form.geri = fields.Button(_(u"Atama Yap"), style="btn-success", cmd="atama_yap")
@@ -188,7 +202,7 @@ class YeniPersonelTcknForm(JsonForm):
 class IletisimveEngelliDurumBilgileriForm(JsonForm):
     class Meta:
         title = gettext_lazy(u'Bilgi Kontrol Ekranı')
-        help_text = gettext_lazy(u"Yeni Personelin Iletisim Bilgilerini Duzenle.")
+        # help_text = gettext_lazy(u"Yeni Personelin Iletisim Bilgilerini Duzenle.")
         grouping = [
             {
                 "layout": "6",
@@ -230,12 +244,11 @@ class IletisimveEngelliDurumBilgileriForm(JsonForm):
     adres_2_posta_kodu = fields.String(gettext_lazy(u"Adres 2 Posta Kodu"))
     oda_tel_no = fields.String(gettext_lazy(u"Oda Telefon Numarası"))
     cep_telefonu = fields.String(gettext_lazy(u"Cep Telefonu"))
-    e_posta = fields.String(gettext_lazy(u"Kurum E-Posta(Yeni Personel için boş bırakınız)"),
-                            required=False)
-    e_posta_2 = fields.String(gettext_lazy(u"E-Posta 2"))
-    e_posta_3 = fields.String(gettext_lazy(u"E-Posta 3"))
-    web_sitesi = fields.String(gettext_lazy(u"Web Sitesi"))
-    notlar = fields.Text(gettext_lazy(u"Not"))
+    e_posta = fields.String(gettext_lazy(u"Kurum E-Posta(Yeni Personel için boş bırakınız)"), required=False)
+    e_posta_2 = fields.String(gettext_lazy(u"E-Posta 2"), required=False)
+    e_posta_3 = fields.String(gettext_lazy(u"E-Posta 3"), required=False)
+    web_sitesi = fields.String(gettext_lazy(u"Web Sitesi"), required=False)
+    notlar = fields.Text(gettext_lazy(u"Not"), required=False)
     engelli_durumu = fields.String(gettext_lazy(u"Engellilik"))
     engel_grubu = fields.String(gettext_lazy(u"Engel Grubu"))
     engel_derecesi = fields.String(gettext_lazy(u"Engel Derecesi"))

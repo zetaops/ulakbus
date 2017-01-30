@@ -129,8 +129,9 @@ class Personel(Model):
     user = User(one_to_one=True)
 
     class AtamaBilgileri(ListNode):
-        tarih = field.Date(_(u"Atamanın Yapıldığı Tarih"), format="%d.%m.%Y")
         atama_bilgisi = field.String(_(u"Atama Bilgisi"))
+        atama_tarihi = field.Date(_(u"Atama Tarihi"), format="%d.%m.%Y")
+        hitap_sebep_no = field.Integer(_(u"Hitap Sebep No"))
 
     class Meta:
         app = 'Personel'
