@@ -133,6 +133,7 @@ class PersonelAtama(CrudView):
     def guncel_bilgileri_goruntule(self):
 
         p = Personel.objects.get(self.current.task_data['personel_id'])
+        p.reload()
         self.output['object'] = {
             "GENEL BİLGİLER:": personel_bilgileri.format(
                 kurum_sicil_no_int=p.kurum_sicil_no_int,
@@ -193,6 +194,7 @@ class PersonelAtama(CrudView):
             for attr in attrs:
                 setattr(form, attr, getattr(model, attr))
 
+        form.durum = p.atama.durum.key
         form.kurumda_ise_baslama_tarihi = p.goreve_baslama_tarihi
         form.kadro_unvan = p.kadro.unvan
         form.kadro_derece_tarihi = form.unvan_tarihi = form.kadro_tarihi = form.goreve_baslama_tarihi
@@ -205,6 +207,8 @@ class PersonelAtama(CrudView):
             p.goreve_baslama_tarihi = self.input['form']['kurumda_ise_baslama_tarihi']
         if self.input['form']['kadro_unvan'] != p.kadro.unvan:
             p.kadro.unvan = self.input['form']['kadro_unvan']
+        if self.input['form']['durum'] != p.atama.durum.key:
+            p.atama.durum = HitapSebep.objects.get(self.input['form']['durum'])
 
         p.kadro.blocking_save()
         p.atama.blocking_save()
@@ -226,7 +230,8 @@ class PersonelAtama(CrudView):
         for atama in sorted(p.AtamaBilgileri, key=lambda a: a.atama_tarihi, reverse=True):
             form.AtamaListesi(atama_bilgisi=atama.atama_bilgisi,
                               atama_tarihi=atama.atama_tarihi,
-                              hitap_sebep_no=atama.hitap_sebep_no)
+                              hitap_sebep_no=atama.hitap_sebep_no,
+                              hitap_sebep_bilgi = atama.hitap_sebep_bilgi)
         self.form_out(form)
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_selection"] = False
@@ -370,11 +375,10 @@ class PersonelAtama(CrudView):
                     'goreve_baslama_aciklama']
                 atama.blocking_save()
                 self.current.task_data['atama_bilgileri'] = atama.clean_value()
-                personel.atama = atama
-                personel.kadro = atanacak_kadro
                 personel.AtamaBilgileri(atama_bilgisi = atama.__unicode__(),
                                         atama_tarihi = atama.goreve_baslama_tarihi,
-                                        hitap_sebep_no = atama.durum.sebep_no)
+                                        hitap_sebep_no = str(atama.durum.sebep_no),
+                                        hitap_sebep_bilgi = atama.durum.ad)
                 personel.blocking_save()
                 hk = HizmetKayitlari(personel=personel)
                 hk.baslama_tarihi = date.today()
@@ -456,7 +460,8 @@ class AtamalarForm(JsonForm):
             title = _(u"Atama Listesi")
         atama_bilgisi = fields.String(_(u"Atama Bilgisi"))
         atama_tarihi = fields.Date(_(u"Atama Tarihi"), format="%d.%m.%Y")
-        hitap_sebep_no = fields.Integer(_(u"Hitap Sebep No"))
+        hitap_sebep_no = fields.String(_(u"Hitap Sebep No"))
+        hitap_sebep_bilgi = fields.String(_(u"Hitap Sebep Bilgi"))
 
 class EksikBilgiForm(JsonForm):
     """
@@ -535,6 +540,7 @@ class PersonelBilgiForm(JsonForm):
     Personel Atama wf  için form olarak kullanılır.
 
     """
+    durum = [(m.key, m.__unicode__()) for m in HitapSebep.objects.filter(nevi=1)[0:10]]
     kurum_sicil_no_int = fields.Integer(_(u"Kurum Sicil No"))
     personel_turu = fields.Integer(_(u"Personel Tip"), choices="personel_turu")
     aday_memur = fields.Boolean(_(u"Aday"))
@@ -547,7 +553,7 @@ class PersonelBilgiForm(JsonForm):
     kurum_durum = fields.String(_(u"Durumu"))
     goreve_baslama_tarihi = fields.Date(_(u"Göreve Başlama Tarihi"))
     ibraz_tarihi = fields.Date(_(u"İbraz Tarihi"))
-    durum = fields.String(_(u"Durum"))  # typeahead olacak
+    durum = fields.String(_(u"Durum"), choices =durum )  # typeahead olacak
     atama_aciklama = fields.Text(_(u"Atama Açıklama"), required=False)
     nereden = fields.Integer(_(u"Nereden"),choices='universiteler',type='typeahead')
     mecburi_hizmet_suresi = fields.Date(_(u"Mecburi Hizmet Süresi"), index=True, format="%d.%m.%Y")

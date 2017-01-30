@@ -131,7 +131,8 @@ class Personel(Model):
     class AtamaBilgileri(ListNode):
         atama_bilgisi = field.String(_(u"Atama Bilgisi"))
         atama_tarihi = field.Date(_(u"Atama Tarihi"), format="%d.%m.%Y")
-        hitap_sebep_no = field.Integer(_(u"Hitap Sebep No"))
+        hitap_sebep_no = field.String(_(u"Hitap Sebep No"))
+        hitap_sebep_bilgi = field.String(_(u"Hitap Sebep"))
 
     class Meta:
         app = 'Personel'
