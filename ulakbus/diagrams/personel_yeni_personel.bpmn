@@ -13,19 +13,19 @@
       <bpmn:lane id="personel" name="personel">
         <bpmn:flowNodeRef>basla</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>kimlik_no_gir</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>hatayi_gozden_gecir</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>bitis</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>mernis_kimlik_bilgileri</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_4</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>aks_bilgileri</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_6</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_5</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>kontrol_et</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_8</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>AtamaYap</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>personel_atama</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>iptal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>bitis</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AtamaYap</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>hatayi_gozden_gecir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_4</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="basla">
@@ -36,29 +36,13 @@
       <bpmn:incoming>SequenceFlow_26</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="hatayi_gozden_gecir" name="Hatayi Gozden Gecir" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.hata_goster">
-      <bpmn:incoming>mernis_hata</bpmn:incoming>
-      <bpmn:incoming>adres_hata</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_11" name="" sourceRef="hatayi_gozden_gecir" targetRef="ExclusiveGateway_6" />
-    <bpmn:endEvent id="bitis">
-      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_25</bpmn:incoming>
-      <bpmn:incoming>islemi_bitir</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_7</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_6" name="" sourceRef="kimlik_no_gir" targetRef="mernis_kimlik_bilgileri" />
     <bpmn:serviceTask id="mernis_kimlik_bilgileri" name="Mernis Bilgileri&#10;Getir" camunda:class="personel.yeni_personel.YeniPersonelEkle.mernis_kimlik_bilgileri_getir">
       <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_4" name="" sourceRef="mernis_kimlik_bilgileri" targetRef="ExclusiveGateway_4" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_4" default="mernis_hata">
-      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_19</bpmn:outgoing>
-      <bpmn:outgoing>mernis_hata</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_19" name="" sourceRef="ExclusiveGateway_4" targetRef="aks_bilgileri">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">mernis_tamam</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -68,12 +52,6 @@
       <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_5" name="" sourceRef="aks_bilgileri" targetRef="ExclusiveGateway_5" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_6" default="iptal_hata">
-      <bpmn:incoming>SequenceFlow_11</bpmn:incoming>
-      <bpmn:outgoing>iptal_hata</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_26</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_25</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="iptal_hata" name="" sourceRef="ExclusiveGateway_6" targetRef="iptal" />
     <bpmn:sequenceFlow id="SequenceFlow_26" name="" sourceRef="ExclusiveGateway_6" targetRef="kimlik_no_gir">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'tekrar']]></bpmn:conditionExpression>
@@ -81,11 +59,6 @@
     <bpmn:sequenceFlow id="SequenceFlow_25" name="" sourceRef="ExclusiveGateway_6" targetRef="bitis">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="iptal"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_5" default="adres_hata">
-      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
-      <bpmn:outgoing>adres_hata</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="adres_hata" name="" sourceRef="ExclusiveGateway_5" targetRef="hatayi_gozden_gecir" />
     <bpmn:sequenceFlow id="SequenceFlow_2" name="" sourceRef="ExclusiveGateway_5" targetRef="kontrol_et">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">adres_tamam</bpmn:conditionExpression>
@@ -96,32 +69,17 @@
       <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_9" name="" sourceRef="kontrol_et" targetRef="ExclusiveGateway_2" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_8" default="islemi_bitir">
-      <bpmn:incoming>SequenceFlow_31</bpmn:incoming>
-      <bpmn:outgoing>islemi_bitir</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_33</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="islemi_bitir" name="" sourceRef="ExclusiveGateway_8" targetRef="bitis">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="bitir"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_33" name="" sourceRef="ExclusiveGateway_8" targetRef="AtamaYap">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="atama_yap"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="AtamaYap" name="Atama Yap" camunda:type="external" camunda:topic="personel_atama">
-      <bpmn:incoming>SequenceFlow_33</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_7" name="" sourceRef="AtamaYap" targetRef="bitis" />
     <bpmn:userTask id="personel_atama" name="Kaydet ve Bilgi Göster" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.kaydet">
       <bpmn:incoming>SequenceFlow_10</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_31</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_31" name="" sourceRef="personel_atama" targetRef="ExclusiveGateway_8" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_2" default="yeni_personel_iptal">
-      <bpmn:incoming>SequenceFlow_9</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_10</bpmn:outgoing>
-      <bpmn:outgoing>yeni_personel_iptal</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_2" targetRef="personel_atama">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="kaydet"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -134,6 +92,48 @@
       <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_13" name="" sourceRef="iptal" targetRef="bitis" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_2" default="yeni_personel_iptal">
+      <bpmn:incoming>SequenceFlow_9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_10</bpmn:outgoing>
+      <bpmn:outgoing>yeni_personel_iptal</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_5" default="adres_hata">
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>adres_hata</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_8" default="islemi_bitir">
+      <bpmn:incoming>SequenceFlow_31</bpmn:incoming>
+      <bpmn:outgoing>islemi_bitir</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_33</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="bitis">
+      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_25</bpmn:incoming>
+      <bpmn:incoming>islemi_bitir</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0udcuui</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="AtamaYap" name="Atama Yap" camunda:type="external" camunda:topic="personel_atama">
+      <bpmn:incoming>SequenceFlow_33</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0udcuui</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0udcuui" sourceRef="AtamaYap" targetRef="bitis" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_6" default="iptal_hata">
+      <bpmn:incoming>SequenceFlow_11</bpmn:incoming>
+      <bpmn:outgoing>iptal_hata</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_26</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_25</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="hatayi_gozden_gecir" name="Hatayi Gozden Gecir" camunda:assignee="personel.yeni_personel.YeniPersonelEkle.hata_goster">
+      <bpmn:incoming>mernis_hata</bpmn:incoming>
+      <bpmn:incoming>adres_hata</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_4" default="mernis_hata">
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19</bpmn:outgoing>
+      <bpmn:outgoing>mernis_hata</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
@@ -147,10 +147,12 @@
         <dc:Bounds x="98" y="48" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_4" targetElement="_BPMNShape_UserTask_7">
-        <di:waypoint xsi:type="dc:Point" x="71" y="98" />
-        <di:waypoint xsi:type="dc:Point" x="537" y="395" />
+        <di:waypoint xsi:type="dc:Point" x="56" y="106" />
+        <di:waypoint xsi:type="dc:Point" x="56" y="536" />
+        <di:waypoint xsi:type="dc:Point" x="587" y="536" />
+        <di:waypoint xsi:type="dc:Point" x="587" y="465" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="259" y="228.5" width="90" height="6" />
+          <dc:Bounds x="276.5" y="518" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_5" bpmnElement="mernis_kimlik_bilgileri">
@@ -161,11 +163,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="_BPMNShape_ServiceTask_5" targetElement="_BPMNShape_ExclusiveGateway_11">
         <di:waypoint xsi:type="dc:Point" x="148" y="330" />
-        <di:waypoint xsi:type="dc:Point" x="148" y="372" />
-        <di:waypoint xsi:type="dc:Point" x="147" y="372" />
-        <di:waypoint xsi:type="dc:Point" x="147" y="399" />
+        <di:waypoint xsi:type="dc:Point" x="148" y="399" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="145" y="331" width="6" height="6" />
+          <dc:Bounds x="118" y="361.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_8" bpmnElement="personel_atama">
@@ -173,103 +173,97 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="_BPMNShape_ServiceTask_6" targetElement="_BPMNShape_ExclusiveGateway_12">
         <di:waypoint xsi:type="dc:Point" x="391" y="424" />
-        <di:waypoint xsi:type="dc:Point" x="417" y="424" />
-        <di:waypoint xsi:type="dc:Point" x="417" y="422" />
-        <di:waypoint xsi:type="dc:Point" x="432" y="422" />
+        <di:waypoint xsi:type="dc:Point" x="433" y="425" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="428" y="538" width="6" height="6" />
+          <dc:Bounds x="367" y="406.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_8" bpmnElement="iptal">
         <dc:Bounds x="708" y="48" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Participant_3" bpmnElement="_Participant_3" isHorizontal="true">
-        <dc:Bounds x="0" y="0" width="1635" height="504" />
+        <dc:Bounds x="-12" y="0" width="1362" height="638" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Lane_13" bpmnElement="personel" isHorizontal="true">
-        <dc:Bounds x="30" y="0" width="1605" height="504" />
+        <dc:Bounds x="18" y="0" width="1332" height="638" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_EndEvent_7" bpmnElement="bitis">
-        <dc:Bounds x="1260" y="70" width="36" height="36" />
+        <dc:Bounds x="1055" y="70" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1278" y="111" width="0" height="0" />
+          <dc:Bounds x="1028" y="111" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_17" bpmnElement="SequenceFlow_13" sourceElement="_BPMNShape_ServiceTask_8" targetElement="_BPMNShape_EndEvent_7">
         <di:waypoint xsi:type="dc:Point" x="808" y="88" />
-        <di:waypoint xsi:type="dc:Point" x="1260" y="88" />
+        <di:waypoint xsi:type="dc:Point" x="1055" y="88" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="830" y="88" width="6" height="6" />
+          <dc:Bounds x="886.5" y="70" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_11" bpmnElement="ExclusiveGateway_4" isMarkerVisible="true">
-        <dc:Bounds x="122" y="399" width="50" height="50" />
+        <dc:Bounds x="123" y="399" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="147" y="454" width="0" height="0" />
+          <dc:Bounds x="103" y="454" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_23" bpmnElement="SequenceFlow_19" sourceElement="_BPMNShape_ExclusiveGateway_11" targetElement="_BPMNShape_ServiceTask_6">
-        <di:waypoint xsi:type="dc:Point" x="172" y="424" />
-        <di:waypoint xsi:type="dc:Point" x="272" y="424" />
-        <di:waypoint xsi:type="dc:Point" x="272" y="425" />
+        <di:waypoint xsi:type="dc:Point" x="173" y="424" />
         <di:waypoint xsi:type="dc:Point" x="291" y="425" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="170" y="424" width="6" height="6" />
+          <dc:Bounds x="187" y="406.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_12" bpmnElement="ExclusiveGateway_5" isMarkerVisible="true">
-        <dc:Bounds x="432" y="397" width="50" height="50" />
+        <dc:Bounds x="433" y="400" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="457" y="452" width="0" height="0" />
+          <dc:Bounds x="413" y="455" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_11" bpmnElement="hatayi_gozden_gecir">
-        <dc:Bounds x="288" y="244" width="109" height="80" />
+        <dc:Bounds x="289" y="242" width="109" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_26" bpmnElement="mernis_hata" sourceElement="_BPMNShape_ExclusiveGateway_11" targetElement="_BPMNShape_UserTask_11">
-        <di:waypoint xsi:type="dc:Point" x="172" y="406" />
-        <di:waypoint xsi:type="dc:Point" x="288" y="323" />
+        <di:waypoint xsi:type="dc:Point" x="162" y="413" />
+        <di:waypoint xsi:type="dc:Point" x="294" y="317" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="224" y="366" width="6" height="6" />
+          <dc:Bounds x="183" y="347" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_27" bpmnElement="adres_hata" sourceElement="_BPMNShape_ExclusiveGateway_12" targetElement="_BPMNShape_UserTask_11">
-        <di:waypoint xsi:type="dc:Point" x="457" y="397" />
-        <di:waypoint xsi:type="dc:Point" x="457" y="284" />
-        <di:waypoint xsi:type="dc:Point" x="396" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="458" y="400" />
+        <di:waypoint xsi:type="dc:Point" x="458" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="398" y="282" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="454" y="337" width="6" height="6" />
+          <dc:Bounds x="428" y="338" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_13" bpmnElement="ExclusiveGateway_6" isMarkerVisible="true">
-        <dc:Bounds x="317" y="62" width="50" height="50" />
+        <dc:Bounds x="318" y="63" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="342" y="117" width="0" height="0" />
+          <dc:Bounds x="298" y="118" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_29" bpmnElement="iptal_hata" sourceElement="_BPMNShape_ExclusiveGateway_13" targetElement="_BPMNShape_ServiceTask_8">
-        <di:waypoint xsi:type="dc:Point" x="367" y="87" />
-        <di:waypoint xsi:type="dc:Point" x="602" y="87" />
-        <di:waypoint xsi:type="dc:Point" x="602" y="88" />
+        <di:waypoint xsi:type="dc:Point" x="368" y="88" />
         <di:waypoint xsi:type="dc:Point" x="708" y="88" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="529" y="87" width="6" height="6" />
+          <dc:Bounds x="493" y="70" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_30" bpmnElement="SequenceFlow_26" sourceElement="_BPMNShape_ExclusiveGateway_13" targetElement="_BPMNShape_UserTask_7">
-        <di:waypoint xsi:type="dc:Point" x="317" y="87" />
-        <di:waypoint xsi:type="dc:Point" x="257" y="87" />
-        <di:waypoint xsi:type="dc:Point" x="257" y="88" />
+        <di:waypoint xsi:type="dc:Point" x="318" y="88" />
         <di:waypoint xsi:type="dc:Point" x="198" y="88" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="254" y="87" width="6" height="6" />
+          <dc:Bounds x="213" y="70" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="_BPMNShape_UserTask_11" targetElement="_BPMNShape_ExclusiveGateway_13">
-        <di:waypoint xsi:type="dc:Point" x="342" y="244" />
-        <di:waypoint xsi:type="dc:Point" x="342" y="112" />
+        <di:waypoint xsi:type="dc:Point" x="343" y="242" />
+        <di:waypoint xsi:type="dc:Point" x="343" y="178" />
+        <di:waypoint xsi:type="dc:Point" x="343" y="178" />
+        <di:waypoint xsi:type="dc:Point" x="343" y="113" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="339" y="184" width="6" height="6" />
+          <dc:Bounds x="313" y="175" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_UserTask_7" targetElement="_BPMNShape_ServiceTask_5">
@@ -280,96 +274,92 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_28" bpmnElement="SequenceFlow_25" sourceElement="_BPMNShape_ExclusiveGateway_13" targetElement="_BPMNShape_EndEvent_7">
-        <di:waypoint xsi:type="dc:Point" x="342" y="62" />
-        <di:waypoint xsi:type="dc:Point" x="342" y="20" />
-        <di:waypoint xsi:type="dc:Point" x="1277" y="20" />
-        <di:waypoint xsi:type="dc:Point" x="1278" y="70" />
+        <di:waypoint xsi:type="dc:Point" x="343" y="63" />
+        <di:waypoint xsi:type="dc:Point" x="343" y="20" />
+        <di:waypoint xsi:type="dc:Point" x="1073" y="20" />
+        <di:waypoint xsi:type="dc:Point" x="1073" y="70" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="744" y="20" width="6" height="6" />
+          <dc:Bounds x="663" y="2" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_13" bpmnElement="kontrol_et">
         <dc:Bounds x="537" y="385" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_ExclusiveGateway_12" targetElement="_BPMNShape_UserTask_13">
-        <di:waypoint xsi:type="dc:Point" x="482" y="422" />
-        <di:waypoint xsi:type="dc:Point" x="509" y="422" />
+        <di:waypoint xsi:type="dc:Point" x="483" y="425" />
+        <di:waypoint xsi:type="dc:Point" x="509" y="425" />
         <di:waypoint xsi:type="dc:Point" x="509" y="425" />
         <di:waypoint xsi:type="dc:Point" x="537" y="425" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="517" y="425" width="6" height="6" />
+          <dc:Bounds x="479" y="422" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_16" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
-        <dc:Bounds x="732" y="399" width="50" height="50" />
+        <dc:Bounds x="733" y="399" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="757" y="454" width="0" height="0" />
+          <dc:Bounds x="713" y="454" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_9" sourceElement="_BPMNShape_UserTask_13" targetElement="_BPMNShape_ExclusiveGateway_16">
         <di:waypoint xsi:type="dc:Point" x="637" y="425" />
-        <di:waypoint xsi:type="dc:Point" x="732" y="424" />
+        <di:waypoint xsi:type="dc:Point" x="733" y="424" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="659" y="425" width="6" height="6" />
+          <dc:Bounds x="640" y="406.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_10" sourceElement="_BPMNShape_ExclusiveGateway_16" targetElement="_BPMNShape_UserTask_8">
-        <di:waypoint xsi:type="dc:Point" x="782" y="424" />
+        <di:waypoint xsi:type="dc:Point" x="783" y="424" />
         <di:waypoint xsi:type="dc:Point" x="864" y="423" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="792" y="424" width="6" height="6" />
+          <dc:Bounds x="778.5" y="405.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_19" bpmnElement="yeni_personel_iptal" sourceElement="_BPMNShape_ExclusiveGateway_16" targetElement="_BPMNShape_ServiceTask_8">
-        <di:waypoint xsi:type="dc:Point" x="757" y="399" />
-        <di:waypoint xsi:type="dc:Point" x="757" y="264" />
-        <di:waypoint xsi:type="dc:Point" x="758" y="264" />
+        <di:waypoint xsi:type="dc:Point" x="758" y="399" />
         <di:waypoint xsi:type="dc:Point" x="758" y="128" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="755" y="263" width="6" height="6" />
+          <dc:Bounds x="728" y="260.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_17" bpmnElement="ExclusiveGateway_8" isMarkerVisible="true">
-        <dc:Bounds x="1260" y="303" width="50" height="50" />
+        <dc:Bounds x="1048" y="399" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1285" y="358" width="0" height="0" />
+          <dc:Bounds x="1028" y="454" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_36" bpmnElement="SequenceFlow_31" sourceElement="_BPMNShape_UserTask_8" targetElement="_BPMNShape_ExclusiveGateway_17">
         <di:waypoint xsi:type="dc:Point" x="964" y="423" />
         <di:waypoint xsi:type="dc:Point" x="1027" y="423" />
-        <di:waypoint xsi:type="dc:Point" x="1027" y="328" />
-        <di:waypoint xsi:type="dc:Point" x="1260" y="328" />
+        <di:waypoint xsi:type="dc:Point" x="1027" y="424" />
+        <di:waypoint xsi:type="dc:Point" x="1048" y="424" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="986" y="423" width="6" height="6" />
+          <dc:Bounds x="997" y="420.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_37" bpmnElement="islemi_bitir" sourceElement="_BPMNShape_ExclusiveGateway_17" targetElement="_BPMNShape_EndEvent_7">
-        <di:waypoint xsi:type="dc:Point" x="1284" y="303" />
-        <di:waypoint xsi:type="dc:Point" x="1279" y="106" />
+        <di:waypoint xsi:type="dc:Point" x="1073" y="399" />
+        <di:waypoint xsi:type="dc:Point" x="1074" y="106" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1278" y="191" width="6" height="6" />
+          <dc:Bounds x="1028.5" y="234.5" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_UserTask_14" bpmnElement="AtamaYap">
-        <dc:Bounds x="1464" y="289" width="100" height="80" />
+        <dc:Bounds x="1201" y="216" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_38" bpmnElement="SequenceFlow_33" sourceElement="_BPMNShape_ExclusiveGateway_17" targetElement="_BPMNShape_UserTask_14">
-        <di:waypoint xsi:type="dc:Point" x="1310" y="328" />
-        <di:waypoint xsi:type="dc:Point" x="1369" y="328" />
-        <di:waypoint xsi:type="dc:Point" x="1369" y="329" />
-        <di:waypoint xsi:type="dc:Point" x="1464" y="329" />
+        <di:waypoint xsi:type="dc:Point" x="1098" y="424" />
+        <di:waypoint xsi:type="dc:Point" x="1251" y="424" />
+        <di:waypoint xsi:type="dc:Point" x="1251" y="296" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1332" y="328" width="6" height="6" />
+          <dc:Bounds x="1129.5" y="406" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="_BPMNShape_UserTask_14" targetElement="_BPMNShape_EndEvent_7">
-        <di:waypoint xsi:type="dc:Point" x="1514" y="289" />
-        <di:waypoint xsi:type="dc:Point" x="1514" y="88" />
-        <di:waypoint xsi:type="dc:Point" x="1356" y="88" />
-        <di:waypoint xsi:type="dc:Point" x="1296" y="88" />
+      <bpmndi:BPMNEdge id="SequenceFlow_0udcuui_di" bpmnElement="SequenceFlow_0udcuui">
+        <di:waypoint xsi:type="dc:Point" x="1251" y="216" />
+        <di:waypoint xsi:type="dc:Point" x="1251" y="88" />
+        <di:waypoint xsi:type="dc:Point" x="1091" y="88" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1502" y="88" width="6" height="6" />
+          <dc:Bounds x="1221" y="142" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
