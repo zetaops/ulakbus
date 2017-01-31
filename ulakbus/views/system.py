@@ -9,7 +9,7 @@
 
 from pyoko.modelmeta import model_registry
 from pyoko.conf import settings
-from ulakbus.lib.cache import PersonelIstatistik
+from ulakbus.lib.cache import PersonelIstatistik, RaporlamaEklentisi
 
 from ulakbus.views.reports import ReporterRegistry
 from zengine.lib.decorators import view
@@ -213,3 +213,201 @@ def get_general_staff_stats():
             "cols": cols
         })
     return rows
+
+@view()
+def get_report_data():
+    """
+        Populates the report screen data.
+
+        .. code-block:: python
+
+               #  request:
+                   {
+                   'view': '_zops_get_report_data',
+                   'options': {
+                        //With example fields
+                        'name': {
+                            'type': 'INPUT',
+                            'condition': 'STARTSWITH',
+                            'parameters': 'Some search parameter e.g. Ahmet'
+
+                        },
+                        'gender': {
+                            'type': 'SELECT',
+                            'condition': '',
+                            'parameters': '1'
+                        },
+                        'unit': {
+                            'type': 'MULTISELECT',
+                            'condition': '',
+                            'parameters': ['unit_a', 'unit_b', 'unit_c', ..., 'unit_z']
+                        }
+                        'some_date': {
+                            'type': 'RANGE',
+                            'condition': '',
+                            'parameters': ['date_1', 'date_2']
+                        }
+                    }
+                   }
+
+               #  response:
+                    {
+                            'gridOptions': {
+                                enableSorting: true,
+                                useExternalSorting: true,  //if need sorting from backend side
+                                enableFiltering: true,
+                                toggleFiltering: true,
+                                useExternalFiltering: true, //if need filtering from backend side
+                                paginationPageSize: 25,
+                                useExternalPagination: true, //if need paginations from backend side
+                                enableAdding: true,
+                                enableRemoving: true,
+                                columnDefs: [
+                                    // default
+                                    {
+                                        field: 'name',
+                                        sort: { // if need frontend sorting
+                                            direction: 'DESC' // 'ASC'
+                                        }
+                                    },
+                                    // no filter and sorting input
+                                    {
+                                        field: 'company',
+                                        enableFiltering: false,
+                                        enableSorting: false
+                                    }
+                                    // select
+                                    {
+                                        field: 'gender',
+                                        filter: {
+                                            term: '2',
+                                            type: 'SELECT',
+                                            selectOptions: [
+                                                { value: '1', label: 'male' },
+                                                { value: '2', label: 'female' }
+                                                ]
+                                        }
+                                    },
+                                    // multiselect
+                                    {
+                                        field: 'graduation',
+                                        filter: {
+                                            type: 'MULTISELECT',
+                                            selectOptions: [
+                                                { value: 'university', label: 'university' },
+                                                { value: 'high school', label: 'high school' }
+                                                ]
+                                        },
+                                    },
+                                    // input contain filter example
+                                    {
+                                        field: "age",
+                                        type: "INPUT"
+                                        filter: {
+                                            condition: "CONTAINS",
+                                            placeholder: "contains"
+                                        }
+                                    }
+
+                                    // multiple input filters example
+                                    {
+                                        field: "age",
+                                        type: "INPUT",
+                                        filters: [
+                                            {
+                                                condition: "STARTS_WITH",
+                                                placeholder: "starts with"
+                                            },
+                                            {
+                                                condition: "ENDS_WITH",
+                                                placeholder: "ends with"
+                                            }
+                                        ]
+                                    }
+
+                                    // range input integer example
+                                    {
+                                        field: "age",
+                                        type: "range",
+                                        rangeType: "integer",
+                                        filters: [
+                                                {
+                                                    condition: "MAX",
+                                                    placeholder: "max value"
+                                                },
+                                                {
+                                                    condition: "MIN",
+                                                    placeholder: "min value",
+                                                }
+                                            ]
+                                    }
+
+                                    // range input datetime example
+                                    {
+                                        field: "date",
+                                        type: "range",
+                                        rangeType: "datetime",
+                                        filters: [
+                                                {
+                                                    condition: "START",
+                                                    placeholder: "start date"
+                                                },
+                                                {
+                                                    condition: "END",
+                                                    placeholder: "end date",
+                                                }
+                                            ]
+                                    }
+
+                                ]
+                        },
+
+                        'columns': [
+                            {'column_1': True},
+                            {'column_2': False},
+                            ...
+                        ],
+
+                        'gridData': [
+                            {
+                                "name": "Cox",
+                                "company": "Enormo",
+                                "gender": "male",
+                                "graduation": "university",
+                                ...
+                            },
+                            {
+                                "name": "Lorraine",
+                                "company": "Comveyer",
+                                "gender": "female",
+                                "graduation": "high school",
+                                ...
+                            },
+                            {
+                                "name": "Nancy",,
+                                "company": "Fuelton",
+                                "gender": "female",
+                                "graduation": "university",
+                                ...
+                            },
+                            {
+                                "name": "Misty",
+                                "company": "Letpro",
+                                "gender": "female",
+                                "graduation": "university",
+                                ...
+                            }
+                        ]
+                    }
+    """
+    result = {}
+    grid_options = {}
+    columns = []
+    grid_data = []
+
+    # Default data from cache
+    cached_data = RaporlamaEklentisi().get_or_set()
+
+
+
+
