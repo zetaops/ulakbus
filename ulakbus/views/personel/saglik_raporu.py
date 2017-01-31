@@ -9,12 +9,15 @@ from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.models.personel import Personel, SaglikRaporu
+from ulakbus.lib.personel import personel_rapor_cesitleri
+from dateutil.rrule import WEEKLY, rrule
 
 
 class SaglikRaporuForm(JsonForm):
     class Meta:
-        exclude = ['personel', ]
+        title = __(u"Sağlık Raporu Formu")
 
+    rapor_cesidi = fields.String(__(u"Rapor Çeşidi"), default=1, required=True)
     kaydet = fields.Button(__(u"Kaydet"))
 
 
@@ -23,33 +26,48 @@ class SaglikRaporuOlustur(CrudView):
         model = 'SaglikRaporu'
 
     def __init__(self, current):
-        self.ObjectForm = SaglikRaporuForm
         CrudView.__init__(self, current)
         if 'personel_id' not in self.current.task_data:
             self.current.task_data["personel_id"] = self.current.input["id"]
 
     def saglik_raporunu_sil_onay(self):
         form = JsonForm(title=_(u"Sağlık Raporu Silme İşlemi"))
-        form.help_text = _(
-            u"""Ad Soyad: **%(ad)s** **%(soyad)s**
-            Başlama Tarihi: **%(baslama_tarihi)s**
-            Bitiş Tarihi: **%(bitis_tarihi)s**
-            Gün: **%(sure)s**
-            Nereden: **%(nerden_alindigi)s**
-            Rapor Çeşidi: **%(rapor_cesidi)s**
-            Bilgilerin bulunduğu raporu silmek istiyor musunuz?"""
-        ) % {'ad': self.object.personel.ad,
+        form.help_text = _(u"""
+* **Ad Soyad:** %(ad)s %(soyad)s
+
+* **Başlama Tarihi:** %(baslama_tarihi)s
+
+* **Bitiş Tarihi:** %(bitis_tarihi)s
+
+* **Gün:** %(sure)s
+
+* **Nereden:** %(nerden_alindigi)s
+
+* **Rapor Çeşidi:** %(rapor_cesidi)s
+
+Bilgilerin bulunduğu raporu silmek istiyor musunuz?""") % {
+             'ad': self.object.personel.ad,
              'soyad': self.object.personel.soyad,
              'baslama_tarihi': self.object.baslama_tarihi,
              'bitis_tarihi': self.object.bitis_tarihi,
              'sure': self.object.sure,
              'nerden_alindigi': self.object.nerden_alindigi,
-             'rapor_cesidi': self.object.get_rapor_cesidi_display()}
-        form.evet = fields.Button(__(u"Evet"), cmd='delete')
-        form.hayir = fields.Button(__(u"Hayır"))
+             'rapor_cesidi': self.object.rapor_cesidi
+        }
+
+        form.evet = fields.Button(_(u"Evet"), cmd='delete')
+        form.hayir = fields.Button(_(u"Hayır"))
         self.form_out(form)
 
     def add_edit_form(self):
+        personel = Personel.objects.get(self.current.task_data['personel_id'])
+        if personel.cinsiyet == 1:
+            cinsiyete_gore_rapor_cesitleri = personel_rapor_cesitleri[:2]
+        else:
+            cinsiyete_gore_rapor_cesitleri = personel_rapor_cesitleri
+
+        _form = SaglikRaporuForm(self.object)
+        _form.set_choices_of("rapor_cesidi", choices=cinsiyete_gore_rapor_cesitleri)
         if 'kontrol_msg' in self.current.task_data:
             msg = _(u"%s") % self.current.task_data['kontrol_msg']
             self.current.output['msgbox'] = {"type": "warning",
@@ -57,7 +75,7 @@ class SaglikRaporuOlustur(CrudView):
                                              "msg": msg}
             del self.current.task_data['kontrol_msg']
             self.set_form_data_to_object()
-        CrudView.add_edit_form(self)
+        self.form_out(_form)
 
     def saglik_raporunu_kaydet(self):
 
@@ -82,9 +100,9 @@ class SaglikRaporuOlustur(CrudView):
         self.current.task_data['cmd'] = cmd
 
     def bilgilendirme(self):
-        # self.set_form_data_to_object()
         msg = _(u"%s %s adlı personelin %s başarılı bir şekilde kaydedildi.") % \
-              (self.object.personel.ad, self.object.personel.soyad, self.object.get_rapor_cesidi_display())
+              (self.object.personel.ad, self.object.personel.soyad,
+               self.object.rapor_cesidi)
 
         # Düzenleme işleminden sonra yeni bir kayit eklemek istediğimizde,
         # form ekranı düzenlenen modelin bilgileriyle
@@ -127,9 +145,17 @@ class SaglikRaporuOlustur(CrudView):
 
         if self.object.rapor_cesidi == 1 and not kontrol_msg:
             if self.object.sure > 10:
-                kontrol_msg = _(u'%s süresi 10 günden fazla olamaz!') % self.object.get_rapor_cesidi_display()
+                kontrol_msg = _(u'%s süresi 10 günden fazla olamaz!') % \
+                              dict(personel_rapor_cesitleri)[self.object.rapor_cesidi]
             elif rapor_sayisi + self.object.sure > 40:
                 kontrol_msg = _(u'% s için yıl içerisinde 40 günden fazla rapor alamazsınız!') \
-                              % self.object.get_rapor_cesidi_display()
+                              % dict(personel_rapor_cesitleri)[self.object.rapor_cesidi]
+        elif self.object.rapor_cesidi == 3 or 4 and not kontrol_msg:
+            if self.object.personel.cinsiyet == 1:
+                kontrol_msg = _(u"Bu raporu sadece kadın personeller alabilir. Lütfen size uygun "
+                                u"bir rapor seçiniz.")
+            elif rrule(WEEKLY, dtstart=self.object.baslama_tarihi,
+                       until=self.object.bitis_tarihi).count() > 8:
+                kontrol_msg = _(u"Doğum öncesi ve sonrası raporlar 8 haftadan fazla olamaz.")
 
         return kontrol_msg

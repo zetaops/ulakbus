@@ -11,6 +11,13 @@ from ulakbus.lib.date_time_helper import zaman_araligi
 
 __author__ = 'Ali Riza Keles'
 
+personel_rapor_cesitleri = [
+    (1, "Tek Hekim Raporu"),
+    (2, "Heyet Raporu"),
+    (3, "Tek Hekim Raporu Doğum Öncesi"),
+    (4, "Tek Hekim Raporu Doğum Sonrası")
+]
+
 
 def personel_izin_gunlerini_getir(okutman, yil, ay):
     """
