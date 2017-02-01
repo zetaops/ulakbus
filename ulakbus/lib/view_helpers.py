@@ -24,7 +24,7 @@ def prepare_choices_for_model(model, **kwargs):
         key ve __unicode__ method değerlerini
 
     """
-    kw_string = "".join(["%s%s" % (k, v) for k, v in kwargs.items()])
+    kw_string = "".join(["%s%s" % (k, v) for k, v in sorted(kwargs.items())])
     cache_key = hashlib.sha256("%s:%s" % (model._get_bucket_name(), kw_string)).hexdigest()
 
     cache = ChoicesFromModel(cache_key)
