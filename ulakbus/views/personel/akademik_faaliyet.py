@@ -213,20 +213,48 @@ class HesaplamaSonucuGoster(CrudView):
 
     def goster(self):
         cached_data_with_db_keys = self.current.task_data['performans']
-        data_with_showable_keys = []
+        self.set_client_cmd('list')
+
+        self.output['objects'] = [[_(u'Faaliyet'), _(u'Toplam Sayı')], ]
+
         for d in cached_data_with_db_keys.items():
-            key = AkademikFaaliyetTuru.objects.get(key=d[0]).__unicode__()
-            value = d[1]
-            line = OrderedDict({})
-            line["Faaliyet"] = key
-            line["Toplam Sayı"] = value
-            data_with_showable_keys.append(line)
+            faaliyet_adi = AkademikFaaliyetTuru.objects.get(key=d[0]).__unicode__()
+            faaliyet_sayisi = d[1]
+            list_item =  {
+                "fields": [faaliyet_adi, faaliyet_sayisi],
+                "actions": [
+                    {'name': _(u'Detaylar'), 'cmd': 'list', 'show_as': 'button',
+                     'object_key': 'faaliyet'},
+                ],
+                "key": d[0]
+            }
 
-        self.set_client_cmd('show')
+            self.output['objects'].append(
+                list_item
+            )
 
-        self.output['object_title'] = 'Akademik Performans Sayıları'
-        self.output['object_key'] = self.object.key
-        self.output['object'] = {
-            "type": "table-multiRow",
-            "fields": data_with_showable_keys,
-            "actions": ""}
+    def detay_goster(self):
+        faaliyet_key = self.current.input['faaliyet']
+        faaliyetler = Af.objects.filter(tur_id=faaliyet_key)
+        f_turu = Aft.objects.get(key=faaliyet_key)
+        self.set_client_cmd('list')
+        self.output['objects'] = [[_('Faaliyet Adı'), _(u'Personel'), _(u'Başlama Tarihi'), _(u'Bitiş Tarihi'), _(u'Oran')], ]
+        self.current.output["meta"]["allow_actions"] = False
+
+        for f in faaliyetler:
+            faaliyet_adi = f.ad
+            personel = f.personel.__unicode__()
+            baslama = str(f.baslama)
+            bitis = str(f.bitis)
+            oran = str(f.tur.oran)
+            list_item = {
+                "fields": [faaliyet_adi, personel, baslama, bitis, oran],
+                "actions": "",
+            }
+            self.output['objects'].append(list_item)
+
+        f = JsonForm(title=f_turu.__unicode__())
+        f.button = fields.Button("Geri Don", cmd="sonuclar")
+        self.form_out(f)
+
+
