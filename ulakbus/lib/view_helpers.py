@@ -8,7 +8,8 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from datetime import datetime
-from ulakbus.lib.cache import GuncelDonem
+from ulakbus.lib.cache import GuncelDonem, ChoicesFromModel
+import hashlib
 
 
 def prepare_choices_for_model(model, **kwargs):
@@ -23,8 +24,13 @@ def prepare_choices_for_model(model, **kwargs):
         key ve __unicode__ method değerlerini
 
     """
+    kw_string = "".join(["%s%s" % (k, v) for k, v in kwargs.items()])
+    cache_key = hashlib.sha256("%s:%s" % (model._get_bucket_name(), kw_string)).hexdigest()
 
-    return [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
+    cache = ChoicesFromModel(cache_key)
+    return cache.get() or cache.set(
+        [(m.key, m.__unicode__()) for m in model.objects.filter(**kwargs)]
+    )
 
 
 def convert_model_object_titlemap_item(m):
