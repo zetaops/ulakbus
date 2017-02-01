@@ -238,7 +238,8 @@ class HesaplamaSonucuGoster(CrudView):
         faaliyetler = Af.objects.filter(tur_id=faaliyet_key)
         f_turu = Aft.objects.get(key=faaliyet_key)
         self.set_client_cmd('list')
-        self.output['objects'] = [[f_turu.__unicode__(), _(u'Personel'), _(u'Başlama Tarihi'), _(u'Bitiş Tarihi'), _(u'Oran')], ]
+        self.output['objects'] = [[_('Faaliyet Adı'), _(u'Personel'), _(u'Başlama Tarihi'), _(u'Bitiş Tarihi'), _(u'Oran')], ]
+        self.current.output["meta"]["allow_actions"] = False
 
         for f in faaliyetler:
             faaliyet_adi = f.ad
@@ -251,5 +252,9 @@ class HesaplamaSonucuGoster(CrudView):
                 "actions": "",
             }
             self.output['objects'].append(list_item)
+
+        f = JsonForm(title=f_turu.__unicode__())
+        f.button = fields.Button("Geri Don", cmd="sonuclar")
+        self.form_out(f)
 
 
