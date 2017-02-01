@@ -1042,7 +1042,8 @@ class FakeDataGenerator:
                                  bitis=bitis,
                                  durum=durum,
                                  kac_kisiyle_yapildi=kac_kisi,
-                                 gorev=gorev).save()
+                                 gorev=gorev,
+                                 personel=personel).save()
 
     def random_date(self):
         year = random.randint(2000, 2023)
