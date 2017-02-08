@@ -18,6 +18,9 @@ from zengine.lib.translation import gettext as _
 from ulakbus.models import Personel, Ogrenci
 from zengine.views.menu import Menu
 
+from datetime import datetime
+import json
+
 
 class Search(SysView):
     SEARCH_ON = None
@@ -216,8 +219,9 @@ def get_general_staff_stats():
         })
     return rows
 
+
 @view()
-def get_report_data():
+def get_report_data(current):
     """
         Populates the report screen data.
 
@@ -226,30 +230,40 @@ def get_report_data():
                #  request:
                    {
                    'view': '_zops_get_report_data',
-                   'options': {
-                        //With example fields
-                        'name': {
-                            'type': 'INPUT',
-                            'condition': 'STARTSWITH',
-                            'parameters': 'Some search parameter e.g. Ahmet'
-
-                        },
-                        'gender': {
-                            'type': 'SELECT',
-                            'condition': '',
-                            'parameters': '1'
-                        },
-                        'unit': {
-                            'type': 'MULTISELECT',
-                            'condition': '',
-                            'parameters': ['unit_a', 'unit_b', 'unit_c', ..., 'unit_z']
+                    selectors: [
+                            {
+                                name: "some field name (name, age etc)",
+                                checked: true or false
+                            },
+                            {
+                                name: "some field name (name, age etc)",
+                                checked: true or false
+                            },
+                            {
+                                name: "some field name (name, age etc)",
+                                checked: true or false
+                            },
+                            ...
+                        ],
+                    options: {
+                            some_input_field: {
+                                condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
+                                value: "some value"
+                            },
+                            some_select_field: {
+                                value: "some value"
+                            },
+                            some_multiselect_field: {
+                                some_name: "some value",
+                                some_name: "some value",
+                                some_name: "some value",
+                                ...
+                            },
+                            some_range_field: {
+                                start (or min): "some value",
+                                end (or max): "some value"
+                            }
                         }
-                        'some_date': {
-                            'type': 'RANGE',
-                            'condition': '',
-                            'parameters': ['date_1', 'date_2']
-                        }
-                    }
                    }
 
                #  response:
@@ -264,43 +278,22 @@ def get_report_data():
                                 useExternalPagination: true, //if need paginations from backend side
                                 enableAdding: true,
                                 enableRemoving: true,
+                                selectors: [
+                                    {
+                                        name: "some field name (name, age etc)",
+                                        checked: true or false
+                                    },
+                                    {
+                                        name: "some field name (name, age etc)",
+                                        checked: true or false
+                                    },
+                                    {
+                                        name: "some field name (name, age etc)",
+                                        checked: true or false
+                                    },
+                                    ...
+                                ],
                                 columnDefs: [
-                                    // default
-                                    {
-                                        field: 'name',
-                                        sort: { // if need frontend sorting
-                                            direction: 'DESC' // 'ASC'
-                                        }
-                                    },
-                                    // no filter and sorting input
-                                    {
-                                        field: 'company',
-                                        enableFiltering: false,
-                                        enableSorting: false
-                                    }
-                                    // select
-                                    {
-                                        field: 'gender',
-                                        filter: {
-                                            term: '2',
-                                            type: 'SELECT',
-                                            selectOptions: [
-                                                { value: '1', label: 'male' },
-                                                { value: '2', label: 'female' }
-                                                ]
-                                        }
-                                    },
-                                    // multiselect
-                                    {
-                                        field: 'graduation',
-                                        filter: {
-                                            type: 'MULTISELECT',
-                                            selectOptions: [
-                                                { value: 'university', label: 'university' },
-                                                { value: 'high school', label: 'high school' }
-                                                ]
-                                        },
-                                    },
                                     // input contain filter example
                                     {
                                         field: "age",
@@ -309,106 +302,172 @@ def get_report_data():
                                             condition: "CONTAINS",
                                             placeholder: "contains"
                                         }
-                                    }
-
+                                    },
                                     // multiple input filters example
                                     {
                                         field: "age",
                                         type: "INPUT",
-                                        filters: [
-                                            {
-                                                condition: "STARTS_WITH",
-                                                placeholder: "starts with"
-                                            },
-                                            {
-                                                condition: "ENDS_WITH",
-                                                placeholder: "ends with"
-                                            }
-                                        ]
-                                    }
-
+                                        filter: {
+                                            condition: "STARTS_WITH",
+                                            placeholder: "starts with"
+                                        }
+                                    },
+                                    {
+                                        field: "age",
+                                        type: "INPUT",
+                                        filter: {
+                                            condition: "ENDS_WITH",
+                                            placeholder: "ends with"
+                                        }
+                                    },
                                     // range input integer example
                                     {
                                         field: "age",
                                         type: "range",
                                         rangeType: "integer",
                                         filters: [
-                                                {
-                                                    condition: "MAX",
-                                                    placeholder: "max value"
-                                                },
-                                                {
-                                                    condition: "MIN",
-                                                    placeholder: "min value",
-                                                }
-                                            ]
-                                    }
-
+                                            {
+                                                condition: "MAX",
+                                                placeholder: "max value"
+                                            },
+                                            {
+                                                condition: "MIN",
+                                                placeholder: "min value"
+                                            }
+                                        ]
+                                    },
                                     // range input datetime example
                                     {
-                                        field: "date",
-                                        type: "range",
-                                        rangeType: "datetime",
-                                        filters: [
-                                                {
-                                                    condition: "START",
-                                                    placeholder: "start date"
-                                                },
-                                                {
-                                                    condition: "END",
-                                                    placeholder: "end date",
-                                                }
-                                            ]
+                                    field: "date",
+                                    type: "range",
+                                    rangeType: "datetime",
+                                    filters: [
+                                            {
+                                                condition: "START",
+                                                placeholder: "start date"
+                                            },
+                                            {
+                                                condition: "END",
+                                                placeholder: "end date"
+                                            }
+                                        ]
+                                    },
+                                    // select
+                                    {
+                                    field: 'gender',
+                                    filter: {
+                                        term: '2',
+                                        type: 'SELECT',
+                                        selectOptions: [ { value: '1', label: 'male' }, { value: '2', label: 'female' }, { value: '3', label: 'unknown'} ]
+                                    },
+                                    // multiselect
+                                    {
+                                        field: 'graduation',
+                                        filter: {
+                                        type: 'MULTISELECT',
+                                        selectOptions: [ { value: 'university', label: 'university' }, { value: 'high school', label: 'high school' } ]
+                                    },
+                                    // examples for editing
+                                    { field: 'last_name', enableCellEdit: true },
+                                    { field: 'age', enableCellEdit: true, type: 'number'},
+                                    { field: 'registered', displayName: 'Registered' , type: 'date'},
+                                    { field: 'address', displayName: 'Address', type: 'object'}, //not editable if type==='object'
+                                    { field: 'address.city', enableCellEdit: true, displayName: 'Address (even rows editable)' }
+                                    { field: 'isActive', enableCellEdit: true, type: 'boolean'},
+                                ],
+                                initialData: [
+                                    {
+                                        "name": "Cox",
+                                        "company": "Enormo",
+                                        "gender": "male",
+                                        "graduation": "university",
+                                        ...
+                                    },
+                                    {
+                                        "name": "Lorraine",
+                                        "company": "Comveyer",
+                                        "gender": "female",
+                                        "graduation": "high school",
+                                        ...
+                                    },
+                                    {
+                                        "name": "Nancy",,
+                                        "company": "Fuelton",
+                                        "gender": "female",
+                                        "graduation": "university",
+                                        ...
+                                    },
+                                        {
+                                        "name": "Misty",
+                                        "company": "Letpro",
+                                        "gender": "female",
+                                        "graduation": "university",
+                                        ...
                                     }
-
                                 ]
-                        },
-
-                        'columns': [
-                            {'column_1': True},
-                            {'column_2': False},
-                            ...
-                        ],
-
-                        'gridData': [
-                            {
-                                "name": "Cox",
-                                "company": "Enormo",
-                                "gender": "male",
-                                "graduation": "university",
-                                ...
-                            },
-                            {
-                                "name": "Lorraine",
-                                "company": "Comveyer",
-                                "gender": "female",
-                                "graduation": "high school",
-                                ...
-                            },
-                            {
-                                "name": "Nancy",,
-                                "company": "Fuelton",
-                                "gender": "female",
-                                "graduation": "university",
-                                ...
-                            },
-                            {
-                                "name": "Misty",
-                                "company": "Letpro",
-                                "gender": "female",
-                                "graduation": "university",
-                                ...
-                            }
-                        ]
+                        }
                     }
     """
-    result = {}
-    grid_options = {}
-    columns = []
-    grid_data = []
 
-    # Default data from cache
-    cached_data = RaporlamaEklentisi().get_or_set()
+    if len(current.input) <= 1:
+        cache_obj = {}
+        cache_obj['gridOptions'] = RaporlamaEklentisi().get_or_set()['gridOptions']
+        current.output = cache_obj
+    else:
+        raporlama_cache = RaporlamaEklentisi().get_or_set()
+        alan_filter_type_map = raporlama_cache['alan_filter_type_map']
+        time_related_fields = raporlama_cache['time_related_fields']
+        options = current.input['options']
+        query_params = {}
+        for f, qp in options.items():
+            if alan_filter_type_map[f] == "INPUT-CONTAINS":
+                query_params[f + "__contains"] = qp['value']
+            elif alan_filter_type_map[f] == "SELECT":
+                query_params[f] = qp['value']
+            elif alan_filter_type_map[f] == "MULTISELECT":
+                multiselect_list = []
+                for msi in qp:
+                    multiselect_list.append(msi)
+                query_params[f + "__in"] = multiselect_list
+            elif alan_filter_type_map[f] == "RANGE-DATETIME":
+                date_format = "%d.%m.%Y"
+                start_raw = str(qp['start'])
+                start = datetime.strptime(start_raw, date_format)
+                starts = start_raw.split(".")
+                end_raw = str(qp['end'])
+                end = datetime.strptime(end_raw, date_format)
+                ends = end_raw.split(".")
+                query_params[f + "__range"] = [start, end]
+            elif alan_filter_type_map[f] == "RANGE-INTEGER":
+                min = qp['min']
+                max = qp['max']
+                query_params[f + "__range"] = [int(min), int(max)]
+            elif alan_filter_type_map[f] == "INPUT-STARTS-WITH":
+                query_params[f + "__startswith"] = qp['value']
+
+        result_set = Personel.objects.filter(**query_params)
+
+        selectors = current.input['selectors']
+        active_selectors = []
+        for selector in selectors:
+            if selector['checked']:
+                active_selectors.append(selector['name'])
+
+        initial_data = []
+        for p in result_set:
+            pd = {}
+            p_ = p.clean_value()
+            for active_selector in active_selectors:
+                if active_selector in time_related_fields:
+                    date_f = "%Y-%d-%mT%H:%M:%SZ"
+                    date_str = p_[active_selector]
+                    d = datetime.strptime(date_str, date_f).date()
+                    pd[active_selector] = d.strftime(date_format)
+                else:
+                    pd[active_selector] = p_[active_selector]
+            initial_data.append(pd)
+
+        current.output['initialData'] = initial_data
 
 
 
