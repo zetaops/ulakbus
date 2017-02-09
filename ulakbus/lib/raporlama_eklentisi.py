@@ -9,23 +9,24 @@ from ulakbus.models.auth import Unit
 from ulakbus.models.hitap.hitap_sebep import HitapSebep
 from pyoko.model import Model
 from zengine.lib.translation import gettext as _, gettext_lazy as __
+from ulakbus import settings
 
 import json
 
 
 def raporlama_ekrani_secim_menulerini_hazirla():
 
-    personel_fixture_file = open('fixtures/personel.json')
+    personel_fixture_file = open(settings.PROJECT_PATH + '/ulakbus/fixtures/personel.json')
     personel_fixture_str = personel_fixture_file.read()
     personel_fixture = dict(json.loads(personel_fixture_str))
     personel_fixture_file.close()
 
-    hitap_fixture_file = open('fixtures/hitap_fixtures.json')
+    hitap_fixture_file = open(settings.PROJECT_PATH + '/ulakbus/fixtures/hitap_fixtures.json')
     hitap_fixture_str = hitap_fixture_file.read()
     hitap_fixture = dict(json.loads(hitap_fixture_str))
     hitap_fixture_file.close()
 
-    hitap_unvan_kod_fixture_file = open('fixtures/hitap_unvankod_fixtures.json')
+    hitap_unvan_kod_fixture_file = open(settings.PROJECT_PATH + '/ulakbus/fixtures/hitap_unvankod_fixtures.json')
     hitap_unvan_kod_fixture_str = hitap_unvan_kod_fixture_file.read()
     hitap_unvan_kod_fixture = dict(json.loads(hitap_unvan_kod_fixture_str))
     hitap_unvan_kod_fixture_file.close()
@@ -107,8 +108,12 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     # Baslangıçta görünecek personeller
     personeller = {}
     tum_personel = Personel.objects.filter()
-    for i in range(30):
-        personeller[i] = tum_personel[i].clean_value()
+    if len(tum_personel) > 50:
+        for i in range(50):
+            personeller[i] = tum_personel[i].clean_value()
+    else:
+        for i, p in enumerate(tum_personel):
+            personeller[i] = p.clean_value()
 
     # Başlangıçta görünecek alanlar
     default_alanlar = ['ad', 'soyad', 'cinsiyet', 'dogum_tarihi', 'personel_turu']

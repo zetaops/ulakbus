@@ -5,9 +5,11 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models import Personel
+from zengine.current import Current
 from zengine.lib.test_utils import BaseTestCase
 import datetime
 from pyoko.manage import FlushDB, LoadData
+from ulakbus.views.system import get_report_data
 
 
 class TestCase(BaseTestCase):
@@ -30,19 +32,115 @@ class TestCase(BaseTestCase):
         Personel(ad="Hakkı", soyad="Bulut", cinsiyet=1,
                  unvan=42647, dogum_tarihi=datetime.date(1950, 1, 1)).blocking_save()
 
-        a = datetime.date(1950, 1, 1)
-        b = datetime.date(1980, 1, 1)
+        a = "01.01.1950"
+        b = "01.01.1980"
         unvan_list = [3975, 42647]
 
-        assert Personel.objects.filter(ad__startswith='M', cinsiyet=1, unvan__in=unvan_list, dogum_tarihi__range=[a, b])\
-            .count() == 1
+        """
+        {
+           'view': '_zops_get_report_data',
+            selectors: [
+                    {
+                        name: "some field name (name, age etc)",
+                        checked: true or false
+                    },
+                    {
+                        name: "some field name (name, age etc)",
+                        checked: true or false
+                    },
+                    {
+                        name: "some field name (name, age etc)",
+                        checked: true or false
+                    },
+                    ...
+                ],
+            options: {
+                    some_input_field: {
+                        condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
+                        value: "some value"
+                    },
+                    some_select_field: {
+                        value: "some value"
+                    },
+                    some_multiselect_field: {
+                        some_name: "some value",
+                        some_name: "some value",
+                        some_name: "some value",
+                        ...
+                    },
+                    some_range_field: {
+                        start (or min): "some value",
+                        end (or max): "some value"
+                    }
+                }
+           }
+        """
 
-        assert Personel.objects.filter(ad__startswith='Ah', cinsiyet=2, unvan__in=[1, 2], dogum_tarihi__range=[a, b])\
-            .count() == 0
+        selectors = [{"name": "ad", "checked": True}, {"name": "soyad", "checked": True},
+                     {"name": "cinsiyet", "checked": True}, {"name": "dogum_tarihi", "checked": True},
+                     {"name": "unvan", "checked": True}]
 
-        assert Personel.objects.filter(cinsiyet=2, dogum_tarihi__range=[a, b]).count() == 1
+        query1 = {}
+        options1 = {}
+        options1["ad"] = {"condition": "STARTS_WITH", "value": "M"}
+        options1["cinsiyet"] = {"value": "1"}
+        options1["unvan"] = {3975: "3975", 42647: "42647"}
+        options1["dogum_tarihi"] = {"start": a, "end": b}
+        query1["view"] = "_zops_get_report_data"
+        query1["selectors"] = selectors
+        query1["options"] = options1
 
-        assert Personel.objects.filter(cinsiyet=1, dogum_tarihi__range=[a, b], unvan__in=unvan_list).count() == 2
+        current = Current()
+        current.input = query1
+
+        get_report_data(current)
+
+        assert len(current.output["initialData"]) == 1
+
+        query2 = {}
+        options2 = {}
+        options2["ad"] = {"condition": "STARTS_WITH", "value": "Ah"}
+        options2["cinsiyet"] = {"value": "2"}
+        options2["unvan"] = {1: "1", 2: "2"}
+        options2["dogum_tarihi"] = {"start": a, "end": b}
+        query2["view"] = "_zops_get_report_data"
+        query2["selectors"] = selectors
+        query2["options"] = options2
+
+        current.input = query2
+
+        get_report_data(current)
+
+        assert len(current.output["initialData"]) == 0
+
+        query3 = {}
+        options3 = {}
+        options3["cinsiyet"] = {"value": "2"}
+        options3["dogum_tarihi"] = {"start": a, "end": b}
+        query3["view"] = "_zops_get_report_data"
+        query3["selectors"] = selectors
+        query3["options"] = options3
+
+        current.input = query3
+
+        get_report_data(current)
+
+        assert len(current.output["initialData"]) == 1
+
+        query4 = {}
+        options4 = {}
+        options4["cinsiyet"] = {"value": "1"}
+        options4["dogum_tarihi"] = {"start": a, "end": b}
+        options4["unvan"] = {3975: "3975", 42647: "42647"}
+        query4["view"] = "_zops_get_report_data"
+        query4["selectors"] = selectors
+        query4["options"] = options4
+
+        current.input = query4
+
+        get_report_data(current)
+
+        assert len(current.output["initialData"]) == 2
 
         FlushDB(model='Personel').run()
 
