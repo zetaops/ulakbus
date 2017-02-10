@@ -175,6 +175,9 @@ class SubelendirmeForm(forms.JsonForm):
                               flow="bilgi_ver")
 
     class Subeler(ListNode):
+        class Meta:
+            title = _(u"Şubeler")
+
         ad = fields.String(_(u'Şube Adı'))
         kontenjan = fields.Integer(_(u'Şube Kontenjanı'))
         dis_kontenjan = fields.Integer(_(u'Şube Dış Kontenjanı'))
@@ -340,6 +343,7 @@ class DersSubelendirme(CrudView):
                                       okutman=sube.okutman.key)
 
         self.form_out(subelendirme_form)
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def subelendirme_kaydet(self):
         """Şubelendirme Kaydet
