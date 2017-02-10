@@ -28,27 +28,15 @@ class GuncelDonem(Cache):
     def __init__(self):
         super(GuncelDonem, self).__init__('guncel_donem')
 
-    def get_or_set(self):
+    def prepare_data(self):
         """
-        Cache'de güncel dönem datası varsa döndürür.
-        Yoksa veritabanından güncel dönemi alıp cache'e set eder.
-        Güncel dönem objesi dönemlik değişeceği için, set edilirken
-        expire olma süresi 360000 yani 100 saat olarak belirlenmiştir.
-
-        Returns: cache_data(dict): Güncel dönem nesnesinin fieldlarının dict hali.
-
+        Cache'de güncel dönem datası yoksa, get_or_set() metodu kendi içinde bu metodu çağırarak datayı cache'e koyar.
+        Sonra da döndürür.
         """
-
         from ulakbus.models.ogrenci import Donem
 
-        cache_data = self.get()
-
-        if not cache_data:
-            guncel_donem = Donem.objects.get(guncel=True)
-            cache_data = guncel_donem.donem_fields_to_dict()
-            self.set(cache_data, 360000)
-
-        return cache_data
+        guncel_donem = Donem.objects.get(guncel=True)
+        return guncel_donem.donem_fields_to_dict()
 
 
 class PersonelIstatistik(Cache):
@@ -60,14 +48,9 @@ class PersonelIstatistik(Cache):
     def __init__(self):
         super(PersonelIstatistik, self).__init__('personel_istatistik')
 
-    def get_or_set(self):
-        cache_data = self.get()
+    def prepare_data(self):
+        return personel_istatistik_bilgileri()
 
-        if not cache_data:
-            cache_data = personel_istatistik_bilgileri()
-            self.set(cache_data, 8 * 60 * 60)
-
-        return cache_data
 
 class AkademikPerformans(Cache):
     """
@@ -78,11 +61,5 @@ class AkademikPerformans(Cache):
     def __init__(self):
         super(AkademikPerformans, self).__init__('akademik_performans')
 
-    def get_or_set(self):
-        cache_data = self.get()
-
-        if not cache_data:
-            cache_data = akademik_performans_hesapla()
-            self.set(cache_data, 8 * 60 * 60)
-
-        return cache_data
+    def prepare_data(self):
+        return akademik_performans_hesapla()
