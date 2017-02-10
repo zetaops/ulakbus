@@ -140,11 +140,11 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             col_def['filter'] = {}
             col_def['filter']['condition'] = "CONTAINS"
             col_def['filter']['placeholder'] = _(u"Contains")
-            alan_filter_type_map[k] = "INPUT-CONTAINS"
+            alan_filter_type_map[k] = "INPUT"
         elif k in select_fields:
             col_def['filter'] = {}
             col_def['filter']['term'] = ''  # todo term ne?
-            col_def['filter']['type'] = 'SELECT'
+            col_def['type'] = 'SELECT'
             if k == 'cinsiyet':
                 sel_opts = get_selection_options(cinsiyet)
             elif k == 'kan_grubu':
@@ -157,7 +157,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             alan_filter_type_map[k] = "SELECT"
         elif k in multiselect_fields:
             col_def['filter'] = {}
-            col_def['filter']['type'] = 'MULTISELECT'
+            col_def['type'] = 'MULTISELECT'
             if k == 'baslama_sebep':
                 sel_opts = get_selection_options(sebep_kodlari)
             elif k == 'birim':
@@ -197,7 +197,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             col_def['filter'] = {}
             col_def['filter']['condition'] = "STARTS_WITH"
             col_def['filter']['placeholder'] = _(u"Starts with")
-            alan_filter_type_map[k] = "INPUT-STARTS-WITH"
+            alan_filter_type_map[k] = "INPUT"
         column_defs.append(col_def)
     grid_options['column_defs'] = column_defs
 

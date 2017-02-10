@@ -34,47 +34,6 @@ class TestCase(BaseTestCase):
 
         a = "01.01.1950"
         b = "01.01.1980"
-        unvan_list = [3975, 42647]
-
-        """
-        {
-           'view': '_zops_get_report_data',
-            selectors: [
-                    {
-                        name: "some field name (name, age etc)",
-                        checked: true or false
-                    },
-                    {
-                        name: "some field name (name, age etc)",
-                        checked: true or false
-                    },
-                    {
-                        name: "some field name (name, age etc)",
-                        checked: true or false
-                    },
-                    ...
-                ],
-            options: {
-                    some_input_field: {
-                        condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
-                        value: "some value"
-                    },
-                    some_select_field: {
-                        value: "some value"
-                    },
-                    some_multiselect_field: {
-                        some_name: "some value",
-                        some_name: "some value",
-                        some_name: "some value",
-                        ...
-                    },
-                    some_range_field: {
-                        start (or min): "some value",
-                        end (or max): "some value"
-                    }
-                }
-           }
-        """
 
         selectors = [{"name": "ad", "checked": True}, {"name": "soyad", "checked": True},
                      {"name": "cinsiyet", "checked": True}, {"name": "dogum_tarihi", "checked": True},

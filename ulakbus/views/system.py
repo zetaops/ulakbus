@@ -355,16 +355,16 @@ def get_report_data(current):
                                     // select
                                     {
                                     field: 'gender',
+                                    type: 'SELECT',
                                     filter: {
                                         term: '2',
-                                        type: 'SELECT',
                                         selectOptions: [ { value: '1', label: 'male' }, { value: '2', label: 'female' }, { value: '3', label: 'unknown'} ]
                                     },
                                     // multiselect
                                     {
                                         field: 'graduation',
-                                        filter: {
                                         type: 'MULTISELECT',
+                                        filter: {
                                         selectOptions: [ { value: 'university', label: 'university' }, { value: 'high school', label: 'high school' } ]
                                     },
                                     // examples for editing
@@ -420,8 +420,14 @@ def get_report_data(current):
         options = current.input['options']
         query_params = {}
         for f, qp in options.items():
-            if alan_filter_type_map[f] == "INPUT-CONTAINS":
-                query_params[f + "__contains"] = qp['value']
+            if alan_filter_type_map[f] == "INPUT":
+                # condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
+                if qp['condition'] == "CONTAINS":
+                    query_params[f + "__contains"] = qp['value']
+                elif qp['condition'] == "STARTS_WITH":
+                    query_params[f + "__startswith"] = qp['value']
+                else:
+                    query_params[f + "__endswith"] = qp['value']
             elif alan_filter_type_map[f] == "SELECT":
                 query_params[f] = qp['value']
             elif alan_filter_type_map[f] == "MULTISELECT":
@@ -433,17 +439,13 @@ def get_report_data(current):
                 date_format = "%d.%m.%Y"
                 start_raw = str(qp['start'])
                 start = datetime.strptime(start_raw, date_format)
-                starts = start_raw.split(".")
                 end_raw = str(qp['end'])
                 end = datetime.strptime(end_raw, date_format)
-                ends = end_raw.split(".")
                 query_params[f + "__range"] = [start, end]
             elif alan_filter_type_map[f] == "RANGE-INTEGER":
                 min = qp['min']
                 max = qp['max']
                 query_params[f + "__range"] = [int(min), int(max)]
-            elif alan_filter_type_map[f] == "INPUT-STARTS-WITH":
-                query_params[f + "__startswith"] = qp['value']
 
         result_set = Personel.objects.filter(**query_params)
 
