@@ -23,9 +23,11 @@ class TestCase(BaseTestCase):
         self.prepare_client("generic_reporter", user=user)
         res = self.client.post(model="GorevSuresiBitenPersonel")
 
+        simdi = datetime.date.today()
+        bitis_tarihi = simdi + datetime.timedelta(days=120)
         personeller = Personel.objects.filter(
-            gorev_suresi_bitis__lte=datetime.date(2016, 5, 24) + datetime.timedelta(days=120),
+            gorev_suresi_bitis__lte=bitis_tarihi,
             personel_turu=1
-        )
+        )  
 
         assert len(res.json["object"]["fields"]) == len(personeller)
