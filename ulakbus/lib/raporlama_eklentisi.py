@@ -204,6 +204,3 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     cache_data['time_related_fields'] = range_date_fields
 
     return cache_data
-
-
-
