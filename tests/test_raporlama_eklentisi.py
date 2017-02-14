@@ -9,7 +9,7 @@ from zengine.current import Current
 from zengine.lib.test_utils import BaseTestCase
 import datetime
 from pyoko.manage import FlushDB, LoadData
-from ulakbus.views.system import get_report_data
+from ulakbus.views.personel.raporlama_ui_grid_view import get_report_data
 
 
 class TestCase(BaseTestCase):

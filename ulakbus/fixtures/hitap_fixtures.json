@@ -1349,6 +1349,40 @@
       "en":"Bahce Bitkileri"
     }
   },
+  "kan_grubu": {
+    "1":{
+      "tr":"0Rh-",
+      "en":"0Rh-"
+    },
+    "2":{
+      "tr":"0Rh+",
+      "en":"0Rh+"
+    },
+    "3":{
+      "tr":"ARh-",
+      "en":"ARh-"
+    },
+    "4":{
+      "tr":"ARh+",
+      "en":"ARh+"
+    },
+    "5":{
+      "tr":"BRh-",
+      "en":"BRh-"
+    },
+    "6":{
+      "tr":"BRh+",
+      "en":"BRh+"
+    },
+    "7":{
+      "tr":"ABRh-",
+      "en":"ABRh-"
+    },
+    "8":{
+      "tr":"ABRh+",
+      "en":"ABRh+"
+    }
+  },
   "kidem_tazminat_odeme_durumu": {
     "0": {
       "tr": "HAYIR",

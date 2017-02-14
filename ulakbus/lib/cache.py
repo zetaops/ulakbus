@@ -53,7 +53,6 @@ class PersonelIstatistik(Cache):
         return personel_istatistik_bilgileri()
 
 
-
 class AkademikPerformans(Cache):
     """
 
