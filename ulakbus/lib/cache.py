@@ -28,7 +28,7 @@ class GuncelDonem(Cache):
     def __init__(self):
         super(GuncelDonem, self).__init__('guncel_donem')
 
-    def prepare_data(self):
+    def get_data_to_cache(self):
         """
         Cache'de güncel dönem datası yoksa, get_or_set() metodu kendi içinde bu metodu çağırarak datayı cache'e koyar.
         Sonra da döndürür.
@@ -48,7 +48,7 @@ class PersonelIstatistik(Cache):
     def __init__(self):
         super(PersonelIstatistik, self).__init__('personel_istatistik')
 
-    def prepare_data(self):
+    def get_data_to_cache(self):
         return personel_istatistik_bilgileri()
 
 
@@ -61,5 +61,5 @@ class AkademikPerformans(Cache):
     def __init__(self):
         super(AkademikPerformans, self).__init__('akademik_performans')
 
-    def prepare_data(self):
+    def get_data_to_cache(self):
         return akademik_performans_hesapla()
