@@ -9,7 +9,7 @@
 
 from pyoko.modelmeta import model_registry
 from pyoko.conf import settings
-from ulakbus.lib.cache import PersonelIstatistik
+from ulakbus.lib.cache import PersonelIstatistik, RaporlamaEklentisi
 
 from ulakbus.views.reports import ReporterRegistry
 from zengine.lib.decorators import view
@@ -17,6 +17,9 @@ from zengine.views.base import SysView
 from zengine.lib.translation import gettext as _
 from ulakbus.models import Personel, Ogrenci
 from zengine.views.menu import Menu
+
+from datetime import datetime
+import json
 
 
 class Search(SysView):
