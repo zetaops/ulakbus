@@ -568,8 +568,7 @@ class Atama(Model):
 
 class SaglikRaporu(Model):
     personel = Personel(_(u"Raporu Alan Personel"))
-    rapor_cesidi = field.Integer(_(u"Rapor Çeşidi"), choices='saglik_raporu_cesitleri',
-                                 required=True)
+    rapor_cesidi = field.Integer(_(u"Rapor Çeşidi"), required=True, choices='saglik_raporu_cesitleri')
     sure = field.Integer(_(u"Gün"), required=True)
     baslama_tarihi = field.Date(_(u"Rapor Başlanğıç Tarihi"), required=True)
     bitis_tarihi = field.Date(_(u"Raporlu Olduğu Son Gün"), required=True)
