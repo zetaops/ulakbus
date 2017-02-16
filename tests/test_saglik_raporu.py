@@ -7,7 +7,8 @@
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models import SaglikRaporu, Personel
 import time
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class TestCase(BaseTestCase):
 
@@ -58,10 +59,13 @@ class TestCase(BaseTestCase):
 
             if i == 0:
                 sure = 2
-                tek_hekim_saglik_raporlari = raporlar.filter(rapor_cesidi='Tek Hekim Raporu')
-                tek_hekim_toplam_gun_sayisi = reduce(
-                    lambda x, y: x + y,
-                    [rapor.sure for rapor in tek_hekim_saglik_raporlari], 0)
+                tek_hekim_saglik_raporlari = raporlar.filter(rapor_cesidi=1,
+                                                             baslama_tarihi__gte=
+                                                             datetime.now().date() -
+                                                             relativedelta(years=1))
+
+                tek_hekim_toplam_gun_sayisi = sum(
+                                        [rapor.sure for rapor in tek_hekim_saglik_raporlari])
 
                 self.client.post(form={"add": 1}, cmd='add_edit_form')
                 resp = self.client.post(form=rapor_form)
@@ -80,9 +84,8 @@ class TestCase(BaseTestCase):
             else:
                 sure = 30
                 tek_hekim_dogum_oncesi = raporlar.filter(
-                    rapor_cesidi='Tek Hekim Raporu Dogum Oncesi'
-                )
-                tek_hekim_dogum_oncesi_rapor_sayisi = tek_hekim_dogum_oncesi.count()
+                    rapor_cesidi=3,
+                    baslama_tarihi__gte=datetime.now().date() - relativedelta(years=1))
 
                 self.client.post(form={"add": 1}, cmd='add_edit_form')
                 resp = self.client.post(form=rapor_form)

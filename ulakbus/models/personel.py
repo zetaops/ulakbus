@@ -14,7 +14,7 @@ from pyoko.lib.utils import lazy_property
 
 from pyoko import Model, field
 from zengine.lib.translation import gettext_lazy as _, gettext
-from ulakbus.lib.personel import gorunen_kademe_hesapla, personel_rapor_cesitleri
+from ulakbus.lib.personel import gorunen_kademe_hesapla
 from .auth import Unit, User
 from ulakbus.settings import SICIL_PREFIX
 from .auth import AbstractRole
@@ -568,7 +568,7 @@ class Atama(Model):
 
 class SaglikRaporu(Model):
     personel = Personel(_(u"Raporu Alan Personel"))
-    rapor_cesidi = field.String(_(u"Rapor Çeşidi"), required=True)
+    rapor_cesidi = field.Integer(_(u"Rapor Çeşidi"), required=True, choices='saglik_raporu_cesitleri')
     sure = field.Integer(_(u"Gün"), required=True)
     baslama_tarihi = field.Date(_(u"Rapor Başlanğıç Tarihi"), required=True)
     bitis_tarihi = field.Date(_(u"Raporlu Olduğu Son Gün"), required=True)
@@ -583,13 +583,9 @@ class SaglikRaporu(Model):
         verbose_name_plural = _(u"Sağlık Raporları")
         list_fields = ['rapor_cesidi', 'sure', 'bitis_tarihi']
 
-    def pre_save(self):
-        rapor = dict(personel_rapor_cesitleri)[self.rapor_cesidi]
-        self.rapor_cesidi = rapor
-
     def __unicode__(self):
         return "%s %s - %s - %s" % (self.personel.ad, self.personel.soyad,
-                                    self.rapor_cesidi, self.bitis_tarihi)
+                                    self.get_rapor_cesidi_display(), self.bitis_tarihi)
 
 
 class Ceza(Model):

@@ -95,6 +95,14 @@
     "2": {
       "tr": "Heyet Raporu",
       "en": ""
+    },
+    "3": {
+      "tr": "Tek Hekim Raporu Doğum Öncesi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Tek Hekim Raporu Doğum Sonrası",
+      "en": ""
     }
   },
   "ceza_turleri": {
