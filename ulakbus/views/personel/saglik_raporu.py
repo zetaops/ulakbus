@@ -64,15 +64,12 @@ Bilgilerin bulunduğu raporu silmek istiyor musunuz?""") % {
     def add_edit_form(self):
         personel = Personel.objects.get(self.current.task_data['personel_id'])
 
-        saglik_raporu_cesitleri = catalog_data_manager.get_all("saglik_raporu_cesitleri")
+        cinsiyete_gore_rapor_cesitleri = sorted(
+            [(item['value'], item['name']) for item in catalog_data_manager.get_all("saglik_raporu_cesitleri")]
+        )
 
         if personel.cinsiyet == 1:
-            cinsiyete_gore_rapor_cesitleri = sorted([(item['value'], item['name'])for item in
-                                                    saglik_raporu_cesitleri if item['value'] == 1 or
-                                                    item['value'] == 2])
-        else:
-            cinsiyete_gore_rapor_cesitleri = sorted([(item['value'], item['name'])for item in
-                                                    saglik_raporu_cesitleri])
+            del cinsiyete_gore_rapor_cesitleri[-2:]
 
         _form = SaglikRaporuForm(self.object)
         _form.set_choices_of("rapor_cesidi", choices=cinsiyete_gore_rapor_cesitleri)
@@ -139,9 +136,12 @@ Bilgilerin bulunduğu raporu silmek istiyor musunuz?""") % {
 
     def rapor_kontrol(self, rapor_sayisi):
         """
-        Formda girilen gun ve darihleri kontrol eder.
+        Formda girilen gun ve tarihleri kontrol eder.
+
+
+
         Args:
-            rapor_sayisi: rapor cesidi tek hekim olan raporlarin sayisi
+            rapor_sayisi: rapor cesidi tek hekim olan raporlarin toplam gun sayisi
 
         Returns: str ("Gun negetif deger alamaz")
 
