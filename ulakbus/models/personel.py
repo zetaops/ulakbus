@@ -54,7 +54,7 @@ class Personel(Model):
     notlar = field.Text(_(u"Notlar"), required=False)
     engelli_durumu = field.String(_(u"Engellilik"))
     engel_grubu = field.String(_(u"Engel Grubu"))
-    engel_derecesi = field.String(_(u"Engel Derecesi"))
+    engel_derecesi = field.Integer(_(u"Engel Derecesi"), choices="personel_engellilik")
     engel_orani = field.Integer(_(u"Engellilik Oranı"))
     cuzdan_seri = field.String(_(u"Seri"))
     cuzdan_seri_no = field.String(_(u"Seri No"))
@@ -235,6 +235,13 @@ class Personel(Model):
     @property
     def kurum_sicil_no(self):
         return "%s-%s" % (SICIL_PREFIX, self.kurum_sicil_no_int)
+
+    class IstenAyrilma(ListNode):
+        gorevden_ayrilma_tarihi = field.Date(_(u"Görevden Ayrılma Tarihi"), index=True,
+                                             format="%d.%m.%Y")
+        gorevden_ayrilma_sebep = HitapSebep()
+
+        gorevden_ayrilma_not = field.Text(_(u"Notlar"), required=False)
 
     def __unicode__(self):
         return gettext(u"%(ad)s %(soyad)s") % {'ad': self.ad, 'soyad': self.soyad}
