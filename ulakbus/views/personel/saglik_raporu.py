@@ -9,8 +9,7 @@ from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.models.personel import Personel, SaglikRaporu
-from dateutil.rrule import WEEKLY, rrule
-from dateutil.relativedelta import relativedelta
+from dateutil.rrule import WEEKLY, DAILY, rrule
 from datetime import datetime
 from zengine.lib.catalog_data import catalog_data_manager
 
@@ -86,17 +85,29 @@ Bilgilerin bulunduğu raporu silmek istiyor musunuz?""") % {
 
         personel = Personel.objects.get(self.current.task_data['personel_id'])
 
+        yil = datetime.now().year
+
+        baslangic_yil = datetime(yil, 1, 1).date()
+        bitis_yil = datetime(yil, 12, 31).date()
+
         saglik_raporlari = SaglikRaporu.objects.filter(
                                 personel=personel,
                                 rapor_cesidi=1,
-                                baslama_tarihi__gte=datetime.now().date() - relativedelta(years=1))
+                                bitis_tarihi__gte=baslangic_yil, bitis_tarihi__lte=bitis_yil)
 
-        tek_hekim_rapor_sayisi = sum([rapor.sure for rapor in saglik_raporlari])
+        tek_hekim_raporlu_gun_sayisi = 0
+
+        for rapor in saglik_raporlari:
+            if rapor.baslama_tarihi < baslangic_yil:
+                gun_sayisi = rrule(DAILY, dtstart=baslangic_yil, until=rapor.bitis_tarihi).count()
+            else:
+                gun_sayisi = rapor.sure
+            tek_hekim_raporlu_gun_sayisi += gun_sayisi
 
         self.set_form_data_to_object()
         self.object.personel = personel
 
-        kontrol_msg = self.rapor_kontrol(tek_hekim_rapor_sayisi)
+        kontrol_msg = self.rapor_kontrol(tek_hekim_raporlu_gun_sayisi)
 
         if not kontrol_msg:
             self.object.save()
