@@ -239,7 +239,7 @@ class Unit(Model):
 
     """
     name = field.String(_(u"İsim"), index=True)
-    long_name = field.String(_(u"Uzun İsim"), index=True)
+    long_name = field.String(_(u"Tam İsim"), index=True)
     yoksis_no = field.Integer(_(u"Yoksis ID"), index=True)
     unit_type = field.String(_(u"Birim Tipi"), index=True)
     parent_unit_no = field.Integer(_(u"Üst Birim ID"), index=True)
