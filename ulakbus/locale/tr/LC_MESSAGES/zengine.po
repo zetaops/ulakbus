@@ -8,61 +8,62 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2017-02-16 16:25+0300\n"
-"PO-Revision-Date: 2016-09-01 13:35+0300\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2017-02-17 15:00+0300\n"
 "Language: tr\n"
 "Language-Team: tr <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
+"Last-Translator: \n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: ../../zengine/zengine/management_commands.py:568
 msgid "Checking migration and solr ..."
-msgstr ""
+msgstr "Migration ve solr kontrol ediliyor ..."
 
 #: ../../zengine/zengine/management_commands.py:573
 msgid "{0}Error not connected, open redis and rabbitmq{1}"
-msgstr ""
+msgstr "{0}Hata, Open Redis ve rabbitmq'ya bağlanılamadı.{1}"
 
 #: ../../zengine/zengine/management_commands.py:589
 msgid "{0}Redis is not working{1} "
-msgstr ""
+msgstr "{0}Redis çalışmıyor{1} "
 
 #: ../../zengine/zengine/management_commands.py:603
 msgid "{0}Riak is working{1}"
-msgstr ""
+msgstr "{0}Riak çalışıyor{1}"
 
 #: ../../zengine/zengine/management_commands.py:605
 #: ../../zengine/zengine/management_commands.py:607
 msgid "{0}Riak is not working{1}"
-msgstr ""
+msgstr "{0}Riak çalışmıyor{1}"
 
 #: ../../zengine/zengine/management_commands.py:623
 msgid "{0}RabbitMQ is working{1}"
-msgstr ""
+msgstr "{0}RabbitMQ çalışıyor{1}"
 
 #: ../../zengine/zengine/management_commands.py:625
 #: ../../zengine/zengine/management_commands.py:627
 msgid "{0}RabbitMQ is not working!{1}"
-msgstr ""
+msgstr "{0}RabbitMQ çalışmıyor!{1}"
 
 #: ../../zengine/zengine/management_commands.py:629
 msgid "{0}RabbitMQ username and password wrong{1}"
-msgstr ""
+msgstr "{0}RabbitMQ kullanıcı adı ve şifre hatalı{1}"
 
 #: ../../zengine/zengine/management_commands.py:641
 msgid "{0}File system encoding correct{1}"
-msgstr ""
+msgstr "{0}Dosya sistemi şifrelemesi doğru{1}"
 
 #: ../../zengine/zengine/management_commands.py:644
 msgid "{0}File system encoding wrong!!{1}"
-msgstr ""
+msgstr "{0}Dosya sistemi şifrelemesi hatalı{1}"
 
 #: ../../zengine/zengine/management_commands.py:653
 msgid "{0}{1} : {2}{3}"
-msgstr ""
+msgstr "{0}{1} : {2}{3}"
 
 #: ../../zengine/zengine/models/auth.py:24
 #: ../../zengine/zengine/models/auth.py:59
@@ -127,7 +128,7 @@ msgstr "Tercih Edilen Sayı Formatı"
 
 #: ../../zengine/zengine/models/auth.py:99
 msgid "Last Login Role Key"
-msgstr ""
+msgstr "Son Giriş Yapılan Rol Anahtarı"
 
 #: ../../zengine/zengine/models/auth.py:105
 msgid "User"
@@ -184,7 +185,7 @@ msgstr "Menü Kategori"
 
 #: ../../zengine/zengine/models/workflow_manager.py:168
 msgid "Lane order"
-msgstr "Lane sırası"
+msgstr "Lane order"
 
 #: ../../zengine/zengine/models/workflow_manager.py:169
 msgid "Actor name"
@@ -192,7 +193,7 @@ msgstr "Kullanıcı ismi"
 
 #: ../../zengine/zengine/models/workflow_manager.py:170
 msgid "Actor specific name of WF"
-msgstr "Aktöre özel iş akışı adı"
+msgstr "Kullanıcıya özel iş akışı adı"
 
 #: ../../zengine/zengine/models/workflow_manager.py:171
 msgid "Lane relations"
@@ -203,9 +204,8 @@ msgid "Possible owners"
 msgstr "Olası sahipler"
 
 #: ../../zengine/zengine/models/workflow_manager.py:173
-#, fuzzy
 msgid "Permissions"
-msgstr "İzin %s"
+msgstr "İzinler"
 
 #: ../../zengine/zengine/models/workflow_manager.py:209
 msgid "No repeat"
@@ -245,7 +245,7 @@ msgstr "1 hafta önce, günlük"
 
 #: ../../zengine/zengine/models/workflow_manager.py:221
 msgid "Day before start time"
-msgstr "Başalamadan önceki gün"
+msgstr "Başlamadan önceki gün"
 
 #: ../../zengine/zengine/models/workflow_manager.py:225
 msgid "Selected unit"
@@ -257,7 +257,7 @@ msgstr "Seçili birim ve tüm alt birimleri"
 
 #: ../../zengine/zengine/models/workflow_manager.py:262
 msgid "Create tasks now!"
-msgstr "Şimdi görev oluştur"
+msgstr "Şimdi görev oluştur!"
 
 #: ../../zengine/zengine/models/workflow_manager.py:264
 msgid "Name of task"
@@ -265,11 +265,11 @@ msgstr "Görev İsmi"
 
 #: ../../zengine/zengine/models/workflow_manager.py:268
 msgid "Get roles from"
-msgstr "Rolleri getir"
+msgstr "Rolleri şuradan getir"
 
 #: ../../zengine/zengine/models/workflow_manager.py:269
 msgid "Role query dict"
-msgstr "Role arama sorgusu"
+msgstr "Rol arama sorgusu"
 
 #: ../../zengine/zengine/models/workflow_manager.py:270
 msgid "Object query dict"
@@ -300,7 +300,7 @@ msgstr "Bitiş zamanı"
 
 #: ../../zengine/zengine/models/workflow_manager.py:275
 msgid "Repeating period"
-msgstr "Tekrarlama"
+msgstr "Tekrarlama Süresi"
 
 #: ../../zengine/zengine/models/workflow_manager.py:276
 msgid "Notification density"
@@ -364,7 +364,6 @@ msgid "In Progress"
 msgstr "Devam Etmekte"
 
 #: ../../zengine/zengine/models/workflow_manager.py:627
-#, fuzzy
 msgid "Finished"
 msgstr "Bitti"
 
@@ -386,9 +385,8 @@ msgid "Choice"
 msgstr "Seçim"
 
 #: ../../zengine/zengine/views/channel_management.py:31
-#, fuzzy
 msgid "Subscriber Name"
-msgstr "Kullanıcı Adı"
+msgstr "Abone Adı"
 
 #: ../../zengine/zengine/views/channel_management.py:41
 msgid "Channel Name"
@@ -405,12 +403,10 @@ msgid ""
 "you should choose just one channel to split."
 msgstr ""
 "Lütfen işlem yapmak istediğiniz kanalları seçiniz.\n"
-"Birleştirme işlemi için en az bir kanal ayırma işlemi için sadece bir "
-"kanal\n"
+"Birleştirme işlemi için en az bir kanal ayırma işlemi için sadece bir kanal\n"
 "seçilmelidir."
 
 #: ../../zengine/zengine/views/channel_management.py:69
-#, fuzzy
 msgid "Successful Operation"
 msgstr "Başarılı İşlem"
 
@@ -470,20 +466,19 @@ msgstr "Seçilen kanallar(%s) '%s' kanalıyla başarılı bir şekilde birleşti
 #: ../../zengine/zengine/views/channel_management.py:238
 #, python-format
 msgid ""
-"Chosen subscribers and messages of them migrated from '%s' channel to "
-"'%s' channel successfully."
+"Chosen subscribers and messages of them migrated from '%s' channel to '%s' "
+"channel successfully."
 msgstr ""
 "Seçilen aboneler ve mesajları '%s' kanalından '%s' kanalına başarılı bir "
 "biçimde taşındı."
 
 #: ../../zengine/zengine/views/channel_management.py:257
 msgid "Incorrect Operation"
-msgstr "Yanlış İşlem"
+msgstr "Hatalı İşlem"
 
 #: ../../zengine/zengine/views/channel_management.py:306
 msgid ""
-"You should choose at least two channel to merge operation at a new "
-"channel."
+"You should choose at least two channel to merge operation at a new channel."
 msgstr "Yeni bir kanalda birleştirme işlemi için en az iki kanal seçmelisiniz."
 
 #: ../../zengine/zengine/views/channel_management.py:309
@@ -500,23 +495,19 @@ msgstr "Kanal ayırma işlemi için bir kanal seçmelisiniz."
 msgid "Add"
 msgstr "Ekle"
 
-#: ../../zengine/zengine/views/crud.py:47
-#: ../../zengine/zengine/views/crud.py:255
+#: ../../zengine/zengine/views/crud.py:47 ../../zengine/zengine/views/crud.py:255
 msgid "Save"
 msgstr "Kaydet"
 
-#: ../../zengine/zengine/views/crud.py:48
-#: ../../zengine/zengine/views/crud.py:256
+#: ../../zengine/zengine/views/crud.py:48 ../../zengine/zengine/views/crud.py:256
 msgid "Save and List"
 msgstr "Kaydet ve Listele"
 
-#: ../../zengine/zengine/views/crud.py:49
-#: ../../zengine/zengine/views/crud.py:258
+#: ../../zengine/zengine/views/crud.py:49 ../../zengine/zengine/views/crud.py:258
 msgid "Save as New"
 msgstr "Yeni Olarak Kaydet"
 
-#: ../../zengine/zengine/views/crud.py:51
-#: ../../zengine/zengine/views/crud.py:260
+#: ../../zengine/zengine/views/crud.py:51 ../../zengine/zengine/views/crud.py:260
 msgid "Save as New and List"
 msgstr "Yeni Olarak Kaydet ve Listele"
 
@@ -605,8 +596,7 @@ msgstr "İş akışı başarıyla başkasına atandı."
 
 #: ../../zengine/zengine/views/task_manager_actions.py:110
 msgid ""
-"This workflow does not belong to you, you cannot assign it to someone "
-"else."
+"This workflow does not belong to you, you cannot assign it to someone else."
 msgstr "Bu iş akışı size ait değil, başkasına atayamazsınız."
 
 #: ../../zengine/zengine/views/task_manager_actions.py:157
@@ -624,4 +614,3 @@ msgstr "İş akışından ayrıldın."
 #: ../../zengine/zengine/views/task_manager_actions.py:198
 msgid "Unfortunately, this workflow does not belong to you or is already idle."
 msgstr "Ne yazık ki, bu iş akışı size ait değil veya zaten boşta."
-
