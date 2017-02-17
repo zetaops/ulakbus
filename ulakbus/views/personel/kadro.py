@@ -504,6 +504,7 @@ class TerfiListe(CrudView):
                 )
 
         self.form_out(_form)
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def terfi_duzenle_kaydet(self):
         for p in self.current.input['form']['Personel']:
