@@ -204,7 +204,7 @@ def get_report_data(current):
                     }
     """
 
-    if len(current.input) <= 1:
+    if not ('selectors' in current.input and 'options' in current.input):
         cache_obj = {}
         cache_obj['gridOptions'] = RaporlamaEklentisi().get_or_set()['gridOptions']
         current.output = cache_obj
@@ -213,6 +213,8 @@ def get_report_data(current):
         alan_filter_type_map = raporlama_cache['alan_filter_type_map']
         time_related_fields = raporlama_cache['time_related_fields']
         options = current.input['options']
+        p = current.input['page'] - 1 if 'page' in current.input else 0
+        page = raporlama_cache['gridOptions']['paginationPageSize']
         query_params = {}
         for f, qp in options.items():
             if alan_filter_type_map[f] == "INPUT":
@@ -242,7 +244,12 @@ def get_report_data(current):
                 max = qp['max']
                 query_params[f + "__range"] = [int(min), int(max)]
 
-        result_set = Personel.objects.filter(**query_params)
+        result_size = Personel.objects.filter(**query_params).count()
+        if result_size >= page*p + page:
+            result_set = Personel.objects.set_params(start=page*p, rows=page).filter(**query_params)
+        else:
+            rows = result_size - page*p
+            result_set = result_set = Personel.objects.set_params(start=page*p, rows=rows).filter(**query_params)
 
         selectors = current.input['selectors']
         active_selectors = []
@@ -256,7 +263,7 @@ def get_report_data(current):
             p_ = p.clean_value()
             for active_selector in active_selectors:
                 if active_selector in time_related_fields:
-                    date_f = "%Y-%d-%mT%H:%M:%SZ"
+                    date_f = "%Y-%m-%dT%H:%M:%SZ"
                     date_str = p_[active_selector]
                     d = datetime.strptime(date_str, date_f).date()
                     pd[active_selector] = d.strftime(date_format)
@@ -264,7 +271,8 @@ def get_report_data(current):
                     pd[active_selector] = p_[active_selector]
             initial_data.append(pd)
 
-        current.output['initialData'] = initial_data
+        current.output['totalItems'] = result_size
+        current.output['data'] = initial_data
 
 
 

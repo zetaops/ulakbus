@@ -178,7 +178,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
         for d in default_alanlar:
             per[d] = pp[d]
         initial_data.append(per)
-    grid_options['initialData'] = initial_data
+    grid_options['data'] = initial_data
 
     """
     useExternalSorting: true,  //if need sorting from backend side
@@ -195,10 +195,12 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     grid_options['enableFiltering'] = True
     grid_options['toggleFiltering'] = True
     grid_options['useExternalFiltering'] = True
-    grid_options['paginationPageSize'] = True
+    grid_options['paginationPageSize'] = 25
     grid_options['useExternalPagination'] = True
     grid_options['enableAdding'] = True
     grid_options['enableRemoving'] = True
+    grid_options['page'] = 1
+    grid_options['totalItems'] = tum_personel.count()
     cache_data['gridOptions'] = grid_options
     cache_data['alan_filter_type_map'] = alan_filter_type_map
     cache_data['time_related_fields'] = range_date_fields

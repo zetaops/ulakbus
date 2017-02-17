@@ -3,7 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
+from ulakbus.lib.cache import RaporlamaEklentisi
 from ulakbus.models import Personel
 from zengine.current import Current
 from zengine.lib.test_utils import BaseTestCase
@@ -15,25 +15,14 @@ from ulakbus.views.personel.raporlama_ui_grid_view import get_report_data
 class TestCase(BaseTestCase):
     def test_rapor_query(self):
 
-        FlushDB(model='Personel').run()
-
-        Personel(ad="İzzet", soyad="Altınmeşe", cinsiyet=1,
-                 unvan=42648, dogum_tarihi=datetime.date(1950, 1, 1)).blocking_save()
-
-        Personel(ad="Belkıs", soyad="Akkale", cinsiyet=2,
-                 unvan=3975, dogum_tarihi=datetime.date(1960, 1, 1)).blocking_save()
-
-        Personel(ad="Muazzez", soyad="Abacı", cinsiyet=2,
-                 unvan=42648, dogum_tarihi=datetime.date(1947, 1, 1)).blocking_save()
-
-        Personel(ad="Müslüm", soyad="Gürses", cinsiyet=1,
-                 unvan=3975, dogum_tarihi=datetime.date(1954, 1, 1)).blocking_save()
-
-        Personel(ad="Hakkı", soyad="Bulut", cinsiyet=1,
-                 unvan=42647, dogum_tarihi=datetime.date(1950, 1, 1)).blocking_save()
+        raporlama_cache = RaporlamaEklentisi().get_or_set()
+        page = raporlama_cache['gridOptions']['paginationPageSize']
+        p = 1
 
         a = "01.01.1950"
         b = "01.01.1980"
+        a_= datetime.date(1950, 01, 01)
+        b_= datetime.date(1980, 01, 01)
 
         selectors = [{"name": "ad", "checked": True}, {"name": "soyad", "checked": True},
                      {"name": "cinsiyet", "checked": True}, {"name": "dogum_tarihi", "checked": True},
@@ -48,13 +37,21 @@ class TestCase(BaseTestCase):
         query1["view"] = "_zops_get_report_data"
         query1["selectors"] = selectors
         query1["options"] = options1
+        query1["page"] = p
 
         current = Current()
         current.input = query1
 
         get_report_data(current)
 
-        assert len(current.output["initialData"]) == 1
+        db_cnt = len(Personel.objects.filter(ad__startswith="M", cinsiyet=1,
+                                                                          unvan__in=[3975, 42647],
+                                                                          dogum_tarihi__range=[a_, b_]))
+
+        if db_cnt > page:
+            assert len(current.output['data']) == page
+        else:
+            assert len(current.output['data']) == db_cnt
 
         query2 = {}
         options2 = {}
@@ -65,12 +62,20 @@ class TestCase(BaseTestCase):
         query2["view"] = "_zops_get_report_data"
         query2["selectors"] = selectors
         query2["options"] = options2
+        query2["page"] = p
 
         current.input = query2
 
         get_report_data(current)
 
-        assert len(current.output["initialData"]) == 0
+        db_cnt = len(Personel.objects.filter(ad__startswith="Ah", cinsiyet=2,
+                                                                          unvan__in=[1, 2],
+                                                                          dogum_tarihi__range=[a_, b_]))
+
+        if db_cnt > page:
+            assert len(current.output['data']) == page
+        else:
+            assert len(current.output['data']) == db_cnt
 
         query3 = {}
         options3 = {}
@@ -79,12 +84,18 @@ class TestCase(BaseTestCase):
         query3["view"] = "_zops_get_report_data"
         query3["selectors"] = selectors
         query3["options"] = options3
+        query3["page"] = p
 
         current.input = query3
 
         get_report_data(current)
 
-        assert len(current.output["initialData"]) == 1
+        db_cnt = len(Personel.objects.filter(cinsiyet=2, dogum_tarihi__range=[a_, b_]))
+
+        if db_cnt > page:
+            assert len(current.output['data']) == page
+        else:
+            assert len(current.output['data']) == db_cnt
 
         query4 = {}
         options4 = {}
@@ -94,16 +105,19 @@ class TestCase(BaseTestCase):
         query4["view"] = "_zops_get_report_data"
         query4["selectors"] = selectors
         query4["options"] = options4
+        query4["page"] = p
 
         current.input = query4
 
         get_report_data(current)
 
-        assert len(current.output["initialData"]) == 2
+        db_cnt = len(Personel.objects.filter(cinsiyet=1, unvan__in=[3975, 42647],
+                                                                          dogum_tarihi__range=[a_, b_]))
 
-        FlushDB(model='Personel').run()
-
-        LoadData(path="fixtures/personel.csv", update=True).run()
+        if db_cnt > page:
+            assert len(current.output['data']) == page
+        else:
+            assert len(current.output['data']) == db_cnt
 
 
 
