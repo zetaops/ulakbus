@@ -69,7 +69,7 @@ class YeniPersonelEkle(CrudView):
 
     def mernis_adres_bilgileri_getir(self, tckn=None):
         if not tckn:
-            tckn = self.current.input['form']['tckn']
+            tckn = self.current.task_data['tckn']
         # Adres bilgileri mernis servisi üzerinden çekilecek
         from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
         mernis_bilgileri = KPSAdresBilgileriGetir(tckn=str(tckn))

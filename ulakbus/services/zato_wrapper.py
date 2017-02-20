@@ -889,6 +889,7 @@ class KPSAdresBilgileriGetir(TcknService):
             response_data (dict): reformatted data compatible with our data models
 
         """
+        response_data = response_data['result']
         ret = {}
         try:
             kb = response_data['KimlikNoileKisiAdresBilgileri']['YerlesimYeriAdresi']
@@ -929,12 +930,10 @@ class SinavProgramiOlustur(ZatoService):
     pass
 
 
-class EPostaYolla(ZatoService):
-    # def __init__(self, kayit):
-    #     super(ZatoService, self).__init__()
-    #
-    #     self.payload = json.dumps(service_payload)
-    pass
+class EPostaYolla(HitapService):
+
+    service_class_path = 'ulakbus.services.common.e_posta_yollama'
+    service_class_name = 'EPostaYolla'
 
 
 def get_payload_object(hitap_model, kayit):

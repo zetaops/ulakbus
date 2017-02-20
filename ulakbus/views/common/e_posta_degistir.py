@@ -7,7 +7,7 @@
 from ulakbus.lib.views import UlakbusView
 from zengine.forms import JsonForm
 from zengine.forms import fields
-from ulakbus.services.zato_wrapper import E_PostaYolla
+from ulakbus.services.zato_wrapper import EPostaYolla
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.common import aktivasyon_kodu_uret
 from ulakbus.lib.common import EPostaDogrulama
@@ -77,7 +77,7 @@ class EPostaDegistir(UlakbusView):
 
         """
 
-        posta_gonder = E_PostaYolla(service_payload={
+        posta_gonder = EPostaYolla(kayit={
             "default_e_mail": MAIL_ADDRESS,
             "e_posta": self.current.task_data["e_posta"],
             "message": self.current.task_data["message"],
