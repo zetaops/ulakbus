@@ -772,4 +772,4 @@ class KanunlaVerilenTerfi(CrudView):
         personel.emekli_muktesebat_derece = self.current.input["form"]["em_derece"]
         personel.emekli_muktesebat_kademe = self.current.input["form"]["em_kademe"]
         personel.emekli_muktesebat_ekgosterge = self.current.input["form"]["em_ekgosterge"]
-        personel.save()git
+        personel.save()
