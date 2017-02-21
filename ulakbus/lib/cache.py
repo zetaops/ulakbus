@@ -77,3 +77,13 @@ class RaporlamaEklentisi(Cache):
 
     def get_data_to_cache(self):
         return raporlama_ekrani_secim_menulerini_hazirla()
+
+
+class ChoicesFromModel(Cache):
+    """
+
+    """
+    PREFIX = "CFM"
+
+    def __init__(self, key):
+        super(ChoicesFromModel, self).__init__(key, serialize=True)
