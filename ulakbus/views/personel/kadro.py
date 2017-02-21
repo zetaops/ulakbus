@@ -732,6 +732,14 @@ class KanunlaVerilenTerfiForm(JsonForm):
     kaydet = fields.Button(_(u'Kaydet'), cmd="kaydet", style="btn-success")
     iptal = fields.Button(_(u'İptal'), cmd="iptal")
 
+class HizmetCetveliForm(JsonForm):
+    class Meta:
+        title = _(u'Kanunla Verilen Terfi Hizmet Cetveli Girişi')
+
+    baslama_tarihi = fields.Date(_(u'Başlama Tarihi'), required=False)
+    bitis_tarihi = fields.Date(_(u'Bitis Tarihi'), required=False)
+    kurum_onay_tarihi = fields.Date(_(u'Kurum Onay Tarihi'), required=False)
+
 class KanunlaVerilenTerfi(CrudView):
     """
         Kanunla Verilen Terfi İş Akışı
