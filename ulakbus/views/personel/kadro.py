@@ -65,7 +65,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
-from ulakbus.models import Personel
+from ulakbus.models import Personel, HitapSebep
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
 import datetime
@@ -681,3 +681,59 @@ class GorevSuresiUzat(CrudView):
         personel.gorev_suresi_baslama = datetime.date.today()
         personel.gorev_suresi_bitis = self.current.input["form"]["gorev_suresi_bitis"]
         personel.save()
+
+class KanunlaVerilenTerfiForm(JsonForm):
+    """ Kanunla verilen terfi işlemleri için form olarak kullanılmak üzere oluşturuldu """
+
+    class Meta:
+        title = _(u'Kanunla Verilen Terfi İşlemi')
+        help_text = _(u'Personelin tüm kademe ve derece bilgilerinin doğru olduğundan emin olunuz')
+
+        grouping = [
+            {
+                "layout" : "6",
+                "groups" : [
+                    {
+                        "group_title" : _(u'Görev Aylığı'),
+                        "items" : [
+                            'ga_derece', 'ga_kademe'
+                        ],
+                        "collapse" : True
+                    }
+                ]
+            },
+            {
+                "layout" : "6",
+                "groups" : [
+                    {
+                        "groups_title" : _(u'Kazanılmış Hak'),
+                        "items" : [
+                            'kh_derece', 'kh_kademe'
+                        ],
+                        "collapse" : True
+                    }
+                ]
+            },
+            {
+                "layout" : "6",
+                "groups" : [
+                    {
+                        "groups_title" : _(u'Emekli Müktesebi'),
+                        "items" : [
+                            'em_derece', 'em_kademe'
+                        ],
+                        "collapse" : True
+                    }
+                ]
+            }
+        ]
+
+    terfi_sebep = HitapSebep()
+    ga_derece = fields.Integer(_(u'Derece'))
+    ga_kademe = fields.Integer(_(u'Kademe'))
+    kh_derece = fields.Integer(_(u'Derece'))
+    kh_kademe = fields.Integer(_(u'Kademe'))
+    em_derece = fields.Integer(_(u'Derece'))
+    em_kademe = fields.Integer(_(u'Kademe'))
+    kaydet = fields.Button(_(u'Kaydet'), cmd="kaydet", style="btn-success")
+    iptal = fields.Button(_(u'İptal'), cmd="iptal")
