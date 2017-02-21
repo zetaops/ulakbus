@@ -756,3 +756,20 @@ class KanunlaVerilenTerfi(CrudView):
         _form.em_ekgosterge = fields.Integer(_(u'Ek Gösterge'), default=personel.emekli_muktesebi_ekgosterge)
 
         self.form_out(_form)
+
+    def terfi_kaydet(self):
+        """
+            Personel İşleri Dairesinden yetkili bir personelin girdiği terfi bilgilerinin
+            veritabanına kaydedildiği metoddur. Yapılan terfi işleminin hitap kaydıda burada yapılmaktadır
+        """
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+        personel.gorev_ayligi_derece = self.current.input["form"]["ga_derece"]
+        personel.gorev_ayligi_kademe = self.current.input["form"]["ga_kademe"]
+        personel.gorev_ayligi_ekgosterge = self.current.input["form"]["ga_ekgosterge"]
+        personel.kazanilmis_hak_derece = self.current.input["form"]["kh_derece"]
+        personel.kazanilmis_hak_kademe = self.current.input["form"]["kh_kademe"]
+        personel.kazanilmis_hak_ekgosterge = self.current.input["form"]["kh_ekgosterge"]
+        personel.emekli_muktesebat_derece = self.current.input["form"]["em_derece"]
+        personel.emekli_muktesebat_kademe = self.current.input["form"]["em_kademe"]
+        personel.emekli_muktesebat_ekgosterge = self.current.input["form"]["em_ekgosterge"]
+        personel.save()git
