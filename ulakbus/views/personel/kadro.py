@@ -696,7 +696,7 @@ class KanunlaVerilenTerfiForm(JsonForm):
                     {
                         "group_title" : _(u'Görev Aylığı'),
                         "items" : [
-                            'ga_derece', 'ga_kademe'
+                            'ga_derece', 'ga_kademe', 'ga_ekgosterge'
                         ],
                         "collapse" : True
                     }
@@ -708,7 +708,7 @@ class KanunlaVerilenTerfiForm(JsonForm):
                     {
                         "groups_title" : _(u'Kazanılmış Hak'),
                         "items" : [
-                            'kh_derece', 'kh_kademe'
+                            'kh_derece', 'kh_kademe', 'kh_ekgosterge'
                         ],
                         "collapse" : True
                     }
@@ -720,7 +720,7 @@ class KanunlaVerilenTerfiForm(JsonForm):
                     {
                         "groups_title" : _(u'Emekli Müktesebi'),
                         "items" : [
-                            'em_derece', 'em_kademe'
+                            'em_derece', 'em_kademe', 'em_ekgosterge'
                         ],
                         "collapse" : True
                     }
@@ -729,11 +729,30 @@ class KanunlaVerilenTerfiForm(JsonForm):
         ]
 
     terfi_sebep = HitapSebep()
-    ga_derece = fields.Integer(_(u'Derece'))
-    ga_kademe = fields.Integer(_(u'Kademe'))
-    kh_derece = fields.Integer(_(u'Derece'))
-    kh_kademe = fields.Integer(_(u'Kademe'))
-    em_derece = fields.Integer(_(u'Derece'))
-    em_kademe = fields.Integer(_(u'Kademe'))
     kaydet = fields.Button(_(u'Kaydet'), cmd="kaydet", style="btn-success")
     iptal = fields.Button(_(u'İptal'), cmd="iptal")
+
+class KanunlaVerilenTerfi(CrudView):
+    """
+        Kanunla Verilen Terfi İş Akışı
+        Burada normal terfideki gibi terfi tıkanmaları yoktur. Bir kanuna istinaden personelin terfisi yapılır.
+        Yapılan her bir terfi işlemi bir hitap koduyla ilişkilendirilir.
+    """
+
+    def terfi_form(self):
+        """ Kanunla verilen terfi işlem formunu return eden metoddur. """
+        self.current.task_data["personel_id"] = self.current.input["id"]
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+
+        _form = KanunlaVerilenTerfiForm(current=self.current)
+        _form.ga_derece = fields.Integer(_(u'Derece'), default=personel.gorev_ayligi_derece)
+        _form.ga_kademe = fields.Integer(_(u'Kademe'), default=personel.gorev_ayligi_kademe)
+        _form.ga_ekgosterge = fields.Integer(_(u'Ek Gösterge'), default=personel.ga_ekgosterge)
+        _form.kh_derece = fields.Integer(_(u'Derece'), default=personel.kazanilmis_hak_derece)
+        _form.kh_kademe = fields.Integer(_(u'Kademe'), default=personel.kazanilmis_hak_kademe)
+        _form.kh_ekgosterge = fields.Integer(_(u'Ek Gösterge'), default=personel.kazanilmis_hak_ekgosterge)
+        _form.em_derece = fields.Integer(_(u'Derece'), default=personel.emekli_muktesebi_derece)
+        _form.em_kademe = fields.Integer(_(u'Kademe'), default=personel.emekli_muktesebi_kademe)
+        _form.em_ekgosterge = fields.Integer(_(u'Ek Gösterge'), default=personel.emekli_muktesebi_ekgosterge)
+
+        self.form_out(_form)
