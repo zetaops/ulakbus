@@ -270,19 +270,21 @@ class DeployZatoServices(Command):
     @staticmethod
     def create_channel_and_service_object(service, path):
         from ulakbus.models.zato import ZatoServiceChannel
-        from pyoko.lib.utils import un_camel
+
+        service_name = service.get_name()
 
         create_channel = ZatoServiceChannel()
         create_channel.cluster_id = 1
-        create_channel.service_name = service.get_name()
-        create_channel.channel_name = service.get_name() + "-channel"
-        create_channel.channel_url_path = '/%s/%s' % ('/'.join(path.split('/')[:-1]),
-                                                      un_camel(service.__name__, dash='-'))
+        create_channel.service_name = service_name
+        create_channel.channel_name = service_name + "-channel"
+        create_channel.channel_url_path = '/%s/%s' % ('/'.join(path.split('/')[:-1]), service_name)
         create_channel.channel_connection = "channel"
         create_channel.channel_data_format = "json"
         create_channel.channel_is_internal = False
         create_channel.channel_is_active = True
         create_channel.channel_transport = "plain_http"
+        create_channel.class_name = service.__name__
+        create_channel.module_path = '.'.join(path.rsplit('.')[0].split('/'))
         create_channel.save()
 
     def create_service_file_object(self, path):

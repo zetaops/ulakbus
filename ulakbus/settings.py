@@ -202,7 +202,7 @@ AUTO_IMPORT_MODULES.extend([
     'ulakbus.views.personel.raporlama_ui_grid_view'
 ])
 
-ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:44333')
+ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 
 ENABLE_SIMPLE_CRUD_MENU = False
 

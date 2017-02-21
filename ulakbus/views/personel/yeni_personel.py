@@ -13,6 +13,8 @@ from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel
+from ulakbus.models.zato import ZatoServiceChannel
+from ulakbus.services.zato_wrapper import TcknService
 
 """
 ``button`` nesnelerinin stillendirilmesi için bu nesnelere ``style`` anahtarı ile css class'ları
@@ -49,16 +51,16 @@ class YeniPersonelEkle(CrudView):
             self.current.task_data['mernis_tamam'] = False
             self.current.task_data['hata_msg'] = _(u"Personel Daha Önce Kaydedilmiş")
         except ObjectDoesNotExist:
-            from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir, \
-                MernisCuzdanBilgileriGetir
-
             # Kimlik bilgileri mernis servisi üzerinden çekilecek
-            mernis_bilgileri = MernisKimlikBilgileriGetir(tckn=str(tckn))
+            service_name = 'kisi-sorgula-tc-kimlik-no'
+            mernis_bilgileri = TcknService(service_name=service_name, payload=str(tckn))
             response = mernis_bilgileri.zato_request()
             self.current.task_data['mernis_tamam'] = True
             self.current.task_data['kimlik_bilgileri'] = response
+
             # Cüzdan bilgileri mernis servisi üzerinden çekilecek
-            mernis_bilgileri = MernisCuzdanBilgileriGetir(tckn=str(tckn))
+            service_name = 'cuzdan-sorgula-tc-kimlik-no'
+            mernis_bilgileri = TcknService(service_name=service_name, payload=str(tckn))
             response = mernis_bilgileri.zato_request()
             self.current.task_data['cuzdan_tamam'] = True
             self.current.task_data['cuzdan_bilgileri'] = response
@@ -71,8 +73,8 @@ class YeniPersonelEkle(CrudView):
         if not tckn:
             tckn = self.current.task_data['tckn']
         # Adres bilgileri mernis servisi üzerinden çekilecek
-        from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-        mernis_bilgileri = KPSAdresBilgileriGetir(tckn=str(tckn))
+        service_name = 'adres-sorgula'
+        mernis_bilgileri = TcknService(service_name=service_name, payload=str(tckn))
         response = mernis_bilgileri.zato_request()
 
         self.current.task_data['adres_tamam'] = True

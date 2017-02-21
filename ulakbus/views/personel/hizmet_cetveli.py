@@ -9,14 +9,13 @@
 #
 # Personele ait hizmet kayıtlarının gösterilmesini ve yazdırılmasını içeren WF
 from ulakbus.models.personel import Personel
-from ulakbus.views.personel.crud_hitap import zato_service_selector
 from ulakbus.views.reports.base import Reporter
 from zengine.forms import fields
 from ulakbus.models.hitap.hitap import HizmetKayitlari
 from collections import OrderedDict
 import datetime
-
-from zengine.views.crud import view_method
+from ulakbus.services.zato_wrapper import TcknService
+from ulakbus.models.zato import ZatoServiceChannel
 
 
 class ReportWithSync(Reporter.ReportForm):
@@ -72,8 +71,8 @@ class HizmetCetveli(Reporter):
         HizmetKayıtları için Hitap sync fonksiyonunu çalıştırır
         :return:
         """
-        hitap_service = zato_service_selector(HizmetKayitlari, 'sync')
-        hs = hitap_service(tckn=str(self.current.task_data['personel_tckn']))
+        hs = TcknService(payload=str(self.current.task_data['personel_tckn']),
+                         service_name='hizmet-cetveli-sync')
         hs.zato_request()
 
     def clear_cmd(self):

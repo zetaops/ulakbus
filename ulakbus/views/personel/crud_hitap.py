@@ -12,35 +12,9 @@ from zengine.views.crud import CrudView, view_method, list_query
 from zengine.lib.translation import gettext_lazy
 from ulakbus.models.personel import Personel
 from zengine import signals
-
-
-def zato_service_selector(model, action):
-    """
-    Model ve actionlara uygun Hitap Servislerini import eder.
-
-    Args:
-        model (class): model class object
-        action (str): model uzerinde yapilacak eylem, sil, ekle, guncelle etc..
-
-    Returns:
-        hitap_service (class): Zato wrapperdan modulunden kritere uygun isi yapan class
-
-    """
-
-    suffix = {"add": "Ekle",
-              "update": "Guncelle",
-              "delete": "Sil",
-              "get": "Getir",
-              "sync": "SenkronizeEt"}[action]
-
-    prefix = model.Meta.hitap_service_prefix
-    service_class_name = prefix + suffix
-
-    hitap_service = getattr(
-        __import__('ulakbus.services.zato_wrapper', fromlist=[service_class_name]),
-        service_class_name)
-
-    return hitap_service
+from ulakbus.models.zato import ZatoServiceChannel
+from ulakbus.services.zato_wrapper import TcknService, HitapService
+from pyoko.lib.utils import un_camel
 
 
 class ListFormHitap(JsonForm):
@@ -103,9 +77,10 @@ class CrudHitap(CrudView):
         manuel olarak calistirir.
 
         """
-        hitap_service = zato_service_selector(self.model_class, 'sync')
-        hs = hitap_service(tckn=str(self.current.task_data['personel_tckn']))
-        hs.zato_request()
+        service_name = un_camel(self.model_class.__name__, dash='-') + '-sync'
+        service = TcknService(service_name=service_name,
+                              payload=str(self.current.task_data['personel_tckn']))
+        service.zato_request()
 
     @view_method
     def save(self):
@@ -120,19 +95,14 @@ class CrudHitap(CrudView):
 
         self.set_form_data_to_object()
         obj_is_new = not self.object.is_in_db()
-        action, self.object.sync = ('add', 4) if obj_is_new else ('update', 2)
+        action, self.object.sync = ('ekle', 4) if obj_is_new else ('guncelle', 2)
         self.object.save()
         self.current.task_data['object_id'] = self.object.key
 
-        hitap_service = zato_service_selector(self.model_class, action)
-        hs = hitap_service(kayit=self.object)
-        try:
-            response = hs.zato_request()
-            if response['status'] == 'ok':
-                self.object.sync = 1
-        except:
-            # try blogundaki islemleri background gondermek
-            pass
+        service_name = un_camel(self.model_class.__name__, dash='-') + '-' + action
+        hs = HitapService(service_name=service_name, payload=self.object)
+        hs.zato_request()
+        self.object.sync = 1
 
     @view_method
     def delete(self):
@@ -152,17 +122,13 @@ class CrudHitap(CrudView):
         self.object.sync = 3
         self.object.blocking_delete()
 
-        hitap_service = zato_service_selector(self.model_class, 'delete')
-        hs = hitap_service(kayit={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no})
+        service_name = un_camel(self.model_class.__name__, dash='-') + "-sil"
+        hs = HitapService(service_name=service_name,
+                          payload={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no})
 
-        try:
-            response = hs.zato_request()
-            if response['status'] == 'ok':
-                self.object.sync = 1
-                self.object.delete()
-        except:
-            # try blogundaki islemleri background gondermek
-            pass
+        hs.zato_request()
+        self.object.sync = 1
+        self.object.delete()
 
         signals.crud_post_delete.send(self, current=self.current, object_data=object_data)
         self.set_client_cmd('reload')

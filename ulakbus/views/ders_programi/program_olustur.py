@@ -11,11 +11,10 @@
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
 from collections import OrderedDict
-from ulakbus.services.zato_wrapper import DersProgramiOlustur
-from ulakbus.services.zato_wrapper import SinavProgramiOlustur
 from ulakbus.models import Room, Okutman, DersEtkinligi, Donem, DerslikZamanPlani, SinavEtkinligi, Sube
 from zengine.lib.translation import gettext_lazy as __, gettext as _, format_time, format_datetime
 from datetime import time
+from ulakbus.services.zato_wrapper import HitapService
 
 ARAMA_TURU = [
     (1, 'Derslik'),
@@ -116,16 +115,18 @@ class ProgramOlustur(CrudView):
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def sinav_programi_hesapla(self):
-        sp = SinavProgramiOlustur(service_payload={"bolum": self.current.role.unit.yoksis_no,
-                                                   "kullanici": self.current.user.key,
-                                                   "sinav_turleri": [1],
-                                                   "url": self.current.get_wf_link()})
+        sp = HitapService(service_name='sinav-plani-start-exam-solver',
+                          payload={"bolum": self.current.role.unit.yoksis_no,
+                                   "kullanici": self.current.user.key,
+                                   "sinav_turleri": [1],
+                                   "url": self.current.get_wf_link()})
         self.program_hesapla(sp)
 
     def ders_programi_hesapla(self):
-        dp = DersProgramiOlustur(service_payload={"bolum": self.current.role.unit.yoksis_no,
-                                                  "kullanici": self.current.user.key,
-                                                  "url": self.current.get_wf_link()})
+        dp = HitapService(service_name='ders-programi-start-solver',
+                          payload={"bolum": self.current.role.unit.yoksis_no,
+                                   "kullanici": self.current.user.key,
+                                   "url": self.current.get_wf_link()})
 
         self.program_hesapla(dp)
 
