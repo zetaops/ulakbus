@@ -65,7 +65,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
-from ulakbus.models import Personel, HitapSebep
+from ulakbus.models import Personel, HitapSebep, HizmetKayitlari
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
 import datetime
@@ -728,7 +728,6 @@ class KanunlaVerilenTerfiForm(JsonForm):
             }
         ]
 
-    terfi_sebep = HitapSebep()
     kaydet = fields.Button(_(u'Kaydet'), cmd="kaydet", style="btn-success")
     iptal = fields.Button(_(u'İptal'), cmd="iptal")
 
@@ -736,6 +735,7 @@ class HizmetCetveliForm(JsonForm):
     class Meta:
         title = _(u'Kanunla Verilen Terfi Hizmet Cetveli Girişi')
 
+    terfi_sebep = HitapSebep()
     baslama_tarihi = fields.Date(_(u'Başlama Tarihi'), required=False)
     bitis_tarihi = fields.Date(_(u'Bitis Tarihi'), required=False)
     kurum_onay_tarihi = fields.Date(_(u'Kurum Onay Tarihi'), required=False)
@@ -746,6 +746,9 @@ class KanunlaVerilenTerfi(CrudView):
         Burada normal terfideki gibi terfi tıkanmaları yoktur. Bir kanuna istinaden personelin terfisi yapılır.
         Yapılan her bir terfi işlemi bir hitap koduyla ilişkilendirilir.
     """
+
+    class Meta:
+        model = "Personel"
 
     def terfi_form(self):
         """ Kanunla verilen terfi işlem formunu return eden metoddur. """
@@ -781,3 +784,44 @@ class KanunlaVerilenTerfi(CrudView):
         personel.emekli_muktesebat_kademe = self.current.input["form"]["em_kademe"]
         personel.emekli_muktesebat_ekgosterge = self.current.input["form"]["em_ekgosterge"]
         personel.save()
+
+    def hizmet_cetveli_form(self):
+        """
+            Kanunla verilen terfi işleminin hizmet cetveline işlenmesinde personelin gireceği
+            veriler oluşturulmuş bir formdur.
+        """
+        _form = HizmetCetveliForm(current=self.current)
+        self.form_out(_form)
+
+    def hitap_kayit(self):
+        """
+            Kanunla verilen terfi kapsamında yapılan terfi işlemini
+            hizmet cetveline (HizmetKayitlari) işleyen metoddur.
+        """
+
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+        hitap_sebep = HitapSebep.objects.get(self.current.input["form"]["terfi_sebep"])
+        hizmet_kayit = HizmetKayitlari(
+            tckn = personel.tckn,
+            baslama_tarihi = self.current.input["form"]["baslama_tarihi"],
+            bitis_tarihi = self.current.input["form"]["bitis_tarihi"],
+            gorev = "%s %s"%(personel.birim.name, personel.kadro.name),
+            unvan_kod = personel.kadro.unvan,
+            hizmet_sinifi = personel.atama.hizmet_sinifi,
+            kadro_derece = personel.kadro.derece,
+            odeme_derece = personel.gorev_ayligi_derece,
+            odeme_kademe = personel.gorev_ayligi_kademe,
+            odeme_ekgosterge = personel.gorev_ayligi_ekgosterge,
+            kazanilmis_hak_ayligi_derece = personel.kazanilmis_hak_derece,
+            kazanilmis_hak_ayligi_kademe = personel.kazanilmis_hak_kademe,
+            kazanilmis_hak_ayligi_ekgosterge = personel.kazanilmis_hak_ekgosterge,
+            emekli_derece = personel.emekli_muktesebat_derece,
+            emekli_kademe = personel.emekli_muktesebat_kademe,
+            emekli_ekgosterge = personel.emekli_muktesebat_ekgosterge,
+            sebep_kod = personel.sebep_no,
+            kurum_onay_tarihi = self.current.input["form"]["kurum_onay_tarihi"],
+            personel = personel,
+            model_key = personel.key
+        )
+
+        hizmet_kayit.save()
