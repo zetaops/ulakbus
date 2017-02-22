@@ -9,8 +9,9 @@
 
 from ulakbus.lib.cache import RaporlamaEklentisi
 from zengine.lib.decorators import view
-from ulakbus.models import Personel, Ogrenci
+from ulakbus.models import Personel
 from datetime import datetime
+from ulakbus.settings import DATE_DEFAULT_FORMAT
 
 __author__ = 'Anıl Can Aydın'
 
@@ -25,6 +26,7 @@ def get_report_data(current):
                #  request:
                    {
                    'view': '_zops_get_report_data',
+                   'page': 1,
                     selectors: [
                             {
                                 name: "some field name (name, age etc)",
@@ -203,111 +205,142 @@ def get_report_data(current):
                         }
                     }
     """
-    date_format = "%d.%m.%Y"
-    date_f = "%Y-%m-%dT%H:%M:%SZ"
+    raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
+    cache_data = raporlama_cache.get_or_set()
+    page = current.input['page'] - 1 if 'page' in current.input else 0
+    page_size = cache_data['gridOptions']['paginationPageSize']
+    time_related_fields = cache_data['time_related_fields']
+    alan_filter_type_map = cache_data['alan_filter_type_map']
 
     if 'selectors' in current.input and not 'options' in current.input:
-        raporlama_cache = RaporlamaEklentisi().get_or_set()
-        personeller = raporlama_cache['personeller']
-        time_related_fields = raporlama_cache['time_related_fields']
-        p = current.input['page'] - 1 if 'page' in current.input else 0
-        page = raporlama_cache['gridOptions']['paginationPageSize']
-
         selectors = current.input['selectors']
         active_selectors = []
         for selector in selectors:
             if selector['checked']:
                 active_selectors.append(selector['name'])
 
-        data = []
-        for k, v in personeller.items():
-            pd = {}
-            for active_selector in active_selectors:
-                if active_selector in time_related_fields:
-                    date_str = v[active_selector]
-                    d = datetime.strptime(date_str, date_f).date()
-                    pd[active_selector] = d.strftime(date_format)
-                elif active_selector in ['birim', 'baslama_sebep']:
-                    pd[active_selector] = v[str(active_selector)+"_id"]
-                else:
-                    pd[active_selector] = v[active_selector]
-            data.append(pd)
-        current.output['totalItems'] = len(personeller)
-        if len(data) >= p*page + page:
-            data = data[p*page:p*page+page]
+        previous_options = cache_data['gridOptions']['options']
+        if not previous_options:
+            total_items, data = personel_data_filtresiz(selectors, page, page_size, time_related_fields)
+
         else:
-            data = data[p*page:len(data)]
+            total_items, data = personel_data_filtreli(previous_options, selectors, page, page_size,
+                                                       time_related_fields, alan_filter_type_map)
+
+        current.output['totalItems'] = total_items
         current.output['data'] = data
+        cache_data['gridOptions']['selectors'] = selectors
+        raporlama_cache.set(cache_data)
     elif not ('selectors' in current.input and 'options' in current.input):
-        cache_obj = {}
-        cache_obj['gridOptions'] = RaporlamaEklentisi().get_or_set()['gridOptions']
-        current.output = cache_obj
-    else:
-        raporlama_cache = RaporlamaEklentisi().get_or_set()
-        alan_filter_type_map = raporlama_cache['alan_filter_type_map']
-        time_related_fields = raporlama_cache['time_related_fields']
-        options = current.input['options']
-        p = current.input['page'] - 1 if 'page' in current.input else 0
-        page = raporlama_cache['gridOptions']['paginationPageSize']
-        query_params = {}
-        for f, qp in options.items():
-            if alan_filter_type_map[f] == "INPUT":
-                # condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
-                if qp['condition'] == "CONTAINS":
-                    query_params[f + "__contains"] = qp['value']
-                elif qp['condition'] == "STARTS_WITH":
-                    query_params[f + "__startswith"] = qp['value']
-                else:
-                    query_params[f + "__endswith"] = qp['value']
-            elif alan_filter_type_map[f] == "SELECT":
-                query_params[f] = qp['value']
-            elif alan_filter_type_map[f] == "MULTISELECT":
-                multiselect_list = []
-                for msi in qp:
-                    multiselect_list.append(msi)
-                query_params[f + "__in"] = multiselect_list
-            elif alan_filter_type_map[f] == "RANGE-DATETIME":
-                start_raw = str(qp['start'])
-                start = datetime.strptime(start_raw, date_format)
-                end_raw = str(qp['end'])
-                end = datetime.strptime(end_raw, date_format)
-                query_params[f + "__range"] = [start, end]
-            elif alan_filter_type_map[f] == "RANGE-INTEGER":
-                min = qp['min']
-                max = qp['max']
-                query_params[f + "__range"] = [int(min), int(max)]
-
-        result_size = Personel.objects.filter(**query_params).count()
-        if result_size >= page*p + page:
-            result_set = Personel.objects.set_params(start=page*p, rows=page).filter(**query_params)
+        if not page == 0:
+            selectors = cache_data['gridOptions']['selectors']
+            total_items, data = personel_data_filtresiz(selectors, page, page_size, time_related_fields)
+            current.output['totalItems'] = total_items
+            current.output['data'] = data
         else:
-            rows = result_size - page*p
-            result_set = result_set = Personel.objects.set_params(start=page*p, rows=rows).filter(**query_params)
-
+            current.output['gridOptions'] = cache_data['gridOptions']
+    else:
+        options = current.input['options']
         selectors = current.input['selectors']
-        active_selectors = []
-        for selector in selectors:
-            if selector['checked']:
-                active_selectors.append(selector['name'])
 
-        initial_data = []
-        for p in result_set:
-            pd = {}
-            p_ = p.clean_value()
-            for active_selector in active_selectors:
-                if active_selector in time_related_fields:
-                    date_str = p_[active_selector]
-                    d = datetime.strptime(date_str, date_f).date()
-                    pd[active_selector] = d.strftime(date_format)
-                elif active_selector in ['birim', 'baslama_sebep']:
-                    pd[active_selector] = p_[str(active_selector)+"_id"]
-                else:
-                    pd[active_selector] = p_[active_selector]
-            initial_data.append(pd)
-
-        current.output['totalItems'] = result_size
-        current.output['data'] = initial_data
+        total_items, data = personel_data_filtreli(options, selectors, page, page_size,
+                                                   time_related_fields, alan_filter_type_map)
+        current.output['totalItems'] = total_items
+        current.output['data'] = data
+        cache_data['gridOptions']['selectors'] = selectors
+        cache_data['gridOptions']['options'] = options
+        raporlama_cache.set(cache_data)
 
 
+def personel_data_filtresiz(selectors, page, page_size, time_related_fields):
+    """
+    :param selectors:
+    :param page:
+    :param page_size:
+    :param time_related_fields:
+    :return:
+    """
+    active_selectors = []
+    for selector in selectors:
+        if selector['checked']:
+            active_selectors.append(selector['name'])
+
+    personeller = Personel.objects.filter()[page * page_size:page * page_size + page_size]
+    data = []
+    for p in personeller:
+        pd = {}
+        for active_selector in active_selectors:
+            if active_selector in ['birim', 'baslama_sebep']:
+                pd[active_selector] = p.__getattribute__(str(active_selector) + "_id")
+            elif active_selector in time_related_fields:
+                pd[active_selector] = p.__getattribute__(active_selector).strftime(DATE_DEFAULT_FORMAT)
+            else:
+                pd[active_selector] = p.__getattribute__(active_selector)
+        data.append(pd)
+
+    return Personel.objects.count(), data
 
 
+def personel_data_filtreli(options, selectors, page, page_size, time_related_fields, alan_filter_type_map):
+    """
+    :param options:
+    :param selectors:
+    :param page:
+    :param page_size:
+    :param time_related_fields:
+    :param alan_filter_type_map:
+    :return:
+    """
+    query_params = {}
+    for f, qp in options.items():
+        if alan_filter_type_map[f] == "INPUT":
+            # condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
+            if qp['condition'] == "CONTAINS":
+                query_params[f + "__contains"] = qp['value']
+            elif qp['condition'] == "STARTS_WITH":
+                query_params[f + "__startswith"] = qp['value']
+            else:
+                query_params[f + "__endswith"] = qp['value']
+        elif alan_filter_type_map[f] == "SELECT":
+            query_params[f] = qp['value']
+        elif alan_filter_type_map[f] == "MULTISELECT":
+            multiselect_list = []
+            for msi in qp:
+                multiselect_list.append(msi)
+            query_params[f + "__in"] = multiselect_list
+        elif alan_filter_type_map[f] == "RANGE-DATETIME":
+            start_raw = str(qp['start'])
+            start = datetime.strptime(start_raw, DATE_DEFAULT_FORMAT)
+            end_raw = str(qp['end'])
+            end = datetime.strptime(end_raw, DATE_DEFAULT_FORMAT)
+            query_params[f + "__range"] = [start, end]
+        elif alan_filter_type_map[f] == "RANGE-INTEGER":
+            min = qp['min']
+            max = qp['max']
+            query_params[f + "__range"] = [int(min), int(max)]
+
+    result_size = Personel.objects.filter(**query_params).count()
+    if result_size >= page * page_size + page_size:
+        result_set = Personel.objects.set_params(start=page * page_size, rows=page_size).filter(**query_params)
+    else:
+        rows = result_size - page * page_size
+        result_set = Personel.objects.set_params(start=page * page_size, rows=rows).filter(**query_params)
+
+    active_selectors = []
+    for selector in selectors:
+        if selector['checked']:
+            active_selectors.append(selector['name'])
+
+    initial_data = []
+    for p in result_set:
+        pd = {}
+        for active_selector in active_selectors:
+            if active_selector in ['birim', 'baslama_sebep']:
+                pd[active_selector] = p.__getattribute__(str(active_selector) + "_id")
+            elif active_selector in time_related_fields:
+                pd[active_selector] = p.__getattribute__(active_selector).strftime(DATE_DEFAULT_FORMAT)
+            else:
+                pd[active_selector] = p.__getattribute__(active_selector)
+        initial_data.append(pd)
+
+    return result_size, initial_data

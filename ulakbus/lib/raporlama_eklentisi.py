@@ -9,7 +9,7 @@ from ulakbus.models.auth import Unit
 from ulakbus.models.hitap.hitap_sebep import HitapSebep
 from zengine.lib.translation import gettext as _
 from zengine.lib.catalog_data import catalog_data_manager
-from datetime import datetime
+from ulakbus.settings import DATE_DEFAULT_FORMAT
 
 
 def raporlama_ekrani_secim_menulerini_hazirla():
@@ -71,15 +71,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     # Hitap sebep kodlarını aldık
     sebep_kodlari = [{"value": sk.sebep_no, "label": sk.ad} for sk in HitapSebep.objects.filter()]
 
-    # Baslangıçta görünecek personeller
-    personeller = {}
-    tum_personel = Personel.objects.filter()
-    if len(tum_personel) > PAGE_SIZE:
-        for i in range(PAGE_SIZE):
-            personeller[i] = tum_personel[i].clean_value()
-    else:
-        for i, p in enumerate(tum_personel):
-            personeller[i] = p.clean_value()
+    personeller = Personel.objects.filter()[0:PAGE_SIZE]
 
     # Başlangıçta görünecek alanlar
     default_alanlar = ['ad', 'soyad', 'cinsiyet', 'dogum_tarihi', 'personel_turu']
@@ -175,19 +167,16 @@ def raporlama_ekrani_secim_menulerini_hazirla():
         selectors.append(select)
     grid_options['selectors'] = selectors
 
-    date_format = "%d.%m.%Y"
-    date_f = "%Y-%m-%dT%H:%M:%SZ"
-
     initial_data = []
-    for pi, pp in personeller.items():
+    for p in personeller:
         per = {}
         for d in default_alanlar:
-            if d in range_date_fields:
-                date_str = pp[d]
-                dt = datetime.strptime(date_str, date_f).date()
-                per[d] = dt.strftime(date_format)
+            if d in ['birim', 'baslama_sebep']:
+                per[d] = p.__getattribute__(str(d) + "_id")
+            elif d in range_date_fields:
+                per[d] = p.__getattribute__(d).strftime(DATE_DEFAULT_FORMAT)
             else:
-                per[d] = pp[d]
+                per[d] = p.__getattribute__(d)
         initial_data.append(per)
     grid_options['data'] = initial_data
 
@@ -211,8 +200,8 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     grid_options['enableAdding'] = True
     grid_options['enableRemoving'] = True
     grid_options['page'] = 1
-    grid_options['totalItems'] = tum_personel.count()
-    cache_data['personeller'] = personeller
+    grid_options['totalItems'] = Personel.objects.count()
+    grid_options['options'] = {}
     cache_data['gridOptions'] = grid_options
     cache_data['alan_filter_type_map'] = alan_filter_type_map
     cache_data['time_related_fields'] = range_date_fields

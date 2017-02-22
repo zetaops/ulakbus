@@ -72,8 +72,8 @@ class RaporlamaEklentisi(Cache):
     """
     PREFIX = "RAPEKL"
 
-    def __init__(self):
-        super(RaporlamaEklentisi, self).__init__('raporlama_eklentisi')
+    def __init__(self, key):
+        super(RaporlamaEklentisi, self).__init__(":".join(['raporlama_eklentisi', key]))
 
     def get_data_to_cache(self):
         return raporlama_ekrani_secim_menulerini_hazirla()
