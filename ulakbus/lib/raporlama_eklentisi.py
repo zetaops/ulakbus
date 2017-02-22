@@ -9,6 +9,7 @@ from ulakbus.models.auth import Unit
 from ulakbus.models.hitap.hitap_sebep import HitapSebep
 from zengine.lib.translation import gettext as _
 from zengine.lib.catalog_data import catalog_data_manager
+from datetime import datetime
 
 
 def raporlama_ekrani_secim_menulerini_hazirla():
@@ -174,11 +175,19 @@ def raporlama_ekrani_secim_menulerini_hazirla():
         selectors.append(select)
     grid_options['selectors'] = selectors
 
+    date_format = "%d.%m.%Y"
+    date_f = "%Y-%m-%dT%H:%M:%SZ"
+
     initial_data = []
     for pi, pp in personeller.items():
         per = {}
         for d in default_alanlar:
-            per[d] = pp[d]
+            if d in range_date_fields:
+                date_str = pp[d]
+                dt = datetime.strptime(date_str, date_f).date()
+                per[d] = dt.strftime(date_format)
+            else:
+                per[d] = pp[d]
         initial_data.append(per)
     grid_options['data'] = initial_data
 
