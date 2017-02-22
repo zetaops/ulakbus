@@ -14,8 +14,8 @@ from ulakbus.views.personel.raporlama_ui_grid_view import get_report_data
 
 class TestCase(BaseTestCase):
     def test_rapor_query(self):
-
-        raporlama_cache = RaporlamaEklentisi().get_or_set()
+        random_key = 'some_random_key'
+        raporlama_cache = RaporlamaEklentisi(random_key).get_or_set()
         page = raporlama_cache['gridOptions']['paginationPageSize']
         p = 1
 
