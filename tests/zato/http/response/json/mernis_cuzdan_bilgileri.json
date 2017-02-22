@@ -1,21 +1,12 @@
 {
-    "status": "ok",
-    "result": {
-        "CuzdanBilgisi": {
-            "TCKimlikNo": "12345678911",
-            "SeriNo": "A10123456",
-            "VerildigiIlce": {
-                "b:Aciklama": "Urla"
-            },
-            "CuzdanVerilmeNeden": {
-                "b:Aciklama": "Kayip"
-            },
-            "KayitNo": "123456",
-            "VerilmeTarih": {
-                "b:Gun": "01",
-                "b:Ay": "01",
-                "b:Yil": "2016"
-            }
-        }
-    }
+  "status": "ok",
+  "result": {
+    "tckn": "12345678911",
+    "cuzdan_seri": "A10",
+    "cuzdan_seri_no": "123456",
+    "kimlik_cuzdani_verildigi_yer": "Urla",
+    "kimlik_cuzdani_verilis_nedeni": "Kayip",
+    "kimlik_cuzdani_kayit_no": "123456",
+    "kimlik_cuzdani_verilis_tarihi": "01.01.2016"
+  }
 }
