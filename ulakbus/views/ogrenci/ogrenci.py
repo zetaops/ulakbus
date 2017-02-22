@@ -102,12 +102,10 @@ class KimlikBilgileri(CrudView):
 
         """
         service_name = 'kisi-sorgula-tc-kimlik-no'
-        mernis_bilgileri = TcknService(service_name=service_name, payload=str(self.object.tckn))
+        mernis_bilgileri = TcknService(service_name=service_name,
+                                       payload={"tckn": str(self.object.tckn)})
         kimlik_bilgisi = mernis_bilgileri.zato_request()
-        data = {}
-        data.update(kimlik_bilgisi)
-        for key in data:
-            setattr(self.object, key, data[key])
+        self.object(**kimlik_bilgisi)
         self.object.save()
 
 
@@ -177,12 +175,10 @@ class IletisimBilgileri(CrudView):
 
         """
         service_name = 'adres-sorgula'
-        mernis_bilgileri = TcknService(service_name=service_name, payload=str(self.object.tckn))
+        mernis_bilgileri = TcknService(service_name=service_name,
+                                       payload={"tckn": str(self.object.tckn)})
         iletisim_bilgisi = mernis_bilgileri.zato_request()
-        data = {}
-        data.update(iletisim_bilgisi)
-        for key in data:
-            setattr(self.object, key, data[key])
+        self.object(**iletisim_bilgisi)
         self.object.save()
 
 

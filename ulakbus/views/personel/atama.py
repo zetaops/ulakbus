@@ -331,7 +331,8 @@ class PersonelAtama(CrudView):
 
         """
         personel = Personel.objects.get(self.current.task_data['personel_id'])
-        hizmet_cetveli = TcknService(service_name='hizmet-cetveli-sync', payload=str(personel.tckn))
+        hizmet_cetveli = TcknService(service_name='hizmet-cetveli-sync',
+                                     payload={"tckn": str(personel.tckn)})
 
         try:
             hizmet_cetveli.zato_request()

@@ -162,7 +162,7 @@ class HITAPSync(ZatoHitapService):
 
         # get hitap data
         hitap_dict, has_error = self.get_hitap_dict(tckn)
-        personel = Personel.objects.filter(tckn=tckn)[0]
+        personel = Personel.objects.get(tckn=tckn)
         if has_error:
             self.logger.info("Hitap kaydi sorgulama hatasi.")
             status = "error"

@@ -15,7 +15,6 @@ from ulakbus.models.hitap.hitap import HizmetKayitlari
 from collections import OrderedDict
 import datetime
 from ulakbus.services.zato_wrapper import TcknService
-from ulakbus.models.zato import ZatoServiceChannel
 
 
 class ReportWithSync(Reporter.ReportForm):
@@ -71,7 +70,7 @@ class HizmetCetveli(Reporter):
         HizmetKayıtları için Hitap sync fonksiyonunu çalıştırır
         :return:
         """
-        hs = TcknService(payload=str(self.current.task_data['personel_tckn']),
+        hs = TcknService(payload={"tckn": self.current.task_data['personel_tckn']},
                          service_name='hizmet-cetveli-sync')
         hs.zato_request()
 

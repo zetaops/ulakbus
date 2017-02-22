@@ -12,7 +12,6 @@ from zengine.views.crud import CrudView, view_method, list_query
 from zengine.lib.translation import gettext_lazy
 from ulakbus.models.personel import Personel
 from zengine import signals
-from ulakbus.models.zato import ZatoServiceChannel
 from ulakbus.services.zato_wrapper import TcknService, HitapService
 from pyoko.lib.utils import un_camel
 
@@ -79,7 +78,7 @@ class CrudHitap(CrudView):
         """
         service_name = un_camel(self.model_class.__name__, dash='-') + '-sync'
         service = TcknService(service_name=service_name,
-                              payload=str(self.current.task_data['personel_tckn']))
+                              payload={"tckn": str(self.current.task_data['personel_tckn'])})
         service.zato_request()
 
     @view_method
@@ -100,9 +99,13 @@ class CrudHitap(CrudView):
         self.current.task_data['object_id'] = self.object.key
 
         service_name = un_camel(self.model_class.__name__, dash='-') + '-' + action
-        hs = HitapService(service_name=service_name, payload=self.object)
-        hs.zato_request()
-        self.object.sync = 1
+        service = HitapService(service_name=service_name, payload=self.object)
+        try:
+            service.zato_request()
+            self.object.sync = 1
+            self.object.blocking_save()
+        except:
+            pass
 
     @view_method
     def delete(self):
@@ -123,15 +126,16 @@ class CrudHitap(CrudView):
         self.object.blocking_delete()
 
         service_name = un_camel(self.model_class.__name__, dash='-') + "-sil"
-        hs = HitapService(service_name=service_name,
-                          payload={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no})
-
-        hs.zato_request()
-        self.object.sync = 1
-        self.object.delete()
-
-        signals.crud_post_delete.send(self, current=self.current, object_data=object_data)
-        self.set_client_cmd('reload')
+        service = HitapService(service_name=service_name,
+                               payload={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no})
+        try:
+            service.zato_request()
+            self.object.sync = 1
+            self.object.delete()
+            signals.crud_post_delete.send(self, current=self.current, object_data=object_data)
+            self.set_client_cmd('reload')
+        except:
+            pass
 
     @list_query
     def list_by_personel_id(self, queryset):

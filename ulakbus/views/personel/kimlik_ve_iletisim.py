@@ -141,13 +141,9 @@ class KimlikIletisim(CrudView):
         """
 
         mernis_bilgileri = TcknService(service_name='kisi-sorgula-tc-kimlik-no',
-                                       payload=str(self.object.tckn))
+                                       payload={"tckn": str(self.object.tckn)})
         kimlik_bilgisi = mernis_bilgileri.zato_request()
-        data = {}
-        data.update(kimlik_bilgisi)
-        for key in data:
-            setattr(self.object, key, data[key])
-
+        self.object(**kimlik_bilgisi)
         self.object.save()
 
     def kps_adres_sorgula(self):
@@ -159,13 +155,9 @@ class KimlikIletisim(CrudView):
         """
 
         mernis_bilgileri = TcknService(service_name='kisi-sorgula-tc-kimlik-no',
-                                       payload=str(self.object.tckn))
+                                       payload={"tckn": str(self.object.tckn)})
         adres_bilgisi = mernis_bilgileri.zato_request()
-        data = {}
-        data.update(adres_bilgisi)
-        for key in data:
-            setattr(self.object, key, data[key])
-
+        self.object(**adres_bilgisi)
         self.object.save()
 
     def kimlik_bilgileri(self):

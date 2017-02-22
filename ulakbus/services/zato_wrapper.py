@@ -15,17 +15,14 @@ Example:
 
     .. code-block:: python
 
-        zs = HitapService(service_name='hizmet-cetveli-sil', payload="{'tckn': 121231,
-                                                                       'kayit_no': 234}")
-        response = zs.zato_request()  # 'ok' or 'error'
-        zs = HitapHizmetCetvelGetir(tckn="12345678900")
-        response = zs.zato_request()  # list, with lines of hizmet cetveli
-
+        zs = HitapService(service_name='hizmet-cetveli-sil',
+                          payload="{'tckn': 121231,'kayit_no': 234}")
+        response = zs.zato_request()  # 'ok' or 'error' list, with lines of hizmet cetveli
 
     .. code-block:: python
 
         from zato_wrapper_class import ZatoService
-        zs = ZatoService(service_name='kisi-sorgula-tc-kimlik-no', payload="12312342131")
+        zs = TcknService(service_name='kisi-sorgula-tc-kimlik-no', payload={"tckn": "12312342131"})
         response = zs.zato_request()  # 'ok' or 'error'
 
 """
@@ -120,7 +117,8 @@ class ZatoService(object):
                             "this means something really went bad, check zato server logs"
                             % r.status_code)
 
-    def rebuild_response(self, response_data):
+    @staticmethod
+    def rebuild_response(response_data):
         """
         Rebuild response data
 
@@ -131,16 +129,13 @@ class ZatoService(object):
             response_data (dict): reformatted data compatible with our data models
 
         """
-        return response_data
+        return response_data['result']
 
 
 class TcknService(ZatoService):
 
     def prepare_payload(self):
-        return '{"tckn":"%s"}' % self.check_turkish_identity_number(self.payload)
 
-    @staticmethod
-    def check_turkish_identity_number(tckn):
         """
         Türkiye Cumhuriyeti Kimlik Numarası geçerlilik kontrolü.
         11 karakter uzunluğunda karakter dizisi olmalı.
@@ -152,8 +147,9 @@ class TcknService(ZatoService):
             str: TCKN
 
         """
-
-        if not tckn:
+        try:
+            tckn = self.payload["tckn"]
+        except:
             raise Exception("tckn can not be empty")
 
         if type(tckn) is not str:
@@ -162,7 +158,7 @@ class TcknService(ZatoService):
         if len(tckn) != 11:
             raise Exception("tckn length must be 11")
 
-        return tckn
+        return self.payload
 
 
 class HitapService(ZatoService):
