@@ -7,17 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-02-16 16:25+0300\n"
+"POT-Creation-Date: 2017-02-22 10:22+0300\n"
 "PO-Revision-Date: 2017-02-17 15:00+0300\n"
+"Last-Translator: \n"
 "Language: tr\n"
 "Language-Team: tr <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
-"Last-Translator: \n"
-"X-Generator: Poedit 1.8.11\n"
 
 #: ../../zengine/zengine/management_commands.py:568
 msgid "Checking migration and solr ..."
@@ -403,7 +402,8 @@ msgid ""
 "you should choose just one channel to split."
 msgstr ""
 "Lütfen işlem yapmak istediğiniz kanalları seçiniz.\n"
-"Birleştirme işlemi için en az bir kanal ayırma işlemi için sadece bir kanal\n"
+"Birleştirme işlemi için en az bir kanal ayırma işlemi için sadece bir "
+"kanal\n"
 "seçilmelidir."
 
 #: ../../zengine/zengine/views/channel_management.py:69
@@ -466,8 +466,8 @@ msgstr "Seçilen kanallar(%s) '%s' kanalıyla başarılı bir şekilde birleşti
 #: ../../zengine/zengine/views/channel_management.py:238
 #, python-format
 msgid ""
-"Chosen subscribers and messages of them migrated from '%s' channel to '%s' "
-"channel successfully."
+"Chosen subscribers and messages of them migrated from '%s' channel to "
+"'%s' channel successfully."
 msgstr ""
 "Seçilen aboneler ve mesajları '%s' kanalından '%s' kanalına başarılı bir "
 "biçimde taşındı."
@@ -478,7 +478,8 @@ msgstr "Hatalı İşlem"
 
 #: ../../zengine/zengine/views/channel_management.py:306
 msgid ""
-"You should choose at least two channel to merge operation at a new channel."
+"You should choose at least two channel to merge operation at a new "
+"channel."
 msgstr "Yeni bir kanalda birleştirme işlemi için en az iki kanal seçmelisiniz."
 
 #: ../../zengine/zengine/views/channel_management.py:309
@@ -495,19 +496,23 @@ msgstr "Kanal ayırma işlemi için bir kanal seçmelisiniz."
 msgid "Add"
 msgstr "Ekle"
 
-#: ../../zengine/zengine/views/crud.py:47 ../../zengine/zengine/views/crud.py:255
+#: ../../zengine/zengine/views/crud.py:47
+#: ../../zengine/zengine/views/crud.py:255
 msgid "Save"
 msgstr "Kaydet"
 
-#: ../../zengine/zengine/views/crud.py:48 ../../zengine/zengine/views/crud.py:256
+#: ../../zengine/zengine/views/crud.py:48
+#: ../../zengine/zengine/views/crud.py:256
 msgid "Save and List"
 msgstr "Kaydet ve Listele"
 
-#: ../../zengine/zengine/views/crud.py:49 ../../zengine/zengine/views/crud.py:258
+#: ../../zengine/zengine/views/crud.py:49
+#: ../../zengine/zengine/views/crud.py:258
 msgid "Save as New"
 msgstr "Yeni Olarak Kaydet"
 
-#: ../../zengine/zengine/views/crud.py:51 ../../zengine/zengine/views/crud.py:260
+#: ../../zengine/zengine/views/crud.py:51
+#: ../../zengine/zengine/views/crud.py:260
 msgid "Save as New and List"
 msgstr "Yeni Olarak Kaydet ve Listele"
 
@@ -596,7 +601,8 @@ msgstr "İş akışı başarıyla başkasına atandı."
 
 #: ../../zengine/zengine/views/task_manager_actions.py:110
 msgid ""
-"This workflow does not belong to you, you cannot assign it to someone else."
+"This workflow does not belong to you, you cannot assign it to someone "
+"else."
 msgstr "Bu iş akışı size ait değil, başkasına atayamazsınız."
 
 #: ../../zengine/zengine/views/task_manager_actions.py:157
@@ -614,3 +620,4 @@ msgstr "İş akışından ayrıldın."
 #: ../../zengine/zengine/views/task_manager_actions.py:198
 msgid "Unfortunately, this workflow does not belong to you or is already idle."
 msgstr "Ne yazık ki, bu iş akışı size ait değil veya zaten boşta."
+

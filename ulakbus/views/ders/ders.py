@@ -191,7 +191,7 @@ class NotGirisForm(forms.JsonForm):
     class Ogrenciler(ListNode):
         ogrenci_no = fields.String(_(u'No'))
         ad_soyad = fields.String(_(u'Ad Soyad'))
-        degerlendirme = fields.Integer(_(u'Not'))
+        degerlendirme = fields.Integer(_(u'Not', domain='students'))
         aciklama = fields.String(_(u'Açıklama'))
         key = fields.String(_(u'Key'), hidden=True)
 
