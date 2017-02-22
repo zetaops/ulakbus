@@ -1061,8 +1061,8 @@ class DegerlendirmeNot(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = _(u"Not")
-        verbose_name_plural = _(u"Notlar")
+        verbose_name = _(u"Not", domain='students')
+        verbose_name_plural = _(u"Notlar", domain='students')
         list_fields = ['puan', 'ders_adi']
         search_fields = ['aciklama', 'puan', 'ogrenci_no']
         list_filters = ['donem', ]
