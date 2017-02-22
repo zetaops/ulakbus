@@ -16,8 +16,7 @@ from zengine.forms import fields
 from zengine.lib.translation import gettext as _, gettext_lazy
 
 from zengine.views.crud import CrudView
-from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
-from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
+from ulakbus.services.zato_wrapper import TcknService
 
 
 class KimlikBilgileriForm(JsonForm):
@@ -141,9 +140,14 @@ class KimlikIletisim(CrudView):
 
         """
 
-        zs = MernisKimlikBilgileriGetir(tckn=self.object.tckn)
-        response = zs.zato_request()
-        self.object(**response)
+        mernis_bilgileri = TcknService(service_name='kisi-sorgula-tc-kimlik-no',
+                                       payload=str(self.object.tckn))
+        kimlik_bilgisi = mernis_bilgileri.zato_request()
+        data = {}
+        data.update(kimlik_bilgisi)
+        for key in data:
+            setattr(self.object, key, data[key])
+
         self.object.save()
 
     def kps_adres_sorgula(self):
@@ -154,9 +158,14 @@ class KimlikIletisim(CrudView):
 
         """
 
-        zs = KPSAdresBilgileriGetir(tckn=self.object.tckn)
-        response = zs.zato_request()
-        self.object(**response)
+        mernis_bilgileri = TcknService(service_name='kisi-sorgula-tc-kimlik-no',
+                                       payload=str(self.object.tckn))
+        adres_bilgisi = mernis_bilgileri.zato_request()
+        data = {}
+        data.update(adres_bilgisi)
+        for key in data:
+            setattr(self.object, key, data[key])
+
         self.object.save()
 
     def kimlik_bilgileri(self):

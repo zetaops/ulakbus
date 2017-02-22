@@ -7,12 +7,12 @@
 from ulakbus.lib.views import UlakbusView
 from zengine.forms import JsonForm
 from zengine.forms import fields
-from ulakbus.services.zato_wrapper import EPostaYolla
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.common import aktivasyon_kodu_uret
 from ulakbus.lib.common import EPostaDogrulama
 from ulakbus.lib.common import e_posta_uygunlugu
 from ulakbus.settings import DEMO_URL, MAIL_ADDRESS
+from ulakbus.services.zato_wrapper import HitapService
 
 
 class EPostaForm(JsonForm):
@@ -77,11 +77,11 @@ class EPostaDegistir(UlakbusView):
 
         """
 
-        posta_gonder = EPostaYolla(kayit={
-            "default_e_mail": MAIL_ADDRESS,
-            "e_posta": self.current.task_data["e_posta"],
-            "message": self.current.task_data["message"],
-            "subject": self.current.task_data["subject"]})
+        posta_gonder = HitapService(service_name='e-posta-yolla',
+                                    payload={"default_e_mail": MAIL_ADDRESS,
+                                             "e_posta": self.current.task_data["e_posta"],
+                                             "message": self.current.task_data["message"],
+                                             "subject": self.current.task_data["subject"]})
 
         posta_gonder.zato_request()
 

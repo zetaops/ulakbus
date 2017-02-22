@@ -19,6 +19,7 @@ from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel, Atama, Kadro
+from ulakbus.services.zato_wrapper import TcknService
 
 
 class PersonelAtama(CrudView):
@@ -330,8 +331,7 @@ class PersonelAtama(CrudView):
 
         """
         personel = Personel.objects.get(self.current.task_data['personel_id'])
-        from ulakbus.services.zato_wrapper import HitapHizmetCetveliSenkronizeEt
-        hizmet_cetveli = HitapHizmetCetveliSenkronizeEt(tckn=str(personel.tckn))
+        hizmet_cetveli = TcknService(service_name='hizmet-cetveli-sync', payload=str(personel.tckn))
 
         try:
             hizmet_cetveli.zato_request()
