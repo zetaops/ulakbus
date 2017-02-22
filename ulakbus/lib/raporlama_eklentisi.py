@@ -12,6 +12,8 @@ from zengine.lib.catalog_data import catalog_data_manager
 
 
 def raporlama_ekrani_secim_menulerini_hazirla():
+    PAGE_SIZE = 25
+
     cache_data = {}
     grid_options = {}
 
@@ -71,8 +73,8 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     # Baslangıçta görünecek personeller
     personeller = {}
     tum_personel = Personel.objects.filter()
-    if len(tum_personel) > 50:
-        for i in range(50):
+    if len(tum_personel) > PAGE_SIZE:
+        for i in range(PAGE_SIZE):
             personeller[i] = tum_personel[i].clean_value()
     else:
         for i, p in enumerate(tum_personel):
@@ -195,12 +197,13 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     grid_options['enableFiltering'] = True
     grid_options['toggleFiltering'] = True
     grid_options['useExternalFiltering'] = True
-    grid_options['paginationPageSize'] = 25
+    grid_options['paginationPageSize'] = PAGE_SIZE
     grid_options['useExternalPagination'] = True
     grid_options['enableAdding'] = True
     grid_options['enableRemoving'] = True
     grid_options['page'] = 1
     grid_options['totalItems'] = tum_personel.count()
+    cache_data['personeller'] = personeller
     cache_data['gridOptions'] = grid_options
     cache_data['alan_filter_type_map'] = alan_filter_type_map
     cache_data['time_related_fields'] = range_date_fields

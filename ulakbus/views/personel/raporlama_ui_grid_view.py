@@ -203,8 +203,42 @@ def get_report_data(current):
                         }
                     }
     """
+    date_format = "%d.%m.%Y"
+    date_f = "%Y-%m-%dT%H:%M:%SZ"
 
-    if not ('selectors' in current.input and 'options' in current.input):
+    if 'selectors' in current.input and not 'options' in current.input:
+        raporlama_cache = RaporlamaEklentisi().get_or_set()
+        personeller = raporlama_cache['personeller']
+        time_related_fields = raporlama_cache['time_related_fields']
+        p = current.input['page'] - 1 if 'page' in current.input else 0
+        page = raporlama_cache['gridOptions']['paginationPageSize']
+
+        selectors = current.input['selectors']
+        active_selectors = []
+        for selector in selectors:
+            if selector['checked']:
+                active_selectors.append(selector['name'])
+
+        data = []
+        for k, v in personeller.items():
+            pd = {}
+            for active_selector in active_selectors:
+                if active_selector in time_related_fields:
+                    date_str = v[active_selector]
+                    d = datetime.strptime(date_str, date_f).date()
+                    pd[active_selector] = d.strftime(date_format)
+                elif active_selector in ['birim', 'baslama_sebep']:
+                    pd[active_selector] = v[str(active_selector)+"_id"]
+                else:
+                    pd[active_selector] = v[active_selector]
+            data.append(pd)
+        current.output['totalItems'] = len(personeller)
+        if len(data) >= p*page + page:
+            data = data[p*page:p*page+page]
+        else:
+            data = data[p*page:len(data)]
+        current.output['data'] = data
+    elif not ('selectors' in current.input and 'options' in current.input):
         cache_obj = {}
         cache_obj['gridOptions'] = RaporlamaEklentisi().get_or_set()['gridOptions']
         current.output = cache_obj
@@ -233,7 +267,6 @@ def get_report_data(current):
                     multiselect_list.append(msi)
                 query_params[f + "__in"] = multiselect_list
             elif alan_filter_type_map[f] == "RANGE-DATETIME":
-                date_format = "%d.%m.%Y"
                 start_raw = str(qp['start'])
                 start = datetime.strptime(start_raw, date_format)
                 end_raw = str(qp['end'])
@@ -263,10 +296,11 @@ def get_report_data(current):
             p_ = p.clean_value()
             for active_selector in active_selectors:
                 if active_selector in time_related_fields:
-                    date_f = "%Y-%m-%dT%H:%M:%SZ"
                     date_str = p_[active_selector]
                     d = datetime.strptime(date_str, date_f).date()
                     pd[active_selector] = d.strftime(date_format)
+                elif active_selector in ['birim', 'baslama_sebep']:
+                    pd[active_selector] = p_[str(active_selector)+"_id"]
                 else:
                     pd[active_selector] = p_[active_selector]
             initial_data.append(pd)
