@@ -9,8 +9,9 @@
 
 from ulakbus.lib.cache import RaporlamaEklentisi
 from zengine.lib.decorators import view
-from ulakbus.models import Personel, Ogrenci
+from ulakbus.models import Personel
 from datetime import datetime
+from ulakbus.settings import DATE_DEFAULT_FORMAT
 
 __author__ = 'Anıl Can Aydın'
 
@@ -25,17 +26,11 @@ def get_report_data(current):
                #  request:
                    {
                    'view': '_zops_get_report_data',
+                   'page': 1,
                     selectors: [
                             {
                                 name: "some field name (name, age etc)",
-                                checked: true or false
-                            },
-                            {
-                                name: "some field name (name, age etc)",
-                                checked: true or false
-                            },
-                            {
-                                name: "some field name (name, age etc)",
+                                label: "Some Field Name To Show (Name, Age etc.)",
                                 checked: true or false
                             },
                             ...
@@ -76,14 +71,7 @@ def get_report_data(current):
                                 selectors: [
                                     {
                                         name: "some field name (name, age etc)",
-                                        checked: true or false
-                                    },
-                                    {
-                                        name: "some field name (name, age etc)",
-                                        checked: true or false
-                                    },
-                                    {
-                                        name: "some field name (name, age etc)",
+                                        label: "Some Field Name To Show (Name, Age etc.)",
                                         checked: true or false
                                     },
                                     ...
@@ -152,25 +140,24 @@ def get_report_data(current):
                                     field: 'gender',
                                     type: 'SELECT',
                                     filter: {
-                                        term: '2',
-                                        selectOptions: [ { value: '1', label: 'male' }, { value: '2', label: 'female' }, { value: '3', label: 'unknown'} ]
+                                        selectOptions: [
+                                            { value: '1', label: 'male' },
+                                            { value: '2', label: 'female' },
+                                            { value: '3', label: 'unknown'}
+                                        ]
                                     },
                                     // multiselect
                                     {
                                         field: 'graduation',
                                         type: 'MULTISELECT',
                                         filter: {
-                                        selectOptions: [ { value: 'university', label: 'university' }, { value: 'high school', label: 'high school' } ]
-                                    },
-                                    // examples for editing
-                                    { field: 'last_name', enableCellEdit: true },
-                                    { field: 'age', enableCellEdit: true, type: 'number'},
-                                    { field: 'registered', displayName: 'Registered' , type: 'date'},
-                                    { field: 'address', displayName: 'Address', type: 'object'}, //not editable if type==='object'
-                                    { field: 'address.city', enableCellEdit: true, displayName: 'Address (even rows editable)' }
-                                    { field: 'isActive', enableCellEdit: true, type: 'boolean'},
+                                        selectOptions: [
+                                            { value: 'university', label: 'university' },
+                                            { value: 'high school', label: 'high school' }
+                                    ]
+                                    }
                                 ],
-                                initialData: [
+                                data: [
                                     {
                                         "name": "Cox",
                                         "company": "Enormo",
@@ -178,21 +165,10 @@ def get_report_data(current):
                                         "graduation": "university",
                                         ...
                                     },
+
+                                    ...,
+
                                     {
-                                        "name": "Lorraine",
-                                        "company": "Comveyer",
-                                        "gender": "female",
-                                        "graduation": "high school",
-                                        ...
-                                    },
-                                    {
-                                        "name": "Nancy",,
-                                        "company": "Fuelton",
-                                        "gender": "female",
-                                        "graduation": "university",
-                                        ...
-                                    },
-                                        {
                                         "name": "Misty",
                                         "company": "Letpro",
                                         "gender": "female",
@@ -203,77 +179,64 @@ def get_report_data(current):
                         }
                     }
     """
+    raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
+    cache_data = raporlama_cache.get_or_set()
+    page_size = cache_data['gridOptions']['paginationPageSize']
 
-    if not ('selectors' in current.input and 'options' in current.input):
-        cache_obj = {}
-        cache_obj['gridOptions'] = RaporlamaEklentisi().get_or_set()['gridOptions']
-        current.output = cache_obj
-    else:
-        raporlama_cache = RaporlamaEklentisi().get_or_set()
-        alan_filter_type_map = raporlama_cache['alan_filter_type_map']
-        time_related_fields = raporlama_cache['time_related_fields']
-        options = current.input['options']
-        p = current.input['page'] - 1 if 'page' in current.input else 0
-        page = raporlama_cache['gridOptions']['paginationPageSize']
-        query_params = {}
-        for f, qp in options.items():
-            if alan_filter_type_map[f] == "INPUT":
-                # condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
-                if qp['condition'] == "CONTAINS":
-                    query_params[f + "__contains"] = qp['value']
-                elif qp['condition'] == "STARTS_WITH":
-                    query_params[f + "__startswith"] = qp['value']
-                else:
-                    query_params[f + "__endswith"] = qp['value']
-            elif alan_filter_type_map[f] == "SELECT":
-                query_params[f] = qp['value']
-            elif alan_filter_type_map[f] == "MULTISELECT":
-                multiselect_list = []
-                for msi in qp:
-                    multiselect_list.append(msi)
-                query_params[f + "__in"] = multiselect_list
-            elif alan_filter_type_map[f] == "RANGE-DATETIME":
-                date_format = "%d.%m.%Y"
-                start_raw = str(qp['start'])
-                start = datetime.strptime(start_raw, date_format)
-                end_raw = str(qp['end'])
-                end = datetime.strptime(end_raw, date_format)
-                query_params[f + "__range"] = [start, end]
-            elif alan_filter_type_map[f] == "RANGE-INTEGER":
-                min = qp['min']
-                max = qp['max']
-                query_params[f + "__range"] = [int(min), int(max)]
+    if 'selectors' in current.input:
+        cache_data['gridOptions']['selectors'] = current.input['selectors']
+    if 'options' in current.input:
+        cache_data['gridOptions']['options'] = current.input['options']
+    if 'page' in current.input:
+        cache_data['gridOptions']['paginationCurrentPage'] = current.input['page']
+
+    page = cache_data['gridOptions']['paginationCurrentPage'] - 1
+    raporlama_cache.set(cache_data)
+
+    def personel_data():
+        query_params = data_grid_filter_parser(cache_data['gridOptions']['options'],
+                                               cache_data['alan_filter_type_map'])
 
         result_size = Personel.objects.filter(**query_params).count()
-        if result_size >= page*p + page:
-            result_set = Personel.objects.set_params(start=page*p, rows=page).filter(**query_params)
-        else:
-            rows = result_size - page*p
-            result_set = result_set = Personel.objects.set_params(start=page*p, rows=rows).filter(**query_params)
 
-        selectors = current.input['selectors']
-        active_selectors = []
-        for selector in selectors:
-            if selector['checked']:
-                active_selectors.append(selector['name'])
+        active_columns = []
+        for col in cache_data['gridOptions']['selectors']:
+            if col['checked']:
+                active_columns.append(col['name'])
 
-        initial_data = []
-        for p in result_set:
-            pd = {}
-            p_ = p.clean_value()
-            for active_selector in active_selectors:
-                if active_selector in time_related_fields:
-                    date_f = "%Y-%m-%dT%H:%M:%SZ"
-                    date_str = p_[active_selector]
-                    d = datetime.strptime(date_str, date_f).date()
-                    pd[active_selector] = d.strftime(date_format)
-                else:
-                    pd[active_selector] = p_[active_selector]
-            initial_data.append(pd)
+        data = Personel.objects.set_params(
+            start=page * page_size, rows=page_size
+        ).filter(**query_params).values(*active_columns)
 
-        current.output['totalItems'] = result_size
-        current.output['data'] = initial_data
+        return result_size, data
+
+    current.output["total_items"], current.output["data"] = personel_data()
 
 
-
-
+def data_grid_filter_parser(filters, field_types):
+    query_params = {}
+    for f, qp in filters.items():
+        if field_types[f] == "INPUT":
+            # condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
+            if qp['condition'] == "CONTAINS":
+                query_params[f + "__contains"] = qp['value']
+            elif qp['condition'] == "STARTS_WITH":
+                query_params[f + "__startswith"] = qp['value']
+            else:
+                query_params[f + "__endswith"] = qp['value']
+        elif field_types[f] == "SELECT":
+            query_params[f] = qp['value']
+        elif field_types[f] == "MULTISELECT":
+            multiselect_list = []
+            for msi in qp:
+                multiselect_list.append(msi)
+            query_params[f + "__in"] = multiselect_list
+        elif field_types[f] == "RANGE-DATETIME":
+            start_raw = str(qp['start'])
+            start = datetime.strptime(start_raw, DATE_DEFAULT_FORMAT)
+            end_raw = str(qp['end'])
+            end = datetime.strptime(end_raw, DATE_DEFAULT_FORMAT)
+            query_params[f + "__range"] = [start, end]
+        elif field_types[f] == "RANGE-INTEGER":
+            query_params[f + "__range"] = [int(qp['min']), int(qp['max'])]
+    return query_params
