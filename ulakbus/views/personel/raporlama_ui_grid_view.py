@@ -30,14 +30,7 @@ def get_report_data(current):
                     selectors: [
                             {
                                 name: "some field name (name, age etc)",
-                                checked: true or false
-                            },
-                            {
-                                name: "some field name (name, age etc)",
-                                checked: true or false
-                            },
-                            {
-                                name: "some field name (name, age etc)",
+                                label: "Some Field Name To Show (Name, Age etc.)",
                                 checked: true or false
                             },
                             ...
@@ -76,16 +69,6 @@ def get_report_data(current):
                                 enableAdding: true,
                                 enableRemoving: true,
                                 selectors: [
-                                    {
-                                        name: "some field name (name, age etc)",
-                                        label: "Some Field Name To Show (Name, Age etc.)",
-                                        checked: true or false
-                                    },
-                                    {
-                                        name: "some field name (name, age etc)",
-                                        label: "Some Field Name To Show (Name, Age etc.)",
-                                        checked: true or false
-                                    },
                                     {
                                         name: "some field name (name, age etc)",
                                         label: "Some Field Name To Show (Name, Age etc.)",
@@ -157,25 +140,24 @@ def get_report_data(current):
                                     field: 'gender',
                                     type: 'SELECT',
                                     filter: {
-                                        term: '2',
-                                        selectOptions: [ { value: '1', label: 'male' }, { value: '2', label: 'female' }, { value: '3', label: 'unknown'} ]
+                                        selectOptions: [
+                                            { value: '1', label: 'male' },
+                                            { value: '2', label: 'female' },
+                                            { value: '3', label: 'unknown'}
+                                        ]
                                     },
                                     // multiselect
                                     {
                                         field: 'graduation',
                                         type: 'MULTISELECT',
                                         filter: {
-                                        selectOptions: [ { value: 'university', label: 'university' }, { value: 'high school', label: 'high school' } ]
-                                    },
-                                    // examples for editing
-                                    { field: 'last_name', enableCellEdit: true },
-                                    { field: 'age', enableCellEdit: true, type: 'number'},
-                                    { field: 'registered', displayName: 'Registered' , type: 'date'},
-                                    { field: 'address', displayName: 'Address', type: 'object'}, //not editable if type==='object'
-                                    { field: 'address.city', enableCellEdit: true, displayName: 'Address (even rows editable)' }
-                                    { field: 'isActive', enableCellEdit: true, type: 'boolean'},
+                                        selectOptions: [
+                                            { value: 'university', label: 'university' },
+                                            { value: 'high school', label: 'high school' }
+                                    ]
+                                    }
                                 ],
-                                initialData: [
+                                data: [
                                     {
                                         "name": "Cox",
                                         "company": "Enormo",
@@ -183,21 +165,10 @@ def get_report_data(current):
                                         "graduation": "university",
                                         ...
                                     },
+
+                                    ...,
+
                                     {
-                                        "name": "Lorraine",
-                                        "company": "Comveyer",
-                                        "gender": "female",
-                                        "graduation": "high school",
-                                        ...
-                                    },
-                                    {
-                                        "name": "Nancy",,
-                                        "company": "Fuelton",
-                                        "gender": "female",
-                                        "graduation": "university",
-                                        ...
-                                    },
-                                        {
                                         "name": "Misty",
                                         "company": "Letpro",
                                         "gender": "female",
@@ -233,8 +204,9 @@ def get_report_data(current):
             if col['checked']:
                 active_columns.append(col['name'])
 
-        data = Personel.objects.set_params(start=page * page_size,
-                                           rows=page_size).filter(**query_params).values(*active_columns)
+        data = Personel.objects.set_params(
+            start=page * page_size, rows=page_size
+        ).filter(**query_params).values(*active_columns)
 
         return result_size, data
 

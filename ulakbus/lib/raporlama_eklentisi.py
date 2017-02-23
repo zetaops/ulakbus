@@ -92,7 +92,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             col_def['type'] = "INPUT"
             col_def['filter'] = {}
             col_def['filter']['condition'] = "CONTAINS"
-            col_def['filter']['placeholder'] = _(u"Contains")
+            col_def['filter']['placeholder'] = _(u"İçeren")
             alan_filter_type_map[col] = "INPUT"
         elif col in select_fields:
             col_def['filter'] = {}
@@ -127,10 +127,10 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             col_def['rangeType'] = 'datetime'
             filter_s = {}
             filter_s['condition'] = "START"
-            filter_s['placeholder'] = _(u"Start date")
+            filter_s['placeholder'] = _(u"Başlangıç")
             filter_e = {}
             filter_e['condition'] = "END"
-            filter_e['placeholder'] = _(u"End date")
+            filter_e['placeholder'] = _(u"Bitiş")
             col_def['filters'] = [filter_s, filter_e]
             alan_filter_type_map[col] = "RANGE-DATETIME"
         elif col in range_int_fields:
@@ -138,17 +138,17 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             col_def['rangeType'] = "integer"
             filter_s = {}
             filter_s['condition'] = "MAX"
-            filter_s['placeholder'] = _(u"Max value")
+            filter_s['placeholder'] = _(u"En çok")
             filter_e = {}
             filter_e['condition'] = "MIN"
-            filter_e['placeholder'] = _(u"Min value")
+            filter_e['placeholder'] = _(u"En az")
             col_def['filters'] = [filter_s, filter_e]
             alan_filter_type_map[col] = "RANGE-INTEGER"
         else:
             col_def['type'] = "INPUT"
             col_def['filter'] = {}
             col_def['filter']['condition'] = "STARTS_WITH"
-            col_def['filter']['placeholder'] = _(u"Starts with")
+            col_def['filter']['placeholder'] = _(u"Başlayan")
             alan_filter_type_map[col] = "INPUT"
         column_defs.append(col_def)
     grid_options['column_defs'] = column_defs
