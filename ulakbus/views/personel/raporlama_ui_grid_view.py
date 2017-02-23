@@ -191,7 +191,6 @@ def get_report_data(current):
         cache_data['gridOptions']['paginationCurrentPage'] = current.input['page']
 
     page = cache_data['gridOptions']['paginationCurrentPage'] - 1
-    raporlama_cache.set(cache_data)
 
     def personel_data():
         query_params = data_grid_filter_parser(cache_data['gridOptions']['options'],
@@ -210,7 +209,9 @@ def get_report_data(current):
 
         return result_size, data
 
-    current.output["total_items"], current.output["data"] = personel_data()
+    cache_data['gridOptions']['totalItems'], cache_data['gridOptions']['data'] = personel_data()
+    raporlama_cache.set(cache_data)
+    current.output['gridOptions'] = cache_data['gridOptions']
 
 
 def data_grid_filter_parser(filters, field_types):
