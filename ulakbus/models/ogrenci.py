@@ -227,7 +227,7 @@ class HariciOkutman(Model):
     kan_grubu = field.String(_(u"Kan Grubu"), index=True, required=False)
     ehliyet = field.String(_(u"Ehliyet"), index=True, required=False)
     biyografi = field.Text(_(u"Biyografi"))
-    notlar = field.Text(_(u"Notlar"))
+    notlar = field.Text(_(u"Notlar", domain='students'))
     engelli_durumu = field.String(_(u"Engellilik"), index=True)
     engel_grubu = field.String(_(u"Engel Grubu"), index=True)
     engel_derecesi = field.String(_(u"Engel Derecesi"))
@@ -1061,8 +1061,8 @@ class DegerlendirmeNot(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = _(u"Not")
-        verbose_name_plural = _(u"Notlar")
+        verbose_name = _(u"Not", domain='students')
+        verbose_name_plural = _(u"Notlar", domain='students')
         list_fields = ['puan', 'ders_adi']
         search_fields = ['aciklama', 'puan', 'ogrenci_no']
         list_filters = ['donem', ]

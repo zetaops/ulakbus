@@ -23,6 +23,7 @@ LOCALIZATION_FORMATS = ['en_US', 'en_GB', 'tr_TR']
 TRANSLATIONS_DIR = os.path.join(BASE_DIR, 'locale')
 # The language of messages in Ulakbus
 TRANSLATION_DOMAINS['messages'] = 'tr'
+TRANSLATION_DOMAINS['students'] = 'tr'
 
 # Default mail address
 MAIL_ADDRESS = 'postmaster@mg.ulakbus.net'
