@@ -19,19 +19,23 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     grid_options = {}
 
     # Gösterilecek alanlar listesi.
-    members = ['tckn', 'cuzdan_seri', 'cuzdan_seri_no', 'kayitli_oldugu_cilt_no', 'kayitli_oldugu_aile_sira_no',
-               'kayitli_oldugu_sira_no', 'kimlik_cuzdani_verildigi_yer', 'kimlik_cuzdani_verilis_nedeni',
-               'kimlik_cuzdani_kayit_no', 'kimlik_cuzdani_verilis_tarihi', 'emekli_sicil_no',
-               'emekli_giris_tarihi', 'ad', 'soyad', 'dogum_tarihi', 'dogum_yeri', 'baba_adi', 'ana_adi', 'cinsiyet',
-               'medeni_hali', 'kan_grubu', 'kayitli_oldugu_mahalle_koy', 'kayitli_oldugu_ilce', 'kayitli_oldugu_il',
-               'brans', 'hizmet_sinifi', 'kazanilmis_hak_derece', 'kazanilmis_hak_kademe', 'kazanilmis_hak_ekgosterge',
-               'gorev_ayligi_derece', 'gorev_ayligi_kademe', 'gorev_ayligi_ekgosterge', 'emekli_muktesebat_derece',
-               'emekli_muktesebat_kademe', 'emekli_muktesebat_ekgosterge', 'kh_sonraki_terfi_tarihi',
-               'ga_sonraki_terfi_tarihi', 'unvan', 'personel_turu', 'goreve_baslama_tarihi', 'mecburi_hizmet_suresi']
+    column_list = ['tckn', 'cuzdan_seri', 'cuzdan_seri_no', 'kayitli_oldugu_cilt_no',
+                   'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no',
+                   'kimlik_cuzdani_verildigi_yer', 'kimlik_cuzdani_verilis_nedeni',
+                   'kimlik_cuzdani_kayit_no', 'kimlik_cuzdani_verilis_tarihi', 'emekli_sicil_no',
+                   'emekli_giris_tarihi', 'ad', 'soyad', 'dogum_tarihi', 'dogum_yeri', 'baba_adi',
+                   'ana_adi', 'cinsiyet', 'medeni_hali', 'kan_grubu', 'kayitli_oldugu_mahalle_koy',
+                   'kayitli_oldugu_ilce', 'kayitli_oldugu_il', 'brans', 'hizmet_sinifi',
+                   'kazanilmis_hak_derece', 'kazanilmis_hak_kademe', 'kazanilmis_hak_ekgosterge',
+                   'gorev_ayligi_derece', 'gorev_ayligi_kademe', 'gorev_ayligi_ekgosterge',
+                   'emekli_muktesebat_derece', 'emekli_muktesebat_kademe',
+                   'emekli_muktesebat_ekgosterge', 'kh_sonraki_terfi_tarihi',
+                   'ga_sonraki_terfi_tarihi', 'unvan', 'personel_turu', 'goreve_baslama_tarihi',
+                   'mecburi_hizmet_suresi', 'kurum_sicil_no_int']
 
     # members içindeki fieldların verbose namelerini alıp dictionary'ye koyar.
     # Örnek: {"ad": "Adı", "tckn": "TC No", ...}
-    personel_fields = dict((name, str(Personel.get_field(name).title)) if Personel.get_field(name) is not None else (name, name) for name in members)
+    personel_fields = dict((name, str(Personel.get_field(name).title)) if Personel.get_field(name) is not None else (name, name) for name in column_list)
 
     personel_fields['birim'] = _(u"Birim")
     personel_fields['baslama_sebep'] = _(u"Başlama Sebebi")
@@ -101,7 +105,6 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             alan_filter_type_map[k] = "INPUT"
         elif k in select_fields:
             col_def['filter'] = {}
-            col_def['filter']['term'] = ''  # todo term ne?
             col_def['type'] = 'SELECT'
             if k == 'cinsiyet':
                 sel_opts = cinsiyet
@@ -196,6 +199,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     grid_options['toggleFiltering'] = True
     grid_options['useExternalFiltering'] = True
     grid_options['paginationPageSize'] = PAGE_SIZE
+    grid_options['paginationCurrentPage'] = 1
     grid_options['useExternalPagination'] = True
     grid_options['enableAdding'] = True
     grid_options['enableRemoving'] = True
