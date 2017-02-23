@@ -1,22 +1,23 @@
-# English translations for ulakbus.
-# Copyright (C) 2017 GPL v3
-# This file is distributed under the same license as the ulakbus project.
+# English translations for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ulakbus VERSION\n"
-"Report-Msgid-Bugs-To: info@zetaops.io\n"
-"POT-Creation-Date: 2017-02-23 15:25+0300\n"
-"PO-Revision-Date: 2017-02-22 10:35+0300\n"
-"Last-Translator: Anil Can Aydin <anlcnydn@gmail.com>\n"
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-02-23 16:42+0300\n"
+"PO-Revision-Date: 2017-02-23 16:50+0300\n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
+"Last-Translator: Anil Can Aydin <anlcnydn@gmail.com>\n"
+"X-Generator: Poedit 1.8.12\n"
 
 #: lib/common.py:245
 msgid "Kullanıcı adınızı yanlış girdiniz. Lütfen tekrar deneyiniz."
@@ -90,8 +91,8 @@ msgid "Başlayan"
 msgstr ""
 
 #: lib/raporlama_eklentisi.py:161 models/ders_sinav_programi.py:80
-#: models/ders_sinav_programi.py:100 models/ogrenci.py:1172
-#: models/personel.py:96 models/personel.py:285 models/personel.py:419
+#: models/ders_sinav_programi.py:100 models/ogrenci.py:1172 models/personel.py:96
+#: models/personel.py:285 models/personel.py:419
 msgid "Birim"
 msgstr ""
 
@@ -407,18 +408,17 @@ msgid "Faaliyet Adı"
 msgstr ""
 
 #: models/akademik_faaliyet.py:51 models/hitap/hitap.py:151
-#: models/hitap/hitap.py:288 models/hitap/hitap.py:320
-#: models/hitap/hitap.py:341 models/hitap/hitap.py:365
-#: models/hitap/hitap.py:445 models/personel.py:283 models/personel.py:345
-#: views/personel/akademik_faaliyet.py:241 views/personel/gorevlendirme.py:64
+#: models/hitap/hitap.py:288 models/hitap/hitap.py:320 models/hitap/hitap.py:341
+#: models/hitap/hitap.py:365 models/hitap/hitap.py:445 models/personel.py:283
+#: models/personel.py:345 views/personel/akademik_faaliyet.py:241
+#: views/personel/gorevlendirme.py:64
 msgid "Başlama Tarihi"
 msgstr ""
 
 #: models/akademik_faaliyet.py:52 models/hitap/hitap.py:152
-#: models/hitap/hitap.py:289 models/hitap/hitap.py:321
-#: models/hitap/hitap.py:342 models/hitap/hitap.py:366
-#: models/hitap/hitap.py:446 models/ogrenci.py:56 models/personel.py:284
-#: models/personel.py:346 models/personel.py:617
+#: models/hitap/hitap.py:289 models/hitap/hitap.py:321 models/hitap/hitap.py:342
+#: models/hitap/hitap.py:366 models/hitap/hitap.py:446 models/ogrenci.py:56
+#: models/personel.py:284 models/personel.py:346 models/personel.py:617
 #: views/common/yeni_donem_olusturma.py:23
 #: views/common/yeni_donem_olusturma.py:26
 #: views/personel/akademik_faaliyet.py:241 views/personel/gorevlendirme.py:64
@@ -942,8 +942,7 @@ msgstr ""
 msgid "Arşivlenmiş"
 msgstr ""
 
-#: models/ders_sinav_programi.py:220 models/ogrenci.py:606
-#: models/ogrenci.py:1059
+#: models/ders_sinav_programi.py:220 models/ogrenci.py:606 models/ogrenci.py:1059
 msgid "Sınav Tarihi"
 msgstr ""
 
@@ -1025,8 +1024,8 @@ msgstr ""
 msgid "Dönemler"
 msgstr ""
 
-#: models/ogrenci.py:206 models/personel.py:31
-#: views/personel/personel_test.py:21 views/personel/yeni_personel.py:180
+#: models/ogrenci.py:206 models/personel.py:31 views/personel/personel_test.py:21
+#: views/personel/yeni_personel.py:180
 msgid "TC No"
 msgstr ""
 
@@ -1464,11 +1463,10 @@ msgid "Ders Programları"
 msgstr ""
 
 #: models/hitap/hitap.py:55 models/hitap/hitap.py:86 models/hitap/hitap.py:114
-#: models/hitap/hitap.py:147 models/hitap/hitap.py:181
-#: models/hitap/hitap.py:207 models/hitap/hitap.py:232
-#: models/hitap/hitap.py:280 models/hitap/hitap.py:318
-#: models/hitap/hitap.py:339 models/hitap/hitap.py:363
-#: models/hitap/hitap.py:460 models/ogrenci.py:669
+#: models/hitap/hitap.py:147 models/hitap/hitap.py:181 models/hitap/hitap.py:207
+#: models/hitap/hitap.py:232 models/hitap/hitap.py:280 models/hitap/hitap.py:318
+#: models/hitap/hitap.py:339 models/hitap/hitap.py:363 models/hitap/hitap.py:460
+#: models/ogrenci.py:669
 msgid "TC Kimlik No"
 msgstr ""
 
@@ -1893,8 +1891,7 @@ msgstr ""
 
 #: models/ogrenci.py:1115
 msgid ""
-"Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye "
-"Yayınlanması"
+"Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye Yayınlanması"
 msgstr ""
 
 #: models/ogrenci.py:1116
@@ -2145,8 +2142,7 @@ msgstr ""
 msgid "Göreve Başlama Tarihi"
 msgstr ""
 
-#: models/personel.py:122 views/personel/atama.py:135
-#: views/personel/atama.py:369
+#: models/personel.py:122 views/personel/atama.py:135 views/personel/atama.py:369
 msgid "Mecburi Hizmet Süresi"
 msgstr ""
 
@@ -2519,11 +2515,10 @@ msgid "Sebep"
 msgstr ""
 
 #: models/hitap/hitap.py:35 models/hitap/hitap.py:69 models/hitap/hitap.py:98
-#: models/hitap/hitap.py:131 models/hitap/hitap.py:164
-#: models/hitap/hitap.py:190 models/hitap/hitap.py:216
-#: models/hitap/hitap.py:264 models/hitap/hitap.py:302
-#: models/hitap/hitap.py:323 models/hitap/hitap.py:347
-#: models/hitap/hitap.py:388 models/hitap/hitap.py:465
+#: models/hitap/hitap.py:131 models/hitap/hitap.py:164 models/hitap/hitap.py:190
+#: models/hitap/hitap.py:216 models/hitap/hitap.py:264 models/hitap/hitap.py:302
+#: models/hitap/hitap.py:323 models/hitap/hitap.py:347 models/hitap/hitap.py:388
+#: models/hitap/hitap.py:465
 msgid "Senkronize"
 msgstr ""
 
@@ -2577,9 +2572,8 @@ msgid "Denklik Bölüm"
 msgstr ""
 
 #: models/hitap/hitap.py:68 models/hitap/hitap.py:97 models/hitap/hitap.py:130
-#: models/hitap/hitap.py:163 models/hitap/hitap.py:189
-#: models/hitap/hitap.py:214 models/hitap/hitap.py:263
-#: models/hitap/hitap.py:301 models/hitap/hitap.py:346
+#: models/hitap/hitap.py:163 models/hitap/hitap.py:189 models/hitap/hitap.py:214
+#: models/hitap/hitap.py:263 models/hitap/hitap.py:301 models/hitap/hitap.py:346
 #: models/hitap/hitap.py:387 models/hitap/hitap.py:463
 #: views/personel/atama.py:407
 msgid "Kurum Onay Tarihi"
@@ -2594,9 +2588,8 @@ msgid "Kurslar"
 msgstr ""
 
 #: models/hitap/hitap.py:85 models/hitap/hitap.py:115 models/hitap/hitap.py:148
-#: models/hitap/hitap.py:180 models/hitap/hitap.py:233
-#: models/hitap/hitap.py:281 models/hitap/hitap.py:319
-#: models/hitap/hitap.py:340 models/hitap/hitap.py:364
+#: models/hitap/hitap.py:180 models/hitap/hitap.py:233 models/hitap/hitap.py:281
+#: models/hitap/hitap.py:319 models/hitap/hitap.py:340 models/hitap/hitap.py:364
 #: models/hitap/hitap.py:447
 msgid "Kayıt No"
 msgstr ""
@@ -2673,8 +2666,7 @@ msgstr ""
 msgid "Geçerli Doğum Tarihi"
 msgstr ""
 
-#: models/hitap/hitap.py:129 models/hitap/hitap.py:290
-#: models/hitap/hitap.py:343
+#: models/hitap/hitap.py:129 models/hitap/hitap.py:290 models/hitap/hitap.py:343
 msgid "Gün Sayısı"
 msgstr ""
 
@@ -3136,16 +3128,15 @@ msgstr ""
 #: views/common/e_posta_degistir.py:55
 msgid ""
 "Girmiş olduğunuz e-posta adresi geçersizdir.\n"
-"                                        Lütfen düzelterek tekrar "
-"deneyiniz."
+"                                        Lütfen düzelterek tekrar deneyiniz."
 msgstr ""
 
 #: views/common/e_posta_degistir.py:93
 #, python-format
 msgid ""
 "'%s' adresinize doğrulama linki gönderilmiştir.\n"
-"        Lütfen e-posta'nızdaki bağlantı linkine tıklayarak e-posta "
-"adresinin size ait\n"
+"        Lütfen e-posta'nızdaki bağlantı linkine tıklayarak e-posta adresinin "
+"size ait\n"
 "        olduğunu doğrulayınız. "
 msgstr ""
 
@@ -3163,13 +3154,12 @@ msgstr ""
 #: views/ogrenci/ogrenci.py:292 views/ogrenci/ogrenci.py:487
 #: views/ogrenci/ogrenci.py:509 views/ogrenci/ogrenci.py:920
 #: views/ogrenci/ogrenci_isleri_not_duzenleme.py:29
-#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:85
-#: views/ogrenci/on_kayit.py:30 views/ogrenci/on_kayit.py:58
-#: views/ogrenci/on_kayit.py:74 views/personel/akademik_faaliyet.py:81
-#: views/personel/atama.py:388 views/personel/atama.py:409
-#: views/personel/gorevlendirme.py:260 views/personel/idari_cezalar.py:19
-#: views/personel/kadro.py:117 views/personel/kadro.py:619
-#: views/personel/kimlik_ve_iletisim.py:41
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:85 views/ogrenci/on_kayit.py:30
+#: views/ogrenci/on_kayit.py:58 views/ogrenci/on_kayit.py:74
+#: views/personel/akademik_faaliyet.py:81 views/personel/atama.py:388
+#: views/personel/atama.py:409 views/personel/gorevlendirme.py:260
+#: views/personel/idari_cezalar.py:19 views/personel/kadro.py:117
+#: views/personel/kadro.py:619 views/personel/kimlik_ve_iletisim.py:41
 #: views/personel/kimlik_ve_iletisim.py:57
 #: views/personel/kimlik_ve_iletisim.py:73 views/personel/personel_test.py:58
 #: views/personel/saglik_raporu.py:22 views/personel/ucretsiz_izin.py:35
@@ -3220,8 +3210,7 @@ msgstr ""
 
 #: views/common/kullanici_adi_degistir.py:61
 msgid ""
-"Bu işlemi gerçekleştirebilmek için güncel parolanızı girmeniz "
-"gerekmektedir."
+"Bu işlemi gerçekleştirebilmek için güncel parolanızı girmeniz gerekmektedir."
 msgstr ""
 
 #: views/common/kullanici_adi_degistir.py:63
@@ -3236,10 +3225,9 @@ msgstr ""
 #, python-format
 msgid ""
 "'%s' olan kullanıcı adınız\n"
-"                                                 '%s' olarak "
-"değiştirilmiştir.Çıkış yapıp yeni kullanıcı\n"
-"                                                 adınızla giriş "
-"yapabilirsiniz "
+"                                                 '%s' olarak değiştirilmiştir."
+"Çıkış yapıp yeni kullanıcı\n"
+"                                                 adınızla giriş yapabilirsiniz "
 msgstr ""
 
 #: views/common/parola_degistir.py:27
@@ -3283,8 +3271,8 @@ msgstr ""
 #: views/common/parola_degistir.py:77
 msgid ""
 "Parolanız başarıyla değiştirildi. Çıkış\n"
-"                                                    yapıp yeni "
-"parolanızla giriş yapabilirsiniz"
+"                                                    yapıp yeni parolanızla "
+"giriş yapabilirsiniz"
 msgstr ""
 
 #: views/common/parolami_unuttum.py:47
@@ -3368,8 +3356,7 @@ msgstr ""
 
 #: views/common/profil_sayfasi_goruntuleme.py:147
 msgid ""
-"Değişiklikleriniz başarıyla kaydedilmiştir. Ana sayfaya "
-"yönlendiriliyorsunuz."
+"Değişiklikleriniz başarıyla kaydedilmiştir. Ana sayfaya yönlendiriliyorsunuz."
 msgstr ""
 
 #: views/common/yeni_donem_olusturma.py:34
@@ -3409,9 +3396,8 @@ msgstr ""
 msgid "Yeni Parola Girişi"
 msgstr ""
 
-#: views/common/yeni_parola_belirle.py:56
-#: views/ders_programi/zaman_tablosu.py:20 views/personel/kadro.py:540
-#: views/workflow/workflow_management.py:46
+#: views/common/yeni_parola_belirle.py:56 views/ders_programi/zaman_tablosu.py:20
+#: views/personel/kadro.py:540 views/workflow/workflow_management.py:46
 msgid "Onayla"
 msgstr ""
 
@@ -3451,8 +3437,7 @@ msgstr ""
 #: views/ders/danisman.py:146
 #, python-format
 msgid ""
-"%(donem)s dönemi için %(unit)s programına ait danışman listesi "
-"kaydedilmiştir"
+"%(donem)s dönemi için %(unit)s programına ait danışman listesi kaydedilmiştir"
 msgstr ""
 
 #: views/ders/danisman.py:150 views/ogrenci/ogrenci.py:385
@@ -3469,8 +3454,7 @@ msgstr ""
 #: views/ogrenci/katilim_durumu.py:98 views/ogrenci/kayit_silme.py:180
 #: views/ogrenci/ogrenci.py:283 views/ogrenci/ogrenci.py:301
 #: views/ogrenci/ogrenci_isleri_not_duzenleme.py:112
-#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:127
-#: views/personel/kadro.py:290
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:127 views/personel/kadro.py:290
 msgid "Seç"
 msgstr ""
 
@@ -3691,8 +3675,8 @@ msgstr ""
 
 #: views/ders_programi/program_olustur.py:33
 msgid ""
-"Oluşturulan programda hatalı sonuçlar bulunmaktadır. Lütfen "
-"tekrardanverileri düzenleyip çalıştırınız."
+"Oluşturulan programda hatalı sonuçlar bulunmaktadır. Lütfen tekrardanverileri "
+"düzenleyip çalıştırınız."
 msgstr ""
 
 #: views/ders_programi/program_olustur.py:36
@@ -3758,8 +3742,7 @@ msgstr ""
 msgid "İşleme devam etmek için tıklayınız!"
 msgstr ""
 
-#: views/ders_programi/program_olustur.py:150
-#: views/personel/isten_ayrilma.py:67
+#: views/ders_programi/program_olustur.py:150 views/personel/isten_ayrilma.py:67
 msgid "Devam"
 msgstr ""
 
@@ -4113,8 +4096,8 @@ msgstr ""
 #: views/ogrenci/ogrenci.py:378
 #, python-format
 msgid ""
-"%(ogrenci)s adlı öğrenciye %(danisman)s adlı personel"
-"                         danışman olarak atandı"
+"%(ogrenci)s adlı öğrenciye %(danisman)s adlı personel                         "
+"danışman olarak atandı"
 msgstr ""
 
 #: views/ogrenci/ogrenci.py:386
@@ -4129,9 +4112,8 @@ msgstr ""
 #: views/ogrenci/ogrenci.py:442
 #, python-format
 msgid ""
-"%(ogrenci_no)s numaralı %(ogrenci)s adlı öğrenci %(bolum)s adlı"
-"                 bölümden %(diploma)s diploma numarası ile mezun "
-"edilmiştir"
+"%(ogrenci_no)s numaralı %(ogrenci)s adlı öğrenci %(bolum)s "
+"adlı                 bölümden %(diploma)s diploma numarası ile mezun edilmiştir"
 msgstr ""
 
 #: views/ogrenci/ogrenci.py:453 views/ogrenci/ogrenci.py:938
@@ -4299,8 +4281,7 @@ msgstr ""
 msgid "Faaliyet Seçiniz"
 msgstr ""
 
-#: views/personel/akademik_faaliyet.py:70
-#: views/personel/akademik_faaliyet.py:74
+#: views/personel/akademik_faaliyet.py:70 views/personel/akademik_faaliyet.py:74
 #: views/personel/akademik_faaliyet.py:144
 #: views/personel/akademik_faaliyet.py:156
 msgid "Ileri"
@@ -4746,8 +4727,8 @@ msgstr ""
 msgid ""
 "{onceki} yılına ait izinli gün sayınız {onceki_izin}, Kalan gün sayınız "
 "{onceki_kalan}\n"
-"                          {guncel} yılına ait izinli gün sayınız "
-"{guncel_izin},Toplam izinli gün sayınız  {guncel_kalan}\n"
+"                          {guncel} yılına ait izinli gün sayınız {guncel_izin},"
+"Toplam izinli gün sayınız  {guncel_kalan}\n"
 "                          'dir.\n"
 "                          "
 msgstr ""
@@ -4926,8 +4907,7 @@ msgstr ""
 #: views/personel/kadro.py:459
 #, python-format
 msgid ""
-"%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen personel "
-"bulunamadı."
+"%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen personel bulunamadı."
 msgstr ""
 
 #: views/personel/kadro.py:529
@@ -5252,8 +5232,7 @@ msgstr ""
 #: views/reports/ders_ucreti_hesaplama.py:107
 msgid ""
 "Seçtiğiniz yıl ve aya ait dönem bulunamadı. Tarih\n"
-"                          seçimine geri dönmek için Geri Dön butonuna, "
-"işlemi\n"
+"                          seçimine geri dönmek için Geri Dön butonuna, işlemi\n"
 "                          iptal etmek için İptal butonuna basabilirsiniz."
 msgstr ""
 
@@ -5277,8 +5256,8 @@ msgstr ""
 #: views/reports/ders_ucreti_hesaplama.py:170
 msgid ""
 "İşlem yapabilmek için en az bir öğretim görevlisi seçmelisiniz.\n"
-"                                Öğretim görevlisi seçimine geri dönmek "
-"için Geri Dön butonuna,\n"
+"                                Öğretim görevlisi seçimine geri dönmek için "
+"Geri Dön butonuna,\n"
 "                                işlemi iptal etmek için İptal butonuna "
 "basabilirsiniz."
 msgstr ""
@@ -5346,8 +5325,7 @@ msgstr ""
 
 #: views/sinav_programi/sinav_programi_goruntule.py:56
 msgid ""
-"Bulunduğunuz döneme ait, güncel yayınlanmış sınav programı "
-"bulunmamaktadır."
+"Bulunduğunuz döneme ait, güncel yayınlanmış sınav programı bulunmamaktadır."
 msgstr ""
 
 #: views/sinav_programi/sinav_programi_goruntule.py:99
@@ -5370,8 +5348,8 @@ msgid ""
 "* Model tipi seçilmesi zorunludur.\n"
 "* Soyut rol secilmesi zorunludur.\n"
 "* Arama sorgusu yazılması zorunludur ve \"role\" ile başlamalıdır.\n"
-"Örnek: Şube modelini kullanan bir iş akışının okutmanlara özel gitmesi "
-"için sorgunun;\n"
+"Örnek: Şube modelini kullanan bir iş akışının okutmanlara özel gitmesi için "
+"sorgunun;\n"
 "okutman=role.user.personel.okutman şeklinde olmalıdır.\n"
 "* Birim seçilmesi zorunludur. Eğer seçilen birim Fakülte ise\n"
 "alt birimlerde ki rolleri getir seçeneği işaretlenmesi zorunludur.\n"
@@ -5380,15 +5358,13 @@ msgstr ""
 
 #: views/workflow/workflow_management.py:67
 msgid ""
-"Modelin seçildiği, aynı soyut role sahip kişilere aynı iş akışı atama "
-"formu:\n"
+"Modelin seçildiği, aynı soyut role sahip kişilere aynı iş akışı atama formu:\n"
 "* Model tipi seçilmesi zorunludur.\n"
 "* Arama sorgusu yapılması zorunlu değildir.\n"
 "Eğer bir sorgu yapılacak ise sorgu kodu \"role\" ile başlamamalıdır.\n"
-"Örnek: personel modelini kullanan bir iş akışı için sorgu şu şekilde "
-"olabilir; personel_turu=2\n"
-"* Eğer rolleri getir secenegi kullanılırsa, birim ile soyut rol "
-"kullanılmaz.\n"
+"Örnek: personel modelini kullanan bir iş akışı için sorgu şu şekilde olabilir; "
+"personel_turu=2\n"
+"* Eğer rolleri getir secenegi kullanılırsa, birim ile soyut rol kullanılmaz.\n"
 "Bu tam tersi durum içinde geçerlidir.\n"
 "* İş akışının başlangıç ve bitiş zamanlari girilmesi zorunludur.\n"
 "\n"
@@ -5396,10 +5372,9 @@ msgstr ""
 
 #: views/workflow/workflow_management.py:78
 msgid ""
-"Modelin olmadığı, aynı soyut role sahip kişilere aynı iş akışı atama "
-"formu:\n"
-"* Burada iki seçenek vardır. Ya rolleri getir secenegi kullanılır ya da "
-"soyut rol seçeneği.\n"
+"Modelin olmadığı, aynı soyut role sahip kişilere aynı iş akışı atama formu:\n"
+"* Burada iki seçenek vardır. Ya rolleri getir secenegi kullanılır ya da soyut "
+"rol seçeneği.\n"
 msgstr ""
 
 #: views/workflow/workflow_management.py:82
@@ -5428,16 +5403,3 @@ msgstr ""
 #: views/workflow/workflow_management.py:125
 msgid "İş akışı ilgili rollere aktarıldı."
 msgstr ""
-
-#~ msgid "Başlama Sebebi"
-#~ msgstr ""
-
-#~ msgid "Başlama tarihi"
-#~ msgstr ""
-
-#~ msgid "Bitiş tarihi"
-#~ msgstr ""
-
-#~ msgid "En fazla"
-#~ msgstr ""
-
