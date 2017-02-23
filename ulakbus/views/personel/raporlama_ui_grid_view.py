@@ -78,14 +78,17 @@ def get_report_data(current):
                                 selectors: [
                                     {
                                         name: "some field name (name, age etc)",
+                                        label: "Some Field Name To Show (Name, Age etc.)",
                                         checked: true or false
                                     },
                                     {
                                         name: "some field name (name, age etc)",
+                                        label: "Some Field Name To Show (Name, Age etc.)",
                                         checked: true or false
                                     },
                                     {
                                         name: "some field name (name, age etc)",
+                                        label: "Some Field Name To Show (Name, Age etc.)",
                                         checked: true or false
                                     },
                                     ...
@@ -207,7 +210,6 @@ def get_report_data(current):
     """
     raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
     cache_data = raporlama_cache.get_or_set()
-    time_related_fields = cache_data['time_related_fields']
     page_size = cache_data['gridOptions']['paginationPageSize']
 
     if 'selectors' in current.input:
@@ -225,25 +227,15 @@ def get_report_data(current):
                                                cache_data['alan_filter_type_map'])
 
         result_size = Personel.objects.filter(**query_params).count()
-        result_set = Personel.objects.set_params(start=page * page_size,
-                                                 rows=page_size).filter(**query_params)
 
         active_columns = []
         for col in cache_data['gridOptions']['selectors']:
             if col['checked']:
                 active_columns.append(col['name'])
 
-        data = []
-        for p in result_set:
-            pd = {}
-            for active_selector in active_columns:
-                if active_selector in ['birim', 'baslama_sebep']:
-                    pd[active_selector] = p.__getattribute__(str(active_selector) + "_id")
-                elif active_selector in time_related_fields:
-                    pd[active_selector] = p.__getattribute__(active_selector).strftime(DATE_DEFAULT_FORMAT)
-                else:
-                    pd[active_selector] = p.__getattribute__(active_selector)
-            data.append(pd)
+        data = Personel.objects.set_params(start=page * page_size,
+                                           rows=page_size).filter(**query_params).values(*active_columns)
+
         return result_size, data
 
     current.output["total_items"], current.output["data"] = personel_data()

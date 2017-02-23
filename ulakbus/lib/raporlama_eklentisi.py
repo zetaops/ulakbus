@@ -9,7 +9,6 @@ from ulakbus.models.auth import Unit
 from ulakbus.models.hitap.hitap_sebep import HitapSebep
 from zengine.lib.translation import gettext as _
 from zengine.lib.catalog_data import catalog_data_manager
-from ulakbus.settings import DATE_DEFAULT_FORMAT
 
 
 def raporlama_ekrani_secim_menulerini_hazirla():
@@ -31,15 +30,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
                    'emekli_muktesebat_derece', 'emekli_muktesebat_kademe',
                    'emekli_muktesebat_ekgosterge', 'kh_sonraki_terfi_tarihi',
                    'ga_sonraki_terfi_tarihi', 'unvan', 'personel_turu', 'goreve_baslama_tarihi',
-                   'mecburi_hizmet_suresi', 'kurum_sicil_no_int']
-
-    # members içindeki fieldların verbose namelerini alıp dictionary'ye koyar.
-    # Örnek: {"ad": "Adı", "tckn": "TC No", ...}
-    personel_fields = dict((name, str(Personel.get_field(name).title)) if Personel.get_field(name) is not None else (name, name) for name in column_list)
-
-    personel_fields['birim'] = _(u"Birim")
-    personel_fields['baslama_sebep'] = _(u"Başlama Sebebi")
-    personel_fields['kurum_sicil_no'] = _(u"Kurum Sicil No")
+                   'mecburi_hizmet_suresi', 'kurum_sicil_no_int', 'birim_id', 'baslama_sebep_id']
 
     # Cinsiyet türlerini catalog datadan aldık
     cinsiyet = [{"value": item['value'], "label": item['name']} for item in
@@ -75,16 +66,16 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     # Hitap sebep kodlarını aldık
     sebep_kodlari = [{"value": sk.sebep_no, "label": sk.ad} for sk in HitapSebep.objects.filter()]
 
-    personeller = Personel.objects.filter()[0:PAGE_SIZE]
-
     # Başlangıçta görünecek alanlar
     default_alanlar = ['ad', 'soyad', 'cinsiyet', 'dogum_tarihi', 'personel_turu']
+
+    grid_options['data'] = Personel.objects.filter()[0:PAGE_SIZE].values(*default_alanlar)
 
     alan_filter_type_map = {}
 
     contains_fields = []
     select_fields = ['cinsiyet', 'kan_grubu', 'medeni_hali', 'personel_turu']
-    multiselect_fields = ['baslama_sebep', 'birim', 'hizmet_sinifi', 'unvan']
+    multiselect_fields = ['baslama_sebep_id', 'birim_id', 'hizmet_sinifi', 'unvan']
     range_date_fields = ['dogum_tarihi', 'em_sonraki_terfi_tarihi', 'emekli_giris_tarihi', 'ga_sonraki_terfi_tarihi',
                          'gorev_suresi_baslama', 'gorev_suresi_bitis', 'goreve_baslama_tarihi',
                          'kh_sonraki_terfi_tarihi', 'mecburi_hizmet_suresi']
@@ -94,44 +85,44 @@ def raporlama_ekrani_secim_menulerini_hazirla():
 
     column_defs = []
 
-    for k, v in personel_fields.items():
+    for col in column_list:
         col_def = {}
-        col_def['field'] = k
-        if k in contains_fields:
+        col_def['field'] = col
+        if col in contains_fields:
             col_def['type'] = "INPUT"
             col_def['filter'] = {}
             col_def['filter']['condition'] = "CONTAINS"
             col_def['filter']['placeholder'] = _(u"Contains")
-            alan_filter_type_map[k] = "INPUT"
-        elif k in select_fields:
+            alan_filter_type_map[col] = "INPUT"
+        elif col in select_fields:
             col_def['filter'] = {}
             col_def['type'] = 'SELECT'
-            if k == 'cinsiyet':
+            if col == 'cinsiyet':
                 sel_opts = cinsiyet
-            elif k == 'kan_grubu':
+            elif col == 'kan_grubu':
                 sel_opts = kan_grubu
-            elif k == 'medeni_hali':
+            elif col == 'medeni_hali':
                 sel_opts = medeni_hal
             else:
                 sel_opts = personel_turu
             col_def['filter']['selectOptions'] = sel_opts
-            alan_filter_type_map[k] = "SELECT"
-        elif k in multiselect_fields:
+            alan_filter_type_map[col] = "SELECT"
+        elif col in multiselect_fields:
             col_def['filter'] = {}
             col_def['type'] = 'MULTISELECT'
-            if k == 'baslama_sebep':
+            if col == 'baslama_sebep_id':
                 sel_opts = sebep_kodlari
-            elif k == 'birim':
+            elif col == 'birim_id':
                 sel_opts = birim
-            elif k == 'hizmet_sinifi':
+            elif col == 'hizmet_sinifi':
                 sel_opts = hizmet_sinifi
-            elif k == 'statu':
+            elif col == 'statu':
                 sel_opts = personel_statu
             else:
                 sel_opts = unvan
             col_def['filter']['selectOptions'] = sel_opts
-            alan_filter_type_map[k] = "MULTISELECT"
-        elif k in range_date_fields:
+            alan_filter_type_map[col] = "MULTISELECT"
+        elif col in range_date_fields:
             col_def['type'] = 'range'
             col_def['rangeType'] = 'datetime'
             filter_s = {}
@@ -141,8 +132,8 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             filter_e['condition'] = "END"
             filter_e['placeholder'] = _(u"End date")
             col_def['filters'] = [filter_s, filter_e]
-            alan_filter_type_map[k] = "RANGE-DATETIME"
-        elif k in range_int_fields:
+            alan_filter_type_map[col] = "RANGE-DATETIME"
+        elif col in range_int_fields:
             col_def['type'] = "range"
             col_def['rangeType'] = "integer"
             filter_s = {}
@@ -152,36 +143,29 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             filter_e['condition'] = "MIN"
             filter_e['placeholder'] = _(u"Min value")
             col_def['filters'] = [filter_s, filter_e]
-            alan_filter_type_map[k] = "RANGE-INTEGER"
+            alan_filter_type_map[col] = "RANGE-INTEGER"
         else:
             col_def['type'] = "INPUT"
             col_def['filter'] = {}
             col_def['filter']['condition'] = "STARTS_WITH"
             col_def['filter']['placeholder'] = _(u"Starts with")
-            alan_filter_type_map[k] = "INPUT"
+            alan_filter_type_map[col] = "INPUT"
         column_defs.append(col_def)
     grid_options['column_defs'] = column_defs
 
     selectors = []
-    for k, v in personel_fields.items():
+    for col in column_list:
         select = {}
-        select['name'] = k
-        select['checked'] = True if k in default_alanlar else False
+        select['name'] = col
+        if col == "birim_id":
+            select['label'] = _(u"Birim")
+        elif col == "baslama_sebep_id":
+            select['label'] = _(u"Başlama Sebep")
+        else:
+            select['label'] = str(Personel.get_field(col).title) if Personel.get_field(col) is not None else col
+        select['checked'] = True if col in default_alanlar else False
         selectors.append(select)
     grid_options['selectors'] = selectors
-
-    initial_data = []
-    for p in personeller:
-        per = {}
-        for d in default_alanlar:
-            if d in ['birim', 'baslama_sebep']:
-                per[d] = p.__getattribute__(str(d) + "_id")
-            elif d in range_date_fields:
-                per[d] = p.__getattribute__(d).strftime(DATE_DEFAULT_FORMAT)
-            else:
-                per[d] = p.__getattribute__(d)
-        initial_data.append(per)
-    grid_options['data'] = initial_data
 
     """
     useExternalSorting: true,  //if need sorting from backend side
