@@ -210,7 +210,9 @@ def get_report_data(current):
 
         return result_size, data
 
-    current.output["total_items"], current.output["data"] = personel_data()
+    cache_data['gridOptions']['totalItems'], cache_data['gridOptions']['data'] = personel_data()
+    raporlama_cache.set(cache_data)
+    current.output['gridOptions'] = cache_data['gridOptions']
 
 
 def data_grid_filter_parser(filters, field_types):
