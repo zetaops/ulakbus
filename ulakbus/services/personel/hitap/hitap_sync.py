@@ -180,11 +180,11 @@ class HITAPSync(ZatoHitapService):
                     hitap_kayit_no = hitap_record['kayit_no']
 
                     # if hitap data is not in db, create an object and save to db.
-                    if hitap_kayit_no not in kayit_no_list:
+                    if str(hitap_kayit_no) not in kayit_no_list:
                         self.save_hitap_data_db(hitap_record, personel)
                     # if in db, don't touch.
                     else:
-                        kayit_no_list.remove(hitap_kayit_no)
+                        kayit_no_list.remove(str(hitap_kayit_no))
 
                 # if there are still some in sync records which are not in hitap, delete them.
                 for model_kayit_no in kayit_no_list:
