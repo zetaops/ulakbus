@@ -5535,32 +5535,3 @@ msgstr "Bilgi"
 #: views/workflow/workflow_management.py:125
 msgid "İş akışı ilgili rollere aktarıldı."
 msgstr "Workflow has been transferred to related roles."
-
-#~ msgid "Uzun İsim"
-#~ msgstr "Full Name"
-
-#~ msgid "Personel İşten ayrılma işlemini onaylıyormusunuz?"
-#~ msgstr "Do you approve the operation employee quit?"
-
-#~ msgid "İptal Edildi"
-#~ msgstr "Cancelled"
-
-#~ msgid "İşlemi iptal ettiniz. Ana sayfa'ya yönlendirileceksiniz"
-#~ msgstr "You cancelled the operation. You will be redirected to main page."
-
-#~ msgid ""
-#~ "Ad Soyad: **%(ad)s** **%(soyad)s**\n"
-#~ "            Başlama Tarihi: **%(baslama_tarihi)s**\n"
-#~ "            Bitiş Tarihi: **%(bitis_tarihi)s**\n"
-#~ "            Gün: **%(sure)s**\n"
-#~ "            Nereden: **%(nerden_alindigi)s**\n"
-#~ "            Rapor Çeşidi: **%(rapor_cesidi)s**\n"
-#~ "            Bilgilerin bulunduğu raporu silmek istiyor musunuz?"
-#~ msgstr ""
-#~ "Name Surname: **%(ad)s** **%(soyad)s**\n"
-#~ "            Start Date: **%(baslama_tarihi)s**\n"
-#~ "\t    End Date: **%(bitis_tarihi)s**\n"
-#~ "            Day: **%(sure)s**\n"
-#~ "            From: **%(nerden_alindigi)s**\n"
-#~ "            Report Type: **%(rapor_cesidi)s**\n"
-#~ "            Do you want to delete this report?"
