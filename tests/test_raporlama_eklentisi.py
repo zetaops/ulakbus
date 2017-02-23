@@ -52,9 +52,9 @@ class TestCase(BaseTestCase):
                                              dogum_tarihi__range=[a_, b_]))
 
         if db_cnt > page:
-            assert len(current.output['data']) == page
+            assert len(current.output['gridOptions']['data']) == page
         else:
-            assert len(current.output['data']) == db_cnt
+            assert len(current.output['gridOptions']['data']) == db_cnt
 
         options2 = {"ad": {"condition": "STARTS_WITH", "value": "Ah"}, "cinsiyet": {"value": "2"},
                     "unvan": {1: "1", 2: "2"}, "dogum_tarihi": {"start": a, "end": b}}
@@ -71,9 +71,9 @@ class TestCase(BaseTestCase):
                                              dogum_tarihi__range=[a_, b_]))
 
         if db_cnt > page:
-            assert len(current.output['data']) == page
+            assert len(current.output['gridOptions']['data']) == page
         else:
-            assert len(current.output['data']) == db_cnt
+            assert len(current.output['gridOptions']['data']) == db_cnt
 
         options3 = {"cinsiyet": {"value": "2"}, "dogum_tarihi": {"start": a, "end": b}}
         query3 = {"view": "_zops_get_report_data", "selectors": selectors, "options": options3,
@@ -86,9 +86,9 @@ class TestCase(BaseTestCase):
         db_cnt = len(Personel.objects.filter(cinsiyet=2, dogum_tarihi__range=[a_, b_]))
 
         if db_cnt > page:
-            assert len(current.output['data']) == page
+            assert len(current.output['gridOptions']['data']) == page
         else:
-            assert len(current.output['data']) == db_cnt
+            assert len(current.output['gridOptions']['data']) == db_cnt
 
         options4 = {"cinsiyet": {"value": "1"}, "dogum_tarihi": {"start": a, "end": b},
                     "unvan": {3975: "3975", 42647: "42647"}}
@@ -103,6 +103,6 @@ class TestCase(BaseTestCase):
                                              dogum_tarihi__range=[a_, b_]))
 
         if db_cnt > page:
-            assert len(current.output['data']) == page
+            assert len(current.output['gridOptions']['data']) == page
         else:
-            assert len(current.output['data']) == db_cnt
+            assert len(current.output['gridOptions']['data']) == db_cnt
