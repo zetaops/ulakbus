@@ -191,7 +191,6 @@ def get_report_data(current):
         cache_data['gridOptions']['paginationCurrentPage'] = current.input['page']
 
     page = cache_data['gridOptions']['paginationCurrentPage'] - 1
-    raporlama_cache.set(cache_data)
 
     def personel_data():
         query_params = data_grid_filter_parser(cache_data['gridOptions']['options'],
