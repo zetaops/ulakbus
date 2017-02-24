@@ -38,5 +38,10 @@ class HizmetKursGetir(HITAPSorgula):
             'kurum_onay_tarihi': 'kurumOnayTarihi'
         },
         'date_filter': ['mezuniyet_tarihi', 'denklik_tarihi', 'kurum_onay_tarihi'],
+        'long_to_string': ['kayit_no', ],
         'required_fields': ['tckn']
     }
+
+
+
+

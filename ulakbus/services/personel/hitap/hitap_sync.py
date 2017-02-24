@@ -119,7 +119,7 @@ class HITAPSync(ZatoHitapService):
 
         obj.sync = 1
         obj.personel = personel
-        obj.save()
+        obj.blocking_save()
         self.logger.info("hitaptaki kayit yerele kaydedildi. kayit no => "
                          + str(obj.kayit_no))
 
@@ -136,7 +136,7 @@ class HITAPSync(ZatoHitapService):
         obj = self.service_dict['model'].objects.get(kayit_no=kayit_no)
 
         if obj.sync == 1:
-            obj.delete()
+            obj.blocking_delete()
             self.logger.info("yereldeki sync kayit hitapta yok, kayit silindi."
                              "kayit no => " + str(obj.kayit_no))
 
@@ -172,19 +172,19 @@ class HITAPSync(ZatoHitapService):
                 # get kayit no list from db
                 kayit_no_list = [record.kayit_no for record in
                                  self.service_dict['model'].objects.filter(tckn=tckn)]
-                self.logger.info("yereldeki kayit sayisi: " + str(len(kayit_no_list)))
-                self.logger.info("hitaptan gelen kayit sayisi: " + str(len(hitap_dict)))
+                self.logger.info("yereldeki kayit sayisi - : " + str(len(kayit_no_list)))
+                self.logger.info("hitaptan gelen kayit sayisi - : " + str(len(hitap_dict)))
 
                 # compare hitap data with db
                 for hitap_record in hitap_dict:
                     hitap_kayit_no = hitap_record['kayit_no']
 
                     # if hitap data is not in db, create an object and save to db.
-                    if str(hitap_kayit_no) not in kayit_no_list:
+                    if hitap_kayit_no not in kayit_no_list:
                         self.save_hitap_data_db(hitap_record, personel)
                     # if in db, don't touch.
                     else:
-                        kayit_no_list.remove(str(hitap_kayit_no))
+                        kayit_no_list.remove(hitap_kayit_no)
 
                 # if there are still some in sync records which are not in hitap, delete them.
                 for model_kayit_no in kayit_no_list:

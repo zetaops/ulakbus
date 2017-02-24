@@ -193,6 +193,12 @@ class HITAPSorgula(ZatoHitapService):
             for field in self.service_dict['date_filter']:
                 record[field] = '01.01.1900' if record[field] == "01.01.0001" else record[field]
 
+    def long_to_string(self, hitap_dict):
+
+        for record in hitap_dict:
+            for field in self.service_dict['long_type']:
+                record[field] = str(record[field])
+
     def custom_filter(self, hitap_dict):
         """
         Hitap sözlüğüne uygulanacak ek filtreleri (varsa) gerçekleştirir.
