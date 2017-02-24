@@ -18,19 +18,18 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     grid_options = {}
 
     # Gösterilecek alanlar listesi.
-    column_list = ['tckn', 'cuzdan_seri', 'cuzdan_seri_no', 'kayitli_oldugu_cilt_no',
-                   'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no',
-                   'kimlik_cuzdani_verildigi_yer', 'kimlik_cuzdani_verilis_nedeni',
-                   'kimlik_cuzdani_kayit_no', 'kimlik_cuzdani_verilis_tarihi', 'emekli_sicil_no',
-                   'emekli_giris_tarihi', 'ad', 'soyad', 'dogum_tarihi', 'dogum_yeri', 'baba_adi',
-                   'ana_adi', 'cinsiyet', 'medeni_hali', 'kan_grubu', 'kayitli_oldugu_mahalle_koy',
-                   'kayitli_oldugu_ilce', 'kayitli_oldugu_il', 'brans', 'hizmet_sinifi',
+    column_list = ['tckn', 'ad', 'soyad', 'dogum_tarihi', 'cinsiyet', 'medeni_hali', 'dogum_yeri',
+                   'kan_grubu', 'ana_adi', 'baba_adi', 'brans', 'unvan', 'personel_turu', 'kurum_sicil_no_int',
+                   'birim_id', 'baslama_sebep_id', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
+                   'kayitli_oldugu_mahalle_koy', 'cuzdan_seri', 'cuzdan_seri_no', 'kayitli_oldugu_cilt_no',
+                   'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no', 'kimlik_cuzdani_verildigi_yer',
+                   'kimlik_cuzdani_verilis_nedeni', 'kimlik_cuzdani_kayit_no', 'kimlik_cuzdani_verilis_tarihi',
+                   'emekli_sicil_no', 'emekli_giris_tarihi', 'hizmet_sinifi',
                    'kazanilmis_hak_derece', 'kazanilmis_hak_kademe', 'kazanilmis_hak_ekgosterge',
                    'gorev_ayligi_derece', 'gorev_ayligi_kademe', 'gorev_ayligi_ekgosterge',
-                   'emekli_muktesebat_derece', 'emekli_muktesebat_kademe',
-                   'emekli_muktesebat_ekgosterge', 'kh_sonraki_terfi_tarihi',
-                   'ga_sonraki_terfi_tarihi', 'unvan', 'personel_turu', 'goreve_baslama_tarihi',
-                   'mecburi_hizmet_suresi', 'kurum_sicil_no_int', 'birim_id', 'baslama_sebep_id']
+                   'emekli_muktesebat_derece', 'emekli_muktesebat_kademe', 'emekli_muktesebat_ekgosterge',
+                   'kh_sonraki_terfi_tarihi', 'ga_sonraki_terfi_tarihi',   'goreve_baslama_tarihi',
+                   'mecburi_hizmet_suresi']
 
     # Cinsiyet türlerini catalog datadan aldık
     cinsiyet = [{"value": item['value'], "label": item['name']} for item in
