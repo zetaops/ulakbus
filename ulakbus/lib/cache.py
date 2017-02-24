@@ -87,3 +87,10 @@ class ChoicesFromModel(Cache):
 
     def __init__(self, key):
         super(ChoicesFromModel, self).__init__(key, serialize=True)
+
+
+class HitapPersonelGirisBilgileri(Cache):
+    """
+
+    """
+    PREFIX = "HITPER"
