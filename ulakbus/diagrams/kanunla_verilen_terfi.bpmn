@@ -40,7 +40,7 @@
       <bpmn:incoming>SequenceFlow_0dwn0ln</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_10mawgt</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="hizmet_cetveli_kayit" name="Hizmet Cetveli Kayıt" camunda:class="personel.kadro.KanunlaVerilenTerfi.hitap_kayit">
+    <bpmn:serviceTask id="hizmet_cetveli_kayit" name="Hizmet Cetveli Kayıt" camunda:class="personel.kadro.KanunlaVerilenTerfi.kayit_tamamla">
       <bpmn:incoming>SequenceFlow_10mawgt</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rrdbw9</bpmn:outgoing>
     </bpmn:serviceTask>

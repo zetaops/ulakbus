@@ -68,6 +68,7 @@ from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime,
 from ulakbus.models import Personel, HitapSebep, HizmetKayitlari
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
+from ulakbus.lib.view_helpers import prepare_choices_for_model
 import datetime
 
 
@@ -691,54 +692,55 @@ class KanunlaVerilenTerfiForm(JsonForm):
 
         grouping = [
             {
-                "layout" : "6",
+                "layout" : "4",
                 "groups" : [
                     {
                         "group_title" : _(u'Görev Aylığı'),
                         "items" : [
-                            'ga_derece', 'ga_kademe', 'ga_ekgosterge'
+                            'ga_derece', 'ga_kademe'
                         ],
                         "collapse" : True
                     }
                 ]
             },
             {
-                "layout" : "6",
+                "layout" : "4",
                 "groups" : [
                     {
-                        "groups_title" : _(u'Kazanılmış Hak'),
+                        "group_title" : _(u'Kazanılmış Hak'),
                         "items" : [
-                            'kh_derece', 'kh_kademe', 'kh_ekgosterge'
+                            'kh_derece', 'kh_kademe'
                         ],
                         "collapse" : True
                     }
                 ]
             },
             {
-                "layout" : "6",
+                "layout" : "4",
                 "groups" : [
                     {
-                        "groups_title" : _(u'Emekli Müktesebi'),
+                        "group_title" : _(u'Emekli Müktesebi'),
                         "items" : [
-                            'em_derece', 'em_kademe', 'em_ekgosterge'
-                        ],
-                        "collapse" : True
+                            'em_derece', 'em_kademe'
+                        ]
                     }
                 ]
             }
         ]
 
-    kaydet = fields.Button(_(u'Kaydet'), cmd="kaydet", style="btn-success")
+    kaydet = fields.Button(_(u'Kaydet'), cmd="terfi_kaydet", style="btn-success")
     iptal = fields.Button(_(u'İptal'), cmd="iptal")
 
 class HizmetCetveliForm(JsonForm):
     class Meta:
         title = _(u'Kanunla Verilen Terfi Hizmet Cetveli Girişi')
 
-    terfi_sebep = HitapSebep()
-    baslama_tarihi = fields.Date(_(u'Başlama Tarihi'), required=False)
-    bitis_tarihi = fields.Date(_(u'Bitis Tarihi'), required=False)
-    kurum_onay_tarihi = fields.Date(_(u'Kurum Onay Tarihi'), required=False)
+    terfi_sebep = fields.String(_(u'Hitap Sebep'), choices=prepare_choices_for_model(HitapSebep))
+    baslama_tarihi = fields.Date(_(u'Başlama Tarihi'),required=False)
+    bitis_tarihi = fields.Date(_(u'Bitis Tarihi'),required=False)
+    kurum_onay_tarihi = fields.Date(_(u'Kurum Onay Tarihi'))
+    kaydet = fields.Button(_(u'Kaydet'), cmd="kayit_tamamla", style="btn-success")
+    iptal = fields.Button(_(u'İptal'), cmd="iptal")
 
 class KanunlaVerilenTerfi(CrudView):
     """
@@ -758,32 +760,25 @@ class KanunlaVerilenTerfi(CrudView):
         _form = KanunlaVerilenTerfiForm(current=self.current)
         _form.ga_derece = fields.Integer(_(u'Derece'), default=personel.gorev_ayligi_derece)
         _form.ga_kademe = fields.Integer(_(u'Kademe'), default=personel.gorev_ayligi_kademe)
-        _form.ga_ekgosterge = fields.Integer(_(u'Ek Gösterge'), default=personel.ga_ekgosterge)
         _form.kh_derece = fields.Integer(_(u'Derece'), default=personel.kazanilmis_hak_derece)
         _form.kh_kademe = fields.Integer(_(u'Kademe'), default=personel.kazanilmis_hak_kademe)
-        _form.kh_ekgosterge = fields.Integer(_(u'Ek Gösterge'), default=personel.kazanilmis_hak_ekgosterge)
-        _form.em_derece = fields.Integer(_(u'Derece'), default=personel.emekli_muktesebi_derece)
-        _form.em_kademe = fields.Integer(_(u'Kademe'), default=personel.emekli_muktesebi_kademe)
-        _form.em_ekgosterge = fields.Integer(_(u'Ek Gösterge'), default=personel.emekli_muktesebi_ekgosterge)
+        _form.em_derece = fields.Integer(_(u'Derece'), default=personel.emekli_muktesebat_derece)
+        _form.em_kademe = fields.Integer(_(u'Kademe'), default=personel.emekli_muktesebat_kademe)
 
         self.form_out(_form)
 
     def terfi_kaydet(self):
         """
             Personel İşleri Dairesinden yetkili bir personelin girdiği terfi bilgilerinin
-            veritabanına kaydedildiği metoddur. Yapılan terfi işleminin hitap kaydıda burada yapılmaktadır
+            iş akışının ileriki aşamalarında veritabanına kaydedilmek üzere saklandığı metoddur.
         """
         personel = Personel.objects.get(self.current.task_data["personel_id"])
-        personel.gorev_ayligi_derece = self.current.input["form"]["ga_derece"]
-        personel.gorev_ayligi_kademe = self.current.input["form"]["ga_kademe"]
-        personel.gorev_ayligi_ekgosterge = self.current.input["form"]["ga_ekgosterge"]
-        personel.kazanilmis_hak_derece = self.current.input["form"]["kh_derece"]
-        personel.kazanilmis_hak_kademe = self.current.input["form"]["kh_kademe"]
-        personel.kazanilmis_hak_ekgosterge = self.current.input["form"]["kh_ekgosterge"]
-        personel.emekli_muktesebat_derece = self.current.input["form"]["em_derece"]
-        personel.emekli_muktesebat_kademe = self.current.input["form"]["em_kademe"]
-        personel.emekli_muktesebat_ekgosterge = self.current.input["form"]["em_ekgosterge"]
-        personel.save()
+        self.current.task_data["ga_derece"] = self.current.input["form"]["ga_derece"]
+        self.current.task_data["ga_kademe"] = self.current.input["form"]["ga_kademe"]
+        self.current.task_data["kh_derece"] = self.current.input["form"]["kh_derece"]
+        self.current.task_data["kh_kademe"] = self.current.input["form"]["kh_kademe"]
+        self.current.task_data["em_derece"] = self.current.input["form"]["em_derece"]
+        self.current.task_data["em_kademe"] = self.current.input["form"]["em_kademe"]
 
     def hizmet_cetveli_form(self):
         """
@@ -793,35 +788,76 @@ class KanunlaVerilenTerfi(CrudView):
         _form = HizmetCetveliForm(current=self.current)
         self.form_out(_form)
 
-    def hitap_kayit(self):
+    def kayit_tamamla(self):
         """
-            Kanunla verilen terfi kapsamında yapılan terfi işlemini
+            Kanunla verilen terfi kapsamında yapılan terfi işlemini hem veritabanına hemde
             hizmet cetveline (HizmetKayitlari) işleyen metoddur.
         """
 
         personel = Personel.objects.get(self.current.task_data["personel_id"])
-        hitap_sebep = HitapSebep.objects.get(self.current.input["form"]["terfi_sebep"])
-        hizmet_kayit = HizmetKayitlari(
-            tckn = personel.tckn,
-            baslama_tarihi = self.current.input["form"]["baslama_tarihi"],
-            bitis_tarihi = self.current.input["form"]["bitis_tarihi"],
-            gorev = "%s %s"%(personel.birim.name, personel.kadro.name),
-            unvan_kod = personel.kadro.unvan,
-            hizmet_sinifi = personel.atama.hizmet_sinifi,
-            kadro_derece = personel.kadro.derece,
-            odeme_derece = personel.gorev_ayligi_derece,
-            odeme_kademe = personel.gorev_ayligi_kademe,
-            odeme_ekgosterge = personel.gorev_ayligi_ekgosterge,
-            kazanilmis_hak_ayligi_derece = personel.kazanilmis_hak_derece,
-            kazanilmis_hak_ayligi_kademe = personel.kazanilmis_hak_kademe,
-            kazanilmis_hak_ayligi_ekgosterge = personel.kazanilmis_hak_ekgosterge,
-            emekli_derece = personel.emekli_muktesebat_derece,
-            emekli_kademe = personel.emekli_muktesebat_kademe,
-            emekli_ekgosterge = personel.emekli_muktesebat_ekgosterge,
-            sebep_kod = personel.sebep_no,
-            kurum_onay_tarihi = self.current.input["form"]["kurum_onay_tarihi"],
-            personel = personel,
-            model_key = personel.key
+        personel.gorev_ayligi_derece = self.current.task_data["ga_derece"]
+        personel.gorev_ayligi_kademe = self.current.task_data["ga_kademe"]
+        personel.kazanilmis_hak_derece = self.current.task_data["kh_derece"]
+        personel.kazanilmis_hak_kademe = self.current.task_data["kh_kademe"]
+        personel.emekli_muktesebat_derece = self.current.task_data["em_derece"]
+        personel.emekli_muktesebat_kademe = self.current.task_data["em_kademe"]
+
+        with personel.save():
+            hitap_sebep = HitapSebep.objects.get(self.current.input["form"]["terfi_sebep"])
+            hizmet_kayit = HizmetKayitlari(
+                tckn = personel.tckn,
+                baslama_tarihi = self.current.input["form"]["baslama_tarihi"],
+                bitis_tarihi = self.current.input["form"]["bitis_tarihi"],
+                gorev = "%s %s"%(personel.birim.name, personel.kadro.name),
+                unvan_kod = personel.kadro.unvan,
+                hizmet_sinifi = personel.atama.hizmet_sinifi,
+                kadro_derece = personel.kadro.derece,
+                odeme_derece = personel.gorev_ayligi_derece,
+                odeme_kademe = personel.gorev_ayligi_kademe,
+                odeme_ekgosterge = personel.gorev_ayligi_ekgosterge,
+                kazanilmis_hak_ayligi_derece = personel.kazanilmis_hak_derece,
+                kazanilmis_hak_ayligi_kademe = personel.kazanilmis_hak_kademe,
+                kazanilmis_hak_ayligi_ekgosterge = personel.kazanilmis_hak_ekgosterge,
+                emekli_derece = personel.emekli_muktesebat_derece,
+                emekli_kademe = personel.emekli_muktesebat_kademe,
+                emekli_ekgosterge = personel.emekli_muktesebat_ekgosterge,
+                sebep_kod = personel.sebep_no,
+                kurum_onay_tarihi = self.current.input["form"]["kurum_onay_tarihi"],
+                personel = personel,
+                model_key = personel.key
+            )
+
+            hizmet_kayit.save()
+
+    def iptal(self):
+        """
+            Terfi işleminin iptal edilmesiyle Kanunla verilen terfi iş akışı
+            ana ekranına yönlendirilir.
+
+        """
+        self.current.output['cmd'] = 'reload'
+
+    def personel_bilgilendir(self):
+        """ Terfi işlemi yapılan personele notification gönderen metoddur """
+
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+
+        title = _(u'Terfiniz Gerçekleştirildi')
+        msg = _(u"""Sn. {ad} {soyad} Terfiniz gerçekleştirilmiştir. Derece ve kademe durumunuz aşağıdaki gibidir
+                __Gorev Aylığı__ : {ga_derece}/{ga_kademe}
+                __Kazanılmış Hak Aylığı__ : {kh_derece}/{kh_kademe}
+                __Emekli Müktesebi__ : {em_derece}/{em_kademe}
+        """).format(
+            ad = personel.ad,
+            soyad = personel.soyad,
+            ga_derece = personel.gorev_ayligi_derece,
+            ga_kademe = personel.gorev_ayligi_kademe,
+            kh_derece = personel.kazanilmis_hak_derece,
+            kh_kademe = personel.kazanilmis_hak_kademe,
+            em_derece = personel.emekli_muktesebat_derece,
+            em_kademe = personel.emekli_muktesebat_kademe
         )
 
-        hizmet_kayit.save()
+        personel.user.send_notification(message=msg, title=title, sender = self.current.user)
+
+
