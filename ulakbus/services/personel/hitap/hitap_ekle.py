@@ -95,12 +95,7 @@ class HITAPEkle(ZatoHitapService):
                     request_data = client.factory.create(service_call_name)
 
                     self.logger.info("Request data: %s", request_data)
-                    self.logger.info("Request data TYPE: %s", type(request_data))
-
-                    if hasattr(request_data, 'kayitNo'):
-                        del request_data.kayitNo
-                    elif hasattr(request_data, 'ihzID'):
-                        del request_data.ihzID
+                    self.logger.info("Request payload: %s", request_payload)
 
                     # filtering for some fields
                     if 'date_filter' in self.service_dict:
@@ -111,7 +106,8 @@ class HITAPEkle(ZatoHitapService):
 
                     for dict_element in self.service_dict['fields']:
                         self.logger.info("Dict element : %s", dict_element)
-                        setattr(request_data, dict_element, request_payload[self.service_dict['fields'][dict_element]])
+                        setattr(request_data, dict_element,
+                                request_payload[self.service_dict['fields'][dict_element]])
 
                     self.logger.info("Request data: %s", request_data)
                     self.logger.info("HITAP EKLE SERVICE NAME: %s", service_name)
@@ -158,12 +154,15 @@ class HITAPEkle(ZatoHitapService):
         şeklindedir.
 
         Args:
-            date_filter_fields (List[]): Zato servisinde bulunan ve tarih formatinda olan field isimleri listesi
+            date_filter_fields (List[]): Zato servisinde bulunan ve
+            tarih formatinda olan field isimleri listesi
 
         """
         from datetime import datetime
+        self.logger.info("Date filter request payload type: %s", type(request_payload))
         for field in date_filter_fields:
             date_field = self.service_dict['fields'][field]
+            self.logger.info("Date field: %s, type: %s" % (date_field, type(date_field)))
             if request_payload[date_field] == "01.01.1900":
                 request_payload[date_field] = '0001-01-01'
             else:

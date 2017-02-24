@@ -52,8 +52,8 @@ class NufusKayitlari(Model):
 
 
 class HizmetKurs(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kursa Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kursa Kayıt No"), index=True, hidden=True)
     kurs_ogrenim_suresi = field.Integer(_(u"Kurs Öğrenim Süresi"), index=True)
     mezuniyet_tarihi = field.Date(_(u"Mezuniyet Tarihi"), index=True, format="%d.%m.%Y")
     kurs_nevi = field.Integer(_(u"Kurs Nevi"), index=True, choices="kurs_nevi")

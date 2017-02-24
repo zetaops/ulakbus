@@ -80,7 +80,7 @@ class HITAPSil(ZatoHitapService):
         try:
             # connection for hitap
             with conn.client() as client:
-
+                self.logger.info("Service name : %s" % service_name)
                 request_data = client.factory.create(service_name)
 
                 request_data.kullaniciAd = H_USER
@@ -90,10 +90,10 @@ class HITAPSil(ZatoHitapService):
                     self.check_required_fields(request_payload)
 
                 for dict_element in self.service_dict["fields"].keys():
-                    self.logger.info("dict_element: %s" % dict_element)
-                    self.logger.info("request_data_fields_dict_element: %s" % request_payload[self.service_dict['fields'][dict_element]])
-                    setattr(request_data, dict_element, request_payload[self.service_dict['fields'][dict_element]])
+                    setattr(request_data, dict_element,
+                            request_payload[self.service_dict['fields'][dict_element]])
 
+                self.logger.info("Request data : %s" % request_data)
                 hitap_service = getattr(client.service, service_name)(request_data)
 
             status = "ok"

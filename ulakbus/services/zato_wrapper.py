@@ -176,10 +176,10 @@ class HitapService(ZatoService):
                 value = self.payload[key]
             else:
                 value = getattr(self.payload, key)
+
                 if type(value) == datetime.date:
                     value = value.strftime("%d.%m.%Y")
 
             payload_object[key] = value
 
-        payload = json.dumps(payload_object)
-        return payload
+        return payload_object
