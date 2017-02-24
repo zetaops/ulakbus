@@ -138,7 +138,9 @@ class HITAPSorgula(ZatoHitapService):
 
                 # filtering for some fields
                 if 'date_filter' in self.service_dict:
-                    self.date_filter(hitap_dict)
+                    self.date_filter_hitap_to_ulakbus(self.service_dict['date_filter'], hitap_dict)
+                if 'long_to_string' in self.service_dict:
+                    self.long_to_string(hitap_dict)
                 self.custom_filter(hitap_dict)
 
             status = "ok"
@@ -196,7 +198,7 @@ class HITAPSorgula(ZatoHitapService):
     def long_to_string(self, hitap_dict):
 
         for record in hitap_dict:
-            for field in self.service_dict['long_type']:
+            for field in self.service_dict['long_to_string']:
                 record[field] = str(record[field])
 
     def custom_filter(self, hitap_dict):

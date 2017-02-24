@@ -92,7 +92,7 @@ class HITAPGuncelle(ZatoHitapService):
 
                 # filtering for some fields
                 if 'date_filter' in self.service_dict:
-                    self.date_filter(self.service_dict)
+                    self.date_filter_ulakbus_to_hitap(self.service_dict['date_filter'], request_data)
                 self.custom_filter(self.service_dict)
 
                 if 'required_fields' in self.service_dict:
@@ -133,30 +133,6 @@ class HITAPGuncelle(ZatoHitapService):
         self.logger.info("hitap_service json created.")
 
         return dumps(dict_result)
-
-    def date_filter(self, hitap_dict):
-        """
-        Yerel kayıttaki tarih alanlarını HITAP servisine uygun biçime getirir.
-
-        Hitap'ta tarih alanları için ``0001-01-01`` değeri boş değer anlamına gelirken,
-        yerelde ``01.01.1900`` şeklindedir.
-
-        Yerelde GG-AA-YYYY formatında tutulurken, HITAP servisi üzerindeki geçerli format YYYY-AA-GG
-        şeklindedir.
-
-        Args:
-            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
-
-        """
-        if hitap_dict['date_filter']:
-            from datetime import datetime
-            for record in hitap_dict:
-                for field in hitap_dict['date_filter']:
-                    if record[field] == "01.01.1900":
-                        record[field] = '0001-01-01'
-                    else:
-                        date_format = datetime.strptime(record[field], "%d.%m.%Y")
-                        record[field] = date_format.strftime("%Y-%m-%d")
 
     def custom_filter(self, hitap_dict):
         """

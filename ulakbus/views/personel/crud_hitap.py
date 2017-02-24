@@ -125,7 +125,6 @@ class CrudHitap(CrudView):
             del self.current.task_data['object_id']
         object_data = self.object._data
         self.object.sync = 3
-        self.object.blocking_delete()
 
         service_name = un_camel(self.model_class.__name__, dash='-') + "-sil"
         service = HitapService(service_name=service_name,
