@@ -102,6 +102,9 @@ OBJECT_MENU = {
         {'name': 'Personel', 'wf': 'kimlik_ve_iletisim_bilgileri',
          'verbose_name': 'Kimlik ve Iletisim Bilgileri Düzenle', 'field': 'object_id'},
 
+        {'name' : 'Personel', 'wf' : 'kanunla_verilen_terfi',
+         'verbose_name' : 'Kanunla Verilen Terfi', 'field' : 'object_id'},
+
         {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri', 'field': 'personel_id'},
 
         {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri',
