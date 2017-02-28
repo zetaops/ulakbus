@@ -24,9 +24,6 @@ class TestCase(BaseTestCase):
         """
 
         """
-        KurumDisiGorevlendirmeBilgileri.objects.delete()
-        KurumIciGorevlendirmeBilgileri.objects.delete()
-
         personel = Personel()
         personel.save()
 
@@ -44,14 +41,14 @@ class TestCase(BaseTestCase):
             if counter % 2 == 0:
                 gorevlendirme = KurumIciGorevlendirmeBilgileri(
                     personel=personel,
-                    kurum_ici_gorev_baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
-                    kurum_ici_gorev_bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
+                    baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
+                    bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
                 )
             else:
                 gorevlendirme = KurumDisiGorevlendirmeBilgileri(
                     personel=personel,
-                    kurum_disi_gorev_baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
-                    kurum_disi_gorev_bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
+                    baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
+                    bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
                 )
             gorevlendirme.blocking_save()
 
@@ -62,14 +59,14 @@ class TestCase(BaseTestCase):
             if counter % 2 == 0:
                 invalid_gorevlendirme = KurumIciGorevlendirmeBilgileri(
                     personel=personel,
-                    kurum_ici_gorev_baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
-                    kurum_ici_gorev_bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
+                    baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
+                    bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
                 )
             else:
                 invalid_gorevlendirme = KurumDisiGorevlendirmeBilgileri(
                     personel=personel,
-                    kurum_disi_gorev_baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
-                    kurum_disi_gorev_bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
+                    baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
+                    bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
                 )
             with pytest.raises(Exception):
                 invalid_gorevlendirme.blocking_save()
@@ -79,25 +76,21 @@ class TestCase(BaseTestCase):
             if counter % 2 == 0:
                 valid_gorevlendirme = KurumIciGorevlendirmeBilgileri(
                     personel=personel,
-                    kurum_ici_gorev_baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
-                    kurum_ici_gorev_bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
+                    baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
+                    bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
                 )
 
             else:
                 valid_gorevlendirme = KurumDisiGorevlendirmeBilgileri(
                     personel=personel,
-                    kurum_disi_gorev_baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
-                    kurum_disi_gorev_bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
+                    baslama_tarihi=datetime.date(2017, tarih[0][0], tarih[0][1]),
+                    bitis_tarihi=datetime.date(2017, tarih[1][0], tarih[1][1])
                 )
 
             assert valid_gorevlendirme.blocking_save()
 
-            if counter % 2 == 0:
-                valid_gorevlendirme.kurum_ici_gorev_baslama_tarihi = datetime.date(2017, 1, 13)
-                valid_gorevlendirme.kurum_ici_gorev_bitis_tarihi = datetime.date(2017, 2, 13)
-            else:
-                valid_gorevlendirme.kurum_disi_gorev_baslama_tarihi = datetime.date(2017, 1, 13)
-                valid_gorevlendirme.kurum_disi_gorev_bitis_tarihi = datetime.date(2017, 2, 13)
+            valid_gorevlendirme.baslama_tarihi = datetime.date(2017, 1, 13)
+            valid_gorevlendirme.bitis_tarihi = datetime.date(2017, 2, 13)
 
             with pytest.raises(Exception):
                 valid_gorevlendirme.blocking_save()
@@ -107,6 +100,7 @@ class TestCase(BaseTestCase):
         assert guncel_gorev_sayisi == mevcut_gorev_sayisi + len(valid_gorevlendirme_zamanlari)
 
         personel.blocking_delete()
-        KurumIciGorevlendirmeBilgileri.objects.delete()
-        KurumDisiGorevlendirmeBilgileri.objects.delete()
+        KurumIciGorevlendirmeBilgileri.objects.filter(personel=personel).delete()
+        KurumDisiGorevlendirmeBilgileri.objects.filter(personel=personel).delete()
+
 
