@@ -22,6 +22,7 @@ class HizmetBirlestirmeGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetBirlestirmeUpdate',
+        'service_mapper': 'ns1:HizmetBirlestirmeServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',
@@ -40,7 +41,7 @@ class HizmetBirlestirmeGuncelle(HITAPGuncelle):
             'khaDurum': 'kha_durum',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
         'required_fields': ['tckn', 'kayitNo', 'sgkNevi', 'sgkSicilNo', 'baslamaTarihi',
                             'bitisTarihi', 'kurumOnayTarihi']
     }

@@ -17,6 +17,7 @@ class UlakbusService(Service):
 
 class ZatoHitapService(UlakbusService):
     service_dict = {}
+
     def handle(self):
         """
         Servis çağrıldığında tetiklenen metod.
@@ -30,11 +31,10 @@ class ZatoHitapService(UlakbusService):
 
         self.logger.info("zato service started to work.")
         request_payload = self.request.payload
-        tckn = self.request.payload['tckn']
         conn = self.outgoing.soap['HITAP'].conn
-        self.request_json(tckn, conn, request_payload)
+        self.request_json(conn, request_payload)
 
-    def request_json(self):
+    def request_json(self, conn, request_payload):
         pass
 
     def check_required_fields(self, request_payload):
@@ -54,7 +54,8 @@ class ZatoHitapService(UlakbusService):
             except KeyError:
                 raise KeyError("required field %s not found in hitap service dict" % required_field)
 
-    def date_filter_ulakbus_to_hitap(self, date_filter_fields, request_payload):
+    @staticmethod
+    def date_filter_ulakbus_to_hitap(date_filter_fields, request_payload):
         """
         Yerel kayıttaki tarih alanlarını HITAP servisine uygun biçime getirir.
 
@@ -73,15 +74,15 @@ class ZatoHitapService(UlakbusService):
         """
         from datetime import datetime
         for field in date_filter_fields:
-            date_field = self.service_dict['fields'][field]
 
-            if request_payload[date_field] == "01.01.1900":
-                request_payload[date_field] = '01.01.0001'
+            if request_payload[field] == "01.01.1900":
+                request_payload[field] = '0001-01-01'
+            else:
+                date_format = datetime.strptime(request_payload[field], "%d.%m.%Y")
+                request_payload[field] = date_format.strftime("%Y-%m-%d")
 
-            date_format = datetime.strptime(request_payload[date_field], "%d.%m.%Y")
-            request_payload[date_field] = date_format.strftime("%Y-%m-%d")
-
-    def date_filter_hitap_to_ulakbus(self, date_filter_fields, response_payload):
+    @staticmethod
+    def date_filter_hitap_to_ulakbus(date_filter_fields, response_payload):
         """
         date_filter_ulakbus_to_hitap metodunun tersi icin gereklidir.
 
@@ -94,10 +95,15 @@ class ZatoHitapService(UlakbusService):
         """
         from datetime import datetime
         for field in date_filter_fields:
-            date_field = self.service_dict['fields'][field]
 
-            if response_payload[date_field] == "0001-01-01":
-                response_payload[date_field] = '1900-01-01'
+            if response_payload[field] == "0001-01-01":
+                response_payload[field] = '01.01.1900'
+            else:
+                date_format = datetime.strptime(response_payload[field], "%Y-%m-%d")
+                response_payload[field] = date_format.strftime("%d.%m.%Y")
 
-            date_format = datetime.strptime(response_payload[date_field], "%Y-%m-%d")
-            response_payload[date_field] = date_format.strftime("%d.%m.%Y")
+    def long_to_string(self, hitap_dict):
+
+        for field in hitap_dict:
+            if field in self.service_dict['long_to_string']:
+                hitap_dict[field] = str(hitap_dict[field])

@@ -23,6 +23,7 @@ class HizmetIhsGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetIHSUpdate',
+        'service_mapper': 'ns1:HizmetIHSServisBean',
         'fields': {
             'ihzID': 'kayit_no',
             'tckn': 'tckn',
@@ -30,6 +31,6 @@ class HizmetIhsGuncelle(HITAPGuncelle):
             'bitisTarihi': 'bitis_tarihi',
             'ihzNevi': 'ihz_nevi',
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi'],
         'required_fields': ['tckn', 'ihzID', 'baslamaTarihi', 'bitisTarihi', 'ihzNevi']
     }

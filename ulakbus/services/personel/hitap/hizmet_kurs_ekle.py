@@ -12,6 +12,7 @@ Hitap'a personelin kurs bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.models.hitap.hitap import HizmetKurs
 
 
 class HizmetKursEkle(HITAPEkle):
@@ -22,6 +23,8 @@ class HizmetKursEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': "HizmetKursInsert",
+        'service_mapper': "ns1:HizmetEgitimKursServisBean",
+        'model': HizmetKurs,
         'fields': {
             'tckn': 'tckn',
             'kursOgrenimSuresi': 'kurs_ogrenim_suresi',
@@ -35,7 +38,8 @@ class HizmetKursEkle(HITAPEkle):
             'denklikBolum': 'denklik_bolum',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['mezuniyet_tarihi', 'denklik_tarihi', 'kurum_onay_tarihi'],
+        'long_to_string': ['kayit_no'],
         'required_fields': ['tckn', 'kursOgrenimSuresi', 'mezuniyetTarihi', 'kursNevi',
                             'okulAd', 'kurumOnayTarihi']
     }

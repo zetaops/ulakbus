@@ -66,18 +66,8 @@ class HITAPSync(ZatoHitapService):
     """
     HAS_CHANNEL = False
 
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Servise gelen istekten kimlik numarası (tckn) bilgisini alır ve
-        Hitap sorgulama servisine gidecek isteği hazırlayacak
-        ve gelen cevabı elde edecek olan sync_hitap_data fonksiyonunu çağırır.
-
-        """
-
-        self.logger.info("zato service started to work.")
-        tckn = self.request.payload['tckn']
+    def request_json(self, conn, request_payload):
+        tckn = request_payload['tckn']
         self.sync_hitap_data(tckn)
 
     def get_hitap_dict(self, tckn):

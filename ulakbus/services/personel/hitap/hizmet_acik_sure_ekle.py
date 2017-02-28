@@ -6,6 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.models.hitap.hitap import HizmetAcikSure
 
 """HITAP Açık Süre Ekle
 
@@ -23,6 +24,8 @@ class HizmetAcikSureEkle(HITAPEkle):
 
     service_dict = {
         'service_name': 'HizmetAcikSureInsert',
+        'service_mapper': 'ns1:HizmetAcikSureServisBean',
+        'model': HizmetAcikSure,
         'fields': {
             'tckn': 'tckn',
             'acikSekil': 'acik_sekil',
@@ -43,10 +46,11 @@ class HizmetAcikSureEkle(HITAPEkle):
             'aciktanAtanmaTarih': 'aciktan_atanma_tarih',
             'kurumOnayTarihi': 'kurum_onay_tarihi',
         },
-        'date_filter': ['acigaAlinmaTarih', 'goreveSonTarih', 'goreveIadeIstemTarih',
-                        'goreveIadeTarih', 'acikAylikBasTarihi', 'acikAylikBitTarihi',
-                        'gorevSonAylikBasTarihi', 'gorevSonAylikBitTarihi', 'SYonetimKaldTarih',
-                        'aciktanAtanmaTarih', 'kurumOnayTarihi'],
+        'date_filter': ['aciga_alinma_tarih', 'goreve_son_tarih', 'goreve_iade_istem_tarih',
+                        'goreve_iade_tarih', 'acik_aylik_bas_tarih', 'acik_aylik_bit_tarih',
+                        'goreve_son_aylik_bas_tarih', 'goreve_son_aylik_bit_tarih',
+                        's_yonetim_kald_tarih', 'aciktan_atanma_tarih', 'kurum_onay_tarihi'],
+        'long_to_string': ['kayit_no'],
         'required_fields': ['tckn', 'acikSekil', 'durum', 'hizmetDurum', 'husus',
                             'kurumOnayTarihi']
     }

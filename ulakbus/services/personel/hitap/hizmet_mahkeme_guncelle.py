@@ -21,6 +21,7 @@ class HizmetMahkemeGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetMahkemeUpdate',
+        'service_mapper': 'ns1:HizmetMahkemeServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',
@@ -40,8 +41,8 @@ class HizmetMahkemeGuncelle(HITAPGuncelle):
             'gunSayisi': 'gun_sayisi',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['kesinlesmeTarihi', 'asilDogumTarihi', 'tashihDogumTarihi',
-                        'gecerliDogumTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['kesinlesme_tarihi', 'asil_dogum_tarihi', 'tashih_dogum_tarihi',
+                        'gecerli_dogum_tarihi', 'kurum_onay_tarihi'],
         'required_fields': ['kayitNo', 'tckn', 'mahkemeAd', 'sebep', 'kararTarihi',
                             'kararSayisi', 'kurumOnayTarihi']
 

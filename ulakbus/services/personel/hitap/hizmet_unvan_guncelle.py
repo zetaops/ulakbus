@@ -22,6 +22,7 @@ class HizmetUnvanGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetUnvanUpdate',
+        'service_mapper': 'ns1:HizmetUnvanServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'asilVekil': 'asil_vekil',
@@ -34,7 +35,7 @@ class HizmetUnvanGuncelle(HITAPGuncelle):
             'kurumOnayTarihi': 'kurum_onay_tarihi',
             'fhzOrani': 'fhz_orani'
         },
-        'date_filter': ['unvanTarihi', 'unvanBitisTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['unvan_tarihi', 'unvan_bitis_tarihi', 'kurum_onay_tarihi'],
         'required_fields': ['kayitNo', 'tckn', 'unvanKod', 'unvanTarihi', 'hizmetSinifi',
                             'asilVekil', 'atamaSekli', 'kurumOnayTarihi']
     }

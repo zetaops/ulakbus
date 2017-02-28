@@ -22,6 +22,7 @@ class HizmetCetveliGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetCetvelUpdate',
+        'service_mapper': 'ns1:HizmetCetveliServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'baslamaTarihi': 'baslama_tarihi',
@@ -48,7 +49,7 @@ class HizmetCetveliGuncelle(HITAPGuncelle):
             'yevmiye': 'yevmiye',
             'kurumOnayTarihi': 'kurum_onay_tarihi',
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
         'required_fields': ['kayitNo', 'emekliDerece', 'emekliKademe', 'gorev', 'unvanKod',
                             'hizmetSinifi', 'kazanilmisHakAyligiDerece',
                             'kazanilmisHakAyligiKademe', 'odemeDerece', 'odemeKademe',

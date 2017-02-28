@@ -22,8 +22,8 @@ class HizmetOkulGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetOkulUpdate',
+        'service_mapper': 'ns1:HizmetEgitimOkulServisBean',
         'fields': {
-            'kayitNo': 'kayit_no',
             'bolum': 'bolum',
             'kayitNo': 'kayit_no',
             'mezuniyetTarihi': 'mezuniyet_tarihi',
@@ -38,7 +38,7 @@ class HizmetOkulGuncelle(HITAPGuncelle):
             'hazirlik': 'hazirlik',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['mezuniyet_tarihi', 'denklik_tarihi', 'kurum_onay_tarihi'],
         'required_fields': ['kayitNo', 'tckn', 'ogrenimDurumu', 'mezuniyetTarihi',
                             'ogrenimSuresi', 'hazirlik', 'kurumOnayTarihi']
     }

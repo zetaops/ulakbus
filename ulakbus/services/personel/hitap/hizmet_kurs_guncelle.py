@@ -22,6 +22,7 @@ class HizmetKursGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetKursUpdate',
+        'service_mapper': "ns1:HizmetEgitimKursServisBean",
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',
@@ -36,7 +37,7 @@ class HizmetKursGuncelle(HITAPGuncelle):
             'denklikBolum': 'denklik_bolum',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['mezuniyetTarihi', 'denklikTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['mezuniyet_tarihi', 'denklik_tarihi', 'kurum_onay_tarihi'],
         'required_fields': ['tckn', 'kayitNo', 'kursOgrenimSuresi', 'mezuniyetTarihi',
                             'kursNevi', 'okulAd', 'kurumOnayTarihi']
     }

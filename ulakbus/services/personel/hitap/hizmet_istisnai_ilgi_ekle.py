@@ -12,6 +12,7 @@ Hitap'a personelin Istisnai Ilgi bilgilerinin eklemesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.models.hitap.hitap import HizmetIstisnaiIlgi
 
 
 class HizmetIstisnaiIlgiEkle(HITAPEkle):
@@ -22,6 +23,8 @@ class HizmetIstisnaiIlgiEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'hizmetIstisnaiIlgiInsert',
+        'service_mapper': 'ns1:HizmetIstisnaiIlgiServisBean',
+        'model': HizmetIstisnaiIlgi,
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',
@@ -32,7 +35,8 @@ class HizmetIstisnaiIlgiEkle(HITAPEkle):
             'khaDurum': 'kha_durum',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
+        'long_to_string': ['kayit_no'],
         'required_fields': ['tckn', 'istisnaiIlgiNevi', 'baslamaTarihi',
                             'bitisTarihi', 'gunSayisi', 'khaDurum', 'kurumOnayTarihi']
     }

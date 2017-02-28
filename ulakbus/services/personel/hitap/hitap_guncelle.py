@@ -43,21 +43,7 @@ class HITAPGuncelle(ZatoHitapService):
     """
     HAS_CHANNEL = False
 
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Hitap'a gidecek isteği hazırlayacak ve gelen cevabı elde edecek olan
-        request_json fonksiyonunu çağırır.
-
-        """
-
-        self.logger.info("zato service started to work.")
-        conn = self.outgoing.soap['HITAP'].conn
-
-        self.request_json(conn)
-
-    def request_json(self, conn):
+    def request_json(self, conn, request_payload):
         """
         Connection bilgisi ve gerekli veriler ile Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
@@ -79,36 +65,33 @@ class HITAPGuncelle(ZatoHitapService):
 
         status = "error"
         hitap_response = False
-        request_data = {}
         service_name = self.service_dict['service_name']
         try:
             # connection for hitap
             with conn.client() as client:
                 # hitap response
-                service_call_name = self.service_mapper(service_name)
+                service_call_name = self.service_dict["service_mapper"]
 
                 if service_call_name:
                     request_data = client.factory.create(service_call_name)
 
-                # filtering for some fields
-                if 'date_filter' in self.service_dict:
-                    self.date_filter_ulakbus_to_hitap(self.service_dict['date_filter'], request_data)
-                self.custom_filter(self.service_dict)
+                    # filtering for some fields
+                    if 'date_filter' in self.service_dict:
+                        self.date_filter_ulakbus_to_hitap(self.service_dict['date_filter'],
+                                                          request_payload)
 
-                if 'required_fields' in self.service_dict:
-                    self.check_required_fields(request_data)
+                    if 'required_fields' in self.service_dict:
+                        self.check_required_fields(request_payload)
 
-                for dict_element in self.service_dict['fields']:
-                    request_data[dict_element] = self.service_dict[dict_element]
+                    for dict_element in self.service_dict['fields']:
+                        setattr(request_data, dict_element,
+                                request_payload[self.service_dict['fields'][dict_element]])
 
-                self.logger.info("%s started to work." % service_name)
+                    self.logger.info("%s started to work." % service_name)
 
-                hitap_response = getattr(client.service, service_name)(request_data,
-                                                                       kullaniciAd=H_USER,
-                                                                       sifre=H_PASS)
-                if hitap_response:
-                    hitap_response = self.create_hitap_json(hitap_response)
-
+                    hitap_response = getattr(client.service, service_name)(request_data,
+                                                                           kullaniciAd=H_USER,
+                                                                           sifre=H_PASS)
             status = "ok"
 
         except AttributeError:
@@ -120,7 +103,8 @@ class HITAPGuncelle(ZatoHitapService):
             status = "error"
 
         finally:
-            self.response.payload = {'status': status, 'result': hitap_response}
+            self.response.payload = {'status': status,
+                                     'result': self.create_hitap_json(hitap_response)}
 
     def create_hitap_json(self, hitap_service):
         """Güncelleme servisinden dönen veriyi JSON formatına döndürür.
@@ -132,7 +116,7 @@ class HITAPGuncelle(ZatoHitapService):
 
         self.logger.info("hitap_service json created.")
 
-        return dumps(dict_result)
+        return dict_result
 
     def custom_filter(self, hitap_dict):
         """
@@ -145,28 +129,3 @@ class HITAPGuncelle(ZatoHitapService):
 
         """
         pass
-
-    def service_mapper(self, service_name):
-
-        """Hitap'a yapılacak olan Update çağrılarında gerekli datanın oluşmasını sağlamak için
-        Servis ve ServisBean'lerini eşleyen method.
-
-        """
-        services_dict = {"HizmetAcikSureUpdate": "ns1:HizmetAcikSureServisBean",
-                         "HizmetAskerlikUpdate": "ns1:HizmetAskerlikServisBean",
-                         "HizmetBirlestirmeUpdate": "ns1:HizmetBirlestirmeServisBean",
-                         "HizmetBorclanmaUpdate": "ns1:HizmetBorclanmaServisBean",
-                         "HizmetCetvelUpdate": "ns1:HizmetCetveliServisBean",
-                         "HizmetIHSUpdate": "ns1:HizmetIHSServisBean",
-                         "HizmetKursUpdate": "ns1:HizmetEgitimKursServisBean",
-                         "HizmetMahkemeUpdate": "ns1:HizmetMahkemeServisBean",
-                         "HizmetNufusUpdate": "ns1:HizmetNufusServisBean",
-                         "HizmetOkulUpdate": "ns1:HizmetEgitimOkulServisBean",
-                         "HizmetTazminatUpdate": "ns1:HizmetTazminatServisBean",
-                         "HizmetUnvanUpdate": "ns1:HizmetUnvanServisBean",
-                         "hizmetIstisnaiIlgiUpdate": "ns1:HizmetIstisnaiIlgiServisBean"}
-
-        if service_name in services_dict:
-            return services_dict[service_name]
-        else:
-            return False

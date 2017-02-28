@@ -41,20 +41,6 @@ class HITAPSil(ZatoHitapService):
     """
     HAS_CHANNEL = False
 
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Hitap'a gidecek isteği hazırlayacak ve gelen cevabı elde edecek olan
-        request_json fonksiyonunu çağırır.
-
-        """
-
-        self.logger.info("zato Hitap Sil service started to work.")
-        conn = self.outgoing.soap['HITAP'].conn
-        request_payload = self.request.payload
-        self.request_json(conn, request_payload)
-
     def request_json(self, conn, request_payload):
         """Connection bilgisi ve gerekli veriler ile Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
@@ -66,6 +52,7 @@ class HITAPSil(ZatoHitapService):
         Veriler uygun şekilde elde edildikten sonra servis cevabı (payload) oluşturulur.
 
         Args:
+            request_payload:pass
             conn (zato.outgoing.soap.conn): Zato soap outgoing bağlantısı
 
         Raises:
@@ -121,5 +108,6 @@ class HITAPSil(ZatoHitapService):
                            if not name.startswith('__'))
 
         self.logger.info("hitap_service json created.")
+        self.logger.info("Dict result: %s" % dict_result)
 
-        return dumps(dict_result)
+        return dict_result

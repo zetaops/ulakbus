@@ -42,20 +42,6 @@ class HITAPEkle(ZatoHitapService):
     """
     HAS_CHANNEL = False
 
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Hitap'a gidecek isteği hazırlayacak ve gelen cevabı elde edecek olan
-        request_json fonksiyonunu çağırır.
-
-        """
-
-        self.logger.info("zato service started to work.")
-        conn = self.outgoing.soap['HITAP'].conn
-        request_payload = self.request.payload
-        self.request_json(conn, request_payload)
-
     def request_json(self, conn, request_payload):
         """
         Connection bilgisi ve gerekli veriler ile Hitap'ın ilgili servisine
@@ -87,7 +73,7 @@ class HITAPEkle(ZatoHitapService):
                 # hitap response
 
                 self.logger.info("HITAP EKLE SERVICE NAME : %s" % service_name)
-                service_call_name = self.service_mapper(service_name)
+                service_call_name = self.service_dict["service_mapper"]
 
                 self.logger.info("Service Call Name: %s" % service_call_name)
 
@@ -99,7 +85,8 @@ class HITAPEkle(ZatoHitapService):
 
                     # filtering for some fields
                     if 'date_filter' in self.service_dict:
-                        self.date_filter(self.service_dict['date_filter'], request_payload)
+                        self.date_filter_ulakbus_to_hitap(self.service_dict['date_filter'],
+                                                          request_payload)
 
                     if 'required_fields' in self.service_dict:
                         self.check_required_fields(request_payload)
@@ -140,68 +127,15 @@ class HITAPEkle(ZatoHitapService):
                            if not name.startswith('__'))
 
         self.logger.info("hitap_service json created.")
+        self.logger.info("Dict result : %s" % dict_result)
+        return dict_result
 
-        return dumps(dict_result)
-
-    def date_filter(self, date_filter_fields, request_payload):
-        """
-        Yerel kayıttaki tarih alanlarını HITAP servisine uygun biçime getirir.
-
-        Hitap'ta tarih alanları için ``0001-01-01`` değeri boş değer anlamına gelirken,
-        yerelde ``01.01.1900`` şeklindedir.
-
-        Yerelde GG-AA-YYYY formatında tutulurken, HITAP servisi üzerindeki geçerli format YYYY-AA-GG
-        şeklindedir.
-
-        Args:
-            date_filter_fields (List[]): Zato servisinde bulunan ve
-            tarih formatinda olan field isimleri listesi
-
-        """
-        from datetime import datetime
-        self.logger.info("Date filter request payload type: %s", type(request_payload))
-        for field in date_filter_fields:
-            date_field = self.service_dict['fields'][field]
-            self.logger.info("Date field: %s, type: %s" % (date_field, type(date_field)))
-            if request_payload[date_field] == "01.01.1900":
-                request_payload[date_field] = '0001-01-01'
-            else:
-                date_format = datetime.strptime(request_payload[date_field], "%d.%m.%Y")
-                request_payload[date_field] = date_format.strftime("%Y-%m-%d")
-
-    def custom_filter(self, hitap_dict):
-        """
-        Hitap sözlüğüne uygulanacak ek filtreleri (varsa) gerçekleştirir.
-
-        Gerçekleştirimi bu servisten kalıtılan servislerde yapılmaktadır.
-
-        Args:
-            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
-
-        """
-        pass
-
-    def service_mapper(self, service_name):
-
-        """Hitap'a yapılacak olan Ekleme çağrılarında gerekli datanın oluşmasını sağlamak için
-        Servis ve ServisBean'lerini eşleyen method.
-
-        """
-        services_dict = {"HizmetAcikSureInsert": "ns1:HizmetAcikSureServisBean",
-                         "HizmetAskerlikInsert": "ns1:HizmetAskerlikServisBean",
-                         "HizmetBirlestirmeInsert": "ns1:HizmetBirlestirmeServisBean",
-                         "HizmetBorclanmaInsert": "ns1:HizmetBorclanmaServisBean",
-                         "HizmetCetvelInsert": "ns1:HizmetCetveliServisBean",
-                         "HizmetIHSInsert": "ns1:HizmetIHSServisBean",
-                         "HizmetKursInsert": "ns1:HizmetEgitimKursServisBean",
-                         "HizmetMahkemeInsert": "ns1:HizmetMahkemeServisBean",
-                         "HizmetNufusInsert": "ns1:HizmetNufusServisBean",
-                         "HizmetOkulInsert": "ns1:HizmetEgitimOkulServisBean",
-                         "HizmetTazminatInsert": "ns1:HizmetTazminatServisBean",
-                         "HizmetUnvanInsert": "ns1:HizmetUnvanServisBean",
-                         "hizmetIstisnaiIlgiInsert": "ns1:HizmetIstisnaiIlgiServisBean"}
-
-        if service_name in services_dict:
-            return services_dict[service_name]
-        else:
-            return False
+    def save_data_db(self, request_payload, kayit_no):
+        obj = self.service_dict['model']()
+        for hk, hv in request_payload.iteritems():
+            setattr(obj, hk, hv)
+        obj.sync = 1
+        obj.kayit_no = str(kayit_no)
+        obj.blocking_save()
+        self.logger.info("hitaptaki kayit yerele kaydedildi. kayit no => "
+                         + str(obj.kayit_no))

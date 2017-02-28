@@ -12,6 +12,7 @@ Hitap'a personelin askerlik bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.models.hitap.hitap import AskerlikKayitlari
 
 
 class HizmetAskerlikEkle(HITAPEkle):
@@ -22,6 +23,8 @@ class HizmetAskerlikEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetAskerlikInsert',
+        'service_mapper': 'ns1:HizmetAskerlikServisBean',
+        'model': AskerlikKayitlari,
         'fields': {
             'askerlikNevi': 'askerlik_nevi',
             'baslamaTarihi': 'baslama_tarihi',
@@ -40,8 +43,10 @@ class HizmetAskerlikEkle(HITAPEkle):
             'kurumOnayTarihi': 'kurum_onay_tarihi',
             'astegmenNaspTarihi': 'astegmen_nasp_tarihi',
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kitaBaslamaTarihi', 'kitaBitisTarihi',
-                        'subayliktanErligeGecisTarihi', 'subayOkuluGirisTarihi',
-                        'tegmenNaspTarihi', 'kurumOnayTarihi', 'astegmenNaspTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kita_baslama_tarihi',
+                        'kita_bitis_tarihi', 'subayliktan_erlige_gecis_tarihi',
+                        'subay_okulu_giris_tarihi', 'tegmen_nasp_tarihi', 'kurum_onay_tarihi',
+                        'astegmen_nasp_tarihi'],
+        'long_to_string': ['kayit_no'],
         'required_fields': ['tckn', 'askerlikNevi', 'kurumOnayTarihi']
     }

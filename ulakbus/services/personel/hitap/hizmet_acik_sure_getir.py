@@ -48,6 +48,7 @@ class HizmetAcikSureGetir(HITAPSorgula):
                         'goreve_iade_tarih', 'acik_aylik_bas_tarih', 'acik_aylik_bit_tarih',
                         'goreve_son_aylik_bas_tarih', 'goreve_son_aylik_bit_tarih',
                         's_yonetim_kald_tarih', 'aciktan_atanma_tarih', 'kurum_onay_tarihi'],
+        'string_to_long': ['kayit_no', ],
         'required_fields': ['tckn']
     }
 

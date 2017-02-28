@@ -12,6 +12,7 @@ Hitap'a personelin Hizmet Cetvel  Kayit bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.models.hitap.hitap import HizmetKayitlari
 
 
 class HizmetCetveliEkle(HITAPEkle):
@@ -22,6 +23,8 @@ class HizmetCetveliEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetCetvelInsert',
+        'service_mapper': 'ns1:HizmetCetveliServisBean',
+        'model': HizmetKayitlari,
         'fields': {
             'baslamaTarihi': 'baslama_tarihi',
             'bitisTarihi': 'bitis_tarihi',
@@ -44,7 +47,8 @@ class HizmetCetveliEkle(HITAPEkle):
             'yevmiye': 'yevmiye',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
+        'long_to_string': ['kayit_no'],
         'required_fields': ['tckn', 'gorev', 'unvanKod', 'hizmetSinifi', 'kadroDerece',
                             'odemeDerece', 'odemeKademe', 'odemeKademe', 'odemeEkGosterge',
                             'kazanilmisHakAyligiDerece', 'kazanilmisHakAyligiKademe',

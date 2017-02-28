@@ -22,6 +22,7 @@ class HizmetAskerlikGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetAskerlikUpdate',
+        'service_mapper': 'ns1:HizmetAskerlikServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'askerlikNevi': 'askerlik_nevi',
@@ -41,8 +42,9 @@ class HizmetAskerlikGuncelle(HITAPGuncelle):
             'kurumOnayTarihi': 'kurum_onay_tarihi',
             'astegmenNaspTarihi': 'astegmen_nasp_tarihi',
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kitaBaslamaTarihi', 'kitaBitisTarihi',
-                        'subayliktanErligeGecisTarihi', 'subayOkuluGirisTarihi',
-                        'tegmenNaspTarihi', 'kurumOnayTarihi', 'astegmenNaspTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kita_baslama_tarihi',
+                        'kita_bitis_tarihi', 'subayliktan_erlige_gecis_tarihi',
+                        'subay_okulu_giris_tarihi', 'tegmen_nasp_tarihi', 'kurum_onay_tarihi',
+                        'astegmen_nasp_tarihi'],
         'required_fields': ['kayitNo', 'tckn', 'askerlikNevi', 'kurumOnayTarihi']
     }

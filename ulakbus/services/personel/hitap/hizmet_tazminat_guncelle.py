@@ -22,6 +22,7 @@ class HizmetTazminatGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetTazminatUpdate',
+        'service_mapper': 'ns1:HizmetTazminatServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'gorev': 'gorev',
@@ -34,6 +35,6 @@ class HizmetTazminatGuncelle(HITAPGuncelle):
             'tazminatBitisTarihi': 'tazminat_bitis_tarihi',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['tazminatTarihi', 'tazminatBitisTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['tazminat_tarihi', 'tazminat_bitis_tarihi', 'kurum_onay_tarihi'],
         'required_fields': ['kayitNo', 'tckn', 'unvanKod', 'tazminatTarihi', 'kurumOnayTarihi']
     }

@@ -78,24 +78,7 @@ class HITAPSorgula(ZatoHitapService):
     """
     HAS_CHANNEL = False
 
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Servise gelen istekten kimlik numarası (tckn) bilgisini alır ve
-        soap outgoing bağlantısını oluşturur. Bu bilgilerle
-        Hitap'a gidecek isteği hazırlayacak ve gelen cevabı elde edecek olan
-        request_json fonksiyonunu çağırır.
-
-        """
-
-        self.logger.info("zato service started to work.")
-        request_payload = self.request.payload
-        tckn = self.request.payload['tckn']
-        conn = self.outgoing.soap['HITAP'].conn
-        self.request_json(tckn, conn, request_payload)
-
-    def request_json(self, tckn, conn, request_payload):
+    def request_json(self, conn, request_payload):
         """
         Kimlik numarası ve kullanıcı bilgileriyle birlikte Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
@@ -107,7 +90,7 @@ class HITAPSorgula(ZatoHitapService):
         Veriler uygun şekilde elde edildikten sonra servis cevabı (payload) oluşturulur.
 
         Args:
-            tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+            request_payload (str): Türkiye Cumhuriyeti Kimlik Numarası
             conn (zato.outgoing.soap.conn): Zato soap outgoing bağlantısı
 
         Raises:
@@ -117,7 +100,7 @@ class HITAPSorgula(ZatoHitapService):
         """
 
         status = "error"
-        hitap_dict = []
+        hitap_dicts = []
         service_name = self.service_dict['service_name']
         bean_name = self.service_dict['bean_name']
         try:
@@ -129,19 +112,24 @@ class HITAPSorgula(ZatoHitapService):
 
                 # hitap response
                 self.logger.info("SORGULA SERVIS NAME : %s" % service_name)
-                hitap_service = getattr(client.service, service_name)(H_USER, H_PASS, tckn)
+                hitap_service = getattr(client.service, service_name)(H_USER,
+                                                                      H_PASS,
+                                                                      request_payload['tckn'])
                 # get bean object
                 service_bean = getattr(hitap_service, bean_name)
 
                 self.logger.info("%s started to work." % service_name)
-                hitap_dict = self.create_hitap_dict(service_bean, self.service_dict['fields'])
+                hitap_dicts = self.create_hitap_dict(service_bean, self.service_dict['fields'])
 
                 # filtering for some fields
                 if 'date_filter' in self.service_dict:
-                    self.date_filter_hitap_to_ulakbus(self.service_dict['date_filter'], hitap_dict)
+                    self.logger.info("Hitap dict: %s" % hitap_dicts)
+                    for hitap_dict in hitap_dicts:
+                        self.date_filter_hitap_to_ulakbus(self.service_dict['date_filter'],
+                                                          hitap_dict)
                 if 'long_to_string' in self.service_dict:
-                    self.long_to_string(hitap_dict)
-                self.custom_filter(hitap_dict)
+                    for hitap_dict in hitap_dicts:
+                        self.long_to_string(hitap_dict)
 
             status = "ok"
 
@@ -154,7 +142,7 @@ class HITAPSorgula(ZatoHitapService):
             status = "error"
 
         finally:
-            self.response.payload = {'status': status, 'result': dumps(hitap_dict)}
+            self.response.payload = {'status': status, 'result': dumps(hitap_dicts)}
 
     def create_hitap_dict(self, service_bean, fields):
         """
@@ -194,12 +182,6 @@ class HITAPSorgula(ZatoHitapService):
         for record in hitap_dict:
             for field in self.service_dict['date_filter']:
                 record[field] = '01.01.1900' if record[field] == "01.01.0001" else record[field]
-
-    def long_to_string(self, hitap_dict):
-
-        for record in hitap_dict:
-            for field in self.service_dict['long_to_string']:
-                record[field] = str(record[field])
 
     def custom_filter(self, hitap_dict):
         """

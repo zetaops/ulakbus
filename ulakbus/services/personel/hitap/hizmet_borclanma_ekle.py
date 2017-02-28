@@ -12,6 +12,7 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.models.hitap.hitap import HizmetBorclanma
 
 
 class HizmetBorclanmaEkle(HITAPEkle):
@@ -22,6 +23,8 @@ class HizmetBorclanmaEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetBorclanmaInsert',
+        'service_mapper': 'ns1:HizmetBorclanmaServisBean',
+        'model': HizmetBorclanma,
         'fields': {
             'tckn': 'tckn',
             'ad': 'ad',
@@ -44,7 +47,8 @@ class HizmetBorclanmaEkle(HITAPEkle):
             'isyeriIlce': 'isyeri_ilce',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'borclanmaTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'borclanma_tarihi', 'kurum_onay_tarihi'],
+        'long_to_string': ['kayit_no'],
         'required_fields': ['tckn', 'ad', 'soyad', 'emekliSicil', 'derece', 'kademe',
                             'ekgosterge', 'baslamaTarihi', 'bitisTarihi', 'gunSayisi',
                             'kanunKod', 'borcNevi', 'toplamTutar', 'calistigiKurum', 'isyeriIl',

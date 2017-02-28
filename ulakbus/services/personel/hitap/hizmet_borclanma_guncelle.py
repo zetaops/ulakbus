@@ -22,6 +22,7 @@ class HizmetBorclanmaGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetBorclanmaUpdate',
+        'service_mapper': 'ns1:HizmetBorclanmaServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',
@@ -45,7 +46,7 @@ class HizmetBorclanmaGuncelle(HITAPGuncelle):
             'isyeriIlce': 'isyeri_ilce',
             'kurumOnayTarihi': 'kurum_onay_tarihi'
         },
-        'date_filter': ['baslamaTarihi', 'bitisTarihi', 'borclanmaTarihi', 'kurumOnayTarihi'],
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'borclanma_tarihi', 'kurum_onay_tarihi'],
         'required_fields': ['tckn', 'kayitNo', 'ad', 'soyad', 'emekliSicil', 'derece', 'kademe',
                             'ekgosterge', 'baslamaTarihi', 'bitisTarihi', 'gunSayisi',
                             'kanunKod', 'borcNevi', 'toplamTutar', 'calistigiKurum', 'isyeriIl',

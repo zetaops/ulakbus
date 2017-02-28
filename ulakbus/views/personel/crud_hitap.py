@@ -97,17 +97,17 @@ class CrudHitap(CrudView):
         action, self.object.sync = ('ekle', 4) if obj_is_new else ('guncelle', 2)
         self.object.tckn = self.current.task_data['personel_tckn']
         self.object.save()
-        self.current.task_data['object_id'] = self.object.key
-
         service_name = un_camel(self.model_class.__name__, dash='-') + '-' + action
         service = HitapService(service_name=service_name, payload=self.object)
         try:
-            result = dict(service.zato_request())
+            result = service.zato_request()
             self.object.kayit_no = result['kayitNo']
             self.object.sync = 1
             self.object.blocking_save()
         except:
             pass
+
+        self.current.task_data['object_id'] = self.object.key
 
     @view_method
     def delete(self):
