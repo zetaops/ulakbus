@@ -195,6 +195,27 @@ class Personel(Model):
         return self.atama.kurum_sicil_no
 
     def gorevlendirme_tarih_kontrol(self, baslama_tarihi, bitis_tarihi):
+        """
+        Eklenmek istenen görevlendirmenin, başlama tarihi ve bitiş tarihinin tutarlılığını ve
+        personelin mevcut Kurum İçi ve Kurum Dışı görevlendirmeleriyle çakışıp çakışmadığını  kontrol eder.
+
+        Personelin mevcut görevlendirmeleri içinde başlama tarihi, eklenmek istenen görevlendirmenin bitiş
+        tarihinden küçük görevlendirmeler ve bitiş tarihi, eklenmek istenen görevlendirmenin başlama tarihinden
+        büyük olan görevlendirmeler sorgulanır. Sorgu sonucunda dönen görevlendirme varsa, personel bu tarih
+        aralığında görevde demektir. Eğer sorgu sonucunda bir görevlendirme dönmüyorsa personel belirtilen tarih
+        aralığında görev aabilir demektir.
+
+        KurumIciGorevlendirmeBilgileri ve KurumDisiGorevlendirmeBilgileri modellerinin pre_save() metodlarında
+        bu kontrol yapılır. Model oluşturulduğunda ya da baslama_tarihi bitis_tarihi alanları güncellendiğinde bu
+        kontrol yapılır.
+
+        Eğer tarihler görevlendirme için uygunsa kayıt işlemine devam edilir. Uygun değilse
+        exception fırlatılır.
+
+        :param baslama_tarihi: Eklenmek istenen görevlendirme başlama tarihi
+        :param bitis_tarihi: Eklenmek istenen görevlendirme bitiş tarihi
+        :return:
+        """
         if baslama_tarihi > bitis_tarihi:
             raise Exception("Bitiş tarihi başlangıç tarihinden büyük olmalıdır.")
         illegal_gorevlendirme_kurum_ici = KurumIciGorevlendirmeBilgileri.objects.filter(
@@ -352,16 +373,10 @@ class KurumIciGorevlendirmeBilgileri(Model):
         return "%s %s" % (self.gorev_tipi, self.aciklama)
 
     def pre_save(self):
-        if self.exist:
-            changed_fields = self.changed_fields()
-            if "baslama_tarihi" in changed_fields or "bitis_tarihi" in changed_fields:
-                self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
-                                                          self.bitis_tarihi)
-
-    def pre_creation(self):
-        self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
-                                                  self.bitis_tarihi)
-
+        changed_fields = self.changed_fields()
+        if changed_fields is None or "baslama_tarihi" in changed_fields or "bitis_tarihi" in changed_fields:
+            self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
+                                                      self.bitis_tarihi)
 
 
 class KurumDisiGorevlendirmeBilgileri(Model):
@@ -426,15 +441,10 @@ class KurumDisiGorevlendirmeBilgileri(Model):
         return "%s %s %s" % (self.gorev_tipi, self.aciklama, self.ulke)
 
     def pre_save(self):
-        if self.exist:
-            changed_fields = self.changed_fields()
-            if "baslama_tarihi" in changed_fields or "bitis_tarihi" in changed_fields:
-                self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
-                                                          self.bitis_tarihi)
-
-    def pre_creation(self):
-        self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
-                                                  self.bitis_tarihi)
+        changed_fields = self.changed_fields()
+        if changed_fields is None or "baslama_tarihi" in changed_fields or "bitis_tarihi" in changed_fields:
+            self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
+                                                      self.bitis_tarihi)
 
 
 class Kadro(Model):
