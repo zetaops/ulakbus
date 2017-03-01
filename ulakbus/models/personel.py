@@ -212,9 +212,10 @@ class Personel(Model):
         Eğer tarihler görevlendirme için uygunsa kayıt işlemine devam edilir. Uygun değilse
         exception fırlatılır.
 
-        :param baslama_tarihi: Eklenmek istenen görevlendirme başlama tarihi
-        :param bitis_tarihi: Eklenmek istenen görevlendirme bitiş tarihi
-        :return:
+        Args:
+            baslama_tarihi (datetime): Eklenmek istenen görevlendirme başlama tarihi
+            bitis_tarihi (datetime): Eklenmek istenen görevlendirme bitiş tarihi
+
         """
         if baslama_tarihi > bitis_tarihi:
             raise Exception("Bitiş tarihi başlangıç tarihinden büyük olmalıdır.")
