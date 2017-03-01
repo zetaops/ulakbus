@@ -194,6 +194,46 @@ class Personel(Model):
 
         return self.atama.kurum_sicil_no
 
+    def gorevlendirme_tarih_kontrol(self, baslama_tarihi, bitis_tarihi):
+        """
+        Eklenmek istenen görevlendirmenin, başlama tarihi ve bitiş tarihinin tutarlılığını ve
+        personelin mevcut Kurum İçi ve Kurum Dışı görevlendirmeleriyle çakışıp çakışmadığını  kontrol eder.
+
+        Personelin mevcut görevlendirmeleri içinde başlama tarihi, eklenmek istenen görevlendirmenin bitiş
+        tarihinden küçük görevlendirmeler ve bitiş tarihi, eklenmek istenen görevlendirmenin başlama tarihinden
+        büyük olan görevlendirmeler sorgulanır. Sorgu sonucunda dönen görevlendirme varsa, personel bu tarih
+        aralığında görevde demektir. Eğer sorgu sonucunda bir görevlendirme dönmüyorsa personel belirtilen tarih
+        aralığında görev aabilir demektir.
+
+        KurumIciGorevlendirmeBilgileri ve KurumDisiGorevlendirmeBilgileri modellerinin pre_save() metodlarında
+        bu kontrol yapılır. Model oluşturulduğunda ya da baslama_tarihi bitis_tarihi alanları güncellendiğinde bu
+        kontrol yapılır.
+
+        Eğer tarihler görevlendirme için uygunsa kayıt işlemine devam edilir. Uygun değilse
+        exception fırlatılır.
+
+        Args:
+            baslama_tarihi (datetime): Eklenmek istenen görevlendirme başlama tarihi
+            bitis_tarihi (datetime): Eklenmek istenen görevlendirme bitiş tarihi
+
+        """
+        if baslama_tarihi > bitis_tarihi:
+            raise Exception("Bitiş tarihi başlangıç tarihinden büyük olmalıdır.")
+        illegal_gorevlendirme_kurum_ici = KurumIciGorevlendirmeBilgileri.objects.filter(
+            baslama_tarihi__lte=bitis_tarihi,
+            bitis_tarihi__gte=baslama_tarihi,
+            personel=self
+        )
+        illegal_gorevlendirme_kurum_disi = KurumDisiGorevlendirmeBilgileri.objects.filter(
+            baslama_tarihi__lte=bitis_tarihi,
+            bitis_tarihi__gte=baslama_tarihi,
+            personel=self
+        )
+
+        if illegal_gorevlendirme_kurum_ici or illegal_gorevlendirme_kurum_disi:
+            raise Exception("Belirtilen tarihlerde, belirtilen personel başka bir görevlendirmede olmamalıdır.")
+
+
     @lazy_property
     def kurum_ici_gorevlendirme(self):
         """kurum_ici_gorevlendirme
@@ -333,6 +373,12 @@ class KurumIciGorevlendirmeBilgileri(Model):
     def __unicode__(self):
         return "%s %s" % (self.gorev_tipi, self.aciklama)
 
+    def pre_save(self):
+        changed_fields = self.changed_fields()
+        if changed_fields is None or "baslama_tarihi" in changed_fields or "bitis_tarihi" in changed_fields:
+            self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
+                                                      self.bitis_tarihi)
+
 
 class KurumDisiGorevlendirmeBilgileri(Model):
     """Kurum Dışı Görevlendirme Bilgileri Modeli
@@ -394,6 +440,12 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
     def __unicode__(self):
         return "%s %s %s" % (self.gorev_tipi, self.aciklama, self.ulke)
+
+    def pre_save(self):
+        changed_fields = self.changed_fields()
+        if changed_fields is None or "baslama_tarihi" in changed_fields or "bitis_tarihi" in changed_fields:
+            self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
+                                                      self.bitis_tarihi)
 
 
 class Kadro(Model):
