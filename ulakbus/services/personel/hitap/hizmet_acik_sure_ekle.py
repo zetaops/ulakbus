@@ -6,7 +6,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap.hitap import HizmetAcikSure
 
 """HITAP Açık Süre Ekle
 
@@ -25,7 +24,6 @@ class HizmetAcikSureEkle(HITAPEkle):
     service_dict = {
         'service_name': 'HizmetAcikSureInsert',
         'service_mapper': 'ns1:HizmetAcikSureServisBean',
-        'model': HizmetAcikSure,
         'fields': {
             'tckn': 'tckn',
             'acikSekil': 'acik_sekil',

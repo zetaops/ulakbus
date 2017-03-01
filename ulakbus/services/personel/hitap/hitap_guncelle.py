@@ -64,7 +64,7 @@ class HITAPGuncelle(ZatoHitapService):
         """
 
         status = "error"
-        hitap_response = False
+        hitap_service = {}
         service_name = self.service_dict['service_name']
         try:
             # connection for hitap
@@ -89,9 +89,9 @@ class HITAPGuncelle(ZatoHitapService):
 
                     self.logger.info("%s started to work." % service_name)
 
-                    hitap_response = getattr(client.service, service_name)(request_data,
-                                                                           kullaniciAd=H_USER,
-                                                                           sifre=H_PASS)
+                    hitap_service = getattr(client.service, service_name)(request_data,
+                                                                          kullaniciAd=H_USER,
+                                                                          sifre=H_PASS)
             status = "ok"
 
         except AttributeError:
@@ -104,19 +104,7 @@ class HITAPGuncelle(ZatoHitapService):
 
         finally:
             self.response.payload = {'status': status,
-                                     'result': self.create_hitap_json(hitap_response)}
-
-    def create_hitap_json(self, hitap_service):
-        """Güncelleme servisinden dönen veriyi JSON formatına döndürür.
-        Converts SOAP call result object into JSON
-
-        """
-        dict_result = dict((name, getattr(hitap_service, name)) for name in dir(hitap_service)
-                           if not name.startswith('__'))
-
-        self.logger.info("hitap_service json created.")
-
-        return dict_result
+                                     'result': self.create_hitap_json(hitap_service)}
 
     def custom_filter(self, hitap_dict):
         """

@@ -98,16 +98,3 @@ class HITAPSil(ZatoHitapService):
             self.response.payload = {'status': status,
                                      'result': self.create_hitap_json(hitap_service)}
             self.logger.info("response payload: %s" % self.response.payload)
-
-    def create_hitap_json(self, hitap_service):
-        """Silme servisinden dönen veriyi JSON formatına döndürür.
-        Converts SOAP call result object into JSON
-
-        """
-        dict_result = dict((name, getattr(hitap_service, name)) for name in dir(hitap_service)
-                           if not name.startswith('__'))
-
-        self.logger.info("hitap_service json created.")
-        self.logger.info("Dict result: %s" % dict_result)
-
-        return dict_result

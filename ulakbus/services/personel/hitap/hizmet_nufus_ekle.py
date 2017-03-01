@@ -12,7 +12,6 @@ Hitap'a personelin Nufus bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap.hitap import NufusKayitlari
 
 
 class HizmetNufusEkle(HITAPEkle):
@@ -24,7 +23,6 @@ class HizmetNufusEkle(HITAPEkle):
     service_dict = {
         'service_name': 'HizmetNufusInsert',
         'service_mapper': 'ns1:HizmetNufusServisBean',
-        'model': NufusKayitlari,
         'fields': {
             'ad': 'ad',
             'cinsiyet': 'cinsiyet',

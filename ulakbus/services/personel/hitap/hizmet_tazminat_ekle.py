@@ -12,7 +12,6 @@ Hitap'a personelin Tazminat bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap.hitap import HizmetTazminat
 
 
 class HizmetTazminatEkle(HITAPEkle):
@@ -24,7 +23,6 @@ class HizmetTazminatEkle(HITAPEkle):
     service_dict = {
         'service_name': 'HizmetTazminatInsert',
         'service_mapper': 'ns1:HizmetTazminatServisBean',
-        'model': HizmetTazminat,
         'fields': {
             'gorev': 'gorev',
             'kadrosuzluk': 'kadrosuzluk',

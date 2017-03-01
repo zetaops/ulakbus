@@ -12,7 +12,6 @@ Hitap'a personelin askerlik bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap.hitap import AskerlikKayitlari
 
 
 class HizmetAskerlikEkle(HITAPEkle):
@@ -24,7 +23,6 @@ class HizmetAskerlikEkle(HITAPEkle):
     service_dict = {
         'service_name': 'HizmetAskerlikInsert',
         'service_mapper': 'ns1:HizmetAskerlikServisBean',
-        'model': AskerlikKayitlari,
         'fields': {
             'askerlikNevi': 'askerlik_nevi',
             'baslamaTarihi': 'baslama_tarihi',

@@ -24,7 +24,6 @@ class HizmetCetveliEkle(HITAPEkle):
     service_dict = {
         'service_name': 'HizmetCetvelInsert',
         'service_mapper': 'ns1:HizmetCetveliServisBean',
-        'model': HizmetKayitlari,
         'fields': {
             'baslamaTarihi': 'baslama_tarihi',
             'bitisTarihi': 'bitis_tarihi',

@@ -12,7 +12,6 @@ Hitap'a personelin Unvan bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap.hitap import HizmetUnvan
 
 
 class HizmetUnvanEkle(HITAPEkle):
@@ -24,7 +23,6 @@ class HizmetUnvanEkle(HITAPEkle):
     service_dict = {
         'service_name': 'HizmetUnvanInsert',
         'service_mapper': 'ns1:HizmetUnvanServisBean',
-        'model': HizmetUnvan,
         'fields': {
             'asilVekil': 'asil_vekil',
             'atamaSekli': 'atama_sekli',

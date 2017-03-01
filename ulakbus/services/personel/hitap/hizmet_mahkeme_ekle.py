@@ -12,7 +12,6 @@ Hitap'a personelin Mahkeme bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap.hitap import HizmetMahkeme
 
 
 class HizmetMahkemeEkle(HITAPEkle):
@@ -24,7 +23,6 @@ class HizmetMahkemeEkle(HITAPEkle):
     service_dict = {
         'service_name': 'HizmetMahkemeInsert',
         'service_mapper': 'ns1:HizmetMahkemeServisBean',
-        'model': HizmetMahkeme,
         'fields': {
             'tckn': 'tckn',
             'mahkemeAd': 'mahkeme_ad',

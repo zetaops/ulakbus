@@ -116,10 +116,11 @@ class HITAPSorgula(ZatoHitapService):
                                                                       H_PASS,
                                                                       request_payload['tckn'])
                 # get bean object
-                service_bean = getattr(hitap_service, bean_name)
+                service_beans = getattr(hitap_service, bean_name)
 
                 self.logger.info("%s started to work." % service_name)
-                hitap_dicts = self.create_hitap_dict(service_bean, self.service_dict['fields'])
+
+                hitap_dicts = self.create_hitap_json(service_beans)
 
                 # filtering for some fields
                 if 'date_filter' in self.service_dict:
@@ -144,44 +145,10 @@ class HITAPSorgula(ZatoHitapService):
         finally:
             self.response.payload = {'status': status, 'result': dumps(hitap_dicts)}
 
-    def create_hitap_dict(self, service_bean, fields):
-        """
-        Modeldeki alanlarla Hitap servisinden dönen verileri eşler.
-
-        Modeldeki kayıtlarla Hitap servisindeki kayıtların alanlarının isimleri
-        bir sözlük ile eşleştirilir. Böylece Hitap'tan gelen veriler
-        sisteme uygun şekilde elde edilebilmektedir.
-
-        Args:
-            service_bean (obj): Hitap bean nesnesi
-            fields (dict): Modeldeki alanların Hitap'taki karşılıklarını tutan map
-
-        Returns:
-            List[dict]: Hitap verisini yerele uygun biçimde tutan sözlük listesi
-
-        """
-
-        hitap_dict = [{k: getattr(record, v) for k, v in iteritems(fields)}
-                      for record in service_bean]
-
-        self.logger.info("hitap_dict created.")
-        return hitap_dict
-
-    def date_filter(self, hitap_dict):
-        """
-        Hitap sözlüğündeki tarih alanlarını yerele uygun biçime getirir.
-
-        Hitap'ta tarih alanları için ``01.01.0001`` değeri boş değer anlamına gelirken,
-        yerelde ``01.01.1900`` şeklindedir.
-
-        Args:
-            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
-
-        """
-
-        for record in hitap_dict:
-            for field in self.service_dict['date_filter']:
-                record[field] = '01.01.1900' if record[field] == "01.01.0001" else record[field]
+    def create_hitap_json(self, data):
+        data_dicts = [{k: getattr(record, v) for k, v in self.service_dict['fields'].iteritems()}
+                      for record in data]
+        return data_dicts
 
     def custom_filter(self, hitap_dict):
         """

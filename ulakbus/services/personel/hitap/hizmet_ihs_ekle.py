@@ -12,7 +12,6 @@ Hitap'a personelin IHS bilgilerinin eklenmesini yapar.
 """
 
 from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap.hitap import HizmetIHS
 
 
 class HizmetIhsEkle(HITAPEkle):
@@ -24,7 +23,6 @@ class HizmetIhsEkle(HITAPEkle):
     service_dict = {
         'service_name': 'HizmetIHSInsert',
         'service_mapper': 'ns1:HizmetIHSServisBean',
-        'model': HizmetIHS,
         'fields': {
             'tckn': 'tckn',
             'baslamaTarihi': 'baslama_tarihi',

@@ -37,6 +37,16 @@ class ZatoHitapService(UlakbusService):
     def request_json(self, conn, request_payload):
         pass
 
+    @classmethod
+    def create_hitap_json(cls, data):
+        """Ekleme servisinden dönen veriyi JSON formatına döndürür.
+        Converts SOAP call result object into JSON
+
+        """
+        fields = ['hataKod', 'hataMesaj', 'kayitNo']
+
+        return dict((field, getattr(data, field)) for field in fields)
+
     def check_required_fields(self, request_payload):
         """Gelen ``service_dict` içindeki ``required_fields`` sözlük listesi içinde belirtilen servis
         tarafında servis tarafında gerekli olarak tanımlanmış alanların hem ``fields`` sözlüğü

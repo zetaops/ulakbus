@@ -101,6 +101,7 @@ class HITAPEkle(ZatoHitapService):
                     hitap_service = getattr(client.service, service_name)(request_data,
                                                                           kullaniciAd=H_USER,
                                                                           sifre=H_PASS)
+                    self.logger.info("Hitap Service: %s" % hitap_service)
             status = "ok"
 
         except AttributeError:
@@ -117,25 +118,3 @@ class HITAPEkle(ZatoHitapService):
             self.logger.info("Hitap servis: %s" % hitap_service)
             self.response.payload = {'status': status,
                                      'result': self.create_hitap_json(hitap_service)}
-
-    def create_hitap_json(self, hitap_service):
-        """Ekleme servisinden dönen veriyi JSON formatına döndürür.
-        Converts SOAP call result object into JSON
-
-        """
-        dict_result = dict((name, getattr(hitap_service, name)) for name in dir(hitap_service)
-                           if not name.startswith('__'))
-
-        self.logger.info("hitap_service json created.")
-        self.logger.info("Dict result : %s" % dict_result)
-        return dict_result
-
-    def save_data_db(self, request_payload, kayit_no):
-        obj = self.service_dict['model']()
-        for hk, hv in request_payload.iteritems():
-            setattr(obj, hk, hv)
-        obj.sync = 1
-        obj.kayit_no = str(kayit_no)
-        obj.blocking_save()
-        self.logger.info("hitaptaki kayit yerele kaydedildi. kayit no => "
-                         + str(obj.kayit_no))
