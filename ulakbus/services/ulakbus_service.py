@@ -4,9 +4,14 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import os
+import urllib2
 
 from zato.server.service import Service
 from pyoko.lib.utils import un_camel
+
+H_USER = os.environ["HITAP_USER"]
+H_PASS = os.environ["HITAP_PASS"]
 
 
 class UlakbusService(Service):
@@ -35,7 +40,53 @@ class ZatoHitapService(UlakbusService):
         self.request_json(conn, request_payload)
 
     def request_json(self, conn, request_payload):
-        pass
+        status = "error"
+        hitap_service = {}
+        service_name = self.service_dict['service_name']
+        try:
+            # connection for hitap
+            with conn.client() as client:
+                self.logger.info("Service name: %s" % service_name)
+
+                request_data = client.factory.create(service_name)
+
+                # filtering for some fields
+                if 'date_filter' in self.service_dict:
+                    self.date_filter_ulakbus_to_hitap(self.service_dict['date_filter'],
+                                                      request_payload)
+
+                if 'required_fields' in self.service_dict:
+                    self.check_required_fields(request_payload)
+
+                for field, bean in request_data:
+                    if bean:
+                        for key, value in self.service_dict['fields'].items():
+                            setattr(bean, key, request_payload[value])
+                    elif field in self.service_dict['fields']:
+                        setattr(request_data,
+                                field,
+                                request_payload[self.service_dict['fields'][field]])
+
+                request_data.kullaniciAd = H_USER
+                request_data.sifre = H_PASS
+
+                self.logger.info("Request Data: %s" % request_data)
+                hitap_service = getattr(client.service, service_name)(request_data)
+                status = "ok"
+
+        except AttributeError:
+            self.logger.exception("AttributeError")
+            status = "error"
+
+        except urllib2.URLError:
+            self.logger.exception("Service unavailable!")
+            status = "error"
+
+        finally:
+            self.logger.info("Status: %s, Result: %s" % (status, hitap_service))
+            self.response.payload = {'status': status,
+                                     'result': self.create_hitap_json(hitap_service)}
+
 
     @classmethod
     def create_hitap_json(cls, data):
