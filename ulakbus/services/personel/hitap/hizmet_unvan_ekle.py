@@ -11,10 +11,10 @@ Hitap'a personelin Unvan bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetUnvanEkle(HITAPEkle):
+class HizmetUnvanEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Unvan Bilgi Ekleme servisi
 
@@ -22,7 +22,6 @@ class HizmetUnvanEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetUnvanInsert',
-        'service_mapper': 'ns1:HizmetUnvanServisBean',
         'fields': {
             'asilVekil': 'asil_vekil',
             'atamaSekli': 'atama_sekli',

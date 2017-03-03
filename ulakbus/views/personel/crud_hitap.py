@@ -24,7 +24,7 @@ class ListFormHitap(JsonForm):
     sync = fields.Button(gettext_lazy(u"HITAP ile senkronize et"), cmd="sync")
 
 
-class CrudHitap(CrudView):
+class CrudHitap(CrudView, object):
     """CrudHitap İş Akışı
 
     CrudHitap, standart CrudView'a ait save, delete gibi metotların

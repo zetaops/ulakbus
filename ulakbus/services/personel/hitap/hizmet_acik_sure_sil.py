@@ -11,10 +11,10 @@ Hitap'da personelin açık süre bilgilerinin silinmesi sağlayan class.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetAcikSureSil(HITAPSil):
+class HizmetAcikSureSil(ZatoHitapService):
     """
     HITAP Silme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Silme servisi
 

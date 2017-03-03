@@ -11,10 +11,10 @@ Hitap'a personelin Nufus bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetNufusEkle(HITAPEkle):
+class HizmetNufusEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Nufus Bilgi Ekleme servisi
 
@@ -22,7 +22,6 @@ class HizmetNufusEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetNufusInsert',
-        'service_mapper': 'ns1:HizmetNufusServisBean',
         'fields': {
             'ad': 'ad',
             'cinsiyet': 'cinsiyet',

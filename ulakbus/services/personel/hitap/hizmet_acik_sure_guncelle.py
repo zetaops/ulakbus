@@ -11,10 +11,10 @@ Hitap'a personelin açık süre bilgilerinin güncellemesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetAcikSureGuncelle(HITAPGuncelle):
+class HizmetAcikSureGuncelle(ZatoHitapService):
     """
     HITAP Güncelleme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Güncelleme servisi
 
@@ -22,7 +22,6 @@ class HizmetAcikSureGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetAcikSureUpdate',
-        'service_mapper': 'ns1:HizmetAcikSureServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',

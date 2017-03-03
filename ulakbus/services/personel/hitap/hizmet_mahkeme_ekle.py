@@ -11,10 +11,10 @@ Hitap'a personelin Mahkeme bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetMahkemeEkle(HITAPEkle):
+class HizmetMahkemeEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Mahkeme Bilgi Ekleme servisi
 
@@ -22,7 +22,6 @@ class HizmetMahkemeEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetMahkemeInsert',
-        'service_mapper': 'ns1:HizmetMahkemeServisBean',
         'fields': {
             'tckn': 'tckn',
             'mahkemeAd': 'mahkeme_ad',

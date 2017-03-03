@@ -11,10 +11,10 @@ Hitap'da personelin Hizmet Birleştirme bilgilerinin silinmesi sağlayan class.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetBirlestirmeSil(HITAPSil):
+class HizmetBirlestirmeSil(ZatoHitapService):
     """
     HITAP Silme servisinden kalıtılmış Hizmet Birleştirme Bilgisi Silme servisi
 

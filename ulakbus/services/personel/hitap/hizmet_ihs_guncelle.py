@@ -11,11 +11,10 @@ Hitap'a personelin IHS bilgilerinin guncellemesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
-# todo: from ulakbus.models.hitap.hitap import HizmetIHS
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetIhsGuncelle(HITAPGuncelle):
+class HizmetIhsGuncelle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet IHS Bilgisi Guncelleme servisi
 
@@ -23,7 +22,6 @@ class HizmetIhsGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetIHSUpdate',
-        'service_mapper': 'ns1:HizmetIHSServisBean',
         'fields': {
             'ihzID': 'kayit_no',
             'tckn': 'tckn',

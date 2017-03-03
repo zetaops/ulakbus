@@ -11,10 +11,10 @@ Hitap'a personelin Okul bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetOkulEkle(HITAPEkle):
+class HizmetOkulEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Okul Bilgi Ekleme servisi
 
@@ -22,7 +22,6 @@ class HizmetOkulEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetOkulInsert',
-        'service_mapper': 'ns1:HizmetEgitimOkulServisBean',
         'fields': {
             'bolum': 'bolum',
             'kayitNo': 'kayit_no',

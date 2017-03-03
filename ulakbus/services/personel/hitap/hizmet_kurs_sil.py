@@ -11,10 +11,10 @@ Hitap'da personelin Hizmet Kurs bilgilerinin silinmesi sağlayan class.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetKursSil(HITAPSil):
+class HizmetKursSil(ZatoHitapService):
     """
     HITAP Silme servisinden kalıtılmış Hizmet Kurs Bilgisi Silme servisi
 

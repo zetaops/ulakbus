@@ -11,10 +11,10 @@ Hitap'a personelin askerlik bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetAskerlikEkle(HITAPEkle):
+class HizmetAskerlikEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Askerlik Bilgisi Ekleme servisi
 

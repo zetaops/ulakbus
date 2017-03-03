@@ -11,10 +11,10 @@ Hitap'da personelin askerlik bilgilerinin silinmesi sağlayan class.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetAskerlikSil(HITAPSil):
+class HizmetAskerlikSil(ZatoHitapService):
     """
     HITAP Silme servisinden kalıtılmış Hizmet Askerlik Bilgisi Silme servisi
 

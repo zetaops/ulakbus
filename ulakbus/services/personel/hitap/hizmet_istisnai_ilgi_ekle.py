@@ -11,10 +11,10 @@ Hitap'a personelin Istisnai Ilgi bilgilerinin eklemesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetIstisnaiIlgiEkle(HITAPEkle):
+class HizmetIstisnaiIlgiEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Istisnai Bilgi Ekleme servisi
 
@@ -22,7 +22,6 @@ class HizmetIstisnaiIlgiEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'hizmetIstisnaiIlgiInsert',
-        'service_mapper': 'ns1:HizmetIstisnaiIlgiServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',

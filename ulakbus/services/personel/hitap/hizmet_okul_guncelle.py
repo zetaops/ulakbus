@@ -11,10 +11,10 @@ Hitap'a personelin Okul bilgilerinin guncellemesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetOkulGuncelle(HITAPGuncelle):
+class HizmetOkulGuncelle(ZatoHitapService):
     """
     HITAP Guncelleme servisinden kalıtılmış Hizmet Okul Bilgi Guncelleme servisi
 
@@ -22,7 +22,6 @@ class HizmetOkulGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetOkulUpdate',
-        'service_mapper': 'ns1:HizmetEgitimOkulServisBean',
         'fields': {
             'bolum': 'bolum',
             'kayitNo': 'kayit_no',

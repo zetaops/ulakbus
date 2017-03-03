@@ -11,10 +11,10 @@ Hitap'da personelin Hizmet Borçlanma bilgilerinin silinmesi sağlayan class.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetBorclanmaSil(HITAPSil):
+class HizmetBorclanmaSil(ZatoHitapService):
     """
     HITAP Silme servisinden kalıtılmış Hizmet Borçlanma Bilgisi Silme servisi
 

@@ -11,10 +11,10 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetBirlestirmeEkle(HITAPEkle):
+class HizmetBirlestirmeEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Birlestirme Bilgisi Ekleme servisi
 

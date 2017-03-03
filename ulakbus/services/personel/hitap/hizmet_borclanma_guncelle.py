@@ -11,10 +11,10 @@ Hitap'a personelin hizmet borclanma bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetBorclanmaGuncelle(HITAPGuncelle):
+class HizmetBorclanmaGuncelle(ZatoHitapService):
     """
     HITAP Guncelleme servisinden kalıtılmış Hizmet Borclanma Bilgisi Guncelleme servisi
 
@@ -22,7 +22,6 @@ class HizmetBorclanmaGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetBorclanmaUpdate',
-        'service_mapper': 'ns1:HizmetBorclanmaServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',

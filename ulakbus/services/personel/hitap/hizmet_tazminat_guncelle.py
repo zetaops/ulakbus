@@ -11,10 +11,10 @@ Hitap'a personelin Tazminat bilgilerinin guncellemesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetTazminatGuncelle(HITAPGuncelle):
+class HizmetTazminatGuncelle(ZatoHitapService):
     """
     HITAP Guncelleme servisinden kalıtılmış Hizmet Tazminat Bilgi Guncelleme servisi
 
@@ -22,7 +22,6 @@ class HizmetTazminatGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetTazminatUpdate',
-        'service_mapper': 'ns1:HizmetTazminatServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'gorev': 'gorev',

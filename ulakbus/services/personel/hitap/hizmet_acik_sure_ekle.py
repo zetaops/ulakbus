@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 """HITAP Açık Süre Ekle
 
@@ -14,7 +14,7 @@ Hitap'a personelin açık süre bilgilerinin eklenmesini yapar.
 """
 
 
-class HizmetAcikSureEkle(HITAPEkle):
+class HizmetAcikSureEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Açık Süre Bilgisi Ekleme servisi
 
@@ -23,7 +23,6 @@ class HizmetAcikSureEkle(HITAPEkle):
 
     service_dict = {
         'service_name': 'HizmetAcikSureInsert',
-        'service_mapper': 'ns1:HizmetAcikSureServisBean',
         'fields': {
             'tckn': 'tckn',
             'acikSekil': 'acik_sekil',

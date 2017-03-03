@@ -11,11 +11,10 @@ Hitap'a personelin Hizmet Cetvel  Kayit bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
-from ulakbus.models.hitap.hitap import HizmetKayitlari
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetCetveliEkle(HITAPEkle):
+class HizmetCetveliEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Okul Bilgi Ekleme servisi
 
@@ -23,7 +22,6 @@ class HizmetCetveliEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetCetvelInsert',
-        'service_mapper': 'ns1:HizmetCetveliServisBean',
         'fields': {
             'baslamaTarihi': 'baslama_tarihi',
             'bitisTarihi': 'bitis_tarihi',

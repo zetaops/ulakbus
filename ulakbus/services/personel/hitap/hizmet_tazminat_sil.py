@@ -11,10 +11,10 @@ Hitap'da personelin Hizmet Tazminat bilgilerinin silinmesi sağlayan class.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetTazminatSil(HITAPSil):
+class HizmetTazminatSil(ZatoHitapService):
     """
     HITAP Silme servisinden kalıtılmış Hizmet Mahkeme Bilgisi Silme servisi
 

@@ -11,10 +11,10 @@ Hitap'a personelin kurs bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetKursEkle(HITAPEkle):
+class HizmetKursEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Kurs Bilgisi Ekleme servisi
 
@@ -22,7 +22,6 @@ class HizmetKursEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': "HizmetKursInsert",
-        'service_mapper': "ns1:HizmetEgitimKursServisBean",
         'fields': {
             'tckn': 'tckn',
             'kursOgrenimSuresi': 'kurs_ogrenim_suresi',

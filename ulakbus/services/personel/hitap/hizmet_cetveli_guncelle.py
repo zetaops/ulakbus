@@ -11,10 +11,10 @@ Hitap'a personelin Hizmet Cetvel Kayit bilgilerinin güncellemesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetCetveliGuncelle(HITAPGuncelle):
+class HizmetCetveliGuncelle(ZatoHitapService):
     """
     HITAP Guncelleme servisinden kalıtılmış Hizmet Okul Bilgi Güncelleme servisi
 
@@ -22,7 +22,6 @@ class HizmetCetveliGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetCetvelUpdate',
-        'service_mapper': 'ns1:HizmetCetveliServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'baslamaTarihi': 'baslama_tarihi',

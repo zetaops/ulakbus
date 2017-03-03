@@ -11,10 +11,10 @@ Hitap'a personelin IHS bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_ekle import HITAPEkle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetIhsEkle(HITAPEkle):
+class HizmetIhsEkle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet IHS Bilgisi Ekleme servisi
 
@@ -22,7 +22,6 @@ class HizmetIhsEkle(HITAPEkle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetIHSInsert',
-        'service_mapper': 'ns1:HizmetIHSServisBean',
         'fields': {
             'tckn': 'tckn',
             'baslamaTarihi': 'baslama_tarihi',

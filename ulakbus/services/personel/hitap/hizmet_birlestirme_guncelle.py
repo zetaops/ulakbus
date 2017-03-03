@@ -11,10 +11,10 @@ Hitap'a personelin hizmet birlestirme bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetBirlestirmeGuncelle(HITAPGuncelle):
+class HizmetBirlestirmeGuncelle(ZatoHitapService):
     """
     HITAP Guncelleme servisinden kalıtılmış Hizmet Birlestirme Bilgisi Guncelleme servisi
 

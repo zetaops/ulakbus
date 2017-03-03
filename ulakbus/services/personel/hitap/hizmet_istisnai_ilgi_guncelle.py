@@ -11,10 +11,10 @@ Hitap'a personelin Istisnai Ilgi bilgilerinin guncellemesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetIstisnaiIlgiGuncelle(HITAPGuncelle):
+class HizmetIstisnaiIlgiGuncelle(ZatoHitapService):
     """
     HITAP Guncelleme servisinden kalıtılmış Hizmet Istisnai Bilgi Guncelleme servisi
 
@@ -22,7 +22,6 @@ class HizmetIstisnaiIlgiGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'hizmetIstisnaiIlgiUpdate',
-        'service_mapper': 'ns1:HizmetIstisnaiIlgiServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',

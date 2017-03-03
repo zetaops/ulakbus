@@ -11,17 +11,16 @@ Hitap'a personelin Mahkeme bilgilerinin guncellemesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetMahkemeGuncelle(HITAPGuncelle):
+class HizmetMahkemeGuncelle(ZatoHitapService):
     """HITAP Guncelleme servisinden kalıtılmış Hizmet Mahkeme Bilgi Guncelleme servisi
 
     """
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetMahkemeUpdate',
-        'service_mapper': 'ns1:HizmetMahkemeServisBean',
         'fields': {
             'kayitNo': 'kayit_no',
             'tckn': 'tckn',

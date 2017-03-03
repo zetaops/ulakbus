@@ -11,10 +11,10 @@ Hitap'a personelin Nufus bilgilerinin guncellenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetNufusGuncelle(HITAPGuncelle):
+class HizmetNufusGuncelle(ZatoHitapService):
     """
     HITAP Ekleme servisinden kalıtılmış Hizmet Nufus Bilgi Guncelleme servisi
 
@@ -22,7 +22,6 @@ class HizmetNufusGuncelle(HITAPGuncelle):
     HAS_CHANNEL = True
     service_dict = {
         'service_name': 'HizmetNufusUpdate',
-        'service_mapper': 'ns1:HizmetNufusServisBean',
         'fields': {
             'ad': 'ad',
             'cinsiyet': 'cinsiyet',
