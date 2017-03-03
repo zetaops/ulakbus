@@ -32,12 +32,6 @@ Bu servis şu işlemleri gerçekleştirir:
     * 3: Yerel kayıt silindi, Hitap kaydı silinecek
     * 4: Yeni bir yerel kayıt oluşturuldu, Hitap'a gönderilecek.
 
-
-Attributes:
-    H_USER (str): Hitap kullanıcı adı
-    H_PASS (str): Hitap kullanıcı şifresi
-
-
 Example:
     Servise JSON nesnesi kullanılarak istek gönderilmesi:
 
@@ -46,9 +40,6 @@ Example:
         $ curl http://localhost:11223/hizmet-okul-sync -d '{"tckn": "tckn"}'
 
 """
-
-H_USER = os.environ["HITAP_USER"]
-H_PASS = os.environ["HITAP_PASS"]
 
 
 class HITAPSync(ZatoHitapService):
@@ -67,10 +58,9 @@ class HITAPSync(ZatoHitapService):
     HAS_CHANNEL = False
 
     def request_json(self, conn, request_payload):
-        tckn = request_payload['tckn']
-        self.sync_hitap_data(tckn)
+        self.sync_hitap_data(payload=request_payload)
 
-    def get_hitap_dict(self, tckn):
+    def get_hitap_dict(self, payload):
         """
         İlgili servise ait sorgulama servisini çağırarak
         gerekli Hitap verisini elde eder.
@@ -85,7 +75,7 @@ class HITAPSync(ZatoHitapService):
 
         """
 
-        response = self.invoke(self.service_dict['sorgula_service'], dumps({'tckn': tckn}),
+        response = self.invoke(self.service_dict['sorgula_service'], dumps(payload),
                                data_format=DATA_FORMAT.JSON, as_bunch=True)
 
         has_error = True if response["status"] == 'error' else False
@@ -130,7 +120,7 @@ class HITAPSync(ZatoHitapService):
             self.logger.info("yereldeki sync kayit hitapta yok, kayit silindi."
                              "kayit no => " + str(obj.kayit_no))
 
-    def sync_hitap_data(self, tckn):
+    def sync_hitap_data(self, payload):
         """
         Yereldeki kayıtları Hitap servisinden gelen kayıtlara göre senkronize eder.
         tckn bilgisine göre Hitap kayıtları ve yereldeki kayıtları getirilir ve:
@@ -151,8 +141,8 @@ class HITAPSync(ZatoHitapService):
         """
 
         # get hitap data
-        hitap_dict, has_error = self.get_hitap_dict(tckn)
-        personel = Personel.objects.get(tckn=tckn)
+        hitap_dict, has_error = self.get_hitap_dict(payload)
+        personel = Personel.objects.get(tckn=payload['tckn'])
         if has_error:
             self.logger.info("Hitap kaydi sorgulama hatasi.")
             status = "error"
@@ -161,7 +151,7 @@ class HITAPSync(ZatoHitapService):
             try:
                 # get kayit no list from db
                 kayit_no_list = [record.kayit_no for record in
-                                 self.service_dict['model'].objects.filter(tckn=tckn)]
+                                 self.service_dict['model'].objects.filter(tckn=payload['tckn'])]
                 self.logger.info("yereldeki kayit sayisi - : " + str(len(kayit_no_list)))
                 self.logger.info("hitaptan gelen kayit sayisi - : " + str(len(hitap_dict)))
 

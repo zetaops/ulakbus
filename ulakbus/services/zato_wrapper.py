@@ -26,13 +26,18 @@ Example:
         response = zs.zato_request()  # 'ok' or 'error'
 
 """
-
-from pyoko.conf import settings
+import os
 import requests
 import json
 import urlparse
 import importlib
+
+from pyoko.conf import settings
 from ulakbus.models import ZatoServiceChannel
+
+
+H_USER = os.environ["HITAP_USER"]
+H_PASS = os.environ["HITAP_PASS"]
 
 
 class ZatoService(object):
@@ -91,7 +96,11 @@ class ZatoService(object):
             or simply string of zato service response payload
 
         """
-        r = requests.post(self.get_uri(), data=json.dumps(self.prepare_payload()))
+        payload = self.prepare_payload()
+        payload['kullanici_ad'] = H_USER
+        payload['kullanici_sifre'] = H_PASS
+
+        r = requests.post(self.get_uri(), data=json.dumps(payload))
         if r.status_code == 200:
             response = r.json()
             r.close()

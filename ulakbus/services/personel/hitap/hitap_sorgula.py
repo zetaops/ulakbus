@@ -16,12 +16,6 @@ from six import iteritems
 Hitap sorgulama servislerinin kalıtılacağı
 abstract HITAP Sorgula servisini içeren modül.
 
-
-Attributes:
-    H_USER (str): Hitap kullanıcı adı
-    H_PASS (str): Hitap kullanıcı şifresi
-
-
 Example:
     Servise JSON nesnesi kullanılarak istek gönderilmesi:
 
@@ -56,9 +50,6 @@ Example:
         }
 
 """
-
-H_USER = os.environ["HITAP_USER"]
-H_PASS = os.environ["HITAP_PASS"]
 
 
 class HITAPSorgula(ZatoHitapService):
@@ -112,9 +103,10 @@ class HITAPSorgula(ZatoHitapService):
 
                 # hitap response
                 self.logger.info("SORGULA SERVIS NAME : %s" % service_name)
-                hitap_service = getattr(client.service, service_name)(H_USER,
-                                                                      H_PASS,
-                                                                      request_payload['tckn'])
+                hitap_service = getattr(client.service,
+                                        service_name)(request_payload['kullanici_ad'],
+                                                      request_payload['kullanici_sifre'],
+                                                      request_payload['tckn'])
                 # get bean object
                 service_beans = getattr(hitap_service, bean_name)
 

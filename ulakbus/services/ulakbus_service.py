@@ -10,9 +10,6 @@ import urllib2
 from zato.server.service import Service
 from pyoko.lib.utils import un_camel
 
-H_USER = os.environ["HITAP_USER"]
-H_PASS = os.environ["HITAP_PASS"]
-
 
 class UlakbusService(Service):
     @classmethod
@@ -40,6 +37,65 @@ class ZatoHitapService(UlakbusService):
         self.request_json(conn, request_payload)
 
     def request_json(self, conn, request_payload):
+        """
+            Çalışan iş akışı ve servisine ait servis ismini alarak
+            zato ilgili servis objesini getirir.
+
+            Örnek(Kurs Bilgiler İş Akışı):
+                request_data = client.factory.create("HizmetKursInsert")
+                request_data = (HizmetKursInsert){
+                                   hizmetEgitimKurs =
+                                      (HizmetEgitimKursServisBean){
+                                         kayitNo = None
+                                         kursNevi = None
+                                         kursOgrenimSuresi = None
+                                         mezuniyetTarihi = None
+                                         ogrenimYeri = None
+                                         okulAd = None
+                                         bolumAd = None
+                                         tckn = None
+                                         denklikTarihi = None
+                                         denklikBolum = None
+                                         denklikOkul = None
+                                         kurumOnayTarihi = None
+                                      }
+                                   kullaniciAd = None
+                                   sifre = None
+                                 }
+                olarak doner. Buradaki ilk veri bean nesnesidir. Ekleme ve Güncelleme
+                servislerinde bulunur. Sil ve Sync servislerinde ise bean nesnesi bulunmaz.
+
+                Sil servisinin request_data'sı : (HizmetKursDelete){
+                                                               kayitNo = None
+                                                               tckn = None
+                                                               kullaniciAd = None
+                                                               sifre = None}
+                şeklindedir.
+
+            iş akışından gönderdiğimiz request_payload nesnesi ile de buradaki gerekli
+            yerleri doldururuz.
+
+
+            gönderdiğimiz verileri ekledikten sonra hitap servisine gönderiyoruz.Bu işlemin
+            sonucundan sonra ise hitap bize response datası gönderiyor.
+
+            hitap_service = getattr(client.service, "HizmetKursInsert")(request_data)
+
+            hitap_service = (ServisSonuc){
+                                           hataKod = None
+                                           hataMesaj = None
+                                           kayitNo = 123
+                                         }
+            türünde hitaptan bilgi döner. Dönen sonuc json formatına dönüştürülüp işlem
+            sonlandırılır.
+
+        Args:
+            conn: Soap connection
+            request_payload:(json) İş akışı ile hitap servise gönderdiğimiz bilgiler.
+
+        Returns:
+
+        """
         status = "error"
         hitap_service = {}
         service_name = self.service_dict['service_name']
@@ -67,8 +123,8 @@ class ZatoHitapService(UlakbusService):
                                 field,
                                 request_payload[self.service_dict['fields'][field]])
 
-                request_data.kullaniciAd = H_USER
-                request_data.sifre = H_PASS
+                request_data.kullaniciAd = request_payload['kullanici_ad']
+                request_data.sifre = request_payload['kullanici_sifre']
 
                 self.logger.info("Request Data: %s" % request_data)
                 hitap_service = getattr(client.service, service_name)(request_data)
