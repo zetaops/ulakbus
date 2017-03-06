@@ -5,11 +5,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.ulakbus_service import ZatoHitapService
-from zato.common import DATA_FORMAT
-import os
 import urllib2
 import socket
+
+from ulakbus.services.ulakbus_service import ZatoHitapService
+from zato.common import DATA_FORMAT
 from json import loads, dumps
 from six import iteritems
 from ulakbus.models.personel import Personel

@@ -26,7 +26,6 @@ Example:
         response = zs.zato_request()  # 'ok' or 'error'
 
 """
-import os
 import requests
 import json
 import urlparse
@@ -34,10 +33,6 @@ import importlib
 
 from pyoko.conf import settings
 from ulakbus.models import ZatoServiceChannel
-
-
-H_USER = os.environ["HITAP_USER"]
-H_PASS = os.environ["HITAP_PASS"]
 
 
 class ZatoService(object):
@@ -56,9 +51,10 @@ class ZatoService(object):
 
     """
 
-    def __init__(self, service_name, payload):
+    def __init__(self, service_name, payload, auth=None):
         self.zato_service = ZatoServiceChannel.objects.get(service_name=service_name)
         self.payload = payload
+        self.auth = auth
 
     def prepare_payload(self):
         return self.payload
@@ -97,8 +93,6 @@ class ZatoService(object):
 
         """
         payload = self.prepare_payload()
-        payload['kullanici_ad'] = H_USER
-        payload['kullanici_sifre'] = H_PASS
 
         r = requests.post(self.get_uri(), data=json.dumps(payload))
         if r.status_code == 200:
@@ -144,35 +138,34 @@ class ZatoService(object):
 class TcknService(ZatoService):
 
     def prepare_payload(self):
+        return self.check_tckn()
+
+    def check_tckn(self, value=None):
 
         """
         Türkiye Cumhuriyeti Kimlik Numarası geçerlilik kontrolü.
         11 karakter uzunluğunda karakter dizisi olmalı.
 
         Args:
-            tckn (str): 11 karakter uzunluğunda TCKN.
-
-        Returns:
-            str: TCKN
+            value: 11 karakter uzunluğunda TCKN.
 
         """
         try:
-            tckn = self.payload["tckn"]
+            tckn = value if value else self.payload["tckn"]
         except:
             raise Exception("tckn can not be empty")
 
-        if type(tckn) is not str:
+        if type(tckn) not in [str, unicode]:
             raise TypeError("tckn must be string which is %s" % type(tckn))
 
         if len(tckn) != 11:
             raise Exception("tckn length must be 11")
 
-        return self.payload
 
-
-class HitapService(ZatoService):
+class HitapService(TcknService):
 
     def prepare_payload(self):
+
         import datetime
         model = getattr(importlib.import_module(self.zato_service.module_path),
                         self.zato_service.class_name)
@@ -186,9 +179,14 @@ class HitapService(ZatoService):
             else:
                 value = getattr(self.payload, key)
 
-                if type(value) == datetime.date:
-                    value = value.strftime("%d.%m.%Y")
+            if type(value) == datetime.date:
+                value = value.strftime("%d.%m.%Y")
+
+            if key == 'tckn':
+                self.check_tckn(value)
 
             payload_object[key] = value
+        payload_object['kullanici_ad'] = self.auth['kullanici_ad']
+        payload_object['kullanici_sifre'] = self.auth['kullanici_sifre']
 
         return payload_object

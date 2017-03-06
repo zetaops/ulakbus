@@ -5,11 +5,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.ulakbus_service import ZatoHitapService
-import os
 import urllib2
+
+from ulakbus.services.ulakbus_service import ZatoHitapService
 from json import dumps
-from six import iteritems
 
 """HITAP Sorgu Servisi
 
@@ -138,7 +137,7 @@ class HITAPSorgula(ZatoHitapService):
             self.response.payload = {'status': status, 'result': dumps(hitap_dicts)}
 
     def create_hitap_json(self, data):
-        data_dicts = [{k: getattr(record, v) for k, v in self.service_dict['fields'].iteritems()}
+        data_dicts = [{k: getattr(record, v) for k, v in self.service_dict['fields'].items()}
                       for record in data]
         return data_dicts
 

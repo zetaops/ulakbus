@@ -12,7 +12,7 @@ from ulakbus.lib.common import aktivasyon_kodu_uret
 from ulakbus.lib.common import EPostaDogrulama
 from ulakbus.lib.common import e_posta_uygunlugu
 from ulakbus.settings import DEMO_URL, MAIL_ADDRESS
-from ulakbus.services.zato_wrapper import HitapService
+from ulakbus.services.zato_wrapper import ZatoService
 
 
 class EPostaForm(JsonForm):
@@ -77,11 +77,11 @@ class EPostaDegistir(UlakbusView):
 
         """
 
-        posta_gonder = HitapService(service_name='e-posta-yolla',
-                                    payload={"default_e_mail": MAIL_ADDRESS,
-                                             "e_posta": self.current.task_data["e_posta"],
-                                             "message": self.current.task_data["message"],
-                                             "subject": self.current.task_data["subject"]})
+        posta_gonder = ZatoService(service_name='e-posta-yolla',
+                                   payload={"default_e_mail": MAIL_ADDRESS,
+                                            "e_posta": self.current.task_data["e_posta"],
+                                            "message": self.current.task_data["message"],
+                                            "subject": self.current.task_data["subject"]})
 
         posta_gonder.zato_request()
 
