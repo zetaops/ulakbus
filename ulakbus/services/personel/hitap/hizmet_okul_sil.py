@@ -11,30 +11,20 @@ Hitap'da personelin Hizmet Okul bilgilerinin silinmesi sağlayan class.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_sil import HITAPSil
+from ulakbus.services.ulakbus_service import ZatoHitapService
 
 
-class HizmetOkulSil(HITAPSil):
+class HizmetOkulSil(ZatoHitapService):
     """
     HITAP Silme servisinden kalıtılmış Hizmet Mahkeme Bilgisi Silme servisi
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict):  Request yoluyla gelen kayıtlar,
-                    HizmetOkulDelete servisinin alanlarıyla eşlenmektedir.
-                    Servis tarafında gerekli olan alanlar listede tutulmaktadır.
-        """
-
-        self.service_name = 'HizmetOkulDelete'
-
-        self.service_dict['fields']['tckn'] = self.request.payload.get('tckn', '')
-        self.service_dict['fields']['kayitNo'] = self.request.payload.get('kayit_no', '')
-        self.service_dict['required_fields'] = ['tckn', 'kayitNo']
-
-        super(HizmetOkulSil, self).handle()
+    service_dict = {
+        'service_name': 'HizmetOkulDelete',
+        'fields': {
+            'tckn': 'tckn',
+            'kayitNo': 'kayit_no'
+        },
+        'required_fields': ['tckn', 'kayit_no']
+    }

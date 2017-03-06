@@ -5,23 +5,15 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.services.ulakbus_service import UlakbusService
-from ulakbus.services.personel.hitap.hitap_helper import HitapHelper
-import os
 import urllib2
+
+from ulakbus.services.ulakbus_service import ZatoHitapService
 from json import dumps
-from six import iteritems
 
 """HITAP Sorgu Servisi
 
 Hitap sorgulama servislerinin kalıtılacağı
 abstract HITAP Sorgula servisini içeren modül.
-
-
-Attributes:
-    H_USER (str): Hitap kullanıcı adı
-    H_PASS (str): Hitap kullanıcı şifresi
-
 
 Example:
     Servise JSON nesnesi kullanılarak istek gönderilmesi:
@@ -58,11 +50,8 @@ Example:
 
 """
 
-H_USER = os.environ["HITAP_USER"]
-H_PASS = os.environ["HITAP_PASS"]
 
-
-class HITAPSorgula(UlakbusService):
+class HITAPSorgula(ZatoHitapService):
     """
     Hitap Sorgulama servislerinin kalıtılacağı abstract Zato servisi.
 
@@ -79,30 +68,7 @@ class HITAPSorgula(UlakbusService):
     """
     HAS_CHANNEL = False
 
-    def __init__(self):
-        self.service_name = ''
-        self.bean_name = ''
-        self.service_dict = {}
-        super(HITAPSorgula, self).__init__()
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Servise gelen istekten kimlik numarası (tckn) bilgisini alır ve
-        soap outgoing bağlantısını oluşturur. Bu bilgilerle
-        Hitap'a gidecek isteği hazırlayacak ve gelen cevabı elde edecek olan
-        request_json fonksiyonunu çağırır.
-
-        """
-
-        self.logger.info("zato service started to work.")
-        tckn = self.request.payload['tckn']
-        conn = self.outgoing.soap['HITAP'].conn
-
-        self.request_json(tckn, conn)
-
-    def request_json(self, tckn, conn):
+    def request_json(self, conn, request_payload):
         """
         Kimlik numarası ve kullanıcı bilgileriyle birlikte Hitap'ın ilgili servisine
         istekte bulunup gelen cevabı uygun şekilde elde eder.
@@ -114,7 +80,7 @@ class HITAPSorgula(UlakbusService):
         Veriler uygun şekilde elde edildikten sonra servis cevabı (payload) oluşturulur.
 
         Args:
-            tckn (str): Türkiye Cumhuriyeti Kimlik Numarası
+            request_payload (str): Türkiye Cumhuriyeti Kimlik Numarası
             conn (zato.outgoing.soap.conn): Zato soap outgoing bağlantısı
 
         Raises:
@@ -124,28 +90,38 @@ class HITAPSorgula(UlakbusService):
         """
 
         status = "error"
-        hitap_dict = []
-
+        hitap_dicts = []
+        service_name = self.service_dict['service_name']
+        bean_name = self.service_dict['bean_name']
         try:
             # connection for hitap
             with conn.client() as client:
 
                 if 'required_fields' in self.service_dict:
-                    required_field_check = HitapHelper()
-                    required_field_check.check_required_data(self.service_dict)
+                    self.check_required_fields(request_payload)
 
                 # hitap response
-                hitap_service = getattr(client.service, self.service_name)(H_USER, H_PASS, tckn)
+                self.logger.info("SORGULA SERVIS NAME : %s" % service_name)
+                hitap_service = getattr(client.service,
+                                        service_name)(request_payload['kullanici_ad'],
+                                                      request_payload['kullanici_sifre'],
+                                                      request_payload['tckn'])
                 # get bean object
-                service_bean = getattr(hitap_service, self.bean_name)
+                service_beans = getattr(hitap_service, bean_name)
 
-                self.logger.info("%s started to work." % self.service_name)
-                hitap_dict = self.create_hitap_dict(service_bean, self.service_dict['fields'])
+                self.logger.info("%s started to work." % service_name)
+
+                hitap_dicts = self.hitap_json(service_beans)
 
                 # filtering for some fields
                 if 'date_filter' in self.service_dict:
-                    self.date_filter(hitap_dict)
-                self.custom_filter(hitap_dict)
+                    self.logger.info("Hitap dict: %s" % hitap_dicts)
+                    for hitap_dict in hitap_dicts:
+                        self.date_filter_hitap_to_ulakbus(self.service_dict['date_filter'],
+                                                          hitap_dict)
+                if 'long_to_string' in self.service_dict:
+                    for hitap_dict in hitap_dicts:
+                        self.long_to_string(hitap_dict)
 
             status = "ok"
 
@@ -158,47 +134,12 @@ class HITAPSorgula(UlakbusService):
             status = "error"
 
         finally:
-            self.response.payload = {'status': status, 'result': dumps(hitap_dict)}
+            self.response.payload = {'status': status, 'result': dumps(hitap_dicts)}
 
-
-    def create_hitap_dict(self, service_bean, fields):
-        """
-        Modeldeki alanlarla Hitap servisinden dönen verileri eşler.
-
-        Modeldeki kayıtlarla Hitap servisindeki kayıtların alanlarının isimleri
-        bir sözlük ile eşleştirilir. Böylece Hitap'tan gelen veriler
-        sisteme uygun şekilde elde edilebilmektedir.
-
-        Args:
-            service_bean (obj): Hitap bean nesnesi
-            fields (dict): Modeldeki alanların Hitap'taki karşılıklarını tutan map
-
-        Returns:
-            List[dict]: Hitap verisini yerele uygun biçimde tutan sözlük listesi
-
-        """
-
-        hitap_dict = [{k: getattr(record, v) for k, v in iteritems(fields)}
-                      for record in service_bean]
-
-        self.logger.info("hitap_dict created.")
-        return hitap_dict
-
-    def date_filter(self, hitap_dict):
-        """
-        Hitap sözlüğündeki tarih alanlarını yerele uygun biçime getirir.
-
-        Hitap'ta tarih alanları için ``01.01.0001`` değeri boş değer anlamına gelirken,
-        yerelde ``01.01.1900`` şeklindedir.
-
-        Args:
-            hitap_dict (List[dict]): Hitap verisini yerele uygun biçimde tutan sözlük listesi
-
-        """
-
-        for record in hitap_dict:
-            for field in self.service_dict['date_filter']:
-                record[field] = '01.01.1900' if record[field] == "01.01.0001" else record[field]
+    def hitap_json(self, data):
+        data_dicts = [{k: getattr(record, v) for k, v in self.service_dict['fields'].items()}
+                      for record in data]
+        return data_dicts
 
     def custom_filter(self, hitap_dict):
         """

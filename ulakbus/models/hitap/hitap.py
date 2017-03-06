@@ -13,7 +13,7 @@ from .hitap_sebep import HitapSebep
 
 
 class NufusKayitlari(Model):
-    tckn = field.String(_(u"Sigortalının TC Kimlik No"), index=True)
+    tckn = field.String(_(u"Sigortalının TC Kimlik No"), index=True, hidden=True)
     ad = field.String(_(u"Adı"), index=True)
     soyad = field.String(_(u"Soyadı"), index=True)
     ilk_soy_ad = field.String(_(u"Memuriyete Girişteki İlk Soyadı"), index=True)
@@ -32,7 +32,7 @@ class NufusKayitlari(Model):
     emekli_sicil_6495 = field.Integer(_(u"2. Emekli Sicil No"), index=True)
     durum = field.Boolean(_(u"Durum"), index=True)
     sebep = field.Integer(_(u"Sebep"), index=True)
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel(one_to_one=True)
 
     # TODO: Personele gore unique olmali
@@ -52,8 +52,8 @@ class NufusKayitlari(Model):
 
 
 class HizmetKurs(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kursa Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kursa Kayıt No"), index=True, hidden=True)
     kurs_ogrenim_suresi = field.Integer(_(u"Kurs Öğrenim Süresi"), index=True)
     mezuniyet_tarihi = field.Date(_(u"Mezuniyet Tarihi"), index=True, format="%d.%m.%Y")
     kurs_nevi = field.Integer(_(u"Kurs Nevi"), index=True, choices="kurs_nevi")
@@ -66,7 +66,7 @@ class HizmetKurs(Model):
     denklik_okulu = field.String(_(u"Denklik Okulu"), index=True)
     denklik_bolum = field.String(_(u"Denklik Bölüm"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -82,8 +82,8 @@ class HizmetKurs(Model):
 
 
 class HizmetOkul(Model):
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
     ogrenim_durumu = field.Integer(_(u"Öğrenim Durumu"), index=True, choices="ogrenim_durumu")
     mezuniyet_tarihi = field.Date(_(u"Mezuniyet Tarihi"), index=True, format="%d.%m.%Y")
     okul_ad = field.String(_(u"Okul Adı"), index=True)
@@ -95,7 +95,7 @@ class HizmetOkul(Model):
     ogrenim_suresi = field.Integer(_(u"Öğrenim Süresi"), index=True)
     hazirlik = field.Integer(_(u"Hazırlık"), index=True, choices="hazirlik_bilgisi")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -111,8 +111,8 @@ class HizmetOkul(Model):
 
 
 class HizmetMahkeme(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
     mahkeme_ad = field.String(_(u"Mahkeme Adı"), index=True)
     sebep = field.Integer(_(u"Mahkeme Sebebi"), index=True, choices="mahkeme_sebep")
     karar_tarihi = field.Date(_(u"Mahkeme Karar Tarihi"), index=True, format="%d.%m.%Y")
@@ -128,7 +128,7 @@ class HizmetMahkeme(Model):
     aciklama = field.String(_(u"Açıklama"), index=True)
     gun_sayisi = field.Integer(_(u"Gün Sayısı"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -144,8 +144,8 @@ class HizmetMahkeme(Model):
 
 
 class HizmetBirlestirme(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
     sgk_nevi = field.Integer(_(u"SGK Nevi"), index=True, choices="sgk_nevi")
     sgk_sicil_no = field.String(_(u"SGK Sicil No"), index=True)
     baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
@@ -161,7 +161,7 @@ class HizmetBirlestirme(Model):
     ayrilma_nedeni = field.String(_(u"Ayrılma Nedeni"), index=True)
     kha_durum = field.Integer(_(u"KHA Durum"), index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -177,8 +177,8 @@ class HizmetBirlestirme(Model):
 
 
 class HizmetTazminat(Model):
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
     unvan_kod = field.Integer(_(u"Ünvan Kodu"), index=True)
     makam = field.Integer(_(u"Makam"), index=True)
     gorev = field.Integer(_(u"Görev"), index=True)
@@ -187,7 +187,7 @@ class HizmetTazminat(Model):
     tazminat_bitis_tarihi = field.Date(_(u"Tazminat Bitiş Tarihi"), index=True, format="%d.%m.%Y")
     kadrosuzluk = field.Integer(_(u"Kadrosuzluk"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -203,8 +203,8 @@ class HizmetTazminat(Model):
 
 
 class HizmetUnvan(Model):
-    kayit_no = field.String(_(u"Hizmet Kayıt No"), index=True)
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    kayit_no = field.String(_(u"Hizmet Kayıt No"), index=True, hidden=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
     unvan_kod = field.Integer(_(u"Ünvan Kodu"), index=True)
     unvan_tarihi = field.Date(_(u"Ünvan Tarihi"), index=True, format="%d.%m.%Y")
     unvan_bitis_tarihi = field.Date(_(u"Ünvan Bitiş Tarihi"), index=True, format="%d.%m.%Y")
@@ -213,7 +213,7 @@ class HizmetUnvan(Model):
     atama_sekli = field.String(_(u"Atama Sekli"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     fhz_orani = field.Float(_(u"FHZ Oranı"), index=True)
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -229,8 +229,8 @@ class HizmetUnvan(Model):
 
 
 class HizmetAcikSure(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
     acik_sekil = field.Integer(_(u"Açığa Alınma Şekli"), index=True, choices="acik_sekli")
     iade_sekil = field.Integer(_(u"İade Şekil"), index=True)
     hizmet_durum = field.Integer(_(u"Hizmet Durumu"), index=True, choices="hizmet_durumu")
@@ -261,7 +261,7 @@ class HizmetAcikSure(Model):
                                       format="%d.%m.%Y")
     aciktan_atanma_tarih = field.Date(_(u"Açıktan Atanma Tarihi"), index=True, format="%d.%m.%Y")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -277,8 +277,8 @@ class HizmetAcikSure(Model):
 
 
 class HizmetBorclanma(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
     ad = field.String(_(u"Ad"), index=True)
     soyad = field.String(_(u"Soyad"), index=True)
     emekli_sicil = field.String(_(u"Emekli Sicili"), index=True)
@@ -299,7 +299,7 @@ class HizmetBorclanma(Model):
     borclanma_tarihi = field.Date(_(u"Borçlanma Tarihi"), index=True, format="%d.%m.%Y")
     odeme_tarihi = field.Date(_(u"Ödeme Tarihi"), index=True, format="%d.%m.%Y")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -315,12 +315,12 @@ class HizmetBorclanma(Model):
 
 
 class HizmetIHS(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
     baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
     ihz_nevi = field.Integer(_(u"İHZ Nevi"), index=True)
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -336,15 +336,15 @@ class HizmetIHS(Model):
 
 
 class HizmetIstisnaiIlgi(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
     baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
     gun_sayisi = field.Integer(_(u"Gün Sayısı"), index=True)
     istisnai_ilgi_nevi = field.Integer(_(u"İstisnai İlgi Nevi"), index=True)
     kha_durum = field.Integer(_(u"KHA Durum"), index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:
@@ -360,8 +360,8 @@ class HizmetIstisnaiIlgi(Model):
 
 
 class HizmetKayitlari(Model):
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
     baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
     gorev = field.String(_(u"Görev"), index=True)  # birim + kadro unvanı
@@ -385,7 +385,7 @@ class HizmetKayitlari(Model):
     emekli_ekgosterge = field.Integer(_(u"Emekli Ek Göstergesi"), index=True)  # personelden gelecek
     sebep_kod = field.Integer(_(u"Hitap Sebep Kodu"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     # hizmet cetveline birden cok modelden veri girilmektedir. bu alanda, hizmet
@@ -444,7 +444,7 @@ class AskerlikKayitlari(Model):
     askerlik_nevi = field.Integer(_(u"Askerlik Nevi"), index=True, choices="askerlik_nevi")
     baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
     bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
-    kayit_no = field.String(_(u"Kayıt No"), index=True)
+    kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
     kita_baslama_tarihi = field.Date(_(u"Kıta Başlama Tarihi"), index=True, format="%d.%m.%Y")
     kita_bitis_tarihi = field.Date(_(u"Kıta Bitiş Tarihi"), index=True, format="%d.%m.%Y")
     muafiyet_neden = field.String(_(u"Muafiyet Neden"), index=True)
@@ -457,12 +457,12 @@ class AskerlikKayitlari(Model):
         index=True,
         format="%d.%m.%Y"
     )
-    tckn = field.String(_(u"TC Kimlik No"), index=True)
+    tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
     tegmen_nasp_tarihi = field.Date(_(u"Teğmen Nasp Tarihi"), index=True, format="%d.%m.%Y")
     gorev_yeri = field.String(_(u"Görev Yeri"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     astegmen_nasp_tarihi = field.Date(_(u"Asteğmen Nasp Tarihi"), index=True, format="%d.%m.%Y")
-    sync = field.Integer(_(u"Senkronize"), index=True)
+    sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
     personel = Personel()
 
     class Meta:

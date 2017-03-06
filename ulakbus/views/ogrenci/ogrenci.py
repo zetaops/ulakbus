@@ -24,14 +24,13 @@ from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
 from ulakbus.models.ogrenci import DonemDanisman
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, Sube
 from ulakbus.models.ogrenci import OgrenciDersi
-from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from ulakbus.lib.ogrenci import kaydi_dondurulmus_abs_role
 from zengine.lib.translation import gettext as _, gettext_lazy, format_date
+from ulakbus.services.zato_wrapper import TcknService
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -102,9 +101,10 @@ class KimlikBilgileri(CrudView):
         değerlerle nesneyi doldurup kaydeder.
 
         """
-
-        servis = MernisKimlikBilgileriGetir(tckn=self.object.tckn)
-        kimlik_bilgisi = servis.zato_request()
+        service_name = 'kisi-sorgula-tc-kimlik-no'
+        mernis_bilgileri = TcknService(service_name=service_name,
+                                       payload={"tckn": str(self.object.tckn)})
+        kimlik_bilgisi = mernis_bilgileri.zato_request()
         self.object(**kimlik_bilgisi)
         self.object.save()
 
@@ -174,8 +174,10 @@ class IletisimBilgileri(CrudView):
         değerlerle nesneyi doldurup kaydeder.
 
         """
-        servis = KPSAdresBilgileriGetir(tckn=self.object.tckn)
-        iletisim_bilgisi = servis.zato_request()
+        service_name = 'adres-sorgula'
+        mernis_bilgileri = TcknService(service_name=service_name,
+                                       payload={"tckn": str(self.object.tckn)})
+        iletisim_bilgisi = mernis_bilgileri.zato_request()
         self.object(**iletisim_bilgisi)
         self.object.save()
 
