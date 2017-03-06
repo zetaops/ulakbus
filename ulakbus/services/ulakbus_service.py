@@ -143,9 +143,8 @@ class ZatoHitapService(UlakbusService):
             self.response.payload = {'status': status,
                                      'result': self.create_hitap_json(hitap_service)}
 
-
-    @classmethod
-    def create_hitap_json(cls, data):
+    @staticmethod
+    def create_hitap_json(data):
         """Ekleme servisinden dönen veriyi JSON formatına döndürür.
         Converts SOAP call result object into JSON
 

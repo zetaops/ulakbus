@@ -111,7 +111,7 @@ class HITAPSorgula(ZatoHitapService):
 
                 self.logger.info("%s started to work." % service_name)
 
-                hitap_dicts = self.create_hitap_json(service_beans)
+                hitap_dicts = self.hitap_json(service_beans)
 
                 # filtering for some fields
                 if 'date_filter' in self.service_dict:
@@ -136,7 +136,7 @@ class HITAPSorgula(ZatoHitapService):
         finally:
             self.response.payload = {'status': status, 'result': dumps(hitap_dicts)}
 
-    def create_hitap_json(self, data):
+    def hitap_json(self, data):
         data_dicts = [{k: getattr(record, v) for k, v in self.service_dict['fields'].items()}
                       for record in data]
         return data_dicts
