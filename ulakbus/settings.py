@@ -229,6 +229,14 @@ ALLOWED_FILE_TYPES = {
     'pptx': ('application/vnd.openxmlformats-officedocument.presentationml.presentation', 'pptx'),
     'xlsx': ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'xlsx'),
     'docx': ('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'docx'),
+    'odt': ('application/vnd.oasis.opendocument.text', 'odt'),
+    'ott': ('application/vnd.oasis.opendocument.text-template', 'ott'),
+    'ods': ('application/vnd.oasis.opendocument.spreadsheet', 'ods'),
+    'ots': ('application/vnd.oasis.opendocument.spreadsheet-template', 'ots'),
+    'odc': ('application/vnd.oasis.opendocument.chart', 'odc'),
+    'odp': ('application/vnd.oasis.opendocument.presentation', 'odp'),
+    'otp': ('application/vnd.oasis.opendocument.presentation-template', 'otp'),
+    'odg': ('application/vnd.oasis.opendocument.graphics', 'odg')
 }
 
 S3_PROXY_URL = os.environ.get('S3_PROXY_URL')

@@ -43,7 +43,8 @@ setup(
         'six',
         'lxml',
         'streamingxmlwriter',
-        'dateutils'
+        'dateutils',
+        'odfpy'
     ],
     url='https://github.com/zetaops/ulakbus',
     packages=find_packages(exclude=['tests', 'tests.*']),

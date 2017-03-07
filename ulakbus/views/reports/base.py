@@ -79,11 +79,14 @@ class Reporter(BaseView):
         # print("CMD", self.cmd)
         if self.cmd == 'show':
             self.show()
-        elif self.cmd == 'printout':
-            self.printout()
+        elif self.cmd == 'pdf':
+            self.pdf()
+        elif self.cmd == 'odt':
+            self.odt()
 
     class ReportForm(JsonForm):
-        printout = fields.Button(gettext_lazy(u"Yazdır"), cmd="printout")
+        pdf = fields.Button(gettext_lazy(u"PDF Yazdır"), cmd="pdf")
+        odt = fields.Button(gettext_lazy(u"ODT İndir"), cmd="odt")
 
     def show(self):
         objects = self.get_objects()
@@ -106,7 +109,7 @@ class Reporter(BaseView):
         self.output['forms']['grouping'] = []
         self.output['meta'] = {}
 
-    def printout(self):
+    def pdf(self):
         register_fonts_from_paths('Vera.ttf',
                                   'VeraIt.ttf',
                                   'VeraBd.ttf',
@@ -129,11 +132,54 @@ class Reporter(BaseView):
                 ascii_objects.append((self.tr2ascii(o[0]), self.tr2ascii(o[1])))
         pdf.table(ascii_objects)
         pdf.generate()
+        self.file_out(f.getvalue(), 'application/pdf', 'pdf')
+
+    def odt(self):
+        from odf.opendocument import load
+        from odf.table import Table, TableRow, TableCell
+        from odf.text import P
+
+        doc = load('/Users/aliriza/Documents/ulakbus-demo-template.ott')
+
+        table = Table(name='table')
+
+        objects = self.get_objects()
+
+        def add_table_cell(row, cell_content):
+            c = TableCell(valuetype="string")
+            row.addElement(c)
+            c.addElement(P(text=cell_content))
+
+        if isinstance(objects[0], dict):
+            tr = TableRow()
+            table.addElement(tr)
+            headers = objects[0].keys()
+            for h in headers:
+                add_table_cell(tr, self.tr2ascii(h))
+
+            for obj in objects:
+                tr = TableRow()
+                table.addElement(tr)
+                for k in obj.values():
+                    add_table_cell(tr, self.tr2ascii(k))
+        else:
+            tr = TableRow()
+            for o in objects:
+                add_table_cell(tr, self.tr2ascii(o[0]))
+                add_table_cell(tr, self.tr2ascii(o[1]))
+
+        f = BytesIO()
+
+        doc.text.addElement(table)
+        doc.save(f)
+        self.file_out(f.getvalue(), 'application/odt', 'odt')
+
+    def file_out(self, content, mime_type, ext):
         download_url = self.generate_temp_file(
             name=self.generate_file_name(),
-            content=base64.b64encode(f.getvalue()),
-            file_type='application/pdf',
-            ext='pdf'
+            content=base64.b64encode(content),
+            file_type=mime_type,
+            ext=ext
         )
         self.set_client_cmd('download')
         self.output['download_url'] = download_url
