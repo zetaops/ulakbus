@@ -135,13 +135,14 @@ class Reporter(BaseView):
         self.file_out(f.getvalue(), 'application/pdf', 'pdf')
 
     def odt(self):
-        from odf.opendocument import load
+        from odf.opendocument import OpenDocumentText
         from odf.table import Table, TableRow, TableCell
-        from odf.text import P
+        from odf.text import P, H
 
-        doc = load('/Users/aliriza/Documents/ulakbus-demo-template.ott')
+        doc = OpenDocumentText()
 
-        table = Table(name='table')
+        h = H(outlinelevel=1, text=self.get_title())
+        doc.text.addElement(h)
 
         objects = self.get_objects()
 
@@ -150,6 +151,7 @@ class Reporter(BaseView):
             row.addElement(c)
             c.addElement(P(text=cell_content))
 
+        table = Table(name='table')
         if isinstance(objects[0], dict):
             tr = TableRow()
             table.addElement(tr)
@@ -168,9 +170,8 @@ class Reporter(BaseView):
                 add_table_cell(tr, self.tr2ascii(o[0]))
                 add_table_cell(tr, self.tr2ascii(o[1]))
 
-        f = BytesIO()
-
         doc.text.addElement(table)
+        f = BytesIO()
         doc.save(f)
         self.file_out(f.getvalue(), 'application/odt', 'odt')
 
