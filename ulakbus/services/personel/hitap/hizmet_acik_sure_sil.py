@@ -11,7 +11,7 @@ Hitap'da personelin açık süre bilgilerinin silinmesi sağlayan class.
 
 """
 
-from ulakbus.services.ulakbus_service import ZatoHitapService
+from ulakbus.services.personel.hitap.hitap_service import ZatoHitapService
 
 
 class HizmetAcikSureSil(ZatoHitapService):

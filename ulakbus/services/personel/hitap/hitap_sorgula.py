@@ -7,7 +7,7 @@
 
 import urllib2
 
-from ulakbus.services.ulakbus_service import ZatoHitapService
+from ulakbus.services.personel.hitap.hitap_service import ZatoHitapService
 from json import dumps
 
 """HITAP Sorgu Servisi
@@ -98,6 +98,7 @@ class HITAPSorgula(ZatoHitapService):
             with conn.client() as client:
 
                 if 'required_fields' in self.service_dict:
+                    self.logger.info("Sorgula Request payload: %s" % request_payload)
                     self.check_required_fields(request_payload)
 
                 # hitap response
