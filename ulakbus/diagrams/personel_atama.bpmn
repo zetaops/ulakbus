@@ -606,6 +606,9 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-1980.9846416382252" y="-420" width="90" height="20" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_081idka_di" bpmnElement="AtamalariGoruntule">
+        <dc:Bounds x="-1719" y="-651" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1qbut6m_di" bpmnElement="SequenceFlow_1qbut6m">
         <di:waypoint xsi:type="dc:Point" x="-1987" y="-445" />
@@ -656,6 +659,9 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-1066" y="-153" width="0" height="0" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1q1oemn_di" bpmnElement="YeniPersonelAtamaKontrol">
+        <dc:Bounds x="-2087" y="-485" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1jaktae_di" bpmnElement="SequenceFlow_1jaktae">
         <di:waypoint xsi:type="dc:Point" x="-1156" y="-178" />
