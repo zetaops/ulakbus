@@ -290,7 +290,6 @@ class PersonelAtama(CrudView):
         _form.goreve_baslama_tarihi = fields.Date(_(u"Göreve Başlama Tarihi"),
                                                   default=str(personel.goreve_baslama_tarihi))
         # TODO: ulakbüs yavaşladığından dolayı choices slice edildi, typeahead olacak.
-
         _form.set_choices_of('baslama_sebep', choices=durum)
 
         # Date formatında mı olacak? yoksa 2 yıl 3 ay gibisinden mi?
@@ -337,13 +336,17 @@ class PersonelAtama(CrudView):
         Personelin atama bilgileri doldurulur.
 
         """
+        atanacak_birim = Unit.objects.get(self.current.input['form']['birim_id'])
+
         _form = KadroBilgiForm(current=self.current,
                                title="{ad} {soyad} adlı personelin atama bilgilerini doldurunuz.".format(
                                    **self.current.task_data['personel'])
                                )
 
         durum = [(m.key, m.__unicode__()) for m in HitapSebep.objects.filter(nevi=1)[0:10]]
-        _form.set_choices_of('kadro', choices=prepare_choices_for_model(Kadro, durum=2))
+
+        _form.set_choices_of('kadro', choices=prepare_choices_for_model(Kadro, durum=2,
+                                                                        birim=atanacak_birim))
         _form.set_choices_of('durum', choices=durum)
         self.form_out(_form)
 
@@ -689,3 +692,51 @@ class PersonelBilgiForm(JsonForm):
             }
 
         ]
+
+
+class BirimSecView(CrudView):
+
+    class Meta:
+        model = 'Personel'
+
+    def birim_sec_form(self):
+        """
+        Atanacak birimi seçtirir.
+
+        """
+        self.form_out(BirimBilgiForm(self.object, current=self.current,
+                               title="{ad} {soyad} adlı personelin atanacağı birimi seçiniz."
+                               .format(
+                                    **self.current.task_data['personel'])))
+
+        if 'birim_user_msg' in self.current.task_data:
+            self.current.output['msgbox'] = {
+                'type': 'error', "title": _(u'Birim Seçme Başarısız'),
+                "msg": self.current.task_data['birim_user_msg'],
+            }
+
+    def birim_sec_kontrol(self):
+        """
+        Birim seçilip seçilmediğini ya da seçilen birimde uygun kadro olup olmadığını kontrol
+        eder.
+
+        """
+        if not self.current.input['form']['iptal']:
+            if not self.current.input['form']['birim_id']:
+                self.current.task_data['birim_user_msg'] = _(u"Atama işlemi için birim seçmelisiniz.")
+                self.current.task_data['cmd'] = 'hatali_birim'
+            elif not (Kadro.objects.filter(durum=2, birim=Unit.objects.get(
+                    self.current.input['form']['birim_id'])).count() > 0):
+                self.current.task_data['birim_user_msg'] = _(u"Seçilen birimde uygun kadro "
+                                                             u"bulunmamaktadır!")
+                self.current.task_data['cmd'] = 'hatali_birim'
+
+
+class BirimBilgiForm(JsonForm):
+
+    class Meta:
+        include = ['birim']
+        title = __(u'Birim Bilgileri')
+
+    kaydet = fields.Button(_(u"İleri"), cmd="ileri", style="btn-success")
+    iptal = fields.Button(_(u"İptal"), cmd="iptal", form_validation=False)
