@@ -76,9 +76,19 @@ class CrudHitap(CrudView, object):
         manuel olarak calistirir.
 
         """
+
+        # Sync işleminden önce ekleme veya güncelleme işlemlerinden biri yapıldıysa
+        # self.current.task_data nın içinde en son işlem yapılan objenin keyi bulunuyor
+        # eğer bu obje hitap ile sync işleminde silinirse 404 hatasına sebeb oluyor.
+        # bu sorunu cozmek için aşağıdaki yöntem uygulanmıştır.
+        if 'object_id' in self.current.task_data:
+            del self.current.task_data['object_id']
+
         service_name = un_camel(self.model_class.__name__, dash='-') + '-sync'
         service = TcknService(service_name=service_name,
-                              payload={"tckn": str(self.current.task_data['personel_tckn'])})
+                              payload={"tckn": str(self.current.task_data['personel_tckn']),
+                                       "kullanici_ad": "",
+                                       "kullanici_sifre": ""})
         service.zato_request()
 
     @view_method
@@ -98,7 +108,10 @@ class CrudHitap(CrudView, object):
         self.object.tckn = self.current.task_data['personel_tckn']
         self.object.save()
         service_name = un_camel(self.model_class.__name__, dash='-') + '-' + action
-        service = HitapService(service_name=service_name, payload=self.object)
+        service = HitapService(service_name=service_name,
+                               payload=self.object,
+                               auth={"kullanici_ad": "",
+                                     "kullanici_sifre": ""})
         try:
             result = service.zato_request()
             self.object.kayit_no = result['kayitNo']
@@ -128,7 +141,9 @@ class CrudHitap(CrudView, object):
 
         service_name = un_camel(self.model_class.__name__, dash='-') + "-sil"
         service = HitapService(service_name=service_name,
-                               payload={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no})
+                               payload={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no},
+                               auth={"kullanici_ad": "",
+                                     "kullanici_sifre": ""})
         try:
             service.zato_request()
             self.object.sync = 1

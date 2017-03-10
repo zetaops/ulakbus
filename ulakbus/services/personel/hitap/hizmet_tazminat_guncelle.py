@@ -11,7 +11,7 @@ Hitap'a personelin Tazminat bilgilerinin guncellemesini yapar.
 
 """
 
-from ulakbus.services.ulakbus_service import ZatoHitapService
+from ulakbus.services.personel.hitap.hitap_service import ZatoHitapService
 
 
 class HizmetTazminatGuncelle(ZatoHitapService):
