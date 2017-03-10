@@ -44,7 +44,7 @@ class TestCase(BaseTestCase):
     user.blocking_save()
 
     def test_profil_sayfasi(self):
-
+        time.sleep(1)
         # Test edilecek iş akışı seçilir.
         # ulakbus kullanıcısıyla giriş yapılır.
         user = User.objects.get(self.user_key)
@@ -106,9 +106,11 @@ class TestCase(BaseTestCase):
         assert resp.json["forms"]["model"]['username'] == 'deneme_kullanici_adi'
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user.username = 'ulakbus'
+        time.sleep(1)
         user.blocking_save()
 
     def test_e_posta_degistir_parola_denemesi_basarisiz(self):
+        time.sleep(1)
         user = User.objects.get(self.user_key)
         self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()
@@ -151,9 +153,11 @@ class TestCase(BaseTestCase):
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         user = User.objects.get(self.user_key)
         user.username = 'ulakbus'
+        time.sleep(1)
         user.blocking_save()
 
     def test_kullanici_adi_degistir_basarili_cikis(self):
+        time.sleep(1)
         user = User.objects.get(self.user_key)
         self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()
@@ -166,6 +170,7 @@ class TestCase(BaseTestCase):
         user = User.objects.get(self.user_key)
         user.username = 'ulakbus'
         user.password = '123'
+        time.sleep(1)
         user.blocking_save()
 
     def test_kullanici_adi_degistir_parola_denemesi_basarisiz(self):

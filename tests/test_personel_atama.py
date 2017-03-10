@@ -7,6 +7,8 @@
 from ulakbus.models import Atama, HizmetKayitlari, Personel
 from ulakbus.models.auth import User
 from zengine.lib.test_utils import BaseTestCase
+from ulakbus.settings import DATE_DEFAULT_FORMAT, DATETIME_DEFAULT_FORMAT
+from datetime import datetime
 
 __author__ = 'Yeter Çatıkkaş'
 
@@ -29,6 +31,34 @@ class TestCase(BaseTestCase):
                          )
         # Önceki atamaların sayıları
         onceki_atama_sayilari = Atama.objects.filter(personel_id="Zln6SwS3pRmEQlhIdasQlGddvie").count()
+
+        # Birim seçmeden ilerleme işlemi denenir.
+        form = {'birim_id': None,
+                'kaydet': 1,
+                'iptal': None}
+
+        # Personelin birim bilgileri gönderilir.
+        resp = self.client.post(form=form, cmd='ileri')
+
+        assert resp.json['reload_cmd'] == 'hatali_birim'
+
+        # Kadro durumu uygun olmayan birim seçimi denenir.
+        form = {'birim_id': "PNrGNyS35dmw9WHKPyl9Er0CiWN",
+                'kaydet': 1,
+                'iptal': None}
+
+        # Personelin birim bilgileri gönderilir.
+        resp = self.client.post(form=form, cmd='ileri')
+
+        assert resp.json['reload_cmd'] == 'hatali_birim'
+
+        # Kadro durumu uygun bir birim seçilir.
+        form = {'birim_id': "BDJqrujKVKLOq7Gd33C34VwhsFo",
+                'kaydet': 1,
+                'iptal': None}
+
+        self.client.post(form=form, cmd='ileri')
+
         form = {'atama_aciklama': "YENİDEN ATAMA",
                 'durum': "WlbWjbkcp3sVYjx0CXK51fapvFG",
                 'goreve_baslama_aciklama': "YENİDEN ATAMA",
@@ -50,7 +80,7 @@ class TestCase(BaseTestCase):
         assert sonraki_atama_sayilari == onceki_atama_sayilari + 1
 
         # İş akışı adımının doğruluğu test edilir.
-        assert resp.json['forms']['schema']['title'] == "Kişi ve Atama Bilgileri"
+        assert resp.json['forms']['schema']['title'] == "Devam Etmek İstediğiniz İşlemi Seçiniz"
 
         # Personel bilgileri hitap ile eşleştirilir.
         resp = self.client.post(cmd="hitap_getir", form={'hitap': 1, 'bitir': 'null'})
@@ -69,8 +99,12 @@ class TestCase(BaseTestCase):
                                                          'type': "check"}})
 
         # Personelin eksik bilgileri düzeltilir.
-        resp = self.client.post(form={'edit': 1, 'yeni_atama': 'null'}, cmd="edit")
-        assert resp.json['forms']['schema']['title'] == "Personelin Eksik Bilgileri"
+        resp = self.client.post(
+            form={'duzenle': 1,
+                  'atama_yap': 'null',
+                  'gecmis_atamalarim': 'null'},
+            cmd="duzenle")
+        assert resp.json['forms']['schema']['title'] == "Personel Bilgileri"
 
         personel = Personel.objects.get("Zln6SwS3pRmEQlhIdasQlGddvie")
         # Personelin önceki branşı
@@ -78,8 +112,18 @@ class TestCase(BaseTestCase):
 
         resp.json['forms']['model']['brans'] = "Fen Bilimleri"
         resp.json['forms']['model']['kaydet'] = 1
+        for key in resp.json['forms']['model'].keys():
+            if key[-7:] == "_tarihi" or key[-7:] == "_suresi":
+                date = resp.json['forms']['model'][key]
+                if date:
+                    resp.json['forms']['model'][key] = datetime.strptime(
+                        date, "%Y-%m-%dT%H:%M:%SZ").strftime(
+                        DATE_DEFAULT_FORMAT)
+                else:
+                    resp.json['forms']['model'][key] = datetime.now().strftime(DATE_DEFAULT_FORMAT)
+
         # Eksik bilgiler kaydedilir.
-        self.client.post(forms=resp.json['forms']['model'], cmd="kaydet")
+        self.client.post(form=resp.json['forms']['model'], cmd="kaydet")
 
         # Personelin değiştirilen branşı
         personelin_sonraki_bransi = Personel.objects.get("Zln6SwS3pRmEQlhIdasQlGddvie").brans
