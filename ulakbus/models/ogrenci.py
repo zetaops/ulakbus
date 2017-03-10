@@ -164,7 +164,7 @@ class Donem(Model):
 
         """
 
-        return cls.objects.filter().order_by('-baslangic_tarihi')[0]
+        return cls.objects.all().order_by('-baslangic_tarihi')[0]
 
     @staticmethod
     def takvim_ayina_rastlayan_donemler(yil, ay):

@@ -253,7 +253,7 @@ class IstenAyrilma(CrudView):
         engelli_dereceleri = [2, 3, 4]
         engelli_personel_sayisi = personel.objects.filter(
             engel_derecesi__in=engelli_dereceleri).count()
-        toplam_personel_sayisi = Personel.objects.filter().count()
+        toplam_personel_sayisi = Personel.objects.count()
 
         engelli_personel_kontrol = toplam_personel_sayisi * self.engelli_personel_katsayisi
 

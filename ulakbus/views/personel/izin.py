@@ -128,7 +128,7 @@ class IzinIslemleri(CrudView):
         return emekli_sandigi_gun + sgk_gun
 
     def kalan_izin_hesapla(self):
-        query = self._apply_list_queries(self.object.objects.filter())
+        query = self._apply_list_queries(self.object.objects.all())
         yillik_izinler = dict()
         mazeret_izinler = dict()
 

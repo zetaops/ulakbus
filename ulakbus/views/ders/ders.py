@@ -355,6 +355,7 @@ class DersSubelendirme(CrudView):
         sb = self.input['form']['Subeler']
         ders = self.current.task_data['ders_key']
         mevcut_subeler = Sube.objects.filter(ders_id=ders)
+
         with BlockSave(Sube):
             for s in sb:
                 okutman = s['okutman']
