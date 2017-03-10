@@ -44,7 +44,7 @@ class TestCase(BaseTestCase):
     user.blocking_save()
 
     def test_profil_sayfasi(self):
-
+        time.sleep(1)
         # Test edilecek iş akışı seçilir.
         # ulakbus kullanıcısıyla giriş yapılır.
         user = User.objects.get(self.user_key)
@@ -107,6 +107,7 @@ class TestCase(BaseTestCase):
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
         time.sleep(1)
         user.username = 'ulakbus'
+        time.sleep(1)
         user.blocking_save()
 
     def test_e_posta_degistir_parola_denemesi_basarisiz(self):

@@ -725,11 +725,12 @@ class BirimSecView(CrudView):
             if not self.current.input['form']['birim_id']:
                 self.current.task_data['birim_user_msg'] = _(u"Atama işlemi için birim seçmelisiniz.")
                 self.current.task_data['cmd'] = 'hatali_birim'
-            elif not (Kadro.objects.filter(durum=2, birim=Unit.objects.get(
-                    self.current.input['form']['birim_id'])).count() > 0):
-                self.current.task_data['birim_user_msg'] = _(u"Seçilen birimde uygun kadro "
-                                                             u"bulunmamaktadır!")
-                self.current.task_data['cmd'] = 'hatali_birim'
+            else:
+                atanacak_birim = Unit.objects.get(self.current.input['form']['birim_id'])
+                if not Kadro.objects.filter(durum=2, birim=atanacak_birim).count() > 0:
+                    self.current.task_data['birim_user_msg'] = _(u"Seçilen birimde uygun kadro "
+                                                                 u"bulunmamaktadır!")
+                    self.current.task_data['cmd'] = 'hatali_birim'
 
 
 class BirimBilgiForm(JsonForm):
