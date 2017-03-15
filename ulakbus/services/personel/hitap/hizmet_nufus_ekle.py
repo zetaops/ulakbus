@@ -11,7 +11,7 @@ Hitap'a personelin Nufus bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.ulakbus_service import ZatoHitapService
+from ulakbus.services.personel.hitap.hitap_service import ZatoHitapService
 
 
 class HizmetNufusEkle(ZatoHitapService):

@@ -138,7 +138,8 @@ class ZatoService(object):
 class TcknService(ZatoService):
 
     def prepare_payload(self):
-        return self.check_tckn()
+        self.check_tckn()
+        return self.payload
 
     def check_tckn(self, value=None):
 
@@ -165,6 +166,14 @@ class TcknService(ZatoService):
 class HitapService(TcknService):
 
     def prepare_payload(self):
+
+        """
+            crud_hitap dan gelen payload bir object ise dict formatına çevirir.
+            payload un içinde tckn fieldı varsa kontrolünü yapar.
+
+        Returns: payload_object (dict)
+
+        """
 
         import datetime
         model = getattr(importlib.import_module(self.zato_service.module_path),

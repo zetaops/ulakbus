@@ -8,7 +8,7 @@
 import urllib2
 import socket
 
-from ulakbus.services.ulakbus_service import ZatoHitapService
+from ulakbus.services.personel.hitap.hitap_service import ZatoHitapService
 from zato.common import DATA_FORMAT
 from json import loads, dumps
 from six import iteritems

@@ -11,7 +11,7 @@ Hitap'a personelin Hizmet Cetvel Kayit bilgilerinin güncellemesini yapar.
 
 """
 
-from ulakbus.services.ulakbus_service import ZatoHitapService
+from ulakbus.services.personel.hitap.hitap_service import ZatoHitapService
 
 
 class HizmetCetveliGuncelle(ZatoHitapService):

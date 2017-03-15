@@ -14,6 +14,7 @@ from .hitap_sebep import HitapSebep
 
 class NufusKayitlari(Model):
     tckn = field.String(_(u"Sigortalının TC Kimlik No"), index=True, hidden=True)
+    kayit_no = field.String(_(u"Bildirge Kayıt No"), index=True, hidden=True)
     ad = field.String(_(u"Adı"), index=True)
     soyad = field.String(_(u"Soyadı"), index=True)
     ilk_soy_ad = field.String(_(u"Memuriyete Girişteki İlk Soyadı"), index=True)
