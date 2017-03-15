@@ -6,12 +6,12 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
+import time
 
 from ulakbus.models import User, Personel
 from zengine.lib.test_utils import BaseTestCase
 from zengine.messaging.model import Message
-import time
+from datetime import datetime
 
 
 class TestCase(BaseTestCase):
@@ -27,14 +27,20 @@ class TestCase(BaseTestCase):
         idari_forms = {'baslangic_tarihi': '20.05.2016',
                        'bitis_tarihi': '30.05.2016',
                        'devam': 1,
-                       'personel_turu': 2}
+                       'personel_turu': 1}
         resp = self.client.post(form=idari_forms)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
-        assert len(ter_gel_id_per) == 3
 
-        idari_per_db = len(Personel.objects.filter(personel_turu=2))
+        baslangic_tarihi = datetime.strptime("25.05.2016", "%d.%m.%Y").date()
+        bitis_tarihi = datetime.strptime("30.05.2016", "%d.%m.%Y").date()
+        qs = Personel.objects.filter(personel_turu=1)
+        terfisi_gelen_personeller = qs.or_filter(
+            ga_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],
+            kh_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],
+            em_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi]
+        )
 
-        assert idari_per_db - len(ter_gel_id_per) == 17
+        assert len(ter_gel_id_per) == terfisi_gelen_personeller.count()
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
@@ -68,7 +74,7 @@ class TestCase(BaseTestCase):
         ter_gel_id_per = resp.json['forms']['model']['Personel']
         Message.objects.all().delete()
 
-        assert len(ter_gel_id_per) == 3
+        assert len(ter_gel_id_per) == terfisi_gelen_personeller.count()
 
         # Terfisi yapilacak personel duzenle
         ter_gel_id_per[0]['sec'] = True
@@ -112,7 +118,8 @@ class TestCase(BaseTestCase):
         token, user = self.get_user_token('genel_sekreter_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
-        assert len(resp.json['forms']['model']['Personel']) == 3
+
+        assert len(resp.json['forms']['model']['Personel']) == terfisi_gelen_personeller.count()
         Message.objects.all().delete()
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']

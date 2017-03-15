@@ -4349,19 +4349,19 @@
          <HizmetOkulSorgulaReturn>
             <!--Zero or more repetitions:-->
             <HizmetEgitimOkulServisBean>
-               <bolum>?</bolum>
-               <kayitNo>?</kayitNo>
-               <mezuniyetTarihi>?</mezuniyetTarihi>
-               <ogrenimDurumu>?</ogrenimDurumu>
-               <ogrenimSuresi>?</ogrenimSuresi>
-               <okulAd>?</okulAd>
-               <tckn>?</tckn>
-               <denklikTarihi>?</denklikTarihi>
-               <ogrenimYer>?</ogrenimYer>
-               <denklikBolum>?</denklikBolum>
-               <denklikOkul>?</denklikOkul>
-               <hazirlik>?</hazirlik>
-               <kurumOnayTarihi>?</kurumOnayTarihi>
+               <bolum>Bilgisayar</bolum>
+               <kayitNo>1</kayitNo>
+               <mezuniyetTarihi>2017-01-01</mezuniyetTarihi>
+               <ogrenimDurumu>1</ogrenimDurumu>
+               <ogrenimSuresi>10</ogrenimSuresi>
+               <okulAd>IYTE</okulAd>
+               <tckn>98548836369</tckn>
+               <denklikTarihi>0001-01-01</denklikTarihi>
+               <ogrenimYer>1</ogrenimYer>
+               <denklikBolum>Matematik</denklikBolum>
+               <denklikOkul>Ege</denklikOkul>
+               <hazirlik>1</hazirlik>
+               <kurumOnayTarihi>0001-01-01</kurumOnayTarihi>
             </HizmetEgitimOkulServisBean>
          </HizmetOkulSorgulaReturn>
       </ser:HizmetOkulSorgulaResponse>
