@@ -118,8 +118,9 @@ class TestCase(BaseTestCase):
         token, user = self.get_user_token('genel_sekreter_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
+
         assert len(resp.json['forms']['model']['Personel']) == terfisi_gelen_personeller.count()
-        Message.objects.filter().delete()
+        Message.objects.all().delete()
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
