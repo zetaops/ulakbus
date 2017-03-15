@@ -1,15 +1,27 @@
 # -*-  coding: utf-8 -*-
-"""
-"""
+#
 # Copyright (C) 2015 ZetaOps Inc.
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
 import datetime
+
 from ulakbus.lib.date_time_helper import zaman_araligi
 
 __author__ = 'Ali Riza Keles'
+
+terfi_max_kademe = {
+    1: 13,
+    2: 16,
+    3: 19,
+    4: 22,
+    5: 25,
+    6: 28,
+    7: 31,
+    8: 5,
+    9: 6
+}
 
 
 def personel_izin_gunlerini_getir(okutman, yil, ay):
@@ -59,51 +71,205 @@ def gorunen_kademe_hesapla(derece, kademe):
         return 0
 
 
-def derece_ilerlet(pkd, der, kad):
+def terfi_tikanma_kontrol(personel):
     """
-    Derece 3 kademede bir artar. Eger kademe 4 gelmise, derece 1 arttirilir
+    Terfi tıkanması kontrolü görev aylığı, kazanılmış hak ve emekli müktesebat
+    içinde ayrı ayrı gerçekleştirilir.
     Args:
-        pkd (int): personel kadro derecesi
-        der (int): derece
-        kad (int): kademe
+        personel: Personel class instance
 
     Returns:
-        der, kad: ilerletilmis derece ve kademe
+        ga, kh, em : Terfi tıkanma durumları boolean türünden ifadeleri
 
     """
-    if pkd < der:
-        if kad == 4:
-            kad = 1
-            der -= 1
-    return der, kad
+    ga = False
+    kh = False
+    em = False
+
+    if personel.personel_turu == 1:
+        if personel.kadro.derece >= personel.gorev_ayligi_derece:
+            ga = True
+
+        if personel.kadro.derece >= personel.kazanilmis_hak_derece:
+            kh = True
+
+        if personel.kadro.derece >= personel.emekli_muktesebat_derece:
+            em = True
+
+        return ga, kh, em
+    else:
+        from ulakbus.models import HizmetOkul
+        from zengine.lib.catalog_data import catalog_data_manager
+        personel_okul = HizmetOkul.objects.set_params(
+            sort='mezuniyet_tarihi desc').filter(tckn=personel.tckn).exclude(ogrenim_durumu=None)
+
+        son_mezun_olunan_okul = personel_okul[0]
+
+        for okul in personel_okul:
+            if okul.mezuniyet_tarihi.year > son_mezun_olunan_okul.mezuniyet_tarihi.year:
+                son_mezun_olunan_okul = okul
+        terfi_tablo = {data['value']: data['name']
+                       for data in catalog_data_manager.get_all('terfi_tablo')}
+        derece_sinir = terfi_tablo[son_mezun_olunan_okul.ogrenim_durumu]['derece']
+        kademe_sinir = terfi_tablo[son_mezun_olunan_okul.ogrenim_durumu]['kademe']
+
+        if (personel.gorev_ayligi_derece == derece_sinir and
+                personel.gorev_ayligi_kademe == kademe_sinir):
+            ga = True
+
+        if (personel.kazanilmis_hak_derece == derece_sinir and
+                personel.kazanilmis_hak_kademe == kademe_sinir):
+            kh = True
+
+        if (personel.emekli_muktesebat_derece == derece_sinir and
+                personel.emekli_muktesebat_kademe == kademe_sinir):
+            em = True
+
+    return ga, kh, em
 
 
-def suren_terfi_var_mi(p):
+def torba_kadro_kontrol(personel):
     """
-    Mevcut wfler icinde arama yaparak personel hakkinda, devam eden terfi isleminin
-    olup olmadigi kontrol edilir.
-
+    İdari bir personel eğer torba kadro ile 1,2,3,4 derecelerinden birine sahip bir
+    kadroya atanmışsa görev aylığı derecesi otomatik olarak kadro derecesiyle eşit
+    olacağı için kazanılmış hak ve emekli müktesebat dereceleri kadro derecesiyle
+    eşit olana kadar görev aylığı kademe ilerleyişi durdurulur.
     Args:
-        p (str): personel key
+        personel: Personel class instance
 
     Returns:
-        Devam eden islem varsa True, yoksa False
+        personel torba kadro ile atanmışsa True aksi halde False
+    """
+
+    if (personel.kadro.derece in [1, 2, 3, 4] and personel.kadro.derece ==
+        personel.gorev_ayligi_derece):
+        if (personel.kazanilmis_hak_derece > personel.kadro.derece or
+                personel.emekli_muktesebat_derece > personel.kadro.derece):
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
+def kademe_ilerlet(personel, ga_kontrol, kh_kontrol, em_kontrol):
+    """
+    Personelin şartlara göre kademe derece ilerleyişini gerçekleştirir.
+    ga_kontrol, kh_kontrol, em_kontrol parametreleriyle görev aylığı,
+    kazanılmış hak ve emekli müktesebat bilgilerinden hangileri
+    üzerinde terfi işlemi gerçekleştirileceği belirlenir.
+    Args:
+        personel: Personel class instance
+        ga_kontrol : Boolean
+        kh_kontrol : Boolean
+        em_kontrol : Boolean
+    Returns:
 
     """
 
-    # TODO: wf ler icinde arama yap
-    return False
+    ga = personel.gorev_ayligi_kademe
+    kh = personel.kazanilmis_hak_kademe
+    em = personel.emekli_muktesebat_kademe
+
+    if kh_kontrol is True:
+        if kh < terfi_max_kademe[personel.kazanilmis_hak_derece]:
+            kh += 1
+
+    if em_kontrol is True:
+        if em < terfi_max_kademe[personel.emekli_muktesebat_derece]:
+            em += 1
+
+    if ga_kontrol is True:
+        if ((personel.personel_turu == 2 and torba_kadro_kontrol(personel) is False) or
+                personel.personel_turu == 1):
+            if ga < terfi_max_kademe[personel.gorev_ayligi_derece]:
+                ga += 1
+
+    return ga, kh, em
 
 
-def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None,
-                                        personel_turu=None, suren_terfi_kontrol=True):
+def derece_ilerlet(**kwargs):
+    """
+        kademe durumuna göre derece ilerleten metod.
+    Args:
+        **kwargs:
+
+    Returns:
+
+    """
+    ga_derece = kwargs.pop('ga_derece')
+    ga_kademe = kwargs.pop('ga_kademe')
+    kh_derece = kwargs.pop('kh_derece')
+    kh_kademe = kwargs.pop('kh_kademe')
+    em_derece = kwargs.pop('em_derece')
+    em_kademe = kwargs.pop('em_kademe')
+    personel = kwargs.pop('personel')
+
+    ga_kontrol, kh_kontrol, em_kontrol = terfi_tikanma_kontrol(personel)
+
+    if ga_kontrol is False and ga_derece > 1:
+        if ga_kademe >= 4:
+            ga_kademe = 1
+            ga_derece -= 1
+
+    if kh_kontrol is False and kh_derece > 1:
+        if kh_kademe >= 4:
+            kh_kademe = 1
+            kh_derece -= 1
+
+    if em_kontrol is False and em_derece > 1:
+        if em_kademe >= 4:
+            em_kademe = 1
+            em_derece -= 1
+
+    return {
+        "ga": {
+            "derece": ga_derece,
+            "kademe": ga_kademe
+        },
+        "kh": {
+            "derece": kh_derece,
+            "kademe": kh_kademe
+        },
+        "em": {
+            "derece": em_derece,
+            "kademe": em_kademe
+        }
+    }
+
+
+def terfi(personel):
+    ga_tarih = personel.ga_sonraki_terfi_tarihi
+    kh_tarih = personel.kh_sonraki_terfi_tarihi
+    em_tarih = personel.em_sonraki_terfi_tarihi
+    
+    bugun = datetime.date.today()
+
+    ga_kontrol = True if ga_tarih <= bugun else False
+    kh_kontrol = True if kh_tarih <= bugun else False
+    em_kontrol = True if em_tarih <= bugun else False
+
+    ga_kademe, kh_kademe, em_kademe = kademe_ilerlet(personel, ga_kontrol, kh_kontrol, em_kontrol)
+
+    sonuc = derece_ilerlet(ga_derece=personel.gorev_ayligi_derece,
+                           ga_kademe=ga_kademe,
+                           kh_derece=personel.kazanilmis_hak_derece,
+                           kh_kademe=kh_kademe,
+                           em_derece=personel.emekli_muktesebat_derece,
+                           em_kademe=em_kademe,
+                           personel=personel)
+
+    return sonuc
+
+
+def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None,
+                                        bitis_tarihi=None,
+                                        personel_turu=None):
     """
     Args:
         baslangic_tarihi (date): baslangic_tarihi
         bitis_tarihi (date): bitis_tarihi
         personel_turu (str): personel turu, 1 akademik, 2 idari
-        suren_terfi_kontrol (bool): personel listesi hazirlanirken suren baska terfi islemi varmi
-                                    kontrolunun yapilip yapilmayacagini kontrol eder.
 
     Returns:
         personeller (dict): personel kademe derece bilgileri iceren sozluk
@@ -128,69 +294,54 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
 
     for personel in terfisi_gelen_personeller:
 
-        suren_terfi = False
-        if suren_terfi_kontrol:
-            suren_terfi = suren_terfi_var_mi(personel.key)
+        # personel temel bilgileri
+        p_data = {"key": personel.key, "tckn": personel.tckn, "ad": personel.ad,
+                  "soyad": personel.soyad, "kadro_derece": personel.kadro.derece}
 
-        if not suren_terfi_kontrol or not suren_terfi:
-            # personel temel bilgileri
-            p_data = {"key": personel.key, "tckn": personel.tckn, "ad": personel.ad,
-                      "soyad": personel.soyad, "kadro_derece": personel.kadro.derece,
-                      "suren_terfi": suren_terfi}
+        # personel guncel derece ve kademeleri
+        p_data.update(
+            {
+                "guncel_gorev_ayligi_derece": personel.gorev_ayligi_derece,
+                "guncel_gorev_ayligi_kademe": personel.gorev_ayligi_kademe,
+                "guncel_kazanilmis_hak_derece": personel.kazanilmis_hak_derece,
+                "guncel_kazanilmis_hak_kademe": personel.kazanilmis_hak_kademe,
+                "guncel_emekli_muktesebat_derece": personel.emekli_muktesebat_derece,
+                "guncel_emekli_muktesebat_kademe": personel.emekli_muktesebat_kademe
+            }
+        )
 
-            # personel guncel derece ve kademeleri
-            p_data.update(
-                {
-                    "guncel_gorev_ayligi_derece": personel.gorev_ayligi_derece,
-                    "guncel_gorev_ayligi_kademe": personel.gorev_ayligi_kademe,
-                    "guncel_kazanilmis_hak_derece": personel.kazanilmis_hak_derece,
-                    "guncel_kazanilmis_hak_kademe": personel.kazanilmis_hak_kademe,
-                    "guncel_emekli_muktesebat_derece": personel.emekli_muktesebat_derece,
-                    "guncel_emekli_muktesebat_kademe": personel.emekli_muktesebat_kademe
-                }
-            )
+        # personel guncel gorunen kademeleri
+        p_data.update(
+            {
+                "gorunen_gorev_ayligi_kademe": personel.gorunen_gorev_ayligi_kademe,
+                "gorunen_kazanilmis_hak_kademe": personel.gorunen_kazanilmis_hak_kademe,
+                "gorunen_emekli_muktesebat_kademe": personel.gorunen_emekli_muktesebat_kademe
+            }
+        )
 
-            # personel guncel gorunen kademeleri
-            p_data.update(
-                {
-                    "gorunen_gorev_ayligi_kademe": personel.gorunen_gorev_ayligi_kademe,
-                    "gorunen_kazanilmis_hak_kademe": personel.gorunen_kazanilmis_hak_kademe,
-                    "gorunen_emekli_muktesebat_kademe": personel.gorunen_emekli_muktesebat_kademe
-                }
-            )
+        personel_terfi = terfi(personel)
 
-            pkd = personel.kadro.derece
+        # terfi sonrasi derece ve kademeler
+        p_data["terfi_sonrasi_gorev_ayligi_derece"] = personel_terfi['ga']['derece']
+        p_data["terfi_sonrasi_gorev_ayligi_kademe"] = personel_terfi['ga']['kademe']
 
-            # terfi sonrasi derece ve kademeler
-            p_data["terfi_sonrasi_gorev_ayligi_derece"], p_data[
-                "terfi_sonrasi_gorev_ayligi_kademe"] = derece_ilerlet(
-                pkd,
-                personel.gorev_ayligi_derece,
-                personel.gorev_ayligi_kademe + 1)
+        p_data["terfi_sonrasi_kazanilmis_hak_derece"] = personel_terfi['ga']['derece']
+        p_data["terfi_sonrasi_kazanilmis_hak_kademe"] = personel_terfi['ga']['kademe']
 
-            p_data["terfi_sonrasi_kazanilmis_hak_derece"], p_data[
-                "terfi_sonrasi_kazanilmis_hak_kademe"] = derece_ilerlet(
-                pkd,
-                personel.kazanilmis_hak_derece,
-                personel.kazanilmis_hak_kademe + 1)
+        p_data["terfi_sonrasi_emekli_muktesebat_derece"] = personel_terfi['ga']['derece']
+        p_data["terfi_sonrasi_emekli_muktesebat_kademe"] = personel_terfi['ga']['kademe']
 
-            p_data["terfi_sonrasi_emekli_muktesebat_derece"], p_data[
-                "terfi_sonrasi_emekli_muktesebat_kademe"] = derece_ilerlet(
-                pkd,
-                personel.gorev_ayligi_derece,
-                personel.gorev_ayligi_kademe + 1)
+        # terfi sonrasi gorunen kademeler
+        p_data["terfi_sonrasi_gorunen_gorev_ayligi_kademe"] = gorunen_kademe_hesapla(
+            p_data["terfi_sonrasi_gorev_ayligi_derece"],
+            p_data["terfi_sonrasi_gorev_ayligi_kademe"])
+        p_data["terfi_sonrasi_gorunen_kazanilmis_hak_kademe"] = gorunen_kademe_hesapla(
+            p_data["terfi_sonrasi_kazanilmis_hak_derece"],
+            p_data["terfi_sonrasi_kazanilmis_hak_kademe"])
+        p_data["terfi_sonrasi_gorunen_emekli_muktesebat_kademe"] = gorunen_kademe_hesapla(
+            p_data["terfi_sonrasi_emekli_muktesebat_derece"],
+            p_data["terfi_sonrasi_emekli_muktesebat_kademe"])
 
-            # terfi sonrasi gorunen kademeler
-            p_data["terfi_sonrasi_gorunen_gorev_ayligi_kademe"] = gorunen_kademe_hesapla(
-                p_data["terfi_sonrasi_gorev_ayligi_derece"],
-                p_data["terfi_sonrasi_gorev_ayligi_kademe"])
-            p_data["terfi_sonrasi_gorunen_kazanilmis_hak_kademe"] = gorunen_kademe_hesapla(
-                p_data["terfi_sonrasi_kazanilmis_hak_derece"],
-                p_data["terfi_sonrasi_kazanilmis_hak_kademe"])
-            p_data["terfi_sonrasi_gorunen_emekli_muktesebat_kademe"] = gorunen_kademe_hesapla(
-                p_data["terfi_sonrasi_emekli_muktesebat_derece"],
-                p_data["terfi_sonrasi_emekli_muktesebat_kademe"])
-
-            personeller[personel.key] = p_data
+        personeller[personel.key] = p_data
 
     return personeller

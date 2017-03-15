@@ -407,12 +407,14 @@ class TerfiDuzenleForm(JsonForm):
 
 class PersonelTerfiKriterleri(JsonForm):
     baslangic_tarihi = fields.Date(gettext_lazy(u"Başlangıç Tarihi"),
-                                   default=datetime.date.today().strftime('d.%m.%Y'))
+                                   default=datetime.date.today().strftime('%d.%m.%Y'))
 
     bitis_tarihi = fields.Date(gettext_lazy(u"Bitiş Tarihi"), default=(
-        datetime.date.today() + datetime.timedelta(days=15)).strftime('d.%m.%Y'))
+        datetime.date.today() + datetime.timedelta(days=15)).strftime('%d.%m.%Y'))
 
-    personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"), choices=[(1, gettext_lazy(u"Akademik")), (2, gettext_lazy(u"İdari"))],
+    personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"),
+                                   choices=[(1, gettext_lazy(u"Akademik")),
+                                            (2, gettext_lazy(u"İdari"))],
                                    default=2)
 
     devam = fields.Button(gettext_lazy(u"Sorgula"))
@@ -435,9 +437,9 @@ class TerfiListe(CrudView):
             personel_turu = self.current.input['form']['personel_turu']
 
             baslangic_tarihi = datetime.datetime.strptime(
-                self.current.input['form']['baslangic_tarihi'], '%d.%m.%Y')
+                self.current.input['form']['baslangic_tarihi'], '%d.%m.%Y').date()
             bitis_tarihi = datetime.datetime.strptime(
-                self.current.input['form']['bitis_tarihi'], '%d.%m.%Y')
+                self.current.input['form']['bitis_tarihi'], '%d.%m.%Y').date()
             self.current.task_data["personeller"] = terfi_tarhine_gore_personel_listesi(
                 baslangic_tarihi=baslangic_tarihi, bitis_tarihi=bitis_tarihi,
                 personel_turu=personel_turu)
@@ -456,14 +458,15 @@ class TerfiListe(CrudView):
             datetime.datetime.today()
             self.current.output['msgbox'] = {
                 'type': 'info', "title": _(u'Terfi Bekleyen Personel Bulunamadı'),
-                "msg": _(u'%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen personel bulunamadı.') % {
+                "msg": _(u'%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen '
+                         u'personel bulunamadı.') % {
                     'baslangic': format_datetime(baslangic_tarihi),
                     'bitis': format_datetime(bitis_tarihi),
                 }
             }
 
     def terfi_liste_duzenle(self):
-        _form = TerfiDuzenleForm()
+        _form = TerfiDuzenleForm(title=_(u"Terfi Düzenleme Form Ekranı"))
         for p in self.current.input['form']['Personel']:
             if p['sec']:
                 p_data = self.current.task_data['personeller'][p['key']]
@@ -505,6 +508,7 @@ class TerfiListe(CrudView):
 
         self.form_out(_form)
         self.current.output["meta"]["allow_add_listnode"] = False
+        self.current.output["meta"]["allow_actions"] = False
 
     def terfi_duzenle_kaydet(self):
         for p in self.current.input['form']['Personel']:
