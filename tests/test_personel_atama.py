@@ -7,7 +7,7 @@
 from ulakbus.models import Atama, HizmetKayitlari, Personel
 from ulakbus.models.auth import User
 from zengine.lib.test_utils import BaseTestCase
-from ulakbus.settings import DATE_DEFAULT_FORMAT, DATETIME_DEFAULT_FORMAT
+from ulakbus.settings import DATE_DEFAULT_FORMAT
 from datetime import datetime
 
 __author__ = 'Yeter Çatıkkaş'
