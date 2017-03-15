@@ -363,8 +363,8 @@ class HizmetIstisnaiIlgi(Model):
 class HizmetKayitlari(Model):
     tckn = field.String(_(u"TC Kimlik No"), index=True, hidden=True)
     kayit_no = field.String(_(u"Kayıt No"), index=True, hidden=True)
-    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y")
-    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y")
+    baslama_tarihi = field.Date(_(u"Başlama Tarihi"), index=True, format="%d.%m.%Y", required=False)
+    bitis_tarihi = field.Date(_(u"Bitiş Tarihi"), index=True, format="%d.%m.%Y", required=False)
     gorev = field.String(_(u"Görev"), index=True)  # birim + kadro unvanı
     unvan_kod = field.Integer(_(u"Unvan Kod"), index=True)  # kadro unvan kodu
     yevmiye = field.String(_(u"Yevmiye"), index=True)

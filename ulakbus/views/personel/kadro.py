@@ -65,7 +65,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
-from ulakbus.models import Personel, HitapSebep, HizmetKayitlari
+from ulakbus.models import Personel, HitapSebep, HizmetKayitlari, Permission
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
 from ulakbus.lib.view_helpers import prepare_choices_for_model
@@ -825,6 +825,9 @@ class KanunlaVerilenTerfi(CrudView):
         elif personel.personel_turu == 2:
             self.current.task_data["permission_name"] = "idari_personel_terfi_onay"
 
+        user_permission = Permission.objects.get(name=self.current.task_data["permission_name"])
+        user_list = user_permission.get_permitted_users()
+        self.current.invite_other_parties(user_list)
         msg = {"title": _(u'Onaya Gönderildi!'),
                "body": _(u'Terfi işlemi onaya gönderildi')}
         self.current.output['msgbox'] = msg
