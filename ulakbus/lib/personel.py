@@ -141,19 +141,13 @@ def terfi_tikanma_kontrol(personel):
         return ga, kh, em
     else:
         from ulakbus.models import HizmetOkul
-        from zengine.lib.catalog_data import catalog_data_manager
         personel_okul = HizmetOkul.objects.set_params(
             sort='mezuniyet_tarihi desc').filter(tckn=personel.tckn).exclude(ogrenim_durumu=None)
 
         son_mezun_olunan_okul = personel_okul[0]
 
-        for okul in personel_okul:
-            if okul.mezuniyet_tarihi.year > son_mezun_olunan_okul.mezuniyet_tarihi.year:
-                son_mezun_olunan_okul = okul
-        terfi_tablo = {data['value']: data['name']
-                       for data in catalog_data_manager.get_all('terfi_tablo')}
-        derece_sinir = terfi_tablo[son_mezun_olunan_okul.ogrenim_durumu]['derece']
-        kademe_sinir = terfi_tablo[son_mezun_olunan_okul.ogrenim_durumu]['kademe']
+        derece_sinir = ogrenim_durumuna_gore_terfi[son_mezun_olunan_okul.ogrenim_durumu]['derece']
+        kademe_sinir = ogrenim_durumuna_gore_terfi[son_mezun_olunan_okul.ogrenim_durumu]['kademe']
 
         if (personel.gorev_ayligi_derece == derece_sinir and
                 personel.gorev_ayligi_kademe == kademe_sinir):
@@ -182,50 +176,47 @@ def torba_kadro_kontrol(personel):
     Returns:
         personel torba kadro ile atanmışsa True aksi halde False
     """
-
-    if (personel.kadro.derece in [1, 2, 3, 4] and personel.kadro.derece ==
-        personel.gorev_ayligi_derece):
-        if (personel.kazanilmis_hak_derece > personel.kadro.derece or
-                personel.emekli_muktesebat_derece > personel.kadro.derece):
-            return True
-        else:
-            return False
-    else:
-        return False
+    return all(
+        [
+            personel.kadro.derece in [1, 2, 3, 4],
+            personel.kadro.derece == personel.gorev_ayligi_derece,
+            (personel.kazanilmis_hak_derece > personel.kadro.derece or
+             personel.emekli_muktesebat_derece > personel.kadro.derece)
+        ]
+    )
 
 
-def kademe_ilerlet(personel, ga_kontrol, kh_kontrol, em_kontrol):
+def kademe_ilerlet(p, ga_kontrol, kh_kontrol, em_kontrol):
     """
     Personelin şartlara göre kademe derece ilerleyişini gerçekleştirir.
     ga_kontrol, kh_kontrol, em_kontrol parametreleriyle görev aylığı,
     kazanılmış hak ve emekli müktesebat bilgilerinden hangileri
     üzerinde terfi işlemi gerçekleştirileceği belirlenir.
+
     Args:
-        personel: Personel class instance
+        p: Personel class instance
         ga_kontrol : Boolean
         kh_kontrol : Boolean
         em_kontrol : Boolean
+
     Returns:
+        yeni kademeler (tuple)
 
     """
 
-    ga = personel.gorev_ayligi_kademe
-    kh = personel.kazanilmis_hak_kademe
-    em = personel.emekli_muktesebat_kademe
+    ga = p.gorev_ayligi_kademe
+    kh = p.kazanilmis_hak_kademe
+    em = p.emekli_muktesebat_kademe
 
-    if kh_kontrol is True:
-        if kh < terfi_max_kademe[personel.kazanilmis_hak_derece]:
-            kh += 1
+    if kh_kontrol and kh < derece_max_kademe[p.kazanilmis_hak_derece]:
+        kh += 1
 
-    if em_kontrol is True:
-        if em < terfi_max_kademe[personel.emekli_muktesebat_derece]:
-            em += 1
+    if em_kontrol and em < derece_max_kademe[p.emekli_muktesebat_derece]:
+        em += 1
 
-    if ga_kontrol is True:
-        if ((personel.personel_turu == 2 and torba_kadro_kontrol(personel) is False) or
-                personel.personel_turu == 1):
-            if ga < terfi_max_kademe[personel.gorev_ayligi_derece]:
-                ga += 1
+    if ga_kontrol and ga < derece_max_kademe[p.gorev_ayligi_derece]:
+        if (p.personel_turu == 2 and torba_kadro_kontrol(p) is False) or p.personel_turu == 1:
+            ga += 1
 
     return ga, kh, em
 
