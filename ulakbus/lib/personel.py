@@ -11,7 +11,50 @@ from ulakbus.lib.date_time_helper import zaman_araligi
 
 __author__ = 'Ali Riza Keles'
 
-terfi_max_kademe = {
+# hitap_fixture ogrenim durumu
+# ogrenim durumu 1 (okur yazar ise, maksimum
+# 13. kademeye kadar yukselebilir.)
+ogrenim_durumuna_gore_terfi = {
+    1: {
+        "derece": 7,
+        "kademe": 31
+    },
+    2: {
+        "derece": 7,
+        "kademe": 31
+    },
+    3: {
+        "derece": 5,
+        "kademe": 25
+    },
+    4: {
+        "derece": 5,
+        "kademe": 25
+    },
+    5: {
+        "derece": 4,
+        "kademe": 22
+    },
+    6: {
+        "derece": 3,
+        "kademe": 19
+    },
+    7: {
+        "derece": 1,
+        "kademe": 13
+    },
+    8: {
+        "derece": 1,
+        "kademe": 13
+    },
+    9: {
+        "derece": 1,
+        "kademe": 13
+    }
+}
+
+# derecede ilerlenebilecek maksimum kademe
+derece_max_kademe = {
     1: 13,
     2: 16,
     3: 19,
@@ -19,8 +62,8 @@ terfi_max_kademe = {
     5: 25,
     6: 28,
     7: 31,
-    8: 5,
-    9: 6
+    8: 34,
+    9: 37
 }
 
 
@@ -65,8 +108,7 @@ def gorunen_kademe_hesapla(derece, kademe):
     kademe_limitleri = {1: 4, 2: 6, 3: 8, 4: 9, 5: 9, 6: 9, 7: 9, 8: 9, 9: 9, 10: 9, 11: 9,
                         12: 9, 13: 9, 14: 9, 15: 9}
     try:
-        kademe = kademe_limitleri[derece] if kademe > kademe_limitleri[derece] else kademe
-        return kademe
+        return kademe_limitleri[derece] if kademe > kademe_limitleri[derece] else kademe
     except KeyError:
         return 0
 
@@ -99,19 +141,13 @@ def terfi_tikanma_kontrol(personel):
         return ga, kh, em
     else:
         from ulakbus.models import HizmetOkul
-        from zengine.lib.catalog_data import catalog_data_manager
         personel_okul = HizmetOkul.objects.set_params(
             sort='mezuniyet_tarihi desc').filter(tckn=personel.tckn).exclude(ogrenim_durumu=None)
 
         son_mezun_olunan_okul = personel_okul[0]
 
-        for okul in personel_okul:
-            if okul.mezuniyet_tarihi.year > son_mezun_olunan_okul.mezuniyet_tarihi.year:
-                son_mezun_olunan_okul = okul
-        terfi_tablo = {data['value']: data['name']
-                       for data in catalog_data_manager.get_all('terfi_tablo')}
-        derece_sinir = terfi_tablo[son_mezun_olunan_okul.ogrenim_durumu]['derece']
-        kademe_sinir = terfi_tablo[son_mezun_olunan_okul.ogrenim_durumu]['kademe']
+        derece_sinir = ogrenim_durumuna_gore_terfi[son_mezun_olunan_okul.ogrenim_durumu]['derece']
+        kademe_sinir = ogrenim_durumuna_gore_terfi[son_mezun_olunan_okul.ogrenim_durumu]['kademe']
 
         if (personel.gorev_ayligi_derece == derece_sinir and
                 personel.gorev_ayligi_kademe == kademe_sinir):
@@ -140,50 +176,47 @@ def torba_kadro_kontrol(personel):
     Returns:
         personel torba kadro ile atanmışsa True aksi halde False
     """
-
-    if (personel.kadro.derece in [1, 2, 3, 4] and personel.kadro.derece ==
-        personel.gorev_ayligi_derece):
-        if (personel.kazanilmis_hak_derece > personel.kadro.derece or
-                personel.emekli_muktesebat_derece > personel.kadro.derece):
-            return True
-        else:
-            return False
-    else:
-        return False
+    return all(
+        [
+            personel.kadro.derece in [1, 2, 3, 4],
+            personel.kadro.derece == personel.gorev_ayligi_derece,
+            (personel.kazanilmis_hak_derece > personel.kadro.derece or
+             personel.emekli_muktesebat_derece > personel.kadro.derece)
+        ]
+    )
 
 
-def kademe_ilerlet(personel, ga_kontrol, kh_kontrol, em_kontrol):
+def kademe_ilerlet(p, ga_kontrol, kh_kontrol, em_kontrol):
     """
     Personelin şartlara göre kademe derece ilerleyişini gerçekleştirir.
     ga_kontrol, kh_kontrol, em_kontrol parametreleriyle görev aylığı,
     kazanılmış hak ve emekli müktesebat bilgilerinden hangileri
     üzerinde terfi işlemi gerçekleştirileceği belirlenir.
+
     Args:
-        personel: Personel class instance
+        p: Personel class instance
         ga_kontrol : Boolean
         kh_kontrol : Boolean
         em_kontrol : Boolean
+
     Returns:
+        yeni kademeler (tuple)
 
     """
 
-    ga = personel.gorev_ayligi_kademe
-    kh = personel.kazanilmis_hak_kademe
-    em = personel.emekli_muktesebat_kademe
+    ga = p.gorev_ayligi_kademe
+    kh = p.kazanilmis_hak_kademe
+    em = p.emekli_muktesebat_kademe
 
-    if kh_kontrol is True:
-        if kh < terfi_max_kademe[personel.kazanilmis_hak_derece]:
-            kh += 1
+    if kh_kontrol and kh < derece_max_kademe[p.kazanilmis_hak_derece]:
+        kh += 1
 
-    if em_kontrol is True:
-        if em < terfi_max_kademe[personel.emekli_muktesebat_derece]:
-            em += 1
+    if em_kontrol and em < derece_max_kademe[p.emekli_muktesebat_derece]:
+        em += 1
 
-    if ga_kontrol is True:
-        if ((personel.personel_turu == 2 and torba_kadro_kontrol(personel) is False) or
-                personel.personel_turu == 1):
-            if ga < terfi_max_kademe[personel.gorev_ayligi_derece]:
-                ga += 1
+    if ga_kontrol and ga < derece_max_kademe[p.gorev_ayligi_derece]:
+        if (p.personel_turu == 2 and torba_kadro_kontrol(p) is False) or p.personel_turu == 1:
+            ga += 1
 
     return ga, kh, em
 
@@ -205,22 +238,19 @@ def derece_ilerlet(**kwargs):
     em_kademe = kwargs.pop('em_kademe')
     personel = kwargs.pop('personel')
 
-    ga_kontrol, kh_kontrol, em_kontrol = terfi_tikanma_kontrol(personel)
+    ga_tikanma, kh_tikanma, em_tikanma = terfi_tikanma_kontrol(personel)
 
-    if ga_kontrol is False and ga_derece > 1:
-        if ga_kademe >= 4:
-            ga_kademe = 1
-            ga_derece -= 1
+    if all([not ga_tikanma, ga_derece > 1, ga_kademe >= 4]):
+        ga_kademe = 1
+        ga_derece -= 1
 
-    if kh_kontrol is False and kh_derece > 1:
-        if kh_kademe >= 4:
-            kh_kademe = 1
-            kh_derece -= 1
+    if all([not kh_tikanma, kh_derece > 1, kh_kademe >= 4]):
+        kh_kademe = 1
+        kh_derece -= 1
 
-    if em_kontrol is False and em_derece > 1:
-        if em_kademe >= 4:
-            em_kademe = 1
-            em_derece -= 1
+    if all([not em_tikanma, em_derece > 1, em_kademe >= 4]):
+        em_kademe = 1
+        em_derece -= 1
 
     return {
         "ga": {
@@ -245,11 +275,8 @@ def terfi(personel):
     
     bugun = datetime.date.today()
 
-    ga_kontrol = True if ga_tarih <= bugun else False
-    kh_kontrol = True if kh_tarih <= bugun else False
-    em_kontrol = True if em_tarih <= bugun else False
-
-    ga_kademe, kh_kademe, em_kademe = kademe_ilerlet(personel, ga_kontrol, kh_kontrol, em_kontrol)
+    ga_kademe, kh_kademe, em_kademe = kademe_ilerlet(personel, ga_tarih <= bugun, kh_tarih <= bugun,
+                                                     em_tarih <= bugun)
 
     sonuc = derece_ilerlet(ga_derece=personel.gorev_ayligi_derece,
                            ga_kademe=ga_kademe,
