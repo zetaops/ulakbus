@@ -173,7 +173,7 @@ class KadroIslemleri(CrudView):
         self.object.durum = self.SAKLI
 
         # Kadroyu kaydet
-        self.object.save()
+        self.object.blocking_save()
 
         # İş akışını yenile
         self.reset()
