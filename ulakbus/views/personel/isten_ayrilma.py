@@ -58,9 +58,7 @@ class IstenAyrilmaOnayForm(JsonForm):
         help_text = __(u"Personel işten ayrılma formu")
         title = __(u"Personel İşten Ayrılma")
 
-    ayrilma_sebeb = fields.Integer(__(u"Ayrılma Sebebi"),
-                                   choices=prepare_choices_for_model(HitapSebep),
-                                   required=True)
+    ayrilma_sebeb = fields.Integer(__(u"Ayrılma Sebebi"),required=True)
     ayrilma_tarih = fields.Date(__(u"Ayrılma Tarihi"), required=True)
     ayrilma_not = fields.Text(__(u"Ayrılma Notu"), required=False)
 
@@ -78,9 +76,9 @@ class WorkflowAtamaForm(JsonForm):
     class YeniRoller(ListNode):
         wf_name = fields.String(__(u"WF Adı"), readonly=True)
         eski_role = fields.String(__(u"Eski Rol"), readonly=True)
-        yeni_role = fields.String(__(u"Yeni Rol"),
-                                  choices=prepare_choices_for_model(Role),
-                                  required=True)
+        yeni_role = fields.String(__(u"Yeni Rol"), required=True)
+        # TODO:yeni_role = fields.String(__(u"Yeni Rol"), choices=prepare_choices_for_model(Role),required=True)
+        # TODO: Pyoko da implement edilen threaded yapıda problem çıkardığı için choices kaldırıldı. Çözüm aranacak.
 
     def generate_yeni_roller(self):
         """
@@ -131,7 +129,9 @@ class IstenAyrilma(CrudView):
 
     def isten_ayrilma_form(self):
         # Onay form kullanıcıya gösteriliyor
-        self.form_out(IstenAyrilmaOnayForm(current=self.current))
+        form = IstenAyrilmaOnayForm(current=self.current)
+        form.set_choices_of('ayrilma_sebeb',choices = prepare_choices_for_model(HitapSebep))
+        self.form_out(form)
 
     def kontrol(self):
         self.current.task_data['gorevden_ayrilma_sebep_id'] = \
