@@ -23,7 +23,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_076pp8a" sourceRef="ExclusiveGateway_0lqknjo" targetRef="demirbas_kaydet" />
     <bpmn:sequenceFlow id="SequenceFlow_0nyhrzh" sourceRef="demirbas_yeni_ekle" targetRef="ExclusiveGateway_0lqknjo" />
     <bpmn:sequenceFlow id="SequenceFlow_1keoq84" sourceRef="demirbas_rezervasyon_yap" targetRef="ExclusiveGateway_17fh3qr" />
-    <bpmn:sequenceFlow id="SequenceFlow_0f29ojp" sourceRef="ExclusiveGateway_0q8kpor" targetRef="demirbas_rezervasyon_yap">
+    <bpmn:sequenceFlow id="SequenceFlow_0f29ojp" sourceRef="ExclusiveGateway_0q8kpor" targetRef="anahtar_al">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="rezervasyon"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0iz5n85" sourceRef="ExclusiveGateway_00o99yr" targetRef="demirbas_ara">
@@ -37,7 +37,6 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1p5h1sl" sourceRef="demirbas_goster" targetRef="ExclusiveGateway_0q8kpor" />
     <bpmn:sequenceFlow id="SequenceFlow_0u8cst2" sourceRef="ExclusiveGateway_1jgqv2z" targetRef="demirbas_rezervasyon_yap" />
-    <bpmn:sequenceFlow id="SequenceFlow_0dygksc" sourceRef="demirbas_rezervasyon_kaydet" targetRef="demirbas_goster" />
     <bpmn:sequenceFlow id="SequenceFlow_12renaa" sourceRef="ExclusiveGateway_00o99yr" targetRef="demirbas_goster">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="goster"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -52,7 +51,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=="listele"]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1lv802g" sourceRef="StartEvent_1" targetRef="demirbas_listele" />
-    <bpmn:serviceTask id="demirbas_ara" name="Demirbas Ara" camunda:class="personel.demirbas.DemirbasView.object_search">
+    <bpmn:serviceTask id="demirbas_ara" name="Demirbas Ara" camunda:class="common.demirbas.DemirbasView.object_search">
       <bpmn:incoming>SequenceFlow_0iz5n85</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_15iebyj</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -61,11 +60,11 @@
       <bpmn:outgoing>SequenceFlow_05nwatx</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0u8cst2</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="demirbas_rezervasyon_kaydet" name="Rezervasyon Kaydet" camunda:class="personel.demirbas.RezervasyonView.rezervasyon_kaydet">
+    <bpmn:serviceTask id="demirbas_rezervasyon_kaydet" name="Rezervasyon Kaydet" camunda:class="common.demirbas.RezervasyonView.rezervasyon_kaydet">
       <bpmn:incoming>SequenceFlow_05nwatx</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0dygksc</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1tdo4o8</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="demirbas_sil" name="Sil" camunda:class="personel.demirbas.DemirbasView.delete">
+    <bpmn:serviceTask id="demirbas_sil" name="Sil" camunda:class="common.demirbas.DemirbasView.delete">
       <bpmn:incoming>SequenceFlow_085pcgz</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_09emjww</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -74,11 +73,11 @@
       <bpmn:outgoing>SequenceFlow_085pcgz</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1ha8i79</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="demirbas_sil_onay" name="Sil Onay" camunda:assignee="personel.demirbas.DemirbasView.confirm_deletion">
+    <bpmn:userTask id="demirbas_sil_onay" name="Sil Onay" camunda:assignee="common.demirbas.DemirbasView.confirm_deletion">
       <bpmn:incoming>SequenceFlow_0hhxjk3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_07k8lsi</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="demirbas_kaydet" name="Kaydet" camunda:class="personel.demirbas.DemirbasView.save">
+    <bpmn:serviceTask id="demirbas_kaydet" name="Kaydet" camunda:class="common.demirbas.DemirbasView.save">
       <bpmn:incoming>SequenceFlow_076pp8a</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_02gn2m7</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -86,7 +85,7 @@
       <bpmn:incoming>SequenceFlow_0nyhrzh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_076pp8a</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="demirbas_yeni_ekle" name="Yeni Ekle/Düzenle" camunda:assignee="personel.demirbas.DemirbasView.add_edit_form">
+    <bpmn:userTask id="demirbas_yeni_ekle" name="Yeni Ekle/Düzenle" camunda:assignee="common.demirbas.DemirbasView.add_edit_form">
       <bpmn:incoming>SequenceFlow_15537db</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0nyhrzh</bpmn:outgoing>
     </bpmn:userTask>
@@ -97,30 +96,30 @@
       <bpmn:outgoing>SequenceFlow_0hhxjk3</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0iz5n85</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="demirbas_goster" name="Göster" camunda:assignee="personel.demirbas.DemirbasView.goruntule">
+    <bpmn:userTask id="demirbas_goster" name="Göster" camunda:assignee="common.demirbas.DemirbasView.goruntule">
       <bpmn:incoming>SequenceFlow_12renaa</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0dygksc</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1p5h1sl</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="demirbas_listele" name="Demirbaş Listele" camunda:assignee="personel.demirbas.DemirbasView.list">
+    <bpmn:userTask id="demirbas_listele" name="Demirbaş Listele" camunda:assignee="common.demirbas.DemirbasView.list">
       <bpmn:incoming>SequenceFlow_1lv802g</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1p4yi2i</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_09emjww</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_02gn2m7</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1ha8i79</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_15iebyj</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1h22zq5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_11g0qcq</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1lv802g</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="demirbas_rezervasyon_kontrol" name="Rezervasyon Kontrol" camunda:class="personel.demirbas.RezervasyonView.rezervasyon_kontrol">
+    <bpmn:serviceTask id="demirbas_rezervasyon_kontrol" name="Rezervasyon Kontrol" camunda:class="common.demirbas.RezervasyonView.rezervasyon_kontrol">
       <bpmn:incoming>SequenceFlow_1nxj9h7</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_18i5hlt</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="demirbas_rezervasyon_yap" name="Rezervasyon Yap" camunda:assignee="personel.demirbas.RezervasyonView.rezervasyon_yap">
-      <bpmn:incoming>SequenceFlow_0f29ojp</bpmn:incoming>
+    <bpmn:userTask id="demirbas_rezervasyon_yap" name="Rezervasyon Yap" camunda:assignee="common.demirbas.RezervasyonView.rezervasyon_yap">
       <bpmn:incoming>SequenceFlow_0u8cst2</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1mvw27u</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1keoq84</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_17fh3qr">
@@ -132,6 +131,17 @@
       <bpmn:outgoing>SequenceFlow_0f29ojp</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1p4yi2i</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1tdo4o8" sourceRef="demirbas_rezervasyon_kaydet" targetRef="basari_mesaji_goster" />
+    <bpmn:userTask id="basari_mesaji_goster" name="Başarı Mesajı Göster" camunda:assignee="common.demirbas.RezervasyonView.rezervasyon_kayit_basari">
+      <bpmn:incoming>SequenceFlow_1tdo4o8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1h22zq5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1mvw27u" sourceRef="anahtar_al" targetRef="demirbas_rezervasyon_yap" />
+    <bpmn:serviceTask id="anahtar_al" name="Anahtar Al" camunda:class="common.demirbas.RezervasyonView.anahtar_al">
+      <bpmn:incoming>SequenceFlow_0f29ojp</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1mvw27u</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1h22zq5" sourceRef="basari_mesaji_goster" targetRef="demirbas_listele" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1j6rxr1">
@@ -294,10 +304,10 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0f29ojp_di" bpmnElement="SequenceFlow_0f29ojp">
-        <di:waypoint xsi:type="dc:Point" x="621" y="-170" />
-        <di:waypoint xsi:type="dc:Point" x="621" y="-197" />
+        <di:waypoint xsi:type="dc:Point" x="646" y="-145" />
+        <di:waypoint xsi:type="dc:Point" x="713" y="-145" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="640" y="-183" width="0" height="0" />
+          <dc:Bounds x="680" y="-160" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_1e6ovzt_di" bpmnElement="demirbas_rezervasyon_yap">
@@ -336,15 +346,6 @@
       <bpmndi:BPMNShape id="ServiceTask_1op1ov0_di" bpmnElement="demirbas_rezervasyon_kaydet">
         <dc:Bounds x="146" y="-368" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0dygksc_di" bpmnElement="SequenceFlow_0dygksc">
-        <di:waypoint xsi:type="dc:Point" x="244" y="-363" />
-        <di:waypoint xsi:type="dc:Point" x="748" y="-363" />
-        <di:waypoint xsi:type="dc:Point" x="748" y="-63" />
-        <di:waypoint xsi:type="dc:Point" x="671" y="-63" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="763" y="-213" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0u8cst2_di" bpmnElement="SequenceFlow_0u8cst2">
         <di:waypoint xsi:type="dc:Point" x="349" y="-328" />
         <di:waypoint xsi:type="dc:Point" x="620" y="-328" />
@@ -383,6 +384,36 @@
         <di:waypoint xsi:type="dc:Point" x="338" y="41" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="357" y="-35" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1tdo4o8_di" bpmnElement="SequenceFlow_1tdo4o8">
+        <di:waypoint xsi:type="dc:Point" x="196" y="-288" />
+        <di:waypoint xsi:type="dc:Point" x="196" y="-163" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="211" y="-225.5" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0wxqqxc_di" bpmnElement="basari_mesaji_goster">
+        <dc:Bounds x="146" y="-163" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1mvw27u_di" bpmnElement="SequenceFlow_1mvw27u">
+        <di:waypoint xsi:type="dc:Point" x="767" y="-195" />
+        <di:waypoint xsi:type="dc:Point" x="767" y="-237" />
+        <di:waypoint xsi:type="dc:Point" x="671" y="-237" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="782" y="-216" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_07v0ttw_di" bpmnElement="anahtar_al">
+        <dc:Bounds x="717" y="-195" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1h22zq5_di" bpmnElement="SequenceFlow_1h22zq5">
+        <di:waypoint xsi:type="dc:Point" x="196" y="-83" />
+        <di:waypoint xsi:type="dc:Point" x="196" y="-29" />
+        <di:waypoint xsi:type="dc:Point" x="276" y="-29" />
+        <di:waypoint xsi:type="dc:Point" x="276" y="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="236" y="-44" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

@@ -19,24 +19,26 @@ class Demirbas(Model):
     kurum_kodu = field.String(_(u"Kurum Kodu"))
 
     demirbas_no = field.String(_(u"Demirbas Numarası"))
-    # satin_alindigi_proje = Proje()
+    satin_alindigi_proje = field.String(_(u"Satın Alındığı Proje"))
     satin_alinma_tarihi = field.Date(_(u"Satın Alınma Tarihi"), format=DATE_DEFAULT_FORMAT)
     teslim_alinma_tarihi = field.Date(_(u"Teslim Alınma Tarihi"), format=DATE_DEFAULT_FORMAT)
     satin_alinma_fiyati = field.Float(_(u"Maliyet"))
-    # teknik özellikler = ???
-    etiketler = []
+    teknik_ozellikler = field.Text(_(u"Teknik Özellikler"))
+
+    # virgülle ayrılacak
+    etiketler = field.String(_(u"Etiketler"))
     marka = field.String(_(u"Marka"))
     model = field.String(_(u"Model"))
-    # durum = Uygun, Kullanımda
+    durum = field.Integer(_(u"Durum"), choices='demirbas_durum')
     birim = Unit(_(u"Birim"))
     notlar = field.Text(_(u"Notlar"))
 
     class Meta:
-        app = 'Demirbas'
+        app = 'Genel'
         verbose_name = _(u"Demirbaş")
         verbose_name_plural = _(u"Demirbaşlar")
         list_fields = ['ad', 'tur', 'demirbas_no', 'satin_alinma_tarihi', 'teslim_alinma_tarihi']
-        search_fields = ['ad', 'tur', 'demirbas_no', 'tckn', 'marka', 'model']
+        search_fields = ['ad', 'tur', 'etiketler', 'marka', 'model', 'demirbas_no']
 
     def __unicode__(self):
         return _(u"%(ad)s %(tur)s") % {'ad': self.ad, 'tur': self.tur}
@@ -53,9 +55,9 @@ class DemirbasRezervasyon(Model):
     # proje = Proje()
 
     class Meta:
-        app = 'RezerveBilgileri'
-        verbose_name = _(u"RezerveBilgileri")
-        verbose_name_plural = _(u"RezerveBilgileri")
+        app = 'Genel'
+        verbose_name = _(u"Rezerve Bilgileri")
+        verbose_name_plural = _(u"Rezerve Bilgileri")
         list_fields = ['rezerve_eden', 'rezervasyon_baslama_tarihi', 'rezervasyon_bitis_tarihi']
         search_fields = ['rezerve_eden', 'rezervasyon_baslama_tarihi', 'rezervasyon_bitis_tarihi']
 

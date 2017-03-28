@@ -6,7 +6,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import Demirbas, DemirbasRezervasyon
+from ulakbus.models import Demirbas, DemirbasRezervasyon, Personel
 from zengine.forms import JsonForm
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy as __
@@ -16,17 +16,6 @@ from datetime import datetime
 
 
 __author__ = 'Anil Can Aydin'
-
-
-class RezervasyonForm(JsonForm):
-    class Meta:
-        title = __(u'Rezervasyon Bilgileri')
-
-    rezerve_eden = fields.String(__(u"Rezerve Eden Personel"))
-    rezervasyon_baslama_tarihi = fields.Date(_(u"Rezervasyon Başlama Tarihi"))
-    rezervasyon_bitis_tarihi = fields.Date(_(u"Rezervasyon Başlama Tarihi"))
-
-    kontrol_kayit = fields.Button(__(u"Kontrol Et ve Kaydet"), cmd="kaydet_ve_kontrol")
 
 
 class DemirbasView(CrudView):
@@ -43,25 +32,16 @@ class DemirbasView(CrudView):
         object_actions = []
 
     def goruntule(self):
-
         if 'basari_mesaji' in self.current.task_data:
             self.current.output['msgbox'] = {"type": _(u"info"),
                                              "title": _(u"İşlem Başarılı"),
                                              "msg": self.current.task_data['basari_mesaji']}
             del self.current.task_data['basari_mesaji']
-            self.show()
-            form = JsonForm()
-            form.geri = fields.Button(__(u"Listeye Dön"), cmd='listele')
-            form.rezervasyon = fields.Button(__(u"Rezervasyon Yap"), cmd='rezervasyon')
-            self.form_out(form)
-        else:
-            self.show()
-            form = JsonForm()
-            form.geri = fields.Button(__(u"Listeye Dön"), cmd='listele')
-            form.rezervasyon = fields.Button(__(u"Rezervasyon Yap"), cmd='rezervasyon')
-            self.form_out(form)
-
-
+        self.show()
+        form = JsonForm()
+        form.geri = fields.Button(__(u"Listeye Dön"), cmd='listele')
+        form.rezervasyon = fields.Button(__(u"Rezervasyon Yap"), cmd='rezervasyon')
+        self.form_out(form)
 
     @obj_filter
     def demirbas_islem(self, obj, result):
@@ -75,41 +55,40 @@ class DemirbasView(CrudView):
 class RezervasyonView(CrudView):
 
     class Meta:
-        model = 'RezerveBilgileri'
+        model = 'DemirbasRezervasyon'
+
+    def anahtar_al(self):
+        self.current.task_data['obj_key'] = self.input['object_key']
 
     def rezervasyon_yap(self):
 
-        if 'object_key' in self.input:
-            obj_key = self.input['object_key']
-            self.current.task_data['obj_key'] = obj_key
-        else:
-            obj_key = self.current.task_data['obj_key']
+        obj_key = self.current.task_data['obj_key']
+        rezervasyonlar = DemirbasRezervasyon.objects.filter(
+            rezerve_edilen_demirbas_id=obj_key)
 
-        demirbas = Demirbas.objects.get(obj_key)
         onceki_rezervasyonlar = []
-        if DemirbasRezervasyon.objects.filter(rezerve_edilen_demirbas=demirbas).count() == 0:
-            onceki_rezervasyonlar.append(__(u"Bu demirbaşa ait rezervasyon bulunmamaktadır."))
+
+        if not rezervasyonlar:
+            onceki_rezervasyonlar.append(_(u"Bu demirbaşa ait rezervasyon bulunmamaktadır."))
         else:
-            for rez in DemirbasRezervasyon.objects.filter(rezerve_edilen_demirbas=demirbas):
+            for rez in rezervasyonlar:
                 onceki_rezervasyonlar.append("(" +\
                     str(rez.rezervasyon_baslama_tarihi) + " - " + \
                     str(rez.rezervasyon_bitis_tarihi) + ")")
-        if 'hata_mesaji' in self.current.task_data:
-            mesaj = __(u"Önceki Rezervasyonlar: ") + " " + ", ".join(onceki_rezervasyonlar)
-            self.current.output['msgbox'] = {"type": _(u"error"),
-                                             "title": _(u"Hatalı İşlem"),
-                                             "msg": self.current.task_data['hata_mesaji']+ mesaj}
-            del self.current.task_data['hata_mesaji']
+
+        if 'hata_mesaji' in self.current.task_data and self.current.task_data['hata_mesaji']:
+            mesaj_type = "error"
+            title = _(u"Hatalı İşlem")
+            mesaj = "%s %s %s" % (self.current.task_data['hata_mesaji'],
+                                  _(u"Önceki Rezervasyonlar: "),
+                                  ", ".join(onceki_rezervasyonlar))
         else:
-            if len(onceki_rezervasyonlar) > 1:
-                mesaj = ", ".join(onceki_rezervasyonlar)
-            else:
-                mesaj = onceki_rezervasyonlar[0]
-            self.current.output['msgbox'] = {"type": _(u"info"),
-                                         "title": _(u"Önceki Rezervasyonlar"),
-                                         "msg": mesaj}
-        form = RezervasyonForm(title=__(u"Rezervasyon bilgilerini giriniz"))
-        self.form_out(form)
+            mesaj_type = "info"
+            title = _(u"Önceki Rezervasyonlar")
+            mesaj = ", ".join(onceki_rezervasyonlar)
+
+        self.current.output['msgbox'] = {"type": mesaj_type, "title": title, "msg": mesaj}
+        self.form_out(RezervasyonForm(self.object, current=self.current))
 
     def rezervasyon_kontrol(self):
 
@@ -130,11 +109,7 @@ class RezervasyonView(CrudView):
             self.current.task_data['hata_mesaji'] = "Belirtilen tarihler rezervasyon için uygun " \
                                                     "değil. "
         else:
-            self.current.task_data['basari_mesaji'] = "%s - %s tarihleri arasındaki " \
-                                                      "rezervasyonununuz başarılı bir şekilde " \
-                                                      "kaydedilmiştir." % (
-                self.input['form']['rezervasyon_baslama_tarihi'],
-                self.input['form']['rezervasyon_bitis_tarihi'])
+            self.current.task_data['hata_mesaji'] = None
             self.current.task_data['form_data'] = self.input['form']
             self.current.task_data['cmd'] = 'rezervasyon_kaydet'
 
@@ -147,10 +122,34 @@ class RezervasyonView(CrudView):
             rezervasyon_bitis_tarihi=datetime.strptime(data['rezervasyon_bitis_tarihi'],
                                                        DATE_DEFAULT_FORMAT),
             rezerve_edilen_demirbas=Demirbas.objects.get(self.current.task_data['obj_key']),
-            rezerve_eden=data['rezerve_eden']
+            rezerve_eden=Personel.objects.get(data['rezerve_eden_id'])
         ).blocking_save()
 
-        self.current.task_data['object_id'] = self.current.task_data['obj_key']
+        # self.current.task_data['object_id'] = self.current.task_data['obj_key']
+
+    def rezervasyon_kayit_basari(self):
+        _data = self.current.task_data['form_data']
+
+        title = _(u"Rezervasyon Kaydı Başarılı")
+
+        help_text = _(u"%s - %s tarihleri arasındaki rezervasyon kaydınız başarıyla tamamlandı. "
+                      u"Listeye dönmek için tıklayınız."
+                  % (_data['rezervasyon_baslama_tarihi'], _data['rezervasyon_bitis_tarihi']))
+        _form = JsonForm(title=title)
+        _form.help_text = help_text
+        _form.listeye_don = fields.Button(_(u"Listeye Dön"), cmd='listele')
+
+        self.form_out(_form)
+
+
+class RezervasyonForm(JsonForm):
+
+    class Meta:
+        exclude = ['rezerve_edilen_demirbas']
+        title = __(u'Rezervasyon Bilgileri')
+
+    kontrol_kayit = fields.Button(__(u"Kontrol Et ve Kaydet"), cmd="kaydet_ve_kontrol")
+
 
 
 
