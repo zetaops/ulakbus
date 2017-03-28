@@ -7,6 +7,7 @@
 from ulakbus.models import Demirbas, DemirbasRezervasyon
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.models.auth import User
+from ulakbus.models.personel import Personel
 
 
 class TestCase(BaseTestCase):
@@ -71,27 +72,27 @@ class TestCase(BaseTestCase):
         form = {
             'rezervasyon_baslama_tarihi': "22.3.2017",
             'rezervasyon_bitis_tarihi': "29.3.2017",
-            'rezerve_eden': "qweqwe"
+            'rezerve_eden_id': "1goyiKX6pME423arQBIdrY6ETao"
         }
 
         resp = self.client.post(form=form, cmd='kaydet_ve_kontrol')
 
-        assert resp.json['msgbox']['title'] == "İşlem Başarılı"
+        assert resp.json['forms']['schema']['title'] == "Rezervasyon Kaydı Başarılı"
 
         assert DemirbasRezervasyon.objects.filter(rezerve_edilen_demirbas=d).count() == \
                rezervasyon_sayisi_baslangic + 1
+
+        self.client.post(object_id=d.key, cmd='goster')
 
         self.client.post(object_key=d.key, cmd='rezervasyon')
 
         form = {
             'rezervasyon_baslama_tarihi': "23.3.2017",
             'rezervasyon_bitis_tarihi': "28.3.2017",
-            'rezerve_eden': "qweqwe"
+            'rezerve_eden_id': "1goyiKX6pME423arQBIdrY6ETao"
         }
 
         resp = self.client.post(form=form, cmd='kaydet_ve_kontrol')
-
-        assert resp.json['msgbox']['title'] == "Hatalı İşlem"
 
         assert DemirbasRezervasyon.objects.filter(rezerve_edilen_demirbas=d).count() == \
                rezervasyon_sayisi_baslangic + 1
