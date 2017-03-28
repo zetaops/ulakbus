@@ -16,3 +16,4 @@ from .ders_sinav_programi import *
 from zengine.models.workflow_manager import DiagramXML, WFInstance, Task, BPMNWorkflow
 from .zato import *
 from .akademik_faaliyet import *
+from .demirbas import *
