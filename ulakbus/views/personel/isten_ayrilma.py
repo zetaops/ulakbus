@@ -89,10 +89,10 @@ class WorkflowAtamaForm(JsonForm):
         user = Personel.objects.get(self.context.task_data["personel_id"]).user
 
         for rs in user.role_set:
-            wf_instances = [ins.key for ins in WFInstance.objects.filter(current_actor=rs.role)]
-            queryset = TaskInvitation.objects.filter(progress__in=[20, 30], role=rs.role)
+            wf_instances = [ins.key for ins in WFInstance.objects.order_by().filter(current_actor=rs.role)]
+            queryset = TaskInvitation.objects.order_by().filter(progress__in=[20, 30], role=rs.role)
             if queryset:
-                wf_names = list(set(q.wf_name for q in queryset.filter(
+                wf_names = list(set(q.wf_name for q in queryset.order_by().filter(
                     instance_id__in=wf_instances)))
                 for wf in wf_names:
                     self.YeniRoller(
@@ -210,12 +210,12 @@ class IstenAyrilma(CrudView):
                 wf_name = yr['wf_name']
                 instances = []
 
-                for wfi in WFInstance.objects.filter(current_actor=eski_rol, name=wf_name):
+                for wfi in WFInstance.objects.order_by().filter(current_actor=eski_rol, name=wf_name):
                     wfi.current_actor = yeni_rol
                     wfi.blocking_save(query_dict={'current_actor': yeni_rol})
                     instances.append(wfi.key)
 
-                for inv in TaskInvitation.objects.filter(progress__in=[20, 30],
+                for inv in TaskInvitation.objects.order_by().filter(progress__in=[20, 30],
                                                          role=eski_rol,
                                                          wf_name=wf_name,
                                                          instance_id__in=instances):
