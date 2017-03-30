@@ -369,7 +369,7 @@ class Okutman(Model):
 
     def donem_subeleri(self, donem=None):
         donem = donem or Donem.guncel_donem()
-        return [s for s in Sube.objects.filter(okutman=self, donem=donem)]
+        return [s for s in Sube.objects.order_by().filter(okutman=self, donem=donem)]
 
     def donemdeki_gorev_yeri(self, donem):
         gorev_birimi_dct = {gorev_birimi.donem.key: gorev_birimi.yoksis_no for gorev_birimi in
@@ -736,7 +736,7 @@ class Ogrenci(Model):
 
     def donem_subeleri(self, donem=None):
         return [d.sube for d in
-                OgrenciDersi.objects.filter(ogrenci=self, donem=donem or Donem.guncel_donem())]
+                OgrenciDersi.objects.order_by().filter(ogrenci=self, donem=donem or Donem.guncel_donem())]
 
 
 class OncekiEgitimBilgisi(Model):
