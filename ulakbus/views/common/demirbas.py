@@ -27,7 +27,6 @@ class DemirbasView(CrudView):
             del self.current.task_data['object_id']
 
     class Meta:
-        allow_search = True
         model = "Demirbas"
         object_actions = []
 
