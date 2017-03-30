@@ -17,3 +17,4 @@ from zengine.models.workflow_manager import DiagramXML, WFInstance, Task, BPMNWo
 from .zato import *
 from .akademik_faaliyet import *
 from .bap.bap import *
+from .demirbas import *
