@@ -13,7 +13,7 @@ from ulakbus.models.personel import Personel
 class TestCase(BaseTestCase):
 
     def test_demirbas(self):
-        user = User.objects.get(username="ulakbus")
+        user = User.objects.get(username="bap_koordinasyon_birimi_1")
         self.prepare_client('/demirbas', user=user)
         self.client.post()
 
