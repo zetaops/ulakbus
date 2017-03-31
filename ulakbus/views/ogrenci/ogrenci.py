@@ -533,7 +533,7 @@ class KayitDondurma(CrudView):
             self.current.task_data['ogrenci_program_id'] = self.current.input['form']['program']
 
         # Öğrenci en fazla 2 dönem için kaydını dondurabilir.
-        donemler = Donem.objects.set_params(sort='baslangic_tarihi desc', rows='2').filter()
+        donemler = Donem.objects.set_params(rows=2).order_by('-baslangic_tarihi').all()
         _form = KayitDondurmaForm(current=self.current, title=_(u"Lütfen Dönem Seçiniz"))
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_id"])
         for donem in donemler:
