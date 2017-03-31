@@ -140,4 +140,3 @@ class BAPProje(Model):
     @lazy_property
     def yurutucu_diger_projeler(self):
         return self.objects.filter(yurutucu=self.yurutucu)
-    

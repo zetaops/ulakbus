@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
   <bpmn:collaboration id="Collaboration_0zvk5l8">
     <bpmn:participant id="proje_basvuru" name="Proje Basvuru" processRef="bap_proje_basvuru" />
   </bpmn:collaboration>
@@ -31,13 +31,13 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_089oz7v</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="proje_bilgisi_gir" name="Proje Bilgilerini Gir">
+    <bpmn:userTask id="proje_bilgisi_gir" name="Proje Bilgilerini Gir" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.proje_bilgisi_gir">
       <bpmn:incoming>SequenceFlow_089oz7v</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_100fq0y</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1elof5m</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_1elof5m" sourceRef="proje_bilgisi_gir" targetRef="proje_bilgilerini_kontrol_et" />
-    <bpmn:userTask id="proje_bilgilerini_kontrol_et" name="Proje Bilgilerini Kontrol Et">
+    <bpmn:userTask id="proje_bilgilerini_kontrol_et" name="Proje Bilgilerini Kontrol Et" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.proje_bilgilerini_kontrol_et">
       <bpmn:incoming>SequenceFlow_1elof5m</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0sp16lm</bpmn:outgoing>
     </bpmn:userTask>
@@ -48,28 +48,28 @@
       <bpmn:outgoing>SequenceFlow_11ybeaq</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1uceux9</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="ogretim_uyesine_bilgilendirme_gonder" name="Öğretim Üyesine Bilgilendirme Mesajı Gönder">
+    <bpmn:serviceTask id="ogretim_uyesine_bilgilendirme_gonder" name="Öğretim Üyesine Bilgilendirme Mesajı Gönder" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.ogretim_uyesine_bilgilendirme_mesaji_gonder">
       <bpmn:incoming>SequenceFlow_11ybeaq</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0kyatir</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_0kyatir" sourceRef="ogretim_uyesine_bilgilendirme_gonder" targetRef="komisyona_sun" />
-    <bpmn:serviceTask id="komisyona_sun" name="Komisyona Sun">
+    <bpmn:serviceTask id="komisyona_sun" name="Komisyona Sun" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.komisyona_sun">
       <bpmn:incoming>SequenceFlow_0kyatir</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1540gge</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1uceux9" sourceRef="ExclusiveGateway_0mje09a" targetRef="ogretim_uyesine_hata_geri_bildirimi_gonder" />
-    <bpmn:userTask id="ogretim_uyesine_hata_geri_bildirimi_gonder" name="Öğretim Üyesine Hata Geri Bildirimi Gönder">
+    <bpmn:userTask id="ogretim_uyesine_hata_geri_bildirimi_gonder" name="Öğretim Üyesine Hata Geri Bildirimi Gönder" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.ogretim_uyesine_hata_geri_bildirimi_gonder">
       <bpmn:incoming>SequenceFlow_1uceux9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1pzrgbx</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_1pzrgbx" sourceRef="ogretim_uyesine_hata_geri_bildirimi_gonder" targetRef="hata_mesaji_goster" />
-    <bpmn:userTask id="hata_mesaji_goster" name="Hata Mesajı Göster">
+    <bpmn:userTask id="hata_mesaji_goster" name="Hata Mesajı Göster" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.hata_mesaji_goster">
       <bpmn:incoming>SequenceFlow_1pzrgbx</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_100fq0y</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_100fq0y" sourceRef="hata_mesaji_goster" targetRef="proje_bilgisi_gir" />
     <bpmn:sequenceFlow id="SequenceFlow_1540gge" sourceRef="komisyona_sun" targetRef="proje_kontrol_komisyon" />
-    <bpmn:userTask id="proje_kontrol_komisyon" name="Proje Bilgilerini Kontrol Et">
+    <bpmn:userTask id="proje_kontrol_komisyon" name="Proje Bilgilerini Kontrol Et" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.proje_bilgilerini_kontrol_et_komisyon">
       <bpmn:incoming>SequenceFlow_1540gge</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rlmbv9</bpmn:outgoing>
     </bpmn:userTask>
@@ -80,17 +80,17 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0rlmbv9" sourceRef="proje_kontrol_komisyon" targetRef="ExclusiveGateway_1s8k8wa" />
     <bpmn:sequenceFlow id="SequenceFlow_1oi6zf9" sourceRef="ExclusiveGateway_1s8k8wa" targetRef="proje_reddet" />
-    <bpmn:serviceTask id="proje_reddet" name="Reddet">
+    <bpmn:serviceTask id="proje_reddet" name="Reddet" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.reddet">
       <bpmn:incoming>SequenceFlow_1oi6zf9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_04qdwbq</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_11z0kmo" sourceRef="ExclusiveGateway_1s8k8wa" targetRef="proje_onayla" />
-    <bpmn:serviceTask id="proje_onayla" name="Onayla">
+    <bpmn:serviceTask id="proje_onayla" name="Onayla" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.onayla">
       <bpmn:incoming>SequenceFlow_11z0kmo</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0chf1gw</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_04qdwbq" sourceRef="proje_reddet" targetRef="proje_sonucu_gonder" />
-    <bpmn:serviceTask id="proje_sonucu_gonder" name="Geri Bildirim Gönder">
+    <bpmn:serviceTask id="proje_sonucu_gonder" name="Geri Bildirim Gönder" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.geri_bildirim_gonder">
       <bpmn:incoming>SequenceFlow_04qdwbq</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0chf1gw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1unrmal</bpmn:outgoing>
@@ -101,7 +101,7 @@
     <bpmn:endEvent id="EndEvent_0r1dr0q">
       <bpmn:incoming>SequenceFlow_1u4io94</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="proje_sonucu_goster" name="Proje Sonucu Göster">
+    <bpmn:userTask id="proje_sonucu_goster" name="Proje Sonucu Göster" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.proje_sonucu_goster">
       <bpmn:incoming>SequenceFlow_1unrmal</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1u4io94</bpmn:outgoing>
     </bpmn:userTask>
