@@ -223,7 +223,7 @@ class IstenAyrilma(CrudView):
                     inv.blocking_save(query_dict={'role_id': yeni_rol.key})
 
         else:
-            silinecek_roller = personel.user.role_set
+            silinecek_roller = [rs.role for rs in personel.user.role_set]
 
         if len(silinecek_roller) > 0:
             for r in silinecek_roller:

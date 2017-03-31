@@ -63,7 +63,7 @@ class TestCase(BaseTestCase):
         time.sleep(3)
 
         ogrenci_sinav_list = DegerlendirmeNot.objects.set_params(
-            rows=1, sort='sinav_tarihi desc').filter(ogrenci=ogrenci_program.ogrenci)
+            rows=1).order_by('-sinav_tarihi').filter(ogrenci=ogrenci_program.ogrenci)
         son_sinav_tarihi = ogrenci_sinav_list[0].sinav_tarihi
         program_secim = Program.objects.get(program_id)
         ogrenci_program = OgrenciProgram.objects.get(ogrenci=ogrenci, program=program_secim)
