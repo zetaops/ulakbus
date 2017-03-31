@@ -14,13 +14,9 @@ class TestCase(BaseTestCase):
     def __init__(self):
         user_key = 'iG4mvjQrfkvTDvM6Jk56X5ILoJ'
         user = User.objects.get(user_key)
-        user_info = {'username':'ulakbus',
-                     'password':'123',
-                     'e_mail':'ulakbus_deneme_maili@ulakbus_deneme.com'}
-
-        for k, v in user_info.items():
-            if getattr(user, k) != v:
-                setattr(user, k, v)
+        user.username = 'ulakbus'
+        user.password = '123'
+        user.e_mail = 'ulakbus_deneme_maili@ulakbus_deneme.com'
         user.save()
 
     def test_aktivasyon_link_yollama(self):
