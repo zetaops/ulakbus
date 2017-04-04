@@ -65,10 +65,11 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
-from ulakbus.models import Personel, HitapSebep, HizmetKayitlari, Permission
+from ulakbus.models import Personel, HitapSebep, HizmetKayitlari, Permission, User
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
 from ulakbus.lib.view_helpers import prepare_choices_for_model
+from pyoko.db.adapter.db_riak import BlockSave
 import datetime
 
 
@@ -736,10 +737,10 @@ class HizmetCetveliForm(JsonForm):
         title = _(u'Kanunla Verilen Terfi Hizmet Cetveli Girişi')
 
     terfi_sebep = fields.String(_(u'Hitap Sebep'), choices=prepare_choices_for_model(HitapSebep))
-    baslama_tarihi = fields.Date(_(u'Başlama Tarihi'),required=False)
-    bitis_tarihi = fields.Date(_(u'Bitis Tarihi'),required=False)
+    baslama_tarihi = fields.Date(_(u'Başlama Tarihi'))
+    bitis_tarihi = fields.Date(_(u'Bitis Tarihi'))
     kurum_onay_tarihi = fields.Date(_(u'Kurum Onay Tarihi'))
-    kaydet = fields.Button(_(u'Kaydet'), cmd="kayit_tamamla", style="btn-success")
+    kaydet = fields.Button(_(u'Kaydet'), cmd="hizmet_cetveli_kayit", style="btn-success")
     iptal = fields.Button(_(u'İptal'), cmd="iptal")
 
 class KanunlaVerilenTerfi(CrudView):
@@ -797,17 +798,12 @@ class KanunlaVerilenTerfi(CrudView):
         Returns:
 
         """
-        self.current.task_data["hizmet_cetveli"]["baslama_tarihi"] = \
-            self.current.input["form"]["baslama_tarihi"]
-
-        self.current.task_data["hizmet_cetveli"]["bitis_tarihi"] = \
-            self.current.input["form"]["bitis_tarihi"]
-
-        self.current.task_data["hizmet_cetveli"]["terfi_sebep"] = \
-            self.current.input["form"]["terfi_sebep"]
-
-        self.current.task_data["hizmet_cetveli"]["kurum_onay_tarihi"] = \
-            self.current.input["kurum_onay_tarihi"]
+        self.current.task_data["hizmet_cetveli"] = {
+            "baslama_tarihi": self.current.input["form"]["baslama_tarihi"],
+            "bitis_tarihi": self.current.input["form"]["bitis_tarihi"],
+            "terfi_sebep": self.current.input["form"]["terfi_sebep"],
+            "kurum_onay_tarihi": self.current.input["form"]["kurum_onay_tarihi"]
+        }
 
     def permission_belirle(self):
         """
@@ -819,19 +815,25 @@ class KanunlaVerilenTerfi(CrudView):
 
         """
         personel = Personel.objects.get(self.current.task_data["personel_id"])
+
+        # Terfi wf yi başlatan personel
         self.current.task_data["personel_user_id"] = self.current.user.key
+
+        # Terfisi yapılacak personel
+        self.current.task_data["terfi_user_id"] = personel.user.key
+
         if personel.personel_turu == 1:
             self.current.task_data["permission_name"] = "akademik_personel_terfi_onay"
         elif personel.personel_turu == 2:
             self.current.task_data["permission_name"] = "idari_personel_terfi_onay"
 
+        msg = {"type" : _(u"info"), "title": _(u'Onaya Gönderildi!'),
+               "msg": _(u'Terfi işlemi onaya gönderildi')}
+        self.current.output["msgbox"] = msg
+
         user_permission = Permission.objects.get(name=self.current.task_data["permission_name"])
         user_list = user_permission.get_permitted_users()
         self.current.invite_other_parties(user_list)
-        msg = {"title": _(u'Onaya Gönderildi!'),
-               "body": _(u'Terfi işlemi onaya gönderildi')}
-        self.current.output['msgbox'] = msg
-        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def iptal(self):
         """
@@ -883,10 +885,13 @@ class KanunlaVerilenTerfi(CrudView):
             tcno = personel.tckn,
             ad = personel.ad,
             soyad = personel.soyad,
+            kadro_derece = personel.kadro.derece,
             gorev_ayligi_derece = personel.gorev_ayligi_derece,
             gorev_ayligi_kademe = personel.gorev_ayligi_kademe,
             kazanilmis_hak_derece = personel.kazanilmis_hak_derece,
             kazanilmis_hak_kademe = personel.kazanilmis_hak_kademe,
+            emekli_muktesebat_derece = personel.emekli_muktesebat_derece,
+            emekli_muktesebat_kademe = personel.emekli_muktesebat_kademe,
             yeni_gorev_ayligi_derece = self.current.task_data["ga_derece"],
             yeni_gorev_ayligi_kademe = self.current.task_data["ga_kademe"],
             yeni_kazanilmis_hak_derece = self.current.task_data["kh_derece"],
@@ -899,8 +904,9 @@ class KanunlaVerilenTerfi(CrudView):
             "" : bilgiler
         }
 
-        _form = JsonForm(title="")
+        _form = JsonForm(title=" ")
         _form.terfi_kaydet = fields.Button("Kaydet", cmd="terfi_kaydet")
+        _form.iptal = fields.Button("İptal", cmd="terfi_iptal")
 
         self.form_out(_form)
 
@@ -918,21 +924,21 @@ class KanunlaVerilenTerfi(CrudView):
 
         """
 
-        personel = Personel.objects.get(self.current.task_data["personel_id"])
-        personel.gorev_ayligi_derece = self.current.task_data["ga_derece"]
-        personel.gorev_ayligi_kademe = self.current.task_data["ga_kademe"]
-        personel.kazanilmis_hak_derece = self.current.task_data["kh_derece"]
-        personel.kazanilmis_hak_kademe = self.current.task_data["kh_kademe"]
-        personel.emekli_muktesebat_derece = self.current.task_data["em_derece"]
-        personel.emekli_muktesebat_kademe = self.current.task_data["em_kademe"]
-
-        with personel.save():
-            hitap_sebep = HitapSebep.objects.get(self.current.input["form"]["terfi_sebep"])
+        with BlockSave(Personel):
+            personel = Personel.objects.get(self.current.task_data["personel_id"])
+            personel.gorev_ayligi_derece = self.current.task_data["ga_derece"]
+            personel.gorev_ayligi_kademe = self.current.task_data["ga_kademe"]
+            personel.kazanilmis_hak_derece = self.current.task_data["kh_derece"]
+            personel.kazanilmis_hak_kademe = self.current.task_data["kh_kademe"]
+            personel.emekli_muktesebat_derece = self.current.task_data["em_derece"]
+            personel.emekli_muktesebat_kademe = self.current.task_data["em_kademe"]
+            personel.save()
+            hitap_sebep = HitapSebep.objects.get(self.current.task_data["hizmet_cetveli"]["terfi_sebep"])
             hizmet_kayit = HizmetKayitlari(
                 tckn=personel.tckn,
                 baslama_tarihi=self.current.task_data["hizmet_cetveli"]["baslama_tarihi"],
                 bitis_tarihi=self.current.task_data["hizmet_cetveli"]["bitis_tarihi"],
-                gorev="%s %s" % (personel.birim.name, personel.kadro.name),
+                gorev="%s %s" % (personel.birim.name, personel.kadro.get_unvan_display()),
                 unvan_kod=personel.kadro.unvan,
                 hizmet_sinifi=personel.atama.hizmet_sinifi,
                 kadro_derece=personel.kadro.derece,
@@ -941,11 +947,11 @@ class KanunlaVerilenTerfi(CrudView):
                 odeme_ekgosterge=personel.gorev_ayligi_ekgosterge,
                 kazanilmis_hak_ayligi_derece=personel.kazanilmis_hak_derece,
                 kazanilmis_hak_ayligi_kademe=personel.kazanilmis_hak_kademe,
-                kazanilmis_hak_ayligi_ekgosterge=personel.kazanilmis_hak_ekgosterge,
+                kazanilmis_hak_ayligi_ekgosterge=personel.kazaniwwlmis_hak_ekgosterge,
                 emekli_derece=personel.emekli_muktesebat_derece,
                 emekli_kademe=personel.emekli_muktesebat_kademe,
                 emekli_ekgosterge=personel.emekli_muktesebat_ekgosterge,
-                sebep_kod=personel.sebep_no,
+                sebep_kod=hitap_sebep.sebep_no,
                 kurum_onay_tarihi=self.current.task_data["hizmet_cetveli"]["kurum_onay_tarihi"],
                 personel=personel,
                 model_key=personel.key
@@ -966,6 +972,10 @@ class KanunlaVerilenTerfi(CrudView):
         """
         self.current.task_data["terfi_onay_flag"] = False
 
+        msg = {"type": _(u"info"), "title": _(u'Onaya Gönderildi!'),
+               "msg": _(u'Terfi işlemi iptal edildi')}
+        self.current.output["msgbox"] = msg
+
     def personel_dairesi_bilgilendir(self):
         """
             Terfi işleminin sonucuna yönelik personel daire başkanlığından ilgili
@@ -982,6 +992,7 @@ class KanunlaVerilenTerfi(CrudView):
         onay_makami = "Rektörlük" if personel.personel_turu == 1 else "Genel Sekreterlik"
         self.current.task_data["onay_makami"] = onay_makami
         personel_dairesi_mesaj = ""
+        user = User.objects.get(self.current.task_data["personel_user_id"])
 
         if self.current.task_data["terfi_onay_flag"] is True:
             personel_dairesi_mesaj = """
@@ -1005,7 +1016,12 @@ class KanunlaVerilenTerfi(CrudView):
                 emekli_muktesebat_kademe=self.current.task_data["em_kademe"],
                 onay_makami=onay_makami
             )
-            personel.user.send_notification(title=_(u"Terfi İşlemi Gerçekleştirildi"), message=personel_dairesi_mesaj)
+
+            user.send_notification(
+                title=_(u"Terfi İşlemi Gerçekleştirildi"),
+                message=personel_dairesi_mesaj,
+                sender=self.current.user
+            )
         else:
             personel_dairesi_mesaj = """
                 T.C. No : {tcno}
@@ -1016,7 +1032,11 @@ class KanunlaVerilenTerfi(CrudView):
                 onay_makami = onay_makami
             )
 
-            personel.user.send_notification(title=_(u"Terfi İşlemi Onaylanmadı"), message=personel_dairesi_mesaj)
+            user.send_notification(
+                title=_(u"Terfi İşlemi Onaylanmadı"),
+                message=personel_dairesi_mesaj,
+                sender=self.current.user
+            )
 
     def ilgili_personel_bilgilendir(self):
         """
@@ -1027,21 +1047,29 @@ class KanunlaVerilenTerfi(CrudView):
         Returns:
 
         """
-        personel = Personel.objects.get(self.current.task_data["personel_user_id"])
+        user = User.objects.get(self.current.task_data["terfi_user_id"])
         if self.current.task_data["terfi_onay_flag"] is True:
             personel_mesaj = """
                 Terfiniz {onay_makami} tarafından onaylandı.
             """.format(
                 onay_makami = self.current.task_data["onay_makami"]
             )
-            personel.user.send_notification(title=_(u"Terfi Gerçekleştirildi"), message=personel_mesaj)
+            user.send_notification(
+                title=_(u"Terfi Gerçekleştirildi"),
+                message=personel_mesaj,
+                sender=self.current.user
+            )
         else:
             personel_mesaj="""
                 Terfiniz {onay_makami} tarafından onaylanmadı.
             """.format(
                 onay_makami=self.current.task_data["onay_makami"]
             )
-            personel.user.send_notification(title=_(u"Terfi Onaylanmadı"), message=personel_mesaj)
+            user.send_notification(
+                title=_(u"Terfi Onaylanmadı"),
+                message=personel_mesaj,
+                sender=self.current.user
+            )
 
         msg = {"title": _(u'Personel Terfi Islemi Onaylandi!'),
                "body": _(u'Onay Belgesi icin Personel Islerine Gonderildi.')}
