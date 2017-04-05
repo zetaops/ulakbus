@@ -584,8 +584,7 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(
-            sort='goreve_baslama_tarihi desc').filter(personel=personel)[0]
+        return cls.objects.order_by('-goreve_baslama_tarihi').filter(personel=personel)[0]
 
     @classmethod
     def personel_ilk_atama(cls, personel):
@@ -597,8 +596,7 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(
-            sort='goreve_baslama_tarihi asc').filter(personel=personel)[0]
+        return cls.objects.order_by('goreve_baslama_tarihi').filter(personel=personel)[0]
 
     def post_save(self):
         # Personel modeline arama için eklenen kadro_derece set edilecek
