@@ -63,7 +63,11 @@ derece_max_kademe = {
     6: 28,
     7: 31,
     8: 34,
-    9: 37
+    9: 37,
+    10: 40,
+    11: 43,
+    12: 46,
+    13: 49
 }
 
 
@@ -141,8 +145,9 @@ def terfi_tikanma_kontrol(personel):
         return ga, kh, em
     else:
         from ulakbus.models import HizmetOkul
-        personel_okul = HizmetOkul.objects.set_params(
-            sort='mezuniyet_tarihi desc').filter(tckn=personel.tckn).exclude(ogrenim_durumu=None)
+        personel_okul = HizmetOkul.objects.order_by('mezuniyet_tarihi').filter(
+            tckn=personel.tckn
+        ).exclude(ogrenim_durumu=None)
 
         son_mezun_olunan_okul = personel_okul[0]
 
