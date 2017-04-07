@@ -58,12 +58,15 @@ class BAPProje(Model):
 
     # Başvuruda doldurulacak alanlar
     yurutucu = Personel()
+
     tur = BAPProjeTurleri()
-    # ay
-    sure = field.Integer(_(u"Süre"))
-    anahtar_kelimeler = field.String(_(u"Anahtar Kelimeler"))
+
+    ad = field.String(_(u"Proje Adı"))
+    sure = field.Integer(_(u"Süre(Ay Cinsinden Olmalıdır)"))
+    anahtar_kelimeler = field.String(_(u"Anahtar Kelimeler(Virgülle Ayrılmış Şekilde Olmalıdır)"))
     teklif_edilen_baslama_tarihi = field.Date(_(u"Teklif Edilen Başlama Tarihi"))
     teklif_edilen_butce = field.Float(_(u"Teklif Edilen Bütçe"))
+
     konu_ve_kapsam = field.Text(_(u"Konu ve Kapsam"))
     literatur_ozeti = field.Text(_(u"Literatür Özeti"))
     ozgun_deger = field.Text(_(u"Özgün Değer"))
@@ -71,6 +74,13 @@ class BAPProje(Model):
     yontem = field.Text(_(u"Yöntem"))
     basari_olcutleri = field.Text(_(u"Başarı Ölçütleri"))
     b_plani = field.Text(_(u"B Planı"))
+
+    class ProjeBelgeleri(ListNode):
+        class Meta:
+            verbose_name = __(u"Proje Belgesi")
+            verbose_name_plural = __(u"Proje Belgeleri")
+
+        belge = field.File(_(u"Belge"), random_name=True)
 
     class ArastirmaOlanaklari(ListNode):
         class Meta:
@@ -113,10 +123,10 @@ class BAPProje(Model):
         tur = field.String(_(u"Destek Türü"))
         destek_miktari = field.String(_(u"Destek Miktarı"))
         verildigi_tarih = field.Date(_(u"Verildiği Tarih"))
-        # ay
-        sure = field.Integer(_(u"Süresi"))
+        sure = field.Integer(_(u"Süresi(Ay CinsindenBA)"))
         destek_belgesi = field.String(_(u"Destek Belgesi"))
 
+    # Koordinatörlük tarafından atanacak
     class BAPHakem(ListNode):
         class Meta:
             verbose_name = __(u"Hakem")
@@ -124,18 +134,8 @@ class BAPProje(Model):
 
         ad = field.String(_(u"Ad"))
         soyad = field.String(_(u"Soyad"))
+        # todo hakemler sorulacak
         birim = field.String(_(u"Birim"))
-
-    # Proje Yürütücüsü Tecrübesi
-    @lazy_property
-    def yurutucu_tecrubesi(self):
-        simdiki_tarih = datetime.date.today()
-        faaliyetler = AkademikFaaliyet.objects.filter(
-            baslama__lte=simdiki_tarih,
-            bitis__gte=simdiki_tarih,
-            personel=self.yurutucu
-        )
-        return faaliyetler if faaliyetler else None
 
     @lazy_property
     def yurutucu_diger_projeler(self):
