@@ -87,3 +87,33 @@ class BAPTakvim(Model):
 
     _takvim_turu.title = __(u"Takvim Türü")
     _tarih.title = __(u"Tarih")
+
+
+class BAPIs(Model):
+    class Meta:
+        verbose_name = __(u"Bap İş Türü")
+        verbose_name_plural = __(u"Bap İş Türleri")
+
+    ad = field.String(__(u"Bap İş"))
+    baslama_tarihi = field.Date(__(u"Başlama Tarihi"))
+    bitis_tarihi = field.Date(__(u"Bitiş Tarihi"))
+
+    def __unicode__(self):
+        return "%s" % self.ad
+
+
+class BAPIsPaketi(Model):
+    class Meta:
+        verbose_name = __(u"Bap İş Paketi")
+        verbose_name_plural = __(u"Bap İş Paketleri")
+
+    ad = field.String(__(u"İş Paketinin Adı"))
+    baslama_tarihi = field.Date(__(u"Başlama Tarihi"))
+    bitis_tarihi = field.Date(__(u"Bitiş Tarihi"))
+
+    class Isler(ListNode):
+        isler = BAPIs()
+
+    def __unicode__(self):
+        return "%s" % self.ad
+
