@@ -9,9 +9,7 @@ from zengine.lib.translation import gettext_lazy as __, gettext as _
 from ulakbus.models.form import Form
 from ulakbus.models import Room, Personel
 from ulakbus.models.demirbas import Demirbas
-from ulakbus.models.akademik_faaliyet import AkademikFaaliyet
 from pyoko.lib.utils import lazy_property
-import datetime
 
 
 class BAPProjeTurleri(Model):
@@ -50,6 +48,8 @@ class BAPProjeTurleri(Model):
 
 
 class BAPProje(Model):
+
+    durum = field.Integer(_(u"Durum"), choices='bap_proje_durum')
 
     # Komisyon kararıyla doldurulacak alanlar
     proje_no = field.String(_(u"Proje No"))
@@ -137,6 +137,17 @@ class BAPProje(Model):
         # todo hakemler sorulacak
         birim = field.String(_(u"Birim"))
 
+    class ProjeIslemGecmisi(ListNode):
+        class Meta:
+            verbose_name = __(u"İşlem Geçmişi")
+            verbose_name_plural = __(u"İşlem Geçmişi")
+        eylem = field.String(_(u"Eylem"))
+        aciklama = field.String(_(u"Açıklama"))
+        tarih = field.Date(_(u"Tarih"))
+
     @lazy_property
     def yurutucu_diger_projeler(self):
         return self.objects.filter(yurutucu=self.yurutucu)
+
+    def __unicode__(self):
+        return "%s: %s" % (self.proje_no, self.ad)

@@ -131,10 +131,10 @@ class UniversiteDisiDestekForm(JsonForm):
 
         kurulus = fields.String(_(u"Destekleyen Kurulus"), readonly=True)
         tur = fields.String(_(u"Destek Türü"), readonly=True)
-        destek_miktari = fields.String(_(u"Destek Miktarı"), readonly=True)
+        destek_miktari = fields.Float(_(u"Destek Miktarı"), readonly=True)
         verildigi_tarih = fields.Date(_(u"Verildiği Tarih"), readonly=True)
         sure = fields.Integer(_(u"Süresi(Ay Cinsinden)"), readonly=True)
-        destek_belgesi = fields.String(_(u"Destek Belgesi"), readonly=True)
+        destek_belgesi = fields.File(_(u"Destek Belgesi"), random_name=True)
 
     ileri = fields.Button(_(u"İleri"))
 
@@ -170,6 +170,14 @@ class ProjeDetayForm(JsonForm):
         include = ['konu_ve_kapsam', 'literatur_ozeti', 'ozgun_deger',
                    'hedef_ve_amac', 'yontem', 'basari_olcutleri', 'b_plani']
         title = _(u"Proje Detayları")
+
+    proje_belgeleri = fields.Button(_(u"Proje Belgeleri"))
+
+
+class ProjeBelgeForm(JsonForm):
+    class Meta:
+        include = ['ProjeBelgeleri']
+        title = _(u"Proje Belgeleri")
 
     arastirma_olanaklari = fields.Button(_(u"Araştırma Olanakları"))
 
@@ -212,12 +220,23 @@ class ProjeBasvuru(CrudView):
                 self.current.task_data['hedef_proje'][k] = v
         self.form_out(ProjeDetayForm(self.object, current=self.current))
 
-    def arastirma_olanagi_ekle(self):
-        if 'arastirma_olanaklari' in self.input['form'] and \
-                self.input['form']['arastirma_olanaklari'] == 1:
+    def proje_belgeleri(self):
+        if 'proje_belgeleri' in self.input['form'] and \
+                self.input['form']['proje_belgeleri'] == 1:
             for k, v in self.input['form'].items():
                 self.current.task_data['hedef_proje'][k] = v
             self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
+        form = ProjeBelgeForm(self.object, current=self.current)
+        self.form_out(form)
+
+    def arastirma_olanagi_ekle(self):
+        if 'ProjeBelgeleri' in self.input['form'] and self.input['form']['ProjeBelgeleri']:
+            # self.current.task_data['hedef_proje']['proje_belgeleri'] = self.input['form']['ProjeBelgeleri']
+            p = BAPProje()
+            for belge in self.input['form']['ProjeBelgeleri']:
+                p.ProjeBelgeleri(belge=belge)
+            self.current.task_data['hedef_proje_id'] = p.blocking_save().key
+
         form = ArastirmaOlanaklariForm()
         for olanak in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
             o = olanak.items()[0]
@@ -302,7 +321,13 @@ class ProjeBasvuru(CrudView):
 
         for proje in projeler:
             # todo ad, kurum, miktar
-            form.Proje(ad=proje.ad, kurum=None, miktar=None)
+            if proje.UniversiteDisiDestek:
+                kurum = proje.UniversiteDisiDestek[0].kurulus
+                miktar = proje.UniversiteDisiDestek[0].destek_miktari
+            else:
+                kurum = None
+                miktar = None
+            form.Proje(ad=proje.ad, kurum=kurum, miktar=miktar)
 
         self.form_out(form)
         self.current.output["meta"]["allow_actions"] = False
@@ -315,6 +340,11 @@ class ProjeBasvuru(CrudView):
         del p['tecrube']
         p['yurutucu_id'] = Personel.objects.get(user_id=self.current.user_id).key
         proje = BAPProje(**p)
+        if 'hedef_proje_id' in self.current.task_data:
+            proje_belgeleri = BAPProje.objects.get(
+                self.current.task_data['hedef_proje_id']).ProjeBelgeleri
+            proje.ProjeBelgeleri = proje_belgeleri
+            BAPProje.objects.get(self.current.task_data['hedef_proje_id']).delete()
         for olanak in p['arastirma_olanaklari']:
             if 'lab' in olanak:
                 proje.ArastirmaOlanaklari(lab_id=olanak['lab'], demirbas=None, personel=None)
@@ -330,6 +360,11 @@ class ProjeBasvuru(CrudView):
             proje.UniversiteDisiDestek(**destek)
         for uzman in p['universite_disi_uzmanlar']:
             proje.UniversiteDisiUzmanlar(**uzman)
+
+        proje.ProjeIslemGecmisi(eylem=_(u"Kayıt"),
+                                aciklama=_(u"Öğretim üyesi tarafından kaydedildi"),
+                                tarih=datetime.datetime.now())
+        proje.durum = 1
         self.current.task_data['proje_id'] = proje.blocking_save().key
 
     def proje_goster(self):
@@ -338,6 +373,10 @@ class ProjeBasvuru(CrudView):
         form = JsonForm()
         form.onay = fields.Button(_(u"Onaya Gönder"), cmd='onay')
         self.form_out(form)
+
+    def onaya_gonder(self):
+        # todo
+        pass
 
     def placeholder_method(self):
         form = JsonForm(title=_(u"PlaceHolder"))
