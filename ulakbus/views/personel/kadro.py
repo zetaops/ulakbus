@@ -438,8 +438,10 @@ class TerfiListe(CrudView):
 
             baslangic_tarihi = datetime.datetime.strptime(
                 self.current.input['form']['baslangic_tarihi'], '%d.%m.%Y').date()
+            baslangic_tarihi = baslangic_tarihi - relativedelta(years=1)
             bitis_tarihi = datetime.datetime.strptime(
                 self.current.input['form']['bitis_tarihi'], '%d.%m.%Y').date()
+            bitis_tarihi = bitis_tarihi - relativedelta(years=1)
             self.current.task_data["personeller"] = terfi_tarhine_gore_personel_listesi(
                 baslangic_tarihi=baslangic_tarihi, bitis_tarihi=bitis_tarihi,
                 personel_turu=personel_turu)
