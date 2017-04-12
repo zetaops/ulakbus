@@ -87,8 +87,13 @@ class CrudHitap(CrudView, object):
         service_name = un_camel(self.model_class.__name__, dash='-') + '-sync'
         service = TcknService(service_name=service_name,
                               payload={"tckn": str(self.current.task_data['personel_tckn']),
-                                       "kullanici_ad": "",
-                                       "kullanici_sifre": ""})
+                                       "meta": {'user': self.current.user_id,
+                                                'role': self.current.role_id},
+                                                'wf_name': self.current.workflow_name,
+                                       "index_fields": [('user', 'bin'), ('role', 'bin'),
+                                                        ('wf_name', 'bin')],
+                                       "kullanici_ad": '',
+                                       "kullanici_sifre": ''})
         service.zato_request()
 
     @view_method
@@ -101,7 +106,6 @@ class CrudHitap(CrudView, object):
         Hemen ardından zato servisi ile değişikliği bildirir.
 
         """
-
         self.set_form_data_to_object()
         obj_is_new = not self.object.is_in_db()
         action, self.object.sync = ('ekle', 4) if obj_is_new else ('guncelle', 2)

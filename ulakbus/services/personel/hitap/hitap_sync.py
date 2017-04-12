@@ -13,7 +13,7 @@ from zato.common import DATA_FORMAT
 from json import loads, dumps
 from six import iteritems
 from ulakbus.models.personel import Personel
-
+from datetime import datetime
 """HITAP Senkronizasyon Servisi
 
 Hitap senkronizasyon servislerinin kalıtılacağı
@@ -83,7 +83,7 @@ class HITAPSync(ZatoHitapService):
 
         return hitap_dict, has_error
 
-    def save_hitap_data_db(self, hitap_data, personel):
+    def save_hitap_data_db(self, hitap_data, personel,meta=None,index_fields=None):
         """
         Hitap servisinden gelen kayıt yerelde yoksa, sync değeri 1 (senkronize)
         olacak şekilde kaydı veritabanına kaydeder.
@@ -98,12 +98,13 @@ class HITAPSync(ZatoHitapService):
             setattr(obj, hk, hv)
 
         obj.sync = 1
+        obj.son_senkronize_tarihi = datetime.now()
         obj.personel = personel
-        obj.blocking_save()
+        obj.blocking_save(meta=meta,index_fields=index_fields)
         self.logger.info("hitaptaki kayit yerele kaydedildi. kayit no => "
                          + str(obj.kayit_no))
 
-    def delete_hitap_data_db(self, kayit_no):
+    def delete_hitap_data_db(self, kayit_no,meta=None,index_fields=None):
         """
         Yereldeki kayıt Hitap'ta yoksa ve sync değeri 1 (senkronize) görünüyorsa,
         Hitap'ta bu kayıt silinmiş demektir ve yerelde de silinir.
@@ -116,7 +117,7 @@ class HITAPSync(ZatoHitapService):
         obj = self.service_dict['model'].objects.get(kayit_no=kayit_no)
 
         if obj.sync == 1:
-            obj.blocking_delete()
+            obj.blocking_delete(meta=meta,index_fields=index_fields)
             self.logger.info("yereldeki sync kayit hitapta yok, kayit silindi."
                              "kayit no => " + str(obj.kayit_no))
 
@@ -143,6 +144,8 @@ class HITAPSync(ZatoHitapService):
         # get hitap data
         hitap_dict, has_error = self.get_hitap_dict(payload)
         personel = Personel.objects.get(tckn=payload['tckn'])
+        meta = payload['meta']
+        index_fields= payload['index_fields']
         if has_error:
             self.logger.info("Hitap kaydi sorgulama hatasi.")
             status = "error"
@@ -161,14 +164,17 @@ class HITAPSync(ZatoHitapService):
 
                     # if hitap data is not in db, create an object and save to db.
                     if hitap_kayit_no not in kayit_no_list:
-                        self.save_hitap_data_db(hitap_record, personel)
+                        self.save_hitap_data_db(hitap_record, personel,meta,index_fields)
                     # if in db, don't touch.
                     else:
+                        obj = self.service_dict['model'].objects.get(kayit_no = hitap_kayit_no)
+                        obj.son_senkronize_tarihi = datetime.now()
+                        obj.blocking_save(meta=meta,index_fields=index_fields)
                         kayit_no_list.remove(hitap_kayit_no)
 
                 # if there are still some in sync records which are not in hitap, delete them.
                 for model_kayit_no in kayit_no_list:
-                    self.delete_hitap_data_db(model_kayit_no)
+                    self.delete_hitap_data_db(model_kayit_no,meta,index_fields)
 
                 status = "ok"
                 result = "Synchronisation completed successfully."
