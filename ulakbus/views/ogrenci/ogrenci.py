@@ -427,8 +427,8 @@ class OgrenciMezuniyet(CrudView):
         try:
 
             ogrenci_program = OgrenciProgram.objects.get(self.input['form']['program'])
-            ogrenci_sinav_list = DegerlendirmeNot.objects.set_params(
-                rows=1, sort='sinav_tarihi desc').filter(ogrenci=ogrenci_program.ogrenci)
+            ogrenci_sinav_list = DegerlendirmeNot.objects.set_params(rows=1).order_by(
+                '-sinav_tarihi').filter(ogrenci=ogrenci_program.ogrenci)
             ogrenci_son_sinav = ogrenci_sinav_list[0]
             diploma_no = diploma_no_uret(ogrenci_program)
             ogrenci_program.diploma_no = diploma_no
