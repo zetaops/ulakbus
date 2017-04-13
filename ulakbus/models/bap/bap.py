@@ -10,6 +10,10 @@ from zengine.lib.translation import gettext_lazy as __
 from pyoko import Model, field, ListNode
 
 
+class BAPProje(Model):
+    pass
+
+
 class BAPProjeTurleri(Model):
     kod = field.String(__(u"Proje tür kodu"))
     ad = field.String(__(u"Proje türünün Adı"))
@@ -117,3 +121,30 @@ class BAPIsPaketi(Model):
     def __unicode__(self):
         return "%s" % self.ad
 
+
+class BAPButcePlani(Model):
+    class Meta:
+        verbose_name = __(u"Bap Bütçe Planı")
+        verbose_name_plural = __(u"Bap Bütçe Planları")
+        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet', 'toplam_fiyat']
+
+    muhasebe_kod = field.String(__(u"Muhasebe Kod"),
+                                choices='analitik_butce_dorduncu_duzey_gider_kodlari',
+                                default="03.2.6.90")
+    kod_adi = field.String(__(u"Kod Adı"))
+    ad = field.String(__(u"Alınacak Malzemenin Adı"))
+    birim_fiyat = field.Float(__(u"Birim Fiyat"))
+    adet = field.Integer(__(u"Adet"))
+    toplam_fiyat = field.Integer(__(u"Toplam Fiyat"))
+    gerekce = field.Text(__(u"Gerekçe"))
+    gerekce_tarihi = field.Date(__(u"Gerekçe Tarihi"))
+    ilgili_proje = BAPProje(__(u"Bağlı olduğu Proje"))
+    onay_tarihi = field.Date(__(u"Onay Tarihi"))
+    
+    def __unicode__(self):
+        return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
+
+    def _muhasebe_kod(self):
+        return self.muhasebe_kod
+
+    _muhasebe_kod.title = __(u"Muhasebe Kodu")
