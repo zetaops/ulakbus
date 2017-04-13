@@ -64,7 +64,7 @@ class Search(SysView):
                 if not objects:
                     objects = self.SEARCH_ON.objects.search_on(
                         'ad', contains=" ".join(q)).filter(**self.query).values('ad', 'soyad',
-                                                                                'tckn', 'key')
+                              fisi_gelen_personel_listesi/                                                  'tckn', 'key')
 
         self.output['results'] = [("{ad} {soyad}".format(**o), o['tckn'], o['key'], '') for o in
                                   objects]
