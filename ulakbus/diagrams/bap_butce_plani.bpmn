@@ -7,7 +7,7 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_0wy98uy</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="Task_0a25jnb" name="Bütçe Planını Listele" camunda:assignee="bap.bap_butce_plani.BapButcePlani.list">
+    <bpmn:userTask id="butce_plani_listele" name="Bütçe Planını Listele" camunda:assignee="bap.bap_butce_plani.BapButcePlani.list">
       <bpmn:incoming>SequenceFlow_0wy98uy</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1uc7bc9</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1e69x36</bpmn:incoming>
@@ -39,17 +39,17 @@
       <bpmn:incoming>SequenceFlow_0j9b801</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_091jw58</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0wy98uy" sourceRef="StartEvent_1" targetRef="Task_0a25jnb" />
-    <bpmn:sequenceFlow id="SequenceFlow_1uc7bc9" sourceRef="ExclusiveGateway_0r2coc8" targetRef="Task_0a25jnb">
+    <bpmn:sequenceFlow id="SequenceFlow_0wy98uy" sourceRef="StartEvent_1" targetRef="butce_plani_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_1uc7bc9" sourceRef="ExclusiveGateway_0r2coc8" targetRef="butce_plani_listele">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1e69x36" sourceRef="butce_plani_kaydet" targetRef="Task_0a25jnb" />
-    <bpmn:sequenceFlow id="SequenceFlow_091jw58" sourceRef="butce_plani_sil" targetRef="Task_0a25jnb" />
-    <bpmn:sequenceFlow id="SequenceFlow_00bl89g" sourceRef="ExclusiveGateway_0fenb86" targetRef="Task_0a25jnb">
+    <bpmn:sequenceFlow id="SequenceFlow_1e69x36" sourceRef="butce_plani_kaydet" targetRef="butce_plani_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_091jw58" sourceRef="butce_plani_sil" targetRef="butce_plani_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_00bl89g" sourceRef="ExclusiveGateway_0fenb86" targetRef="butce_plani_listele">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='list']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_17ii4pf" sourceRef="butce_plani_goruntule" targetRef="Task_0a25jnb" />
-    <bpmn:sequenceFlow id="SequenceFlow_0fl4a0s" sourceRef="Task_0a25jnb" targetRef="ExclusiveGateway_1tzizw1" />
+    <bpmn:sequenceFlow id="SequenceFlow_17ii4pf" sourceRef="butce_plani_goruntule" targetRef="butce_plani_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_0fl4a0s" sourceRef="butce_plani_listele" targetRef="ExclusiveGateway_1tzizw1" />
     <bpmn:sequenceFlow id="SequenceFlow_0adhqd0" sourceRef="ExclusiveGateway_1tzizw1" targetRef="butce_kalemi_sec">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='add_edit_form']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -102,7 +102,7 @@
           <dc:Bounds x="154" y="354" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_0srmce2_di" bpmnElement="Task_0a25jnb">
+      <bpmndi:BPMNShape id="UserTask_0srmce2_di" bpmnElement="butce_plani_listele">
         <dc:Bounds x="246" y="339" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_1tzizw1_di" bpmnElement="ExclusiveGateway_1tzizw1" isMarkerVisible="true">

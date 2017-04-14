@@ -59,7 +59,7 @@ class BAPTakvim(Model):
             verbose_name = __(u"Proje Türü")
             verbose_name_plural = __(u"Proje Türleri")
 
-        proje_turu = BAPProjeTurleri()
+        proje_turu = field.String(__(u"Proje Türleri"))
 
     class OnemliTarihler(ListNode):
         class Meta:
@@ -79,14 +79,14 @@ class BAPTakvim(Model):
     def _takvim_turu(self):
         if self.ProjeTuru:
             return ''.join(["""
-            %s\n""" % proje.proje_turu.ad for proje in self.ProjeTuru])
+            %s\n""" % proje.proje_turu for proje in self.ProjeTuru])
         else:
             return """
             Genel Takvim"""
 
     def _tarih(self):
         return ''.join(["""
-        %s - %s\n""" % (tarih.baslangic_tarihi, tarih.bitis_tarihi) for tarih in
+        %s / %s\n""" % (tarih.baslangic_tarihi, tarih.bitis_tarihi) for tarih in
                         self.OnemliTarihler])
 
     _takvim_turu.title = __(u"Takvim Türü")

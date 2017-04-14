@@ -36,7 +36,7 @@ class TestCase(BaseTestCase):
                  'bitis_tarihi': '2017-06-14T21:00:00.000Z'}
             ],
             'ProjeTuru': [
-                {'proje_turu': 'Kvu9MRWA52accYwKfWKegtZr2BA'},
+                {'proje_turu': 'Test Proje Turu'},
             ],
             'donem': 2,
             'takvim_aciklama': 'Test Proje Tur Takvim Ekle 2. Donem',
