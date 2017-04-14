@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project id="dd044939-9de5-475b-aa52-783e55ad40ee" activeEnvironment="Default" name="HITAP" resourceRoot="${projectDir}" soapui-version="5.2.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="735225ee-bb18-4444-9396-71b5d4ea2f7c" wsaVersion="NONE" name="Hitap4cWEBBeanSoapBinding" type="wsdl" bindingName="{http://servis.hizmetTakipProje.sgk.gov.tr}Hitap4cWEBBeanSoapBinding" soapVersion="1_1" anonymous="optional" definition="https://hitap.sgk.gov.tr/WS_HizmetTakip/services/Hitap4cWEBBean/wsdl/Hitap4cWEBBean.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="https://hitap.sgk.gov.tr/WS_HizmetTakip/services/Hitap4cWEBBean/wsdl/Hitap4cWEBBean.wsdl"><con:part><con:url>https://hitap.sgk.gov.tr/WS_HizmetTakip/services/Hitap4cWEBBean/wsdl/Hitap4cWEBBean.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://servis.hizmetTakipProje.sgk.gov.tr" xmlns:impl="http://servis.hizmetTakipProje.sgk.gov.tr" xmlns:intf="http://servis.hizmetTakipProje.sgk.gov.tr" xmlns:tns2="http://bean.servis.hizmetTakipProje.sgk.gov.tr" xmlns:tns3="http://bean.model.hizmetTakipProje.sgk.gov.tr" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsi="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<con:soapui-project id="dd044939-9de5-475b-aa52-783e55ad40ee" activeEnvironment="Default" name="HITAP" resourceRoot="${projectDir}" soapui-version="5.3.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="735225ee-bb18-4444-9396-71b5d4ea2f7c" wsaVersion="NONE" name="Hitap4cWEBBeanSoapBinding" type="wsdl" bindingName="{http://servis.hizmetTakipProje.sgk.gov.tr}Hitap4cWEBBeanSoapBinding" soapVersion="1_1" anonymous="optional" definition="https://hitap.sgk.gov.tr/WS_HizmetTakip/services/Hitap4cWEBBean/wsdl/Hitap4cWEBBean.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="https://hitap.sgk.gov.tr/WS_HizmetTakip/services/Hitap4cWEBBean/wsdl/Hitap4cWEBBean.wsdl"><con:part><con:url>https://hitap.sgk.gov.tr/WS_HizmetTakip/services/Hitap4cWEBBean/wsdl/Hitap4cWEBBean.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://servis.hizmetTakipProje.sgk.gov.tr" xmlns:impl="http://servis.hizmetTakipProje.sgk.gov.tr" xmlns:intf="http://servis.hizmetTakipProje.sgk.gov.tr" xmlns:tns2="http://bean.servis.hizmetTakipProje.sgk.gov.tr" xmlns:tns3="http://bean.model.hizmetTakipProje.sgk.gov.tr" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsi="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:types>
     <schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://servis.hizmetTakipProje.sgk.gov.tr" xmlns="http://www.w3.org/2001/XMLSchema">
       <import namespace="http://bean.model.hizmetTakipProje.sgk.gov.tr"/>
@@ -4149,30 +4149,30 @@
             <!--Zero or more repetitions:-->
             <HizmetEgitimKursServisBean>
                <kayitNo>1214</kayitNo>
-               <kursNevi></kursNevi>
-               <kursOgrenimSuresi></kursOgrenimSuresi>
+               <kursNevi>5</kursNevi>
+               <kursOgrenimSuresi>2</kursOgrenimSuresi>
                <mezuniyetTarihi>0001-01-01</mezuniyetTarihi>
-               <ogrenimYeri></ogrenimYeri>
+               <ogrenimYeri>Bahcesehir</ogrenimYeri>
                <okulAd>2</okulAd>
                <bolumAd>3</bolumAd>
                <tckn>98548836369</tckn>
                <denklikTarihi>0001-01-01</denklikTarihi>
-               <denklikBolum></denklikBolum>
-               <denklikOkul></denklikOkul>
+               <denklikBolum>Biyometri</denklikBolum>
+               <denklikOkul>Necmettin Erbakan Uni</denklikOkul>
                <kurumOnayTarihi>0001-01-01</kurumOnayTarihi>
             </HizmetEgitimKursServisBean>            
             <HizmetEgitimKursServisBean>
                <kayitNo>12</kayitNo>
-               <kursNevi></kursNevi>
-               <kursOgrenimSuresi></kursOgrenimSuresi>
+               <kursNevi>3</kursNevi>
+               <kursOgrenimSuresi>5</kursOgrenimSuresi>
                <mezuniyetTarihi>0001-01-01</mezuniyetTarihi>
-               <ogrenimYeri></ogrenimYeri>
+               <ogrenimYeri>Erciyes</ogrenimYeri>
                <okulAd>1</okulAd>
                <bolumAd>1</bolumAd>
                <tckn>98548836369</tckn>
                <denklikTarihi>0001-01-01</denklikTarihi>
-               <denklikBolum></denklikBolum>
-               <denklikOkul></denklikOkul>
+               <denklikBolum>BiyoMedikal</denklikBolum>
+               <denklikOkul>Selcuk Universitesi</denklikOkul>
                <kurumOnayTarihi>0001-01-01</kurumOnayTarihi>
             </HizmetEgitimKursServisBean>         
          </HizmetKursSorgulaReturn>

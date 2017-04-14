@@ -4,13 +4,12 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 import pytest
-
+import time
 from ulakbus.models import HizmetKurs, ObjectDoesNotExist
 from zengine.lib.test_utils import BaseTestCase
 from ulakbus.lib.cache import HitapPersonelGirisBilgileri
-import os
 
-os.environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
+
 class TestCase(BaseTestCase):
     def test_hitap_islemleri(self):
         personel_id = "OI3vq7rWIaTdSNUj4KwSBpeHMrc"
@@ -43,10 +42,9 @@ class TestCase(BaseTestCase):
                                 wf="hitap_islemleri")
         assert resp.json['forms']['schema']['title'] == "İşlem Seçeneği"
 
+        # Hitap ile senkronize etme ekranı kontrolleri
         resp = self.client.post(form={"hitap_bilgileri": 1}, cmd='hitap_bilgileri',
                                 model='HizmetKurs', wf='hitap_islemleri')
-        assert resp.json['forms']['form'][0][
-                   'helpvalue'] == "Veritabanında HİTAP ile senkronize kayıt bulunmamaktadır."
         assert resp.json['forms']['schema']['properties']['senkronize'][
                    'title'] == "Hitap İle Senkronize Et"
         assert resp.json['forms']['schema']['title'] == "Hitap Kurs Bilgileri"
@@ -57,7 +55,6 @@ class TestCase(BaseTestCase):
         assert resp.json['msgbox']['title'] == "İşlem Başarılı"
         kayit_sayisi = HizmetKurs.objects.filter(personel_id=personel_id, sync=1).count()
         assert len(resp.json['objects']) == kayit_sayisi + 1
-        assert "Son Senkronize Tarihi" in resp.json['forms']['form'][0]['helpvalue']
 
         self.prepare_client('/hitap_islemleri', username='ulakbus')
         self.client.post(id=personel_id, model="HizmetKurs", param="personel_id",
@@ -65,33 +62,52 @@ class TestCase(BaseTestCase):
         self.client.post(form={"degisiklik": 1}, cmd='degisiklik', model='HizmetKurs',
                          wf='hitap_islemleri')
 
-        sample_obj = HizmetKurs.objects.filter(personel_id=personel_id, sync=1)[0]
-        sample_obj_2 = HizmetKurs.objects.filter(personel_id=personel_id, sync=1)[1]
+        updated_obj = HizmetKurs.objects.filter(personel_id=personel_id, sync=1)[0]
+        main_key = updated_obj.key
+        update_kayit = updated_obj.kayit_no
+        updated_obj.key = ''
+        new_obj = updated_obj.save()
+        updated_obj = HizmetKurs.objects.get(main_key)
+        new_obj.sync = None
+        new_obj.kayit_no = None
+        new_obj.save()
+        deleted_obj = HizmetKurs.objects.filter(personel_id=personel_id, sync=1)[1]
 
-        # Kaydetme işlemi sync ataması kontrolü
-        # self.client.post(id=personel_id, model="HizmetKurs", param="personel_id",
-        #                  object_id=sample_obj.key, wf="hitap_islemleri", cmd="save")
-        #
-        # sample_obj.reload()
-        # assert sample_obj.sync == 4
-
-        # Silme işlemi sync ataması kontrolü
+        # Güncellenecek kayıt kaydetme işlemi sync ataması kontrolü
         self.client.post(id=personel_id, model="HizmetKurs", param="personel_id",
-                         object_id=sample_obj_2.key, wf="hitap_islemleri", cmd="delete")
+                         object_id=updated_obj.key, wf="hitap_islemleri", cmd="save")
 
-        sample_obj_2.reload()
-        assert sample_obj_2.sync == 3
+        updated_obj.reload()
+        assert updated_obj.sync == 4
+
+        # Yeni eklenecek kayıt kaydetme işlemi sync ataması kontrolü
+        self.client.post(id=personel_id, model="HizmetKurs", param="personel_id",
+                         object_id=new_obj.key, wf="hitap_islemleri", cmd="save")
+
+        new_obj.reload()
+        assert new_obj.sync == 2
+
+        # Silincek kayıt silme işlemi sync ataması kontrolü
+        self.client.post(id=personel_id, model="HizmetKurs", param="personel_id",
+                         object_id=deleted_obj.key, wf="hitap_islemleri", cmd="delete")
+
+        deleted_obj.reload()
+        assert deleted_obj.sync == 3
+        time.sleep(1)
 
         # Yapılan değişikliklerin hitapa gönderilmesi kontrolü
 
-        self.client.post(form={"gonder": 1},id=personel_id, model="HizmetKurs", param="personel_id",
+        self.client.post(form={"gonder": 1}, id=personel_id, model="HizmetKurs",
+                         param="personel_id",
                          wf="hitap_islemleri", cmd="gonder")
 
         with pytest.raises(ObjectDoesNotExist):
-            sample_obj_2.reload()
+            deleted_obj.reload()
 
+        new_obj.reload()
+        updated_obj.reload()
 
-
-
-
-
+        assert new_obj.kayit_no is not None
+        assert new_obj.sync == 1
+        assert updated_obj.kayit_no != update_kayit
+        assert updated_obj.sync == 1

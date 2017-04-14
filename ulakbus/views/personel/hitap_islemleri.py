@@ -5,6 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from collections import OrderedDict
 
+from pyoko.db.connection import log_bucket
 from pyoko.lib.utils import un_camel
 from ulakbus.lib.cache import HitapPersonelGirisBilgileri
 from ulakbus.models import Personel
@@ -13,7 +14,6 @@ from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy
 import six
 from ulakbus.lib.hitap import hitap_save, hitap_delete
-import datetime
 
 
 class ListFormHitap(JsonForm):
@@ -35,9 +35,13 @@ class HitapIslemleri(CrudView):
 
         self.meta = {'user': self.current.user_id,
                      'role': self.current.role_id,
-                     'wf_name': self.current.workflow_name}
+                     'wf_name': self.current.workflow_name,
+                     # 'model_name': self.model.__name__,
+                     'personel': self.personel_id
+                     }
 
-        self.index_fields = [('user', 'bin'), ('role', 'bin'), ('wf_name', 'bin')]
+        self.index_fields = [('user', 'bin'), ('role', 'bin'), ('wf_name', 'bin'),
+                             ('model_name', 'bin'), ('personel', 'bin')]
 
     def hitap_bilgileri_cache_kontrol(self):
         """
@@ -121,7 +125,7 @@ class HitapIslemleri(CrudView):
         """
         # self.set_form_data_to_object()
         self.object.sync = 4 if self.object.kayit_no else 2
-        self.object.save(meta=self.meta, index_fields=self.index_fields)
+        self.object.blocking_save(meta=self.meta, index_fields=self.index_fields)
 
     def sil(self):
         """
@@ -129,11 +133,10 @@ class HitapIslemleri(CrudView):
         kayıt anlamına gelen 3 yapılır.
         """
         if not self.object.kayit_no:
-            self.object.delete(meta=self.meta, index_fields=self.index_fields)
+            self.object.blocking_delete(meta=self.meta, index_fields=self.index_fields)
         else:
             self.object.sync = 3
-            self.object.save(meta=self.meta, index_fields=self.index_fields)
-        self.set_client_cmd('reload')
+            self.object.blocking_save(meta=self.meta, index_fields=self.index_fields)
 
     def hitaptaki_kaydi_getir(self):
         # Tekil hitaptaki kaydı getirip yereldeki datayı onunla değiştirecek servis yapılacaktır.
@@ -141,24 +144,25 @@ class HitapIslemleri(CrudView):
 
     def hitapa_gonder(self):
         """
-
+        Yerelden hitapa gönderilecek kayıtlar için servisler çağırılır. Silinecek olan servisler için
+        hitap_delete, yeni veya güncellenecek kayıtlar için hitap_save servisi çağırılır.
 
         """
 
         service_name = un_camel(self.model_class.__name__, dash='-')
-        # p = Personel.objects.get(self.personel_id)
-        # self.model_class(personel=p,sync =3,kayit_no='21',tckn = self.current.task_data['personel_tckn']).blocking_save()
 
-        kaydedilecekler = self.model.objects.filter(personel_id=self.personel_id, sync__in=[2, 4])
-        silinecekler = self.model.objects.filter(personel_id=self.personel_id, sync=3)
-        for kayit in kaydedilecekler:
+        # UI Grid ile beraber aşağı taraf düzeltilecektir. Test etmek için yazılmıştır.
+        hitap_kayitlar = self.model.objects.filter(personel_id=self.personel_id, sync__in=[2, 3, 4])
+        for kayit in hitap_kayitlar:
             kayit.tckn = str(self.current.task_data['personel_tckn'])
-            kayit.save()
-            hitap_save(kayit, service_name,self.meta,self.index_fields)
-        for kayit in silinecekler:
-            kayit.tckn = str(self.current.task_data['personel_tckn'])
-            kayit.save()
-            hitap_delete(kayit, service_name,self.meta,self.index_fields)
+            kayit.blocking_save()
+            hitap_delete(kayit, service_name, meta=self.meta,
+                         index_fields=self.index_fields) if kayit.sync == 3 else hitap_save(kayit,
+                                                                                            service_name,
+                                                                                            meta=self.meta,
+                                                                                            index_fields=self.index_fields)
+            if 'object_id' in self.current.task_data:
+                del self.current.task_data['object_id']
 
     def hitap_bilgileri_goster(self):
         """
@@ -170,12 +174,6 @@ class HitapIslemleri(CrudView):
         self.current.output["meta"]["allow_search"] = False
         model_adi = six.text_type(self.model.Meta.verbose_name)
         form = JsonForm(title=_(u"Hitap %s Bilgileri") % model_adi)
-        try:
-            son_senkronize_tarihi = self.list_by_personel_id(self.model.objects)[
-                0].son_senkronize_tarihi
-            form.help_text = _(u"Son Senkronize Tarihi: %s" % son_senkronize_tarihi)
-        except:
-            form.help_text = _(u"Veritabanında HİTAP ile senkronize kayıt bulunmamaktadır.")
 
         form.senkronize = fields.Button(_(u"Hitap İle Senkronize Et"), cmd='sync')
         self.form_out(form)

@@ -88,12 +88,15 @@ class CrudHitap(CrudView, object):
         service = TcknService(service_name=service_name,
                               payload={"tckn": str(self.current.task_data['personel_tckn']),
                                        "meta": {'user': self.current.user_id,
-                                                'role': self.current.role_id},
+                                                'role': self.current.role_id,
                                                 'wf_name': self.current.workflow_name,
+                                                'model_name': self.model_class.__name__,
+                                                'personel': self.current.task_data['personel_id']},
                                        "index_fields": [('user', 'bin'), ('role', 'bin'),
-                                                        ('wf_name', 'bin')],
-                                       "kullanici_ad": '',
-                                       "kullanici_sifre": ''})
+                                                        ('wf_name', 'bin'),('model_name','bin'),
+                                                        ('personel', 'bin')],
+                                       "kullanici_ad": "",
+                                       "kullanici_sifre": ""})
         service.zato_request()
 
     @view_method
@@ -106,6 +109,7 @@ class CrudHitap(CrudView, object):
         Hemen ardından zato servisi ile değişikliği bildirir.
 
         """
+
         self.set_form_data_to_object()
         obj_is_new = not self.object.is_in_db()
         action, self.object.sync = ('ekle', 4) if obj_is_new else ('guncelle', 2)

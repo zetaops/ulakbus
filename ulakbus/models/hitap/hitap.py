@@ -68,8 +68,8 @@ class HizmetKurs(Model):
     denklik_bolum = field.String(_(u"Denklik Bölüm"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"),format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"),format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -78,7 +78,7 @@ class HizmetKurs(Model):
         verbose_name_plural = _(u"Kurslar")
         list_fields = ['tckn', 'kayit_no', 'kurs_ogrenim_suresi', 'mezuniyet_tarihi', 'kurs_nevi',
                        'bolum_ad', 'okul_ad', 'ogrenim_yeri', 'denklik_tarihi', 'denklik_okulu',
-                       'denklik_bolum', 'kurum_onay_tarihi']
+                       'denklik_bolum', 'kurum_onay_tarihi','son_senkronize_tarihi']
         search_fields = ['tckn', 'okul_ad', 'bolum_ad']
         hitap_service_prefix = "HitapKurs"
 
@@ -101,8 +101,8 @@ class HizmetOkul(Model):
     hazirlik = field.Integer(_(u"Hazırlık"), index=True, choices="hazirlik_bilgisi")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -136,8 +136,8 @@ class HizmetMahkeme(Model):
     gun_sayisi = field.Integer(_(u"Gün Sayısı"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -171,8 +171,8 @@ class HizmetBirlestirme(Model):
     kha_durum = field.Integer(_(u"KHA Durum"), index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -199,8 +199,8 @@ class HizmetTazminat(Model):
     kadrosuzluk = field.Integer(_(u"Kadrosuzluk"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -227,8 +227,8 @@ class HizmetUnvan(Model):
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     fhz_orani = field.Float(_(u"FHZ Oranı"), index=True)
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -277,8 +277,8 @@ class HizmetAcikSure(Model):
     aciktan_atanma_tarih = field.Date(_(u"Açıktan Atanma Tarihi"), index=True, format="%d.%m.%Y")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -317,8 +317,8 @@ class HizmetBorclanma(Model):
     odeme_tarihi = field.Date(_(u"Ödeme Tarihi"), index=True, format="%d.%m.%Y")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -366,8 +366,8 @@ class HizmetIstisnaiIlgi(Model):
     kha_durum = field.Integer(_(u"KHA Durum"), index=True, choices="kha_durum")
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:
@@ -409,8 +409,8 @@ class HizmetKayitlari(Model):
     sebep_kod = field.Integer(_(u"Hitap Sebep Kodu"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     # hizmet cetveline birden cok modelden veri girilmektedir. bu alanda, hizmet
@@ -488,8 +488,8 @@ class AskerlikKayitlari(Model):
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     astegmen_nasp_tarihi = field.Date(_(u"Asteğmen Nasp Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"))
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"))
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:

@@ -138,7 +138,7 @@ OBJECT_MENU = {
          'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetOkul', 'verbose_name': 'Okul Bilgileri', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
+         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
 
         {'name': 'HizmetMahkeme', 'verbose_name': 'Mahkeme Bilgileri', 'field': 'personel_id',
          'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},

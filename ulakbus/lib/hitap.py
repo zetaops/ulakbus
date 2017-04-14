@@ -7,7 +7,7 @@ from ulakbus.services.zato_wrapper import HitapService
 from datetime import datetime
 
 
-def hitap_save(obj, service_name, meta, index_fields):
+def hitap_save(obj, service_name, meta=None, index_fields=None):
     """
 
     Yeni eklenmiş ya da değiştirilmiş kaydı hitapa yollar. Hitapa
@@ -29,7 +29,7 @@ def hitap_save(obj, service_name, meta, index_fields):
         pass
 
 
-def hitap_delete(obj, service_name, meta, index_fields):
+def hitap_delete(obj, service_name, meta=None, index_fields=None):
     """
 
     Yerelde silinecek olarak işaretlenmiş bir kaydı hitapa yollar
