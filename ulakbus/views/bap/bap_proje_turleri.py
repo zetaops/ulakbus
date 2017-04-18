@@ -30,15 +30,15 @@ class ProjeTuruFormlari(JsonForm):
         class Meta:
             title = __(u"BAP Form Listesi")
         key = fields.String("Key", hidden=True)
-        sec = fields.Boolean(__(u"Seç"), type="checkbox")
+        sec = fields.Boolean(__(u"Projeye Dahil Et"), type="checkbox")
         ad = fields.String(__(u"Form Adı"), index=True)
         file = fields.File(__(u"File"), index=True,
                            random_name=True)  # form eger PDF olarak yulendiyse bu alan kullanilir.
         date = fields.Date(__(u"Form Tarihi"), index=True, format="%d.%m.%Y")
-        gereklilik = fields.Boolean(__(u"Gereklilik"), type="checkbox")
+        gereklilik = fields.Boolean(__(u"Zorunluluk"), type="checkbox")
 
     def bap_proje_turu_form(self):
-        formlar = Form.objects.filter(tag="BAP")
+        formlar = Form.objects.all(tag="BAP")
 
         for form in formlar:
             self.BapFormListesi(
@@ -79,8 +79,15 @@ class ProjeTurleri(CrudView):
         if 'form' in self.input and 'Belgeler' in self.input['form']:
             self.current.task_data['proje_turu_belgeler'] = self.input['form']['Belgeler']
         form = ProjeTuruFormlari()
-        form.bap_proje_turu_form()
-
+        if not self.object.Formlar:
+            form.bap_proje_turu_form()
+        else:
+            [form.BapFormListesi(key=f.proje_formu.key,
+                                 ad=f.proje_formu.ad,
+                                 file=f.proje_formu.file,
+                                 date=f.proje_formu.date,
+                                 sec=f.secili,
+                                 gereklilik=f.gereklilik) for f in self.object.Formlar]
         self.form_out(form)
 
     def save(self):
@@ -121,7 +128,7 @@ class ProjeTurleri(CrudView):
                 f.permissions = Permission.objects.get(name='BAPProjeTurleri')
                 f.tag = "BAP"
                 f.save()
-            proje_turu.Formlar(proje_formu=f, gereklilik=form['gereklilik'])
+            proje_turu.Formlar(proje_formu=f, gereklilik=form['gereklilik'], secili=True)
         proje_turu.blocking_save()
 
     def show(self):
@@ -136,10 +143,10 @@ class ProjeTurleri(CrudView):
                 for v in d['value']:
                     if 'proje_formu_id' in v:
                         string = str(v['proje_formu_id']['unicode']) + \
-                                 ("(Gerekli)" if v['gereklilik'] else "(Gerekli Değil)")
+                                 ("(Zorunlu)" if v['gereklilik'] else "(Zorunlu Değil)")
                     else:
                         string = str(v['ad']) + \
-                                 ("(Gerekli)" if v['gereklilik'] else "(Gerekli Değil)")
+                                 ("(Zorunlu)" if v['gereklilik'] else "(Zorunlu Değil)")
                     data.append(string)
                 obj_data[key] = ' - '.join(data)
             else:
