@@ -1,19 +1,15 @@
 {
   "onemli_tarih_aciklama": {
     "1": {
-      "tr": "1. Dönem Önemli Tarih",
+      "tr": "Proje başvuruları",
       "en": ""
     },
     "2": {
-      "tr": "2. Dönem Önemli Tarih",
+      "tr": "Proje değerlendirmeleri",
       "en": ""
     },
     "3": {
-      "tr": "3. Dönem Önemli Tarih",
-      "en": ""
-    },
-    "4": {
-      "tr": "4. Dönem Önemli Tarih",
+      "tr": "Proje Sözleşmeleri",
       "en": ""
     }
   },

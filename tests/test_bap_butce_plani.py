@@ -17,7 +17,6 @@ class TestCase(BaseTestCase):
                       'birim_fiyat': 12,
                       'adet': 1,
                       'gerekce': "Test Not tutulacak.",
-                      'gerekce_tarihi': "12.04.2017",
                       'toplam_fiyat': 12.5,
                       'kaydet': 1}
 
@@ -50,7 +49,7 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['model']['ad'] == butce_form['ad']
 
         butce_form['adet'] = 2
-        butce_form['toplam_fiyat'] = 25
+        butce_form['toplam_fiyat'] = 25.0
         butce_form['gerekce'] = "Test düzenleme Not tutulacak."
         butce_form['object_key'] = object_id
 

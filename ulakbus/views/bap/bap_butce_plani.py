@@ -41,7 +41,7 @@ class BapButcePlani(CrudView):
         self.current.task_data['kod_adi'] = self.object.kod_adi
 
         form = ButcePlaniForm(self.object, current=self.current)
-        form.exclude = ['ilgili_proje', 'muhasebe_kod', 'kod_adi', 'onay_tarihi']
+        form.exclude = ['muhasebe_kod', 'kod_adi', 'onay_tarihi']
         form.title = "%s / %s Bütçe Planı" % (self.object.muhasebe_kod, self.object.kod_adi)
         self.form_out(form)
 
@@ -49,8 +49,8 @@ class BapButcePlani(CrudView):
         self.set_form_data_to_object()
         self.object.muhasebe_kod = self.current.task_data['muhasebe_kod']
         self.object.kod_adi = self.current.task_data['kod_adi']
-        if 'bap_proje_id' in self.current.task_data:
-            self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        if 'bap_proje_adi' in self.current.task_data:
+            self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_adi'])
         self.save_object()
 
     def confirm_deletion(self):
@@ -67,6 +67,12 @@ class BapButcePlani(CrudView):
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
+
+    def list(self, custom_form=None):
+        CrudView.list(self)
+        toplam = sum(float(obj['fields'][5])for obj in self.output['objects'][1:])
+        self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
+                                       'actions': ''})
 
     @obj_filter
     def proje_turu_islem(self, obj, result):
