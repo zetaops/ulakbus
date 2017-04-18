@@ -43,7 +43,7 @@ class BapTakvim(CrudView):
         CrudView.list(self, custom_form)
 
     def add_edit_form(self):
-        form = TakvimOlusturForm(self.object, current=self.current, title=_(u"Takvim Olustur"))
+        form = TakvimOlusturForm(self.object, current=self.current, title=_(u"Takvim Oluştur"))
 
         if ('form' in self.input and self.input['form']['genel_takvim']) or (
                 not self.object.ProjeTuru and 'object_id' in self.current.task_data):

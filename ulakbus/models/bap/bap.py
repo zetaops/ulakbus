@@ -32,16 +32,14 @@ class BAPProjeTurleri(Model):
 
     class Belgeler(ListNode):
         class Meta:
-            verbose_name = __(U"Projede Kullanılacak Belge")
-            verbose_name_plural = __(u"Projede Kullanılacak Belgeler")
+            title = __(u"Projede Kullanılacak Belgeler")
 
         ad = field.String(__(u"Belgenin İsmi"))
         gereklilik = field.Boolean(__(u"Belgenin Zorunluluğu"))
 
     class Formlar(ListNode):
         class Meta:
-            verbose_name = __(u"Projede Kullanılacak Form")
-            verbose_name_plural = __(u"Projede Kullanılacak Formlar")
+            title = __(u"Projede Kullanılacak Formlar")
 
         proje_formu = Form()
         gereklilik = field.Boolean(__(u"Formun Gerekliliği"), default=False)
@@ -58,15 +56,13 @@ class BAPTakvim(Model):
 
     class ProjeTuru(ListNode):
         class Meta:
-            verbose_name = __(u"Proje Türü")
-            verbose_name_plural = __(u"Proje Türleri")
+            title = __(u"Proje Türü")
 
         proje_turu = field.String(__(u"Proje Türleri"))
 
     class OnemliTarihler(ListNode):
         class Meta:
-            verbose_name = __(u"Önemli Tarih")
-            verbose_name_plural = __(u"Önemli Tarihler")
+            title = __(u"Önemli Tarihler")
 
         baslangic_tarihi = field.Date(__(u"Başlangıç Tarihi"))
         bitis_tarihi = field.Date(__(u"Bitiş Tarihi"))

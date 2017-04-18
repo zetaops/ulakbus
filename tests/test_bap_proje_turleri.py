@@ -37,8 +37,8 @@ class TestCase(BaseTestCase):
                                                  'sec': True}],
                              'ileri': 1}
 
-            object_form = {u'Belgeler': "Test Proje Turu Belge(Zorunlu)",
-                           u'Formlar': "Test Form 2017-04-01(Zorunlu)",
+            object_form = {u'Projede Kullanılacak Belgeler': "Test Proje Turu Belge(Zorunlu)",
+                           u'Projede Kullanılacak Formlar': "Test Form 2017-04-01(Zorunlu)",
                            u'Proje tür kodu': "Test Proje Tur Kod",
                            u'Proje türüne dair açıklama': "Test Aciklama",
                            u'Proje türünün Adı': "Test Tur Ad",
@@ -56,8 +56,8 @@ class TestCase(BaseTestCase):
                 form['min_sure'] = 5
                 belge_form['Belgeler'][0]['gereklilik'] = False
                 form_sec_form['BapFormListesi'][0]['date'] = "2017-05-01T21:00:00.000Z"
-                object_form[u'Belgeler'] = "Test Proje Turu Belge(Zorunlu Değil)"
-                object_form[u'Formlar'] = "Test Form 2017-05-01(Zorunlu)"
+                object_form[u'Projede Kullanılacak Belgeler'] = "Test Proje Turu Belge(Zorunlu Değil)"
+                object_form[u'Projede Kullanılacak Formlar'] = "Test Form 2017-05-01(Zorunlu)"
                 object_form[u'Projenin minumum süreceği ay sayısı'] = "5"
 
             resp = self.client.post(wf='bap_proje_turleri', form=form)
