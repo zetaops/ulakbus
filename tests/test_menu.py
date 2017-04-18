@@ -10,9 +10,6 @@ from ulakbus.models import User, Role, Permission
 from zengine.lib.test_utils import BaseTestCase
 from zengine.lib.test_utils import HTTPError
 
-PERMISSION_LST = [permission.code for permission in Permission.objects.filter(code__contains='Borc')]
-
-
 class TestCase(BaseTestCase):
     """
     Bu sınıf ``BaseTestCase`` extend edilerek hazırlanmıştır.
@@ -50,6 +47,8 @@ class TestCase(BaseTestCase):
         first_permissions = self.client.user.role_set[0].role.get_db_permissions()
 
         number_of_permissions_added = 0
+        PERMISSION_LST = [permission.code for permission in
+                          Permission.objects.filter(code__contains='Borc')]
         for p in PERMISSION_LST:
             if p not in first_permissions:
                 number_of_permissions_added += 1
@@ -107,6 +106,9 @@ class TestCase(BaseTestCase):
             delete_added_permissions fonksiyonunu
 
         """
+        PERMISSION_LST = [permission.code for permission in
+                          Permission.objects.filter(code__contains='Borc')]
+
         for permission in user_role.Permissions:
             if permission.permission.code in PERMISSION_LST:
                 permission.remove()

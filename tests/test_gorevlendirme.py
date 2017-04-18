@@ -72,7 +72,7 @@ class TestCase(BaseTestCase):
                                    resmi_yazi_tarih=resmi_yazi_tarih.strftime("%d.%m.%Y")))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
-        gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.filter()[0]
+        gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.all()[0]
         assert gorevlendirme.personel.key == personel_id
 
         assert gorevlendirme.baslama_tarihi == baslangic
@@ -135,7 +135,7 @@ class TestCase(BaseTestCase):
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
-        gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.filter()[0]
+        gorevlendirme = KurumIciGorevlendirmeBilgileri.objects.all()[0]
         assert gorevlendirme.personel.key == personel_id
 
         assert gorevlendirme.baslama_tarihi == baslangic
@@ -150,7 +150,7 @@ class TestCase(BaseTestCase):
         ))
 
         # Hizmet cetveli kontrolü
-        assert HizmetKayitlari.objects.filter().count() > 0
+        assert HizmetKayitlari.objects.count() > 0
 
     def test_kurum_disi_gorevlendirme_rektor(self):
         """
@@ -206,8 +206,8 @@ class TestCase(BaseTestCase):
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
-        assert KurumDisiGorevlendirmeBilgileri.objects.filter().count() > 0
-        gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
+        assert KurumDisiGorevlendirmeBilgileri.objects.count() > 0
+        gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.all()[0]
         assert gorevlendirme.personel.key == personel_id
 
         assert gorevlendirme.baslama_tarihi == baslangic
@@ -220,7 +220,7 @@ class TestCase(BaseTestCase):
         ))
 
         # Hizmet cetveli kontrolü
-        assert HizmetKayitlari.objects.filter().count() > 0
+        assert HizmetKayitlari.objects.count() > 0
 
     def test_kurum_disi_gorevlendirme_dekan(self):
         """
@@ -276,8 +276,8 @@ class TestCase(BaseTestCase):
         ))
 
         # İlgili wf adımında görevlendirme kaydının yapılıp yapılmadığının kontrolü
-        assert KurumDisiGorevlendirmeBilgileri.objects.filter().count() > 0
-        gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.filter()[0]
+        assert KurumDisiGorevlendirmeBilgileri.objects.count() > 0
+        gorevlendirme = KurumDisiGorevlendirmeBilgileri.objects.all()[0]
         assert gorevlendirme.personel.key == personel_id
 
         assert gorevlendirme.baslama_tarihi == baslangic
@@ -290,4 +290,4 @@ class TestCase(BaseTestCase):
         ))
 
         # Hizmet cetveli kontrolü
-        assert HizmetKayitlari.objects.filter().count() > 0
+        assert HizmetKayitlari.objects.count() > 0

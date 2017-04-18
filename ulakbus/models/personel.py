@@ -165,7 +165,7 @@ class Personel(Model):
 
         """
         # Mevcut pyoko API'i ile uyumlu olmasi icin, geriye bos bir Atama nesnesi dondurur.
-        atamalar = Atama.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=self)
+        atamalar = Atama.objects.order_by('-goreve_baslama_tarihi').filter(personel=self)
         return atamalar[0] if atamalar else Atama()
 
     @lazy_property
@@ -584,8 +584,7 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(
-            sort='goreve_baslama_tarihi desc').filter(personel=personel)[0]
+        return cls.objects.order_by('-goreve_baslama_tarihi').filter(personel=personel)[0]
 
     @classmethod
     def personel_ilk_atama(cls, personel):
@@ -597,8 +596,7 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(
-            sort='goreve_baslama_tarihi asc').filter(personel=personel)[0]
+        return cls.objects.order_by('goreve_baslama_tarihi').filter(personel=personel)[0]
 
     def post_save(self):
         # Personel modeline arama için eklenen kadro_derece set edilecek

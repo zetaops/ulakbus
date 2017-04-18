@@ -71,7 +71,7 @@ class AkademikTakvimView(CrudView):
         ogretim_yili = OgretimYili.objects.get(yil=Donem.guncel_donem().baslangic_tarihi.year)
         akademik_takvim = get_akademik_takvim(self.current.role.unit, ogretim_yili)
 
-        for e in Takvim.objects.filter(akademik_takvim=akademik_takvim):
+        for e in Takvim.objects.order_by().filter(akademik_takvim=akademik_takvim):
             etkinlik = OrderedDict({})
             etkinlik[_(u'Etkinlik')] = dict(AKADEMIK_TAKVIM_ETKINLIKLERI).get(str(e.etkinlik), '')
             etkinlik[_(u'Başlangıç')] = format_datetime(e.baslangic) if e.baslangic else ''

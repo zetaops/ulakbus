@@ -45,7 +45,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
                   catalog_data_manager.get_all("medeni_hali")]
 
     # Birimleri aldık
-    birim = [{"value": u.yoksis_no, "label": u.name} for u in Unit.objects.filter()]
+    birim = [{"value": u.yoksis_no, "label": u.name} for u in Unit.objects.all()]
 
     # Unvanları aldık
     unvan = [{"value": item['value'], "label": item['name']} for item in catalog_data_manager.get_all("unvan_kod")]
@@ -63,12 +63,12 @@ def raporlama_ekrani_secim_menulerini_hazirla():
                       in catalog_data_manager.get_all("personel_statu")]
 
     # Hitap sebep kodlarını aldık
-    sebep_kodlari = [{"value": sk.sebep_no, "label": sk.ad} for sk in HitapSebep.objects.filter()]
+    sebep_kodlari = [{"value": sk.sebep_no, "label": sk.ad} for sk in HitapSebep.objects.all()]
 
     # Başlangıçta görünecek alanlar
     default_alanlar = ['ad', 'soyad', 'cinsiyet', 'dogum_tarihi', 'personel_turu']
 
-    grid_options['data'] = Personel.objects.filter()[0:PAGE_SIZE].values(*default_alanlar)
+    grid_options['data'] = Personel.objects.all()[0:PAGE_SIZE].values(*default_alanlar)
 
     alan_filter_type_map = {}
 

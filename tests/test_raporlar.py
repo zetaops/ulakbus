@@ -77,7 +77,7 @@ class TestCase(BaseTestCase):
             Ogrenci harc miktarlarinin rapora dogru miktar da gelip gelmedigi
             kontrolu yapilir.
         """
-        borc = Borc.objects.filter()
+        borc = Borc.objects.all()
         ogrenci_ogretim_ucreti = format_currency(
             sum(borc.filter(sebep=1).values_list('miktar')), "TRY")
         ogrenci_yaz_okulu_ucreti = format_currency(
