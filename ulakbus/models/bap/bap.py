@@ -3,6 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+
 from ulakbus.models.form import Form
 
 from zengine.lib.translation import gettext_lazy as __
@@ -35,7 +36,7 @@ class BAPProjeTurleri(Model):
             verbose_name_plural = __(u"Projede Kullanılacak Belgeler")
 
         ad = field.String(__(u"Belgenin İsmi"))
-        gereklilik = field.Boolean(__(u"Belgenin Gerekliliği"))
+        gereklilik = field.Boolean(__(u"Belgenin Zorunluluğu"))
 
     class Formlar(ListNode):
         class Meta:
@@ -43,7 +44,8 @@ class BAPProjeTurleri(Model):
             verbose_name_plural = __(u"Projede Kullanılacak Formlar")
 
         proje_formu = Form()
-        gereklilik = field.Boolean(__(u"Formun Gerekliliği"))
+        gereklilik = field.Boolean(__(u"Formun Gerekliliği"), default=False)
+        secili = field.Boolean(__(u"Projeye Dahil Et"), default=False)
 
     def __unicode__(self):
         return "%s: %s" % (self.kod, self.ad)
@@ -68,7 +70,8 @@ class BAPTakvim(Model):
 
         baslangic_tarihi = field.Date(__(u"Başlangıç Tarihi"))
         bitis_tarihi = field.Date(__(u"Bitiş Tarihi"))
-        aciklama = field.Integer(__(u"Açıklama Seçiniz"), choices='onemli_tarih_aciklama')
+        aciklama = field.Integer(__(u"Açıklama Seçiniz"), choices='onemli_tarih_aciklama',
+                                 default=1)
 
     takvim_aciklama = field.Text(__(u"Takvim Açıklaması"))
     donem = field.Integer(__(u"Takvimin Yayınlanacağı Dönem"))
@@ -86,10 +89,11 @@ class BAPTakvim(Model):
 
     def _tarih(self):
         return ''.join(["""
-        %s / %s\n""" % (tarih.baslangic_tarihi, tarih.bitis_tarihi) for tarih in
+        %s / %s\n""" % (tarih.baslangic_tarihi.strftime("%d.%m.%Y"),
+                        tarih.bitis_tarihi.strftime("%d.%m.%Y")) for tarih in
                         self.OnemliTarihler])
 
-    _takvim_turu.title = __(u"Takvim Türü")
+    _takvim_turu.title = __(u"Proje Türü")
     _tarih.title = __(u"Tarih")
 
 
@@ -135,10 +139,9 @@ class BAPButcePlani(Model):
     ad = field.String(__(u"Alınacak Malzemenin Adı"))
     birim_fiyat = field.Float(__(u"Birim Fiyat"))
     adet = field.Integer(__(u"Adet"))
-    toplam_fiyat = field.Integer(__(u"Toplam Fiyat"))
+    toplam_fiyat = field.Float(__(u"Toplam Fiyat"))
     gerekce = field.Text(__(u"Gerekçe"))
-    gerekce_tarihi = field.Date(__(u"Gerekçe Tarihi"))
-    ilgili_proje = BAPProje(__(u"Bağlı olduğu Proje"))
+    ilgili_proje = field.String(__(u"Bağlı olduğu Projenin Adı"), readonly=True, required=False)
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     
     def __unicode__(self):

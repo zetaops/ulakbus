@@ -26,8 +26,8 @@ class IsPaketiHazirlaForm(JsonForm):
             title = __(u"İş Ekle")
 
         ad = fields.String(__(u"Bap İş"))
-        baslama_tarihi = fields.Date(__(u"Başlama Tarihi"), format="%d.%m.%Y")
-        bitis_tarihi = fields.Date(__(u"Bitiş Tarihi"), format="%d.%m.%Y")
+        baslama_tarihi = fields.Date(__(u"Başlama Tarihi"))
+        bitis_tarihi = fields.Date(__(u"Bitiş Tarihi"))
 
     kaydet = fields.Button(__(u"Kaydet"))
     iptal = fields.Button(__(u"İptal"), cmd='iptal', form_validation=False)
