@@ -146,5 +146,31 @@
       "tr": "Makine Teçhizat Bakım ve Onarım Giderleri",
       "en": ""
     }
+  },
+  "bap_proje_durum": {
+    "1": {
+      "tr": "Kaydedildi",
+      "en": ""
+    },
+    "2": {
+      "tr": "Koordinasyon Birimi Onayı Bekliyor",
+      "en": ""
+    },
+    "3": {
+      "tr": "Koordinasyon Birimi Tarafından Öğretim Üyesine Düzenleme Talebiyle Gönderildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Komisyon Onayı Bekliyor",
+      "en": ""
+    },
+    "5": {
+      "tr": "Komisyon Tarafından Onaylandı",
+      "en": ""
+    },
+    "6": {
+      "tr": "Komisyon Tarafından Reddedildi",
+      "en": ""
+    }
   }
 }
