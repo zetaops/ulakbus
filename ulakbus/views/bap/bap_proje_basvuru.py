@@ -10,13 +10,16 @@ from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 from pyoko import ListNode
 import datetime
+from ulakbus.settings import DATE_DEFAULT_FORMAT
 
 
 class ProjeTurForm(JsonForm):
     class Meta:
+        include = ['tur']
         title = _(u'Proje Türü Seçiniz')
+        always_blank = False
 
-    tur = fields.String(_(u"Proje Türleri"))
+    # tur = fields.String(_(u"Proje Türleri"))
     sec = fields.Button(_(u"Seç"), cmd="kaydet_ve_kontrol")
 
 
@@ -40,6 +43,7 @@ class GenelBilgiGirForm(JsonForm):
         include = ['ad', 'sure', 'anahtar_kelimeler', 'teklif_edilen_baslama_tarihi',
                    'teklif_edilen_butce']
         title = _(u"Proje Genel Bilgileri")
+        always_blank = False
 
     detay_gir = fields.Button(_(u"Proje Detay Bilgileri"))
 
@@ -50,6 +54,7 @@ class ArastirmaOlanaklariForm(JsonForm):
         help_text = _(u"Üniversite/fakülte envanterinde mevcut olan ve önerilen proje ile ilgili "
                       u"kullanma olanağına sahip olduğunuz personel, yer, teçhizat (marka ve model "
                       u"belirtilerek) vs. hakkında ayrıntılı bilgi verilmelidir.")
+        # always_blank = False
 
     class Olanak(ListNode):
         class Meta:
@@ -90,6 +95,7 @@ class PersonelEkleForm(JsonForm):
 class ProjeCalisanlariForm(JsonForm):
     class Meta:
         title = _(u"Çalışan Ekle")
+        always_blank = False
 
     class Calisan(ListNode):
         class Meta:
@@ -105,6 +111,7 @@ class ProjeCalisanlariForm(JsonForm):
 class UniversiteDisiUzmanForm(JsonForm):
     class Meta:
         title = _(u"Üniversite Dışı Uzman Ekle")
+        always_blank = False
 
     class Uzman(ListNode):
         class Meta:
@@ -124,6 +131,7 @@ class UniversiteDisiUzmanForm(JsonForm):
 class UniversiteDisiDestekForm(JsonForm):
     class Meta:
         title = _(u"Üniversite Dışı Destek Ekle")
+        always_blank = False
 
     class Destek(ListNode):
         class Meta:
@@ -142,6 +150,7 @@ class UniversiteDisiDestekForm(JsonForm):
 class YurutucuTecrubesiForm(JsonForm):
     class Meta:
         title = _(u"Yürütücü Tecrübesi")
+        always_blank = False
 
     class AkademikFaaliyet(ListNode):
         ad = fields.String(_(u'Ad'), readonly=True)
@@ -156,6 +165,7 @@ class YurutucuTecrubesiForm(JsonForm):
 class YurutucuProjeForm(JsonForm):
     class Meta:
         title = _(u"Yürütücünün Halihazırdaki Projeleri")
+        always_blank = False
 
     class Proje(ListNode):
         ad = fields.String(_(u'Ad'), readonly=True)
@@ -170,6 +180,7 @@ class ProjeDetayForm(JsonForm):
         include = ['konu_ve_kapsam', 'literatur_ozeti', 'ozgun_deger',
                    'hedef_ve_amac', 'yontem', 'basari_olcutleri', 'b_plani']
         title = _(u"Proje Detayları")
+        always_blank = False
 
     proje_belgeleri = fields.Button(_(u"Proje Belgeleri"))
 
@@ -178,6 +189,7 @@ class ProjeBelgeForm(JsonForm):
     class Meta:
         include = ['ProjeBelgeleri']
         title = _(u"Proje Belgeleri")
+        always_blank = False
 
     arastirma_olanaklari = fields.Button(_(u"Araştırma Olanakları"))
 
@@ -186,13 +198,16 @@ class ProjeBasvuru(CrudView):
     class Meta:
         model = "BAPProje"
 
+    def proje_olustur(self):
+        proje_id = BAPProje().blocking_save().key
+        self.current.task_data['bap_proje_id'] = proje_id
+
     def proje_tur_sec(self):
-        form = ProjeTurForm()
-        form.set_choices_of('tur', prepare_choices_for_model(BAPProjeTurleri))
+        form = ProjeTurForm(self.object, current=self.current)
         self.form_out(form)
 
     def gerekli_belge_form(self):
-        tur_id = self.input['form']['tur']
+        tur_id = self.current.task_data['ProjeTurForm']['tur_id']
         tur = BAPProjeTurleri.objects.get(tur_id)
         form = GerekliBelgeForm()
         self.current.task_data['hedef_proje'] = {}
@@ -214,30 +229,15 @@ class ProjeBasvuru(CrudView):
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))
 
     def proje_detay_gir(self):
-        if 'detay_gir' in self.input['form'] and \
-                self.input['form']['detay_gir'] == 1:
-            for k, v in self.input['form'].items():
-                self.current.task_data['hedef_proje'][k] = v
         self.form_out(ProjeDetayForm(self.object, current=self.current))
 
     def proje_belgeleri(self):
-        if 'proje_belgeleri' in self.input['form'] and \
-                self.input['form']['proje_belgeleri'] == 1:
-            for k, v in self.input['form'].items():
-                self.current.task_data['hedef_proje'][k] = v
-            self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
         form = ProjeBelgeForm(self.object, current=self.current)
         self.form_out(form)
+        self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
 
     def arastirma_olanagi_ekle(self):
-        if 'ProjeBelgeleri' in self.input['form'] and self.input['form']['ProjeBelgeleri']:
-            # self.current.task_data['hedef_proje']['proje_belgeleri'] = self.input['form']['ProjeBelgeleri']
-            p = BAPProje()
-            for belge in self.input['form']['ProjeBelgeleri']:
-                p.ProjeBelgeleri(belge=belge)
-            self.current.task_data['hedef_proje_id'] = p.blocking_save().key
-
-        form = ArastirmaOlanaklariForm()
+        form = ArastirmaOlanaklariForm(current=self.current)
         for olanak in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
             o = olanak.items()[0]
             if o[0] == 'lab':
@@ -251,7 +251,6 @@ class ProjeBasvuru(CrudView):
                 tur = _(u"Personel")
             form.Olanak(ad=ad, tur=tur)
         self.form_out(form)
-        self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def lab_ekle(self):
@@ -280,26 +279,18 @@ class ProjeBasvuru(CrudView):
         self.current.task_data['hedef_proje']['arastirma_olanaklari'].append(olanak)
 
     def calisan_ekle(self):
-        form = ProjeCalisanlariForm()
+        form = ProjeCalisanlariForm(current=self.current)
         self.form_out(form)
 
-    def proje_calisan_kaydet(self):
-        self.current.task_data['hedef_proje']['proje_calisanlari'] = self.input['form']['Calisan']
-
     def universite_disi_uzman_ekle(self):
-        form = UniversiteDisiUzmanForm()
+        form = UniversiteDisiUzmanForm(current=self.current)
         self.form_out(form)
 
     def universite_disi_destek_ekle(self):
-        self.current.task_data['hedef_proje']['universite_disi_uzmanlar'] = \
-            self.input['form']['Uzman']
-        form = UniversiteDisiDestekForm()
+        form = UniversiteDisiDestekForm(current=self.current)
         self.form_out(form)
 
     def yurutucu_tecrubesi(self):
-        if 'Destek' in self.input['form']:
-            self.current.task_data['hedef_proje']['universite_disi_destek'] = \
-                self.input['form']['Destek']
         personel = Personel.objects.get(user_id=self.current.user_id)
         faaliyetler = AkademikFaaliyet.objects.all(personel=personel)
 
@@ -313,7 +304,6 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def yurutucu_projeleri(self):
-        self.current.task_data['hedef_proje']['tecrube'] = self.input['form']['AkademikFaaliyet']
         personel = Personel.objects.get(user_id=self.current.user_id)
         projeler = BAPProje.objects.all(yurutucu=personel)
 
@@ -334,49 +324,89 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def proje_kaydet(self):
-        p = self.current.task_data['hedef_proje']
-        del p['form_key']
-        del p['detay_gir']
-        del p['tecrube']
-        p['yurutucu_id'] = Personel.objects.get(user_id=self.current.user_id).key
-        proje = BAPProje(**p)
-        if 'hedef_proje_id' in self.current.task_data:
-            proje_belgeleri = BAPProje.objects.get(
-                self.current.task_data['hedef_proje_id']).ProjeBelgeleri
-            proje.ProjeBelgeleri = proje_belgeleri
-            BAPProje.objects.get(self.current.task_data['hedef_proje_id']).delete()
-        for olanak in p['arastirma_olanaklari']:
-            if 'lab' in olanak:
-                proje.ArastirmaOlanaklari(lab_id=olanak['lab'], demirbas=None, personel=None)
-            elif 'demirbas' in olanak:
-                proje.ArastirmaOlanaklari(lab=None, demirbas_id=olanak['demirbas'], personel=None)
-            else:
-                proje.ArastirmaOlanaklari(lab=None, demirbas=None, personel_id=olanak['personel'])
-        for calisan in p['proje_calisanlari']:
-            proje.ProjeCalisanlari(**calisan)
-        for destek in p['universite_disi_destek']:
-            destek['verildigi_tarih'] = datetime.datetime.strptime(
-                destek['verildigi_tarih'], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%d.%m.%Y")
-            proje.UniversiteDisiDestek(**destek)
-        for uzman in p['universite_disi_uzmanlar']:
-            proje.UniversiteDisiUzmanlar(**uzman)
+        td = self.current.task_data
+        proje = BAPProje.objects.get(td['bap_proje_id'])
+        yurutucu = Personel.objects.get(user_id=self.current.user_id)
+        if 'arastirma_olanaklari' in td['hedef_proje']:
+            for olanak in td['hedef_proje']['arastirma_olanaklari']:
+                if 'lab' in olanak:
+                    proje.ArastirmaOlanaklari(lab_id=olanak['lab'], demirbas=None, personel=None)
+                elif 'demirbas' in olanak:
+                    proje.ArastirmaOlanaklari(lab=None, demirbas_id=olanak['demirbas'],
+                                              personel=None)
+                else:
+                    proje.ArastirmaOlanaklari(lab=None, demirbas=None,
+                                              personel_id=olanak['personel'])
+        if 'GenelBilgiGirForm' in td:
+            proje.ad = td['GenelBilgiGirForm']['ad']
+            proje.anahtar_kelimeler = td['GenelBilgiGirForm'][
+                'anahtar_kelimeler']
+            proje.sure = td['GenelBilgiGirForm']['sure']
+            proje.teklif_edilen_baslama_tarihi = datetime.datetime.strptime(
+                td['GenelBilgiGirForm']['teklif_edilen_baslama_tarihi'],
+                DATE_DEFAULT_FORMAT)
+            proje.teklif_edilen_butce = td['GenelBilgiGirForm'][
+                'teklif_edilen_butce']
+        if 'ProjeDetayForm' in td:
+            proje.b_plani = td['ProjeDetayForm']['b_plani']
+            proje.hedef_ve_amac = td['ProjeDetayForm']['hedef_ve_amac']
+            proje.basari_olcutleri = td['ProjeDetayForm']['basari_olcutleri']
+            proje.ozgun_deger = td['ProjeDetayForm']['ozgun_deger']
+            proje.konu_ve_kapsam = td['ProjeDetayForm']['konu_ve_kapsam']
+            proje.literatur_ozeti = td['ProjeDetayForm']['literatur_ozeti']
+            proje.yontem = td['ProjeDetayForm']['yontem']
+        if 'ProjeTurForm' in td:
+            proje.tur_id = str(td['ProjeTurForm']['tur_id'])
+        if 'ProjeBelgeForm' in td:
+            for belge in td['ProjeBelgeForm']['ProjeBelgeleri']:
+                proje.ProjeBelgeleri(belge=belge.belge)
+        if 'ProjeCalisanlariForm' in td:
+            for calisan in td['ProjeCalisanlariForm']['Calisan']:
+                proje.ProjeCalisanlari(ad=calisan['ad'], soyad=calisan['soyad'],
+                                       nitelik=calisan['nitelik'],
+                                       calismaya_katkisi=['calismaya_katkisi'])
+        if 'UniversiteDisiDestekForm' in td:
+            for destek in td['UniversiteDisiDestekForm']['Destek']:
+                proje.UniversiteDisiDestek(
+                    kurulus=destek['kurulus'],
+                    tur=destek['tur'],
+                    destek_miktari=destek['destek_miktari'],
+                    verildigi_tarih=datetime.datetime.strftime(destek['verildigi_tarih'],
+                                                                DATE_DEFAULT_FORMAT),
+                    sure=destek['sure'],
+                    destek_belgesi=destek['destek_belgesi']
+                )
+        if 'UniversiteDisiUzmanForm' in td:
+            for uzman in td['UniversiteDisiUzmanForm']['Uzman']:
+                proje.UniversiteDisiUzmanlar(
+                    ad=uzman['ad'],
+                    soyad=uzman['soyad'],
+                    unvan=uzman['unvan'],
+                    kurum=uzman['kurum'],
+                    tel=uzman['tel'],
+                    faks=uzman['faks'],
+                    eposta=uzman['eposta']
+                )
 
         proje.ProjeIslemGecmisi(eylem=_(u"Kayıt"),
                                 aciklama=_(u"Öğretim üyesi tarafından kaydedildi"),
                                 tarih=datetime.datetime.now())
         proje.durum = 1
-        self.current.task_data['proje_id'] = proje.blocking_save().key
+        proje.blocking_save()
 
     def proje_goster(self):
-        self.object = BAPProje.objects.get(self.current.task_data['proje_id'])
+        self.object = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.show()
         form = JsonForm()
         form.onay = fields.Button(_(u"Onaya Gönder"), cmd='onay')
         self.form_out(form)
 
     def onaya_gonder(self):
-        # todo
-        pass
+        proje = BAPProje.objects.get(self.current.task_data['proje_id'])
+        proje.durum = 2
+        proje.ProjeIslemGecmisi(eylem=_(u"Onay"),
+                                aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
+                                tarih=datetime.datetime.now())
 
     def placeholder_method(self):
         form = JsonForm(title=_(u"PlaceHolder"))

@@ -224,7 +224,7 @@ class BAPProje(Model):
         destek_miktari = field.String(_(u"Destek Miktarı"))
         verildigi_tarih = field.Date(_(u"Verildiği Tarih"))
         sure = field.Integer(_(u"Süresi(Ay CinsindenBA)"))
-        destek_belgesi = field.String(_(u"Destek Belgesi"))
+        destek_belgesi = field.File(_(u"Destek Belgesi"), random_name=True)
 
     # Koordinatörlük tarafından atanacak
     class BAPHakem(ListNode):
