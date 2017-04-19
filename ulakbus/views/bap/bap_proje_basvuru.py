@@ -210,8 +210,8 @@ class ProjeBasvuru(CrudView):
         tur_id = self.current.task_data['ProjeTurForm']['tur_id']
         tur = BAPProjeTurleri.objects.get(tur_id)
         form = GerekliBelgeForm()
-        self.current.task_data['hedef_proje'] = {}
-        self.current.task_data['hedef_proje']['tur_id'] = tur_id
+        if 'hedef_proje' not in self.current.task_data:
+            self.current.task_data['hedef_proje'] = {}
 
         for belge in tur.Belgeler:
             if belge.gereklilik:
@@ -234,7 +234,8 @@ class ProjeBasvuru(CrudView):
     def proje_belgeleri(self):
         form = ProjeBelgeForm(self.object, current=self.current)
         self.form_out(form)
-        self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
+        if 'arastirma_olanaklari' not in self.current.task_data['hedef_proje']:
+            self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
 
     def arastirma_olanagi_ekle(self):
         form = ArastirmaOlanaklariForm(current=self.current)
@@ -402,11 +403,13 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def onaya_gonder(self):
-        proje = BAPProje.objects.get(self.current.task_data['proje_id'])
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         proje.durum = 2
         proje.ProjeIslemGecmisi(eylem=_(u"Onay"),
                                 aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
                                 tarih=datetime.datetime.now())
+        proje.blocking_save()
+        self.object = proje
 
     def placeholder_method(self):
         form = JsonForm(title=_(u"PlaceHolder"))
