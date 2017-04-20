@@ -328,6 +328,7 @@ class ProjeBasvuru(CrudView):
         td = self.current.task_data
         proje = BAPProje.objects.get(td['bap_proje_id'])
         yurutucu = Personel.objects.get(user_id=self.current.user_id)
+        proje.yurutucu = yurutucu
         if 'arastirma_olanaklari' in td['hedef_proje']:
             for olanak in td['hedef_proje']['arastirma_olanaklari']:
                 if 'lab' in olanak:
@@ -411,8 +412,27 @@ class ProjeBasvuru(CrudView):
         proje.blocking_save()
         self.object = proje
 
+    def geri_bildirim_goster(self):
+        if 'karar' in self.current.task_data:
+            if self.current.task_data['karar'] == 'revizyon':
+                msg = self.current.task_data['revizyon_gerekce']
+            elif self.current.task_data['karar'] == 'onayla':
+                msg = _(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme alınmıştır.")
+            else:
+                msg = _(u"Başvurunuz koordinasyon birimine iletilmiştir. "
+                        u"En kısa sürede incelenip bilgilendirme yapılacaktır.")
+            form = JsonForm(title=_(u"BAP Proje Geri Bildirim"))
+            form.devam = fields.Button(_(u"Tamam"), cmd=self.current.task_data['karar'])
+            self.current.output['msgbox'] = {
+                "type": "info",
+                "title": _(u"Koordinasyon Birimi Kararı"),
+                "msg": msg}
+            self.form_out(form)
+
     def placeholder_method(self):
         form = JsonForm(title=_(u"PlaceHolder"))
         form.button = fields.Button(_(u"Tamam"))
+        self.current.task_data['karar'] = 'revizyon'
+        self.current.task_data['revizyon_gerekce'] = "Bu bir revizyon gerekçesi"
         self.form_out(form)
 
