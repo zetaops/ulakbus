@@ -732,11 +732,15 @@ class KanunlaVerilenTerfiForm(JsonForm):
     kaydet = fields.Button(_(u'Kaydet'), cmd="terfi_kaydet", style="btn-success")
     iptal = fields.Button(_(u'İptal'), cmd="iptal")
 
+
+
+
+
 class HizmetCetveliForm(JsonForm):
     class Meta:
         title = _(u'Kanunla Verilen Terfi Hizmet Cetveli Girişi')
 
-    terfi_sebep = fields.String(_(u'Hitap Sebep'), choices=prepare_choices_for_model(HitapSebep))
+    terfi_sebep = fields.String(_(u'Hitap Sebep'))
     baslama_tarihi = fields.Date(_(u'Başlama Tarihi'))
     bitis_tarihi = fields.Date(_(u'Bitis Tarihi'))
     kurum_onay_tarihi = fields.Date(_(u'Kurum Onay Tarihi'))
@@ -787,6 +791,7 @@ class KanunlaVerilenTerfi(CrudView):
             veriler oluşturulmuş bir formdur.
         """
         _form = HizmetCetveliForm(current=self.current)
+        _form.set_choices_of('terfi_sebep', prepare_choices_for_model(HitapSebep))
         self.form_out(_form)
 
     def hizmet_cetveli_kayit(self):
@@ -947,7 +952,7 @@ class KanunlaVerilenTerfi(CrudView):
                 odeme_ekgosterge=personel.gorev_ayligi_ekgosterge,
                 kazanilmis_hak_ayligi_derece=personel.kazanilmis_hak_derece,
                 kazanilmis_hak_ayligi_kademe=personel.kazanilmis_hak_kademe,
-                kazanilmis_hak_ayligi_ekgosterge=personel.kazaniwwlmis_hak_ekgosterge,
+                kazanilmis_hak_ayligi_ekgosterge=personel.kazanilmis_hak_ekgosterge,
                 emekli_derece=personel.emekli_muktesebat_derece,
                 emekli_kademe=personel.emekli_muktesebat_kademe,
                 emekli_ekgosterge=personel.emekli_muktesebat_ekgosterge,
