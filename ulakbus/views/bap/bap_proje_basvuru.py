@@ -210,8 +210,8 @@ class ProjeBasvuru(CrudView):
         tur_id = self.current.task_data['ProjeTurForm']['tur_id']
         tur = BAPProjeTurleri.objects.get(tur_id)
         form = GerekliBelgeForm()
-        self.current.task_data['hedef_proje'] = {}
-        self.current.task_data['hedef_proje']['tur_id'] = tur_id
+        if 'hedef_proje' not in self.current.task_data:
+            self.current.task_data['hedef_proje'] = {}
 
         for belge in tur.Belgeler:
             if belge.gereklilik:
@@ -234,7 +234,8 @@ class ProjeBasvuru(CrudView):
     def proje_belgeleri(self):
         form = ProjeBelgeForm(self.object, current=self.current)
         self.form_out(form)
-        self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
+        if 'arastirma_olanaklari' not in self.current.task_data['hedef_proje']:
+            self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
 
     def arastirma_olanagi_ekle(self):
         form = ArastirmaOlanaklariForm(current=self.current)
@@ -327,6 +328,7 @@ class ProjeBasvuru(CrudView):
         td = self.current.task_data
         proje = BAPProje.objects.get(td['bap_proje_id'])
         yurutucu = Personel.objects.get(user_id=self.current.user_id)
+        proje.yurutucu = yurutucu
         if 'arastirma_olanaklari' in td['hedef_proje']:
             for olanak in td['hedef_proje']['arastirma_olanaklari']:
                 if 'lab' in olanak:
@@ -402,11 +404,30 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def onaya_gonder(self):
-        proje = BAPProje.objects.get(self.current.task_data['proje_id'])
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         proje.durum = 2
         proje.ProjeIslemGecmisi(eylem=_(u"Onay"),
                                 aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
                                 tarih=datetime.datetime.now())
+        proje.blocking_save()
+        self.object = proje
+
+    def geri_bildirim_goster(self):
+        if 'karar' in self.current.task_data:
+            if self.current.task_data['karar'] == 'revizyon':
+                msg = self.current.task_data['revizyon_gerekce']
+            elif self.current.task_data['karar'] == 'onayla':
+                msg = _(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme alınmıştır.")
+            else:
+                msg = _(u"Başvurunuz koordinasyon birimine iletilmiştir. "
+                        u"En kısa sürede incelenip bilgilendirme yapılacaktır.")
+            form = JsonForm(title=_(u"BAP Proje Geri Bildirim"))
+            form.devam = fields.Button(_(u"Tamam"), cmd=self.current.task_data['karar'])
+            self.current.output['msgbox'] = {
+                "type": "info",
+                "title": _(u"Koordinasyon Birimi Kararı"),
+                "msg": msg}
+            self.form_out(form)
 
     def placeholder_method(self):
         form = JsonForm(title=_(u"PlaceHolder"))
