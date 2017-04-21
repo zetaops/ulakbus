@@ -58,9 +58,7 @@ class IstenAyrilmaOnayForm(JsonForm):
         help_text = __(u"Personel işten ayrılma formu")
         title = __(u"Personel İşten Ayrılma")
 
-    ayrilma_sebeb = fields.Integer(__(u"Ayrılma Sebebi"),
-                                   choices=prepare_choices_for_model(HitapSebep),
-                                   required=True)
+    ayrilma_sebeb = fields.Integer(__(u"Ayrılma Sebebi"),required=True)
     ayrilma_tarih = fields.Date(__(u"Ayrılma Tarihi"), required=True)
     ayrilma_not = fields.Text(__(u"Ayrılma Notu"), required=False)
 
@@ -78,9 +76,9 @@ class WorkflowAtamaForm(JsonForm):
     class YeniRoller(ListNode):
         wf_name = fields.String(__(u"WF Adı"), readonly=True)
         eski_role = fields.String(__(u"Eski Rol"), readonly=True)
-        yeni_role = fields.String(__(u"Yeni Rol"),
-                                  choices=prepare_choices_for_model(Role),
-                                  required=True)
+        yeni_role = fields.String(__(u"Yeni Rol"), required=True)
+        # TODO:yeni_role = fields.String(__(u"Yeni Rol"), choices=prepare_choices_for_model(Role),required=True)
+        # TODO: Pyoko da implement edilen threaded yapıda problem çıkardığı için choices kaldırıldı. Çözüm aranacak.
 
     def generate_yeni_roller(self):
         """
@@ -91,10 +89,10 @@ class WorkflowAtamaForm(JsonForm):
         user = Personel.objects.get(self.context.task_data["personel_id"]).user
 
         for rs in user.role_set:
-            wf_instances = [ins.key for ins in WFInstance.objects.filter(current_actor=rs.role)]
-            queryset = TaskInvitation.objects.filter(progress__in=[20, 30], role=rs.role)
+            wf_instances = [ins.key for ins in WFInstance.objects.order_by().filter(current_actor=rs.role)]
+            queryset = TaskInvitation.objects.order_by().filter(progress__in=[20, 30], role=rs.role)
             if queryset:
-                wf_names = list(set(q.wf_name for q in queryset.filter(
+                wf_names = list(set(q.wf_name for q in queryset.order_by().filter(
                     instance_id__in=wf_instances)))
                 for wf in wf_names:
                     self.YeniRoller(
@@ -131,7 +129,9 @@ class IstenAyrilma(CrudView):
 
     def isten_ayrilma_form(self):
         # Onay form kullanıcıya gösteriliyor
-        self.form_out(IstenAyrilmaOnayForm(current=self.current))
+        form = IstenAyrilmaOnayForm(current=self.current)
+        form.set_choices_of('ayrilma_sebeb',choices = prepare_choices_for_model(HitapSebep))
+        self.form_out(form)
 
     def kontrol(self):
         self.current.task_data['gorevden_ayrilma_sebep_id'] = \
@@ -210,12 +210,12 @@ class IstenAyrilma(CrudView):
                 wf_name = yr['wf_name']
                 instances = []
 
-                for wfi in WFInstance.objects.filter(current_actor=eski_rol, name=wf_name):
+                for wfi in WFInstance.objects.order_by().filter(current_actor=eski_rol, name=wf_name):
                     wfi.current_actor = yeni_rol
                     wfi.blocking_save(query_dict={'current_actor': yeni_rol})
                     instances.append(wfi.key)
 
-                for inv in TaskInvitation.objects.filter(progress__in=[20, 30],
+                for inv in TaskInvitation.objects.order_by().filter(progress__in=[20, 30],
                                                          role=eski_rol,
                                                          wf_name=wf_name,
                                                          instance_id__in=instances):
@@ -223,7 +223,7 @@ class IstenAyrilma(CrudView):
                     inv.blocking_save(query_dict={'role_id': yeni_rol.key})
 
         else:
-            silinecek_roller = personel.user.role_set
+            silinecek_roller = [rs.role for rs in personel.user.role_set]
 
         if len(silinecek_roller) > 0:
             for r in silinecek_roller:
@@ -253,7 +253,7 @@ class IstenAyrilma(CrudView):
         engelli_dereceleri = [2, 3, 4]
         engelli_personel_sayisi = personel.objects.filter(
             engel_derecesi__in=engelli_dereceleri).count()
-        toplam_personel_sayisi = Personel.objects.filter().count()
+        toplam_personel_sayisi = Personel.objects.count()
 
         engelli_personel_kontrol = toplam_personel_sayisi * self.engelli_personel_katsayisi
 

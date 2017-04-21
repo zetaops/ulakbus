@@ -105,6 +105,7 @@ class TestCase(BaseTestCase):
         # Profil sayfasında da kullanıcı adının değiştiği test edilir.
         assert resp.json["forms"]["model"]['username'] == 'deneme_kullanici_adi'
         # Kullanıcı adı tekrardan varsayılan haline getirilir.
+        time.sleep(1)
         user.username = 'ulakbus'
         time.sleep(1)
         user.blocking_save()
@@ -112,6 +113,7 @@ class TestCase(BaseTestCase):
     def test_e_posta_degistir_parola_denemesi_basarisiz(self):
         time.sleep(1)
         user = User.objects.get(self.user_key)
+        assert user.username == 'ulakbus'
         self.prepare_client('/profil_sayfasi_goruntuleme', user=user)
         self.client.post()
         # E-posta değiştirme iş akışına geçiş yapılır.
@@ -231,6 +233,7 @@ class TestCase(BaseTestCase):
         assert user.e_mail == 'ulakbus_mail@ulakbus_mail.com'
         # E-postası eski haline döndürülür.
         user.e_mail = self.user.e_mail
+        time.sleep(1)
         user.blocking_save()
 
     def parola_deneme_basarisiz(self, resp):

@@ -535,7 +535,7 @@ class NotGirisi(CrudView):
                                  aciklama=ogr['aciklama'],
                                  key=ogr['key'])
         except:
-            ogrenciler = OgrenciDersi.objects.filter(sube_id=sube_key)
+            ogrenciler = OgrenciDersi.objects.order_by().filter(sube_id=sube_key)
 
             for ogr in ogrenciler:
                 try:  # Öğrencinin bu sınava ait daha önceden kayıtlı notu var mı?
@@ -600,7 +600,7 @@ class NotGirisi(CrudView):
             sinav_key = self.current.task_data['sinav_key']
             sube_key = self.current.task_data["sube"]
             sinav = Sinav.objects.get(sinav_key)
-            ogrenciler = OgrenciDersi.objects.filter(sube_id=sube_key)
+            ogrenciler = OgrenciDersi.objects.order_by().filter(sube_id=sube_key)
             notlar = []
 
             for ogr in ogrenciler:

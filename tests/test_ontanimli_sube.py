@@ -44,11 +44,10 @@ class TestCase(BaseTestCase):
         ders = Ders()
         ders.ad = 'Havacılık'
         ders.kod = str(random.randrange(1, 100000))
-        ders.save()
-        time.sleep(1)
+        ders.blocking_save()
         assert ders.just_created
+        time.sleep(1)
         sube = Sube.objects.get(ders_id=ders.key)
-
         assert sube.ad == 'Varsayılan Şube'
         assert sube.kontenjan == 30
         assert sube.dis_kontenjan == 5

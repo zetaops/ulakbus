@@ -77,7 +77,7 @@ class TestCase(BaseTestCase):
         # Veritabanından çekilen öğrenci bilgisi ile sunucudan gelen öğrenci bilgisi
         # karşılaştırılarak test edilir.
         for i in range(0, len(resp.json['object']['fields'])):
-            ogrenci_ders = OgrenciDersi.objects.filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')[i]
+            ogrenci_ders = OgrenciDersi.objects.order_by().filter(sube_id='PRGgozMfVXSrAqyO2aMnjS6aBQo')[i]
             ogrenci_ad = "%s %s" % (ogrenci_ders.ogrenci_program.ogrenci.ad,
                                     ogrenci_ders.ogrenci_program.ogrenci.soyad)
             assert ogrenci_ad == resp.json['object']['fields'][i][u'Adı Soyadı']
