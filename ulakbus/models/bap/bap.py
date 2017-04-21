@@ -149,5 +149,14 @@ class BAPProje(Model):
     def yurutucu_diger_projeler(self):
         return self.objects.filter(yurutucu=self.yurutucu)
 
+    class Meta:
+        app = 'BAP'
+        verbose_name = _(u"BAP Proje")
+        verbose_name_plural = _(u"BAP Projeler")
+        list_fields = ['durum', 'proje_no', 'ad','yurutucu']
+        search_fields = ['durum', 'proje_no', 'ad','yurutucu']
+
     def __unicode__(self):
         return "%s: %s" % (self.proje_no, self.ad)
+
+
