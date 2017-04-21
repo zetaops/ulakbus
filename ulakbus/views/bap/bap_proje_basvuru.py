@@ -432,7 +432,5 @@ class ProjeBasvuru(CrudView):
     def placeholder_method(self):
         form = JsonForm(title=_(u"PlaceHolder"))
         form.button = fields.Button(_(u"Tamam"))
-        self.current.task_data['karar'] = 'revizyon'
-        self.current.task_data['revizyon_gerekce'] = "Bu bir revizyon gerekçesi"
         self.form_out(form)
 
