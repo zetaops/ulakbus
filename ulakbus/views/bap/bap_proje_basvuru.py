@@ -410,7 +410,6 @@ class ProjeBasvuru(CrudView):
                                 aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
                                 tarih=datetime.datetime.now())
         proje.blocking_save()
-        self.object = proje
 
     def geri_bildirim_goster(self):
         if 'karar' in self.current.task_data:
