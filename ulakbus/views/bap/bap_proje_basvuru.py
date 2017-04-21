@@ -421,12 +421,8 @@ class ProjeBasvuru(CrudView):
             else:
                 msg = _(u"Başvurunuz koordinasyon birimine iletilmiştir. "
                         u"En kısa sürede incelenip bilgilendirme yapılacaktır.")
-            form = JsonForm(title=_(u"BAP Proje Geri Bildirim"))
+            form = JsonForm(title=_(u"Proje: %s Geri Bildirim" % self.object.ad), help_text=msg)
             form.devam = fields.Button(_(u"Tamam"), cmd=self.current.task_data['karar'])
-            self.current.output['msgbox'] = {
-                "type": "info",
-                "title": _(u"Koordinasyon Birimi Kararı"),
-                "msg": msg}
             self.form_out(form)
 
     def placeholder_method(self):
