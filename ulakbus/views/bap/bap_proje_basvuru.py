@@ -410,7 +410,6 @@ class ProjeBasvuru(CrudView):
                                 aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
                                 tarih=datetime.datetime.now())
         proje.blocking_save()
-        self.object = proje
 
     def geri_bildirim_goster(self):
         if 'karar' in self.current.task_data:
@@ -421,12 +420,10 @@ class ProjeBasvuru(CrudView):
             else:
                 msg = _(u"Başvurunuz koordinasyon birimine iletilmiştir. "
                         u"En kısa sürede incelenip bilgilendirme yapılacaktır.")
-            form = JsonForm(title=_(u"BAP Proje Geri Bildirim"))
+            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+            form = JsonForm(title=_(u"Proje: %s Geri Bildirim" % proje.ad))
+            form.help_text = msg
             form.devam = fields.Button(_(u"Tamam"), cmd=self.current.task_data['karar'])
-            self.current.output['msgbox'] = {
-                "type": "info",
-                "title": _(u"Koordinasyon Birimi Kararı"),
-                "msg": msg}
             self.form_out(form)
 
     def placeholder_method(self):
