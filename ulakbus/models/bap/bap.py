@@ -147,6 +147,7 @@ class BAPButcePlani(Model):
 
     _muhasebe_kod.title = __(u"Muhasebe Kodu")
 
+
 class BAPProje(Model):
 
     durum = field.Integer(_(u"Durum"), choices='bap_proje_durum')
@@ -251,3 +252,28 @@ class BAPProje(Model):
 
     def __unicode__(self):
         return "%s: %s" % (self.proje_no, self.ad)
+
+
+class BAPGundem(Model):
+    class Meta:
+        verbose_name = __(u"Gündem")
+        verbose_name_plural = __(u"Gündemler")
+        list_fields = ['_proje_adi', 'gundem_tipi', 'oturum_numarasi', 'oturum_tarihi', 'karar_no',
+                       'karar_tarihi']
+
+    proje = BAPProje()
+    gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
+    oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
+    oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
+    karar_no = field.Integer(__(u"Karar No"), default=0)
+    karar = field.Text(__(u"Karar"))
+    karar_tarihi = field.Date(__(u"Karar Tarihi"))
+    sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
+
+    def _proje_adi(self):
+        return "%s" % self.proje.ad
+
+    _proje_adi.title = __(u"Projenin Adı")
+
+    def __unicode__(self):
+        return "Bap Gundem"
