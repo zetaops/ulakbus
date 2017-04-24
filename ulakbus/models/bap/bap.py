@@ -153,8 +153,8 @@ class BAPProje(Model):
         app = 'BAP'
         verbose_name = _(u"BAP Proje")
         verbose_name_plural = _(u"BAP Projeler")
-        list_fields = ['durum', 'proje_no', 'ad','yurutucu']
-        search_fields = ['durum', 'proje_no', 'ad','yurutucu']
+        list_fields = ['durum', 'ad', 'yurutucu']
+        search_fields = ['durum', 'ad', 'yurutucu']
 
     def __unicode__(self):
         return "%s: %s" % (self.proje_no, self.ad)

@@ -14,9 +14,9 @@ class ProjeKararForm(JsonForm):
     class Meta:
         title = _(u"İnceleme Sonrası Proje Kararı")
 
-    revizyon = fields.Button(_(u"Revizyon İste"), cmd='revizyon')
-    onayla = fields.Button(_(u"Projeyi Onayla"), cmd='onayla')
-    iptal = fields.Button(_(u"İptal"), cmd='iptal')
+    revizyon = fields.Button(__(u"Revizyon İste"), cmd='revizyon')
+    onayla = fields.Button(__(u"Projeyi Onayla"), cmd='onayla')
+    iptal = fields.Button(__(u"Daha Sonra Karar Ver"), cmd='iptal')
 
 
 class RevizyonGerekceForm(JsonForm):
@@ -24,14 +24,19 @@ class RevizyonGerekceForm(JsonForm):
         title = _(u"Revizyon İsteme Gerekçeleri")
         help_text = _(u"Lütfen revizyon isteme gerekçelerinizi açıkça belirtiniz.")
 
-    revizyon_gerekce = fields.Text(_(u"Revizyon Gerekçe"))
-    gonder = fields.Button(_(u"Revizyona Gönder"), cmd='gonder')
-    iptal = fields.Button(_(u"İptal"), cmd='iptal')
+    revizyon_gerekce = fields.Text(__(u"Revizyon Gerekçe"))
+    gonder = fields.Button(__(u"Revizyona Gönder"), cmd='gonder')
+    iptal = fields.Button(__(u"İptal"), cmd='iptal')
 
 
 class BasvuruKarari(CrudView):
     class Meta:
         model = "BAPProje"
+
+    def __init__(self, current):
+        CrudView.__init__(self, current)
+        if not self.object.key:
+            self.object = self.model_class.objects.get(self.current.task_data['bap_proje_id'])
 
     def karar_sor(self):
         self.current.task_data['karar'] = 'iptal'
@@ -41,6 +46,18 @@ class BasvuruKarari(CrudView):
                              self.object.yurutucu.__unicode__(), self.object.ad)
 
         self.form_out(form)
+
+    def karar_kontrol(self):
+        karar = self.cmd
+        msg = ''
+        if karar == 'onayla' and self.object.durum == 4:
+            msg = _(u"Proje zaten onaylanmış durumdadır.")
+        elif karar == 'revizyon' and self.object.durum == 3:
+            msg = _(u"Proje zaten revizyona gönderilmiş durumdadır")
+
+        if msg:
+            self.current.task_data['cmd'] = 'gecersiz'
+            self.current.task_data['hata_mesaji'] = msg
 
     def revizyon_gerekce_gir(self):
         form = RevizyonGerekceForm(current=self.current)
@@ -56,9 +73,9 @@ class BasvuruKarari(CrudView):
         self.object.save()
 
     def onayla(self):
-        self.object.durum = 4
         self.current.task_data['karar'] = 'onayla'
         self.object.ProjeIslemGecmisi(eylem='Gündeme Alındı',
                                       aciklama='Onaylandı ve gündeme alındı',
                                       tarih=datetime.now().date())
+        self.object.durum = 4
         self.object.save()
