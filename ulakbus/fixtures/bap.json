@@ -172,5 +172,39 @@
       "tr": "Komisyon Tarafından Reddedildi",
       "en": ""
     }
+  },
+  "bap_komisyon_gundemleri": {
+    "1": {
+      "tr": "Proje başvurusu",
+      "en": ""
+    },
+    "2": {
+      "tr": "Ek bütçe talebi",
+      "en": ""
+    },
+    "3": {
+      "tr": "Fasıl aktarım talebi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Ek süre talebi",
+      "en": ""
+    },
+    "5": {
+      "tr": "Proje sonuç raporu",
+      "en": ""
+    },
+    "6": {
+      "tr": "Proje dönem raporu",
+      "en": ""
+    },
+    "7": {
+      "tr": "Proje iptal talebi",
+      "en": ""
+    },
+    "8": {
+      "tr": "Yürütücü değişikliği",
+      "en": ""
+    }
   }
 }
