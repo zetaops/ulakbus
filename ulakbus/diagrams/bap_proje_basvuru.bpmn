@@ -216,7 +216,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1797rdc" sourceRef="ExclusiveGateway_0zxfcws" targetRef="geri_bildirim_goster">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0sddybg" sourceRef="geri_bildirim_gonder" targetRef="geri_bildirim_goster" />
+    <bpmn:sequenceFlow id="bap_checkpoint" sourceRef="geri_bildirim_gonder" targetRef="geri_bildirim_goster" />
     <bpmn:endEvent id="EndEvent_bap_project">
       <bpmn:incoming>SequenceFlow_0230l3q</bpmn:incoming>
     </bpmn:endEvent>
@@ -235,7 +235,7 @@
     </bpmn:userTask>
     <bpmn:serviceTask id="geri_bildirim_goster" name="Bildirim Gönder" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.bildirim_gonder">
       <bpmn:incoming>SequenceFlow_1797rdc</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0sddybg</bpmn:incoming>
+      <bpmn:incoming>bap_checkpoint</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_08ijc4n</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="basvuru_gozden_gecir" name="Başvuru İncele" camunda:type="external" camunda:topic="bap_basvuru_inceleme">
@@ -244,7 +244,7 @@
     </bpmn:serviceTask>
     <bpmn:serviceTask id="geri_bildirim_gonder" name="Karar Ver" camunda:type="external" camunda:topic="bap_basvuru_karari">
       <bpmn:incoming>SequenceFlow_0pva3g5</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0sddybg</bpmn:outgoing>
+      <bpmn:outgoing>bap_checkpoint</bpmn:outgoing>
     </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -645,7 +645,7 @@
           <dc:Bounds x="371" y="754" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0sddybg_di" bpmnElement="SequenceFlow_0sddybg">
+      <bpmndi:BPMNEdge id="SequenceFlow_0sddybg_di" bpmnElement="bap_checkpoint">
         <di:waypoint xsi:type="dc:Point" x="334" y="704" />
         <di:waypoint xsi:type="dc:Point" x="301" y="704" />
         <bpmndi:BPMNLabel>
