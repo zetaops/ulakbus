@@ -216,26 +216,25 @@
     <bpmn:sequenceFlow id="SequenceFlow_1797rdc" sourceRef="ExclusiveGateway_0zxfcws" targetRef="geri_bildirim_goster">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="bap_checkpoint" sourceRef="geri_bildirim_gonder" targetRef="geri_bildirim_goster" />
     <bpmn:endEvent id="EndEvent_bap_project">
       <bpmn:incoming>SequenceFlow_0230l3q</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0suxe5p" default="SequenceFlow_0230l3q">
       <bpmn:incoming>SequenceFlow_08ijc4n</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0230l3q</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_1v8fzqs</bpmn:outgoing>
+      <bpmn:outgoing>bap_check_point</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_1v8fzqs" sourceRef="ExclusiveGateway_0suxe5p" targetRef="revizyon_mesaj_goster">
+    <bpmn:sequenceFlow id="bap_check_point" sourceRef="ExclusiveGateway_0suxe5p" targetRef="revizyon_mesaj_goster">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='revizyon']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1vy30sg" sourceRef="revizyon_mesaj_goster" targetRef="proje_turu_sec" />
     <bpmn:userTask id="revizyon_mesaj_goster" name="Revizyon Mesajı Göster" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.revizyon_mesaji_goster">
-      <bpmn:incoming>SequenceFlow_1v8fzqs</bpmn:incoming>
+      <bpmn:incoming>bap_check_point</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1vy30sg</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="geri_bildirim_goster" name="Bildirim Gönder" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.bildirim_gonder">
       <bpmn:incoming>SequenceFlow_1797rdc</bpmn:incoming>
-      <bpmn:incoming>bap_checkpoint</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1ri69zh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_08ijc4n</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="basvuru_gozden_gecir" name="Başvuru İncele" camunda:type="external" camunda:topic="bap_basvuru_inceleme">
@@ -244,8 +243,9 @@
     </bpmn:serviceTask>
     <bpmn:serviceTask id="geri_bildirim_gonder" name="Karar Ver" camunda:type="external" camunda:topic="bap_basvuru_karari">
       <bpmn:incoming>SequenceFlow_0pva3g5</bpmn:incoming>
-      <bpmn:outgoing>bap_checkpoint</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1ri69zh</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1ri69zh" sourceRef="geri_bildirim_gonder" targetRef="geri_bildirim_goster" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0zvk5l8">
@@ -645,14 +645,7 @@
           <dc:Bounds x="371" y="754" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0sddybg_di" bpmnElement="bap_checkpoint">
-        <di:waypoint xsi:type="dc:Point" x="334" y="704" />
-        <di:waypoint xsi:type="dc:Point" x="301" y="704" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="318" y="689" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1v8fzqs_di" bpmnElement="SequenceFlow_1v8fzqs">
+      <bpmndi:BPMNEdge id="SequenceFlow_1v8fzqs_di" bpmnElement="bap_check_point">
         <di:waypoint xsi:type="dc:Point" x="296" y="563" />
         <di:waypoint xsi:type="dc:Point" x="296" y="425" />
         <bpmndi:BPMNLabel>
@@ -680,6 +673,13 @@
       <bpmndi:BPMNShape id="ServiceTask_0fyaigz_di" bpmnElement="geri_bildirim_gonder">
         <dc:Bounds x="334" y="664" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ri69zh_di" bpmnElement="SequenceFlow_1ri69zh">
+        <di:waypoint xsi:type="dc:Point" x="334" y="704" />
+        <di:waypoint xsi:type="dc:Point" x="301" y="704" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="318" y="679" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
