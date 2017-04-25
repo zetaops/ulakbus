@@ -11,6 +11,7 @@ from zengine.lib.translation import gettext as _
 from pyoko import ListNode
 import datetime
 from ulakbus.settings import DATE_DEFAULT_FORMAT
+from pyoko.fields import DATE_TIME_FORMAT
 
 
 class ProjeTurForm(JsonForm):
@@ -135,6 +136,7 @@ class UniversiteDisiDestekForm(JsonForm):
 
     class Destek(ListNode):
         class Meta:
+            exclude = ['destek_belgesi']
             title = _(u"Destekler")
 
         kurulus = fields.String(_(u"Destekleyen Kurulus"), readonly=True)
@@ -330,6 +332,7 @@ class ProjeBasvuru(CrudView):
         yurutucu = Personel.objects.get(user_id=self.current.user_id)
         proje.yurutucu = yurutucu
         if 'arastirma_olanaklari' in td['hedef_proje']:
+            proje.ArastirmaOlanaklari.clear()
             for olanak in td['hedef_proje']['arastirma_olanaklari']:
                 if 'lab' in olanak:
                     proje.ArastirmaOlanaklari(lab_id=olanak['lab'], demirbas=None, personel=None)
@@ -360,25 +363,29 @@ class ProjeBasvuru(CrudView):
         if 'ProjeTurForm' in td:
             proje.tur_id = str(td['ProjeTurForm']['tur_id'])
         if 'ProjeBelgeForm' in td:
+            proje.ProjeBelgeleri.clear()
             for belge in td['ProjeBelgeForm']['ProjeBelgeleri']:
                 proje.ProjeBelgeleri(belge=belge.belge)
         if 'ProjeCalisanlariForm' in td:
+            proje.ProjeCalisanlari.clear()
             for calisan in td['ProjeCalisanlariForm']['Calisan']:
                 proje.ProjeCalisanlari(ad=calisan['ad'], soyad=calisan['soyad'],
                                        nitelik=calisan['nitelik'],
-                                       calismaya_katkisi=['calismaya_katkisi'])
+                                       calismaya_katkisi=calisan['calismaya_katkisi'])
         if 'UniversiteDisiDestekForm' in td:
+            proje.UniversiteDisiDestek.clear()
             for destek in td['UniversiteDisiDestekForm']['Destek']:
                 proje.UniversiteDisiDestek(
                     kurulus=destek['kurulus'],
                     tur=destek['tur'],
                     destek_miktari=destek['destek_miktari'],
-                    verildigi_tarih=datetime.datetime.strftime(destek['verildigi_tarih'],
-                                                                DATE_DEFAULT_FORMAT),
+                    verildigi_tarih=datetime.datetime.strptime(destek['verildigi_tarih'],
+                                                               DATE_TIME_FORMAT),
                     sure=destek['sure'],
                     destek_belgesi=destek['destek_belgesi']
                 )
         if 'UniversiteDisiUzmanForm' in td:
+            proje.UniversiteDisiUzmanlar.clear()
             for uzman in td['UniversiteDisiUzmanForm']['Uzman']:
                 proje.UniversiteDisiUzmanlar(
                     ad=uzman['ad'],
@@ -411,20 +418,31 @@ class ProjeBasvuru(CrudView):
                                 tarih=datetime.datetime.now())
         proje.blocking_save()
 
-    def geri_bildirim_goster(self):
-        if 'karar' in self.current.task_data:
-            if self.current.task_data['karar'] == 'revizyon':
-                msg = self.current.task_data['revizyon_gerekce']
-            elif self.current.task_data['karar'] == 'onayla':
-                msg = _(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme alınmıştır.")
-            else:
-                msg = _(u"Başvurunuz koordinasyon birimine iletilmiştir. "
-                        u"En kısa sürede incelenip bilgilendirme yapılacaktır.")
-            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-            form = JsonForm(title=_(u"Proje: %s Geri Bildirim" % proje.ad))
-            form.help_text = msg
-            form.devam = fields.Button(_(u"Tamam"), cmd=self.current.task_data['karar'])
-            self.form_out(form)
+    def bildirim_gonder(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        role = proje.yurutucu().user().role_set[0].role
+        if self.input['cmd'] == 'iptal':
+            role.send_notification(
+                title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
+                message=_(u"Başvurunuz koordinasyon birimine iletilmiştir. "
+                          u"En kısa sürede incelenip bilgilendirme yapılacaktır.")
+            )
+        elif self.input['cmd'] == 'onayla':
+            role.send_notification(
+                title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
+                message=_(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme "
+                          u"alınmıştır.")
+            )
+        else:
+            self.current.task_data['cmd'] = 'revizyon'
+
+    def revizyon_mesaji_goster(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        msg = self.current.task_data['revizyon_gerekce']
+        form = JsonForm(title=_(u"%s İsimli Proje İçin Revizyon Talebi" % proje.ad))
+        form.help_text = msg
+        form.devam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
 
     def placeholder_method(self):
         form = JsonForm(title=_(u"PlaceHolder"))
