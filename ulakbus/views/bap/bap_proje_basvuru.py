@@ -375,15 +375,20 @@ class ProjeBasvuru(CrudView):
         if 'UniversiteDisiDestekForm' in td:
             proje.UniversiteDisiDestek.clear()
             for destek in td['UniversiteDisiDestekForm']['Destek']:
+                try:
+                    tarih = datetime.datetime.strptime(destek['verildigi_tarih'], DATE_TIME_FORMAT)
+                except ValueError:
+                    tarih = datetime.datetime.strptime(destek['verildigi_tarih'],
+                                                       DATE_DEFAULT_FORMAT)
                 proje.UniversiteDisiDestek(
                     kurulus=destek['kurulus'],
                     tur=destek['tur'],
                     destek_miktari=destek['destek_miktari'],
-                    verildigi_tarih=datetime.datetime.strptime(destek['verildigi_tarih'],
-                                                               DATE_TIME_FORMAT),
+                    verildigi_tarih=tarih,
                     sure=destek['sure'],
                     destek_belgesi=destek['destek_belgesi']
                 )
+
         if 'UniversiteDisiUzmanForm' in td:
             proje.UniversiteDisiUzmanlar.clear()
             for uzman in td['UniversiteDisiUzmanForm']['Uzman']:
