@@ -421,13 +421,13 @@ class ProjeBasvuru(CrudView):
     def bildirim_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         role = proje.yurutucu().user().role_set[0].role
-        if self.input['cmd'] == 'iptal':
+        if self.current.task_data['karar'] == 'iptal' or self.cmd == 'iptal':
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
                 message=_(u"Başvurunuz koordinasyon birimine iletilmiştir. "
                           u"En kısa sürede incelenip bilgilendirme yapılacaktır.")
             )
-        elif self.input['cmd'] == 'onayla':
+        elif self.current.task_data['karar'] == 'onayla':
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
                 message=_(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme "
