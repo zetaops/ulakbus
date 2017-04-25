@@ -10,11 +10,16 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 
 
 class ProjeIncelemeForm(JsonForm):
-    proje_hakkinda = fields.Button(_(u"Proje Hakkında"), cmd='proje_hakkinda', style="btn-success")
-    butce_islemleri = fields.Button(_(u"Bütçe İşlemleri"), cmd='butce_islemleri',style="btn-success")
-    proje_calisanlari = fields.Button(_(u"Proje Çalışanları"), cmd='proje_calisanlari',
-                                      style="btn-success")
-    is_plani = fields.Button(_(u"İş Planı"), cmd='is_plani', style="btn-success")
+    """
+    Koordinasyon biriminin projeyi incelerken kategoriler arasında geçiş yapabileceği ve
+    inceleme sonrası karar vermesini sağlayan form.
+
+    """
+
+    proje_hakkinda = fields.Button(_(u"Proje Hakkında"), cmd='proje_hakkinda')
+    butce_islemleri = fields.Button(_(u"Bütçe İşlemleri"), cmd='butce_islemleri')
+    proje_calisanlari = fields.Button(_(u"Proje Çalışanları"), cmd='proje_calisanlari')
+    is_plani = fields.Button(_(u"İş Planı"), cmd='is_plani')
     iptal = fields.Button(_(u"Daha Sonra Karar Ver"), cmd='iptal', style="btn-info")
     karar_ver = fields.Button(_(u"Karar Ver"), cmd='karar_ver', style="btn-info")
 
@@ -41,26 +46,33 @@ class BasvuruInceleme(CrudView):
                          'İş Planı')
         }
 
-        self.default_key = 'proje_hakkinda'
+        self.default_kategori = 'proje_hakkinda'
 
     def kategori_datalari_olustur(self):
+        """
+        Proje bilgilerini kategori kategori ayırır ve dict'e koyar. Gösterime hazır hale getirir.
+
+        """
+
         obj_form = JsonForm(self.object, current=self.current, models=False)._serialize(
             readable=True)
 
         detay_goster_data = {k: {} for k, v in self.detaylar.items()}
 
-        for obj in obj_form:
-            kategori = self.kategori_bul(obj['name'])
+        for obj_field in obj_form:
+            kategori = self.kategori_bul(obj_field['name'])
             if kategori:
-                if obj['type'] == 'ListNode':
-                    if obj['value'] is not None:
-                        key = six.text_type(getattr(self.object, obj['name']).Meta.verbose_name)
-                        detay_goster_data = list_node_to_str(detay_goster_data, kategori, key, obj)
+                if obj_field['type'] == 'ListNode':
+                    if obj_field['value'] is not None:
+                        key = six.text_type(
+                            getattr(self.object, obj_field['name']).Meta.verbose_name)
+                        detay_goster_data = list_node_to_str(detay_goster_data, kategori, key,
+                                                             obj_field)
 
                 else:
-                    key = six.text_type(obj['title'])
-                    detay_goster_data[kategori][key] = str(obj['value']) if obj[
-                                                                                'value'] is not None else ''
+                    key = six.text_type(obj_field['title'])
+                    detay_goster_data[kategori][key] = str(obj_field['value']) if obj_field[
+                                                                                      'value'] is not None else ''
 
         detay_goster_data['proje_calisanlari'][
             'Yürütücü Personel'] = self.object.yurutucu.__unicode__()
@@ -69,28 +81,63 @@ class BasvuruInceleme(CrudView):
             self.current.task_data[k] = v, self.detaylar[k][1]
 
     def istenen_datalari_hazirla(self):
+        """
+        Gösterilmesi istenen kategorinin adını task_data nın içerisine kategori keyi ile koyar.
 
-        key = self.cmd if self.cmd in self.detaylar.keys() else self.default_key
-        self.current.task_data['istenen_key'] = key
+        """
+
+        kategori = self.cmd if self.cmd in self.detaylar.keys() else self.default_kategori
+        self.current.task_data['kategori'] = kategori
 
     def istenen_datalari_goster(self):
-        key = self.current.task_data['istenen_key']
+        """
+        Önceden hazırlanmış datalardan istenen kategoriye ait olanları gösterir.
+
+        """
+
+        key = self.current.task_data['kategori']
         gosterilecek_degerler, form_title = self.current.task_data[key]
         form = ProjeIncelemeForm(title=__(form_title))
         self.form_out(form)
         self.output['object'] = gosterilecek_degerler
 
     def kategori_bul(self, field_name):
+        """
+        Verilen field name'in hangi kategoriye ait olduğunu döndürür. Eğer belirtilmemişse
+        False döner.
+
+        Args:
+            field_name(str): Nesnenin fieldının adı. 'ad', 'soyad' gibi.
+
+        Returns: kategori adı 'proje_hakkinda', 'butce_islemleri' gibi ya da False
+
+
+        """
+
         for kategori, kategori_fields in self.detaylar.items():
             if field_name in kategori_fields[0]:
                 return kategori
         return False
 
 
-def list_node_to_str(detay_goster_data, kategori, key, obj):
-    for i, val in enumerate(obj['value']):
+def list_node_to_str(detay_goster_data, kategori, key, obj_field):
+    """
+    Nesnenin list node fieldının içinde bulunan her bir fieldı key, value şeklinde string haline
+    çevirir ve ilgili kategoriye koyar.
+
+    Args:
+        detay_goster_data:
+        kategori:
+        key:
+        obj:
+
+    Returns:
+
+    """
+
+    for i, val in enumerate(obj_field['value']):
         degerler = []
-        for d in obj['schema']:
+        for d in obj_field['schema']:
             if val[d['name']] is not None:
                 if d['name'].endswith('_id'):
                     obj_val = '%s: %s' % (d['title'], val[d['name']]['unicode'] if val[d['name']][

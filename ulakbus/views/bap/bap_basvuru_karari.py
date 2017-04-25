@@ -10,23 +10,19 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 from datetime import datetime
 
 
-class ProjeKararForm(JsonForm):
-    class Meta:
-        title = _(u"İnceleme Sonrası Proje Kararı")
-
-    revizyon = fields.Button(__(u"Revizyon İste"), cmd='revizyon')
-    onayla = fields.Button(__(u"Projeyi Onayla"), cmd='onayla')
-    iptal = fields.Button(__(u"Daha Sonra Karar Ver"), cmd='iptal')
-
-
 class RevizyonGerekceForm(JsonForm):
+    """
+    Proje hakkında revizyon istenirse, gerekçelerin girileceği form.
+
+    """
+
     class Meta:
         title = _(u"Revizyon İsteme Gerekçeleri")
         help_text = _(u"Lütfen revizyon isteme gerekçelerinizi açıkça belirtiniz.")
 
     revizyon_gerekce = fields.Text(__(u"Revizyon Gerekçe"))
     gonder = fields.Button(__(u"Revizyona Gönder"), cmd='gonder')
-    iptal = fields.Button(__(u"İptal"), cmd='iptal')
+    iptal = fields.Button(__(u"İptal"), cmd='iptal', form_validation=False)
 
 
 class BasvuruKarari(CrudView):
@@ -39,31 +35,46 @@ class BasvuruKarari(CrudView):
             self.object = self.model_class.objects.get(self.current.task_data['bap_proje_id'])
 
     def karar_sor(self):
+        """
+        İnceleme sonrası koordinasyon birimi proje hakkında karar verir.
+
+        """
+
         self.current.task_data['karar'] = 'iptal'
-        form = ProjeKararForm(current=self.current)
+        form = JsonForm(current=self.current, title=_(u"İnceleme Sonrası Proje Kararı"))
+
+        if self.object.durum not in [3, 4]:
+            form.onayla = fields.Button(__(u"Projeyi Onayla"), cmd='onayla')
+
+        if not self.object.durum == 3:
+            form.revizyon = fields.Button(__(u"Revizyon İste"), cmd='revizyon')
+
+        form.iptal = fields.Button(__(u"Daha Sonra Karar Ver"), cmd='iptal')
+
         form.help_text = _(
-            u"Lütfen %s adlı personelin %s projesi hakkındaki kararınızı belirleyiniz.") % (
-                             self.object.yurutucu.__unicode__(), self.object.ad)
+            u"Lütfen %s adlı personelin %s projesi hakkındaki kararınızı belirleyiniz."
+            u"Projenin güncel durumu: %s") % (
+                             self.object.yurutucu.__unicode__(), self.object.ad,
+                             self.object.get_durum_display())
 
         self.form_out(form)
 
-    def karar_kontrol(self):
-        karar = self.cmd
-        msg = ''
-        if karar == 'onayla' and self.object.durum == 4:
-            msg = _(u"Proje zaten onaylanmış durumdadır.")
-        elif karar == 'revizyon' and self.object.durum == 3:
-            msg = _(u"Proje zaten revizyona gönderilmiş durumdadır")
-
-        if msg:
-            self.current.task_data['cmd'] = 'gecersiz'
-            self.current.task_data['hata_mesaji'] = msg
-
     def revizyon_gerekce_gir(self):
+        """
+        Projeye neden revizyon istendiği açıkça belirtilir.
+
+        """
+
         form = RevizyonGerekceForm(current=self.current)
         self.form_out(form)
 
     def revizyon_kaydet_gonder(self):
+        """
+        Revizyon gerekçeleri öğretim elemanına gönderilmek üzere kaydedilir, projenin durumu
+        revizyonda olarak değiştirilir ve işlem geçmişi güncellenir.
+
+        """
+
         gerekce = self.input['form']['revizyon_gerekce']
         self.current.task_data['karar'] = 'revizyon'
         self.current.task_data['revizyon_gerekce'] = gerekce
@@ -73,6 +84,11 @@ class BasvuruKarari(CrudView):
         self.object.save()
 
     def onayla(self):
+        """
+        Projenin durumu onaylandı olarak değiştirilir ve işlem geçmişi güncellenir.
+
+        """
+
         self.current.task_data['karar'] = 'onayla'
         self.object.ProjeIslemGecmisi(eylem='Gündeme Alındı',
                                       aciklama='Onaylandı ve gündeme alındı',

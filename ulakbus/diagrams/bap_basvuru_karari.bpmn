@@ -4,17 +4,7 @@
     <bpmn:participant id="basvuru_karari" name="BAP Başvuru Kararı" processRef="bap_basvuru_karari" />
   </bpmn:collaboration>
   <bpmn:process id="bap_basvuru_karari" name="" isExecutable="false">
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>SequenceFlow_18d788j</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:userTask id="KararSor" name="Karar Sor" camunda:assignee="bap.bap_basvuru_karari.BasvuruKarari.karar_sor">
-      <bpmn:incoming>SequenceFlow_18d788j</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0bb712n</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_18d788j" sourceRef="StartEvent_1" targetRef="KararSor" />
-    <bpmn:sequenceFlow id="SequenceFlow_1w5wcqo" sourceRef="ExclusiveGateway_1mujq03" targetRef="EndEvent">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'iptal']]></bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0sstqn4" sourceRef="ExclusiveGateway_0pht4yk" targetRef="RevizyonGerekceGir">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'revizyon']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -38,33 +28,18 @@
       <bpmn:outgoing>SequenceFlow_0q2s3rw</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="EndEvent" name="EndEvent">
-      <bpmn:incoming>SequenceFlow_1w5wcqo</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1buic3v</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0toc5si</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0q2s3rw</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0e2miql</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_1mujq03" default="SequenceFlow_1wmtu4q">
-      <bpmn:incoming>SequenceFlow_0bb712n</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1wmtu4q</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_1w5wcqo</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0bb712n" sourceRef="KararSor" targetRef="ExclusiveGateway_1mujq03" />
-    <bpmn:sequenceFlow id="SequenceFlow_1wmtu4q" sourceRef="ExclusiveGateway_1mujq03" targetRef="KararKontrol" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_0pht4yk">
-      <bpmn:incoming>SequenceFlow_0obgadi</bpmn:incoming>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0pht4yk" default="SequenceFlow_0e2miql">
+      <bpmn:incoming>SequenceFlow_0sxgs34</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0sstqn4</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0txjk0u</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0e2miql</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0obgadi" sourceRef="KararKontrol" targetRef="ExclusiveGateway_0pht4yk" />
-    <bpmn:sequenceFlow id="SequenceFlow_0e2miql" sourceRef="ExclusiveGateway_0pht4yk" targetRef="EndEvent">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'gecersiz']]></bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="KararKontrol" name="Karar Kontrol" camunda:class="bap.bap_basvuru_karari.BasvuruKarari.karar_kontrol">
-      <bpmn:incoming>SequenceFlow_1wmtu4q</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0obgadi</bpmn:outgoing>
-    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0e2miql" sourceRef="ExclusiveGateway_0pht4yk" targetRef="EndEvent" />
     <bpmn:userTask id="RevizyonGerekceGir" name="Revizyon Gerekçe Gir" camunda:assignee="bap.bap_basvuru_karari.BasvuruKarari.revizyon_gerekce_gir">
       <bpmn:incoming>SequenceFlow_0sstqn4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1k62xiw</bpmn:outgoing>
@@ -73,16 +48,24 @@
       <bpmn:incoming>SequenceFlow_0txjk0u</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1buic3v</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:userTask id="KararSor" name="Karar Sor" camunda:assignee="bap.bap_basvuru_karari.BasvuruKarari.karar_sor">
+      <bpmn:incoming>SequenceFlow_18d788j</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0sxgs34</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_18d788j</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0sxgs34" sourceRef="KararSor" targetRef="ExclusiveGateway_0pht4yk" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0ewxpol">
       <bpmndi:BPMNShape id="Participant_1ww1hbp_di" bpmnElement="basvuru_karari">
-        <dc:Bounds x="370" y="184" width="1017" height="434" />
+        <dc:Bounds x="538" y="184" width="849" height="421" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="420" y="403" width="36" height="36" />
+        <dc:Bounds x="588" y="403" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="438" y="439" width="0" height="0" />
+          <dc:Bounds x="606" y="439" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_0pht4yk_di" bpmnElement="ExclusiveGateway_0pht4yk" isMarkerVisible="true">
@@ -97,15 +80,6 @@
           <dc:Bounds x="1116" y="439" width="48" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1w5wcqo_di" bpmnElement="SequenceFlow_1w5wcqo">
-        <di:waypoint xsi:type="dc:Point" x="646" y="446" />
-        <di:waypoint xsi:type="dc:Point" x="646" y="563" />
-        <di:waypoint xsi:type="dc:Point" x="1140" y="563" />
-        <di:waypoint xsi:type="dc:Point" x="1140" y="439" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="893" y="548" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0sstqn4_di" bpmnElement="SequenceFlow_0sstqn4">
         <di:waypoint xsi:type="dc:Point" x="870" y="396" />
         <di:waypoint xsi:type="dc:Point" x="870" y="286" />
@@ -115,10 +89,10 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_18d788j_di" bpmnElement="SequenceFlow_18d788j">
-        <di:waypoint xsi:type="dc:Point" x="456" y="421" />
-        <di:waypoint xsi:type="dc:Point" x="497" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="624" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="669" y="421" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="477" y="406" width="0" height="0" />
+          <dc:Bounds x="647" y="406" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1buic3v_di" bpmnElement="SequenceFlow_1buic3v">
@@ -144,7 +118,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_1i6zpjr_di" bpmnElement="KararSor">
-        <dc:Bounds x="497" y="381" width="100" height="80" />
+        <dc:Bounds x="669" y="381" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_127iflx_di" bpmnElement="RevizyonGerekceGir">
         <dc:Bounds x="953" y="246" width="100" height="80" />
@@ -182,36 +156,6 @@
       <bpmndi:BPMNShape id="ServiceTask_1qgplzm_di" bpmnElement="Onayla">
         <dc:Bounds x="953" y="381" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_1f39crv_di" bpmnElement="KararKontrol">
-        <dc:Bounds x="711" y="381" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ExclusiveGateway_1mujq03_di" bpmnElement="ExclusiveGateway_1mujq03" isMarkerVisible="true">
-        <dc:Bounds x="621" y="396" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="646" y="446" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0bb712n_di" bpmnElement="SequenceFlow_0bb712n">
-        <di:waypoint xsi:type="dc:Point" x="597" y="421" />
-        <di:waypoint xsi:type="dc:Point" x="621" y="421" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="609" y="396" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1wmtu4q_di" bpmnElement="SequenceFlow_1wmtu4q">
-        <di:waypoint xsi:type="dc:Point" x="671" y="421" />
-        <di:waypoint xsi:type="dc:Point" x="711" y="421" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="691" y="406" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0obgadi_di" bpmnElement="SequenceFlow_0obgadi">
-        <di:waypoint xsi:type="dc:Point" x="811" y="421" />
-        <di:waypoint xsi:type="dc:Point" x="845" y="421" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="828" y="406" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0e2miql_di" bpmnElement="SequenceFlow_0e2miql">
         <di:waypoint xsi:type="dc:Point" x="870" y="446" />
         <di:waypoint xsi:type="dc:Point" x="870" y="516" />
@@ -219,6 +163,13 @@
         <di:waypoint xsi:type="dc:Point" x="1140" y="439" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1005" y="501" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sxgs34_di" bpmnElement="SequenceFlow_0sxgs34">
+        <di:waypoint xsi:type="dc:Point" x="769" y="421" />
+        <di:waypoint xsi:type="dc:Point" x="845" y="421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="807" y="396" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko.db.connection import cache
 from zengine.models import TaskInvitation, WFInstance
-from zengine.views.crud import CrudView, obj_filter
+from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from datetime import datetime, timedelta
 
@@ -15,13 +15,24 @@ class BasvuruListeleme(CrudView):
         model = "BAPProje"
 
     def karar_sonrasi_islemler(self):
+        """
+        Listeden seçilen projenin onaylanmasına karar verilmiş ise proje sahibi öğretim üyesi
+        bildirim ile bilgilendirilir. Eğer revizyon kararı verilmiş ise proje başvurusu iş akışı
+        instance'ı bulunur ve invitation yollanır. Böylelikle öğretim üyesinin tekrardan iş akışına
+        katılması ve projeyi revizyon etmesi sağlanır.
+
+        """
+
         user = self.object.yurutucu.user
         role = ilgili_rolu_bul(user)
         today = datetime.today()
         karar = self.current.task_data['karar']
 
         if karar == 'onayla':
-            role.send_notification(message='Projeniz onaylanmıştır',
+            role.send_notification(title=_(u"Proje Onayı"),
+                                   message=_(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme alınmıştır."),
+                                   typ=1,
+                                   url='',
                                    sender=self.current.user
                                    )
         else:
@@ -59,24 +70,36 @@ class BasvuruListeleme(CrudView):
             inv.save()
 
     def karar_sonrasi_islem_mesaji(self):
+        """
+        Koordinasyon biriminin kararından sonra başarılı işlem mesajı oluşturulur.
+
+        """
+
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'Kararınız İletildi'),
             "msg": _(u'%s projesi hakkındaki kararınız %s adlı personele iletilmiştir.') % (
                 self.object.ad, self.object.yurutucu.__unicode__())}
-
-    def gecersiz_islem_mesaji(self):
-        self.current.output['msgbox'] = {
-            'type': 'warning', "title": _(u'Geçersiz İşlem'),
-            "msg": _(self.current.task_data['hata_mesaji'])}
-
 
     @obj_filter
     def basvuru_listeleme(self, obj, result):
         result['actions'] = [
             {'name': _(u'İncele'), 'cmd': 'incele', 'mode': 'normal', 'show_as': 'button'}]
 
+    @list_query
+    def list_by_ordered(self, queryset):
+        return queryset.filter().order_by()
+
 
 def ilgili_rolu_bul(user):
+    """
+    Verilen kullanıcı nesnesinin öğretim elemanı abstract rolü ile ilgili rolü bulunur.
+
+    Args:
+        user(obj): User nesnesi
+
+    Returns: (obj): Role nesnesi
+
+    """
     if len(user.role_set) > 1:
         for role_set in user.role_set:
             if role_set.role.abstract_role.key == 'OGRETIM_ELEMANI':
