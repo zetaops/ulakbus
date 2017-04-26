@@ -38,9 +38,9 @@
         <bpmn:flowNodeRef>ExclusiveGateway_0zxfcws</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_bap_project</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0suxe5p</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>geri_bildirim_goster</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>basvuru_gozden_gecir</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>geri_bildirim_gonder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>geri_bildirim_goster</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="SequenceFlow_0wo95u0" sourceRef="proje_turu_sec" targetRef="gerekli_belge_bildir" />
@@ -232,11 +232,6 @@
       <bpmn:incoming>bap_check_point</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1vy30sg</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="geri_bildirim_goster" name="Bildirim Gönder" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.bildirim_gonder">
-      <bpmn:incoming>SequenceFlow_1797rdc</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1ri69zh</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_08ijc4n</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:serviceTask id="basvuru_gozden_gecir" name="Başvuru İncele" camunda:type="external" camunda:topic="bap_basvuru_inceleme">
       <bpmn:incoming>SequenceFlow_09g84xd</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1who4td</bpmn:outgoing>
@@ -246,6 +241,11 @@
       <bpmn:outgoing>SequenceFlow_1ri69zh</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1ri69zh" sourceRef="geri_bildirim_gonder" targetRef="geri_bildirim_goster" />
+    <bpmn:userTask id="geri_bildirim_goster" name="Bildirim Gönder" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.bildirim_gonder">
+      <bpmn:incoming>SequenceFlow_1ri69zh</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1797rdc</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_08ijc4n</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0zvk5l8">
@@ -664,9 +664,6 @@
       <bpmndi:BPMNShape id="UserTask_1fq2f04_di" bpmnElement="revizyon_mesaj_goster">
         <dc:Bounds x="246" y="345" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_08bpcv5_di" bpmnElement="geri_bildirim_goster">
-        <dc:Bounds x="201" y="664" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_0lfu6c6_di" bpmnElement="basvuru_gozden_gecir">
         <dc:Bounds x="553" y="664" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -677,9 +674,12 @@
         <di:waypoint xsi:type="dc:Point" x="334" y="704" />
         <di:waypoint xsi:type="dc:Point" x="301" y="704" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="318" y="679" width="0" height="0" />
+          <dc:Bounds x="318" y="689" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0gh9opa_di" bpmnElement="geri_bildirim_goster">
+        <dc:Bounds x="201" y="664" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

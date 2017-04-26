@@ -136,13 +136,13 @@ class UniversiteDisiDestekForm(JsonForm):
 
     class Destek(ListNode):
         class Meta:
-            exclude = ['destek_belgesi']
             title = _(u"Destekler")
 
         kurulus = fields.String(_(u"Destekleyen Kurulus"), readonly=True)
         tur = fields.String(_(u"Destek Türü"), readonly=True)
         destek_miktari = fields.Float(_(u"Destek Miktarı"), readonly=True)
-        verildigi_tarih = fields.Date(_(u"Verildiği Tarih"), readonly=True)
+        verildigi_tarih = fields.Date(_(u"Verildiği Tarih"), format=DATE_DEFAULT_FORMAT,
+                                      readonly=True)
         sure = fields.Integer(_(u"Süresi(Ay Cinsinden)"), readonly=True)
         destek_belgesi = fields.File(_(u"Destek Belgesi"), random_name=True)
 
@@ -430,23 +430,38 @@ class ProjeBasvuru(CrudView):
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
                 message=_(u"Başvurunuz koordinasyon birimine iletilmiştir. "
-                          u"En kısa sürede incelenip bilgilendirme yapılacaktır.")
+                          u"En kısa sürede incelenip bilgilendirme yapılacaktır."),
+                sender=self.current.user
             )
+            karar = 'iptal'
+            help_text = _(u"%s adlı projeye daha sonra karar vermeyi seçtiniz. Başvuru Listeleme iş "
+                     u"akışından bu projeye ulaşabilirsiniz." % proje.ad)
+
         elif self.current.task_data['karar'] == 'onayla':
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
                 message=_(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme "
-                          u"alınmıştır.")
+                          u"alınmıştır."),
+                sender=self.current.user
             )
+            karar = 'onayla'
+            help_text = _(u"%s adlı projeyi onayladınız. Kararınızı değiştirmek istiyorsanız Başvuru "
+                     u"Listeleme iş akışından bu projeye ulaşabilirsiniz." % proje.ad)
         else:
-            self.current.task_data['cmd'] = 'revizyon'
+            karar = 'revizyon'
+            help_text = _(u"%s adlı projeyi revizyona gönderdiniz. %s, revizyon talebi hakkında "
+                     u"bilgilendirildi." % (proje.ad, proje.yurutucu))
+        form = JsonForm(title=_(u"%s Hakkındaki Kararınız" % proje.ad))
+        form.help_text = help_text
+        form.tamam = fields.Button(_(u"Tamam"), cmd=karar)
 
     def revizyon_mesaji_goster(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        baslik = _(u"#### Revizyon Gerekçeleri:\n")
         msg = self.current.task_data['revizyon_gerekce']
         form = JsonForm(title=_(u"%s İsimli Proje İçin Revizyon Talebi" % proje.ad))
-        form.help_text = msg
-        form.devam = fields.Button(_(u"Tamam"))
+        form.help_text = baslik + msg
+        form.devam = fields.Button(_(u"Revize Et"))
         self.form_out(form)
 
     def placeholder_method(self):
