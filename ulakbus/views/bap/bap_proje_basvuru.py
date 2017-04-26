@@ -376,10 +376,11 @@ class ProjeBasvuru(CrudView):
             proje.UniversiteDisiDestek.clear()
             for destek in td['UniversiteDisiDestekForm']['Destek']:
                 try:
-                    tarih = datetime.datetime.strptime(destek['verildigi_tarih'], DATE_TIME_FORMAT)
+                    tarih = datetime.datetime.strptime(
+                        destek['verildigi_tarih'], DATE_TIME_FORMAT).date()
                 except ValueError:
                     tarih = datetime.datetime.strptime(destek['verildigi_tarih'],
-                                                       DATE_DEFAULT_FORMAT)
+                                                       DATE_DEFAULT_FORMAT).date()
                 proje.UniversiteDisiDestek(
                     kurulus=destek['kurulus'],
                     tur=destek['tur'],
