@@ -455,6 +455,7 @@ class ProjeBasvuru(CrudView):
         form = JsonForm(title=_(u"%s Hakkındaki Kararınız" % proje.ad))
         form.help_text = help_text
         form.tamam = fields.Button(_(u"Tamam"), cmd=karar)
+        self.form_out(form)
 
     def revizyon_mesaji_goster(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
