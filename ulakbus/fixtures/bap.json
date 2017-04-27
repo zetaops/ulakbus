@@ -1,4 +1,152 @@
 {
+  "onemli_tarih_aciklama": {
+    "1": {
+      "tr": "Proje başvuruları",
+      "en": ""
+    },
+    "2": {
+      "tr": "Proje değerlendirmeleri",
+      "en": ""
+    },
+    "3": {
+      "tr": "Proje Sözleşmeleri",
+      "en": ""
+    }
+  },
+  "analitik_butce_dorduncu_duzey_gider_kodlari": {
+    "03.2.1.01": {
+      "tr": "Kırtasiye Alımları",
+      "en": ""
+    },
+    "03.2.1.02": {
+      "tr": "Büro Malzemesi Alımları",
+      "en": ""
+    },
+    "03.2.1.03": {
+      "tr": "Periyodik Yayın Alımları",
+      "en": ""
+    },
+    "03.2.1.04": {
+      "tr": "Diğer Yayın Alımları",
+      "en": ""
+    },
+    "03.2.1.05": {
+      "tr": "Baskı ve Cilt Giderleri",
+      "en": ""
+    },
+    "03.2.1.90": {
+      "tr": "Diğer Kırtasiye ve Büro malzeme alımları",
+      "en": ""
+    },
+    "03.2.3.02": {
+      "tr": "Akaryakıt ve Yağ Alımları",
+      "en": ""
+    },
+    "03.2.4.03": {
+      "tr": "Yem Alımları",
+      "en": ""
+    },
+    "03.2.6.01": {
+      "tr": "Laboratuvar Malzemesi ile Kimyevi ve Temrinlik Malzeme Alımı",
+      "en": ""
+    },
+    "03.2.6.02": {
+      "tr": "Tıbbi Malzeme ve İlaç Alımları",
+      "en": ""
+    },
+    "03.2.6.03": {
+      "tr": "Zirai Malzeme ve İlaç Alımları",
+      "en": ""
+    },
+    "03.2.6.04": {
+      "tr": "Canlı Hayvan Alım, Bakım ve Diğer Giderleri",
+      "en": ""
+    },
+    "03.2.6.90": {
+      "tr": "Diğer Özel Malzeme Alımları",
+      "en": ""
+    },
+    "03.2.9.01": {
+      "tr": "Bahçe Malzemesi Alımları ile Yapım ve Bakım Giderleri ",
+      "en": ""
+    },
+    "03.2.9.90": {
+      "tr": "Diğer Tüketim Mal ve Malzemesi Alımları",
+      "en": ""
+    },
+    "03.3.1.01": {
+      "tr": "Yurtiçi Geçici Görev Yollukları",
+      "en": ""
+    },
+    "03.3.3.01": {
+      "tr": "Yurtdışı Geçici Görev Yollukları",
+      "en": ""
+    },
+    "03.5.1.01": {
+      "tr": "Etüt-Proje Bilirkişi Ekspertiz Giderleri",
+      "en": ""
+    },
+    "03.5.1.02": {
+      "tr": "Araştırma ve Geliştirme Giderleri",
+      "en": ""
+    },
+    "03.5.1.05": {
+      "tr": "Harita Yapım ve Alım Giderleri",
+      "en": ""
+    },
+    "03.5.1.06": {
+      "tr": "Enformasyon ve Raporlama Giderleri",
+      "en": ""
+    },
+    "03.5.1.90": {
+      "tr": "Diğer Müşavir Firma ve Kişilere Ödemeler",
+      "en": ""
+    },
+    "03.5.5.01": {
+      "tr": "Dayanıklı Mal ve Malzeme Kiralama Giderleri",
+      "en": ""
+    },
+    "03.5.5.02": {
+      "tr": "Taşıt Kiralaması Giderleri",
+      "en": ""
+    },
+    "03.5.5.08": {
+      "tr": "Yüzer Taşıt Kiralaması Giderleri",
+      "en": ""
+    },
+    "03.5.9.03": {
+      "tr": "Kurslara Katılma Giderleri",
+      "en": ""
+    },
+    "03.7.1.01": {
+      "tr": "Büro ve İşyeri Mal , Malzeme Alımları",
+      "en": ""
+    },
+    "03.7.1.02": {
+      "tr": "Büro ve İşyeri Makine ve Teçhizat Alımları",
+      "en": ""
+    },
+    "03.7.1.03": {
+      "tr": "Avadanlık ve Yedek Parça Alımları (Herhangi bir bakım sözleşmesinden veya işinden bağımsız olarak alınan yedek parçalar)",
+      "en": ""
+    },
+    "03.7.1.90": {
+      "tr": "Diğer Dayanıklı Mal ve Malzeme Alımı",
+      "en": ""
+    },
+    "03.7.2.01": {
+      "tr": "Bilgisayar Yazılım Alımları ve Yapımları",
+      "en": ""
+    },
+    "03.7.3.01": {
+      "tr": "Tefrişat Bakım ve Onarım Giderleri",
+      "en": ""
+    },
+    "03.7.3.02": {
+      "tr": "Makine Teçhizat Bakım ve Onarım Giderleri",
+      "en": ""
+    }
+  },
   "bap_proje_durum": {
     "1": {
       "tr": "Kaydedildi",
@@ -24,6 +172,39 @@
       "tr": "Komisyon Tarafından Reddedildi",
       "en": ""
     }
-
+  },
+  "bap_komisyon_gundemleri": {
+    "1": {
+      "tr": "Proje başvurusu",
+      "en": ""
+    },
+    "2": {
+      "tr": "Ek bütçe talebi",
+      "en": ""
+    },
+    "3": {
+      "tr": "Fasıl aktarım talebi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Ek süre talebi",
+      "en": ""
+    },
+    "5": {
+      "tr": "Proje sonuç raporu",
+      "en": ""
+    },
+    "6": {
+      "tr": "Proje dönem raporu",
+      "en": ""
+    },
+    "7": {
+      "tr": "Proje iptal talebi",
+      "en": ""
+    },
+    "8": {
+      "tr": "Yürütücü değişikliği",
+      "en": ""
+    }
   }
 }
