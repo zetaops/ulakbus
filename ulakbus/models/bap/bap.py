@@ -105,51 +105,6 @@ class BAPIs(Model):
         return "%s" % self.ad
 
 
-class BAPIsPaketi(Model):
-    class Meta:
-        verbose_name = __(u"Bap İş Paketi")
-        verbose_name_plural = __(u"Bap İş Paketleri")
-
-    ad = field.String(__(u"İş Paketinin Adı"))
-    baslama_tarihi = field.Date(__(u"Başlama Tarihi"))
-    bitis_tarihi = field.Date(__(u"Bitiş Tarihi"))
-    proje = BAPProje()
-
-    class Isler(ListNode):
-        isler = BAPIs()
-
-    def __unicode__(self):
-        return "%s" % self.ad
-
-
-class BAPButcePlani(Model):
-    class Meta:
-        verbose_name = __(u"Bap Bütçe Planı")
-        verbose_name_plural = __(u"Bap Bütçe Planları")
-        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet', 'toplam_fiyat']
-
-    muhasebe_kod = field.String(__(u"Muhasebe Kod"),
-                                choices='analitik_butce_dorduncu_duzey_gider_kodlari',
-                                default="03.2.6.90")
-    kod_adi = field.String(__(u"Kod Adı"))
-    ad = field.String(__(u"Alınacak Malzemenin Adı"))
-    birim_fiyat = field.Float(__(u"Birim Fiyat"))
-    adet = field.Integer(__(u"Adet"))
-    toplam_fiyat = field.Float(__(u"Toplam Fiyat"))
-    gerekce = field.Text(__(u"Gerekçe"))
-    ilgili_proje = field.String(__(u"Bağlı olduğu Projenin Adı"), readonly=True, required=False)
-    onay_tarihi = field.Date(__(u"Onay Tarihi"))
-    proje = BAPProje()
-    
-    def __unicode__(self):
-        return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
-
-    def _muhasebe_kod(self):
-        return self.muhasebe_kod
-
-    _muhasebe_kod.title = __(u"Muhasebe Kodu")
-
-
 class BAPProje(Model):
 
     durum = field.Integer(_(u"Durum"), choices='bap_proje_durum')
@@ -261,6 +216,51 @@ class BAPProje(Model):
 
     def __unicode__(self):
         return "%s: %s" % (self.proje_no, self.ad)
+
+
+class BAPIsPaketi(Model):
+    class Meta:
+        verbose_name = __(u"Bap İş Paketi")
+        verbose_name_plural = __(u"Bap İş Paketleri")
+
+    ad = field.String(__(u"İş Paketinin Adı"))
+    baslama_tarihi = field.Date(__(u"Başlama Tarihi"))
+    bitis_tarihi = field.Date(__(u"Bitiş Tarihi"))
+    proje = BAPProje()
+
+    class Isler(ListNode):
+        isler = BAPIs()
+
+    def __unicode__(self):
+        return "%s" % self.ad
+
+
+class BAPButcePlani(Model):
+    class Meta:
+        verbose_name = __(u"Bap Bütçe Planı")
+        verbose_name_plural = __(u"Bap Bütçe Planları")
+        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet', 'toplam_fiyat']
+
+    muhasebe_kod = field.String(__(u"Muhasebe Kod"),
+                                choices='analitik_butce_dorduncu_duzey_gider_kodlari',
+                                default="03.2.6.90")
+    kod_adi = field.String(__(u"Kod Adı"))
+    ad = field.String(__(u"Alınacak Malzemenin Adı"))
+    birim_fiyat = field.Float(__(u"Birim Fiyat"))
+    adet = field.Integer(__(u"Adet"))
+    toplam_fiyat = field.Float(__(u"Toplam Fiyat"))
+    gerekce = field.Text(__(u"Gerekçe"))
+    ilgili_proje = field.String(__(u"Bağlı olduğu Projenin Adı"), readonly=True, required=False)
+    onay_tarihi = field.Date(__(u"Onay Tarihi"))
+    proje = BAPProje()
+    
+    def __unicode__(self):
+        return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
+
+    def _muhasebe_kod(self):
+        return self.muhasebe_kod
+
+    _muhasebe_kod.title = __(u"Muhasebe Kodu")
 
 
 class BAPGundem(Model):
