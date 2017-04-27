@@ -27,6 +27,12 @@ class BapButcePlani(CrudView):
             del self.current.task_data['object_id']
             self.object = BAPButcePlani()
 
+    def butce_plani_listele(self):
+        form = JsonForm(title=_(u"Bap Bütçe Planları"))
+        form.ekle = fields.Button(_(u"Ekle"))
+        form.bitir = fields.Button(_(u"Tamam"), cmd='bitir')
+        self.list(custom_form=form)
+
     def butce_kalemi_sec(self):
         form = JsonForm(self.object, current=self.current, title=_(u"Bütçe Kalemi Seç"))
         form.include = ['muhasebe_kod']
@@ -69,7 +75,7 @@ class BapButcePlani(CrudView):
         self.form_out(form)
 
     def list(self, custom_form=None):
-        CrudView.list(self)
+        CrudView.list(self, custom_form=custom_form)
         toplam = sum(float(obj['fields'][5])for obj in self.output['objects'][1:])
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
                                        'actions': ''})
