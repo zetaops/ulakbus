@@ -113,6 +113,7 @@ class BAPIsPaketi(Model):
     ad = field.String(__(u"İş Paketinin Adı"))
     baslama_tarihi = field.Date(__(u"Başlama Tarihi"))
     bitis_tarihi = field.Date(__(u"Bitiş Tarihi"))
+    proje = BAPProje()
 
     class Isler(ListNode):
         isler = BAPIs()
@@ -138,6 +139,7 @@ class BAPButcePlani(Model):
     gerekce = field.Text(__(u"Gerekçe"))
     ilgili_proje = field.String(__(u"Bağlı olduğu Projenin Adı"), readonly=True, required=False)
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
+    proje = BAPProje()
     
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
