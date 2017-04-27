@@ -6,6 +6,7 @@
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from zengine.forms import JsonForm, fields
+from zengine.models import WFInstance
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 from pyoko import ListNode
@@ -209,6 +210,9 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def gerekli_belge_form(self):
+        wfi = WFInstance.objects.get(self.current.token)
+        wfi.wf_object = self.current.task_data['bap_proje_id']
+        wfi.blocking_save()
         tur_id = self.current.task_data['ProjeTurForm']['tur_id']
         tur = BAPProjeTurleri.objects.get(tur_id)
         form = GerekliBelgeForm()
@@ -427,7 +431,7 @@ class ProjeBasvuru(CrudView):
     def bildirim_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         role = proje.yurutucu().user().role_set[0].role
-        if self.current.task_data['karar'] == 'iptal' or self.cmd == 'iptal':
+        if self.cmd == 'iptal' or self.current.task_data['karar'] == 'iptal':
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
                 message=_(u"Başvurunuz koordinasyon birimine iletilmiştir. "

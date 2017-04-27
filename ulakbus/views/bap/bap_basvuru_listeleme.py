@@ -37,16 +37,11 @@ class BasvuruListeleme(CrudView):
                                    )
         else:
 
-            wfi_finished_instances = WFInstance.objects.filter(name='bap_proje_basvuru',
-                                                               finished=True)
-            wfi_list = [wfi for wfi in wfi_finished_instances if
-                        wfi._data['data']['bap_proje_id'] == self.object.key and wfi._data['pool']['ogretim_uyesi_lane'] == role.key]
-            wfi = sorted(wfi_list, key=lambda wfi: wfi.timestamp, reverse=True)[0]
-
+            wfi = WFInstance.objects.get(wf_object=self.object.key, finished=True)
             wfi.finished = False
             wfi.data['karar'] = self.current.task_data['karar']
             wfi.data['revizyon_gerekce'] = self.current.task_data['revizyon_gerekce']
-            wfi.step = '"bap_check_point", 1'
+            wfi.step = '"bap_revizyon_noktasi", 1'
             wfi.blocking_save()
 
             cache.delete(wfi.key)

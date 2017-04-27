@@ -52,10 +52,10 @@ class BasvuruKarari(CrudView):
         form.iptal = fields.Button(__(u"Daha Sonra Karar Ver"), cmd='iptal')
 
         form.help_text = _(
-            u"Lütfen %s adlı personelin %s projesi hakkındaki kararınızı belirleyiniz."
-            u"Projenin güncel durumu: %s") % (
-                             self.object.yurutucu.__unicode__(), self.object.ad,
-                             self.object.get_durum_display())
+u"""Lütfen %s adlı personelin %s projesi hakkındaki kararınızı belirleyiniz.\n
+Projenin güncel durumu: %s
+""") % (self.object.yurutucu.__unicode__(), self.object.ad,
+        self.object.get_durum_display())
 
         self.form_out(form)
 

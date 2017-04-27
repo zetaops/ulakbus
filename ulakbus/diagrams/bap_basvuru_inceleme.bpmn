@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
   <bpmn:collaboration id="Collaboration_17try9i">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="hidden" />
+      </camunda:properties>
+    </bpmn:extensionElements>
     <bpmn:participant id="basvuru_inceleme" name="BAP Başvuru İnceleme" processRef="bap_basvuru_inceleme" />
   </bpmn:collaboration>
   <bpmn:process id="bap_basvuru_inceleme" isExecutable="false">
@@ -40,76 +45,76 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_17try9i">
       <bpmndi:BPMNShape id="Participant_0igdopl_di" bpmnElement="basvuru_inceleme">
-        <dc:Bounds x="576" y="276" width="720" height="315" />
+        <dc:Bounds x="206" y="18" width="720" height="315" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="627" y="485" width="36" height="36" />
+        <dc:Bounds x="257" y="227" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="645" y="521" width="0" height="0" />
+          <dc:Bounds x="275" y="263" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0vyn9cw_di" bpmnElement="SequenceFlow_0vyn9cw">
-        <di:waypoint xsi:type="dc:Point" x="663" y="503" />
-        <di:waypoint xsi:type="dc:Point" x="714" y="503" />
+        <di:waypoint xsi:type="dc:Point" x="293" y="245" />
+        <di:waypoint xsi:type="dc:Point" x="344" y="245" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="689" y="488" width="0" height="0" />
+          <dc:Bounds x="319" y="230" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_1l0d5fk_di" bpmnElement="EndEvent">
-        <dc:Bounds x="1183" y="352" width="36" height="36" />
+        <dc:Bounds x="813" y="94" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1177" y="388" width="48" height="13" />
+          <dc:Bounds x="807" y="130" width="48" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1q0dp3x_di" bpmnElement="KategoriDatalariOlustur">
-        <dc:Bounds x="714" y="463" width="100" height="80" />
+        <dc:Bounds x="344" y="205" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0x3fln3_di" bpmnElement="SequenceFlow_0x3fln3">
-        <di:waypoint xsi:type="dc:Point" x="814" y="503" />
-        <di:waypoint xsi:type="dc:Point" x="858" y="503" />
+        <di:waypoint xsi:type="dc:Point" x="444" y="245" />
+        <di:waypoint xsi:type="dc:Point" x="488" y="245" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="836" y="488" width="0" height="0" />
+          <dc:Bounds x="466" y="230" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0w2uk6m_di" bpmnElement="SequenceFlow_0w2uk6m">
-        <di:waypoint xsi:type="dc:Point" x="958" y="503" />
-        <di:waypoint xsi:type="dc:Point" x="991" y="503" />
+        <di:waypoint xsi:type="dc:Point" x="588" y="245" />
+        <di:waypoint xsi:type="dc:Point" x="621" y="245" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="975" y="488" width="0" height="0" />
+          <dc:Bounds x="605" y="230" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0okqb2b_di" bpmnElement="IstenenDatalariHazirla">
-        <dc:Bounds x="858" y="463" width="100" height="80" />
+        <dc:Bounds x="488" y="205" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_1b6v5fk_di" bpmnElement="IstenenDatalariGoster">
-        <dc:Bounds x="991" y="463" width="100" height="80" />
+        <dc:Bounds x="621" y="205" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_0k820sk_di" bpmnElement="ExclusiveGateway_0k820sk" isMarkerVisible="true">
-        <dc:Bounds x="1016" y="345" width="50" height="50" />
+        <dc:Bounds x="646" y="87" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1041" y="395" width="0" height="0" />
+          <dc:Bounds x="671" y="137" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0qumhjf_di" bpmnElement="SequenceFlow_0qumhjf">
-        <di:waypoint xsi:type="dc:Point" x="1041" y="463" />
-        <di:waypoint xsi:type="dc:Point" x="1041" y="395" />
+        <di:waypoint xsi:type="dc:Point" x="671" y="205" />
+        <di:waypoint xsi:type="dc:Point" x="671" y="137" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1056" y="419" width="0" height="0" />
+          <dc:Bounds x="686" y="161" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0euzrct_di" bpmnElement="SequenceFlow_0euzrct">
-        <di:waypoint xsi:type="dc:Point" x="1066" y="370" />
-        <di:waypoint xsi:type="dc:Point" x="1183" y="370" />
+        <di:waypoint xsi:type="dc:Point" x="696" y="112" />
+        <di:waypoint xsi:type="dc:Point" x="813" y="112" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1125" y="355" width="0" height="0" />
+          <dc:Bounds x="755" y="97" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_02mldha_di" bpmnElement="SequenceFlow_02mldha">
-        <di:waypoint xsi:type="dc:Point" x="1016" y="370" />
-        <di:waypoint xsi:type="dc:Point" x="908" y="370" />
-        <di:waypoint xsi:type="dc:Point" x="908" y="463" />
+        <di:waypoint xsi:type="dc:Point" x="646" y="112" />
+        <di:waypoint xsi:type="dc:Point" x="538" y="112" />
+        <di:waypoint xsi:type="dc:Point" x="538" y="205" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="962" y="355" width="0" height="0" />
+          <dc:Bounds x="592" y="97" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
