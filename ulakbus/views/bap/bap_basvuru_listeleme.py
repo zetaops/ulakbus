@@ -6,7 +6,7 @@
 from pyoko.db.connection import cache
 from zengine.models import TaskInvitation, WFInstance
 from zengine.views.crud import CrudView, obj_filter, list_query
-from zengine.lib.translation import gettext as _, gettext_lazy as __
+from zengine.lib.translation import gettext as _
 from datetime import datetime, timedelta
 
 
@@ -30,7 +30,8 @@ class BasvuruListeleme(CrudView):
 
         if karar == 'onayla':
             role.send_notification(title=_(u"Proje Onayı"),
-                                   message=_(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme alınmıştır."),
+                                   message=_(u"""%s adlı proje başvurunuz koordinasyon birimi
+                                   tarafından onaylanarak gündeme alınmıştır.""" % self.object.ad),
                                    typ=1,
                                    url='',
                                    sender=self.current.user
@@ -46,8 +47,10 @@ class BasvuruListeleme(CrudView):
 
             cache.delete(wfi.key)
 
-            role.send_notification(title='',
-                                   message='',
+            role.send_notification(title=_(u"Proje Revizyon İsteği"),
+                                   message=_(u"""%s adlı başvurunuza koordinasyon birimi tarafından
+                                   revizyon istenmiştir. Aşağıda bulunan linke tıklayarak revizyon
+                                   işlemine devam edebilirsiniz.""" % self.object.ad),
                                    typ=1,
                                    url='#/cwf/bap_proje_basvuru/%s' % wfi.key,
                                    sender=self.current.user
@@ -81,7 +84,7 @@ class BasvuruListeleme(CrudView):
 
     @list_query
     def list_by_ordered(self, queryset):
-        return queryset.filter().order_by()
+        return queryset.filter().exclude(durum=None).order_by()
 
 
 def ilgili_rolu_bul(user):
