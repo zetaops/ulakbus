@@ -985,26 +985,6 @@ class KanunlaVerilenTerfi(CrudView):
                "msg": _(u'Terfi işlemi iptal edildi')}
         self.current.output["msgbox"] = msg
 
-    def personel_dairesi_bilgilendir(self):
-        """
-            Terfi işleminin sonucuna yönelik personel daire başkanlığından ilgili
-            personelin bilgilendirilmesi işlemini yapar. Bilgilendirme işlemi
-            notification ile yapılır.
-        Args:
-            self:
-
-        Returns:
-
-        """
-
-        personel = Personel.objects.get(self.current.task_data["personel_id"])
-        onay_makami = "Rektörlük" if personel.personel_turu == 1 else "Genel Sekreterlik"
-        self.current.task_data["onay_makami"] = onay_makami
-        personel_dairesi_mesaj = ""
-        user = User.objects.get(self.current.task_data["personel_user_id"])
-
-
-
     def ilgili_personel_bilgilendir(self):
         """
         Terfisi yapılan personelin terfi sonucuna dair bilgilendirilmesini sağlayan metod
