@@ -18,11 +18,10 @@
       <bpmn:lane id="Lane_15njkpn">
         <bpmn:flowNodeRef>terfi_durum_goruntule</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0v6enj9</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>terfi_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>kayit_tamamla</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>terfi_red</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>personel_dairesi_bilgilendir</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ilgili_personel_bilgilendir</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0s1qpgi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ilgili_personel_bilgilendir</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="SequenceFlow_1wzb8hd" sourceRef="permission_belirle" targetRef="terfi_durum_goruntule" />
@@ -36,30 +35,20 @@
       <bpmn:outgoing>SequenceFlow_1vsvrr9</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_04r00g3" sourceRef="terfi_durum_goruntule" targetRef="ExclusiveGateway_0v6enj9" />
-    <bpmn:sequenceFlow id="SequenceFlow_1g17t6n" sourceRef="ExclusiveGateway_0v6enj9" targetRef="terfi_kaydet">
+    <bpmn:sequenceFlow id="SequenceFlow_1g17t6n" sourceRef="ExclusiveGateway_0v6enj9" targetRef="kayit_tamamla">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='terfi_kaydet']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1vsvrr9" sourceRef="ExclusiveGateway_0v6enj9" targetRef="terfi_red">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='terfi_red']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="terfi_kaydet" name="Terfi Kaydet" camunda:class="personel.kadro.KanunlaVerilenTerfi.kayit_tamamla">
+    <bpmn:serviceTask id="kayit_tamamla" name="Kayıt Tamamla" camunda:class="personel.kadro.KanunlaVerilenTerfi.kayit_tamamla">
       <bpmn:incoming>SequenceFlow_1g17t6n</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1streln</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1p2ltnf</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="terfi_red" name="Terfi Red" camunda:class="personel.kadro.KanunlaVerilenTerfi.terfi_red">
       <bpmn:incoming>SequenceFlow_1vsvrr9</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0rq308e</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1wamm2y</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="personel_dairesi_bilgilendir" name="Personel Dairesi Bilgilendir" camunda:class="personel.kadro.KanunlaVerilenTerfi.personel_dairesi_bilgilendir">
-      <bpmn:incoming>SequenceFlow_1streln</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0rq308e</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_16j0o6f</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="ilgili_personel_bilgilendir" name="İlgili Personel Bilgilendir" camunda:class="personel.kadro.KanunlaVerilenTerfi.ilgili_personel_bilgilendir">
-      <bpmn:incoming>SequenceFlow_16j0o6f</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1tq6vsh</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_16j0o6f" sourceRef="personel_dairesi_bilgilendir" targetRef="ilgili_personel_bilgilendir" />
     <bpmn:serviceTask id="hizmet_cetveli_kayit" name="Hizmet Cetveli Kayıt" camunda:class="personel.kadro.KanunlaVerilenTerfi.hizmet_cetveli_kayit">
       <bpmn:incoming>SequenceFlow_10mawgt</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rrdbw9</bpmn:outgoing>
@@ -68,7 +57,7 @@
       <bpmn:incoming>SequenceFlow_0dwn0ln</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_10mawgt</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="terfi_bilgileri_kaydet" name="Terfi Bilgileri Kaydet" camunda:class="personel.kadro.KanunlaVerilenTerfi.terfi_kaydet">
+    <bpmn:serviceTask id="terfi_bilgileri_kaydet" name="Terfi Bilgileri Kaydet" camunda:class="personel.kadro.KanunlaVerilenTerfi.terfi_bilgileri_kaydet">
       <bpmn:incoming>SequenceFlow_16krubf</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0dwn0ln</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -93,12 +82,10 @@
       <bpmn:outgoing>SequenceFlow_1ryshcc</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_1ryshcc" sourceRef="onay_belgesi_uret" targetRef="EndEvent_0bc2e1n" />
-    <bpmn:sequenceFlow id="SequenceFlow_1streln" sourceRef="terfi_kaydet" targetRef="personel_dairesi_bilgilendir" />
     <bpmn:userTask id="permission_belirle" name="Permission Belirle" camunda:assignee="personel.kadro.KanunlaVerilenTerfi.permission_belirle">
       <bpmn:incoming>SequenceFlow_0rrdbw9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wzb8hd</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0rq308e" sourceRef="terfi_red" targetRef="personel_dairesi_bilgilendir" />
     <bpmn:exclusiveGateway id="ExclusiveGateway_0s1qpgi">
       <bpmn:incoming>SequenceFlow_1tq6vsh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1i4awob</bpmn:outgoing>
@@ -111,6 +98,13 @@
     <bpmn:sequenceFlow id="SequenceFlow_0nwqy4b" sourceRef="ExclusiveGateway_0s1qpgi" targetRef="EndEvent_0bc2e1n">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">terfi_onay_flag==False</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:userTask id="ilgili_personel_bilgilendir" name="İlgili Personel Bilgilendir" camunda:assignee="personel.kadro.KanunlaVerilenTerfi.ilgili_personel_bilgilendir">
+      <bpmn:incoming>SequenceFlow_1p2ltnf</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1wamm2y</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1tq6vsh</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1p2ltnf" sourceRef="kayit_tamamla" targetRef="ilgili_personel_bilgilendir" />
+    <bpmn:sequenceFlow id="SequenceFlow_1wamm2y" sourceRef="terfi_red" targetRef="ilgili_personel_bilgilendir" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1n8tch5">
@@ -203,7 +197,7 @@
           <dc:Bounds x="887.5" y="422" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0orng4g_di" bpmnElement="terfi_kaydet">
+      <bpmndi:BPMNShape id="ServiceTask_0orng4g_di" bpmnElement="kayit_tamamla">
         <dc:Bounds x="881" y="342" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_17tbhep_di" bpmnElement="terfi_red">
@@ -221,19 +215,6 @@
         <di:waypoint xsi:type="dc:Point" x="1090" y="457" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1044" y="272" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_066dred_di" bpmnElement="personel_dairesi_bilgilendir">
-        <dc:Bounds x="724" y="457" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_0urgrd7_di" bpmnElement="ilgili_personel_bilgilendir">
-        <dc:Bounds x="526" y="457" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_16j0o6f_di" bpmnElement="SequenceFlow_16j0o6f">
-        <di:waypoint xsi:type="dc:Point" x="724" y="497" />
-        <di:waypoint xsi:type="dc:Point" x="626" y="497" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="630" y="472" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0ls8ysf_di" bpmnElement="hizmet_cetveli_kayit">
@@ -256,26 +237,9 @@
           <dc:Bounds x="436.5" y="234" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1streln_di" bpmnElement="SequenceFlow_1streln">
-        <di:waypoint xsi:type="dc:Point" x="881" y="382" />
-        <di:waypoint xsi:type="dc:Point" x="774" y="382" />
-        <di:waypoint xsi:type="dc:Point" x="774" y="457" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="782.5" y="357" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_0mn3c2g_di" bpmnElement="permission_belirle">
         <dc:Bounds x="1038" y="57" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0rq308e_di" bpmnElement="SequenceFlow_0rq308e">
-        <di:waypoint xsi:type="dc:Point" x="881" y="600" />
-        <di:waypoint xsi:type="dc:Point" x="853" y="600" />
-        <di:waypoint xsi:type="dc:Point" x="853" y="497" />
-        <di:waypoint xsi:type="dc:Point" x="824" y="497" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="823" y="538.5" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ExclusiveGateway_0s1qpgi_di" bpmnElement="ExclusiveGateway_0s1qpgi" isMarkerVisible="true">
         <dc:Bounds x="551" y="370" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -302,6 +266,26 @@
         <di:waypoint xsi:type="dc:Point" x="419" y="277" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="440" y="370" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1thfc2y_di" bpmnElement="ilgili_personel_bilgilendir">
+        <dc:Bounds x="526" y="457" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1p2ltnf_di" bpmnElement="SequenceFlow_1p2ltnf">
+        <di:waypoint xsi:type="dc:Point" x="881" y="382" />
+        <di:waypoint xsi:type="dc:Point" x="754" y="382" />
+        <di:waypoint xsi:type="dc:Point" x="754" y="497" />
+        <di:waypoint xsi:type="dc:Point" x="626" y="497" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="724" y="429.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wamm2y_di" bpmnElement="SequenceFlow_1wamm2y">
+        <di:waypoint xsi:type="dc:Point" x="881" y="600" />
+        <di:waypoint xsi:type="dc:Point" x="576" y="600" />
+        <di:waypoint xsi:type="dc:Point" x="576" y="537" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="683.5" y="575" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

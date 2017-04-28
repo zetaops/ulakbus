@@ -6,9 +6,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from ulakbus.models import User, Personel, HitapSebep
 from zengine.lib.test_utils import BaseTestCase
 from zengine.messaging.model import Message
-from ulakbus.models import User, Personel, HitapSebep
 import time
 import random
 
@@ -48,7 +48,7 @@ class TestCase(BaseTestCase):
 
 
         usr = User.objects.get(username='mithat')
-        personel = Personel.objects.filter()[random.randint(0,3000)]
+        personel = Personel.objects.all()[random.randint(0,3000)]
         personel_id = personel.key
         self.prepare_client('kanunla_verilen_terfi', user=usr)
         self.client.post(cmd="terfi_form", id=personel.key)
@@ -68,16 +68,16 @@ class TestCase(BaseTestCase):
         self.client.post(cmd="terfi_bilgileri_kaydet", form=terfi_form)
 
         hizmet_cetveli_form = {
-            "terfi_sebep_id" : HitapSebep.objects.get(sebep_no=6),
+            "terfi_sebep" : HitapSebep.objects.get(sebep_no=6).key,
             "baslama_tarihi" : "10.04.2017",
             "bitis_tarihi" : "25.04.2017",
             "kurum_onay_tarihi" : "09.04.2017"
         }
 
-        resp = self.client.post(cmd="hizmet_cetveli_kayit")
+        resp = self.client.post(cmd="hizmet_cetveli_kayit", form=hizmet_cetveli_form)
 
-        assert resp.json["msgbox"]["title"] == u'Onaya Gönderildi'
-
+        assert resp.json["msgbox"]["title"] == u'Onaya Gönderildi!'
+        time.sleep(2)
         assert Message.objects.count() == mesaj_sayisi +1
 
         mesaj_sayisi += 1
@@ -86,15 +86,27 @@ class TestCase(BaseTestCase):
         # Terfisi yapılan personel eğer akademik personel ise onay makamı rektörlüktür.
 
         if personel.personel_turu == 1:
-            usr = User.objects.get(username='rektor')
+            token, usr_onay = self.get_user_token('rektor')
         else:
-            usr = User.objects.get(username='genel_sekreter')
+            token, usr_onay = self.get_user_token('genel_sekreter')
 
-        self.prepare_client('kanunla_verilen_terfi', user=usr)
+        self.prepare_client('kanunla_verilen_terfi', user=usr_onay, token=token)
 
-        resp = self.client.post(cmd='terfi_kaydet')
+        self.client.post(token=token)
 
-        assert resp.json["msgbox"]["title"] == u"Terfi İşlemi Gerçekleştirildi"
+        resp = self.client.post(cmd='kayit_tamamla')
+
+        #self.client.set_path('/logout')
+        #time.sleep(1)
+        token, usr = self.get_user_token('mithat')
+        self.prepare_client('kanunla_verilen_terfi', user=usr, token=token)
+        self.client.post(token=token)
+
+        personel_dairesi_mesaj = Message.objects.filter(channel_id=usr.prv_exchange)[0]
+
+        terfisi_yapilan_personel_mesaj = Message.objects.filter(channel_id = personel.user.prv_exchange)[0]
+
+        assert terfisi_yapilan_personel_mesaj.msg_title == u"Terfi Gerçekleştirildi"
 
         assert Message.objects.count() == mesaj_sayisi + 2
 

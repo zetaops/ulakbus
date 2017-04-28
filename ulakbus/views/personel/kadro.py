@@ -772,7 +772,7 @@ class KanunlaVerilenTerfi(CrudView):
 
         self.form_out(_form)
 
-    def terfi_kaydet(self):
+    def terfi_bilgileri_kaydet(self):
         """
             Personel İşleri Dairesinden yetkili bir personelin girdiği terfi bilgilerinin
             iş akışının ileriki aşamalarında veritabanına kaydedilmek üzere saklandığı metoddur.
@@ -875,7 +875,11 @@ class KanunlaVerilenTerfi(CrudView):
             __Kadro Derece__ : {kadro_derece}
 
 
-            ### Terfi Öncesi Kademe ve Derece Durumları
+            ### Terfi Önces            user.send_notification(
+                title=_(u"Terfi İşlemi Gerçekleştirildi"),
+                message=personel_dairesi_mesaj,
+                sender=self.current.user
+            )i Kademe ve Derece Durumları
 
             __Görev Aylığı__ : {gorev_ayligi_derece}/{gorev_ayligi_kademe}
             __Kazanılmış Hak__ : {gorev_ayligi_derece}/{gorev_ayligi_kademe}
@@ -999,6 +1003,47 @@ class KanunlaVerilenTerfi(CrudView):
         personel_dairesi_mesaj = ""
         user = User.objects.get(self.current.task_data["personel_user_id"])
 
+
+
+    def ilgili_personel_bilgilendir(self):
+        """
+        Terfisi yapılan personelin terfi sonucuna dair bilgilendirilmesini sağlayan metod
+        Args:
+            self:
+
+        Returns:
+
+        """
+        user = User.objects.get(self.current.task_data["terfi_user_id"])
+        personel = Personel.objects.get(user_id=user.key)
+        onay_makami = "Rektörlük" if personel.personel_turu == 1 else "Genel Sekreterlik"
+        if self.current.task_data["terfi_onay_flag"] is True:
+            personel_mesaj = """
+                Terfiniz {onay_makami} tarafından onaylandı.
+            """.format(
+                onay_makami = onay_makami
+            )
+            user.send_notification(
+                title=_(u"Terfi Gerçekleştirildi"),
+                message=personel_mesaj,
+                sender=self.current.user
+            )
+        else:
+            personel_mesaj="""
+                Terfiniz {onay_makami} tarafından onaylanmadı.
+            """.format(
+                onay_makami=onay_makami
+            )
+            user.send_notification(
+                title=_(u"Terfi Onaylanmadı"),
+                message=personel_mesaj,
+                sender=self.current.user
+            )
+
+        msg = {"title": _(u'Personel Terfi Islemi Onaylandi!'),
+               "body": _(u'Onay Belgesi icin Personel Islerine Gonderildi.')}
+        self.current.output['msgbox'] = msg
+
         if self.current.task_data["terfi_onay_flag"] is True:
             personel_dairesi_mesaj = """
                 Aşağıda bilgileri verilen personelin terfisi {onay_makami} tarafından onaylanmıştır.
@@ -1021,12 +1066,6 @@ class KanunlaVerilenTerfi(CrudView):
                 emekli_muktesebat_kademe=self.current.task_data["em_kademe"],
                 onay_makami=onay_makami
             )
-
-            user.send_notification(
-                title=_(u"Terfi İşlemi Gerçekleştirildi"),
-                message=personel_dairesi_mesaj,
-                sender=self.current.user
-            )
         else:
             personel_dairesi_mesaj = """
                 T.C. No : {tcno}
@@ -1036,50 +1075,9 @@ class KanunlaVerilenTerfi(CrudView):
             """.format(
                 onay_makami = onay_makami
             )
-
-            user.send_notification(
-                title=_(u"Terfi İşlemi Onaylanmadı"),
-                message=personel_dairesi_mesaj,
-                sender=self.current.user
-            )
-
-    def ilgili_personel_bilgilendir(self):
-        """
-        Terfisi yapılan personelin terfi sonucuna dair bilgilendirilmesini sağlayan metod
-        Args:
-            self:
-
-        Returns:
-
-        """
-        user = User.objects.get(self.current.task_data["terfi_user_id"])
-        if self.current.task_data["terfi_onay_flag"] is True:
-            personel_mesaj = """
-                Terfiniz {onay_makami} tarafından onaylandı.
-            """.format(
-                onay_makami = self.current.task_data["onay_makami"]
-            )
-            user.send_notification(
-                title=_(u"Terfi Gerçekleştirildi"),
-                message=personel_mesaj,
-                sender=self.current.user
-            )
-        else:
-            personel_mesaj="""
-                Terfiniz {onay_makami} tarafından onaylanmadı.
-            """.format(
-                onay_makami=self.current.task_data["onay_makami"]
-            )
-            user.send_notification(
-                title=_(u"Terfi Onaylanmadı"),
-                message=personel_mesaj,
-                sender=self.current.user
-            )
-
-        msg = {"title": _(u'Personel Terfi Islemi Onaylandi!'),
-               "body": _(u'Onay Belgesi icin Personel Islerine Gonderildi.')}
-        self.current.output['msgbox'] = msg
-        self.current.task_data['LANE_CHANGE_MSG'] = msg
+        self.current.task_data['LANE_CHANGE_MSG'] = personel_dairesi_mesaj
+        personel_dairesi_user = User.objects.get(self.current.task_data["personel_user_id"])
+        self.current.invite_other_parties([personel_dairesi_user])
 
     def onay_belgesi_uret(self):
         """
