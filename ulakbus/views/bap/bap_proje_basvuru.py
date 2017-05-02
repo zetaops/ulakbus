@@ -368,8 +368,9 @@ class ProjeBasvuru(CrudView):
             proje.tur_id = str(td['ProjeTurForm']['tur_id'])
         if 'ProjeBelgeForm' in td:
             proje.ProjeBelgeleri.clear()
-            for belge in td['ProjeBelgeForm']['ProjeBelgeleri']:
-                proje.ProjeBelgeleri(belge=belge.belge)
+            if td['ProjeBelgeForm']['ProjeBelgeleri'] is not None:
+                for belge in td['ProjeBelgeForm']['ProjeBelgeleri']:
+                    proje.ProjeBelgeleri(belge=belge.belge)
         if 'ProjeCalisanlariForm' in td:
             proje.ProjeCalisanlari.clear()
             for calisan in td['ProjeCalisanlariForm']['Calisan']:
@@ -378,21 +379,22 @@ class ProjeBasvuru(CrudView):
                                        calismaya_katkisi=calisan['calismaya_katkisi'])
         if 'UniversiteDisiDestekForm' in td:
             proje.UniversiteDisiDestek.clear()
-            for destek in td['UniversiteDisiDestekForm']['Destek']:
-                try:
-                    tarih = datetime.datetime.strptime(
-                        destek['verildigi_tarih'], DATE_TIME_FORMAT).date()
-                except ValueError:
-                    tarih = datetime.datetime.strptime(destek['verildigi_tarih'],
-                                                       DATE_DEFAULT_FORMAT).date()
-                proje.UniversiteDisiDestek(
-                    kurulus=destek['kurulus'],
-                    tur=destek['tur'],
-                    destek_miktari=destek['destek_miktari'],
-                    verildigi_tarih=tarih,
-                    sure=destek['sure'],
-                    destek_belgesi=destek['destek_belgesi']
-                )
+            if td['UniversiteDisiDestekForm']['Destek'] is not None:
+                for destek in td['UniversiteDisiDestekForm']['Destek']:
+                    try:
+                        tarih = datetime.datetime.strptime(
+                            destek['verildigi_tarih'], DATE_TIME_FORMAT).date()
+                    except ValueError:
+                        tarih = datetime.datetime.strptime(destek['verildigi_tarih'],
+                                                           DATE_DEFAULT_FORMAT).date()
+                    proje.UniversiteDisiDestek(
+                        kurulus=destek['kurulus'],
+                        tur=destek['tur'],
+                        destek_miktari=destek['destek_miktari'],
+                        verildigi_tarih=tarih,
+                        sure=destek['sure'],
+                        destek_belgesi=destek['destek_belgesi']
+                    )
 
         if 'UniversiteDisiUzmanForm' in td:
             proje.UniversiteDisiUzmanlar.clear()
@@ -434,8 +436,8 @@ class ProjeBasvuru(CrudView):
         if self.cmd == 'iptal' or self.current.task_data['karar'] == 'iptal':
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
-                message=_(u"Başvurunuz koordinasyon birimine iletilmiştir. "
-                          u"En kısa sürede incelenip bilgilendirme yapılacaktır."),
+                message=_(u"%s adlı proje başvurunuz koordinasyon birimine iletilmiştir. "
+                          u"En kısa sürede incelenip bilgilendirme yapılacaktır." % proje.ad),
                 sender=self.current.user
             )
             karar = 'iptal'
@@ -445,8 +447,8 @@ class ProjeBasvuru(CrudView):
         elif self.current.task_data['karar'] == 'onayla':
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
-                message=_(u"Başvurunuz koordinasyon birimi tarafından onaylanarak gündeme "
-                          u"alınmıştır."),
+                message=_(u"%s adlı proje başvurunuz koordinasyon birimi tarafından onaylanarak gündeme "
+                          u"alınmıştır." % proje.ad),
                 sender=self.current.user
             )
             karar = 'onayla'
@@ -470,8 +472,4 @@ class ProjeBasvuru(CrudView):
         form.devam = fields.Button(_(u"Revize Et"))
         self.form_out(form)
 
-    def placeholder_method(self):
-        form = JsonForm(title=_(u"PlaceHolder"))
-        form.button = fields.Button(_(u"Tamam"))
-        self.form_out(form)
 
