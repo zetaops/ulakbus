@@ -7,6 +7,7 @@
 from ulakbus.models import BAPProje, User
 from zengine.lib.test_utils import BaseTestCase
 from zengine.models import WFInstance, Message
+import time
 
 
 class TestCase(BaseTestCase):
@@ -151,8 +152,7 @@ class TestCase(BaseTestCase):
         assert 'Otomatik Süpürge' in resp.json['forms']['form'][0]['helpvalue']
         self.client.post(cmd='onayla', wf='bap_basvuru_listeleme', form={'tamam': 1})
 
-        import time
-        time.sleep(3)
+        time.sleep(1)
         notification = Message.objects.filter().order_by()[0]
         project.reload()
         wfi.reload()
@@ -161,9 +161,13 @@ class TestCase(BaseTestCase):
         assert 'End' in wfi.step
         assert 'Otomatik Süpürge' in notification.msg_title
         assert 'gündeme alınmıştır' in notification.body
+        assert notification.sender.key == user_koord.key
+        assert notification.receiver.key == user_ou.key
         assert wfi._data['data']['GenelBilgiGirForm']['ad'] == 'Otomatik Süpürge'
 
         wfi._data['data']['GenelBilgiGirForm']['ad'] = 'Akıllı Robot'
         wfi.save()
         project.ad = 'Akıllı Robot'
         project.save()
+
+        BAPProje.objects.filter(durum=None).delete()
