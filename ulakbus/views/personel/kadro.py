@@ -684,6 +684,7 @@ class GorevSuresiUzat(CrudView):
         personel.gorev_suresi_bitis = self.current.input["form"]["gorev_suresi_bitis"]
         personel.save()
 
+
 class KanunlaVerilenTerfiForm(JsonForm):
     """ Kanunla verilen terfi işlemleri için form olarak kullanılmak üzere oluşturuldu """
 
@@ -693,35 +694,35 @@ class KanunlaVerilenTerfiForm(JsonForm):
 
         grouping = [
             {
-                "layout" : "4",
-                "groups" : [
+                "layout": "4",
+                "groups": [
                     {
-                        "group_title" : _(u'Görev Aylığı'),
-                        "items" : [
+                        "group_title": _(u'Görev Aylığı'),
+                        "items": [
                             'ga_derece', 'ga_kademe'
                         ],
-                        "collapse" : True
+                        "collapse": True
                     }
                 ]
             },
             {
-                "layout" : "4",
-                "groups" : [
+                "layout": "4",
+                "groups": [
                     {
-                        "group_title" : _(u'Kazanılmış Hak'),
-                        "items" : [
+                        "group_title": _(u'Kazanılmış Hak'),
+                        "items": [
                             'kh_derece', 'kh_kademe'
                         ],
-                        "collapse" : True
+                        "collapse": True
                     }
                 ]
             },
             {
-                "layout" : "4",
-                "groups" : [
+                "layout": "4",
+                "groups": [
                     {
-                        "group_title" : _(u'Emekli Müktesebi'),
-                        "items" : [
+                        "group_title": _(u'Emekli Müktesebi'),
+                        "items": [
                             'em_derece', 'em_kademe'
                         ]
                     }
@@ -731,9 +732,6 @@ class KanunlaVerilenTerfiForm(JsonForm):
 
     kaydet = fields.Button(_(u'Kaydet'), cmd="terfi_kaydet", style="btn-success")
     iptal = fields.Button(_(u'İptal'), cmd="iptal")
-
-
-
 
 
 class HizmetCetveliForm(JsonForm):
@@ -749,9 +747,12 @@ class HizmetCetveliForm(JsonForm):
 
 class KanunlaVerilenTerfi(CrudView):
     """
-        Kanunla Verilen Terfi İş Akışı
-        Burada normal terfideki gibi terfi tıkanmaları yoktur. Bir kanuna istinaden personelin terfisi yapılır.
-        Yapılan her bir terfi işlemi bir hitap koduyla ilişkilendirilir.
+    Kanunla Verilen Terfi İş Akışı
+    
+    Burada normal terfideki gibi terfi tıkanmaları yoktur. Bir kanuna
+    istinaden personelin terfisi yapılır.
+    
+    Yapılan her bir terfi işlemi bir hitap koduyla ilişkilendirilir.
     """
 
     class Meta:
@@ -774,8 +775,8 @@ class KanunlaVerilenTerfi(CrudView):
 
     def terfi_bilgileri_kaydet(self):
         """
-            Personel İşleri Dairesinden yetkili bir personelin girdiği terfi bilgilerinin
-            iş akışının ileriki aşamalarında veritabanına kaydedilmek üzere saklandığı metoddur.
+        Personel İşleri Dairesinden yetkili bir personelin girdiği terfi bilgilerinin
+        iş akışının ileriki aşamalarında veritabanına kaydedilmek üzere saklandığı metoddur.
         """
         personel = Personel.objects.get(self.current.task_data["personel_id"])
         self.current.task_data["ga_derece"] = self.current.input["form"]["ga_derece"]
@@ -787,8 +788,8 @@ class KanunlaVerilenTerfi(CrudView):
 
     def hizmet_cetveli_form(self):
         """
-            Kanunla verilen terfi işleminin hizmet cetveline işlenmesinde personelin gireceği
-            veriler oluşturulmuş bir formdur.
+        Kanunla verilen terfi işleminin hizmet cetveline işlenmesinde personelin gireceği
+        veriler oluşturulmuş bir formdur.
         """
         _form = HizmetCetveliForm(current=self.current)
         _form.set_choices_of('terfi_sebep', prepare_choices_for_model(HitapSebep))
@@ -796,12 +797,7 @@ class KanunlaVerilenTerfi(CrudView):
 
     def hizmet_cetveli_kayit(self):
         """
-            Hizmet cetveli formundan gelen bilgileri task_data içerisinde saklayan metod.
-        Args:
-            self:
-
-        Returns:
-
+        Hizmet cetveli formundan gelen bilgileri task_data içerisinde saklayan metod.
         """
         self.current.task_data["hizmet_cetveli"] = {
             "baslama_tarihi": self.current.input["form"]["baslama_tarihi"],
@@ -812,12 +808,7 @@ class KanunlaVerilenTerfi(CrudView):
 
     def permission_belirle(self):
         """
-
-        Args:
-            self:
-
-        Returns:
-
+        Personel türüne göre onay merci ve yetkisinin belirlenmesi.
         """
         personel = Personel.objects.get(self.current.task_data["personel_id"])
 
@@ -832,7 +823,7 @@ class KanunlaVerilenTerfi(CrudView):
         elif personel.personel_turu == 2:
             self.current.task_data["permission_name"] = "idari_personel_terfi_onay"
 
-        msg = {"type" : _(u"info"), "title": _(u'Onaya Gönderildi!'),
+        msg = {"type": _(u"info"), "title": _(u'Onaya Gönderildi!'),
                "msg": _(u'Terfi işlemi onaya gönderildi')}
         self.current.output["msgbox"] = msg
 
@@ -842,24 +833,24 @@ class KanunlaVerilenTerfi(CrudView):
 
     def iptal(self):
         """
-            Terfi işleminin iptal edilmesiyle Kanunla verilen terfi iş akışı
-            ana ekranına yönlendirilir.
+        Terfi işleminin iptal edilmesiyle Kanunla verilen terfi iş akışı
+        ana ekranına yönlendirilir.
 
         """
         self.current.output['cmd'] = 'reload'
 
     def terfi_durum_goruntule(self):
         """
-            Terfisi yapılan personelin terfi sonrası kademe ve derece durumlarını
-            personel türüne göre rektör veya genel sekretere sunan workflow adımına
-            assign edilmiş metoddur.
+        Terfisi yapılan personelin terfi sonrası kademe ve derece durumlarını
+        personel türüne göre rektör veya genel sekretere sunan workflow adımına
+        assign edilmiş metoddur.
 
-            Kural
-            - Personel akademik bir personel ise terfi onay işlemi rektör tarafından
-              yapılır.
+        Kural
+            - Personel akademik bir personel ise terfi onay işlemi
+            rektör tarafından yapılır.
 
-            - Personel idari bir personel ise terfi onay işlemi rektörlük tarafından yapılır.
-        Returns:
+            - Personel idari bir personel ise terfi onay işlemi
+              genel sekreterlik tarafından yapılır.
 
         """
 
@@ -891,27 +882,25 @@ class KanunlaVerilenTerfi(CrudView):
             __Kazanılmış Hak__ : {yeni_kazanilmis_hak_derece}/{yeni_kazanilmis_hak_kademe}
             __Emekli Muktesebat__ : {yeni_emekli_muktesebat_derece}/{yeni_emekli_muktesebat_kademe}
         """.format(
-            tcno = personel.tckn,
-            ad = personel.ad,
-            soyad = personel.soyad,
-            kadro_derece = personel.kadro.derece,
-            gorev_ayligi_derece = personel.gorev_ayligi_derece,
-            gorev_ayligi_kademe = personel.gorev_ayligi_kademe,
-            kazanilmis_hak_derece = personel.kazanilmis_hak_derece,
-            kazanilmis_hak_kademe = personel.kazanilmis_hak_kademe,
-            emekli_muktesebat_derece = personel.emekli_muktesebat_derece,
-            emekli_muktesebat_kademe = personel.emekli_muktesebat_kademe,
-            yeni_gorev_ayligi_derece = self.current.task_data["ga_derece"],
-            yeni_gorev_ayligi_kademe = self.current.task_data["ga_kademe"],
-            yeni_kazanilmis_hak_derece = self.current.task_data["kh_derece"],
-            yeni_kazanilmis_hak_kademe = self.current.task_data["kh_kademe"],
-            yeni_emekli_muktesebat_derece = self.current.task_data["em_derece"],
-            yeni_emekli_muktesebat_kademe = self.current.task_data["em_kademe"]
+            tcno=personel.tckn,
+            ad=personel.ad,
+            soyad=personel.soyad,
+            kadro_derece=personel.kadro.derece,
+            gorev_ayligi_derece=personel.gorev_ayligi_derece,
+            gorev_ayligi_kademe=personel.gorev_ayligi_kademe,
+            kazanilmis_hak_derece=personel.kazanilmis_hak_derece,
+            kazanilmis_hak_kademe=personel.kazanilmis_hak_kademe,
+            emekli_muktesebat_derece=personel.emekli_muktesebat_derece,
+            emekli_muktesebat_kademe=personel.emekli_muktesebat_kademe,
+            yeni_gorev_ayligi_derece=self.current.task_data["ga_derece"],
+            yeni_gorev_ayligi_kademe=self.current.task_data["ga_kademe"],
+            yeni_kazanilmis_hak_derece=self.current.task_data["kh_derece"],
+            yeni_kazanilmis_hak_kademe=self.current.task_data["kh_kademe"],
+            yeni_emekli_muktesebat_derece=self.current.task_data["em_derece"],
+            yeni_emekli_muktesebat_kademe=self.current.task_data["em_kademe"]
         )
 
-        self.output['object'] = {
-            "" : bilgiler
-        }
+        self.output['object'] = {"": bilgiler}
 
         _form = JsonForm(title=" ")
         _form.terfi_kaydet = fields.Button("Kaydet", cmd="terfi_kaydet")
@@ -919,18 +908,14 @@ class KanunlaVerilenTerfi(CrudView):
 
         self.form_out(_form)
 
-
     def kayit_tamamla(self):
         """
-             Kanunla verilen terfi kapsamında yapılan terfi işlemini veritabanında
-            hem Personel modelinde hemde HizmetKayitlari modeline işleyen metoddur.
-            Ayrıca bu workflow adımı çalıştığı takdirde task_data içerisinde
-            tutulan terfi_onay_flag True yapılır.
-        Args:
-            self:
-
-        Returns:
-
+        Kanunla verilen terfi kapsamında yapılan terfi işlemini veritabanında
+        hem Personel modelinde hemde HizmetKayitlari modeline işleyen metoddur.
+        
+        Ayrıca bu workflow adımı çalıştığı takdirde task_data içerisinde
+        tutulan terfi_onay_flag True yapılır.
+        
         """
 
         with BlockSave(Personel):
@@ -942,7 +927,8 @@ class KanunlaVerilenTerfi(CrudView):
             personel.emekli_muktesebat_derece = self.current.task_data["em_derece"]
             personel.emekli_muktesebat_kademe = self.current.task_data["em_kademe"]
             personel.save()
-            hitap_sebep = HitapSebep.objects.get(self.current.task_data["hizmet_cetveli"]["terfi_sebep"])
+            hitap_sebep = HitapSebep.objects.get(
+                self.current.task_data["hizmet_cetveli"]["terfi_sebep"])
             hizmet_kayit = HizmetKayitlari(
                 tckn=personel.tckn,
                 baslama_tarihi=self.current.task_data["hizmet_cetveli"]["baslama_tarihi"],
@@ -971,14 +957,10 @@ class KanunlaVerilenTerfi(CrudView):
 
     def terfi_red(self):
         """
-            Workflow da terfinin reddedilmesi adımını içerir. terfi_onay flag
-            False yapılır.
-        Args:
-            self:
-
-        Returns:
-
+        Workflow da terfinin reddedilmesi adımını içerir. terfi_onay flag
+        False yapılır.
         """
+
         self.current.task_data["terfi_onay_flag"] = False
 
         msg = {"type": _(u"info"), "title": _(u'Onaya Gönderildi!'),
@@ -986,14 +968,8 @@ class KanunlaVerilenTerfi(CrudView):
         self.current.output["msgbox"] = msg
 
     def ilgili_personel_bilgilendir(self):
-        """
-        Terfisi yapılan personelin terfi sonucuna dair bilgilendirilmesini sağlayan metod
-        Args:
-            self:
+        """Terfisi yapılan personelin terfi sonucu bilgilendirilmesini sağlayan metod"""
 
-        Returns:
-
-        """
         user = User.objects.get(self.current.task_data["terfi_user_id"])
         personel = Personel.objects.get(user_id=user.key)
         onay_makami = "Rektörlük" if personel.personel_turu == 1 else "Genel Sekreterlik"
@@ -1001,7 +977,7 @@ class KanunlaVerilenTerfi(CrudView):
             personel_mesaj = """
                 Terfiniz {onay_makami} tarafından onaylandı.
             """.format(
-                onay_makami = onay_makami
+                onay_makami=onay_makami
             )
             user.send_notification(
                 title=_(u"Terfi Gerçekleştirildi"),
@@ -1009,7 +985,7 @@ class KanunlaVerilenTerfi(CrudView):
                 sender=self.current.user
             )
         else:
-            personel_mesaj="""
+            personel_mesaj = """
                 Terfiniz {onay_makami} tarafından onaylanmadı.
             """.format(
                 onay_makami=onay_makami
@@ -1035,9 +1011,9 @@ class KanunlaVerilenTerfi(CrudView):
                 Kazanılmış Hak : {kazanilmis_hak_derece}/{kazanilmis_hak_kademe}
                 Emekli Müktesebat : {emekli_muktesebat_derece}/{emekli_muktesebat_kademe}
             """.format(
-                tcno = personel.tckn,
-                ad = personel.ad,
-                soyad = personel.soyad,
+                tcno=personel.tckn,
+                ad=personel.ad,
+                soyad=personel.soyad,
                 gorev_ayligi_derece=self.current.task_data["ga_derece"],
                 gorev_ayligi_kademe=self.current.task_data["ga_kademe"],
                 kazanilmis_hak_derece=self.current.task_data["kh_derece"],
@@ -1053,7 +1029,10 @@ class KanunlaVerilenTerfi(CrudView):
 
                 Yukarıda bilgileri verilen personelin terfisi {onay_makami} tarafından onaylanmadı.
             """.format(
-                onay_makami = onay_makami
+                onay_makami=onay_makami,
+                tcno=personel.tckn,
+                ad=personel.ad,
+                soyad=personel.soyad
             )
         self.current.task_data['LANE_CHANGE_MSG'] = personel_dairesi_mesaj
         personel_dairesi_user = User.objects.get(self.current.task_data["personel_user_id"])
@@ -1061,11 +1040,7 @@ class KanunlaVerilenTerfi(CrudView):
 
     def onay_belgesi_uret(self):
         """
-            Terfisi gerçekleşen personelin onay belgesini üreten metoddur.
-        Args:
-            self:
-
-        Returns:
-
+        Terfisi gerçekleşen personelin onay belgesini üreten metoddur.
+        
         """
         pass

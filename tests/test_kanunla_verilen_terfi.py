@@ -1,7 +1,4 @@
-#-*- coding: utf-8 -*-
-"""
-"""
-
+# -*- coding: utf-8 -*-
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
@@ -12,19 +9,18 @@ from zengine.messaging.model import Message
 import time
 import random
 
-class TestCase(BaseTestCase):
 
+class TestCase(BaseTestCase):
     def test_terfi(self):
         """
-            Kanunla verilen terfi workflow'a ait testleri içerir
-        Returns:
-
+        Kanunla verilen terfi workflow'a ait testleri içerir
+        
         """
 
         def kademe_derece_duzenle(terfi_form):
             """
-                Parametre olarak girilen kademe değerine göre personelin
-                derecesinin ne olacağını return eder.
+            Parametre olarak girilen kademe değerine göre personelin
+            derecesinin ne olacağını belirler.
             """
 
             if terfi_form["ga_kademe"] >= 3:
@@ -45,22 +41,20 @@ class TestCase(BaseTestCase):
             else:
                 terfi_form["em_kademe"] += 1
 
-
-
         usr = User.objects.get(username='mithat')
-        personel = Personel.objects.all()[random.randint(0,3000)]
+        personel = Personel.objects.all()[random.randint(0, 3000)]
         personel_id = personel.key
         self.prepare_client('kanunla_verilen_terfi', user=usr)
         self.client.post(cmd="terfi_form", id=personel.key)
         mesaj_sayisi = Message.objects.count()
 
         terfi_form = {
-            "ga_kademe" : personel.gorev_ayligi_kademe,
-            "ga_derece" : personel.gorev_ayligi_derece,
-            "kh_kademe" : personel.kazanilmis_hak_kademe,
-            "kh_derece" : personel.kazanilmis_hak_derece,
-            "em_kademe" : personel.emekli_muktesebat_kademe,
-            "em_derece" : personel.emekli_muktesebat_derece
+            "ga_kademe": personel.gorev_ayligi_kademe,
+            "ga_derece": personel.gorev_ayligi_derece,
+            "kh_kademe": personel.kazanilmis_hak_kademe,
+            "kh_derece": personel.kazanilmis_hak_derece,
+            "em_kademe": personel.emekli_muktesebat_kademe,
+            "em_derece": personel.emekli_muktesebat_derece
         }
 
         kademe_derece_duzenle(terfi_form)
@@ -68,17 +62,17 @@ class TestCase(BaseTestCase):
         self.client.post(cmd="terfi_bilgileri_kaydet", form=terfi_form)
 
         hizmet_cetveli_form = {
-            "terfi_sebep" : HitapSebep.objects.get(sebep_no=6).key,
-            "baslama_tarihi" : "10.04.2017",
-            "bitis_tarihi" : "25.04.2017",
-            "kurum_onay_tarihi" : "09.04.2017"
+            "terfi_sebep": HitapSebep.objects.get(sebep_no=6).key,
+            "baslama_tarihi": "10.04.2017",
+            "bitis_tarihi": "25.04.2017",
+            "kurum_onay_tarihi": "09.04.2017"
         }
 
         resp = self.client.post(cmd="hizmet_cetveli_kayit", form=hizmet_cetveli_form)
 
         assert resp.json["msgbox"]["title"] == u'Onaya Gönderildi!'
         time.sleep(2)
-        assert Message.objects.count() == mesaj_sayisi +1
+        assert Message.objects.count() == mesaj_sayisi + 1
 
         mesaj_sayisi += 1
 
@@ -96,15 +90,16 @@ class TestCase(BaseTestCase):
 
         resp = self.client.post(cmd='kayit_tamamla')
 
-        #self.client.set_path('/logout')
-        #time.sleep(1)
+        # self.client.set_path('/logout')
+        # time.sleep(1)
         token, usr = self.get_user_token('mithat')
         self.prepare_client('kanunla_verilen_terfi', user=usr, token=token)
         self.client.post(token=token)
 
         personel_dairesi_mesaj = Message.objects.filter(channel_id=usr.prv_exchange)[0]
 
-        terfisi_yapilan_personel_mesaj = Message.objects.filter(channel_id = personel.user.prv_exchange)[0]
+        terfisi_yapilan_personel_mesaj = Message.objects.filter(
+            channel_id=personel.user.prv_exchange)[0]
 
         assert terfisi_yapilan_personel_mesaj.msg_title == u"Terfi Gerçekleştirildi"
 
