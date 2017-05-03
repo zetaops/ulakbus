@@ -179,25 +179,30 @@ def get_report_data(current):
                         }
                     }
     """
+
+
+    page_default = 1
     raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
     cache_data = raporlama_cache.get_or_set()
-    page_size = cache_data['gridOptions']['paginationPageSize']
+    page_size = cache_data['page_size']
 
     if 'selectors' in current.input:
         cache_data['gridOptions']['selectors'] = current.input['selectors']
-    if 'options' in current.input:
-        cache_data['gridOptions']['options'] = current.input['options']
+    if 'filterColumns' in current.input:
+        cache_data['gridOptions']['filter_columns'] = current.input['filterColumns']
+    if 'sortColumns' in current.input:
+        cache_data['gridOptions']['sort_columns'] = current.input['sortColumns']
     if 'page' in current.input:
-        cache_data['gridOptions']['paginationCurrentPage'] = current.input['page']
+        page_default = current.input['page']
 
-    page = cache_data['gridOptions']['paginationCurrentPage'] - 1
+    page = page_default - 1
 
     def personel_data():
-        query_params = data_grid_filter_parser(cache_data['gridOptions']['options'],
+        gos = cache_data['gridOptions']
+        query_params = data_grid_filter_parser(gos.get('filter_columns', []),
                                                cache_data['alan_filter_type_map'])
 
-        result_size = Personel.objects.filter(**query_params).count()
-
+        sort_params = data_grid_order_parser(gos.get('sort_columns', []))
         active_columns = []
         for col in cache_data['gridOptions']['selectors']:
             if col['checked']:
@@ -205,39 +210,78 @@ def get_report_data(current):
 
         data = Personel.objects.set_params(
             start=page * page_size, rows=page_size
-        ).filter(**query_params).values(*active_columns)
+        ).all(**query_params).order_by(*sort_params).values(*active_columns)
 
-        return result_size, data
+        return data
 
-    cache_data['gridOptions']['totalItems'], cache_data['gridOptions']['data'] = personel_data()
+    cache_data['gridOptions']['data'] = personel_data()
     raporlama_cache.set(cache_data)
     current.output['gridOptions'] = cache_data['gridOptions']
 
 
 def data_grid_filter_parser(filters, field_types):
+    filter_conditions = {
+        "STARTS_WITH": 2,
+        "ENDS_WITH": 4,
+        "EXACT": 8,
+        "CONTAINS": 16,
+        "GREATER_THAN": 32,
+        "GREATER_THAN_OR_EQUAL": 64,
+        "LESS_THAN": 128,
+        "LESS_THAN_OR_EQUAL": 256,
+        "NOT_EQUAL": 512
+    }
     query_params = {}
-    for f, qp in filters.items():
-        if field_types[f] == "INPUT":
-            # condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
-            if qp['condition'] == "CONTAINS":
-                query_params[f + "__contains"] = qp['value']
-            elif qp['condition'] == "STARTS_WITH":
-                query_params[f + "__startswith"] = qp['value']
-            else:
-                query_params[f + "__endswith"] = qp['value']
-        elif field_types[f] == "SELECT":
-            query_params[f] = qp['value']
-        elif field_types[f] == "MULTISELECT":
-            multiselect_list = []
-            for msi in qp:
-                multiselect_list.append(msi)
-            query_params[f + "__in"] = multiselect_list
-        elif field_types[f] == "RANGE-DATETIME":
-            start_raw = str(qp['start'])
-            start = datetime.strptime(start_raw, DATE_DEFAULT_FORMAT)
-            end_raw = str(qp['end'])
-            end = datetime.strptime(end_raw, DATE_DEFAULT_FORMAT)
-            query_params[f + "__range"] = [start, end]
-        elif field_types[f] == "RANGE-INTEGER":
-            query_params[f + "__range"] = [int(qp['min']), int(qp['max'])]
+    for element in filters:
+        f = element['columnName']
+        qp = element['filterParam']
+        if qp:
+            if field_types[f] == "INPUT":
+                # condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
+                cond = qp[0]['condition']
+                val = qp[0]['value']
+                if cond == filter_conditions["CONTAINS"]:
+                    query_params[f + "__contains"] = val
+                elif cond == filter_conditions["STARTS_WITH"]:
+                    query_params[f + "__startswith"] = val
+                elif cond == filter_conditions["ENDS_WITH"]:
+                    query_params[f + "__endswith"] = val
+                else:
+                    query_params[f] = val
+            elif field_types[f] == "SELECT":
+                query_params[f] = qp[0]['value']
+            elif field_types[f] == "MULTISELECT":
+                multiselect_list = []
+                for msi in qp:
+                    multiselect_list.append(msi['value'])
+                query_params[f + "__in"] = multiselect_list
+            elif field_types[f] == "RANGE-DATETIME":
+                start_raw = ""
+                end_raw = ""
+                for date_item in qp:
+                    if date_item['condition'] == filter_conditions["GREATER_THAN"]:
+                        start_raw = str(date_item['value'])
+                    if date_item['condition'] == filter_conditions["LESS_THAN"]:
+                        end_raw = str(date_item['value'])
+                start = datetime.strptime(start_raw, DATE_DEFAULT_FORMAT)
+                end = datetime.strptime(end_raw, DATE_DEFAULT_FORMAT)
+                query_params[f + "__range"] = [start, end]
+            elif field_types[f] == "RANGE-INTEGER":
+                minn = maxx = 0
+                for int_item in qp:
+                    if int_item['condition'] == filter_conditions["GREATER_THAN"]:
+                        minn = int_item['value']
+                    if int_item['condition'] == filter_conditions["LESS_THAN"]:
+                        maxx = int_item['value']
+                query_params[f + "__range"] = [int(minn), int(maxx)]
     return query_params
+
+
+def data_grid_order_parser(sort_columns):
+    sort_params = []
+    for col in sort_columns:
+        if col['order'] == 'desc':
+            sort_params.append("%s%s" % ("-", col['columnName']))
+        else:
+            sort_params.append(col['columnName'])
+    return sort_params
