@@ -6,7 +6,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import User, Personel, HitapSebep
+from ulakbus.models import User, Personel, HitapSebep, HizmetKayitlari
 from zengine.lib.test_utils import BaseTestCase
 from zengine.messaging.model import Message
 import time
@@ -112,14 +112,17 @@ class TestCase(BaseTestCase):
 
         personel = Personel.objects.get(personel_id)
 
+        hizmet_kayit = HizmetKayitlari.objects.all(tckn=personel.tckn)[0]
+
         assert personel.gorev_ayligi_kademe == terfi_form["ga_kademe"]
-
         assert personel.gorev_ayligi_derece == terfi_form["ga_derece"]
-
         assert personel.kazanilmis_hak_kademe == terfi_form["kh_kademe"]
-
         assert personel.kazanilmis_hak_derece == terfi_form["kh_derece"]
-
         assert personel.emekli_muktesebat_kademe == terfi_form["em_kademe"]
-
         assert personel.emekli_muktesebat_derece == terfi_form["em_derece"]
+        assert hizmet_kayit.odeme_derece == terfi_form["ga_derece"]
+        assert hizmet_kayit.odeme_kademe == terfi_form["ga_kademe"]
+        assert hizmet_kayit.kazanilmis_hak_ayligi_derece == terfi_form["kh_derece"]
+        assert hizmet_kayit.kazanilmis_hak_ayligi_kademe == terfi_form["kh_kademe"]
+        assert hizmet_kayit.emekli_derece == terfi_form["em_derece"]
+        assert hizmet_kayit.emekli_kademe == terfi_form["em_kademe"]
