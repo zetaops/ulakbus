@@ -12,7 +12,7 @@ from zengine.lib.catalog_data import catalog_data_manager
 
 
 def raporlama_ekrani_secim_menulerini_hazirla():
-    PAGE_SIZE = 25
+    PAGE_SIZE = 100
 
     cache_data = {}
     grid_options = {}
@@ -55,7 +55,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
                      catalog_data_manager.get_all("personel_turu")]
 
     # Hizmet sınıflarını aldık
-    hizmet_sinifi = [{"value": item['value'], "label": item['name']} for item in
+    hizmet_sinifi = [{"value": item['value'], "label": item['name'][:10]} for item in
                      catalog_data_manager.get_all("hizmet_sinifi")]
 
     # Personel statülerini aldık.
@@ -63,7 +63,8 @@ def raporlama_ekrani_secim_menulerini_hazirla():
                       in catalog_data_manager.get_all("personel_statu")]
 
     # Hitap sebep kodlarını aldık
-    sebep_kodlari = [{"value": sk.sebep_no, "label": sk.ad} for sk in HitapSebep.objects.all()]
+    sebep_kodlari = [{"value": sk.sebep_no, "label": sk.ad if sk.ad is None else sk.ad[:10]} for sk
+                     in HitapSebep.objects.all()]
 
     # Başlangıçta görünecek alanlar
     default_alanlar = ['ad', 'soyad', 'cinsiyet', 'dogum_tarihi', 'personel_turu']
@@ -164,33 +165,15 @@ def raporlama_ekrani_secim_menulerini_hazirla():
             select['label'] = str(Personel.get_field(col).title) if Personel.get_field(col) is not None else col
         select['checked'] = True if col in default_alanlar else False
         selectors.append(select)
-    grid_options['selectors'] = selectors
 
-    """
-    useExternalSorting: true,  //if need sorting from backend side
-    enableFiltering: true,
-    toggleFiltering: true,
-    useExternalFiltering: true, //if need filtering from backend side
-    paginationPageSize: 25,
-    useExternalPagination: true, //if need paginations from backend side
-    enableAdding: true,
-    enableRemoving: true,
-    """
+    grid_options['selectors'] = selectors
     grid_options['enableSorting'] = True
-    grid_options['useExternalSorting'] = True
     grid_options['enableFiltering'] = True
     grid_options['toggleFiltering'] = True
-    grid_options['useExternalFiltering'] = True
-    grid_options['paginationPageSize'] = PAGE_SIZE
-    grid_options['paginationCurrentPage'] = 1
-    grid_options['useExternalPagination'] = True
-    grid_options['enableAdding'] = True
     grid_options['enableRemoving'] = True
-    grid_options['page'] = 1
-    grid_options['totalItems'] = Personel.objects.count()
-    grid_options['options'] = {}
     cache_data['gridOptions'] = grid_options
     cache_data['alan_filter_type_map'] = alan_filter_type_map
     cache_data['time_related_fields'] = range_date_fields
+    cache_data['page_size'] = PAGE_SIZE
 
     return cache_data
