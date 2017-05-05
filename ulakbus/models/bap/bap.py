@@ -250,10 +250,9 @@ class BAPButcePlani(Model):
     adet = field.Integer(__(u"Adet"))
     toplam_fiyat = field.Float(__(u"Toplam Fiyat"))
     gerekce = field.Text(__(u"Gerekçe"))
-    ilgili_proje = field.String(__(u"Bağlı olduğu Projenin Adı"), readonly=True, required=False)
+    ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
-    proje = BAPProje()
-    
+
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
 

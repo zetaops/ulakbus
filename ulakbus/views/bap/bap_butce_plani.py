@@ -34,6 +34,11 @@ class BapButcePlani(CrudView):
         self.form_out(form)
 
     def add_edit_form(self):
+        if 'bap_proje_id' in self.current.task_data:
+            proje_ad = BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad
+        else:
+            proje_ad = '(Proje Belirlenmedi!)'
+
         self.object.muhasebe_kod = self.input['form']['muhasebe_kod']
         self.object.kod_adi = self.object.get_muhasebe_kod_display()
 
@@ -41,16 +46,18 @@ class BapButcePlani(CrudView):
         self.current.task_data['kod_adi'] = self.object.kod_adi
 
         form = ButcePlaniForm(self.object, current=self.current)
-        form.exclude = ['muhasebe_kod', 'kod_adi', 'onay_tarihi']
-        form.title = "%s / %s Bütçe Planı" % (self.object.muhasebe_kod, self.object.kod_adi)
+        form.exclude = ['muhasebe_kod', 'kod_adi', 'onay_tarihi', 'ilgili_proje']
+        form.title = "%s Kodlu / %s Bütçe Planı" % (self.object.muhasebe_kod, self.object.kod_adi)
+        form.help_text = "Yapacaginiz butce plani %s adli proje icin yapilacaktir." % \
+                         proje_ad
         self.form_out(form)
 
     def save(self):
         self.set_form_data_to_object()
         self.object.muhasebe_kod = self.current.task_data['muhasebe_kod']
         self.object.kod_adi = self.current.task_data['kod_adi']
-        if 'bap_proje_adi' in self.current.task_data:
-            self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_adi'])
+        if 'bap_proje_id' in self.current.task_data:
+            self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.save_object()
 
     def confirm_deletion(self):
