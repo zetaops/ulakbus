@@ -180,7 +180,6 @@ def get_report_data(current):
                     }
     """
 
-
     page_default = 1
     raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
     cache_data = raporlama_cache.get_or_set()
@@ -207,15 +206,19 @@ def get_report_data(current):
         for col in cache_data['gridOptions']['selectors']:
             if col['checked']:
                 active_columns.append(col['name'])
-
+        data_size = Personel.objects.all(**query_params).count()
         data = Personel.objects.set_params(
             start=page * page_size, rows=page_size
         ).all(**query_params).order_by(*sort_params).values(*active_columns)
 
-        return data
+        is_more_data_left = data_size / page_size > page
 
-    cache_data['gridOptions']['data'] = personel_data()
+        return is_more_data_left, data
+
+    cache_data['gridOptions']['isMoreDataLeft'], cache_data['gridOptions']['data'] = personel_data()
     raporlama_cache.set(cache_data)
+    del cache_data['gridOptions']['filter_columns']
+    del cache_data['gridOptions']['sort_columns']
     current.output['gridOptions'] = cache_data['gridOptions']
 
 
