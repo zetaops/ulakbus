@@ -45,6 +45,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
                   catalog_data_manager.get_all("medeni_hali")]
 
     # Birimleri aldık
+    # todo u.key ile göndermek mantıklı olacak, yoksa label'ları kaybediyoruz
     birim = [{"value": u.yoksis_no, "label": u.name} for u in Unit.objects.all()]
 
     # Unvanları aldık
