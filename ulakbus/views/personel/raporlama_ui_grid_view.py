@@ -6,8 +6,12 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import base64
+import csv
+from io import BytesIO
 
 from ulakbus.lib.cache import RaporlamaEklentisi
+from ulakbus.lib.s3_file_manager import S3FileManager
 from zengine.lib.decorators import view
 from ulakbus.models import Personel
 from datetime import datetime
@@ -254,9 +258,7 @@ def data_grid_filter_parser(filters, field_types):
             elif field_types[f] == "SELECT":
                 query_params[f] = qp[0]['value']
             elif field_types[f] == "MULTISELECT":
-                multiselect_list = []
-                for msi in qp:
-                    multiselect_list.append(msi['value'])
+                multiselect_list = qp[0]['value']
                 query_params[f + "__in"] = multiselect_list
             elif field_types[f] == "RANGE-DATETIME":
                 start_raw = ""
@@ -288,3 +290,61 @@ def data_grid_order_parser(sort_columns):
         else:
             sort_params.append(col['columnName'])
     return sort_params
+
+
+@view()
+def get_csv_data(current):
+    raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
+    cache_data = raporlama_cache.get_or_set()
+
+    if 'selectors' in current.input:
+        cache_data['gridOptions']['selectors'] = current.input['selectors']
+    if 'filterColumns' in current.input:
+        cache_data['gridOptions']['filter_columns'] = current.input['filterColumns']
+    if 'sortColumns' in current.input:
+        cache_data['gridOptions']['sort_columns'] = current.input['sortColumns']
+
+    def personel_data():
+        gos = cache_data['gridOptions']
+        query_params = data_grid_filter_parser(gos.get('filter_columns', []),
+                                               cache_data['alan_filter_type_map'])
+
+        sort_params = data_grid_order_parser(gos.get('sort_columns', []))
+        active_columns = []
+        for col in cache_data['gridOptions']['selectors']:
+            if col['checked']:
+                active_columns.append(col['name'])
+        data = Personel.objects.all(**query_params).order_by(*sort_params).values(
+            *active_columns)
+
+        return data
+
+    output = BytesIO()
+    csv_writer = csv.writer(output, delimiter=',', quotechar="'", quoting=csv.QUOTE_MINIMAL)
+
+    count = 0
+    for emp in personel_data():
+        if count == 0:
+            header = emp.keys()
+            csv_writer.writerow(header)
+            count += 1
+        csv_writer.writerow(emp.values())
+
+    download_url = generate_temp_file(
+        name=generate_file_name(),
+        content=base64.b64encode(output.getvalue()),
+        file_type='text/csv',
+        ext='csv'
+    )
+
+    current.output['download_url'] = download_url
+
+
+def generate_temp_file(name, content, file_type, ext):
+    f = S3FileManager()
+    key = f.store_file(name=name, content=content, type=file_type, ext=ext)
+    return f.get_url(key)
+
+
+def generate_file_name():
+    return "personel-rapor-%s" % datetime.now().strftime("%d.%m.%Y-%H.%M.%S")
