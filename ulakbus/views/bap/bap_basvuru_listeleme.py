@@ -14,6 +14,10 @@ class BasvuruListeleme(CrudView):
     class Meta:
         model = "BAPProje"
 
+    def __init__(self, current=None):
+        CrudView.__init__(self, current)
+        self.ListForm.add = None
+
     def karar_sonrasi_islemler(self):
         """
         Listeden seçilen projenin onaylanmasına karar verilmiş ise proje sahibi öğretim üyesi
@@ -84,7 +88,12 @@ class BasvuruListeleme(CrudView):
 
     @list_query
     def list_by_ordered(self, queryset):
-        return queryset.filter().exclude(durum=None).order_by()
+        """
+        2: Öğretim elemanı tarafından koordinasyon birimine onaya gönderildi.
+        3: Koordinasyon birimi tarafından öğretim elemanına revizyon için gönderildi.
+        4: Koordinasyon birimi projeyi onayladı.
+        """
+        return queryset.filter(durum__in=[2, 3, 4]).order_by()
 
 
 def ilgili_rolu_bul(user):

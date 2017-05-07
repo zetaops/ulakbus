@@ -38,8 +38,11 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == 'BAP Projeler'
         # Listeleme kategorileri kontrol edilir.
         assert 'Durum' and 'Proje_Adı' and 'Personel' in resp.json['objects'][0]
+
         # Seçilen projenin adının da listeleme ekranında bulunduğu kontrol edilir.
-        assert resp.json['objects'][1]['fields'][1] == "Akıllı Robot"
+        del resp.json['objects'][0]
+        project_name_list = [obj['fields'][1] for obj in resp.json['objects']]
+        assert "Akıllı Robot" in project_name_list
 
         # Seçilen proje için incele butonuna basılır ve inceleme iş akışı tetiklenir.
         resp = self.client.post(cmd='incele', object_id=project.key,
@@ -202,8 +205,8 @@ class TestCase(BaseTestCase):
         # Projenin durumu 4 yani onaylanmış olduğu kontrol edilir.
         assert project.durum == 4
 
-        # sync_wf_cache methodunun çalışması için worker'a ihtiyaç olduğu için wfi kısmı kontrolü
-        # yoruma alındı, bu methodun çalışması için çözüm bulunacak.
+        # sync_wf_cache methodunun bg_job olarak çalışması için worker'a ihtiyaç olduğu için wfi
+        # kısmı kontrolü yoruma alındı, bu methodun çalışması için çözüm bulunacak.
 
         # Instance'ın finished field'ının tekrardan True olduğu kontrol edilir.
         # assert wfi.finished == True
