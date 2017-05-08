@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1l3mhaq">
     <bpmn:participant id="Participant_0nrci7x" name="Bap Takvim" processRef="bap_takvim" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_takvim" isExecutable="false">
+  <bpmn:process id="bap_takvim" name="Bap Takvim" isExecutable="false">
     <bpmn:sequenceFlow id="SequenceFlow_1q5scvu" sourceRef="takvim_goruntule" targetRef="ExclusiveGateway_1thl0m9" />
     <bpmn:sequenceFlow id="SequenceFlow_17zs6kb" sourceRef="ExclusiveGateway_1thl0m9" targetRef="takvim_proje_sil_onay">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='confirm_deletion']]></bpmn:conditionExpression>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_0skt6zg">
-    <bpmn:participant id="Participant_0cq037p" name="Bap Proje Türü" processRef="bap_proje_turleri" />
+    <bpmn:participant id="Participant_0cq037p" name="Bap Proje Türleri" processRef="bap_proje_turleri" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_proje_turleri" isExecutable="false">
+  <bpmn:process id="bap_proje_turleri" name="Bap Proje Türleri" isExecutable="false">
     <bpmn:userTask id="proje_turlerini_listele" name="Proje Türlerini Listele" camunda:assignee="bap.bap_proje_turleri.ProjeTurleri.list">
       <bpmn:incoming>SequenceFlow_1aljzis</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1ix07gc</bpmn:incoming>

@@ -239,7 +239,8 @@ class BAPButcePlani(Model):
     class Meta:
         verbose_name = __(u"Bap Bütçe Planı")
         verbose_name_plural = __(u"Bap Bütçe Planları")
-        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet', 'toplam_fiyat']
+        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', '_proje_adi', 'birim_fiyat', 'adet',
+                       'toplam_fiyat']
 
     muhasebe_kod = field.String(__(u"Muhasebe Kod"),
                                 choices='analitik_butce_dorduncu_duzey_gider_kodlari',
@@ -260,6 +261,11 @@ class BAPButcePlani(Model):
         return self.muhasebe_kod
 
     _muhasebe_kod.title = __(u"Muhasebe Kodu")
+
+    def _proje_adi(self):
+        return "%s" % self.ilgili_proje.ad
+
+    _proje_adi.title = __(u"Projenin Adı")
 
 
 class BAPGundem(Model):
@@ -284,4 +290,4 @@ class BAPGundem(Model):
     _proje_adi.title = __(u"Projenin Adı")
 
     def __unicode__(self):
-        return "Bap Gundem"
+        return "Bap Gündem"

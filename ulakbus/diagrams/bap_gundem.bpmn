@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_0am6cuj">
     <bpmn:participant id="Participant_0tq8pf9" name="Bap Gündem" processRef="bap_gundem" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_gundem" isExecutable="false">
+  <bpmn:process id="bap_gundem" name="Bap Gündem" isExecutable="false">
     <bpmn:exclusiveGateway id="ExclusiveGateway_0xu54t7" default="SequenceFlow_02ildeq">
       <bpmn:incoming>SequenceFlow_0kdmcyb</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_18o8591</bpmn:outgoing>

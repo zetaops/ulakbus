@@ -5,13 +5,20 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPButcePlani, BAPProje
+from ulakbus.models import BAPButcePlani, BAPProje, User, Personel
 
 from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):
     def test_bap_butce_plani(self):
+        proje = BAPProje()
+        user = User.objects.get(username='ogretim_uyesi_1')
+        personel = Personel.objects.get(user=user)
+        proje.ad = "Test ek bütçe talep projesi"
+        proje.yurutucu = personel
+        proje.save()
+
         muhasebe_kod = "03.2.1.01"
         butce_form = {'ad': "Test Defter",
                       'birim_fiyat': 12,
@@ -20,9 +27,13 @@ class TestCase(BaseTestCase):
                       'toplam_fiyat': 12.5,
                       'kaydet': 1}
 
-        self.prepare_client('/bap_butce_plani', username="bap_koordinasyon_birimi_1")
-        resp = self.client.post()
+        self.prepare_client('/bap_butce_plani', username="ogretim_uyesi_1")
+        self.client.post()
+
+        resp = self.client.post(form={'proje': proje.key, 'ilerle': 1})
+
         butce_planlari_sayisi = len(resp.json['objects'])
+
         resp = self.client.post(form={'add': 1}, cmd='add_edit_form')
 
         assert 'muhasebe_kod' in resp.json['forms']['model']

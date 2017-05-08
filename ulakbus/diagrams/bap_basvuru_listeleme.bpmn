@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_1izhmpx">
     <bpmn:participant id="basvuru_listeleme" name="BAP Başvuru Listeleme" processRef="bap_basvuru_listeleme" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_basvuru_listeleme" name="" isExecutable="false">
+  <bpmn:process id="bap_basvuru_listeleme" name="Bap Başvuru Listeleme" isExecutable="false">
     <bpmn:serviceTask id="BasvuruInceleme" name="Başvuru İnceleme" camunda:type="external" camunda:topic="bap_basvuru_inceleme">
       <bpmn:incoming>SequenceFlow_0xpdj3l</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1owcxac</bpmn:outgoing>

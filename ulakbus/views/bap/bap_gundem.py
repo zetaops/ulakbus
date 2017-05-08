@@ -31,6 +31,8 @@ class Gundem(CrudView):
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
+        self.output['object_title'] = _(u"%s / %s") % (self.object.proje.ad,
+                                                       self.object.get_gundem_tipi_display())
 
     def komisyon_kararini_ilet(self):
         self.object.proje.yurutucu.user.send_notification(

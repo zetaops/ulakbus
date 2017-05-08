@@ -25,7 +25,16 @@ class EkSureTalebi(CrudView):
         if 'bap_proje_id' not in self.current.task_data:
             personel = Personel.objects.get(user=self.current.user)
             data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel)]
-            self.current.task_data['proje_data'] = data
+            if data:
+                self.current.task_data['proje_data'] = data
+            else:
+                self.current.task_data['onaylandi'] = 1
+                self.current.task_data['proje_yok'] = {
+                    'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
+                           'bulunamadı. Size bağlı olan proje '
+                           'olmadığı için ek süre talebinde '
+                           'bulunamazsınız.',
+                    'title': 'Proje Bulunamadı'}
 
         if 'onaylandi' not in self.current.task_data:
             self.current.task_data['onaylandi'] = 0
@@ -39,7 +48,7 @@ class EkSureTalebi(CrudView):
 
         form = EkSureTalepForm()
         if 'proje_data' in self.current.task_data:
-            form.proje = fields.String("Proje Seciniz",
+            form.proje = fields.String(_(u"Proje Seçiniz"),
                                        choices=self.current.task_data['proje_data'])
         self.form_out(form)
 
@@ -88,5 +97,9 @@ class EkSureTalebi(CrudView):
                                              "olup, komisyonun gündemine alınmıştır."
 
     def bilgilendirme(self):
-        self.current.msg_box(msg=self.current.task_data['onay'], title=_(u"Talebiniz Kabul "
-                                                                         u"Edildi."))
+        if 'proje_yok' in self.current.task_data:
+            self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
+                                 title=self.current.task_data['proje_yok']['title'])
+        else:
+            self.current.msg_box(msg=self.current.task_data['onay'], title=_(u"Talebiniz Kabul "
+                                                                             u"Edildi."))

@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_014hno1">
     <bpmn:participant id="Participant_0riupjj" name="Bap İş Paketi Hazırlama" processRef="bap_is_paketi_hazirlama" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_is_paketi_hazirlama" isExecutable="false">
+  <bpmn:process id="bap_is_paketi_hazirlama" name="Bap İş Paketi Hazırlama" isExecutable="false">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_132vpbe</bpmn:outgoing>
     </bpmn:startEvent>

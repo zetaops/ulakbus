@@ -33,7 +33,7 @@ class TestCase(BaseTestCase):
         object_form = {'ad': 'Araba',
                              'adet': 1,
                              'birim_fiyat': 100,
-                             'gerekce': 'Yol icin',
+                             'gerekce': 'Yol için',
                              'toplam_fiyat': 120,
                              'kaydet': 1}
         butce = BAPButcePlani()
@@ -64,13 +64,13 @@ class TestCase(BaseTestCase):
             if i == 0:
                 self.client.post(form={'ekle': 1}, cmd='add_edit_form')
                 resp = self.client.post(form={'muhasebe_kod': "03.5.5.02", 'ilerle': 1})
-                assert resp.json['forms']['form'][0]['helpvalue'] == "Yapacaginiz butce plani " \
+                assert resp.json['forms']['form'][0]['helpvalue'] == "Yapacağınız bütçe planı " \
                                                                      "Test ek bütçe talep " \
-                                                                     "projesi adli proje icin " \
-                                                                     "yapilacaktir."
+                                                                     "projesi adlı proje için " \
+                                                                     "yapılacaktır."
             elif i == 1:
                 assert resp.json['msgbox']['title'] == 'Talebiniz Reddedildi.'
-                assert resp.json['msgbox']['msg'] == 'Yeniden duzenleyiniz'
+                assert resp.json['msgbox']['msg'] == 'Yeniden düzenleyiniz'
 
                 self.client.post(cmd='add_edit_form', object_id=butce.key)
                 resp = self.client.post(form={'muhasebe_kod': "03.5.5.02",
@@ -82,7 +82,7 @@ class TestCase(BaseTestCase):
                 assert resp.json['forms']['model']['toplam_fiyat'] == object_form['toplam_fiyat']
 
                 object_form['toplam_fiyat'] = 100
-                object_form['gerekce'] = 'Indirim yapildi'
+                object_form['gerekce'] = 'İndirim yapıldı'
 
             resp = self.client.post(form=object_form)
             kalem_sayisi = BAPButcePlani.objects.filter(ilgili_proje=proje).count()
@@ -110,20 +110,20 @@ class TestCase(BaseTestCase):
             assert resp.json['objects'][1]['fields'][1] == 'Araba'
             if i == 0:
                 assert resp.json['objects'][1]['fields'][3] == '120'
-                assert resp.json['objects'][1]['fields'][4] == 'Yol icin'
+                assert resp.json['objects'][1]['fields'][4] == 'Yol için'
                 assert resp.json['objects'][1]['fields'][5] == 'Yeni'
                 self.client.post(cmd='iptal')
 
-                resp = self.client.post(form={'red_aciklama': 'Yeniden duzenleyiniz',
+                resp = self.client.post(form={'red_aciklama': 'Yeniden düzenleyiniz',
                                               'red_gonder': 1})
 
             if i == 1:
                 assert resp.json['objects'][1]['fields'][3] == '100'
-                assert resp.json['objects'][1]['fields'][4] == 'Indirim yapildi'
+                assert resp.json['objects'][1]['fields'][4] == 'İndirim yapıldı'
                 assert resp.json['objects'][1]['fields'][5] == 'Düzenlendi'
 
                 resp = self.client.post(cmd='kabul', form={'onayla': 1})
-                time.sleep(0.5)
+                time.sleep(1)
                 assert BAPGundem.objects.filter(gundem_tipi=2,
                                                 proje=proje).count() == gundem_sayisi + 1
 

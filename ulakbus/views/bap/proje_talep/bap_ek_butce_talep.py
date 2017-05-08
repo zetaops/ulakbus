@@ -24,11 +24,11 @@ class EkButceTalep(CrudView):
         personel = Personel.objects.get(user=self.current.user)
         if BAPProje.objects.filter(yurutucu=personel).count() == 0:
             self.current.task_data['onaylandi'] = 1
-            self.current.task_data['proje_yok'] = {'msg': 'Yurutucusu oldugunuz herhangi bir proje '
-                                                          'bulunamadi. Size bagli olan proje '
-                                                          'olmadigi icin ek butce talebinde '
-                                                          'bulunamazsiniz.',
-                                                   'title': 'Proje Bulunamadi'}
+            self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
+                                                          'bulunamadı. Size bağlı olan proje '
+                                                          'olmadığı için ek bütçe talebinde '
+                                                          'bulunamazsınız.',
+                                                   'title': 'Proje Bulunamadı'}
         elif 'onaylandi' not in self.current.task_data:
                 self.current.task_data['onaylandi'] = 0
 
@@ -36,9 +36,9 @@ class EkButceTalep(CrudView):
         personel = Personel.objects.get(user=self.current.user)
         data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel)]
 
-        form = JsonForm(title="Proje Seciniz")
+        form = JsonForm(title=_(u"Proje Seçiniz"))
         form.proje = fields.String(choices=data)
-        form.ilerle = fields.Button("Ilerle")
+        form.ilerle = fields.Button(_(u"İlerle"))
         self.form_out(form)
 
     def list(self, custom_form=None):
@@ -49,7 +49,7 @@ class EkButceTalep(CrudView):
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
                                        'actions': ''})
 
-        form = JsonForm(title="Bap Ek Butce Talep")
+        form = JsonForm(title=_(u"Bap Ek Bütçe Talep"))
         form.tamam = fields.Button(_(u"Onaya Yolla"))
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
         self.form_out(form)

@@ -4,9 +4,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPButcePlani, BAPProje
+from ulakbus.models import BAPButcePlani, BAPProje, Personel
 
-from zengine.views.crud import CrudView, obj_filter
+from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 
@@ -27,6 +27,27 @@ class BapButcePlani(CrudView):
             del self.current.task_data['object_id']
             self.object = BAPButcePlani()
 
+    def kontrol(self):
+        if 'bap_proje_id' not in self.current.task_data:
+            personel = Personel.objects.get(user=self.current.user)
+            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel)]
+            if data:
+                self.current.task_data['proje_data'] = data
+                self.current.task_data['proje_sec'] = 1
+            else:
+                self.current.task_data['proje_sec'] = 0
+                self.current.task_data['proje_yok'] = {
+                    'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
+                           'bulunamadı. Size bağlı olan proje '
+                           'olmadığı için yeni bir bütçe planı yapamazsınız.',
+                    'title': 'Proje Bulunamadı'}
+
+    def proje_sec(self):
+        form = JsonForm(title=_(u"Proje Seçiniz"))
+        form.proje = fields.String(choices=self.current.task_data['proje_data'])
+        form.ilerle = fields.Button(_(u"İlerle"))
+        self.form_out(form)
+
     def butce_kalemi_sec(self):
         form = JsonForm(self.object, current=self.current, title=_(u"Bütçe Kalemi Seç"))
         form.include = ['muhasebe_kod']
@@ -34,11 +55,7 @@ class BapButcePlani(CrudView):
         self.form_out(form)
 
     def add_edit_form(self):
-        if 'bap_proje_id' in self.current.task_data:
-            proje_ad = BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad
-        else:
-            proje_ad = '(Proje Belirlenmedi!)'
-
+        proje_ad = BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad
         self.object.muhasebe_kod = self.input['form']['muhasebe_kod']
         self.object.kod_adi = self.object.get_muhasebe_kod_display()
 
@@ -48,7 +65,7 @@ class BapButcePlani(CrudView):
         form = ButcePlaniForm(self.object, current=self.current)
         form.exclude = ['muhasebe_kod', 'kod_adi', 'onay_tarihi', 'ilgili_proje']
         form.title = "%s Kodlu / %s Bütçe Planı" % (self.object.muhasebe_kod, self.object.kod_adi)
-        form.help_text = "Yapacaginiz butce plani %s adli proje icin yapilacaktir." % \
+        form.help_text = "Yapacağınız bütçe planı %s adlı proje için yapılacaktır." % \
                          proje_ad
         self.form_out(form)
 
@@ -56,8 +73,7 @@ class BapButcePlani(CrudView):
         self.set_form_data_to_object()
         self.object.muhasebe_kod = self.current.task_data['muhasebe_kod']
         self.object.kod_adi = self.current.task_data['kod_adi']
-        if 'bap_proje_id' in self.current.task_data:
-            self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.save_object()
 
     def confirm_deletion(self):
@@ -76,10 +92,23 @@ class BapButcePlani(CrudView):
         self.form_out(form)
 
     def list(self, custom_form=None):
+        if 'form' in self.input and 'proje' in self.input['form']:
+            self.current.task_data['bap_proje_id'] = self.input['form']['proje']
+
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         CrudView.list(self)
         toplam = sum(float(obj['fields'][5])for obj in self.output['objects'][1:])
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
                                        'actions': ''})
+        form = JsonForm(title=_(u"%s projesi için Bütçe Planı") % proje.ad)
+        form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
+        form.bitir = fields.Button(_(u"Bitir"), cmd='bitir')
+        self.form_out(form)
+
+    def bilgilendirme(self):
+        if 'proje_yok' in self.current.task_data:
+            self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
+                                 title=self.current.task_data['proje_yok']['title'])
 
     @obj_filter
     def proje_turu_islem(self, obj, result):
@@ -87,3 +116,7 @@ class BapButcePlani(CrudView):
             {'name': _(u'Sil'), 'cmd': 'confirm_deletion', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}]
+
+    @list_query
+    def list_by_bap_proje_id(self, queryset):
+        return queryset.filter(ilgili_proje_id=self.current.task_data['bap_proje_id'])

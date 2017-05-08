@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1u87znh">
     <bpmn:participant id="Participant_1ie1rh4" name="Bap Ek Bütçe Talebi" processRef="bap_ek_butce_talep" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_ek_butce_talep" isExecutable="false">
+  <bpmn:process id="bap_ek_butce_talep" name="Bap Ek Bütçe Talebi" isExecutable="false">
     <bpmn:laneSet>
       <bpmn:lane id="proje_yurutucusu" name="Proje Yürütücüsü">
         <bpmn:flowNodeRef>sonuc</bpmn:flowNodeRef>
