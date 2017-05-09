@@ -20,7 +20,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     # Gösterilecek alanlar listesi.
     column_list = ['tckn', 'ad', 'soyad', 'dogum_tarihi', 'cinsiyet', 'medeni_hali', 'dogum_yeri',
                    'kan_grubu', 'ana_adi', 'baba_adi', 'brans', 'unvan', 'personel_turu', 'kurum_sicil_no_int',
-                   'birim_id', 'baslama_sebep_id', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
+                   'birim_id', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
                    'kayitli_oldugu_mahalle_koy', 'cuzdan_seri', 'cuzdan_seri_no', 'kayitli_oldugu_cilt_no',
                    'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no', 'kimlik_cuzdani_verildigi_yer',
                    'kimlik_cuzdani_verilis_nedeni', 'kimlik_cuzdani_kayit_no', 'kimlik_cuzdani_verilis_tarihi',
@@ -63,10 +63,6 @@ def raporlama_ekrani_secim_menulerini_hazirla():
     personel_statu = [{"value": item['value'], "label": item['name']} for item
                       in catalog_data_manager.get_all("personel_statu")]
 
-    # Hitap sebep kodlarını aldık
-    sebep_kodlari = [{"value": sk.sebep_no, "label": sk.ad if sk.ad is None else sk.ad[:10]} for sk
-                     in HitapSebep.objects.all()]
-
     # Başlangıçta görünecek alanlar
     default_alanlar = ['ad', 'soyad', 'cinsiyet', 'dogum_tarihi', 'personel_turu']
 
@@ -76,7 +72,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
 
     contains_fields = []
     select_fields = ['cinsiyet', 'kan_grubu', 'medeni_hali', 'personel_turu']
-    multiselect_fields = ['baslama_sebep_id', 'birim_id', 'hizmet_sinifi', 'unvan']
+    multiselect_fields = ['birim_id', 'hizmet_sinifi', 'unvan']
     range_date_fields = ['dogum_tarihi', 'em_sonraki_terfi_tarihi', 'emekli_giris_tarihi', 'ga_sonraki_terfi_tarihi',
                          'gorev_suresi_baslama', 'gorev_suresi_bitis', 'goreve_baslama_tarihi',
                          'kh_sonraki_terfi_tarihi', 'mecburi_hizmet_suresi']
@@ -111,9 +107,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
         elif col in multiselect_fields:
             col_def['filter'] = {}
             col_def['type'] = 'MULTISELECT'
-            if col == 'baslama_sebep_id':
-                sel_opts = sebep_kodlari
-            elif col == 'birim_id':
+            if col == 'birim_id':
                 sel_opts = birim
             elif col == 'hizmet_sinifi':
                 sel_opts = hizmet_sinifi
