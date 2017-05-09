@@ -26,7 +26,7 @@ class BAPProjeTurleri(Model):
         verbose_name = __(u"Proje Türü")
         verbose_name_plural = __(u"Proje Türleri")
         list_fields = ['kod', 'ad', 'min_sure', 'max_sure', 'butce_ust_limit']
-        list_filters = ['kod', 'ad']
+        list_filters = ['kod', ]
         search_fields = ['kod', 'ad', 'min_sure', 'max_sure', 'butce_ust_limit']
 
     class Belgeler(ListNode):
@@ -57,7 +57,7 @@ class BAPTakvim(Model):
         class Meta:
             title = __(u"Proje Türü")
 
-        proje_turu = field.String(__(u"Proje Türleri"))
+        proje_turu = BAPProjeTurleri()
 
     class OnemliTarihler(ListNode):
         class Meta:
