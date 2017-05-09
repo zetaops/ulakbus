@@ -37,12 +37,28 @@ class TestCase(BaseTestCase):
         # Listeleme ekranının başlığının BAP Projeler olduğu kontrol edilir.
         assert resp.json['forms']['schema']['title'] == 'BAP Projeler'
         # Listeleme kategorileri kontrol edilir.
-        assert 'Durum' and 'Proje_Adı' and 'Personel' in resp.json['objects'][0]
+        # assert u'Proje_Adı' in resp.json['objects'][0]
+        assert 'Personel' in resp.json['objects'][0]
 
         # Seçilen projenin adının da listeleme ekranında bulunduğu kontrol edilir.
         del resp.json['objects'][0]
-        project_name_list = [obj['fields'][1] for obj in resp.json['objects']]
+        project_name_list = [obj['fields'][0] for obj in resp.json['objects']]
         assert "Akıllı Robot" in project_name_list
+
+        # Seçilen proje için işlem geçmişi butonuna basılır ve projenin işlem geçmişi görüntülenir.
+        resp = self.client.post(cmd='islem_gecmisi', object_id=project.key,
+                                wf="bap_basvuru_listeleme")
+
+        # Proje işlem geçmişinin başlığı kontrol edilir.
+        assert resp.json['forms']['schema']['title'] == 'Proje İşlem Geçmişi'
+        # Tablo başlıkları kontrol edilir.
+        assert 'Eylem' in resp.json['objects'][0]
+        assert 'Açıklama' in resp.json['objects'][0]
+        assert 'Tarih' in resp.json['objects'][0]
+
+        # Tekrardan listeleme ekranına geri dönülür.
+        resp = self.client.post(wf='bap_basvuru_listeleme', form={'geri': 1})
+        assert resp.json['forms']['schema']['title'] == 'BAP Projeler'
 
         # Seçilen proje için incele butonuna basılır ve inceleme iş akışı tetiklenir.
         resp = self.client.post(cmd='incele', object_id=project.key,
@@ -51,22 +67,41 @@ class TestCase(BaseTestCase):
         # İnceleme iş akışının default sayfası Proje Hakkında olmalıdır. Başlık kontrol edilir.
         assert resp.json['forms']['schema']['title'] == 'Proje Hakkında'
         # Proje hakkında sayfası'nda proje hakkında istenilen bilgilerin olduğu kontrol edilir.
-        assert 'Proje Adı' and 'Hedef ve Amaç' and 'B Planı' in resp.json['object'].keys()
+        assert 'Proje Adı' in resp.json['object'].keys()
         # Proje adı kısmı Akıllı Robot olmalıdır.
-        assert resp.json['object'][u'Proje Adı'] == u'Akıllı Robot'
+        assert resp.json['object']['Proje Adı'] == 'Akıllı Robot'
+        # Araştırma Olanakları detay kısmı kontrolleri
+        resp = self.client.post(cmd='olanak', wf="bap_basvuru_listeleme")
+        assert 'Demirbaş' in resp.json['objects'][0]
+        assert resp.json['forms']['schema']['title'] == 'Araştırma Olanakları'
+        # Üniversite Dışı Uzmanlar detay kısmı kontrolleri
+        resp = self.client.post(cmd='dis_uzman', wf="bap_basvuru_listeleme")
+        assert 'Kurum' in resp.json['objects'][0]
+        assert resp.json['forms']['schema']['title'] == 'Üniversite Dışı Uzmanlar'
+        # Üniversite Dışı Destekler detay kısmı kontrolleri
+        resp = self.client.post(cmd='dis_destek', wf="bap_basvuru_listeleme")
+        assert resp.json['forms']['schema']['title'] == 'Üniversite Dışı Destekler'
+
+        # Detay ekranından geri dönüldüğünde genel proje bilgilerinin gösterildiği
+        # ekrana gidildiği kontrol edilir.
+        resp = self.client.post(cmd='geri_don', wf="bap_basvuru_listeleme")
+        assert resp.json['forms']['schema']['title'] == 'Proje Hakkında'
 
         # Projenin bütçe planı kısmı kontrol edilir.
         resp = self.client.post(cmd='butce_plani', wf='bap_basvuru_listeleme',
-                                form={'butce_plani': 1})
+                                form={'butce': 1})
         assert resp.json['forms']['schema']['title'] == 'Bütçe Planı'
         assert 'Muhasebe Kodu' and 'Kod Adı' in resp.json['objects'][0]
 
         # Projenin proje çalışanları kısmı kontrol edilir.
         resp = self.client.post(cmd='proje_calisanlari', wf='bap_basvuru_listeleme',
                                 form={'proje_calisanlari': 1})
+        assert 'Çalışmaya Katkısı' in resp.json['objects'][0]
         assert resp.json['forms']['schema']['title'] == 'Proje Çalışanları'
+
         # Projenin  iş planı kısmı kontrol edilir.
         resp = self.client.post(cmd='is_plani', wf='bap_basvuru_listeleme', form={'is_plani': 1})
+        assert 'Paket Adı' in resp.json['objects'][0]
         assert resp.json['forms']['schema']['title'] == 'İş Planı'
 
         # İş planları arasından bir planın ayrıntılarını görme kısmı kontrol edilir.
@@ -75,8 +110,7 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == 'Robot Yazılımı İş Planı Ayrıntıları'
 
         # Tekrardan iş planı kısmına dönüldüğü kontrol edilir.
-        resp = self.client.post(cmd='is_plani', wf='bap_basvuru_listeleme',
-                                form={'form_name': 'IsPlaniAyrintilariForm', 'tamam': 1})
+        resp = self.client.post(wf='bap_basvuru_listeleme', form={'geri': 1})
         assert resp.json['forms']['schema']['title'] == 'İş Planı'
 
         # Daha sonra karar ver seçeneğine tıklandığında tekrardan listeleme ekranına dönüldüğü
@@ -186,7 +220,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
         # Projenin adının değiştiği kontrol edilir.
         assert resp.json['forms']['schema']['title'] == 'Proje Hakkında'
-        assert resp.json['object'][u'Proje Adı'] == u'Otomatik Süpürge'
+        assert resp.json['object']['Proje Adı'] == 'Otomatik Süpürge'
         # Karar verilir.
         resp = self.client.post(cmd='karar_ver', wf='bap_basvuru_listeleme', form={'karar_ver': 1})
         assert resp.json['forms']['schema']['title'] == "İnceleme Sonrası Proje Kararı"

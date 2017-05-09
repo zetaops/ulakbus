@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models.form import Form
-from ulakbus.models import Room, Personel
+from ulakbus.models import Room, Personel, Role
 from ulakbus.models.demirbas import Demirbas
 from pyoko.lib.utils import lazy_property
 
@@ -108,6 +108,7 @@ class BAPIs(Model):
 class BAPProje(Model):
 
     durum = field.Integer(_(u"Durum"), choices='bap_proje_durum')
+    basvuru_rolu = Role()
 
     # Komisyon kararıyla doldurulacak alanlar
     proje_no = field.String(_(u"Proje No"))
@@ -201,7 +202,7 @@ class BAPProje(Model):
             verbose_name_plural = __(u"İşlem Geçmişi")
         eylem = field.String(_(u"Eylem"))
         aciklama = field.String(_(u"Açıklama"))
-        tarih = field.Date(_(u"Tarih"))
+        tarih = field.DateTime(_(u"Tarih"))
 
     @lazy_property
     def yurutucu_diger_projeler(self):
@@ -211,11 +212,12 @@ class BAPProje(Model):
         app = 'BAP'
         verbose_name = _(u"BAP Proje")
         verbose_name_plural = _(u"BAP Projeler")
-        list_fields = ['durum', 'ad', 'yurutucu']
-        search_fields = ['durum', 'ad', 'yurutucu']
+        list_fields = ['ad', 'yurutucu']
+        search_fields = ['ad']
+        list_filters = ['durum']
 
     def __unicode__(self):
-        return "%s: %s" % (self.proje_no, self.ad)
+        return "%s: %s" % (self.ad, self.yurutucu.__unicode__())
 
 
 class BAPIsPaketi(Model):

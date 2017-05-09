@@ -83,7 +83,7 @@ Projenin güncel durumu: %s
         self.current.task_data['karar'] = 'revizyon'
         self.current.task_data['revizyon_gerekce'] = gerekce
         self.object.ProjeIslemGecmisi(eylem='Revizyon', aciklama='Revizyona gönderildi',
-                                      tarih=datetime.now().date())
+                                      tarih=datetime.now())
         self.object.durum = 3
         self.object.save()
 
@@ -94,8 +94,8 @@ Projenin güncel durumu: %s
         """
 
         self.current.task_data['karar'] = 'onayla'
-        self.object.ProjeIslemGecmisi(eylem='Gündeme Alındı',
+        self.object.ProjeIslemGecmisi(eylem='Onaylandı',
                                       aciklama='Onaylandı ve gündeme alındı',
-                                      tarih=datetime.now().date())
+                                      tarih=datetime.now())
         self.object.durum = 4
         self.object.save()
