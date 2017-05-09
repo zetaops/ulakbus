@@ -4,9 +4,23 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from ulakbus.lib.view_helpers import prepare_choices_for_model
+from ulakbus.models import BAPProje
+
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy as __
+
+
+class YeniGundemForm(JsonForm):
+    class Meta:
+        title = __(u"Yeni Gündem")
+
+    proje = fields.String(__(u"Proje Seçiniz"))
+    gundem_tipi = fields.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
+    oturum_numarasi = fields.Integer(__(u"Oturum Numarası"))
+    oturum_tarihi = fields.Date(__(u"Oturum Tarihi"))
+    kaydet = fields.Button(__(u"Kaydet"))
 
 
 class Gundem(CrudView):
@@ -15,7 +29,18 @@ class Gundem(CrudView):
 
     def list(self, custom_form=None):
         custom_form = JsonForm(current=self.current, title=_(u"Gündem Listesi"))
+        custom_form.ekle = fields.Button(_(u"Yeni Gündem Oluştur"), cmd='yeni_gundem')
         CrudView.list(self, custom_form=custom_form)
+
+    def yeni_gundem_olustur(self):
+        form = YeniGundemForm()
+        form.set_choices_of('proje', prepare_choices_for_model(BAPProje))
+        self.form_out(form)
+
+    def yeni_gundem_kaydet(self):
+        self.set_form_data_to_object()
+        self.object.proje = BAPProje.objects.get(self.input['form']['proje'])
+        self.object.blocking_save()
 
     def add_edit_form(self):
         form = JsonForm(self.object)
@@ -33,6 +58,10 @@ class Gundem(CrudView):
         self.form_out(form)
         self.output['object_title'] = _(u"%s / %s") % (self.object.proje.ad,
                                                        self.object.get_gundem_tipi_display())
+        sonuc = _(u"Sonuçlandı") if self.output['object'][u'Kararın Sonuçlandırılması'] == u'True' \
+            else _(u"Sonuçlanmadı")
+
+        self.output['object'][u'Kararın Sonuçlandırılması'] = sonuc
 
     def komisyon_kararini_ilet(self):
         self.object.proje.yurutucu.user.send_notification(
@@ -55,7 +84,8 @@ class Gundem(CrudView):
     def proje_turu_islem(self, obj, result):
         sonuc = {'name': _(u'Sonuç'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'}
         goster = {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}
+        sil = {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'}
         if obj.sonuclandi:
-            result['actions'] = ([goster])
+            result['actions'] = ([goster, sil])
         else:
-            result['actions'] = ([sonuc, goster])
+            result['actions'] = ([sonuc, goster, sil])

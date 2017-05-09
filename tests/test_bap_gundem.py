@@ -52,7 +52,7 @@ class TestCase(BaseTestCase):
                      u'Karar': 'Reddedildi',
                      u'Karar No': '2',
                      u'Karar Tarihi': '21.04.2017',
-                     u'Kararın Sonuçlandırılması': 'True',
+                     u'Kararın Sonuçlandırılması': 'Sonuçlandı',
                      u'Oturum Numarası': '5',
                      u'Oturum Tarihi': '21.04.2017'}
 
