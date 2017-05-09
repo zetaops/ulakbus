@@ -17,6 +17,9 @@ from datetime import datetime
 
 
 class IsPaketiHazirlaForm(JsonForm):
+    class Meta:
+        always_blank = False
+
     ad = fields.String(__(u"İş Paketinin Adı"))
     baslama_tarihi = fields.Date(__(u"Başlama Tarihi"), format="%d.%m.%Y")
     bitis_tarihi = fields.Date(__(u"Bitiş Tarihi"), format="%d.%m.%Y")
@@ -43,6 +46,9 @@ class IsPaketiHazirlama(CrudView):
                 'object_id' not in self.input:
             del self.current.task_data['object_id']
             self.object = BAPIsPaketi()
+
+        if 'iptal' in current.task_data['cmd'] and 'IsPaketiHazirlaForm' in self.current.task_data:
+            del current.task_data['IsPaketiHazirlaForm']
 
     def zaman_cizelgesi(self):
         """
@@ -119,7 +125,18 @@ class IsPaketiHazirlama(CrudView):
         self.form_out(form)
 
     def add_edit_form(self):
-        self.form_out(IsPaketiHazirlaForm(title=_(u"İş Paketi Ekle")))
+        # if 'IsPaketiHazirlaForm' in self.current.task_data:
+        #     for i in range(len(self.current.task_data['IsPaketiHazirlaForm']['Isler'])):
+        #         bas = self.current.task_data['IsPaketiHazirlaForm']['Isler'][i]['baslama_tarihi']
+        #         bit = self.current.task_data['IsPaketiHazirlaForm']['Isler'][i]['bitis_tarihi']
+        #         self.current.task_data['IsPaketiHazirlaForm']['Isler'][i]['baslama_tarihi'] = \
+        #             datetime.strftime(datetime.strptime(bas, '%Y-%m-%dT%H:%M:%S.%fZ').date(),
+        #                               '%d.%m.%Y')
+        #         self.current.task_data['IsPaketiHazirlaForm']['Isler'][i]['bitis_tarihi'] = \
+        #             datetime.strftime(datetime.strptime(bit, '%Y-%m-%dT%H:%M:%S.%fZ').date(),
+        #                               '%d.%m.%Y')
+
+        self.form_out(IsPaketiHazirlaForm(current=self.current, title=_(u"İş Paketi Ekle")))
 
     def is_paketi_kontrolu_yap(self):
         hata_msg = ''
@@ -134,8 +151,18 @@ class IsPaketiHazirlama(CrudView):
 
         if 'Isler' in self.input['form'] and not hata_msg:
             for bap_is in self.input['form']['Isler']:
-                bas = datetime.strptime(bap_is['baslama_tarihi'], '%Y-%m-%dT%H:%M:%S.%fZ').date()
-                bit = datetime.strptime(bap_is['bitis_tarihi'], '%Y-%m-%dT%H:%M:%S.%fZ').date()
+                try:
+                    format_date = '%d.%m.%Y'
+                    datetime.strptime(bap_is['baslama_tarihi'], format_date).date()
+                except ValueError:
+                    format_date = '%Y-%m-%dT%H:%M:%S.%fZ'
+
+                except TypeError:
+                    hata_msg = _(u"Lütfen tarihlerinizi kontrol edip düzeltiniz.")
+                    break
+
+                bas = datetime.strptime(bap_is['baslama_tarihi'], format_date).date()
+                bit = datetime.strptime(bap_is['bitis_tarihi'], format_date).date()
                 if not iki_tarih_arasinda_mi(bas, bit, ip_baslama_tarihi, ip_bitis_tarihi):
                     hata_msg = _(u"%s işinizin tarihi iş paketinizin tarih aralığında değil. "
                                  u"Lütfen tekrardan düzenleyiniz.") % bap_is['ad']
@@ -166,6 +193,8 @@ class IsPaketiHazirlama(CrudView):
                  for bap_is in self.input['form']['Isler']]
         [is_paketi.Isler(isler=b_is) for b_is in isler]
         is_paketi.blocking_save()
+        if 'IsPaketiHazirlaForm' in self.current.task_data:
+            del self.current.task_data['IsPaketiHazirlaForm']
 
     def confirm_deletion(self):
         pass
