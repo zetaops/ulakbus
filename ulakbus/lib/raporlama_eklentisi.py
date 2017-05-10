@@ -46,7 +46,7 @@ def raporlama_ekrani_secim_menulerini_hazirla():
 
     # Birimleri aldık
     # todo u.key ile göndermek mantıklı olacak, yoksa label'ları kaybediyoruz
-    birim = [{"value": u.yoksis_no, "label": u.name} for u in Unit.objects.all()]
+    birim = [{"value": u.key, "label": u.name} for u in Unit.objects.all()]
 
     # Unvanları aldık
     unvan = [{"value": item['value'], "label": item['name']} for item in catalog_data_manager.get_all("unvan_kod")]
