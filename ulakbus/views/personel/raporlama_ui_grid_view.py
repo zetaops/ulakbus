@@ -18,6 +18,7 @@ from ulakbus.models import Personel, Unit
 from datetime import datetime
 from ulakbus.settings import DATE_DEFAULT_FORMAT
 from pyoko.fields import DATE_FORMAT
+from zengine.lib.translation import gettext as _
 
 __author__ = 'Anıl Can Aydın'
 
@@ -208,6 +209,12 @@ def get_report_data(current):
     raporlama_cache.set(cache_data)
     del cache_data['gridOptions']['filter_columns']
     del cache_data['gridOptions']['sort_columns']
+    # 'applyFilter', 'cancelFilter', 'csvDownload', 'selectColumns', 'dataLoading'
+    cache_data['gridOptions']['applyFilter'] = _(u"Filtrele")
+    cache_data['gridOptions']['cancelFilter'] = _(u"Filtreleri Temizle")
+    cache_data['gridOptions']['csvDownload'] = _(u"Dışa Aktar")
+    cache_data['gridOptions']['selectColumns'] = _(u"Kolon Seç")
+    cache_data['gridOptions']['dataLoading'] = _(u"Yükleniyor...")
     current.output['gridOptions'] = cache_data['gridOptions']
 
 
