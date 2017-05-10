@@ -12,10 +12,12 @@ from io import BytesIO
 
 from ulakbus.lib.cache import RaporlamaEklentisi
 from ulakbus.lib.s3_file_manager import S3FileManager
+from zengine.lib.catalog_data import catalog_data_manager
 from zengine.lib.decorators import view
-from ulakbus.models import Personel
+from ulakbus.models import Personel, Unit
 from datetime import datetime
 from ulakbus.settings import DATE_DEFAULT_FORMAT
+from pyoko.fields import DATE_FORMAT
 
 __author__ = 'Anıl Can Aydın'
 
@@ -200,26 +202,9 @@ def get_report_data(current):
 
     page = page_default - 1
 
-    def personel_data():
-        gos = cache_data['gridOptions']
-        query_params = data_grid_filter_parser(gos.get('filter_columns', []),
-                                               cache_data['alan_filter_type_map'])
-
-        sort_params = data_grid_order_parser(gos.get('sort_columns', []))
-        active_columns = []
-        for col in cache_data['gridOptions']['selectors']:
-            if col['checked']:
-                active_columns.append(col['name'])
-        data_size = Personel.objects.all(**query_params).count()
-        data = Personel.objects.set_params(
-            start=page * page_size, rows=page_size
-        ).all(**query_params).order_by(*sort_params).values(*active_columns)
-
-        is_more_data_left = data_size / page_size > page
-
-        return is_more_data_left, data
-
-    cache_data['gridOptions']['isMoreDataLeft'], cache_data['gridOptions']['data'] = personel_data()
+    cache_data['gridOptions']['isMoreDataLeft'], cache_data['gridOptions']['data'] = personel_data(
+        cache_data, page
+    )
     raporlama_cache.set(cache_data)
     del cache_data['gridOptions']['filter_columns']
     del cache_data['gridOptions']['sort_columns']
@@ -304,26 +289,11 @@ def get_csv_data(current):
     if 'sortColumns' in current.input:
         cache_data['gridOptions']['sort_columns'] = current.input['sortColumns']
 
-    def personel_data():
-        gos = cache_data['gridOptions']
-        query_params = data_grid_filter_parser(gos.get('filter_columns', []),
-                                               cache_data['alan_filter_type_map'])
-
-        sort_params = data_grid_order_parser(gos.get('sort_columns', []))
-        active_columns = []
-        for col in cache_data['gridOptions']['selectors']:
-            if col['checked']:
-                active_columns.append(col['name'])
-        data = Personel.objects.all(**query_params).order_by(*sort_params).values(
-            *active_columns)
-
-        return data
-
     output = BytesIO()
-    csv_writer = csv.writer(output, delimiter=',', quotechar="'", quoting=csv.QUOTE_MINIMAL)
+    csv_writer = csv.writer(output, delimiter=';', quotechar="'", quoting=csv.QUOTE_MINIMAL)
 
     count = 0
-    for emp in personel_data():
+    for emp in personel_data(cache_data):
         if count == 0:
             header = emp.keys()
             csv_writer.writerow(header)
@@ -348,3 +318,116 @@ def generate_temp_file(name, content, file_type, ext):
 
 def generate_file_name():
     return "personel-rapor-%s" % datetime.now().strftime("%d.%m.%Y-%H.%M.%S")
+
+
+def personel_data(cache_data, page=None):
+    page_size = cache_data['page_size']
+    gos = cache_data['gridOptions']
+    query_params = data_grid_filter_parser(gos.get('filter_columns', []),
+                                           cache_data['alan_filter_type_map'])
+
+    sort_params = data_grid_order_parser(gos.get('sort_columns', []))
+    active_columns = []
+
+    time_related_fields = cache_data['time_related_fields']
+
+    for col in cache_data['gridOptions']['selectors']:
+        if col['checked']:
+            active_columns.append(col['name'])
+    if page is not None:
+        data_size = Personel.objects.all(**query_params).count()
+        data_to_return = []
+        for data, key in Personel.objects.set_params(start=page * page_size, rows=page_size).all(
+                **query_params).order_by(*sort_params).data():
+            d = {}
+            for ac in active_columns:
+                if ac == 'cinsiyet':
+                    for cins in catalog_data_manager.get_all('cinsiyet'):
+                        if data[ac] == cins['value']:
+                            d[ac] = cins['name']
+                elif ac == 'kan_grubu':
+                    for kan in catalog_data_manager.get_all('kan_grubu'):
+                        if data[ac] == kan['value']:
+                            d[ac] = kan['name']
+                elif ac == 'medeni_hali':
+                    for mh in catalog_data_manager.get_all('medeni_hali'):
+                        if data[ac] == mh['value']:
+                            d[ac] = mh['name']
+                elif ac == 'birim_id':
+                    if data[ac]:
+                        d[ac] = Unit.objects.get(data[ac]).name
+                    else:
+                        d[ac] = ""
+                elif ac == 'unvan':
+                    for unv in catalog_data_manager.get_all('unvan_kod'):
+                        if data[ac] == unv['value']:
+                            d[ac] = unv['name']
+                elif ac == 'personel_turu':
+                    for pt in catalog_data_manager.get_all('personel_turu'):
+                        if data[ac] == pt['value']:
+                            d[ac] = pt['name']
+                elif ac == 'hizmet_sinifi':
+                    for hs in catalog_data_manager.get_all('hizmet_sinifi'):
+                        if data[ac] == hs['value']:
+                            d[ac] = hs['name']
+                elif ac == 'statu':
+                    for stat in catalog_data_manager.get_all('personel_statu'):
+                        if data[ac] == stat['value']:
+                            d[ac] = stat['name']
+                elif ac in time_related_fields:
+                    d[ac] = datetime.strftime(
+                        datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
+                else:
+                    d[ac] = data[ac]
+            data_to_return.append(d)
+
+        is_more_data_left = data_size / page_size > page
+
+        return is_more_data_left, data_to_return
+
+    else:
+        data_to_return = []
+        for data, key in Personel.objects.all(**query_params).order_by(*sort_params).data():
+            d = {}
+            for ac in active_columns:
+                if ac == 'cinsiyet':
+                    for cins in catalog_data_manager.get_all('cinsiyet'):
+                        if data[ac] == cins['value']:
+                            d[ac] = cins['name']
+                elif ac == 'kan_grubu':
+                    for kan in catalog_data_manager.get_all('kan_grubu'):
+                        if data[ac] == kan['value']:
+                            d[ac] = kan['name']
+                elif ac == 'medeni_hali':
+                    for mh in catalog_data_manager.get_all('medeni_hali'):
+                        if data[ac] == mh['value']:
+                            d[ac] = mh['name']
+                elif ac == 'birim_id':
+                    if data[ac]:
+                        d[ac] = Unit.objects.get(data[ac]).name
+                    else:
+                        d[ac] = ""
+                elif ac == 'unvan':
+                    for unv in catalog_data_manager.get_all('unvan_kod'):
+                        if data[ac] == unv['value']:
+                            d[ac] = unv['name']
+                elif ac == 'personel_turu':
+                    for pt in catalog_data_manager.get_all('personel_turu'):
+                        if data[ac] == pt['value']:
+                            d[ac] = pt['name']
+                elif ac == 'hizmet_sinifi':
+                    for hs in catalog_data_manager.get_all('hizmet_sinifi'):
+                        if data[ac] == hs['value']:
+                            d[ac] = hs['name']
+                elif ac == 'statu':
+                    for stat in catalog_data_manager.get_all('personel_statu'):
+                        if data[ac] == stat['value']:
+                            d[ac] = stat['name']
+                elif ac in time_related_fields:
+                    d[ac] = datetime.strftime(
+                        datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
+                else:
+                    d[ac] = data[ac]
+            data_to_return.append(d)
+
+        return data_to_return
