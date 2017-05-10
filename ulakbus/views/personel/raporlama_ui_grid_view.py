@@ -261,6 +261,7 @@ def get_report_data(current):
     cache_data['gridOptions']['csvDownload'] = _(u"Dışa Aktar")
     cache_data['gridOptions']['selectColumns'] = _(u"Kolon Seç")
     cache_data['gridOptions']['dataLoading'] = _(u"Yükleniyor...")
+    cache_data['gridOptions']['pageTitle'] = _(u"Personel Raporları")
     # gridOptions içinde grid datası gönderilir.
     current.output['gridOptions'] = cache_data['gridOptions']
 
