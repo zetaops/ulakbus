@@ -26,15 +26,15 @@ __author__ = 'Anıl Can Aydın'
 @view()
 def get_report_data(current):
     """
-        Populates the report screen data.
-
+        Rapor ekranı verilerini oluşturur. Gelen sorgulara uyan verileri rapor ekranına gönderir.
         .. code-block:: python
 
                #  request:
                    {
+
                    'view': '_zops_get_report_data',
                    'page': 1,
-                    selectors: [
+                   'selectors': [ //Gösterilen kolonlar değiştiğinde gönderilir.
                             {
                                 name: "some field name (name, age etc)",
                                 label: "Some Field Name To Show (Name, Age etc.)",
@@ -42,39 +42,80 @@ def get_report_data(current):
                             },
                             ...
                         ],
-                    options: {
-                            some_input_field: {
-                                condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
-                                value: "some value"
-                            },
-                            some_select_field: {
-                                value: "some value"
-                            },
-                            some_multiselect_field: {
-                                some_name: "some value",
-                                some_name: "some value",
-                                some_name: "some value",
-                                ...
-                            },
-                            some_range_field: {
-                                start (or min): "some value",
-                                end (or max): "some value"
-                            }
+                   'filterColumns': [
+                        {
+                            'columnName': "ad",
+                            'columnType': "INPUT",
+                            'filterParam': [
+                                {
+                                    'condition': 2,
+                                    'value': "A"
+                                }
+                            ]
+                        },
+                        {
+                            'columnName': "soyad",
+                            'columnType': "INPUT",
+                            'filterParam': [
+                                {
+                                    'condition': 2,
+                                    'value': "B"
+                                }
+                            ]
+                        },
+                        {
+                            'columnName': "dogum_tarihi",
+                            'columnType': "datetime",
+                            'filterParam': [
+                                {
+                                    'condition': 32,
+                                    'value': "01.01.1960"
+                                },
+                                {
+                                    'condition': 128,
+                                    'value': "01.01.1990"
+                                }
+                            ]
+                        },
+                        {   'columnName': "cinsiyet",
+                            'columnType': "SELECT",
+                            'filterParam': [
+                                {
+                                    'condition': 8,
+                                    'value': 1
+                                }
+                            ]
+                        },
+                        {
+                            'columnName': "personel_turu",
+                            'columnType': "SELECT",
+                            'filterParam': [
+                                {
+                                    'condition': 8,
+                                    'value': 1
+                                }
+                            ]
                         }
+                    ],
+                    'sortColumns': [{columnName: "dogum_tarihi", order: "asc"}]
                    }
 
                #  response:
                     {
                             'gridOptions': {
-                                enableSorting: true,
-                                useExternalSorting: true,  //if need sorting from backend side
-                                enableFiltering: true,
-                                toggleFiltering: true,
-                                useExternalFiltering: true, //if need filtering from backend side
-                                paginationPageSize: 25,
-                                useExternalPagination: true, //if need paginations from backend side
-                                enableAdding: true,
-                                enableRemoving: true,
+                                'applyFilter': "Filtrele",
+                                'cancelFilter': "Filtreleri Temizle",
+                                'csvDownload': "Dışa Aktar",
+                                'dataLoading': "Yükleniyor",
+                                'selectColumns': "Kolon Seç",
+
+                                'enableSorting': true,
+                                'enableFiltering': true,
+                                'toggleFiltering': true,
+                                'enableRemoving': true,
+
+                                'isMoreDataLeft': true,
+
                                 selectors: [
                                     {
                                         name: "some field name (name, age etc)",
@@ -186,39 +227,56 @@ def get_report_data(current):
                         }
                     }
     """
-
-    page_default = 1
+    page = 0
     raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
+    # Cache'te duran raporlama ekran bilgileri alınır, cache'te yoksa hazırlanıp cache yazılır,
+    # sonra cache'ten alınır.
     cache_data = raporlama_cache.get_or_set()
-    page_size = cache_data['page_size']
 
+    # Gelen istekte 'selectors' alanı varsa, saklanır. Bu alandaki datalar grid içinde gösterilecek
+    # kolonları, onların hangi alanlara ait olduklarını ve labellarını tutarlar.
     if 'selectors' in current.input:
         cache_data['gridOptions']['selectors'] = current.input['selectors']
+    # Filtreler
     if 'filterColumns' in current.input:
         cache_data['gridOptions']['filter_columns'] = current.input['filterColumns']
+    # Sıralama parametreleri
     if 'sortColumns' in current.input:
         cache_data['gridOptions']['sort_columns'] = current.input['sortColumns']
+    # Kaçıncı sayfanın istendiği
     if 'page' in current.input:
-        page_default = current.input['page']
+        page = current.input['page'] - 1
 
-    page = page_default - 1
-
+    # cache_data'da duran sorgu parametreleri kullanılarak personel verisi getirilir ve bir sonraki
+    # sayfa olup olmadığı bilgisi getirilir.
     cache_data['gridOptions']['isMoreDataLeft'], cache_data['gridOptions']['data'] = personel_data(
         cache_data, page
     )
     raporlama_cache.set(cache_data)
     del cache_data['gridOptions']['filter_columns']
     del cache_data['gridOptions']['sort_columns']
-    # 'applyFilter', 'cancelFilter', 'csvDownload', 'selectColumns', 'dataLoading'
+    # Sayfada görünecek mesajlar
     cache_data['gridOptions']['applyFilter'] = _(u"Filtrele")
     cache_data['gridOptions']['cancelFilter'] = _(u"Filtreleri Temizle")
     cache_data['gridOptions']['csvDownload'] = _(u"Dışa Aktar")
     cache_data['gridOptions']['selectColumns'] = _(u"Kolon Seç")
     cache_data['gridOptions']['dataLoading'] = _(u"Yükleniyor...")
+    # gridOptions içinde grid datası gönderilir.
     current.output['gridOptions'] = cache_data['gridOptions']
 
 
 def data_grid_filter_parser(filters, field_types):
+    """
+        Gelen filtreleri parse ederek query_dict oluşturur ve döndürür.
+        Alan tiplerini de cache_data içindeki alan_filter_type_map'ten alır.
+
+
+
+        Returns:
+            Dict.
+
+
+    """
     filter_conditions = {
         "STARTS_WITH": 2,
         "ENDS_WITH": 4,
@@ -275,6 +333,11 @@ def data_grid_filter_parser(filters, field_types):
 
 
 def data_grid_order_parser(sort_columns):
+    """
+        Gelen sıralama parametrelerini alarak bir list oluşturur. Sıra descending ise alan adının
+         başına '-' ekler. Ascending ise alan adını ekler. Oluşturduğu listeyi döndürür. Listedeki
+         sıraya göre dönen sonuçlar sıralanır.
+    """
     sort_params = []
     for col in sort_columns:
         if col['order'] == 'desc':
@@ -286,11 +349,84 @@ def data_grid_order_parser(sort_columns):
 
 @view()
 def get_csv_data(current):
+    """
+    Rapor ekranındaki verileri kullanarak csv  dosyası oluşturur. Output olarak bu csv linkini
+    döndürür.
+        .. code-block:: python
+
+               #  request:
+                    {
+                        'filterColumns': [
+                        {
+                            'columnName': "ad",
+                            'columnType': "INPUT",
+                            'filterParam': [
+                                {
+                                    'condition': 2,
+                                    'value': "A"
+                                }
+                            ]
+                        },
+                        {
+                            'columnName': "soyad",
+                            'columnType': "INPUT",
+                            'filterParam': [
+                                {
+                                    'condition': 2,
+                                    'value': "B"
+                                }
+                            ]
+                        },
+                        {
+                            'columnName': "dogum_tarihi",
+                            'columnType': "datetime",
+                            'filterParam': [
+                                {
+                                    'condition': 32,
+                                    'value': "01.01.1960"
+                                },
+                                {
+                                    'condition': 128,
+                                    'value': "01.01.1990"
+                                }
+                            ]
+                        },
+                        {   'columnName': "cinsiyet",
+                            'columnType': "SELECT",
+                            'filterParam': [
+                                {
+                                    'condition': 8,
+                                    'value': 1
+                                }
+                            ]
+                        },
+                        {
+                            'columnName': "personel_turu",
+                            'columnType': "SELECT",
+                            'filterParam': [
+                                {
+                                    'condition': 8,
+                                    'value': 1
+                                }
+                            ]
+                        }
+                    ],
+                    'page': 1,
+                    'sortColumns': [{columnName: "dogum_tarihi", order: "asc"}]
+                    }
+
+               #  response:
+                    {
+                        'download_url': "http://ulakbus.3s.ulakbus.net:18177/personel-rapor-10.05.
+2017-14.53.csv"
+                    }
+
+
+
+    """
     raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
     cache_data = raporlama_cache.get_or_set()
 
-    if 'selectors' in current.input:
-        cache_data['gridOptions']['selectors'] = current.input['selectors']
     if 'filterColumns' in current.input:
         cache_data['gridOptions']['filter_columns'] = current.input['filterColumns']
     if 'sortColumns' in current.input:
@@ -328,6 +464,16 @@ def generate_file_name():
 
 
 def personel_data(cache_data, page=None):
+    """
+        Cache nesnesi üzerinden gelen request parametrelerini okuyarak personel datası üzerinde
+         gelen sorguyu çalıştırır.
+
+         Data-grid ekranı için çağırılmışsa sayfa sayısı ile çağırıldığı için
+         geriye sayfa kalıp kalmadığı bilgisi ve sorgu sonucu oluşan verileri döndürür.
+
+         CSV için çağırılmışsa geriye sorguya uyan tüm datalardan sayfa numarası önemsenmeden
+         oluşturulmuş tüm verileri csv formatında döndürür.
+    """
     page_size = cache_data['page_size']
     gos = cache_data['gridOptions']
     query_params = data_grid_filter_parser(gos.get('filter_columns', []),
