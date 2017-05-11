@@ -48,8 +48,8 @@ class TestCase(BaseTestCase):
 
         d = Demirbas.objects.get(ad="Sandalye")
 
-        # Bemirbaş düzenle
-        self.client.post(object_id=d.key, cmd='add_edit_form')
+        # Demirbaş düzenle
+        self.client.post(object_id=d.key, cmd='ekle_duzenle')
 
         onceki_marka = form['marka']
         form['marka'] = "Bir başka marka"
