@@ -8,6 +8,7 @@
 import datetime
 
 from ulakbus.lib.date_time_helper import zaman_araligi
+from dateutil.relativedelta import relativedelta
 
 __author__ = 'Ali Riza Keles'
 
@@ -145,25 +146,22 @@ def terfi_tikanma_kontrol(personel):
         return ga, kh, em
     else:
         from ulakbus.models import HizmetOkul
-        personel_okul = HizmetOkul.objects.order_by('mezuniyet_tarihi').filter(
+        personel_okul = HizmetOkul.objects.order_by('-mezuniyet_tarihi').filter(
             tckn=personel.tckn
         ).exclude(ogrenim_durumu=None)
 
         son_mezun_olunan_okul = personel_okul[0]
 
         derece_sinir = ogrenim_durumuna_gore_terfi[son_mezun_olunan_okul.ogrenim_durumu]['derece']
-        kademe_sinir = ogrenim_durumuna_gore_terfi[son_mezun_olunan_okul.ogrenim_durumu]['kademe']
+        #kademe_sinir = ogrenim_durumuna_gore_terfi[son_mezun_olunan_okul.ogrenim_durumu]['kademe']
 
-        if (personel.gorev_ayligi_derece == derece_sinir and
-                personel.gorev_ayligi_kademe == kademe_sinir):
+        if personel.gorev_ayligi_derece <= derece_sinir:
             ga = True
 
-        if (personel.kazanilmis_hak_derece == derece_sinir and
-                personel.kazanilmis_hak_kademe == kademe_sinir):
+        if personel.kazanilmis_hak_derece <= derece_sinir:
             kh = True
 
-        if (personel.emekli_muktesebat_derece == derece_sinir and
-                personel.emekli_muktesebat_kademe == kademe_sinir):
+        if personel.emekli_muktesebat_derece <= derece_sinir:
             em = True
 
     return ga, kh, em
@@ -273,15 +271,14 @@ def derece_ilerlet(**kwargs):
     }
 
 
-def terfi(personel):
+def terfi(personel, baslangic_tarihi, bitis_tarihi):
     ga_tarih = personel.ga_sonraki_terfi_tarihi
     kh_tarih = personel.kh_sonraki_terfi_tarihi
     em_tarih = personel.em_sonraki_terfi_tarihi
-    
-    bugun = datetime.date.today()
 
-    ga_kademe, kh_kademe, em_kademe = kademe_ilerlet(personel, ga_tarih <= bugun, kh_tarih <= bugun,
-                                                     em_tarih <= bugun)
+    ga_kademe, kh_kademe, em_kademe = kademe_ilerlet(personel, baslangic_tarihi <= ga_tarih <= bitis_tarihi,
+                                                     baslangic_tarihi <= kh_tarih <= bitis_tarihi,
+                                                     baslangic_tarihi <= em_tarih <= bitis_tarihi)
 
     sonuc = derece_ilerlet(ga_derece=personel.gorev_ayligi_derece,
                            ga_kademe=ga_kademe,
@@ -351,17 +348,17 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None,
             }
         )
 
-        personel_terfi = terfi(personel)
+        personel_terfi = terfi(personel, baslangic_tarihi, bitis_tarihi)
 
         # terfi sonrasi derece ve kademeler
         p_data["terfi_sonrasi_gorev_ayligi_derece"] = personel_terfi['ga']['derece']
         p_data["terfi_sonrasi_gorev_ayligi_kademe"] = personel_terfi['ga']['kademe']
 
-        p_data["terfi_sonrasi_kazanilmis_hak_derece"] = personel_terfi['ga']['derece']
-        p_data["terfi_sonrasi_kazanilmis_hak_kademe"] = personel_terfi['ga']['kademe']
+        p_data["terfi_sonrasi_kazanilmis_hak_derece"] = personel_terfi['kh']['derece']
+        p_data["terfi_sonrasi_kazanilmis_hak_kademe"] = personel_terfi['kh']['kademe']
 
-        p_data["terfi_sonrasi_emekli_muktesebat_derece"] = personel_terfi['ga']['derece']
-        p_data["terfi_sonrasi_emekli_muktesebat_kademe"] = personel_terfi['ga']['kademe']
+        p_data["terfi_sonrasi_emekli_muktesebat_derece"] = personel_terfi['em']['derece']
+        p_data["terfi_sonrasi_emekli_muktesebat_kademe"] = personel_terfi['em']['kademe']
 
         # terfi sonrasi gorunen kademeler
         p_data["terfi_sonrasi_gorunen_gorev_ayligi_kademe"] = gorunen_kademe_hesapla(

@@ -30,11 +30,6 @@
         <bpmn:flowNodeRef>mesaj_goster</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_2" name="Genel Sekreter veya Rektor Yardimcisi">
-        <bpmn:extensionElements>
-          <camunda:properties>
-            <camunda:property name="permissions" value="idari_personel_terfi_onay" />
-          </camunda:properties>
-        </bpmn:extensionElements>
         <bpmn:flowNodeRef>aciklama_yaz_ve_geri_gonder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>terfi_islemlerini_kaydet</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>terfileri_kontrol_et</bpmn:flowNodeRef>
