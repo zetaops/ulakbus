@@ -84,8 +84,9 @@
     <bpmn:exclusiveGateway id="ExclusiveGateway_0lqknjo">
       <bpmn:incoming>SequenceFlow_0nyhrzh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_076pp8a</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1pp0hoa</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="demirbas_yeni_ekle" name="Yeni Ekle/Düzenle" camunda:assignee="common.demirbas.DemirbasView.add_edit_form">
+    <bpmn:userTask id="demirbas_yeni_ekle" name="Yeni Ekle/Düzenle" camunda:assignee="common.demirbas.DemirbasView.ekle_duzenle">
       <bpmn:incoming>SequenceFlow_15537db</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0nyhrzh</bpmn:outgoing>
     </bpmn:userTask>
@@ -98,6 +99,7 @@
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="demirbas_goster" name="Göster" camunda:assignee="common.demirbas.DemirbasView.goruntule">
       <bpmn:incoming>SequenceFlow_12renaa</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1jfxefe</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1p5h1sl</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="demirbas_listele" name="Demirbaş Listele" camunda:assignee="common.demirbas.DemirbasView.list">
@@ -108,6 +110,7 @@
       <bpmn:incoming>SequenceFlow_1ha8i79</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_15iebyj</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1h22zq5</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1pp0hoa</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_11g0qcq</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:startEvent id="StartEvent_1">
@@ -125,6 +128,7 @@
     <bpmn:exclusiveGateway id="ExclusiveGateway_17fh3qr">
       <bpmn:incoming>SequenceFlow_1keoq84</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1nxj9h7</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1jfxefe</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0q8kpor">
       <bpmn:incoming>SequenceFlow_1p5h1sl</bpmn:incoming>
@@ -142,6 +146,12 @@
       <bpmn:outgoing>SequenceFlow_1mvw27u</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1h22zq5" sourceRef="basari_mesaji_goster" targetRef="demirbas_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_1jfxefe" sourceRef="ExclusiveGateway_17fh3qr" targetRef="demirbas_goster">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1pp0hoa" sourceRef="ExclusiveGateway_0lqknjo" targetRef="demirbas_listele">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1j6rxr1">
@@ -414,6 +424,23 @@
         <di:waypoint xsi:type="dc:Point" x="276" y="40" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="236" y="-44" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1jfxefe_di" bpmnElement="SequenceFlow_1jfxefe">
+        <di:waypoint xsi:type="dc:Point" x="478" y="-212" />
+        <di:waypoint xsi:type="dc:Point" x="478" y="-63" />
+        <di:waypoint xsi:type="dc:Point" x="571" y="-63" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="493" y="-147.5" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1pp0hoa_di" bpmnElement="SequenceFlow_1pp0hoa">
+        <di:waypoint xsi:type="dc:Point" x="485" y="336" />
+        <di:waypoint xsi:type="dc:Point" x="376" y="336" />
+        <di:waypoint xsi:type="dc:Point" x="376" y="146" />
+        <di:waypoint xsi:type="dc:Point" x="340" y="117" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="391" y="241" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

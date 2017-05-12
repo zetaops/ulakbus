@@ -122,6 +122,7 @@ class IsPaketiHazirlama(CrudView):
 
         form = JsonForm(title=_(u"Bap İş Paketi Takvimi"))
         form.yeni_paket = fields.Button(_(u"Yeni İş Paketi Ekle"))
+        form.bitir = fields.Button(_(u"Tamam"), cmd='bitir')
         self.form_out(form)
 
     def add_edit_form(self):

@@ -31,12 +31,19 @@ class DemirbasView(CrudView):
         model = "Demirbas"
         object_actions = []
 
+    def ekle_duzenle(self):
+        self.object_form.iptal = fields.Button(__(u"İptal"), cmd='iptal')
+        self.add_edit_form()
+
     def goruntule(self):
         if 'basari_mesaji' in self.current.task_data:
             self.current.output['msgbox'] = {"type": _(u"info"),
                                              "title": _(u"İşlem Başarılı"),
                                              "msg": self.current.task_data['basari_mesaji']}
             del self.current.task_data['basari_mesaji']
+        if 'form' in self.input and 'iptal' in self.input['form'] and self.input['form']['iptal'] \
+                == 1:
+            self.object = Demirbas.objects.get(self.current.task_data['obj_key'])
         self.show()
         form = JsonForm()
         form.geri = fields.Button(__(u"Listeye Dön"), cmd='listele')
@@ -72,9 +79,10 @@ class RezervasyonView(CrudView):
             onceki_rezervasyonlar.append(_(u"Bu demirbaşa ait rezervasyon bulunmamaktadır."))
         else:
             for rez in rezervasyonlar:
-                onceki_rezervasyonlar.append("(" +\
-                    str(rez.rezervasyon_baslama_tarihi) + " - " + \
-                    str(rez.rezervasyon_bitis_tarihi) + ")")
+                onceki_rezervasyonlar.append("(" + datetime.strftime(rez.rezervasyon_baslama_tarihi,
+                                                                     DATE_DEFAULT_FORMAT) +
+                                             " - " + datetime.strftime(rez.rezervasyon_bitis_tarihi,
+                                                                       DATE_DEFAULT_FORMAT) + ")")
 
         if 'hata_mesaji' in self.current.task_data and self.current.task_data['hata_mesaji']:
             mesaj_type = "error"
@@ -125,8 +133,6 @@ class RezervasyonView(CrudView):
             rezerve_eden=Personel.objects.get(data['rezerve_eden_id'])
         ).blocking_save()
 
-        # self.current.task_data['object_id'] = self.current.task_data['obj_key']
-
     def rezervasyon_kayit_basari(self):
         _data = self.current.task_data['form_data']
 
@@ -149,6 +155,7 @@ class RezervasyonForm(JsonForm):
         title = __(u'Rezervasyon Bilgileri')
 
     kontrol_kayit = fields.Button(__(u"Kontrol Et ve Kaydet"), cmd="kaydet_ve_kontrol")
+    iptal = fields.Button(__(u"İptal"), cmd="iptal")
 
 
 
