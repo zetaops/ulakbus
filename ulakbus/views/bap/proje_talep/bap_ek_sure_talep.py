@@ -69,7 +69,7 @@ class EkSureTalebi(CrudView):
                     "Açıklama": self.current.task_data['aciklama']}
         self.output['object'] = obj_data
         form = JsonForm()
-        form.onayla = fields.Button(_(u"Onayla"), cmd='kabul')
+        form.onayla = fields.Button(_(u"Komisyona Yolla"), cmd='kabul')
         form.reddet = fields.Button(_(u"Reddet"), cmd='iptal')
         self.form_out(form)
 

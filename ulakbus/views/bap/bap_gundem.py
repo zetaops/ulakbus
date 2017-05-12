@@ -18,6 +18,7 @@ class YeniGundemForm(JsonForm):
 
     proje = fields.String(__(u"Proje Seçiniz"))
     gundem_tipi = fields.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
+    gundem_aciklama = fields.Text(__(u"Gündem Açıklaması"))
     oturum_numarasi = fields.Integer(__(u"Oturum Numarası"))
     oturum_tarihi = fields.Date(__(u"Oturum Tarihi"))
     kaydet = fields.Button(__(u"Kaydet"))

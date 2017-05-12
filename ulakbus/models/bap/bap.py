@@ -239,7 +239,7 @@ class BAPButcePlani(Model):
     class Meta:
         verbose_name = __(u"Bap Bütçe Planı")
         verbose_name_plural = __(u"Bap Bütçe Planları")
-        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', '_proje_adi', 'birim_fiyat', 'adet',
+        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet',
                        'toplam_fiyat']
 
     muhasebe_kod = field.String(__(u"Muhasebe Kod"),
@@ -262,21 +262,17 @@ class BAPButcePlani(Model):
 
     _muhasebe_kod.title = __(u"Muhasebe Kodu")
 
-    def _proje_adi(self):
-        return "%s" % self.ilgili_proje.ad
-
-    _proje_adi.title = __(u"Projenin Adı")
-
 
 class BAPGundem(Model):
     class Meta:
         verbose_name = __(u"Gündem")
         verbose_name_plural = __(u"Gündemler")
-        list_fields = ['_proje_adi', 'gundem_tipi', 'oturum_numarasi', 'oturum_tarihi', 'karar_no',
-                       'karar_tarihi']
+        list_fields = ['_proje_adi', '_proje_yurutucusu', 'gundem_tipi', 'oturum_numarasi',
+                       'oturum_tarihi', 'karar_no', 'karar_tarihi']
 
     proje = BAPProje()
     gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
+    gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
     oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
     oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
     karar_no = field.Integer(__(u"Karar No"), default=0)
@@ -288,6 +284,11 @@ class BAPGundem(Model):
         return "%s" % self.proje.ad
 
     _proje_adi.title = __(u"Projenin Adı")
+
+    def _proje_yurutucusu(self):
+        return "%s %s" % (self.proje.yurutucu.ad, self.proje.yurutucu.soyad)
+
+    _proje_yurutucusu.title = __(u"Proje Yürütücüsü")
 
     def __unicode__(self):
         return "Bap Gündem"

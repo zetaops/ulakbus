@@ -6,7 +6,7 @@
 
 from collections import defaultdict
 
-from ulakbus.models import BAPProje, BAPGundem, Personel
+from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel
 
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
@@ -45,7 +45,8 @@ class EkButceTalep(CrudView):
         if 'form' in self.input and 'proje' in self.input['form']:
             self.current.task_data['bap_proje_id'] = self.input['form']['proje']
         CrudView.list(self)
-        toplam = sum(float(obj['fields'][5]) for obj in self.output['objects'][1:])
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        toplam = sum(BAPButcePlani.objects.filter(ilgili_proje=proje).values_list('toplam_fiyat'))
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
                                        'actions': ''})
 
@@ -145,7 +146,7 @@ class EkButceTalep(CrudView):
             self.output['objects'].append(item)
 
         form = JsonForm()
-        form.onayla = fields.Button(_(u"Onayla"), cmd='kabul')
+        form.onayla = fields.Button(_(u"Komisyona Yolla"), cmd='kabul')
         form.reddet = fields.Button(_(u"Reddet"), cmd='iptal')
         self.form_out(form)
 
@@ -168,6 +169,7 @@ class EkButceTalep(CrudView):
     def bilgilendir(self):
         if 'red_aciklama' in self.input['form']:
             self.current.task_data['red_aciklama'] = self.input['form']['red_aciklama']
+            del self.current.task_data['yeni_butceler']
         else:
             self.current.task_data['onay'] = "Ek bütçe için bulunduğunuz talep kabul edilmiş " \
                                              "olup, komisyonun gündemine alınmıştır."
