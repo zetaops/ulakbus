@@ -33,16 +33,37 @@ class GridCache(Cache):
         pass
 
 
+class GridQueryCache(Cache):
+    """
+
+    """
+    PREFIX = "GRIDQUERYCACHE"
+
+    def __init__(self, key):
+        super(GridQueryCache, self).__init__(":".join(['grid_query_cache', key]))
+
+    def get_data_to_cache(self):
+        pass
+
+
 class DataGrid(object):
 
-    def __init__(self, model, page, filter_params, sort_params, columns, selectors=None, **kwargs):
+    def __init__(self, cache_key, model, page, filter_params, sort_params, columns, selectors=None,
+                 **kwargs):
         self.model = model
-        self.grid_cache = GridCache(self.model.get_verbose_name())
+        self.grid_cache = GridCache(cache_key)
         self.page = page
         self.filter_params = filter_params
         self.sort_params = sort_params
         self.columns = columns
-        self.selectors = selectors if selectors else self.grid_cache.get().get('selectors', None) or self.prepare_selectors()
+        self.default_fields = kwargs.get('default_fields', [])
+        self.column_types_dict = kwargs.get('column_types_dict', {})
+        if selectors:
+            self.selectors = selectors
+        elif self.grid_cache.get():
+            self.selectors = self.grid_cache.get().get('selectors', None)
+        else:
+            self.selectors = self.prepare_selectors()
         self.filter_conditions = {
             # STARTS_WITH
             2: '__startswith',
@@ -63,13 +84,27 @@ class DataGrid(object):
             # NOT_EQUAL
             512: ''
         }
-        self.field_filter_type_map = {}
-        self.column_types_dict = kwargs.get('column_types_dict', {})
-        self.default_fields = kwargs.get('default_fields', [])
+
         self.select_fields = self.column_types_dict.get('select_fields', {})
         self.multiselect_fields = self.column_types_dict.get('multiselect_fields', {})
         self.range_date_fields = self.column_types_dict.get('range_date_fields', [])
-        self.column_defs = self.grid_cache.get().get('column_defs', None) or self.prepare_column_defs()
+        if self.grid_cache.get():
+            self.field_filter_type_map = self.grid_cache.get().get('field_filter_type_map', {})
+            self.select_options_dict = self.grid_cache.get().get('select_options_dict', {})
+            self.column_defs = self.grid_cache.get().get('column_defs',
+                                                         None) or self.prepare_column_defs()
+        else:
+            self.field_filter_type_map = {}
+            self.select_options_dict = {}
+            self.column_defs = self.prepare_column_defs()
+        self.grid_cache.set(
+            {
+                'selectors': self.selectors,
+                'column_defs': self.column_defs,
+                'field_filter_type_map': self.field_filter_type_map,
+                'select_options_dict': self.select_options_dict
+            }
+        )
 
     def prepare_column_defs(self):
         contains_fields = self.column_types_dict.get('contains_fields', [])
@@ -108,12 +143,16 @@ class DataGrid(object):
                     'selectOptions': self.select_fields[col]
                 }
                 self.field_filter_type_map[col] = "SELECT"
+                self.select_options_dict[col] = self._swith_to_dict_from_select_options(
+                    self.select_fields[col])
             elif col in self.multiselect_fields:
                 col_def['type'] = 'MULTISELECT'
                 col_def['filter'] = {
                     'selectOptions': self.multiselect_fields[col]
                 }
                 self.field_filter_type_map[col] = "MULTISELECT"
+                self.select_options_dict[col] = self._swith_to_dict_from_select_options(
+                    self.multiselect_fields[col])
             elif col in self.range_date_fields:
                 col_def['type'] = 'range'
                 col_def['rangeType'] = 'datetime'
@@ -155,27 +194,36 @@ class DataGrid(object):
         return selectors
 
     def build_response(self):
-        is_more_data_left, data = self.prepare_data(page=self.page)
-        response = {
-            'gridOptions': {
-                'applyFilter': "Filtrele",
-                'cancelFilter': "Filtreleri Temizle",
-                'csvDownload': "Dışa Aktar",
-                'dataLoading': "Yükleniyor",
-                'selectColumns': "Kolon Seç",
+        key = hash(":".join([str(self.page), str(self.filter_params), str(self.sort_params),
+                             str(self.selectors)]))
+        key = str(key)
+        query_cache = GridQueryCache(key)
+        cached_response = query_cache.get()
+        if cached_response:
+            return cached_response
+        else:
+            is_more_data_left, data = self.prepare_data()
+            response = {
+                'gridOptions': {
+                    'applyFilter': "Filtrele",
+                    'cancelFilter': "Filtreleri Temizle",
+                    'csvDownload': "Dışa Aktar",
+                    'dataLoading': "Yükleniyor",
+                    'selectColumns': "Kolon Seç",
 
-                'enableSorting': True,
-                'enableFiltering': True,
-                'toggleFiltering': True,
-                'enableRemoving': True,
+                    'enableSorting': True,
+                    'enableFiltering': True,
+                    'toggleFiltering': True,
+                    'enableRemoving': True,
 
-                'isMoreDataLeft': is_more_data_left,
-                'selectors': self.selectors,
-                'columnDefs': self.column_defs,
-                'data': data
+                    'isMoreDataLeft': is_more_data_left,
+                    'selectors': self.selectors,
+                    'column_defs': self.column_defs,
+                    'data': data
 
+                }
             }
-        }
+            return query_cache.set(response)
 
     def grid_query_parser(self):
         query_params = {}
@@ -195,26 +243,19 @@ class DataGrid(object):
                     multiselect_list = qp[0]['value']
                     query_params[f + "__in"] = multiselect_list
 
-                elif self.field_filter_type_map[f] == "RANGE-DATETIME":
-                    start_raw = ""
-                    end_raw = ""
-                    for date_item in qp:
-                        if fc[date_item['condition']] == '__gt':
-                            start_raw = str(date_item['value'])
-                        if fc[date_item['condition']] == '__lt':
-                            end_raw = str(date_item['value'])
-                    start = datetime.strptime(start_raw, DATE_DEFAULT_FORMAT)
-                    end = datetime.strptime(end_raw, DATE_DEFAULT_FORMAT)
-                    query_params[f + "__range"] = [start, end]
-
-                elif self.field_filter_type_map[f] == "RANGE-INTEGER":
-                    minn = maxx = 0
-                    for int_item in qp:
-                        if fc[int_item['condition']] == '__gt':
-                            minn = int_item['value']
-                        if fc[int_item['condition']] == '__lt':
-                            maxx = int_item['value']
-                    query_params[f + "__range"] = [int(minn), int(maxx)]
+                else:
+                    start = end = ""
+                    for item in qp:
+                        if fc[item['condition']] == '__gt':
+                            start = item['value']
+                        if fc[item['condition']] == '__lt':
+                            end = item['value']
+                    if self.field_filter_type_map[f] == "RANGE-DATETIME":
+                        start = datetime.strptime(start, DATE_DEFAULT_FORMAT)
+                        end = datetime.strptime(end, DATE_DEFAULT_FORMAT)
+                    else:
+                        start, end = int(start, end)
+                    query_params[f + '__range'] = [start, end]
         for col in self.sort_params:
             if col['order'] == 'desc':
                 sort_params.append("%s%s" % ("-", col['columnName']))
@@ -222,7 +263,7 @@ class DataGrid(object):
                 sort_params.append(col['columnName'])
         return query_params, sort_params
 
-    def prepare_data(self, page=None):
+    def prepare_data(self, csv=False):
         page_size = DATA_GRID_PAGE_SIZE
         query_params, sort_params = self.grid_query_parser()
         active_columns = []
@@ -232,8 +273,8 @@ class DataGrid(object):
                 active_columns.append(col['name'])
 
         data_size = self.model.objects.all(**query_params).count()
-        if page is not None:
-            qs = self.model.objects.set_params(start=(page-1)*page_size, rows=page_size)
+        if not csv:
+            qs = self.model.objects.set_params(start=(self.page-1)*page_size, rows=page_size)
         else:
             qs = self.model.objects
 
@@ -241,14 +282,8 @@ class DataGrid(object):
         for data, key in qs.all(**query_params).order_by(*sort_params).data():
             d = {}
             for ac in active_columns:
-                if ac in self.select_fields:
-                    for sf in self.select_fields[ac]:
-                        if data[ac] == sf['value']:
-                            d[ac] = sf['label']
-                elif ac in self.multiselect_fields:
-                    for sf in self.multiselect_fields[ac]:
-                        if data[ac] == sf['value']:
-                            d[ac] = sf['label']
+                if ac in self.select_fields or ac in self.multiselect_fields:
+                    d[ac] = self.select_options_dict[ac][str(data[ac])]
                 elif ac in self.range_date_fields:
                     d[ac] = datetime.strftime(
                         datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
@@ -256,7 +291,7 @@ class DataGrid(object):
                     d[ac] = data[ac]
             data_to_return.append(d)
 
-        is_more_data_left = data_size / page_size > (page - 1)
+        is_more_data_left = data_size / page_size > (self.page - 1)
 
         return is_more_data_left, data_to_return
 
@@ -264,7 +299,7 @@ class DataGrid(object):
         output = BytesIO()
         csv_writer = csv.writer(output, delimiter=';', quotechar="'", quoting=csv.QUOTE_MINIMAL)
 
-        is_more_data_left, data = self.prepare_data()
+        is_more_data_left, data = self.prepare_data(csv=True)
 
         count = 0
         for emp in data:
@@ -290,8 +325,15 @@ class DataGrid(object):
         return f.get_url(key)
 
     def _generate_file_name(self):
-        return "%s-%s-%s" % (self.model.get_verbose_name(), _(u"rapor"), datetime.now().strftime(
+        return "%s-%s-%s" % (self.model().get_verbose_name(), _(u"rapor"), datetime.now().strftime(
             "%d.%m.%Y-%H.%M.%S"))
+
+    @staticmethod
+    def _swith_to_dict_from_select_options(sel_opts):
+        sd = {}
+        for so in sel_opts:
+            sd[str(so['value'])] = so['label']
+        return sd
 
 
 
