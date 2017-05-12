@@ -8,7 +8,10 @@
 # (GPLv3).  See LICENSE.txt for details.
 import base64
 import csv
+from collections import OrderedDict
 from io import BytesIO
+
+from ulakbus.data_grid import DataGrid
 
 from ulakbus.lib.cache import RaporlamaEklentisi
 from ulakbus.lib.s3_file_manager import S3FileManager
@@ -227,125 +230,111 @@ def get_report_data(current):
                         }
                     }
     """
-    page = 0
-    raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
-    # Cache'te duran raporlama ekran bilgileri alınır, cache'te yoksa hazırlanıp cache yazılır,
-    # sonra cache'ten alınır.
-    cache_data = raporlama_cache.get_or_set()
+    # Gösterilecek alanlar listesi.
+    column_list = ['tckn', 'ad', 'soyad', 'dogum_tarihi', 'cinsiyet', 'medeni_hali', 'dogum_yeri',
+                   'kan_grubu', 'ana_adi', 'baba_adi', 'brans', 'unvan', 'personel_turu',
+                   'kurum_sicil_no_int',
+                   'birim_id', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
+                   'kayitli_oldugu_mahalle_koy', 'cuzdan_seri', 'cuzdan_seri_no',
+                   'kayitli_oldugu_cilt_no',
+                   'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no',
+                   'kimlik_cuzdani_verildigi_yer',
+                   'kimlik_cuzdani_verilis_nedeni', 'kimlik_cuzdani_kayit_no',
+                   'kimlik_cuzdani_verilis_tarihi',
+                   'emekli_sicil_no', 'emekli_giris_tarihi', 'hizmet_sinifi',
+                   'kazanilmis_hak_derece', 'kazanilmis_hak_kademe', 'kazanilmis_hak_ekgosterge',
+                   'gorev_ayligi_derece', 'gorev_ayligi_kademe', 'gorev_ayligi_ekgosterge',
+                   'emekli_muktesebat_derece', 'emekli_muktesebat_kademe',
+                   'emekli_muktesebat_ekgosterge',
+                   'kh_sonraki_terfi_tarihi', 'ga_sonraki_terfi_tarihi', 'goreve_baslama_tarihi',
+                   'mecburi_hizmet_suresi']
 
-    # Gelen istekte 'selectors' alanı varsa, saklanır. Bu alandaki datalar grid içinde gösterilecek
-    # kolonları, onların hangi alanlara ait olduklarını ve labellarını tutarlar.
-    if 'selectors' in current.input:
-        cache_data['gridOptions']['selectors'] = current.input['selectors']
-    # Filtreler
-    if 'filterColumns' in current.input:
-        cache_data['gridOptions']['filter_columns'] = current.input['filterColumns']
-    # Sıralama parametreleri
-    if 'sortColumns' in current.input:
-        cache_data['gridOptions']['sort_columns'] = current.input['sortColumns']
-    # Kaçıncı sayfanın istendiği
-    if 'page' in current.input:
-        page = current.input['page'] - 1
-
-    # cache_data'da duran sorgu parametreleri kullanılarak personel verisi getirilir ve bir sonraki
-    # sayfa olup olmadığı bilgisi getirilir.
-    cache_data['gridOptions']['isMoreDataLeft'], cache_data['gridOptions']['data'] = personel_data(
-        cache_data, page
-    )
-    raporlama_cache.set(cache_data)
-    del cache_data['gridOptions']['filter_columns']
-    del cache_data['gridOptions']['sort_columns']
-    # Sayfada görünecek mesajlar
-    cache_data['gridOptions']['applyFilter'] = _(u"Filtrele")
-    cache_data['gridOptions']['cancelFilter'] = _(u"Filtreleri Temizle")
-    cache_data['gridOptions']['csvDownload'] = _(u"Dışa Aktar")
-    cache_data['gridOptions']['selectColumns'] = _(u"Kolon Seç")
-    cache_data['gridOptions']['dataLoading'] = _(u"Yükleniyor...")
-    cache_data['gridOptions']['pageTitle'] = _(u"Personel Raporları")
-    # gridOptions içinde grid datası gönderilir.
-    current.output['gridOptions'] = cache_data['gridOptions']
-
-
-def data_grid_filter_parser(filters, field_types):
-    """
-        Gelen filtreleri parse ederek query_dict oluşturur ve döndürür.
-        Alan tiplerini de cache_data içindeki alan_filter_type_map'ten alır.
-
-
-
-        Returns:
-            Dict.
-
-
-    """
-    filter_conditions = {
-        "STARTS_WITH": 2,
-        "ENDS_WITH": 4,
-        "EXACT": 8,
-        "CONTAINS": 16,
-        "GREATER_THAN": 32,
-        "GREATER_THAN_OR_EQUAL": 64,
-        "LESS_THAN": 128,
-        "LESS_THAN_OR_EQUAL": 256,
-        "NOT_EQUAL": 512
-    }
-    query_params = {}
-    for element in filters:
-        f = element['columnName']
-        qp = element['filterParam']
-        if qp:
-            if field_types[f] == "INPUT":
-                # condition: "CONTAINS", // or "STARTS_WITH", "END_WIDTH"
-                cond = qp[0]['condition']
-                val = qp[0]['value']
-                if cond == filter_conditions["CONTAINS"]:
-                    query_params[f + "__contains"] = val
-                elif cond == filter_conditions["STARTS_WITH"]:
-                    query_params[f + "__startswith"] = val
-                elif cond == filter_conditions["ENDS_WITH"]:
-                    query_params[f + "__endswith"] = val
-                else:
-                    query_params[f] = val
-            elif field_types[f] == "SELECT":
-                query_params[f] = qp[0]['value']
-            elif field_types[f] == "MULTISELECT":
-                multiselect_list = qp[0]['value']
-                query_params[f + "__in"] = multiselect_list
-            elif field_types[f] == "RANGE-DATETIME":
-                start_raw = ""
-                end_raw = ""
-                for date_item in qp:
-                    if date_item['condition'] == filter_conditions["GREATER_THAN"]:
-                        start_raw = str(date_item['value'])
-                    if date_item['condition'] == filter_conditions["LESS_THAN"]:
-                        end_raw = str(date_item['value'])
-                start = datetime.strptime(start_raw, DATE_DEFAULT_FORMAT)
-                end = datetime.strptime(end_raw, DATE_DEFAULT_FORMAT)
-                query_params[f + "__range"] = [start, end]
-            elif field_types[f] == "RANGE-INTEGER":
-                minn = maxx = 0
-                for int_item in qp:
-                    if int_item['condition'] == filter_conditions["GREATER_THAN"]:
-                        minn = int_item['value']
-                    if int_item['condition'] == filter_conditions["LESS_THAN"]:
-                        maxx = int_item['value']
-                query_params[f + "__range"] = [int(minn), int(maxx)]
-    return query_params
-
-
-def data_grid_order_parser(sort_columns):
-    """
-        Gelen sıralama parametrelerini alarak bir list oluşturur. Sıra descending ise alan adının
-         başına '-' ekler. Ascending ise alan adını ekler. Oluşturduğu listeyi döndürür. Listedeki
-         sıraya göre dönen sonuçlar sıralanır.
-    """
-    sort_params = []
-    for col in sort_columns:
-        if col['order'] == 'desc':
-            sort_params.append("%s%s" % ("-", col['columnName']))
+    ordered_dict_param = []
+    for col in column_list:
+        if col == "birim_id":
+            ordered_dict_param.append((col, _(u"Birim")))
+        elif col == "baslama_sebep_id":
+            ordered_dict_param.append((col, _(u"Başlama Sebep")))
         else:
-            sort_params.append(col['columnName'])
-    return sort_params
+            ordered_dict_param.append(
+                (col, str(Personel.get_field(col).title) if Personel.get_field(
+                    col) is not None else col))
+    column_dict = OrderedDict(ordered_dict_param)
+
+    select_fields = {
+        'cinsiyet': prepare_options_from_catalog_data('cinsiyet'),
+        'kan_grubu': prepare_options_from_catalog_data('kan_grubu'),
+        'medeni_hali': prepare_options_from_catalog_data('medeni_hali'),
+        'personel_turu': prepare_options_from_catalog_data('personel_turu')
+    }
+
+    birim = [{"value": u.key, "label": u.name} for u in Unit.objects.all()]
+    multiselect_fields = {
+        'birim_id': birim,
+        'hizmet_sinifi': prepare_options_from_catalog_data('hizmet_sinifi'),
+        'unvan': prepare_options_from_catalog_data('unvan_kod'),
+        'statu': prepare_options_from_catalog_data('personel_statu')
+    }
+    range_date_fields = ['dogum_tarihi', 'em_sonraki_terfi_tarihi', 'emekli_giris_tarihi',
+                         'ga_sonraki_terfi_tarihi',
+                         'gorev_suresi_baslama', 'gorev_suresi_bitis', 'goreve_baslama_tarihi',
+                         'kh_sonraki_terfi_tarihi', 'mecburi_hizmet_suresi']
+    range_int_fields = ['emekli_muktesebat_derece', 'emekli_muktesebat_ekgosterge',
+                        'emekli_muktesebat_kademe',
+                        'engel_orani', 'gorev_ayligi_derece', 'gorev_ayligi_ekgosterge',
+                        'gorev_ayligi_kademe',
+                        'kazanilmis_hak_derece', 'kazanilmis_hak_ekgosterge',
+                        'kazanilmis_hak_kademe']
+    starts_fields = ['tckn', 'ad', 'soyad', 'dogum_yeri', 'ana_adi', 'baba_adi', 'brans',
+                     'kurum_sicil_no_int', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
+                     'kayitli_oldugu_mahalle_koy', 'cuzdan_seri', 'cuzdan_seri_no',
+                     'kayitli_oldugu_cilt_no', 'kayitli_oldugu_aile_sira_no',
+                     'kayitli_oldugu_sira_no', 'kimlik_cuzdani_verildigi_yer',
+                     'kimlik_cuzdani_verilis_nedeni', 'kimlik_cuzdani_kayit_no',
+                     'kimlik_cuzdani_verilis_tarihi', 'emekli_sicil_no']
+
+    column_types_dict = {
+        'select_fields': select_fields,
+        'multiselect_fields': multiselect_fields,
+        'range_date_fields': range_date_fields,
+        'range_num_fields': range_int_fields,
+        'starts_fields': starts_fields
+    }
+
+    kwargs = {
+        'default_fields': ['ad', 'soyad', 'cinsiyet', 'dogum_tarihi', 'personel_turu'],
+        'column_types_dict': column_types_dict
+    }
+
+    grid = DataGrid(
+        current.session.sess_id,
+        Personel,
+        current.input['page'],
+        current.input['filterColumns'],
+        current.input['sortColumns'],
+        column_dict,
+        current.input.get('selectors', None),
+        **kwargs
+    )
+    current.output['gridOptions'] = grid.build_response()['gridOptions']
+
+
+def prepare_options_from_catalog_data(catalog_key):
+    """
+    prepare options from for field from catalog data
+    Args:
+
+        catalog_key (str): catalog key, e.g gender
+    Returns:
+        list: list of dict of options [{"value": 1, "label": "Male"},
+        {"value": 2, "label": "Female"}]
+    """
+    return [
+        {
+            "value": item['value'],
+            "label": item['name']
+        } for item in catalog_data_manager.get_all(catalog_key)
+        ]
 
 
 @view()
@@ -425,163 +414,91 @@ def get_csv_data(current):
 
 
     """
-    raporlama_cache = RaporlamaEklentisi(current.session.sess_id)
-    cache_data = raporlama_cache.get_or_set()
+    column_list = ['tckn', 'ad', 'soyad', 'dogum_tarihi', 'cinsiyet', 'medeni_hali', 'dogum_yeri',
+                   'kan_grubu', 'ana_adi', 'baba_adi', 'brans', 'unvan', 'personel_turu',
+                   'kurum_sicil_no_int',
+                   'birim_id', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
+                   'kayitli_oldugu_mahalle_koy', 'cuzdan_seri', 'cuzdan_seri_no',
+                   'kayitli_oldugu_cilt_no',
+                   'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no',
+                   'kimlik_cuzdani_verildigi_yer',
+                   'kimlik_cuzdani_verilis_nedeni', 'kimlik_cuzdani_kayit_no',
+                   'kimlik_cuzdani_verilis_tarihi',
+                   'emekli_sicil_no', 'emekli_giris_tarihi', 'hizmet_sinifi',
+                   'kazanilmis_hak_derece', 'kazanilmis_hak_kademe', 'kazanilmis_hak_ekgosterge',
+                   'gorev_ayligi_derece', 'gorev_ayligi_kademe', 'gorev_ayligi_ekgosterge',
+                   'emekli_muktesebat_derece', 'emekli_muktesebat_kademe',
+                   'emekli_muktesebat_ekgosterge',
+                   'kh_sonraki_terfi_tarihi', 'ga_sonraki_terfi_tarihi', 'goreve_baslama_tarihi',
+                   'mecburi_hizmet_suresi']
 
-    if 'filterColumns' in current.input:
-        cache_data['gridOptions']['filter_columns'] = current.input['filterColumns']
-    if 'sortColumns' in current.input:
-        cache_data['gridOptions']['sort_columns'] = current.input['sortColumns']
+    ordered_dict_param = []
+    for col in column_list:
+        if col == "birim_id":
+            ordered_dict_param.append((col, _(u"Birim")))
+        elif col == "baslama_sebep_id":
+            ordered_dict_param.append((col, _(u"Başlama Sebep")))
+        else:
+            ordered_dict_param.append(
+                (col, str(Personel.get_field(col).title) if Personel.get_field(
+                    col) is not None else col))
+    column_dict = OrderedDict(ordered_dict_param)
 
-    output = BytesIO()
-    csv_writer = csv.writer(output, delimiter=';', quotechar="'", quoting=csv.QUOTE_MINIMAL)
+    select_fields = {
+        'cinsiyet': prepare_options_from_catalog_data('cinsiyet'),
+        'kan_grubu': prepare_options_from_catalog_data('kan_grubu'),
+        'medeni_hali': prepare_options_from_catalog_data('medeni_hali'),
+        'personel_turu': prepare_options_from_catalog_data('personel_turu')
+    }
 
-    count = 0
-    for emp in personel_data(cache_data):
-        if count == 0:
-            header = emp.keys()
-            csv_writer.writerow(header)
-            count += 1
-        csv_writer.writerow(emp.values())
+    birim = [{"value": u.key, "label": u.name} for u in Unit.objects.all()]
+    multiselect_fields = {
+        'birim_id': birim,
+        'hizmet_sinifi': prepare_options_from_catalog_data('hizmet_sinifi'),
+        'unvan': prepare_options_from_catalog_data('unvan_kod'),
+        'statu': prepare_options_from_catalog_data('personel_statu')
+    }
+    range_date_fields = ['dogum_tarihi', 'em_sonraki_terfi_tarihi', 'emekli_giris_tarihi',
+                         'ga_sonraki_terfi_tarihi',
+                         'gorev_suresi_baslama', 'gorev_suresi_bitis', 'goreve_baslama_tarihi',
+                         'kh_sonraki_terfi_tarihi', 'mecburi_hizmet_suresi']
+    range_int_fields = ['emekli_muktesebat_derece', 'emekli_muktesebat_ekgosterge',
+                        'emekli_muktesebat_kademe',
+                        'engel_orani', 'gorev_ayligi_derece', 'gorev_ayligi_ekgosterge',
+                        'gorev_ayligi_kademe',
+                        'kazanilmis_hak_derece', 'kazanilmis_hak_ekgosterge',
+                        'kazanilmis_hak_kademe']
+    starts_fields = ['tckn', 'ad', 'soyad', 'dogum_yeri', 'ana_adi', 'baba_adi', 'brans',
+                     'kurum_sicil_no_int', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
+                     'kayitli_oldugu_mahalle_koy', 'cuzdan_seri', 'cuzdan_seri_no',
+                     'kayitli_oldugu_cilt_no', 'kayitli_oldugu_aile_sira_no',
+                     'kayitli_oldugu_sira_no', 'kimlik_cuzdani_verildigi_yer',
+                     'kimlik_cuzdani_verilis_nedeni', 'kimlik_cuzdani_kayit_no',
+                     'kimlik_cuzdani_verilis_tarihi', 'emekli_sicil_no']
 
-    download_url = generate_temp_file(
-        name=generate_file_name(),
-        content=base64.b64encode(output.getvalue()),
-        file_type='text/csv',
-        ext='csv'
+    column_types_dict = {
+        'select_fields': select_fields,
+        'multiselect_fields': multiselect_fields,
+        'range_date_fields': range_date_fields,
+        'range_num_fields': range_int_fields,
+        'starts_fields': starts_fields
+    }
+
+    kwargs = {
+        'default_fields': ['ad', 'soyad', 'cinsiyet', 'dogum_tarihi', 'personel_turu'],
+        'column_types_dict': column_types_dict
+    }
+
+    grid = DataGrid(
+        current.session.sess_id,
+        Personel,
+        current.input['page'],
+        current.input['filterColumns'],
+        current.input['sortColumns'],
+        column_dict,
+        current.input.get('selectors', None),
+        **kwargs
     )
-
-    current.output['download_url'] = download_url
-
-
-def generate_temp_file(name, content, file_type, ext):
-    f = S3FileManager()
-    key = f.store_file(name=name, content=content, type=file_type, ext=ext)
-    return f.get_url(key)
+    current.output['download_url'] = grid.generate_csv_link()
 
 
-def generate_file_name():
-    return "personel-rapor-%s" % datetime.now().strftime("%d.%m.%Y-%H.%M.%S")
-
-
-def personel_data(cache_data, page=None):
-    """
-        Cache nesnesi üzerinden gelen request parametrelerini okuyarak personel datası üzerinde
-         gelen sorguyu çalıştırır.
-
-         Data-grid ekranı için çağırılmışsa sayfa sayısı ile çağırıldığı için
-         geriye sayfa kalıp kalmadığı bilgisi ve sorgu sonucu oluşan verileri döndürür.
-
-         CSV için çağırılmışsa geriye sorguya uyan tüm datalardan sayfa numarası önemsenmeden
-         oluşturulmuş tüm verileri csv formatında döndürür.
-    """
-    page_size = cache_data['page_size']
-    gos = cache_data['gridOptions']
-    query_params = data_grid_filter_parser(gos.get('filter_columns', []),
-                                           cache_data['alan_filter_type_map'])
-
-    sort_params = data_grid_order_parser(gos.get('sort_columns', []))
-    active_columns = []
-
-    time_related_fields = cache_data['time_related_fields']
-
-    for col in cache_data['gridOptions']['selectors']:
-        if col['checked']:
-            active_columns.append(col['name'])
-    if page is not None:
-        data_size = Personel.objects.all(**query_params).count()
-        data_to_return = []
-        for data, key in Personel.objects.set_params(start=page * page_size, rows=page_size).all(
-                **query_params).order_by(*sort_params).data():
-            d = {}
-            for ac in active_columns:
-                if ac == 'cinsiyet':
-                    for cins in catalog_data_manager.get_all('cinsiyet'):
-                        if data[ac] == cins['value']:
-                            d[ac] = cins['name']
-                elif ac == 'kan_grubu':
-                    for kan in catalog_data_manager.get_all('kan_grubu'):
-                        if data[ac] == kan['value']:
-                            d[ac] = kan['name']
-                elif ac == 'medeni_hali':
-                    for mh in catalog_data_manager.get_all('medeni_hali'):
-                        if data[ac] == mh['value']:
-                            d[ac] = mh['name']
-                elif ac == 'birim_id':
-                    if data[ac]:
-                        d[ac] = Unit.objects.get(data[ac]).name
-                    else:
-                        d[ac] = ""
-                elif ac == 'unvan':
-                    for unv in catalog_data_manager.get_all('unvan_kod'):
-                        if data[ac] == unv['value']:
-                            d[ac] = unv['name']
-                elif ac == 'personel_turu':
-                    for pt in catalog_data_manager.get_all('personel_turu'):
-                        if data[ac] == pt['value']:
-                            d[ac] = pt['name']
-                elif ac == 'hizmet_sinifi':
-                    for hs in catalog_data_manager.get_all('hizmet_sinifi'):
-                        if data[ac] == hs['value']:
-                            d[ac] = hs['name']
-                elif ac == 'statu':
-                    for stat in catalog_data_manager.get_all('personel_statu'):
-                        if data[ac] == stat['value']:
-                            d[ac] = stat['name']
-                elif ac in time_related_fields:
-                    d[ac] = datetime.strftime(
-                        datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
-                else:
-                    d[ac] = data[ac]
-            data_to_return.append(d)
-
-        is_more_data_left = data_size / page_size > page
-
-        return is_more_data_left, data_to_return
-
-    else:
-        data_to_return = []
-        for data, key in Personel.objects.all(**query_params).order_by(*sort_params).data():
-            d = {}
-            for ac in active_columns:
-                if ac == 'cinsiyet':
-                    for cins in catalog_data_manager.get_all('cinsiyet'):
-                        if data[ac] == cins['value']:
-                            d[ac] = cins['name']
-                elif ac == 'kan_grubu':
-                    for kan in catalog_data_manager.get_all('kan_grubu'):
-                        if data[ac] == kan['value']:
-                            d[ac] = kan['name']
-                elif ac == 'medeni_hali':
-                    for mh in catalog_data_manager.get_all('medeni_hali'):
-                        if data[ac] == mh['value']:
-                            d[ac] = mh['name']
-                elif ac == 'birim_id':
-                    if data[ac]:
-                        d[ac] = Unit.objects.get(data[ac]).name
-                    else:
-                        d[ac] = ""
-                elif ac == 'unvan':
-                    for unv in catalog_data_manager.get_all('unvan_kod'):
-                        if data[ac] == unv['value']:
-                            d[ac] = unv['name']
-                elif ac == 'personel_turu':
-                    for pt in catalog_data_manager.get_all('personel_turu'):
-                        if data[ac] == pt['value']:
-                            d[ac] = pt['name']
-                elif ac == 'hizmet_sinifi':
-                    for hs in catalog_data_manager.get_all('hizmet_sinifi'):
-                        if data[ac] == hs['value']:
-                            d[ac] = hs['name']
-                elif ac == 'statu':
-                    for stat in catalog_data_manager.get_all('personel_statu'):
-                        if data[ac] == stat['value']:
-                            d[ac] = stat['name']
-                elif ac in time_related_fields:
-                    d[ac] = datetime.strftime(
-                        datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
-                else:
-                    d[ac] = data[ac]
-            data_to_return.append(d)
-
-        return data_to_return
