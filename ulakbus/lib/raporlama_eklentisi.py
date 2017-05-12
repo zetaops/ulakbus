@@ -3,6 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from collections import OrderedDict
 
 from ulakbus.models import Personel
 from ulakbus.models.auth import Unit
@@ -30,6 +31,20 @@ def raporlama_ekrani_secim_menulerini_hazirla():
                    'emekli_muktesebat_derece', 'emekli_muktesebat_kademe', 'emekli_muktesebat_ekgosterge',
                    'kh_sonraki_terfi_tarihi', 'ga_sonraki_terfi_tarihi',   'goreve_baslama_tarihi',
                    'mecburi_hizmet_suresi']
+
+    ordered_dict_param = []
+    for col in column_list:
+        if col == "birim_id":
+            ordered_dict_param.append((col, _(u"Birim")))
+        elif col == "baslama_sebep_id":
+            ordered_dict_param.append((col, _(u"Başlama Sebep")))
+        else:
+            ordered_dict_param.append((col, str(Personel.get_field(col).title) if Personel.get_field(
+                col) is not None else col))
+
+    column_dict = OrderedDict(ordered_dict_param)
+
+
 
     # Cinsiyet türlerini catalog datadan aldık
     cinsiyet = [{"value": item['value'], "label": item['name']} for item in
