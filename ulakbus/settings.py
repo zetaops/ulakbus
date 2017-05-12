@@ -274,3 +274,5 @@ MESSAGES = {
                                 'İlgili kişiler, iş akışına katılmaları için haberdar edildiler.',
 
 }
+
+DATA_GRID_PAGE_SIZE = 100
