@@ -8,7 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 import time
 
-from ulakbus.models import User, Personel
+from ulakbus.models import User, Personel, Permission
 from zengine.lib.test_utils import BaseTestCase
 from zengine.messaging.model import Message
 from datetime import datetime
@@ -31,9 +31,9 @@ class TestCase(BaseTestCase):
         resp = self.client.post(form=idari_forms)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
-        baslangic_tarihi = datetime.strptime("25.05.2016", "%d.%m.%Y").date()
+        baslangic_tarihi = datetime.strptime("20.05.2016", "%d.%m.%Y").date()
         bitis_tarihi = datetime.strptime("30.05.2016", "%d.%m.%Y").date()
-        qs = Personel.objects.filter(personel_turu=1)
+        qs = Personel.objects.all(personel_turu=1)
         terfisi_gelen_personeller = qs.or_filter(
             ga_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],
             kh_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],
@@ -51,7 +51,9 @@ class TestCase(BaseTestCase):
         time.sleep(1)
 
         # Personel terfi islemini reddet bolumu
-        token, user = self.get_user_token('genel_sekreter_1')
+        idari_permission = Permission.objects.get(name='idari_personel_terfi_onay')
+        idari_onay_user = idari_permission.get_permitted_users()[0]
+        token, user = self.get_user_token(idari_onay_user.username)
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         # resp = self.client.post()
         self.client.post(cmd="red_aciklamasi_yaz",
@@ -115,7 +117,7 @@ class TestCase(BaseTestCase):
         TODO: docstring eklenecek..
         """
         # Personel terfi islemini onayla bolumu
-        token, user = self.get_user_token('genel_sekreter_1')
+        token, user = self.get_user_token(idari_onay_user.username)
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
 
