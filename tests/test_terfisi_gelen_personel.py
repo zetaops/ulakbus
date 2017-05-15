@@ -52,7 +52,7 @@ class TestCase(BaseTestCase):
 
         # Personel terfi islemini reddet bolumu
         idari_permission = Permission.objects.get(name='idari_personel_terfi_onay')
-        idari_onay_user = idari_permission.get_permitted_users()[0]
+        idari_onay_user = list(idari_permission.get_permitted_users())[0]
         token, user = self.get_user_token(idari_onay_user.username)
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         # resp = self.client.post()
