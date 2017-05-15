@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_0yctxth">
     <bpmn:participant id="Participant_0zbdtjq" name="Bap Bütçe Planı" processRef="bap_butce_plani" />
   </bpmn:collaboration>
   <bpmn:process id="bap_butce_plani" name="Bap Bütçe Planı" isExecutable="false">
-    <bpmn:sequenceFlow id="SequenceFlow_1vfi5gh" sourceRef="bilgilendirme" targetRef="EndEvent_0u2ab51" />
+    <bpmn:sequenceFlow id="SequenceFlow_1vfi5gh" sourceRef="bilgilendirme" targetRef="EndEvent" />
     <bpmn:sequenceFlow id="SequenceFlow_0x1pqw1" sourceRef="ExclusiveGateway_0z6u1w0" targetRef="bilgilendirme">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">proje_sec==0</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">proje_sec and not proje_data</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0axkmyt" sourceRef="ExclusiveGateway_0z6u1w0" targetRef="proje_sec">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">proje_sec==1</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">proje_sec and proje_data</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0j9b801" sourceRef="ExclusiveGateway_0fenb86" targetRef="butce_plani_sil">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='delete']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1ry6gx5" sourceRef="ExclusiveGateway_0r2coc8" targetRef="butce_plani_kaydet" />
     <bpmn:sequenceFlow id="SequenceFlow_071vhd0" sourceRef="proje_sec" targetRef="butce_plani_listele" />
-    <bpmn:sequenceFlow id="SequenceFlow_0pdg5pc" sourceRef="ExclusiveGateway_0z6u1w0" targetRef="butce_plani_listele" />
+    <bpmn:sequenceFlow id="SequenceFlow_0pdg5pc" sourceRef="ExclusiveGateway_0z6u1w0" targetRef="butce_plani_listele">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">not proje_sec</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_00bl89g" sourceRef="ExclusiveGateway_0fenb86" targetRef="butce_plani_listele">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='list']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -30,7 +32,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_16wbr8g" sourceRef="butce_plani_sil_onay" targetRef="ExclusiveGateway_0fenb86" />
     <bpmn:sequenceFlow id="SequenceFlow_0bagcp8" sourceRef="butce_plani_ekle_duzenle" targetRef="ExclusiveGateway_0r2coc8" />
     <bpmn:sequenceFlow id="SequenceFlow_0rat21w" sourceRef="butce_kalemi_sec" targetRef="butce_plani_ekle_duzenle" />
-    <bpmn:sequenceFlow id="SequenceFlow_1sndx6g" sourceRef="ExclusiveGateway_1tzizw1" targetRef="EndEvent_0u2ab51">
+    <bpmn:sequenceFlow id="SequenceFlow_1sndx6g" sourceRef="ExclusiveGateway_1tzizw1" targetRef="EndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='bitir']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_07o2bcf" sourceRef="ExclusiveGateway_1tzizw1" targetRef="butce_plani_sil_onay">
@@ -44,20 +46,16 @@
     <bpmn:sequenceFlow id="SequenceFlow_1s9dg75" sourceRef="ExclusiveGateway_1tzizw1" targetRef="butce_plani_goruntule">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='show']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:endEvent id="EndEvent_0u2ab51">
+    <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_1vfi5gh</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1sndx6g</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_0z6u1w0" default="SequenceFlow_0pdg5pc">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0z6u1w0">
       <bpmn:incoming>SequenceFlow_163e9qp</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0pdg5pc</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0axkmyt</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0x1pqw1</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="butce_plani_kaydet" name="Kaydet" camunda:class="bap.bap_butce_plani.BapButcePlani.save">
-      <bpmn:incoming>SequenceFlow_1ry6gx5</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1e69x36</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:serviceTask id="butce_plani_sil" name="Sil" camunda:class="bap.bap_butce_plani.BapButcePlani.delete">
       <bpmn:incoming>SequenceFlow_0j9b801</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_091jw58</bpmn:outgoing>
@@ -72,16 +70,6 @@
       <bpmn:outgoing>SequenceFlow_1ry6gx5</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1uc7bc9</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="butce_plani_listele" name="Bütçe Planını Listele" camunda:assignee="bap.bap_butce_plani.BapButcePlani.list">
-      <bpmn:incoming>SequenceFlow_1uc7bc9</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1e69x36</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_091jw58</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_00bl89g</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_17ii4pf</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0pdg5pc</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_071vhd0</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0fl4a0s</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:serviceTask id="kontrol" name="Kontrol" camunda:class="bap.bap_butce_plani.BapButcePlani.kontrol">
       <bpmn:incoming>SequenceFlow_0wy98uy</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_163e9qp</bpmn:outgoing>
@@ -120,6 +108,20 @@
       <bpmn:incoming>SequenceFlow_0axkmyt</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_071vhd0</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:userTask id="butce_plani_listele" name="Bütçe Planını Listele" camunda:assignee="bap.bap_butce_plani.BapButcePlani.list">
+      <bpmn:incoming>SequenceFlow_1uc7bc9</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1e69x36</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_091jw58</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_00bl89g</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_17ii4pf</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0pdg5pc</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_071vhd0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0fl4a0s</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="butce_plani_kaydet" name="Kaydet" camunda:class="bap.bap_butce_plani.BapButcePlani.save">
+      <bpmn:incoming>SequenceFlow_1ry6gx5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1e69x36</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0yctxth">
@@ -189,7 +191,7 @@
         <di:waypoint xsi:type="dc:Point" x="644" y="180" />
         <di:waypoint xsi:type="dc:Point" x="644" y="339" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="614" y="249.5" width="90" height="20" />
+          <dc:Bounds x="614" y="250" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1e69x36_di" bpmnElement="SequenceFlow_1e69x36">
@@ -197,7 +199,7 @@
         <di:waypoint xsi:type="dc:Point" x="608" y="180" />
         <di:waypoint xsi:type="dc:Point" x="608" y="339" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="539.5" y="155" width="90" height="20" />
+          <dc:Bounds x="540" y="155" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_07o2bcf_di" bpmnElement="SequenceFlow_07o2bcf">
@@ -231,14 +233,14 @@
         <di:waypoint xsi:type="dc:Point" x="544" y="505" />
         <di:waypoint xsi:type="dc:Point" x="615" y="419" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="534.5" y="437" width="90" height="20" />
+          <dc:Bounds x="535" y="437" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_00bl89g_di" bpmnElement="SequenceFlow_00bl89g">
         <di:waypoint xsi:type="dc:Point" x="644" y="520" />
         <di:waypoint xsi:type="dc:Point" x="644" y="419" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="614" y="459.5" width="90" height="20" />
+          <dc:Bounds x="614" y="460" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1s9dg75_di" bpmnElement="SequenceFlow_1s9dg75">
@@ -315,7 +317,7 @@
         <di:waypoint xsi:type="dc:Point" x="522" y="277" />
         <di:waypoint xsi:type="dc:Point" x="600" y="343" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="440.5" y="252" width="90" height="20" />
+          <dc:Bounds x="441" y="252" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0x1pqw1_di" bpmnElement="SequenceFlow_0x1pqw1">
@@ -326,7 +328,7 @@
           <dc:Bounds x="369" y="464.5" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_0u2ab51_di" bpmnElement="EndEvent_0u2ab51">
+      <bpmndi:BPMNShape id="EndEvent_0u2ab51_di" bpmnElement="EndEvent">
         <dc:Bounds x="214" y="612" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="187" y="648" width="90" height="20" />

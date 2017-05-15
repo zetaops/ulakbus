@@ -22,7 +22,8 @@ class BapButcePlani(CrudView):
 
     def __init__(self, current):
         CrudView.__init__(self, current)
-        self.current.task_data['proje_sec'] = None
+        self.current.task_data['proje_sec'] = False
+        self.current.task_data['proje_data'] = []
         if 'object_id' in self.current.task_data and self.cmd == 'add_edit_form' and \
                 'object_id' not in self.input:
             del self.current.task_data['object_id']
@@ -31,17 +32,9 @@ class BapButcePlani(CrudView):
     def kontrol(self):
         if 'bap_proje_id' not in self.current.task_data:
             personel = Personel.objects.get(user=self.current.user)
-            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel)]
-            if data:
-                self.current.task_data['proje_data'] = data
-                self.current.task_data['proje_sec'] = 1
-            else:
-                self.current.task_data['proje_sec'] = 0
-                self.current.task_data['proje_yok'] = {
-                    'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
-                           'bulunamadı. Size bağlı olan proje '
-                           'olmadığı için yeni bir bütçe planı yapamazsınız.',
-                    'title': 'Proje Bulunamadı'}
+            self.current.task_data['proje_data'] = [(proje.key, proje.ad) for proje in
+                                                    BAPProje.objects.filter(yurutucu=personel)]
+            self.current.task_data['proje_sec'] = True
 
     def proje_sec(self):
         form = JsonForm(title=_(u"Proje Seçiniz"))
@@ -95,10 +88,9 @@ class BapButcePlani(CrudView):
     def list(self, custom_form=None):
         if 'form' in self.input and 'proje' in self.input['form']:
             self.current.task_data['bap_proje_id'] = self.input['form']['proje']
-
-        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         CrudView.list(self)
-        toplam = sum(float(obj['fields'][5])for obj in self.output['objects'][1:])
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        toplam = sum(BAPButcePlani.objects.filter(ilgili_proje=proje).values_list('toplam_fiyat'))
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
                                        'actions': ''})
         form = JsonForm(title=_(u"%s projesi için Bütçe Planı") % proje.ad)
@@ -108,8 +100,11 @@ class BapButcePlani(CrudView):
 
     def bilgilendirme(self):
         if 'proje_yok' in self.current.task_data:
-            self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
-                                 title=self.current.task_data['proje_yok']['title'])
+            self.current.msg_box(
+                msg="""Yürütücüsü olduğunuz herhangi bir proje
+                    bulunamadı. Size bağlı olan proje
+                    olmadığı için yeni bir bütçe planı yapamazsınız.""",
+                title='Proje Bulunamadı')
 
     @obj_filter
     def proje_turu_islem(self, obj, result):
