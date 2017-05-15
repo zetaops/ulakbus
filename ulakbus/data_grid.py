@@ -194,10 +194,20 @@ class DataGrid(object):
         return selectors
 
     def build_response(self):
-        key = hash(":".join([str(self.page), str(self.filter_params), str(self.sort_params),
-                             str(self.selectors)]))
-        key = str(key)
-        query_cache = GridQueryCache(key)
+        import json
+        import hashlib
+
+        cache_key = hashlib.sha256(
+            "%s%s%s%s" % (
+                self.page,
+                json.dumps(self.filter_params),
+                json.dumps(self.sort_params),
+                json.dumps(self.selectors),
+            )
+
+        ).hexdigest()
+
+        query_cache = GridQueryCache(cache_key)
         cached_response = query_cache.get()
         if cached_response:
             return cached_response

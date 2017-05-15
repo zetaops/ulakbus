@@ -22,26 +22,21 @@ class PersonelDataGridView(CrudView):
     def __init__(self, current=None):
         super(PersonelDataGridView, self).__init__(current)
         # Gösterilecek alanlar listesi.
-        self.column_list = ['tckn', 'ad', 'soyad', 'dogum_tarihi', 'cinsiyet', 'medeni_hali',
-                       'dogum_yeri',
-                       'kan_grubu', 'ana_adi', 'baba_adi', 'brans', 'unvan', 'personel_turu',
-                       'kurum_sicil_no_int',
-                       'birim_id', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
-                       'kayitli_oldugu_mahalle_koy', 'cuzdan_seri', 'cuzdan_seri_no',
-                       'kayitli_oldugu_cilt_no',
-                       'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no',
-                       'kimlik_cuzdani_verildigi_yer',
-                       'kimlik_cuzdani_verilis_nedeni', 'kimlik_cuzdani_kayit_no',
-                       'kimlik_cuzdani_verilis_tarihi',
-                       'emekli_sicil_no', 'emekli_giris_tarihi', 'hizmet_sinifi',
-                       'kazanilmis_hak_derece', 'kazanilmis_hak_kademe',
-                       'kazanilmis_hak_ekgosterge',
-                       'gorev_ayligi_derece', 'gorev_ayligi_kademe', 'gorev_ayligi_ekgosterge',
-                       'emekli_muktesebat_derece', 'emekli_muktesebat_kademe',
-                       'emekli_muktesebat_ekgosterge',
-                       'kh_sonraki_terfi_tarihi', 'ga_sonraki_terfi_tarihi',
-                       'goreve_baslama_tarihi',
-                       'mecburi_hizmet_suresi']
+        self.column_list = [
+            'tckn', 'ad', 'soyad', 'dogum_tarihi', 'cinsiyet', 'medeni_hali', 'dogum_yeri',
+            'kan_grubu', 'ana_adi', 'baba_adi', 'brans', 'unvan', 'personel_turu',
+            'kurum_sicil_no_int', 'birim_id', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
+            'kayitli_oldugu_mahalle_koy', 'cuzdan_seri', 'cuzdan_seri_no',
+            'kayitli_oldugu_cilt_no', 'kayitli_oldugu_aile_sira_no', 'kayitli_oldugu_sira_no',
+            'kimlik_cuzdani_verildigi_yer', 'kimlik_cuzdani_verilis_nedeni',
+            'kimlik_cuzdani_kayit_no', 'kimlik_cuzdani_verilis_tarihi', 'emekli_sicil_no',
+            'emekli_giris_tarihi', 'hizmet_sinifi', 'kazanilmis_hak_derece',
+            'kazanilmis_hak_kademe', 'kazanilmis_hak_ekgosterge',
+            'gorev_ayligi_derece', 'gorev_ayligi_kademe', 'gorev_ayligi_ekgosterge',
+            'emekli_muktesebat_derece', 'emekli_muktesebat_kademe', 'emekli_muktesebat_ekgosterge',
+            'kh_sonraki_terfi_tarihi', 'ga_sonraki_terfi_tarihi',
+            'goreve_baslama_tarihi', 'mecburi_hizmet_suresi',
+        ]
         ordered_dict_param = []
         for col in self.column_list:
             if col == "birim_id":
