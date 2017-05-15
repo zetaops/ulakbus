@@ -29,8 +29,10 @@ class EkButceTalep(CrudView):
                                                           'olmadığı için ek bütçe talebinde '
                                                           'bulunamazsınız.',
                                                    'title': 'Proje Bulunamadı'}
+        elif 'red_aciklama' in self.current.task_data:
+            self.current.task_data['onaylandi'] = 2
         elif 'onaylandi' not in self.current.task_data:
-                self.current.task_data['onaylandi'] = 0
+            self.current.task_data['onaylandi'] = 0
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
@@ -50,7 +52,7 @@ class EkButceTalep(CrudView):
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
                                        'actions': ''})
 
-        form = JsonForm(title=_(u"Bap Ek Bütçe Talep"))
+        form = JsonForm(title=_(u"%s - Bap Ek Bütçe Talep") % proje.ad)
         form.tamam = fields.Button(_(u"Onaya Yolla"))
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
         self.form_out(form)

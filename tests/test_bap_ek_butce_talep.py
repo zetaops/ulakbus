@@ -56,7 +56,8 @@ class TestCase(BaseTestCase):
                 break
 
             kalem_sayisi = BAPButcePlani.objects.filter(ilgili_proje=proje).count()
-            resp = self.client.post(form={'ilerle': 1, 'proje': proje.key})
+            if i == 0:
+                resp = self.client.post(form={'ilerle': 1, 'proje': proje.key})
 
             assert len(resp.json['objects']) - 2 == kalem_sayisi
 

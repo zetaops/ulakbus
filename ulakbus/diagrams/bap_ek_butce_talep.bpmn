@@ -68,6 +68,7 @@
       <bpmn:incoming>SequenceFlow_1st5jk1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1eumkw5</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0fs3x2f</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_17y9ikl</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1nc8ojb" sourceRef="butce_kalemi_ekle_duzenle" targetRef="ExclusiveGateway_0obdyvw" />
     <bpmn:endEvent id="EndEvent_0axcvjp">
@@ -107,6 +108,7 @@
       <bpmn:incoming>SequenceFlow_0zr7p6c</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1rm17oi</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1w5xuad</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_17y9ikl</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0vvd0an</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0obdyvw" default="SequenceFlow_043682h">
@@ -189,6 +191,9 @@
       <bpmn:incoming>SequenceFlow_04c1owe</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_05ejr9s</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_17y9ikl" sourceRef="ExclusiveGateway_0whqu58" targetRef="butce_kalemlerini_listele">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">onaylandi==2</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1u87znh">
@@ -512,6 +517,15 @@
       <bpmndi:BPMNShape id="UserTask_11fqfct_di" bpmnElement="komisyon_aciklamasi">
         <dc:Bounds x="574" y="584" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_17y9ikl_di" bpmnElement="SequenceFlow_17y9ikl">
+        <di:waypoint xsi:type="dc:Point" x="358" y="293" />
+        <di:waypoint xsi:type="dc:Point" x="358" y="242" />
+        <di:waypoint xsi:type="dc:Point" x="595" y="242" />
+        <di:waypoint xsi:type="dc:Point" x="595" y="278" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="431.5" y="217" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
