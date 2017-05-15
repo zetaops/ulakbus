@@ -24,8 +24,8 @@ class TestCase(BaseTestCase):
         usr = User.objects.get(username='personel_isleri_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr)
         self.client.post()
-        idari_forms = {'baslangic_tarihi': '20.05.2016',
-                       'bitis_tarihi': '30.05.2016',
+        idari_forms = {'baslangic_tarihi': '20.05.2017',
+                       'bitis_tarihi': '30.05.2017',
                        'devam': 1,
                        'personel_turu': 1}
         resp = self.client.post(form=idari_forms)
@@ -46,7 +46,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
                                                           'kaydet': 1})
 
-        assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
+        assert resp.json['msgbox']['title'] == u"Personeller Onay Icin Gonderildi!"
 
         time.sleep(1)
 
