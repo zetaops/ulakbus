@@ -22,6 +22,7 @@ class BapButcePlani(CrudView):
 
     def __init__(self, current):
         CrudView.__init__(self, current)
+        self.current.task_data['proje_sec'] = None
         if 'object_id' in self.current.task_data and self.cmd == 'add_edit_form' and \
                 'object_id' not in self.input:
             del self.current.task_data['object_id']
