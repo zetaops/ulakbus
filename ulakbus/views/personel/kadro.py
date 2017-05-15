@@ -545,11 +545,11 @@ class TerfiListe(CrudView):
 
         """
 
-        msg = {"type": _(u'info'),"title": _(u'Personeller Onay Icin Gonderildi!'),
+        msg = {"title": _(u'Personeller Onay Icin Gonderildi!'),
                "body": _(u'Talebiniz Basariyla iletildi.')}
         # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
 
-        self.current.output["msgbox"] = msg
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
         # Akademik personelin terfi onayı rektör tarafından yapılır.
         # İdari personelin terfi onayı genel sekreter tarafından yapılır.
