@@ -51,9 +51,9 @@ class TestCase(BaseTestCase):
         time.sleep(1)
 
         # Personel terfi islemini reddet bolumu
-        idari_permission = Permission.objects.get(name='idari_personel_terfi_onay')
-        idari_onay_user = list(idari_permission.get_permitted_users())[0]
-        token, user = self.get_user_token(idari_onay_user.username)
+        akademik_permission = Permission.objects.get(name='akademik_personel_terfi_onay')
+        akademik_onay_user = list(akademik_permission.get_permitted_users())[0]
+        token, user = self.get_user_token(akademik_onay_user.username)
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         # resp = self.client.post()
         self.client.post(cmd="red_aciklamasi_yaz",
@@ -66,7 +66,7 @@ class TestCase(BaseTestCase):
             form={'devam': 1, 'red_aciklama': "Reddedildi"}
         )
 
-        assert resp.json['msgbox']['msg'] == "Talebiniz Basariyla iletildi."
+        assert resp.json['msgbox']['title'] == u'İşlem Tamamlandı!'
 
         time.sleep(1)
 

@@ -592,6 +592,10 @@ class TerfiListe(CrudView):
         previous_user = User.objects.get(self.current.task_data["previous_user_key"])
         self.current.invite_other_parties([previous_user])
 
+        msg = {"title": _(u'İşlem Tamamlandı!'),
+               "body": _(u'Terfi red açıklaması Personel Daire Başkanlığına Gönderildi')}
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
+
     def terfi_yap(self):
         """
         Terfi onay makamı (rektör/genel sekreter) tarafından onaylanan terfiler burada veritabanına
