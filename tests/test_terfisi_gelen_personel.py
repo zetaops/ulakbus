@@ -80,7 +80,7 @@ class TestCase(BaseTestCase):
 
         # Terfisi yapilacak personel duzenle
         ter_gel_id_per[0]['sec'] = True
-        ter_gel_id_per[2]['sec'] = True
+        ter_gel_id_per[1]['sec'] = True
 
         terfi_duz_forms = {'Personel': ter_gel_id_per,
                            'duzenle': 1}
@@ -103,7 +103,7 @@ class TestCase(BaseTestCase):
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
         assert ter_gel_id_per[0]['yeni_gorev_ayligi'] == '2/8(8)'
-        assert ter_gel_id_per[2]['yeni_kazanilmis_hak'] == '3/8(8)'
+        assert ter_gel_id_per[1]['yeni_kazanilmis_hak'] == '3/8(8)'
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
@@ -117,7 +117,7 @@ class TestCase(BaseTestCase):
         TODO: docstring eklenecek..
         """
         # Personel terfi islemini onayla bolumu
-        token, user = self.get_user_token(idari_onay_user.username)
+        token, user = self.get_user_token(akademik_onay_user.username)
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
 
