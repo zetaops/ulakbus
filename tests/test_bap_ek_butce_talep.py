@@ -56,7 +56,8 @@ class TestCase(BaseTestCase):
                 break
 
             kalem_sayisi = BAPButcePlani.objects.filter(ilgili_proje=proje).count()
-            resp = self.client.post(form={'ilerle': 1, 'proje': proje.key})
+            if i == 0:
+                resp = self.client.post(form={'ilerle': 1, 'proje': proje.key})
 
             assert len(resp.json['objects']) - 2 == kalem_sayisi
 
@@ -110,8 +111,7 @@ class TestCase(BaseTestCase):
             assert resp.json['objects'][1]['fields'][1] == 'Araba'
             if i == 0:
                 assert resp.json['objects'][1]['fields'][3] == '120'
-                assert resp.json['objects'][1]['fields'][4] == 'Yol için'
-                assert resp.json['objects'][1]['fields'][5] == 'Yeni'
+                assert resp.json['objects'][1]['fields'][4] == 'Yeni'
                 self.client.post(cmd='iptal')
 
                 resp = self.client.post(form={'red_aciklama': 'Yeniden düzenleyiniz',
@@ -119,10 +119,11 @@ class TestCase(BaseTestCase):
 
             if i == 1:
                 assert resp.json['objects'][1]['fields'][3] == '100'
-                assert resp.json['objects'][1]['fields'][4] == 'İndirim yapıldı'
-                assert resp.json['objects'][1]['fields'][5] == 'Düzenlendi'
+                assert resp.json['objects'][1]['fields'][4] == 'Düzenlendi'
 
-                resp = self.client.post(cmd='kabul', form={'onayla': 1})
+                self.client.post(cmd='kabul', form={'onayla': 1})
+                resp = self.client.post(form={'komisyon_aciklama': 'Kontrol Edildi.',
+                                              'yolla': 1})
                 time.sleep(1)
                 assert BAPGundem.objects.filter(gundem_tipi=2,
                                                 proje=proje).count() == gundem_sayisi + 1

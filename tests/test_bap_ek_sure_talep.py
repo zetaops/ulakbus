@@ -73,8 +73,10 @@ class TestCase(BaseTestCase):
                                               'red_gonder': 1}, token=token, wf='bap_ek_sure_talep')
 
             if i == 1:
-                resp = self.client.post(form={'onayla': 1}, token=token, cmd='kabul')
-
+                self.client.post(form={'onayla': 1}, token=token, cmd='kabul')
+                resp = self.client.post(form={'komisyon_aciklama': 'Ek süre talebi kontrol '
+                                                                   'edildi.',
+                                              'yolla': 1})
             self.lane_change_massage_kontrol(resp)
 
         proje.reload()

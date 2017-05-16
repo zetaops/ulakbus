@@ -79,11 +79,18 @@ class EkSureTalebi(CrudView):
         form.red_gonder = fields.Button(_(u"Gönder"))
         self.form_out(form)
 
+    def komisyon_aciklamasi(self):
+        form = JsonForm(title=_(u"Komisyon Açıklaması"))
+        form.komisyon_aciklama = fields.Text(_(u"Açıklama Yazınız"))
+        form.yolla = fields.Button(_(u"Yolla"))
+        self.form_out(form)
+
     def komisyona_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         gundem = BAPGundem()
         gundem.proje = proje
         gundem.gundem_tipi = 4
+        gundem.gundem_aciklama = self.input['form']
         gundem.save()
         proje.durum = 4     # Komisyon Onayı Bekliyor
         proje.save()

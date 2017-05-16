@@ -76,6 +76,7 @@
       <bpmn:incoming>SequenceFlow_0se3b6s</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0y5a2ge</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0ogce67</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0mstrdw</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0ogce67" sourceRef="ExclusiveGateway_0x0shu1" targetRef="proje_sec" />
     <bpmn:sequenceFlow id="SequenceFlow_0celdsp" sourceRef="proje_sec" targetRef="kalem_listesi" />
@@ -86,6 +87,7 @@
       <bpmn:incoming>SequenceFlow_174e3qw</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0vgyp82</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_033sdm9</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0mstrdw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1xdb2mu</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="kaydet" name="Kaydet" camunda:class="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.kaydet">
@@ -204,6 +206,9 @@
       <bpmn:incoming>SequenceFlow_0wgxi9y</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ftma9o</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0mstrdw" sourceRef="ExclusiveGateway_0x0shu1" targetRef="kalem_listesi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='red_mesaj']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_01849bd">
@@ -567,6 +572,15 @@
       <bpmndi:BPMNShape id="UserTask_02lklgm_di" bpmnElement="komisyon_aciklamasi">
         <dc:Bounds x="739" y="657" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0mstrdw_di" bpmnElement="SequenceFlow_0mstrdw">
+        <di:waypoint xsi:type="dc:Point" x="341" y="324" />
+        <di:waypoint xsi:type="dc:Point" x="380" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="537" y="258" />
+        <di:waypoint xsi:type="dc:Point" x="537" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413.5" y="233" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

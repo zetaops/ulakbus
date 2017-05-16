@@ -29,8 +29,10 @@ class EkButceTalep(CrudView):
                                                           'olmadığı için ek bütçe talebinde '
                                                           'bulunamazsınız.',
                                                    'title': 'Proje Bulunamadı'}
+        elif 'red_aciklama' in self.current.task_data:
+            self.current.task_data['onaylandi'] = 2
         elif 'onaylandi' not in self.current.task_data:
-                self.current.task_data['onaylandi'] = 0
+            self.current.task_data['onaylandi'] = 0
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
@@ -50,7 +52,7 @@ class EkButceTalep(CrudView):
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
                                        'actions': ''})
 
-        form = JsonForm(title=_(u"Bap Ek Bütçe Talep"))
+        form = JsonForm(title=_(u"%s - Bap Ek Bütçe Talep") % proje.ad)
         form.tamam = fields.Button(_(u"Onaya Yolla"))
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
         self.form_out(form)
@@ -64,23 +66,26 @@ class EkButceTalep(CrudView):
         if 'yeni_butceler' not in self.current.task_data:
             self.current.task_data['yeni_butceler'] = defaultdict(dict)
 
+        obje_durum = obje_tipleri[1]
+
         if not self.object.key:
             obje_durum = obje_tipleri[0]
             self.set_form_data_to_object()
             self.object.save()
-            toplam_fiyat = 0
-        else:
-            obje_durum = obje_tipleri[1]
-            toplam_fiyat = self.object.toplam_fiyat
-            self.set_form_data_to_object()
 
         self.current.task_data['yeni_butceler'][self.object.key] = \
             {'durum': obje_durum,
              'kod_ad': self.current.task_data['kod_adi'],
-             'ad': self.input['form']['ad'],
-             'eski_toplam_fiyat': toplam_fiyat,
+             'ad': self.object.ad,
+             'eski_adet': self.object.adet if obje_durum == obje_tipleri[1] else 0,
+             'yeni_adet': self.input['form']['adet'],
+             'eski_birim_fiyat': self.object.birim_fiyat if obje_durum == obje_tipleri[1] else 0,
+             'yeni_birim_fiyat': self.input['form']['birim_fiyat'],
+             'eski_toplam_fiyat': self.object.toplam_fiyat if obje_durum == obje_tipleri[1] else 0,
              'yeni_toplam_fiyat': self.input['form']['toplam_fiyat'],
              'gerekce': self.input['form']['gerekce']}
+
+        self.set_form_data_to_object()
 
         self.object.muhasebe_kod = self.current.task_data['muhasebe_kod']
         self.object.kod_adi = self.current.task_data['kod_adi']
@@ -130,18 +135,19 @@ class EkButceTalep(CrudView):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Ek bütçe talebi") % \
                                        (proje.yurutucu, proje.ad)
-        self.output['objects'] = [['Kod Adi', 'Ad', 'Eski Fiyati', 'Yeni Fiyati',
-                                   'Gerekce', 'Durum']]
-        for talep in self.current.task_data['yeni_butceler'].values():
+        self.output['objects'] = [['Kod Adi', 'Ad', 'Eski Toplam Fiyati', 'Yeni Toplam Fiyati',
+                                   'Durum']]
+        for key, talep in self.current.task_data['yeni_butceler'].iteritems():
             
             item = {
                 "fields": [talep['kod_ad'],
                            talep['ad'],
                            str(talep['eski_toplam_fiyat']),
                            str(talep['yeni_toplam_fiyat']),
-                           talep['gerekce'],
                            talep['durum']],
-                "actions": False,
+                "actions": [{'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal',
+                            'show_as': 'button'}],
+                'key': key
             }
             self.output['objects'].append(item)
 
@@ -150,11 +156,39 @@ class EkButceTalep(CrudView):
         form.reddet = fields.Button(_(u"Reddet"), cmd='iptal')
         self.form_out(form)
 
+    def talep_detay_goster(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s / Kalem: %s") % \
+                                       (proje.yurutucu, proje.ad, self.object)
+
+        data = self.current.task_data['yeni_butceler'][self.object.key]
+
+        obj_data = {'Kalem Adı': data['ad'],
+                    'Eski Adet': str(data['eski_adet']),
+                    'Yeni Adet': str(data['yeni_adet']),
+                    'Eski Birim Fiyat': str(data['eski_birim_fiyat']),
+                    'Yeni Birim Fiyat': str(data['yeni_birim_fiyat']),
+                    'Eski Toplam Fiyat': str(data['eski_toplam_fiyat']),
+                    'Yeni Toplam Fiyat': str(data['yeni_toplam_fiyat']),
+                    'Gerekçe': data['gerekce']}
+        self.output['object'] = obj_data
+
+        form = JsonForm()
+        form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
+
+    def komisyon_aciklamasi(self):
+        form = JsonForm(title=_(u"Komisyon Açıklaması"))
+        form.komisyon_aciklama = fields.Text(_(u"Açıklama Yazınız"))
+        form.yolla = fields.Button(_(u"Yolla"))
+        self.form_out(form)
+
     def kabul_et_ve_komisyona_yolla(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         gundem = BAPGundem()
         gundem.proje = proje
         gundem.gundem_tipi = 2
+        gundem.gundem_aciklama = self.input['form']['komisyon_aciklama']
         gundem.save()
         proje.durum = 4     # Komisyon Onayı Bekliyor
         proje.save()
