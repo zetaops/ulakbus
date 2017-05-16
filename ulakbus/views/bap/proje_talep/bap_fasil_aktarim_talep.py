@@ -220,6 +220,7 @@ class FasilAktarimTalep(CrudView):
     def bilgilendir(self):
         if 'red_aciklama' in self.input['form']:
             self.current.task_data['red_aciklama'] = self.input['form']['red_aciklama']
+            self.current.task_data['cmd'] = 'red_aciklama'
             del self.current.task_data['fasil_islemleri']
         else:
             self.current.task_data['onay'] = "Fasıl aktarımı için bulunduğunuz talep kabul " \
