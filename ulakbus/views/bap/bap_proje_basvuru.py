@@ -413,6 +413,8 @@ class ProjeBasvuru(CrudView):
                                 aciklama=_(u"Öğretim üyesi tarafından kaydedildi"),
                                 tarih=datetime.datetime.now())
         proje.durum = 1
+        if not proje.basvuru_rolu.exist:
+            proje.basvuru_rolu = self.current.role
         proje.blocking_save()
 
     def proje_goster(self):
@@ -425,7 +427,7 @@ class ProjeBasvuru(CrudView):
     def onaya_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         proje.durum = 2
-        proje.ProjeIslemGecmisi(eylem=_(u"Onay"),
+        proje.ProjeIslemGecmisi(eylem=_(u"Onaya Gönderildi"),
                                 aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
                                 tarih=datetime.datetime.now())
         proje.blocking_save()

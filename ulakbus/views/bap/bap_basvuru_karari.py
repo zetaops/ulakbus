@@ -38,12 +38,16 @@ class BasvuruKarari(CrudView):
         """
         İnceleme sonrası koordinasyon birimi proje hakkında karar verir.
 
+        2: Öğretim elemanı tarafından koordinasyon birimine onaya gönderildi.
+        3: Koordinasyon birimi tarafından öğretim elemanına revizyon için gönderildi.
+        4: Koordinasyon birimi projeyi onayladı.
+
         """
 
         self.current.task_data['karar'] = 'iptal'
         form = JsonForm(current=self.current, title=_(u"İnceleme Sonrası Proje Kararı"))
 
-        if self.object.durum not in [3, 4]:
+        if self.object.durum == 2:
             form.onayla = fields.Button(__(u"Projeyi Onayla"), cmd='onayla')
 
         if not self.object.durum == 3:
@@ -79,7 +83,7 @@ Projenin güncel durumu: %s
         self.current.task_data['karar'] = 'revizyon'
         self.current.task_data['revizyon_gerekce'] = gerekce
         self.object.ProjeIslemGecmisi(eylem='Revizyon', aciklama='Revizyona gönderildi',
-                                      tarih=datetime.now().date())
+                                      tarih=datetime.now())
         self.object.durum = 3
         self.object.save()
 
@@ -90,8 +94,8 @@ Projenin güncel durumu: %s
         """
 
         self.current.task_data['karar'] = 'onayla'
-        self.object.ProjeIslemGecmisi(eylem='Gündeme Alındı',
+        self.object.ProjeIslemGecmisi(eylem='Onaylandı',
                                       aciklama='Onaylandı ve gündeme alındı',
-                                      tarih=datetime.now().date())
+                                      tarih=datetime.now())
         self.object.durum = 4
         self.object.save()
