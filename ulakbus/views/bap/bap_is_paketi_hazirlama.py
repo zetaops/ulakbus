@@ -87,41 +87,44 @@ class IsPaketiHazirlama(CrudView):
             }
         """
 
-        item = {'is_paketleri': []}
+        item = {
+            'options': {
+                'maxHeight': 850,
+                'viewScale': "month",
+                'columnWidth': 80
+            },
+            'data': []
+        }
 
-        tarih = [{'yil': 2017, 'ay': 1},
-                 {'yil': 2017, 'ay': 2},
-                 {'yil': 2017, 'ay': 3},
-                 {'yil': 2017, 'ay': 4},
-                 {'yil': 2017, 'ay': 5},
-                 {'yil': 2017, 'ay': 6}, ]
-
-        item['tarih'] = tarih
-
-        is_paketleri = BAPIsPaketi.objects.filter()
+        is_paketleri = BAPIsPaketi.objects.filter(proje_id=self.current.task_data.get(
+            'bap_proje_id', None))
         for is_paketi in is_paketleri:
-            item['is_paketleri'].append({'ad': is_paketi.ad,
-                                         'key': is_paketi.key,
-                                         'baslama_tarihi':
-                                             datetime.strftime(is_paketi.baslama_tarihi,
-                                                               '%d.%m.%Y'),
-                                         'bitis_tarihi':
-                                             datetime.strftime(is_paketi.bitis_tarihi,
-                                                               '%d.%m.%Y'),
-                                         'is': [{'key': bap_is.isler.key,
-                                                 'ad': bap_is.isler.ad,
-                                                 'baslama_tarihi':
-                                                     datetime.strftime(bap_is.isler.baslama_tarihi,
-                                                                       '%d.%m.%Y'),
-                                                 'bitis_tarihi':
-                                                     datetime.strftime(bap_is.isler.bitis_tarihi,
-                                                                       '%d.%m.%Y')}
-                                                for bap_is in is_paketi.Isler]})
-
-        self.current.output['is_paketi_takvimi'] = item
+            item['data'].append(
+                {
+                    'name': is_paketi.ad,
+                    'children': [bap_is.isler.ad for bap_is in is_paketi.Isler]
+                })
+            for bap_is in is_paketi.Isler:
+                item['data'].append(
+                    {
+                        'name': bap_is.isler.ad,
+                        'tooltips': True,
+                        'tasks': [
+                            {
+                                'id': bap_is.isler.key,
+                                'name': bap_is.isler.ad,
+                                'color': '#a61229',
+                                'from': bap_is.isler.baslama_tarihi.strftime(
+                                    '%Y-%m-%dT%H:%M:%S.%fZ'),
+                                'to': bap_is.isler.bitis_tarihi.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+                            }
+                        ]
+                    }
+                )
+        self.current.output['gantt_chart'] = item
 
         form = JsonForm(title=_(u"Bap İş Paketi Takvimi"))
-        form.yeni_paket = fields.Button(_(u"Yeni İş Paketi Ekle"))
+        form.yeni_paket = fields.Button(_(u"Yeni İş Paketi Ekle"),cmd = 'add_edit_form')
         form.bitir = fields.Button(_(u"Tamam"), cmd='bitir')
         self.form_out(form)
 
