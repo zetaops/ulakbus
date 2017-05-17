@@ -74,7 +74,8 @@ class LabEkleForm(JsonForm):
     class Meta:
         title = _(u"Laboratuvar Seç")
 
-    lab = fields.String(_(u"Laboratuvar"))
+    room_choices = prepare_choices_for_model(Room)
+    lab = fields.String(_(u"Laboratuvar"), choices=room_choices, default=room_choices[0][0])
     lab_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
     iptal = fields.Button(_(u"İptal"))
 
@@ -83,7 +84,9 @@ class DemirbasEkleForm(JsonForm):
     class Meta:
         title = _(u"Demirbaş Seç")
 
-    demirbas = fields.String(_(u"Demirbaş"))
+    demirbas_choices = prepare_choices_for_model(Demirbas)
+    demirbas = fields.String(_(u"Demirbaş"), choices=demirbas_choices,
+                             default=demirbas_choices[0][0])
     demirbas_ekle = fields.Button(_(u"Ekle"),  cmd='ekle')
     iptal = fields.Button(_(u"İptal"))
 
@@ -91,8 +94,9 @@ class DemirbasEkleForm(JsonForm):
 class PersonelEkleForm(JsonForm):
     class Meta:
         title = _(u"Personel Seç")
-
-    personel = fields.String(_(u"Personel"))
+    personel_choices = prepare_choices_for_model(Personel)
+    personel = fields.String(_(u"Personel"), choices=personel_choices,
+                             default=personel_choices[0][0])
     personel_ekle = fields.Button(_(u"Ekle"),  cmd='ekle')
     iptal = fields.Button(_(u"İptal"))
 
@@ -285,7 +289,9 @@ class ProjeBasvuru(CrudView):
 
     def lab_ekle(self):
         form = LabEkleForm()
-        form.set_choices_of('lab', prepare_choices_for_model(Room))
+        # room_choices = prepare_choices_for_model(Room)
+        # form.set_choices_of('lab', room_choices)
+        # form.lab.default = room_choices[1]
         self.form_out(form)
 
     def demirbas_ekle(self):
