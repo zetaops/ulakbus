@@ -75,7 +75,8 @@ class LabEkleForm(JsonForm):
         title = _(u"Laboratuvar Seç")
 
     lab = fields.String(_(u"Laboratuvar"))
-    lab_ekle = fields.Button(_(u"Ekle"))
+    lab_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class DemirbasEkleForm(JsonForm):
@@ -83,7 +84,8 @@ class DemirbasEkleForm(JsonForm):
         title = _(u"Demirbaş Seç")
 
     demirbas = fields.String(_(u"Demirbaş"))
-    demirbas_ekle = fields.Button(_(u"Ekle"))
+    demirbas_ekle = fields.Button(_(u"Ekle"),  cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class PersonelEkleForm(JsonForm):
@@ -91,7 +93,8 @@ class PersonelEkleForm(JsonForm):
         title = _(u"Personel Seç")
 
     personel = fields.String(_(u"Personel"))
-    personel_ekle = fields.Button(_(u"Ekle"))
+    personel_ekle = fields.Button(_(u"Ekle"),  cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class ProjeCalisanlariForm(JsonForm):
@@ -258,6 +261,27 @@ class ProjeBasvuru(CrudView):
             form.Olanak(ad=ad, tur=tur)
         self.form_out(form)
         self.current.output["meta"]["allow_add_listnode"] = False
+
+    def arastirma_olanagi_senkronize_et(self):
+        value_map = {
+            'lab': _(u"Laboratuvar"),
+            'demirbas': _(u"Demirbaş"),
+            'personel': _(u"Personel")
+        }
+        query_map = {
+            'lab': Room,
+            'demirbas': Demirbas,
+            'personel': Personel
+        }
+        if len(self.current.task_data['hedef_proje']['arastirma_olanaklari']) != len(
+                self.current.task_data['ArastirmaOlanaklariForm']['Olanak']):
+            for aotd in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
+                item = {
+                    'ad': query_map[aotd.items()[0][0]].objects.get(aotd.items()[0][1]).__unicode__(),
+                    'tur': value_map[aotd.items()[0][0]]
+                }
+                if item not in self.current.task_data['ArastirmaOlanaklariForm']['Olanak']:
+                    self.current.task_data['hedef_proje']['arastirma_olanaklari'].remove(aotd)
 
     def lab_ekle(self):
         form = LabEkleForm()
