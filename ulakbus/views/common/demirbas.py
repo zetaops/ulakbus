@@ -113,7 +113,10 @@ class RezervasyonView(CrudView):
             rezerve_edilen_demirbas=demirbas
         )
 
-        if illegal_rezervasyon:
+        if baslama_tarihi > bitis_tarihi:
+            self.current.task_data['hata_mesaji'] = "Belirtilen tarihler tutarsız görünüyor. " \
+                                                    "Lütfen konrol edip tekrar deneyiniz."
+        elif illegal_rezervasyon:
             self.current.task_data['hata_mesaji'] = "Belirtilen tarihler rezervasyon için uygun " \
                                                     "değil. "
         else:
