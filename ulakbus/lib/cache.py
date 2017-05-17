@@ -6,6 +6,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import hashlib
+
 from ulakbus.lib.raporlama_eklentisi import raporlama_ekrani_secim_menulerini_hazirla
 from ulakbus.lib.widgets import personel_istatistik_bilgileri
 from ulakbus.lib.akademik_faaliyet import akademik_performans_hesapla
@@ -87,3 +89,23 @@ class ChoicesFromModel(Cache):
 
     def __init__(self, key):
         super(ChoicesFromModel, self).__init__(key, serialize=True)
+
+
+class ModelLabelValue(Cache):
+    """
+
+    """
+    PREFIX = "MLV"
+
+    def __init__(self, model, filters=None):
+        self.model = model
+        self.filters = filters if filters else {}
+        key = self.generate_key()
+        super(ModelLabelValue, self).__init__(key, serialize=True)
+
+    def generate_key(self):
+        kw_string = "".join(["%s%s" % (k, v) for k, v in sorted(self.filters.items())])
+        return hashlib.sha256("%s:%s" % (self.model._get_bucket_name(), kw_string)).hexdigest()
+
+    def get_data_to_cache(self):
+        return [{"value": u.key, "label": u.name} for u in self.model.objects.all(**self.filters)]

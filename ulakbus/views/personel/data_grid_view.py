@@ -16,13 +16,15 @@ from zengine.lib.catalog_data import catalog_data_manager
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 
+from ulakbus.lib.cache import ModelLabelValue
+
 
 class PersonelDataGridView(CrudView):
 
     def __init__(self, current=None):
         super(PersonelDataGridView, self).__init__(current)
         # Gösterilecek alanlar listesi.
-        self.column_list = [
+        column_list = [
             'tckn', 'ad', 'soyad', 'dogum_tarihi', 'cinsiyet', 'medeni_hali', 'dogum_yeri',
             'kan_grubu', 'ana_adi', 'baba_adi', 'brans', 'unvan', 'personel_turu',
             'kurum_sicil_no_int', 'birim_id', 'kayitli_oldugu_il', 'kayitli_oldugu_ilce',
@@ -38,7 +40,7 @@ class PersonelDataGridView(CrudView):
             'goreve_baslama_tarihi', 'mecburi_hizmet_suresi',
         ]
         ordered_dict_param = []
-        for col in self.column_list:
+        for col in column_list:
             if col == "birim_id":
                 ordered_dict_param.append((col, _(u"Birim")))
             elif col == "baslama_sebep_id":
@@ -55,7 +57,9 @@ class PersonelDataGridView(CrudView):
             'personel_turu': prepare_options_from_catalog_data('personel_turu')
         }
 
-        birim = [{"value": u.key, "label": u.name} for u in Unit.objects.all()]
+        birim = ModelLabelValue(Unit).get_or_set()
+
+        # birim = [{"value": u.key, "label": u.name} for u in Unit.objects.all()]
         multiselect_fields = {
             'birim_id': birim,
             'hizmet_sinifi': prepare_options_from_catalog_data('hizmet_sinifi'),
@@ -93,8 +97,8 @@ class PersonelDataGridView(CrudView):
             'column_types_dict': column_types_dict
         }
 
-    def grid_goster(self):
-        grid = DataGrid(
+    def get_grid_data(self):
+        return DataGrid(
             self.current.session.sess_id,
             Personel,
             self.current.input.get('page', 1),
@@ -104,19 +108,13 @@ class PersonelDataGridView(CrudView):
             self.current.input.get('selectors', None),
             **self.kwargs
         )
+
+    def grid_goster(self):
+        grid = self.get_grid_data()
         self.output['gridOptions'] = grid.build_response()['gridOptions']
 
     def csv_indir(self):
-        grid = DataGrid(
-            self.current.session.sess_id,
-            Personel,
-            self.current.input.get('page', 1),
-            self.current.input.get('filterColumns', []),
-            self.current.input.get('sortColumns', []),
-            self.column_dict,
-            self.current.input.get('selectors', None),
-            **self.kwargs
-        )
+        grid = self.get_grid_data()
         self.output['download_url'] = grid.generate_csv_link()
 
 
