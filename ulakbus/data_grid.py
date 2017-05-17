@@ -16,6 +16,7 @@ from pyoko.fields import DATE_FORMAT
 from ulakbus.lib.s3_file_manager import S3FileManager
 from zengine.lib.cache import Cache
 from zengine.lib.translation import gettext as _
+from collections import OrderedDict
 
 __author__ = 'Anıl Can Aydın'
 
@@ -233,7 +234,7 @@ class DataGrid(object):
             qp = element['filterParam']
             if qp:
                 if self.field_filter_type_map[f] == "INPUT":
-                    query_params[f + fc.get(qp[0]['condition'])] = qp[0]['value']
+                    query_params[f + fc.get(qp[0]['condition'])] = qp[0]['value'].lower()
 
                 elif self.field_filter_type_map[f] == "SELECT":
                     query_params[f] = qp[0]['value']
@@ -279,7 +280,7 @@ class DataGrid(object):
 
         data_to_return = []
         for data, key in qs.all(**query_params).order_by(*sort_params).data():
-            d = {}
+            d = OrderedDict()
             for ac in active_columns:
                 if ac in self.select_fields or ac in self.multiselect_fields:
                     d[ac] = self.select_options_dict[ac][str(data[ac])]
