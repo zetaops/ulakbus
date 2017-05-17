@@ -279,29 +279,26 @@ class ProjeBasvuru(CrudView):
         }
         if len(self.current.task_data['hedef_proje']['arastirma_olanaklari']) != len(
                 self.current.task_data['ArastirmaOlanaklariForm']['Olanak']):
+            list_to_remove = list(self.current.task_data['hedef_proje']['arastirma_olanaklari'])
             for aotd in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
                 item = {
                     'ad': query_map[aotd.items()[0][0]].objects.get(aotd.items()[0][1]).__unicode__(),
                     'tur': value_map[aotd.items()[0][0]]
                 }
                 if item not in self.current.task_data['ArastirmaOlanaklariForm']['Olanak']:
-                    self.current.task_data['hedef_proje']['arastirma_olanaklari'].remove(aotd)
+                    list_to_remove.remove(aotd)
+            self.current.task_data['hedef_proje']['arastirma_olanaklari'] = list_to_remove
 
     def lab_ekle(self):
         form = LabEkleForm()
-        # room_choices = prepare_choices_for_model(Room)
-        # form.set_choices_of('lab', room_choices)
-        # form.lab.default = room_choices[1]
         self.form_out(form)
 
     def demirbas_ekle(self):
         form = DemirbasEkleForm()
-        form.set_choices_of('demirbas', prepare_choices_for_model(Demirbas))
         self.form_out(form)
 
     def personel_ekle(self):
         form = PersonelEkleForm()
-        form.set_choices_of('personel', prepare_choices_for_model(Personel))
         self.form_out(form)
 
     def olanak_kaydet(self):
