@@ -1,0 +1,16 @@
+{
+  "demirbas_durum": {
+    "1": {
+      "tr": "Uygun",
+      "en": "Available"
+    },
+    "2": {
+      "tr": "Kullanımda",
+      "en": "In use"
+    },
+    "3": {
+      "tr": "Arızalı",
+      "en": "Broken"
+    }
+  }
+}
