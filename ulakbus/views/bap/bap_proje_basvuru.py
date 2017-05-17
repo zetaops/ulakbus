@@ -124,7 +124,7 @@ class UniversiteDisiUzmanForm(JsonForm):
         unvan = fields.String(_(u"Unvan"), readonly=True)
         kurum = fields.String(_(u"Kurum"), readonly=True)
         tel = fields.String(_(u"Telefon"), readonly=True)
-        faks = fields.String(_(u"Faks"), readonly=True)
+        faks = fields.String(_(u"Faks"), readonly=True, required=False)
         eposta = fields.String(_(u"E-posta"), readonly=True)
 
     ileri = fields.Button(_(u"İleri"))
