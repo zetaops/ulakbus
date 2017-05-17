@@ -87,8 +87,10 @@ class TestCase(BaseTestCase):
         assert 'msgbox' in resp.json
 
         yeni_guncel_donem = Donem.guncel_donem()
-        yeni_guncel_donem.guncel = False
-        yeni_guncel_donem.save()
-        yeni_guncel_donem.ogretim_yili.delete()
         ilk_guncel_donem.guncel = True
-        ilk_guncel_donem.save()
+        ilk_guncel_donem.blocking_save()
+        yeni_guncel_donem.ogretim_yili.blocking_delete()
+        yeni_guncel_donem.reload()
+        assert yeni_guncel_donem.guncel == False
+        assert ilk_guncel_donem.guncel == True
+        assert Donem.guncel_donem().key == ilk_guncel_donem.key
