@@ -153,7 +153,6 @@ class UniversiteDisiDestekForm(JsonForm):
 class YurutucuTecrubesiForm(JsonForm):
     class Meta:
         title = _(u"Yürütücü Tecrübesi")
-        always_blank = False
 
     class AkademikFaaliyet(ListNode):
         ad = fields.String(_(u'Ad'), readonly=True)
