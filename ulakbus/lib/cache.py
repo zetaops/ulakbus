@@ -91,21 +91,35 @@ class ChoicesFromModel(Cache):
         super(ChoicesFromModel, self).__init__(key, serialize=True)
 
 
-class ModelLabelValue(Cache):
-    """
-
-    """
-    PREFIX = "MLV"
-
+class DataModel(Cache):
     def __init__(self, model, filters=None):
         self.model = model
         self.filters = filters if filters else {}
         key = self.generate_key()
-        super(ModelLabelValue, self).__init__(key, serialize=True)
+        super(DataModel, self).__init__(key, serialize=True)
 
     def generate_key(self):
         kw_string = "".join(["%s%s" % (k, v) for k, v in sorted(self.filters.items())])
         return hashlib.sha256("%s:%s" % (self.model._get_bucket_name(), kw_string)).hexdigest()
 
+
+class ModelLabelValue(DataModel):
+    """
+
+    """
+    PREFIX = "MLV"
+
     def get_data_to_cache(self):
         return [{"value": u.key, "label": u.name} for u in self.model.objects.all(**self.filters)]
+
+
+class ModelQuery(DataModel):
+    """
+
+    """
+    PREFIX = "DMQ"
+
+    def get_data_to_cache(self):
+        return [{"value": u.key, "label": u.name} for u in self.model.objects.all(**self.filters)]
+
+

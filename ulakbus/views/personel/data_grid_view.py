@@ -98,14 +98,15 @@ class PersonelDataGridView(CrudView):
         }
 
     def get_grid_data(self):
+        form_data = self.current.input.get('form', {})
         return DataGrid(
-            self.current.session.sess_id,
-            Personel,
-            self.current.input.get('page', 1),
-            self.current.input.get('filterColumns', []),
-            self.current.input.get('sortColumns', []),
-            self.column_dict,
-            self.current.input.get('selectors', None),
+            cache_key=self.current.session.sess_id, # unique id
+            model=Personel,
+            page=form_data.get('page', 1),
+            filter_params=form_data.get('filterColumns', []),
+            sort_params=form_data.get('sortColumns', []),
+            columns=self.column_dict,
+            selectors=form_data.get('selectors', None),
             **self.kwargs
         )
 
