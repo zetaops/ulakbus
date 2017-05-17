@@ -29,9 +29,6 @@ class GridCache(Cache):
     def __init__(self, key):
         super(GridCache, self).__init__(":".join(['grid_cache', key]))
 
-    def get_data_to_cache(self):
-        pass
-
 
 class GridQueryCache(Cache):
     """
@@ -42,28 +39,22 @@ class GridQueryCache(Cache):
     def __init__(self, key):
         super(GridQueryCache, self).__init__(":".join(['grid_query_cache', key]))
 
-    def get_data_to_cache(self):
-        pass
-
 
 class DataGrid(object):
-
     def __init__(self, cache_key, model, page, filter_params, sort_params, columns, selectors=None,
                  **kwargs):
         self.model = model
         self.grid_cache = GridCache(cache_key)
+        self.grid_cache_data = self.grid_cache.get() or {}
         self.page = page
         self.filter_params = filter_params
         self.sort_params = sort_params
         self.columns = columns
         self.default_fields = kwargs.get('default_fields', [])
         self.column_types_dict = kwargs.get('column_types_dict', {})
-        if selectors:
-            self.selectors = selectors
-        elif self.grid_cache.get():
-            self.selectors = self.grid_cache.get().get('selectors', None)
-        else:
-            self.selectors = self.prepare_selectors()
+
+        self.selectors = selectors or self.grid_cache_data.get('selectors',
+                                                               self.prepare_selectors())
         self.filter_conditions = {
             # STARTS_WITH
             2: '__startswith',
@@ -88,15 +79,11 @@ class DataGrid(object):
         self.select_fields = self.column_types_dict.get('select_fields', {})
         self.multiselect_fields = self.column_types_dict.get('multiselect_fields', {})
         self.range_date_fields = self.column_types_dict.get('range_date_fields', [])
-        if self.grid_cache.get():
-            self.field_filter_type_map = self.grid_cache.get().get('field_filter_type_map', {})
-            self.select_options_dict = self.grid_cache.get().get('select_options_dict', {})
-            self.column_defs = self.grid_cache.get().get('column_defs',
-                                                         None) or self.prepare_column_defs()
-        else:
-            self.field_filter_type_map = {}
-            self.select_options_dict = {}
-            self.column_defs = self.prepare_column_defs()
+
+        self.field_filter_type_map = self.grid_cache_data.get('field_filter_type_map', {})
+        self.select_options_dict = self.grid_cache_data.get('select_options_dict', {})
+        self.column_defs = self.grid_cache_data.get('column_defs', self.prepare_column_defs())
+
         self.grid_cache.set(
             {
                 'selectors': self.selectors,
@@ -194,10 +181,22 @@ class DataGrid(object):
         return selectors
 
     def build_response(self):
-        key = hash(":".join([str(self.page), str(self.filter_params), str(self.sort_params),
-                             str(self.selectors)]))
-        key = str(key)
-        query_cache = GridQueryCache(key)
+        import json
+        import hashlib
+
+        cache_key = hashlib.sha256(
+            "%s%s%s%s" % (
+                self.page,
+                json.dumps(self.filter_params),
+                json.dumps(self.sort_params),
+                json.dumps(self.selectors),
+            )
+
+        ).hexdigest()
+
+        cache_key = hashlib.sha256(cache_key).hexdigest()
+
+        query_cache = GridQueryCache(cache_key)
         cached_response = query_cache.get()
         if cached_response:
             return cached_response
@@ -274,7 +273,7 @@ class DataGrid(object):
 
         data_size = self.model.objects.all(**query_params).count()
         if not csv:
-            qs = self.model.objects.set_params(start=(self.page-1)*page_size, rows=page_size)
+            qs = self.model.objects.set_params(start=(self.page - 1) * page_size, rows=page_size)
         else:
             qs = self.model.objects
 
@@ -334,9 +333,3 @@ class DataGrid(object):
         for so in sel_opts:
             sd[str(so['value'])] = so['label']
         return sd
-
-
-
-
-
-
