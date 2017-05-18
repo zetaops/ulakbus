@@ -74,24 +74,31 @@ class LabEkleForm(JsonForm):
     class Meta:
         title = _(u"Laboratuvar Seç")
 
-    lab = fields.String(_(u"Laboratuvar"))
-    lab_ekle = fields.Button(_(u"Ekle"))
+    room_choices = prepare_choices_for_model(Room)
+    lab = fields.String(_(u"Laboratuvar"), choices=room_choices, default=room_choices[0][0])
+    lab_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class DemirbasEkleForm(JsonForm):
     class Meta:
         title = _(u"Demirbaş Seç")
 
-    demirbas = fields.String(_(u"Demirbaş"))
-    demirbas_ekle = fields.Button(_(u"Ekle"))
+    demirbas_choices = prepare_choices_for_model(Demirbas)
+    demirbas = fields.String(_(u"Demirbaş"), choices=demirbas_choices,
+                             default=demirbas_choices[0][0])
+    demirbas_ekle = fields.Button(_(u"Ekle"),  cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class PersonelEkleForm(JsonForm):
     class Meta:
         title = _(u"Personel Seç")
-
-    personel = fields.String(_(u"Personel"))
-    personel_ekle = fields.Button(_(u"Ekle"))
+    personel_choices = prepare_choices_for_model(Personel)
+    personel = fields.String(_(u"Personel"), choices=personel_choices,
+                             default=personel_choices[0][0])
+    personel_ekle = fields.Button(_(u"Ekle"),  cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class ProjeCalisanlariForm(JsonForm):
@@ -284,17 +291,14 @@ class ProjeBasvuru(CrudView):
 
     def lab_ekle(self):
         form = LabEkleForm()
-        form.set_choices_of('lab', prepare_choices_for_model(Room))
         self.form_out(form)
 
     def demirbas_ekle(self):
         form = DemirbasEkleForm()
-        form.set_choices_of('demirbas', prepare_choices_for_model(Demirbas))
         self.form_out(form)
 
     def personel_ekle(self):
         form = PersonelEkleForm()
-        form.set_choices_of('personel', prepare_choices_for_model(Personel))
         self.form_out(form)
 
     def olanak_kaydet(self):
