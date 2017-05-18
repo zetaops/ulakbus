@@ -74,24 +74,31 @@ class LabEkleForm(JsonForm):
     class Meta:
         title = _(u"Laboratuvar Seç")
 
-    lab = fields.String(_(u"Laboratuvar"))
-    lab_ekle = fields.Button(_(u"Ekle"))
+    room_choices = prepare_choices_for_model(Room)
+    lab = fields.String(_(u"Laboratuvar"), choices=room_choices, default=room_choices[0][0])
+    lab_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class DemirbasEkleForm(JsonForm):
     class Meta:
         title = _(u"Demirbaş Seç")
 
-    demirbas = fields.String(_(u"Demirbaş"))
-    demirbas_ekle = fields.Button(_(u"Ekle"))
+    demirbas_choices = prepare_choices_for_model(Demirbas)
+    demirbas = fields.String(_(u"Demirbaş"), choices=demirbas_choices,
+                             default=demirbas_choices[0][0])
+    demirbas_ekle = fields.Button(_(u"Ekle"),  cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class PersonelEkleForm(JsonForm):
     class Meta:
         title = _(u"Personel Seç")
-
-    personel = fields.String(_(u"Personel"))
-    personel_ekle = fields.Button(_(u"Ekle"))
+    personel_choices = prepare_choices_for_model(Personel)
+    personel = fields.String(_(u"Personel"), choices=personel_choices,
+                             default=personel_choices[0][0])
+    personel_ekle = fields.Button(_(u"Ekle"),  cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class ProjeCalisanlariForm(JsonForm):
@@ -124,7 +131,7 @@ class UniversiteDisiUzmanForm(JsonForm):
         unvan = fields.String(_(u"Unvan"), readonly=True)
         kurum = fields.String(_(u"Kurum"), readonly=True)
         tel = fields.String(_(u"Telefon"), readonly=True)
-        faks = fields.String(_(u"Faks"), readonly=True)
+        faks = fields.String(_(u"Faks"), readonly=True, required=False)
         eposta = fields.String(_(u"E-posta"), readonly=True)
 
     ileri = fields.Button(_(u"İleri"))
@@ -153,7 +160,6 @@ class UniversiteDisiDestekForm(JsonForm):
 class YurutucuTecrubesiForm(JsonForm):
     class Meta:
         title = _(u"Yürütücü Tecrübesi")
-        always_blank = False
 
     class AkademikFaaliyet(ListNode):
         ad = fields.String(_(u'Ad'), readonly=True)
@@ -260,19 +266,39 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
         self.current.output["meta"]["allow_add_listnode"] = False
 
+    def arastirma_olanagi_senkronize_et(self):
+        value_map = {
+            'lab': _(u"Laboratuvar"),
+            'demirbas': _(u"Demirbaş"),
+            'personel': _(u"Personel")
+        }
+        query_map = {
+            'lab': Room,
+            'demirbas': Demirbas,
+            'personel': Personel
+        }
+        if len(self.current.task_data['hedef_proje']['arastirma_olanaklari']) != len(
+                self.current.task_data['ArastirmaOlanaklariForm']['Olanak']):
+            list_to_remove = list(self.current.task_data['hedef_proje']['arastirma_olanaklari'])
+            for aotd in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
+                item = {
+                    'ad': query_map[aotd.items()[0][0]].objects.get(aotd.items()[0][1]).__unicode__(),
+                    'tur': value_map[aotd.items()[0][0]]
+                }
+                if item not in self.current.task_data['ArastirmaOlanaklariForm']['Olanak']:
+                    list_to_remove.remove(aotd)
+            self.current.task_data['hedef_proje']['arastirma_olanaklari'] = list_to_remove
+
     def lab_ekle(self):
         form = LabEkleForm()
-        form.set_choices_of('lab', prepare_choices_for_model(Room))
         self.form_out(form)
 
     def demirbas_ekle(self):
         form = DemirbasEkleForm()
-        form.set_choices_of('demirbas', prepare_choices_for_model(Demirbas))
         self.form_out(form)
 
     def personel_ekle(self):
         form = PersonelEkleForm()
-        form.set_choices_of('personel', prepare_choices_for_model(Personel))
         self.form_out(form)
 
     def olanak_kaydet(self):
