@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_01849bd">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="BAP" />
+      </camunda:properties>
+    </bpmn:extensionElements>
     <bpmn:participant id="Participant_0xh19uz" name="BAP Fasıl Aktarım Talep" processRef="bap_fasil_aktarim_talep" />
   </bpmn:collaboration>
   <bpmn:process id="bap_fasil_aktarim_talep" name="BAP Fasıl Aktarım Talep" isExecutable="false">
@@ -106,7 +111,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='show']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_174e3qw" sourceRef="detay_goster" targetRef="kalem_listesi" />
-    <bpmn:userTask id="detay_goster" name="Kalem Detay Göster" camunda:assignee="bap.bap_butce_plani.BapButcePlani.show">
+    <bpmn:userTask id="detay_goster" name="Kalem Detay Göster" camunda:assignee="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.talep_detay_goster">
       <bpmn:incoming>SequenceFlow_0iy8xjj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_174e3qw</bpmn:outgoing>
     </bpmn:userTask>

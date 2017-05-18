@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
   <bpmn:collaboration id="Collaboration_1u87znh">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="BAP" />
+      </camunda:properties>
+    </bpmn:extensionElements>
     <bpmn:participant id="Participant_1ie1rh4" name="Bap Ek Bütçe Talebi" processRef="bap_ek_butce_talep" />
   </bpmn:collaboration>
   <bpmn:process id="bap_ek_butce_talep" name="Bap Ek Bütçe Talebi" isExecutable="false">
@@ -133,7 +138,7 @@
       <bpmn:outgoing>SequenceFlow_1qw9kui</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1458r0a</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="butce_kalemini_goster" name="Butce Kalemini Goster" camunda:assignee="bap.bap_butce_plani.BapButcePlani.show">
+    <bpmn:userTask id="butce_kalemini_goster" name="Butce Kalemini Goster" camunda:assignee="bap.proje_talep.bap_ek_butce_talep.EkButceTalep.talep_detay_goster">
       <bpmn:incoming>SequenceFlow_1t8ibr3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1j3mg2k</bpmn:outgoing>
     </bpmn:userTask>
@@ -179,7 +184,7 @@
       <bpmn:outgoing>SequenceFlow_1jn3sf3</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1au55lb" sourceRef="ExclusiveGateway_017czmp" targetRef="talep_detay_goster">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='show']]></bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='goster']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="talep_detay_goster" name="Detay Göster" camunda:assignee="bap.proje_talep.bap_ek_butce_talep.EkButceTalep.talep_detay_goster">
       <bpmn:incoming>SequenceFlow_1au55lb</bpmn:incoming>
