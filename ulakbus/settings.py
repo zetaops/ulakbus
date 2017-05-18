@@ -199,7 +199,6 @@ OBJECT_MENU = {
 
 AUTO_IMPORT_MODULES.extend([
     'ulakbus.views.system',
-    'ulakbus.views.personel.raporlama_ui_grid_view'
 ])
 
 ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')

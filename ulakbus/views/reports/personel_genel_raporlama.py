@@ -8,7 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from collections import OrderedDict
 
-from ulakbus.data_grid import DataGrid
+from ulakbus.lib.data_grid import DataGrid
 
 from ulakbus.models import Personel
 from ulakbus.models import Unit
@@ -16,11 +16,10 @@ from zengine.lib.catalog_data import catalog_data_manager
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 
-
 from ulakbus.lib.cache import ModelLabelValue
 
-class PersonelDataGridView(CrudView):
 
+class PersonelDataGridView(CrudView):
     def __init__(self, current=None):
         super(PersonelDataGridView, self).__init__(current)
         # Gösterilecek alanlar listesi.
@@ -102,7 +101,7 @@ class PersonelDataGridView(CrudView):
     def get_grid_data(self):
         form_data = self.current.input.get('form', {})
         return DataGrid(
-            cache_key=self.current.session.sess_id, # unique id
+            cache_key=self.current.session.sess_id,  # unique id
             model=Personel,
             page=form_data.get('page', 1),
             filter_params=form_data.get('filterColumns', []),
@@ -137,7 +136,3 @@ def prepare_options_from_catalog_data(catalog_key):
             "label": item['name']
         } for item in catalog_data_manager.get_all(catalog_key)
     ]
-
-
-
-

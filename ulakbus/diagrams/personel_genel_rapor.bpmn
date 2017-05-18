@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
-  <bpmn:collaboration id="Collaboration_12li5k4">
-    <bpmn:participant id="Participant_067idbb" name="Personel Data Grid" processRef="personel_data_grid" />
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.6.0">
+  <bpmn:collaboration id="personel_isleri">
+    <bpmn:participant id="personel_genel_raporlama" name="Personel Genel Rapor" processRef="personel_genel_rapor" />
   </bpmn:collaboration>
-  <bpmn:process id="personel_data_grid" isExecutable="false">
+  <bpmn:process id="personel_genel_rapor" isExecutable="false">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="Raporlar" />
+      </camunda:properties>
+    </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1906pvf</bpmn:outgoing>
     </bpmn:startEvent>
@@ -12,13 +17,13 @@
       <bpmn:outgoing>SequenceFlow_0up632y</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0ntw4kg</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="DataGridGoster" name="Data Grid Göster" camunda:assignee="personel.data_grid_view.PersonelDataGridView.grid_goster">
+    <bpmn:userTask id="DataGridGoster" name="Data Grid Göster" camunda:assignee="reports.personel_genel_raporlama.PersonelDataGridView.grid_goster">
       <bpmn:incoming>SequenceFlow_0up632y</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0l70203</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1906pvf</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_017yob7</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Task_1ndneqx" name="CSV Disa Aktar" camunda:class="personel.data_grid_view.PersonelDataGridView.csv_indir">
+    <bpmn:serviceTask id="Task_1ndneqx" name="CSV Disa Aktar" camunda:class="reports.personel_genel_raporlama.PersonelDataGridView.csv_indir">
       <bpmn:incoming>SequenceFlow_0ntw4kg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0l70203</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -31,8 +36,8 @@
     <bpmn:sequenceFlow id="SequenceFlow_1906pvf" sourceRef="StartEvent_1" targetRef="DataGridGoster" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_12li5k4">
-      <bpmndi:BPMNShape id="Participant_067idbb_di" bpmnElement="Participant_067idbb">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="personel_isleri">
+      <bpmndi:BPMNShape id="Participant_067idbb_di" bpmnElement="personel_genel_raporlama">
         <dc:Bounds x="330" y="125" width="600" height="250" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
