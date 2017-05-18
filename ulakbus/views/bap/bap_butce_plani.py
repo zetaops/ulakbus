@@ -90,10 +90,14 @@ class BapButcePlani(CrudView):
             self.current.task_data['bap_proje_id'] = self.input['form']['proje']
         CrudView.list(self)
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        if 'GerekliBilgiGirForm' in self.current.task_data:
+            ad = self.current.task_data['GerekliBilgiGirForm']['ad']
+        else:
+            ad = proje.ad
         toplam = sum(BAPButcePlani.objects.filter(ilgili_proje=proje).values_list('toplam_fiyat'))
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
                                        'actions': ''})
-        form = JsonForm(title=_(u"%s projesi için Bütçe Planı") % proje.ad)
+        form = JsonForm(title=_(u"%s projesi için Bütçe Planı") % ad)
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
         form.bitir = fields.Button(_(u"Bitir"), cmd='bitir')
         self.form_out(form)

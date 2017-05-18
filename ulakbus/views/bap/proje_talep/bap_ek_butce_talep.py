@@ -148,7 +148,13 @@ class EkButceTalep(CrudView):
              'gerekce': self.object.gerekce}
 
     def onaya_yolla(self):
-        if 'yeni_butceler' not in self.current.task_data:
+        duzenlenen = False
+        for key, talep in self.current.task_data['yeni_butceler'].iteritems():
+            if not talep['durum'] == 'Düzenlenmedi':
+                duzenlenen = True
+                break
+
+        if 'yeni_butceler' not in self.current.task_data or not duzenlenen:
             self.current.task_data['cmd'] = 'talep_yok'
             self.current.output['msgbox'] = {
                 'type': 'warning', "title": _(u'Ek Bütçe Talebi'),
