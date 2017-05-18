@@ -109,8 +109,8 @@ class TestCase(BaseTestCase):
         # butce1 goruntuleme
         resp = self.client.post(cmd='show', object_id=butce1.key)
 
-        assert resp.json['object']['Adet'] == str(obj_data['butce1']['adet'])
-        assert resp.json['object']['Toplam Fiyat'] == str(obj_data['butce1']['toplam_fiyat'])
+        assert resp.json['object']['Yeni Adet'] == str(obj_data['butce1']['adet'])
+        assert resp.json['object']['Yeni Toplam Fiyat'] == str(obj_data['butce1']['toplam_fiyat'])
 
         self.client.post(form={'tamam': 1})
 
@@ -133,8 +133,8 @@ class TestCase(BaseTestCase):
 
         # butce2 goruntuleme
         resp = self.client.post(cmd='show', object_id=butce2.key)
-        assert resp.json['object'][u'Birim Fiyat'] == str(obj_data['butce2']['birim_fiyat'])
-        assert resp.json['object'][u'Toplam Fiyat'] == str(obj_data['butce2']['toplam_fiyat'])
+        assert resp.json['object'][u'Yeni Birim Fiyat'] == str(obj_data['butce2']['birim_fiyat'])
+        assert resp.json['object'][u'Yeni Toplam Fiyat'] == str(obj_data['butce2']['toplam_fiyat'])
 
         self.client.post(form={'tamam': 1})
 

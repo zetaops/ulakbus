@@ -42,19 +42,55 @@ class FasilAktarimTalep(CrudView):
         if 'form' in self.input and 'proje' in self.input['form']:
             self.current.task_data['bap_proje_id'] = self.input['form']['proje']
 
-        CrudView.list(self)
+        if 'fasil_islemleri' not in self.current.task_data:
+            self.current.task_data['fasil_islemleri'] = defaultdict(dict)
+
+        self.output['objects'] = [['Muhasebe Kodu', 'Kod Adı', 'Alınacak Malzemenin Adı',
+                                   'Birim Fiyat', 'Adet', 'Toplam Fiyat', 'Durum']]
 
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        butce_planlari = BAPButcePlani.objects.all(ilgili_proje=proje)
+        for butce in butce_planlari:
+            if butce.key not in self.current.task_data['fasil_islemleri']:
+                butce.durum = 4
+                butce.save()
+                self.current.task_data['fasil_islemleri'][butce.key] = {
+                    'durum': butce.get_durum_display(),
+                    'kod_ad': butce.kod_adi,
+                    'ad': butce.ad,
+                    'eski_adet': butce.adet,
+                    'yeni_adet': '',
+                    'eski_birim_fiyat': butce.birim_fiyat,
+                    'yeni_birim_fiyat': '',
+                    'eski_toplam_fiyat': butce.toplam_fiyat,
+                    'yeni_toplam_fiyat': '',
+                    'gerekce': butce.gerekce
+                }
+            item = {
+                "fields": [butce.muhasebe_kod,
+                           butce.kod_adi,
+                           butce.ad,
+                           str(butce.birim_fiyat),
+                           str(butce.adet),
+                           str(butce.toplam_fiyat),
+                           self.current.task_data['fasil_islemleri'][butce.key]['durum']],
+                "actions": [{'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal',
+                            'show_as': 'button'},
+                            {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
+                             'show_as': 'button'}],
+                'key': butce.key
+            }
+            self.output['objects'].append(item)
         self.current.task_data['toplam_butce'] = proje.kabul_edilen_butce
 
-        toplam = sum(BAPButcePlani.objects.filter(ilgili_proje=proje).values_list('toplam_fiyat'))
+        toplam = sum(butce_planlari.values_list('toplam_fiyat'))
         kullanilabilir_butce = proje.kabul_edilen_butce - toplam
         self.output['objects'].append({'fields': ['TOPLAM :', '', '', '', '', str(toplam)],
                                        'actions': ''})
         self.output['objects'].append({'fields': ['---', '---', '---', '---', '---', '---'],
                                        'actions': ''})
         self.output['objects'].append({'fields': ['TOPLAM BÜTÇE :', str(proje.kabul_edilen_butce),
-                                                  '', 'KULLANILABİLİR BÜTÇE :',
+                                                  '', '', 'KULLANILABİLİR BÜTÇE :',
                                                   str(kullanilabilir_butce), ''],
                                        'actions': ''})
 
@@ -113,17 +149,19 @@ class FasilAktarimTalep(CrudView):
             if hasattr(self.object, key):
                 self.object.setattr(key, value)
 
+        self.object.durum = 3
         self.current.task_data['fasil_islemleri'][self.object.key] = \
-            {'kalem_ad': self.object.ad,
+            {'ad': self.object.ad,
+             'durum': self.object.get_durum_display(),
+             'kod_ad': self.object.kod_adi,
              'eski_adet': kalem.adet,
              'yeni_adet': self.object.adet,
              'eski_birim_fiyat': kalem.birim_fiyat,
              'yeni_birim_fiyat': self.object.birim_fiyat,
              'eski_toplam_fiyat': kalem.toplam_fiyat,
              'yeni_toplam_fiyat': self.object.toplam_fiyat,
+             'gerekce': self.object.gerekce,
              'aciklama': self.input['form']['aciklama']}
-
-        self.object.save()
 
     def onaya_yolla(self):
         if 'fasil_islemleri' not in self.current.task_data:
@@ -156,7 +194,7 @@ class FasilAktarimTalep(CrudView):
                                    'Eski Toplam Fiyat', 'Yeni Toplam Fiyat']]
         for key, talep in self.current.task_data['fasil_islemleri'].iteritems():
             item = {
-                "fields": [talep['kalem_ad'],
+                "fields": [talep['ad'],
                            str(talep['eski_birim_fiyat']),
                            str(talep['yeni_birim_fiyat']),
                            str(talep['eski_toplam_fiyat']),
@@ -180,7 +218,7 @@ class FasilAktarimTalep(CrudView):
 
         data = self.current.task_data['fasil_islemleri'][self.object.key]
 
-        obj_data = {'Kalem Adı': data['kalem_ad'],
+        obj_data = {'Kalem Adı': data['ad'],
                     'Eski Adet': str(data['eski_adet']),
                     'Yeni Adet': str(data['yeni_adet']),
                     'Eski Birim Fiyat': str(data['eski_birim_fiyat']),

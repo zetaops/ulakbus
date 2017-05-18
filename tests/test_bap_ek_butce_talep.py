@@ -31,11 +31,12 @@ class TestCase(BaseTestCase):
         gundem_sayisi = BAPGundem.objects.filter(gundem_tipi=2, proje=proje).count()
 
         object_form = {'ad': 'Araba',
-                             'adet': 1,
-                             'birim_fiyat': 100,
-                             'gerekce': 'Yol için',
-                             'toplam_fiyat': 120,
-                             'kaydet': 1}
+                       'adet': 1,
+                       'birim_fiyat': 100,
+                       'gerekce': 'Yol için',
+                       'toplam_fiyat': 120,
+                       'kaydet': 1}
+
         butce = BAPButcePlani()
 
         for i in range(3):

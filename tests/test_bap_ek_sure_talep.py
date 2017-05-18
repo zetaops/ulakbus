@@ -86,4 +86,3 @@ class TestCase(BaseTestCase):
         assert len(gundem) == 1
 
         proje.delete()
-        gundem.delete()
