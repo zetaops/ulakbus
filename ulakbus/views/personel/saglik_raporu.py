@@ -137,9 +137,9 @@ Bilgilerin bulunduğu raporu silmek istiyor musunuz?""") % {
 
     @obj_filter
     def saglik_raporu_islem(self, obj, result):
-        result['actions'].extend([
+        result['actions'] = [
             {'name': _(u'Sil'), 'cmd': 'sil', 'mode': 'normal', 'show_as': 'button'},
-            {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'}])
+            {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'}]
 
     @list_query
     def list_by_personel_id(self, queryset):

@@ -38,8 +38,6 @@ class TestCase(BaseTestCase):
             form={'kaydet': 1, 'guz_baslangic_tarihi': '02.09.2017', 'guz_bitis_tarihi': '01.02.2018',
                   'bahar_baslangic_tarihi': '02.02.2018', 'bahar_bitis_tarihi': '01.07.2018'})
 
-        # Solr ve Riak arasındaki gecikmeden dolayı 1 saniye bekletilir.
-        time.sleep(1)
         # Yeni dönemler eklendikten sonraki dönem sayısı
         son_donem_sayisi = Donem.objects.count()
 
