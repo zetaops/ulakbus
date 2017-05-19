@@ -47,7 +47,7 @@ class Personel(Model):
     web_sitesi = field.String(_(u"Web Sitesi"))
     yayinlar = field.String(_(u"Yayınlar"))
     projeler = field.String(_(u"Projeler"))
-    kan_grubu = field.String(_(u"Kan Grubu"))
+    kan_grubu = field.Integer(_(u"Kan Grubu"), choices='kan_grubu')
     ehliyet = field.String(_(u"Ehliyet"))
     verdigi_dersler = field.String(_(u"Verdiği Dersler"))
     biyografi = field.Text(_(u"Biyografi"))
