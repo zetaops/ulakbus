@@ -20,7 +20,7 @@ class EkButceTalep(CrudView):
     # ---------- Proje Yürütücüsü ----------
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
-        if BAPProje.objects.filter(yurutucu=personel).count() == 0:
+        if BAPProje.objects.filter(yurutucu=personel, durum=5).count() == 0:
             self.current.task_data['onaylandi'] = 1
             self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
                                                           'bulunamadı. Size bağlı olan proje '
@@ -34,7 +34,8 @@ class EkButceTalep(CrudView):
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
-        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel)]
+        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
+                                                                           durum=5)]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
         form.proje = fields.String(choices=data)

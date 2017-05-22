@@ -24,7 +24,8 @@ class EkSureTalebi(CrudView):
     def kontrol(self):
         if 'bap_proje_id' not in self.current.task_data:
             personel = Personel.objects.get(user=self.current.user)
-            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel)]
+            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
+                                                                               durum=5)]
             if data:
                 self.current.task_data['proje_data'] = data
             else:
