@@ -40,7 +40,7 @@ class BAPProjeTurleri(Model):
             title = __(u"Projede Kullanılacak Belgeler")
 
         ad = field.String(__(u"Belgenin İsmi"))
-        gereklilik = field.Boolean(__(u"Belgenin Zorunluluğu"))
+        gereklilik = field.Boolean(__(u"Belgenin Zorunluluğu"), required=False)
 
     class Formlar(ListNode):
         class Meta:

@@ -73,7 +73,7 @@ class BapTakvim(CrudView):
          for tarih in self.input['form']['OnemliTarihler']]
 
         if 'ProjeTuru' in self.input['form']:
-            [takvim.ProjeTuru(proje_turu=BAPProjeTurleri.objects.get(proje['proje_turu']))
+            [takvim.ProjeTuru(proje_turu=BAPProjeTurleri.objects.get(proje['proje_turu_id']))
              for proje in self.input['form']['ProjeTuru']]
 
         takvim.blocking_save()

@@ -43,7 +43,7 @@ class Demirbas(Model):
         search_fields = ['ad', 'tur', 'etiketler', 'marka', 'model', 'demirbas_no']
 
     def __unicode__(self):
-        return _(u"%(ad)s %(tur)s") % {'ad': self.ad, 'tur': self.tur}
+        return _(u"%(ad)s") % {'ad': self.ad}
 
     def rezervasyonlar(self):
         rezervasyonlar = DemirbasRezervasyon.objects.filter(

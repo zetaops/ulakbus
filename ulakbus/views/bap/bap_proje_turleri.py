@@ -35,7 +35,7 @@ class ProjeTuruFormlari(JsonForm):
         file = fields.File(__(u"File"), index=True,
                            random_name=True)  # form eger PDF olarak yulendiyse bu alan kullanilir.
         date = fields.Date(__(u"Form Tarihi"), index=True, format="%d.%m.%Y")
-        gereklilik = fields.Boolean(__(u"Zorunluluk"), type="checkbox")
+        gereklilik = fields.Boolean(__(u"Zorunluluk"), type="checkbox", required=False)
 
     def bap_proje_turu_form(self):
         formlar = Form.objects.all(tag="BAP")
