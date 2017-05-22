@@ -26,6 +26,7 @@ class TestCase(BaseTestCase):
         personel = Personel.objects.get(user=user)
         proje.ad = "Test ek süre talep projesi"
         proje.yurutucu = personel
+        proje.durum = 5
         proje.save()
 
         talep_form = {'ek_sure': 3,
@@ -45,7 +46,9 @@ class TestCase(BaseTestCase):
 
             if i == 1:
                 assert resp.json['msgbox']['title'] == 'Talebiniz Reddedildi.'
-                assert resp.json['msgbox']['msg'] == 'Reddedildi'
+                assert resp.json['msgbox']['msg'] == '%s için yaptığınız %s aylık ek süre talebi ' \
+                                                     'reddedildi. RED Açıklaması: Reddedildi' % (
+                                                      proje.ad, talep_form['ek_sure'])
                 talep_form['ek_sure'] = 2
             if i == 2:
                 assert resp.json['msgbox']['title'] == 'Talebiniz Kabul Edildi.'

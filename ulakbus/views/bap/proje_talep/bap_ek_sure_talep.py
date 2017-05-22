@@ -47,10 +47,9 @@ class EkSureTalebi(CrudView):
                                  typ='warning')
             del self.current.task_data['red_aciklama']
 
-        form = EkSureTalepForm()
-        if 'proje_data' in self.current.task_data:
-            form.proje = fields.String(_(u"Proje Seçiniz"),
-                                       choices=self.current.task_data['proje_data'])
+        form = EkSureTalepForm(self.object, current=self.current)
+        form.proje = fields.String(_(u"Proje Seçiniz"),
+                                   choices=self.current.task_data['proje_data'])
         self.form_out(form)
 
     def onaya_gonder(self):
@@ -99,7 +98,10 @@ class EkSureTalebi(CrudView):
 
     def bilgilendir(self):
         if 'red_aciklama' in self.input['form']:
-            self.current.task_data['red_aciklama'] = self.input['form']['red_aciklama']
+            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+            self.current.task_data['red_aciklama'] = "%s için yaptığınız %s aylık ek süre talebi " \
+                                                     "reddedildi. RED Açıklaması: %s" % (
+                proje.ad, self.current.task_data['ek_sure'], self.input['form']['red_aciklama'])
         else:
             self.current.task_data['onay'] = "Ek süre için bulunduğunuz talep kabul edilmiş " \
                                              "olup, komisyonun gündemine alınmıştır."

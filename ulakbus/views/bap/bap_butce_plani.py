@@ -90,8 +90,8 @@ class BapButcePlani(CrudView):
             self.current.task_data['bap_proje_id'] = self.input['form']['proje']
         CrudView.list(self)
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        if 'GerekliBilgiGirForm' in self.current.task_data:
-            ad = self.current.task_data['GerekliBilgiGirForm']['ad']
+        if 'GenelBilgiGirForm' in self.current.task_data:
+            ad = self.current.task_data['GenelBilgiGirForm']['ad']
         else:
             ad = proje.ad
         toplam = sum(BAPButcePlani.objects.filter(ilgili_proje=proje).values_list('toplam_fiyat'))
