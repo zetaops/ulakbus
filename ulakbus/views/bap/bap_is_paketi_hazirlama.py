@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPIsPaketi, BAPIs
+from ulakbus.models import BAPIsPaketi, BAPIs, BAPProje
 from ulakbus.lib.date_time_helper import iki_tarih_arasinda_mi
 
 from zengine.forms import JsonForm, fields
@@ -196,6 +196,7 @@ class IsPaketiHazirlama(CrudView):
                                                       '%Y-%m-%dT%H:%M:%S.%fZ').date()).save()
                  for bap_is in self.input['form']['Isler']]
         [is_paketi.Isler(isler=b_is) for b_is in isler]
+        is_paketi.proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         is_paketi.blocking_save()
         if 'IsPaketiHazirlaForm' in self.current.task_data:
             del self.current.task_data['IsPaketiHazirlaForm']
