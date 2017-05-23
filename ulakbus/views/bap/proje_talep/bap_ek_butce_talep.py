@@ -20,7 +20,7 @@ class EkButceTalep(CrudView):
     # ---------- Proje Yürütücüsü ----------
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
-        if BAPProje.objects.filter(yurutucu=personel, durum=5).count() == 0:
+        if BAPProje.objects.filter(yurutucu=personel, durum__in=[3, 5]).count() == 0:
             self.current.task_data['onaylandi'] = 1
             self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
                                                           'bulunamadı. Size bağlı olan proje '
@@ -35,7 +35,7 @@ class EkButceTalep(CrudView):
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
         data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
-                                                                           durum=5)]
+                                                                           durum__in=[3, 5])]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
         form.proje = fields.String(choices=data)
@@ -70,14 +70,19 @@ class EkButceTalep(CrudView):
                     'yeni_toplam_fiyat': '',
                     'gerekce': butce.gerekce
                 }
+            durum = self.current.task_data['yeni_butceler'][butce.key]['durum']
             item = {
-                "fields": [butce.muhasebe_kod,
-                           butce.kod_adi,
-                           butce.ad,
-                           str(butce.birim_fiyat),
-                           str(butce.adet),
-                           str(butce.toplam_fiyat),
-                           self.current.task_data['yeni_butceler'][butce.key]['durum']],
+                "fields": [
+                    butce.muhasebe_kod,
+                    butce.kod_adi,
+                    butce.ad,
+                    str(self.current.task_data['yeni_butceler'][butce.key]['yeni_birim_fiyat'])
+                    if butce.durum not in [2, 4] else str(butce.birim_fiyat),
+                    str(self.current.task_data['yeni_butceler'][butce.key]['yeni_adet'])
+                    if butce.durum not in [2, 4] else str(butce.adet),
+                    str(self.current.task_data['yeni_butceler'][butce.key]['yeni_toplam_fiyat'])
+                    if butce.durum not in [2, 4] else str(butce.toplam_fiyat),
+                    durum],
                 "actions": [{'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal',
                             'show_as': 'button'},
                             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
@@ -248,6 +253,9 @@ class EkButceTalep(CrudView):
 
     def bilgilendir(self):
         if 'red_aciklama' in self.input['form']:
+            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+            proje.durum = 3
+            proje.save()
             self.current.task_data['red_aciklama'] = self.input['form']['red_aciklama']
             del self.current.task_data['yeni_butceler']
         else:
