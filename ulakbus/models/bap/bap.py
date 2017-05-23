@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models.form import Form
-from ulakbus.models import Room, Personel, Role
+from ulakbus.models import Room, Personel, Role, User
 from ulakbus.models.demirbas import Demirbas
 from pyoko.lib.utils import lazy_property
 
@@ -112,7 +112,6 @@ class BAPIs(Model):
 
 
 class BAPProje(Model):
-
     durum = field.Integer(_(u"Durum"), choices='bap_proje_durum')
     basvuru_rolu = Role()
 
@@ -208,6 +207,7 @@ class BAPProje(Model):
         class Meta:
             verbose_name = __(u"İşlem Geçmişi")
             verbose_name_plural = __(u"İşlem Geçmişi")
+
         eylem = field.String(_(u"Eylem"))
         aciklama = field.String(_(u"Açıklama"))
         tarih = field.DateTime(_(u"Tarih"))
@@ -304,3 +304,44 @@ class BAPGundem(Model):
 
     def __unicode__(self):
         return "Bap Gündem"
+
+
+class BAPFirma(Model):
+    class Meta:
+        verbose_name = __(u"Firma")
+        verbose_name_plural = __(u"Firmalar")
+
+    ad = field.String(__(u"Firma Adı"))
+    telefon = field.String(__(u"Telefon"))
+    adres = field.String(__(u"Adres"))
+    e_posta = field.String(__(u"E-posta Adresi"))
+    vergi_no = field.String(__(u"Vergi Kimlik Numarası"))
+    vergi_dairesi = field.String(__(u"Vergi Dairesi"))
+    faaliyet_belgesi = field.File(_(u"Firma Faaliyet Belgesi"), random_name=False)
+    faaliyet_belgesi_verilis_tarihi = field.Date(__(u"Faaliyet Belgesi Veriliş Tarihi"))
+    # durum=1: Onay Bekliyor, durum=2: Onaylanmış Firma
+    durum = field.Integer(__(u"Durum"))
+
+    class Yetkililer(ListNode):
+        yetkili = User()
+
+    def __unicode__(self):
+        return "%s" % (self.ad)
+
+
+class BAPTeklif(Model):
+    class Meta:
+        verbose_name = __(u"Firma Teklif")
+        verbose_name_plural = __(u"Firma Teklifleri")
+
+    firma = BAPFirma()
+    butce = BAPButcePlani()
+    # durum=1: Onay Bekliyor, durum=2: Onaylanmış Teklif
+    durum = field.Integer(__(u"Durum"))
+    onay_tarihi = field.Date(__(u"Firma Teklifi Onay Tarihi"))
+
+    class Belgeler(ListNode):
+        belge = field.File(_(u"Firma Teklif Belgesi"), random_name=False)
+
+    def __unicode__(self):
+        return "%s - %s" % (self.firma.ad, self.butce.ad)

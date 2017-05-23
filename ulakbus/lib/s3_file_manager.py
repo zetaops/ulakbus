@@ -31,6 +31,7 @@ class S3FileManager(object):
         filename = None
         if 'name' in kwargs:
             filename, extension = os.path.splitext(kwargs['name'])
+            filename = filename.replace(" ", "")
             extension = extension.replace('.', '')
         if 'ext' in kwargs:
             extension = kwargs['ext']
@@ -39,6 +40,7 @@ class S3FileManager(object):
             typ = kwargs['type']
         if 'random_name' in kwargs:
             filename = None
+
         k.key = "%s.%s" % (filename or uuid4().hex, ext)
         k.content_type = typ
         try:
