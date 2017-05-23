@@ -407,12 +407,14 @@ class TerfiDuzenleForm(JsonForm):
 
 class PersonelTerfiKriterleri(JsonForm):
     baslangic_tarihi = fields.Date(gettext_lazy(u"Başlangıç Tarihi"),
-                                   default=datetime.date.today().strftime('d.%m.%Y'))
+                                   default=datetime.date.today().strftime('%d.%m.%Y'))
 
     bitis_tarihi = fields.Date(gettext_lazy(u"Bitiş Tarihi"), default=(
-        datetime.date.today() + datetime.timedelta(days=15)).strftime('d.%m.%Y'))
+        datetime.date.today() + datetime.timedelta(days=15)).strftime('%d.%m.%Y'))
 
-    personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"), choices=[(1, gettext_lazy(u"Akademik")), (2, gettext_lazy(u"İdari"))],
+    personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"),
+                                   choices=[(1, gettext_lazy(u"Akademik")),
+                                            (2, gettext_lazy(u"İdari"))],
                                    default=2)
 
     devam = fields.Button(gettext_lazy(u"Sorgula"))
