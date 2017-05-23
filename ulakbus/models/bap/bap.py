@@ -146,6 +146,7 @@ class BAPProje(Model):
             verbose_name_plural = __(u"Proje Belgeleri")
 
         belge = field.File(_(u"Belge"), random_name=True)
+        belge_aciklamasi = field.String(_(u"Belge Açıklaması"), required=False)
 
     class ArastirmaOlanaklari(ListNode):
         class Meta:
@@ -186,10 +187,11 @@ class BAPProje(Model):
 
         kurulus = field.String(_(u"Destekleyen Kurulus"))
         tur = field.String(_(u"Destek Türü"))
-        destek_miktari = field.String(_(u"Destek Miktarı"))
+        destek_miktari = field.Float(_(u"Destek Miktarı"))
         verildigi_tarih = field.Date(_(u"Verildiği Tarih"))
         sure = field.Integer(_(u"Süresi(Ay CinsindenBA)"))
         destek_belgesi = field.File(_(u"Destek Belgesi"), random_name=True)
+        destek_belgesi_aciklamasi = field.String(_(u"Belge Açıklaması"), required=False)
 
     # Koordinatörlük tarafından atanacak
     class BAPHakem(ListNode):
@@ -230,6 +232,7 @@ class BAPIsPaketi(Model):
     class Meta:
         verbose_name = __(u"Bap İş Paketi")
         verbose_name_plural = __(u"Bap İş Paketleri")
+        unique_together = [('ad', 'proje')]
 
     ad = field.String(__(u"İş Paketinin Adı"))
     baslama_tarihi = field.Date(__(u"Başlama Tarihi"))

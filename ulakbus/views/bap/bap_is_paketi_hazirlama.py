@@ -3,8 +3,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
-from ulakbus.models import BAPIsPaketi, BAPIs
+from pyoko.exceptions import IntegrityError
+from ulakbus.models import BAPIsPaketi, BAPIs, BAPProje
 from ulakbus.lib.date_time_helper import iki_tarih_arasinda_mi
 
 from zengine.forms import JsonForm, fields
@@ -127,6 +127,13 @@ class IsPaketiHazirlama(CrudView):
         form.yeni_paket = fields.Button(_(u"Yeni İş Paketi Ekle"),cmd = 'add_edit_form')
         form.bitir = fields.Button(_(u"Tamam"), cmd='bitir')
         self.form_out(form)
+        error_msg = self.current.task_data.get('integrity_error_msg', None)
+        if error_msg:
+            self.current.output['msgbox'] = {
+                'type': 'info', "title": _(u'İş Paketi Ekleme Başarısız'),
+                "msg": error_msg
+            }
+            del self.current.task_data['integrity_error_msg']
 
     def add_edit_form(self):
         # if 'IsPaketiHazirlaForm' in self.current.task_data:
@@ -196,7 +203,13 @@ class IsPaketiHazirlama(CrudView):
                                                       '%Y-%m-%dT%H:%M:%S.%fZ').date()).save()
                  for bap_is in self.input['form']['Isler']]
         [is_paketi.Isler(isler=b_is) for b_is in isler]
-        is_paketi.blocking_save()
+        is_paketi.proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        try:
+            is_paketi.blocking_save()
+        except IntegrityError:
+            self.current.task_data['integrity_error_msg'] = _(u"Aynı isimde birden "
+                                                              u"fazla iş paketi olamaz!")
+
         if 'IsPaketiHazirlaForm' in self.current.task_data:
             del self.current.task_data['IsPaketiHazirlaForm']
 
