@@ -76,6 +76,7 @@ class LabEkleForm(JsonForm):
 
     lab = fields.String(_(u"Laboratuvar"))
     lab_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class DemirbasEkleForm(JsonForm):
@@ -84,6 +85,7 @@ class DemirbasEkleForm(JsonForm):
 
     demirbas = fields.String(_(u"Demirbaş"))
     demirbas_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class PersonelEkleForm(JsonForm):
@@ -92,6 +94,7 @@ class PersonelEkleForm(JsonForm):
 
     personel = fields.String(_(u"Personel"))
     personel_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
+    iptal = fields.Button(_(u"İptal"))
 
 
 class ProjeCalisanlariForm(JsonForm):
