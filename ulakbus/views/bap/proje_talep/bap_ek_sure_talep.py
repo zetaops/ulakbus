@@ -25,7 +25,7 @@ class EkSureTalebi(CrudView):
         if 'bap_proje_id' not in self.current.task_data:
             personel = Personel.objects.get(user=self.current.user)
             data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
-                                                                               durum=5)]
+                                                                               durum__in=[3, 5])]
             if data:
                 self.current.task_data['proje_data'] = data
             else:
@@ -90,7 +90,7 @@ class EkSureTalebi(CrudView):
         gundem = BAPGundem()
         gundem.proje = proje
         gundem.gundem_tipi = 4
-        gundem.gundem_aciklama = self.input['form']
+        gundem.gundem_aciklama = self.input['form']['komisyon_aciklama']
         gundem.save()
         proje.durum = 4     # Komisyon Onayı Bekliyor
         proje.save()
@@ -99,6 +99,8 @@ class EkSureTalebi(CrudView):
     def bilgilendir(self):
         if 'red_aciklama' in self.input['form']:
             proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+            proje.durum = 3
+            proje.save()
             self.current.task_data['red_aciklama'] = "%s için yaptığınız %s aylık ek süre talebi " \
                                                      "reddedildi. RED Açıklaması: %s" % (
                 proje.ad, self.current.task_data['ek_sure'], self.input['form']['red_aciklama'])

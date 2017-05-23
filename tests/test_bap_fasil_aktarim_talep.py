@@ -26,6 +26,7 @@ class TestCase(BaseTestCase):
         proje.ad = "Test ek bütçe talep projesi"
         proje.yurutucu = user.personel
         proje.kabul_edilen_butce = 100.0
+        proje.durum = 5
         proje.save()
 
         obj_data = {'butce1': {'ad': 'Benzin',
@@ -192,6 +193,3 @@ class TestCase(BaseTestCase):
         proje.delete()
         butce1.delete()
         butce2.delete()
-        gundem.delete()
-
-

@@ -21,7 +21,10 @@ class FasilAktarimTalep(CrudView):
 
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
-        if BAPProje.objects.filter(yurutucu=personel, durum=5).count() == 0:
+        projeler = BAPProje.objects.filter(yurutucu=personel,
+                                           durum__in=[3, 5],
+                                           kabul_edilen_butce__gt=0)
+        if projeler.count() == 0:
             self.current.task_data['cmd'] = 'bulunamadi'
             self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
                                                           'bulunamadı. Size bağlı olan proje '
@@ -32,7 +35,7 @@ class FasilAktarimTalep(CrudView):
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
         data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
-                                                                           durum=5)]
+                                                                           durum__in=[3, 5])]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
         form.proje = fields.String(choices=data)
@@ -90,7 +93,8 @@ class FasilAktarimTalep(CrudView):
                                        'actions': ''})
         self.output['objects'].append({'fields': ['---', '---', '---', '---', '---', '---'],
                                        'actions': ''})
-        self.output['objects'].append({'fields': ['TOPLAM BÜTÇE :', str(proje.kabul_edilen_butce),
+        self.output['objects'].append({'fields': ['TOPLAM KABUL EDİLEN BÜTÇE :',
+                                                  str(proje.kabul_edilen_butce),
                                                   '', '', 'KULLANILABİLİR BÜTÇE :',
                                                   str(kullanilabilir_butce), ''],
                                        'actions': ''})
@@ -258,6 +262,9 @@ class FasilAktarimTalep(CrudView):
 
     def bilgilendir(self):
         if 'red_aciklama' in self.input['form']:
+            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+            proje.durum = 3
+            proje.save()
             self.current.task_data['red_aciklama'] = self.input['form']['red_aciklama']
             self.current.task_data['cmd'] = 'red_aciklama'
             del self.current.task_data['fasil_islemleri']
