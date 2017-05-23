@@ -12,7 +12,7 @@ from zengine.lib.translation import gettext as _
 from pyoko import ListNode
 import datetime
 from ulakbus.settings import DATE_DEFAULT_FORMAT
-from pyoko.fields import DATE_TIME_FORMAT
+from pyoko.fields import DATE_TIME_FORMAT, File
 
 
 class ProjeTurForm(JsonForm):
@@ -342,7 +342,6 @@ class ProjeBasvuru(CrudView):
         form = YurutucuProjeForm(current=self.current)
 
         for proje in projeler:
-            # todo ad, kurum, miktar
             if proje.UniversiteDisiDestek:
                 kurum = proje.UniversiteDisiDestek[0].kurulus
                 miktar = proje.UniversiteDisiDestek[0].destek_miktari
@@ -395,7 +394,7 @@ class ProjeBasvuru(CrudView):
             proje.ProjeBelgeleri.clear()
             if td['ProjeBelgeForm']['ProjeBelgeleri'] is not None:
                 for belge in td['ProjeBelgeForm']['ProjeBelgeleri']:
-                    proje.ProjeBelgeleri(belge=belge.belge)
+                    proje.ProjeBelgeleri(belge=File(random_name=True, **belge['belge']))
         if 'ProjeCalisanlariForm' in td:
             proje.ProjeCalisanlari.clear()
             for calisan in td['ProjeCalisanlariForm']['Calisan']:
@@ -418,7 +417,7 @@ class ProjeBasvuru(CrudView):
                         destek_miktari=destek['destek_miktari'],
                         verildigi_tarih=tarih,
                         sure=destek['sure'],
-                        destek_belgesi=destek['destek_belgesi']
+                        destek_belgesi=File(random_name=True, **destek['destek_belgesi'])
                     )
 
         if 'UniversiteDisiUzmanForm' in td:
