@@ -230,6 +230,7 @@ class BAPIsPaketi(Model):
     class Meta:
         verbose_name = __(u"Bap İş Paketi")
         verbose_name_plural = __(u"Bap İş Paketleri")
+        unique_together = [('ad', 'proje')]
 
     ad = field.String(__(u"İş Paketinin Adı"))
     baslama_tarihi = field.Date(__(u"Başlama Tarihi"))
