@@ -6,6 +6,8 @@
 
 import datetime
 from math import floor
+
+from ulakbus import settings
 from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi, User
 from zengine.lib.translation import gettext as _
 from zengine.lib.cache import Cache
@@ -32,6 +34,9 @@ parola_kalibi = re.compile(
 
 e_posta_kalibi = re.compile('[^@]+@[^@]+\.[^@]+')
 
+
+def get_file_url(key):
+    return "%s%s" % (settings.S3_PUBLIC_URL, key)
 
 def saat2slot(saat):
     return saat * 60 / SLOT_SURESI

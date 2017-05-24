@@ -210,5 +210,52 @@
       "tr": "Diğer",
       "en": ""
     }
+  },
+  "bap_butce_kalem_durum": {
+    "1": {
+      "tr": "Teklife Açık",
+      "en": ""
+    },
+    "2": {
+      "tr": "Teklif Sonuçlandı",
+      "en": ""
+    },
+    "3": {
+      "tr": "Satın Alma Sürecinde",
+      "en": ""
+    },
+    "4": {
+      "tr": "Teslim Alındı",
+      "en": ""
+    }
+    },
+  "bap_firma_durum": {
+    "1": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "2": {
+      "tr": "Kabul Edilmiş",
+      "en": ""
+    },
+    "3": {
+      "tr": "Reddedilmiş",
+      "en": ""
+    }
+    },
+  "bap_teklif_durum": {
+    "1": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "2": {
+      "tr": "Kabul Edilmiş",
+      "en": ""
+    },
+    "3": {
+      "tr": "Kabul Edilmemiş",
+      "en": ""
+    }
+    }
   }
 }

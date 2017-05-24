@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+  <bpmn:collaboration id="Collaboration_1vq9261">
+    <bpmn:participant id="BapFirmaKayit" name="Bap Firma Kayıt" processRef="bap_firma_kayit" />
+  </bpmn:collaboration>
+  <bpmn:process id="bap_firma_kayit" name="Bap Firma Kayıt" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1fzqy64</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="KayitFormuOlustur" name="Kayıt Formu Oluştur" camunda:assignee="bap.bap_firma_kayit.BapFirmaKayit.kayit_formu_olustur">
+      <bpmn:incoming>SequenceFlow_1fzqy64</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0du6dgi</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="KaydiBitir" name="Kaydı Bitir" camunda:class="bap.bap_firma_kayit.BapFirmaKayit.kaydi_bitir">
+      <bpmn:incoming>SequenceFlow_0du6dgi</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1r0ci7v</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="IslemMesajiGoster" name="İşlem Mesajı Göster" camunda:assignee="bap.bap_firma_kayit.BapFirmaKayit.islem_mesaji_goster">
+      <bpmn:incoming>SequenceFlow_1r0ci7v</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02eywry</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1fzqy64" sourceRef="StartEvent_1" targetRef="KayitFormuOlustur" />
+    <bpmn:sequenceFlow id="SequenceFlow_0du6dgi" sourceRef="KayitFormuOlustur" targetRef="KaydiBitir" />
+    <bpmn:sequenceFlow id="SequenceFlow_1r0ci7v" sourceRef="KaydiBitir" targetRef="IslemMesajiGoster" />
+    <bpmn:endEvent id="EndEvent_0z2l2du">
+      <bpmn:incoming>SequenceFlow_1ia9hbd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_02eywry" sourceRef="IslemMesajiGoster" targetRef="CikisaYonlendir" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ia9hbd" sourceRef="CikisaYonlendir" targetRef="EndEvent_0z2l2du" />
+    <bpmn:serviceTask id="CikisaYonlendir" name="Çıkışa Yönlendir" camunda:class="bap.bap_firma_kayit.BapFirmaKayit.cikisa_yonlendir">
+      <bpmn:incoming>SequenceFlow_02eywry</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ia9hbd</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1vq9261">
+      <bpmndi:BPMNShape id="Participant_0x7ce60_di" bpmnElement="BapFirmaKayit">
+        <dc:Bounds x="429" y="276" width="842" height="248" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="479" y="368" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="497" y="404" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1y4hat3_di" bpmnElement="KayitFormuOlustur">
+        <dc:Bounds x="586" y="346" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1fzqy64_di" bpmnElement="SequenceFlow_1fzqy64">
+        <di:waypoint xsi:type="dc:Point" x="515" y="386" />
+        <di:waypoint xsi:type="dc:Point" x="586" y="386" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="551" y="361" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0du6dgi_di" bpmnElement="SequenceFlow_0du6dgi">
+        <di:waypoint xsi:type="dc:Point" x="686" y="386" />
+        <di:waypoint xsi:type="dc:Point" x="754" y="386" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="720" y="371" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0kxq3i0_di" bpmnElement="KaydiBitir">
+        <dc:Bounds x="754" y="346" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1r0ci7v_di" bpmnElement="SequenceFlow_1r0ci7v">
+        <di:waypoint xsi:type="dc:Point" x="854" y="386" />
+        <di:waypoint xsi:type="dc:Point" x="924" y="386" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="889" y="371" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0xxdfmx_di" bpmnElement="IslemMesajiGoster">
+        <dc:Bounds x="924" y="346" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0z2l2du_di" bpmnElement="EndEvent_0z2l2du">
+        <dc:Bounds x="1188" y="368" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1206" y="404" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_02eywry_di" bpmnElement="SequenceFlow_02eywry">
+        <di:waypoint xsi:type="dc:Point" x="1024" y="386" />
+        <di:waypoint xsi:type="dc:Point" x="1058" y="386" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1041" y="371" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ia9hbd_di" bpmnElement="SequenceFlow_1ia9hbd">
+        <di:waypoint xsi:type="dc:Point" x="1158" y="386" />
+        <di:waypoint xsi:type="dc:Point" x="1188" y="386" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1173" y="371" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0es2a6q_di" bpmnElement="CikisaYonlendir">
+        <dc:Bounds x="1058" y="346" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

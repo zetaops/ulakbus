@@ -51,7 +51,3 @@ class S3FileManager(object):
         k.set_contents_from_string(content)
         bucket.set_acl('public-read', k.key)
         return k.key
-
-    @staticmethod
-    def get_url(key):
-        return "%s%s" % (settings.S3_PUBLIC_URL, key)

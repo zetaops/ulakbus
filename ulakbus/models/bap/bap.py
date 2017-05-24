@@ -265,6 +265,7 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
+    teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_butce_kalem_durum')
 
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
@@ -311,16 +312,16 @@ class BAPFirma(Model):
         verbose_name = __(u"Firma")
         verbose_name_plural = __(u"Firmalar")
 
-    ad = field.String(__(u"Firma Adı"))
-    telefon = field.String(__(u"Telefon"))
-    adres = field.String(__(u"Adres"))
-    e_posta = field.String(__(u"E-posta Adresi"))
-    vergi_no = field.String(__(u"Vergi Kimlik Numarası"))
-    vergi_dairesi = field.String(__(u"Vergi Dairesi"))
-    faaliyet_belgesi = field.File(_(u"Firma Faaliyet Belgesi"), random_name=False)
-    faaliyet_belgesi_verilis_tarihi = field.Date(__(u"Faaliyet Belgesi Veriliş Tarihi"))
-    # durum=1: Onay Bekliyor, durum=2: Onaylanmış Firma
-    durum = field.Integer(__(u"Durum"))
+    ad = field.String(__(u"Firma Adı"), required=True)
+    telefon = field.String(__(u"Telefon"), required=True)
+    adres = field.String(__(u"Adres"), required=True)
+    e_posta = field.String(__(u"E-posta Adresi"), required=True)
+    vergi_no = field.String(__(u"Vergi Kimlik Numarası"), required=True)
+    vergi_dairesi = field.String(__(u"Vergi Dairesi"), required=True)
+    faaliyet_belgesi = field.File(_(u"Firma Faaliyet Belgesi"), random_name=False, required=True)
+    faaliyet_belgesi_verilis_tarihi = field.Date(__(u"Faaliyet Belgesi Veriliş Tarihi"),
+                                                 required=True)
+    durum = field.Integer(__(u"Durum"), choices='bap_firma_durum')
 
     class Yetkililer(ListNode):
         yetkili = User()
@@ -336,12 +337,12 @@ class BAPTeklif(Model):
 
     firma = BAPFirma()
     butce = BAPButcePlani()
-    # durum=1: Onay Bekliyor, durum=2: Onaylanmış Teklif
-    durum = field.Integer(__(u"Durum"))
+    durum = field.Integer(__(u"Durum"), choices='bap_teklif_durum')
     onay_tarihi = field.Date(__(u"Firma Teklifi Onay Tarihi"))
 
     class Belgeler(ListNode):
-        belge = field.File(_(u"Firma Teklif Belgesi"), random_name=False)
+        belge = field.File(_(u"Firma Teklif Belgesi"), random_name=False, required=True)
+        aciklama = field.String(__(u"Belge Açıklaması"), required=True)
 
     def __unicode__(self):
         return "%s - %s" % (self.firma.ad, self.butce.ad)
