@@ -7,6 +7,8 @@ from ulakbus.models import User
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext_lazy as __
+from datetime import datetime
+import hashlib
 
 
 class FirmaKayitForm(JsonForm):
@@ -30,21 +32,22 @@ class BapFirmaKayit(CrudView):
         self.form_out(FirmaKayitForm(self.object, current=self.current))
 
     def kaydi_bitir(self):
+        temp_password = hashlib.sha1(str(datetime.now())).hexdigest()
         form = self.input['form']
         user = User(name=form['isim'], surname=form['soyad'], username=form['k_adi'],
-                    e_mail=form['e_posta'], password='temp_password')
+                    e_mail=form['e_posta'], password=temp_password)
         user.blocking_save()
         self.set_form_data_to_object()
         self.object.Yetkililer(yetkili=user)
         self.object.durum = 1
         self.object.blocking_save()
-        print('sada')
 
     def islem_mesaji_goster(self):
+        firma_adi = self.input['form']['ad']
         self.current.output['msgbox'] = {"type": "info",
                                          "title": __(u'Firma Kaydı İşlem Mesajı'),
                                          "msg": __(
                                              u"%s adlı firmanız için kayıt başvurunuz alınmıştır."
                                              u" Koordinasyon birimi değerlendirmesinden sonra"
                                              u" başvuru sonucunuz hakkında bilgilendirileceksiniz."
-                                             % self.object.ad)}
+                                             % firma_adi)}
