@@ -3,8 +3,6 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import BAPButcePlani
-
 from ulakbus.models import BAPTeklif, BAPFirma
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
@@ -29,6 +27,7 @@ class BapFirmaTeklif(CrudView):
         self.ListForm.add = fields.Button(__(u"Mevcut Tekliflerim"), cmd='mevcut_teklif')
         self.model_class.Meta.verbose_name_plural = __(u"Teklife Açık Bütçe Kalemleri")
         self.firma = BAPFirma.objects.get('DulDXqOk6HeHVnKG4Mvwo5hU1TE')
+        # self.firma = self.current.user.bap_firma_set[0].bap_firma
 
     def ayni_butce_kalemi_teklif_kontrol(self):
         teklif_sayisi = BAPTeklif.objects.filter(butce=self.object, firma=self.firma).count()
@@ -125,12 +124,11 @@ class BapFirmaTeklif(CrudView):
         mevcut = []
         yeni = []
         for belge in form_belgeler:
-            mevcut.append(belge) if isinstance(belge, unicode) else yeni.append(belge)
+            yeni.append(belge) if isinstance(belge, dict) else mevcut.append(belge)
 
         [belge.remove() for belge in teklif.Belgeler if belge.belge not in mevcut]
         [teklif.Belgeler(belge=belge) for belge in yeni]
         teklif.blocking_save()
-        print('ok')
 
     @obj_filter
     def firma_kayit_actions(self, obj, result):
