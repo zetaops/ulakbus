@@ -12,6 +12,11 @@ import hashlib
 
 
 class FirmaKayitForm(JsonForm):
+    """
+    Firma ve firma yetkilisi bilgilerinin girileceği form.
+    
+    """
+
     class Meta:
         exclude = ['durum', 'Yetkililer']
         title = __(u'Firma Bilgileri')
@@ -25,13 +30,31 @@ class FirmaKayitForm(JsonForm):
 
 
 class BapFirmaKayit(CrudView):
+    """
+    Firmaların firma bilgileri ve yetkili bilgisini girerek teklif verebilmek 
+    için sisteme kayıt olma isteği yapmasını sağlayan iş akışı.
+    
+    """
+
     class Meta:
         model = 'BAPFirma'
 
     def kayit_formu_olustur(self):
+        """
+        Firma ve firma yetkilisi bilgilerinin girileceği form oluşturulur.        
+        
+        """
         self.form_out(FirmaKayitForm(self.object, current=self.current))
 
     def kaydi_bitir(self):
+        """
+        Formdan gelen bilgilerle firma nesnesi kaydedilir. Durumu, değerlendirme sürecinde anlamına
+        gelen 1 yapılır. Yetkili bilgilerinden kullanıcı nesnesi oluşturulur ve firmanın Yetkililer
+        list node'una eklenir. Kullanıcı parolasına geçici olarak anlık hashlenmiş string atanır.
+        Firmanın onaylanması durumunda, yeni parola üretilerek, geçici parola değiştirilir ve 
+        yetkili kişiyle yeni üretilen parola paylaşılarak giriş yapması sağlanır. 
+
+        """
         temp_password = hashlib.sha1(str(datetime.now())).hexdigest()
         form = self.input['form']
         user = User(name=form['isim'], surname=form['soyad'], username=form['k_adi'],
@@ -43,6 +66,10 @@ class BapFirmaKayit(CrudView):
         self.object.blocking_save()
 
     def islem_mesaji_goster(self):
+        """
+        Kayıt başvurusunun alındığına dair işlem sonrası mesaj üretilir ve gösterilir. 
+
+        """
         firma_adi = self.input['form']['ad']
         self.current.output['msgbox'] = {"type": "info",
                                          "title": __(u'Firma Kaydı İşlem Mesajı'),
