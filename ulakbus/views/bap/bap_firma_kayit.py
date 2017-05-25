@@ -29,6 +29,18 @@ class FirmaKayitForm(JsonForm):
     kaydi_bitir = fields.Button(__(u"Kaydı Bitir"))
 
 
+class IslemMesajiForm(JsonForm):
+    """
+    Firma kayıt başvurusu sonrası gösterilecek form.
+
+    """
+
+    class Meta:
+        title = __(u'Firma Kaydı İşlem Mesajı')
+
+    tamam = fields.Button(__(u'Tamam'))
+
+
 class BapFirmaKayit(CrudView):
     """
     Firmaların firma bilgileri ve yetkili bilgisini girerek teklif verebilmek 
@@ -71,10 +83,9 @@ class BapFirmaKayit(CrudView):
 
         """
         firma_adi = self.input['form']['ad']
-        self.current.output['msgbox'] = {"type": "info",
-                                         "title": __(u'Firma Kaydı İşlem Mesajı'),
-                                         "msg": __(
-                                             u"%s adlı firmanız için kayıt başvurunuz alınmıştır."
-                                             u" Koordinasyon birimi değerlendirmesinden sonra"
-                                             u" başvuru sonucunuz hakkında bilgilendirileceksiniz."
-                                             % firma_adi)}
+        form = IslemMesajiForm(current=self.current)
+        form.help_text = __(
+            u"%s adlı firmanız için kayıt başvurunuz alınmıştır. Koordinasyon birimi "
+            u"değerlendirmesinden sonra başvuru sonucunuz hakkında bilgilendirileceksiniz."
+            % firma_adi)
+        self.form_out(form)
