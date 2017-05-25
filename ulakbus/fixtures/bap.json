@@ -210,5 +210,33 @@
       "tr": "Diğer",
       "en": ""
     }
+  },
+  "bap_proje_degerlendirme_sonuc": {
+    "1": {
+      "tr": "Olumlu/Proje Desteklenmelidir",
+      "en": "Affirmative/The Project should be Supported"
+    },
+    "2": {
+      "tr": "Olumsuz/Proje Desteklenmemelidir",
+      "en": "Negative/The Project SHOULD NOT be Supported"
+    }
+  },
+  "bap_proje_degerlendirme_secenekler": {
+    "1": {
+      "tr": "Çok İyi",
+      "en": "Very Good"
+    },
+    "2": {
+      "tr": "İyi",
+      "en": "Good"
+    },
+    "3": {
+      "tr": "Yeterli",
+      "en": "Satisfactory"
+    },
+    "4": {
+      "tr": "Yetersiz",
+      "en": "Unsatisfactory"
+    }
   }
 }

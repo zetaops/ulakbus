@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.models.form import Form
-from ulakbus.models import Room, Personel, Role
+from ulakbus.models import Room, Personel, Role, User
 from ulakbus.models.demirbas import Demirbas
 from pyoko.lib.utils import lazy_property
 
@@ -211,6 +211,17 @@ class BAPProje(Model):
         eylem = field.String(_(u"Eylem"))
         aciklama = field.String(_(u"Açıklama"))
         tarih = field.DateTime(_(u"Tarih"))
+
+    class ProjeDegerlendirmeleri(ListNode):
+        class Meta:
+            verbose_name = __(u"Proje Değerlendirmesi")
+            verbose_name_plural = __(u"Proje Değerlendirmeleri")
+
+        user = User()
+        role = Role()
+        form_data = field.Text(_(u"Form Data"))
+        degerlendirme_sonucu = field.Integer(_(u"Değerlendirme Sonucu"),
+                                             choices="bap_proje_degerlendirme")
 
     @lazy_property
     def yurutucu_diger_projeler(self):
