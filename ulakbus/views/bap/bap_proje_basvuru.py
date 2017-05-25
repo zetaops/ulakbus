@@ -149,6 +149,7 @@ class UniversiteDisiDestekForm(JsonForm):
                                       readonly=True)
         sure = fields.Integer(_(u"Süresi(Ay Cinsinden)"), readonly=True)
         destek_belgesi = fields.File(_(u"Destek Belgesi"), random_name=True)
+        destek_belgesi_aciklamasi = fields.String(_(u"Belge Açıklaması"), required=False)
 
     ileri = fields.Button(_(u"İleri"))
 
@@ -245,6 +246,37 @@ class ProjeBasvuru(CrudView):
         if 'arastirma_olanaklari' not in self.current.task_data['hedef_proje']:
             self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
 
+    def proje_belge_kaydet(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        form_proje_belgeleri = self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri']
+
+        for bel in proje.ProjeBelgeleri:
+            f = {
+                'belge': bel.belge,
+                'belge_aciklamasi': bel.belge_aciklamasi
+            }
+            if f not in form_proje_belgeleri:
+                bel.remove()
+
+        # forma eklenmiş ya da düzenlenmiş belgeleri kaydettik
+        for pb in form_proje_belgeleri:
+            if 'file_content' in pb['belge']:
+                proje.ProjeBelgeleri(belge=pb['belge'], belge_aciklamasi=pb['belge_aciklamasi'])
+
+        proje.blocking_save()
+        proje.reload()
+
+        belge_form = []
+        for b in proje.ProjeBelgeleri:
+            f = {
+                'belge': b.belge,
+                'belge_aciklamasi': b.belge_aciklamasi
+            }
+            belge_form.append(f)
+
+        # Dosya adını key ile form datasının içine koymuş olduk
+        self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = belge_form
+
     def arastirma_olanagi_ekle(self):
         form = ArastirmaOlanaklariForm(current=self.current)
         for olanak in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
@@ -322,6 +354,64 @@ class ProjeBasvuru(CrudView):
         form = UniversiteDisiDestekForm(current=self.current)
         self.form_out(form)
 
+    def universite_disi_destek_kaydet(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        form_destek = self.current.task_data['UniversiteDisiDestekForm']['Destek']
+
+        for des in proje.UniversiteDisiDestek:
+            tarih = des.verildigi_tarih.strftime(DATE_TIME_FORMAT)
+            d = {
+                'destek_belgesi': des.destek_belgesi,
+                'destek_miktari': des.destek_miktari,
+                'kurulus': des.kurulus,
+                'sure': des.sure,
+                'tur': des.tur,
+                'verildigi_tarih': tarih,
+                'destek_belgesi_aciklamasi': des.destek_belgesi_aciklamasi
+            }
+
+            if d not in form_destek:
+                des.remove()
+
+        # forma eklenmiş ya da düzenlenmiş belgeleri kaydettik
+        for fd in form_destek:
+            if 'file_content' in fd['destek_belgesi']:
+                try:
+                    tarih = datetime.datetime.strptime(
+                        fd['verildigi_tarih'], DATE_TIME_FORMAT).date()
+                except ValueError:
+                    tarih = datetime.datetime.strptime(fd['verildigi_tarih'],
+                                                       DATE_DEFAULT_FORMAT).date()
+                proje.UniversiteDisiDestek(
+                    destek_belgesi=fd['destek_belgesi'],
+                    destek_miktari=fd['destek_miktari'],
+                    kurulus=fd['kurulus'],
+                    sure=fd['sure'],
+                    tur=fd['tur'],
+                    verildigi_tarih=tarih,
+                    destek_belgesi_aciklamasi=fd['destek_belgesi_aciklamasi']
+                )
+
+        proje.blocking_save()
+        proje.reload()
+
+        destek_form = []
+        for des in proje.UniversiteDisiDestek:
+            tarih = des.verildigi_tarih.strftime(DATE_TIME_FORMAT)
+            f = {
+                'destek_belgesi': des.destek_belgesi,
+                'destek_miktari': des.destek_miktari,
+                'kurulus': des.kurulus,
+                'sure': des.sure,
+                'tur': des.tur,
+                'verildigi_tarih': tarih,
+                'destek_belgesi_aciklamasi': des.destek_belgesi_aciklamasi
+            }
+            destek_form.append(f)
+
+        # Dosya adını key ile form datasının içine koymuş olduk
+        self.current.task_data['UniversiteDisiDestekForm']['Destek'] = destek_form
+
     def yurutucu_tecrubesi(self):
         personel = Personel.objects.get(user_id=self.current.user_id)
         faaliyetler = AkademikFaaliyet.objects.all(personel=personel)
@@ -390,36 +480,12 @@ class ProjeBasvuru(CrudView):
             proje.yontem = td['ProjeDetayForm']['yontem']
         if 'ProjeTurForm' in td:
             proje.tur_id = str(td['ProjeTurForm']['tur_id'])
-        if 'ProjeBelgeForm' in td:
-            proje.ProjeBelgeleri.clear()
-            if td['ProjeBelgeForm']['ProjeBelgeleri'] is not None:
-                for belge in td['ProjeBelgeForm']['ProjeBelgeleri']:
-                    proje.ProjeBelgeleri(belge=File(random_name=True, **belge['belge']))
         if 'ProjeCalisanlariForm' in td:
             proje.ProjeCalisanlari.clear()
             for calisan in td['ProjeCalisanlariForm']['Calisan']:
                 proje.ProjeCalisanlari(ad=calisan['ad'], soyad=calisan['soyad'],
                                        nitelik=calisan['nitelik'],
                                        calismaya_katkisi=calisan['calismaya_katkisi'])
-        if 'UniversiteDisiDestekForm' in td:
-            proje.UniversiteDisiDestek.clear()
-            if td['UniversiteDisiDestekForm']['Destek'] is not None:
-                for destek in td['UniversiteDisiDestekForm']['Destek']:
-                    try:
-                        tarih = datetime.datetime.strptime(
-                            destek['verildigi_tarih'], DATE_TIME_FORMAT).date()
-                    except ValueError:
-                        tarih = datetime.datetime.strptime(destek['verildigi_tarih'],
-                                                           DATE_DEFAULT_FORMAT).date()
-                    proje.UniversiteDisiDestek(
-                        kurulus=destek['kurulus'],
-                        tur=destek['tur'],
-                        destek_miktari=destek['destek_miktari'],
-                        verildigi_tarih=tarih,
-                        sure=destek['sure'],
-                        destek_belgesi=File(random_name=True, **destek['destek_belgesi'])
-                    )
-
         if 'UniversiteDisiUzmanForm' in td:
             proje.UniversiteDisiUzmanlar.clear()
             for uzman in td['UniversiteDisiUzmanForm']['Uzman']:
