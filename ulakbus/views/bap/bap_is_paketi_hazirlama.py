@@ -14,6 +14,7 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 from pyoko import ListNode
 
 from datetime import datetime
+from pyoko.fields import DATE_TIME_FORMAT
 
 
 class IsPaketiHazirlaForm(JsonForm):
@@ -89,7 +90,7 @@ class IsPaketiHazirlama(CrudView):
 
         item = {
             'options': {
-                'maxHeight': 850,
+                'maxHeight': 350,
                 'viewScale': "month",
                 'columnWidth': 80
             },
@@ -101,12 +102,12 @@ class IsPaketiHazirlama(CrudView):
         for is_paketi in is_paketleri:
             item['data'].append(
                 {
-                    'name': is_paketi.ad,
-                    'children': [bap_is.isler.ad for bap_is in is_paketi.Isler]
+                    'name': is_paketi.ad
                 })
             for bap_is in is_paketi.Isler:
                 item['data'].append(
                     {
+                        'parent': is_paketi.ad,
                         'name': bap_is.isler.ad,
                         'tooltips': True,
                         'tasks': [
@@ -115,8 +116,8 @@ class IsPaketiHazirlama(CrudView):
                                 'name': bap_is.isler.ad,
                                 'color': '#a61229',
                                 'from': bap_is.isler.baslama_tarihi.strftime(
-                                    '%Y-%m-%dT%H:%M:%S.%fZ'),
-                                'to': bap_is.isler.bitis_tarihi.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+                                    DATE_TIME_FORMAT),
+                                'to': bap_is.isler.bitis_tarihi.strftime(DATE_TIME_FORMAT)
                             }
                         ]
                     }
