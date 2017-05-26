@@ -238,5 +238,27 @@
       "tr": "Yetersiz",
       "en": "Unsatisfactory"
     }
+  },
+  "bap_proje_hakem_degerlendirme_durum": {
+    "1": {
+      "tr": "Hakem Listesine Eklendi",
+      "en": ""
+    },
+    "2": {
+      "tr": "Hakemlik Daveti Gönderildi",
+      "en": ""
+    },
+    "3": {
+      "tr": "Hakemlik Daveti Kabul Edildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Hakemlik Daveti Reddedildi",
+      "en": ""
+    },
+    "5": {
+      "tr": "Proje Değerlendirildi",
+      "en": ""
+    }
   }
 }

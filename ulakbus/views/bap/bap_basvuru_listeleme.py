@@ -130,7 +130,10 @@ class BasvuruListeleme(CrudView):
         result['actions'] = [
             {'name': _(u'İncele'), 'cmd': 'incele', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'İşlem Geçmişi'), 'cmd': 'islem_gecmisi', 'mode': 'normal',
-             'show_as': 'button'}]
+             'show_as': 'button'},
+            {'name': _(u'Hakem Daveti Gönder'), 'cmd': 'hakem_daveti', 'mode': 'normal',
+             'show_as': 'button'}
+        ]
 
     @list_query
     def list_by_ordered(self, queryset):
