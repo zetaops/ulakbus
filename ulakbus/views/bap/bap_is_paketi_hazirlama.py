@@ -185,10 +185,12 @@ class IsPaketiHazirlama(CrudView):
             self.current.task_data['is_paketi_id'] = self.input['form']['is_paketi']
             data = self.current.task_data['is_paketleri_form'][self.input['form']['is_paketi']]
             [form.Isler(ad=bap_is['ad'],
-                        baslama_tarihi=datetime.strptime(bap_is['baslama_tarihi'],
-                                                         '%Y-%m-%dT%H:%M:%S.%fZ').date(),
-                        bitis_tarihi=datetime.strptime(bap_is['bitis_tarihi'],
-                                                       '%Y-%m-%dT%H:%M:%S.%fZ').date())
+                        baslama_tarihi=datetime.strptime(
+                           bap_is['baslama_tarihi'],
+                           get_format_date(bap_is['baslama_tarihi'])).date(),
+                        bitis_tarihi=datetime.strptime(
+                           bap_is['bitis_tarihi'],
+                           get_format_date(bap_is['bitis_tarihi'])).date())
              for bap_is in data['Isler']]
 
             isler = data.pop('Isler')
@@ -248,6 +250,8 @@ class IsPaketiHazirlama(CrudView):
                            bap_is['bitis_tarihi'],
                            get_format_date(bap_is['bitis_tarihi'])).date()).save()
                  for bap_is in self.input['form']['Isler']]
+        is_paketi.Isler.node_stack = []
+        is_paketi.Isler._data = []
         [is_paketi.Isler(isler=b_is) for b_is in isler]
         is_paketi.proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         try:
