@@ -14,7 +14,8 @@ from boto.s3.key import Key
 from pyoko.conf import settings
 import zipfile
 from ulakbus.lib.common import get_file_url
-from StringIO import StringIO
+from io import BytesIO
+
 
 class S3FileManager(object):
     def __init__(self):
@@ -64,11 +65,11 @@ class S3FileManager(object):
 
         """
         zip_name = "%s.zip" % zip_name
-        temp_zip_file = StringIO()
+        temp_zip_file = BytesIO()
         zip_file = zipfile.ZipFile(temp_zip_file, mode='w', compression=zipfile.ZIP_DEFLATED)
         # keys = ["0ca909b643794135a770d217e7ee2c49.png", "0aa8b23d458140829da74602726453c1.png"]
         for file_key in keys:
-            temp_file = StringIO()
+            temp_file = BytesIO()
             self.bucket.get_key(file_key).get_contents_to_file(temp_file)
             zip_file.writestr(file_key, temp_file.getvalue())
         zip_file.close()
