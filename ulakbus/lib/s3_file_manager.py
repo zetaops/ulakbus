@@ -9,12 +9,12 @@
 import base64
 import os
 from uuid import uuid4
-
 from boto.s3.connection import S3Connection as s3
-
 from boto.s3.key import Key
 from pyoko.conf import settings
-
+import zipfile
+from ulakbus.lib.common import get_file_url
+from StringIO import StringIO
 
 class S3FileManager(object):
     def __init__(self):
@@ -23,11 +23,12 @@ class S3FileManager(object):
                        proxy=settings.S3_PROXY_URL,
                        proxy_port=settings.S3_PROXY_PORT,
                        is_secure=False)
+        self.bucket = self.conn.get_bucket(settings.S3_BUCKET_NAME)
 
     def store_file(self, **kwargs):
-        bucket = self.conn.get_bucket(settings.S3_BUCKET_NAME)
+
         content = kwargs['content']
-        k = Key(bucket)
+        k = Key(self.bucket)
         filename = None
         if 'name' in kwargs:
             filename, extension = os.path.splitext(kwargs['name'])
@@ -49,5 +50,28 @@ class S3FileManager(object):
             content = base64.decodestring(content)
 
         k.set_contents_from_string(content)
-        bucket.set_acl('public-read', k.key)
+        self.bucket.set_acl('public-read', k.key)
         return k.key
+
+    def download_files_as_zip(self, keys, zip_name):
+        """
+        Args:
+            keys(list): s3'e kaydedilen dosyaların key'lerinden oluşan list
+            zip_name(str): oluşturulacak zip dosyasının adı
+
+        Returns:
+            Oluşturulan zip dosyasının url'i döndürülür.
+
+        """
+        zip_name = "%s.zip" % zip_name
+        temp_zip_file = StringIO()
+        zip_file = zipfile.ZipFile(temp_zip_file, mode='w', compression=zipfile.ZIP_DEFLATED)
+        # keys = ["0ca909b643794135a770d217e7ee2c49.png", "0aa8b23d458140829da74602726453c1.png"]
+        for file_key in keys:
+            temp_file = StringIO()
+            self.bucket.get_key(file_key).get_contents_to_file(temp_file)
+            zip_file.writestr(file_key, temp_file.getvalue())
+        zip_file.close()
+        content = base64.b64encode(temp_zip_file.getvalue())
+        self.store_file(name=zip_name, content=content, type='application/zip', ext='zip')
+        return get_file_url(zip_name)

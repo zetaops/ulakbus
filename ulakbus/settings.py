@@ -230,6 +230,7 @@ ALLOWED_FILE_TYPES = {
     'xlsx': ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'xlsx'),
     'docx': ('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'docx'),
     'csv': ('text/csv', 'csv'),
+    'zip': ('application/zip', 'zip')
 }
 
 S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
