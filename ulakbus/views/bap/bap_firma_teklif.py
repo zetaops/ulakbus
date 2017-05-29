@@ -168,6 +168,7 @@ class BapFirmaTeklif(CrudView):
         # Yeni belgeler açıklamalarıyla beraber veritabına kaydedilir.
         [teklif.Belgeler(belge=belge, aciklama=aciklama) for belge, aciklama in yeni]
         teklif.blocking_save()
+        self.task_data_file_guncelle(teklif)
 
     def islem_sonrasi_mesaj(self):
         """
@@ -223,6 +224,20 @@ class BapFirmaTeklif(CrudView):
         [teklif.Belgeler(belge=belge, aciklama=aciklama) for belge, aciklama in form_belgeler]
         teklif.durum = 1
         teklif.blocking_save()
+        self.task_data_file_guncelle(teklif)
+
+    def task_data_file_guncelle(self, teklif):
+        """
+        Task data içerisinde base64 şeklinde dosya ismi ve dosya içeriği tutulan 
+        dosyanın, kaydedildikten sonra form datası dosyanın ismi ile güncellenir.  
+        
+        Args:
+            teklif(obj): BAPTeklif nesnesi 
+
+        """
+        teklif.reload()
+        belge_form = [{'belge': b.belge, 'aciklama': b.aciklama} for b in teklif.Belgeler]
+        self.current.task_data['FirmaTeklifForm']['Belgeler'] = belge_form
 
     @obj_filter
     def firma_kayit_actions(self, obj, result):
