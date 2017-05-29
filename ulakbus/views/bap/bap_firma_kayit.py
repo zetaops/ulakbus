@@ -40,7 +40,7 @@ class IslemMesajiForm(JsonForm):
 
     tamam = fields.Button(__(u'Tamam'))
 
-
+    
 class BapFirmaKayit(CrudView):
     """
     Firmaların firma bilgileri ve yetkili bilgisini girerek teklif verebilmek 
