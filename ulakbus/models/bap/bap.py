@@ -344,4 +344,4 @@ class BAPTeklif(Model):
         aciklama = field.String(__(u"Belge Açıklaması"), required=True)
 
     def __unicode__(self):
-        return "%s - %s" % (self.firma.ad, self.butce.ad)
+        return "%s-%s" % (self.firma.ad, self.butce.ad)

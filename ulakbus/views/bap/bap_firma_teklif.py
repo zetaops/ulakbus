@@ -3,11 +3,11 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import BAPTeklif, BAPFirma
+from ulakbus.models import BAPTeklif
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
-from ulakbus.lib.common import get_file_url
+from ulakbus.lib.s3_file_manager import S3FileManager
 
 
 class FirmaTeklifForm(JsonForm):
@@ -113,14 +113,16 @@ class BapFirmaTeklif(CrudView):
 
     def teklif_belgeleri_indir(self):
         """
-        Seçilen teklife ait teklif belgeleri indirilir.
+        Seçilen teklife ait teklif belgeleri zip dosyası olarak indirilir.
                 
         """
+        s3 = S3FileManager()
         teklif = BAPTeklif.objects.get(self.current.input['data_key'])
-        belge_urls = [get_file_url(belge.belge) for belge in teklif.Belgeler]
+        keys = [belge.belge for belge in teklif.Belgeler]
+        zip_name = "%s-teklif-belgeler" % teklif.__unicode__()
+        zip_url = s3.download_files_as_zip(keys, zip_name)
         self.set_client_cmd('download')
-        # TODO: multiple files should be downloaded as one zip file
-        self.current.output['download_url'] = belge_urls[0]
+        self.current.output['download_url'] = zip_url
 
     def teklif_belgeleri_duzenle(self):
         """
