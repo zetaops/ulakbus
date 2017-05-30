@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
   <bpmn:collaboration id="akademik_faaliyetler">
     <bpmn:participant id="ogretim_elemani" processRef="akademik_faaliyet" />
   </bpmn:collaboration>
@@ -19,6 +19,7 @@
       <bpmn:outgoing>SequenceFlow_1dvm6mz</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_07x8bgj</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1sq7azz</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0fh5jps</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="faaliyet_sec" name="Faaliyet Sec" camunda:assignee="personel.akademik_faaliyet.AkademikFaaliyet.faaliyet_sec">
       <bpmn:incoming>SequenceFlow_1dvm6mz</bpmn:incoming>
@@ -114,6 +115,12 @@
       <bpmn:outgoing>SequenceFlow_1oq24ok</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1ed81q8</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent" name="EndEvent">
+      <bpmn:incoming>SequenceFlow_0fh5jps</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0fh5jps" sourceRef="ExclusiveGateway_06h2gr8" targetRef="EndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='bitir']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="akademik_faaliyetler">
@@ -348,6 +355,19 @@
         <di:waypoint xsi:type="dc:Point" x="147" y="284" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="236.5" y="9" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0k3rgbq_di" bpmnElement="EndEvent">
+        <dc:Bounds x="272" y="374" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="266" y="410" width="48" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fh5jps_di" bpmnElement="SequenceFlow_0fh5jps">
+        <di:waypoint xsi:type="dc:Point" x="290" y="349" />
+        <di:waypoint xsi:type="dc:Point" x="290" y="374" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="305" y="351.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

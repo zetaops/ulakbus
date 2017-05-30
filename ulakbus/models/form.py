@@ -29,13 +29,14 @@ class Form(Model):
                       random_name=True)  # form eger PDF olarak yulendiyse bu alan kullanilir.
     permissions = Permission()
     date = field.Date(_(u"Form Tarihi"), index=True, format="%d.%m.%Y")
+    tag = field.String(_(u"Formun Bağlı olduğu iş akışı"))
 
     class Meta:
         app = 'Form'
         verbose_name = _(u"Form")
         verbose_name_plural = _(u"Formlar")
         list_fields = ['ad', 'date']
-        search_fields = ['ad', 'file']
+        search_fields = ['ad', 'file', 'tag']
 
     def __unicode__(self):
         return '%s %s' % (self.ad, self.date)

@@ -11,49 +11,37 @@ Hitap'a personelin hizmet birlestirme bilgilerinin eklenmesini yapar.
 
 """
 
-from ulakbus.services.personel.hitap.hitap_guncelle import HITAPGuncelle
+from ulakbus.services.personel.hitap.hitap_service import ZatoHitapService
 
 
-class HizmetBirlestirmeGuncelle(HITAPGuncelle):
+class HizmetBirlestirmeGuncelle(ZatoHitapService):
     """
     HITAP Guncelleme servisinden kalıtılmış Hizmet Birlestirme Bilgisi Guncelleme servisi
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            service_dict (dict): Request yoluyla gelen kayıtlar,
-                    HizmetBirlestirmeUpdate servisinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
-        """
-
-        self.service_name = 'HizmetBirlestirmeUpdate'
-
-        self.service_dict = {
-            'fields': {
-                'kayitNo': self.request.payload.get('kayit_no', ''),
-                'tckn': self.request.payload.get('tckn', ''),
-                'sgkNevi': self.request.payload.get('sgk_nevi', ''),
-                'sgkSicilNo': self.request.payload.get('sgk_sicil_no', ''),
-                'baslamaTarihi': self.request.payload.get('baslama_tarihi', ''),
-                'bitisTarihi': self.request.payload.get('bitis_tarihi', ''),
-                'kamuIsyeriAd': self.request.payload.get('kamu_isyeri_ad', ''),
-                'ozelIsyeriAd': self.request.payload.get('ozel_isyeri_ad', ''),
-                'bagKurMeslek': self.request.payload.get('bag_kur_meslek', ''),
-                'ulkeKod': self.request.payload.get('ulke_kod', ''),
-                'bankaSandikKod': self.request.payload.get('banka_sandik_kod', ''),
-                'kidemTazminatOdemeDurumu': self.request.payload.get('kidem_tazminat_odeme_durumu', ''),
-                'ayrilmaNedeni': self.request.payload.get('ayrilma_nedeni', ''),
-                'sure': self.request.payload.get('sure', ''),
-                'khaDurum': self.request.payload.get('kha_durum', ''),
-                'kurumOnayTarihi': self.request.payload.get('kurum_onay_tarihi', '')
-            },
-            'date_filter': ['baslamaTarihi', 'bitisTarihi', 'kurumOnayTarihi'],
-            'required_fields': ['tckn', 'kayitNo', 'sgkNevi', 'sgkSicilNo', 'baslamaTarihi',
-                                'bitisTarihi', 'kurumOnayTarihi']
-        }
-        super(HizmetBirlestirmeGuncelle, self).handle()
+    service_dict = {
+        'service_name': 'HizmetBirlestirmeUpdate',
+        'service_mapper': 'ns1:HizmetBirlestirmeServisBean',
+        'fields': {
+            'kayitNo': 'kayit_no',
+            'tckn': 'tckn',
+            'sgkNevi': 'sgk_nevi',
+            'sgkSicilNo': 'sgk_sicil_no',
+            'baslamaTarihi': 'baslama_tarihi',
+            'bitisTarihi': 'bitis_tarihi',
+            'kamuIsyeriAd': 'kamu_isyeri_ad',
+            'ozelIsyeriAd': 'ozel_isyeri_ad',
+            'bagKurMeslek': 'bag_kur_meslek',
+            'ulkeKod': 'ulke_kod',
+            'bankaSandikKod': 'banka_sandik_kod',
+            'kidemTazminatOdemeDurumu': 'kidem_tazminat_odeme_durumu',
+            'ayrilmaNedeni': 'ayrilma_nedeni',
+            'sure': 'sure',
+            'khaDurum': 'kha_durum',
+            'kurumOnayTarihi': 'kurum_onay_tarihi'
+        },
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
+        'required_fields': ['tckn', 'kayitNo', 'sgkNevi', 'sgkSicilNo', 'baslamaTarihi',
+                            'bitisTarihi', 'kurumOnayTarihi']
+    }

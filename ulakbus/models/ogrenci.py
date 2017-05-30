@@ -164,7 +164,7 @@ class Donem(Model):
 
         """
 
-        return cls.objects.filter().order_by('-baslangic_tarihi')[0]
+        return cls.objects.all().order_by('-baslangic_tarihi')[0]
 
     @staticmethod
     def takvim_ayina_rastlayan_donemler(yil, ay):
@@ -227,7 +227,7 @@ class HariciOkutman(Model):
     kan_grubu = field.String(_(u"Kan Grubu"), index=True, required=False)
     ehliyet = field.String(_(u"Ehliyet"), index=True, required=False)
     biyografi = field.Text(_(u"Biyografi"))
-    notlar = field.Text(_(u"Notlar"))
+    notlar = field.Text(_(u"Notlar", domain='students'))
     engelli_durumu = field.String(_(u"Engellilik"), index=True)
     engel_grubu = field.String(_(u"Engel Grubu"), index=True)
     engel_derecesi = field.String(_(u"Engel Derecesi"))
@@ -369,7 +369,7 @@ class Okutman(Model):
 
     def donem_subeleri(self, donem=None):
         donem = donem or Donem.guncel_donem()
-        return [s for s in Sube.objects.filter(okutman=self, donem=donem)]
+        return [s for s in Sube.objects.order_by().filter(okutman=self, donem=donem)]
 
     def donemdeki_gorev_yeri(self, donem):
         gorev_birimi_dct = {gorev_birimi.donem.key: gorev_birimi.yoksis_no for gorev_birimi in
@@ -736,7 +736,7 @@ class Ogrenci(Model):
 
     def donem_subeleri(self, donem=None):
         return [d.sube for d in
-                OgrenciDersi.objects.filter(ogrenci=self, donem=donem or Donem.guncel_donem())]
+                OgrenciDersi.objects.order_by().filter(ogrenci=self, donem=donem or Donem.guncel_donem())]
 
 
 class OncekiEgitimBilgisi(Model):
@@ -1061,8 +1061,8 @@ class DegerlendirmeNot(Model):
 
     class Meta:
         app = 'Ogrenci'
-        verbose_name = _(u"Not")
-        verbose_name_plural = _(u"Notlar")
+        verbose_name = _(u"Not", domain='students')
+        verbose_name_plural = _(u"Notlar", domain='students')
         list_fields = ['puan', 'ders_adi']
         search_fields = ['aciklama', 'puan', 'ogrenci_no']
         list_filters = ['donem', ]

@@ -21,45 +21,30 @@ class HizmetBirlestirmeGetir(HITAPSorgula):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            bean_name (str): Hitap'tan gelen bean nesnesinin adı
-            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
-                    ``HizmetBirlestirme`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetBirlestirmeSorgula'
-        self.bean_name = 'HizmetBirlestirmeServisBean'
-        self.service_dict = {
-            'fields': {
-                'tckn': 'tckn',
-                'kayit_no': 'kayitNo',
-                'sgk_nevi': 'sgkNevi',
-                'sgk_sicil_no': 'sgkSicilNo',
-                'baslama_tarihi': 'baslamaTarihi',
-                'bitis_tarihi': 'bitisTarihi',
-                'sure': 'sure',
-                'kamu_isyeri_ad': 'kamuIsyeriAd',
-                'ozel_isyeri_ad': 'ozelIsyeriAd',
-                'bag_kur_meslek': 'bagKurMeslek',
-                'ulke_kod': 'ulkeKod',
-                'banka_sandik_kod': 'bankaSandikKod',
-                'kidem_tazminat_odeme_durumu': 'kidemTazminatOdemeDurumu',
-                'ayrilma_nedeni': 'ayrilmaNedeni',
-                'kha_durum': 'khaDurum',
-                'kurum_onay_tarihi': 'kurumOnayTarihi'
-            },
-            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
-            'required_fields': ['tckn']
-        }
-        super(HizmetBirlestirmeGetir, self).handle()
+    service_dict = {
+        'service_name': 'HizmetBirlestirmeSorgula',
+        'bean_name': 'HizmetBirlestirmeServisBean',
+        'fields': {
+            'tckn': 'tckn',
+            'kayit_no': 'kayitNo',
+            'sgk_nevi': 'sgkNevi',
+            'sgk_sicil_no': 'sgkSicilNo',
+            'baslama_tarihi': 'baslamaTarihi',
+            'bitis_tarihi': 'bitisTarihi',
+            'sure': 'sure',
+            'kamu_isyeri_ad': 'kamuIsyeriAd',
+            'ozel_isyeri_ad': 'ozelIsyeriAd',
+            'bag_kur_meslek': 'bagKurMeslek',
+            'ulke_kod': 'ulkeKod',
+            'banka_sandik_kod': 'bankaSandikKod',
+            'kidem_tazminat_odeme_durumu': 'kidemTazminatOdemeDurumu',
+            'ayrilma_nedeni': 'ayrilmaNedeni',
+            'kha_durum': 'khaDurum',
+            'kurum_onay_tarihi': 'kurumOnayTarihi'
+        },
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
+        'required_fields': ['tckn']
+    }
 
     def custom_filter(self, hitap_dict):
         """

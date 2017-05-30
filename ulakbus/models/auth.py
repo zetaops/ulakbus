@@ -136,10 +136,10 @@ class Permission(Model):
             User list
         """
         users = set()
-        for ars in self.abstract_role_set.objects.filter():
-            for r in ars.role_set.objects.filter():
+        for ars in self.abstract_role_set.objects.all():
+            for r in ars.role_set.objects.all():
                 users.add(r.user)
-        for r in self.role_set.objects.filter():
+        for r in self.role_set.objects.all():
             users.add(r.user)
         return users
 
@@ -151,10 +151,10 @@ class Permission(Model):
             Role list
         """
         roles = set()
-        for ars in self.abstract_role_set.objects.filter():
-            for r in ars.role_set.objects.filter():
+        for ars in self.abstract_role_set.objects.all():
+            for r in ars.role_set.objects.all():
                 roles.add(r)
-        for r in self.role_set.objects.filter():
+        for r in self.role_set.objects.all():
             roles.add(r)
         return roles
 
@@ -239,7 +239,7 @@ class Unit(Model):
 
     """
     name = field.String(_(u"İsim"), index=True)
-    long_name = field.String(_(u"Uzun İsim"), index=True)
+    long_name = field.String(_(u"Tam İsim"), index=True)
     yoksis_no = field.Integer(_(u"Yoksis ID"), index=True)
     unit_type = field.String(_(u"Birim Tipi"), index=True)
     parent_unit_no = field.Integer(_(u"Üst Birim ID"), index=True)
@@ -283,8 +283,8 @@ class Unit(Model):
 
     class Meta:
         app = 'Sistem'
-        verbose_name = _(u"Unit")
-        verbose_name_plural = _(u"Units")
+        verbose_name = _(u"Birim")
+        verbose_name_plural = _(u"Birimler")
         search_fields = ['name', 'yoksis_no']
         list_fields = ['name', 'unit_type']
 
@@ -715,7 +715,42 @@ def ulakbus_permissions():
         list: Ulakbus'e ait tüm yetkiler
 
     """
-    default_perms = get_all_permissions()
     from ulakbus.views.reports import ReporterRegistry
+    from pyoko.model import model_registry
+    from ulakbus.views.personel.crud_hitap import CrudHitap
+
+    default_perms = get_all_permissions()
+    hitap_generic_commands = CrudHitap().VIEW_METHODS.keys()
+    hitap_permissions = []
+    enabled_models = _get_object_menu_models()
+
+    for model in model_registry.get_base_models():
+        model_name = model.__name__
+        if model_name in enabled_models:
+            # no matter if it's available as CRUD or not,
+            # we may need a ListBox for any model
+            for cmd in hitap_generic_commands:
+                if cmd in ['do']:
+                    continue
+                hitap_permissions.append(("%s.%s" % (model_name, cmd),
+                                          "Can %s %s" % (cmd, model_name),
+                                          ""))
+            continue
+
     report_perms = ReporterRegistry.get_permissions()
-    return default_perms + report_perms
+
+    return default_perms + report_perms + hitap_permissions
+
+
+def _get_object_menu_models():
+    """
+    we need to create basic permissions
+    for only CRUD enabled models
+    """
+    from pyoko.conf import settings
+    enabled_models = []
+    for entry in settings.OBJECT_MENU.values():
+        for mdl in entry:
+            if 'wf' in mdl and mdl['wf'] == "crud_hitap":
+                enabled_models.append(mdl['name'])
+    return enabled_models

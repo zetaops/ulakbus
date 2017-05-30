@@ -13,7 +13,7 @@ from zengine.messaging.model import Message
 class TestCase(BaseTestCase):
 
     def test_zaman_tablo(self):
-        Message.objects.filter()._clear()
+        Message.objects.all()._clear()
         for loop in range(2):
             time.sleep(1)
             if loop == 1:
@@ -76,7 +76,7 @@ class TestCase(BaseTestCase):
         self.prepare_client('/ogretim_elemani_zaman_tablosu', user=user, token=token)
         resp = self.client.post()
         assert resp.json['msgbox']['title'] == 'Talebiniz Onaylandı!'
-        Message.objects.filter().delete()
+        Message.objects.all().delete()
 
     def test_derslik_zaman_tablosu(self):
         for loop in range(2):
@@ -86,7 +86,7 @@ class TestCase(BaseTestCase):
                 self.prepare_client('/derslik_zaman_tablosu', user=user, token=token)
                 resp = self.client.post()
                 assert resp.json['msgbox']['msg'] == "Reddedildi"
-                Message.objects.filter().delete()
+                Message.objects.all().delete()
             else:
                 usr = User.objects.get(username='ders_programi_koordinatoru_1')
                 self.prepare_client('/derslik_zaman_tablosu', user=usr)
@@ -144,7 +144,7 @@ class TestCase(BaseTestCase):
         self.prepare_client('/derslik_zaman_tablosu', user=user, token=token)
         resp = self.client.post()
         assert resp.json['msgbox']['title'] == 'Talebiniz Onaylandı!'
-        Message.objects.filter().delete()
+        Message.objects.all().delete()
 
     def test_sinav_derslik_zaman_tablosu(self):
         for loop in range(2):
@@ -154,7 +154,7 @@ class TestCase(BaseTestCase):
                 self.prepare_client('/derslik_sinav_zaman_tablosu', user=user, token=token)
                 resp = self.client.post()
                 assert resp.json['msgbox']['msg'] == "Reddedildi"
-                Message.objects.filter().delete()
+                Message.objects.all().delete()
             else:
                 usr = User.objects.get(username='ders_programi_koordinatoru_1')
                 self.prepare_client('/derslik_sinav_zaman_tablosu', user=usr)

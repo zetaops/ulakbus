@@ -111,7 +111,7 @@ class YeniDonemOlusturma(CrudView):
                 baslangic_tarihi=baslangic,
                 bitis_tarihi=bitis
             )
-            d.save()
+            d.blocking_save()
 
         fdata = self.current.input['form']
 

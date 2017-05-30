@@ -96,7 +96,7 @@ class FakeDataGenerator:
 
             if Donem.objects.filter(ad="%s - %s" % (ad, year)).count() < 1:
                 if guncel:
-                    for d in list(Donem.objects.filter()):
+                    for d in list(Donem.objects.all()):
                         d.guncel = False
                         d.save()
                     donem.guncel = True
@@ -151,8 +151,8 @@ class FakeDataGenerator:
         """
         import time
         uni = Unit.objects.get(parent_unit_no=0)
-        campus = random.choice(Campus.objects.filter())
-        # campus = Campus.objects.filter()[0]
+        campus = random.choice(Campus.objects.all())
+        # campus = Campus.objects.all()[0]
         # Eğer daha önceden oluşturulmuş oda tipi yoksa
         if RoomType.objects.count() < 1:
             self.yeni_oda_tipi('Derslik', sinav_uygun=True)
@@ -191,7 +191,7 @@ class FakeDataGenerator:
         """
 
         unit_list = list(Unit.objects.filter(parent_unit_no=parent_unit_no, unit_type="Bölüm"))
-        room_types = list(RoomType.objects.filter())
+        room_types = list(RoomType.objects.all())
         for unit in unit_list:
             for i in range(1, count+1):
                 capacity = random.choice(range(30, 100))
@@ -269,8 +269,12 @@ class FakeDataGenerator:
         for i in range(personel_say):
             p = Personel()
             p.tckn = ints(length=11)
-            p.ad = fake.first_name()
-            p.soyad = fake.last_name()
+            if user:
+                p.ad = user.name
+                p.soyad = user.surname
+            else:
+                p.ad = fake.first_name()
+                p.soyad = fake.last_name()
             p.cinsiyet = gender()
             p.uyruk = fake.country()
             p.medeni_hali = marital_status(student=False)
@@ -1022,7 +1026,7 @@ class FakeDataGenerator:
         for index, personel in enumerate(personeller):
             for i in range(30):
                 random_index = random.randint(0, 63)
-                af_tur = AkademikFaaliyetTuru.objects.filter()[random_index]
+                af_tur = AkademikFaaliyetTuru.objects.all()[random_index]
                 ad = fake.lecture()
                 baslama = FakeDataGenerator().random_date()
                 bitis = FakeDataGenerator().random_date()
@@ -1042,7 +1046,8 @@ class FakeDataGenerator:
                                  bitis=bitis,
                                  durum=durum,
                                  kac_kisiyle_yapildi=kac_kisi,
-                                 gorev=gorev).save()
+                                 gorev=gorev,
+                                 personel=personel).save()
 
     def random_date(self):
         year = random.randint(2000, 2023)

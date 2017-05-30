@@ -130,6 +130,9 @@ class NVIService(UlakbusService):
             elif e.nodeType == e.TEXT_NODE:
                 return e.data
 
+        return self.rebuild_response(response_dict)
+
+    def rebuild_response(self, response_dict):
         return response_dict
 
 
@@ -155,6 +158,45 @@ class KisiSorgulaTCKimlikNo(NVIService):
             </env:Body>""" % tckn
         super(KisiSorgulaTCKimlikNo, self).handle()
 
+    def rebuild_response(self, response_dict):
+        """
+            Kimlik Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+            Args:
+                response_dict (dict): contains data returned from service
+
+            Returns:
+                ret (dict): reformatted data compatible with our data models
+
+        """
+        response_data = response_dict['result']
+        ret = {}
+
+        try:
+            kb = response_data['KisiBilgisi']
+
+            ret['tckn'] = kb['TCKimlikNo']
+            ret['ad'] = kb['TemelBilgisi']['Ad']
+            ret['soyad'] = kb['TemelBilgisi']['Soyad']
+            ret['cinsiyet'] = kb['TemelBilgisi']['Cinsiyet']['Kod']
+            ret['dogum_tarihi'] = '%s.%s.%s' % (
+                kb['TemelBilgisi']['DogumTarih']['Gun'], kb['TemelBilgisi']['DogumTarih']['Ay'],
+                kb['TemelBilgisi']['DogumTarih']['Yil'])
+            ret['dogum_yeri'] = kb['TemelBilgisi']['DogumYer']
+            ret['baba_adi'] = kb['TemelBilgisi']['BabaAd']
+            ret['ana_adi'] = kb['TemelBilgisi']['AnneAd']
+            ret['medeni_hali'] = kb['DurumBilgisi']['MedeniHal']['Kod']
+            ret['kayitli_oldugu_il'] = kb['KayitYeriBilgisi']['Il']['Aciklama']
+            ret['kayitli_oldugu_ilce'] = kb['KayitYeriBilgisi']['Ilce']['Aciklama']
+            ret['kayitli_oldugu_mahalle_koy'] = kb['KayitYeriBilgisi']['Cilt']['Aciklama']
+            ret['kayitli_oldugu_cilt_no'] = kb['KayitYeriBilgisi']['Cilt']['Kod']
+            ret['kayitli_oldugu_aile_sira_no'] = kb['KayitYeriBilgisi']['AileSiraNo']
+            ret['kayitli_oldugu_sira_no'] = kb['KayitYeriBilgisi']['BireySiraNo']
+        except KeyError:
+            ret['hata'] = True
+
+        return ret
+
 
 class CuzdanSorgulaTCKimlikNo(NVIService):
     """
@@ -178,6 +220,37 @@ class CuzdanSorgulaTCKimlikNo(NVIService):
                 </ns1:ListeleCoklu>
             </env:Body>""" % tckn
         super(CuzdanSorgulaTCKimlikNo, self).handle()
+
+    def rebuild_response(self, response_dict):
+
+        """
+            Mernis Cüzdan Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+            Args:
+                response_dict (dict): contains data returned from service
+
+            Returns:
+                ret (dict): reformatted data compatible with our data models
+
+            """
+        response_data = response_dict['result']
+        ret = {}
+
+        try:
+            kb = response_data['CuzdanBilgisi']
+            ret['tckn'] = kb['TCKimlikNo']
+            ret['cuzdan_seri'] = kb['SeriNo'][0:3]
+            ret['cuzdan_seri_no'] = kb['SeriNo'][3:]
+            ret['kimlik_cuzdani_verildigi_yer'] = kb['VerildigiIlce']['b:Aciklama']
+            ret['kimlik_cuzdani_verilis_nedeni'] = kb['CuzdanVerilmeNeden']['b:Aciklama']
+            ret['kimlik_cuzdani_kayit_no'] = kb['KayitNo']
+            ret['kimlik_cuzdani_verilis_tarihi'] = '%s.%s.%s' % (
+                kb['VerilmeTarih']['b:Gun'], kb['VerilmeTarih']['b:Ay'],
+                kb['VerilmeTarih']['b:Yil'])
+        except KeyError:
+            ret['hata'] = True
+
+        return ret
 
 
 class YabanciKisiSorgula(NVIService):
@@ -224,6 +297,29 @@ class AdresSorgula(NVIService):
                     </ns2:Sorgula>
             </env:Body>""" % tckn
         super(AdresSorgula, self).handle()
+
+    def rebuild_response(self, response_dict):
+        """
+            KPS Adres Bilgileri servisinden dönen datayı modellerimize uygun hale getirir.
+
+            Args:
+                response_dict (dict): contains data returned from service
+
+            Returns:
+                ret (dict): reformatted data compatible with our data models
+
+        """
+        response_data = response_dict['result']
+        ret = {}
+        try:
+            kb = response_data['KimlikNoileKisiAdresBilgileri']['YerlesimYeriAdresi']
+            ret['ikamet_adresi'] = kb['AcikAdres']
+            ret['ikamet_il'] = kb['IlIlceMerkezAdresi']['Il']
+            ret['ikamet_ilce'] = kb['IlIlceMerkezAdresi']['Ilce']
+        except KeyError:
+            ret['hata'] = True
+
+        return ret
 
 
 class AileBireySorgula(NVIService):

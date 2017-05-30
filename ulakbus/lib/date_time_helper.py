@@ -131,3 +131,26 @@ def yil_ve_aya_gore_ilk_ve_son_gun(yil, ay):
     son = date(yil, ay, ay_sonu)
 
     return ilk, son
+
+
+def iki_tarih_arasinda_mi(tarih1, tarih2, baslangic_tarihi, bitis_tarihi):
+    """Sorguladığınız tarih, başlangıç ve bitiş tarihleri arasında mı değil mi
+    onun kontrolünü yapar.Eğer kontrol edilen tarih verilen iki tarih arasında ise
+    True değilse False değerini döndürür.
+
+    Args:
+        tarih1: datetime.date (Sorgulanicak baslangic tarih)
+        tarih2: datetime.date (Sorgulanacak bitis tarih)
+        baslangic_tarihi: datetime.date
+        bitis_tarihi: datetime.date
+
+    Returns: boolean
+    """
+    try:
+        if baslangic_tarihi <= tarih1 <= bitis_tarihi and \
+                                baslangic_tarihi <= tarih2 <= bitis_tarihi:
+            return True
+        else:
+            return False
+    except TypeError as e:
+        print "Tarihler datetime.date formatinda olmali...\n%s" % e

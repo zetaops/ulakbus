@@ -72,8 +72,8 @@ from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
 from ulakbus.models import Personel
-from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
+from pyoko.fields import DATE_TIME_FORMAT
 
 
 class KadroObjectForm(JsonForm):
@@ -412,12 +412,14 @@ class TerfiDuzenleForm(JsonForm):
 
 class PersonelTerfiKriterleri(JsonForm):
     baslangic_tarihi = fields.Date(gettext_lazy(u"Başlangıç Tarihi"),
-                                   default=datetime.date.today().strftime('d.%m.%Y'))
+                                   default=datetime.date.today().strftime(DATE_TIME_FORMAT))
 
     bitis_tarihi = fields.Date(gettext_lazy(u"Bitiş Tarihi"), default=(
-        datetime.date.today() + datetime.timedelta(days=15)).strftime('d.%m.%Y'))
+        datetime.date.today() + datetime.timedelta(days=15)).strftime(DATE_TIME_FORMAT))
 
-    personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"), choices=[(1, gettext_lazy(u"Akademik")), (2, gettext_lazy(u"İdari"))],
+    personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"),
+                                   choices=[(1, gettext_lazy(u"Akademik")),
+                                            (2, gettext_lazy(u"İdari"))],
                                    default=2)
 
     devam = fields.Button(gettext_lazy(u"Sorgula"))
@@ -509,6 +511,7 @@ class TerfiListe(CrudView):
                 )
 
         self.form_out(_form)
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def terfi_duzenle_kaydet(self):
         for p in self.current.input['form']['Personel']:

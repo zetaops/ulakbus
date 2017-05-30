@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.6.0">
+  <bpmn:collaboration id="personel_isleri">
+    <bpmn:participant id="personel_genel_raporlama" name="Personel Genel Rapor" processRef="personel_genel_rapor" />
+  </bpmn:collaboration>
+  <bpmn:process id="personel_genel_rapor" isExecutable="false">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="Raporlar" />
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1906pvf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0l2ym9v" default="SequenceFlow_0up632y">
+      <bpmn:incoming>SequenceFlow_017yob7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0up632y</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0ntw4kg</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="DataGridGoster" name="Data Grid Göster" camunda:assignee="reports.personel_genel_raporlama.PersonelDataGridView.grid_goster">
+      <bpmn:incoming>SequenceFlow_0up632y</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0l70203</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1906pvf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_017yob7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_1ndneqx" name="CSV Disa Aktar" camunda:class="reports.personel_genel_raporlama.PersonelDataGridView.csv_indir">
+      <bpmn:incoming>SequenceFlow_0ntw4kg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0l70203</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_017yob7" sourceRef="DataGridGoster" targetRef="ExclusiveGateway_0l2ym9v" />
+    <bpmn:sequenceFlow id="SequenceFlow_0up632y" sourceRef="ExclusiveGateway_0l2ym9v" targetRef="DataGridGoster" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ntw4kg" sourceRef="ExclusiveGateway_0l2ym9v" targetRef="Task_1ndneqx">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='csv']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0l70203" sourceRef="Task_1ndneqx" targetRef="DataGridGoster" />
+    <bpmn:sequenceFlow id="SequenceFlow_1906pvf" sourceRef="StartEvent_1" targetRef="DataGridGoster" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="personel_isleri">
+      <bpmndi:BPMNShape id="Participant_067idbb_di" bpmnElement="personel_genel_raporlama">
+        <dc:Bounds x="330" y="125" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="383" y="236" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="401" y="272" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0l2ym9v_di" bpmnElement="ExclusiveGateway_0l2ym9v" isMarkerVisible="true">
+        <dc:Bounds x="646" y="229" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="671" y="279" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_017yob7_di" bpmnElement="SequenceFlow_017yob7">
+        <di:waypoint xsi:type="dc:Point" x="592" y="254" />
+        <di:waypoint xsi:type="dc:Point" x="646" y="254" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="619" y="239" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0up632y_di" bpmnElement="SequenceFlow_0up632y">
+        <di:waypoint xsi:type="dc:Point" x="671" y="229" />
+        <di:waypoint xsi:type="dc:Point" x="671" y="191" />
+        <di:waypoint xsi:type="dc:Point" x="542" y="191" />
+        <di:waypoint xsi:type="dc:Point" x="542" y="214" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="607" y="176" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ntw4kg_di" bpmnElement="SequenceFlow_0ntw4kg">
+        <di:waypoint xsi:type="dc:Point" x="696" y="254" />
+        <di:waypoint xsi:type="dc:Point" x="751" y="254" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="724" y="239" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0l70203_di" bpmnElement="SequenceFlow_0l70203">
+        <di:waypoint xsi:type="dc:Point" x="801" y="294" />
+        <di:waypoint xsi:type="dc:Point" x="801" y="334" />
+        <di:waypoint xsi:type="dc:Point" x="542" y="334" />
+        <di:waypoint xsi:type="dc:Point" x="542" y="294" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="672" y="319" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1jnsx02_di" bpmnElement="DataGridGoster">
+        <dc:Bounds x="492" y="214" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0byyury_di" bpmnElement="Task_1ndneqx">
+        <dc:Bounds x="751" y="214" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1906pvf_di" bpmnElement="SequenceFlow_1906pvf">
+        <di:waypoint xsi:type="dc:Point" x="419" y="254" />
+        <di:waypoint xsi:type="dc:Point" x="492" y="254" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="456" y="229" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

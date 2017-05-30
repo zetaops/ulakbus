@@ -20,31 +20,16 @@ class HizmetIHSGetir(HITAPSorgula):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            bean_name (str): Hitap'tan gelen bean nesnesinin adı
-            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
-                    ``HizmetIHS`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetIHSSorgula'
-        self.bean_name = 'HizmetIHSServisBean'
-        self.service_dict = {
-            'fields': {
-                'tckn': 'tckn',
-                'kayit_no': 'ihzID',  # TODO: ihzID mi olacak?
-                'baslama_tarihi': 'baslamaTarihi',
-                'bitis_tarihi': 'bitisTarihi',
-                'ihz_nevi': 'ihzNevi'
-            },
-            'date_filter': ['baslama_tarihi', 'bitis_tarihi'],
-            'required_fields': ['tckn']
-        }
-        super(HizmetIHSGetir, self).handle()
+    service_dict = {
+        'service_name': 'HizmetIHSSorgula',
+        'bean_name': 'HizmetIHSServisBean',
+        'fields': {
+            'tckn': 'tckn',
+            'kayit_no': 'ihzID',
+            'baslama_tarihi': 'baslamaTarihi',
+            'bitis_tarihi': 'bitisTarihi',
+            'ihz_nevi': 'ihzNevi'
+        },
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi'],
+        'required_fields': ['tckn']
+    }

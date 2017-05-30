@@ -25,38 +25,22 @@ class HizmetIstisnaiIlgiGetir(HITAPSorgula):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            bean_name (str): Hitap'tan gelen bean nesnesinin adı
-            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
-                    ``HizmetIstisnaiIlgi`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları ve servis tarafında gerekli olan
-                    alanlar listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'hizmetIstisnaiIlgiSorgu'
-        self.bean_name = 'HizmetIstisnaiIlgiServisBean'
-        self.service_dict = {
-            'fields': {
-                'tckn': 'tckn',
-                'kayit_no': 'kayitNo',
-                'baslama_tarihi': 'baslamaTarihi',
-                'bitis_tarihi': 'bitisTarihi',
-                'gun_sayisi': 'gunSayisi',
-                'istisnai_ilgi_nevi': 'istisnaiIlgiNevi',
-                'kha_durum': 'khaDurum',
-                'kurum_onay_tarihi': 'kurumOnayTarihi'
-            },
-            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
-            'required_fields': ['tckn']
-        }
-        super(HizmetIstisnaiIlgiGetir, self).handle()
+    service_dict = {
+        'service_name': 'hizmetIstisnaiIlgiSorgu',
+        'bean_name': 'HizmetIstisnaiIlgiServisBean',
+        'fields': {
+            'tckn': 'tckn',
+            'kayit_no': 'kayitNo',
+            'baslama_tarihi': 'baslamaTarihi',
+            'bitis_tarihi': 'bitisTarihi',
+            'gun_sayisi': 'gunSayisi',
+            'istisnai_ilgi_nevi': 'istisnaiIlgiNevi',
+            'kha_durum': 'khaDurum',
+            'kurum_onay_tarihi': 'kurumOnayTarihi'
+        },
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
+        'required_fields': ['tckn']
+    }
 
     def custom_filter(self, hitap_dict):
         """

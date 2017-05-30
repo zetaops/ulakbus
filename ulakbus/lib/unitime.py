@@ -158,7 +158,7 @@ class ExportCourseTimetable(UnitimeEntityXMLExport):
 
     def export_rooms(self, writer):
         with writer.element('rooms'):
-            buildings = list(Building.objects.filter())
+            buildings = list(Building.objects.all())
             for building in buildings:
                 rooms = list(Room.objects.filter(building=building))
                 for room in rooms:

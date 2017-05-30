@@ -11,12 +11,13 @@ from .test_profil_islemleri import parola_hatalari
 
 
 class TestCase(BaseTestCase):
-    user_key = 'iG4mvjQrfkvTDvM6Jk56X5ILoJ'
-    user = User.objects.get(user_key)
-    user.username = 'ulakbus'
-    user.password = '123'
-    user.e_mail = 'ulakbus_deneme_maili@ulakbus_deneme.com'
-    user.save()
+    def __init__(self):
+        user_key = 'iG4mvjQrfkvTDvM6Jk56X5ILoJ'
+        user = User.objects.get(user_key)
+        user.username = 'ulakbus'
+        user.password = '123'
+        user.e_mail = 'ulakbus_deneme_maili@ulakbus_deneme.com'
+        user.save()
 
     def test_aktivasyon_link_yollama(self):
         # ulakbus kullanıcısıyla giriş yapılır.

@@ -52,7 +52,7 @@ class OgrenciHarc(Reporter):
     def get_objects(self):
         # choices = self.convert_choices(Borc().get_choices_for('sebep'))
         result = defaultdict(lambda: 0)
-        for b in Borc.objects.filter():
+        for b in Borc.objects.all():
             result["%s %s" % (b.get_sebep_display(), 'Borç')] += int(b.miktar or 0)
             # result["%s %s" % (b.get_sebep_display(), 'Ödenen')] += int(b.odenen_miktar or 0)
 

@@ -11,7 +11,7 @@ from ulakbus.lib.date_time_helper import map_etkinlik_hafta_gunleri
 
 
 class TestCase(BaseTestCase):
-    def test_okutman_sinav_programi_goruntule(self):
+    def test_ogrenci_sinav_programi_goruntule(self):
 
         user = User.objects.get(username='ogrenci_3')
         unit = user.role_set[0].role.unit

@@ -9,37 +9,11 @@
 #
 from zengine.forms import fields, JsonForm
 from zengine.views.crud import CrudView, view_method, list_query
-from zengine.lib.translation import gettext as _, gettext_lazy
+from zengine.lib.translation import gettext_lazy
 from ulakbus.models.personel import Personel
-
-
-def zato_service_selector(model, action):
-    """
-    Model ve actionlara uygun Hitap Servislerini import eder.
-
-    Args:
-        model (class): model class object
-        action (str): model uzerinde yapilacak eylem, sil, ekle, guncelle etc..
-
-    Returns:
-        hitap_service (class): Zato wrapperdan modulunden kritere uygun isi yapan class
-
-    """
-
-    suffix = {"add": "Ekle",
-              "update": "Guncelle",
-              "delete": "Sil",
-              "get": "Getir",
-              "sync": "SenkronizeEt"}[action]
-
-    prefix = model.Meta.hitap_service_prefix
-    service_class_name = prefix + suffix
-
-    hitap_service = getattr(
-        __import__('ulakbus.services.zato_wrapper', fromlist=[service_class_name]),
-        service_class_name)
-
-    return hitap_service
+from zengine import signals
+from ulakbus.services.zato_wrapper import TcknService, HitapService
+from pyoko.lib.utils import un_camel
 
 
 class ListFormHitap(JsonForm):
@@ -50,7 +24,7 @@ class ListFormHitap(JsonForm):
     sync = fields.Button(gettext_lazy(u"HITAP ile senkronize et"), cmd="sync")
 
 
-class CrudHitap(CrudView):
+class CrudHitap(CrudView, object):
     """CrudHitap İş Akışı
 
     CrudHitap, standart CrudView'a ait save, delete gibi metotların
@@ -90,7 +64,7 @@ class CrudHitap(CrudView):
     def __init__(self, current=None):
         super(CrudHitap, self).__init__(current)
         self.ListForm = ListFormHitap
-        if 'id' in self.input:
+        if current and 'id' in self.input:
             self.current.task_data['personel_id'] = self.input['id']
             self.current.task_data['personel_tckn'] = Personel.objects.get(self.input['id']).tckn
 
@@ -102,10 +76,22 @@ class CrudHitap(CrudView):
         manuel olarak calistirir.
 
         """
-        hitap_service = zato_service_selector(self.model_class, 'sync')
-        hs = hitap_service(tckn=str(self.current.task_data['personel_tckn']))
-        hs.zato_request()
 
+        # Sync işleminden önce ekleme veya güncelleme işlemlerinden biri yapıldıysa
+        # self.current.task_data nın içinde en son işlem yapılan objenin keyi bulunuyor
+        # eğer bu obje hitap ile sync işleminde silinirse 404 hatasına sebeb oluyor.
+        # bu sorunu cozmek için aşağıdaki yöntem uygulanmıştır.
+        if 'object_id' in self.current.task_data:
+            del self.current.task_data['object_id']
+
+        service_name = un_camel(self.model_class.__name__, dash='-') + '-sync'
+        service = TcknService(service_name=service_name,
+                              payload={"tckn": str(self.current.task_data['personel_tckn']),
+                                       "kullanici_ad": "",
+                                       "kullanici_sifre": ""})
+        service.zato_request()
+
+    @view_method
     def save(self):
         """Crud Hitap Kaydet
 
@@ -118,23 +104,25 @@ class CrudHitap(CrudView):
 
         self.set_form_data_to_object()
         obj_is_new = not self.object.is_in_db()
-        action, self.object.sync = ('add', 4) if obj_is_new else ('update', 2)
+        action, self.object.sync = ('ekle', 4) if obj_is_new else ('guncelle', 2)
+        self.object.tckn = self.current.task_data['personel_tckn']
         self.object.save()
-
-        hitap_service = zato_service_selector(self.model_class, action)
-        hs = hitap_service(kayit=self.object)
+        service_name = un_camel(self.model_class.__name__, dash='-') + '-' + action
+        service = HitapService(service_name=service_name,
+                               payload=self.object,
+                               auth={"kullanici_ad": "",
+                                     "kullanici_sifre": ""})
         try:
-            response = hs.zato_request()
-            if response['status'] == 'ok':
-                self.object.sync = 1
-                self.object.save()
+            result = service.zato_request()
+            self.object.kayit_no = result['kayitNo']
+            self.object.sync = 1
+            self.object.blocking_save()
         except:
-            # try blogundaki islemleri background gondermek
             pass
 
-        if self.next_cmd and obj_is_new:
-            self.current.task_data['added_obj'] = self.object.key
+        self.current.task_data['object_id'] = self.object.key
 
+    @view_method
     def delete(self):
         """Crud Hitap Sil
 
@@ -144,24 +132,26 @@ class CrudHitap(CrudView):
 
         """
 
-        self.current.task_data['deleted_obj'] = self.object.key
+        signals.crud_pre_delete.send(self, current=self.current, object=self.object)
+
         if 'object_id' in self.current.task_data:
             del self.current.task_data['object_id']
-
+        object_data = self.object._data
         self.object.sync = 3
-        hitap_service = zato_service_selector(self.model_class, 'delete')
-        hs = hitap_service(kayit=self.object)
 
+        service_name = un_camel(self.model_class.__name__, dash='-') + "-sil"
+        service = HitapService(service_name=service_name,
+                               payload={"tckn": self.object.tckn, "kayit_no": self.object.kayit_no},
+                               auth={"kullanici_ad": "",
+                                     "kullanici_sifre": ""})
         try:
-            response = hs.zato_request()
-            if response['status'] == 'ok':
-                self.object.sync = 1
-                self.object.delete()
+            service.zato_request()
+            self.object.sync = 1
+            self.object.blocking_delete()
+            signals.crud_post_delete.send(self, current=self.current, object_data=object_data)
+            self.set_client_cmd('reload')
         except:
-            # try blogundaki islemleri background gondermek
             pass
-
-        self.set_client_cmd('reload')
 
     @list_query
     def list_by_personel_id(self, queryset):

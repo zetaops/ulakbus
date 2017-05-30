@@ -270,30 +270,38 @@ class DeployZatoServices(Command):
     @staticmethod
     def create_channel_and_service_object(service, path):
         from ulakbus.models.zato import ZatoServiceChannel
-        from pyoko.lib.utils import un_camel
 
-        create_channel = ZatoServiceChannel()
+        service_name = service.get_name()
+        channel_name = service_name + "-channel"
+
+        create_channel, b = ZatoServiceChannel.objects.get_or_create(channel_name=channel_name)
         create_channel.cluster_id = 1
-        create_channel.service_name = service.get_name()
-        create_channel.channel_name = service.get_name() + "-channel"
-        create_channel.channel_url_path = '/%s/%s' % ('/'.join(path.split('/')[:-1]),
-                                                      un_camel(service.__name__, dash='-'))
+        create_channel.service_name = service_name
+        create_channel.channel_name = channel_name
+        create_channel.channel_url_path = '/%s/%s' % ('/'.join(path.split('/')[:-1]), service_name)
         create_channel.channel_connection = "channel"
         create_channel.channel_data_format = "json"
         create_channel.channel_is_internal = False
         create_channel.channel_is_active = True
         create_channel.channel_transport = "plain_http"
+        create_channel.class_name = service.__name__
+        create_channel.module_path = '.'.join(path.rsplit('.')[0].split('/'))
+        if not b:
+            create_channel.deploy = False
         create_channel.save()
 
     def create_service_file_object(self, path):
         from ulakbus.models.zato import ZatoServiceFile
 
         service_payload = self.get_service_payload_data(path)
+        payload_name = service_payload["payload_name"]
 
-        upload_service = ZatoServiceFile()
+        upload_service, b = ZatoServiceFile.objects.get_or_create(service_payload_name=payload_name)
         upload_service.cluster_id = 1
-        upload_service.service_payload_name = service_payload["payload_name"]
+        upload_service.service_payload_name = payload_name
         upload_service.service_payload = service_payload["payload"]
+        if not b:
+            upload_service.deploy = False
         upload_service.save()
 
     @staticmethod

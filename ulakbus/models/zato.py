@@ -32,6 +32,8 @@ class ZatoServiceChannel(Model):
     channel_is_active = field.Boolean(default=True)
     service_id = field.Integer(__(u"Service Id"))
     service_name = field.String(__(u"Service name"))
+    class_name = field.String(__(u"Service Class Name"))
+    module_path = field.String(__(u"Service Class Path"))
     deploy = field.Boolean(__(u"Deploy Channel"), default=False)
 
     def __unicode__(self):

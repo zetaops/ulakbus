@@ -73,7 +73,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
 
         # Kayıtlı kadroların listesini veritabanından çeker.
-        kadro_lst = Kadro.objects.filter()
+        kadro_lst = Kadro.objects.all()
 
         # Sunucudan dönen kadro kayıtlarının sayısı.
         num_of_kadro = len_1(resp.json['objects'])
@@ -157,7 +157,7 @@ class TestCase(BaseTestCase):
         time.sleep(1)
         yeni_kadro = Kadro.objects.get(unvan=22469, unvan_aciklama='22464', derece=8)
 
-        last_kadro_lst = Kadro.objects.filter()
+        last_kadro_lst = Kadro.objects.all()
 
         self.client.set_path('/kadro_islemleri')
         resp = self.client.post()
@@ -173,7 +173,7 @@ class TestCase(BaseTestCase):
                          object_id=yeni_kadro.key)
         resp = self.client.post(cmd='kadro_sil', form={'evet': 1, 'hayir': 'null'})
 
-        kadro_lst = Kadro.objects.filter()
+        kadro_lst = Kadro.objects.all()
 
         assert len_1(resp.json['objects']) == len(kadro_lst)
 

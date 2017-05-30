@@ -13,11 +13,77 @@ from ulakbus.models.zato import ZatoServiceChannel, ZatoServiceFile
 
 class ServiceManagement(Service):
 
+    """
+        Eğer yerelde çalışıyorsanız zato ortamına http://localhost:8183/ adresini vererek
+        bağlanabirlisiniz.
+
+        Service Management Zato'ya yüklenecek servisdir. Zato'ya herhangi bir servis
+        yükleme işlemi ise;
+        Services -> List services -> Upload a service package  diyerek servisin bulunduğu
+        klasör seçilir ve işlem tamamlanır.
+
+        Servisi yükledikten sonra projemizde bulunan diger servisleri otomatik yüklemek ve
+        onlara bağlı kanalları yaratmak için yüklediğimiz servise bağlı bir kanal yaratmamız
+        lazım bu işlemi ise;
+        Connections -> Channels -> Plain HTTP -> Create a new Plain HTTP channel  işlemleri
+        yapılarak yeni kanal yaratma formu gelir.
+
+            #Name:                      deploy ulakbus services (Farklı bir isim olabilir)
+            #URL path:                  /deploy-ulakbus-services (Farklı url ismi olabilir)
+            #Data format:               JSON (zorunlu)
+            #Service:                   Service Management (get_name methodunda return edilen değer)
+            #Security definition:       No security definition (zorunlu)
+
+            seçenekleri seçilip kanal yaratma işlemi tamamlanır.
+
+        Kanal yaratıldıktan sonra manage.py load_zato_services --path services/ komutunu
+        çalıştırdığımız zaman services klasörü altında bulunan butun servisler için ZatoServiceFile
+        ve ZatoServiceChannel modellerini dolduracak.
+
+        Modelleri doldurduktan sonra artık servislerimizi Zato'ya yükleyebiliriz.
+        Bu işlemi gerçekleştirmek için ise;
+
+        curl localhost:11223/deploy-ulakbus-services
+
+        dememiz yeterli olacaktir. Yukleme islemi tamamlandıktan sonra servisleri test edip,
+        kullanabilirsiniz.
+
+    """
+
     @staticmethod
     def get_name():
         return "Service Management"
 
     def handle(self):
+        """
+            İlk olarak servislerin bulunduğu python dosyalarını zatoya yükleme işlemi
+            gerçekleştirilir.
+
+                ZatoServiceFile.objects.filter(deploy=False) burada zatoya yüklenmemiş objeleri
+                çağırıyoruz.
+
+                Yüklenmemiş objeleri zatonun bize sağlamış olduğu api sayesinde;
+
+                    self.invoke('zato.service.upload-package', payload={..})
+
+                servisleri zatoya yüklüyoruz. Gönderdikten sonra objeyi
+                deploy=True yapıp kaydediyoruz.
+
+            Servisleri zatoya yükleme işlemi gerçekleştikten sonra kanalları yaratabilriz.
+
+                ZatoServiceChannel.objects.filter(deploy=False) bu sorguda ise zatoya
+                yuklenecek kanal objelerini çağırıyoruz.
+
+                self.invoke('zato.service.get-by-name', payload={..}) -> zatoya yüklenen
+
+                kanala ait servislerin idlerine ulaşmak için bu sorguyu yapıyoruz. Dönen
+                responsedan kanalın id'sini modele kaydediyoruz.
+
+                self.invoke('zato.http-soap.create', payload={..}) -> zatoda ilgili servise
+
+                bağlı kanal oluşturur.
+
+        """
         ulakbus_service_files = ZatoServiceFile.objects.filter(deploy=False)
         if ulakbus_service_files:
             for ulakbus_service_file in ulakbus_service_files:

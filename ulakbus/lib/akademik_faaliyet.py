@@ -10,7 +10,7 @@ from ulakbus.models.akademik_faaliyet import AkademikFaaliyetTuru
 __author__ = 'Anıl Can Aydın'
 
 def akademik_performans_hesapla():
-    aft = AkademikFaaliyetTuru.objects.filter()
+    aft = AkademikFaaliyetTuru.objects.all()
     data = {}
     for t in aft:
         num = AkademikFaaliyet.objects.filter(tur=t).count()
