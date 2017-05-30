@@ -3,6 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.models import Personel
 from zengine.forms import JsonForm
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy as __
@@ -122,12 +123,15 @@ class ProjeDegerlendirme(CrudView):
     """
         Proje hakemlerinin projeyi degerlendirirken kullanacagi is akisidir.
     """
-    def __init__(self, current):
-        CrudView.__init__(self, current)
-        self.current.task_data['bap_proje_id'] = 'RLWk2BU0HjX1XGiU8YXJ0UhslNt'
-
-    def deneme(self):
-        self.current.task_data['bap_proje_id'] = 'RLWk2BU0HjX1XGiU8YXJ0UhslNt'
+    def proje_degerlendirme_karari_sor(self):
+        form = JsonForm(title=_(u"""%s Tarafından Gönderilen Hakemlik Daveti""" %
+                                Personel.objects.get(self.current.task_data[
+                                                         'davet_gonderen'].__unicode__())))
+        form.help_text(_(u"""Proje özetini inceleyebilir, hakemlik davetini kabul edebilir ya da
+        geri çevirebilirsiniz."""))
+        form.ozet_incele = fields.Button(_(u"Proje Özeti İncele"), cmd='ozet_incele')
+        form.davet_red = fields.Button(_(u"Hakemlik Davetini Reddet"), cmd='davet_red')
+        form.davet_kabul = fields.Button(_(u"Hakemlik Davetini Kabul Et"), cmd='davet_kabul')
 
     def proje_degerlendir(self):
         form = ProjeDegerlendirmeForm()

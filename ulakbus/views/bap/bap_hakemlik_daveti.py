@@ -79,6 +79,7 @@ class HakemlikDaveti(CrudView):
             )
             wfi.data = dict()
             wfi.data['bap_proje_id'] = self.object.key
+            wfi.data['davet_gonderen'] = self.current.user_id
             wfi.data['flow'] = None
             wfi.pool = {}
             wfi.blocking_save()
