@@ -30,7 +30,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_17vvhp7" sourceRef="ExclusiveGateway_0i7rbf4" targetRef="proje_degerlendirme_durum_degistir">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='davet_kabul']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="proje_degerlendirme_durum_degistir" name="Proje Değerlendirme Durumunu Değiştir">
+    <bpmn:serviceTask id="proje_degerlendirme_durum_degistir" name="Proje Değerlendirme Durumunu Değiştir" camunda:class="bap.bap_proje_degerlendirme.ProjeDegerlendirme.kabul_durum_degistir">
       <bpmn:incoming>SequenceFlow_17vvhp7</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0polfcp</bpmn:outgoing>
     </bpmn:serviceTask>

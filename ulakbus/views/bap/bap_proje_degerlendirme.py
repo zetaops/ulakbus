@@ -149,16 +149,44 @@ class ProjeDegerlendirme(CrudView):
         self.form_out(form)
 
     def red_bildirimi(self):
+        """
+            Hakem adayı hakemlik davetini reddederse, projenin ProjeDegerlendirmeleri ListNode'unda
+              hakem adayına karşılık gelen alanın degerlendirme durumu 'Hakemlik Daveti Reddedildi'
+              (4) olarak kaydedilir. Daveti gönderen kullanıcıya davetin reddedildiği bildirilir.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         for degerlendirme in proje.ProjeDegerlendirmeleri:
             if degerlendirme.hakem().okutman().user_id == self.current.user_id:
                 degerlendirme.hakem_degerlendirme_durumu = 4
+        proje.blocking_save()
         role = User.objects.get(self.current.task_data['davet_gonderen']).role_set[0].role
         role.send_notification(title=_(u"Proje Hakemlik Daveti Yanıtı"),
                                message=_(u"""%s adlı projeyi değerlendirmek üzere %s adlı hakem
                                adayına gönderdiğiniz davet reddedilmiştir. Proje listeleme adımından
                                hakemlik daveti butonuna tıklayarak yeniden davet gönderebilirsiniz.
                                """ % (proje.ad, self.current.user)),
+                               typ=1,
+                               sender=self.current.user
+                               )
+
+    def kabul_durum_degistir(self):
+        """
+            Hakem adayı hakemlik davetini kabul ederse, projenin ProjeDegerlendirmeleri
+            ListNode'unda hakem adayına karşılık gelen alanın degerlendirme durumu 'Hakemlik Daveti
+            Kabul Edildi' (3) olarak kaydedilir. Daveti gönderen kullanıcıya davetin kabul edildiği
+            bildirilir.
+        """
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        for degerlendirme in proje.ProjeDegerlendirmeleri:
+            if degerlendirme.hakem().okutman().user_id == self.current.user_id:
+                degerlendirme.hakem_degerlendirme_durumu = 3
+        proje.blocking_save()
+        role = User.objects.get(self.current.task_data['davet_gonderen']).role_set[0].role
+        role.send_notification(title=_(u"Proje Hakemlik Daveti Yanıtı"),
+                               message=_(u"""%s adlı projeyi değerlendirmek üzere %s adlı hakem
+                                       adayına gönderdiğiniz davet kabul edilmiştir. Değerlendirme
+                                       tamamlandığında tarafınıza bildirim yapılacaktır.
+                                       """ % (proje.ad, self.current.user)),
                                typ=1,
                                sender=self.current.user
                                )
