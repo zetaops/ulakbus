@@ -124,6 +124,9 @@ class ProjeDegerlendirme(CrudView):
     """
         Proje hakemlerinin projeyi degerlendirirken kullanacagi is akisidir.
     """
+    class Meta:
+        model = "BAPProje"
+
     def proje_degerlendirme_karari_sor(self):
         """
             Hakemlik daveti gönderilen hakem adayına proje hakemlik daveti kararını soran
@@ -131,13 +134,14 @@ class ProjeDegerlendirme(CrudView):
              reddedebilir.
         """
         form = JsonForm(title=_(u"""%s Tarafından Gönderilen Hakemlik Daveti""" %
-                                Personel.objects.get(user_id=self.current.task_data[
-                                                         'davet_gonderen'].__unicode__())))
-        form.help_text(_(u"""Proje özetini inceleyebilir, hakemlik davetini kabul edebilir ya da
-        geri çevirebilirsiniz."""))
+                                User.objects.get(self.current.task_data[
+                                                         'davet_gonderen']).__unicode__()))
+        form.help_text = _(u"""Proje özetini inceleyebilir, hakemlik davetini kabul edebilir ya da
+        geri çevirebilirsiniz.""")
         form.ozet_incele = fields.Button(_(u"Proje Özeti İncele"), cmd='ozet_incele')
         form.davet_red = fields.Button(_(u"Hakemlik Davetini Reddet"), cmd='davet_red')
         form.davet_kabul = fields.Button(_(u"Hakemlik Davetini Kabul Et"), cmd='davet_kabul')
+        self.form_out(form)
 
     def proje_ozet_goruntule(self):
         """
@@ -157,7 +161,7 @@ class ProjeDegerlendirme(CrudView):
         """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         for degerlendirme in proje.ProjeDegerlendirmeleri:
-            if degerlendirme.hakem().okutman().user_id == self.current.user_id:
+            if degerlendirme.hakem().okutman().user().key == self.current.user_id:
                 degerlendirme.hakem_degerlendirme_durumu = 4
         proje.blocking_save()
         role = User.objects.get(self.current.task_data['davet_gonderen']).role_set[0].role
@@ -179,7 +183,7 @@ class ProjeDegerlendirme(CrudView):
         """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         for degerlendirme in proje.ProjeDegerlendirmeleri:
-            if degerlendirme.hakem().okutman().user_id == self.current.user_id:
+            if degerlendirme.hakem().okutman().user().key == self.current.user_id:
                 degerlendirme.hakem_degerlendirme_durumu = 3
         proje.blocking_save()
         role = User.objects.get(self.current.task_data['davet_gonderen']).role_set[0].role
@@ -192,13 +196,16 @@ class ProjeDegerlendirme(CrudView):
                                sender=self.current.user
                                )
 
+    def yonlendir(self):
+        self.current.output['cmd'] = 'reload'
+
     def proje_degerlendir(self):
         """
             Hakem adayının projeyi değerlendireceği formu gösterir. Form doldurulup submit
             edildiğinde bir sonraki adımda kayıt gerçekleştirilir. Eğer hakem adayı proje inceleme
             adımına dönüp tekrar form adımına gelirse, form bıraktığı şekilde yeniden gösterilir.
         """
-        form = ProjeDegerlendirmeForm()
+        form = ProjeDegerlendirmeForm(current=self.current)
         self.form_out(form)
 
     def degerlendirme_kaydet(self):
@@ -212,7 +219,7 @@ class ProjeDegerlendirme(CrudView):
             del form['incelemeye_don']
             del form['degerlendirme_kaydet']
         for degerlendirme in proje.ProjeDegerlendirmeleri:
-            if degerlendirme.hakem().okutman().user_id == self.current.user_id:
+            if degerlendirme.hakem().okutman().user().key == self.current.user_id:
                 degerlendirme.hakem_degerlendirme_durumu = 5
                 degerlendirme.degerlendirme_sonucu = form['proje_degerlendirme_sonucu']
                 degerlendirme.form_data = form
@@ -228,7 +235,7 @@ class ProjeDegerlendirme(CrudView):
         role = User.objects.get(self.current.task_data['davet_gonderen']).role_set[0].role
         deger_durum = ""
         for degerlendirme in proje.ProjeDegerlendirmeleri:
-            if degerlendirme.hakem().okutman().user_id == self.current.user_id:
+            if degerlendirme.hakem().okutman().user().key == self.current.user_id:
                 if degerlendirme.degerlendirme_sonucu == 1:
                     deger_durum = _(u"Olumlu/Proje Desteklenmelidir")
                 else:

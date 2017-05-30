@@ -92,14 +92,14 @@
       <bpmn:outgoing>SequenceFlow_05l4obo</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0ufw7z5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0l34gm3" sourceRef="ExclusiveGateway_09rnmwx" targetRef="Task_0j6fkss">
+    <bpmn:sequenceFlow id="SequenceFlow_0l34gm3" sourceRef="ExclusiveGateway_09rnmwx" targetRef="hakemlik_daveti">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='hakem_daveti']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Task_0j6fkss" name="Hakemlik Daveti Gönder" camunda:type="external" camunda:topic="bap_hakemlik_daveti">
+    <bpmn:serviceTask id="hakemlik_daveti" name="Hakemlik Daveti Gönder" camunda:type="external" camunda:topic="bap_hakemlik_daveti">
       <bpmn:incoming>SequenceFlow_0l34gm3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_170ba4a</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_170ba4a" sourceRef="Task_0j6fkss" targetRef="BasvuruListeleme" />
+    <bpmn:sequenceFlow id="SequenceFlow_170ba4a" sourceRef="hakemlik_daveti" targetRef="BasvuruListeleme" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1izhmpx">
@@ -280,7 +280,7 @@
           <dc:Bounds x="-115" y="149.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_1ap00qs_di" bpmnElement="Task_0j6fkss">
+      <bpmndi:BPMNShape id="ServiceTask_1ap00qs_di" bpmnElement="hakemlik_daveti">
         <dc:Bounds x="34" y="94" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_170ba4a_di" bpmnElement="SequenceFlow_170ba4a">
