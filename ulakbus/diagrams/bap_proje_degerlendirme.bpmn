@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_0ii3inp">
     <bpmn:extensionElements>
       <camunda:properties>
-        <camunda:property name="memu_category" value="BAP" />
+        <camunda:property name="menu_category" value="hidden" />
       </camunda:properties>
     </bpmn:extensionElements>
     <bpmn:participant id="Participant_0e33222" name="BAP Proje Değerlendirme" processRef="bap_proje_degerlendirme" />

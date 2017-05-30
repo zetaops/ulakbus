@@ -26,6 +26,8 @@ class HakemSecForm(JsonForm):
         soyad = fields.String(_(u"Soyad"), readonly=True)
         email = fields.String(_(u"E-posta"), readonly=True)
         birim = fields.String(_(u"Birim"), readonly=True)
+        durum = fields.Integer(_(u"Durum"), choices='bap_proje_hakem_degerlendirme_durum',
+                               readonly=True)
 
     hakem = field.String(_(u"Hakem"))
     ekle = fields.Button(_(u"Ekle"), cmd='ekle')
@@ -48,17 +50,23 @@ class HakemlikDaveti(CrudView):
                 ad=pd.hakem.okutman().ad,
                 soyad=pd.hakem.okutman().soyad,
                 email=pd.hakem.okutman().e_posta,
-                birim=pd.hakem.okutman().birim().name
+                birim=pd.hakem.okutman().birim().name,
+                durum=pd.hakem_degerlendirme_durumu
             )
         self.form_out(form)
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def hakem_kaydet(self):
-        self.object.ProjeDegerlendirmeleri(
-            hakem=Okutman.objects.get(self.input['form']['hakem'])
-        )
-        self.object.blocking_save()
+        for hakem in self.object.ProjeDegerlendirmeleri:
+            if hakem.hakem() == Okutman.objects.get(self.input['form']['hakem']):
+                break
+        else:
+            self.object.ProjeDegerlendirmeleri(
+                hakem=Okutman.objects.get(self.input['form']['hakem']),
+                hakem_degerlendirme_durumu=1
+            )
+            self.object.blocking_save()
 
     def hakem_cikar(self):
         for hakem in self.object.ProjeDegerlendirmeleri:
@@ -70,36 +78,39 @@ class HakemlikDaveti(CrudView):
         wf = BPMNWorkflow.objects.get(name='bap_proje_degerlendirme')
         today = datetime.today()
         for hakem in self.object.ProjeDegerlendirmeleri:
-            role = hakem.hakem().okutman().user().role_set[0].role
-            wfi = WFInstance(
-                wf=wf,
-                current_actor=role,
-                task=None,
-                name=wf.name
-            )
-            wfi.data = dict()
-            wfi.data['bap_proje_id'] = self.object.key
-            wfi.data['davet_gonderen'] = self.current.user_id
-            wfi.data['flow'] = None
-            wfi.pool = {}
-            wfi.blocking_save()
-            role.send_notification(title=_(u"Proje Revizyon İsteği"),
-                                   message=_(u"""%s adlı projeyi değerlendirmek üzere koordinasyon
-                                   birimi tarafından hakem olarak davet edildiniz. Görev
-                                   yöneticinizden daveti kabul edip değerlendirebilir ya da daveti
-                                   reddedebilirsiniz.""" % self.object.ad),
-                                   typ=1,
-                                   sender=self.current.user
-                                   )
-            # wfi = WFInstance.objects.filter()[0]
-            inv = TaskInvitation(
-                instance=wfi,
-                role=hakem.hakem().okutman().user().role_set[0].role,
-                wf_name=wfi.wf.name,
-                progress=30,
-                start_date=today,
-                finish_date=today + timedelta(15)
-            )
-            inv.title = wfi.wf.title
-            inv.save()
+            if hakem.hakem_degerlendirme_durumu == 1:
+                role = hakem.hakem().okutman().user().role_set[0].role
+                wfi = WFInstance(
+                    wf=wf,
+                    current_actor=role,
+                    task=None,
+                    name=wf.name
+                )
+                wfi.data = dict()
+                wfi.data['bap_proje_id'] = self.object.key
+                wfi.data['davet_gonderen'] = self.current.user_id
+                wfi.data['flow'] = None
+                wfi.pool = {}
+                wfi.blocking_save()
+                role.send_notification(title=_(u"Proje Revizyon İsteği"),
+                                       message=_(u"""%s adlı projeyi değerlendirmek üzere koordinasyon
+                                       birimi tarafından hakem olarak davet edildiniz. Görev
+                                       yöneticinizden daveti kabul edip değerlendirebilir ya da daveti
+                                       reddedebilirsiniz.""" % self.object.ad),
+                                       typ=1,
+                                       sender=self.current.user
+                                       )
+                # wfi = WFInstance.objects.filter()[0]
+                inv = TaskInvitation(
+                    instance=wfi,
+                    role=hakem.hakem().okutman().user().role_set[0].role,
+                    wf_name=wfi.wf.name,
+                    progress=30,
+                    start_date=today,
+                    finish_date=today + timedelta(15)
+                )
+                inv.title = wfi.wf.title
+                inv.save()
+                hakem.hakem_degerlendirme_durumu = 2
+        self.object.blocking_save()
 
