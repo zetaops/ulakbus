@@ -15,7 +15,7 @@ from pyoko import field
 class ProjeDegerlendirmeForm(JsonForm):
     class Meta:
         title = _(u"Bilimsel Araştırma Projesi (BAP) Proje Başvuru Değerlendirme Formu")
-        # always_blank = False
+        always_blank = False
 
         grouping = [
             {
@@ -89,7 +89,7 @@ class ProjeDegerlendirmeForm(JsonForm):
     basari_olcut_gercek_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
 
     katki_beklenti = field.Integer(_(u"PROJE İLE SAĞLANACAK KATKILARA İLİŞKİN BEKLENTİLER"),
-                                        choices='bap_proje_degerlendirme_secenekler', default=1)
+                                   choices='bap_proje_degerlendirme_secenekler', default=1)
 
     katki_beklenti_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
 
@@ -114,8 +114,9 @@ class ProjeDegerlendirmeForm(JsonForm):
     proje_degerlendirme_sonucu = field.Integer(
         _(u"DEĞERLENDİRME SONUCUNUZ"), choices='bap_proje_degerlendirme_sonuc', default=1)
 
-    iptal = fields.Button(_(u"İptal"), cmd='iptal')
-    tamam = fields.Button(_(u"Değerlendirme Kaydet"), cmd='kaydet')
+    incelemeye_don = fields.Button(_(u"İncelemeye Dön"), cmd='incelemeye_don',
+                                   form_validation=False)
+    degerlendirme_kaydet = fields.Button(_(u"Değerlendirme Kaydet"), cmd='kaydet')
 
 
 
@@ -192,8 +193,50 @@ class ProjeDegerlendirme(CrudView):
                                )
 
     def proje_degerlendir(self):
+        """
+            Hakem adayının projeyi değerlendireceği formu gösterir. Form doldurulup submit
+            edildiğinde bir sonraki adımda kayıt gerçekleştirilir. Eğer hakem adayı proje inceleme
+            adımına dönüp tekrar form adımına gelirse, form bıraktığı şekilde yeniden gösterilir.
+        """
         form = ProjeDegerlendirmeForm()
         self.form_out(form)
 
     def degerlendirme_kaydet(self):
-        pass
+        """
+            Hakem adayının doldurduğu formu, aynı hakem adayının değerlendirmesi olarak projeye
+             kaydeder.
+        """
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        form = self.input['form']
+        if 'incelemeye_don' in form and 'degerlendirme_kaydet' in form:
+            del form['incelemeye_don']
+            del form['degerlendirme_kaydet']
+        for degerlendirme in proje.ProjeDegerlendirmeleri:
+            if degerlendirme.hakem().okutman().user_id == self.current.user_id:
+                degerlendirme.hakem_degerlendirme_durumu = 5
+                degerlendirme.degerlendirme_sonucu = form['proje_degerlendirme_sonucu']
+                degerlendirme.form_data = form
+        proje.blocking_save()
+
+    def degerlendirildi_bildirimi(self):
+        """
+            Hakem adayı değerlendirmesi kaydedildikten sonra koordinasyon birimine proje
+             değerlendirildi bildirimi gönderilir. Değerlendirme sonucu da bildirim içinde
+             gösterilir.
+        """
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        role = User.objects.get(self.current.task_data['davet_gonderen']).role_set[0].role
+        deger_durum = ""
+        for degerlendirme in proje.ProjeDegerlendirmeleri:
+            if degerlendirme.hakem().okutman().user_id == self.current.user_id:
+                if degerlendirme.degerlendirme_sonucu == 1:
+                    deger_durum = _(u"Olumlu/Proje Desteklenmelidir")
+                else:
+                    deger_durum = _(u"Olumsuz/Proje Desteklenmemelidir")
+        role.send_notification(title=_(u"Proje Değerlendirme Sonucu"),
+                               message=_(u"""%s adlı proje %s adlı hakem adayı tarafından
+                               değerlendirilmiştir. Projenin değerlendirme sonucu '%s' olarak
+                               belirtilmiştir.""" % (proje.ad, self.current.user, deger_durum)),
+                               typ=1,
+                               sender=self.current.user
+                               )
