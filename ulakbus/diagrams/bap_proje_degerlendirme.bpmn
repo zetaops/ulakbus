@@ -15,7 +15,7 @@
       <bpmn:outgoing>SequenceFlow_0tm8brh</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_0bdfdvf" sourceRef="StartEvent_1" targetRef="proje_degerlendirme_karari_sor" />
-    <bpmn:userTask id="proje_degerlendirme_karari_sor" name="Proje Değerlendirme Kararı Sor">
+    <bpmn:userTask id="proje_degerlendirme_karari_sor" name="Proje Değerlendirme Kararı Sor" camunda:assignee="bap.bap_proje_degerlendirme.ProjeDegerlendirme.proje_degerlendirme_karari_sor">
       <bpmn:incoming>SequenceFlow_0bdfdvf</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_07oisfn</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0vdrn4w</bpmn:outgoing>
@@ -27,18 +27,18 @@
       <bpmn:outgoing>SequenceFlow_02o81et</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_004k8ds</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_17vvhp7" sourceRef="ExclusiveGateway_0i7rbf4" targetRef="Task_115jqr8">
+    <bpmn:sequenceFlow id="SequenceFlow_17vvhp7" sourceRef="ExclusiveGateway_0i7rbf4" targetRef="proje_degerlendirme_durum_degistir">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='davet_kabul']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Task_115jqr8" name="Proje Hakem Değerlendirme Durumunu Değiştir">
+    <bpmn:serviceTask id="proje_degerlendirme_durum_degistir" name="Proje Değerlendirme Durumunu Değiştir">
       <bpmn:incoming>SequenceFlow_17vvhp7</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0polfcp</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0polfcp" sourceRef="Task_115jqr8" targetRef="proje_incele" />
-    <bpmn:sequenceFlow id="SequenceFlow_02o81et" sourceRef="ExclusiveGateway_0i7rbf4" targetRef="Task_1yjddj8">
+    <bpmn:sequenceFlow id="SequenceFlow_0polfcp" sourceRef="proje_degerlendirme_durum_degistir" targetRef="proje_incele" />
+    <bpmn:sequenceFlow id="SequenceFlow_02o81et" sourceRef="ExclusiveGateway_0i7rbf4" targetRef="red_bildirimi">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='davet_red']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Task_1yjddj8" name="Koordinasyon Birimine Red Bildirimi Gönder">
+    <bpmn:serviceTask id="red_bildirimi" name="Koordinasyon Birimine Red Bildirimi Gönder" camunda:class="bap.bap_proje_degerlendirme.ProjeDegerlendirme.red_bildirimi">
       <bpmn:incoming>SequenceFlow_02o81et</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_007zmrk</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -48,7 +48,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_004k8ds" sourceRef="ExclusiveGateway_0i7rbf4" targetRef="proje_ozet_goruntule">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='ozet_incele']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="proje_ozet_goruntule" name="Proje Özeti Görüntüle">
+    <bpmn:userTask id="proje_ozet_goruntule" name="Proje Özeti Görüntüle" camunda:assignee="bap.bap_proje_degerlendirme.ProjeDegerlendirme.proje_ozet_goruntule">
       <bpmn:incoming>SequenceFlow_004k8ds</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_07oisfn</bpmn:outgoing>
     </bpmn:userTask>
@@ -62,7 +62,7 @@
       <bpmn:incoming>SequenceFlow_1o4lrnv</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0u222aw</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_007zmrk" sourceRef="Task_1yjddj8" targetRef="EndEvent" />
+    <bpmn:sequenceFlow id="SequenceFlow_007zmrk" sourceRef="red_bildirimi" targetRef="EndEvent" />
     <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_007zmrk</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1vbi4ad</bpmn:incoming>
@@ -137,7 +137,7 @@
           <dc:Bounds x="439" y="105" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_19cq164_di" bpmnElement="Task_115jqr8">
+      <bpmndi:BPMNShape id="ServiceTask_19cq164_di" bpmnElement="proje_degerlendirme_durum_degistir">
         <dc:Bounds x="451" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0polfcp_di" bpmnElement="SequenceFlow_0polfcp">
@@ -154,7 +154,7 @@
           <dc:Bounds x="416" y="180" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0nul22f_di" bpmnElement="Task_1yjddj8">
+      <bpmndi:BPMNShape id="ServiceTask_0nul22f_di" bpmnElement="red_bildirimi">
         <dc:Bounds x="351" y="215" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_004k8ds_di" bpmnElement="SequenceFlow_004k8ds">

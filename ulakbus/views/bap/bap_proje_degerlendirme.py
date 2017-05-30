@@ -3,7 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import Personel
+from ulakbus.models import BAPProje, Personel, User
 from zengine.forms import JsonForm
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy as __
@@ -124,14 +124,44 @@ class ProjeDegerlendirme(CrudView):
         Proje hakemlerinin projeyi degerlendirirken kullanacagi is akisidir.
     """
     def proje_degerlendirme_karari_sor(self):
+        """
+            Hakemlik daveti gönderilen hakem adayına proje hakemlik daveti kararını soran
+             adımdır. Hakem adayı proje özetini görüntüleyebilir, hakemlik davetini kabul ya da
+             reddedebilir.
+        """
         form = JsonForm(title=_(u"""%s Tarafından Gönderilen Hakemlik Daveti""" %
-                                Personel.objects.get(self.current.task_data[
+                                Personel.objects.get(user_id=self.current.task_data[
                                                          'davet_gonderen'].__unicode__())))
         form.help_text(_(u"""Proje özetini inceleyebilir, hakemlik davetini kabul edebilir ya da
         geri çevirebilirsiniz."""))
         form.ozet_incele = fields.Button(_(u"Proje Özeti İncele"), cmd='ozet_incele')
         form.davet_red = fields.Button(_(u"Hakemlik Davetini Reddet"), cmd='davet_red')
         form.davet_kabul = fields.Button(_(u"Hakemlik Davetini Kabul Et"), cmd='davet_kabul')
+
+    def proje_ozet_goruntule(self):
+        """
+            Hakem adayına proje özetinin gösterildiği adımdır.
+        """
+        self.object = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        self.show()
+        form = JsonForm()
+        form.geri = fields.Button(_(u"Geri"))
+        self.form_out(form)
+
+    def red_bildirimi(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        for degerlendirme in proje.ProjeDegerlendirmeleri:
+            if degerlendirme.hakem().okutman().user_id == self.current.user_id:
+                degerlendirme.hakem_degerlendirme_durumu = 4
+        role = User.objects.get(self.current.task_data['davet_gonderen']).role_set[0].role
+        role.send_notification(title=_(u"Proje Hakemlik Daveti Yanıtı"),
+                               message=_(u"""%s adlı projeyi değerlendirmek üzere %s adlı hakem
+                               adayına gönderdiğiniz davet reddedilmiştir. Proje listeleme adımından
+                               hakemlik daveti butonuna tıklayarak yeniden davet gönderebilirsiniz.
+                               """ % (proje.ad, self.current.user)),
+                               typ=1,
+                               sender=self.current.user
+                               )
 
     def proje_degerlendir(self):
         form = ProjeDegerlendirmeForm()
