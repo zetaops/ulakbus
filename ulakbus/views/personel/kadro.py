@@ -59,7 +59,6 @@ Kadro Sil Onay
    Silme işlemi için onay adımıdır.
 
 """
-import datetime
 from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi, suren_terfi_var_mi
 from ulakbus.lib.personel import terfi_durum_kontrol, derece_ilerlet, terfi_tikanma_kontrol
@@ -68,9 +67,12 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
-from ulakbus.models import Personel, Permission, User
+from ulakbus.models import Personel, HitapSebep, HizmetKayitlari, Permission, User
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
+from ulakbus.lib.view_helpers import prepare_choices_for_model
+from pyoko.db.adapter.db_riak import BlockSave
+import datetime
 
 
 class KadroObjectForm(JsonForm):
@@ -1064,3 +1066,389 @@ class GorevSuresiUzat(CrudView):
         personel.gorev_suresi_baslama = datetime.date.today()
         personel.gorev_suresi_bitis = self.current.input["form"]["gorev_suresi_bitis"]
         personel.save()
+
+class KanunlaVerilenTerfiForm(JsonForm):
+    """ Kanunla verilen terfi işlemleri için form olarak kullanılmak üzere oluşturuldu """
+
+    class Meta:
+        title = _(u'Kanunla Verilen Terfi İşlemi')
+        help_text = _(u'Personelin tüm kademe ve derece bilgilerinin doğru olduğundan emin olunuz')
+
+        grouping = [
+            {
+                "layout" : "4",
+                "groups" : [
+                    {
+                        "group_title" : _(u'Görev Aylığı'),
+                        "items" : [
+                            'ga_derece', 'ga_kademe'
+                        ],
+                        "collapse" : True
+                    }
+                ]
+            },
+            {
+                "layout" : "4",
+                "groups" : [
+                    {
+                        "group_title" : _(u'Kazanılmış Hak'),
+                        "items" : [
+                            'kh_derece', 'kh_kademe'
+                        ],
+                        "collapse" : True
+                    }
+                ]
+            },
+            {
+                "layout" : "4",
+                "groups" : [
+                    {
+                        "group_title" : _(u'Emekli Müktesebi'),
+                        "items" : [
+                            'em_derece', 'em_kademe'
+                        ]
+                    }
+                ]
+            }
+        ]
+
+    kaydet = fields.Button(_(u'Kaydet'), cmd="terfi_kaydet", style="btn-success")
+    iptal = fields.Button(_(u'İptal'), cmd="iptal")
+
+
+
+
+
+class HizmetCetveliForm(JsonForm):
+    class Meta:
+        title = _(u'Kanunla Verilen Terfi Hizmet Cetveli Girişi')
+
+    terfi_sebep = fields.String(_(u'Hitap Sebep'))
+    baslama_tarihi = fields.Date(_(u'Başlama Tarihi'))
+    bitis_tarihi = fields.Date(_(u'Bitis Tarihi'))
+    kurum_onay_tarihi = fields.Date(_(u'Kurum Onay Tarihi'))
+    kaydet = fields.Button(_(u'Kaydet'), cmd="hizmet_cetveli_kayit", style="btn-success")
+    iptal = fields.Button(_(u'İptal'), cmd="iptal")
+
+class KanunlaVerilenTerfi(CrudView):
+    """
+        Kanunla Verilen Terfi İş Akışı
+        Burada normal terfideki gibi terfi tıkanmaları yoktur. Bir kanuna istinaden personelin terfisi yapılır.
+        Yapılan her bir terfi işlemi bir hitap koduyla ilişkilendirilir.
+    """
+
+    class Meta:
+        model = "Personel"
+
+    def terfi_form(self):
+        """ Kanunla verilen terfi işlem formunu return eden metoddur. """
+        self.current.task_data["personel_id"] = self.current.input["id"]
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+
+        _form = KanunlaVerilenTerfiForm(current=self.current)
+        _form.ga_derece = fields.Integer(_(u'Derece'), default=personel.gorev_ayligi_derece)
+        _form.ga_kademe = fields.Integer(_(u'Kademe'), default=personel.gorev_ayligi_kademe)
+        _form.kh_derece = fields.Integer(_(u'Derece'), default=personel.kazanilmis_hak_derece)
+        _form.kh_kademe = fields.Integer(_(u'Kademe'), default=personel.kazanilmis_hak_kademe)
+        _form.em_derece = fields.Integer(_(u'Derece'), default=personel.emekli_muktesebat_derece)
+        _form.em_kademe = fields.Integer(_(u'Kademe'), default=personel.emekli_muktesebat_kademe)
+
+        self.form_out(_form)
+
+    def terfi_bilgileri_kaydet(self):
+        """
+            Personel İşleri Dairesinden yetkili bir personelin girdiği terfi bilgilerinin
+            iş akışının ileriki aşamalarında veritabanına kaydedilmek üzere saklandığı metoddur.
+        """
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+        self.current.task_data["ga_derece"] = self.current.input["form"]["ga_derece"]
+        self.current.task_data["ga_kademe"] = self.current.input["form"]["ga_kademe"]
+        self.current.task_data["kh_derece"] = self.current.input["form"]["kh_derece"]
+        self.current.task_data["kh_kademe"] = self.current.input["form"]["kh_kademe"]
+        self.current.task_data["em_derece"] = self.current.input["form"]["em_derece"]
+        self.current.task_data["em_kademe"] = self.current.input["form"]["em_kademe"]
+
+    def hizmet_cetveli_form(self):
+        """
+            Kanunla verilen terfi işleminin hizmet cetveline işlenmesinde personelin gireceği
+            veriler oluşturulmuş bir formdur.
+        """
+        _form = HizmetCetveliForm(current=self.current)
+        _form.set_choices_of('terfi_sebep', prepare_choices_for_model(HitapSebep))
+        self.form_out(_form)
+
+    def hizmet_cetveli_kayit(self):
+        """
+            Hizmet cetveli formundan gelen bilgileri task_data içerisinde saklayan metod.
+        Args:
+            self:
+
+        Returns:
+
+        """
+        self.current.task_data["hizmet_cetveli"] = {
+            "baslama_tarihi": self.current.input["form"]["baslama_tarihi"],
+            "bitis_tarihi": self.current.input["form"]["bitis_tarihi"],
+            "terfi_sebep": self.current.input["form"]["terfi_sebep"],
+            "kurum_onay_tarihi": self.current.input["form"]["kurum_onay_tarihi"]
+        }
+
+    def permission_belirle(self):
+        """
+
+        Args:
+            self:
+
+        Returns:
+
+        """
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+
+        # Terfi wf yi başlatan personel
+        self.current.task_data["personel_user_id"] = self.current.user.key
+
+        # Terfisi yapılacak personel
+        self.current.task_data["terfi_user_id"] = personel.user.key
+
+        if personel.personel_turu == 1:
+            self.current.task_data["permission_name"] = "akademik_personel_terfi_onay"
+        elif personel.personel_turu == 2:
+            self.current.task_data["permission_name"] = "idari_personel_terfi_onay"
+
+        msg = {"type" : _(u"info"), "title": _(u'Onaya Gönderildi!'),
+               "msg": _(u'Terfi işlemi onaya gönderildi')}
+        self.current.output["msgbox"] = msg
+
+        user_permission = Permission.objects.get(name=self.current.task_data["permission_name"])
+        user_list = user_permission.get_permitted_users()
+        self.current.invite_other_parties(user_list)
+
+    def iptal(self):
+        """
+            Terfi işleminin iptal edilmesiyle Kanunla verilen terfi iş akışı
+            ana ekranına yönlendirilir.
+
+        """
+        self.current.output['cmd'] = 'reload'
+
+    def terfi_durum_goruntule(self):
+        """
+            Terfisi yapılan personelin terfi sonrası kademe ve derece durumlarını
+            personel türüne göre rektör veya genel sekretere sunan workflow adımına
+            assign edilmiş metoddur.
+
+            Kural
+            - Personel akademik bir personel ise terfi onay işlemi rektör tarafından
+              yapılır.
+
+            - Personel idari bir personel ise terfi onay işlemi rektörlük tarafından yapılır.
+        Returns:
+
+        """
+
+        personel = Personel.objects.get(self.current.task_data["personel_id"])
+
+        bilgiler = """
+            ### Personel Bilgileri
+
+            __T.C. No__ : {tcno}
+
+            __Ad Soyad__ : {ad} {soyad}
+
+            __Kadro Derece__ : {kadro_derece}
+
+
+            ### Terfi Önces            user.send_notification(
+                title=_(u"Terfi İşlemi Gerçekleştirildi"),
+                message=personel_dairesi_mesaj,
+                sender=self.current.user
+            )i Kademe ve Derece Durumları
+
+            __Görev Aylığı__ : {gorev_ayligi_derece}/{gorev_ayligi_kademe}
+            __Kazanılmış Hak__ : {gorev_ayligi_derece}/{gorev_ayligi_kademe}
+            __Emekli Müktesebat__ : {emekli_muktesebat_derece}/{emekli_muktesebat_kademe}
+
+            ### Terfi Sonrası Kademe ve Derece Durumları
+
+            __Görev Aylığı__ : {yeni_gorev_ayligi_derece}/{yeni_gorev_ayligi_kademe}
+            __Kazanılmış Hak__ : {yeni_kazanilmis_hak_derece}/{yeni_kazanilmis_hak_kademe}
+            __Emekli Muktesebat__ : {yeni_emekli_muktesebat_derece}/{yeni_emekli_muktesebat_kademe}
+        """.format(
+            tcno = personel.tckn,
+            ad = personel.ad,
+            soyad = personel.soyad,
+            kadro_derece = personel.kadro.derece,
+            gorev_ayligi_derece = personel.gorev_ayligi_derece,
+            gorev_ayligi_kademe = personel.gorev_ayligi_kademe,
+            kazanilmis_hak_derece = personel.kazanilmis_hak_derece,
+            kazanilmis_hak_kademe = personel.kazanilmis_hak_kademe,
+            emekli_muktesebat_derece = personel.emekli_muktesebat_derece,
+            emekli_muktesebat_kademe = personel.emekli_muktesebat_kademe,
+            yeni_gorev_ayligi_derece = self.current.task_data["ga_derece"],
+            yeni_gorev_ayligi_kademe = self.current.task_data["ga_kademe"],
+            yeni_kazanilmis_hak_derece = self.current.task_data["kh_derece"],
+            yeni_kazanilmis_hak_kademe = self.current.task_data["kh_kademe"],
+            yeni_emekli_muktesebat_derece = self.current.task_data["em_derece"],
+            yeni_emekli_muktesebat_kademe = self.current.task_data["em_kademe"]
+        )
+
+        self.output['object'] = {
+            "" : bilgiler
+        }
+
+        _form = JsonForm(title=" ")
+        _form.terfi_kaydet = fields.Button("Kaydet", cmd="terfi_kaydet")
+        _form.iptal = fields.Button("İptal", cmd="terfi_iptal")
+
+        self.form_out(_form)
+
+
+    def kayit_tamamla(self):
+        """
+             Kanunla verilen terfi kapsamında yapılan terfi işlemini veritabanında
+            hem Personel modelinde hemde HizmetKayitlari modeline işleyen metoddur.
+            Ayrıca bu workflow adımı çalıştığı takdirde task_data içerisinde
+            tutulan terfi_onay_flag True yapılır.
+        Args:
+            self:
+
+        Returns:
+
+        """
+
+        with BlockSave(Personel):
+            personel = Personel.objects.get(self.current.task_data["personel_id"])
+            personel.gorev_ayligi_derece = self.current.task_data["ga_derece"]
+            personel.gorev_ayligi_kademe = self.current.task_data["ga_kademe"]
+            personel.kazanilmis_hak_derece = self.current.task_data["kh_derece"]
+            personel.kazanilmis_hak_kademe = self.current.task_data["kh_kademe"]
+            personel.emekli_muktesebat_derece = self.current.task_data["em_derece"]
+            personel.emekli_muktesebat_kademe = self.current.task_data["em_kademe"]
+            personel.save()
+            hitap_sebep = HitapSebep.objects.get(self.current.task_data["hizmet_cetveli"]["terfi_sebep"])
+            hizmet_kayit = HizmetKayitlari(
+                tckn=personel.tckn,
+                baslama_tarihi=self.current.task_data["hizmet_cetveli"]["baslama_tarihi"],
+                bitis_tarihi=self.current.task_data["hizmet_cetveli"]["bitis_tarihi"],
+                gorev="%s %s" % (personel.birim.name, personel.kadro.get_unvan_display()),
+                unvan_kod=personel.kadro.unvan,
+                hizmet_sinifi=personel.atama.hizmet_sinifi,
+                kadro_derece=personel.kadro.derece,
+                odeme_derece=personel.gorev_ayligi_derece,
+                odeme_kademe=personel.gorev_ayligi_kademe,
+                odeme_ekgosterge=personel.gorev_ayligi_ekgosterge,
+                kazanilmis_hak_ayligi_derece=personel.kazanilmis_hak_derece,
+                kazanilmis_hak_ayligi_kademe=personel.kazanilmis_hak_kademe,
+                kazanilmis_hak_ayligi_ekgosterge=personel.kazanilmis_hak_ekgosterge,
+                emekli_derece=personel.emekli_muktesebat_derece,
+                emekli_kademe=personel.emekli_muktesebat_kademe,
+                emekli_ekgosterge=personel.emekli_muktesebat_ekgosterge,
+                sebep_kod=hitap_sebep.sebep_no,
+                kurum_onay_tarihi=self.current.task_data["hizmet_cetveli"]["kurum_onay_tarihi"],
+                personel=personel,
+                model_key=personel.key
+            )
+
+            hizmet_kayit.save()
+            self.current.task_data["terfi_onay_flag"] = True
+
+    def terfi_red(self):
+        """
+            Workflow da terfinin reddedilmesi adımını içerir. terfi_onay flag
+            False yapılır.
+        Args:
+            self:
+
+        Returns:
+
+        """
+        self.current.task_data["terfi_onay_flag"] = False
+
+        msg = {"type": _(u"info"), "title": _(u'Onaya Gönderildi!'),
+               "msg": _(u'Terfi işlemi iptal edildi')}
+        self.current.output["msgbox"] = msg
+
+    def ilgili_personel_bilgilendir(self):
+        """
+        Terfisi yapılan personelin terfi sonucuna dair bilgilendirilmesini sağlayan metod
+        Args:
+            self:
+
+        Returns:
+
+        """
+        user = User.objects.get(self.current.task_data["terfi_user_id"])
+        personel = Personel.objects.get(user_id=user.key)
+        onay_makami = "Rektörlük" if personel.personel_turu == 1 else "Genel Sekreterlik"
+        if self.current.task_data["terfi_onay_flag"] is True:
+            personel_mesaj = """
+                Terfiniz {onay_makami} tarafından onaylandı.
+            """.format(
+                onay_makami = onay_makami
+            )
+            user.send_notification(
+                title=_(u"Terfi Gerçekleştirildi"),
+                message=personel_mesaj,
+                sender=self.current.user
+            )
+        else:
+            personel_mesaj="""
+                Terfiniz {onay_makami} tarafından onaylanmadı.
+            """.format(
+                onay_makami=onay_makami
+            )
+            user.send_notification(
+                title=_(u"Terfi Onaylanmadı"),
+                message=personel_mesaj,
+                sender=self.current.user
+            )
+
+        msg = {"title": _(u'Personel Terfi Islemi Onaylandi!'),
+               "body": _(u'Onay Belgesi icin Personel Islerine Gonderildi.')}
+        self.current.output['msgbox'] = msg
+
+        if self.current.task_data["terfi_onay_flag"] is True:
+            personel_dairesi_mesaj = """
+                Aşağıda bilgileri verilen personelin terfisi {onay_makami} tarafından onaylanmıştır.
+                Terfi sonrası kademe derece durumu aşağıdaki gibidir.
+
+                T.C. No : {tcno}
+                Ad Soyad : {ad} {soyad}
+                Görev Aylığı : {gorev_ayligi_derece}/{gorev_ayligi_kademe}
+                Kazanılmış Hak : {kazanilmis_hak_derece}/{kazanilmis_hak_kademe}
+                Emekli Müktesebat : {emekli_muktesebat_derece}/{emekli_muktesebat_kademe}
+            """.format(
+                tcno = personel.tckn,
+                ad = personel.ad,
+                soyad = personel.soyad,
+                gorev_ayligi_derece=self.current.task_data["ga_derece"],
+                gorev_ayligi_kademe=self.current.task_data["ga_kademe"],
+                kazanilmis_hak_derece=self.current.task_data["kh_derece"],
+                kazanilmis_hak_kademe=self.current.task_data["kh_kademe"],
+                emekli_muktesebat_derece=self.current.task_data["em_derece"],
+                emekli_muktesebat_kademe=self.current.task_data["em_kademe"],
+                onay_makami=onay_makami
+            )
+        else:
+            personel_dairesi_mesaj = """
+                T.C. No : {tcno}
+                Ad Soyad : {ad} {soyad}
+
+                Yukarıda bilgileri verilen personelin terfisi {onay_makami} tarafından onaylanmadı.
+            """.format(
+                onay_makami = onay_makami
+            )
+        self.current.task_data['LANE_CHANGE_MSG'] = personel_dairesi_mesaj
+        personel_dairesi_user = User.objects.get(self.current.task_data["personel_user_id"])
+        self.current.invite_other_parties([personel_dairesi_user])
+
+    def onay_belgesi_uret(self):
+        """
+            Terfisi gerçekleşen personelin onay belgesini üreten metoddur.
+        Args:
+            self:
+
+        Returns:
+
+        """
+        pass

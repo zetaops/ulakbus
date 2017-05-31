@@ -283,7 +283,7 @@ class DataGrid(object):
             d = OrderedDict()
             for ac in active_columns:
                 if ac in self.select_fields or ac in self.multiselect_fields:
-                    d[ac] = self.select_options_dict[ac][str(data[ac])]
+                    d[ac] = self.select_options_dict[ac].get(str(data[ac]))
                 elif ac in self.range_date_fields:
                     d[ac] = datetime.strftime(
                         datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
