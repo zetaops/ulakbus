@@ -36,10 +36,22 @@ class HakemSecForm(JsonForm):
 
 
 class HakemlikDaveti(CrudView):
+    """
+        Koordinasyon biriminin hakem adaylarını seçerek adaylara davet gönderdiği iş akışı view
+        kodudur. Basvuru Listeleme is akisindan baslatilir.
+    """
     class Meta:
         model = "BAPProje"
 
     def hakemleri_sec(self):
+        """
+             Koordinasyon birimi davet gondermek istedigi hakem adaylarini tek tek secerek listeye
+             ekler. Listeden cikarmak istediklerini de ayni sekilde secer ve cikar butonuyla
+             listeden cikarir.
+
+             Listeyi olusturduktan sonra, listedekilere davet gonder butonuna tiklayarak
+             listedeki adaylara davet gonderir.
+        """
         form = HakemSecForm()
         hakem_list = [(i.key, i.__unicode__()) for i in Okutman.objects.exclude(
             key=self.object.yurutucu().key)]
@@ -58,6 +70,9 @@ class HakemlikDaveti(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def hakem_kaydet(self):
+        """
+            Hakem adayi zaten listeye eklenmisse, tekrar eklenmez.
+        """
         for hakem in self.object.ProjeDegerlendirmeleri:
             if hakem.hakem() == Okutman.objects.get(self.input['form']['hakem']):
                 break
@@ -75,6 +90,10 @@ class HakemlikDaveti(CrudView):
         self.object.blocking_save()
 
     def davet_gonder(self):
+        """
+            Hakem adaylari sadece listeye yeni eklenmisse davet gonderilir. Coktan davet
+            gonderilmis, davet reddedilmis ya da proje coktan degerlendirilmisse davet gonderilmez.
+        """
         wf = BPMNWorkflow.objects.get(name='bap_proje_degerlendirme')
         today = datetime.today()
         for hakem in self.object.ProjeDegerlendirmeleri:
@@ -113,4 +132,17 @@ class HakemlikDaveti(CrudView):
                 inv.save()
                 hakem.hakem_degerlendirme_durumu = 2
         self.object.blocking_save()
+
+    def davet_gonderildi_mesaj_goster(self):
+        """
+            Davet gonderildikten sonra koordinasyon birimine başarıyla davet gonderildigine dair
+            mesaj gosterilir.
+        """
+        form = JsonForm(title=_(u"%s Adlı Proje Hakem Daveti" % self.object.__unicode__()))
+        form.help_text = _(u"""Listeye eklediğiniz personellere hakemlik daveti gönderilmiştir.
+        Davetler hakem adayları tarafından yanıtlandıklarında tarafınıza bilgilendirme yapılacaktır.
+        """)
+        form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
+
 

@@ -134,8 +134,7 @@ class ProjeDegerlendirme(CrudView):
              reddedebilir.
         """
         form = JsonForm(title=_(u"""%s Tarafından Gönderilen Hakemlik Daveti""" %
-                                User.objects.get(self.current.task_data[
-                                                         'davet_gonderen']).__unicode__()))
+                                User.objects.get(self.current.task_data['davet_gonderen'])))
         form.help_text = _(u"""Proje özetini inceleyebilir, hakemlik davetini kabul edebilir ya da
         geri çevirebilirsiniz.""")
         form.ozet_incele = fields.Button(_(u"Proje Özeti İncele"), cmd='ozet_incele')
@@ -247,3 +246,33 @@ class ProjeDegerlendirme(CrudView):
                                typ=1,
                                sender=self.current.user
                                )
+
+    def red_mesaji_goster(self):
+        """
+            Hakem adayına proje davetini reddettiğine dair mesaj gösterir. Tamam butonuna
+            basıldıktan sonra iş akışı tamamlanır ve anasayfaya yöndlendirilir.
+        """
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        user = User.objects.get(self.current.task_data['davet_gonderen'])
+        form = JsonForm(title=_(u"%s Adlı Proje Hakem Daveti Yanıtı" % proje.__unicode__()))
+        form.help_text = _(u"""%s adlı proje için gelen hakemlik davetini reddettiniz. %s bu hususta
+        bilgilendirildi.""" % (proje.__unicode__(), user))
+        form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
+
+    def degerlendirildi_mesaji_goster(self):
+        """
+            Hakem adayına projeyi başarıyla değerlendirdiğine dair mesaj gösterir. Tamam butonuna
+            basıldıktan sonra iş akışı tamamlanır ve anasayfaya yöndlendirilir.
+        """
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        user = User.objects.get(self.current.task_data['davet_gonderen'])
+        form = JsonForm(title=_(u"%s Adlı Proje Değerlendirme Sonucu" % proje.__unicode__()))
+        form.help_text = _(u"""%s adlı proje değerlendirmeniz başarıyla kaydedildi. %s bu hususta
+                bilgilendirildi.""" % (proje.__unicode__(), user))
+        form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
+
+    def bitir(self):
+        self.current.output['cmd'] = 'reload'
+

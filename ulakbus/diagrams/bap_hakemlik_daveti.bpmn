@@ -13,11 +13,12 @@
       <bpmn:lane id="Lane_00u7un3">
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>hakem_sec_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_17k8oaj</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>hakem_kaydet</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>hakem_davet_gonder</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_17k8oaj</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>hakem_cikar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>davet_gonderildi_mesaji_goster</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="StartEvent_1">
@@ -30,7 +31,6 @@
       <bpmn:incoming>SequenceFlow_1irgewy</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1n8ttex</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_11fc1lv" sourceRef="hakem_davet_gonder" targetRef="EndEvent" />
     <bpmn:exclusiveGateway id="ExclusiveGateway_17k8oaj">
       <bpmn:incoming>SequenceFlow_1n8ttex</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0whvsjw</bpmn:outgoing>
@@ -51,11 +51,8 @@
     <bpmn:sequenceFlow id="SequenceFlow_01ncbgi" sourceRef="hakem_kaydet" targetRef="hakem_sec_goster" />
     <bpmn:serviceTask id="hakem_davet_gonder" name="Hakemlere Davet Gönder" camunda:class="bap.bap_hakemlik_daveti.HakemlikDaveti.davet_gonder">
       <bpmn:incoming>SequenceFlow_1jogqf2</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_11fc1lv</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_01evab9</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="EndEvent">
-      <bpmn:incoming>SequenceFlow_11fc1lv</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0jl0eff" sourceRef="ExclusiveGateway_17k8oaj" targetRef="hakem_cikar">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='cikar']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -64,11 +61,20 @@
       <bpmn:outgoing>SequenceFlow_1irgewy</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1irgewy" sourceRef="hakem_cikar" targetRef="hakem_sec_goster" />
+    <bpmn:endEvent id="EndEvent">
+      <bpmn:incoming>SequenceFlow_137wdp7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_01evab9" sourceRef="hakem_davet_gonder" targetRef="davet_gonderildi_mesaji_goster" />
+    <bpmn:userTask id="davet_gonderildi_mesaji_goster" name="Davet Gönderildi Mesajı Göster" camunda:assignee="bap.bap_hakemlik_daveti.HakemlikDaveti.davet_gonderildi_mesaj_goster">
+      <bpmn:incoming>SequenceFlow_01evab9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_137wdp7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_137wdp7" sourceRef="davet_gonderildi_mesaji_goster" targetRef="EndEvent" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1b9lt7z">
       <bpmndi:BPMNShape id="Participant_061ige5_di" bpmnElement="Participant_061ige5">
-        <dc:Bounds x="123" y="1" width="592" height="363" />
+        <dc:Bounds x="123" y="1" width="732" height="363" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="177" y="155" width="36" height="36" />
@@ -90,21 +96,14 @@
         <dc:Bounds x="461" y="133" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_0n1s3ye_di" bpmnElement="EndEvent">
-        <dc:Bounds x="638" y="155" width="36" height="36" />
+        <dc:Bounds x="780" y="155" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="656" y="191" width="0" height="0" />
+          <dc:Bounds x="798" y="191" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_00u7un3_di" bpmnElement="Lane_00u7un3">
-        <dc:Bounds x="153" y="1" width="562" height="363" />
+        <dc:Bounds x="153" y="1" width="702" height="363" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_11fc1lv_di" bpmnElement="SequenceFlow_11fc1lv">
-        <di:waypoint xsi:type="dc:Point" x="561" y="173" />
-        <di:waypoint xsi:type="dc:Point" x="638" y="173" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="600" y="158" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ExclusiveGateway_17k8oaj_di" bpmnElement="ExclusiveGateway_17k8oaj" isMarkerVisible="true">
         <dc:Bounds x="369" y="148" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -159,6 +158,23 @@
         <di:waypoint xsi:type="dc:Point" x="296" y="133" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="320" y="44" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_01evab9_di" bpmnElement="SequenceFlow_01evab9">
+        <di:waypoint xsi:type="dc:Point" x="561" y="173" />
+        <di:waypoint xsi:type="dc:Point" x="606" y="173" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="584" y="158" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0ylc8en_di" bpmnElement="davet_gonderildi_mesaji_goster">
+        <dc:Bounds x="606" y="133" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_137wdp7_di" bpmnElement="SequenceFlow_137wdp7">
+        <di:waypoint xsi:type="dc:Point" x="706" y="173" />
+        <di:waypoint xsi:type="dc:Point" x="780" y="173" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="743" y="148" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
