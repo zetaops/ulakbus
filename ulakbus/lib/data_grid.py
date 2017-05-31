@@ -285,8 +285,9 @@ class DataGrid(object):
                 if ac in self.select_fields or ac in self.multiselect_fields:
                     d[ac] = self.select_options_dict[ac].get(str(data[ac]))
                 elif ac in self.range_date_fields:
-                    d[ac] = datetime.strftime(
-                        datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
+                    if data[ac] is not None and data[ac] != '':
+                        d[ac] = datetime.strftime(
+                            datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
                 else:
                     d[ac] = data[ac]
             data_to_return.append(d)
