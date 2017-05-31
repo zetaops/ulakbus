@@ -64,10 +64,9 @@ class S3FileManager(object):
             Oluşturulan zip dosyasının url'i döndürülür.
 
         """
-        zip_name = "%s.zip" % zip_name
+        zip_name = "%s.zip" % zip_name.replace(" ", "")
         temp_zip_file = BytesIO()
         zip_file = zipfile.ZipFile(temp_zip_file, mode='w', compression=zipfile.ZIP_DEFLATED)
-        # keys = ["0ca909b643794135a770d217e7ee2c49.png", "0aa8b23d458140829da74602726453c1.png"]
         for file_key in keys:
             temp_file = BytesIO()
             self.bucket.get_key(file_key).get_contents_to_file(temp_file)

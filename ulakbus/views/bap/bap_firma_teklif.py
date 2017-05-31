@@ -229,7 +229,7 @@ class BapFirmaTeklif(CrudView):
     def task_data_file_guncelle(self, teklif):
         """
         Task data içerisinde base64 şeklinde dosya ismi ve dosya içeriği tutulan 
-        dosyanın, kaydedildikten sonra form datası dosyanın ismi ile güncellenir.  
+        dosyanın, kaydedildikten sonra form datası, dosyanın ismi ile güncellenir.
         
         Args:
             teklif(obj): BAPTeklif nesnesi 
