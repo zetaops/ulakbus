@@ -99,6 +99,7 @@ class Personel(Model):
 
     # Personelin Kendi Ünvanı
     unvan = field.Integer(_(u"Personel Unvan"), index=True, choices="unvan_kod", required=False)
+    unvan_tarih = field.Date(_(u"Ünvan Tarihi"), index=True, required=False)
 
     # Aşağıdaki bilgiler atama öncesi kontrol edilecek, Doldurulması istenecek
     emekli_sicil_no = field.String(_(u"Emekli Sicil No"), index=True)

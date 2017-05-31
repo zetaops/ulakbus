@@ -12,6 +12,7 @@ from ulakbus.views.reports.base import Reporter
 from collections import OrderedDict
 import datetime
 from zengine.lib.translation import gettext_lazy
+from dateutil.relativedelta import relativedelta
 
 
 class PersonelByGender(Reporter):
@@ -152,3 +153,38 @@ class GorevSuresiBitenPersonel(Reporter):
             personel_list.append(personel)
 
         return personel_list
+
+class BesYiliDolduranDocentler(Reporter):
+    TITLE = gettext_lazy(u"Görevde 5 Yılı Dolduran Doçent Listesi")
+
+    def get_objects(self):
+        """
+            Doçent olduktan sonra 5 yılı doldurmuş olan akademik personel listesini getirir.
+        Returns:
+            docent_list : list
+
+        """
+
+        tarih = datetime.date.today() - relativedelta(years=5)
+
+        docent_list = Personel.objects.all(
+            personel_turu = 1,
+            unvan = 1555,
+            unvan_tarih__lte = tarih,
+            arsiv = False
+        )
+
+        docent_report = []
+        for p in docent_list:
+            raw = OrderedDict({})
+            raw["T.C. No"] = p.tckn
+            raw["Ad"] = p.ad
+            raw["Soyad"] = p.soyad
+            raw["Ünvan Tarih"] = p.unvan_tarih.strftime("%d.%m.%Y")
+            raw["Birim"] = p.kadro.birim.name
+            raw["Doçentlikte Kaçıncı Yıl"] = str(datetime.date.today().year - p.unvan_tarih.year)
+            docent_report.append(raw)
+
+        return docent_report
+
+
