@@ -228,7 +228,7 @@
       "tr": "Teslim Alındı",
       "en": ""
     }
-    },
+  },
   "bap_firma_durum": {
     "1": {
       "tr": "Değerlendirme Sürecinde",
@@ -242,7 +242,7 @@
       "tr": "Reddedilmiş",
       "en": ""
     }
-    },
+  },
   "bap_teklif_durum": {
     "1": {
       "tr": "Değerlendirme Sürecinde",
@@ -255,7 +255,6 @@
     "3": {
       "tr": "Kabul Edilmemiş",
       "en": ""
-    }
     }
   }
 }
