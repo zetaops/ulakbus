@@ -60,13 +60,10 @@ Kadro Sil Onay
 
 """
 import datetime
-from dateutil.relativedelta import relativedelta
-from pyoko import ListNode
 from pyoko.exceptions import ObjectDoesNotExist
 from ulakbus.lib.personel import terfi_tarhine_gore_personel_listesi, suren_terfi_var_mi
 from ulakbus.lib.personel import terfi_durum_kontrol, derece_ilerlet, terfi_tikanma_kontrol
 from ulakbus.lib.personel import  gorunen_kademe_hesapla
-from ulakbus.models import Personel, Permission, User
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
@@ -74,7 +71,6 @@ from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime,
 from ulakbus.models import Personel, Permission, User
 from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
-from pyoko.fields import DATE_TIME_FORMAT
 
 
 class KadroObjectForm(JsonForm):
@@ -1023,7 +1019,7 @@ class GorevSuresiUzat(CrudView):
         Her akademik personele ait sadece bir adet atama kaydı bulunabilir.
         Elde edilen atama nesnesinden çekilen görev süresi bitiş tarihi
         form nesnesi instance üretilirken parametre olarak verilir.
-        Son olarak da form görüntülenir.
+        S<on olarak da form görüntülenir.
         """
 
         try:

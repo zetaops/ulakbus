@@ -292,6 +292,19 @@ def terfi(personel, baslangic_tarihi, bitis_tarihi):
 
     return sonuc
 
+def suren_terfi_var_mi(p):
+    """
+    Mevcut wfler icinde arama yaparak personel hakkinda, devam eden terfi isleminin
+    olup olmadigi kontrol edilir.
+    Args:
+        p (str): personel key
+    Returns:
+        Devam eden islem varsa True, yoksa False
+    """
+
+    # TODO: wf ler icinde arama yap
+    return False
+
 
 def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None,
                                         bitis_tarihi=None,
