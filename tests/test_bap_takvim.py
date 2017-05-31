@@ -14,6 +14,11 @@ from zengine.lib.test_utils import BaseTestCase
 
 class TestCase(BaseTestCase):
     def test_bap_takvim(self):
+
+        proje_turu = BAPProjeTurleri()
+        proje_turu.ad = 'test_bap_takvim_proje_turu'
+        proje_turu.save()
+
         self.prepare_client('/bap_takvim', username="bap_koordinasyon_birimi_1")
         resp = self.client.post()
         takvim_sayisi = len(resp.json['objects'])
@@ -36,7 +41,7 @@ class TestCase(BaseTestCase):
                  'bitis_tarihi': '2017-06-14T21:00:00.000Z'}
             ],
             'ProjeTuru': [
-                {'proje_turu': 'Test Proje Turu'},
+                {'proje_turu_id': proje_turu.key},
             ],
             'donem': 2,
             'takvim_aciklama': 'Test Proje Tur Takvim Ekle 2. Donem',
@@ -95,3 +100,5 @@ class TestCase(BaseTestCase):
         self.client.post(wf='bap_takvim', object_id=obj.key, cmd='confirm_deletion')
         resp = self.client.post(form={'confirm': 1}, cmd='delete')
         assert takvim_sayisi == len(resp.json['objects'])
+
+        proje_turu.blocking_delete()
