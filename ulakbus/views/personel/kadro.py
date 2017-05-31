@@ -71,7 +71,8 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy, format_datetime, format_date
-from ulakbus.models import Personel
+from ulakbus.models import Personel, Permission, User
+from pyoko import ListNode
 from dateutil.relativedelta import relativedelta
 from pyoko.fields import DATE_TIME_FORMAT
 
@@ -412,10 +413,10 @@ class TerfiDuzenleForm(JsonForm):
 
 class PersonelTerfiKriterleri(JsonForm):
     baslangic_tarihi = fields.Date(gettext_lazy(u"Başlangıç Tarihi"),
-                                   default=datetime.date.today().strftime(DATE_TIME_FORMAT))
+                                   default=datetime.date.today().strftime('%d.%m.%Y'))
 
     bitis_tarihi = fields.Date(gettext_lazy(u"Bitiş Tarihi"), default=(
-        datetime.date.today() + datetime.timedelta(days=15)).strftime(DATE_TIME_FORMAT))
+        datetime.date.today() + datetime.timedelta(days=15)).strftime('%d.%m.%Y'))
 
     personel_turu = fields.Integer(gettext_lazy(u"Personel Türü"),
                                    choices=[(1, gettext_lazy(u"Akademik")),
@@ -438,16 +439,23 @@ class TerfiListe(CrudView):
 
         try:
             self.current.task_data["personeller"]
+            if "red_aciklama" in self.current.task_data:
+                self.current.output["msgbox"] = {
+                    "type": "error", "title": _(u'Terfi Reddedildi'),
+                    "msg": self.current.task_data["red_aciklama"]
+                }
         except KeyError:
-            personel_turu = self.current.input['form']['personel_turu']
+            self.current.task_data["personel_turu"] = self.current.input['form']['personel_turu']
 
             baslangic_tarihi = datetime.datetime.strptime(
-                self.current.input['form']['baslangic_tarihi'], '%d.%m.%Y')
+                self.current.input['form']['baslangic_tarihi'], '%d.%m.%Y').date()
+            baslangic_tarihi = baslangic_tarihi - relativedelta(years=1)
             bitis_tarihi = datetime.datetime.strptime(
-                self.current.input['form']['bitis_tarihi'], '%d.%m.%Y')
+                self.current.input['form']['bitis_tarihi'], '%d.%m.%Y').date()
+            bitis_tarihi = bitis_tarihi - relativedelta(years=1)
             self.current.task_data["personeller"] = terfi_tarhine_gore_personel_listesi(
                 baslangic_tarihi=baslangic_tarihi, bitis_tarihi=bitis_tarihi,
-                personel_turu=personel_turu)
+                personel_turu=self.current.task_data["personel_turu"])
 
         if self.current.task_data["personeller"]:
             _form = TerfiForm(current=self.current, title=_(u"Terfi İşlemi"))
@@ -463,14 +471,15 @@ class TerfiListe(CrudView):
             datetime.datetime.today()
             self.current.output['msgbox'] = {
                 'type': 'info', "title": _(u'Terfi Bekleyen Personel Bulunamadı'),
-                "msg": _(u'%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen personel bulunamadı.') % {
+                "msg": _(u'%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen '
+                         u'personel bulunamadı.') % {
                     'baslangic': format_datetime(baslangic_tarihi),
                     'bitis': format_datetime(bitis_tarihi),
                 }
             }
 
     def terfi_liste_duzenle(self):
-        _form = TerfiDuzenleForm()
+        _form = TerfiDuzenleForm(title=_(u"Terfi Düzenleme Form Ekranı"))
         for p in self.current.input['form']['Personel']:
             if p['sec']:
                 p_data = self.current.task_data['personeller'][p['key']]
@@ -512,6 +521,7 @@ class TerfiListe(CrudView):
 
         self.form_out(_form)
         self.current.output["meta"]["allow_add_listnode"] = False
+        self.current.output["meta"]["allow_actions"] = False
 
     def terfi_duzenle_kaydet(self):
         for p in self.current.input['form']['Personel']:
@@ -532,12 +542,36 @@ class TerfiListe(CrudView):
 
     # todo: lane geicisi
     def mesaj_goster(self):
+        """
+            Workflow un personel dairesi için oluşturulmuş lane deki adımların
+            bitiminde ekrana lane değişim mesajını basar ve bir sonraki lane için
+            yetkilendirilmiş kullanıcılara workflow a dahil olmaları için
+            notification gönderir.
+        Returns:
+
+        """
 
         msg = {"title": _(u'Personeller Onay Icin Gonderildi!'),
                "body": _(u'Talebiniz Basariyla iletildi.')}
         # workflowun bu kullanıcı için bitişinde verilen mesajı ekrana bastırır
 
         self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+        # Akademik personelin terfi onayı rektör tarafından yapılır.
+        # İdari personelin terfi onayı genel sekreter tarafından yapılır.
+        if self.current.task_data["personel_turu"] == 1:
+            permission_name = "akademik_personel_terfi_onay"
+        elif self.current.task_data["personel_turu"] == 2:
+            permission_name = "idari_personel_terfi_onay"
+
+        # Terfi sonucuna yönelik bilgilendirme mesajının terfi işlemini başlatan
+        # personele gelmesi için işlemi başlatan personelin user key ni tutuyoruz.
+        self.current.task_data["previous_user_key"] = self.current.user.key
+
+        user_permission = Permission.objects.get(name=permission_name)
+        user_list = user_permission.get_permitted_users()
+        self.current.invite_other_parties(user_list)
+
 
     def onay_kontrol(self):
         _form = TerfiForm(current=self.current, title=_(u"Terfi İşlemi"))
@@ -561,11 +595,42 @@ class TerfiListe(CrudView):
 
     def red_aciklamasi_kaydet(self):
         self.current.task_data["red_aciklama"] = self.current.input['form']['red_aciklama']
+        previous_user = User.objects.get(self.current.task_data["previous_user_key"])
+        self.current.invite_other_parties([previous_user])
+
+        msg = {"title": _(u'İşlem Tamamlandı!'),
+               "body": _(u'Terfi red açıklaması Personel Daire Başkanlığına Gönderildi')}
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def terfi_yap(self):
+        """
+        Terfi onay makamı (rektör/genel sekreter) tarafından onaylanan terfiler burada veritabanına
+        işlenir. Görev aylığı, kazanılmış hak ve emekli müktesebat bilgilerinden hangilerinde
+        terfi işlemi yapılmışsa ona ait terfi tarihi bir sonraki yıla set edilir.
+        Returns:
+
+        """
         for key, p_data in self.current.task_data['personeller'].items():
             try:
                 personel = Personel.objects.get(key)
+
+                if (personel.gorev_ayligi_kademe != p_data["terfi_sonrasi_gorev_ayligi_kademe"] or
+                    personel.gorev_ayligi_derece != p_data["terfi_sonrasi_gorev_ayligi_derece"]):
+                    personel.ga_sonraki_terfi_tarihi = personel.ga_sonraki_terfi_tarihi + relativedelta(
+                        years=1
+                    )
+
+                if (personel.kazanilmis_hak_kademe != p_data["terfi_sonrasi_kazanilmis_hak_kademe"] or
+                    personel.kazanilmis_hak_derece != p_data["terfi_sonrasi_kazanilmis_hak_derece"]):
+                    personel.kh_sonraki_terfi_tarihi = personel.kh_sonraki_terfi_tarihi + relativedelta(
+                        years=1
+                    )
+
+                if (personel.emekli_muktesebat_kademe != p_data["terfi_sonrasi_emekli_muktesebat_kademe"] or
+                    personel.emekli_muktesebat_derece != p_data["terfi_sonrasi_emekli_muktesebat_derece"]):
+                    personel.em_sonraki_terfi_tarihi = personel.em_sonraki_terfi_tarihi + relativedelta(
+                        years=1
+                    )
 
                 personel.gorev_ayligi_derece = p_data["terfi_sonrasi_gorev_ayligi_derece"]
                 personel.gorev_ayligi_kademe = p_data["terfi_sonrasi_gorev_ayligi_kademe"]
@@ -575,9 +640,6 @@ class TerfiListe(CrudView):
 
                 personel.emekli_muktesebat_derece = p_data["terfi_sonrasi_emekli_muktesebat_derece"]
                 personel.emekli_muktesebat_kademe = p_data["terfi_sonrasi_emekli_muktesebat_kademe"]
-
-                personel.kh_sonraki_terfi_tarihi = personel.kh_sonraki_terfi_tarihi + relativedelta(
-                    years=1)
 
                 personel.save()
 
@@ -591,6 +653,9 @@ class TerfiListe(CrudView):
                "body": _(u'Onay Belgesi icin Personel Islerine Gonderildi.')}
         self.current.output['msgbox'] = msg
         self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+        previous_user = User.objects.get(self.current.task_data["previous_user_key"])
+        self.current.invite_other_parties([previous_user])
 
     def onay_belgesi_uret(self):
         self.current.output['msgbox'] = {

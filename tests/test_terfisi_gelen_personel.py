@@ -6,12 +6,12 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import time
 
-
-from ulakbus.models import User, Personel
+from ulakbus.models import User, Personel, Permission
 from zengine.lib.test_utils import BaseTestCase
 from zengine.messaging.model import Message
-import time
+from datetime import datetime
 
 
 class TestCase(BaseTestCase):
@@ -24,28 +24,36 @@ class TestCase(BaseTestCase):
         usr = User.objects.get(username='personel_isleri_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr)
         self.client.post()
-        idari_forms = {'baslangic_tarihi': '20.05.2016',
-                       'bitis_tarihi': '30.05.2016',
+        idari_forms = {'baslangic_tarihi': '20.05.2017',
+                       'bitis_tarihi': '30.05.2017',
                        'devam': 1,
-                       'personel_turu': 2}
+                       'personel_turu': 1}
         resp = self.client.post(form=idari_forms)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
-        assert len(ter_gel_id_per) == 3
 
-        idari_per_db = len(Personel.objects.filter(personel_turu=2))
+        baslangic_tarihi = datetime.strptime("20.05.2016", "%d.%m.%Y").date()
+        bitis_tarihi = datetime.strptime("30.05.2016", "%d.%m.%Y").date()
+        qs = Personel.objects.all(personel_turu=1)
+        terfisi_gelen_personeller = qs.or_filter(
+            ga_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],
+            kh_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],
+            em_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi]
+        )
 
-        assert idari_per_db - len(ter_gel_id_per) == 17
+        assert len(ter_gel_id_per) == terfisi_gelen_personeller.count()
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
                                                           'kaydet': 1})
 
-        assert resp.json['msgbox']['title'] == "Personeller Onay Icin Gonderildi!"
+        assert resp.json['msgbox']['title'] == u"Personeller Onay Icin Gonderildi!"
 
         time.sleep(1)
 
         # Personel terfi islemini reddet bolumu
-        token, user = self.get_user_token('genel_sekreter_1')
+        akademik_permission = Permission.objects.get(name='akademik_personel_terfi_onay')
+        akademik_onay_user = list(akademik_permission.get_permitted_users())[0]
+        token, user = self.get_user_token(akademik_onay_user.username)
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         # resp = self.client.post()
         self.client.post(cmd="red_aciklamasi_yaz",
@@ -58,7 +66,7 @@ class TestCase(BaseTestCase):
             form={'devam': 1, 'red_aciklama': "Reddedildi"}
         )
 
-        assert resp.json['msgbox']['msg'] == "Talebiniz Basariyla iletildi."
+        assert resp.json['msgbox']['title'] == u'İşlem Tamamlandı!'
 
         time.sleep(1)
 
@@ -68,11 +76,11 @@ class TestCase(BaseTestCase):
         ter_gel_id_per = resp.json['forms']['model']['Personel']
         Message.objects.all().delete()
 
-        assert len(ter_gel_id_per) == 3
+        assert len(ter_gel_id_per) == terfisi_gelen_personeller.count()
 
         # Terfisi yapilacak personel duzenle
         ter_gel_id_per[0]['sec'] = True
-        ter_gel_id_per[2]['sec'] = True
+        ter_gel_id_per[1]['sec'] = True
 
         terfi_duz_forms = {'Personel': ter_gel_id_per,
                            'duzenle': 1}
@@ -95,7 +103,7 @@ class TestCase(BaseTestCase):
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
         assert ter_gel_id_per[0]['yeni_gorev_ayligi'] == '2/8(8)'
-        assert ter_gel_id_per[2]['yeni_kazanilmis_hak'] == '3/8(8)'
+        assert ter_gel_id_per[1]['yeni_kazanilmis_hak'] == '3/8(8)'
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
@@ -109,10 +117,11 @@ class TestCase(BaseTestCase):
         TODO: docstring eklenecek..
         """
         # Personel terfi islemini onayla bolumu
-        token, user = self.get_user_token('genel_sekreter_1')
+        token, user = self.get_user_token(akademik_onay_user.username)
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
-        assert len(resp.json['forms']['model']['Personel']) == 3
+
+        assert len(resp.json['forms']['model']['Personel']) == terfisi_gelen_personeller.count()
         Message.objects.all().delete()
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
