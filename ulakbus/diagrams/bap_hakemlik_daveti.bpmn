@@ -36,6 +36,7 @@
       <bpmn:outgoing>SequenceFlow_0whvsjw</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1jogqf2</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0jl0eff</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1sftnnz</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1n8ttex" sourceRef="hakem_sec_goster" targetRef="ExclusiveGateway_17k8oaj" />
     <bpmn:sequenceFlow id="SequenceFlow_0whvsjw" sourceRef="ExclusiveGateway_17k8oaj" targetRef="hakem_kaydet">
@@ -63,6 +64,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1irgewy" sourceRef="hakem_cikar" targetRef="hakem_sec_goster" />
     <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_137wdp7</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1sftnnz</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_01evab9" sourceRef="hakem_davet_gonder" targetRef="davet_gonderildi_mesaji_goster" />
     <bpmn:userTask id="davet_gonderildi_mesaji_goster" name="Davet Gönderildi Mesajı Göster" camunda:assignee="bap.bap_hakemlik_daveti.HakemlikDaveti.davet_gonderildi_mesaj_goster">
@@ -70,6 +72,9 @@
       <bpmn:outgoing>SequenceFlow_137wdp7</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_137wdp7" sourceRef="davet_gonderildi_mesaji_goster" targetRef="EndEvent" />
+    <bpmn:sequenceFlow id="SequenceFlow_1sftnnz" sourceRef="ExclusiveGateway_17k8oaj" targetRef="EndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1b9lt7z">
@@ -175,6 +180,15 @@
         <di:waypoint xsi:type="dc:Point" x="780" y="173" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="743" y="148" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1sftnnz_di" bpmnElement="SequenceFlow_1sftnnz">
+        <di:waypoint xsi:type="dc:Point" x="405" y="187" />
+        <di:waypoint xsi:type="dc:Point" x="456" y="250" />
+        <di:waypoint xsi:type="dc:Point" x="798" y="250" />
+        <di:waypoint xsi:type="dc:Point" x="798" y="191" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="627" y="235" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

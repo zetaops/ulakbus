@@ -30,6 +30,7 @@ class HakemSecForm(JsonForm):
                                readonly=True)
 
     hakem = field.String(_(u"Hakem"))
+    iptal = fields.Button(_(u"İptal"), cmd='iptal')
     ekle = fields.Button(_(u"Ekle"), cmd='ekle')
     cikar = fields.Button(_(u"Çıkar"), cmd='cikar')
     bitir = fields.Button(_(u"Listedekilere Davet Gönder"), cmd='bitir')
