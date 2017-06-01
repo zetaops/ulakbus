@@ -112,6 +112,7 @@ class BAPIs(Model):
 
 
 class BAPProje(Model):
+
     durum = field.Integer(_(u"Durum"), choices='bap_proje_durum')
     basvuru_rolu = Role()
 
@@ -207,7 +208,6 @@ class BAPProje(Model):
         class Meta:
             verbose_name = __(u"İşlem Geçmişi")
             verbose_name_plural = __(u"İşlem Geçmişi")
-
         eylem = field.String(_(u"Eylem"))
         aciklama = field.String(_(u"Açıklama"))
         tarih = field.DateTime(_(u"Tarih"))

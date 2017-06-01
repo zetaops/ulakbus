@@ -27,7 +27,6 @@ class S3FileManager(object):
         self.bucket = self.conn.get_bucket(settings.S3_BUCKET_NAME)
 
     def store_file(self, **kwargs):
-
         content = kwargs['content']
         k = Key(self.bucket)
         filename = None
@@ -42,7 +41,6 @@ class S3FileManager(object):
             typ = kwargs['type']
         if 'random_name' in kwargs:
             filename = None
-
         k.key = "%s.%s" % (filename or uuid4().hex, ext)
         k.content_type = typ
         try:

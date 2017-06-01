@@ -5,9 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 import time
-
 from ulakbus.models import User, BAPFirma
-
 from zengine.lib.test_utils import BaseTestCase
 
 
