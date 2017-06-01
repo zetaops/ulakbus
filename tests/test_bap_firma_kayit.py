@@ -45,7 +45,7 @@ class TestCase(BaseTestCase):
 
         # unique yetkili e-posta adresi uyarısı
         firma_form['k_adi'] = 'selim_sayan'
-        firma_form['yetkili_e_posta'] = 'ulakbus_deneme_birincil_maili@ulakbus.com'
+        firma_form['yetkili_e_posta'] = 'bap_firma@yetkilisi_1.com'
         resp = self.client.post(wf='bap_firma_kayit', form=firma_form)
         assert resp.json['msgbox']['title'] == "Mevcut Bilgi Uyarısı"
         assert "e-posta bilgisi, sistemimizde bulunmaktadır" in resp.json['msgbox']['msg']

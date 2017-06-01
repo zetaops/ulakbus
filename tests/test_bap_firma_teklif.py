@@ -49,6 +49,7 @@ class TestCase(BaseTestCase):
         butce_kalemi = BAPButcePlani.objects.get('MpRqF2BZk6sMbi4QNkQvTNH1mVW')
         user = User.objects.get(username='bap_firma_yetkilisi_1')
         firma = user.bap_firma_set[0].bap_firma
+        BAPTeklif.objects.filter(firma=firma, durum=1).delete()
         self.prepare_client('/bap_firma_teklif', user=user)
         resp = self.client.post()
 
@@ -82,8 +83,6 @@ class TestCase(BaseTestCase):
         assert 'sonuçlanmış' in resp.json['msgbox']['msg']
 
         # mevcut tekliflerim olumsuz
-        BAPTeklif.objects.filter(firma=firma, durum=1).delete()
-        time.sleep(1)
         resp = self.client.post(wf='bap_firma_teklif', cmd="mevcut", form={'add': 1})
         assert resp.json['msgbox']['title'] == "Firma Teklifleri"
         assert 'başvuru sürecinde bulunan' in resp.json['msgbox']['msg']
@@ -98,11 +97,16 @@ class TestCase(BaseTestCase):
         resp = self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri': 1})
         assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
 
-        # teklifte bulun
+        # teklif belgeleri boş kontrol
         resp = self.client.post(wf='bap_firma_teklif', cmd="teklif_ver",
                                 object_id="MpRqF2BZk6sMbi4QNkQvTNH1mVW")
+        resp = self.client.post(wf='bap_firma_teklif', cmd="kaydet",
+                                form={'Belgeler': [], 'kaydet': 1})
         assert resp.json['forms']['schema']['title'] == "Bütçe Kalemi Teklifi"
         assert 'Arduino' in resp.json['forms']['form'][0]['helpvalue']
+        assert resp.json['msgbox']['title'] == "Belge Eksikliği"
+
+        # teklifte bulun
         resp = self.client.post(wf='bap_firma_teklif', cmd="kaydet",
                                 form={'Belgeler': [jpg_belge, png_belge], 'kaydet': 1})
 

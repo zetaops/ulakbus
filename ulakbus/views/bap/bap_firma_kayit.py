@@ -122,6 +122,7 @@ class BapFirmaKayit(CrudView):
         error = self.current.task_data['error']
         self.current.output['msgbox'] = {"type": "warning",
                                          "title": __(u'Mevcut Bilgi Uyarısı'),
-                                         "msg": __(u"""Girmiş olduğunuz yetkili %s bilgisi, 
-                                         sistemimizde bulunmaktadır. Lütfen başka bir %s ile 
-                                         değiştirerek tekrar deneyiniz.""" % (error, error))}
+                                         "msg": __(u"Girmiş olduğunuz yetkili %s bilgisi, "
+                                                   u"sistemimizde bulunmaktadır. Lütfen başka bir "
+                                                   u"%s ile değiştirerek tekrar deneyiniz."
+                                                   % (error, error))}

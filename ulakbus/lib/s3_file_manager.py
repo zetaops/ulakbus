@@ -62,7 +62,7 @@ class S3FileManager(object):
             Oluşturulan zip dosyasının url'i döndürülür.
 
         """
-        zip_name = "%s.zip" % zip_name.replace(" ", "")
+        zip_name = "%s.zip" % zip_name
         temp_zip_file = BytesIO()
         zip_file = zipfile.ZipFile(temp_zip_file, mode='w', compression=zipfile.ZIP_DEFLATED)
         for file_key in keys:
@@ -71,5 +71,5 @@ class S3FileManager(object):
             zip_file.writestr(file_key, temp_file.getvalue())
         zip_file.close()
         content = base64.b64encode(temp_zip_file.getvalue())
-        self.store_file(name=zip_name, content=content, type='application/zip', ext='zip')
-        return get_file_url(zip_name)
+        key = self.store_file(name=zip_name, content=content, type='application/zip', ext='zip')
+        return get_file_url(key)
