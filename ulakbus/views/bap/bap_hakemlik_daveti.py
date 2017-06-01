@@ -87,6 +87,21 @@ class HakemlikDaveti(CrudView):
     def hakem_cikar(self):
         for hakem in self.object.ProjeDegerlendirmeleri:
             if hakem.hakem().key == self.input['form']['hakem']:
+                role = hakem.hakem().okutman().user().role_set[0].role
+                task_invs = TaskInvitation.objects.filter(
+                    role=role,
+                    title='Bap Proje Degerlendirme')
+                for ti in task_invs:
+                    if ti.instance().data['bap_proje_id'] == self.object.key:
+                        ti.blocking_delete()
+                        role.send_notification(title=_(u"Proje Hakemlik Daveti"),
+                                               message=_(u"""%s adlı projeyi değerlendirmek üzere
+                                               koordinasyon birimi tarafından gönderilen hakemlik
+                                               daveti hatalıdır. Davet görev yöneticinizden
+                                               kaldırılmıştır. Eğer işlem yaptıysanız yaptığınız
+                                               işlemler geçersiz olacaktır.""" % self.object.ad),
+                                               typ=1,
+                                               sender=self.current.user)
                 hakem.remove()
         self.object.blocking_save()
 
@@ -112,7 +127,7 @@ class HakemlikDaveti(CrudView):
                 wfi.data['flow'] = None
                 wfi.pool = {}
                 wfi.blocking_save()
-                role.send_notification(title=_(u"Proje Revizyon İsteği"),
+                role.send_notification(title=_(u"Proje Hakemlik Daveti"),
                                        message=_(u"""%s adlı projeyi değerlendirmek üzere koordinasyon
                                        birimi tarafından hakem olarak davet edildiniz. Görev
                                        yöneticinizden daveti kabul edip değerlendirebilir ya da daveti
@@ -120,7 +135,6 @@ class HakemlikDaveti(CrudView):
                                        typ=1,
                                        sender=self.current.user
                                        )
-                # wfi = WFInstance.objects.filter()[0]
                 inv = TaskInvitation(
                     instance=wfi,
                     role=hakem.hakem().okutman().user().role_set[0].role,

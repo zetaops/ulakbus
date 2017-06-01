@@ -3,7 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import BAPProje, Personel, User
+from ulakbus.models import BAPProje, User
 from zengine.forms import JsonForm
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy as __
@@ -60,50 +60,50 @@ class ProjeDegerlendirmeForm(JsonForm):
     arastirma_kapsam_tutar = field.Integer(_(u"ARAŞTIRMA KAPSAMININ PROJE AMACI İLE TUTARLILIĞI"),
                                            choices='bap_proje_degerlendirme_secenekler',
                                            default=1)
-    arastirma_kapsam_tutar_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    arastirma_kapsam_tutar_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     literatur_ozeti = field.Integer(
         _(u"VERİLEN LİTERATÜR ÖZETİNİN PROJEYE UYGUNLUĞU VE YETERLİLİĞİ"),
         choices='bap_proje_degerlendirme_secenekler', default=1)
 
-    literatur_ozeti_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    literatur_ozeti_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     ozgun_deger = field.Integer(_(u"PROJENİN ÖZGÜN DEĞERİ"),
                                 choices='bap_proje_degerlendirme_secenekler', default=1)
 
-    ozgun_deger_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    ozgun_deger_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     yontem_amac_tutar = field.Integer(_(u"ÖNERİLEN YÖNTEMİN PROJE AMACI İLE TUTARLILIĞI"),
                                       choices='bap_proje_degerlendirme_secenekler', default=1)
 
-    yontem_amac_tutar_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    yontem_amac_tutar_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     yontem_uygulanabilirlik = field.Integer(_(u"ÖNERİLEN YÖNTEMİN UYGULANABİLİRLİĞİ"),
                                             choices='bap_proje_degerlendirme_secenekler', default=1)
 
-    yontem_uygulanabilirlik_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    yontem_uygulanabilirlik_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     basari_olcut_gercek = field.Integer(_(u"BAŞARI ÖLÇÜTLERİNİN GERÇEKÇİLİĞİ"),
                                         choices='bap_proje_degerlendirme_secenekler', default=1)
 
-    basari_olcut_gercek_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    basari_olcut_gercek_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     katki_beklenti = field.Integer(_(u"PROJE İLE SAĞLANACAK KATKILARA İLİŞKİN BEKLENTİLER"),
                                    choices='bap_proje_degerlendirme_secenekler', default=1)
 
-    katki_beklenti_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    katki_beklenti_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     bilim_endustri_katki = field.Integer(
         _(u"ARAŞTIRMA SONUÇLARININ BİLİME VE/VEYA ÜLKE ENDÜSTRİSİNE KATKISI"),
         choices='bap_proje_degerlendirme_secenekler', default=1)
 
-    bilim_endustri_katki_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    bilim_endustri_katki_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     arastirmaci_bilgi_yeterlilik = field.Integer(
         _(u"ARAŞTIRMACILARIN BİLGİ VE DENEYİM BİRİKİMİNİN YETERLİLİĞİ"),
         choices='bap_proje_degerlendirme_secenekler', default=1)
 
-    arastirmaci_bilgi_yeterlilik_gerekce = field.Text(_(u"Gerekçe-Açıklama"))
+    arastirmaci_bilgi_yeterlilik_gerekce = field.Text(_(u"Gerekçe-Açıklama"), required=False)
 
     butce_gorus_oneri = field.Text(
         _(u"PROJENİN BÜTÇESİ VE UYGUNLUĞUNA İLİŞKİN GÖRÜŞ VE ÖNERİLERİNİZ"))
@@ -221,6 +221,11 @@ class ProjeDegerlendirme(CrudView):
             if degerlendirme.hakem().okutman().user().key == self.current.user_id:
                 degerlendirme.hakem_degerlendirme_durumu = 5
                 degerlendirme.degerlendirme_sonucu = form['proje_degerlendirme_sonucu']
+                if form['proje_degerlendirme_sonucu'] == 1:
+                    deger_durum = _(u"Olumlu/Proje Desteklenmelidir")
+                else:
+                    deger_durum = _(u"Olumsuz/Proje Desteklenmemelidir")
+                self.current.task_data['deger_durum'] = deger_durum
                 degerlendirme.form_data = form
         proje.blocking_save()
 
@@ -232,13 +237,7 @@ class ProjeDegerlendirme(CrudView):
         """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         role = User.objects.get(self.current.task_data['davet_gonderen']).role_set[0].role
-        deger_durum = ""
-        for degerlendirme in proje.ProjeDegerlendirmeleri:
-            if degerlendirme.hakem().okutman().user().key == self.current.user_id:
-                if degerlendirme.degerlendirme_sonucu == 1:
-                    deger_durum = _(u"Olumlu/Proje Desteklenmelidir")
-                else:
-                    deger_durum = _(u"Olumsuz/Proje Desteklenmemelidir")
+        deger_durum = self.current.task_data['deger_durum']
         role.send_notification(title=_(u"Proje Değerlendirme Sonucu"),
                                message=_(u"""%s adlı proje %s adlı hakem adayı tarafından
                                değerlendirilmiştir. Projenin değerlendirme sonucu '%s' olarak
