@@ -20,7 +20,10 @@ class FirmaKayitForm(JsonForm):
     class Meta:
         exclude = ['durum', 'Yetkililer']
         title = __(u'Firma Bilgileri')
-        help_text = __(u'Lütfen kayıt işlemi için firma ve yetkili bilgilerinizi giriniz.')
+        help_text = __(u"""Lütfen kayıt işlemi için firma ve yetkili bilgilerinizi giriniz. 
+        Yetkili bilgilerini, değerlendirme sonucunda firmanızın onay alması halinde, giriş yapmanız 
+        için oluşturacağımız kullanıcı bilgisi için kullanacağız. Bu yüzden yetkili bilgileri 
+        kısmını, firmanızın yetkilisi olan kişi olarak düşünerek doldurunuz.""")
         always_blank = False
 
     isim = fields.String(__(u"Yetkili Adı"), required=True)
@@ -119,7 +122,6 @@ class BapFirmaKayit(CrudView):
         error = self.current.task_data['error']
         self.current.output['msgbox'] = {"type": "warning",
                                          "title": __(u'Mevcut Bilgi Uyarısı'),
-                                         "msg": __(u"Girmiş olduğunuz yetkili %s bilgisi, "
-                                                   u"sistemimizde bulunmaktadır. Lütfen başka bir %s"
-                                                   u" ile değiştirerek tekrar deneyiniz." % (
-                                                       error, error))}
+                                         "msg": __(u"""Girmiş olduğunuz yetkili %s bilgisi, 
+                                         sistemimizde bulunmaktadır. Lütfen başka bir %s ile 
+                                         değiştirerek tekrar deneyiniz.""" % (error, error))}
