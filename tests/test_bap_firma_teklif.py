@@ -4,6 +4,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import time
 from ulakbus import settings
 from ulakbus.models import User, BAPTeklif, BAPButcePlani
 from zengine.lib.test_utils import BaseTestCase
@@ -45,7 +46,6 @@ class TestCase(BaseTestCase):
     """
 
     def test_bap_firma_teklif(self):
-        BAPTeklif.objects._clear()
         butce_kalemi = BAPButcePlani.objects.get('MpRqF2BZk6sMbi4QNkQvTNH1mVW')
         user = User.objects.get(username='bap_firma_yetkilisi_1')
         firma = user.bap_firma_set[0].bap_firma
@@ -53,16 +53,40 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
 
         # listeleme ekranı
-        assert resp.json['forms']['schema']['title'] == u"Teklife Açık Bütçe Kalemleri"
+        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
         assert resp.json['forms']['schema']['properties']['add']['title'] == "Mevcut Tekliflerim"
-        assert "Muhasebe Kodu" in resp.json['objects'][0]
+        assert resp.json['forms']['schema']['properties']['sonuclanan'][
+                   'title'] == "Sonuçlanmış Tekliflerim"
+        assert "Muhasebe Kod" in resp.json['objects'][0]
         assert "Kod Adı" in resp.json['objects'][0]
         assert resp.json['objects'][1]['actions'][0]['name'] == "Teklifte Bulun"
 
-        # mevcut tekliflerim olumsuz
-        resp = self.client.post(wf='bap_firma_teklif', form={'add': 1})
+        # sonuçlanmış tekliflerim olumlu
+        resp = self.client.post(wf='bap_firma_teklif', cmd="sonuclanan", form={"sonuclanan": 1})
+        assert resp.json['forms']['schema']['title'] == "Firmanın Sonuçlanmış Teklifleri"
+        assert "Bütçe Kalemi" in resp.json['objects'][0]
+        assert "Durum" in resp.json['objects'][0]
+        resp = self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri_don': 1})
+        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
+
+        # sonuçlanmış tekliflerim olumsuz
+        teklifler = []
+        for teklif in BAPTeklif.objects.filter(firma=firma, durum__in=[2, 3]):
+            teklif.deleted = True
+            teklif.blocking_save()
+            teklifler.append(teklif)
+        time.sleep(1)
+
+        resp = self.client.post(wf='bap_firma_teklif', cmd="sonuclanan", form={'sonuclanan': 1})
         assert resp.json['msgbox']['title'] == "Firma Teklifleri"
-        assert 'bulunmamaktadır' in resp.json['msgbox']['msg']
+        assert 'sonuçlanmış' in resp.json['msgbox']['msg']
+
+        # mevcut tekliflerim olumsuz
+        BAPTeklif.objects.filter(firma=firma, durum=1).delete()
+        time.sleep(1)
+        resp = self.client.post(wf='bap_firma_teklif', cmd="mevcut", form={'add': 1})
+        assert resp.json['msgbox']['title'] == "Firma Teklifleri"
+        assert 'başvuru sürecinde bulunan' in resp.json['msgbox']['msg']
 
         # teklifte bulun
         resp = self.client.post(wf='bap_firma_teklif', cmd="teklif_ver",
@@ -101,12 +125,12 @@ class TestCase(BaseTestCase):
         assert 'teklifiniz bulunmaktadır' in resp.json['msgbox']['msg']
 
         # mevcut tekliflerim olumlu, geri dön
-        self.client.post(wf='bap_firma_teklif', form={'add': 1})
-        resp = self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri': 1})
+        self.client.post(wf='bap_firma_teklif', cmd="mevcut", form={'add': 1})
+        resp = self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri_don': 1})
         assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
 
         # mevcut tekliflerim olumlu, düzenle
-        resp = self.client.post(wf='bap_firma_teklif', form={'add': 1})
+        resp = self.client.post(wf='bap_firma_teklif', cmd='mevcut', form={'add': 1})
         assert resp.json['forms']['schema']['title'] == "Firmanın Mevcut Teklifleri"
         assert "Bütçe Kalemi" in resp.json['objects'][0]
         resp = self.client.post(wf='bap_firma_teklif', cmd="belge_duzenle", data_key=teklif.key)
@@ -132,7 +156,7 @@ class TestCase(BaseTestCase):
         assert 'başarıyla yüklenmiştir' in resp.json['msgbox']['msg']
 
         # düzenleme sonrası form data kontrol
-        self.client.post(wf='bap_firma_teklif', form={'add': 1})
+        self.client.post(wf='bap_firma_teklif', cmd="mevcut", form={'add': 1})
         resp = self.client.post(wf='bap_firma_teklif', cmd="belge_duzenle", data_key=teklif.key)
         belge_aciklama = {"png_trial.png": "png değişmiş aciklama",
                           "pdf_trial.pdf": "pdf denemesi"}
@@ -166,5 +190,10 @@ class TestCase(BaseTestCase):
         for belge_ad in belge_aciklama.keys():
             assert belge_ad in file_names
             os.remove(belge_ad)
+
+        for bap_teklif in teklifler:
+            bap_teklif.deleted = False
+            bap_teklif.blocking_save()
+        time.sleep(1)
 
         teklif.blocking_delete()

@@ -8,6 +8,7 @@ from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.s3_file_manager import S3FileManager
+from ulakbus.settings import DATE_DEFAULT_FORMAT
 
 
 class FirmaTeklifForm(JsonForm):
@@ -30,7 +31,20 @@ class MevcutTeklifForm(JsonForm):
     """
 
     class Meta:
-        title = __(u'Firmanın Mevcut Teklifleri')
+        title = _(u"Firmanın Mevcut Teklifleri")
+        help_text = __(u'Firmanın değerlendirme sürecinde bulunan teklifleri gösterilir.')
+
+    geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
+
+
+class SonuclanmisTeklifForm(JsonForm):
+    """
+    Firmaya ait sonuçlanmış tekliflerin gösterildiği form.
+
+    """
+
+    class Meta:
+        title = _(u'Firmanın Sonuçlanmış Teklifleri')
 
     geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 
@@ -46,7 +60,8 @@ class BapFirmaTeklif(CrudView):
 
     def __init__(self, current=None):
         CrudView.__init__(self, current)
-        self.ListForm.add = fields.Button(__(u"Mevcut Tekliflerim"), cmd='mevcut_teklif')
+        self.ListForm.add = fields.Button(__(u"Mevcut Tekliflerim"), cmd='mevcut')
+        self.ListForm.sonuclanan = fields.Button(__(u"Sonuçlanmış Tekliflerim"), cmd='sonuclanan')
         self.model_class.Meta.verbose_name_plural = __(u"Teklife Açık Bütçe Kalemleri")
         self.firma = self.current.user.bap_firma_set[0].bap_firma
 
@@ -67,28 +82,33 @@ class BapFirmaTeklif(CrudView):
         """
         self.current.output['msgbox'] = {"type": "warning",
                                          "title": __(u'Mevcut Teklif Uyarısı'),
-                                         "msg": __(u"%s adlı bütçe kalemine ait teklifiniz "
-                                                   u"bulunmaktadır. Mevcut Tekliflerim'den ilgili "
-                                                   u"teklife ulaşabilir, değişiklikler "
-                                                   u"yapabilirsiniz." % self.object.ad)}
+                                         "msg": __(u"""%s adlı bütçe kalemine ait başvuru sürecinde
+                                         olan teklifiniz bulunmaktadır. Mevcut Tekliflerim'den 
+                                         ilgili teklife ulaşabilir, değişiklikler yapabilirsiniz.
+                                         """ % self.object.ad)}
 
-    def mevcut_teklifler_kontrol(self):
+    def istenen_teklifler_kontrol(self):
         """
-        Değerlendirme halinde olan mevcut herhangi bir teklifin olup olmadığını kontrol eder. 
-
-        """
-        teklif_sayisi = BAPTeklif.objects.filter(firma=self.firma, durum=1).count()
-        self.current.task_data['mevcut_teklifler'] = True if teklif_sayisi else False
-
-    def mevcut_teklif_yok_mesaji(self):
-        """
-        Mevcut teklif yokken, mevcut tekliflerin görüntülenmesi 
-        istenirse uyarı mesajı üretilir ve gösterilir.
+        İstenen şekilde (mevcut ya da sonuçlanan) herhangi 
+        bir teklifin olup olmadığını kontrol eder. 
 
         """
+        query = {'durum__in': [2, 3]} if self.cmd == 'sonuclanan' else {'durum': 1}
+        teklif_sayisi = BAPTeklif.objects.filter(firma=self.firma, **query).count()
+        self.current.task_data['istenen_teklifler'] = True if teklif_sayisi else False
+
+    def istenen_teklif_yok_mesaji(self):
+        """
+        İstenen teklif (mevcut ya da sonuçlanan) yokken, tekliflerin 
+        görüntülenmesi istenirse uyarı mesajı üretilir ve gösterilir.
+
+        """
+        durum = 'sonuçlanmış' if self.cmd == 'sonuclanan' else 'başvuru sürecinde bulunan'
         self.current.output['msgbox'] = {"type": "warning",
                                          "title": __(u'Firma Teklifleri'),
-                                         "msg": __(u"Sistemde kayıtlı teklifiniz bulunmamaktadır.")}
+                                         "msg": __(
+                                             u"Sistemde kayıtlı %s teklifiniz bulunmamaktadır."
+                                             % durum)}
 
     def mevcut_teklifleri_goster(self):
         """
@@ -111,9 +131,27 @@ class BapFirmaTeklif(CrudView):
             self.output['objects'].append(list_item)
         self.form_out(MevcutTeklifForm(current=self.current))
 
+    def sonuclanan_teklifleri_goster(self):
+        """
+        Firmaya ait sonuçlanmış(red ya da kabul) teklifler gösterilir.
+        
+        """
+        self.current.output["meta"]["allow_actions"] = False
+        teklifler = BAPTeklif.objects.filter(firma=self.firma, durum__in=[2, 3]).order_by()
+        self.output['objects'] = [[_(u'Bütçe Kalemi'), _(u'Sonuçlanma Tarihi'), _(u'Durum')]]
+        for teklif in teklifler:
+            butce = teklif.butce.ad
+            tarih = teklif.sonuclanma_tarihi.strftime(DATE_DEFAULT_FORMAT)
+            durum = teklif.get_durum_display()
+            list_item = {
+                "fields": [butce, tarih, durum],
+                "actions": ''}
+            self.output['objects'].append(list_item)
+        self.form_out(SonuclanmisTeklifForm(current=self.current))
+
     def teklif_belgeleri_indir(self):
         """
-        Seçilen teklife ait teklif belgeleri zip dosyası olarak indirilir.
+        Seçilen teklife ait teklif belgeler zip dosyası olarak indirilir.
                 
         """
         s3 = S3FileManager()
@@ -208,9 +246,9 @@ class BapFirmaTeklif(CrudView):
         """
         self.current.output['msgbox'] = {"type": "warning",
                                          "title": __(u'Belge Eksikliği'),
-                                         "msg": __(u"Teklifinize ilişkin belge ya da belgeleri"
-                                                   u" yüklemeniz gerekmektedir. Lütfen kontrol edip"
-                                                   u" tekrar deneyiniz. ")}
+                                         "msg": __(u"""Teklifinize ilişkin belge ya da belgeleri 
+                                         yüklemeniz gerekmektedir. Lütfen kontrol edip tekrar 
+                                         deneyiniz.""")}
 
     def teklif_kaydet(self):
         """
