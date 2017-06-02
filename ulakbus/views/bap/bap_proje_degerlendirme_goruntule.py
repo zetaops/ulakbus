@@ -60,7 +60,7 @@ class ProjeDegerlendirmeGoruntule(CrudView):
         for degerlendirme in proje.ProjeDegerlendirmeleri:
             hakem = degerlendirme.hakem().okutman().__unicode__()
             durum = cd_durum[degerlendirme.hakem_degerlendirme_durumu]
-            sonuc = cd_sonuc[degerlendirme.degerlendirme_sonucu]
+            sonuc = cd_sonuc.get(degerlendirme.degerlendirme_sonucu, 'Henüz değerlendirme yapmadı')
 
             list_item = {
                 "fields": [hakem, durum, sonuc],
