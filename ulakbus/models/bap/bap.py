@@ -316,3 +316,17 @@ class BAPGundem(Model):
 
     def __unicode__(self):
         return "Bap Gündem"
+
+
+class BAPSSS(Model):
+    class Meta:
+        verbose_name = __(u"Sıkça Sorulan Soru")
+        verbose_name_plural = __(u"Sıkça Sorulan Sorular")
+        list_fields = ['soru', 'cevap']
+
+    soru = field.Text(__(u"Sıkça Sorulan Soru"))
+    cevap = field.Text(__(u"Cevap"))
+    yayinlanmismi = field.Boolean(__(u"Yayınlanmış mı?"), default=False)
+
+    def __unicode__(self):
+        return "%s" % self.soru
