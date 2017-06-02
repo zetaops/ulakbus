@@ -9,6 +9,7 @@ from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.s3_file_manager import S3FileManager
 from ulakbus.settings import DATE_DEFAULT_FORMAT
+from datetime import datetime
 
 
 class FirmaTeklifForm(JsonForm):
@@ -24,27 +25,16 @@ class FirmaTeklifForm(JsonForm):
     geri = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 
 
-class MevcutTeklifForm(JsonForm):
-    """
-    Firmaya ait yapılmış, değerlendirme halindeki tekliflerin gösterildiği form.
-        
-    """
-
-    class Meta:
-        title = _(u"Firmanın Mevcut Teklifleri")
-        help_text = __(u'Firmanın değerlendirme sürecinde bulunan teklifleri gösterilir.')
-
-    geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
-
-
-class SonuclanmisTeklifForm(JsonForm):
+class TeklifleriGosterForm(JsonForm):
     """
     Firmaya ait sonuçlanmış tekliflerin gösterildiği form.
 
     """
 
     class Meta:
-        title = _(u'Firmanın Sonuçlanmış Teklifleri')
+        title = _(u'Firmanın Teklifleri')
+        help_text = _(u"Firmanın sonuçlanmış veya değerlendirme sürecinde bulunan"
+                      u" tüm teklifleri gösterilir.")
 
     geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 
@@ -60,94 +50,53 @@ class BapFirmaTeklif(CrudView):
 
     def __init__(self, current=None):
         CrudView.__init__(self, current)
-        self.ListForm.add = fields.Button(__(u"Mevcut Tekliflerim"), cmd='mevcut')
-        self.ListForm.sonuclanan = fields.Button(__(u"Sonuçlanmış Tekliflerim"), cmd='sonuclanan')
+        self.ListForm.add = fields.Button(__(u"Tekliflerimi Göster"), cmd='tekliflerim')
         self.model_class.Meta.verbose_name_plural = __(u"Teklife Açık Bütçe Kalemleri")
         self.firma = self.current.user.bap_firma_set[0].bap_firma
 
-    def ayni_butce_kalemi_teklif_kontrol(self):
+    def teklifler_kontrol(self):
         """
-        Bir firma tarafından, bir bütçe kalemine teklif yapılmışsa, 
-        aynı bütçe kalemine yeni bir teklif yapılmasını kontrol eder.
-                
-        """
-        teklif_sayisi = BAPTeklif.objects.filter(butce=self.object, firma=self.firma).count()
-        self.current.task_data['ayni_teklif'] = True if teklif_sayisi else False
-
-    def ayni_teklif_var_mesaji(self):
-        """
-        Bir bütçe kalemine, firma tarafından yapılmış teklif varken, yeni 
-        bir teklif yapılmaya çalışıldığında uyarı mesajı gösterilir. 
-
-        """
-        self.current.output['msgbox'] = {"type": "warning",
-                                         "title": __(u'Mevcut Teklif Uyarısı'),
-                                         "msg": __(u"""%s adlı bütçe kalemine ait başvuru sürecinde
-                                         olan teklifiniz bulunmaktadır. Mevcut Tekliflerim'den 
-                                         ilgili teklife ulaşabilir, değişiklikler yapabilirsiniz.
-                                         """ % self.object.ad)}
-
-    def istenen_teklifler_kontrol(self):
-        """
-        İstenen şekilde (mevcut ya da sonuçlanan) herhangi 
+        Değerlendirme sürecinde ya da sonuçlanmış herhangi 
         bir teklifin olup olmadığını kontrol eder. 
 
         """
-        query = {'durum__in': [2, 3]} if self.cmd == 'sonuclanan' else {'durum': 1}
-        teklif_sayisi = BAPTeklif.objects.filter(firma=self.firma, **query).count()
-        self.current.task_data['istenen_teklifler'] = True if teklif_sayisi else False
+        teklif_sayisi = BAPTeklif.objects.filter(firma=self.firma).count()
+        self.current.task_data['tekliflerim'] = True if teklif_sayisi else False
 
-    def istenen_teklif_yok_mesaji(self):
+    def teklif_yok_mesaji(self):
         """
-        İstenen teklif (mevcut ya da sonuçlanan) yokken, tekliflerin 
+        Değerlendirme sürecinde ya da sonuçlanmış teklif yokken, tekliflerin 
         görüntülenmesi istenirse uyarı mesajı üretilir ve gösterilir.
 
         """
-        durum = 'sonuçlanmış' if self.cmd == 'sonuclanan' else 'başvuru sürecinde bulunan'
         self.current.output['msgbox'] = {"type": "warning",
                                          "title": __(u'Firma Teklifleri'),
                                          "msg": __(
-                                             u"Sistemde kayıtlı %s teklifiniz bulunmamaktadır."
-                                             % durum)}
+                                             u"Sistemde kayıtlı sonuçlanmış ya da değerlendirme"
+                                             u" sürecinde bulunan teklifiniz bulunmamaktadır.")}
 
-    def mevcut_teklifleri_goster(self):
+    def teklifleri_goster(self):
         """
-        Firmaya ait değerlendirme halinde olan güncel teklifler gösterilir.
-
+        Değerlendirme sürecinde ya da sonuçlanmış teklifler gösterilir.
+        
         """
-        teklifler = BAPTeklif.objects.filter(firma=self.firma, durum=1).order_by()
-        self.output['objects'] = [[_(u'Bütçe Kalemi')]]
+        teklifler = BAPTeklif.objects.filter(firma=self.firma).order_by()
+        self.output['objects'] = [[_(u'Bütçe Kalemi'), _(u'Sonuçlanma Tarihi'), _(u'Durum')]]
         for teklif in teklifler:
             butce = teklif.butce.ad
+            tarih = teklif.sonuclanma_tarihi.strftime(
+                DATE_DEFAULT_FORMAT) if teklif.sonuclanma_tarihi else ""
+            durum = teklif.get_durum_display()
             list_item = {
-                "fields": [butce],
+                "fields": [butce, tarih, durum],
                 "actions": [
-                    {'name': _(u'Belgeleri İndir'), 'cmd': 'belge_indir', 'show_as': 'button',
-                     'object_key': 'data_key'},
-                    {'name': _(u'Belgeleri Düzenle'), 'cmd': 'belge_duzenle', 'show_as': 'button',
+                    {'name': _(u'Teklif Belgeleri İndir'), 'cmd': 'belge_indir',
+                     'show_as': 'button',
                      'object_key': 'data_key'}
                 ],
                 'key': teklif.key}
             self.output['objects'].append(list_item)
-        self.form_out(MevcutTeklifForm(current=self.current))
-
-    def sonuclanan_teklifleri_goster(self):
-        """
-        Firmaya ait sonuçlanmış(red ya da kabul) teklifler gösterilir.
-        
-        """
-        self.current.output["meta"]["allow_actions"] = False
-        teklifler = BAPTeklif.objects.filter(firma=self.firma, durum__in=[2, 3]).order_by()
-        self.output['objects'] = [[_(u'Bütçe Kalemi'), _(u'Sonuçlanma Tarihi'), _(u'Durum')]]
-        for teklif in teklifler:
-            butce = teklif.butce.ad
-            tarih = teklif.sonuclanma_tarihi.strftime(DATE_DEFAULT_FORMAT)
-            durum = teklif.get_durum_display()
-            list_item = {
-                "fields": [butce, tarih, durum],
-                "actions": ''}
-            self.output['objects'].append(list_item)
-        self.form_out(SonuclanmisTeklifForm(current=self.current))
+        self.form_out(TeklifleriGosterForm(current=self.current))
 
     def teklif_belgeleri_indir(self):
         """
@@ -155,7 +104,10 @@ class BapFirmaTeklif(CrudView):
                 
         """
         s3 = S3FileManager()
-        teklif = BAPTeklif.objects.get(self.current.input['data_key'])
+        if 'data_key' in self.current.input:
+            teklif = BAPTeklif.objects.get(self.current.input['data_key'])
+        else:
+            teklif = BAPTeklif.objects.get(firma=self.firma, butce=self.object)
         keys = [belge.belge for belge in teklif.Belgeler]
         zip_name = "%s-teklif-belgeler" % teklif.__unicode__()
         zip_url = s3.download_files_as_zip(keys, zip_name)
@@ -165,11 +117,11 @@ class BapFirmaTeklif(CrudView):
     def teklif_belgeleri_duzenle(self):
         """
         Seçilen teklife ait teklif belgeleri düzenlenir. Mevcut 
-        belgeler silinebilir, yeni belgeler yüklenebilir. 
+        belgeler düzenlenebilir, silinebilir, yeni belgeler yüklenebilir. 
 
         """
-        self.current.task_data['data_key'] = self.current.input['data_key']
-        teklif = BAPTeklif.objects.get(self.current.task_data['data_key'])
+        self.current.task_data['new'] = False
+        teklif = BAPTeklif.objects.get(firma=self.firma, butce=self.object)
         self.form_out(
             FirmaTeklifForm(teklif, current=self.current, title=__(u"Teklif Belgeleri Düzenleme")))
 
@@ -179,32 +131,27 @@ class BapFirmaTeklif(CrudView):
         gelen belgelere göre tekrardan düzenlenir ve kaydedilir.        
 
         """
-        teklif = BAPTeklif.objects.get(self.current.task_data['data_key'])
-        # Formdan değişiklik yapılmış, en son istenen belgeler alınır.
-        form_belgeler = [(belge['belge'], belge['aciklama']) for belge in
-                         self.input['form']['Belgeler']]
+        teklif = BAPTeklif.objects.get(firma=self.firma, butce=self.object)
+        form_belgeler = self.input['form']['Belgeler']
 
-        mevcut = {}
-        yeni = []
-        for belge, aciklama in form_belgeler:
-            # dict ise yeni eklenmiş belgedir.
-            if isinstance(belge, dict):
-                yeni.append((belge, aciklama))
-            else:
-                # kayıtlı, var olan belgedir.
-                mevcut[belge] = aciklama
+        # yeni kayıtlar
+        for belge in form_belgeler:
+            if 'file_content' in belge['belge']:
+                teklif.Belgeler(belge=belge['belge'], aciklama=belge['aciklama'])
+                form_belgeler.remove(belge)
 
-        # Veritabanına kayıtlı belgeler içinde dolaşılır,
-        # formda bulunmayan belgeler veritabanından silinir.
-        # Formda bulunan ama açıklaması değişmiş belgelerin açıklamaları güncellenir.
+        # mevcutlar
+        belgeler_kv = {belge['belge']: belge['aciklama'] for belge in form_belgeler}
+
+        # mevcutta olmayanları sil, olanların açıklaması değişmişse güncelle
         for belge in teklif.Belgeler:
-            if belge.belge not in mevcut:
-                belge.remove()
-            elif belge.aciklama != mevcut[belge.belge]:
-                belge.aciklama = mevcut[belge.belge]
+            if not isinstance(belge.belge, dict):
+                if belge.belge not in belgeler_kv:
+                    belge.remove()
+                elif belge.aciklama != belgeler_kv[belge.belge]:
+                    belge.aciklama = belgeler_kv[belge.belge]
 
-        # Yeni belgeler açıklamalarıyla beraber veritabına kaydedilir.
-        [teklif.Belgeler(belge=belge, aciklama=aciklama) for belge, aciklama in yeni]
+        teklif.son_degisiklik_tarihi = datetime.now()
         teklif.blocking_save()
         self.task_data_file_guncelle(teklif)
 
@@ -217,7 +164,7 @@ class BapFirmaTeklif(CrudView):
         self.current.output['msgbox'] = {"type": "info",
                                          "title": __(u'Firma Teklifleri'),
                                          "msg": __(u"Teklif belgeleriniz sisteme başarıyla"
-                                                   u" yüklenmiştir. Mevcut Tekliflerim altından"
+                                                   u" yüklenmiştir. Teklif Belgeleri Düzenle ile"
                                                    u" teklif belgelerinize ulaşabilir ve "
                                                    u"belgelerinizde değişiklikler yapabilirsiniz.")}
 
@@ -226,6 +173,7 @@ class BapFirmaTeklif(CrudView):
         Teklifin yapıldığı, belgelerin eklenebildiği ekran oluşturulur.         
 
         """
+        self.current.task_data['new'] = True
         form = FirmaTeklifForm(BAPTeklif(), current=self.current, title=__(u"Bütçe Kalemi Teklifi"))
         form.help_text = __(
             u"Lütfen %s adlı bütçe kalemine yaptığınız teklife "
@@ -261,6 +209,8 @@ class BapFirmaTeklif(CrudView):
                          self.input['form']['Belgeler']]
         [teklif.Belgeler(belge=belge, aciklama=aciklama) for belge, aciklama in form_belgeler]
         teklif.durum = 1
+        teklif.ilk_teklif_tarihi = datetime.now()
+        teklif.son_degisiklik_tarihi = datetime.now()
         teklif.blocking_save()
         self.task_data_file_guncelle(teklif)
 
@@ -279,10 +229,13 @@ class BapFirmaTeklif(CrudView):
 
     @obj_filter
     def firma_kayit_actions(self, obj, result):
-        result['actions'] = [
-            {'name': _(u'Teklifte Bulun'), 'cmd': 'teklif_ver', 'mode': 'normal',
-             'show_as': 'button'},
-        ]
+        teklif_sayisi = BAPTeklif.objects.filter(firma=self.firma, butce=obj).count()
+        butonlar = [(_(u'Teklif Belgeleri Düzenle'), 'duzenle'),
+                    (_(u'Teklif Belgeleri İndir'), 'indir')] if teklif_sayisi else [
+            (_(u'Teklifte Bulun'), 'teklif_ver')]
+
+        result['actions'] = [{'name': name, 'cmd': cmd, 'mode': 'normal',
+                              'show_as': 'button'} for name, cmd in butonlar]
 
     @list_query
     def teklife_acik_butce_kalemleri_listele(self, queryset):

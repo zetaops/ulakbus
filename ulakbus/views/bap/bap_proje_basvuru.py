@@ -3,6 +3,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+import copy
+
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from zengine.forms import JsonForm, fields
@@ -249,30 +251,27 @@ class ProjeBasvuru(CrudView):
     def proje_belge_kaydet(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         form_proje_belgeleri = self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri']
-
-        for bel in proje.ProjeBelgeleri:
-            f = {
-                'belge': bel.belge,
-                'belge_aciklamasi': bel.belge_aciklamasi
-            }
-            if f not in form_proje_belgeleri:
-                bel.remove()
-
+        clone_belgeler = copy.deepcopy(form_proje_belgeleri)
         # forma eklenmiş ya da düzenlenmiş belgeleri kaydettik
         for pb in form_proje_belgeleri:
             if 'file_content' in pb['belge']:
                 proje.ProjeBelgeleri(belge=pb['belge'], belge_aciklamasi=pb['belge_aciklamasi'])
+                clone_belgeler.remove(pb)
+
+        belgeler_kv = {belge['belge']: belge['belge_aciklamasi'] for belge in clone_belgeler}
+
+        for bel in proje.ProjeBelgeleri:
+            if not isinstance(bel.belge, dict):
+                if bel.belge not in belgeler_kv:
+                    bel.remove()
+                elif bel.belge_aciklamasi != belgeler_kv[bel.belge]:
+                    bel.belge_aciklamasi = belgeler_kv[bel.belge]
 
         proje.blocking_save()
         proje.reload()
 
-        belge_form = []
-        for b in proje.ProjeBelgeleri:
-            f = {
-                'belge': b.belge,
-                'belge_aciklamasi': b.belge_aciklamasi
-            }
-            belge_form.append(f)
+        belge_form = [{'belge': b.belge, 'belge_aciklamasi': b.belge_aciklamasi} for b in
+                      proje.ProjeBelgeleri]
 
         # Dosya adını key ile form datasının içine koymuş olduk
         self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = belge_form

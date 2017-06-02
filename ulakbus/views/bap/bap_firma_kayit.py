@@ -77,7 +77,7 @@ class BapFirmaKayit(CrudView):
         temp_password = hashlib.sha1(str(datetime.now())).hexdigest()
         form = self.input['form']
         user = User(name=form['isim'], surname=form['soyad'], username=form['k_adi'],
-                    e_mail=form['yetkili_e_posta'], password=temp_password)
+                    e_mail=form['yetkili_e_posta'], password=temp_password, is_active = False)
 
         self.current.task_data['uygunluk'] = True
         try:
