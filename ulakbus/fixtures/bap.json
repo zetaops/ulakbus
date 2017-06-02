@@ -256,5 +256,55 @@
       "tr": "Reddedilmiş",
       "en": ""
     }
+  },
+  "bap_proje_degerlendirme_sonuc": {
+    "1": {
+      "tr": "Olumlu/Proje Desteklenmelidir",
+      "en": "Affirmative/The Project should be Supported"
+    },
+    "2": {
+      "tr": "Olumsuz/Proje Desteklenmemelidir",
+      "en": "Negative/The Project SHOULD NOT be Supported"
+    }
+  },
+  "bap_proje_degerlendirme_secenekler": {
+    "1": {
+      "tr": "Çok İyi",
+      "en": "Very Good"
+    },
+    "2": {
+      "tr": "İyi",
+      "en": "Good"
+    },
+    "3": {
+      "tr": "Yeterli",
+      "en": "Satisfactory"
+    },
+    "4": {
+      "tr": "Yetersiz",
+      "en": "Unsatisfactory"
+    }
+  },
+  "bap_proje_hakem_degerlendirme_durum": {
+    "1": {
+      "tr": "Hakem Listesine Eklendi",
+      "en": ""
+    },
+    "2": {
+      "tr": "Hakemlik Daveti Gönderildi",
+      "en": ""
+    },
+    "3": {
+      "tr": "Hakemlik Daveti Kabul Edildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Hakemlik Daveti Reddedildi",
+      "en": ""
+    },
+    "5": {
+      "tr": "Proje Değerlendirildi",
+      "en": ""
+    }
   }
 }

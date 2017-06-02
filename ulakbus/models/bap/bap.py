@@ -3,7 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
+from ulakbus.models import Okutman
 from ulakbus.models.form import Form
 from ulakbus.models import Room, Personel, Role, User
 from ulakbus.models.demirbas import Demirbas
@@ -122,7 +122,7 @@ class BAPProje(Model):
     kabul_edilen_butce = field.Float(_(u"Kabul Edilen Bütçe"))
 
     # Başvuruda doldurulacak alanlar
-    yurutucu = Personel()
+    yurutucu = Okutman()
 
     tur = BAPProjeTurleri()
 
@@ -211,6 +211,18 @@ class BAPProje(Model):
         eylem = field.String(_(u"Eylem"))
         aciklama = field.String(_(u"Açıklama"))
         tarih = field.DateTime(_(u"Tarih"))
+
+    class ProjeDegerlendirmeleri(ListNode):
+        class Meta:
+            verbose_name = __(u"Proje Değerlendirmesi")
+            verbose_name_plural = __(u"Proje Değerlendirmeleri")
+
+        hakem = Okutman()
+        form_data = field.Text(_(u"Form Data"))
+        hakem_degerlendirme_durumu = field.Integer(_(u"Hakem/Değerlendirme Durumu"),
+                                                   choices='bap_proje_hakem_degerlendirme_durum')
+        degerlendirme_sonucu = field.Integer(_(u"Değerlendirme Sonucu"),
+                                             choices="bap_proje_degerlendirme_sonuc")
 
     @lazy_property
     def yurutucu_diger_projeler(self):
