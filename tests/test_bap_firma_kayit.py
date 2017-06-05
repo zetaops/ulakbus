@@ -58,11 +58,13 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == "Firma Kaydı İşlem Mesajı"
         assert 'Grundig' in resp.json['forms']['form'][0]['helpvalue']
 
+        time.sleep(1)
         assert BAPFirma.objects.count() == mevcut_firma_sayisi + 1
         assert User.objects.count() == mevcut_kullanici_sayisi + 1
 
         user = User.objects.get(username='selim_sayan')
         assert user.name == 'Selim'
+        assert user.is_active == False
         firma = user.bap_firma_set[0].bap_firma
         assert firma.ad == 'Grundig'
         assert firma.vergi_no == '232132193213890'

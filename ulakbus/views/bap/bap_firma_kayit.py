@@ -40,9 +40,9 @@ class IslemMesajiForm(JsonForm):
     """
 
     class Meta:
-        title = __(u'Firma Kaydı İşlem Mesajı')
+        title = __(u"Firma Kaydı İşlem Mesajı")
 
-    tamam = fields.Button(__(u'Tamam'))
+    tamam = fields.Button(__(u"Çıkışa Yönlendir"))
 
 
 class BapFirmaKayit(CrudView):
@@ -77,7 +77,7 @@ class BapFirmaKayit(CrudView):
         temp_password = hashlib.sha1(str(datetime.now())).hexdigest()
         form = self.input['form']
         user = User(name=form['isim'], surname=form['soyad'], username=form['k_adi'],
-                    e_mail=form['yetkili_e_posta'], password=temp_password, is_active = False)
+                    e_mail=form['yetkili_e_posta'], password=temp_password, is_active=False)
 
         self.current.task_data['uygunluk'] = True
         try:
@@ -99,7 +99,7 @@ class BapFirmaKayit(CrudView):
         self.set_form_data_to_object()
         self.object.Yetkililer(yetkili=user)
         self.object.durum = 1
-        self.object.blocking_save()
+        self.object.save()
 
     def islem_mesaji_goster(self):
         """
