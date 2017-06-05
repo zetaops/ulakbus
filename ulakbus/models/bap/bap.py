@@ -277,6 +277,8 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
+    teklife_acilma_tarihi = field.DateTime(_(u"Teklife Açılma Tarihi"))
+    teklife_kapanma_tarihi = field.DateTime(_(u"Teklife Kapanma Tarihi"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_butce_kalem_durum')
 
     def __unicode__(self):
