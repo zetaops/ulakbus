@@ -46,6 +46,7 @@ class TestCase(BaseTestCase):
     """
 
     def test_bap_firma_teklif(self):
+
         butce_kalemi = BAPButcePlani.objects.get('MpRqF2BZk6sMbi4QNkQvTNH1mVW')
         user = User.objects.get(username='bap_firma_yetkilisi_1')
         firma = user.bap_firma_set[0].bap_firma
@@ -82,13 +83,11 @@ class TestCase(BaseTestCase):
         assert resp.json['msgbox']['title'] == "Firma Teklifleri"
         assert 'sonuçlanmış' in resp.json['msgbox']['msg']
 
-        # teklifte bulun
+        # teklifte bulun, geri dön
         resp = self.client.post(wf='bap_firma_teklif', cmd="teklif_ver",
                                 object_id="MpRqF2BZk6sMbi4QNkQvTNH1mVW")
         assert resp.json['forms']['schema']['title'] == "Bütçe Kalemi Teklifi"
         assert 'Arduino' in resp.json['forms']['form'][0]['helpvalue']
-
-        # geri dön
         resp = self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri': 1})
         assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
 
@@ -171,19 +170,21 @@ class TestCase(BaseTestCase):
         # geri dön
         self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri': 1})
 
+        for tek in teklifler:
+            tek.deleted = False
+            tek.blocking_save()
+        time.sleep(1)
+
         # belgeleri indirme
         for i in range(2):
+            # güncel tekliflerden indir
             if i == 0:
                 resp = self.client.post(wf='bap_firma_teklif', cmd="indir",
                                         object_id="MpRqF2BZk6sMbi4QNkQvTNH1mVW")
                 assert resp.json['download_url'] == "%s%s-teklif-belgeler.zip" % (
                     settings.S3_PUBLIC_URL, teklif.__unicode__().replace(' ', ''))
 
-                for bap_teklif in teklifler:
-                    bap_teklif.deleted = False
-                    bap_teklif.blocking_save()
-                time.sleep(1)
-
+            # sonuçlanmış tekliflerden indir
             else:
                 user = User.objects.get(username='bap_firma_yetkilisi_1')
                 self.prepare_client('/bap_firma_teklif', user=user)

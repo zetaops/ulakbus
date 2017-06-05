@@ -3,8 +3,6 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-import copy
-
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from zengine.forms import JsonForm, fields
@@ -15,6 +13,7 @@ from pyoko import ListNode
 import datetime
 from ulakbus.settings import DATE_DEFAULT_FORMAT
 from pyoko.fields import DATE_TIME_FORMAT, File
+import copy
 
 
 class ProjeTurForm(JsonForm):

@@ -10,6 +10,7 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.s3_file_manager import S3FileManager
 from ulakbus.settings import DATE_DEFAULT_FORMAT
 from datetime import datetime
+import copy
 
 
 class FirmaTeklifForm(JsonForm):
@@ -133,9 +134,10 @@ class BapFirmaTeklif(CrudView):
         """
         teklif = BAPTeklif.objects.get(firma=self.firma, butce=self.object)
         form_belgeler = self.input['form']['Belgeler']
+        clone_belgeler = copy.deepcopy(form_belgeler)
 
         # yeni kayıtlar
-        for belge in form_belgeler:
+        for belge in clone_belgeler:
             if 'file_content' in belge['belge']:
                 teklif.Belgeler(belge=belge['belge'], aciklama=belge['aciklama'])
                 form_belgeler.remove(belge)

@@ -217,14 +217,18 @@
       "en": ""
     },
     "2": {
-      "tr": "Teklif Sonuçlandı",
+      "tr": "Teklife Kapatıldı",
       "en": ""
     },
     "3": {
-      "tr": "Satın Alma Sürecinde",
+      "tr": "Teklif Sonuçlandı",
       "en": ""
     },
     "4": {
+      "tr": "Satın Alma Sürecinde",
+      "en": ""
+    },
+    "5": {
       "tr": "Teslim Alındı",
       "en": ""
     }
@@ -235,25 +239,29 @@
       "en": ""
     },
     "2": {
-      "tr": "Kabul Edilmiş",
+      "tr": "Kabul Edildi",
       "en": ""
     },
     "3": {
-      "tr": "Reddedilmiş",
+      "tr": "Reddedildi",
       "en": ""
     }
   },
   "bap_teklif_durum": {
     "1": {
-      "tr": "Değerlendirme Sürecinde",
+      "tr": "Teklif Süreci Devam Ediyor",
       "en": ""
     },
     "2": {
-      "tr": "Kabul Edilmiş",
+      "tr": "Değerlendirme Sürecinde",
       "en": ""
     },
     "3": {
-      "tr": "Reddedilmiş",
+      "tr": "Kabul Edildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Reddedildi",
       "en": ""
     }
   },
