@@ -15,7 +15,7 @@ class BapKomisyonUyeleri(CrudView):
         self.current.output["meta"]["allow_search"] = False
         self.current.output["meta"]["allow_actions"] = False
         self.output['objects'] = [
-            [_(u'Ad Soyad'), _(u'Statü')]
+            [_(u'Ad Soyad'), _(u'Statü'), _(u"Telefon"), _(u"E-posta")]
         ]
 
         rol_kom_uye = AbstractRole.objects.get(name='Bilimsel Arastirma Projesi Komisyon Uyesi')
@@ -24,14 +24,14 @@ class BapKomisyonUyeleri(CrudView):
         r = Role.objects.get(abstract_role_id=rol_kom_bas.key)
         p = Personel.objects.get(user=r.user())
         self.output['objects'].append({
-            "fields": [p.__unicode__(), _(u"Başkan")],
+            "fields": [p.__unicode__(), _(u"Başkan"), p.oda_tel_no, p.e_posta],
             "actions": []
         })
 
         for r in Role.objects.all(abstract_role_id=rol_kom_uye.key):
             p = Personel.objects.get(user=r.user())
             self.output['objects'].append({
-                "fields": [p.__unicode__(), _(u"Üye")],
+                "fields": [p.__unicode__(), _(u"Üye"), p.oda_tel_no, p.e_posta],
                 "actions": []
             })
 
