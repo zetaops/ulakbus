@@ -13,6 +13,7 @@ from zengine.lib.cache import Cache
 import random
 import hashlib
 import re
+import uuid
 
 # Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
 SLOT_SURESI = 5
@@ -33,6 +34,9 @@ parola_kalibi = re.compile(
 
 e_posta_kalibi = re.compile('[^@]+@[^@]+\.[^@]+')
 
+
+def get_temp_password():
+    return uuid.uuid4().hex
 
 def get_file_url(key):
     return "%s%s" % (settings.S3_PUBLIC_URL, key)

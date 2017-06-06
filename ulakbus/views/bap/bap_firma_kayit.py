@@ -9,7 +9,8 @@ from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext_lazy as __
 from datetime import datetime
 import hashlib
-
+import uuid
+from ulakbus.lib.common import get_temp_password
 
 class FirmaKayitForm(JsonForm):
     """
@@ -74,7 +75,7 @@ class BapFirmaKayit(CrudView):
             False or True: eğer kaydetme işlemi olmuş ise True hata oluşmuşsa False döndürülür
 
         """
-        temp_password = hashlib.sha1(str(datetime.now())).hexdigest()
+        temp_password = hashlib.sha1(get_temp_password()).hexdigest()
         form = self.input['form']
         user = User(name=form['isim'], surname=form['soyad'], username=form['k_adi'],
                     e_mail=form['yetkili_e_posta'], password=temp_password, is_active=False)

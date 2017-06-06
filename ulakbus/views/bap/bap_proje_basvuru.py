@@ -12,8 +12,7 @@ from zengine.lib.translation import gettext as _
 from pyoko import ListNode
 import datetime
 from ulakbus.settings import DATE_DEFAULT_FORMAT
-from pyoko.fields import DATE_TIME_FORMAT, File
-import copy
+from pyoko.fields import DATE_TIME_FORMAT
 
 
 class ProjeTurForm(JsonForm):
@@ -250,30 +249,19 @@ class ProjeBasvuru(CrudView):
     def proje_belge_kaydet(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         form_proje_belgeleri = self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri']
-        clone_belgeler = copy.deepcopy(form_proje_belgeleri)
-        # forma eklenmiş ya da düzenlenmiş belgeleri kaydettik
+
+        # mevcut belgeleri temizle
+        proje.ProjeBelgeleri.clear()
+
+        # formdan gelen belgeleri ekle
         for pb in form_proje_belgeleri:
-            if 'file_content' in pb['belge']:
-                proje.ProjeBelgeleri(belge=pb['belge'], belge_aciklamasi=pb['belge_aciklamasi'])
-                clone_belgeler.remove(pb)
-
-        belgeler_kv = {belge['belge']: belge['belge_aciklamasi'] for belge in clone_belgeler}
-
-        for bel in proje.ProjeBelgeleri:
-            if not isinstance(bel.belge, dict):
-                if bel.belge not in belgeler_kv:
-                    bel.remove()
-                elif bel.belge_aciklamasi != belgeler_kv[bel.belge]:
-                    bel.belge_aciklamasi = belgeler_kv[bel.belge]
+            proje.ProjeBelgeleri(belge=pb['belge'], belge_aciklamasi=pb['belge_aciklamasi'])
 
         proje.blocking_save()
         proje.reload()
 
-        belge_form = [{'belge': b.belge, 'belge_aciklamasi': b.belge_aciklamasi} for b in
-                      proje.ProjeBelgeleri]
-
         # Dosya adını key ile form datasının içine koymuş olduk
-        self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = belge_form
+        self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = proje.ProjeBelgeleri.clean_value()
 
     def arastirma_olanagi_ekle(self):
         form = ArastirmaOlanaklariForm(current=self.current)
