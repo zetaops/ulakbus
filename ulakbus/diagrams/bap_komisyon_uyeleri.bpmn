@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1xnro66">
     <bpmn:extensionElements>
       <camunda:properties>
-        <camunda:property />
+        <camunda:property name="menu_category" value="BAP" />
       </camunda:properties>
     </bpmn:extensionElements>
     <bpmn:participant id="Participant_1aa9xg7" processRef="bap_komisyon_uyeleri" />
@@ -13,7 +13,7 @@
       <bpmn:outgoing>SequenceFlow_0hvgn1h</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0hvgn1h" sourceRef="StartEvent_1" targetRef="komisyon_uyelerini_listele" />
-    <bpmn:userTask id="komisyon_uyelerini_listele" name="BAP Komisyon Uyelerini Listele">
+    <bpmn:userTask id="komisyon_uyelerini_listele" name="BAP Komisyon Uyelerini Listele" camunda:assignee="bap.bap_komisyon_uyeleri.BapKomisyonUyeleri.komisyon_uyelerini_listele">
       <bpmn:incoming>SequenceFlow_0hvgn1h</bpmn:incoming>
     </bpmn:userTask>
   </bpmn:process>

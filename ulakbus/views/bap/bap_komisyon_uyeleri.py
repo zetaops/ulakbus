@@ -3,8 +3,35 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.models import AbstractRole
+from ulakbus.models import Personel
+from ulakbus.models import Role
 from zengine.views.crud import CrudView
+from zengine.lib.translation import gettext as _
 
 
 class BapKomisyonUyeleri(CrudView):
-    pass
+    def komisyon_uyelerini_listele(self):
+        self.current.output["meta"]["allow_search"] = False
+        self.current.output["meta"]["allow_actions"] = False
+        self.output['objects'] = [
+            [_(u'Ad Soyad'), _(u'Statü')]
+        ]
+
+        rol_kom_uye = AbstractRole.objects.get(name='Bilimsel Arastirma Projesi Komisyon Uyesi')
+        rol_kom_bas = AbstractRole.objects.get(name='Bilimsel Arastirma Projesi Komisyon Baskani')
+
+        r = Role.objects.get(abstract_role_id=rol_kom_bas.key)
+        p = Personel.objects.get(user=r.user())
+        self.output['objects'].append({
+            "fields": [p.__unicode__(), _(u"Başkan")],
+            "actions": []
+        })
+
+        for r in Role.objects.all(abstract_role_id=rol_kom_uye.key):
+            p = Personel.objects.get(user=r.user())
+            self.output['objects'].append({
+                "fields": [p.__unicode__(), _(u"Üye")],
+                "actions": []
+            })
+
