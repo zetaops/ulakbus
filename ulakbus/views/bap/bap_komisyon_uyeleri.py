@@ -11,6 +11,9 @@ from zengine.lib.translation import gettext as _
 
 
 class BapKomisyonUyeleri(CrudView):
+    """
+    Komisyon uyelerinin goruntulendigi is akisidir.
+    """
     def komisyon_uyelerini_listele(self):
         self.current.output["meta"]["allow_search"] = False
         self.current.output["meta"]["allow_actions"] = False
