@@ -17,6 +17,7 @@ class BapKomisyonUyeleri(CrudView):
     def komisyon_uyelerini_listele(self):
         self.current.output["meta"]["allow_search"] = False
         self.current.output["meta"]["allow_actions"] = False
+        self.output['object_title'] = _(u"BAP Komisyonu Üyeleri")
         self.output['objects'] = [
             [_(u'Ad Soyad'), _(u'Statü'), _(u"Telefon"), _(u"E-posta")]
         ]
