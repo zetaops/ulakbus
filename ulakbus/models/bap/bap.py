@@ -330,3 +330,29 @@ class BAPSSS(Model):
 
     def __unicode__(self):
         return "%s" % self.soru
+
+
+class BAPDuyurular(Model):
+    class Meta:
+        verbose_name = __(u"BAP Duyuru")
+        verbose_name_plural = __(u"BAP Duyurular")
+        list_fields = ['duyuru_baslik', 'eklenme_tarihi', 'son_gecerlilik_tarihi']
+
+    ekleyen = User()
+    eklenme_tarihi = field.Date(__(u"Eklenme Tarihi"))
+    son_gecerlilik_tarihi = field.Date(__(u"Son Geçerlilik Tarihi"))
+    duyuru_baslik = field.String(__(u"Duyuru Başlığı"))
+    duyuru_icerik = field.Text(__(u"Duyuru İçeriği"))
+    yayinlanmismi = field.Boolean(__(u"Yayınlanmış mı?"), default=False)
+
+    class EkDosyalar(ListNode):
+        class Meta:
+            verbose_name = __(u"Ek Dosya")
+            verbose_name_plural = __(u"Ek Dosyalar")
+            list_fields = ['dosya_aciklamasi']
+
+        ek_dosya = field.File(__(u"Ek Dosya Seç"), random_name=True)
+        dosya_aciklamasi = field.String(__(u"Dosya Açıklaması"))
+
+    def __unicode__(self):
+        return "%s" % self.duyuru_baslik
