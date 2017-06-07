@@ -5,6 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
 from ulakbus.lib.view_helpers import prepare_choices_for_model
+from ulakbus.models import Okutman
 from zengine.forms import JsonForm, fields
 from zengine.models import WFInstance
 from zengine.views.crud import CrudView
@@ -413,7 +414,7 @@ class ProjeBasvuru(CrudView):
 
     def yurutucu_projeleri(self):
         personel = Personel.objects.get(user_id=self.current.user_id)
-        projeler = BAPProje.objects.all(yurutucu=personel)
+        projeler = BAPProje.objects.all(yurutucu=Okutman.objects.get(personel=personel))
 
         form = YurutucuProjeForm(current=self.current)
 
@@ -433,7 +434,7 @@ class ProjeBasvuru(CrudView):
     def proje_kaydet(self):
         td = self.current.task_data
         proje = BAPProje.objects.get(td['bap_proje_id'])
-        yurutucu = Personel.objects.get(user_id=self.current.user_id)
+        yurutucu = Okutman.objects.get(personel=Personel.objects.get(user_id=self.current.user_id))
         proje.yurutucu = yurutucu
         if 'arastirma_olanaklari' in td['hedef_proje']:
             proje.ArastirmaOlanaklari.clear()
@@ -510,7 +511,7 @@ class ProjeBasvuru(CrudView):
 
     def bildirim_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        role = proje.yurutucu().user().role_set[0].role
+        role = proje.yurutucu().okutman().user().role_set[0].role
         if self.cmd == 'iptal' or self.current.task_data['karar'] == 'iptal':
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
