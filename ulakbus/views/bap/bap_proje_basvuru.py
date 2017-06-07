@@ -320,17 +320,23 @@ class ProjeBasvuru(CrudView):
 
     def lab_ekle(self):
         form = LabEkleForm()
-        form.set_choices_of('lab', prepare_choices_for_model(Room))
+        ch = prepare_choices_for_model(Room)
+        form.set_choices_of('lab', ch)
+        form.set_default_of('lab', ch[0][0])
         self.form_out(form)
 
     def demirbas_ekle(self):
         form = DemirbasEkleForm()
-        form.set_choices_of('demirbas', prepare_choices_for_model(Demirbas))
+        ch = prepare_choices_for_model(Demirbas)
+        form.set_choices_of('demirbas', ch)
+        form.set_default_of('demirbas', ch[0][0])
         self.form_out(form)
 
     def personel_ekle(self):
         form = PersonelEkleForm()
-        form.set_choices_of('personel', prepare_choices_for_model(Personel))
+        ch = prepare_choices_for_model(Personel)
+        form.set_choices_of('personel', ch)
+        form.set_default_of('personel', ch[0][0])
         self.form_out(form)
 
     def olanak_kaydet(self):
