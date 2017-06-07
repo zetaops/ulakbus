@@ -38,7 +38,7 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == 'BAP Projeler'
         # Listeleme kategorileri kontrol edilir.
         # assert u'Proje_Adı' in resp.json['objects'][0]
-        assert 'Personel' in resp.json['objects'][0]
+        assert 'Okutman' in resp.json['objects'][0]
 
         # Seçilen projenin adının da listeleme ekranında bulunduğu kontrol edilir.
         del resp.json['objects'][0]

@@ -20,7 +20,7 @@ class TestCase(BaseTestCase):
 
         proje = BAPProje()
         proje.ad = "Test Bap Gündem Proje"
-        proje.yurutucu = personel
+        proje.yurutucu = personel.okutman
         proje.save()
 
         gundem = BAPGundem()

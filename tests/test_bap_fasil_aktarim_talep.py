@@ -24,7 +24,7 @@ class TestCase(BaseTestCase):
         proje = BAPProje()
         user = User.objects.get(username='ogretim_uyesi_1')
         proje.ad = "Test ek bütçe talep projesi"
-        proje.yurutucu = user.personel
+        proje.yurutucu = user.personel.okutman
         proje.kabul_edilen_butce = 100.0
         proje.durum = 5
         proje.save()
