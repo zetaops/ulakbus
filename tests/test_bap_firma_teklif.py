@@ -6,7 +6,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 import time
 from ulakbus import settings
-from ulakbus.models import User, BAPTeklif, BAPButcePlani
+from ulakbus.models import User, BAPTeklif, BAPButcePlani, BAPSatinAlma
 from zengine.lib.test_utils import BaseTestCase
 import requests, zipfile, io, os
 
@@ -46,8 +46,7 @@ class TestCase(BaseTestCase):
     """
 
     def test_bap_firma_teklif(self):
-
-        butce_kalemi = BAPButcePlani.objects.get('MpRqF2BZk6sMbi4QNkQvTNH1mVW')
+        satin_alma = BAPSatinAlma.objects.get('EEEKHshgTCZXSl02obdeZckzut2')
         user = User.objects.get(username='bap_firma_yetkilisi_1')
         firma = user.bap_firma_set[0].bap_firma
         BAPTeklif.objects.filter(firma=firma, durum=1).delete()
@@ -55,21 +54,38 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
 
         # listeleme ekranı
-        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
+
+        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemi Satın Almaları"
         assert resp.json['forms']['schema']['properties']['add']['title'] == "Tekliflerimi Göster"
-        assert "Muhasebe Kodu" in resp.json['objects'][0]
-        assert "Kod Adı" in resp.json['objects'][0]
-        assert resp.json['objects'][1]['actions'][0]['name'] == "Teklifte Bulun"
+        assert "Satın Alma Duyuru Adı" in resp.json['objects'][0]
+        assert "Teklife Açılma Tarihi" in resp.json['objects'][0]
+        action_names = ["Teklifte Bulun", "Ayrıntı Gör"]
+        for action in resp.json['objects'][1]['actions']:
+            assert action['name'] in action_names
 
         # tekliflerim olumlu
         resp = self.client.post(wf='bap_firma_teklif', cmd="tekliflerim", form={"add": 1})
         assert resp.json['forms']['schema']['title'] == "Firmanın Teklifleri"
-        assert "Bütçe Kalemi" in resp.json['objects'][0]
+        assert "Satın Alma Adı" in resp.json['objects'][0]
         assert "Durum" in resp.json['objects'][0]
         assert 'sonuçlanmış' in resp.json['forms']['form'][0]['helpvalue']
-        assert resp.json['objects'][1]['actions'][0]['name'] == "Teklif Belgeleri İndir"
+        action_names = ["Teklif Belgeleri İndir", "Ayrıntı Gör"]
+        for action in resp.json['objects'][1]['actions']:
+            assert action['name'] in action_names
+
+        # sonuçlanmış teklif ayrıntı gör
+        resp = self.client.post(wf='bap_firma_teklif', cmd="ayrinti",
+                                data_key="GSX4LNZntJicEmD4k0DQ3u7M9ME")
+
+        assert resp.json['forms']['schema'][
+                   'title'] == "4 Kalem Malzeme Alımı Satın Alma Duyurusu Bütçe Kalemleri"
+
+        assert "Bütçe Kalemi Adı" in resp.json['objects'][0]
+        assert "Adet" in resp.json['objects'][0]
+
+        self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri_don': 1})
         resp = self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri_don': 1})
-        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
+        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemi Satın Almaları"
 
         # tekliflerim olumsuz
         teklifler = []
@@ -83,21 +99,32 @@ class TestCase(BaseTestCase):
         assert resp.json['msgbox']['title'] == "Firma Teklifleri"
         assert 'sonuçlanmış' in resp.json['msgbox']['msg']
 
+        # bütçe kalemlerini ayrıntılı gör
+        resp = self.client.post(wf='bap_firma_teklif', cmd="ayrinti",
+                                object_id="EEEKHshgTCZXSl02obdeZckzut2")
+        assert resp.json['forms']['schema'][
+                   'title'] == "3 Kalem Büro Malzemesi Alımı Satın Alma Duyurusu Bütçe Kalemleri"
+
+        assert "Bütçe Kalemi Adı" in resp.json['objects'][0]
+        assert "Adet" in resp.json['objects'][0]
+
+        self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri_don': 1})
+
         # teklifte bulun, geri dön
         resp = self.client.post(wf='bap_firma_teklif', cmd="teklif_ver",
-                                object_id="MpRqF2BZk6sMbi4QNkQvTNH1mVW")
+                                object_id="EEEKHshgTCZXSl02obdeZckzut2")
         assert resp.json['forms']['schema']['title'] == "Bütçe Kalemi Teklifi"
-        assert 'Arduino' in resp.json['forms']['form'][0]['helpvalue']
+        assert '3 Kalem Büro Malzemesi Alımı' in resp.json['forms']['form'][0]['helpvalue']
         resp = self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri': 1})
-        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
+        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemi Satın Almaları"
 
         # teklif belgeleri boş kontrol
         resp = self.client.post(wf='bap_firma_teklif', cmd="teklif_ver",
-                                object_id="MpRqF2BZk6sMbi4QNkQvTNH1mVW")
+                                object_id="EEEKHshgTCZXSl02obdeZckzut2")
         resp = self.client.post(wf='bap_firma_teklif', cmd="kaydet",
                                 form={'Belgeler': [], 'kaydet': 1})
         assert resp.json['forms']['schema']['title'] == "Bütçe Kalemi Teklifi"
-        assert 'Arduino' in resp.json['forms']['form'][0]['helpvalue']
+        assert '3 Kalem Büro Malzemesi Alımı' in resp.json['forms']['form'][0]['helpvalue']
         assert resp.json['msgbox']['title'] == "Belge Eksikliği"
 
         # teklifte bulun
@@ -106,21 +133,21 @@ class TestCase(BaseTestCase):
 
         # teklif kaydedildi mesajı
         assert resp.json['msgbox']['title'] == "Firma Teklifleri"
-        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
+        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemi Satın Almaları"
         assert 'başarıyla yüklenmiştir' in resp.json['msgbox']['msg']
         del resp.json['objects'][0]
 
         # teklif kaydından sonra buton değişikliği
         for obj in resp.json['objects']:
-            if obj['key'] == "MpRqF2BZk6sMbi4QNkQvTNH1mVW":
+            if obj['key'] == "EEEKHshgTCZXSl02obdeZckzut2":
                 break
 
-        action_list = ['Teklif Belgeleri Düzenle', 'Teklif Belgeleri İndir']
+        action_list = ['Teklif Belgeleri Düzenle', 'Teklif Belgeleri İndir', 'Ayrıntı Gör']
         for action in obj['actions']:
             assert action['name'] in action_list
 
         # veritabanı kaydetme kontrol
-        teklif = BAPTeklif.objects.get(firma=firma, butce=butce_kalemi)
+        teklif = BAPTeklif.objects.get(firma=firma, satin_alma=satin_alma)
         assert len(teklif.Belgeler) == 2
         belge_adlari = [png_belge['belge']['file_name'], jpg_belge['belge']['file_name']]
         for belge in teklif.Belgeler:
@@ -128,7 +155,7 @@ class TestCase(BaseTestCase):
 
         # mevcut tekliflerim olumlu, düzenle
         resp = self.client.post(wf='bap_firma_teklif', cmd="duzenle",
-                                object_id="MpRqF2BZk6sMbi4QNkQvTNH1mVW")
+                                object_id="EEEKHshgTCZXSl02obdeZckzut2")
         assert resp.json['forms']['schema']['title'] == "Teklif Belgeleri Düzenleme"
         belge_adlari = [png_belge['belge']['file_name'],
                         jpg_belge['belge']['file_name']]
@@ -147,12 +174,12 @@ class TestCase(BaseTestCase):
 
         # işlem mesajı kontrolü
         assert resp.json['msgbox']['title'] == "Firma Teklifleri"
-        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemleri"
+        assert resp.json['forms']['schema']['title'] == "Teklife Açık Bütçe Kalemi Satın Almaları"
         assert 'başarıyla yüklenmiştir' in resp.json['msgbox']['msg']
 
         # düzenleme sonrası form data kontrol
         resp = self.client.post(wf='bap_firma_teklif', cmd="duzenle",
-                                object_id="MpRqF2BZk6sMbi4QNkQvTNH1mVW")
+                                object_id="EEEKHshgTCZXSl02obdeZckzut2")
         belge_aciklama = {"png_trial.png": "png değişmiş aciklama",
                           "pdf_trial.pdf": "pdf denemesi"}
         assert len(resp.json['forms']['model']['Belgeler']) == 2
@@ -170,6 +197,7 @@ class TestCase(BaseTestCase):
         # geri dön
         self.client.post(wf='bap_firma_teklif', cmd="geri_don", form={'geri': 1})
 
+        # silinen teklifler eski haline döndürülür
         for tek in teklifler:
             tek.deleted = False
             tek.blocking_save()
@@ -180,7 +208,7 @@ class TestCase(BaseTestCase):
             # güncel tekliflerden indir
             if i == 0:
                 resp = self.client.post(wf='bap_firma_teklif', cmd="indir",
-                                        object_id="MpRqF2BZk6sMbi4QNkQvTNH1mVW")
+                                        object_id="EEEKHshgTCZXSl02obdeZckzut2")
                 assert resp.json['download_url'] == "%s%s-teklif-belgeler.zip" % (
                     settings.S3_PUBLIC_URL, teklif.__unicode__().replace(' ', ''))
 
@@ -189,7 +217,7 @@ class TestCase(BaseTestCase):
                 user = User.objects.get(username='bap_firma_yetkilisi_1')
                 self.prepare_client('/bap_firma_teklif', user=user)
                 self.client.post()
-                ikinci_teklif = BAPTeklif.objects.get('IMfzevxs5c42S5bMZ9ADGMG2fRp')
+                ikinci_teklif = BAPTeklif.objects.get('GSX4LNZntJicEmD4k0DQ3u7M9ME')
                 self.client.post(wf='bap_firma_teklif', cmd="tekliflerim", form={"add": 1})
                 resp = self.client.post(wf='bap_firma_teklif', cmd="belge_indir",
                                         data_key=ikinci_teklif.key)

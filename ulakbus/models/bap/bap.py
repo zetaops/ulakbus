@@ -277,9 +277,6 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
-    teklife_acilma_tarihi = field.DateTime(_(u"Teklife Açılma Tarihi"))
-    teklife_kapanma_tarihi = field.DateTime(_(u"Teklife Kapanma Tarihi"))
-    teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_butce_kalem_durum')
 
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
@@ -344,13 +341,32 @@ class BAPFirma(Model):
         return "%s" % (self.ad)
 
 
+class BAPSatinAlma(Model):
+    class Meta:
+        verbose_name = __(u"Bütçe Kalemi Satın Alma")
+        verbose_name_plural = __(u"Bütçe Kalemi Satın Almaları")
+        list_fields = ['ad', 'teklife_acilma_tarihi', 'teklife_kapanma_tarihi']
+
+    ad = field.String(__(u"Satın Alma Duyuru Adı"))
+    teklife_acilma_tarihi = field.DateTime(__(u"Teklife Açılma Tarihi"))
+    teklife_kapanma_tarihi = field.DateTime(__(u"Teklife Kapanma Tarihi"))
+    sonuclanma_tarihi = field.Date(__(u"Teklifin Sonuçlanma Tarihi"))
+    teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
+
+    class ButceKalemleri(ListNode):
+        butce = BAPButcePlani()
+
+    def __unicode__(self):
+        return "%s" % self.ad
+
+
 class BAPTeklif(Model):
     class Meta:
         verbose_name = __(u"Firma Teklif")
         verbose_name_plural = __(u"Firma Teklifleri")
 
     firma = BAPFirma()
-    butce = BAPButcePlani()
+    satin_alma = BAPSatinAlma()
     durum = field.Integer(__(u"Durum"), choices='bap_teklif_durum')
     ilk_teklif_tarihi = field.DateTime(_(u"İlk Teklif Tarihi"))
     son_degisiklik_tarihi = field.DateTime(_(u"Son Değişiklik Tarihi"))
@@ -361,4 +377,4 @@ class BAPTeklif(Model):
         aciklama = field.String(__(u"Belge Açıklaması"), required=True)
 
     def __unicode__(self):
-        return "%s-%s" % (self.firma.ad, self.butce.ad)
+        return "%s-%s" % (self.firma.ad, self.satin_alma.ad)
