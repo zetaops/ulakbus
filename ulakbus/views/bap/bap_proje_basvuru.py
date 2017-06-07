@@ -13,7 +13,7 @@ from zengine.lib.translation import gettext as _
 from pyoko import ListNode
 import datetime
 from ulakbus.settings import DATE_DEFAULT_FORMAT
-from pyoko.fields import DATE_TIME_FORMAT, File
+from pyoko.fields import DATE_TIME_FORMAT
 
 
 class ProjeTurForm(JsonForm):
@@ -251,32 +251,18 @@ class ProjeBasvuru(CrudView):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         form_proje_belgeleri = self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri']
 
-        for bel in proje.ProjeBelgeleri:
-            f = {
-                'belge': bel.belge,
-                'belge_aciklamasi': bel.belge_aciklamasi
-            }
-            if f not in form_proje_belgeleri:
-                bel.remove()
+        # mevcut belgeleri temizle
+        proje.ProjeBelgeleri.clear()
 
-        # forma eklenmiş ya da düzenlenmiş belgeleri kaydettik
+        # formdan gelen belgeleri ekle
         for pb in form_proje_belgeleri:
-            if 'file_content' in pb['belge']:
-                proje.ProjeBelgeleri(belge=pb['belge'], belge_aciklamasi=pb['belge_aciklamasi'])
+            proje.ProjeBelgeleri(belge=pb['belge'], belge_aciklamasi=pb['belge_aciklamasi'])
 
         proje.blocking_save()
         proje.reload()
 
-        belge_form = []
-        for b in proje.ProjeBelgeleri:
-            f = {
-                'belge': b.belge,
-                'belge_aciklamasi': b.belge_aciklamasi
-            }
-            belge_form.append(f)
-
         # Dosya adını key ile form datasının içine koymuş olduk
-        self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = belge_form
+        self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = proje.ProjeBelgeleri.clean_value()
 
     def arastirma_olanagi_ekle(self):
         form = ArastirmaOlanaklariForm(current=self.current)

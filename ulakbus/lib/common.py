@@ -6,12 +6,14 @@
 
 import datetime
 from math import floor
+from ulakbus import settings
 from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi, User
 from zengine.lib.translation import gettext as _
 from zengine.lib.cache import Cache
 import random
 import hashlib
 import re
+import uuid
 
 # Dakika cinsinden her bir slotun uzunluğu. Ders planlamada kullanılan en küçük zaman birimi.
 SLOT_SURESI = 5
@@ -31,6 +33,13 @@ parola_kalibi = re.compile(
     "><\.,:;≤≥])[A-Za-z\d\(\)\[\]\{\}!@#\$%\^&\*\+=\-§±_~\/|\\><\.,:;≤≥]{8,100}$")
 
 e_posta_kalibi = re.compile('[^@]+@[^@]+\.[^@]+')
+
+
+def get_temp_password():
+    return uuid.uuid4().hex
+
+def get_file_url(key):
+    return "%s%s" % (settings.S3_PUBLIC_URL, key)
 
 
 def saat2slot(saat):

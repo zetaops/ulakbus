@@ -58,7 +58,8 @@ ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # diagrams that does not require logged in user
-ANONYMOUS_WORKFLOWS.extend(['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle'])
+ANONYMOUS_WORKFLOWS.extend(
+    ['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle', 'bap_firma_kayit'])
 
 #: Ortak kullanılan workflowlar
 COMMON_WORKFLOWS.extend(['profil_sayfasi_goruntuleme', 'e_posta_degistir', 'kullanici_adi_degistir',
@@ -229,6 +230,7 @@ ALLOWED_FILE_TYPES = {
     'xlsx': ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'xlsx'),
     'docx': ('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'docx'),
     'csv': ('text/csv', 'csv'),
+    'zip': ('application/zip', 'zip')
 }
 
 S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
