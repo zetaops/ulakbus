@@ -53,6 +53,7 @@ class User(Model, BaseUser):
     surname = field.String(_(u"Soyad"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
     last_login_role_key = field.String(_(u"Son Giriş Yapılan Rol"))
+    is_active = field.Boolean(_(u"Kullanıcı Aktifliği"))
     locale_language = field.String(
         _(u"Tercih Edilen Dil Formatı"),
         index=False,
@@ -678,7 +679,7 @@ class AuthBackend(object):
         """
         user = User.objects.get(username=username)
         is_login_ok = user.check_password(password)
-        if is_login_ok:
+        if is_login_ok and user.is_active:
             self.set_user(user)
         else:
             pass
