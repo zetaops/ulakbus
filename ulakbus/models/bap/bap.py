@@ -140,6 +140,8 @@ class BAPProje(Model):
     basari_olcutleri = field.Text(_(u"Başarı Ölçütleri"))
     b_plani = field.Text(_(u"B Planı"))
 
+    bitis_tarihi = field.Date(_(u"Tamamlanma Tarihi"))
+
     class ProjeBelgeleri(ListNode):
         class Meta:
             verbose_name = __(u"Proje Belgesi")
