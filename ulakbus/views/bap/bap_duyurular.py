@@ -83,7 +83,6 @@ class BapDuyurular(CrudView):
 
         self.current.output['cmd'] = 'reload'
 
-
     def confirm_deletion(self):
         form = JsonForm(title=_(u"Silme İşlemi"))
         form.help_text = _(u"%s duyurusunu silmek istiyor musunuz?") % self.object
@@ -97,3 +96,19 @@ class BapDuyurular(CrudView):
             {'name': _(u'Sil'), 'cmd': 'confirm_deletion', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}]
+
+    def bap_duyurulari_goruntule(self):
+        self.output['object_title'] = _(u"BAP Genel Duyurular")
+        self.output['objects'] = [['Duyuru Başlık', 'Eklenme Tarihi', 'Son Geçerlilik Tarihi',
+                                   'Ekleyen']]
+        for duyuru in BAPDuyurular.objects.all(yayinlanmismi=True):
+            item = {
+                "fields": [duyuru.duyuru_baslik,
+                           duyuru.eklenme_tarihi.strftime("%d.%m.%Y"),
+                           duyuru.son_gecerlilik_tarihi.strftime("%d.%m.%Y"),
+                           "%s %s" % (duyuru.ekleyen.name, duyuru.ekleyen.surname)],
+                "actions": [{'name': _(u'Göster'), 'cmd': 'detay',
+                             'mode': 'normal', 'show_as': 'button'}],
+                "key": duyuru.key
+            }
+            self.output['objects'].append(item)
