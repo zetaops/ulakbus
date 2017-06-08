@@ -65,7 +65,7 @@ class Gundem(CrudView):
         self.output['object'][u'Kararın Sonuçlandırılması'] = sonuc
 
     def komisyon_kararini_ilet(self):
-        self.object.proje.yurutucu.user.send_notification(
+        self.object.proje.yurutucu.personel.user.send_notification(
             title=_(u"Komisyon Kararı"),
             message=_(u"%s adlı projenizin %s komisyon kararı Karar: %s") % (
                 self.object.proje.ad,
