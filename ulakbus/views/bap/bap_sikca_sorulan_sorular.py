@@ -80,3 +80,17 @@ class BAPSikcaSorulanSorular(CrudView):
             {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}]
 
 # -------------- Bap Koordinasyon Birimi --------------
+
+# -------------- Anonim Wf ----------------
+
+    def bap_sss_goruntule(self):
+        self.output['object_title'] = _(u"BAP Sıkça Sorulan Sorular")
+        self.output['objects'] = [['Soru', 'Cevap']]
+        for sss in BAPSSS.objects.all(yayinlanmismi=True):
+            item = {
+                "fields": [sss.soru, sss.cevap],
+                "actions": []
+            }
+            self.output['objects'].append(item)
+
+        self.current.output["meta"]["allow_actions"] = False
