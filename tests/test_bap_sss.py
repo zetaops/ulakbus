@@ -64,3 +64,10 @@ class TestCase(BaseTestCase):
                                                                 'Yayınlamak İstiyor musunuz?'
 
                 self.client.post(cmd='yayinla', form={'evet': 1})
+
+    def test_bap_sss_goruntule(self):
+        yayinlanmis_sss_sayisi = BAPSSS.objects.all(yayinlanmismi=True).count()
+        self.prepare_client('/bap_sss', username='ulakbus')
+        resp = self.client.post()
+        assert yayinlanmis_sss_sayisi == len(resp.json['objects']) - 1
+        assert resp.json['object_title'] == 'BAP Sıkça Sorulan Sorular'

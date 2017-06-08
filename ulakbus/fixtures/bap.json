@@ -211,6 +211,60 @@
       "en": ""
     }
   },
+  "bap_satin_alma_durum": {
+    "1": {
+      "tr": "Teklife Açık",
+      "en": ""
+    },
+    "2": {
+      "tr": "Teklife Kapatıldı",
+      "en": ""
+    },
+    "3": {
+      "tr": "Teklif Sonuçlandı",
+      "en": ""
+    },
+    "4": {
+      "tr": "Satın Alma Sürecinde",
+      "en": ""
+    },
+    "5": {
+      "tr": "Teslim Alındı",
+      "en": ""
+    }
+  },
+  "bap_firma_durum": {
+    "1": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "2": {
+      "tr": "Kabul Edildi",
+      "en": ""
+    },
+    "3": {
+      "tr": "Reddedildi",
+      "en": ""
+    }
+  },
+  "bap_teklif_durum": {
+    "1": {
+      "tr": "Teklif Süreci Devam Ediyor",
+      "en": ""
+    },
+    "2": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "3": {
+      "tr": "Kabul Edildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Reddedildi",
+      "en": ""
+    }
+  },
   "bap_proje_degerlendirme_sonuc": {
     "1": {
       "tr": "Olumlu/Proje Desteklenmelidir",
