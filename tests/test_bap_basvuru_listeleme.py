@@ -185,9 +185,11 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == "Çalışan Ekle"
         assert resp.json['forms']['model']['Calisan'][0]['ad'] == 'Kerim'
 
-        self.client.post(cmd='ileri', wf='bap_proje_basvuru', form={'ileri': 1})
-        self.client.post(wf='bap_proje_basvuru', form={'button': 1})
-        resp = self.client.post(wf='bap_proje_basvuru', form={'button': 1})
+        resp = self.client.post(cmd='ileri', wf='bap_proje_basvuru', form={'ileri': 1})
+        assert resp.json['forms']['schema']['title'] == "Bap İş Paketi Takvimi"
+        resp = self.client.post(wf='bap_proje_basvuru', cmd='bitir', form={'bitir': 1})
+        assert "Otomatik Süpürge" in resp.json['forms']['schema']['title']
+        resp = self.client.post(wf='bap_proje_basvuru', cmd='bitir', form={'bitir': 1})
 
         assert resp.json['forms']['schema']['title'] == "Üniversite Dışı Uzman Ekle"
         resp = self.client.post(wf='bap_proje_basvuru', form={'ileri': 1})
