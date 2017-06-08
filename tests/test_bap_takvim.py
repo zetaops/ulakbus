@@ -14,7 +14,7 @@ from zengine.lib.test_utils import BaseTestCase
 
 class TestCase(BaseTestCase):
     def test_bap_takvim(self):
-
+        BAPTakvim.objects.all(takvim_aciklama='Test Proje Tur Takvim Ekle 2. Donem')._clear()
         proje_turu = BAPProjeTurleri()
         proje_turu.ad = 'test_bap_takvim_proje_turu'
         proje_turu.save()

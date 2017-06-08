@@ -188,7 +188,7 @@ class TestCase(BaseTestCase):
             self.client.post(cmd='duzenle_veya_sil', form={'sil': 1})
 
             # silinecek is paketi secilir
-            resp = self.client.post(form={'ilerle': 1, 'is_paket': is_paketi_id})
+            resp = self.client.post(form={'ilerle': 1, 'is_paketi': is_paketi_id})
 
             assert resp.json['forms']['form'][0]['helpvalue'] == "test_is_paketi_hazirlama " \
                                                                  "iş paketini silmek istiyor musunuz?"
