@@ -330,3 +330,65 @@ class BAPSSS(Model):
 
     def __unicode__(self):
         return "%s" % self.soru
+
+
+class BAPFirma(Model):
+    class Meta:
+        verbose_name = __(u"Firma")
+        verbose_name_plural = __(u"Firmalar")
+
+    ad = field.String(__(u"Firma Adı"), required=True)
+    telefon = field.String(__(u"Telefon"), required=True)
+    adres = field.String(__(u"Adres"), required=True)
+    e_posta = field.String(__(u"E-posta Adresi"), required=True)
+    vergi_no = field.String(__(u"Vergi Kimlik Numarası"), required=True)
+    vergi_dairesi = field.String(__(u"Vergi Dairesi"), required=True)
+    faaliyet_belgesi = field.File(_(u"Firma Faaliyet Belgesi"), random_name=False, required=True)
+    faaliyet_belgesi_verilis_tarihi = field.Date(__(u"Faaliyet Belgesi Veriliş Tarihi"),
+                                                 required=True)
+    durum = field.Integer(__(u"Durum"), choices='bap_firma_durum')
+
+    class Yetkililer(ListNode):
+        yetkili = User()
+
+    def __unicode__(self):
+        return "%s" % (self.ad)
+
+
+class BAPSatinAlma(Model):
+    class Meta:
+        verbose_name = __(u"Bütçe Kalemi Satın Alma")
+        verbose_name_plural = __(u"Bütçe Kalemi Satın Almaları")
+        list_fields = ['ad', 'teklife_acilma_tarihi', 'teklife_kapanma_tarihi']
+
+    ad = field.String(__(u"Satın Alma Duyuru Adı"))
+    teklife_acilma_tarihi = field.DateTime(__(u"Teklife Açılma Tarihi"))
+    teklife_kapanma_tarihi = field.DateTime(__(u"Teklife Kapanma Tarihi"))
+    sonuclanma_tarihi = field.Date(__(u"Teklifin Sonuçlanma Tarihi"))
+    teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
+
+    class ButceKalemleri(ListNode):
+        butce = BAPButcePlani()
+
+    def __unicode__(self):
+        return "%s" % self.ad
+
+
+class BAPTeklif(Model):
+    class Meta:
+        verbose_name = __(u"Firma Teklif")
+        verbose_name_plural = __(u"Firma Teklifleri")
+
+    firma = BAPFirma()
+    satin_alma = BAPSatinAlma()
+    durum = field.Integer(__(u"Durum"), choices='bap_teklif_durum')
+    ilk_teklif_tarihi = field.DateTime(_(u"İlk Teklif Tarihi"))
+    son_degisiklik_tarihi = field.DateTime(_(u"Son Değişiklik Tarihi"))
+    sonuclanma_tarihi = field.Date(__(u"Firma Teklifinin Sonuçlanma Tarihi"))
+
+    class Belgeler(ListNode):
+        belge = field.File(_(u"Firma Teklif Belgesi"), random_name=False, required=True)
+        aciklama = field.String(__(u"Belge Açıklaması"), required=True)
+
+    def __unicode__(self):
+        return "%s-%s" % (self.firma.ad, self.satin_alma.ad)

@@ -12,6 +12,7 @@ import csv
 from datetime import datetime
 from io import BytesIO
 from settings import DATA_GRID_PAGE_SIZE, DATE_DEFAULT_FORMAT
+from ulakbus.lib.common import get_file_url
 from pyoko.fields import DATE_FORMAT
 from ulakbus.lib.s3_file_manager import S3FileManager
 from zengine.lib.cache import Cache
@@ -322,7 +323,7 @@ class DataGrid(object):
     def _generate_temp_file(name, content, file_type, ext):
         f = S3FileManager()
         key = f.store_file(name=name, content=content, type=file_type, ext=ext)
-        return f.get_url(key)
+        return get_file_url(key)
 
     def _generate_file_name(self):
         return "%s-%s-%s" % (self.model().get_verbose_name(), _(u"rapor"), datetime.now().strftime(
