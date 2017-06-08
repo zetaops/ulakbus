@@ -6,7 +6,7 @@
 
 from collections import defaultdict
 
-from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel
+from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
 
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
@@ -20,7 +20,8 @@ class EkButceTalep(CrudView):
     # ---------- Proje Yürütücüsü ----------
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
-        if BAPProje.objects.filter(yurutucu=personel, durum__in=[3, 5]).count() == 0:
+        okutman = Okutman.objects.get(personel=personel)
+        if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
             self.current.task_data['onaylandi'] = 1
             self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
                                                           'bulunamadı. Size bağlı olan proje '
@@ -34,7 +35,8 @@ class EkButceTalep(CrudView):
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
-        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
+        okutman = Okutman.objects.get(personel=personel)
+        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
                                                                            durum__in=[3, 5])]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
