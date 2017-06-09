@@ -3,7 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
+from ulakbus.lib.s3_file_manager import S3FileManager
 from ulakbus.models import BAPDuyurular
 
 from zengine.views.crud import CrudView, obj_filter
@@ -97,7 +97,7 @@ class BapDuyurular(CrudView):
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}]
 
-    def bap_duyurulari_goruntule(self):
+    def duyurulari_goruntule(self):
         self.output['object_title'] = _(u"BAP Genel Duyurular")
         self.output['objects'] = [['Duyuru Başlık', 'Eklenme Tarihi', 'Son Geçerlilik Tarihi',
                                    'Ekleyen']]
@@ -112,3 +112,30 @@ class BapDuyurular(CrudView):
                 "key": duyuru.key
             }
             self.output['objects'].append(item)
+
+    def duyuru_goruntule_detay(self):
+        self.output['object_title'] = _(u"%s") % self.object
+
+        obj_data = {'Ekleyen': _(u"%s") % self.object.ekleyen,
+                    'Eklenme Tarihi': _(u"%s") % self.object.eklenme_tarihi,
+                    'Son Geçerlilik Tarihi': _(u"%s") % self.object.son_gecerlilik_tarihi,
+                    'Başlık': _(u"%s") % self.object.duyuru_baslik,
+                    'Duyuru': _(u"%s") % self.object.duyuru_icerik,
+                    'Ek Dosyalar': ''.join(["""%s\n""" % dosya.dosya_aciklamasi
+                                            for dosya in self.object.EkDosyalar])}
+
+        self.output['object'] = obj_data
+
+        form = JsonForm()
+        form.tamam = fields.Button(_(u"Tamam"))
+        if self.object.EkDosyalar:
+            form.indir = fields.Button(_(u"Ek Dosyaları İndir"), cmd='belge_indir')
+        self.form_out(form)
+
+    def duyuru_belge_indir(self):
+        s3 = S3FileManager()
+        keys = [dosya.ek_dosya for dosya in self.object.EkDosyalar]
+        zip_name = "%s-duyuru-belgeler" % self.object.__unicode__()
+        zip_url = s3.download_files_as_zip(keys, zip_name)
+        self.set_client_cmd('download')
+        self.output['download_url'] = zip_url
