@@ -139,6 +139,11 @@ class BasvuruListeleme(CrudView):
                 {'name': _(u'Değerlendirmeler'), 'cmd': 'degerlendirmeler', 'mode': 'normal',
                  'show_as': 'button'}
             )
+        if obj.durum == 5:
+            result['actions'].append(
+                {'name': _(u'Satın Alma'), 'cmd': 'satin_alma', 'mode': 'normal',
+                 'show_as': 'button'}
+            )
 
     @list_query
     def list_by_ordered(self, queryset):
@@ -148,5 +153,6 @@ class BasvuruListeleme(CrudView):
         2: Öğretim elemanı tarafından koordinasyon birimine onaya gönderildi.
         3: Koordinasyon birimi tarafından öğretim elemanına revizyon için gönderildi.
         4: Koordinasyon birimi projeyi onayladı.
+        5: Komisyon projeyi onayladı.
         """
-        return queryset.filter(durum__in=[2, 3, 4]).order_by()
+        return queryset.filter(durum__in=[2, 3, 4, 5]).order_by()
