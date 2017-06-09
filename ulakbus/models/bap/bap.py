@@ -395,6 +395,9 @@ class BAPSatinAlma(Model):
     teklife_acilma_tarihi = field.DateTime(__(u"Teklife Açılma Tarihi"))
     teklife_kapanma_tarihi = field.DateTime(__(u"Teklife Kapanma Tarihi"))
     sonuclanma_tarihi = field.Date(__(u"Teklifin Sonuçlanma Tarihi"))
+    onay_tarih_sayi = field.String(__(u"Onay Tarih/Sayı"))
+    ekleyen = Personel()
+    aciklama = field.Text(__(u"Açıklama"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
 
     class ButceKalemleri(ListNode):
