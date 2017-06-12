@@ -6,7 +6,7 @@
 
 from collections import defaultdict
 
-from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel
+from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
 
 from zengine.views.crud import CrudView, list_query, obj_filter
 from zengine.forms import JsonForm, fields
@@ -21,7 +21,8 @@ class FasilAktarimTalep(CrudView):
 
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
-        projeler = BAPProje.objects.filter(yurutucu=personel,
+        okutman = Okutman.objects.get(personel=personel)
+        projeler = BAPProje.objects.filter(yurutucu=okutman,
                                            durum__in=[3, 5],
                                            kabul_edilen_butce__gt=0)
         if projeler.count() == 0:
@@ -34,7 +35,8 @@ class FasilAktarimTalep(CrudView):
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
-        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
+        okutman = Okutman.objects.get(personel=personel)
+        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
                                                                            durum__in=[3, 5])]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))

@@ -320,6 +320,46 @@ class BAPGundem(Model):
         return "Bap Gündem"
 
 
+class BAPSSS(Model):
+    class Meta:
+        verbose_name = __(u"Sıkça Sorulan Soru")
+        verbose_name_plural = __(u"Sıkça Sorulan Sorular")
+        list_fields = ['soru', 'cevap']
+
+    soru = field.Text(__(u"Sıkça Sorulan Soru"))
+    cevap = field.Text(__(u"Cevap"))
+    yayinlanmis_mi = field.Boolean(__(u"Yayınlanmış mı?"), default=False)
+
+    def __unicode__(self):
+        return "%s" % self.soru
+
+
+class BAPDuyuru(Model):
+    class Meta:
+        verbose_name = __(u"BAP Duyuru")
+        verbose_name_plural = __(u"BAP Duyurular")
+        list_fields = ['duyuru_baslik', 'eklenme_tarihi', 'son_gecerlilik_tarihi']
+
+    ekleyen = User()
+    eklenme_tarihi = field.Date(__(u"Eklenme Tarihi"))
+    son_gecerlilik_tarihi = field.Date(__(u"Son Geçerlilik Tarihi"))
+    duyuru_baslik = field.String(__(u"Duyuru Başlığı"))
+    duyuru_icerik = field.Text(__(u"Duyuru İçeriği"))
+    yayinlanmis_mi = field.Boolean(__(u"Yayınlanmış mı?"), default=False)
+
+    class EkDosyalar(ListNode):
+        class Meta:
+            verbose_name = __(u"Ek Dosya")
+            verbose_name_plural = __(u"Ek Dosyalar")
+            list_fields = ['dosya_aciklamasi']
+
+        ek_dosya = field.File(__(u"Ek Dosya Seç"), random_name=True)
+        dosya_aciklamasi = field.String(__(u"Dosya Açıklaması"))
+
+    def __unicode__(self):
+        return "%s" % self.duyuru_baslik
+
+
 class BAPFirma(Model):
     class Meta:
         verbose_name = __(u"Firma")
@@ -340,7 +380,7 @@ class BAPFirma(Model):
         yetkili = User()
 
     def __unicode__(self):
-        return "%s" % (self.ad)
+        return "%s" % self.ad
 
 
 class BAPSatinAlma(Model):
