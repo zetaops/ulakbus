@@ -328,7 +328,7 @@ class BAPSSS(Model):
 
     soru = field.Text(__(u"Sıkça Sorulan Soru"))
     cevap = field.Text(__(u"Cevap"))
-    yayinlanmismi = field.Boolean(__(u"Yayınlanmış mı?"), default=False)
+    yayinlanmis_mi = field.Boolean(__(u"Yayınlanmış mı?"), default=False)
 
     def __unicode__(self):
         return "%s" % self.soru
@@ -345,7 +345,7 @@ class BAPDuyurular(Model):
     son_gecerlilik_tarihi = field.Date(__(u"Son Geçerlilik Tarihi"))
     duyuru_baslik = field.String(__(u"Duyuru Başlığı"))
     duyuru_icerik = field.Text(__(u"Duyuru İçeriği"))
-    yayinlanmismi = field.Boolean(__(u"Yayınlanmış mı?"), default=False)
+    yayinlanmis_mi = field.Boolean(__(u"Yayınlanmış mı?"), default=False)
 
     class EkDosyalar(ListNode):
         class Meta:

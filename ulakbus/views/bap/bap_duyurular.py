@@ -13,7 +13,7 @@ from zengine.forms import JsonForm, fields
 
 class DuyurularAddEditForm(JsonForm):
     class Meta:
-        exclude = ['ekleyen', 'yayinlanmismi']
+        exclude = ['ekleyen', 'yayinlanmis_mi']
 
     kaydet = fields.Button(__(u"Kaydet"), cmd='save')
     iptal = fields.Button(__(u"İptal"), form_validation=False)
@@ -43,7 +43,7 @@ class BapDuyurular(CrudView):
     def save(self):
         CrudView.save(self)
         self.object.ekleyen = self.current.user
-        self.object.yayinlanmismi = False
+        self.object.yayinlanmis_mi = False
         self.object.blocking_save()
 
     def duyuru_detay_goster(self):
@@ -54,7 +54,7 @@ class BapDuyurular(CrudView):
                     'Son Geçerlilik Tarihi': _(u"%s") % self.object.son_gecerlilik_tarihi,
                     'Başlık': _(u"%s") % self.object.duyuru_baslik,
                     'Duyuru': _(u"%s") % self.object.duyuru_icerik,
-                    'Durum': _(u"%s") % ("Yayınlandı" if self.object.yayinlanmismi else
+                    'Durum': _(u"%s") % ("Yayınlandı" if self.object.yayinlanmis_mi else
                                          "Yayınlanmadı"),
                     'Ek Dosyalar': ''.join(["""%s\n""" % dosya.dosya_aciklamasi
                                             for dosya in self.object.EkDosyalar])}
@@ -67,9 +67,9 @@ class BapDuyurular(CrudView):
 
     def duyuru_yayinla(self):
         if self.input['cmd'] == 'yayinla':
-            self.object.yayinlanmismi = True
+            self.object.yayinlanmis_mi = True
         else:
-            self.object.yayinlanmismi = False
+            self.object.yayinlanmis_mi = False
 
         self.object.blocking_save()
 
@@ -90,13 +90,13 @@ class BapDuyurular(CrudView):
             {'name': _(u'Sil'), 'cmd': 'confirm_deletion', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
-            yayindan_kaldir if obj.yayinlanmismi else yayinla]
+            yayindan_kaldir if obj.yayinlanmis_mi else yayinla]
 
     def duyurulari_goruntule(self):
         self.output['object_title'] = _(u"BAP Genel Duyurular")
         self.output['objects'] = [['Duyuru Başlık', 'Eklenme Tarihi', 'Son Geçerlilik Tarihi',
                                    'Ekleyen']]
-        for duyuru in BAPDuyurular.objects.all(yayinlanmismi=True):
+        for duyuru in BAPDuyurular.objects.all(yayinlanmis_mi=True):
             item = {
                 "fields": [duyuru.duyuru_baslik,
                            duyuru.eklenme_tarihi.strftime("%d.%m.%Y"),

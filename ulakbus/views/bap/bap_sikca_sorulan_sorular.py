@@ -13,7 +13,7 @@ from zengine.forms import JsonForm, fields
 
 class SSSAddEditForm(JsonForm):
     class Meta:
-        exclude = ['yayinlanmismi']
+        exclude = ['yayinlanmis_mi']
 
     kaydet = fields.Button(__(u"Kaydet"), cmd='save')
     iptal = fields.Button(__(u"İptal"), form_validation=False)
@@ -44,16 +44,16 @@ class BAPSikcaSorulanSorular(CrudView):
 
     def show(self):
         CrudView.show(self)
-        self.output['object']['Yayınlanmış mı?'] = 'Evet' if self.object.yayinlanmismi else 'Hayır'
+        self.output['object']['Yayınlanmış mı?'] = 'Evet' if self.object.yayinlanmis_mi else 'Hayır'
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
 
     def yayinla(self):
         if self.input['cmd'] == 'yayinla':
-            self.object.yayinlanmismi = True
+            self.object.yayinlanmis_mi = True
         else:
-            self.object.yayinlanmismi = False
+            self.object.yayinlanmis_mi = False
 
         self.object.blocking_save()
 
@@ -74,7 +74,7 @@ class BAPSikcaSorulanSorular(CrudView):
             {'name': _(u'Sil'), 'cmd': 'confirm_deletion', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
-            yayindan_kaldir if obj.yayinlanmismi else yayinla]
+            yayindan_kaldir if obj.yayinlanmis_mi else yayinla]
 
 # -------------- Bap Koordinasyon Birimi --------------
 
@@ -83,7 +83,7 @@ class BAPSikcaSorulanSorular(CrudView):
     def bap_sss_goruntule(self):
         self.output['object_title'] = _(u"BAP Sıkça Sorulan Sorular")
         self.output['objects'] = [['Soru', 'Cevap']]
-        for sss in BAPSSS.objects.all(yayinlanmismi=True):
+        for sss in BAPSSS.objects.all(yayinlanmis_mi=True):
             item = {
                 "fields": [sss.soru, sss.cevap],
                 "actions": []

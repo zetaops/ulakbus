@@ -23,12 +23,12 @@ class TestCase(BaseTestCase):
         duyuru.duyuru_icerik = 'Duyurunun yapılacağı içerik kısmı'
         duyuru.eklenme_tarihi = eklenme_tarihi
         duyuru.son_gecerlilik_tarihi = son_gecerlilik_tarihi
-        duyuru.yayinlanmismi = True
+        duyuru.yayinlanmis_mi = True
         duyuru.EkDosyalar(ek_dosya='TestDosyasi.txt',
                           dosya_aciklamasi='Dosya ile ilgili aciklama')
         duyuru.save()
 
-        yayinlanan_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmismi=True).count()
+        yayinlanan_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmis_mi=True).count()
 
         self.prepare_client('/bap_duyurulari_goruntule', username='ulakbus')
         resp = self.client.post()
