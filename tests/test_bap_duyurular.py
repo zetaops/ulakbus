@@ -16,7 +16,7 @@ from zengine.lib.test_utils import BaseTestCase
 
 class TestCase(BaseTestCase):
     def test_bap_duyurular(self):
-        yayinlanmis_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmismi=True).count()
+        yayinlanmis_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmis_mi=True).count()
 
         eklenme_tarihi = datetime.strptime('06.06.2017', '%d.%m.%Y').date()
         son_gecerlilik_tarihi = datetime.strptime('30.06.2017', '%d.%m.%Y').date()
@@ -27,12 +27,12 @@ class TestCase(BaseTestCase):
             soru_sayisi = len(resp.json['objects']) - 1
             if i == 1:
                 time.sleep(1)
-                yeni_yay_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmismi=True).count()
+                yeni_yay_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmis_mi=True).count()
                 assert yeni_yay_duyuru_sayisi == yayinlanmis_duyuru_sayisi + 1
                 obj = BAPDuyurular.objects.all(duyuru_baslik='Duyuru İçin Gerekli Başlık',
                                                eklenme_tarihi=eklenme_tarihi,
                                                son_gecerlilik_tarihi=son_gecerlilik_tarihi,
-                                               yayinlanmismi=True)[0]
+                                               yayinlanmis_mi=True)[0]
                 resp = self.client.post(cmd='confirm_deletion', object_id=obj.key)
                 assert resp.json['forms']['schema']['title'] == 'Silme İşlemi'
                 assert resp.json['forms']['form'][0]['helpvalue'] == 'Duyuru İçin Gerekli Başlık ' \
@@ -75,12 +75,8 @@ class TestCase(BaseTestCase):
                 assert resp.json['object']['Durum'] == 'Yayınlanmadı'
 
                 self.client.post(object_key=obj.key, form={'tamam': 1})
+                self.client.post(cmd='yayinla', object_id=obj.key)
 
-                assert not obj.yayinlanmismi
+                obj.reload()
 
-                resp = self.client.post(cmd='yayinla', form={'duyuru_yayinla': 1})
-
-                assert resp.json['forms']['form'][0]['helpvalue'] == 'Duyuruları yayınlamak ' \
-                                                                     'istiyor musunuz?'
-
-                self.client.post(cmd='bitir', form={'evet': 1})
+                assert obj.yayinlanmis_mi

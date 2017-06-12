@@ -14,7 +14,7 @@ from zengine.lib.test_utils import BaseTestCase
 
 class TestCase(BaseTestCase):
     def test_bap_sss(self):
-        yayinlanmis_sss_sayisi = BAPSSS.objects.all(yayinlanmismi=True).count()
+        yayinlanmis_sss_sayisi = BAPSSS.objects.all(yayinlanmis_mi=True).count()
 
         for i in range(2):
             self.prepare_client('/bap_sikca_sorulan_sorular', username='bap_koordinasyon_birimi_1')
@@ -22,11 +22,11 @@ class TestCase(BaseTestCase):
             soru_sayisi = len(resp.json['objects']) - 1
             if i == 1:
                 time.sleep(1)
-                yeni_yay_sss_sayisi = BAPSSS.objects.all(yayinlanmismi=True).count()
+                yeni_yay_sss_sayisi = BAPSSS.objects.all(yayinlanmis_mi=True).count()
                 assert yeni_yay_sss_sayisi == yayinlanmis_sss_sayisi + 1
                 obj = BAPSSS.objects.all(soru='Test Sıkca Sorulan Soru?',
                                          cevap='Onun cevabı',
-                                         yayinlanmismi=True)[0]
+                                         yayinlanmis_mi=True)[0]
                 resp = self.client.post(cmd='confirm_deletion', object_id=obj.key)
                 assert resp.json['forms']['schema']['title'] == 'Silme İşlemi'
                 assert resp.json['forms']['form'][0]['helpvalue'] == 'Test Sıkca Sorulan Soru? ' \
@@ -56,11 +56,10 @@ class TestCase(BaseTestCase):
 
                 self.client.post(object_key=obj.key, form={'tamam': 1})
 
-                assert not obj.yayinlanmismi
+                assert not obj.yayinlanmis_mi
 
-                resp = self.client.post(cmd='bitir', form={'sss_yayinla': 1})
+                self.client.post(cmd='yayinla', object_id=obj.key)
 
-                assert resp.json['forms']['schema']['title'] == 'Yapmış Olduğunuz Değişiklikleri ' \
-                                                                'Yayınlamak İstiyor musunuz?'
+                obj.reload()
 
-                self.client.post(cmd='yayinla', form={'evet': 1})
+                assert obj.yayinlanmis_mi

@@ -13,7 +13,7 @@ from zengine.lib.test_utils import BaseTestCase
 
 class TestCase(BaseTestCase):
     def test_bap_sss_goruntule(self):
-        yayinlanmis_sss_sayisi = BAPSSS.objects.all(yayinlanmismi=True).count()
+        yayinlanmis_sss_sayisi = BAPSSS.objects.all(yayinlanmis_mi=True).count()
         self.prepare_client('/bap_sss', username='ulakbus')
         resp = self.client.post()
         assert yayinlanmis_sss_sayisi == len(resp.json['objects']) - 1

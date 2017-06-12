@@ -13,7 +13,7 @@ from zengine.forms import JsonForm, fields
 
 class SSSAddEditForm(JsonForm):
     class Meta:
-        exclude = ['yayinlanmismi']
+        exclude = ['yayinlanmis_mi']
 
     kaydet = fields.Button(__(u"Kaydet"), cmd='save')
     iptal = fields.Button(__(u"İptal"), form_validation=False)
@@ -36,7 +36,6 @@ class BAPSikcaSorulanSorular(CrudView):
     def list(self, custom_form=None):
         CrudView.list(self)
         form = JsonForm(title=_(u"Sıkça Sorulan Sorular"))
-        form.sss_yayinla = fields.Button(_(u"Yayınla"), cmd='bitir')
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
         self.form_out(form)
 
@@ -45,25 +44,18 @@ class BAPSikcaSorulanSorular(CrudView):
 
     def show(self):
         CrudView.show(self)
-        self.output['object']['Yayınlanmış mı?'] = 'Evet' if self.object.yayinlanmismi else 'Hayır'
+        self.output['object']['Yayınlanmış mı?'] = 'Evet' if self.object.yayinlanmis_mi else 'Hayır'
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
 
-    def yayinla_onay(self):
-        form = JsonForm(title=_(u"Yapmış Olduğunuz Değişiklikleri Yayınlamak İstiyor musunuz?"))
-        form.evet = fields.Button(_(u"Evet"), cmd='yayinla')
-        form.iptal = fields.Button(_(u"İptal"))
-        self.form_out(form)
-
     def yayinla(self):
-        sss = BAPSSS.objects.all(yayinlanmismi=False)
+        if self.input['cmd'] == 'yayinla':
+            self.object.yayinlanmis_mi = True
+        else:
+            self.object.yayinlanmis_mi = False
 
-        for s in sss:
-            s.yayinlanmismi = True
-            s.blocking_save()
-
-        self.current.output['cmd'] = 'reload'
+        self.object.blocking_save()
 
     def confirm_deletion(self):
         form = JsonForm(title=_(u"Silme İşlemi"))
@@ -74,10 +66,15 @@ class BAPSikcaSorulanSorular(CrudView):
 
     @obj_filter
     def sss_islem(self, obj, result):
+        yayinla = {'name': _(u'Yayınla'), 'cmd': 'yayinla',
+                   'mode': 'normal', 'show_as': 'button'}
+        yayindan_kaldir = {'name': _(u'Yayından Kaldır'), 'cmd': 'yayindan_kaldir',
+                           'mode': 'normal', 'show_as': 'button'}
         result['actions'] = [
             {'name': _(u'Sil'), 'cmd': 'confirm_deletion', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
-            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}]
+            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
+            yayindan_kaldir if obj.yayinlanmis_mi else yayinla]
 
 # -------------- Bap Koordinasyon Birimi --------------
 
@@ -86,7 +83,7 @@ class BAPSikcaSorulanSorular(CrudView):
     def bap_sss_goruntule(self):
         self.output['object_title'] = _(u"BAP Sıkça Sorulan Sorular")
         self.output['objects'] = [['Soru', 'Cevap']]
-        for sss in BAPSSS.objects.all(yayinlanmismi=True):
+        for sss in BAPSSS.objects.all(yayinlanmis_mi=True):
             item = {
                 "fields": [sss.soru, sss.cevap],
                 "actions": []

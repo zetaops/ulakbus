@@ -13,7 +13,7 @@ from zengine.forms import JsonForm, fields
 
 class DuyurularAddEditForm(JsonForm):
     class Meta:
-        exclude = ['ekleyen', 'yayinlanmismi']
+        exclude = ['ekleyen', 'yayinlanmis_mi']
 
     kaydet = fields.Button(__(u"Kaydet"), cmd='save')
     iptal = fields.Button(__(u"İptal"), form_validation=False)
@@ -34,7 +34,6 @@ class BapDuyurular(CrudView):
     def list(self, custom_form=None):
         CrudView.list(self)
         form = JsonForm(title=_(u"BAP Duyurular"))
-        form.duyuru_yayinla = fields.Button(_(u"Yayınla"), cmd='yayinla')
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
         self.form_out(form)
 
@@ -44,7 +43,7 @@ class BapDuyurular(CrudView):
     def save(self):
         CrudView.save(self)
         self.object.ekleyen = self.current.user
-        self.object.yayinlanmismi = False
+        self.object.yayinlanmis_mi = False
         self.object.blocking_save()
 
     def duyuru_detay_goster(self):
@@ -55,7 +54,7 @@ class BapDuyurular(CrudView):
                     'Son Geçerlilik Tarihi': _(u"%s") % self.object.son_gecerlilik_tarihi,
                     'Başlık': _(u"%s") % self.object.duyuru_baslik,
                     'Duyuru': _(u"%s") % self.object.duyuru_icerik,
-                    'Durum': _(u"%s") % ("Yayınlandı" if self.object.yayinlanmismi else
+                    'Durum': _(u"%s") % ("Yayınlandı" if self.object.yayinlanmis_mi else
                                          "Yayınlanmadı"),
                     'Ek Dosyalar': ''.join(["""%s\n""" % dosya.dosya_aciklamasi
                                             for dosya in self.object.EkDosyalar])}
@@ -66,22 +65,13 @@ class BapDuyurular(CrudView):
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
 
-    def duyuru_yayinla_onay(self):
-        form = JsonForm(title=_(u"Duyuruları Yayınlama Onay Ekranı"))
-        form.help_text = _(u"Duyuruları yayınlamak istiyor musunuz?")
-        form.evet = fields.Button(_(u"Evet"), cmd='bitir')
-        form.iptal = fields.Button(_(u"İptal"))
-        self.form_out(form)
-
     def duyuru_yayinla(self):
-        duyurular = BAPDuyurular.objects.all()
-        yayinlanmamis_duyurular = duyurular.filter(yayinlanmismi=False)
+        if self.input['cmd'] == 'yayinla':
+            self.object.yayinlanmis_mi = True
+        else:
+            self.object.yayinlanmis_mi = False
 
-        for d in yayinlanmamis_duyurular:
-            d.yayinlanmismi = True
-            d.blocking_save()
-
-        self.current.output['cmd'] = 'reload'
+        self.object.blocking_save()
 
     def confirm_deletion(self):
         form = JsonForm(title=_(u"Silme İşlemi"))
@@ -92,16 +82,21 @@ class BapDuyurular(CrudView):
 
     @obj_filter
     def duyuru_islem(self, obj, result):
+        yayinla = {'name': _(u'Yayınla'), 'cmd': 'yayinla',
+                   'mode': 'normal', 'show_as': 'button'}
+        yayindan_kaldir = {'name': _(u'Yayından Kaldır'), 'cmd': 'yayindan_kaldir',
+                           'mode': 'normal', 'show_as': 'button'}
         result['actions'] = [
             {'name': _(u'Sil'), 'cmd': 'confirm_deletion', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
-            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}]
+            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
+            yayindan_kaldir if obj.yayinlanmis_mi else yayinla]
 
     def duyurulari_goruntule(self):
         self.output['object_title'] = _(u"BAP Genel Duyurular")
         self.output['objects'] = [['Duyuru Başlık', 'Eklenme Tarihi', 'Son Geçerlilik Tarihi',
                                    'Ekleyen']]
-        for duyuru in BAPDuyurular.objects.all(yayinlanmismi=True):
+        for duyuru in BAPDuyurular.objects.all(yayinlanmis_mi=True):
             item = {
                 "fields": [duyuru.duyuru_baslik,
                            duyuru.eklenme_tarihi.strftime("%d.%m.%Y"),
