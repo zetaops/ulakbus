@@ -322,6 +322,7 @@ class BAPFirma(Model):
     class Meta:
         verbose_name = __(u"Firma")
         verbose_name_plural = __(u"Firmalar")
+        list_fields = ['ad','vergi_no']
 
     ad = field.String(__(u"Firma Adı"), required=True)
     telefon = field.String(__(u"Telefon"), required=True)

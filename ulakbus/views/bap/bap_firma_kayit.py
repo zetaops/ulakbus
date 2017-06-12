@@ -3,14 +3,15 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import User, IntegrityError
+from ulakbus.models import User, IntegrityError, Permission
+from zengine.models import BPMNWorkflow, WFInstance, TaskInvitation
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
-from zengine.lib.translation import gettext_lazy as __
-from datetime import datetime
+from zengine.lib.translation import gettext as __
+from datetime import datetime, timedelta
 import hashlib
-import uuid
 from ulakbus.lib.common import get_temp_password
+
 
 class FirmaKayitForm(JsonForm):
     """
@@ -101,6 +102,45 @@ class BapFirmaKayit(CrudView):
         self.object.Yetkililer(yetkili=user)
         self.object.durum = 1
         self.object.save()
+        self.current.task_data['firma_key'] = self.object.key
+
+    def davet_gonder(self):
+        """
+        Firmanın kayıt başvurusunun değerlendirilmesi için koordinasyon birimine davet gönderilir.
+
+        """
+        wf = BPMNWorkflow.objects.get(name='bap_firma_basvuru_degerlendirme')
+        perm = Permission.objects.get('bap_firma_basvuru_degerlendirme')
+        sistem_user = User.objects.get(username='sistem_bilgilendirme')
+        today = datetime.today()
+        for role in perm.get_permitted_roles():
+            wfi = WFInstance(
+                wf=wf,
+                current_actor=role,
+                task=None,
+                name=wf.name,
+                wf_object = self.current.task_data['firma_key']
+            )
+            wfi.data = dict()
+            wfi.data['flow'] = None
+            wfi.pool = {}
+            wfi.blocking_save()
+            role.send_notification(title=__(u"Firma Kayıt Başvurusu"),
+                                   message=__(u"""%s adlı firma, kayıt başvurusunda bulunmuştur.
+                                   Görev yöneticinizden firmaların kayıt başvurularına ulaşabilir,
+                                   değerlendirebilirsiniz.""" % self.input['form']['ad']), typ=1,
+                                   sender=sistem_user
+                                   )
+            inv = TaskInvitation(
+                instance=wfi,
+                role=role,
+                wf_name=wfi.wf.name,
+                progress=30,
+                start_date=today,
+                finish_date=today + timedelta(15)
+            )
+            inv.title = wfi.wf.title
+            inv.save()
 
     def islem_mesaji_goster(self):
         """
@@ -109,9 +149,9 @@ class BapFirmaKayit(CrudView):
         """
         form = IslemMesajiForm(current=self.current)
         form.help_text = __(
-            u"%s adlı firmanız için kayıt başvurunuz alınmıştır. Koordinasyon birimi "
-            u"değerlendirmesinden sonra başvuru sonucunuz hakkında bilgilendirileceksiniz."
-            % self.input['form']['ad'])
+            u"""Koordinasyon birimi %s adlı firmanız için yaptığınız kayıt başvurusu hakkında 
+            bilgilendirilmiştir. Başvurunuz değerlendirildikten sonra sonucu hakkında
+            bilgilendirileceksiniz.""" % self.input['form']['ad'])
         self.form_out(form)
 
     def hata_mesaji_olustur(self):

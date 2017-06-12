@@ -92,6 +92,8 @@ class User(Model, BaseUser):
     def pre_save(self):
         if not self.username or not self.password:
             raise IntegrityError
+        if self.is_active is None:
+            self.is_active = True
         self.encrypt_password()
 
     def post_creation(self):

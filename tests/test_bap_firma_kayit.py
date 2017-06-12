@@ -7,6 +7,7 @@
 import time
 from ulakbus.models import User, BAPFirma
 from zengine.lib.test_utils import BaseTestCase
+from zengine.models import TaskInvitation, Message, WFInstance
 
 
 class TestCase(BaseTestCase):
@@ -17,6 +18,8 @@ class TestCase(BaseTestCase):
     """
 
     def test_bap_firma_kayit(self):
+        mesaj_sayisi = Message.objects.count()
+        davet_sayisi = TaskInvitation.objects.count()
         User.objects.filter(username='selim_sayan').delete()
         self.prepare_client('/bap_firma_kayit', username='ulakbus')
         resp = self.client.post()
@@ -33,7 +36,7 @@ class TestCase(BaseTestCase):
                       'isim': 'Selim',
                       'soyad': 'Sayan',
                       'k_adi': 'ulakbus',
-                      'yetkili_e_posta': 'selim@sayan.slm',
+                      'yetkili_e_posta': 'selim@sayan.fake_mail_fake.slm',
                       'faaliyet_belgesi_verilis_tarihi': "31.05.2017"}
 
         # unique yetkili kullanıcı adı uyarısı
@@ -53,7 +56,7 @@ class TestCase(BaseTestCase):
         assert BAPFirma.objects.count() == mevcut_firma_sayisi
 
         # başarılı kayıt işlemi
-        firma_form['yetkili_e_posta'] = 'selim@sayan.slm'
+        firma_form['yetkili_e_posta'] = 'selim@sayan.fake_mail_fake.slm'
         resp = self.client.post(wf='bap_firma_kayit', form=firma_form)
         assert resp.json['forms']['schema']['title'] == "Firma Kaydı İşlem Mesajı"
         assert 'Grundig' in resp.json['forms']['form'][0]['helpvalue']
@@ -61,6 +64,9 @@ class TestCase(BaseTestCase):
         time.sleep(1)
         assert BAPFirma.objects.count() == mevcut_firma_sayisi + 1
         assert User.objects.count() == mevcut_kullanici_sayisi + 1
+        assert TaskInvitation.objects.count() == davet_sayisi + 1
+        assert Message.objects.count() == mesaj_sayisi + 1
+        assert 'Grundig' in Message.objects.filter().order_by()[0].body
 
         user = User.objects.get(username='selim_sayan')
         assert user.name == 'Selim'
@@ -70,5 +76,19 @@ class TestCase(BaseTestCase):
         assert firma.vergi_no == '232132193213890'
         assert firma.durum == 1
 
+        # firmanın başvurusunun koordinasyon birimine iletilmesi
+        token = WFInstance.objects.filter().order_by()[0].key
+        self.prepare_client('/bap_firma_proje_basvuru_degerlendirme',
+                            username='bap_koordinasyon_birimi_1', token=token)
+        resp = self.client.post()
+        assert resp.json['forms']['schema']['title'] == "Firma Başvuru Değerlendirmeleri"
+        assert "Firma Adı" in resp.json['objects'][0]
+        del resp.json['objects'][0]
+        firma_adlari_list = [obj['fields'][0] for obj in resp.json['objects']]
+        assert "Grundig" in firma_adlari_list
+
+        TaskInvitation.objects.all().order_by()[0].delete()
+        Message.objects.all().order_by()[0].delete()
+        WFInstance.objects.get(token).delete()
         user.blocking_delete()
         firma.blocking_delete()
