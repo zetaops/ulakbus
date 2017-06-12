@@ -161,7 +161,7 @@ class TestCase(BaseTestCase):
             dogru gelip gelmedigini kontrol eder.
         """
         terfisi_tikanan_personeller = Personel.objects.set_params(
-            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)").filter(
+            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)").all(
             gorev_ayligi_kademe__gte=4)
 
         resp = self.login_rapor(model_name='TerfisiTikananPersonel')
@@ -181,7 +181,7 @@ class TestCase(BaseTestCase):
         simdi = datetime.today().date()
         bitis_tarihi = simdi + timedelta(days=120)
 
-        gorev_suresi_dolan_personeller = Personel.objects.filter(
+        gorev_suresi_dolan_personeller = Personel.objects.all(
             gorev_suresi_bitis__lte=bitis_tarihi,
             personel_turu=1
         )
