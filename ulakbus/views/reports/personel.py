@@ -122,7 +122,7 @@ class GorevSuresiBitenPersonel(Reporter):
         bitis_tarihi = simdi + datetime.timedelta(days=120)
 
         # todo: add order_by
-        personeller = Personel.objects.filter(
+        personeller = Personel.objects.all(
             gorev_suresi_bitis__lte=bitis_tarihi,
             personel_turu=1
         )

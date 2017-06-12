@@ -4,15 +4,15 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import *
+from ulakbus.models import Ogrenci, Personel, Kadro, Borc, Room
 from zengine.lib.test_utils import BaseTestCase
 from zengine.lib.translation import format_currency
 from zengine.lib.utils import solr_to_year
 from collections import defaultdict
+from datetime import datetime, timedelta
 
 
 class TestCase(BaseTestCase):
-
     def login_rapor(self, model_name):
         """
             Bütün raporları test ederken ulakbus kullanıcısı kullanılır.
@@ -133,7 +133,7 @@ class TestCase(BaseTestCase):
         akademik_ve_idari_personel_sayilari = Personel.objects.distinct_values_of('personel_turu')
 
         akademik_personel_sayisi = akademik_ve_idari_personel_sayilari['1']
-        idari_personel_sayisi =  akademik_ve_idari_personel_sayilari['2']
+        idari_personel_sayisi = akademik_ve_idari_personel_sayilari['2']
 
         resp = self.login_rapor(model_name='PersonelByAkademikIdari')
 
@@ -161,7 +161,7 @@ class TestCase(BaseTestCase):
             dogru gelip gelmedigini kontrol eder.
         """
         terfisi_tikanan_personeller = Personel.objects.set_params(
-            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)").filter(
+            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)").all(
             gorev_ayligi_kademe__gte=4)
 
         resp = self.login_rapor(model_name='TerfisiTikananPersonel')
@@ -178,10 +178,10 @@ class TestCase(BaseTestCase):
 
         """
 
-        simdi = datetime.date.today()
-        bitis_tarihi = simdi + datetime.timedelta(days=120)
+        simdi = datetime.today().date()
+        bitis_tarihi = simdi + timedelta(days=120)
 
-        gorev_suresi_dolan_personeller = Personel.objects.filter(
+        gorev_suresi_dolan_personeller = Personel.objects.all(
             gorev_suresi_bitis__lte=bitis_tarihi,
             personel_turu=1
         )
@@ -193,4 +193,3 @@ class TestCase(BaseTestCase):
             assert len(resp.json['object']['fields']) == len(gorev_suresi_dolan_personeller)
         else:
             assert len(gorev_suresi_dolan_personeller) == 0
-

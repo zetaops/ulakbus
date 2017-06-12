@@ -25,7 +25,7 @@ class TestCase(BaseTestCase):
         user = User.objects.get(username='ogretim_uyesi_1')
         personel = Personel.objects.get(user=user)
         proje.ad = "Test ek süre talep projesi"
-        proje.yurutucu = personel
+        proje.yurutucu = personel.okutman
         proje.durum = 5
         proje.save()
 
