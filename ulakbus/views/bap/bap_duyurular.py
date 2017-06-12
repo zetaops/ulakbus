@@ -34,7 +34,6 @@ class BapDuyurular(CrudView):
     def list(self, custom_form=None):
         CrudView.list(self)
         form = JsonForm(title=_(u"BAP Duyurular"))
-        form.duyuru_yayinla = fields.Button(_(u"Yayınla"), cmd='yayinla')
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
         self.form_out(form)
 
@@ -66,22 +65,13 @@ class BapDuyurular(CrudView):
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
 
-    def duyuru_yayinla_onay(self):
-        form = JsonForm(title=_(u"Duyuruları Yayınlama Onay Ekranı"))
-        form.help_text = _(u"Duyuruları yayınlamak istiyor musunuz?")
-        form.evet = fields.Button(_(u"Evet"), cmd='bitir')
-        form.iptal = fields.Button(_(u"İptal"))
-        self.form_out(form)
-
     def duyuru_yayinla(self):
-        duyurular = BAPDuyurular.objects.all()
-        yayinlanmamis_duyurular = duyurular.filter(yayinlanmismi=False)
+        if self.input['cmd'] == 'yayinla':
+            self.object.yayinlanmismi = True
+        else:
+            self.object.yayinlanmismi = False
 
-        for d in yayinlanmamis_duyurular:
-            d.yayinlanmismi = True
-            d.blocking_save()
-
-        self.current.output['cmd'] = 'reload'
+        self.object.blocking_save()
 
     def confirm_deletion(self):
         form = JsonForm(title=_(u"Silme İşlemi"))
@@ -92,10 +82,15 @@ class BapDuyurular(CrudView):
 
     @obj_filter
     def duyuru_islem(self, obj, result):
+        yayinla = {'name': _(u'Yayınla'), 'cmd': 'yayinla',
+                   'mode': 'normal', 'show_as': 'button'}
+        yayindan_kaldir = {'name': _(u'Yayından Kaldır'), 'cmd': 'yayindan_kaldir',
+                           'mode': 'normal', 'show_as': 'button'}
         result['actions'] = [
             {'name': _(u'Sil'), 'cmd': 'confirm_deletion', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
-            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}]
+            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
+            yayindan_kaldir if obj.yayinlanmismi else yayinla]
 
     def duyurulari_goruntule(self):
         self.output['object_title'] = _(u"BAP Genel Duyurular")

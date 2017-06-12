@@ -75,12 +75,8 @@ class TestCase(BaseTestCase):
                 assert resp.json['object']['Durum'] == 'Yayınlanmadı'
 
                 self.client.post(object_key=obj.key, form={'tamam': 1})
+                self.client.post(cmd='yayinla', object_id=obj.key)
 
-                assert not obj.yayinlanmismi
+                obj.reload()
 
-                resp = self.client.post(cmd='yayinla', form={'duyuru_yayinla': 1})
-
-                assert resp.json['forms']['form'][0]['helpvalue'] == 'Duyuruları yayınlamak ' \
-                                                                     'istiyor musunuz?'
-
-                self.client.post(cmd='bitir', form={'evet': 1})
+                assert obj.yayinlanmismi
