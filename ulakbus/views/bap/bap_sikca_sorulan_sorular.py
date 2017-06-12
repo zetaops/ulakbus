@@ -36,7 +36,6 @@ class BAPSikcaSorulanSorular(CrudView):
     def list(self, custom_form=None):
         CrudView.list(self)
         form = JsonForm(title=_(u"Sıkça Sorulan Sorular"))
-        form.sss_yayinla = fields.Button(_(u"Yayınla"), cmd='bitir')
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
         self.form_out(form)
 
@@ -50,20 +49,13 @@ class BAPSikcaSorulanSorular(CrudView):
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
 
-    def yayinla_onay(self):
-        form = JsonForm(title=_(u"Yapmış Olduğunuz Değişiklikleri Yayınlamak İstiyor musunuz?"))
-        form.evet = fields.Button(_(u"Evet"), cmd='yayinla')
-        form.iptal = fields.Button(_(u"İptal"))
-        self.form_out(form)
-
     def yayinla(self):
-        sss = BAPSSS.objects.all(yayinlanmismi=False)
+        if self.input['cmd'] == 'yayinla':
+            self.object.yayinlanmismi = True
+        else:
+            self.object.yayinlanmismi = False
 
-        for s in sss:
-            s.yayinlanmismi = True
-            s.blocking_save()
-
-        self.current.output['cmd'] = 'reload'
+        self.object.blocking_save()
 
     def confirm_deletion(self):
         form = JsonForm(title=_(u"Silme İşlemi"))
@@ -74,10 +66,15 @@ class BAPSikcaSorulanSorular(CrudView):
 
     @obj_filter
     def sss_islem(self, obj, result):
+        yayinla = {'name': _(u'Yayınla'), 'cmd': 'yayinla',
+                   'mode': 'normal', 'show_as': 'button'}
+        yayindan_kaldir = {'name': _(u'Yayından Kaldır'), 'cmd': 'yayindan_kaldir',
+                           'mode': 'normal', 'show_as': 'button'}
         result['actions'] = [
             {'name': _(u'Sil'), 'cmd': 'confirm_deletion', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
-            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}]
+            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
+            yayindan_kaldir if obj.yayinlanmismi else yayinla]
 
 # -------------- Bap Koordinasyon Birimi --------------
 

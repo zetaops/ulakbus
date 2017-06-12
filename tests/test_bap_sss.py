@@ -58,9 +58,8 @@ class TestCase(BaseTestCase):
 
                 assert not obj.yayinlanmismi
 
-                resp = self.client.post(cmd='bitir', form={'sss_yayinla': 1})
+                self.client.post(cmd='yayinla', object_id=obj.key)
 
-                assert resp.json['forms']['schema']['title'] == 'Yapmış Olduğunuz Değişiklikleri ' \
-                                                                'Yayınlamak İstiyor musunuz?'
+                obj.reload()
 
-                self.client.post(cmd='yayinla', form={'evet': 1})
+                assert obj.yayinlanmismi
