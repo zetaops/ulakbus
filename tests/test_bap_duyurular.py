@@ -9,14 +9,14 @@ import time
 
 from datetime import datetime
 
-from ulakbus.models import BAPDuyurular
+from ulakbus.models import BAPDuyuru
 
 from zengine.lib.test_utils import BaseTestCase
 
 
 class TestCase(BaseTestCase):
     def test_bap_duyurular(self):
-        yayinlanmis_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmis_mi=True).count()
+        yayinlanmis_duyuru_sayisi = BAPDuyuru.objects.all(yayinlanmis_mi=True).count()
 
         eklenme_tarihi = datetime.strptime('06.06.2017', '%d.%m.%Y').date()
         son_gecerlilik_tarihi = datetime.strptime('30.06.2017', '%d.%m.%Y').date()
@@ -27,9 +27,9 @@ class TestCase(BaseTestCase):
             soru_sayisi = len(resp.json['objects']) - 1
             if i == 1:
                 time.sleep(1)
-                yeni_yay_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmis_mi=True).count()
+                yeni_yay_duyuru_sayisi = BAPDuyuru.objects.all(yayinlanmis_mi=True).count()
                 assert yeni_yay_duyuru_sayisi == yayinlanmis_duyuru_sayisi + 1
-                obj = BAPDuyurular.objects.all(duyuru_baslik='Duyuru İçin Gerekli Başlık',
+                obj = BAPDuyuru.objects.all(duyuru_baslik='Duyuru İçin Gerekli Başlık',
                                                eklenme_tarihi=eklenme_tarihi,
                                                son_gecerlilik_tarihi=son_gecerlilik_tarihi,
                                                yayinlanmis_mi=True)[0]
@@ -63,7 +63,7 @@ class TestCase(BaseTestCase):
                                                         'isImage': False}}]})
 
                 assert len(resp.json['objects']) - 1 == soru_sayisi + 1
-                obj = BAPDuyurular.objects.all(duyuru_baslik='Duyuru İçin Gerekli Başlık',
+                obj = BAPDuyuru.objects.all(duyuru_baslik='Duyuru İçin Gerekli Başlık',
                                                eklenme_tarihi=eklenme_tarihi,
                                                son_gecerlilik_tarihi=son_gecerlilik_tarihi)[0]
 

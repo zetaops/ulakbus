@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.lib.s3_file_manager import S3FileManager
-from ulakbus.models import BAPDuyurular
+from ulakbus.models import BAPDuyuru
 
 from zengine.views.crud import CrudView, obj_filter
 from zengine.lib.translation import gettext as _, gettext_lazy as __
@@ -21,14 +21,14 @@ class DuyurularAddEditForm(JsonForm):
 
 class BapDuyurular(CrudView):
     class Meta:
-        model = "BAPDuyurular"
+        model = "BAPDuyuru"
 
     def __init__(self, current):
         CrudView.__init__(self, current)
         if 'object_id' in self.current.task_data and self.cmd == 'add_edit_form' and \
                 'object_id' not in self.input:
             del self.current.task_data['object_id']
-            self.object = BAPDuyurular()
+            self.object = BAPDuyuru()
             self.object_form = DuyurularAddEditForm(self.object, current=self.current)
 
     def list(self, custom_form=None):
@@ -96,7 +96,7 @@ class BapDuyurular(CrudView):
         self.output['object_title'] = _(u"BAP Genel Duyurular")
         self.output['objects'] = [['Duyuru Başlık', 'Eklenme Tarihi', 'Son Geçerlilik Tarihi',
                                    'Ekleyen']]
-        for duyuru in BAPDuyurular.objects.all(yayinlanmis_mi=True):
+        for duyuru in BAPDuyuru.objects.all(yayinlanmis_mi=True):
             item = {
                 "fields": [duyuru.duyuru_baslik,
                            duyuru.eklenme_tarihi.strftime("%d.%m.%Y"),

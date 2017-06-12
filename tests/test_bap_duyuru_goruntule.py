@@ -7,7 +7,7 @@
 
 from datetime import datetime
 
-from ulakbus.models import BAPDuyurular
+from ulakbus.models import BAPDuyuru
 from ulakbus import settings
 
 from zengine.lib.test_utils import BaseTestCase
@@ -18,7 +18,7 @@ class TestCase(BaseTestCase):
         eklenme_tarihi = datetime.strptime('06.06.2017', '%d.%m.%Y').date()
         son_gecerlilik_tarihi = datetime.strptime('30.06.2017', '%d.%m.%Y').date()
 
-        duyuru = BAPDuyurular()
+        duyuru = BAPDuyuru()
         duyuru.duyuru_baslik = 'Test Duyuru Başlıgı'
         duyuru.duyuru_icerik = 'Duyurunun yapılacağı içerik kısmı'
         duyuru.eklenme_tarihi = eklenme_tarihi
@@ -28,7 +28,7 @@ class TestCase(BaseTestCase):
                           dosya_aciklamasi='Dosya ile ilgili aciklama')
         duyuru.save()
 
-        yayinlanan_duyuru_sayisi = BAPDuyurular.objects.all(yayinlanmis_mi=True).count()
+        yayinlanan_duyuru_sayisi = BAPDuyuru.objects.all(yayinlanmis_mi=True).count()
 
         self.prepare_client('/bap_duyurulari_goruntule', username='ulakbus')
         resp = self.client.post()

@@ -334,7 +334,7 @@ class BAPSSS(Model):
         return "%s" % self.soru
 
 
-class BAPDuyurular(Model):
+class BAPDuyuru(Model):
     class Meta:
         verbose_name = __(u"BAP Duyuru")
         verbose_name_plural = __(u"BAP Duyurular")
