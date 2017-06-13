@@ -314,5 +314,23 @@
       "tr": "Proje Değerlendirildi",
       "en": ""
     }
+  },
+  "bap_butce_plani_satin_alma_durumu": {
+    "1": {
+      "tr": "Satın Alma İlanına Müsait",
+      "en": ""
+    },
+    "2": {
+      "tr": "Satın Alma İlanında",
+      "en": ""
+    },
+    "3": {
+      "tr": "Teslim Alma Sürecinde",
+      "en": ""
+    },
+    "4": {
+      "tr": "Teslim Alındı",
+      "en": ""
+    }
   }
 }

@@ -65,7 +65,7 @@ class BAPSatinAlmaView(CrudView):
                 'type': 'error',
                 "title": _(u"Eksik Seçim"),
                 "msg": msg}
-        butce_planlari = BAPButcePlani.objects.filter(ilgili_proje_id=obj_id)
+        butce_planlari = BAPButcePlani.objects.filter(ilgili_proje_id=obj_id, satin_alma_durum=1)
 
         form = ButceKalemleriForm()
         form.help_text = _(u"Satın alma talebi oluşturulacak bütçe kalemleri seçilmelidir.")
@@ -116,13 +116,19 @@ class BAPSatinAlmaView(CrudView):
         talep_form = self.current.task_data['SatinAlmaTalebiForm']
         for kalem in kalemler:
             if kalem['sec']:
-                satin_alma.ButceKalemleri(butce_id=kalem['butce_plan_key'])
+                butce = BAPButcePlani.objects.get(kalem['butce_plan_key'])
+                butce.satin_alma_durum = 2
+                butce.blocking_save()
+                satin_alma.ButceKalemleri(butce=butce)
         satin_alma.aciklama = talep_form['aciklama']
         satin_alma.ad = talep_form['satin_alma_talep_adi']
-        satin_alma.teklife_acilma_tarihi = datetime.datetime.strptime(
+        d1 = datetime.datetime.strptime(
             talep_form['teklife_acilma_tarihi'], DATE_DEFAULT_FORMAT)
-        satin_alma.teklife_kapanma_tarihi = datetime.datetime.strptime(
+        satin_alma.teklife_acilma_tarihi = datetime.datetime(d1.year, d1.month, d1.day, 9, 0, 0, 0)
+        d2 = datetime.datetime.strptime(
             talep_form['son_teklif_tarihi'], DATE_DEFAULT_FORMAT)
+        satin_alma.teklife_kapanma_tarihi = datetime.datetime(d2.year, d2.month, d2.day, 16, 0, 0, 0
+                                                              )
         satin_alma.onay_tarih_sayi = talep_form['onay_tarih_sayi']
         satin_alma.ekleyen = Personel.objects.get(talep_form['ekleyen'])
         satin_alma.teklif_durum = 1
