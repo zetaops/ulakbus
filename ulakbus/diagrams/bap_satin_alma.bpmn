@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1mvac7x">
     <bpmn:extensionElements>
       <camunda:properties>
-        <camunda:property name="menu_category" value="BAP" />
+        <camunda:property name="menu_category" value="hidden" />
       </camunda:properties>
     </bpmn:extensionElements>
     <bpmn:participant id="Participant_0ey4zph" processRef="bap_satin_alma" />
@@ -13,7 +13,7 @@
       <bpmn:outgoing>SequenceFlow_0lhby0a</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0lhby0a" sourceRef="StartEvent_1" targetRef="butce_kalem_goster_sec" />
-    <bpmn:userTask id="butce_kalem_goster_sec" name="Bütçe Kalemleri Göster/Seç">
+    <bpmn:userTask id="butce_kalem_goster_sec" name="Bütçe Kalemleri Göster/Seç" camunda:assignee="bap.bap_satin_alma.BAPSatinAlma.butce_kalemleri_sec_goster">
       <bpmn:incoming>SequenceFlow_0lhby0a</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0205862</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1c0tq50</bpmn:outgoing>
@@ -27,7 +27,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_01uzwho" sourceRef="ExclusiveGateway_0nol9bh" targetRef="satin_alma_talebi_olustur">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='tamam']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="satin_alma_talebi_olustur" name="Satın Alma Talebi Oluştur">
+    <bpmn:userTask id="satin_alma_talebi_olustur" name="Satın Alma Talebi Oluştur" camunda:assignee="bap.bap_satin_alma.BAPSatinAlma.satin_alma_talebi_olustur">
       <bpmn:incoming>SequenceFlow_01uzwho</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1hlwq3v</bpmn:outgoing>
     </bpmn:userTask>
@@ -41,23 +41,23 @@
     <bpmn:sequenceFlow id="SequenceFlow_0s0jn2k" sourceRef="ExclusiveGateway_0c1f0s3" targetRef="satin_alma_talebi_kaydet">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='kaydet']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="satin_alma_talebi_kaydet" name="Satın Alma Talebini Kaydet">
+    <bpmn:serviceTask id="satin_alma_talebi_kaydet" name="Satın Alma Talebini Kaydet" camunda:class="bap.bap_satin_alma.BAPSatinAlma.satin_alma_talebi_kaydet">
       <bpmn:incoming>SequenceFlow_0s0jn2k</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0dbt5an</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="EndEvent_1fugux9">
+    <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_0dbt5an</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0eo6u05</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0hansj0</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0dbt5an" sourceRef="satin_alma_talebi_kaydet" targetRef="EndEvent_1fugux9" />
-    <bpmn:sequenceFlow id="SequenceFlow_0eo6u05" sourceRef="ExclusiveGateway_0nol9bh" targetRef="EndEvent_1fugux9">
+    <bpmn:sequenceFlow id="SequenceFlow_0dbt5an" sourceRef="satin_alma_talebi_kaydet" targetRef="EndEvent" />
+    <bpmn:sequenceFlow id="SequenceFlow_0eo6u05" sourceRef="ExclusiveGateway_0nol9bh" targetRef="EndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0205862" sourceRef="ExclusiveGateway_0c1f0s3" targetRef="butce_kalem_goster_sec">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='geri']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0hansj0" sourceRef="ExclusiveGateway_0c1f0s3" targetRef="EndEvent_1fugux9">
+    <bpmn:sequenceFlow id="SequenceFlow_0hansj0" sourceRef="ExclusiveGateway_0c1f0s3" targetRef="EndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
   </bpmn:process>
@@ -128,7 +128,7 @@
       <bpmndi:BPMNShape id="ServiceTask_0hbg5jw_di" bpmnElement="satin_alma_talebi_kaydet">
         <dc:Bounds x="666" y="174" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_1fugux9_di" bpmnElement="EndEvent_1fugux9">
+      <bpmndi:BPMNShape id="EndEvent_1fugux9_di" bpmnElement="EndEvent">
         <dc:Bounds x="698" y="291" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="716" y="327" width="0" height="0" />
