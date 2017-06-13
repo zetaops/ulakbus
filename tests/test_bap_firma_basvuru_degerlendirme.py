@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus import settings
-from ulakbus.models import BAPFirma
+from ulakbus.models import BAPFirma, User
 from zengine.lib.test_utils import BaseTestCase
 
 
@@ -82,6 +82,8 @@ class TestCase(BaseTestCase):
         del resp.json['objects'][0]
         firma_adlari_list = [obj['fields'][0] for obj in resp.json['objects']]
         assert "Veli Usta Dondurma" not in firma_adlari_list
+        kullanici = firma.Yetkililer[0].yetkili
+        assert User.objects.filter(key=kullanici.key).count() == 0
         assert BAPFirma.objects.filter(key="5uGjOb0fj9rzGwfIwYoSIN2pNRH").count() == 0
         firma = BAPFirma.objects.filter(key="5uGjOb0fj9rzGwfIwYoSIN2pNRH", deleted=True)[0]
         firma.deleted = False

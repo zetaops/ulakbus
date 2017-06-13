@@ -186,7 +186,9 @@ class BapFirmaBasvuruDegerlendirme(CrudView):
         reddetme gerekçesi de içeriğe eklenir. 
 
         """
+        kullanici =self.object.Yetkililer[0].yetkili
         self.object.blocking_delete()
+        kullanici.blocking_delete()
         del self.current.task_data['object_id']
         self.current.task_data["message"] = "İyi günler.\n\n%s adlı firmanızın kayıt başvurusu " \
                                             "tarafımızdan reddedilmiştir. Reddedilme gerekçesinde" \
