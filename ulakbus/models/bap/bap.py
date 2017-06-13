@@ -364,11 +364,13 @@ class BAPFirma(Model):
     class Meta:
         verbose_name = __(u"Firma")
         verbose_name_plural = __(u"Firmalar")
+        list_fields = ['ad', 'vergi_no']
+        unique_together = [('vergi_no', 'vergi_dairesi')]
 
     ad = field.String(__(u"Firma Adı"), required=True)
     telefon = field.String(__(u"Telefon"), required=True)
     adres = field.String(__(u"Adres"), required=True)
-    e_posta = field.String(__(u"E-posta Adresi"), required=True)
+    e_posta = field.String(__(u"E-posta Adresi"), required=True, unique=True)
     vergi_no = field.String(__(u"Vergi Kimlik Numarası"), required=True)
     vergi_dairesi = field.String(__(u"Vergi Dairesi"), required=True)
     faaliyet_belgesi = field.File(_(u"Firma Faaliyet Belgesi"), random_name=False, required=True)

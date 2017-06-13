@@ -137,7 +137,7 @@ class HakemlikDaveti(CrudView):
                                        )
                 inv = TaskInvitation(
                     instance=wfi,
-                    role=hakem.hakem().okutman().user().role_set[0].role,
+                    role=role,
                     wf_name=wfi.wf.name,
                     progress=30,
                     start_date=today,
@@ -159,5 +159,3 @@ class HakemlikDaveti(CrudView):
         """)
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
-
-
