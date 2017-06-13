@@ -7,7 +7,7 @@ from ulakbus.models import User, IntegrityError, Permission
 from zengine.models import BPMNWorkflow, WFInstance, TaskInvitation
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
-from zengine.lib.translation import gettext as __
+from zengine.lib.translation import gettext as _, gettext_lazy as __
 from datetime import datetime, timedelta
 import hashlib
 from ulakbus.lib.common import get_temp_password
@@ -125,8 +125,8 @@ class BapFirmaKayit(CrudView):
             wfi.data['flow'] = None
             wfi.pool = {}
             wfi.blocking_save()
-            role.send_notification(title=__(u"Firma Kayıt Başvurusu"),
-                                   message=__(u"""%s adlı firma, kayıt başvurusunda bulunmuştur.
+            role.send_notification(title=_(u"Firma Kayıt Başvurusu"),
+                                   message=_(u"""%s adlı firma, kayıt başvurusunda bulunmuştur.
                                    Görev yöneticinizden firmaların kayıt başvurularına ulaşabilir,
                                    değerlendirebilirsiniz.""" % self.input['form']['ad']), typ=1,
                                    sender=sistem_user
@@ -148,7 +148,7 @@ class BapFirmaKayit(CrudView):
 
         """
         form = IslemMesajiForm(current=self.current)
-        form.help_text = __(
+        form.help_text = _(
             u"""Koordinasyon birimi %s adlı firmanız için yaptığınız kayıt başvurusu hakkında 
             bilgilendirilmiştir. Başvurunuz değerlendirildikten sonra sonucu hakkında
             bilgilendirileceksiniz.""" % self.input['form']['ad'])
@@ -162,8 +162,8 @@ class BapFirmaKayit(CrudView):
         """
         error = self.current.task_data['error']
         self.current.output['msgbox'] = {"type": "warning",
-                                         "title": __(u'Mevcut Bilgi Uyarısı'),
-                                         "msg": __(u"Girmiş olduğunuz yetkili %s bilgisi, "
+                                         "title": _(u'Mevcut Bilgi Uyarısı'),
+                                         "msg": _(u"Girmiş olduğunuz yetkili %s bilgisi, "
                                                    u"sistemimizde bulunmaktadır. Lütfen başka bir "
                                                    u"%s ile değiştirerek tekrar deneyiniz."
                                                    % (error, error))}

@@ -217,8 +217,8 @@ class BapFirmaBasvuruDegerlendirme(CrudView):
         """
         self.ilgili_daveti_sil()
         self.current.output['msgbox'] = {"type": "info",
-                                         "title": __(u"Firma Başvuru Kaydı Değerlendirme"),
-                                         "msg": __(u"""%s adlı firmanın kayıt başvurusu hakkındaki
+                                         "title": _(u"Firma Başvuru Kaydı Değerlendirme"),
+                                         "msg": _(u"""%s adlı firmanın kayıt başvurusu hakkındaki
                                             kararınız firma yetkilisine başarıyla iletilmiştir.
                                             """ % self.current.task_data["firma_ad"])}
 

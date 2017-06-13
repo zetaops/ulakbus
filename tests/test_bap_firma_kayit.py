@@ -36,7 +36,7 @@ class TestCase(BaseTestCase):
                       'isim': 'Selim',
                       'soyad': 'Sayan',
                       'k_adi': 'ulakbus',
-                      'yetkili_e_posta': 'selim@sayan.fake_mail_fake.slm',
+                      'yetkili_e_posta': 'selim@sayan.fake_mail',
                       'faaliyet_belgesi_verilis_tarihi': "31.05.2017"}
 
         # unique yetkili kullanıcı adı uyarısı
@@ -56,7 +56,7 @@ class TestCase(BaseTestCase):
         assert BAPFirma.objects.count() == mevcut_firma_sayisi
 
         # başarılı kayıt işlemi
-        firma_form['yetkili_e_posta'] = 'selim@sayan.fake_mail_fake.slm'
+        firma_form['yetkili_e_posta'] = 'selim@sayan.fake_mail'
         resp = self.client.post(wf='bap_firma_kayit', form=firma_form)
         assert resp.json['forms']['schema']['title'] == "Firma Kaydı İşlem Mesajı"
         assert 'Grundig' in resp.json['forms']['form'][0]['helpvalue']
@@ -87,8 +87,8 @@ class TestCase(BaseTestCase):
         firma_adlari_list = [obj['fields'][0] for obj in resp.json['objects']]
         assert "Grundig" in firma_adlari_list
 
+        WFInstance.objects.filter(wf_object=firma.key).delete()
         TaskInvitation.objects.all().order_by()[0].delete()
         Message.objects.all().order_by()[0].delete()
-        WFInstance.objects.get(token).delete()
         user.blocking_delete()
         firma.blocking_delete()
