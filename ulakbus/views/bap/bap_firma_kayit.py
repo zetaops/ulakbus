@@ -119,7 +119,7 @@ class BapFirmaKayit(CrudView):
                 current_actor=role,
                 task=None,
                 name=wf.name,
-                wf_object = self.current.task_data['firma_key']
+                wf_object=self.current.task_data['firma_key']
             )
             wfi.data = dict()
             wfi.data['flow'] = None
@@ -164,6 +164,6 @@ class BapFirmaKayit(CrudView):
         self.current.output['msgbox'] = {"type": "warning",
                                          "title": _(u'Mevcut Bilgi Uyarısı'),
                                          "msg": _(u"Girmiş olduğunuz yetkili %s bilgisi, "
-                                                   u"sistemimizde bulunmaktadır. Lütfen başka bir "
-                                                   u"%s ile değiştirerek tekrar deneyiniz."
-                                                   % (error, error))}
+                                                  u"sistemimizde bulunmaktadır. Lütfen başka bir "
+                                                  u"%s ile değiştirerek tekrar deneyiniz."
+                                                  % (error, error))}

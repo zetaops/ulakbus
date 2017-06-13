@@ -159,5 +159,3 @@ class HakemlikDaveti(CrudView):
         """)
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
-
-
