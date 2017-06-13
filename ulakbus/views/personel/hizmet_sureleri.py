@@ -2,8 +2,8 @@
 
 from datetime import timedelta, date, datetime
 
-from ulakbus.models.hitap.hitap import HizmetKayitlari, HizmetBirlestirme
-from ulakbus.models.personel import Personel, Izin
+from ulakbus.models import HizmetKayitlari, HizmetBirlestirme, AskerlikKayitlari, HizmetOkul
+from ulakbus.models.personel import Personel, Izin, UcretsizIzin
 from zengine.views.crud import CrudView
 
 personel_hizmet = """__Sicil No__: {sicil_no} | __Vatandaşlık No__: {tckn}
@@ -345,13 +345,23 @@ class HizmetSureleri():
         return sure
 
     def _askerlik_hesapla(self):
-        return 0
+        askerlik = AskerlikKayitlari.objects.get(tckn=self.personel.tckn)
+        sure = (askerlik.bitis_tarihi - askerlik.baslama_tarihi).days
+        return sure
 
     def _fahri_gorev_hesapla(self):
         return 0
 
     def _yurtdisi_egitim_hesapla(self):
-        return 0
+        egitim_bilgileri = HizmetOkul.objects.filter(ogrenim_yeri=2)
+        sure = 0
+        for egitim in egitim_bilgileri:
+            sure += egitim.ogrenim_suresi * 360
 
     def _ucretsiz_izin_hesapla(self):
-        return 0
+        ucretsiz_izinler = UcretsizIzin.objects.filter(personel=self.personel)
+        sure = 0
+        for izin in ucretsiz_izinler:
+            sure += (izin.bitis - izin.baslangic).days
+
+        return sure
