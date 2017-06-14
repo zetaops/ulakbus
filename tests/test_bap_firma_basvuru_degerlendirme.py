@@ -49,7 +49,6 @@ class TestCase(BaseTestCase):
         assert resp.json['download_url'] == "%s%s" % (
             settings.S3_PUBLIC_URL, firma.faaliyet_belgesi)
         self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="geri_don")
-        self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="geri_don")
 
         # karar, geri don
         resp = self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="karar_ver",
