@@ -18,9 +18,9 @@ class YeniGundemForm(JsonForm):
 
     proje = fields.String(__(u"Proje Seçiniz"))
     gundem_tipi = fields.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
-    gundem_aciklama = fields.Text(__(u"Gündem Açıklaması"))
-    oturum_numarasi = fields.Integer(__(u"Oturum Numarası"))
-    oturum_tarihi = fields.Date(__(u"Oturum Tarihi"))
+    gundem_aciklama = fields.Text(__(u"Gündem Açıklaması"), required=False)
+    oturum_numarasi = fields.Integer(__(u"Oturum Numarası"), required=False)
+    oturum_tarihi = fields.Date(__(u"Oturum Tarihi"), required=False)
     kaydet = fields.Button(__(u"Kaydet"))
 
 
@@ -79,7 +79,10 @@ class Gundem(CrudView):
     def bilgilendirme(self):
         self.object.sonuclandi = True
         self.object.save()
-        self.set_client_cmd('reload')
+        self.current.msg_box(title=_(u"%s") % self.object.proje,
+                             msg=_(u"%s projesi başarı ile sonuçlandırılmıştır") %
+                             self.object.proje,
+                             typ='info')
 
     @obj_filter
     def proje_turu_islem(self, obj, result):

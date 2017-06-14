@@ -56,6 +56,7 @@ class FasilAktarimTalep(CrudView):
 
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         butce_planlari = BAPButcePlani.objects.all(ilgili_proje=proje)
+        toplam = 0
         for butce in butce_planlari:
             if butce.key not in self.current.task_data['fasil_islemleri']:
                 butce.durum = 4
@@ -70,26 +71,30 @@ class FasilAktarimTalep(CrudView):
                     'yeni_birim_fiyat': '',
                     'eski_toplam_fiyat': butce.toplam_fiyat,
                     'yeni_toplam_fiyat': '',
-                    'gerekce': butce.gerekce
+                    'gerekce': butce.gerekce,
+                    'degisiklik': False
                 }
+            birim_fiyat = self.current.task_data['fasil_islemleri'][butce.key]['yeni_birim_fiyat']
+            adet = self.current.task_data['fasil_islemleri'][butce.key]['yeni_adet']
+            toplam_fiyat = self.current.task_data['fasil_islemleri'][butce.key]['yeni_toplam_fiyat']
             item = {
                 "fields": [butce.muhasebe_kod,
                            butce.kod_adi,
                            butce.ad,
-                           str(butce.birim_fiyat),
-                           str(butce.adet),
-                           str(butce.toplam_fiyat),
+                           str(birim_fiyat) if birim_fiyat else str(butce.birim_fiyat),
+                           str(adet) if adet else str(butce.adet),
+                           str(toplam_fiyat) if toplam_fiyat else str(butce.toplam_fiyat),
                            self.current.task_data['fasil_islemleri'][butce.key]['durum']],
                 "actions": [{'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal',
                             'show_as': 'button'},
                             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
-                             'show_as': 'button'}],
+                             'show_as': 'button'} if 'onay' not in self.current.task_data else {}],
                 'key': butce.key
             }
             self.output['objects'].append(item)
+            toplam += toplam_fiyat if toplam_fiyat else butce.toplam_fiyat
         self.current.task_data['toplam_butce'] = proje.kabul_edilen_butce
 
-        toplam = sum(butce_planlari.values_list('toplam_fiyat'))
         kullanilabilir_butce = proje.kabul_edilen_butce - toplam
         self.output['objects'].append({'fields': ['TOPLAM :', '', '', '', '', str(toplam)],
                                        'actions': ''})
@@ -100,12 +105,6 @@ class FasilAktarimTalep(CrudView):
                                                   '', '', 'KULLANILABİLİR BÜTÇE :',
                                                   str(kullanilabilir_butce), ''],
                                        'actions': ''})
-
-        form = JsonForm(title=_(u"%s için Fasıl Aktarım Talebi") % proje.ad)
-        form.tamam = fields.Button(_(u"Onaya Yolla"), cmd='yolla')
-        form.bitir = fields.Button(_(u"Bitir"), cmd='bitir')
-        self.form_out(form)
-
         if 'red_aciklama' in self.current.task_data:
             self.current.msg_box(msg=self.current.task_data['red_aciklama'],
                                  title=_(u"Talebiniz Reddedildi."),
@@ -118,11 +117,18 @@ class FasilAktarimTalep(CrudView):
             del self.current.task_data['hata_fazla_butce']
         elif 'onay' in self.current.task_data:
             self.current.msg_box(msg=self.current.task_data['onay'],
-                                 title=_(u"Talebiniz Komisyon Gündemine Alınmıştır"))
+                                 title=_(u"Talebiniz Komisyon Gündemine Alınmıştır"),
+                                 typ='info')
+
+        form = JsonForm(title=_(u"%s için Fasıl Aktarım Talebi") % proje.ad)
+        if 'onay' not in self.current.task_data:
+            form.tamam = fields.Button(_(u"Onaya Yolla"), cmd='yolla')
+        form.bitir = fields.Button(_(u"Vazgeç"), cmd='bitir')
+        self.form_out(form)
 
     def add_edit_form(self):
         form = JsonForm(self.object, current=self.current)
-        form.exclude = ['muhasebe_kod', 'kod_adi', 'ad', 'onay_tarihi', 'ilgili_proje']
+        form.exclude = ['muhasebe_kod', 'kod_adi', 'ad', 'onay_tarihi', 'ilgili_proje', 'durum']
         form.title = "%s Kodlu / %s / Kalem Adı: %s" % (
             self.object.muhasebe_kod, self.object.kod_adi, self.object.ad)
         form.ilerle = fields.Button(_(u"İlerle"))
@@ -168,19 +174,26 @@ class FasilAktarimTalep(CrudView):
              'eski_toplam_fiyat': kalem.toplam_fiyat,
              'yeni_toplam_fiyat': self.object.toplam_fiyat,
              'gerekce': self.object.gerekce,
-             'aciklama': self.input['form']['aciklama']}
+             'aciklama': self.input['form']['aciklama'],
+             'degisiklik': True}
 
     def onaya_yolla(self):
-        if 'fasil_islemleri' not in self.current.task_data:
+        degisiklik = False
+        if 'fasil_islemleri' in self.current.task_data:
+            for k, islem in self.current.task_data['fasil_islemleri'].iteritems():
+                if islem['degisiklik']:
+                    degisiklik = True
+
+        if degisiklik:
+            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+            proje.durum = 2  # koordinasyon birimi onayi bekleniyor.
+            proje.save()
+        else:
             self.current.task_data['cmd'] = 'talep_yok'
             self.current.output['msgbox'] = {
                 'type': 'warning', "title": _(u'Fasıl Aktarım Talebi'),
                 "msg": _(u'Fasıl aktarım talebinde bulunmanız için var olan kalemlerinizde '
                          u'değişiklikler yapmalısınız.')}
-        else:
-            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-            proje.durum = 2     # koordinasyon birimi onayi bekleniyor.
-            proje.save()
 
     def proje_bulunamadi(self):
         self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
@@ -232,7 +245,7 @@ class FasilAktarimTalep(CrudView):
                     'Yeni Birim Fiyat': str(data['yeni_birim_fiyat']),
                     'Eski Toplam Fiyat': str(data['eski_toplam_fiyat']),
                     'Yeni Toplam Fiyat': str(data['yeni_toplam_fiyat']),
-                    'Açıklama': data['aciklama']}
+                    'Açıklama': data['aciklama'] if 'aciklama' in data else ''}
         self.output['object'] = obj_data
 
         form = JsonForm()
@@ -263,8 +276,8 @@ class FasilAktarimTalep(CrudView):
         self.current.task_data['onaylandi'] = 1
 
     def bilgilendir(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         if 'red_aciklama' in self.input['form']:
-            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
             proje.durum = 3
             proje.save()
             self.current.task_data['red_aciklama'] = self.input['form']['red_aciklama']
