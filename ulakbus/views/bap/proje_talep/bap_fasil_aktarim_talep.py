@@ -12,10 +12,6 @@ from zengine.views.crud import CrudView, list_query, obj_filter
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 
-# Yeni duzenlenen datalar listeleme ekraninda gozukecek
-# BKC nin detay gostermede ek butce talep diye gozuuyor o duzeltilecek
-# durum duzenlemeden kaldirilacak
-
 
 class FasilAktarimTalep(CrudView):
     class Meta:
@@ -127,7 +123,7 @@ class FasilAktarimTalep(CrudView):
         form = JsonForm(title=_(u"%s için Fasıl Aktarım Talebi") % proje.ad)
         if 'onay' not in self.current.task_data:
             form.tamam = fields.Button(_(u"Onaya Yolla"), cmd='yolla')
-        form.bitir = fields.Button(_(u"Bitir"), cmd='bitir')
+        form.bitir = fields.Button(_(u"Vazgeç"), cmd='bitir')
         self.form_out(form)
 
     def add_edit_form(self):
