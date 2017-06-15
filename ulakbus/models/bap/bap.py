@@ -297,12 +297,13 @@ class BAPGundem(Model):
                        'oturum_tarihi', 'karar_no', 'karar_tarihi']
 
     proje = BAPProje()
-    gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
+    gundem_tipi = field.Integer(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
     gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
-    oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
+    oturum_numarasi = field.Integer(__(u"Oturum Numarası"))
     oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
-    karar_no = field.Integer(__(u"Karar No"), default=0)
-    karar = field.Text(__(u"Karar"))
+    karar_no = field.String(__(u"Karar No"), '')
+    karar = field.Integer(__(u"Karar"), choices='bap_gundem_kararlari', default=1)
+    karar_metni = field.Text(__(u"Karar Metni"))
     karar_tarihi = field.Date(__(u"Karar Tarihi"))
     sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
 

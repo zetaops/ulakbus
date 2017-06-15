@@ -30,6 +30,7 @@ class Gundem(CrudView):
 
     def list(self, custom_form=None):
         custom_form = JsonForm(current=self.current, title=_(u"Gündem Listesi"))
+
         custom_form.ekle = fields.Button(_(u"Yeni Gündem Oluştur"), cmd='yeni_gundem')
         CrudView.list(self, custom_form=custom_form)
 
@@ -49,7 +50,9 @@ class Gundem(CrudView):
                                                           self.object.get_gundem_tipi_display())
         form.exclude = ['proje', 'gundem_tipi', 'sonuclandi']
         form.kaydet = fields.Button(_(u"Kaydet"), cmd='save')
-        form.iptal = fields.Button(_(u"İptal"), form_validation=False)
+        form.iptal = fields.Button(_(u"Geri Dön"), form_validation=False)
+        if self.object.sonuclandi:
+            form._model._fields['karar'].kwargs['read_only'] = True
         self.form_out(_form=form)
 
     def show(self):
@@ -77,11 +80,11 @@ class Gundem(CrudView):
         pass
 
     def bilgilendirme(self):
+        islem = 'düzenlenmiştir' if self.object.sonuclandi else 'sonuçlandırılmıştır'
         self.object.sonuclandi = True
         self.object.save()
-        self.current.msg_box(title=_(u"%s") % self.object.proje,
-                             msg=_(u"%s projesi başarı ile sonuçlandırılmıştır") %
-                             self.object.proje,
+        self.current.msg_box(title=_(u"İşlem Mesajı"),
+                             msg=_(u"%s projesi başarı ile %s") % (self.object.proje,islem),
                              typ='info')
 
     @obj_filter
@@ -90,6 +93,5 @@ class Gundem(CrudView):
         goster = {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}
         sil = {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'}
         if obj.sonuclandi:
-            result['actions'] = ([goster, sil])
-        else:
-            result['actions'] = ([sonuc, goster, sil])
+            sonuc['name'] = _(u'Sonuç Düzenle')
+        result['actions'] = ([sonuc, goster, sil])

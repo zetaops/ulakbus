@@ -211,6 +211,20 @@
       "en": ""
     }
   },
+  "bap_gundem_kararlari": {
+    "1": {
+      "tr": "Kabul",
+      "en": ""
+    },
+    "2": {
+      "tr": "Red",
+      "en": ""
+    },
+    "3": {
+      "tr": "Revizyon",
+      "en": ""
+    }
+  },
   "bap_satin_alma_durum": {
     "1": {
       "tr": "Teklife Açık",
