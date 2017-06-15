@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPButcePlani, BAPProje, Personel, Okutman
+from ulakbus.models import BAPButcePlani, BAPProje, Personel, Okutman, BAPTeknikSartname, ListNode
 
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
@@ -14,6 +14,27 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 class ButcePlaniForm(JsonForm):
     kaydet = fields.Button(__(u"Kaydet"))
     iptal = fields.Button(__(u"İptal"), cmd='iptal', form_validation=False)
+
+
+class SartnameKalemSecForm(JsonForm):
+    class Meta:
+        title = __(u"Şartname için kalem seç")
+        inline_edit = ['sec']
+
+    class Kalemler(ListNode):
+        sec = fields.Boolean(__(u"Seç"), type="checkbox", default=False)
+        kalem = fields.String(__(u"Kalem"))
+        kalem_key = fields.String(__(u"Kalem Key"), hidden=True)
+
+    ilerle = fields.Button(__(u"İlerle"))
+
+    def kalemleri_getir(self):
+        proje = BAPProje.objects.get(self.context.task_data['bap_proje_id'])
+        kalemler = BAPButcePlani.objects.all(ilgili_proje=proje)
+        for kalem in kalemler:
+            self.Kalemler(sec=False,
+                          kalem="%s / %s " % (kalem.kod_adi, kalem.ad),
+                          kalem_key=kalem.key)
 
 
 class BapButcePlani(CrudView):
@@ -35,6 +56,7 @@ class BapButcePlani(CrudView):
             okutman = Okutman.objects.get(personel=personel)
             self.current.task_data['proje_data'] = [(proje.key, proje.ad) for proje in
                                                     BAPProje.objects.filter(yurutucu=okutman)]
+
             self.current.task_data['proje_sec'] = True
 
     def proje_sec(self):
@@ -65,6 +87,67 @@ class BapButcePlani(CrudView):
                          proje_ad
         self.form_out(form)
 
+    def kalem_ve_sartname_kontrol(self):
+        if self.current.task_data['cmd'] == 'sartname_ekle':
+            self.current.output['cmd'] = 'sartname_ekle'
+        elif self.current.task_data['cmd'] == 'bitir':
+            butce_kalemleri = BAPButcePlani.objects.all(
+                ilgili_proje=self.current.task_data['bap_proje_id'])
+            for kalem in butce_kalemleri:
+                if not kalem.teknik_sartname:
+                    self.current.msg_box(msg=_(u"Bütün kalemler için Teknik şartname atamak "
+                                               u"zorundasınız."), typ='error')
+                    self.current.output['cmd'] = 'eksik_sartname'
+                    break
+
+    def sartname_sec_veya_olustur(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        sartnameler = [(sartname.key, sartname.aciklama) for sartname in BAPTeknikSartname.objects.all(
+            ilgili_proje=proje)]
+        form = JsonForm(title=_(u"Teknik Şartname Seç Veya Oluştur"))
+        if not sartnameler:
+            form.help_text = _(u"Kayıtlı Teknik şartnameniz bulunmamaktadır. Lütfen yeni bir "
+                               u"şartname oluşturunuz")
+        else:
+            form.sartname_sec = fields.String(_(u"Teknik Şartname Seç"), choices=sartnameler,
+                                              required=False, default=sartnameler[0][0])
+        form.yeni_sartname = fields.Button(_(u"Yeni Şartname Oluştur"), cmd='yeni_sartname')
+        form.ilerle = fields.Button(_(u"İlerle"))
+        self.form_out(form)
+
+    def teknik_sartname_ekle(self):
+        self.object = BAPTeknikSartname()
+        form = JsonForm(self.object, current=self.current, title=_(u"Teknik Şartname Ekle"))
+        form.exclude = ['ilgili_proje']
+        form.ilerle = fields.Button(_(u"İlerle"))
+        self.form_out(form)
+
+    def sartname_icin_kalem_sec(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        if 'sartname_sec' in self.input['form']:
+            sartname = BAPTeknikSartname.objects.get(self.input['form']['sartname_sec'])
+        else:
+            sartname = BAPTeknikSartname()
+            sartname.sartname_dosyasi = self.input['form']['sartname_dosyasi']
+            sartname.aciklama = self.input['form']['aciklama']
+            sartname.ilgili_proje = proje
+            sartname.blocking_save()
+
+        self.current.task_data['sartname_id'] = sartname.key
+        form = SartnameKalemSecForm(current=self.current)
+        form.kalemleri_getir()
+        self.form_out(form)
+        self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
+
+    def sartname_kaydet(self):
+        for kalem in self.input['form']['Kalemler']:
+            if kalem['sec']:
+                k = BAPButcePlani.objects.get(kalem['kalem_key'])
+                k.teknik_sartname = BAPTeknikSartname.objects.get(
+                    self.current.task_data['sartname_id'])
+                k.save()
+
     def save(self):
         self.set_form_data_to_object()
         self.object.muhasebe_kod_genel = self.current.task_data['muhasebe_kod_genel']
@@ -84,6 +167,7 @@ class BapButcePlani(CrudView):
     def show(self):
         CrudView.show(self)
         self.output['object']['Muhasebe Kod'] = str(self.object.muhasebe_kod_genel)
+        self.output['object']['Teknik Şartname'] = self.object.teknik_sartname.aciklama
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
@@ -97,11 +181,12 @@ class BapButcePlani(CrudView):
             ad = self.current.task_data['GenelBilgiGirForm']['ad']
         else:
             ad = proje.ad
-        toplam = sum(BAPButcePlani.objects.filter(ilgili_proje=proje).values_list('toplam_fiyat'))
-        self.output['objects'].append({'fields': ['TOPLAM', '', '', '', str(toplam)],
+        toplam = sum(BAPButcePlani.objects.all(ilgili_proje=proje).values_list('toplam_fiyat'))
+        self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam), ''],
                                        'actions': ''})
         form = JsonForm(title=_(u"%s projesi için Bütçe Planı") % ad)
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
+        form.sartname_ekle = fields.Button(_(u"Teknik Şartname Ekle"), cmd='sartname_ekle')
         form.bitir = fields.Button(_(u"Bitir"), cmd='bitir')
         self.form_out(form)
 

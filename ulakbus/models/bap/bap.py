@@ -295,17 +295,36 @@ class BAPFirma(Model):
         return "%s" % self.ad
 
 
+class BAPTeknikSartname(Model):
+    class Meta:
+        verbose_name = __(u"Teknik Şartname")
+        verbose_name_plural = __(u"Teknik Şartnameler")
+
+    sartname_dosyasi = field.File(__(u"Şartname Dosyası"), random_name=True)
+    aciklama = field.String(__(u"Açıklama"))
+    ilgili_proje = BAPProje()
+
+    def __unicode__(self):
+        return "%s" % self.aciklama
+
+
 class BAPButcePlani(Model):
     class Meta:
         verbose_name = __(u"Bap Bütçe Planı")
         verbose_name_plural = __(u"Bap Bütçe Planları")
-        list_fields = ['kod_adi', 'ad', 'birim_fiyat', 'adet', 'toplam_fiyat']
+
+        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet',
+                       'toplam_fiyat', '_teknik_sartname']
+
     # Öğretim üyesinin seçeceği muhasebe kodları
     muhasebe_kod_genel = field.Integer(__(u"Muhasebe Kod"),
                                        choices='bap_ogretim_uyesi_gider_kodlari', default=1)
+
+
     muhasebe_kod = field.String(__(u"Muhasebe Kod"),
                                 choices='analitik_butce_dorduncu_duzey_gider_kodlari',
                                 default="03.2.6.90")
+
     kod_adi = field.String(__(u"Kod Adı"))
     ad = field.String(__(u"Alınacak Malzemenin Adı"))
     birim_fiyat = field.Float(__(u"Birim Fiyat"),
@@ -316,8 +335,12 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
+
     ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
     kazanan_firma = BAPFirma()
+
+    teknik_sartname = BAPTeknikSartname()
+
 
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod or self.muhasebe_kod_genel, self.kod_adi,
@@ -325,6 +348,8 @@ class BAPButcePlani(Model):
 
     def _muhasebe_kod(self):
         return self.muhasebe_kod or self.muhasebe_kod_genel
+
+    _muhasebe_kod.title = __(u"Muhasebe Kodu")
 
 
 class BAPEtkinlikProje(Model):
@@ -369,6 +394,11 @@ class BAPEtkinlikProje(Model):
 
     def __unicode__(self):
         return "%s | %s" % (self.bildiri_basligi, self.basvuru_yapan.__unicode__())
+
+    def _teknik_sartname(self):
+        return "Var" if self.teknik_sartname.aciklama else "Yok"
+
+    _teknik_sartname.title = __(u"Teknik Şartname")
 
 
 class BAPGundem(Model):
