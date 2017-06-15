@@ -88,16 +88,16 @@ class BapButcePlani(CrudView):
         self.form_out(form)
 
     def kalem_ve_sartname_kontrol(self):
-        if self.current.task_data['cmd'] == 'sartname_ekle':
-            self.current.output['cmd'] = 'sartname_ekle'
-        elif self.current.task_data['cmd'] == 'bitir':
+        if self.current.task_data['cmd'] == 'bitir':
             butce_kalemleri = BAPButcePlani.objects.all(
-                ilgili_proje=self.current.task_data['bap_proje_id'])
+                ilgili_proje=BAPProje.objects.get(self.current.task_data['bap_proje_id']))
             for kalem in butce_kalemleri:
-                if not kalem.teknik_sartname:
-                    self.current.msg_box(msg=_(u"Bütün kalemler için Teknik şartname atamak "
+                if not kalem.teknik_sartname.sartname_dosyasi:
+                    self.current.msg_box(
+                        title=_(u'Eksik Şartname'),
+                        msg=_(u"Bütün kalemler için Teknik şartname atamak "
                                                u"zorundasınız."), typ='error')
-                    self.current.output['cmd'] = 'eksik_sartname'
+                    self.current.task_data['cmd'] = 'eksik_sartname'
                     break
 
     def sartname_sec_veya_olustur(self):
@@ -111,8 +111,8 @@ class BapButcePlani(CrudView):
         else:
             form.sartname_sec = fields.String(_(u"Teknik Şartname Seç"), choices=sartnameler,
                                               required=False, default=sartnameler[0][0])
+            form.ilerle = fields.Button(_(u"İlerle"))
         form.yeni_sartname = fields.Button(_(u"Yeni Şartname Oluştur"), cmd='yeni_sartname')
-        form.ilerle = fields.Button(_(u"İlerle"))
         self.form_out(form)
 
     def teknik_sartname_ekle(self):
