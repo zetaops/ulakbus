@@ -46,18 +46,15 @@ class SatinAlmaTalebiForm(JsonForm):
     ekleyen = fields.String(u"Ekleyen")
     aciklama = fields.Text(u"Açıklama", required=False)
 
-    iptal = fields.Button(_(u"İptal"), cmd='iptal', form_validation=False)
-    geri = fields.Button(_(u"Bütçe Kalemlerine Dön"), cmd='geri', form_validation=False)
+    iptal = fields.Button(_(u"İptal Et ve Proje Listesine Dön"), cmd='iptal', form_validation=False)
     kaydet = fields.Button(_(u"Kaydet"), cmd='kaydet')
+    geri = fields.Button(_(u"İptal Et ve Bütçe Kalemlerine Dön"), cmd='geri', form_validation=False)
 
 
 class BAPSatinAlmaView(CrudView):
     def butce_kalemleri_sec_goster(self):
-        obj_id = self.input.get('object_id', None)
-        if obj_id:
-            self.current.task_data['obj_id'] = obj_id
-        else:
-            obj_id = self.current.task_data['obj_id']
+        self.current.task_data['obj_id'] = self.input.get('object_id') or \
+                                           self.current.task_data['obj_id']
 
         msg = self.current.task_data.pop('uyari_mesaji', None)
         if msg:
@@ -65,7 +62,9 @@ class BAPSatinAlmaView(CrudView):
                 'type': 'error',
                 "title": _(u"Eksik Seçim"),
                 "msg": msg}
-        butce_planlari = BAPButcePlani.objects.filter(ilgili_proje_id=obj_id, satin_alma_durum=1)
+
+        butce_planlari = BAPButcePlani.objects.filter(
+            ilgili_proje_id=self.current.task_data['obj_id'], satin_alma_durum=1)
 
         form = ButceKalemleriForm()
         form.help_text = _(u"Satın alma talebi oluşturulacak bütçe kalemleri seçilmelidir.")
