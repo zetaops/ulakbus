@@ -28,9 +28,17 @@ class TestCase(BaseTestCase):
         # Satın alma iş akışı başlatılır.
         resp = self.client.post(cmd='satin_alma', object_id='b5avq6Tc6jHuKf9z2kizPFK3nc')
 
+        # Hic satin alma olmadigi kontrol edilir
+        assert len(resp.json['objects']) == 1
+
+        # Satin almaya uygun butce kalemleri sayisi alinir.
         butce_kalem_sayisi = BAPButcePlani.objects.filter(
             ilgili_proje=proje, satin_alma_durum=1).count()
 
+        # Ekle butonu ile ekleme adimina gelinir.
+        resp = self.client.post(cmd='ekle')
+
+        # Satin almaya uygun butce kalem sayisi kontrol edilir.
         assert len(resp.json['forms']['model']['Kalem']) == butce_kalem_sayisi
 
         form = {
@@ -55,14 +63,19 @@ class TestCase(BaseTestCase):
             "tamam": 1
         }
 
+        # Hic butce kalemi secilmeden submit edilir.
         resp = self.client.post(form=form, cmd='tamam')
 
+        # Hic butce kalemi secilmediginde uyari cikmasi kontrol edilir.
         assert "msgbox" in resp.json
 
+        # Ilk butce kalemi secilir.
         form['Kalem'][0]['sec'] = True
 
+        # Form submit edilir.
         self.client.post(form=form, cmd='tamam')
 
+        # Satin alma talep formu doldurulur
         form = {
             "aciklama": "asd",
             "ekleyen": "UJmuvhQ32fWfxXYuUkoS9gFHfrw",
@@ -74,20 +87,30 @@ class TestCase(BaseTestCase):
             "yurutucu": "G2XjlaJMX0FUZX84aoIeiVCqZMR"
         }
 
+        # Form submit edilir.
         resp = self.client.post(form=form, cmd='kaydet')
 
+        # Satin alma talebinin basarili oldugu kontrol edilir.
         assert resp.json['forms']['form'][0]['helpvalue'] == _(
             u"Satın alma talebi başarıyla oluşturuldu.")
 
+        # Form submit edilir.
         self.client.post(form={"tamam": 1})
 
+        # Satin alma is akisina tekrar donulur.
         resp = self.client.post(cmd='satin_alma', object_id='b5avq6Tc6jHuKf9z2kizPFK3nc')
+
+        assert len(resp.json['objects']) == 2
+
+        resp = self.client.post(cmd='ekle')
 
         assert len(resp.json['forms']['model']['Kalem']) == butce_kalem_sayisi - 1
 
-        BAPSatinAlma.objects.get(ekleyen_id="UJmuvhQ32fWfxXYuUkoS9gFHfrw",
-                                 aciklama="asd", ad="Başlık").blocking_delete()
+        resp = self.client.post(cmd='listeye_don')
 
-        butce = BAPButcePlani.objects.get('8W16zg1iEvrrbQXRpM4JFw3oR62')
-        butce.satin_alma_durum = 1
-        butce.blocking_save()
+        key = resp.json['objects'][1]['key']
+
+        resp = self.client.post(cmd='sil', satin_alma=key)
+
+        # Hic satin alma olmadigi kontrol edilir
+        assert len(resp.json['objects']) == 1
