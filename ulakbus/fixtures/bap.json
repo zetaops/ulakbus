@@ -316,6 +316,10 @@
     }
   },
   "bap_butce_plani_satin_alma_durumu": {
+    "0": {
+      "tr": "Satın Alma İlanına Müsait Değil",
+      "en": ""
+    },
     "1": {
       "tr": "Satın Alma İlanına Müsait",
       "en": ""
