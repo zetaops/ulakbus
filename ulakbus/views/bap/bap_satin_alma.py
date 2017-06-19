@@ -3,6 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.views.bap.bap_proje_degerlendirme_goruntule import catalog_to_dict
 from pyoko import ListNode
 from ulakbus.models import AbstractRole
 from ulakbus.models import BAPButcePlani, BAPProje
@@ -10,6 +11,7 @@ from ulakbus.models import BAPSatinAlma
 from ulakbus.models import Personel
 from ulakbus.models import Role
 from zengine.forms import JsonForm
+from zengine.lib.catalog_data import catalog_data_manager
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from zengine.forms import fields
@@ -18,6 +20,9 @@ import datetime
 
 
 class ButceKalemleriForm(JsonForm):
+    """
+    Bütçe kalemlerinin gösterildiği formdur.
+    """
     class Meta:
         title = __(u"Bütçe Kalemleri")
         inline_edit = ['sec']
@@ -37,6 +42,9 @@ class ButceKalemleriForm(JsonForm):
 
 
 class SatinAlmaTalebiForm(JsonForm):
+    """
+    Satın alma talebi alanlarının alındığı, koordinasyon biriminin dolduracağı formdur.
+    """
     class Meta:
         title = __(u"Satın Alma Talebi")
 
@@ -47,14 +55,16 @@ class SatinAlmaTalebiForm(JsonForm):
     son_teklif_tarihi = fields.DateTime(u"Son Teklif Tarihi")
     ekleyen = fields.String(u"Ekleyen")
     aciklama = fields.Text(u"Açıklama", required=False)
-
-
     iptal_satin_alma = fields.Button(_(u"İptal Et ve Satın Alma Listesine Dön"), cmd='listeye_don',
                                      form_validation=False)
     kaydet = fields.Button(_(u"Kaydet"), cmd='kaydet')
 
 
 class BAPSatinAlmaView(CrudView):
+    """
+    Koordinasyon biriminin satın alma talebi yapılan projeler üzerinde çalıştırdığı, yapılan satın
+    alma taleplerini görüntülediği, uygun bulduklarını satın almaya çıkardığı iş akışıdır.
+    """
 
     def __init__(self, current):
         CrudView.__init__(self, current)
@@ -63,6 +73,12 @@ class BAPSatinAlmaView(CrudView):
             del self.current.task_data['object_id']
 
     def satin_almalari_listele(self):
+        """
+        Projenin varsa önceki satın almaları listelenir. Satın almalar düzenlenip silinebilir.
+        Yoksa yeni satın alma eklenebilir. Yeni satın alma eklenirken mevcut bütçe kalemleri içinden
+        koordinasyon birimi kullanıcısının seçtiği bir veya daha fazla bütçe kalemi alınıp satın
+        alma oluşturulur.
+        """
         self.current.task_data['obj_id'] = self.input.get('object_id') or \
                                            self.current.task_data['obj_id']
         proje = BAPProje.objects.get(self.current.task_data['obj_id'])
@@ -73,11 +89,13 @@ class BAPSatinAlmaView(CrudView):
         self.output['objects'] = [[_(u'Ad'), _(u'Teklife Açılma Tarihi'),
                                    _(u"Teklife Kapanma Tarihi"), _(u"Durum")], ]
 
+        d = catalog_to_dict(catalog_data_manager.get_all('bap_satin_alma_durum'))
+
         for s in satin_almalar:
             tat = s.teklife_acilma_tarihi.strftime(DATETIME_DEFAULT_FORMAT)
             tkt = s.teklife_kapanma_tarihi.strftime(DATETIME_DEFAULT_FORMAT)
             list_item = {
-                "fields": [s.ad, tat, tkt, s.teklif_durum],
+                "fields": [s.ad, tat, tkt, d[s.teklif_durum]],
                 "actions": [
                     {'name': _(u'Düzenle'), 'cmd': 'edit', 'show_as': 'button',
                      'object_key': 'satin_alma'},
@@ -93,6 +111,10 @@ class BAPSatinAlmaView(CrudView):
         self.form_out(form)
 
     def satin_alma_sil(self):
+        """
+        Eklenen satın almanın silindiği adımdır. Satın alma silinirken, satın almaya eklenen bütçe
+         kalemlerinin durumları da önceki haline getirilir.
+        """
         satin_alma = BAPSatinAlma.objects.get(self.input.get('satin_alma'))
         for bk in satin_alma.ButceKalemleri:
             butce_key = bk.butce.key
@@ -102,6 +124,9 @@ class BAPSatinAlmaView(CrudView):
         satin_alma.blocking_delete()
 
     def satin_alma_duzenle(self):
+        """
+        Satın alma ilanının düzenlendiği adımdır. Satın alma duyurusuna çıkacak alanlar düzenlenir.
+        """
         self.current.task_data['satin_alma_id'] = self.input.get('satin_alma')
         satin_alma = BAPSatinAlma.objects.get(self.input.get('satin_alma'))
         proje = BAPProje.objects.get(self.current.task_data['obj_id'])
@@ -123,6 +148,9 @@ class BAPSatinAlmaView(CrudView):
         self.form_out(form)
 
     def duzenleme_kaydet(self):
+        """
+        Satın alma düzenlemesinin kaydedildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['obj_id'])
         satin_alma = BAPSatinAlma.objects.get(self.current.task_data.pop('satin_alma_id'))
         talep_form = self.current.task_data['SatinAlmaTalebiForm']
@@ -143,6 +171,9 @@ class BAPSatinAlmaView(CrudView):
         satin_alma.blocking_save()
 
     def butce_kalemleri_sec_goster(self):
+        """
+        Satın almaya çıkarılacak bütçe kalemlerinin seçildiği adımdır.
+        """
         msg = self.current.task_data.pop('uyari_mesaji', None)
         if msg:
             self.current.output['msgbox'] = {
@@ -170,6 +201,11 @@ class BAPSatinAlmaView(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def secimi_kontrol_et(self):
+        """
+        Bütçe kalemleri seçilip seçilmediğini kontrol eden adımdır. Eğer hiç bütçe kalemi
+        seçilmediyse bütçe kalemi seçilmesine dair bir uyarı ile bütçe kalemi seçimi adımına döner.
+         Eğer en az bir bütçe kalemi seçildiyse, satın alma talebi oluşturma adımına devam edilir.
+        """
         kalemler = self.input['form']['Kalem']
         for kalem in kalemler:
             if kalem['sec']:
@@ -181,6 +217,10 @@ class BAPSatinAlmaView(CrudView):
             self.current.task_data['cmd'] = 'gecersiz'
 
     def satin_alma_talebi_olustur(self):
+        """
+        Satın alma duyurusunda gösterilecek alanların ve satın alma bilgilerinin doldurulduğu
+        adımdır.
+        """
         obj_id = self.current.task_data['obj_id']
         proje = BAPProje.objects.get(obj_id)
         form = SatinAlmaTalebiForm()
@@ -191,8 +231,8 @@ class BAPSatinAlmaView(CrudView):
         role_list = Role.objects.filter(abstract_role=ar)
         personel_list = [Personel.objects.get(user=rr.user()) for rr in role_list]
         form.set_choices_of('ekleyen', choices=[(p.key, p.__unicode__()) for p in personel_list])
-        # form.set_default_of('ekleyen',
-        #                     default=Personel.objects.get(user_id=self.current.user_id).key)
+        form.set_default_of('ekleyen',
+                            default=Personel.objects.get(user_id=self.current.user_id).key)
         form.iptal = fields.Button(_(u"İptal Et ve Proje Listesine Dön"), cmd='iptal',
                                    form_validation=False)
         form.geri = fields.Button(_(u"İptal Et ve Bütçe Kalemlerine Dön"), cmd='geri',
@@ -200,6 +240,9 @@ class BAPSatinAlmaView(CrudView):
         self.form_out(form)
 
     def satin_alma_talebi_kaydet(self):
+        """
+        Satın alma talebinin kaydedildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['obj_id'])
         satin_alma = BAPSatinAlma()
         kalemler = self.current.task_data['ButceKalemleriForm']['Kalem']
@@ -227,6 +270,9 @@ class BAPSatinAlmaView(CrudView):
         satin_alma.blocking_save()
 
     def basari_mesaji_goster(self):
+        """
+        Satın alma talebinin tamamlandığını gösteren adımdır.
+        """
         form = JsonForm(title=_(u"Satın Alma Talebi"))
         form.help_text = _(u"Satın alma talebi başarıyla oluşturuldu.")
         form.tamam = fields.Button(_(u"Tamam"))
