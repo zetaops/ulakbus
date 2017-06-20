@@ -182,7 +182,7 @@ class BAPSatinAlmaView(CrudView):
                 "msg": msg}
 
         butce_planlari = BAPButcePlani.objects.filter(
-            ilgili_proje_id=self.current.task_data['obj_id'], satin_alma_durum=1)
+            ilgili_proje_id=self.current.task_data['obj_id'], satin_alma_durum=2)
 
         form = ButceKalemleriForm()
         form.help_text = _(u"Satın alma talebi oluşturulacak bütçe kalemleri seçilmelidir.")
@@ -193,7 +193,7 @@ class BAPSatinAlmaView(CrudView):
                 adet=bp.adet,
                 alim_kalemi_sartnamesi="",
                 genel_sartname="",
-                butce_plan_key=bp.key
+                butce_plan_key=bp.key,
             )
 
         self.form_out(form)
