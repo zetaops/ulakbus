@@ -316,27 +316,19 @@
     }
   },
   "bap_butce_plani_satin_alma_durumu": {
-    "0": {
-      "tr": "Komisyon Onayı Bekliyor",
-      "en": ""
-    },
     "1": {
-      "tr": "Komisyon Tarafından Onaylandı",
-      "en": ""
-    },
-    "2": {
       "tr": "Öğretim Üyesi Tarafından Satın Alma Talebi Yapıldı",
       "en": ""
     },
-    "3": {
+    "2": {
       "tr": "Satın Alma İlanında",
       "en": ""
     },
-    "4": {
+    "3": {
       "tr": "Teslim Alma Sürecinde",
       "en": ""
     },
-    "5": {
+    "4": {
       "tr": "Teslim Alındı",
       "en": ""
     }

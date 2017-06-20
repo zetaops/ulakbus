@@ -143,7 +143,7 @@ class BasvuruListeleme(CrudView):
         if obj.durum == 5:
             butceler = BAPButcePlani.objects.filter(ilgili_proje=obj)
             for butce in butceler:
-                if butce.satin_alma_durum == 2:
+                if butce.satin_alma_durum == 1:
                     result['actions'].append(
                         {'name': _(u'Satın Alma'), 'cmd': 'satin_alma', 'mode': 'normal',
                          'show_as': 'button'}

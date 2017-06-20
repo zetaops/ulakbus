@@ -3,6 +3,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from collections import OrderedDict
+
 from ulakbus.views.bap.bap_proje_degerlendirme_goruntule import catalog_to_dict
 from pyoko import ListNode
 from ulakbus.models import AbstractRole
@@ -101,6 +103,8 @@ class BAPSatinAlmaView(CrudView):
                      'object_key': 'satin_alma'},
                     {'name': _(u'Sil'), 'cmd': 'sil', 'show_as': 'button',
                      'object_key': 'satin_alma'},
+                    {'name': _(u'Detay Göster'), 'cmd': 'goster', 'show_as': 'button',
+                     'object_key': 'satin_alma'},
                 ],
                 "key": s.key
             }
@@ -170,6 +174,49 @@ class BAPSatinAlmaView(CrudView):
 
         satin_alma.blocking_save()
 
+    def satin_alma_detay_goster(self):
+        """
+        Satın Almanın detaylı olarak gösterildiği adımdır.
+        """
+
+        satin_alma = BAPSatinAlma.objects.get(self.input.get('satin_alma'))
+        d = catalog_to_dict(catalog_data_manager.get_all('bap_satin_alma_durum'))
+        satin_alma_bilgileri = OrderedDict([
+            (_(u"Satın Alma Başlığı"), satin_alma.ad),
+            (_(u"Teklife Açılma Tarihi"),
+             satin_alma.teklife_acilma_tarihi.strftime(DATETIME_DEFAULT_FORMAT)),
+            (_(u"Teklife Kapanma Tarihi"),
+             satin_alma.teklife_kapanma_tarihi.strftime(DATETIME_DEFAULT_FORMAT)),
+            (_(u"Sonuçlanma Tarihi"),
+             satin_alma.sonuclanma_tarihi.strftime(DATE_DEFAULT_FORMAT) if
+             satin_alma.sonuclanma_tarihi else ""),
+            (_(u"Onay Tarih/Sayı"), satin_alma.onay_tarih_sayi),
+            (_(u"Ekleyen"), satin_alma.ekleyen().__unicode__()),
+            (_(u"Açıklama"), satin_alma.aciklama),
+            (_(u"Teklif Durum"), d[satin_alma.teklif_durum]),
+            (_(u"Ait Olduğu Proje"), satin_alma.ilgili_proje().__unicode__())
+        ])
+        form = JsonForm(title=_(u"%s Başılklı Satın Alma Detayları" % satin_alma.__unicode__()))
+        form.geri = fields.Button(_(u"Geri"))
+        self.form_out(form)
+        # self.output['object'] = satin_alma_bilgileri
+
+        self.current.output['meta']['allow_actions'] = False
+        self.output['objects'] = [[_(u'Ad'), _(u'Adet'), _(u'Alım Kalemi Şartnamesi'),
+                                   _(u'Genel Şartname')]]
+        for bk in satin_alma.ButceKalemleri:
+            ad = bk.butce.ad
+            adet = str(bk.butce.adet)
+            alim_kalemi_sartnamesi = ""
+            genel_sartname = ""
+            list_item = {
+                "fields": [ad, adet, alim_kalemi_sartnamesi, genel_sartname],
+                "actions": [],
+            }
+            self.output['objects'].append(list_item)
+        self.output['object'] = satin_alma_bilgileri
+
+
     def butce_kalemleri_sec_goster(self):
         """
         Satın almaya çıkarılacak bütçe kalemlerinin seçildiği adımdır.
@@ -182,7 +229,7 @@ class BAPSatinAlmaView(CrudView):
                 "msg": msg}
 
         butce_planlari = BAPButcePlani.objects.filter(
-            ilgili_proje_id=self.current.task_data['obj_id'], satin_alma_durum=2)
+            ilgili_proje_id=self.current.task_data['obj_id'], satin_alma_durum=1)
 
         form = ButceKalemleriForm()
         form.help_text = _(u"Satın alma talebi oluşturulacak bütçe kalemleri seçilmelidir.")
