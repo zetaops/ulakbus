@@ -350,5 +350,15 @@
       "tr": "Proje Değerlendirildi",
       "en": ""
     }
+  },
+  "bap_rapor_turu": {
+    "1": {
+      "tr": "Dönem Raporu",
+      "en": ""
+    },
+    "2": {
+      "tr": "Sonuç Raporu",
+      "en": ""
+    }
   }
 }

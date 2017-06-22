@@ -434,8 +434,8 @@ class BAPRapor(Model):
         verbose_name_plural = __(u"Proje Raporları")
 
     proje = BAPProje()
-    # add rapor turu
-    rapor = field.File(_(u"Proje Raporu"), random_name=True, required=True)
+    tur = field.Integer(__(u"Rapor Türü"), choices='bap_rapor_turu')
+    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=True, required=True)
 
     def __unicode__(self):
-        return "%s-%s" % (self.proje.ad, self.satin_alma.ad)
+        return "%s-%s" % (self.proje.ad, self.get_tur_display())
