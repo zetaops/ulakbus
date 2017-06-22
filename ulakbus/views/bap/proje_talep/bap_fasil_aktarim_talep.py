@@ -11,6 +11,7 @@ from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
 from zengine.views.crud import CrudView, list_query, obj_filter
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
+import json
 
 
 class FasilAktarimTalep(CrudView):
@@ -86,7 +87,7 @@ class FasilAktarimTalep(CrudView):
                            str(toplam_fiyat) if toplam_fiyat else str(butce.toplam_fiyat),
                            self.current.task_data['fasil_islemleri'][butce.key]['durum']],
                 "actions": [{'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal',
-                            'show_as': 'button'},
+                             'show_as': 'button'},
                             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
                              'show_as': 'button'} if 'onay' not in self.current.task_data else {}],
                 'key': butce.key
@@ -209,7 +210,7 @@ class FasilAktarimTalep(CrudView):
     def talep_kontrol(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Ek bütçe talebi") % \
-                                       (proje.yurutucu, proje.ad)
+                                      (proje.yurutucu, proje.ad)
         self.output['objects'] = [['Kalem Adı', 'Eski Birim Fiyat', 'Yeni Birim Fiyat',
                                    'Eski Toplam Fiyat', 'Yeni Toplam Fiyat']]
         for key, talep in self.current.task_data['fasil_islemleri'].iteritems():
@@ -220,7 +221,7 @@ class FasilAktarimTalep(CrudView):
                            str(talep['eski_toplam_fiyat']),
                            str(talep['yeni_toplam_fiyat'])],
                 "actions": [{'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal',
-                            'show_as': 'button'}],
+                             'show_as': 'button'}],
                 'key': key
             }
             self.output['objects'].append(item)
@@ -234,7 +235,7 @@ class FasilAktarimTalep(CrudView):
     def talep_detay_goster(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s / Kalem: %s") % \
-                                       (proje.yurutucu, proje.ad, self.object)
+                                      (proje.yurutucu, proje.ad, self.object)
 
         data = self.current.task_data['fasil_islemleri'][self.object.key]
 
@@ -266,12 +267,42 @@ class FasilAktarimTalep(CrudView):
 
     def komisyona_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+
+        butce_farki = 0
+        degisen_kalemler_aciklama = []
+        for k, v in self.current.task_data['fasil_islemleri'].items():
+            if not v['degisiklik']:
+                del self.current.task_data['fasil_islemleri'][k]
+            else:
+                butce_farki += (v['yeni_toplam_fiyat'] - v['eski_toplam_fiyat'])
+                degisen_kalemler_aciklama.append(
+                    "KALEM ADI:{}, ESKi ADET:{}, ESKİ BİRİM FİYAT:{}, ESKİ TOPLAM FİYAT:{}, "
+                    "YENİ ADET:{}, YENİBİRİM FİYAT:{}, YENİ TOLAM FİYAT:{}, "
+                    "KALEM DEĞİŞİKLİK AÇIKLAMASI:{}".format(
+                        v['ad'], v['eski_adet'], v['eski_birim_fiyat'],
+                        v['eski_toplam_fiyat'], v['yeni_adet'],
+                        v['yeni_birim_fiyat'],
+                        v['yeni_toplam_fiyat'], v['aciklama']))
+
+        eski_toplam_butce = BAPButcePlani.proje_butcesi_bul(proje)
+        fasil_bilgileri = {"kabul_edilen_butce": proje.kabul_edilen_butce,
+                           "eski_toplam_butce": eski_toplam_butce,
+                           "yeni_toplam_butce": eski_toplam_butce + butce_farki}
+
+        kalem_aciklama = ', '.join(degisen_kalemler_aciklama)
+        koordinasyon_aciklama = "Koordinasyon Birimi Açıklaması:{}".format(
+            self.input['form']['komisyon_aciklama'])
+
+        fasil_bilgileri['degisen_kalemler_aciklama'] = kalem_aciklama
+        fasil_bilgileri.update({'degisen_kalemler': self.current.task_data['fasil_islemleri']})
+
         gundem = BAPGundem()
         gundem.proje = proje
         gundem.gundem_tipi = 3
-        gundem.gundem_aciklama = self.input['form']['komisyon_aciklama']
+        gundem.gundem_aciklama = ', '.join([koordinasyon_aciklama, kalem_aciklama])
+        gundem.gundem_ekstra_bilgiler = json.dumps(fasil_bilgileri)
         gundem.save()
-        proje.durum = 4     # Komisyon Onayı Bekliyor
+        proje.durum = 4  # Komisyon Onayı Bekliyor
         proje.save()
         self.current.task_data['onaylandi'] = 1
 

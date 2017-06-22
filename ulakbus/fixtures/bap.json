@@ -171,6 +171,28 @@
     "6": {
       "tr": "Komisyon Tarafından Reddedildi",
       "en": ""
+    },
+    "7": {
+      "tr": "Komisyon Tarafından Öğretim Üyesine Düzenleme Talebiyle Gönderildi",
+      "en": ""
+    },
+    "8": {
+      "tr": "Komisyon Tarafından İptal Edildi",
+      "en": ""
+    }
+  },
+  "bap_butce_kalemi_durum": {
+    "1": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "2": {
+      "tr": "Onaylandı",
+      "en": ""
+    },
+    "3": {
+      "tr": "Reddedildi",
+      "en": ""
     }
   },
   "bap_komisyon_gundemleri": {

@@ -279,7 +279,7 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
-
+    kalem_durum = field.Integer(__(u"Değerlendirme Durum"), choices='bap_butce_kalemi_durum')
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
 
@@ -299,13 +299,16 @@ class BAPGundem(Model):
     proje = BAPProje()
     gundem_tipi = field.Integer(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
     gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
-    oturum_numarasi = field.Integer(__(u"Oturum Numarası"))
+    oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
     oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
-    karar_no = field.String(__(u"Karar No"), '')
+    karar_no = field.Integer(__(u"Karar No"), default=0)
     karar = field.Integer(__(u"Karar"), choices='bap_gundem_kararlari', default=1)
     karar_metni = field.Text(__(u"Karar Metni"))
+    karar_gerekcesi = field.Text(
+        __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"))
     karar_tarihi = field.Date(__(u"Karar Tarihi"))
     sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
+    gundem_ekstra_bilgiler = field.String(__(u"Gündem Ekstra Bilgileri"))
 
     def _proje_adi(self):
         return "%s" % self.proje.ad
@@ -423,3 +426,16 @@ class BAPTeklif(Model):
 
     def __unicode__(self):
         return "%s-%s" % (self.firma.ad, self.satin_alma.ad)
+
+
+class BAPRapor(Model):
+    class Meta:
+        verbose_name = __(u"Proje Rapor")
+        verbose_name_plural = __(u"Proje Raporları")
+
+    proje = BAPProje()
+    # add rapor turu
+    rapor = field.File(_(u"Proje Raporu"), random_name=True, required=True)
+
+    def __unicode__(self):
+        return "%s-%s" % (self.proje.ad, self.satin_alma.ad)

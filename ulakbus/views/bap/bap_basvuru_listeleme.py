@@ -11,6 +11,7 @@ from zengine.models import TaskInvitation, WFInstance
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from datetime import datetime, timedelta
+from ulakbus.lib.common import is_akisini_belli_bir_adimdan_aktif_et
 
 
 class ProjeIslemGecmisiForm(JsonForm):
@@ -78,37 +79,16 @@ class BasvuruListeleme(CrudView):
         katılması ve projeyi revizyon etmesi sağlanır.
 
         """
-
         role = self.object.basvuru_rolu
-        today = datetime.today()
-
-        wfi = WFInstance.objects.get(wf_object=self.object.key, finished=True)
-        wfi.finished = False
-        wfi.data['karar'] = self.current.task_data['karar']
-        wfi.data['revizyon_gerekce'] = self.current.task_data['revizyon_gerekce']
-        wfi.step = '"bap_revizyon_noktasi", 1'
-        wfi.blocking_save()
-
-        cache.delete(wfi.key)
-
-        role.send_notification(title=_(u"Proje Revizyon İsteği"),
-                               message=_(u"""%s adlı başvurunuza koordinasyon birimi tarafından
-                               revizyon istenmiştir. Aşağıda bulunan linke tıklayarak revizyon
-                               işlemine devam edebilirsiniz.""" % self.object.ad),
-                               typ=1,
-                               url='#/cwf/bap_proje_basvuru/%s' % wfi.key,
-                               sender=self.current.user
-                               )
-        inv = TaskInvitation(
-            instance=wfi,
-            role=role,
-            wf_name=wfi.wf.name,
-            progress=30,
-            start_date=today,
-            finish_date=today + timedelta(15)
-        )
-        inv.title = wfi.wf.title
-        inv.save()
+        data = {'karar': self.current.task_data['karar'],
+                'revizyon_gerekce': self.current.task_data['revizyon_gerekce']}
+        step = '"bap_revizyon_noktasi", 1'
+        title = _(u"Proje Revizyon İsteği")
+        message = _(u"""%s adlı başvurunuza koordinasyon birimi tarafından revizyon istenmiştir. 
+        Görev yöneticinizden ilgili isteğe ulaşabilir, proje revizyonunu gerçekleştirebilirsiniz."""
+                    % self.object.ad)
+        sender = self.current.user
+        is_akisini_belli_bir_adimdan_aktif_et(role, self.object, data, step, title, message, sender)
 
     def karar_sonrasi_islem_mesaji(self):
         """

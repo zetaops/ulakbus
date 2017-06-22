@@ -5,12 +5,11 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from collections import defaultdict
-
 from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
-
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _
+import json
 
 
 class EkButceTalep(CrudView):
@@ -88,7 +87,7 @@ class EkButceTalep(CrudView):
                     if butce.durum not in [2, 4] else str(butce.toplam_fiyat),
                     durum],
                 "actions": [{'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal',
-                            'show_as': 'button'},
+                             'show_as': 'button'},
                             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
                              'show_as': 'button'},
                             {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal',
@@ -172,7 +171,7 @@ class EkButceTalep(CrudView):
                          u'değişiklikler yapmalısınız.')}
         else:
             proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-            proje.durum = 2     # koordinasyon birimi onayi bekleniyor.
+            proje.durum = 2  # koordinasyon birimi onayi bekleniyor.
             proje.save()
 
     def sonuc(self):
@@ -189,11 +188,10 @@ class EkButceTalep(CrudView):
     def ek_butce_talep_kontrol(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Ek bütçe talebi") % \
-                                       (proje.yurutucu, proje.ad)
+                                      (proje.yurutucu, proje.ad)
         self.output['objects'] = [['Kod Adi', 'Ad', 'Eski Toplam Fiyati', 'Yeni Toplam Fiyati',
                                    'Durum']]
         for key, talep in self.current.task_data['yeni_butceler'].iteritems():
-            
             item = {
                 "fields": [talep['kod_ad'],
                            talep['ad'],
@@ -201,7 +199,7 @@ class EkButceTalep(CrudView):
                            str(talep['yeni_toplam_fiyat']),
                            talep['durum']],
                 "actions": [{'name': _(u'Göster'), 'cmd': 'goster', 'mode': 'normal',
-                            'show_as': 'button'}],
+                             'show_as': 'button'}],
                 'key': key
             }
             self.output['objects'].append(item)
@@ -214,7 +212,7 @@ class EkButceTalep(CrudView):
     def talep_detay_goster(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s / Kalem: %s") % \
-                                       (proje.yurutucu, proje.ad, self.object)
+                                      (proje.yurutucu, proje.ad, self.object)
 
         data = self.current.task_data['yeni_butceler'][self.object.key]
 
@@ -240,20 +238,57 @@ class EkButceTalep(CrudView):
 
     def kabul_et_ve_komisyona_yolla(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        ek_butce_aciklama = []
+        butce_farki = 0
+        for k, v in self.current.task_data['yeni_butceler'].items():
+            if v['durum'] == 'Düzenlenmedi':
+                del self.current.task_data['yeni_butceler'][k]
+                continue
+            ek_butce_aciklama.append(
+                "İŞLEM:{}, KALEM ADI:{}, ESKi ADET:{}, ESKİ BİRİM FİYAT:{}, ESKİ TOPLAM FİYAT:{}, "
+                "YENİ ADET:{}, YENİ BİRİM FİYAT:{}, YENİ TOPLAM FİYAT:{}"
+                    .format(v['durum'],
+                            v['ad'], v['eski_adet'],
+                            v['eski_birim_fiyat'],
+                            v['eski_toplam_fiyat'], v['yeni_adet'],
+                            v['yeni_birim_fiyat'],
+                            v['yeni_toplam_fiyat']))
+            if v['durum'] == 'Düzenlendi':
+                butce_farki += (v['yeni_toplam_fiyat'] - v['eski_toplam_fiyat'])
+            elif v['durum'] == 'Silinecek':
+                butce_farki -= v['eski_toplam_fiyat']
+            else:
+                butce_farki += v['yeni_toplam_fiyat']
+
+        eski_toplam_butce = BAPButcePlani.proje_butcesi_bul(proje)
+        ek_butce_bilgileri = {"kabul_edilen_butce": proje.kabul_edilen_butce,
+                              "eski_toplam_butce": eski_toplam_butce,
+                              "yeni_toplam_butce": eski_toplam_butce + butce_farki}
+
+        kalem_aciklama = ', '.join(ek_butce_aciklama)
+        koordinasyon_aciklama = "KOORDİNASYON BİRİMİ AÇIKLAMASI:{}".format(
+            self.input['form']['komisyon_aciklama'])
+
+        ek_butce_bilgileri['degisen_kalemler_aciklama'] = kalem_aciklama
+        ek_butce_bilgileri.update({'degisen_kalemler': self.current.task_data['yeni_butceler']})
+
         gundem = BAPGundem()
         gundem.proje = proje
         gundem.gundem_tipi = 2
-        gundem.gundem_aciklama = self.input['form']['komisyon_aciklama']
+        gundem.gundem_aciklama = ', '.join([koordinasyon_aciklama, kalem_aciklama])
+        gundem.gundem_ekstra_bilgiler = json.dumps(ek_butce_bilgileri)
         gundem.save()
-        proje.durum = 4     # Komisyon Onayı Bekliyor
+        proje.durum = 4  # Komisyon Onayı Bekliyor
         proje.save()
         self.current.task_data['onaylandi'] = 1
+
 
     def reddet_ve_aciklama_yaz(self):
         form = JsonForm(title=_(u"Red Açıklaması Yazınız"))
         form.red_aciklama = fields.Text(_(u"Red Açıklaması"))
         form.red_gonder = fields.Button(_(u"Gönder"))
         self.form_out(form)
+
 
     def bilgilendir(self):
         if 'red_aciklama' in self.input['form']:
@@ -266,6 +301,7 @@ class EkButceTalep(CrudView):
             self.current.task_data['onay'] = "Ek bütçe için bulunduğunuz talep kabul edilmiş " \
                                              "olup, komisyonun gündemine alınmıştır."
 
+
     # ---------------------------------------
 
     @obj_filter
@@ -274,6 +310,7 @@ class EkButceTalep(CrudView):
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'}]
+
 
     @list_query
     def list_by_bap_proje_id(self, queryset):
