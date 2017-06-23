@@ -8,12 +8,7 @@ from ulakbus.models import BAPProje, BAPButcePlani, BAPSatinAlma, BAPRapor, Okut
 from zengine.views.crud import CrudView, obj_filter
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
-from ulakbus.lib.komisyon_sonrasi_adimlar import KomisyonKarariSonrasiAdimlar
-
-gundem_kategori = {1: 'proje_basvurusu', 2: 'ek_butce_talebi',
-                   3: 'fasil_aktarim_talebi', 4: 'ek_sure_talebi',
-                   5: 'proje_sonuc_raporu', 6: 'proje_donem_raporu',
-                   7: 'proje_iptal_talebi', 8: 'yurutucu_degisikligi'}
+from ulakbus.lib.komisyon_sonrasi_adimlar import KomisyonKarariSonrasiAdimlar, gundem_kararlari
 
 
 class YeniGundemForm(JsonForm):
@@ -55,8 +50,8 @@ class Gundem(CrudView):
         form.exclude = ['proje', 'gundem_tipi', 'sonuclandi']
         form.kaydet = fields.Button(_(u"Kaydet"), cmd='save')
         form.iptal = fields.Button(_(u"Geri Dön"), form_validation=False)
-        if self.object.sonuclandi:
-            form._model._fields['karar'].kwargs['read_only'] = True
+        form._model._fields['karar'].choices = gundem_kararlari[self.object.gundem_tipi]['kararlar']
+        form._model._fields['karar'].default = gundem_kararlari[self.object.gundem_tipi]['default']
         self.form_out(_form=form)
 
     def duzenleme_mesaji_olustur(self):
@@ -78,8 +73,8 @@ class Gundem(CrudView):
         del self.output['object'][u'Gündem Ekstra Bilgileri']
 
     def ilgili_methodu_cagir(self):
-        method = '_'.join(
-            [gundem_kategori[self.object.gundem_tipi], self.object.get_karar_display().lower()])
+        kararlar = gundem_kararlari[self.object.gundem_tipi]
+        method = '_'.join([kararlar['tip_adi'], self.object.karar])
         getattr(KomisyonKarariSonrasiAdimlar(self.object, self.current.user), method)()
 
     def komisyon_kararini_ilet(self):

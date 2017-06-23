@@ -8,9 +8,7 @@ from ulakbus.models.form import Form
 from ulakbus.models import Room, Personel, Role, User
 from ulakbus.models.demirbas import Demirbas
 from pyoko.lib.utils import lazy_property
-
 from zengine.lib.translation import gettext_lazy as __, gettext as _
-
 from pyoko import Model, field, ListNode
 
 
@@ -278,8 +276,8 @@ class BAPButcePlani(Model):
     gerekce = field.Text(__(u"Gerekçe"))
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
-    durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
-    kalem_durum = field.Integer(__(u"Değerlendirme Durum"), choices='bap_butce_kalemi_durum')
+    durum = field.Integer(__(u"Durum"), choices='bap_butce_kalemi_durum', default=1)
+
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
 
@@ -302,7 +300,7 @@ class BAPGundem(Model):
     oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
     oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
     karar_no = field.Integer(__(u"Karar No"), default=0)
-    karar = field.Integer(__(u"Karar"), choices='bap_gundem_kararlari', default=1)
+    karar = field.String(__(u"Karar"), choices='')
     karar_metni = field.Text(__(u"Karar Metni"))
     karar_gerekcesi = field.Text(
         __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"))
@@ -435,7 +433,8 @@ class BAPRapor(Model):
 
     proje = BAPProje()
     tur = field.Integer(__(u"Rapor Türü"), choices='bap_rapor_turu')
-    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=True, required=True)
+    durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum')
+    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=True)
 
     def __unicode__(self):
         return "%s-%s" % (self.proje.ad, self.get_tur_display())

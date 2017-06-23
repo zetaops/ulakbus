@@ -193,6 +193,10 @@
     "3": {
       "tr": "Reddedildi",
       "en": ""
+    },
+    "4": {
+      "tr": "İptal Edildi",
+      "en": ""
     }
   },
   "bap_komisyon_gundemleri": {
@@ -230,20 +234,6 @@
     },
     "9": {
       "tr": "Diğer",
-      "en": ""
-    }
-  },
-  "bap_gundem_kararlari": {
-    "1": {
-      "tr": "Kabul",
-      "en": ""
-    },
-    "2": {
-      "tr": "Red",
-      "en": ""
-    },
-    "3": {
-      "tr": "Revizyon",
       "en": ""
     }
   },
@@ -348,6 +338,16 @@
     },
     "5": {
       "tr": "Proje Değerlendirildi",
+      "en": ""
+    }
+  },
+  "bap_rapor_durum": {
+    "1": {
+      "tr": "Başarılı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Başarısız",
       "en": ""
     }
   },

@@ -9,9 +9,32 @@ from zengine.lib.translation import gettext as _
 from datetime import datetime
 import json
 
-kalem_degisiklik = {'adet': 'yeni_adet',
-                    'birim_fiyat': 'yeni_birim_fiyat',
-                    'toplam_fiyat': 'yeni_toplam_fiyat'}
+gundem_kararlari = {
+    1: {'tip_adi': 'proje_basvurusu',
+        'kararlar': [('kabul', 'Kabul'), ('red', 'Red'), ('revizyon', 'Revizyon')],
+        'default': 'kabul'},
+    2: {'tip_adi': 'ek_butce_talebi',
+        'kararlar': [('kabul', 'Kabul'), ('red', 'Red')],
+        'default': 'kabul'},
+    3: {'tip_adi': 'fasil_aktarim_talebi',
+        'kararlar': [('kabul', 'Kabul'), ('red', 'Red')],
+        'default': 'kabul'},
+    4: {'tip_adi': 'ek_sure_talebi',
+        'kararlar': [('kabul', 'Kabul'), ('red', 'Red')],
+        'default': 'kabul'},
+    5: {'tip_adi': 'proje_sonuc_raporu',
+        'kararlar': [('basarili', 'Başarılı'), ('basarisiz', 'Başarısız')],
+        'default': 'basarili'},
+    6: {'tip_adi': 'proje_donem_raporu',
+        'kararlar': [('basarili', 'Başarılı'), ('basarisiz', 'Başarısız')],
+        'default': 'basarili'},
+    7: {'tip_adi': 'proje_iptal_talebi',
+        'kararlar': [('kabul', 'Kabul'), ('red', 'Red')],
+        'default': 'kabul'},
+    8: {'tip_adi': 'yurutucu_degisikligi',
+        'kararlar': [('kabul', 'Kabul'), ('red', 'Red')],
+        'default': 'kabul'},
+}
 
 
 class KomisyonKarariSonrasiAdimlar():
@@ -24,13 +47,10 @@ class KomisyonKarariSonrasiAdimlar():
         Projenin durumu komisyon tarafından onaylandı anlamına gelen 5 yapılır.
     
         """
-        self.object.proje.durum = 5
-        self.object.proje.save()
-        # bütçe fişi iş akışını tetikle
-
+        # todo bütçe fişi iş akışını tetikle
         eylem = "Onaylandı"
         aciklama = "Proje, komisyon tarafından {} karar numarası ile onaylandı."
-        self.islem_gecmisi_guncelle(eylem, aciklama)
+        self.islem_gecmisi_guncelle(eylem, aciklama, durum=5)
         self.butce_kalemleri_durum_degistir(durum=2)
 
         bildirim = _(
@@ -44,12 +64,9 @@ class KomisyonKarariSonrasiAdimlar():
         Projenin durumu komisyon tarafından reddedildi anlamına gelen 6 yapılır.
 
         """
-        self.object.proje.durum = 6
-        self.object.proje.save()
-
         eylem = "Reddedildi"
         aciklama = "Proje komisyon tarafından {} karar numarası ile reddedildi."
-        self.islem_gecmisi_guncelle(eylem, aciklama)
+        self.islem_gecmisi_guncelle(eylem, aciklama, durum=6)
         self.butce_kalemleri_durum_degistir(durum=3)
 
         bildirim = _(
@@ -64,12 +81,9 @@ class KomisyonKarariSonrasiAdimlar():
         Öğretim üyesine davet gönderilerek, projesini revize etmesi sağlanır.
 
         """
-        self.object.proje.durum = 7
-        self.object.proje.save()
-
         eylem = "Revizyon"
         aciklama = "Proje, komisyon tarafindan {} karar numarası ile revizyona gonderildi."
-        self.islem_gecmisi_guncelle(eylem, aciklama)
+        self.islem_gecmisi_guncelle(eylem, aciklama, durum=7)
 
         role = self.object.proje.basvuru_rolu
         data = {'karar': 'revizyon',
@@ -93,9 +107,9 @@ class KomisyonKarariSonrasiAdimlar():
             kalem = BAPButcePlani.objects.get(kalem_id)
             if data['durum'] == 'Silinecek':
                 kalem.durum = 3
-            elif data['durum'] == 'Düzenlendi':
-                for k, v in kalem_degisiklik.items():
-                    setattr(kalem, k, data[v])
+            # elif data['durum'] == 'Düzenlendi':
+            #     for k, v in kalem_degisiklik.items():
+            #         setattr(kalem, k, data[v])
             else:
                 kalem.durum = 2
             kalem.save()
@@ -141,9 +155,9 @@ class KomisyonKarariSonrasiAdimlar():
         fasil_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)
         for kalem_id, data in fasil_bilgileri['degisen_kalemler'].items():
             kalem = BAPButcePlani.objects.get(kalem_id)
-            for k, v in kalem_degisiklik.items():
-                setattr(kalem, k, data[v])
-            kalem.save()
+            # for k, v in kalem_degisiklik.items():
+            #     setattr(kalem, k, data[v])
+            # kalem.save()
 
         eylem = "Fasıl Aktarım Talebi Kabulü"
         aciklama = ' '.join([
@@ -210,7 +224,7 @@ class KomisyonKarariSonrasiAdimlar():
 
         self.bildirim_gonder(bildirim)
 
-    def proje_sonuc_raporu_kabul(self):
+    def proje_sonuc_raporu_basarili(self):
         """
         Proje sonuç raporu kabul edildiğinde, proje raporunun durumu değiştirilir.
         Proje geçmişi güncellenir ve öğretim üyesi karar hakkında bilgilendirilir.
@@ -226,7 +240,7 @@ class KomisyonKarariSonrasiAdimlar():
 
         self.bildirim_gonder(bildirim)
 
-    def proje_sonuc_raporu_red(self):
+    def proje_sonuc_raporu_basarisiz(self):
         """
         Proje sonuç raporu reddedildiğinde, proje raporunun durumu değiştirilir.
         Proje geçmişi güncellenir ve öğretim üyesi karar hakkında bilgilendirilir.
@@ -242,23 +256,23 @@ class KomisyonKarariSonrasiAdimlar():
                        self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
         self.bildirim_gonder(bildirim)
 
-    def proje_sonuc_raporu_revizyon(self):
-        """
-        Proje sonuç raporu kabul edildiğinde, proje raporunun durumu değiştirilir.
-        Proje geçmişi güncellenir ve öğretim üyesi karar hakkında bilgilendirilir.
+    # def proje_sonuc_raporu_revizyon(self):
+    #     """
+    #     Proje sonuç raporu kabul edildiğinde, proje raporunun durumu değiştirilir.
+    #     Proje geçmişi güncellenir ve öğretim üyesi karar hakkında bilgilendirilir.
+    #
+    #     """
+    #     self.rapor_durum_degistir(4)
+    #     eylem = 'Proje Sonuç Raporu Kabulü'
+    #     aciklama = "Sonuç raporu komisyon tarafından {} karar numarası ile revizyona gonderildi."
+    #     self.islem_gecmisi_guncelle(eylem, aciklama)
+    #     bildirim = _(
+    #         u"%s adlı projeniz için sunduğunuz sonuç raporu %s karar numarası ile "
+    #         u"komisyon tarafından revizyona gonderilmiştir. Gerekçe: %s") % (
+    #                    self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
+    #     self.bildirim_gonder(bildirim)
 
-        """
-        self.rapor_durum_degistir(4)
-        eylem = 'Proje Sonuç Raporu Kabulü'
-        aciklama = "Sonuç raporu komisyon tarafından {} karar numarası ile revizyona gonderildi."
-        self.islem_gecmisi_guncelle(eylem, aciklama)
-        bildirim = _(
-            u"%s adlı projeniz için sunduğunuz sonuç raporu %s karar numarası ile "
-            u"komisyon tarafından revizyona gonderilmiştir. Gerekçe: %s") % (
-                       self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
-        self.bildirim_gonder(bildirim)
-
-    def proje_donem_raporu_kabul(self):
+    def proje_donem_raporu_basarili(self):
         """
         Proje dönem raporu kabul edildiğinde, proje raporunun durumu değiştirilir.
         Proje geçmişi güncellenir ve öğretim üyesi karar hakkında bilgilendirilir.
@@ -273,7 +287,7 @@ class KomisyonKarariSonrasiAdimlar():
             u"tarafından kabul edilmiştir.") % (self.object.proje.ad, self.object.karar_no)
         self.bildirim_gonder(bildirim)
 
-    def proje_donem_raporu_red(self):
+    def proje_donem_raporu_basarisiz(self):
         """
         Proje dönem raporu reddedildiğinde, proje raporunun durumu değiştirilir.
         Proje geçmişi güncellenir ve öğretim üyesi karar hakkında bilgilendirilir.
@@ -289,30 +303,30 @@ class KomisyonKarariSonrasiAdimlar():
                        self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
         self.bildirim_gonder(bildirim)
 
-    def proje_donem_raporu_revizyon(self):
-        self.rapor_durum_degistir(4)
-        eylem = 'Proje Dönem Raporu Revizyonu'
-        aciklama = "Dönem raporu için komisyon tarafından {} karar numarası ile revizyon istendi."
-        self.islem_gecmisi_guncelle(eylem, aciklama)
-        bildirim = _(u"%s adlı projeniz için sunduğunuz dönem raporu için %s karar numarası ile "
-                     u"komisyon tarafından revizyon istenmiştir. Gerekçe: %s") % (
-                       self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
-        self.bildirim_gonder(bildirim)
+    # def proje_donem_raporu_revizyon(self):
+    #     self.rapor_durum_degistir(4)
+    #     eylem = 'Proje Dönem Raporu Revizyonu'
+    #     aciklama = "Dönem raporu için komisyon tarafından {} karar numarası ile revizyon istendi."
+    #     self.islem_gecmisi_guncelle(eylem, aciklama)
+    #     bildirim = _(u"%s adlı projeniz için sunduğunuz dönem raporu için %s karar numarası ile "
+    #                  u"komisyon tarafından revizyon istenmiştir. Gerekçe: %s") % (
+    #                    self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
+    #     self.bildirim_gonder(bildirim)
 
     def proje_iptal_talebi_kabul(self):
         """
-        Öğretim üyesinin proje iptal talebinin kabulünde, projenin durumu iptal anlamına gelen 8 
-        yapılır. Projeye ait onaylanmış bütçe kalemlerinin durumu geçersiz anlamına gelen 3 yapılır.
+        Öğretim üyesinin proje iptal talebinin kabulünde, projenin durumu 
+        iptal anlamına gelen 8 yapılır. Projeye ait onaylanmış bütçe 
+        kalemlerinin durumu iptal edildi anlamına gelen 4 yapılır.
         
         """
         eylem = "İptal Talebi Kabulü"
         aciklama = "Projenin iptal talebi komisyon tarafından {} karar numarası ile kabul edildi."
-        self.islem_gecmisi_guncelle(eylem, aciklama)
+        self.islem_gecmisi_guncelle(eylem, aciklama, durum=8)
+        self.butce_kalemleri_durum_degistir(4)
 
-        self.object.proje.durum = 8
-        self.object.proje.save()
-
-        self.butce_kalemleri_durum_degistir(3)
+        # todo satin almalari durdur
+        # todo proje gerceklestiricisini iptal et
 
         bildirim = _(
             u"%s adlı projeniz için yapmış olduğunuz iptal talebi %s karar numarası ile komisyon "
@@ -339,8 +353,9 @@ class KomisyonKarariSonrasiAdimlar():
 
     def yurutucu_degisikligi_kabul(self):
         """
-        Yürütücü değişikliği kabulünde, projenin yürütücüsü, talep edilen öğretim üyesi ile 
-        güncellenir. Proje işlem geçmişi güncellenir, talep eden öğretim üyesine bildirim gönderilir.
+        Yürütücü değişikliği kabulünde, projenin yürütücüsü, talep edilen 
+        öğretim üyesi ile güncellenir. Proje işlem geçmişi güncellenir, 
+        talep eden öğretim üyesine bildirim gönderilir.
         
         """
         yurutucu_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)
@@ -353,7 +368,8 @@ class KomisyonKarariSonrasiAdimlar():
         self.object.proje.yurutucu.save()
 
         eylem = "Yürütücü Değişikliği Talebi Kabulü"
-        aciklama = "Yürütücü değişikliği talebi komisyon tarafından {} karar numarası ile kabul edildi"
+        aciklama = "Yürütücü değişikliği talebi komisyon " \
+                   "tarafından {} karar numarası ile kabul edildi"
         self.islem_gecmisi_guncelle(eylem, aciklama)
 
         eski_yurutucu_bildirim = _(
@@ -387,7 +403,7 @@ class KomisyonKarariSonrasiAdimlar():
 
         self.bildirim_gonder(bildirim)
 
-    def islem_gecmisi_guncelle(self, eylem, aciklama):
+    def islem_gecmisi_guncelle(self, eylem, aciklama, durum=None):
         """
         Gönderilen eylem ve açıklama ile, seçilmiş gündemin projesinin işlem geçmişini günceller.
         
@@ -396,8 +412,11 @@ class KomisyonKarariSonrasiAdimlar():
             aciklama(str): İşlemin içeriği
 
         """
+
         self.object.proje.ProjeIslemGecmisi(aciklama=aciklama.format(self.object.karar_no),
                                             eylem=eylem, tarih=datetime.now())
+        if durum:
+            self.object.proje.durum = durum
         self.object.proje.save()
 
     def bildirim_gonder(self, bildirim, role=None):
