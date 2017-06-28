@@ -87,19 +87,6 @@ class BapButcePlani(CrudView):
                          proje_ad
         self.form_out(form)
 
-    def kalem_ve_sartname_kontrol(self):
-        if self.current.task_data['cmd'] == 'bitir':
-            butce_kalemleri = BAPButcePlani.objects.all(
-                ilgili_proje=BAPProje.objects.get(self.current.task_data['bap_proje_id']))
-            for kalem in butce_kalemleri:
-                if not kalem.teknik_sartname.sartname_dosyasi:
-                    self.current.msg_box(
-                        title=_(u'Eksik Şartname'),
-                        msg=_(u"Bütün kalemler için Teknik şartname atamak "
-                                               u"zorundasınız."), typ='error')
-                    self.current.task_data['cmd'] = 'eksik_sartname'
-                    break
-
     def sartname_sec_veya_olustur(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         sartnameler = [(sartname.key, sartname.aciklama) for sartname in BAPTeknikSartname.objects.all(
