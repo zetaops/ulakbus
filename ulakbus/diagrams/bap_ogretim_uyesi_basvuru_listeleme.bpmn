@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+  <bpmn:collaboration id="Collaboration_0umfazt">
+    <bpmn:participant id="Participant_0dppipi" processRef="bap_ogretim_uyesi_basvuru_listeleme" />
+  </bpmn:collaboration>
+  <bpmn:process id="bap_ogretim_uyesi_basvuru_listeleme" isExecutable="false">
+    <bpmn:sequenceFlow id="SequenceFlow_1ibc67z" sourceRef="StartEvent_1" targetRef="basvuru_listele" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1ibc67z</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1oa928r" sourceRef="basvuru_listele" targetRef="external_wf_placeholder" />
+    <bpmn:userTask id="basvuru_listele" name="Başvuru Listele">
+      <bpmn:incoming>SequenceFlow_1ibc67z</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1y5549x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1oa928r</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="external_wf_placeholder" name="External WF Placeholder" camunda:type="external" camunda:topic=" ">
+      <bpmn:incoming>SequenceFlow_1oa928r</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1y5549x</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1y5549x" sourceRef="external_wf_placeholder" targetRef="basvuru_listele" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0umfazt">
+      <bpmndi:BPMNShape id="Participant_0dppipi_di" bpmnElement="Participant_0dppipi">
+        <dc:Bounds x="123" y="153" width="558" height="254" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="183" y="279" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="201" y="315" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ibc67z_di" bpmnElement="SequenceFlow_1ibc67z">
+        <di:waypoint xsi:type="dc:Point" x="219" y="297" />
+        <di:waypoint xsi:type="dc:Point" x="249" y="297" />
+        <di:waypoint xsi:type="dc:Point" x="249" y="297" />
+        <di:waypoint xsi:type="dc:Point" x="283" y="297" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="264" y="297" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1oa928r_di" bpmnElement="SequenceFlow_1oa928r">
+        <di:waypoint xsi:type="dc:Point" x="383" y="297" />
+        <di:waypoint xsi:type="dc:Point" x="458" y="297" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="421" y="282" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_15zzlgi_di" bpmnElement="basvuru_listele">
+        <dc:Bounds x="283" y="257" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1n6q13d_di" bpmnElement="external_wf_placeholder">
+        <dc:Bounds x="458" y="257" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1y5549x_di" bpmnElement="SequenceFlow_1y5549x">
+        <di:waypoint xsi:type="dc:Point" x="508" y="257" />
+        <di:waypoint xsi:type="dc:Point" x="508" y="207" />
+        <di:waypoint xsi:type="dc:Point" x="333" y="207" />
+        <di:waypoint xsi:type="dc:Point" x="333" y="257" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="421" y="192" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
