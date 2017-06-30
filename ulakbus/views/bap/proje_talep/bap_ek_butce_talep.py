@@ -108,6 +108,7 @@ class EkButceTalep(CrudView):
         form = JsonForm(title=_(u"%s - Bap Ek Bütçe Talep") % proje.ad)
         form.tamam = fields.Button(_(u"Onaya Yolla"))
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')
+        form.iptal = fields.Button(_(u"İptal"), cmd='iptal')
         self.form_out(form)
         if 'red_aciklama' in self.current.task_data:
             self.current.msg_box(msg=self.current.task_data['red_aciklama'],

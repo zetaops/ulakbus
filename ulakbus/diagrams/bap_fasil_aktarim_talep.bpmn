@@ -22,7 +22,7 @@
         <bpmn:flowNodeRef>detay_goster</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_195cbwr</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>onaya_yolla</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1uck8i5</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>tamamlandi</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>butce_kalemini_duzenle</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>aciklama_yaz</bpmn:flowNodeRef>
@@ -67,12 +67,12 @@
     <bpmn:sequenceFlow id="SequenceFlow_0letd02" sourceRef="ExclusiveGateway_0xh75zl" targetRef="tamamlandi">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='bitir']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1f5jzsx" sourceRef="tamamlandi" targetRef="EndEvent" />
+    <bpmn:sequenceFlow id="SequenceFlow_1f5jzsx" sourceRef="tamamlandi" targetRef="EndEvent_1uck8i5" />
     <bpmn:sequenceFlow id="SequenceFlow_1bhnfay" sourceRef="bilgilendir" targetRef="kalem_listesi" />
     <bpmn:sequenceFlow id="SequenceFlow_0y5a2ge" sourceRef="ExclusiveGateway_0x0shu1" targetRef="proje_bulunamadi">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='bulunamadi']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0o6l9gt" sourceRef="proje_bulunamadi" targetRef="EndEvent" />
+    <bpmn:sequenceFlow id="SequenceFlow_0o6l9gt" sourceRef="proje_bulunamadi" targetRef="EndEvent_1uck8i5" />
     <bpmn:serviceTask id="kontrol" name="Kontrol" camunda:class="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.kontrol">
       <bpmn:incoming>SequenceFlow_09ynac7</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0se3b6s</bpmn:outgoing>
@@ -157,7 +157,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_047t4cf" sourceRef="ExclusiveGateway_0xh75zl" targetRef="butce_kalemini_duzenle">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='add_edit_form']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:endEvent id="EndEvent">
+    <bpmn:endEvent id="EndEvent_1uck8i5">
       <bpmn:incoming>SequenceFlow_1f5jzsx</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0o6l9gt</bpmn:incoming>
     </bpmn:endEvent>
@@ -361,7 +361,7 @@
           <dc:Bounds x="714" y="372" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_1uck8i5_di" bpmnElement="EndEvent">
+      <bpmndi:BPMNShape id="EndEvent_1uck8i5_di" bpmnElement="EndEvent_1uck8i5">
         <dc:Bounds x="1114" y="218" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1087" y="254" width="90" height="20" />

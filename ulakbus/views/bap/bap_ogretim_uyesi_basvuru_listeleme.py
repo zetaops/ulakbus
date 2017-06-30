@@ -47,9 +47,9 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
             (1, _(u"Ek Bütçe Talebi")),
             (2, _(u"Fasıl Aktarımı Talebi")),
             (3, _(u"Ek Süre Talebi")),
-            (4, _(u"Satın Alma Talebi")),
-            (5, _(u"Yürütücü Değişikliği Talebi")),
-            (6, _(u"Proje İptal Talebi")),
+            # (4, _(u"Satın Alma Talebi")),
+            # (5, _(u"Yürütücü Değişikliği Talebi")),
+            # (6, _(u"Proje İptal Talebi")),
         ]
         form.set_choices_of('talepler', talep_list)
         form.set_default_of('talepler', 1)
@@ -65,9 +65,9 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
             1: 'bap_ek_butce_talep',
             2: 'bap_fasil_aktarim_talep',
             3: 'bap_ek_sure_talep',
-            4: 'bap_satin_alma_talep',
-            5: 'bap_yurutucu_degisikligi_talep',
-            6: 'bap_proje_iptal_talep',
+            # 4: 'bap_satin_alma_talep',
+            # 5: 'bap_yurutucu_degisikligi_talep',
+            # 6: 'bap_proje_iptal_talep',
         }
         secim = self.input['form'].get('talepler') or self.input['form'].get('raporlar')
         self.current.task_data['external_wf'] = ex_dict[secim]
@@ -84,8 +84,8 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         if obj.durum == 5:
             result['actions'].append({'name': _(u'Talepler'), 'cmd': 'talepler', 'mode': 'normal',
                                       'show_as': 'button'})
-            result['actions'].append({'name': _(u'Raporlar'), 'cmd': 'rapor', 'mode': 'normal',
-                                      'show_as': 'button'})
+            # result['actions'].append({'name': _(u'Raporlar'), 'cmd': 'rapor', 'mode': 'normal',
+            #                           'show_as': 'button'})
 
     @list_query
     def list_by_personel_id(self, queryset):

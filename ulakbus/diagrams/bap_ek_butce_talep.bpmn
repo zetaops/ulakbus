@@ -14,7 +14,7 @@
         <bpmn:flowNodeRef>sonuc</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0whqu58</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent_0axcvjp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>butce_kalemlerini_listele</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0obdyvw</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>kaydet</bpmn:flowNodeRef>
@@ -55,7 +55,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0fs3x2f" sourceRef="ExclusiveGateway_0whqu58" targetRef="sonuc">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">onaylandi==1</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1b8pjgb" sourceRef="sonuc" targetRef="EndEvent_0axcvjp" />
+    <bpmn:sequenceFlow id="SequenceFlow_1b8pjgb" sourceRef="sonuc" targetRef="EndEvent" />
     <bpmn:sequenceFlow id="SequenceFlow_1jn3sf3" sourceRef="bilgilendir" targetRef="kontrol" />
     <bpmn:sequenceFlow id="SequenceFlow_0vvd0an" sourceRef="butce_kalemlerini_listele" targetRef="ExclusiveGateway_0gkabpa" />
     <bpmn:sequenceFlow id="SequenceFlow_11x4u1s" sourceRef="kaydet" targetRef="butce_kalemlerini_listele" />
@@ -76,8 +76,9 @@
       <bpmn:outgoing>SequenceFlow_17y9ikl</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1nc8ojb" sourceRef="butce_kalemi_ekle_duzenle" targetRef="ExclusiveGateway_0obdyvw" />
-    <bpmn:endEvent id="EndEvent_0axcvjp">
+    <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_1b8pjgb</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_121wqlv</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="ExclusiveGateway_017czmp">
       <bpmn:incoming>SequenceFlow_0zikbhh</bpmn:incoming>
@@ -137,6 +138,7 @@
       <bpmn:outgoing>SequenceFlow_1t8ibr3</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1qw9kui</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1458r0a</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_121wqlv</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="butce_kalemini_goster" name="Butce Kalemini Goster" camunda:assignee="bap.proje_talep.bap_ek_butce_talep.EkButceTalep.talep_detay_goster">
       <bpmn:incoming>SequenceFlow_1t8ibr3</bpmn:incoming>
@@ -198,6 +200,9 @@
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_17y9ikl" sourceRef="ExclusiveGateway_0whqu58" targetRef="butce_kalemlerini_listele">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">onaylandi==2</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_121wqlv" sourceRef="ExclusiveGateway_0gkabpa" targetRef="EndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -309,7 +314,7 @@
           <dc:Bounds x="328" y="352.5" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_0axcvjp_di" bpmnElement="EndEvent_0axcvjp">
+      <bpmndi:BPMNShape id="EndEvent_0axcvjp_di" bpmnElement="EndEvent">
         <dc:Bounds x="489" y="404" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="462" y="440" width="90" height="20" />
@@ -529,6 +534,14 @@
         <di:waypoint xsi:type="dc:Point" x="595" y="278" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="431.5" y="217" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_121wqlv_di" bpmnElement="SequenceFlow_121wqlv">
+        <di:waypoint xsi:type="dc:Point" x="795" y="326" />
+        <di:waypoint xsi:type="dc:Point" x="568" y="423" />
+        <di:waypoint xsi:type="dc:Point" x="525" y="423" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="682" y="359.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

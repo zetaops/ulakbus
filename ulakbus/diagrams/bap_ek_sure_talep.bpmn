@@ -18,6 +18,7 @@
         <bpmn:flowNodeRef>kontrol</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>onaya_gonder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ek_sure_talep_gir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_19sucxf</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="koordinasyon_birimi" name="Koordinasyon Birimi">
         <bpmn:flowNodeRef>talebi_goruntule</bpmn:flowNodeRef>
@@ -43,7 +44,6 @@
     <bpmn:sequenceFlow id="SequenceFlow_0c6gvea" sourceRef="ExclusiveGateway_1et5hn2" targetRef="ek_sure_talep_gir">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">onaylandi==0</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_153qtxz" sourceRef="ek_sure_talep_gir" targetRef="onaya_gonder" />
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_07svpf0</bpmn:outgoing>
     </bpmn:startEvent>
@@ -65,6 +65,7 @@
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_1ma5uwf</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0q3gtvf</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:userTask id="bilgilendirme" name="Bilgilendirme" camunda:assignee="bap.proje_talep.bap_ek_sure_talep.EkSureTalebi.bilgilendirme">
       <bpmn:incoming>SequenceFlow_1q5koiz</bpmn:incoming>
@@ -108,13 +109,23 @@
       <bpmn:outgoing>SequenceFlow_1h6tu13</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="onaya_gonder" name="Onaya Gönder" camunda:class="bap.proje_talep.bap_ek_sure_talep.EkSureTalebi.onaya_gonder">
-      <bpmn:incoming>SequenceFlow_153qtxz</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1sdp9ec</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_12cbmxm</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="ek_sure_talep_gir" name="Ek Süre talebini gir" camunda:assignee="bap.proje_talep.bap_ek_sure_talep.EkSureTalebi.ek_sure_talep_gir">
       <bpmn:incoming>SequenceFlow_0c6gvea</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_153qtxz</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0fog6bd</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_19sucxf" default="SequenceFlow_1sdp9ec">
+      <bpmn:incoming>SequenceFlow_0fog6bd</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1sdp9ec</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0q3gtvf</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0fog6bd" sourceRef="ek_sure_talep_gir" targetRef="ExclusiveGateway_19sucxf" />
+    <bpmn:sequenceFlow id="SequenceFlow_1sdp9ec" sourceRef="ExclusiveGateway_19sucxf" targetRef="onaya_gonder" />
+    <bpmn:sequenceFlow id="SequenceFlow_0q3gtvf" sourceRef="ExclusiveGateway_19sucxf" targetRef="EndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1m92t3u">
@@ -141,7 +152,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_1jwvfca_di" bpmnElement="ek_sure_talep_gir">
-        <dc:Bounds x="615" y="170" width="100" height="80" />
+        <dc:Bounds x="553" y="72" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1dr4inm_di" bpmnElement="onaya_gonder">
         <dc:Bounds x="804" y="170" width="100" height="80" />
@@ -218,17 +229,11 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0c6gvea_di" bpmnElement="SequenceFlow_0c6gvea">
-        <di:waypoint xsi:type="dc:Point" x="376" y="210" />
-        <di:waypoint xsi:type="dc:Point" x="615" y="210" />
+        <di:waypoint xsi:type="dc:Point" x="351" y="185" />
+        <di:waypoint xsi:type="dc:Point" x="351" y="112" />
+        <di:waypoint xsi:type="dc:Point" x="553" y="112" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="450.5" y="185" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_153qtxz_di" bpmnElement="SequenceFlow_153qtxz">
-        <di:waypoint xsi:type="dc:Point" x="715" y="210" />
-        <di:waypoint xsi:type="dc:Point" x="804" y="210" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="714.5" y="185" width="90" height="20" />
+          <dc:Bounds x="366" y="148.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1q5koiz_di" bpmnElement="SequenceFlow_1q5koiz">
@@ -301,6 +306,33 @@
       <bpmndi:BPMNShape id="UserTask_0lyb6vj_di" bpmnElement="komisyon_aciklamasi">
         <dc:Bounds x="524" y="392" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_19sucxf_di" bpmnElement="ExclusiveGateway_19sucxf" isMarkerVisible="true">
+        <dc:Bounds x="578" y="185" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="603" y="235" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fog6bd_di" bpmnElement="SequenceFlow_0fog6bd">
+        <di:waypoint xsi:type="dc:Point" x="603" y="152" />
+        <di:waypoint xsi:type="dc:Point" x="603" y="185" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="618" y="158.5" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1sdp9ec_di" bpmnElement="SequenceFlow_1sdp9ec">
+        <di:waypoint xsi:type="dc:Point" x="628" y="210" />
+        <di:waypoint xsi:type="dc:Point" x="804" y="210" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="716" y="185" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0q3gtvf_di" bpmnElement="SequenceFlow_0q3gtvf">
+        <di:waypoint xsi:type="dc:Point" x="588" y="220" />
+        <di:waypoint xsi:type="dc:Point" x="496" y="288" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="542" y="239" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
