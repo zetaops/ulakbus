@@ -9,7 +9,19 @@ from zengine.views.crud import CrudView, list_query, obj_filter
 from zengine.lib.translation import gettext as _
 
 
+class TalepSecForm(JsonForm):
+    class Meta:
+        title = _(u"Talep Seçimi")
+
+    talepler = fields.Integer(_(u"Talep"))
+    sec = fields.Button(_(u"Seç"))
+    iptal = fields.Button(_(u"İptal"), cmd='iptal')
+
+
 class OgretimUyesiBasvuruListelemeView(CrudView):
+    """
+    Öğretim Üyesinin kendi BAP Proje başvurularını görüntüleyeceği iş akışıdır.
+    """
 
     class Meta:
         allow_search = True
@@ -23,10 +35,31 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         self.list(list_fields=['ad', 'durum'])
 
     def talep_sec(self):
-        pass
+        form = TalepSecForm()
+        talep_list = [
+            (1, _(u"Ek Bütçe Talebi")),
+            (2, _(u"Fasıl Aktarımı Talebi")),
+            (3, _(u"Ek Süre Talebi")),
+            (4, _(u"Satın Alma Talebi")),
+            (5, _(u"Yürütücü Değişikliği Talebi")),
+            (6, _(u"Proje İptal Talebi")),
+        ]
+        form.set_choices_of('talepler', talep_list)
+        form.set_default_of('talepler', 1)
+        self.form_out(form)
 
-    def rapor_sec(self):
-        pass
+    def secim_to_wf(self):
+        self.current.task_data['proje_id'] = self.current.task_data.pop('object_id')
+        ex_dict = {
+            1: 'bap_ek_butce_talep',
+            2: 'bap_fasil_aktarim_talep',
+            3: 'bap_ek_sure_talep',
+            4: 'bap_satin_alma_talep',
+            5: 'bap_yurutucu_degisikligi_talep',
+            6: 'bap_proje_iptal_talep',
+        }
+        secim = self.input['form'].get('talepler') or self.input['form'].get('raporlar')
+        self.current.task_data['external_wf'] = ex_dict[secim]
 
     @obj_filter
     def basvuru_islemleri(self, obj, result, **kwargs):
