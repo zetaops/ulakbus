@@ -37,6 +37,10 @@ class EkSureTalebi(CrudView):
                            'olmadığı için ek süre talebinde '
                            'bulunamazsınız.',
                     'title': 'Proje Bulunamadı'}
+        else:
+            data = [(self.current.task_data['bap_proje_id'],
+                     BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad)]
+            self.current.task_data['proje_data'] = data
 
         if 'onaylandi' not in self.current.task_data:
             self.current.task_data['onaylandi'] = 0
@@ -50,7 +54,8 @@ class EkSureTalebi(CrudView):
 
         form = EkSureTalepForm(self.object, current=self.current)
         form.proje = fields.String(_(u"Proje Seçiniz"),
-                                   choices=self.current.task_data['proje_data'])
+                                   choices=self.current.task_data['proje_data'],
+                                   default=self.current.task_data['proje_data'][0][0])
         self.form_out(form)
 
     def onaya_gonder(self):

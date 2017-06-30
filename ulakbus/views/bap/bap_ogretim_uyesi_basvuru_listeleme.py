@@ -82,6 +82,6 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         """
         Öğretim üyesinin kendi projeleri filtrelenmiştir.
         """
-        return queryset.filter(yurutucu_id=self.current.user_id)
+        return queryset.filter(yurutucu=self.current.user.personel.okutman)
 
 
