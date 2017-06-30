@@ -49,7 +49,7 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         self.form_out(form)
 
     def secim_to_wf(self):
-        self.current.task_data['proje_id'] = self.current.task_data.pop('object_id')
+        self.current.task_data['bap_proje_id'] = self.current.task_data.pop('object_id')
         ex_dict = {
             1: 'bap_ek_butce_talep',
             2: 'bap_fasil_aktarim_talep',
@@ -82,7 +82,6 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         """
         Öğretim üyesinin kendi projeleri filtrelenmiştir.
         """
-        # return queryset.filter(yurutucu_id=self.current.user_id)
-        return queryset.filter(yurutucu_id='G2XjlaJMX0FUZX84aoIeiVCqZMR')
+        return queryset.filter(yurutucu_id=self.current.user_id)
 
 
