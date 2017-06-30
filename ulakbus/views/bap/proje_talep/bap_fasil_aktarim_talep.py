@@ -32,6 +32,8 @@ class FasilAktarimTalep(CrudView):
                                                           'olmadığı için fasıl talebinde '
                                                           'bulunamazsınız.',
                                                    'title': 'Proje Bulunamadı'}
+        if 'bap_proje_id' in self.current.task_data:
+            self.current.task_data['cmd'] = 'red_mesaj'
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
@@ -40,7 +42,7 @@ class FasilAktarimTalep(CrudView):
                                                                            durum__in=[3, 5])]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
-        form.proje = fields.String(choices=data)
+        form.proje = fields.String(choices=data, default=data[0][0])
         form.ilerle = fields.Button(_(u"İlerle"))
         self.form_out(form)
 
