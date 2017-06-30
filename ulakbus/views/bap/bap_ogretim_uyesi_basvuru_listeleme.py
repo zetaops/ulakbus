@@ -3,7 +3,6 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import BAPProje
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView, list_query, obj_filter
 from zengine.lib.translation import gettext as _
@@ -32,9 +31,17 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         self.ListForm.add = None
 
     def basvuru_listele(self):
+        """
+        Öğretim üyesinin hali hazırdaki başvurularının listelendiği adımdır.
+        """
         self.list(list_fields=['ad', 'durum'])
 
     def talep_sec(self):
+        """
+        Öğretim üyesinin proje üzerinde Ek Bütçe Talebi, Fasıl Aktarım Talebi, Ek Süre Talebi, Satın
+        Alma Talebi, Yürütücü Değişikliği Talebi ve Proje İptal Talebi seçenekleri arasından
+        birini seçerek talep gerçekleştireceği adımdır.
+        """
         form = TalepSecForm()
         talep_list = [
             (1, _(u"Ek Bütçe Talebi")),
@@ -49,6 +56,10 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         self.form_out(form)
 
     def secim_to_wf(self):
+        """
+        Seçilen talebi external olarak çalıştırmak üzere, external workflow placeholder adımına
+        gönderecek adımdır.
+        """
         self.current.task_data['bap_proje_id'] = self.current.task_data.pop('object_id')
         ex_dict = {
             1: 'bap_ek_butce_talep',
@@ -65,7 +76,6 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
     def basvuru_islemleri(self, obj, result, **kwargs):
         """
         Default action buttonlar, öğretim üyesinin projedeki eylemlerine göre düzenlenmiştir.
-
         """
         # todo externaL_wf'ler tamamlandıkça actionlara eklenecek
         result['actions'] = [
