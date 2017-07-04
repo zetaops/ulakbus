@@ -38,8 +38,21 @@ e_posta_kalibi = re.compile('[^@]+@[^@]+\.[^@]+')
 def get_temp_password():
     return uuid.uuid4().hex
 
+
 def get_file_url(key):
     return "%s%s" % (settings.S3_PUBLIC_URL, key)
+
+
+def e_mail_star_formatter(e_mail):
+    first, second = tuple(e_mail.split('@'))
+    return "{}***@{}***".format(first[:2], second[:2])
+
+
+def catalog_to_dict(l):
+    d = dict()
+    for item in l:
+        d[item['value']] = item['name']
+    return d
 
 
 def saat2slot(saat):

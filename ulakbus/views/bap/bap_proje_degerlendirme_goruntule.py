@@ -12,6 +12,7 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 from zengine.lib.catalog_data import catalog_data_manager
 from zengine.forms import fields
 from pyoko.fields import Integer
+from ulakbus.lib.common import catalog_to_dict
 
 
 class ProjeDegerlendirmeGoruntuleForm(JsonForm):
@@ -106,10 +107,3 @@ class ProjeDegerlendirmeGoruntule(CrudView):
         del self.current.task_data['object_id']
         self.output['object'] = obj
         self.form_out(ProjeDegerlendirmeDetayGoruntuleForm())
-
-
-def catalog_to_dict(l):
-    d = dict()
-    for item in l:
-        d[item['value']] = item['name']
-    return d
