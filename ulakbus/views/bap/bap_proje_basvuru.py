@@ -279,7 +279,7 @@ class ProjeBasvuru(CrudView):
 
         """
         gorevli_id = self.input['form']['gerceklestirme_gorevlisi_id']
-        self.current.task_data['gorevli_secimi_uygunlugu'] = (gorevli_id is not None)
+        self.current.task_data['gorevli_secimi_uygunlugu'] = True if gorevli_id else False
 
     def gorevli_secim_uyari_mesaji(self):
         """
