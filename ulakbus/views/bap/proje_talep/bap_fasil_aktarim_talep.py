@@ -35,6 +35,8 @@ class FasilAktarimTalep(CrudView):
                                                           'olmadığı için fasıl talebinde '
                                                           'bulunamazsınız.',
                                                    'title': 'Proje Bulunamadı'}
+        if 'bap_proje_id' in self.current.task_data:
+            self.current.task_data['cmd'] = 'red_mesaj'
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)

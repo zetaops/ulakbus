@@ -605,6 +605,14 @@
           <dc:Bounds x="529" y="168" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_121wqlv_di" bpmnElement="SequenceFlow_121wqlv">
+        <di:waypoint xsi:type="dc:Point" x="795" y="326" />
+        <di:waypoint xsi:type="dc:Point" x="568" y="423" />
+        <di:waypoint xsi:type="dc:Point" x="525" y="423" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="682" y="359.5" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
