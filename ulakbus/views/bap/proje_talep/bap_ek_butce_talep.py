@@ -18,24 +18,24 @@ class EkButceTalep(CrudView):
         model = 'BAPButcePlani'
 
     # ---------- Proje Yürütücüsü ----------
+    def proje_id_kontrol(self):
+        self.current.task_data['cmd'] = 'proje_id_var' if 'bap_proje_id' in self.current.task_data \
+            else 'proje_id_yok'
+
     def kontrol(self):
-        if 'bap_proje_id' in self.current.task_data and 'red_aciklama' not in \
-                self.current.task_data and 'onay' not in self.current.task_data:
+        personel = Personel.objects.get(user=self.current.user)
+        okutman = Okutman.objects.get(personel=personel)
+        if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
+            self.current.task_data['onaylandi'] = 1
+            self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
+                                                          'bulunamadı. Size bağlı olan proje '
+                                                          'olmadığı için ek bütçe talebinde '
+                                                          'bulunamazsınız.',
+                                                   'title': 'Proje Bulunamadı'}
+        elif 'red_aciklama' in self.current.task_data:
             self.current.task_data['onaylandi'] = 2
-        else:
-            personel = Personel.objects.get(user=self.current.user)
-            okutman = Okutman.objects.get(personel=personel)
-            if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
-                self.current.task_data['onaylandi'] = 1
-                self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
-                                                              'bulunamadı. Size bağlı olan proje '
-                                                              'olmadığı için ek bütçe talebinde '
-                                                              'bulunamazsınız.',
-                                                       'title': 'Proje Bulunamadı'}
-            elif 'red_aciklama' in self.current.task_data:
-                self.current.task_data['onaylandi'] = 2
-            elif 'onaylandi' not in self.current.task_data:
-                self.current.task_data['onaylandi'] = 0
+        elif 'onaylandi' not in self.current.task_data:
+            self.current.task_data['onaylandi'] = 0
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)

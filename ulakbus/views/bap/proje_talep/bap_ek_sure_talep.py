@@ -22,6 +22,15 @@ class EkSureTalepForm(JsonForm):
 
 class EkSureTalebi(CrudView):
 
+    def proje_id_kontrol(self):
+        if 'bap_proje_id' in self.current.task_data:
+            self.current.task_data['cmd'] = 'proje_id_var'
+            proje_data = [(self.current.task_data['bap_proje_id'],
+                           BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad)]
+            self.current.task_data['proje_data'] = proje_data
+        else:
+            self.current.task_data['cmd'] = 'proje_id_yok'
+
     def kontrol(self):
         if 'bap_proje_id' not in self.current.task_data:
             personel = Personel.objects.get(user=self.current.user)
@@ -38,10 +47,6 @@ class EkSureTalebi(CrudView):
                            'olmadığı için ek süre talebinde '
                            'bulunamazsınız.',
                     'title': 'Proje Bulunamadı'}
-        else:
-            data = [(self.current.task_data['bap_proje_id'],
-                     BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad)]
-            self.current.task_data['proje_data'] = data
 
         if 'onaylandi' not in self.current.task_data:
             self.current.task_data['onaylandi'] = 0

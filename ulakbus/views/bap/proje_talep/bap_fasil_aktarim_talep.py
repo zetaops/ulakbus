@@ -18,6 +18,9 @@ class FasilAktarimTalep(CrudView):
         model = 'BAPButcePlani'
 
     # ---------- Proje Yürütücüsü ----------
+    def proje_id_kontrol(self):
+        self.current.task_data['cmd'] = 'proje_id_var' if 'bap_proje_id' in self.current.task_data \
+            else 'proje_id_yok'
 
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
@@ -32,8 +35,6 @@ class FasilAktarimTalep(CrudView):
                                                           'olmadığı için fasıl talebinde '
                                                           'bulunamazsınız.',
                                                    'title': 'Proje Bulunamadı'}
-        if 'bap_proje_id' in self.current.task_data:
-            self.current.task_data['cmd'] = 'red_mesaj'
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
