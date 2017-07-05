@@ -117,7 +117,7 @@ class BasvuruInceleme(CrudView):
             [_('Muhasebe Kodu'), _(u'Kod Adı'), _(u'Kalem Adı'), _(u'Birim Fiyatı'),
              _(u'Adet'), _('Toplam Fiyat'), _('Gerekçe')]]
 
-        for plan in BAPButcePlani.objects.filter(proje=self.object).order_by():
+        for plan in BAPButcePlani.objects.filter(ilgili_proje=self.object).order_by():
             muhasebe_kodu = plan.muhasebe_kod
             kod_adi = plan.kod_adi
             ad = plan.ad

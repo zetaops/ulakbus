@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+  <bpmn:collaboration id="Collaboration_1xnro66">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="BAP" />
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:participant id="Participant_1aa9xg7" processRef="bap_komisyon_uyeleri" />
+  </bpmn:collaboration>
+  <bpmn:process id="bap_komisyon_uyeleri" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0hvgn1h</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0hvgn1h" sourceRef="StartEvent_1" targetRef="komisyon_uyelerini_listele" />
+    <bpmn:userTask id="komisyon_uyelerini_listele" name="BAP Komisyon Uyelerini Listele" camunda:assignee="bap.bap_komisyon_uyeleri.BapKomisyonUyeleri.komisyon_uyelerini_listele">
+      <bpmn:incoming>SequenceFlow_0hvgn1h</bpmn:incoming>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1xnro66">
+      <bpmndi:BPMNShape id="Participant_1aa9xg7_di" bpmnElement="Participant_1aa9xg7">
+        <dc:Bounds x="311" y="232" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="361" y="333" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="379" y="369" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0hvgn1h_di" bpmnElement="SequenceFlow_0hvgn1h">
+        <di:waypoint xsi:type="dc:Point" x="397" y="351" />
+        <di:waypoint xsi:type="dc:Point" x="494" y="351" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="446" y="336" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1kc72br_di" bpmnElement="komisyon_uyelerini_listele">
+        <dc:Bounds x="494" y="311" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

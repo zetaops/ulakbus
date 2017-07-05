@@ -23,7 +23,7 @@ class TestCase(BaseTestCase):
         self.client.post(cmd='add_edit_form')
 
         form = {
-            'ad': "Sandalye",
+            'ad': "Test Sandalye",
             'birim_id': "M2bJNCtvMmzCNnvG8BpFISK6KTs",
             'demirbas_no': "123qwe",
             'kurum_kodu': "123qwe",
@@ -46,7 +46,7 @@ class TestCase(BaseTestCase):
 
         assert demirbas_sayisi_ekleme_sonrasi == demirbas_sayisi_baslangic + 1
 
-        d = Demirbas.objects.get(ad="Sandalye")
+        d = Demirbas.objects.get(ad="Test Sandalye")
 
         # Demirbaş düzenle
         self.client.post(object_id=d.key, cmd='ekle_duzenle')
@@ -56,7 +56,7 @@ class TestCase(BaseTestCase):
 
         self.client.post(form=form)
 
-        d = Demirbas.objects.get(ad="Sandalye")
+        d = Demirbas.objects.get(ad="Test Sandalye")
 
         assert d.marka != onceki_marka
 

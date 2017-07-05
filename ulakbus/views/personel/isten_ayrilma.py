@@ -43,7 +43,6 @@ class OncekiIstenAyrilmalari(JsonForm):
                                            ayrilma_not=ia.gorevden_ayrilma_not)
         else:
             self.help_text = __(u"Personele ait silinmiş kayıt bulunmamaktadır.")
-            self.exclude = ["IstenAyrilmaBilgileri"]
 
     isten_ayril = fields.Button(__(u"İşten Ayrıl"), style='btn-primary')
 

@@ -22,6 +22,7 @@ except:
     print("Warning: Reportlab module not found")
 
 from ulakbus.lib.s3_file_manager import S3FileManager
+from ulakbus.lib.common import get_file_url
 
 
 class ReporterRegistry(type):
@@ -142,7 +143,7 @@ class Reporter(BaseView):
     def generate_temp_file(name, content, file_type, ext):
         f = S3FileManager()
         key = f.store_file(name=name, content=content, type=file_type, ext=ext)
-        return f.get_url(key)
+        return get_file_url(key)
 
     def generate_file_name(self):
         return "{0}-{1}".format(

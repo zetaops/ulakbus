@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPProje, BAPGundem, Personel
+from ulakbus.models import BAPProje, BAPGundem, Personel, Okutman
 
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
@@ -24,7 +24,8 @@ class EkSureTalebi(CrudView):
     def kontrol(self):
         if 'bap_proje_id' not in self.current.task_data:
             personel = Personel.objects.get(user=self.current.user)
-            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
+            okutman = Okutman.objects.get(personel=personel)
+            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
                                                                                durum__in=[3, 5])]
             if data:
                 self.current.task_data['proje_data'] = data

@@ -37,8 +37,11 @@ class TestCase(BaseTestCase):
             resp = self.client.post(id=personel_id, model="Personel", param="personel_id",
                                     wf="personel_isten_ayrilma")
             if 'IstenAyrilmaBilgileri' in resp.json['forms']['model']:
-                assert len(resp.json['forms']['model']['IstenAyrilmaBilgileri']) == \
-                    onceki_isten_ayrilma_bilgileri_sayisi
+                if resp.json['forms']['model']['IstenAyrilmaBilgileri']:
+                    assert len(resp.json['forms']['model']['IstenAyrilmaBilgileri']) == \
+                        onceki_isten_ayrilma_bilgileri_sayisi
+                else:
+                    assert resp.json['forms']['model']['IstenAyrilmaBilgileri'] == None
             else:
                 assert resp.json['forms']['form'][0]['helpvalue'] == \
                        u"Personele ait silinmiş kayıt bulunmamaktadır."
@@ -91,7 +94,7 @@ class TestCase(BaseTestCase):
 
         personel.arsiv = False
         personel.notlar = ''
-        personel.save()
+        personel.blocking_save()
 
         r = Role.objects.filter(key=deleted_role.key, deleted=True)[0]
         r.deleted = False

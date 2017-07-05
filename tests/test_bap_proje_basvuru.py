@@ -32,7 +32,6 @@ class TestCase(BaseTestCase):
                 assert 'ProjeBelgeForm' in self.client.current.task_data
                 assert 'ProjeCalisanlariForm' in self.client.current.task_data
                 assert 'ProjeDetayForm' in self.client.current.task_data
-                assert 'ProjeIncelemeForm' in self.client.current.task_data
                 assert 'ProjeTurForm' in self.client.current.task_data
                 assert 'RevizyonGerekceForm' in self.client.current.task_data
                 assert 'UniversiteDisiDestekForm' in self.client.current.task_data
@@ -90,30 +89,37 @@ class TestCase(BaseTestCase):
 
             assert resp.json['forms']['model']['form_name'] == 'ProjeBelgeForm'
 
-            resp = self.client.post(form={'arastirma_olanaklari': 1})
+            resp = self.client.post(form={'arastirma_olanaklari': 1, 'ProjeBelgeleri': []})
 
             assert resp.json['forms']['model']['form_name'] == 'ArastirmaOlanaklariForm'
 
             if loop == 0:
+                olanak = resp.json['forms']['model']['Olanak']
                 # Lab ekleme ekranına gidilir
-                resp = self.client.post(cmd='lab', form={'lab_ekle': 1})
+                resp = self.client.post(cmd='lab', form={'lab_ekle': 1,
+                                                         'Olanak': olanak if olanak else []})
 
                 assert resp.json['forms']['model']['form_name'] == 'LabEkleForm'
 
                 # Lab eklenir
-                resp = self.client.post(form={'lab': "6Jy9r5e05DwsnkPGOesSvG9v6T8", 'lab_ekle': 1})
+                resp = self.client.post(cmd='ekle', form={'lab': "6Jy9r5e05DwsnkPGOesSvG9v6T8",
+                                                          'lab_ekle': 1})
+
+                olanak = resp.json['forms']['model']['Olanak']
 
                 assert resp.json['forms']['model']['form_name'] == 'ArastirmaOlanaklariForm'
 
                 assert len(resp.json['forms']['model']['Olanak']) == 1
 
                 # Personel ekleme ekranına gidilir
-                resp = self.client.post(cmd='personel', form={'personel_ekle': 1})
+                resp = self.client.post(cmd='personel', form={'personel_ekle': 1,
+                                                              'Olanak': olanak})
 
                 assert resp.json['forms']['model']['form_name'] == 'PersonelEkleForm'
 
                 # Personel eklenir
-                resp = self.client.post(form={'personel': "L6j4ZvGts0XY5PKEiRPUiWxdTvy", 'personel_ekle': 1})
+                resp = self.client.post(cmd='ekle', form={'personel': "L6j4ZvGts0XY5PKEiRPUiWxdTvy",
+                                                          'personel_ekle': 1})
 
                 assert resp.json['forms']['model']['form_name'] == 'ArastirmaOlanaklariForm'
 
@@ -141,6 +147,67 @@ class TestCase(BaseTestCase):
                 self.client.post(cmd='ileri')
 
             # İş paketi ekranı
+            form = {
+                'Isler': [{'ad': 'test_is_ekleme',
+                           'baslama_tarihi': '2017-04-11T21:00:00.000Z',
+                           'bitis_tarihi': '2017-04-15T21:00:00.000Z'}],
+                'ad': 'test_is_paketi_hazirlama',
+                'baslama_tarihi': '10.04.2017',
+                'bitis_tarihi': '24.04.2017',
+                'kaydet': 1
+            }
+
+            # yeni is paketi ekleme adimi baslatilir
+            self.client.post(cmd='add_edit_form', form={'yeni_paket': 1})
+
+            # yeni eklenicek is paketi datalari gonderilip kaydedilir.
+            self.client.post(form=form)
+
+            # is paketi duzenleme adimi baslatilir
+            resp = self.client.post(cmd='duzenle_veya_sil', form={'duzenle': 1})
+
+            # yeni kaydettigimiz is paketinin id si bulunup is_paketi_id degiskenine atanir.
+            tittle_map = resp.json['forms']['form'][1]['titleMap']
+            is_paketi_id = ''
+            for item in tittle_map:
+                if item['name'] == form['ad']:
+                    is_paketi_id = item['value']
+                    break
+
+            # duzenlenecek is paketi secilir
+            resp = self.client.post(form={'ilerle': 1, 'is_paketi': is_paketi_id})
+
+            assert resp.json['forms']['model']['ad'] == form['ad']
+
+            form['bitis_tarihi'] = '29.04.2017'
+
+            # Düzenlenen iş paketini kaydet.
+            self.client.post(form=form)
+
+            # is paketi silme adimi baslatilir.
+            self.client.post(cmd='duzenle_veya_sil', form={'sil': 1})
+
+            # silinecek is paketi secilir
+            resp = self.client.post(form={'ilerle': 1, 'is_paketi': is_paketi_id})
+
+            assert resp.json['forms']['form'][0]['helpvalue'] == "test_is_paketi_hazirlama " \
+                                                                 "iş paketini silmek istiyor musunuz?"
+
+            # silme islemi gerceklestirilir.
+            self.client.post(cmd='delete', form={'evet': 1})
+
+            # baslangic tarihi bitis tarihinden buyuk bir is paketi eklenmeye calisilir.
+            self.client.post(cmd='add_edit_form', form={'yeni_paket': 1})
+            form['baslama_tarihi'] = '30.04.2017'
+            resp = self.client.post(form=form)
+
+            assert resp.json['msgbox']['title'] == 'Kayıt Başarısız Oldu!'
+            assert resp.json['msgbox']['msg'] == 'Bitiş tarihi, başlangıç tarihinden küçük olamaz'
+
+            form['kaydet'] = ''
+            form['iptal'] = 1
+
+            self.client.post(cmd='iptal', form=form)
             self.client.post(cmd='bitir', form={'bitir': 1})
 
             # Bütçe planı ekranı
@@ -171,14 +238,22 @@ class TestCase(BaseTestCase):
             sleep(1)
             assert resp.json['forms']['model']['form_name'] == 'UniversiteDisiDestekForm'
 
-            resp = self.client.post(form={'ileri': 1})
-            assert resp.json['forms']['model']['form_name'] == 'YurutucuTecrubesiForm'
+            destek = resp.json['forms']['model']['Destek']
 
-            resp = self.client.post(form={'ileri': 1})
+            resp = self.client.post(form={'ileri': 1, 'Destek': destek if destek else []})
+            assert resp.json['forms']['model']['form_name'] == 'YurutucuTecrubesiForm'
+            akademik_faaliyet = resp.json['forms']['model']['AkademikFaaliyet']
+
+            resp = self.client.post(form={'ileri': 1,
+                                          'AkademikFaaliyet': akademik_faaliyet if
+                                          akademik_faaliyet else []})
+
             assert resp.json['forms']['model']['form_name'] == 'YurutucuProjeForm'
+            proje = resp.json['forms']['model']['Proje']
 
             # Görüntüle
-            self.client.post(cmd='ileri', form={'ileri': 1})
+            self.client.post(cmd='ileri', form={'ileri': 1,
+                                                'Proje': proje if proje else []})
 
             # Onaya gönder
             resp = self.client.post(cmd='onay', form={'onay': 1})
@@ -206,24 +281,3 @@ class TestCase(BaseTestCase):
                 assert 'msgbox' in resp.json
 
         BAPProje.objects.get(self.client.current.task_data['bap_proje_id']).blocking_delete()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

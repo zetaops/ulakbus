@@ -25,7 +25,7 @@ class TestCase(BaseTestCase):
         user = User.objects.get(username='ogretim_uyesi_1')
         personel = Personel.objects.get(user=user)
         proje.ad = "Test ek bütçe talep projesi"
-        proje.yurutucu = personel
+        proje.yurutucu = personel.okutman
         proje.save()
 
         gundem_sayisi = BAPGundem.objects.filter(gundem_tipi=2, proje=proje).count()

@@ -6,7 +6,7 @@
 
 from collections import defaultdict
 
-from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel
+from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
 
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
@@ -20,7 +20,8 @@ class EkButceTalep(CrudView):
     # ---------- Proje Yürütücüsü ----------
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
-        if BAPProje.objects.filter(yurutucu=personel, durum__in=[3, 5]).count() == 0:
+        okutman = Okutman.objects.get(personel=personel)
+        if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
             self.current.task_data['onaylandi'] = 1
             self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
                                                           'bulunamadı. Size bağlı olan proje '
@@ -34,7 +35,8 @@ class EkButceTalep(CrudView):
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
-        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=personel,
+        okutman = Okutman.objects.get(personel=personel)
+        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
                                                                            durum__in=[3, 5])]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
@@ -54,6 +56,7 @@ class EkButceTalep(CrudView):
 
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         butce_planlari = BAPButcePlani.objects.all(ilgili_proje=proje)
+        toplam = 0
         for butce in butce_planlari:
             if butce.key not in self.current.task_data['yeni_butceler']:
                 butce.durum = 4
@@ -71,6 +74,7 @@ class EkButceTalep(CrudView):
                     'gerekce': butce.gerekce
                 }
             durum = self.current.task_data['yeni_butceler'][butce.key]['durum']
+            toplam_fiyat = self.current.task_data['yeni_butceler'][butce.key]['yeni_toplam_fiyat']
             item = {
                 "fields": [
                     butce.muhasebe_kod,
@@ -92,7 +96,7 @@ class EkButceTalep(CrudView):
                 'key': butce.key
             }
             self.output['objects'].append(item)
-        toplam = sum(butce_planlari.values_list('toplam_fiyat'))
+            toplam += toplam_fiyat if toplam_fiyat else butce.toplam_fiyat
 
         self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam), ''],
                                        'actions': ''})

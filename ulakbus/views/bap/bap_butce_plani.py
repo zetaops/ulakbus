@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPButcePlani, BAPProje, Personel
+from ulakbus.models import BAPButcePlani, BAPProje, Personel, Okutman
 
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
@@ -32,8 +32,9 @@ class BapButcePlani(CrudView):
         self.current.task_data['proje_data'] = []
         if 'bap_proje_id' not in self.current.task_data:
             personel = Personel.objects.get(user=self.current.user)
+            okutman = Okutman.objects.get(personel=personel)
             self.current.task_data['proje_data'] = [(proje.key, proje.ad) for proje in
-                                                    BAPProje.objects.filter(yurutucu=personel)]
+                                                    BAPProje.objects.filter(yurutucu=okutman)]
             self.current.task_data['proje_sec'] = True
 
     def proje_sec(self):

@@ -34,7 +34,6 @@ class ProjeTuruFormlari(JsonForm):
         ad = fields.String(__(u"Form Adı"), index=True)
         file = fields.File(__(u"File"), index=True,
                            random_name=True)  # form eger PDF olarak yulendiyse bu alan kullanilir.
-        date = fields.Date(__(u"Form Tarihi"), index=True, format="%d.%m.%Y")
         gereklilik = fields.Boolean(__(u"Zorunluluk"), type="checkbox", required=False)
 
     def bap_proje_turu_form(self):
@@ -46,7 +45,6 @@ class ProjeTuruFormlari(JsonForm):
                 sec=False,
                 ad=form.ad,
                 file=form.file,
-                date=form.date,
                 gereklilik=False
             )
 
@@ -124,7 +122,6 @@ class ProjeTurleri(CrudView):
                 f = Form()
                 f.ad = form['ad']
                 f.file = form['file']
-                f.date = datetime.strptime(form['date'], '%Y-%m-%dT%H:%M:%S.%fZ').date()
                 f.permissions = Permission.objects.get(name='BAPProjeTurleri')
                 f.tag = "BAP"
                 f.save()
