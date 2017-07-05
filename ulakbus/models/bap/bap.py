@@ -27,6 +27,8 @@ class BAPProjeTurleri(Model):
     min_sure = field.Integer(__(u"Projenin minumum süreceği ay sayısı"))
     max_sure = field.Integer(__(u"Projenin maximum süreceği ay sayısı"))
     butce_ust_limit = field.Float(__(u"Projenin üst limiti"))
+    gerceklestirme_gorevlisi_yurutucu_ayni_mi = field.Boolean(
+        __(u"Projenin gerçekleştirme görevlisi ile yürütücüsü aynı kişi mi?"))
 
     class Meta:
         verbose_name = __(u"Proje Türü")
@@ -123,6 +125,9 @@ class BAPProje(Model):
 
     # Başvuruda doldurulacak alanlar
     yurutucu = Okutman()
+    gerceklestirme_gorevlisi = Personel()
+    harcama_yetkilisi = Personel()
+    muhasebe_yetkilisi = Personel()
 
     tur = BAPProjeTurleri()
 

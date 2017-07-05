@@ -109,6 +109,8 @@ class ProjeTurleri(CrudView):
         proje_turu.max_sure = self.current.task_data['proje_turu_bilgileri']['max_sure']
         proje_turu.butce_ust_limit = \
             self.current.task_data['proje_turu_bilgileri']['butce_ust_limit']
+        proje_turu.gerceklestirme_gorevlisi_yurutucu_ayni_mi = \
+        self.current.task_data['proje_turu_bilgileri']['gerceklestirme_gorevlisi_yurutucu_ayni_mi']
         if belgeler:
             [proje_turu.Belgeler(
                 ad=belge['ad'],
