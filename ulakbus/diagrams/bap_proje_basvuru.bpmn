@@ -310,10 +310,10 @@
     <bpmn:sequenceFlow id="SequenceFlow_1vnsalf" sourceRef="yurutucu_projeleri" targetRef="GerceklestirmeGorevlisiKontrolu" />
     <bpmn:sequenceFlow id="SequenceFlow_15bzlux" sourceRef="GerceklestirmeGorevlisiKontrolu" targetRef="ExclusiveGateway_1uwt77n" />
     <bpmn:sequenceFlow id="SequenceFlow_0v7a1fo" sourceRef="ExclusiveGateway_1uwt77n" targetRef="proje_kaydet">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">ayni == True</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">gerceklestirme_gorevlisi_yurutucu_ayni_mi == True</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0s9jaey" sourceRef="ExclusiveGateway_1uwt77n" targetRef="GerceklestirmeGorevlisiSec">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">ayni == False</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">gerceklestirme_gorevlisi_yurutucu_ayni_mi == False</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0khg4m9" sourceRef="GorevliSecimUyariMesaji" targetRef="GerceklestirmeGorevlisiSec" />
     <bpmn:sequenceFlow id="SequenceFlow_01wy2i8" sourceRef="GerceklestirmeGorevlisiSec" targetRef="GorevliSecimKontrolu" />
@@ -330,11 +330,11 @@
     <bpmn:sequenceFlow id="SequenceFlow_0230l3q" sourceRef="ExclusiveGateway_0suxe5p" targetRef="EndEvent_bap_project" />
     <bpmn:sequenceFlow id="SequenceFlow_0rytywv" sourceRef="GerceklestirmeGorevlisiKaydet" targetRef="proje_kaydet" />
     <bpmn:sequenceFlow id="SequenceFlow_1ppelzz" sourceRef="ExclusiveGateway_1gx85j2" targetRef="GerceklestirmeGorevlisiKaydet">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">uygun == True</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">gorevli_secimi_uygunlugu == True</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_07k59pd" sourceRef="GorevliSecimKontrolu" targetRef="ExclusiveGateway_1gx85j2" />
     <bpmn:sequenceFlow id="SequenceFlow_135uexu" sourceRef="ExclusiveGateway_1gx85j2" targetRef="GorevliSecimUyariMesaji">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">uygun == False</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">gorevli_secimi_uygunlugu == False</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">

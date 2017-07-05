@@ -257,8 +257,9 @@ class ProjeBasvuru(CrudView):
         if 'GerceklestirmeGorevlisiForm' in td and proje.gerceklestirme_gorevlisi.key != \
                 td['GerceklestirmeGorevlisiForm']['gerceklestirme_gorevlisi_id']:
             del td['GerceklestirmeGorevlisiForm']
-        td['ayni'] = tur.gerceklestirme_gorevlisi_yurutucu_ayni_mi
-        if td['ayni']:
+        aynilik_durumu = tur.gerceklestirme_gorevlisi_yurutucu_ayni_mi
+        td['gerceklestirme_gorevlisi_yurutucu_ayni_mi'] = aynilik_durumu
+        if aynilik_durumu:
             proje.gerceklestirme_gorevlisi = self.current.user.personel
             proje.save()
 
@@ -278,7 +279,7 @@ class ProjeBasvuru(CrudView):
 
         """
         gorevli_id = self.input['form']['gerceklestirme_gorevlisi_id']
-        self.current.task_data['uygun'] = (gorevli_id is not None)
+        self.current.task_data['gorevli_secimi_uygunlugu'] = (gorevli_id is not None)
 
     def gorevli_secim_uyari_mesaji(self):
         """
@@ -504,8 +505,6 @@ class ProjeBasvuru(CrudView):
 
     def proje_kaydet(self):
         td = self.current.task_data
-        td.pop('ayni', False)
-        td.pop('uygun', False)
         proje = BAPProje.objects.get(td['bap_proje_id'])
         yurutucu = Okutman.objects.get(personel=Personel.objects.get(user_id=self.current.user_id))
         proje.yurutucu = yurutucu
