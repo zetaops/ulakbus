@@ -132,13 +132,13 @@ class BAPProje(Model):
     teklif_edilen_baslama_tarihi = field.Date(_(u"Teklif Edilen Başlama Tarihi"))
     teklif_edilen_butce = field.Float(_(u"Teklif Edilen Bütçe"))
 
-    konu_ve_kapsam = field.Text(_(u"Konu ve Kapsam"), min_lenght=50, max_lenght=500)
-    literatur_ozeti = field.Text(_(u"Literatür Özeti"), min_lenght=50, max_lenght=500)
-    ozgun_deger = field.Text(_(u"Özgün Değer"), min_lenght=50, max_lenght=500)
-    hedef_ve_amac = field.Text(_(u"Hedef ve Amaç"), min_lenght=50, max_lenght=500)
-    yontem = field.Text(_(u"Yöntem"), min_lenght=50, max_lenght=500)
-    basari_olcutleri = field.Text(_(u"Başarı Ölçütleri"), min_lenght=50, max_lenght=500)
-    b_plani = field.Text(_(u"B Planı"), min_lenght=50, max_lenght=500)
+    konu_ve_kapsam = field.Text(_(u"Konu ve Kapsam"), min_length=50, max_length=500)
+    literatur_ozeti = field.Text(_(u"Literatür Özeti"), min_length=50, max_length=500)
+    ozgun_deger = field.Text(_(u"Özgün Değer"), min_length=50, max_length=500)
+    hedef_ve_amac = field.Text(_(u"Hedef ve Amaç"), min_length=50, max_length=500)
+    yontem = field.Text(_(u"Yöntem"), min_length=50, max_length=500)
+    basari_olcutleri = field.Text(_(u"Başarı Ölçütleri"), min_length=50, max_length=500)
+    b_plani = field.Text(_(u"B Planı"), min_length=50, max_length=500)
 
     bitis_tarihi = field.Date(_(u"Tamamlanma Tarihi"))
 
