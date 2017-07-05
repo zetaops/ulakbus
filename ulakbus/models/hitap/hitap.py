@@ -58,10 +58,8 @@ class HizmetKurs(Model):
     kurs_ogrenim_suresi = field.Integer(_(u"Kurs Öğrenim Süresi"), index=True)
     mezuniyet_tarihi = field.Date(_(u"Mezuniyet Tarihi"), index=True, format="%d.%m.%Y")
     kurs_nevi = field.Integer(_(u"Kurs Nevi"), index=True, choices="kurs_nevi")
-    bolum_ad = field.Integer(_(u"Bölüm Adı"), index=True,
-                             choices="bolum_adi")  # TODO: serviste karsiligi yok
-    okul_ad = field.Integer(_(u"Okul Adı"), index=True,
-                            choices="okul_adi")  # TODO: servisten gelen string
+    bolum_ad = field.String(_(u"Bölüm Adı"), index=True)  # TODO: serviste karsiligi yok
+    okul_ad = field.String(_(u"Okul Adı"), index=True)  # TODO: servisten gelen string
     ogrenim_yeri = field.String(_(u"Öğrenim Yeri"), index=True)
     denklik_tarihi = field.Date(_(u"Denklik Tarihi"), index=True, format="%d.%m.%Y")
     denklik_okulu = field.String(_(u"Denklik Okulu"), index=True)
@@ -419,23 +417,23 @@ class HizmetKayitlari(Model):
             self.order_date = self.bitis_tarihi
         self.save()
 
-    def post_creation(self):
-        if self.personel:
-            self.tckn = self.personel.tckn
-            self.gorev = "%s %s" % (self.personel.birim.name, self.personel.kadro.unvan)
-            self.unvan_kod = self.personel.kadro.unvan
-            self.hizmet_sinifi = self.personel.atama.hizmet_sinifi
-            self.kadro_derece = self.personel.kadro_derece
-            self.odeme_derece = self.personel.gorev_ayligi_derece
-            self.odeme_kademe = self.personel.gorunen_gorev_ayligi_kademe
-            self.odeme_ekgosterge = self.personel.gorev_ayligi_ekgosterge
-            self.kazanilmis_hak_ayligi_derece = self.personel.kazanilmis_hak_derece
-            self.kazanilmis_hak_ayligi_kademe = self.personel.gorunen_kazanilmis_hak_kademe
-            self.kazanilmis_hak_ayligi_ekgosterge = self.personel.kazanilmis_hak_ekgosterge
-            self.emekli_derece = self.personel.emekli_muktesebat_derece
-            self.emekli_kademe = self.personel.gorunen_emekli_muktesebat_kademe
-            self.emekli_ekgosterge = self.personel.emekli_muktesebat_ekgosterge
-            self.save()
+ #   def post_creation(self):
+ #       if self.personel:
+ #           self.tckn = self.personel.tckn
+ #           self.gorev = "%s %s" % (self.personel.birim.name, self.personel.kadro.unvan)
+ #           self.unvan_kod = self.personel.kadro.unvan
+ #           self.hizmet_sinifi = self.personel.atama.hizmet_sinifi
+ #           self.kadro_derece = self.personel.kadro_derece
+ #          self.odeme_derece = self.personel.gorev_ayligi_derece
+ #          self.odeme_kademe = self.personel.gorunen_gorev_ayligi_kademe
+  #          self.odeme_ekgosterge = self.personel.gorev_ayligi_ekgosterge
+   #         self.kazanilmis_hak_ayligi_derece = self.personel.kazanilmis_hak_derece
+#        self.kazanilmis_hak_ayligi_kademe = self.personel.gorunen_kazanilmis_hak_kademe
+ #           self.kazanilmis_hak_ayligi_ekgosterge = self.personel.kazanilmis_hak_ekgosterge
+ #           self.emekli_derece = self.personel.emekli_muktesebat_derece
+  #          self.emekli_kademe = self.personel.gorunen_emekli_muktesebat_kademe
+  #          self.emekli_ekgosterge = self.personel.emekli_muktesebat_ekgosterge
+  #          self.save()
 
     def __unicode__(self):
         return '%s %s %s' % (self.unvan_kod, self.hizmet_sinifi, self.gorev)

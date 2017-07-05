@@ -2,99 +2,33 @@
 
 from datetime import timedelta, date, datetime
 
-from ulakbus.models import HizmetKayitlari, HizmetBirlestirme, AskerlikKayitlari, HizmetOkul
-from ulakbus.models.personel import Personel, Izin, UcretsizIzin
+from ulakbus.models.hitap.hitap import HizmetKayitlari, HizmetBirlestirme
+from ulakbus.models import Personel, Izin, AskerlikKayitlari, UcretsizIzin
+from ulakbus.models import HizmetOkul, HizmetKurs
 from zengine.views.crud import CrudView
-
-personel_hizmet = """__Sicil No__: {sicil_no} | __Vatandaşlık No__: {tckn}
-
-### Fiili Hizmet
-
-__Emekli Sandığı__: {fiili_hizmet_emekli_sandigi}
-
-__Bağkur(Tüm)__: {fiili_hizmet_bagkur_tum}
-
-__Diğer Hizmetler__:  {fiili_hizmet_diger_hizmet}
-
-__Yurtdışı (Tüm)__: {fiili_hizmet_yurtdisi_tum}
-
-__Fiili İtibar__: {fiili_hizmet_fiili_hizmet}
-
-__SSK (Tüm)__: {fiili_hizmet_ssk_tum}
-
-__Askerlik__: {fiili_hizmet_askerlik_hesapla}
-
-__Ücretsiz İzin__: {fiili_hizmet_ucretsiz_izin}
-
-__Fahri Görev__: {fiili_hizmet_fahri_gorev}
-
-__Yurtdışı Eğitim__: {fiili_hizmet_yurtdisi_egitim}
-
-
-
-### Kıdem Hizmet
-
-__Emekli Sandığı__: {kidem_hizmet_emekli_sandigi}
-
-__Bağkur(2/3)__: {kidem_hizmet_bagkur_2_3}
-
-__Bağkur(3/4)__: {kidem_hizmet_bagkur_3_4}
-
-__Yurtdışı (2/3)__: {kidem_hizmet_yurtdisi_2_3}
-
-__Yurtdışı (3/4)__: {kidem_hizmet_yurtdisi_3_4}
-
-__Yurtdışı (Tüm)__: {kidem_hizmet_yurtdisi_tum}
-
-__Diğer Hizmetler__:  {kidem_hizmet_diger_hizmet}
-
-__SSK (2/3)__: {kidem_hizmet_ssk_2_3}
-
-__SSK (3/4)__: {kidem_hizmet_ssk_3_4}
-
-__SSK (Kamu)__: {kidem_hizmet_ssk_kamu}
-
-__Askerlik__: {kidem_hizmet_askerlik_hesapla}
-
-__Fahri Görev__: {kidem_hizmet_fahri_gorev}
-
-__Yurtdışı Eğitim__: {kidem_hizmet_yurtdisi_egitim}
-
-
-
-### İzin Hizmet
-
-__Emekli Sandığı__: {izin_hizmet_emekli_sandigi}
-
-__Bağkur(2/3)__: {izin_hizmet_bagkur_2_3}
-
-__Bağkur(3/4)__: {izin_hizmet_bagkur_3_4}
-
-__Yurtdışı (2/3)__: {izin_hizmet_yurtdisi_2_3}
-
-__Yurtdışı (3/4)__: {izin_hizmet_yurtdisi_3_4}
-
-__Yurtdışı (Tüm)__: {izin_hizmet_yurtdisi_tum}
-
-__Diğer Hizmetler__:  {izin_hizmet_diger_hizmet}
-
-__SSK (2/3)__: {izin_hizmet_ssk_2_3}
-
-__SSK (3/4)__: {izin_hizmet_ssk_3_4}
-
-__SSK (Kamu)__: {izin_hizmet_ssk_kamu}
-
-__Fahri Görev__: {izin_hizmet_fahri_gorev}
-
-__Yurtdışı Eğitim__: {izin_hizmet_yurtdisi_egitim}
-
-"""
-
+from pyoko.exceptions import ObjectDoesNotExist
+from collections import OrderedDict
 
 class HizmetSureleriView(CrudView):
 
     class Meta:
         model = 'Personel'
+
+    def sure_gosterim_duzenle(self, sure):
+        if sure == 0:
+            return 0
+        else:
+            yildan_kalan = sure % 360
+            sure -= yildan_kalan
+            yil = sure / 360
+            aydan_kalan = yildan_kalan % 30
+            yildan_kalan -= aydan_kalan
+            ay = yildan_kalan / 30
+            return "{yil} Yıl {ay} Ay {gun} Gun".format(
+                yil = yil,
+                ay = ay,
+                gun = aydan_kalan
+            )
 
     def goster(self):
         p = self.object
@@ -105,49 +39,134 @@ class HizmetSureleriView(CrudView):
         kidem_hizmet = hs.kidem_hizmet_ayrinti()
         izin_hizmet = hs.izin_hizmet_ayrinti()
 
-        self.output['object'] = {
-            "": personel_hizmet.format(
-                sicil_no=p.kurum_sicil_no_int,
-                tckn=p.tckn,
-                fiili_hizmet_emekli_sandigi=fiili_hizmet['emekli_sandigi'],
-                fiili_hizmet_bagkur_tum=fiili_hizmet['bagkur_tum'],
-                fiili_hizmet_diger_hizmet=fiili_hizmet['diger_hizmet'],
-                fiili_hizmet_yurtdisi_tum=fiili_hizmet['yurtdisi_tum'],
-                fiili_hizmet_fiili_hizmet=fiili_hizmet['fiili_hizmet'],
-                fiili_hizmet_ssk_tum=fiili_hizmet['ssk_tum'],
-                fiili_hizmet_askerlik_hesapla=fiili_hizmet['askerlik_hesapla'],
-                fiili_hizmet_ucretsiz_izin=fiili_hizmet['ucretsiz_izin'],
-                fiili_hizmet_fahri_gorev=fiili_hizmet['fahri_gorev'],
-                fiili_hizmet_yurtdisi_egitim=fiili_hizmet['yurtdisi_egitim'],
+        output = [{0: (u'Fiili Hizmet'),
+                   1: (u'Kıdem Hizmeti'),
+                   2: (u'İzin Hizmeti')}]
 
-                kidem_hizmet_emekli_sandigi=kidem_hizmet['emekli_sandigi'],
-                kidem_hizmet_bagkur_2_3=kidem_hizmet['bagkur_2_3'],
-                kidem_hizmet_bagkur_3_4=kidem_hizmet['bagkur_3_4'],
-                kidem_hizmet_yurtdisi_2_3=kidem_hizmet['yurtdisi_2_3'],
-                kidem_hizmet_yurtdisi_3_4=kidem_hizmet['yurtdisi_3_4'],
-                kidem_hizmet_yurtdisi_tum=kidem_hizmet['yurtdisi_tum'],
-                kidem_hizmet_diger_hizmet=kidem_hizmet['diger_hizmet'],
-                kidem_hizmet_ssk_2_3=kidem_hizmet['ssk_2_3'],
-                kidem_hizmet_ssk_3_4=kidem_hizmet['ssk_3_4'],
-                kidem_hizmet_ssk_kamu=kidem_hizmet['ssk_kamu'],
-                kidem_hizmet_askerlik_hesapla=kidem_hizmet['askerlik_hesapla'],
-                kidem_hizmet_fahri_gorev=kidem_hizmet['fahri_gorev'],
-                kidem_hizmet_yurtdisi_egitim=kidem_hizmet['yurtdisi_egitim'],
+        self.current.output['objects'] = output
 
-                izin_hizmet_emekli_sandigi=izin_hizmet['emekli_sandigi'],
-                izin_hizmet_bagkur_2_3=izin_hizmet['bagkur_2_3'],
-                izin_hizmet_bagkur_3_4=izin_hizmet['bagkur_3_4'],
-                izin_hizmet_yurtdisi_2_3=izin_hizmet['yurtdisi_2_3'],
-                izin_hizmet_yurtdisi_3_4=izin_hizmet['yurtdisi_3_4'],
-                izin_hizmet_yurtdisi_tum=izin_hizmet['yurtdisi_tum'],
-                izin_hizmet_diger_hizmet=izin_hizmet['diger_hizmet'],
-                izin_hizmet_ssk_2_3=izin_hizmet['ssk_2_3'],
-                izin_hizmet_ssk_3_4=izin_hizmet['ssk_3_4'],
-                izin_hizmet_ssk_kamu=izin_hizmet['ssk_kamu'],
-                izin_hizmet_fahri_gorev=izin_hizmet['fahri_gorev'],
-                izin_hizmet_yurtdisi_egitim=izin_hizmet['yurtdisi_egitim']
-            )
+        hesaplanan_fiili_hizmet = """
+        Emekli Sandığı: {fiili_hizmet_emekli_sandigi}
+
+        Bağkur(Tüm): {fiili_hizmet_bagkur_tum}
+
+        Diğer Hizmetler:  {fiili_hizmet_diger_hizmet}
+
+        Yurtdışı (Tüm): {fiili_hizmet_yurtdisi_tum}
+
+        Fiili İtibar: {fiili_hizmet_fiili_hizmet}
+
+        SSK (Tüm): {fiili_hizmet_ssk_tum}
+
+        Askerlik: {fiili_hizmet_askerlik_hesapla}
+
+        Ücretsiz İzin: {fiili_hizmet_ucretsiz_izin}
+
+        Fahri Görev: {fiili_hizmet_fahri_gorev}
+
+        Yurtdışı Eğitim: {fiili_hizmet_yurtdisi_egitim}
+        """.format(
+            fiili_hizmet_emekli_sandigi=self.sure_gosterim_duzenle(fiili_hizmet['emekli_sandigi']),
+            fiili_hizmet_bagkur_tum=self.sure_gosterim_duzenle(fiili_hizmet['bagkur_tum']),
+            fiili_hizmet_diger_hizmet=self.sure_gosterim_duzenle(fiili_hizmet['diger_hizmet']),
+            fiili_hizmet_yurtdisi_tum=self.sure_gosterim_duzenle(fiili_hizmet['yurtdisi_tum']),
+            fiili_hizmet_fiili_hizmet=self.sure_gosterim_duzenle(fiili_hizmet['fiili_hizmet']),
+            fiili_hizmet_ssk_tum=self.sure_gosterim_duzenle(fiili_hizmet['ssk_tum']),
+            fiili_hizmet_askerlik_hesapla=self.sure_gosterim_duzenle(fiili_hizmet['askerlik_hesapla']),
+            fiili_hizmet_ucretsiz_izin=self.sure_gosterim_duzenle(fiili_hizmet['ucretsiz_izin']),
+            fiili_hizmet_fahri_gorev=self.sure_gosterim_duzenle(fiili_hizmet['fahri_gorev']),
+            fiili_hizmet_yurtdisi_egitim=self.sure_gosterim_duzenle(fiili_hizmet['yurtdisi_egitim'])
+        )
+
+        hesaplanan_kidem_hizmeti = """
+        Emekli Sandığı: {kidem_hizmet_emekli_sandigi}
+
+        Bağkur(2/3): {kidem_hizmet_bagkur_2_3}
+
+        Bağkur(3/4): {kidem_hizmet_bagkur_3_4}
+
+        Yurtdışı (2/3): {kidem_hizmet_yurtdisi_2_3}
+
+        Yurtdışı (3/4): {kidem_hizmet_yurtdisi_3_4}
+
+        Yurtdışı (Tüm): {kidem_hizmet_yurtdisi_tum}
+
+        Diğer Hizmetler:  {kidem_hizmet_diger_hizmet}
+
+        SSK (2/3): {kidem_hizmet_ssk_2_3}
+
+        SSK (3/4): {kidem_hizmet_ssk_3_4}
+
+        SSK (Kamu): {kidem_hizmet_ssk_kamu}
+
+        Askerlik: {kidem_hizmet_askerlik_hesapla}
+
+        Fahri Görev: {kidem_hizmet_fahri_gorev}
+
+        Yurtdışı Eğitim: {kidem_hizmet_yurtdisi_egitim}
+        """.format(
+            kidem_hizmet_emekli_sandigi=self.sure_gosterim_duzenle(kidem_hizmet['emekli_sandigi']),
+            kidem_hizmet_bagkur_2_3=self.sure_gosterim_duzenle(kidem_hizmet['bagkur_2_3']),
+            kidem_hizmet_bagkur_3_4=self.sure_gosterim_duzenle(kidem_hizmet['bagkur_3_4']),
+            kidem_hizmet_yurtdisi_2_3=self.sure_gosterim_duzenle(kidem_hizmet['yurtdisi_2_3']),
+            kidem_hizmet_yurtdisi_3_4=self.sure_gosterim_duzenle(kidem_hizmet['yurtdisi_3_4']),
+            kidem_hizmet_yurtdisi_tum=self.sure_gosterim_duzenle(kidem_hizmet['yurtdisi_tum']),
+            kidem_hizmet_diger_hizmet=self.sure_gosterim_duzenle(kidem_hizmet['diger_hizmet']),
+            kidem_hizmet_ssk_2_3=self.sure_gosterim_duzenle(kidem_hizmet['ssk_2_3']),
+            kidem_hizmet_ssk_3_4=self.sure_gosterim_duzenle(kidem_hizmet['ssk_3_4']),
+            kidem_hizmet_ssk_kamu=self.sure_gosterim_duzenle(kidem_hizmet['ssk_kamu']),
+            kidem_hizmet_askerlik_hesapla=self.sure_gosterim_duzenle(kidem_hizmet['askerlik_hesapla']),
+            kidem_hizmet_fahri_gorev=self.sure_gosterim_duzenle(kidem_hizmet['fahri_gorev']),
+            kidem_hizmet_yurtdisi_egitim=self.sure_gosterim_duzenle(kidem_hizmet['yurtdisi_egitim'])
+        )
+
+        hesaplanan_izin_hizmeti = """
+        Emekli Sandığı: {izin_hizmet_emekli_sandigi}
+
+        Bağkur(2/3): {izin_hizmet_bagkur_2_3}
+
+        Bağkur(3/4): {izin_hizmet_bagkur_3_4}
+
+        Yurtdışı (2/3): {izin_hizmet_yurtdisi_2_3}
+
+        Yurtdışı (3/4): {izin_hizmet_yurtdisi_3_4}
+
+        Yurtdışı (Tüm): {izin_hizmet_yurtdisi_tum}
+
+        Diğer Hizmetler:  {izin_hizmet_diger_hizmet}
+
+        SSK (2/3): {izin_hizmet_ssk_2_3}
+
+        SSK (3/4): {izin_hizmet_ssk_3_4}
+
+        SSK (Kamu): {izin_hizmet_ssk_kamu}
+
+        Fahri Görev: {izin_hizmet_fahri_gorev}
+
+        Yurtdışı Eğitim: {izin_hizmet_yurtdisi_egitim}
+        """.format(
+            izin_hizmet_emekli_sandigi=self.sure_gosterim_duzenle(izin_hizmet['emekli_sandigi']),
+            izin_hizmet_bagkur_2_3=self.sure_gosterim_duzenle(izin_hizmet['bagkur_2_3']),
+            izin_hizmet_bagkur_3_4=self.sure_gosterim_duzenle(izin_hizmet['bagkur_3_4']),
+            izin_hizmet_yurtdisi_2_3=self.sure_gosterim_duzenle(izin_hizmet['yurtdisi_2_3']),
+            izin_hizmet_yurtdisi_3_4=self.sure_gosterim_duzenle(izin_hizmet['yurtdisi_3_4']),
+            izin_hizmet_yurtdisi_tum=self.sure_gosterim_duzenle(izin_hizmet['yurtdisi_tum']),
+            izin_hizmet_diger_hizmet=self.sure_gosterim_duzenle(izin_hizmet['diger_hizmet']),
+            izin_hizmet_ssk_2_3=self.sure_gosterim_duzenle(izin_hizmet['ssk_2_3']),
+            izin_hizmet_ssk_3_4=self.sure_gosterim_duzenle(izin_hizmet['ssk_3_4']),
+            izin_hizmet_ssk_kamu=self.sure_gosterim_duzenle(izin_hizmet['ssk_kamu']),
+            izin_hizmet_fahri_gorev=self.sure_gosterim_duzenle(izin_hizmet['fahri_gorev']),
+            izin_hizmet_yurtdisi_egitim=self.sure_gosterim_duzenle(izin_hizmet['yurtdisi_egitim'])
+        )
+        bilgiler = OrderedDict([(0, hesaplanan_fiili_hizmet), (1, hesaplanan_kidem_hizmeti),
+                                (2, hesaplanan_izin_hizmeti)])
+        item = {
+            "type": "table-multiRow",
+            "fields": bilgiler,
+            "actions": False
         }
+
+        self.current.output['objects'].append(item)
 
 
 class HizmetSureleri():
@@ -221,8 +240,22 @@ class HizmetSureleri():
 
     """
 
+    def tarih_fark_hesapla(self, baslangic, bitis):
+        sure = (bitis.year - baslangic.year) * 360
+        if bitis.month > baslangic.month:
+            sure += (bitis.month - baslangic.month) * 30
+        elif bitis.month < baslangic.month:
+            sure -= (baslangic.month - bitis.month) * 30
+
+        if bitis.day > baslangic.day:
+            sure += bitis.day - baslangic.day
+        elif bitis.day < baslangic.day:
+            sure -= baslangic.day - bitis.day
+
+        return sure
+
     def _emekli_sandigi_hesapla(self):
-        hizmetler = HizmetKayitlari.objects.filter(tckn=self.personel.tckn).order_by("order_date")
+        hizmetler = HizmetKayitlari.objects.filter(tckn=self.personel.tckn).order_by("-order_date")
 
         baslangic = None
         sure = 0
@@ -231,10 +264,11 @@ class HizmetSureleri():
             if hizmet.sebep_kod.nevi == 1:
                 baslangic = hizmet.baslama_tarihi
             elif hizmet.sebep_kod.nevi == 2:
-                sure += (hizmet.bitis_tarihi - baslangic).days
+                sure += self.tarih_fark_hesapla(baslangic, hizmet.bitis_tarihi)
+                baslangic = None
 
         if baslangic:
-            sure += (date.today() - baslangic).days
+            sure += self.tarih_fark_hesapla(baslangic, date.today())
 
         return sure
 
@@ -345,23 +379,29 @@ class HizmetSureleri():
         return sure
 
     def _askerlik_hesapla(self):
-        askerlik = AskerlikKayitlari.objects.get(tckn=self.personel.tckn)
-        sure = (askerlik.bitis_tarihi - askerlik.baslama_tarihi).days
+        try:
+            askerlik = AskerlikKayitlari.objects.get(tckn=self.personel.tckn)
+            sure = self.tarih_fark_hesapla(askerlik.baslama_tarihi, askerlik.bitis_tarihi)
+        except ObjectDoesNotExist:
+            sure = 0
         return sure
 
     def _fahri_gorev_hesapla(self):
         return 0
 
     def _yurtdisi_egitim_hesapla(self):
-        egitim_bilgileri = HizmetOkul.objects.filter(ogrenim_yeri=2)
+        egitim_bilgileri = HizmetOkul.objects.filter(ogrenim_yeri=2, tckn=self.personel.tckn)
         sure = 0
         for egitim in egitim_bilgileri:
             sure += egitim.ogrenim_suresi * 360
+        return sure
 
     def _ucretsiz_izin_hesapla(self):
         ucretsiz_izinler = UcretsizIzin.objects.filter(personel=self.personel)
         sure = 0
+
         for izin in ucretsiz_izinler:
-            sure += (izin.bitis - izin.baslangic).days
+            sure += self.tarih_fark_hesapla(izin.baslangic, izin.bitis)
+            #sure += (izin.bitis - izin.baslangic).days
 
         return sure
