@@ -504,6 +504,8 @@ class ProjeBasvuru(CrudView):
 
     def proje_kaydet(self):
         td = self.current.task_data
+        td.pop('ayni', False)
+        td.pop('uygun', False)
         proje = BAPProje.objects.get(td['bap_proje_id'])
         yurutucu = Okutman.objects.get(personel=Personel.objects.get(user_id=self.current.user_id))
         proje.yurutucu = yurutucu
