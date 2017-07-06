@@ -201,6 +201,15 @@ class ProjeBelgeForm(JsonForm):
     arastirma_olanaklari = fields.Button(_(u"Araştırma Olanakları"))
 
 
+class GerceklestirmeGorevlisiForm(JsonForm):
+    class Meta:
+        title = _(u"Proje Gerçekleştirme Görevlisi Seçimi")
+        include = ['gerceklestirme_gorevlisi']
+        always_blank = False
+
+    sec = fields.Button(_(u"Gerçekleştirme Görevlisi Seç"))
+
+
 class ProjeBasvuru(CrudView):
     class Meta:
         model = "BAPProje"
@@ -234,6 +243,63 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
+
+    def gerceklestirme_gorevlisi_kontrolu(self):
+        """
+        Seçilen proje türüne göre, gerçekleştirme görevlisinin projenin yürütücüsü ile aynı kişi 
+        olması durumu kontrol edilir. Aynı kişi olması gerekiyorsa projenin gerçekleştirme 
+        görevlisi, proje başvurusu yapan öğretim görevlisi olarak atanır.
+
+        """
+        td = self.current.task_data
+        proje = BAPProje.objects.get(td['bap_proje_id'])
+        tur = BAPProjeTurleri.objects.get(td['ProjeTurForm']['tur_id'])
+        if 'GerceklestirmeGorevlisiForm' in td and proje.gerceklestirme_gorevlisi.key != \
+                td['GerceklestirmeGorevlisiForm']['gerceklestirme_gorevlisi_id']:
+            del td['GerceklestirmeGorevlisiForm']
+        aynilik_durumu = tur.gerceklestirme_gorevlisi_yurutucu_ayni_mi
+        td['gerceklestirme_gorevlisi_yurutucu_ayni_mi'] = aynilik_durumu
+        if aynilik_durumu:
+            proje.gerceklestirme_gorevlisi = self.current.user.personel
+            proje.blocking_save()
+
+    def gerceklestirme_gorevlisi_sec(self):
+        """
+        Gerçekleştirme görevlisinin, proje yürütücüsünün farklı olması gereken durumda yürütücüden 
+        projesi için bir gerçekleştirme görevlisi seçmesi istenir.
+
+        """
+        self.form_out(GerceklestirmeGorevlisiForm(self.object, current=self.current))
+
+    def gorevli_secim_kontrolu(self):
+        """
+        Gerçekleştirme görevlisi seçim formunun boş submit edilip edilmediğini kontrol eder. Boş 
+        seçilmiş ise kullanıcı bir seçim yapması yönünde uyarılır ve seçim ekranına tekrardan 
+        yönlendirilir.
+
+        """
+        gorevli_id = self.input['form']['gerceklestirme_gorevlisi_id']
+        self.current.task_data['gorevli_secimi_uygunlugu'] = True if gorevli_id else False
+
+    def gorevli_secim_uyari_mesaji(self):
+        """
+        Uyarı mesajı oluşturulur.         
+
+        """
+        self.current.output['msgbox'] = {'type': 'warning',
+                                         "title": _(u"Gerçekleştirme Görevlisi Seçimi Hatası"),
+                                         "msg": _(u"İlerlemek için projenize bir gerçekleştirme "
+                                                  u"görevlisi seçmelisiniz.")}
+
+    def gerceklestirme_gorevlisi_kaydet(self):
+        """
+        Formdan seçilen personel, projenin gerçekleştirme görevlisi olarak kaydedilir.
+                
+        """
+        gorevli = Personel.objects.get(self.input['form']['gerceklestirme_gorevlisi_id'])
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        proje.gerceklestirme_gorevlisi = gorevli
+        proje.blocking_save()
 
     def proje_genel_bilgilerini_gir(self):
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))
