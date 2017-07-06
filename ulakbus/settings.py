@@ -216,7 +216,11 @@ ALLOWED_ORIGINS += [
     'http://nightly.ulakbus.net'
 ]
 
+# Universite ID'sidir
 UID = 173500
+
+UNIVERSITY_NAME = os.environ.get('UNIVERSITY_NAME', 'ULAKBUS')
+UNIVERSITY_LOGO = os.environ.get('UNIVERSITY_LOGO', None)
 
 FILE_MANAGER = 'ulakbus.lib.s3_file_manager.S3FileManager'
 ALLOWED_FILE_TYPES = {
