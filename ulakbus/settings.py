@@ -60,7 +60,7 @@ ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
 # diagrams that does not require logged in user
 ANONYMOUS_WORKFLOWS.extend(
     ['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle', 'bap_firma_kayit',
-     'bap_duyurulari_goruntule', 'bap_makine_techizat_ara',
+     'bap_duyurulari_goruntule', 'bap_makine_techizat_ara', 'bap_anasayfa'
      ])
 
 #: Ortak kullanılan workflowlar
