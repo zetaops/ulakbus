@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+  <bpmn:collaboration id="Collaboration_023p3is">
+    <bpmn:participant id="Participant_1dinki1" processRef="bap_butce_fisi" />
+  </bpmn:collaboration>
+  <bpmn:process id="bap_butce_fisi" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0dpvipl</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0dpvipl" sourceRef="StartEvent_1" targetRef="butce_kalem_listele" />
+    <bpmn:userTask id="butce_kalem_listele" name="Bütçe Kalemlerini Listele">
+      <bpmn:incoming>SequenceFlow_0dpvipl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1pl6bp4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1pl6bp4" sourceRef="butce_kalem_listele" targetRef="butce_fislerini_kaydet" />
+    <bpmn:serviceTask id="butce_fislerini_kaydet" name="Bütçe Fişlerini Kaydet">
+      <bpmn:incoming>SequenceFlow_1pl6bp4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1j3xm2u</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_0uimspc">
+      <bpmn:incoming>SequenceFlow_1j3xm2u</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1j3xm2u" sourceRef="butce_fislerini_kaydet" targetRef="EndEvent_0uimspc" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_023p3is">
+      <bpmndi:BPMNShape id="Participant_1dinki1_di" bpmnElement="Participant_1dinki1">
+        <dc:Bounds x="147" y="188" width="651" height="247" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="197" y="295" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="215" y="331" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0dpvipl_di" bpmnElement="SequenceFlow_0dpvipl">
+        <di:waypoint xsi:type="dc:Point" x="233" y="313" />
+        <di:waypoint xsi:type="dc:Point" x="278" y="313" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="256" y="298" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_080sw7y_di" bpmnElement="butce_kalem_listele">
+        <dc:Bounds x="278" y="273" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1pl6bp4_di" bpmnElement="SequenceFlow_1pl6bp4">
+        <di:waypoint xsi:type="dc:Point" x="378" y="313" />
+        <di:waypoint xsi:type="dc:Point" x="437" y="313" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="408" y="298" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0ou910j_di" bpmnElement="butce_fislerini_kaydet">
+        <dc:Bounds x="437" y="273" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0uimspc_di" bpmnElement="EndEvent_0uimspc">
+        <dc:Bounds x="638" y="295" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="656" y="331" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1j3xm2u_di" bpmnElement="SequenceFlow_1j3xm2u">
+        <di:waypoint xsi:type="dc:Point" x="537" y="313" />
+        <di:waypoint xsi:type="dc:Point" x="638" y="313" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="588" y="288" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
