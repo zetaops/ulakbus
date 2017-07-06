@@ -25,7 +25,8 @@ class TestCase(BaseTestCase):
                     'ileri': 1,
                     'kod': "Test Proje Tur Kod",
                     'max_sure': 8,
-                    'min_sure': 4}
+                    'min_sure': 4,
+                    'gerceklestirme_gorevlisi_yurutucu_ayni_mi':True}
 
             belge_form = {'Belgeler': [{'ad': "Test Proje Turu Belge", 'gereklilik': True}],
                           'ileri': 1}
@@ -43,7 +44,8 @@ class TestCase(BaseTestCase):
                            u'Proje türünün Adı': "Test Tur Ad",
                            u'Projenin maximum süreceği ay sayısı': "8",
                            u'Projenin minumum süreceği ay sayısı': "4",
-                           u'Projenin üst limiti': "2500.0"}
+                           u'Projenin üst limiti': "2500.0",
+                           u"Projenin gerçekleştirme görevlisi ile yürütücüsü aynı kişi mi?":'Evet'}
 
             if i == 0:
                 self.client.post(cmd='add_edit_form', form={'add': 1})
@@ -88,7 +90,7 @@ class TestCase(BaseTestCase):
             resp = self.client.post(wf='bap_proje_turleri', cmd='show', object_id=object_id)
 
             for key, value in resp.json['object'].items():
-                assert object_form[key] == value
+                 assert object_form[key] == value
             self.client.post(wf='bap_proje_turleri', object_key=object_id, form={'tamam': 1})
 
         self.client.post(wf='bap_proje_turleri', cmd='delete', object_id=object_id)

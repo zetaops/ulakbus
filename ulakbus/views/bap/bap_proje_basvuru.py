@@ -261,7 +261,7 @@ class ProjeBasvuru(CrudView):
         td['gerceklestirme_gorevlisi_yurutucu_ayni_mi'] = aynilik_durumu
         if aynilik_durumu:
             proje.gerceklestirme_gorevlisi = self.current.user.personel
-            proje.save()
+            proje.blocking_save()
 
     def gerceklestirme_gorevlisi_sec(self):
         """
@@ -299,7 +299,7 @@ class ProjeBasvuru(CrudView):
         gorevli = Personel.objects.get(self.input['form']['gerceklestirme_gorevlisi_id'])
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         proje.gerceklestirme_gorevlisi = gorevli
-        proje.save()
+        proje.blocking_save()
 
     def proje_genel_bilgilerini_gir(self):
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))

@@ -15,7 +15,11 @@ class TestCase(BaseTestCase):
     def test_bap_proje_basvuru(self):
 
         for loop in range(2):
+            form = {
+                'sec': 1,
+            }
             if loop == 1:
+                form['tur_id'] = 'NHOloQ0kAy3Reb03aSlrfEnnlJb'
                 sleep(1)
                 token, user = self.get_user_token('ogretim_uyesi_1')
                 self.prepare_client('/bap_proje_basvuru', user=user, token=token)
@@ -37,17 +41,15 @@ class TestCase(BaseTestCase):
                 assert 'UniversiteDisiDestekForm' in self.client.current.task_data
                 assert 'UniversiteDisiUzmanForm' in self.client.current.task_data
                 assert 'YurutucuTecrubesiForm' in self.client.current.task_data
+                assert 'GerceklestirmeGorevlisiForm' in self.client.current.task_data
+
 
                 self.client.post(form={'devam': 1})
             else:
+                form['tur_id'] = 'Kvu9MRWA52accYwKfWKegtZr2BA'
                 user = User.objects.get(username='ogretim_uyesi_1')
                 self.prepare_client('/bap_proje_basvuru', user=user)
                 self.client.post()
-
-            form = {
-                'sec': 1,
-                'tur_id': 'Kvu9MRWA52accYwKfWKegtZr2BA'
-            }
 
             sleep(1)
 
@@ -251,9 +253,26 @@ class TestCase(BaseTestCase):
             assert resp.json['forms']['model']['form_name'] == 'YurutucuProjeForm'
             proje = resp.json['forms']['model']['Proje']
 
-            # Görüntüle
-            self.client.post(cmd='ileri', form={'ileri': 1,
-                                                'Proje': proje if proje else []})
+            resp = self.client.post(cmd='ileri', form={'ileri': 1,
+                                                       'Proje': proje if proje else []})
+
+            # Proje Gerçekleştiricisi
+            proje = BAPProje.objects.get(self.client.current.task_data['bap_proje_id'])
+            if loop == 0:
+                assert "Gerçekleştirme Görevlisi" in resp.json['forms']['schema']['title']
+                resp = self.client.post(wf='bap_proje_basvuru',
+                                        form={'gerceklestirme_gorevlisi_id': None, 'sec': 1})
+                assert resp.json['msgbox']['title'] == "Gerçekleştirme Görevlisi Seçimi Hatası"
+                assert "Gerçekleştirme Görevlisi" in resp.json['forms']['schema']['title']
+                self.client.post(wf='bap_proje_basvuru',
+                                 form={'gerceklestirme_gorevlisi_id': "DFAhsiUW9rhz0bhmM5C9WOacorI",
+                                       'sec': 1})
+                proje.reload()
+                assert proje.gerceklestirme_gorevlisi.key == "DFAhsiUW9rhz0bhmM5C9WOacorI"
+
+            if loop == 1:
+                proje.reload()
+                assert proje.gerceklestirme_gorevlisi.user == self.client.current.user
 
             # Onaya gönder
             resp = self.client.post(cmd='onay', form={'onay': 1})

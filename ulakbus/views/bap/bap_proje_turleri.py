@@ -150,7 +150,10 @@ class ProjeTurleri(CrudView):
                 obj_data[key] = ' - '.join(data)
             else:
                 obj_data[key] = str(d['value'])
-
+        durum = (
+        obj_data[u'Projenin gerçekleştirme görevlisi ile yürütücüsü aynı kişi mi?'] == 'True')
+        obj_data[
+            u'Projenin gerçekleştirme görevlisi ile yürütücüsü aynı kişi mi?'] = 'Evet' if durum else 'Hayır'
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)

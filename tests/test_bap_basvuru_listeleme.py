@@ -200,6 +200,9 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == "Yürütücünün Halihazırdaki Projeleri"
         resp = self.client.post(cmd="ileri", wf='bap_proje_basvuru',
                                 form={'ileri': 1, 'form_name': "YurutucuProjeForm"})
+        assert resp.json['forms']['schema']['title'] == "Proje Gerçekleştirme Görevlisi Seçimi"
+        resp = self.client.post(wf='bap_proje_basvuru',
+                                form={'sec': 1, 'form_name': "GerceklestirmeGorevlisiForm"})
 
         # Revize edildikten sonra onaya göndermeden önceki gösterimde
         # projenin adının değiştiği kontrol edilir.
