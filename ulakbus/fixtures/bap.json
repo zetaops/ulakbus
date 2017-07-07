@@ -14,138 +14,138 @@
     }
   },
   "analitik_butce_dorduncu_duzey_gider_kodlari": {
-    "03.2.1.01": {
-      "tr": "Kırtasiye Alımları",
-      "en": ""
-    },
-    "03.2.1.02": {
-      "tr": "Büro Malzemesi Alımları",
-      "en": ""
-    },
-    "03.2.1.03": {
-      "tr": "Periyodik Yayın Alımları",
-      "en": ""
-    },
-    "03.2.1.04": {
-      "tr": "Diğer Yayın Alımları",
-      "en": ""
-    },
-    "03.2.1.05": {
-      "tr": "Baskı ve Cilt Giderleri",
-      "en": ""
-    },
-    "03.2.1.90": {
-      "tr": "Diğer Kırtasiye ve Büro malzeme alımları",
-      "en": ""
-    },
-    "03.2.3.02": {
-      "tr": "Akaryakıt ve Yağ Alımları",
-      "en": ""
-    },
-    "03.2.4.03": {
-      "tr": "Yem Alımları",
-      "en": ""
-    },
-    "03.2.6.01": {
-      "tr": "Laboratuvar Malzemesi ile Kimyevi ve Temrinlik Malzeme Alımı",
-      "en": ""
-    },
-    "03.2.6.02": {
-      "tr": "Tıbbi Malzeme ve İlaç Alımları",
-      "en": ""
-    },
-    "03.2.6.03": {
-      "tr": "Zirai Malzeme ve İlaç Alımları",
-      "en": ""
-    },
-    "03.2.6.04": {
-      "tr": "Canlı Hayvan Alım, Bakım ve Diğer Giderleri",
-      "en": ""
-    },
-    "03.2.6.90": {
-      "tr": "Diğer Özel Malzeme Alımları",
-      "en": ""
-    },
-    "03.2.9.01": {
-      "tr": "Bahçe Malzemesi Alımları ile Yapım ve Bakım Giderleri ",
-      "en": ""
-    },
-    "03.2.9.90": {
-      "tr": "Diğer Tüketim Mal ve Malzemesi Alımları",
-      "en": ""
-    },
-    "03.3.1.01": {
-      "tr": "Yurtiçi Geçici Görev Yollukları",
-      "en": ""
-    },
-    "03.3.3.01": {
-      "tr": "Yurtdışı Geçici Görev Yollukları",
-      "en": ""
-    },
-    "03.5.1.01": {
-      "tr": "Etüt-Proje Bilirkişi Ekspertiz Giderleri",
-      "en": ""
-    },
-    "03.5.1.02": {
-      "tr": "Araştırma ve Geliştirme Giderleri",
-      "en": ""
-    },
-    "03.5.1.05": {
-      "tr": "Harita Yapım ve Alım Giderleri",
-      "en": ""
-    },
-    "03.5.1.06": {
-      "tr": "Enformasyon ve Raporlama Giderleri",
-      "en": ""
-    },
-    "03.5.1.90": {
-      "tr": "Diğer Müşavir Firma ve Kişilere Ödemeler",
-      "en": ""
-    },
-    "03.5.5.01": {
-      "tr": "Dayanıklı Mal ve Malzeme Kiralama Giderleri",
-      "en": ""
-    },
-    "03.5.5.02": {
-      "tr": "Taşıt Kiralaması Giderleri",
-      "en": ""
-    },
-    "03.5.5.08": {
-      "tr": "Yüzer Taşıt Kiralaması Giderleri",
-      "en": ""
-    },
-    "03.5.9.03": {
-      "tr": "Kurslara Katılma Giderleri",
-      "en": ""
-    },
-    "03.7.1.01": {
-      "tr": "Büro ve İşyeri Mal , Malzeme Alımları",
-      "en": ""
-    },
-    "03.7.1.02": {
-      "tr": "Büro ve İşyeri Makine ve Teçhizat Alımları",
-      "en": ""
-    },
-    "03.7.1.03": {
-      "tr": "Avadanlık ve Yedek Parça Alımları (Herhangi bir bakım sözleşmesinden veya işinden bağımsız olarak alınan yedek parçalar)",
-      "en": ""
-    },
-    "03.7.1.90": {
-      "tr": "Diğer Dayanıklı Mal ve Malzeme Alımı",
-      "en": ""
-    },
-    "03.7.2.01": {
-      "tr": "Bilgisayar Yazılım Alımları ve Yapımları",
-      "en": ""
-    },
-    "03.7.3.01": {
-      "tr": "Tefrişat Bakım ve Onarım Giderleri",
-      "en": ""
-    },
-    "03.7.3.02": {
-      "tr": "Makine Teçhizat Bakım ve Onarım Giderleri",
-      "en": ""
-    }
+   "03.2.1.01":{
+      "en":"",
+      "tr":"03.2.1.01 - Kırtasiye Alımları"
+   },
+   "03.2.1.02":{
+      "en":"",
+      "tr":"03.2.1.02 - Büro Malzemesi Alımları"
+   },
+   "03.2.1.03":{
+      "en":"",
+      "tr":"03.2.1.03 - Periyodik Yayın Alımları"
+   },
+   "03.2.1.04":{
+      "en":"",
+      "tr":"03.2.1.04 - Diğer Yayın Alımları"
+   },
+   "03.2.1.05":{
+      "en":"",
+      "tr":"03.2.1.05 - Baskı ve Cilt Giderleri"
+   },
+   "03.2.1.90":{
+      "en":"",
+      "tr":"03.2.1.90 - Diğer Kırtasiye ve Büro malzeme alımları"
+   },
+   "03.2.3.02":{
+      "en":"",
+      "tr":"03.2.3.02 - Akaryakıt ve Yağ Alımları"
+   },
+   "03.2.4.03":{
+      "en":"",
+      "tr":"03.2.4.03 - Yem Alımları"
+   },
+   "03.2.6.01":{
+      "en":"",
+      "tr":"03.2.6.01 - Laboratuvar Malzemesi ile Kimyevi ve Temrinlik Malzeme Alımı"
+   },
+   "03.2.6.02":{
+      "en":"",
+      "tr":"03.2.6.02 - Tıbbi Malzeme ve İlaç Alımları"
+   },
+   "03.2.6.03":{
+      "en":"",
+      "tr":"03.2.6.03 - Zirai Malzeme ve İlaç Alımları"
+   },
+   "03.2.6.04":{
+      "en":"",
+      "tr":"03.2.6.04 - Canlı Hayvan Alım, Bakım ve Diğer Giderleri"
+   },
+   "03.2.6.90":{
+      "en":"",
+      "tr":"03.2.6.90 - Diğer Özel Malzeme Alımları"
+   },
+   "03.2.9.01":{
+      "en":"",
+      "tr":"03.2.9.01 - Bahçe Malzemesi Alımları ile Yapım ve Bakım Giderleri "
+   },
+   "03.2.9.90":{
+      "en":"",
+      "tr":"03.2.9.90 - Diğer Tüketim Mal ve Malzemesi Alımları"
+   },
+   "03.3.1.01":{
+      "en":"",
+      "tr":"03.3.1.01 - Yurtiçi Geçici Görev Yollukları"
+   },
+   "03.3.3.01":{
+      "en":"",
+      "tr":"03.3.3.01 - Yurtdışı Geçici Görev Yollukları"
+   },
+   "03.5.1.01":{
+      "en":"",
+      "tr":"03.5.1.01 - Etüt-Proje Bilirkişi Ekspertiz Giderleri"
+   },
+   "03.5.1.02":{
+      "en":"",
+      "tr":"03.5.1.02 - Araştırma ve Geliştirme Giderleri"
+   },
+   "03.5.1.05":{
+      "en":"",
+      "tr":"03.5.1.05 - Harita Yapım ve Alım Giderleri"
+   },
+   "03.5.1.06":{
+      "en":"",
+      "tr":"03.5.1.06 - Enformasyon ve Raporlama Giderleri"
+   },
+   "03.5.1.90":{
+      "en":"",
+      "tr":"03.5.1.90 - Diğer Müşavir Firma ve Kişilere Ödemeler"
+   },
+   "03.5.5.01":{
+      "en":"",
+      "tr":"03.5.5.01 - Dayanıklı Mal ve Malzeme Kiralama Giderleri"
+   },
+   "03.5.5.02":{
+      "en":"",
+      "tr":"03.5.5.02 - Taşıt Kiralaması Giderleri"
+   },
+   "03.5.5.08":{
+      "en":"",
+      "tr":"03.5.5.08 - Yüzer Taşıt Kiralaması Giderleri"
+   },
+   "03.5.9.03":{
+      "en":"",
+      "tr":"03.5.9.03 - Kurslara Katılma Giderleri"
+   },
+   "03.7.1.01":{
+      "en":"",
+      "tr":"03.7.1.01 - Büro ve İşyeri Mal , Malzeme Alımları"
+   },
+   "03.7.1.02":{
+      "en":"",
+      "tr":"03.7.1.02 - Büro ve İşyeri Makine ve Teçhizat Alımları"
+   },
+   "03.7.1.03":{
+      "en":"",
+      "tr":"03.7.1.03 - Avadanlık ve Yedek Parça Alımları (Herhangi bir bakım sözleşmesinden veya işinden bağımsız olarak alınan yedek parçalar)"
+   },
+   "03.7.1.90":{
+      "en":"",
+      "tr":"03.7.1.90 - Diğer Dayanıklı Mal ve Malzeme Alımı"
+   },
+   "03.7.2.01":{
+      "en":"",
+      "tr":"03.7.2.01 - Bilgisayar Yazılım Alımları ve Yapımları"
+   },
+   "03.7.3.01":{
+      "en":"",
+      "tr":"03.7.3.01 - Tefrişat Bakım ve Onarım Giderleri"
+   },
+   "03.7.3.02":{
+      "en":"",
+      "tr":"03.7.3.02 - Makine Teçhizat Bakım ve Onarım Giderleri"
+   }
   },
   "bap_proje_durum": {
     "1": {
