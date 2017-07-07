@@ -271,7 +271,9 @@ class BAPButcePlani(Model):
         verbose_name_plural = __(u"Bap Bütçe Planları")
         list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet',
                        'toplam_fiyat']
-
+    # Öğretim üyesinin seçeceği muhasebe kodları
+    muhasebe_kod_genel = field.Integer(__(u"Muhasebe Kod"),
+                                      choices='bap_ogretim_uyesi_gider_kodlari', default=1)
     muhasebe_kod = field.String(__(u"Muhasebe Kod"),
                                 choices='analitik_butce_dorduncu_duzey_gider_kodlari',
                                 default="03.2.6.90")

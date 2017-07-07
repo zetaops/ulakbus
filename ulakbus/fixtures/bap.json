@@ -314,5 +314,27 @@
       "tr": "Proje Değerlendirildi",
       "en": ""
     }
+  },
+  "bap_ogretim_uyesi_gider_kodlari": {
+    "1": {
+      "tr": "Hizmet Alımı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Yolluk",
+      "en": ""
+    },
+    "3": {
+      "tr": "Tüketim Malzemesi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Makine Teçhizat",
+      "en": ""
+    },
+    "5": {
+      "tr": "Yazılım",
+      "en": ""
+    }
   }
 }
