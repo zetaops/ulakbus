@@ -5,7 +5,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel, UcretsizIzin
-from ulakbus.models.hitap.hitap import HizmetKayitlari
+from ulakbus.models.hitap.hitap import HizmetKayitlari, HitapSebep
 from datetime import timedelta, date
 
 
@@ -88,7 +88,7 @@ class UcretsizIzinIslemleri(CrudView):
                 hitap_kaydi.unvan_kod = personel.kadro.unvan
 
                 ## TODO: Sebep Kodları fixtures eklenecek
-                hitap_kaydi.sebep_kod = 269
+                hitap_kaydi.sebep_kod = HitapSebep.objects.get(sebep_no=269)
                 hitap_kaydi.kurum_onay_tarihi = self.object.onay_tarihi
                 hitap_kaydi.sync = 2
                 hitap_kaydi.save()
@@ -105,7 +105,7 @@ class UcretsizIzinIslemleri(CrudView):
             hitap_kaydi.unvan_kod = personel.kadro.unvan
 
             ## TODO: Sebep Kodları fixtures eklenecek, form içerisinden seçilecek
-            hitap_kaydi.sebep_kod = 269
+            hitap_kaydi.sebep_kod = HitapSebep.objects.get(sebep_no=269)
             hitap_kaydi.kurum_onay_tarihi = self.object.onay_tarihi
             hitap_kaydi.sync = 2
             hitap_kaydi.save()
