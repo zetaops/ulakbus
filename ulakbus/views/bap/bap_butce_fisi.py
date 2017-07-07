@@ -33,9 +33,20 @@ class ButceKalemleriForm(JsonForm):
 
 
 class BAPButceFisiView(CrudView):
+    """
+    Koordinasyon biriminin bütçe kalemlerine muhasebe kodlarını girdiği iş akışıdır. Proje
+    onaylandıktan sonra koordinasyon biriminin görev yöneticisine bu iş akışı düşer, iş akışı görev
+     yöneticisinden başlatılır. Tamamlandığında da görev yöneticisinden silinir.
+    """
     def butce_kalemlerini_goruntule(self):
-        # proje_id = self.current.task_data['bap_proje_id']
-        proje_id = 'WlRiJzMM4XExfmbgVyJDBZAUGg'
+        """
+        Bütçe kalemleri; isimleri, öğretim üyesinin girdiği genel muhasebe türleri ve muhasebe
+        kodları ile listelenir. Koordinasyon birimi bu liste üzerinde muhasebe kodlarını seçerler.
+         Kaydet ve listele butonu ile muhasebe kodları kaydedilerek read-only bir şekilde
+         listenir. İptal butonu iş akışından çıkılmasını sağlar, ancak iş akışı tamamlanmadığı için
+         görev yöneticisinden silinmez. Tıklandığında kaldığı yerden devam eder.
+        """
+        proje_id = self.current.task_data['bap_proje_id']
         butce_kalemleri = BAPButcePlani.objects.all(ilgili_proje_id=proje_id)
         form = ButceKalemleriForm(current=self.current, title=BAPProje.objects.get(proje_id).ad)
         for bk in butce_kalemleri:
@@ -51,6 +62,9 @@ class BAPButceFisiView(CrudView):
         self.form_out(form)
 
     def butce_kalemlerini_kaydet(self):
+        """
+        Listedeki bütçe kalemlerini submit edildiği şekilde kaydeder.
+        """
         butce_kalemleri = self.input['form']['ButceKalemList']
         for bk in butce_kalemleri:
             butce_plani = BAPButcePlani.objects.get(bk['key'])
@@ -59,16 +73,17 @@ class BAPButceFisiView(CrudView):
                 butce_plani.blocking_save()
 
     def yonlendir(self):
+        """
+        Anasayfaya yönlendirir ve iş akışını bir sonraki adıma taşır.
+        """
         self.current.output['cmd'] = 'reload'
 
     def uyari_mesaji_goster(self):
-        # form = JsonForm(title=_(u"Bütçe Fişi Onayı"))
-        # form.help_text = _(u"Bütçe Kalemleri kodlarını kaydetmek istediğinize emin misiniz?")
-        # form.geri = fields.Button(_(u"Geri"), cmd='geri')
-        # form.onay = fields.Button(_(u"Onayla"), cmd='bitir')
-        # self.form_out(form)
-        proje_id = 'WlRiJzMM4XExfmbgVyJDBZAUGg'
-        butce_kalemleri = BAPButcePlani.objects.all(ilgili_proje_id=proje_id)
+        """
+         Bütçe kalemlerinin read-only olarak gösterildiği adımdır. Değişiklik yapılmak istenirse
+         listeye dön butonu ile listeye dönülür, istenmezse Bitir butonu ile iş akışı sonlanır.
+        """
+        proje_id = self.current.task_data['bap_proje_id']
         setattr(ButceKalemleriForm, 'iptal', fields.Button(_(u"Listeye Dön"), cmd='geri'))
         setattr(ButceKalemleriForm, 'kaydet', fields.Button(_(u"Bitir"), cmd='bitir'))
         setattr(ButceKalemleriForm.Meta, 'inline_edit', [])
