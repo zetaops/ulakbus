@@ -11,7 +11,7 @@ import base64
 import csv
 from datetime import datetime
 from io import BytesIO
-from settings import DATA_GRID_PAGE_SIZE, DATE_DEFAULT_FORMAT
+from ulakbus.settings import DATA_GRID_PAGE_SIZE, DATE_DEFAULT_FORMAT
 from ulakbus.lib.common import get_file_url
 from pyoko.fields import DATE_FORMAT
 from ulakbus.lib.s3_file_manager import S3FileManager
@@ -286,7 +286,7 @@ class DataGrid(object):
                 if ac in self.select_fields or ac in self.multiselect_fields:
                     d[ac] = self.select_options_dict[ac].get(str(data[ac]))
                 elif ac in self.range_date_fields:
-                    if data[ac] is not None and data[ac] != '':
+                    if data[ac] is not None and data[ac] != '' and data[ac] != '0000-00-00T00:00:00Z':
                         d[ac] = datetime.strftime(
                             datetime.strptime(data[ac], DATE_FORMAT).date(), DATE_DEFAULT_FORMAT)
                 else:
