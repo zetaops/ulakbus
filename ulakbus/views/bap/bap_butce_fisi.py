@@ -46,7 +46,9 @@ class BAPButceFisiView(CrudView):
          listenir. İptal butonu iş akışından çıkılmasını sağlar, ancak iş akışı tamamlanmadığı için
          görev yöneticisinden silinmez. Tıklandığında kaldığı yerden devam eder.
         """
-        proje_id = self.current.task_data['bap_proje_id']
+        proje_id = self.current.task_data.get('bap_proje_id', False) or self.input.get(
+            'bap_proje_id')
+        self.current.task_data['bap_proje_id'] = proje_id
         butce_kalemleri = BAPButcePlani.objects.all(ilgili_proje_id=proje_id)
         form = ButceKalemleriForm(current=self.current, title=BAPProje.objects.get(proje_id).ad)
         for bk in butce_kalemleri:
