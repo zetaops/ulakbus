@@ -32,6 +32,17 @@ class ButceKalemleriForm(JsonForm):
     kaydet = fields.Button(_(u"Kaydet ve Listele"), cmd='kaydet')
 
 
+class ButceKalemleriFormRO(ButceKalemleriForm):
+    class Meta:
+        inline_edit = []
+        always_blank = False
+
+    ButceKalemList = ButceKalemleriForm.ButceKalemList
+
+    iptal = fields.Button(_(u"Listeye Dön"), cmd='geri')
+    kaydet = fields.Button(_(u"Bitir"), cmd='bitir')
+
+
 class BAPButceFisiView(CrudView):
     """
     Koordinasyon biriminin bütçe kalemlerine muhasebe kodlarını girdiği iş akışıdır. Proje
@@ -85,17 +96,12 @@ class BAPButceFisiView(CrudView):
          Bütçe kalemlerinin read-only olarak gösterildiği adımdır. Değişiklik yapılmak istenirse
          listeye dön butonu ile listeye dönülür, istenmezse Bitir butonu ile iş akışı sonlanır.
         """
+        self.current.task_data['ButceKalemleriFormRO'] = self.current.task_data['ButceKalemleriForm']
         proje_id = self.current.task_data['bap_proje_id']
-        setattr(ButceKalemleriForm, 'iptal', fields.Button(_(u"Listeye Dön"), cmd='geri'))
-        setattr(ButceKalemleriForm, 'kaydet', fields.Button(_(u"Bitir"), cmd='bitir'))
-        setattr(ButceKalemleriForm.Meta, 'inline_edit', [])
-        form = ButceKalemleriForm(current=self.current, title=BAPProje.objects.get(proje_id).ad)
+        form = ButceKalemleriFormRO(current=self.current, title=BAPProje.objects.get(proje_id).ad)
         form.help_text = _(u"Bütçe kalemlerinin muhasebe kodlarını aşağıdaki gibi kaydettiniz. "
                            u"Düzenleme yapmak için 'Listeye Dön' işlemi tamamlamak için 'Bitir' "
                            u"butonlarını kullanabilirsiniz.")
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
         self.form_out(form)
-        setattr(ButceKalemleriForm, 'iptal', fields.Button(_(u"İptal"), cmd='iptal'))
-        setattr(ButceKalemleriForm, 'kaydet', fields.Button(_(u"Kaydet ve Listele"), cmd='kaydet'))
-        setattr(ButceKalemleriForm.Meta, 'inline_edit', ['muhasebe_kod'])
