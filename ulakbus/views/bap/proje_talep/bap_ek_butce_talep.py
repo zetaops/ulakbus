@@ -275,6 +275,9 @@ class EkButceTalep(CrudView):
             self.current.task_data['onay'] = "Ek bütçe için bulunduğunuz talep kabul edilmiş " \
                                              "olup, komisyonun gündemine alınmıştır."
 
+    def nesne_id_sil(self):
+        self.current.task_data.pop('object_id', None)
+
     # ---------------------------------------
 
     @obj_filter

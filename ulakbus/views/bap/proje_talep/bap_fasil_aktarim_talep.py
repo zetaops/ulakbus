@@ -204,9 +204,6 @@ class FasilAktarimTalep(CrudView):
         self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
                              title=self.current.task_data['proje_yok']['title'])
 
-    def tamamlandi(self):
-        self.current.output['cmd'] = 'reload'
-
     # ---------------------------------------
 
     # ---------- Koordinasyon Birimi --------
@@ -294,6 +291,9 @@ class FasilAktarimTalep(CrudView):
 
     def iptal_et(self):
         pass
+
+    def nesne_id_sil(self):
+        self.current.task_data.pop('object_id', None)
 
     # ---------------------------------------
 
