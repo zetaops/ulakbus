@@ -18,6 +18,9 @@ class FasilAktarimTalep(CrudView):
         model = 'BAPButcePlani'
 
     # ---------- Proje Yürütücüsü ----------
+    def proje_id_kontrol(self):
+        self.current.task_data['cmd'] = 'proje_id_var' if 'bap_proje_id' in self.current.task_data \
+            else 'proje_id_yok'
 
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
@@ -32,6 +35,8 @@ class FasilAktarimTalep(CrudView):
                                                           'olmadığı için fasıl talebinde '
                                                           'bulunamazsınız.',
                                                    'title': 'Proje Bulunamadı'}
+        if 'bap_proje_id' in self.current.task_data:
+            self.current.task_data['cmd'] = 'red_mesaj'
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
@@ -40,7 +45,7 @@ class FasilAktarimTalep(CrudView):
                                                                            durum__in=[3, 5])]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
-        form.proje = fields.String(choices=data)
+        form.proje = fields.String(choices=data, default=data[0][0])
         form.ilerle = fields.Button(_(u"İlerle"))
         self.form_out(form)
 
@@ -199,9 +204,6 @@ class FasilAktarimTalep(CrudView):
         self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
                              title=self.current.task_data['proje_yok']['title'])
 
-    def tamamlandi(self):
-        self.current.output['cmd'] = 'reload'
-
     # ---------------------------------------
 
     # ---------- Koordinasyon Birimi --------
@@ -289,6 +291,9 @@ class FasilAktarimTalep(CrudView):
 
     def iptal_et(self):
         pass
+
+    def nesne_id_sil(self):
+        self.current.task_data.pop('object_id', None)
 
     # ---------------------------------------
 
