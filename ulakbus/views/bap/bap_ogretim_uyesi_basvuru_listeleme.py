@@ -12,7 +12,7 @@ class TalepSecForm(JsonForm):
     class Meta:
         title = _(u"Talep Seçimi")
 
-    talepler = fields.Integer(_(u"Talep"))
+    talepler = fields.Integer(_(u"Talep"), required=True)
     sec = fields.Button(_(u"Seç"))
     iptal = fields.Button(_(u"İptal"), cmd='iptal')
 
