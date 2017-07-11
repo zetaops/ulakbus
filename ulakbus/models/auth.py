@@ -53,6 +53,7 @@ class User(Model, BaseUser):
     surname = field.String(_(u"Soyad"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
     last_login_role_key = field.String(_(u"Son Giriş Yapılan Rol"))
+    is_active = field.Boolean(_(u"Kullanıcı Aktifliği"),default=True)
     locale_language = field.String(
         _(u"Tercih Edilen Dil Formatı"),
         index=False,
@@ -283,8 +284,8 @@ class Unit(Model):
 
     class Meta:
         app = 'Sistem'
-        verbose_name = _(u"Unit")
-        verbose_name_plural = _(u"Units")
+        verbose_name = _(u"Birim")
+        verbose_name_plural = _(u"Birimler")
         search_fields = ['name', 'yoksis_no']
         list_fields = ['name', 'unit_type']
 
@@ -678,7 +679,7 @@ class AuthBackend(object):
         """
         user = User.objects.get(username=username)
         is_login_ok = user.check_password(password)
-        if is_login_ok:
+        if is_login_ok and user.is_active:
             self.set_user(user)
         else:
             pass

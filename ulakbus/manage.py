@@ -20,6 +20,7 @@ class CreateUser(Command):
         {'name': 'password', 'required': True, 'help': 'Login password'},
         {'name': 'abstract_role', 'default': 'BaseAbsRole', 'help': 'Name of the AbstractRole'},
         {'name': 'super', 'action': 'store_true', 'help': 'This is a super user'},
+        {'name': 'is_active','action': 'store_false','help':'This is not active'},
         {'name': 'permission_query', 'default': "code:crud* OR code:login* OR code:logout*",
          'help': 'Permissions which will be returned from this query will be granted to the user. '
                  'Defaults to: "code:crud* OR code:login* OR code:logout*"'},
@@ -31,7 +32,7 @@ class CreateUser(Command):
             print("User already exists!")
             return
         abs_role, new = AbstractRole.objects.get_or_create(name=self.manager.args.abstract_role)
-        user = User(username=self.manager.args.username, superuser=self.manager.args.super)
+        user = User(username=self.manager.args.username, superuser=self.manager.args.super,is_active=self.manager.args.is_active)
         user.set_password(self.manager.args.password)
         user.save()
         role = Role(user=user, abstract_role=abs_role)
