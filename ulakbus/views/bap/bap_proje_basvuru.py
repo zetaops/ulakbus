@@ -255,7 +255,7 @@ class ProjeBasvuru(CrudView):
         """
         td = self.current.task_data
         proje = BAPProje.objects.get(td['bap_proje_id'])
-        tur = BAPProjeTurleri.objects.get(td['ProjeTurForm']['tur_id'])
+        tur = BAPProjeTurleri.objects.get(td['ProjeTurForm']['tur'])
         if 'GerceklestirmeGorevlisiForm' in td and proje.gerceklestirme_gorevlisi.key != \
                 td['GerceklestirmeGorevlisiForm']['gerceklestirme_gorevlisi_id']:
             del td['GerceklestirmeGorevlisiForm']
@@ -540,7 +540,7 @@ class ProjeBasvuru(CrudView):
             proje.literatur_ozeti = td['ProjeDetayForm']['literatur_ozeti']
             proje.yontem = td['ProjeDetayForm']['yontem']
         if 'ProjeTurForm' in td:
-            proje.tur_id = str(td['ProjeTurForm']['tur_id'])
+            proje.tur_id = str(td['ProjeTurForm']['tur'])
         if 'ProjeCalisanlariForm' in td:
             proje.ProjeCalisanlari.clear()
             for calisan in td['ProjeCalisanlariForm']['Calisan']:
@@ -582,6 +582,10 @@ class ProjeBasvuru(CrudView):
                                 aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
                                 tarih=datetime.datetime.now())
         proje.blocking_save()
+        msg = {"title": _(u'Başvurunuzu tamamladınız!'),
+               "body": _(u'Proje başvurunuz BAP birimine başarıyla iletilmiştir. '
+                         u'Değerlendirme sürecinde size bilgi verilecektir.')}
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def bildirim_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
