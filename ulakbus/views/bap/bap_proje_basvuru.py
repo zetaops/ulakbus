@@ -18,11 +18,10 @@ from pyoko.fields import DATE_TIME_FORMAT
 
 class ProjeTurForm(JsonForm):
     class Meta:
-        include = ['tur']
         title = _(u'Proje Türü Seçiniz')
         always_blank = False
 
-    # tur = fields.String(_(u"Proje Türleri"))
+    tur = fields.String(_(u"Proje Türleri"), required=True)
     sec = fields.Button(_(u"Seç"), cmd="kaydet_ve_kontrol")
 
 
@@ -219,7 +218,10 @@ class ProjeBasvuru(CrudView):
         self.current.task_data['bap_proje_id'] = proje_id
 
     def proje_tur_sec(self):
-        form = ProjeTurForm(self.object, current=self.current)
+        form = ProjeTurForm(current=self.current)
+        choices = prepare_choices_for_model(BAPProjeTurleri)
+        form.set_choices_of('tur', choices)
+        form.set_default_of('tur', choices[0][0])
         self.form_out(form)
 
     def gerekli_belge_form(self):
