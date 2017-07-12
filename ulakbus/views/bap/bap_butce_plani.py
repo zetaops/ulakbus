@@ -45,28 +45,29 @@ class BapButcePlani(CrudView):
 
     def butce_kalemi_sec(self):
         form = JsonForm(self.object, current=self.current, title=_(u"Bütçe Kalemi Seç"))
-        form.include = ['muhasebe_kod']
+        form.include = ['muhasebe_kod_genel']
         form.ilerle = fields.Button(_(u"İlerle"))
         self.form_out(form)
 
     def add_edit_form(self):
         proje_ad = BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad
-        self.object.muhasebe_kod = self.input['form']['muhasebe_kod']
-        self.object.kod_adi = self.object.get_muhasebe_kod_display()
+        self.object.muhasebe_kod_genel = self.input['form']['muhasebe_kod_genel']
+        self.object.kod_adi = self.object.get_muhasebe_kod_genel_display()
 
-        self.current.task_data['muhasebe_kod'] = self.object.muhasebe_kod
+        self.current.task_data['muhasebe_kod_genel'] = self.object.muhasebe_kod_genel
         self.current.task_data['kod_adi'] = self.object.kod_adi
 
         form = ButcePlaniForm(self.object, current=self.current)
-        form.exclude = ['muhasebe_kod', 'kod_adi', 'onay_tarihi', 'ilgili_proje', 'durum']
-        form.title = "%s Kodlu / %s Bütçe Planı" % (self.object.muhasebe_kod, self.object.kod_adi)
+        form.exclude = ['muhasebe_kod', 'muhasebe_kod_genel', 'kod_adi', 'onay_tarihi',
+                        'ilgili_proje', 'durum']
+        form.title = "%s Bütçe Planı" % self.object.kod_adi
         form.help_text = "Yapacağınız bütçe planı %s adlı proje için yapılacaktır." % \
                          proje_ad
         self.form_out(form)
 
     def save(self):
         self.set_form_data_to_object()
-        self.object.muhasebe_kod = self.current.task_data['muhasebe_kod']
+        self.object.muhasebe_kod_genel = self.current.task_data['muhasebe_kod_genel']
         self.object.kod_adi = self.current.task_data['kod_adi']
         self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.save_object()
@@ -81,7 +82,7 @@ class BapButcePlani(CrudView):
 
     def show(self):
         CrudView.show(self)
-        self.output['object']['Muhasebe Kod'] = str(self.object.muhasebe_kod)
+        self.output['object']['Muhasebe Kod'] = str(self.object.muhasebe_kod_genel)
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
@@ -96,7 +97,7 @@ class BapButcePlani(CrudView):
         else:
             ad = proje.ad
         toplam = sum(BAPButcePlani.objects.filter(ilgili_proje=proje).values_list('toplam_fiyat'))
-        self.output['objects'].append({'fields': ['TOPLAM', '', '', '', '', str(toplam)],
+        self.output['objects'].append({'fields': ['TOPLAM', '', '', '', str(toplam)],
                                        'actions': ''})
         form = JsonForm(title=_(u"%s projesi için Bütçe Planı") % ad)
         form.ekle = fields.Button(_(u"Ekle"), cmd='add_edit_form')

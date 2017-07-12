@@ -269,8 +269,7 @@ class BAPButcePlani(Model):
     class Meta:
         verbose_name = __(u"Bap Bütçe Planı")
         verbose_name_plural = __(u"Bap Bütçe Planları")
-        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet',
-                       'toplam_fiyat']
+        list_fields = ['kod_adi', 'ad', 'birim_fiyat', 'adet', 'toplam_fiyat']
     # Öğretim üyesinin seçeceği muhasebe kodları
     muhasebe_kod_genel = field.Integer(__(u"Muhasebe Kod"),
                                       choices='bap_ogretim_uyesi_gider_kodlari', default=1)
@@ -286,12 +285,14 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
+    ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
 
     def __unicode__(self):
-        return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
+        return "%s / %s / %s" % (self.muhasebe_kod or self.muhasebe_kod_genel, self.kod_adi,
+                                 self.ad)
 
     def _muhasebe_kod(self):
-        return self.muhasebe_kod
+        return self.muhasebe_kod or self.muhasebe_kod_genel
 
     _muhasebe_kod.title = __(u"Muhasebe Kodu")
 

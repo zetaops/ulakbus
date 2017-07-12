@@ -306,6 +306,8 @@ class ProjeBasvuru(CrudView):
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))
 
     def proje_detay_gir(self):
+        self.object.ad = self.input['form']['ad']
+        self.object.blocking_save()
         self.form_out(ProjeDetayForm(self.object, current=self.current))
 
     def proje_belgeleri(self):
