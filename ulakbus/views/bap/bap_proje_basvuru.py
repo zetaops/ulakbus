@@ -228,7 +228,7 @@ class ProjeBasvuru(CrudView):
         wfi = WFInstance.objects.get(self.current.token)
         wfi.wf_object = self.current.task_data['bap_proje_id']
         wfi.blocking_save()
-        tur_id = self.current.task_data['ProjeTurForm']['tur_id']
+        tur_id = self.current.task_data['ProjeTurForm']['tur']
         tur = BAPProjeTurleri.objects.get(tur_id)
         form = GerekliBelgeForm()
         if 'hedef_proje' not in self.current.task_data:
