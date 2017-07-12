@@ -42,8 +42,7 @@ class GerekliBelgeForm(JsonForm):
 
 class GenelBilgiGirForm(JsonForm):
     class Meta:
-        include = ['ad', 'sure', 'anahtar_kelimeler', 'teklif_edilen_baslama_tarihi',
-                   'teklif_edilen_butce']
+        include = ['ad', 'sure', 'anahtar_kelimeler', 'teklif_edilen_butce']
         title = _(u"Proje Genel Bilgileri")
         always_blank = False
 
