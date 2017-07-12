@@ -4,13 +4,12 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko import ListNode
-
-from ulakbus.models import BAPTeklif, BAPFirma, BAPButcePlani, BAPTeklifFiyatIsleme, \
-    ObjectDoesNotExist
+from ulakbus.models import BAPTeklif, BAPFirma, BAPButcePlani, BAPTeklifFiyatIsleme
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.s3_file_manager import S3FileManager
+from pyoko.exceptions import ObjectDoesNotExist
 from datetime import datetime
 
 
@@ -20,20 +19,30 @@ class KazananFirmalarForm(JsonForm):
     """
 
     class Meta:
-        inline_edit = ['birim_fiyat', 'toplam_fiyat']
+        inline_edit = ['firma']
+        always_blank = False
 
     class KazananFirmalar(ListNode):
         class Meta:
-            title = __(u"Teklif Değerlendirmesi")
+            title = "Kazanan Firmalar"
 
         kalem = fields.String(__(u"Bütçe Kalemi Adı"))
         adet = fields.Integer(__(u"Adet"))
-        firma = fields.Integer(__(u"Kazanan Firma"), choices=[(0, 'ASDNAKSDNSAKDNK'),
-                                                              (1, 'LASDL')])
+        firma = fields.String(__(u"Kazanan Firma"))
         key = fields.String('Key', hidden=True)
 
     kaydet = fields.Button(__(u"Kaydet"), cmd='kaydet')
-    geri = fields.Button(__(u"Geri Dön"), cmd='geri_don')
+    geri = fields.Button(__(u"Teklif Görüntüleme Ekranına Geri Dön"), cmd='geri_don')
+
+
+class KazananFirmalarGosterForm(KazananFirmalarForm):
+    class Meta:
+        inline_edit = []
+        always_blank = False
+
+    KazananFirmalar = KazananFirmalarForm.KazananFirmalar
+    kaydet = fields.Button(__(u"Onayla"), cmd='onayla')
+    geri = fields.Button(__(u"Kazanan Belirleme Ekranına Geri Dön"), cmd='geri_don')
 
 
 class TeklifGorForm(JsonForm):
@@ -76,20 +85,6 @@ class TeklifIsleForm(JsonForm):
     geri = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 
 
-class TeklifleriGosterForm(JsonForm):
-    """
-    Firmaya ait sonuçlanmış ya da değerlendirme sürecinde bulunan tekliflerin gösterildiği form.
-
-    """
-
-    class Meta:
-        title = _(u'Firmanın Teklifleri')
-        help_text = _(u"Firmanın sonuçlanmış veya değerlendirme sürecinde bulunan"
-                      u" tüm teklifleri gösterilir.")
-
-    geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
-
-
 class TeklifDegerlendirme(CrudView):
     """
     Firmaların, teklife açık bütçe kalemlerine teklif vermesini sağlayan iş akışı.
@@ -99,16 +94,19 @@ class TeklifDegerlendirme(CrudView):
     class Meta:
         model = 'BAPSatinAlma'
 
-    def __init__(self, current=None):
-        CrudView.__init__(self, current)
-        self.ListForm.add = None
-        listeleme_ekrani_baslik = __(u"Teklife Kapanmış Bütçe Kalemi Satın Almaları")
-        self.model_class.Meta.verbose_name_plural = listeleme_ekrani_baslik
+    def _list(self):
+        """
+        Koordinasyon birimi görevlisinin kendi üstünde bulunan, teklif süresi dolmuş ve 
+        değerlendirilmemiş satın alma duyurularını listeler.
+        
+        """
+        form = JsonForm(title=__(u"Teklife Kapanmış Bütçe Kalemi Satın Almaları"))
+        self.list(custom_form=form)
 
     def teklifleri_gor(self):
         """
-        Satın alma duyurusu içerisinde bulunan bütçe kalemleri ayrıntılı gösterilir.
-
+        Seçilen satın alma duyurusuna teklif yapmış firmalar listelenir.
+        
         """
         self.output['objects'] = [[_(u'Firma Adı')]]
         for teklif in BAPTeklif.objects.filter(satin_alma=self.object):
@@ -128,7 +126,9 @@ class TeklifDegerlendirme(CrudView):
 
         title = "{} Adlı Satın Alma Duyurusu Teklifleri".format(self.object.ad)
         help_text = "{} adlı satın alma duyurusuna yapılmış teklifler gösterilir."
-        self.form_out(TeklifGorForm(title=title, help_text=help_text.format(self.object.ad)))
+        form = TeklifGorForm(title=title)
+        form.help_text = help_text.format(self.object.ad)
+        self.form_out(form)
 
     def belge_indir(self):
         kwargs = {'firma_key': self.input['data_key']} if 'data_key' in self.input else {}
@@ -209,12 +209,14 @@ class TeklifDegerlendirme(CrudView):
                                          "title": _(u"Hata Mesajı"),
                                          "msg": hata_mesaji}
 
-    def karar_ver(self):
-        form = KararVerForm(current=self.current)
-        form.title = __(u"'{}' Satın Alma Teklif Değerlendirmesi".format(self.object.ad))
+    def teklifleri_degerlendir(self):
         self.current.output["meta"]["allow_actions"] = False
+        form = KararVerForm(current=self.current)
+        form.title = __(u"'{}' Satın Alma Duyurusuna Verilen Teklifler".format(self.object.ad))
+
         self.output['objects'] = [[_(u'Kalem Adı'), _(u'Adet')]]
         firmalar = [teklif.firma for teklif in BAPTeklif.objects.filter(satin_alma=self.object)]
+        self.current.task_data['firma_adlari'] = {firma.key: firma.ad for firma in firmalar}
         self.output['objects'][0].extend([firma.ad for firma in firmalar])
 
         for kalem in self.object.ButceKalemleri:
@@ -238,23 +240,51 @@ class TeklifDegerlendirme(CrudView):
         self.form_out(form)
 
     def kazanan_firmalari_belirle(self):
+        self.current.output["meta"]["allow_add_listnode"] = False
+        self.current.output["meta"]["allow_actions"] = False
         form = KazananFirmalarForm(current=self.current)
+        form.title = __(u"'{}' İçin Kazanan Firmaların Belirlenmesi".format(self.object.ad))
+        form.help_text = __(u"Lütfen listelenmiş bütçe kalemleri için kazanan firmayı seçiniz. "
+                            u"Kazanan bir firma bulunmuyor ise boş bırakınız.")
+        form.KazananFirmalar._fields['firma'].choices = self.current.task_data[
+            'firma_adlari'].items()
 
         for kalem in self.object.ButceKalemleri:
             kalem = kalem.butce
-            kwargs = {'kalem': kalem.ad, 'adet': kalem.adet, 'key': kalem.key, 'birim_fiyat': None,
-                      'toplam_fiyat': None}
-            if self.cmd == 'duzenle':
-                try:
-                    fiyat_isleme = BAPTeklifFiyatIsleme.objects.get(firma=firma, kalem=kalem)
-                    kwargs.update({'birim_fiyat': fiyat_isleme.birim_fiyat,
-                                   'toplam_fiyat': fiyat_isleme.toplam_fiyat})
-                except ObjectDoesNotExist:
-                    pass
-
-            form.TeklifIsle(**kwargs)
+            form.KazananFirmalar(kalem=kalem.ad, adet=kalem.adet, key=kalem.key)
 
         self.form_out(form)
+
+    def onaylama_ekrani_goster(self):
+        self.current.output["meta"]["allow_add_listnode"] = False
+        self.current.output["meta"]["allow_actions"] = False
+        help_text = '{} satın alma duyurusunda bulunan bütçe kalemleri için belirlediğiniz ' \
+                    'kazanan firmalar aşağıda listelenmiştir. Değişiklik yapmak için bir önceki ' \
+                    'ekrana dönebilir, kaydetmek için Onayla butonuna basarak ilerleyebilirsiniz.'
+
+        self.current.task_data['KazananFirmalarGosterForm'] = self.current.task_data[
+            'KazananFirmalarForm']
+
+        form = KazananFirmalarGosterForm(current=self.current,
+                                         title='Kazanan Firmaların Onayı'
+                                         )
+        form.help_text = help_text.format(self.object.ad)
+
+        self.form_out(form)
+
+    def kazanan_firma_kaydet(self):
+        form = self.input['form']['KazananFirmalar']
+        for obj in form:
+            if obj['firma']:
+                kalem = BAPButcePlani.objects.get(obj['key'])
+                kalem.kazanan_firma_id = str(obj['firma'])
+                kalem.save()
+
+    def islem_mesaji_goster(self):
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": _(u'İşlem Bilgilendirme'),
+            "msg": _(u'{} adlı satın alma duyurusu için teklifler değerlendirildi ve kazanan '
+                     u'firma ya da firmalar belirlendi.')}
 
     @obj_filter
     def teklife_kapanmis_satin_alma_actions(self, obj, result):

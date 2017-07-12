@@ -310,6 +310,7 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
+    kazanan_firma = BAPFirma()
 
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
@@ -443,3 +444,10 @@ class BAPTeklifFiyatIsleme(Model):
 
     def __unicode__(self):
         return "%s-%s" % (self.firma.ad, self.kalem.ad)
+
+    @classmethod
+    def en_iyi_teklif_veren_ikinci_ve_ucuncu_firmayi_getir(cls, butce):
+        firmalar = cls.objects.filter(kalem=butce).exclude(firma=butce.kazanan_firma).order_by(
+            '-toplam_fiyat')
+
+        return firmalar[0], firmalar[1]
