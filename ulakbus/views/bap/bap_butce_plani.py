@@ -59,7 +59,7 @@ class BapButcePlani(CrudView):
 
         form = ButcePlaniForm(self.object, current=self.current)
         form.exclude = ['muhasebe_kod', 'muhasebe_kod_genel', 'kod_adi', 'onay_tarihi',
-                        'ilgili_proje', 'durum']
+                        'ilgili_proje', 'durum', 'toplam_fiyat']
         form.title = "%s Bütçe Planı" % self.object.kod_adi
         form.help_text = "Yapacağınız bütçe planı %s adlı proje için yapılacaktır." % \
                          proje_ad
@@ -69,6 +69,7 @@ class BapButcePlani(CrudView):
         self.set_form_data_to_object()
         self.object.muhasebe_kod_genel = self.current.task_data['muhasebe_kod_genel']
         self.object.kod_adi = self.current.task_data['kod_adi']
+        self.object.toplam_fiyat = self.object.birim_fiyat * self.object.adet
         self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.save_object()
 

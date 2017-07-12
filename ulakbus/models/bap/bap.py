@@ -278,7 +278,8 @@ class BAPButcePlani(Model):
                                 default="03.2.6.90")
     kod_adi = field.String(__(u"Kod Adı"))
     ad = field.String(__(u"Alınacak Malzemenin Adı"))
-    birim_fiyat = field.Float(__(u"Birim Fiyat"))
+    birim_fiyat = field.Float(__(u"Birim Fiyat"),
+                              help_text=__(u"Birim fiyatlar KDV dahil fiyatlar olmalıdır!"))
     adet = field.Integer(__(u"Adet"))
     toplam_fiyat = field.Float(__(u"Toplam Fiyat"))
     gerekce = field.Text(__(u"Gerekçe"))
