@@ -173,6 +173,7 @@ class BAPProje(Model):
         soyad = field.String(_(u"Soyad"))
         nitelik = field.String(_(u"Nitelik"))
         calismaya_katkisi = field.String(_(u"Çalışmaya Katkısı"))
+        kurum = field.String(_(u"Kurum"))
 
     class UniversiteDisiUzmanlar(ListNode):
         class Meta:

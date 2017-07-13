@@ -108,6 +108,7 @@ class ProjeCalisanlariForm(JsonForm):
         soyad = fields.String(_(u"Soyad"), readonly=True)
         nitelik = fields.String(_(u"Nitelik"), readonly=True)
         calismaya_katkisi = fields.String(_(u"Çalışmaya Katkısı"), readonly=True)
+        kurum = fields.String(_(u"Kurum"), readonly=True)
 
     ileri = fields.Button(_(u"İleri"), cmd='ileri')
 
@@ -547,7 +548,8 @@ class ProjeBasvuru(CrudView):
             for calisan in td['ProjeCalisanlariForm']['Calisan']:
                 proje.ProjeCalisanlari(ad=calisan['ad'], soyad=calisan['soyad'],
                                        nitelik=calisan['nitelik'],
-                                       calismaya_katkisi=calisan['calismaya_katkisi'])
+                                       calismaya_katkisi=calisan['calismaya_katkisi'],
+                                       kurum=calisan['kurum'])
         if 'UniversiteDisiUzmanForm' in td:
             proje.UniversiteDisiUzmanlar.clear()
             for uzman in td['UniversiteDisiUzmanForm']['Uzman']:
