@@ -528,9 +528,6 @@ class ProjeBasvuru(CrudView):
             proje.anahtar_kelimeler = td['GenelBilgiGirForm'][
                 'anahtar_kelimeler']
             proje.sure = td['GenelBilgiGirForm']['sure']
-            proje.teklif_edilen_baslama_tarihi = datetime.datetime.strptime(
-                td['GenelBilgiGirForm']['teklif_edilen_baslama_tarihi'],
-                DATE_DEFAULT_FORMAT)
             proje.teklif_edilen_butce = td['GenelBilgiGirForm'][
                 'teklif_edilen_butce']
         if 'ProjeDetayForm' in td:
