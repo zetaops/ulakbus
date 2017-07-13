@@ -403,6 +403,7 @@ class BAPSatinAlma(Model):
     teklife_kapanma_tarihi = field.DateTime(__(u"Teklife Kapanma Tarihi"))
     sonuclanma_tarihi = field.Date(__(u"Teklifin Sonuçlanma Tarihi"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
+    sorumlu = Role()
 
     class ButceKalemleri(ListNode):
         butce = BAPButcePlani()
