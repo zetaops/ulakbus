@@ -119,7 +119,7 @@ class BAPProje(Model):
     basvuru_rolu = Role()
 
     # Komisyon kararıyla doldurulacak alanlar
-    proje_no = field.String(_(u"Proje No"))
+    proje_no = field.Integer(_(u"Proje No"))
     kabul_edilen_baslama_tarihi = field.Date(_(u"Kabul Edilen Başlama Tarihi"))
     kabul_edilen_butce = field.Float(_(u"Kabul Edilen Bütçe"))
 
@@ -235,6 +235,10 @@ class BAPProje(Model):
     @lazy_property
     def yurutucu_diger_projeler(self):
         return self.objects.filter(yurutucu=self.yurutucu)
+
+    @lazy_property
+    def proje_kodu(self):
+        return "%s%s" % (self.tur.kod, self.proje_no)
 
     class Meta:
         app = 'BAP'

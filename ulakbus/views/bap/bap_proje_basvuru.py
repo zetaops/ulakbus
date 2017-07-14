@@ -6,12 +6,14 @@
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models import Okutman
+from ulakbus.models import Role
 from zengine.forms import JsonForm, fields
+from zengine.models import TaskInvitation
 from zengine.models import WFInstance
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 from pyoko import ListNode
-import datetime
+from datetime import datetime, timedelta
 from ulakbus.settings import DATE_DEFAULT_FORMAT
 from pyoko.fields import DATE_TIME_FORMAT
 
@@ -46,7 +48,9 @@ class GenelBilgiGirForm(JsonForm):
         title = _(u"Proje Genel Bilgileri")
         always_blank = False
 
-    detay_gir = fields.Button(_(u"Proje Detay Bilgileri"))
+    daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
+                                        form_validation=False)
+    detay_gir = fields.Button(_(u"Proje Detay Bilgileri"), cmd='detay_gir')
 
 
 class ArastirmaOlanaklariForm(JsonForm):
@@ -225,9 +229,6 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def gerekli_belge_form(self):
-        wfi = WFInstance.objects.get(self.current.token)
-        wfi.wf_object = self.current.task_data['bap_proje_id']
-        wfi.blocking_save()
         tur_id = self.current.task_data['ProjeTurForm']['tur']
         tur = BAPProjeTurleri.objects.get(tur_id)
         form = GerekliBelgeForm()
@@ -305,6 +306,55 @@ class ProjeBasvuru(CrudView):
 
     def proje_genel_bilgilerini_gir(self):
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))
+
+    def proje_no_kaydet(self):
+        tur_id = self.current.task_data['ProjeTurForm']['tur']
+        proje_id = self.current.task_data.get('bap_proje_id', False)
+        if proje_id:
+            proje = BAPProje.objects.get(proje_id)
+            if proje.tur_id != tur_id:
+                proje.proje_no = self.proje_no_belirle(tur_id)
+        else:
+            proje = BAPProje()
+            proje.proje_no = self.proje_no_belirle(tur_id)
+        proje.tur = BAPProjeTurleri.objects.get(tur_id)
+        proje.blocking_save()
+        proje_id = proje.key
+        self.current.task_data['bap_proje_id'] = proje_id
+
+        wfi = WFInstance.objects.get(self.current.token)
+        wfi.wf_object = proje_id
+        wfi.blocking_save()
+
+    def proje_no_belirle(self, tur_id):
+        r = BAPProje.objects.set_params(rows=1).filter(tur_id=tur_id).order_by(
+            '-proje_no').values_list('proje_no')
+        r.extend(BAPProje.objects.set_params(rows=1).filter(tur_id=tur_id, deleted=True).order_by(
+            '-proje_no'))
+        return max(r) + 1 if r else 1
+
+    def kaydet_ve_draft_olustur(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        today = datetime.today()
+        wfi = WFInstance.objects.get(self.current.token)
+        role = Role.objects.get(user=self.current.user)
+        inv_key = self.current.task_data.get('inv_key', False)
+        if inv_key:
+            inv = TaskInvitation.objects.get(inv_key)
+            inv.instance = wfi
+        else:
+            inv = TaskInvitation(
+                instance=wfi,
+                role=role,
+                wf_name=wfi.wf.name,
+                progress=30,
+                start_date=today,
+                finish_date=today + timedelta(15)
+            )
+        inv.title = "%s | %s" % (proje.proje_kodu, wfi.wf.title)
+        inv.blocking_save()
+        self.current.task_data['inv_key'] = inv.key
+        self.current.output['cmd'] = 'reload'
 
     def proje_detay_gir(self):
         self.object.ad = self.input['form']['ad']
