@@ -24,14 +24,13 @@ from ulakbus.models.ogrenci import DegerlendirmeNot, DondurulmusKayit
 from ulakbus.models.ogrenci import DonemDanisman
 from ulakbus.models.ogrenci import Ogrenci, OgrenciProgram, Program, Donem, Sube
 from ulakbus.models.ogrenci import OgrenciDersi
-from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir
 from ulakbus.views.ders.ders import prepare_choices_for_model
 from zengine import forms
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from ulakbus.lib.ogrenci import kaydi_dondurulmus_abs_role
 from zengine.lib.translation import gettext as _, gettext_lazy, format_date
+from ulakbus.services.zato_wrapper import TcknService
 
 
 class KimlikBilgileriForm(forms.JsonForm):
@@ -102,9 +101,10 @@ class KimlikBilgileri(CrudView):
         değerlerle nesneyi doldurup kaydeder.
 
         """
-
-        servis = MernisKimlikBilgileriGetir(tckn=self.object.tckn)
-        kimlik_bilgisi = servis.zato_request()
+        service_name = 'kisi-sorgula-tc-kimlik-no'
+        mernis_bilgileri = TcknService(service_name=service_name,
+                                       payload={"tckn": str(self.object.tckn)})
+        kimlik_bilgisi = mernis_bilgileri.zato_request()
         self.object(**kimlik_bilgisi)
         self.object.save()
 
@@ -174,8 +174,10 @@ class IletisimBilgileri(CrudView):
         değerlerle nesneyi doldurup kaydeder.
 
         """
-        servis = KPSAdresBilgileriGetir(tckn=self.object.tckn)
-        iletisim_bilgisi = servis.zato_request()
+        service_name = 'adres-sorgula'
+        mernis_bilgileri = TcknService(service_name=service_name,
+                                       payload={"tckn": str(self.object.tckn)})
+        iletisim_bilgisi = mernis_bilgileri.zato_request()
         self.object(**iletisim_bilgisi)
         self.object.save()
 
@@ -425,8 +427,8 @@ class OgrenciMezuniyet(CrudView):
         try:
 
             ogrenci_program = OgrenciProgram.objects.get(self.input['form']['program'])
-            ogrenci_sinav_list = DegerlendirmeNot.objects.set_params(
-                rows=1, sort='sinav_tarihi desc').filter(ogrenci=ogrenci_program.ogrenci)
+            ogrenci_sinav_list = DegerlendirmeNot.objects.set_params(rows=1).order_by(
+                '-sinav_tarihi').filter(ogrenci=ogrenci_program.ogrenci)
             ogrenci_son_sinav = ogrenci_sinav_list[0]
             diploma_no = diploma_no_uret(ogrenci_program)
             ogrenci_program.diploma_no = diploma_no
@@ -531,7 +533,7 @@ class KayitDondurma(CrudView):
             self.current.task_data['ogrenci_program_id'] = self.current.input['form']['program']
 
         # Öğrenci en fazla 2 dönem için kaydını dondurabilir.
-        donemler = Donem.objects.set_params(sort='baslangic_tarihi desc', rows='2').filter()
+        donemler = Donem.objects.set_params(rows=2).order_by('-baslangic_tarihi').all()
         _form = KayitDondurmaForm(current=self.current, title=_(u"Lütfen Dönem Seçiniz"))
         ogrenci_program = OgrenciProgram.objects.get(self.current.task_data["ogrenci_program_id"])
         for donem in donemler:

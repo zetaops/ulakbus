@@ -1,0 +1,20 @@
+{
+  "status": "ok",
+  "result": {
+    "tckn": "12345678911",
+    "ad": "Ali",
+    "soyad": "Atabak",
+    "cinsiyet": 1,
+    "dogum_tarihi": "01.01.1992",
+    "dogum_yeri": "Urla",
+    "baba_adi": "Ahmet",
+    "ana_adi": "Ayse",
+    "medeni_hali": 1,
+    "kayitli_oldugu_il": "Izmir",
+    "kayitli_oldugu_ilce": "Urla",
+    "kayitli_oldugu_mahalle_koy": "Gulbahce",
+    "kayitli_oldugu_cilt_no": "123456",
+    "kayitli_oldugu_aile_sira_no": "1234",
+    "kayitli_oldugu_sira_no": "1234"
+  }
+}

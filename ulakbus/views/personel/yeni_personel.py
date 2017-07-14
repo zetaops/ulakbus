@@ -13,6 +13,7 @@ from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel
+from ulakbus.services.zato_wrapper import TcknService
 
 """
 ``button`` nesnelerinin stillendirilmesi için bu nesnelere ``style`` anahtarı ile css class'ları
@@ -49,16 +50,18 @@ class YeniPersonelEkle(CrudView):
             self.current.task_data['mernis_tamam'] = False
             self.current.task_data['hata_msg'] = _(u"Personel Daha Önce Kaydedilmiş")
         except ObjectDoesNotExist:
-            from ulakbus.services.zato_wrapper import MernisKimlikBilgileriGetir, \
-                MernisCuzdanBilgileriGetir
-
             # Kimlik bilgileri mernis servisi üzerinden çekilecek
-            mernis_bilgileri = MernisKimlikBilgileriGetir(tckn=str(tckn))
+            service_name = 'kisi-sorgula-tc-kimlik-no'
+            mernis_bilgileri = TcknService(service_name=service_name,
+                                           payload={"tckn": str(tckn)})
             response = mernis_bilgileri.zato_request()
             self.current.task_data['mernis_tamam'] = True
             self.current.task_data['kimlik_bilgileri'] = response
+
             # Cüzdan bilgileri mernis servisi üzerinden çekilecek
-            mernis_bilgileri = MernisCuzdanBilgileriGetir(tckn=str(tckn))
+            service_name = 'cuzdan-sorgula-tc-kimlik-no'
+            mernis_bilgileri = TcknService(service_name=service_name,
+                                           payload={"tckn": str(tckn)})
             response = mernis_bilgileri.zato_request()
             self.current.task_data['cuzdan_tamam'] = True
             self.current.task_data['cuzdan_bilgileri'] = response
@@ -69,10 +72,11 @@ class YeniPersonelEkle(CrudView):
 
     def mernis_adres_bilgileri_getir(self, tckn=None):
         if not tckn:
-            tckn = self.current.input['form']['tckn']
+            tckn = self.current.task_data['tckn']
         # Adres bilgileri mernis servisi üzerinden çekilecek
-        from ulakbus.services.zato_wrapper import KPSAdresBilgileriGetir
-        mernis_bilgileri = KPSAdresBilgileriGetir(tckn=str(tckn))
+        service_name = 'adres-sorgula'
+        mernis_bilgileri = TcknService(service_name=service_name,
+                                       payload={"tckn": str(tckn)})
         response = mernis_bilgileri.zato_request()
 
         self.current.task_data['adres_tamam'] = True
@@ -226,7 +230,8 @@ class IletisimveEngelliDurumBilgileriForm(JsonForm):
     adres_2_posta_kodu = fields.String(gettext_lazy(u"Adres 2 Posta Kodu"))
     oda_tel_no = fields.String(gettext_lazy(u"Oda Telefon Numarası"))
     cep_telefonu = fields.String(gettext_lazy(u"Cep Telefonu"))
-    e_posta = fields.String(gettext_lazy(u"Kurum E-Posta(Yeni Personel için boş bırakınız)"), required=False)
+    e_posta = fields.String(gettext_lazy(u"Kurum E-Posta(Yeni Personel için boş bırakınız)"),
+                            required=False)
     e_posta_2 = fields.String(gettext_lazy(u"E-Posta 2"))
     e_posta_3 = fields.String(gettext_lazy(u"E-Posta 3"))
     web_sitesi = fields.String(gettext_lazy(u"Web Sitesi"))

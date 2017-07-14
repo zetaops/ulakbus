@@ -118,7 +118,7 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
 
     personeller = {}
 
-    qs = Personel.objects.filter(personel_turu=personel_turu)
+    qs = Personel.objects.all(personel_turu=personel_turu)
 
     terfisi_gelen_personeller = qs.or_filter(
         ga_sonraki_terfi_tarihi__range=[baslangic_tarihi, bitis_tarihi],

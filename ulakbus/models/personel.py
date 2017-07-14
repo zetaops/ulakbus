@@ -47,14 +47,14 @@ class Personel(Model):
     web_sitesi = field.String(_(u"Web Sitesi"))
     yayinlar = field.String(_(u"Yayınlar"))
     projeler = field.String(_(u"Projeler"))
-    kan_grubu = field.String(_(u"Kan Grubu"), readonly=True)
+    kan_grubu = field.Integer(_(u"Kan Grubu"), choices='kan_grubu',read_only= True)
     ehliyet = field.String(_(u"Ehliyet"))
     verdigi_dersler = field.String(_(u"Verdiği Dersler"))
     biyografi = field.Text(_(u"Biyografi"))
     notlar = field.Text(_(u"Notlar"), required=False)
     engelli_durumu = field.String(_(u"Engellilik"))
     engel_grubu = field.String(_(u"Engel Grubu"))
-    engel_derecesi = field.String(_(u"Engel Derecesi"))
+    engel_derecesi = field.Integer(_(u"Engel Derecesi"), choices="personel_engellilik")
     engel_orani = field.Integer(_(u"Engellilik Oranı"))
     cuzdan_seri = field.String(_(u"Seri"), readonly=True)
     cuzdan_seri_no = field.String(_(u"Seri No"), readonly=True)
@@ -165,7 +165,7 @@ class Personel(Model):
 
         """
         # Mevcut pyoko API'i ile uyumlu olmasi icin, geriye bos bir Atama nesnesi dondurur.
-        atamalar = Atama.objects.set_params(sort='goreve_baslama_tarihi desc').filter(personel=self)
+        atamalar = Atama.objects.order_by('-goreve_baslama_tarihi').filter(personel=self)
         return atamalar[0] if atamalar else Atama()
 
     @lazy_property
@@ -193,6 +193,46 @@ class Personel(Model):
         """
 
         return self.atama.kurum_sicil_no
+
+    def gorevlendirme_tarih_kontrol(self, baslama_tarihi, bitis_tarihi):
+        """
+        Eklenmek istenen görevlendirmenin, başlama tarihi ve bitiş tarihinin tutarlılığını ve
+        personelin mevcut Kurum İçi ve Kurum Dışı görevlendirmeleriyle çakışıp çakışmadığını  kontrol eder.
+
+        Personelin mevcut görevlendirmeleri içinde başlama tarihi, eklenmek istenen görevlendirmenin bitiş
+        tarihinden küçük görevlendirmeler ve bitiş tarihi, eklenmek istenen görevlendirmenin başlama tarihinden
+        büyük olan görevlendirmeler sorgulanır. Sorgu sonucunda dönen görevlendirme varsa, personel bu tarih
+        aralığında görevde demektir. Eğer sorgu sonucunda bir görevlendirme dönmüyorsa personel belirtilen tarih
+        aralığında görev aabilir demektir.
+
+        KurumIciGorevlendirmeBilgileri ve KurumDisiGorevlendirmeBilgileri modellerinin pre_save() metodlarında
+        bu kontrol yapılır. Model oluşturulduğunda ya da baslama_tarihi bitis_tarihi alanları güncellendiğinde bu
+        kontrol yapılır.
+
+        Eğer tarihler görevlendirme için uygunsa kayıt işlemine devam edilir. Uygun değilse
+        exception fırlatılır.
+
+        Args:
+            baslama_tarihi (datetime): Eklenmek istenen görevlendirme başlama tarihi
+            bitis_tarihi (datetime): Eklenmek istenen görevlendirme bitiş tarihi
+
+        """
+        if baslama_tarihi > bitis_tarihi:
+            raise Exception("Bitiş tarihi başlangıç tarihinden büyük olmalıdır.")
+        illegal_gorevlendirme_kurum_ici = KurumIciGorevlendirmeBilgileri.objects.filter(
+            baslama_tarihi__lte=bitis_tarihi,
+            bitis_tarihi__gte=baslama_tarihi,
+            personel=self
+        )
+        illegal_gorevlendirme_kurum_disi = KurumDisiGorevlendirmeBilgileri.objects.filter(
+            baslama_tarihi__lte=bitis_tarihi,
+            bitis_tarihi__gte=baslama_tarihi,
+            personel=self
+        )
+
+        if illegal_gorevlendirme_kurum_ici or illegal_gorevlendirme_kurum_disi:
+            raise Exception("Belirtilen tarihlerde, belirtilen personel başka bir görevlendirmede olmamalıdır.")
+
 
     @lazy_property
     def kurum_ici_gorevlendirme(self):
@@ -235,6 +275,13 @@ class Personel(Model):
     @property
     def kurum_sicil_no(self):
         return "%s-%s" % (SICIL_PREFIX, self.kurum_sicil_no_int)
+
+    class IstenAyrilma(ListNode):
+        gorevden_ayrilma_tarihi = field.Date(_(u"Görevden Ayrılma Tarihi"), index=True,
+                                             format="%d.%m.%Y")
+        gorevden_ayrilma_sebep = HitapSebep()
+
+        gorevden_ayrilma_not = field.Text(_(u"Notlar"), required=False)
 
     def __unicode__(self):
         return gettext(u"%(ad)s %(soyad)s") % {'ad': self.ad, 'soyad': self.soyad}
@@ -326,6 +373,12 @@ class KurumIciGorevlendirmeBilgileri(Model):
     def __unicode__(self):
         return "%s %s" % (self.gorev_tipi, self.aciklama)
 
+    def pre_save(self):
+        changed_fields = self.changed_fields()
+        if changed_fields is None or "baslama_tarihi" in changed_fields or "bitis_tarihi" in changed_fields:
+            self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
+                                                      self.bitis_tarihi)
+
 
 class KurumDisiGorevlendirmeBilgileri(Model):
     """Kurum Dışı Görevlendirme Bilgileri Modeli
@@ -387,6 +440,12 @@ class KurumDisiGorevlendirmeBilgileri(Model):
 
     def __unicode__(self):
         return "%s %s %s" % (self.gorev_tipi, self.aciklama, self.ulke)
+
+    def pre_save(self):
+        changed_fields = self.changed_fields()
+        if changed_fields is None or "baslama_tarihi" in changed_fields or "bitis_tarihi" in changed_fields:
+            self.personel.gorevlendirme_tarih_kontrol(self.baslama_tarihi,
+                                                      self.bitis_tarihi)
 
 
 class Kadro(Model):
@@ -525,8 +584,7 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(
-            sort='goreve_baslama_tarihi desc').filter(personel=personel)[0]
+        return cls.objects.order_by('-goreve_baslama_tarihi').filter(personel=personel)[0]
 
     @classmethod
     def personel_ilk_atama(cls, personel):
@@ -538,8 +596,7 @@ class Atama(Model):
 
         """
 
-        return cls.objects.set_params(
-            sort='goreve_baslama_tarihi asc').filter(personel=personel)[0]
+        return cls.objects.order_by('goreve_baslama_tarihi').filter(personel=personel)[0]
 
     def post_save(self):
         # Personel modeline arama için eklenen kadro_derece set edilecek
@@ -568,10 +625,9 @@ class Atama(Model):
 
 class SaglikRaporu(Model):
     personel = Personel(_(u"Raporu Alan Personel"))
-    rapor_cesidi = field.Integer(_(u"Rapor Çeşidi"), choices='saglik_raporu_cesitleri',
-                                 required=True)
+    rapor_cesidi = field.Integer(_(u"Rapor Çeşidi"), required=True, choices='saglik_raporu_cesitleri')
     sure = field.Integer(_(u"Gün"), required=True)
-    baslama_tarihi = field.Date(_(u"Rapor Başlanğıç Tarihi"), required=True)
+    baslama_tarihi = field.Date(_(u"Rapor Başlangıç Tarihi"), required=True)
     bitis_tarihi = field.Date(_(u"Raporlu Olduğu Son Gün"), required=True)
     onay_tarihi = field.Date(_(u"Onay Tarihi"), required=True)
     raporun_alindigi_il = field.Integer(_(u"Raporun Alındığı İl"), choices='iller', required=False)

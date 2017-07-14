@@ -23,6 +23,7 @@ LOCALIZATION_FORMATS = ['en_US', 'en_GB', 'tr_TR']
 TRANSLATIONS_DIR = os.path.join(BASE_DIR, 'locale')
 # The language of messages in Ulakbus
 TRANSLATION_DOMAINS['messages'] = 'tr'
+TRANSLATION_DOMAINS['students'] = 'tr'
 
 # Default mail address
 MAIL_ADDRESS = 'postmaster@mg.ulakbus.net'
@@ -57,7 +58,8 @@ ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
 # DEFAULT_CACHE_EXPIRE_TIME = 99999999  # seconds
 
 # diagrams that does not require logged in user
-ANONYMOUS_WORKFLOWS.extend(['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle'])
+ANONYMOUS_WORKFLOWS.extend(
+    ['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle', 'bap_firma_kayit', 'bap_duyurulari_goruntule'])
 
 #: Ortak kullanılan workflowlar
 COMMON_WORKFLOWS.extend(['profil_sayfasi_goruntuleme', 'e_posta_degistir', 'kullanici_adi_degistir',
@@ -82,17 +84,17 @@ OBJECT_MENU = {
     # verbose_name can be specified to override the model's verbose_name_plural
     'other': [
         # {'name': 'Personel', 'category': 'Genel'},
-        {'name': 'Ogrenci', 'category': 'Genel'},
-        {'name': 'Okutman', 'category': 'Genel'},
-        {'name': 'HariciOkutman', 'category': 'Genel'},
-        {'name': 'Donem', 'category': 'Genel'},
-        {'name': 'Program', 'category': 'Genel'},
-        {'name': 'Ders', 'category': 'Genel'},
-        {'name': 'Campus', 'category': 'Genel'},
-        {'name': 'Building', 'category': 'Genel'},
-        {'name': 'Room', 'category': 'Genel'},
+        # {'name': 'Ogrenci', 'category': 'Genel'},
+        # {'name': 'Okutman', 'category': 'Genel'},
+        # {'name': 'HariciOkutman', 'category': 'Genel'},
+        # {'name': 'Donem', 'category': 'Genel'},
+        # {'name': 'Program', 'category': 'Genel'},
+        # {'name': 'Ders', 'category': 'Genel'},
+        # {'name': 'Campus', 'category': 'Genel'},
+        # {'name': 'Building', 'category': 'Genel'},
+        # {'name': 'Room', 'category': 'Genel'},
         # {'name': 'AkademikTakvim', 'category': 'Genel'},
-        {'name': 'OgrenciProgram', 'category': 'Genel'},
+        # {'name': 'OgrenciProgram', 'category': 'Genel'},
     ],
     'personel': [
         {'name': 'Personel', 'wf': 'personel_bilgileri',
@@ -227,6 +229,8 @@ ALLOWED_FILE_TYPES = {
     'pptx': ('application/vnd.openxmlformats-officedocument.presentationml.presentation', 'pptx'),
     'xlsx': ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'xlsx'),
     'docx': ('application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'docx'),
+    'csv': ('text/csv', 'csv'),
+    'zip': ('application/zip', 'zip')
 }
 
 S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
@@ -264,10 +268,12 @@ MESSAGING_UNIT_SEARCH_FIELDS = ['name', ]
 
 MESSAGES = {
     'lane_change_invite_title': 'Etkinlik gerekiyor!',
-    'lane_change_invite_body': 'Bir iş akışı sizin etkinliğinizi gerektiriyor, '
-                               'lütfen aşağıdaki bağlantıya tıklayarak akışa katılın:',
+    'lane_change_invite_body': 'adlı iş akışı sizin etkinliğinizi gerektiriyor, '
+                               'görev yöneticinizden ilgili iş akışına ulaşabilirsiniz.',
     'lane_change_message_title': 'Teşekkürler!',
     'lane_change_message_body': 'Bu iş akışında şuan için gerekli adımları tamamladınız. '
                                 'İlgili kişiler, iş akışına katılmaları için haberdar edildiler.',
 
 }
+
+DATA_GRID_PAGE_SIZE = 100
