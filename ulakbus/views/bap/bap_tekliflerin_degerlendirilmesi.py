@@ -21,7 +21,7 @@ class KazananFirmalarForm(JsonForm):
 
     class Meta:
         inline_edit = ['firma']
-        title = __(u"'{}' İçin Kazanan Firmaların Belirlenmesi")
+        title = __(u"{} İçin Kazanan Firmaların Belirlenmesi")
         help_text = __(u"Lütfen listelenmiş bütçe kalemleri için kazanan firmayı seçiniz. "
                        u"Kazanan bir firma bulunmuyor ise boş bırakınız.")
         always_blank = False
@@ -61,7 +61,7 @@ class TeklifGorForm(JsonForm):
     """
 
     class Meta:
-        title = __(u"{} Adlı Satın Alma Duyurusu Teklifleri")
+        title = __(u"{} Satın Alma Duyurusu Teklifleri")
 
     degerlendir = fields.Button(__(u"Teklifleri Değerlendir"), cmd='degerlendir')
     indir = fields.Button(__(u"Bütün Teklif Dosyalarını İndir"), cmd='indir')
@@ -75,7 +75,7 @@ class KararVerForm(JsonForm):
     """
 
     class Meta:
-        title = __(u"'{}' Satın Alma Duyurusuna Verilen Teklifler")
+        title = __(u"{} Satın Alma Duyurusuna Verilen Teklifler")
 
     belirle = fields.Button(__(u"Kazanan Firmaları Belirle"), cmd='belirle')
     geri = fields.Button(__(u"Geri Dön"), cmd='geri_don')
