@@ -5,10 +5,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 import time
-from ulakbus import settings
-from ulakbus.models import User, BAPTeklif, BAPButcePlani, BAPSatinAlma
+from ulakbus.models import User, BAPTeklif, BAPButcePlani, BAPSatinAlma, BAPTeklifFiyatIsleme
 from zengine.lib.test_utils import BaseTestCase
-import requests, zipfile, io, os
 
 
 class TestCase(BaseTestCase):
@@ -19,6 +17,7 @@ class TestCase(BaseTestCase):
     """
 
     def test_bap_tekliflerin_degerlendirilmesi(self):
+        obj_id = "JgrLlrsr61OEADCLmyVWDWrVbg1"
         self.prepare_client('/bap_tekliflerin_degerlendirilmesi',
                             username='bap_koordinasyon_birimi_1')
 
@@ -27,7 +26,7 @@ class TestCase(BaseTestCase):
 
         resp = self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
                                 cmd="gor",
-                                object_id="JgrLlrsr61OEADCLmyVWDWrVbg1")
+                                object_id=obj_id)
 
         assert "4 Kalem Kırtasiye Malzemesi" in resp.json['forms']['schema']['title']
 
@@ -105,14 +104,16 @@ class TestCase(BaseTestCase):
                              cmd="kaydet",
                              form={'TeklifIsle': list_node_data})
 
-        resp = self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
-                         cmd="degerlendir")
-
-        assert "4 Kalem Kırtasiye Malzemesi" in resp.json['forms']['schema']['title']
+        time.sleep(1)
 
         resp = self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
-                                cmd="belirle",
-                                form = {'belirle':1})
+                                cmd="degerlendir")
+
+        assert resp.json['forms']['schema'][
+                   'title'] == "4 Kalem Kırtasiye Malzemesi Alımı Satın Alma Duyurusuna Verilen Teklifler"
+
+        resp = self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
+                                cmd="belirle")
 
         assert "4 Kalem Kırtasiye Malzemesi" in resp.json['forms']['schema']['title']
 
@@ -130,7 +131,6 @@ class TestCase(BaseTestCase):
                     'key': key}
             list_node_data.append(data)
 
-
         resp = self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
                                 cmd="kaydet",
                                 form={'KazananFirmalar': list_node_data})
@@ -141,3 +141,9 @@ class TestCase(BaseTestCase):
                                 cmd="onayla")
 
         assert resp.json['msgbox']['title'] == "İşlem Bilgilendirme"
+
+        satin_alma = BAPSatinAlma.objects.get(obj_id)
+        BAPTeklifFiyatIsleme.objects.filter(satin_alma=satin_alma).delete()
+        for teklif in BAPTeklif.objects.filter(satin_alma=satin_alma):
+            teklif.fiyat_islemesi = False
+            teklif.save()
