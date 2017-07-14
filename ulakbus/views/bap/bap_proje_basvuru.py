@@ -3,6 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from pyoko.exceptions import IntegrityError
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models import Okutman
@@ -67,6 +68,8 @@ class ArastirmaOlanaklariForm(JsonForm):
         ad = fields.String(_(u"Adı"), readonly=True)
         tur = fields.String(_(u"Türü"), readonly=True)
 
+    daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
+                                        form_validation=False)
     lab_ekle = fields.Button(_(u"Laboratuvar Ekle"), cmd='lab')
     demirbas_ekle = fields.Button(_(u"Demirbas Ekle"), cmd='demirbas')
     personel_ekle = fields.Button(_(u"Personel Ekle"), cmd='personel')
@@ -134,7 +137,9 @@ class UniversiteDisiUzmanForm(JsonForm):
         faks = fields.String(_(u"Faks"), readonly=True, required=False)
         eposta = fields.String(_(u"E-posta"), readonly=True)
 
-    ileri = fields.Button(_(u"İleri"))
+    daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
+                                        form_validation=False)
+    ileri = fields.Button(_(u"İleri"), cmd='ileri')
 
 
 class UniversiteDisiDestekForm(JsonForm):
@@ -168,6 +173,8 @@ class YurutucuTecrubesiForm(JsonForm):
         bitis = fields.Date(_(u'Bitiş'), readonly=True)
         durum = fields.Integer(_(u'Durum'), readonly=True)
 
+    daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
+                                        form_validation=False)
     ileri = fields.Button(_(u"İleri"), cmd='ileri')
     ekle = fields.Button(_(u"Ekle"), cmd='ekle')
 
@@ -308,17 +315,23 @@ class ProjeBasvuru(CrudView):
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))
 
     def proje_no_kaydet(self):
+        if self.current.task_data['cmd'] == 'retry':
+            self.current.task_data['cmd'] = self.current.task_data['pre_cmd']
         tur_id = self.current.task_data['ProjeTurForm']['tur']
         proje_id = self.current.task_data.get('bap_proje_id', False)
         if proje_id:
             proje = BAPProje.objects.get(proje_id)
-            if proje.tur_id != tur_id:
+            if proje.tur.key != tur_id:
                 proje.proje_no = self.proje_no_belirle(tur_id)
         else:
             proje = BAPProje()
             proje.proje_no = self.proje_no_belirle(tur_id)
         proje.tur = BAPProjeTurleri.objects.get(tur_id)
-        proje.blocking_save()
+        try:
+            proje.blocking_save()
+        except IntegrityError:
+            self.current.task_data['pre_cmd'] = self.current.task_data['cmd']
+            self.current.task_data['cmd'] = 'retry'
         proje_id = proje.key
         self.current.task_data['bap_proje_id'] = proje_id
 
@@ -636,6 +649,11 @@ class ProjeBasvuru(CrudView):
                "body": _(u'Proje başvurunuz BAP birimine başarıyla iletilmiştir. '
                          u'Değerlendirme sürecinde size bilgi verilecektir.')}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+        role = Role.objects.get(user=self.current.user)
+        wfi = WFInstance.objects.get(self.current.token)
+        inv = TaskInvitation.objects.get(instance=wfi, role=role)
+        inv.blocking_delete()
 
     def bildirim_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])

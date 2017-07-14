@@ -247,6 +247,7 @@ class BAPProje(Model):
         list_fields = ['ad', 'yurutucu']
         search_fields = ['ad']
         list_filters = ['durum']
+        unique_together = [('tur', 'proje_no')]
 
     def __unicode__(self):
         return "%s: %s" % (self.ad, self.yurutucu.__unicode__())
