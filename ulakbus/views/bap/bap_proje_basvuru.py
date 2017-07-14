@@ -80,7 +80,7 @@ class LabEkleForm(JsonForm):
     class Meta:
         title = _(u"Laboratuvar Seç")
 
-    lab = fields.String(_(u"Laboratuvar"))
+    lab = Room()
     lab_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
     iptal = fields.Button(_(u"İptal"))
 
@@ -98,7 +98,7 @@ class PersonelEkleForm(JsonForm):
     class Meta:
         title = _(u"Personel Seç")
 
-    personel = fields.String(_(u"Personel"))
+    personel = Personel()
     personel_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
     iptal = fields.Button(_(u"İptal"))
 
@@ -439,9 +439,6 @@ class ProjeBasvuru(CrudView):
 
     def lab_ekle(self):
         form = LabEkleForm()
-        ch = prepare_choices_for_model(Room)
-        form.set_choices_of('lab', ch)
-        form.set_default_of('lab', ch[0][0])
         self.form_out(form)
 
     def demirbas_ekle(self):
@@ -453,18 +450,15 @@ class ProjeBasvuru(CrudView):
 
     def personel_ekle(self):
         form = PersonelEkleForm()
-        ch = prepare_choices_for_model(Personel)
-        form.set_choices_of('personel', ch)
-        form.set_default_of('personel', ch[0][0])
         self.form_out(form)
 
     def olanak_kaydet(self):
-        if 'lab' in self.input['form']:
-            olanak = {'lab': self.input['form']['lab']}
+        if 'lab_id' in self.input['form']:
+            olanak = {'lab': self.input['form']['lab_id']}
         elif 'demirbas' in self.input['form']:
             olanak = {'demirbas': self.input['form']['demirbas']}
         else:
-            olanak = {'personel': self.input['form']['personel']}
+            olanak = {'personel': self.input['form']['personel_id']}
 
         self.current.task_data['hedef_proje']['arastirma_olanaklari'].append(olanak)
 
