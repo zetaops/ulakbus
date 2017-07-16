@@ -35,7 +35,7 @@ class KazananFirmalarForm(JsonForm):
         firma = fields.String(__(u"Kazanan Firma"))
         key = fields.String('Key', hidden=True)
 
-    kaydet = fields.Button(__(u"Kaydet"), cmd='kaydet')
+    ilerle = fields.Button(__(u"İlerle"), cmd='ilerle')
     geri = fields.Button(__(u"Teklif Görüntüleme Ekranına Geri Dön"), cmd='geri_don')
 
 
@@ -50,7 +50,7 @@ class KazananFirmalarGosterForm(KazananFirmalarForm):
         always_blank = False
 
     KazananFirmalar = KazananFirmalarForm.KazananFirmalar
-    kaydet = fields.Button(__(u"Onayla"), cmd='onayla')
+    ilerle = fields.Button(__(u"Onayla"), cmd='onayla')
     geri = fields.Button(__(u"Kazanan Belirleme Ekranına Geri Dön"), cmd='geri_don')
 
 
@@ -206,7 +206,7 @@ class TeklifDegerlendirme(CrudView):
                       'satin_alma_id': self.object.key}
 
             if not obj['birim_fiyat'] or not obj['toplam_fiyat']:
-                BAPTeklifFiyatIsleme.objects.filter(**kwargs).delete()
+                self.delete_if_exists(kwargs)
                 continue
 
             isleme, new = BAPTeklifFiyatIsleme.objects.get_or_create(**kwargs)
@@ -363,6 +363,18 @@ class TeklifDegerlendirme(CrudView):
             return BAPTeklifFiyatIsleme.objects.get(kalem=kalem, firma=firma)
         except ObjectDoesNotExist:
             return False
+
+    @staticmethod
+    def delete_if_exists(kwargs):
+        """
+        Eğer verilen parametrelere ait BAPTeklifFiyatİsleme nesnesi veritabanında bulunuyor ise 
+        silinir.
+         
+        """
+        try:
+            BAPTeklifFiyatIsleme.objects.get(**kwargs).delete()
+        except ObjectDoesNotExist:
+            pass
 
     @obj_filter
     def teklife_kapanmis_satin_alma_actions(self, obj, result):
