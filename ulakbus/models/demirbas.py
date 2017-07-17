@@ -32,6 +32,7 @@ class Demirbas(Model):
     model = field.String(_(u"Model"), required=False)
     durum = field.Integer(_(u"Durum"), choices='demirbas_durum')
     birim = Unit(_(u"Birim"), required=False)
+    sorumlu = Personel()
     notlar = field.Text(_(u"Notlar"), required=False)
 
     class Meta:

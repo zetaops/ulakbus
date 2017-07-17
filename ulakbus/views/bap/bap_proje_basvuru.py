@@ -224,11 +224,8 @@ class ProjeBasvuru(CrudView):
     class Meta:
         model = "BAPProje"
 
-    def proje_olustur(self):
-        proje_id = BAPProje().blocking_save().key
-        self.current.task_data['bap_proje_id'] = proje_id
-
     def proje_tur_sec(self):
+        self.current.task_data['proje_basvuru'] = True
         form = ProjeTurForm(current=self.current)
         choices = prepare_choices_for_model(BAPProjeTurleri)
         form.set_choices_of('tur', choices)
@@ -441,22 +438,15 @@ class ProjeBasvuru(CrudView):
         form = LabEkleForm()
         self.form_out(form)
 
-    def demirbas_ekle(self):
-        form = DemirbasEkleForm()
-        ch = prepare_choices_for_model(Demirbas)
-        form.set_choices_of('demirbas', ch)
-        form.set_default_of('demirbas', ch[0][0])
-        self.form_out(form)
-
     def personel_ekle(self):
         form = PersonelEkleForm()
         self.form_out(form)
 
     def olanak_kaydet(self):
-        if 'lab_id' in self.input['form']:
+        if 'form' in self.input and 'lab_id' in self.input['form']:
             olanak = {'lab': self.input['form']['lab_id']}
-        elif 'demirbas' in self.input['form']:
-            olanak = {'demirbas': self.input['form']['demirbas']}
+        elif 'demirbas' in self.current.task_data:
+            olanak = {'demirbas': self.current.task_data.pop('demirbas')}
         else:
             olanak = {'personel': self.input['form']['personel_id']}
 

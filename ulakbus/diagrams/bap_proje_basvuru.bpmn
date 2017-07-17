@@ -32,7 +32,6 @@
         <bpmn:flowNodeRef>ExclusiveGateway_14emyvv</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>arastirma_olanak_senkironize</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>lab_ekle</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>demirbas_ekle</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>personel_ekle</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0nkhywo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>proje_belge_kaydet</bpmn:flowNodeRef>
@@ -61,6 +60,7 @@
         <bpmn:flowNodeRef>ExclusiveGateway_0uk01qj</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>universite_disi_destek_ekle</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_00zchlz</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>demirbas_ekle</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="SequenceFlow_0a9cfvn" sourceRef="proje_no_kaydet" targetRef="ExclusiveGateway_0t5hs88" />
@@ -293,10 +293,6 @@
       <bpmn:incoming>SequenceFlow_11r4lep</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1k00tio</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="demirbas_ekle" name="Demirbas Ekle" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.demirbas_ekle">
-      <bpmn:incoming>SequenceFlow_13u5lbv</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_102qwuo</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:userTask id="lab_ekle" name="Lab Ekle" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.lab_ekle">
       <bpmn:incoming>SequenceFlow_0uxk9fh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_01t3cek</bpmn:outgoing>
@@ -396,6 +392,10 @@
     <bpmn:sequenceFlow id="SequenceFlow_0wyalhe" sourceRef="ExclusiveGateway_0t5hs88" targetRef="proje_no_kaydet">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='retry']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="demirbas_ekle" name="Demirbas Ekle" camunda:type="external" camunda:topic="bap_makine_techizat_ara">
+      <bpmn:incoming>SequenceFlow_13u5lbv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_102qwuo</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0zvk5l8">
@@ -513,9 +513,6 @@
           <dc:Bounds x="1327" y="-351" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_17li9ld_di" bpmnElement="demirbas_ekle">
-        <dc:Bounds x="1510" y="-314" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_0ogdk6j_di" bpmnElement="personel_ekle">
         <dc:Bounds x="1394" y="-314" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -753,7 +750,7 @@
         <di:waypoint xsi:type="dc:Point" x="1560" y="-191" />
         <di:waypoint xsi:type="dc:Point" x="1387" y="-191" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1575" y="-212" width="0" height="0" />
+          <dc:Bounds x="1575" y="-212.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_01t3cek_di" bpmnElement="SequenceFlow_01t3cek">
@@ -1074,6 +1071,9 @@
           <dc:Bounds x="1017" y="-551" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0k4mcql_di" bpmnElement="demirbas_ekle">
+        <dc:Bounds x="1510" y="-314" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
