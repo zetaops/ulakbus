@@ -88,7 +88,7 @@ class TeklifIsleForm(JsonForm):
     """
 
     class Meta:
-        inline_edit = ['birim_fiyat', 'toplam_fiyat']
+        inline_edit = ['birim_fiyat']
         title = __(u"{} Firması {} Satın Alma Duyurusu Fiyat İşlemeleri")
         help_text = __(u"Firmanın teklifte bulunduğu bütçe kalemleri için gereken yerleri "
                        u"doldurunuz. Teklif verilmeyen kalemlerin alanlarını boş bırakınız.")
@@ -100,7 +100,7 @@ class TeklifIsleForm(JsonForm):
         kalem = fields.String(__(u"Bütçe Kalemi Adı"))
         adet = fields.Integer(__(u"Adet"))
         birim_fiyat = fields.Float(__(u" Birim Fiyat"))
-        toplam_fiyat = fields.Float(__(u"Toplam Fiyat"))
+        # toplam_fiyat = fields.Float(__(u"Toplam Fiyat"))
         key = fields.String('Key', hidden=True)
 
     kaydet = fields.Button(__(u"Kaydet"), cmd='kaydet')
@@ -162,8 +162,8 @@ class TeklifDegerlendirme(CrudView):
 
     def teklifleri_isle_duzenle(self):
         """
-        Firmaların verdiği teklifler birim fiyat ve toplam fiyat olarak işlenir. Eğer önceden 
-        işlenmiş ise düzenlenebilir.
+        Firmaların verdiği teklifler birim fiyatolarak işlenir. Adet ve birim fiyat kullanılarak 
+        toplam fiyat hesaplanir. Eğer önceden işlenmiş ise düzenlenebilir.
 
         """
         self.current.output["meta"]["allow_add_listnode"] = False
@@ -180,13 +180,12 @@ class TeklifDegerlendirme(CrudView):
                       'adet': kalem.adet,
                       'key': kalem.key,
                       'birim_fiyat': None,
-                      'toplam_fiyat': None}
+                      }
 
             if self.cmd == 'duzenle':
                 fiyat = self.get_obj_or_false(kalem, firma)
                 if fiyat:
-                    kwargs.update({'birim_fiyat': fiyat.birim_fiyat,
-                                   'toplam_fiyat': fiyat.toplam_fiyat})
+                    kwargs.update({'birim_fiyat': fiyat.birim_fiyat})
 
             form.TeklifIsle(**kwargs)
 
@@ -201,20 +200,20 @@ class TeklifDegerlendirme(CrudView):
         teklif = BAPTeklif.objects.get(self.current.task_data['teklif_id'])
         self.current.task_data['firma_ad'] = teklif.firma.ad
         for obj in self.input['form']['TeklifIsle']:
-            kwargs = {'firma_id': teklif.firma.key,
-                      'kalem_id': obj['key'],
-                      'satin_alma_id': self.object.key}
+            teklif_bilgileri = {'firma_id': teklif.firma.key,
+                                'kalem_id': obj['key'],
+                                'satin_alma_id': self.object.key}
 
-            if not obj['birim_fiyat'] or not obj['toplam_fiyat']:
-                self.delete_if_exists(kwargs)
+            if not obj['birim_fiyat']:
+                self.delete_if_exists(teklif_bilgileri)
                 continue
 
-            isleme, new = BAPTeklifFiyatIsleme.objects.get_or_create(**kwargs)
-            if new:
-                teklif.fiyat_islemesi = True
-            kwargs = {'birim_fiyat': float(obj['birim_fiyat']),
-                      'toplam_fiyat': float(obj['toplam_fiyat'])}
-            isleme(**kwargs).save()
+            isleme, new = BAPTeklifFiyatIsleme.objects.get_or_create(**teklif_bilgileri)
+            teklif.fiyat_islemesi = True
+
+            isleme(birim_fiyat=float(obj['birim_fiyat']),
+                   toplam_fiyat=float(obj['birim_fiyat']) * obj['adet']).save()
+
         teklif.save()
 
     def islem_mesaji_olustur(self):

@@ -36,20 +36,19 @@ class TestCase(BaseTestCase):
 
         assert "Test Firma 2" in resp.json['forms']['schema']['title']
 
-        key_dict = {'7uvtCCHGqcjnAdhVMDtBKYiFQ2T': (0.5, 500),
-                    'BNfJoUkHVZKH2dmjzZEuJST4its': (None, None),
-                    'WD0K3k6syBXJOX9hkS5wBmnCQBD': (8, 16),
-                    'Jj8IRgcmS6HFNKPegm5wASOjUAB': (None, None)}
+        key_dict = {'7uvtCCHGqcjnAdhVMDtBKYiFQ2T': 0.5,
+                    'BNfJoUkHVZKH2dmjzZEuJST4its': None,
+                    'WD0K3k6syBXJOX9hkS5wBmnCQBD': 8,
+                    'Jj8IRgcmS6HFNKPegm5wASOjUAB': None}
 
         list_node_data = []
-        for key, fiyat in key_dict.items():
-            birim, toplam = fiyat
+        for key, birim in key_dict.items():
             kalem = BAPButcePlani.objects.get(key)
             data = {'adet': kalem.adet,
                     'birim_fiyat': birim,
                     'kalem': kalem.ad,
-                    'key': key,
-                    'toplam_fiyat': toplam}
+                    'key': key
+                    }
             list_node_data.append(data)
 
         resp = self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
@@ -68,14 +67,14 @@ class TestCase(BaseTestCase):
                                 cmd="duzenle",
                                 data_key="530g49RwA2nX5fzwEMWurrbqouN")
 
+        time.sleep(1)
         for obj in resp.json['forms']['model']['TeklifIsle']:
-            assert key_dict[obj['key']] == (obj['birim_fiyat'], obj['toplam_fiyat'])
+            assert key_dict[obj['key']] == obj['birim_fiyat']
 
         for obj in list_node_data:
             if obj['key'] == 'WD0K3k6syBXJOX9hkS5wBmnCQBD':
                 obj['birim_fiyat'] = 11.5
-                obj['toplam_fiyat'] = 23
-                key_dict['WD0K3k6syBXJOX9hkS5wBmnCQBD'] = (obj['birim_fiyat'], obj['toplam_fiyat'])
+                key_dict['WD0K3k6syBXJOX9hkS5wBmnCQBD'] = obj['birim_fiyat']
 
         self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
                          cmd="kaydet",
@@ -86,7 +85,7 @@ class TestCase(BaseTestCase):
                                 data_key="530g49RwA2nX5fzwEMWurrbqouN")
 
         for obj in resp.json['forms']['model']['TeklifIsle']:
-            assert key_dict[obj['key']] == (obj['birim_fiyat'], obj['toplam_fiyat'])
+            assert key_dict[obj['key']] == obj['birim_fiyat']
 
         self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
                          cmd="geri_don")
@@ -132,7 +131,7 @@ class TestCase(BaseTestCase):
             list_node_data.append(data)
 
         resp = self.client.post(wf='bap_tekliflerin_degerlendirilmesi',
-                                cmd="kaydet",
+                                cmd="ilerle",
                                 form={'KazananFirmalar': list_node_data})
 
         assert resp.json['forms']['schema']['title'] == "Kazanan Firmaların Onayı"

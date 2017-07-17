@@ -144,10 +144,10 @@
     <bpmn:sequenceFlow id="SequenceFlow_17rpdmg" sourceRef="TeklifIslemeleriKaydet" targetRef="IslemMesajiOlustur" />
     <bpmn:sequenceFlow id="SequenceFlow_0s2rbhr" sourceRef="DegerlendirmeKontrol" targetRef="ExclusiveGateway_12k0i4z" />
     <bpmn:sequenceFlow id="SequenceFlow_1wx7nle" sourceRef="ExclusiveGateway_12k0i4z" targetRef="DegerlendirmeHataMesajiOlustur">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">degerlendirme_kontrol == False</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">degerlendirme_kontrol</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_16f64hj" sourceRef="ExclusiveGateway_12k0i4z" targetRef="TeklifleriDegerlendir">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">degerlendirme_kontrol == True</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">degerlendirme_kontrol</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0nbtigf" sourceRef="ExclusiveGateway_1vfmu93" targetRef="TeklifleriDegerlendir">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'geri_don']]></bpmn:conditionExpression>
