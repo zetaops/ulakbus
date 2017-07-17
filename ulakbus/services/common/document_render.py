@@ -167,3 +167,17 @@ class RenderDocument(Service):
                   is_secure=False)
         self.bucket = conn.get_bucket(self.S3_BUCKET_NAME)
         self.s3connect = True
+
+    def save_document(self, pdf_file):
+        """
+        Save document to S3 bucket
+        Args:
+            pdf_file: file-like object, BytesIO
+        Returns:
+            (str) key of file
+        """
+        self.s3_connect()
+        k = Key(self.bucket)
+        k.set_contents_from_string(pdf_file.getvalue())
+        self.bucket.set_acl('public-read', k.key)
+        return k.key
