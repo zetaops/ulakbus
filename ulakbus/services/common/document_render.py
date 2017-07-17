@@ -152,3 +152,18 @@ class RenderDocument(Service):
                 break
         self.logger.info('Elapsed time : {}'.format(now_time - start_time))
         return queue_info
+
+    def s3_connect(self):
+        """ Connect to 3S server
+        :return:
+        """
+        if self.s3connect:
+            return
+
+        conn = s3(aws_access_key_id=self.S3_ACCESS_KEY,
+                  aws_secret_access_key=self.S3_SECRET_KEY,
+                  proxy=self.S3_PROXY_URL,
+                  proxy_port=self.S3_PROXY_PORT,
+                  is_secure=False)
+        self.bucket = conn.get_bucket(self.S3_BUCKET_NAME)
+        self.s3connect = True
