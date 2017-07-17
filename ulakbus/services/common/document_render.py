@@ -128,3 +128,27 @@ class RenderDocument(Service):
         else:
             pass
             return '{"status":"Error!", "download_url":"None"}'
+
+    def check_the_status(self, request_period, task_id):
+        """ Check the status of task_id according to given request_period
+        :param request_period:
+        :param task_id:
+        :return:
+        """
+        pdf_writer_queue = self.outgoing.plain_http.get('docsbox.out.queue')
+        self.logger.info('ATTR : {}'.format(pdf_writer_queue.__dict__))
+        start_time = time.time()
+        now_time = 0.0
+        while True:
+            params = {'task_id': '{}'.format(task_id)}
+
+            queue_info = pdf_writer_queue.conn.get(self.cid, params)
+            queue_info = json.loads(queue_info.text)
+
+            if queue_info['status'] == 'finished':
+                break
+            now_time = time.time()
+            if (now_time - start_time) >= request_period:
+                break
+        self.logger.info('Elapsed time : {}'.format(now_time - start_time))
+        return queue_info
