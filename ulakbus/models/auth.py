@@ -678,8 +678,8 @@ class AuthBackend(object):
 
         """
         user = User.objects.get(username=username)
-        is_login_ok = user.check_password(password)
-        if is_login_ok and user.is_active:
+        is_login_ok = user.check_password(password) and user.is_active
+        if is_login_ok:
             self.set_user(user)
         else:
             pass
