@@ -92,4 +92,39 @@ class RenderDocument(Service):
         file_desc.seek(0)
         return file_desc
 
-    
+    def create_pdf(self, download_url):
+        """ ODF to PDF.
+        :param download_url: URL of ODF file.
+        :return: Status of process.
+        """
+        # Make file-like object
+        file_desc = self.make_file_like_object(download_url)
+
+        # Get outgoing way.
+        pdf_writer = self.outgoing.plain_http.get('docsbox.out')
+
+        # Add to queue
+        files = {'file': file_desc}
+        headers = {'Content-Type': 'multipart/form-data'}
+        result = pdf_writer.conn.post(self.cid, files=files)
+        task_info = json.loads(result.text)
+
+        # Check the queue.
+        task_id = task_info['id'].encode('utf-8')
+        # Chect the queue for 3 seconds.
+        task_queue_status = self.check_the_status(request_period=3,
+                                                  task_id=task_id)
+
+        # Send a response to client
+
+        if task_queue_status['status'] == 'finished':
+            # send back to client, result_url
+            # Make a BytesIO object of DOCSBOX result_url.
+            pdf_file = self.make_file_like_object('{0}{1}'.format(self.DOSBOX_URL, task_queue_status['result_url']))
+            # Save PDF file to S3 Server
+            s3_url = self.save_document(pdf_file)
+            task_queue_status['download_url'] = "{0}{1}".format(self.S3_PUBLIC_URL, s3_url)
+            return task_queue_status
+        else:
+            pass
+            return '{"status":"Error!", "download_url":"None"}'
