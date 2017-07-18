@@ -51,7 +51,7 @@
       <bpmn:incoming>SequenceFlow_1lcy64l</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_17rpdmg</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_12k0i4z">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_12k0i4z" default="SequenceFlow_1wx7nle">
       <bpmn:incoming>SequenceFlow_0s2rbhr</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1wx7nle</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_16f64hj</bpmn:outgoing>
@@ -143,9 +143,7 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_17rpdmg" sourceRef="TeklifIslemeleriKaydet" targetRef="IslemMesajiOlustur" />
     <bpmn:sequenceFlow id="SequenceFlow_0s2rbhr" sourceRef="DegerlendirmeKontrol" targetRef="ExclusiveGateway_12k0i4z" />
-    <bpmn:sequenceFlow id="SequenceFlow_1wx7nle" sourceRef="ExclusiveGateway_12k0i4z" targetRef="DegerlendirmeHataMesajiOlustur">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">degerlendirme_kontrol</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1wx7nle" sourceRef="ExclusiveGateway_12k0i4z" targetRef="DegerlendirmeHataMesajiOlustur" />
     <bpmn:sequenceFlow id="SequenceFlow_16f64hj" sourceRef="ExclusiveGateway_12k0i4z" targetRef="TeklifleriDegerlendir">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">degerlendirme_kontrol</bpmn:conditionExpression>
     </bpmn:sequenceFlow>

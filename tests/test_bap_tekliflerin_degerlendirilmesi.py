@@ -67,7 +67,7 @@ class TestCase(BaseTestCase):
                                 cmd="duzenle",
                                 data_key="530g49RwA2nX5fzwEMWurrbqouN")
 
-        time.sleep(1)
+        time.sleep(2)
         for obj in resp.json['forms']['model']['TeklifIsle']:
             assert key_dict[obj['key']] == obj['birim_fiyat']
 
