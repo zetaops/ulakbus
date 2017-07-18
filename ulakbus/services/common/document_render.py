@@ -8,16 +8,6 @@ import json
 from boto.s3.connection import S3Connection as s3
 from boto.s3.key import Key
 
-"""
-S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
-S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
-S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
-S3_PUBLIC_URL = os.environ.get('S3_PUBLIC_URL')
-S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '80')
-S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME', 'my_bucket')
-MAX_UPLOAD_TEMPLATE_SIZE = os.environ.get('MAX_UPLOAD_TEMPLATE_SIZE',
-                                          False) or 3 * 1024 * 1024  # 3MB
-"""
 
 class RenderDocument(Service):
     """ The submitted template is rendered with the context data and the download link is sent back.
@@ -53,7 +43,6 @@ class RenderDocument(Service):
 
         self.s3connect = False
         # Load the 3S configuration from ZATO.
-        self.DOSBOX_URL = self.user_config.zetaops.zetaops3s.DOCSBOX_URL
         self.S3_PROXY_URL = self.user_config.zetaops.zetaops3s.S3_PROXY_URL
         self.S3_ACCESS_KEY = self.user_config.zetaops.zetaops3s.S3_ACCESS_KEY
         self.S3_SECRET_KEY = self.user_config.zetaops.zetaops3s.S3_SECRET_KEY
