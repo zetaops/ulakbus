@@ -5,6 +5,8 @@ import time
 import requests
 import io
 import json
+import hashlib
+import base64
 from boto.s3.connection import S3Connection as s3
 from boto.s3.key import Key
 
@@ -50,6 +52,8 @@ class RenderDocument(Service):
         self.S3_PROXY_PORT = self.user_config.zetaops.zetaops3s.S3_PROXY_PORT
         self.S3_BUCKET_NAME = self.user_config.zetaops.zetaops3s.S3_BUCKET_NAME
 
+        document_cache = DocumentCache(self)
+
         # Standart render process
         resp = self.render_document(payload=self.request.payload)
 
@@ -57,11 +61,14 @@ class RenderDocument(Service):
         if wants_pdf:
             file_desc = self.make_file_like_object(resp.data['download_url'])
             pdf_resp = self.create_pdf(file_desc)
+
+            document_cache.add_rendered_doc(pdf_url=pdf_resp['download_url'], odt_url=resp.data['download_url'])
             resp = self.prepare_response(pdf_resp['status'], pdf_resp['download_url'])
         else:
             resp = self.prepare_response('finished', resp.data['download_url'])
 
         self.response.payload = resp
+
 
     @staticmethod
     def prepare_response(status, url):
@@ -208,18 +215,52 @@ class DocumentCache:
     def __init__(self, zato_service):
         self.zato_service = zato_service
 
+    @staticmethod
+    def hashing(data):
+        """
+        Get SHA256 hash of str data.
+        :param data: encoded bytes data
+        :return: hashed string.
+        """
+        return hashlib.sha256(data).hexdigest()
+
     def key_from_context(self):
         """ Sort and convert string of request.payload. Make key, from context data
         :return: produced key. type: <str>
         """
         context = self.zato_service.request.payload['context']
-        context = json.loads(context)
         key = "".join(["{}{}".format(k, v) for k, v in sorted(context.items())])
+        key = self.hashing(key.encode())
         return key
+
+    def value_of_template(self, pdf_url, odt_url):
+        """ Make dict for key_from_context() method. Get hash of template.
+        :param pdf_url:
+        :param odt_url:
+        :return: type: <dict>
+        """
+        # Hash value of template. If template is base64 encoded data, decode it.
+        if self.zato_service.request.payload['template'].startswith('http'):
+            template = self.hashing(self.zato_service.request.payload['template'])
+        else:
+            template = base64.b64decode(self.zato_service.request.payload['template'])
+            template = self.hashing(template)
+
+        return {"template":template, "odt_url": odt_url, "pdf_url": pdf_url}
+
+    def add_rendered_doc(self, pdf_url=None, odt_url=None):
+        key = self.key_from_context()
+        value = self.value_of_template(odt_url=odt_url, pdf_url=pdf_url)
+
+        self.zato_service.kvdb.conn.set(key, value)
+        val = self.zato_service.kvdb.conn.get(key)
+        self.zato_service.logger.info("KVDB'ye bir data eklendi.")
+        self.zato_service.logger.info("VALUE : {}".format(val))
 
     def check_context(self):
         key = self.key_from_context()
         val_of_context = self.zato_service.kvdb.conn.get(key)
         if val_of_context is not None:
             pass
+
 
