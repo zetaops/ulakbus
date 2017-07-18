@@ -562,10 +562,10 @@ class ProjeBasvuru(CrudView):
         for fd in form_destek:
             if 'file_content' in fd['destek_belgesi']:
                 try:
-                    tarih = datetime.datetime.strptime(
+                    tarih = datetime.strptime(
                         fd['verildigi_tarih'], DATE_TIME_FORMAT).date()
                 except ValueError:
-                    tarih = datetime.datetime.strptime(fd['verildigi_tarih'],
+                    tarih = datetime.strptime(fd['verildigi_tarih'],
                                                        DATE_DEFAULT_FORMAT).date()
                 proje.UniversiteDisiDestek(
                     destek_belgesi=fd['destek_belgesi'],
@@ -693,7 +693,7 @@ class ProjeBasvuru(CrudView):
 
         proje.ProjeIslemGecmisi(eylem=_(u"Kayıt"),
                                 aciklama=_(u"Öğretim üyesi tarafından kaydedildi"),
-                                tarih=datetime.datetime.now())
+                                tarih=datetime.now())
         proje.durum = 1
         if not proje.basvuru_rolu.exist:
             proje.basvuru_rolu = self.current.role
@@ -717,7 +717,7 @@ class ProjeBasvuru(CrudView):
         proje.durum = 2
         proje.ProjeIslemGecmisi(eylem=_(u"Onaya Gönderildi"),
                                 aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
-                                tarih=datetime.datetime.now())
+                                tarih=datetime.now())
         proje.blocking_save()
         msg = {"title": _(u'Başvurunuzu tamamladınız!'),
                "body": _(u'Proje başvurunuz BAP birimine başarıyla iletilmiştir. '
