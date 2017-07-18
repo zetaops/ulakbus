@@ -19,9 +19,13 @@ class ProjeIptal(CrudView):
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
         okutman = Okutman.objects.get(personel=personel)
-        if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
+        if BAPProje.objects.filter(yurutucu=okutman).count() == 0:
             self.current.task_data['cmd'] = 'bilgilendir'
-            self.current.task_data['bilgilendirme'] = 'jjhvjgjhbjhbjh'
+            self.current.task_data['bilgilendirme'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
+                                                              'bulunamadı. Size bağlı olan proje '
+                                                              'olmadığı için iptal talebinde '
+                                                              'bulunamazsınız.',
+                                                       'title': 'Proje Bulunamadı'}
         elif 'kabul' in self.current.task_data:
             self.current.task_data['cmd'] = 'bilgilendir'
             self.current.task_data['bilgilendirme'] = self.current.task_data['kabul']
@@ -34,8 +38,7 @@ class ProjeIptal(CrudView):
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
         okutman = Okutman.objects.get(personel=personel)
-        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
-                                                                           durum__in=[3, 5])]
+        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman)]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
         form.proje = fields.String(choices=data, default=data[0][0])
@@ -73,7 +76,7 @@ class ProjeIptal(CrudView):
     def ana_sayfaya_yonlendir(self):
         self.current.output['cmd'] = 'reload'
 
-    def talebi_goruntule(self):
+    def iptal_talebini_goruntule(self):
         self.object = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.show()
         self.output['object_title'] = _(u"Proje iptal talebi : %s") % self.object

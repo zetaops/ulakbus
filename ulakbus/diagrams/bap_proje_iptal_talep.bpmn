@@ -60,7 +60,7 @@
     <bpmn:endEvent id="EndEvent_0umhwkm">
       <bpmn:incoming>SequenceFlow_0lcttd3</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="talebi_goruntule" name="Talebi Görüntüle" camunda:assignee="bap.proje_talep.bap_proje_iptal_talep.ProjeIptal.talebi_goruntule">
+    <bpmn:userTask id="talebi_goruntule" name="Talebi Görüntüle" camunda:assignee="bap.proje_talep.bap_proje_iptal_talep.ProjeIptal.iptal_talebini_goruntule">
       <bpmn:incoming>SequenceFlow_1py0v5j</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0bjoptg</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0dfatlz</bpmn:incoming>
