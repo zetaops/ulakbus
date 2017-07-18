@@ -10,7 +10,7 @@ from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
 
 from zengine.views.crud import CrudView, list_query, obj_filter
 from zengine.forms import JsonForm, fields
-from zengine.lib.translation import gettext as _, gettext_lazy as __
+from zengine.lib.translation import gettext as _
 
 
 class FasilAktarimTalep(CrudView):
@@ -25,9 +25,7 @@ class FasilAktarimTalep(CrudView):
     def kontrol(self):
         personel = Personel.objects.get(user=self.current.user)
         okutman = Okutman.objects.get(personel=personel)
-        projeler = BAPProje.objects.filter(yurutucu=okutman,
-                                           durum__in=[3, 5],
-                                           kabul_edilen_butce__gt=0)
+        projeler = BAPProje.objects.filter(yurutucu=okutman, kabul_edilen_butce__gt=0)
         if projeler.count() == 0:
             self.current.task_data['cmd'] = 'bulunamadi'
             self.current.task_data['proje_yok'] = {'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
@@ -41,15 +39,14 @@ class FasilAktarimTalep(CrudView):
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
         okutman = Okutman.objects.get(personel=personel)
-        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
-                                                                           durum__in=[3, 5])]
+        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman)]
 
         form = JsonForm(title=_(u"Proje Seçiniz"))
         form.proje = fields.String(choices=data, default=data[0][0])
         form.ilerle = fields.Button(_(u"İlerle"))
         self.form_out(form)
 
-    def list(self, custom_form=None):
+    def list(self, custom_form=None, **kwargs):
         if 'form' in self.input and 'proje' in self.input['form']:
             self.current.task_data['bap_proje_id'] = self.input['form']['proje']
 
@@ -233,7 +230,7 @@ class FasilAktarimTalep(CrudView):
         form.iptal = fields.Button(_(u"İptal"), cmd='iptal')
         self.form_out(form)
 
-    def talep_detay_goster(self):
+    def fasil_talep_detay_goster(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s / Kalem: %s") % \
                                        (proje.yurutucu, proje.ad, self.object)

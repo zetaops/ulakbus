@@ -4,6 +4,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+import json
+
 from ulakbus.models import BAPProje, BAPGundem, Personel, Okutman
 
 from zengine.views.crud import CrudView
@@ -26,19 +28,22 @@ class YurutucuDegisikligi(CrudView):
         model = "BAPProje"
 
     def kontrol(self):
-        personel = Personel.objects.get(user=self.current.user)
-        okutman = Okutman.objects.get(personel=personel)
-        if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
-            self.current.task_data['cmd'] = 'bilgilendir'
-            self.current.task_data['bilgilendirme'] = 'jjhvjgjhbjhbjh'
-        elif 'kabul' in self.current.task_data:
-            self.current.task_data['cmd'] = 'bilgilendir'
-            self.current.task_data['bilgilendirme'] = self.current.task_data['kabul']
-        elif 'red_msg' in self.current.task_data:
-            self.current.task_data['cmd'] = 'bilgilendir'
-            self.current.task_data['bilgilendirme'] = self.current.task_data['red_msg']
-        elif 'bap_proje_id' not in self.current.task_data:
-            self.current.task_data['cmd'] = 'proje_yok'
+        if 'detay_goruntule' in self.current.task_data:
+            self.current.task_data['cmd'] = 'goruntule'
+        else:
+            personel = Personel.objects.get(user=self.current.user)
+            okutman = Okutman.objects.get(personel=personel)
+            if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
+                self.current.task_data['cmd'] = 'bilgilendir'
+                self.current.task_data['bilgilendirme'] = 'jjhvjgjhbjhbjh'
+            elif 'kabul' in self.current.task_data:
+                self.current.task_data['cmd'] = 'bilgilendir'
+                self.current.task_data['bilgilendirme'] = self.current.task_data['kabul']
+            elif 'red_msg' in self.current.task_data:
+                self.current.task_data['cmd'] = 'bilgilendir'
+                self.current.task_data['bilgilendirme'] = self.current.task_data['red_msg']
+            elif 'bap_proje_id' not in self.current.task_data:
+                self.current.task_data['cmd'] = 'proje_yok'
 
     def proje_sec(self):
         personel = Personel.objects.get(user=self.current.user)
@@ -73,12 +78,6 @@ class YurutucuDegisikligi(CrudView):
         form.iptal = fields.Button(_(u"İptal"), cmd='iptal')
         self.form_out(form)
 
-    def talebi_gonder(self):
-        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        proje.yurutucu_talep = {'yurutucu_id': self.current.task_data['yeni_yurutucu_id'],
-                                'yurutucu_aciklama': self.current.task_data['yurutucu_aciklama']}
-        proje.save()
-
     def bilgilendirme(self):
         form = JsonForm()
         form.title = self.current.task_data['bilgilendirme']['title']
@@ -92,10 +91,10 @@ class YurutucuDegisikligi(CrudView):
     def degisiklik_talebini_goruntule(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Proje: %s - Yürütücü Değişikliği Talebi") % proje.ad
-        yeni_yurutucu = Okutman.objects.get(proje.yurutucu_talep['yurutucu_id'])
+        yeni_yurutucu = Okutman.objects.get(self.current.task_data['yeni_yurutucu_id'])
         obj_data = {"Şuanki Yürütücü": str(proje.yurutucu),
                     "Talep Edilen Yeni Yürütücü": str(yeni_yurutucu),
-                    "Açıklama": proje.yurutucu_talep['yurutucu_aciklama']}
+                    "Açıklama": self.current.task_data['yurutucu_aciklama']}
         self.output['object'] = obj_data
         form = JsonForm()
         form.onayla = fields.Button(_(u"Komisyona Yolla"), cmd='onayla')
@@ -104,7 +103,7 @@ class YurutucuDegisikligi(CrudView):
 
     def komisyona_gonder_aciklama(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        yeni_yurutucu = Okutman.objects.get(proje.yurutucu_talep['yurutucu_id'])
+        yeni_yurutucu = Okutman.objects.get(self.current.task_data['yeni_yurutucu_id'])
         form = JsonForm(title=_(u"Yürütücü Değişikliği Talebini Komisyona Yolla"))
         form.help_text = _(u"%s projesinin mevcut yürütücüsü olan %s 'nın yerine %s 'nın "
                            u"yürütücü olarak atanması talebini onaylayıp komisyona "
@@ -116,7 +115,7 @@ class YurutucuDegisikligi(CrudView):
 
     def onayla_gundeme_al(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        yeni_yurutucu = Okutman.objects.get(proje.yurutucu_talep['yurutucu_id'])
+        yeni_yurutucu = Okutman.objects.get(self.current.task_data['yeni_yurutucu_id'])
         yeni_yurutucu.personel.user.send_notification(
             title=_(u"Yürütücü Değişikliği"),
             message=_(u"%s, %s projesi için sizi yürütücü olarak atama talebinde bulunmuş "
@@ -127,7 +126,10 @@ class YurutucuDegisikligi(CrudView):
         gundem = BAPGundem()
         gundem.proje = proje
         gundem.gundem_tipi = 8
-        gundem.gundem_aciklama = proje.yurutucu_talep['yurutucu_aciklama']
+        gundem.gundem_aciklama = self.current.task_data['yurutucu_aciklama']
+        gundem.gundem_ekstra_bilgiler = json.dumps({
+            'eski_yurutucu_id': proje.yurutucu.key,
+            'yeni_yurutucu_id': self.current.task_data['yeni_yurutucu_id']})
         gundem.save()
 
     def reddet_ve_aciklama_yaz(self):
@@ -139,7 +141,7 @@ class YurutucuDegisikligi(CrudView):
 
     def yurutucuyu_bilgilendir(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        yeni_yurutucu = Okutman.objects.get(proje.yurutucu_talep['yurutucu_id'])
+        yeni_yurutucu = Okutman.objects.get(self.current.task_data['yeni_yurutucu_id'])
         if 'form' in self.input and 'red_gonder' in self.input['form']:
             title = "Talebiniz Koordinasyon Birimi Tarafından Reddedildi"
             msg = "%s projeniz için %s 'in yerine %s 'in yürütücü olarak atanması talebiniz " \

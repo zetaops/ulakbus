@@ -4,10 +4,11 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
+from ulakbus.lib.gundem_detay import gundem_detay_getir
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models import BAPProje
 
-from zengine.views.crud import CrudView, obj_filter, list_query
+from zengine.views.crud import CrudView, obj_filter
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 
@@ -28,7 +29,7 @@ class Gundem(CrudView):
     class Meta:
         model = "BAPGundem"
 
-    def list(self, custom_form=None):
+    def list(self, custom_form=None, **kwargs):
         custom_form = JsonForm(current=self.current, title=_(u"Gündem Listesi"))
         custom_form.ekle = fields.Button(_(u"Yeni Gündem Oluştur"), cmd='yeni_gundem')
         CrudView.list(self, custom_form=custom_form)
@@ -63,6 +64,9 @@ class Gundem(CrudView):
             else _(u"Sonuçlanmadı")
 
         self.output['object'][u'Kararın Sonuçlandırılması'] = sonuc
+        self.output['object'].update(gundem_detay_getir(self.object.gundem_tipi,
+                                                        self.object.gundem_ekstra_bilgiler))
+        self.output['object'].pop(u'Gündem Ekstra Bilgileri')
 
     def komisyon_kararini_ilet(self):
         self.object.proje.yurutucu.personel.user.send_notification(
@@ -70,7 +74,7 @@ class Gundem(CrudView):
             message=_(u"%s adlı projenizin %s komisyon kararı Karar: %s") % (
                 self.object.proje.ad,
                 self.object.get_gundem_tipi_display(),
-                self.input['form']['karar']),
+                self.input['form']['karar_metni']),
             sender=self.current.role.user)
 
     def karar_sonrasi_adimlar(self):

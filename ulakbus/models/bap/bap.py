@@ -3,14 +3,15 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+
 from ulakbus.models import Okutman
 from ulakbus.models.form import Form
 from ulakbus.models import Room, Personel, Role, User
 from ulakbus.models.demirbas import Demirbas
-from pyoko.lib.utils import lazy_property
 
 from zengine.lib.translation import gettext_lazy as __, gettext as _
 
+from pyoko.lib.utils import lazy_property
 from pyoko import Model, field, ListNode
 
 talep_durum = [(1, 'Yeni'),
@@ -144,8 +145,6 @@ class BAPProje(Model):
     b_plani = field.Text(_(u"B Planı"), min_length=650, max_length=1000)
 
     bitis_tarihi = field.Date(_(u"Tamamlanma Tarihi"))
-
-    yurutucu_talep = field.String(__(u"Yürütücü Değişikliği Talebi"), hidden=True, required=False)
 
     class ProjeBelgeleri(ListNode):
         class Meta:
@@ -339,12 +338,15 @@ class BAPGundem(Model):
     proje = BAPProje()
     gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
     gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
-    oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
+    oturum_numarasi = field.String(__(u"Oturum Numarası"))
     oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
-    karar_no = field.Integer(__(u"Karar No"), default=0)
-    karar = field.Text(__(u"Karar"))
+    karar_no = field.String(__(u"Karar No"))
     karar_tarihi = field.Date(__(u"Karar Tarihi"))
     sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
+    karar_metni = field.Text(__(u"Karar Metni"))
+    karar_gerekcesi = field.Text(
+        __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"))
+    gundem_ekstra_bilgiler = field.String(__(u"Gündem Ekstra Bilgileri"), hidden=True)
 
     def _proje_adi(self):
         return "%s" % self.proje.ad
