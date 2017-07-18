@@ -221,10 +221,17 @@ class GerceklestirmeGorevlisiForm(JsonForm):
 
 
 class ProjeBasvuru(CrudView):
+    """
+    Öğretim üyesinin bilimsel araştırma proje başvurusu yaptığı iş akışıdır.
+    """
     class Meta:
         model = "BAPProje"
 
     def proje_tur_sec(self):
+        """
+        Proje türünün seçildiği adımdır.
+        Makine teçhizat ekle adımı için task_data'ya proje_basvuru değeri True olarak eklenir.
+        """
         self.current.task_data['proje_basvuru'] = True
         form = ProjeTurForm(current=self.current)
         choices = prepare_choices_for_model(BAPProjeTurleri)
@@ -233,6 +240,11 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def gerekli_belge_form(self):
+        """
+        Proje türü için gerekli belgelerin gösterildiği, öğretim üyesinin belgelerini kontrol ederek
+        belgelerinin hazır olduğunu beyan ettiği adımdır. Belgeler hazırsa proje genel bilgileri
+        adımına geçilir, hazır değilse proje türü adımına geri dönülür.
+        """
         tur_id = self.current.task_data['ProjeTurForm']['tur']
         tur = BAPProjeTurleri.objects.get(tur_id)
         form = GerekliBelgeForm()
@@ -309,9 +321,25 @@ class ProjeBasvuru(CrudView):
         proje.blocking_save()
 
     def proje_genel_bilgilerini_gir(self):
+        """
+        Proje genel bilgilerinin girildiği adımdır.
+        """
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))
 
     def proje_no_kaydet(self):
+        """
+        Genel bilgi gir adımından sonra proje bir proje nuarası oluşturularak kaydedilir. Projeler
+        türleri üzerinde numaralandırılır. Proje üzerinde son kaydedilmiş projenin proje_no alanı
+        değerinin bir fazlası bir sonraki projenin proje_no'su olarak kaydedilir.
+
+        Örnek: Altyapı projeleri için proje tür kodu ALT olacağı
+        için numaralandırma artan bir şekilde devam ettiğinde kaydedilecek projeler ALT1, ALT2,
+        ALT3... şeklinde numaralandırılacaktır.
+
+        Proje türü ve proje numarası unique_together olduğundan kayıt sırasında IntegrityError
+        beklenir. Eğer IntegrityError yakalanırsa, sorgu tekrar atılır ve tekrar kayıt yapılır.
+
+        """
         if self.current.task_data['cmd'] == 'retry':
             self.current.task_data['cmd'] = self.current.task_data['pre_cmd']
         tur_id = self.current.task_data['ProjeTurForm']['tur']
@@ -337,6 +365,9 @@ class ProjeBasvuru(CrudView):
         wfi.blocking_save()
 
     def proje_no_belirle(self, tur_id):
+        """
+        Proje ve türe özgü proje_no alanının belirlendiği adımdır.
+        """
         r = BAPProje.objects.set_params(rows=1).filter(tur_id=tur_id).order_by(
             '-proje_no').values_list('proje_no')
         r.extend(BAPProje.objects.set_params(rows=1).filter(tur_id=tur_id, deleted=True).order_by(
@@ -344,6 +375,13 @@ class ProjeBasvuru(CrudView):
         return max(r) + 1 if r else 1
 
     def kaydet_ve_draft_olustur(self):
+        """
+        Öğretim üyesinin projeye daha sonra devam etmek istediği takdirde çalışacak adımdır.
+        Projenin tur ve proje_no alanları kaydedilir. Çalışan wfi instance'ı ile bir TaskInvitation
+        oluşturularak kullanıcının görev yöneticisine projenin en baştan formları dolu bir şekilde
+        devam edebileceği bir task koyulur. Proje başvurusu tamamlandığında bu task görev
+        yöneticisinden silinecektir.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         today = datetime.today()
         wfi = WFInstance.objects.get(self.current.token)
@@ -367,17 +405,26 @@ class ProjeBasvuru(CrudView):
         self.current.output['cmd'] = 'reload'
 
     def proje_detay_gir(self):
+        """
+        Proje detay bilgilerinin girildiği adımdır.
+        """
         self.object.ad = self.input['form']['ad']
         self.object.blocking_save()
         self.form_out(ProjeDetayForm(self.object, current=self.current))
 
     def proje_belgeleri(self):
+        """
+        Proje belgelerinin eklendiği adımdır.
+        """
         form = ProjeBelgeForm(self.object, current=self.current)
         self.form_out(form)
         if 'arastirma_olanaklari' not in self.current.task_data['hedef_proje']:
             self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
 
     def proje_belge_kaydet(self):
+        """
+        Eklenen proje belgelerinin kaydedildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         form_proje_belgeleri = self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri']
 
@@ -395,6 +442,10 @@ class ProjeBasvuru(CrudView):
         self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = proje.ProjeBelgeleri.clean_value()
 
     def arastirma_olanagi_ekle(self):
+        """
+        Araştırma olanaklarının proje başvurusuna eklendiği adımdır.
+        Bu adımda demirbaş, personel ve laboratuvar proje başvurusuna eklenebilir.
+        """
         form = ArastirmaOlanaklariForm(current=self.current)
         for olanak in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
             o = olanak.items()[0]
@@ -412,6 +463,9 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def arastirma_olanagi_senkronize_et(self):
+        """
+        Submit edilen form ile kaydedilecek araştırma olanaklarını senkronize eden adımdır.
+        """
         value_map = {
             'lab': _(u"Laboratuvar"),
             'demirbas': _(u"Demirbaş"),
@@ -435,14 +489,23 @@ class ProjeBasvuru(CrudView):
             self.current.task_data['hedef_proje']['arastirma_olanaklari'] = list_to_remove
 
     def lab_ekle(self):
+        """
+        Öğretim üyesinin laboratuvar arayıp başvurusuna dahil ettiği adımdır.
+        """
         form = LabEkleForm()
         self.form_out(form)
 
     def personel_ekle(self):
+        """
+        Öğretim üyesinin personel arayıp başvurusuna dahil ettiği adımdır.
+        """
         form = PersonelEkleForm()
         self.form_out(form)
 
     def olanak_kaydet(self):
+        """
+        Araştırma olanaklarının task_data'ya kaydedildiği adımdır.
+        """
         if 'form' in self.input and 'lab_id' in self.input['form']:
             olanak = {'lab': self.input['form']['lab_id']}
         elif 'demirbas' in self.current.task_data:
@@ -453,18 +516,30 @@ class ProjeBasvuru(CrudView):
         self.current.task_data['hedef_proje']['arastirma_olanaklari'].append(olanak)
 
     def calisan_ekle(self):
+        """
+        Proje çalışanlarının eklendiği adımdır.
+        """
         form = ProjeCalisanlariForm(current=self.current)
         self.form_out(form)
 
     def universite_disi_uzman_ekle(self):
+        """
+        Proje başvurusuna üniversite dışı uzman eklendiği adımdır.
+        """
         form = UniversiteDisiUzmanForm(current=self.current)
         self.form_out(form)
 
     def universite_disi_destek_ekle(self):
+        """
+        Proje başvurusuna üniversite dışı destek eklendiği adımdır.
+        """
         form = UniversiteDisiDestekForm(current=self.current)
         self.form_out(form)
 
     def universite_disi_destek_kaydet(self):
+        """
+        Universite dışı desteklerin kaydedildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         form_destek = self.current.task_data['UniversiteDisiDestekForm']['Destek']
 
@@ -523,6 +598,9 @@ class ProjeBasvuru(CrudView):
         self.current.task_data['UniversiteDisiDestekForm']['Destek'] = destek_form
 
     def yurutucu_tecrubesi(self):
+        """
+        Öğretim üyesinin önceki akademik faaliyetlerinin listelendiği adımdır.
+        """
         personel = Personel.objects.get(user_id=self.current.user_id)
         faaliyetler = AkademikFaaliyet.objects.all(personel=personel)
 
@@ -536,6 +614,9 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def yurutucu_projeleri(self):
+        """
+        Yürütücünün halihazırdaki projelerinin listelendiği adımdır.
+        """
         personel = Personel.objects.get(user_id=self.current.user_id)
         projeler = BAPProje.objects.all(yurutucu=Okutman.objects.get(personel=personel))
 
@@ -555,6 +636,9 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def proje_kaydet(self):
+        """
+        Projenin son haliyle kaydedildiği adımdır.
+        """
         td = self.current.task_data
         proje = BAPProje.objects.get(td['bap_proje_id'])
         yurutucu = Okutman.objects.get(personel=Personel.objects.get(user_id=self.current.user_id))
@@ -616,6 +700,9 @@ class ProjeBasvuru(CrudView):
         proje.blocking_save()
 
     def proje_goster(self):
+        """
+        Proje başvurusunun öğretim üyesine özet halinde gösterildiği adımdır.
+        """
         self.object = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.show()
         form = JsonForm()
@@ -623,6 +710,9 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def onaya_gonder(self):
+        """
+        Projenin onaya gönderildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         proje.durum = 2
         proje.ProjeIslemGecmisi(eylem=_(u"Onaya Gönderildi"),
@@ -640,6 +730,9 @@ class ProjeBasvuru(CrudView):
         inv.blocking_delete()
 
     def bildirim_gonder(self):
+        """
+        Koordinasyon biriminin kararı sonucu öğretim üyesine bildirim gönderilen adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         role = proje.yurutucu().okutman().user().role_set[0].role
         if self.cmd == 'iptal' or self.current.task_data['karar'] == 'iptal':
@@ -673,6 +766,10 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def revizyon_mesaji_goster(self):
+        """
+        Koordinasyon biriminin revizyon kararı sonrasında revizyon talebi mesajının öğretim üyesine
+        gösterildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         baslik = _(u"#### Revizyon Gerekçeleri:\n")
         msg = self.current.task_data['revizyon_gerekce']
