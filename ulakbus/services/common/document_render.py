@@ -49,84 +49,106 @@ class RenderDocument(Service):
         self.S3_PUBLIC_URL = self.user_config.zetaops.zetaops3s.S3_PUBLIC_URL
         self.S3_PROXY_PORT = self.user_config.zetaops.zetaops3s.S3_PROXY_PORT
         self.S3_BUCKET_NAME = self.user_config.zetaops.zetaops3s.S3_BUCKET_NAME
-        self.MAX_UPLOAD_TEMPLATE_SIZE = 3 * 1024 * 1024
 
+        # Standart render process
+        resp = self.render_document(payload=self.request.payload)
+
+        wants_pdf = 'pdf' in self.request.payload
+        if wants_pdf:
+            file_desc = self.make_file_like_object(resp.data['download_url'])
+            pdf_resp = self.create_pdf(file_desc)
+            resp = self.prepare_response(pdf_resp['status'], pdf_resp['download_url'])
+        else:
+            resp = self.prepare_response('finished', resp.data['download_url'])
+
+        self.response.payload = resp
+
+    @staticmethod
+    def prepare_response(status, url):
+        """ Prepare a response for client
+        :param status: Message of status
+        :param url: Download_url, It can be None or URL
+        :return: type: <dict>
+        """
+        resp = {"status": status, "download_url": url}
+        return resp
+
+    def render_document(self, payload):
+        """ Render ODT file.
+        :param payload:
+        :return:
+        """
         self.logger.info('{} :: Document render service called'.format(time.ctime()))
 
         renderer = self.outgoing.plain_http.get('document.renderer')
         headers = {'X-App-Name': 'Zato', 'Content-Type': 'application/json'}
 
-        resp = renderer.conn.send(self.cid, data=self.request.payload, headers=headers)
-
-        # If client wants a pdf, send pdf download_url to client
-        if 'pdf' in self.request.payload:
-            self.logger.info('{} :: create_pdf method called'.format(time.ctime()))
-            pdf_resp = self.create_pdf(resp.data['download_url'])
-            resp = {"status": pdf_resp['status'], "download_url": pdf_resp['download_url']}
-            self.response.payload = resp
-
-        # Just send download_url to client
-        else:
-            r = {"status":"finished", "download_url":resp.data['download_url']}
-            self.response.payload = r
+        resp = renderer.conn.send(self.cid, data=payload, headers=headers)
+        return resp
 
     @staticmethod
-    def make_file_like_object(download_url, download_token=1):
+    def make_file_like_object(data, download_token=1):
         """  Make file-like object from url.
-        :param download_url:
+        :param data: URL or Value
+        :param download_token: Will the
         :return: BytesIO object
         """
+        file_desc = None
         if download_token == 1:
-            s3_resp = requests.get(download_url)
+            s3_resp = requests.get(data)
             file_desc = io.BytesIO(s3_resp.content)
         else:
-            file_desc = io.BytesIO(download_url)
+            file_desc = io.BytesIO(data)
         file_desc.seek(0)
         return file_desc
 
-    def create_pdf(self, download_url):
-        """ ODF to PDF.
-        :param download_url: URL of ODF file.
-        :return: Status of process.
+    def create_pdf(self, file_desc):
+        """ ODF to PDF
+        :param file_desc: File-like object
+        :return:
         """
-        # Make file-like object
-        file_desc = self.make_file_like_object(download_url)
-
+        self.logger.info('{} :: Docsbox service called'.format(time.ctime()))
         # Get outgoing way.
         pdf_writer = self.outgoing.plain_http.get('docsbox.out')
 
         # Add to queue
         files = {'file':file_desc}
         headers = {'Content-Type': 'multipart/form-data'}
+
         result = pdf_writer.conn.post(self.cid, files=files)
         task_info = json.loads(result.text)
 
-        # Check the queue.
         task_id = task_info['id'].encode('utf-8')
+
         # Chect the queue for 3 seconds.
         task_queue_status = self.check_the_status(request_period=3,
                                                   task_id=task_id)
-
-        # Send a response to client
-
+        # Send back to client
         if task_queue_status['status'] == 'finished':
-            # send back to client, result_url
-            # Get outgoing connection of zato.
-            download_pdf = self.outgoing.plain_http.get('download_pdf')
-            params = {"req_param":task_queue_status['result_url']}
-            headers = {'Content-Type': 'multipart/form-data'}
-            # Make request to download pdf file with params and headers.
-            download_pdf_result = download_pdf.conn.get(self.cid, params=params, headers=headers)
 
-            # Make a BytesIO object of DOCSBOX result_url.
-            pdf_file = self.make_file_like_object(download_pdf_result._content, download_token=0)
+            pdf_file = self.download_pdf_file(task_queue_status['result_url'])
             # Save PDF file to S3 Server
             s3_url = self.save_document(pdf_file)
             task_queue_status['download_url'] = "{0}{1}".format(self.S3_PUBLIC_URL, s3_url)
             return task_queue_status
         else:
-            pass
             return '{"status":"Error!", "download_url":"None"}'
+
+    def download_pdf_file(self, result_url):
+        """ Download pdf file from Docsbox service
+        :param result_url: URL of pdf file.
+        :return: PDF file, type: <BytesIO>
+        """
+        # Get outgoing connection of zato.
+        download_pdf = self.outgoing.plain_http.get('download_pdf')
+        params = {"req_param": result_url}
+        headers = {'Content-Type': 'multipart/form-data'}
+        # Make request to download pdf file with params and headers.
+        download_pdf_result = download_pdf.conn.get(self.cid, params=params, headers=headers)
+        # Make a BytesIO object of DOCSBOX result_url.
+        pdf_file = self.make_file_like_object(download_pdf_result._content, download_token=0)
+
+        return pdf_file
 
     def check_the_status(self, request_period, task_id):
         """ Check the status of task_id according to given request_period
@@ -180,3 +202,24 @@ class RenderDocument(Service):
         k.set_contents_from_string(pdf_file.getvalue())
         self.bucket.set_acl('public-read', k.key)
         return k.key
+
+
+class DocumentCache:
+    def __init__(self, zato_service):
+        self.zato_service = zato_service
+
+    def key_from_context(self):
+        """ Sort and convert string of request.payload. Make key, from context data
+        :return: produced key. type: <str>
+        """
+        context = self.zato_service.request.payload['context']
+        context = json.loads(context)
+        key = "".join(["{}{}".format(k, v) for k, v in sorted(context.items())])
+        return key
+
+    def check_context(self):
+        key = self.key_from_context()
+        val_of_context = self.zato_service.kvdb.conn.get(key)
+        if val_of_context is not None:
+            pass
+
