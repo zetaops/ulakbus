@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.1">
   <bpmn:collaboration id="Collaboration_1u87znh">
     <bpmn:extensionElements>
       <camunda:properties>
@@ -51,7 +51,7 @@
       <bpmn:outgoing>SequenceFlow_0fs3x2f</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_17y9ikl</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_017czmp">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_017czmp" default="SequenceFlow_1au55lb">
       <bpmn:incoming>SequenceFlow_0zikbhh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_04c1owe</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0q8jaci</bpmn:outgoing>
@@ -137,7 +137,7 @@
       <bpmn:incoming>SequenceFlow_0eoaqv1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1jn3sf3</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="talep_detay_goster" name="Detay Göster" camunda:assignee="bap.proje_talep.bap_ek_butce_talep.EkButceTalep.talep_detay_goster">
+    <bpmn:userTask id="talep_detay_goster" name="Detay Göster" camunda:assignee="bap.proje_talep.bap_ek_butce_talep.EkButceTalep.butce_talep_detay_goster">
       <bpmn:incoming>SequenceFlow_1au55lb</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0zpaj4i</bpmn:outgoing>
     </bpmn:userTask>
@@ -162,9 +162,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0q8jaci" sourceRef="ExclusiveGateway_017czmp" targetRef="reddet_ve_aciklama_yaz">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1au55lb" sourceRef="ExclusiveGateway_017czmp" targetRef="talep_detay_goster">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='goster']]></bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1au55lb" sourceRef="ExclusiveGateway_017czmp" targetRef="talep_detay_goster" />
     <bpmn:sequenceFlow id="SequenceFlow_0bbty2v" sourceRef="ExclusiveGateway_1hdm38q" targetRef="ek_butce_talep_kontrol" />
     <bpmn:sequenceFlow id="SequenceFlow_0zpaj4i" sourceRef="talep_detay_goster" targetRef="ek_butce_talep_kontrol" />
     <bpmn:sequenceFlow id="SequenceFlow_05ejr9s" sourceRef="komisyon_aciklamasi" targetRef="kabul_et_ve_komisyona_yolla" />
