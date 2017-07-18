@@ -14,11 +14,6 @@ from zengine.lib.translation import gettext_lazy as __, gettext as _
 from pyoko.lib.utils import lazy_property
 from pyoko import Model, field, ListNode
 
-talep_durum = [(1, 'Yeni'),
-               (2, 'Silinecek'),
-               (3, 'Düzenlendi'),
-               (4, 'Düzenlenmedi')]
-
 
 class BAPProjeTurleri(Model):
     kod = field.String(__(u"Proje tür kodu"))
@@ -316,7 +311,6 @@ class BAPButcePlani(Model):
     gerekce = field.Text(__(u"Gerekçe"))
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
-    durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
     ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
     kazanan_firma = BAPFirma()
 
