@@ -34,13 +34,13 @@ class TestCase(BaseTestCase):
 
         firma_form = {'ad': 'DenemeFirma',
                       'adres': 'yenipazar mahallesi',
-                      'vergi_no': '',
-                      'vergi_dairesi': '',
+                      'vergi_no': '324324423',
+                      'vergi_dairesi': 1253,
                       'e_posta': 'kocakiletisim@fakemail.kocakiletisim',
                       'isim': 'DenemeKullanici',
                       'soyad': 'DenemeSoyad',
-                      'k_adi': '',
-                      'yetkili_e_posta': '',
+                      'k_adi': 'sample_username',
+                      'yetkili_e_posta': 'sample@mail.com',
                       'faaliyet_belgesi_verilis_tarihi': "31.05.2017"}
 
         # UYARILAR
@@ -52,7 +52,7 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == 'Firma Bilgileri'
 
         # yetkili kullanıcı adı
-        firma_form['e_posta'] = ''
+        firma_form['e_posta'] = 'sample_e_mail'
         firma_form['k_adi'] = mevcut_firma.Yetkililer[0].yetkili.username
         resp = self.client.post(wf='bap_firma_kayit', form=firma_form)
         assert resp.json['msgbox']['title'] == "Mevcut Bilgi Uyarısı"
@@ -60,7 +60,7 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == 'Firma Bilgileri'
 
         # yetkili e-postası
-        firma_form['k_adi'] = ''
+        firma_form['k_adi'] = 'sample_username'
         firma_form['yetkili_e_posta'] = mevcut_firma.Yetkililer[0].yetkili.e_mail
         resp = self.client.post(wf='bap_firma_kayit', form=firma_form)
         assert resp.json['msgbox']['title'] == "Mevcut Bilgi Uyarısı"
@@ -68,7 +68,7 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['title'] == 'Firma Bilgileri'
 
         # vergi no ve vergi dairesi
-        firma_form['yetkili_e_posta'] = ''
+        firma_form['yetkili_e_posta'] = 'sample_e_mail'
         firma_form['vergi_no'] = mevcut_firma.vergi_no
         firma_form['vergi_dairesi'] = mevcut_firma.vergi_dairesi
         resp = self.client.post(wf='bap_firma_kayit', form=firma_form)
@@ -97,7 +97,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post()
         firma_form['kaydi_bitir'] = 1
         firma_form['vergi_no'] = '12345678'
-        firma_form['vergi_dairesi'] = 98765
+        firma_form['vergi_dairesi'] = 1109
         firma_form['k_adi'] = 'deneme_k_adi'
         firma_form['yetkili_e_posta'] = 'bubir@deneme.mailidir'
         resp = self.client.post(wf='bap_firma_kayit', form=firma_form)
@@ -117,7 +117,7 @@ class TestCase(BaseTestCase):
         firma = user.bap_firma_set[0].bap_firma
         assert firma.ad == 'DenemeFirma'
         assert firma.vergi_no == '12345678'
-        assert firma.vergi_dairesi == 98765
+        assert firma.vergi_dairesi == 1109
         assert firma.durum == 1
 
         # firmanın başvurusunun koordinasyon birimine iletilmesi

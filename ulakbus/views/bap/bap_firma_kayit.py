@@ -3,6 +3,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from pyoko.exceptions import ObjectDoesNotExist
+
 from ulakbus.models import User, Permission, BAPFirma
 from zengine.models import BPMNWorkflow, WFInstance, TaskInvitation
 from zengine.views.crud import CrudView
@@ -280,46 +282,27 @@ class BapFirmaKayit(CrudView):
             bool, hata mesajı, hatanın bulunduğu form field listesi
     
         """
-        self.current.task_data['vergi_no'] = False
-        query = {'vergi_no': form['vergi_no'], 'vergi_dairesi': form['vergi_dairesi']}
-        if self.kayit_kontrol(BAPFirma, query, vergi_islemleri=True):
-            self.current.task_data['vergi_no'] = True
-            vergi_daireleri = catalog_to_dict(catalog_data_manager.get_all('vergi_daireleri'))
-            vergi_dairesi = vergi_daireleri[form['vergi_dairesi']]
-            error_msg = vergi_no_msg.format(form['vergi_no'], vergi_dairesi)
-            return False, error_msg, ['vergi_no', 'vergi_dairesi']
+        vergi_daireleri = catalog_to_dict(catalog_data_manager.get_all('vergi_daireleri'))
+        vergi_dairesi = vergi_daireleri[form['vergi_dairesi']]
 
-        if self.kayit_kontrol(BAPFirma, {'e_posta': form['e_posta']}):
-            error_msg = mevcut_bilgi_msg.format(form['e_posta'], 'firma e-postasına')
-            return False, error_msg, ['e_posta']
+        giris_bilgileri = {
+            'vergi_no': (BAPFirma,
+                         {'vergi_no': form['vergi_no'], 'vergi_dairesi': form['vergi_dairesi']},
+                         vergi_dairesi, 'vergi_dairesi'),
+            'e_posta': (BAPFirma, {'e_posta': form['e_posta']}, 'firma e-postasına', ''),
+            'k_adi': (User, {'username': form['k_adi']}, 'yetkili kullanıcı adına', ''),
+            'yetkili_e_posta': (User, {'e_mail': form['yetkili_e_posta']}, 'yetkili e-postasına', '')}
 
-        if self.kayit_kontrol(User, {'username': form['k_adi']}):
-            error_msg = mevcut_bilgi_msg.format(form['k_adi'], 'yetkili kullanıcı adına')
-            return False, error_msg, ['k_adi']
-
-        if self.kayit_kontrol(User, {'e_mail': form['yetkili_e_posta']}):
-            error_msg = mevcut_bilgi_msg.format(form['yetkili_e_posta'], 'yetkili e-postasına')
-            return False, error_msg, ['yetkili_e_posta']
-
-        return True, '', []
-
-    def kayit_kontrol(self, model, query, vergi_islemleri=False):
-        """
-        Verilen model ve querynin veritabanında bulunup bulunmadığı kontrol edilir. Var ise True, 
-        yoksa False döndürülür. Eğer, vergi bilgileri ile ilgili bir durum var ise, hatırlatma 
-        e-postası hazırlığı için firma keyi task data içerisine koyulur. 
-        
-        Args:
-            model(model): model (User, BAPFirma vb.) 
-            query(dict): get methodu içinde sorgulanacak parametreler
-    
-        Returns: bool True ya da False 
-    
-        """
-        try:
-            obj = model.objects.get(**query)
-            if vergi_islemleri:
-                self.current.task_data['firma_key'] = obj.key
-            return True
-        except:
-            return False
+        for key, bilgiler in giris_bilgileri.items():
+            model, query, msg, additional = bilgiler
+            try:
+                obj = model.objects.get(**query)
+                error_msg = vergi_no_msg if key == 'vergi_no' else mevcut_bilgi_msg
+                field_list = [key, additional] if key == 'vergi_no' else [key]
+                self.current.task_data['vergi_no_hatasi'] = (key == 'vergi_no')
+                if self.current.task_data['vergi_no_hatasi']:
+                    self.current.task_data['firma_key'] = obj.key
+                return False, error_msg.format(form[key], msg), field_list
+            except ObjectDoesNotExist:
+                pass
+        return True, '', ''
