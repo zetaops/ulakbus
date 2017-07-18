@@ -371,7 +371,7 @@ class ProjeBasvuru(CrudView):
         r = BAPProje.objects.set_params(rows=1).filter(tur_id=tur_id).order_by(
             '-proje_no').values_list('proje_no')
         r.extend(BAPProje.objects.set_params(rows=1).filter(tur_id=tur_id, deleted=True).order_by(
-            '-proje_no'))
+            '-proje_no').values_list('proje_no'))
         return max(r) + 1 if r else 1
 
     def kaydet_ve_draft_olustur(self):
