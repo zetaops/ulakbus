@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.1">
   <bpmn:collaboration id="Collaboration_1m92t3u">
     <bpmn:extensionElements>
       <camunda:properties>
@@ -24,7 +24,6 @@
       </bpmn:lane>
       <bpmn:lane id="koordinasyon_birimi" name="Koordinasyon Birimi">
         <bpmn:flowNodeRef>talebi_goruntule</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>talep_detay_goster</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>komisyona_gonder</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>komisyon_aciklamasi</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>bilgilendir</bpmn:flowNodeRef>
@@ -32,16 +31,14 @@
         <bpmn:flowNodeRef>ExclusiveGateway_1gbmdxv</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:userTask id="talebi_goruntule" name="Talebi Görüntüle" camunda:assignee="bap.proje_talep.bap_ek_sure_talep.EkSureTalebi.talebi_goruntule">
+    <bpmn:userTask id="talebi_goruntule" name="Talebi Görüntüle" camunda:assignee="bap.proje_talep.bap_ek_sure_talep.EkSureTalebi.ek_sure_talebi_goruntule">
       <bpmn:incoming>SequenceFlow_12cbmxm</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0wl2b3o</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1oio0tj</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1gbmdxv">
       <bpmn:incoming>SequenceFlow_1oio0tj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0kbsi0q</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0hjrejo</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_14z0mjl</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_1ma5uwf</bpmn:incoming>
@@ -61,10 +58,6 @@
       <bpmn:incoming>SequenceFlow_1p2m9gg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1ruckb7</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="talep_detay_goster" name="Detay Göster" camunda:assignee="bap.proje_talep.bap_ek_sure_talep.EkSureTalebi.talep_detay_goster">
-      <bpmn:incoming>SequenceFlow_14z0mjl</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0wl2b3o</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:serviceTask id="komisyona_gonder" name="Komisyona Gönder" camunda:class="bap.proje_talep.bap_ek_sure_talep.EkSureTalebi.komisyona_gonder">
       <bpmn:incoming>SequenceFlow_0xhedjb</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_051sxv4</bpmn:outgoing>
@@ -104,16 +97,12 @@
       <bpmn:outgoing>SequenceFlow_1ktitww</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_12cbmxm" sourceRef="onaya_gonder" targetRef="talebi_goruntule" />
-    <bpmn:sequenceFlow id="SequenceFlow_0wl2b3o" sourceRef="talep_detay_goster" targetRef="talebi_goruntule" />
     <bpmn:sequenceFlow id="SequenceFlow_1oio0tj" sourceRef="talebi_goruntule" targetRef="ExclusiveGateway_1gbmdxv" />
     <bpmn:sequenceFlow id="SequenceFlow_0kbsi0q" sourceRef="ExclusiveGateway_1gbmdxv" targetRef="red_yazisi_yaz">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0hjrejo" sourceRef="ExclusiveGateway_1gbmdxv" targetRef="komisyon_aciklamasi">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='kabul']]></bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_14z0mjl" sourceRef="ExclusiveGateway_1gbmdxv" targetRef="talep_detay_goster">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='show']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1ma5uwf" sourceRef="bilgilendirme" targetRef="EndEvent" />
     <bpmn:sequenceFlow id="SequenceFlow_0q3gtvf" sourceRef="ExclusiveGateway_19sucxf" targetRef="EndEvent">
@@ -293,24 +282,6 @@
       <bpmndi:BPMNShape id="ServiceTask_1i259fg_di" bpmnElement="kontrol">
         <dc:Bounds x="191" y="158" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_14z0mjl_di" bpmnElement="SequenceFlow_14z0mjl">
-        <di:waypoint xsi:type="dc:Point" x="483" y="562" />
-        <di:waypoint xsi:type="dc:Point" x="483" y="620" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="498" y="581" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_0x0b5nw_di" bpmnElement="talep_detay_goster">
-        <dc:Bounds x="433" y="620" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0wl2b3o_di" bpmnElement="SequenceFlow_0wl2b3o">
-        <di:waypoint xsi:type="dc:Point" x="433" y="660" />
-        <di:waypoint xsi:type="dc:Point" x="262" y="660" />
-        <di:waypoint xsi:type="dc:Point" x="262" y="577" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="348" y="635" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0xhedjb_di" bpmnElement="SequenceFlow_0xhedjb">
         <di:waypoint xsi:type="dc:Point" x="624" y="420" />
         <di:waypoint xsi:type="dc:Point" x="659" y="420" />

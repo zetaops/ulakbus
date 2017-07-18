@@ -4,8 +4,9 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPProje, BAPGundem, Personel, Okutman
+import json
 
+from ulakbus.models import BAPProje, BAPGundem, Personel, Okutman
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
@@ -35,8 +36,7 @@ class EkSureTalebi(CrudView):
         if 'bap_proje_id' not in self.current.task_data:
             personel = Personel.objects.get(user=self.current.user)
             okutman = Okutman.objects.get(personel=personel)
-            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
-                                                                               durum__in=[3, 5])]
+            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman)]
             if data:
                 self.current.task_data['proje_data'] = data
             else:
@@ -74,10 +74,9 @@ class EkSureTalebi(CrudView):
         self.current.task_data['ek_sure'] = self.input['form']['ek_sure']
         self.current.task_data['aciklama'] = self.input['form']['aciklama']
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        proje.durum = 2     # koordinasyon birimi onayi bekleniyor.
         proje.save()
 
-    def talebi_goruntule(self):
+    def ek_sure_talebi_goruntule(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Ek süre talebi") % \
                                        (proje.yurutucu, proje.ad)
@@ -107,8 +106,9 @@ class EkSureTalebi(CrudView):
         gundem.proje = proje
         gundem.gundem_tipi = 4
         gundem.gundem_aciklama = self.input['form']['komisyon_aciklama']
+        gundem.gundem_ekstra_bilgiler = json.dumps({'ek_sure': self.current.task_data['ek_sure'],
+                                                    'aciklama': self.current.task_data['aciklama']})
         gundem.save()
-        proje.durum = 4     # Komisyon Onayı Bekliyor
         proje.save()
         self.current.task_data['onaylandi'] = 1
 
