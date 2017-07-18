@@ -44,15 +44,20 @@ def get_file_url(key):
 
 
 def e_mail_star_formatter(e_mail):
+    """
+    Formats with stars first part and second part of e-mail address.
+    Example output:
+        given e-mail address: info@zetaops.io
+        formatted output: in***@ze***
+    
+    Args:
+        e_mail(str): e-mail address 
+
+    Returns(str): e-mail address formatted with star
+
+    """
     first, second = tuple(e_mail.split('@'))
     return "{}***@{}***".format(first[:2], second[:2])
-
-
-def catalog_to_dict(l):
-    d = dict()
-    for item in l:
-        d[item['value']] = item['name']
-    return d
 
 
 def saat2slot(saat):

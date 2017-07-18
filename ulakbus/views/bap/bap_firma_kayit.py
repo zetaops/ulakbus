@@ -12,7 +12,7 @@ from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from datetime import datetime, timedelta
 import hashlib
-from ulakbus.lib.common import get_temp_password, catalog_to_dict, e_mail_star_formatter
+from ulakbus.lib.common import get_temp_password, e_mail_star_formatter
 from zengine.lib.catalog_data import catalog_data_manager
 
 vergi_no_msg = "Sistemimizde, girmiş olduğunuz '{}' vergi numarası ile '{}' vergi dairesine ait " \
@@ -282,7 +282,7 @@ class BapFirmaKayit(CrudView):
             bool, hata mesajı, hatanın bulunduğu form field listesi
     
         """
-        vergi_daireleri = catalog_to_dict(catalog_data_manager.get_all('vergi_daireleri'))
+        vergi_daireleri = catalog_data_manager.get_all_as_dict('vergi_daireleri')
         vergi_dairesi = vergi_daireleri[form['vergi_dairesi']]
 
         giris_bilgileri = {
