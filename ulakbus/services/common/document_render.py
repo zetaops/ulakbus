@@ -8,6 +8,16 @@ import json
 from boto.s3.connection import S3Connection as s3
 from boto.s3.key import Key
 
+"""
+S3_PROXY_URL = os.environ.get('S3_PROXY_URL')
+S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
+S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
+S3_PUBLIC_URL = os.environ.get('S3_PUBLIC_URL')
+S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '80')
+S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME', 'my_bucket')
+MAX_UPLOAD_TEMPLATE_SIZE = os.environ.get('MAX_UPLOAD_TEMPLATE_SIZE',
+                                          False) or 3 * 1024 * 1024  # 3MB
+"""
 
 class RenderDocument(Service):
     """ The submitted template is rendered with the context data and the download link is sent back.
@@ -72,13 +82,16 @@ class RenderDocument(Service):
             self.response.payload = r
 
     @staticmethod
-    def make_file_like_object(download_url):
+    def make_file_like_object(download_url, download_token=1):
         """  Make file-like object from url.
         :param download_url:
         :return: BytesIO object
         """
-        s3_resp = requests.get(download_url)
-        file_desc = io.BytesIO(s3_resp.content)
+        if download_token == 1:
+            s3_resp = requests.get(download_url)
+            file_desc = io.BytesIO(s3_resp.content)
+        else:
+            file_desc = io.BytesIO(download_url)
         file_desc.seek(0)
         return file_desc
 
@@ -94,7 +107,7 @@ class RenderDocument(Service):
         pdf_writer = self.outgoing.plain_http.get('docsbox.out')
 
         # Add to queue
-        files = {'file': file_desc}
+        files = {'file':file_desc}
         headers = {'Content-Type': 'multipart/form-data'}
         result = pdf_writer.conn.post(self.cid, files=files)
         task_info = json.loads(result.text)
@@ -109,8 +122,15 @@ class RenderDocument(Service):
 
         if task_queue_status['status'] == 'finished':
             # send back to client, result_url
+            # Get outgoing connection of zato.
+            download_pdf = self.outgoing.plain_http.get('download_pdf')
+            params = {"req_param":task_queue_status['result_url']}
+            headers = {'Content-Type': 'multipart/form-data'}
+            # Make request to download pdf file with params and headers.
+            download_pdf_result = download_pdf.conn.get(self.cid, params=params, headers=headers)
+
             # Make a BytesIO object of DOCSBOX result_url.
-            pdf_file = self.make_file_like_object('{0}{1}'.format(self.DOSBOX_URL, task_queue_status['result_url']))
+            pdf_file = self.make_file_like_object(download_pdf_result._content, download_token=0)
             # Save PDF file to S3 Server
             s3_url = self.save_document(pdf_file)
             task_queue_status['download_url'] = "{0}{1}".format(self.S3_PUBLIC_URL, s3_url)
@@ -140,7 +160,7 @@ class RenderDocument(Service):
             now_time = time.time()
             if (now_time - start_time) >= request_period:
                 break
-        self.logger.info('Elapsed time : {}'.format(now_time - start_time))
+        self.logger.info('Elapsed time : {}'.format(now_time-start_time))
         return queue_info
 
     def s3_connect(self):
