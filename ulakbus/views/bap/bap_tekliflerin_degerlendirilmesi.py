@@ -100,7 +100,6 @@ class TeklifIsleForm(JsonForm):
         kalem = fields.String(__(u"Bütçe Kalemi Adı"))
         adet = fields.Integer(__(u"Adet"))
         birim_fiyat = fields.Float(__(u" Birim Fiyat"))
-        # toplam_fiyat = fields.Float(__(u"Toplam Fiyat"))
         key = fields.String('Key', hidden=True)
 
     kaydet = fields.Button(__(u"Kaydet"), cmd='kaydet')
@@ -183,7 +182,7 @@ class TeklifDegerlendirme(CrudView):
                       }
 
             if self.cmd == 'duzenle':
-                fiyat = self.get_obj_or_false(kalem, firma)
+                fiyat = BAPTeklifFiyatIsleme.objects.get_or_none(**{'kalem': kalem, 'firma': firma})
                 if fiyat:
                     kwargs.update({'birim_fiyat': fiyat.birim_fiyat})
 
@@ -205,7 +204,7 @@ class TeklifDegerlendirme(CrudView):
                                 'satin_alma_id': self.object.key}
 
             if not obj['birim_fiyat']:
-                self.delete_if_exists(teklif_bilgileri)
+                BAPTeklifFiyatIsleme.objects.delete_if_exists(**teklif_bilgileri)
                 continue
 
             isleme, new = BAPTeklifFiyatIsleme.objects.get_or_create(**teklif_bilgileri)
@@ -273,7 +272,7 @@ class TeklifDegerlendirme(CrudView):
                 "actions": '',
             }
             for firma in firmalar:
-                fiyat = self.get_obj_or_false(kalem, firma)
+                fiyat = BAPTeklifFiyatIsleme.objects.get_or_none(**{'kalem': kalem, 'firma': firma})
                 list_item['fields'].append(str(fiyat.toplam_fiyat) if fiyat else '-')
 
             self.output['objects'].append(list_item)
@@ -345,35 +344,6 @@ class TeklifDegerlendirme(CrudView):
             'type': 'info', "title": _(u'İşlem Bilgilendirme'),
             "msg": _(u'{} adlı satın alma duyurusu için teklifler değerlendirildi ve kazanan '
                      u'firma/firmalar belirlendi.'.format(self.object.ad))}
-
-    @staticmethod
-    def get_obj_or_false(kalem, firma):
-        """
-        Verilen parametrelere göre bir nesne bulunuyorsa nesne döndürür, yoksa False döndürür.
-        Args:
-            kalem(object): BAPButcePlani nesnesi 
-            firma(object): BAPFirma nesnesi 
-
-        Returns:
-            object or False
-
-        """
-        try:
-            return BAPTeklifFiyatIsleme.objects.get(kalem=kalem, firma=firma)
-        except ObjectDoesNotExist:
-            return False
-
-    @staticmethod
-    def delete_if_exists(kwargs):
-        """
-        Eğer verilen parametrelere ait BAPTeklifFiyatİsleme nesnesi veritabanında bulunuyor ise 
-        silinir.
-         
-        """
-        try:
-            BAPTeklifFiyatIsleme.objects.get(**kwargs).delete()
-        except ObjectDoesNotExist:
-            pass
 
     @obj_filter
     def teklife_kapanmis_satin_alma_actions(self, obj, result):
