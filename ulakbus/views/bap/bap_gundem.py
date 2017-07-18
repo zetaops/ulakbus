@@ -4,7 +4,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.lib.gundem_detay import gundem_detay_getir
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models import BAPProje
 
@@ -64,9 +63,6 @@ class Gundem(CrudView):
             else _(u"Sonuçlanmadı")
 
         self.output['object'][u'Kararın Sonuçlandırılması'] = sonuc
-        self.output['object'].update(gundem_detay_getir(self.object.gundem_tipi,
-                                                        self.object.gundem_ekstra_bilgiler))
-        self.output['object'].pop(u'Gündem Ekstra Bilgileri')
 
     def komisyon_kararini_ilet(self):
         self.object.proje.yurutucu.personel.user.send_notification(
