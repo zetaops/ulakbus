@@ -3,7 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from pyoko.exceptions import IntegrityError
+from pyoko.exceptions import IntegrityError, ObjectDoesNotExist
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models import Okutman
@@ -726,8 +726,14 @@ class ProjeBasvuru(CrudView):
 
         role = Role.objects.get(user=self.current.user)
         wfi = WFInstance.objects.get(self.current.token)
-        inv = TaskInvitation.objects.get(instance=wfi, role=role)
-        inv.blocking_delete()
+        try:
+            inv = TaskInvitation.objects.get(instance=wfi, role=role)
+            title = inv.title
+            inv.blocking_delete()
+        except ObjectDoesNotExist:
+            title = "%s | %s" % (proje.proje_kodu, wfi.wf.title)
+        finally:
+            self.current.task_data['INVITATION_TITLE'] = title
 
     def bildirim_gonder(self):
         """
