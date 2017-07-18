@@ -33,9 +33,17 @@ class BAPMakineTechizatAra(CrudView):
         model = 'Demirbas'
 
     def kontrol(self):
+        """
+        Makine, teçhizat ara iş akışına nereden(proje başvurusu ya da bap anasayfa) gelindiğini
+         kontrol eden adımdır.
+        """
         self.current.task_data['proje_basvuru'] = self.current.task_data.get('proje_basvuru', False)
 
     def onay_metni_goster(self):
+        """
+        Proje başvurusunda, aranan demirbaşla ilgili gerçekleştirilen işlemin bir satın alma
+        olmadığı konusunda öğretim üyesine gerekli bilgiyi veren ve anlaşıldı onayını alan adımdır.
+        """
         form = JsonForm(title=_(u"Makine, Teçhizat Ekle"))
         form.help_text = _(u"Burası demirbaş satın alma ekranı değildir, sorgulama ekranıdır. "
                            u"Burada yer alan demirbaşlar yanlarında belirtilen birim ve kişilerin "
@@ -53,6 +61,7 @@ class BAPMakineTechizatAra(CrudView):
         Makine, teçhizatların aranıp listelendiği iş akışı adımıdır.
         """
         form = MakineTechizatAraForm()
+        # Arama sonuclari task_data'dan alınır.
         arama_sonuclari = self.current.task_data.pop('arama_sonuclari', False)
         if arama_sonuclari:
             self.output['objects'] = [
@@ -71,6 +80,8 @@ class BAPMakineTechizatAra(CrudView):
                     ],
                     "key": demirbas.key,
                 }
+                # Proje başvurusundan gelindiyse araştırma olanak listesine ekle butonu işlemlere
+                # eklenir.
                 if self.current.task_data['proje_basvuru']:
                     list_item['actions'].append(
                         {'name': _(u'Araştırma Olanakları Listesine Ekle'), 'cmd': 'listeye_ekle',
@@ -82,9 +93,14 @@ class BAPMakineTechizatAra(CrudView):
                 'type': 'warning',
                 'title': _(u"Sonuç bulunamadı."),
                 "msg": _(u"Filtrelerinize uygun sonuç bulunamadı.")}
+        self.current.output["meta"]["allow_search"] = False
         self.form_out(form)
 
     def arama_sonuc_dondur(self):
+        """
+        Girilen filtreleri modele uygulayarak, dönen sonuçları keyleri ile task_data'ya yazan
+        adımdır.
+        """
         ad = self.input['form']['ad']
         birim_id = self.input['form']['birim_id']
         qs = Demirbas.objects
@@ -93,10 +109,16 @@ class BAPMakineTechizatAra(CrudView):
             'ad', 'teknik_ozellikler', 'etiketler', contains=ad).values_list('key')
 
     def listeye_ekle(self):
+        """
+        Seçilen demirbaşı araştırma olanakları listesine ekleyen adımdır.
+        """
         self.current.task_data['cmd'] = 'ekle'
         self.current.task_data['demirbas'] = self.current.task_data.pop('object_id')
 
     def goruntule(self):
+        """
+        Seçilen demirbaşın ayrıntılı görüntülendiği adımdır.
+        """
         self.object = Demirbas.objects.get(self.current.task_data.pop('object_id'))
         self.show()
         form = JsonForm(title=self.object.__unicode__())
