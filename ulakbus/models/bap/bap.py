@@ -13,7 +13,6 @@ from zengine.lib.translation import gettext_lazy as __, gettext as _
 
 from pyoko import Model, field, ListNode
 
-
 talep_durum = [(1, 'Yeni'),
                (2, 'Silinecek'),
                (3, 'Düzenlendi'),
@@ -114,7 +113,6 @@ class BAPIs(Model):
 
 
 class BAPProje(Model):
-
     durum = field.Integer(_(u"Durum"), choices='bap_proje_durum')
     basvuru_rolu = Role()
 
@@ -216,6 +214,7 @@ class BAPProje(Model):
         class Meta:
             verbose_name = __(u"İşlem Geçmişi")
             verbose_name_plural = __(u"İşlem Geçmişi")
+
         eylem = field.String(_(u"Eylem"))
         aciklama = field.String(_(u"Açıklama"))
         tarih = field.DateTime(_(u"Tarih"))
@@ -271,6 +270,31 @@ class BAPIsPaketi(Model):
         return "%s" % self.ad
 
 
+class BAPFirma(Model):
+    class Meta:
+        verbose_name = __(u"Firma")
+        verbose_name_plural = __(u"Firmalar")
+        list_fields = ['ad', 'vergi_no']
+        unique_together = [('vergi_no', 'vergi_dairesi')]
+
+    ad = field.String(__(u"Firma Adı"), required=True)
+    telefon = field.String(__(u"Telefon"), required=True)
+    adres = field.String(__(u"Adres"), required=True)
+    e_posta = field.String(__(u"E-posta Adresi"), required=True, unique=True)
+    vergi_no = field.String(__(u"Vergi Kimlik Numarası"), required=True)
+    vergi_dairesi = field.String(__(u"Vergi Dairesi"), required=True)
+    faaliyet_belgesi = field.File(_(u"Firma Faaliyet Belgesi"), random_name=False, required=True)
+    faaliyet_belgesi_verilis_tarihi = field.Date(__(u"Faaliyet Belgesi Veriliş Tarihi"),
+                                                 required=True)
+    durum = field.Integer(__(u"Durum"), choices='bap_firma_durum')
+
+    class Yetkililer(ListNode):
+        yetkili = User()
+
+    def __unicode__(self):
+        return "%s" % self.ad
+
+
 class BAPButcePlani(Model):
     class Meta:
         verbose_name = __(u"Bap Bütçe Planı")
@@ -278,7 +302,7 @@ class BAPButcePlani(Model):
         list_fields = ['kod_adi', 'ad', 'birim_fiyat', 'adet', 'toplam_fiyat']
     # Öğretim üyesinin seçeceği muhasebe kodları
     muhasebe_kod_genel = field.Integer(__(u"Muhasebe Kod"),
-                                      choices='bap_ogretim_uyesi_gider_kodlari', default=1)
+                                       choices='bap_ogretim_uyesi_gider_kodlari', default=1)
     muhasebe_kod = field.String(__(u"Muhasebe Kod"),
                                 choices='analitik_butce_dorduncu_duzey_gider_kodlari',
                                 default="03.2.6.90")
@@ -293,6 +317,7 @@ class BAPButcePlani(Model):
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
     ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
+    kazanan_firma = BAPFirma()
 
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod or self.muhasebe_kod_genel, self.kod_adi,
@@ -300,8 +325,6 @@ class BAPButcePlani(Model):
 
     def _muhasebe_kod(self):
         return self.muhasebe_kod or self.muhasebe_kod_genel
-
-    _muhasebe_kod.title = __(u"Muhasebe Kodu")
 
 
 class BAPGundem(Model):
@@ -375,31 +398,6 @@ class BAPDuyuru(Model):
         return "%s" % self.duyuru_baslik
 
 
-class BAPFirma(Model):
-    class Meta:
-        verbose_name = __(u"Firma")
-        verbose_name_plural = __(u"Firmalar")
-        list_fields = ['ad', 'vergi_no']
-        unique_together = [('vergi_no', 'vergi_dairesi')]
-
-    ad = field.String(__(u"Firma Adı"), required=True)
-    telefon = field.String(__(u"Telefon"), required=True)
-    adres = field.String(__(u"Adres"), required=True)
-    e_posta = field.String(__(u"E-posta Adresi"), required=True, unique=True)
-    vergi_no = field.String(__(u"Vergi Kimlik Numarası"), required=True)
-    vergi_dairesi = field.String(__(u"Vergi Dairesi"), required=True)
-    faaliyet_belgesi = field.File(_(u"Firma Faaliyet Belgesi"), random_name=False, required=True)
-    faaliyet_belgesi_verilis_tarihi = field.Date(__(u"Faaliyet Belgesi Veriliş Tarihi"),
-                                                 required=True)
-    durum = field.Integer(__(u"Durum"), choices='bap_firma_durum')
-
-    class Yetkililer(ListNode):
-        yetkili = User()
-
-    def __unicode__(self):
-        return "%s" % self.ad
-
-
 class BAPSatinAlma(Model):
     class Meta:
         verbose_name = __(u"Bütçe Kalemi Satın Alma")
@@ -411,6 +409,7 @@ class BAPSatinAlma(Model):
     teklife_kapanma_tarihi = field.DateTime(__(u"Teklife Kapanma Tarihi"))
     sonuclanma_tarihi = field.Date(__(u"Teklifin Sonuçlanma Tarihi"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
+    sorumlu = Role()
 
     class ButceKalemleri(ListNode):
         butce = BAPButcePlani()
@@ -430,6 +429,7 @@ class BAPTeklif(Model):
     ilk_teklif_tarihi = field.DateTime(_(u"İlk Teklif Tarihi"))
     son_degisiklik_tarihi = field.DateTime(_(u"Son Değişiklik Tarihi"))
     sonuclanma_tarihi = field.Date(__(u"Firma Teklifinin Sonuçlanma Tarihi"))
+    fiyat_islemesi = field.Boolean(__(u"Fiyat İşlemesi Yapıldı mı?"), default=False)
 
     class Belgeler(ListNode):
         belge = field.File(_(u"Firma Teklif Belgesi"), random_name=False, required=True)
@@ -437,3 +437,25 @@ class BAPTeklif(Model):
 
     def __unicode__(self):
         return "%s-%s" % (self.firma.ad, self.satin_alma.ad)
+
+
+class BAPTeklifFiyatIsleme(Model):
+    class Meta:
+        verbose_name = __(u"Teklif Fiyat İşleme")
+        verbose_name_plural = __(u"Teklif Fiyat İşlemeleri")
+
+    firma = BAPFirma()
+    kalem = BAPButcePlani()
+    satin_alma = BAPSatinAlma()
+    birim_fiyat = field.Float(__(u"Birim Fiyat"))
+    toplam_fiyat = field.Float(__(u"Toplam Fiyat"))
+
+    def __unicode__(self):
+        return "%s-%s" % (self.firma.ad, self.kalem.ad)
+
+    @classmethod
+    def en_iyi_teklif_veren_ikinci_ve_ucuncu_firmayi_getir(cls, butce):
+        firmalar = cls.objects.filter(kalem=butce).exclude(firma=butce.kazanan_firma).order_by(
+            '-toplam_fiyat')
+
+        return firmalar[0], firmalar[1]
