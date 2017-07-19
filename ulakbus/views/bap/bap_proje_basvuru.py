@@ -386,11 +386,8 @@ class ProjeBasvuru(CrudView):
         today = datetime.today()
         wfi = WFInstance.objects.get(self.current.token)
         role = Role.objects.get(user=self.current.user)
-        inv_key = self.current.task_data.get('inv_key', False)
-        if inv_key:
-            inv = TaskInvitation.objects.get(inv_key)
-            inv.instance = wfi
-        else:
+        inv = TaskInvitation.objects.get_or_none(role=role, instance=wfi)
+        if not inv:
             inv = TaskInvitation(
                 instance=wfi,
                 role=role,
@@ -401,7 +398,6 @@ class ProjeBasvuru(CrudView):
             )
         inv.title = "%s | %s" % (proje.proje_kodu, wfi.wf.title)
         inv.blocking_save()
-        self.current.task_data['inv_key'] = inv.key
         self.current.output['cmd'] = 'reload'
 
     def proje_detay_gir(self):
@@ -726,14 +722,13 @@ class ProjeBasvuru(CrudView):
 
         role = Role.objects.get(user=self.current.user)
         wfi = WFInstance.objects.get(self.current.token)
-        try:
-            inv = TaskInvitation.objects.get(instance=wfi, role=role)
+        inv = TaskInvitation.objects.get_or_none(instance=wfi, role=role)
+        if inv:
             title = inv.title
             inv.blocking_delete()
-        except ObjectDoesNotExist:
+        else:
             title = "%s | %s" % (proje.proje_kodu, wfi.wf.title)
-        finally:
-            self.current.task_data['INVITATION_TITLE'] = title
+        self.current.task_data['INVITATION_TITLE'] = title
 
     def bildirim_gonder(self):
         """
