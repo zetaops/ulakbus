@@ -13,7 +13,6 @@ from zengine.lib.translation import gettext_lazy as __, gettext as _
 
 from pyoko import Model, field, ListNode
 
-
 talep_durum = [(1, 'Yeni'),
                (2, 'Silinecek'),
                (3, 'Düzenlendi'),
@@ -114,7 +113,6 @@ class BAPIs(Model):
 
 
 class BAPProje(Model):
-
     durum = field.Integer(_(u"Durum"), choices='bap_proje_durum')
     basvuru_rolu = Role()
 
@@ -215,6 +213,7 @@ class BAPProje(Model):
         class Meta:
             verbose_name = __(u"İşlem Geçmişi")
             verbose_name_plural = __(u"İşlem Geçmişi")
+
         eylem = field.String(_(u"Eylem"))
         aciklama = field.String(_(u"Açıklama"))
         tarih = field.DateTime(_(u"Tarih"))
@@ -264,6 +263,7 @@ class BAPIsPaketi(Model):
     def __unicode__(self):
         return "%s" % self.ad
 
+
 class BAPFirma(Model):
     class Meta:
         verbose_name = __(u"Firma")
@@ -295,9 +295,10 @@ class BAPButcePlani(Model):
         verbose_name_plural = __(u"Bap Bütçe Planları")
         list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet',
                        'toplam_fiyat']
+
     # Öğretim üyesinin seçeceği muhasebe kodları
     muhasebe_kod_genel = field.Integer(__(u"Muhasebe Kod"),
-                                      choices='bap_ogretim_uyesi_gider_kodlari', default=1)
+                                       choices='bap_ogretim_uyesi_gider_kodlari', default=1)
     muhasebe_kod = field.String(__(u"Muhasebe Kod"),
                                 choices='analitik_butce_dorduncu_duzey_gider_kodlari',
                                 default="03.2.6.90")
@@ -431,6 +432,7 @@ class BAPTeklif(Model):
 
     def __unicode__(self):
         return "%s-%s" % (self.firma.ad, self.satin_alma.ad)
+
 
 class BAPTeklifFiyatIsleme(Model):
     class Meta:
