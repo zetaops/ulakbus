@@ -91,7 +91,10 @@ class AkademikFaaliyet(CrudView):
     def listele(self):
         personel_id = self.current.user.personel.key
         self.current.task_data['personel_id'] = personel_id
-        self.list()
+        form = JsonForm(title=_(u"Akademik Faaliyetler"))
+        form.ekle = fields.Button(_(u"Ekle"))
+        form.bitir = fields.Button(_(u"Tamam"), cmd='bitir')
+        self.list(custom_form=form)
 
     def goruntule(self):
         self.show()

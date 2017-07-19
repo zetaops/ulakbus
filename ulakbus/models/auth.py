@@ -53,6 +53,7 @@ class User(Model, BaseUser):
     surname = field.String(_(u"Soyad"), index=True)
     superuser = field.Boolean(_(u"Super user"), default=False)
     last_login_role_key = field.String(_(u"Son Giriş Yapılan Rol"))
+    is_active = field.Boolean(_(u"Kullanıcı Aktifliği"))
     locale_language = field.String(
         _(u"Tercih Edilen Dil Formatı"),
         index=False,
@@ -96,13 +97,13 @@ class User(Model, BaseUser):
     def post_creation(self):
         self.prepare_channels()
 
-    def get_avatar_url(self):
-        if self.avatar:
-            return BaseUser.get_avatar_url(self)
-        else:
-            # FIXME: This is for fun, remove when we resolve static hosting problem
-            return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
-                "%s@gmail.com" % self.username).hexdigest()
+    # def get_avatar_url(self):
+    #     if self.avatar:
+    #         return BaseUser.get_avatar_url(self)
+    #     else:
+    #         # FIXME: This is for fun, remove when we resolve static hosting problem
+    #         return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
+    #             "%s@gmail.com" % self.username).hexdigest()
 
     def __unicode__(self):
         return "%s %s" % (self.name, self.surname)
@@ -283,8 +284,8 @@ class Unit(Model):
 
     class Meta:
         app = 'Sistem'
-        verbose_name = _(u"Unit")
-        verbose_name_plural = _(u"Units")
+        verbose_name = _(u"Birim")
+        verbose_name_plural = _(u"Birimler")
         search_fields = ['name', 'yoksis_no']
         list_fields = ['name', 'unit_type']
 
@@ -677,7 +678,7 @@ class AuthBackend(object):
 
         """
         user = User.objects.get(username=username)
-        is_login_ok = user.check_password(password)
+        is_login_ok = user.check_password(password) and user.is_active
         if is_login_ok:
             self.set_user(user)
         else:
