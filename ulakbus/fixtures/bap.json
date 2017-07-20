@@ -346,5 +346,37 @@
       "tr": "Katılımcı",
       "en": ""
     }
+  },
+  "bap_bilimseL_etkinlik_butce_talep_turleri": {
+     "1": {
+      "tr": "Konaklama",
+      "en": ""
+    },
+    "2": {
+      "tr": "Ulaşım",
+      "en": ""
+    },
+     "3": {
+      "tr": "Yevmiye",
+      "en": ""
+    },
+    "4": {
+      "tr": "Katılım Ücreti",
+      "en": ""
+    }
+  },
+  "bap_bilimsel_etkinlik_butce_talep_durum": {
+    "1": {
+      "tr": "Talep Yapıldı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Onaylandı",
+      "en": ""
+    },
+     "3": {
+      "tr": "Reddedildi",
+      "en": ""
+    }
   }
 }
