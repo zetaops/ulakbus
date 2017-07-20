@@ -459,3 +459,17 @@ class BAPTeklifFiyatIsleme(Model):
             '-toplam_fiyat')
 
         return firmalar[0], firmalar[1]
+
+
+class BAPEtkinlikProje(Model):
+    class Meta:
+        verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği")
+        verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Destekleri")
+
+    ulke = field.String(__(u"Ülke"), required=True)
+    sehir = field.String(__(u"Şehir"), required=True)
+    bildiri_basligi = field.String(__(u"Etkinlik Başlığı"), required=True)
+    baslangic = field.Date(__(u"Başlangıç Tarihi"), required=True)
+    bitis = field.Date(__(u"Bitiş Tarihi"), required=True)
+    katilim_turu = field.Integer(__(u"Katılım Turu"), required=True,
+                                 choices='bap_bilimsel_etkinlik_katilim_turu')

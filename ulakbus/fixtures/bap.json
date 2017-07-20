@@ -336,5 +336,15 @@
       "tr": "Yazılım",
       "en": ""
     }
+  },
+  "bap_bilimsel_etkinlik_katilim_turu": {
+    "1": {
+      "tr": "Sözlü",
+      "en": ""
+    },
+    "2": {
+      "tr": "Katılımcı",
+      "en": ""
+    }
   }
 }
