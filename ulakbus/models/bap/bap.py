@@ -473,6 +473,8 @@ class BAPEtkinlikProje(Model):
     bitis = field.Date(__(u"Bitiş Tarihi"), required=True)
     katilim_turu = field.Integer(__(u"Katılım Turu"), required=True,
                                  choices='bap_bilimsel_etkinlik_katilim_turu')
+    etkinlik_lokasyon = field.Integer(__(u"Etkinlik Türü"), required=True,
+                                      choices="arastirma_hedef_lokasyon")
     basvuru_yapan = Okutman()
 
     def __unicode__(self):
