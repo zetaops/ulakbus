@@ -63,9 +63,9 @@ class RenderDocument(Service):
             if 'odt_url' in cache_stat:
                 if self.wants_pdf:
                     self.logger.info("NO ACTION WASN'T REQUIRED, SENDED PDF URL")
-                    resp = self.prepare_response('finished', cache_stat['pdf_url'])
+                    resp = self.prepare_response('ok', cache_stat['pdf_url'])
                 else:
-                    resp = self.prepare_response('finished', cache_stat['odt_url'])
+                    resp = self.prepare_response('ok', cache_stat['odt_url'])
                     self.logger.info("NO ACTION WASN'T REQUIRED, SENDED ODT URL")
             # No need to download template
             elif 'modify_date' in cache_stat:
@@ -78,6 +78,7 @@ class RenderDocument(Service):
             self.logger.info("STANDARD RENDERING PROCESS")
             resp = self.standard_process(self.request.payload)
 
+        self.response.status_code = 200
         self.response.payload = resp
 
     def standard_process(self, payload):
@@ -101,9 +102,9 @@ class RenderDocument(Service):
                                                      pdf_url=pdf_resp['download_url'],
                                                      odt_url=resp.data['download_url'])
 
-            resp = self.prepare_response(pdf_resp['status'], pdf_resp['download_url'])
+            resp = self.prepare_response("ok", pdf_resp['download_url'])
         else:
-            resp = self.prepare_response('finished', resp.data['download_url'])
+            resp = self.prepare_response('ok', resp.data['download_url'])
         return resp
 
     @staticmethod
@@ -111,9 +112,9 @@ class RenderDocument(Service):
         """ Prepare a response for client
         :param status: Message of status
         :param url: Download_url, It can be None or URL
-        :return: type: <dict>
+        :return: type: str
         """
-        resp = {"status": status, "download_url": url}
+        resp = {"status": status, "result": url}
         return resp
 
     def render_document(self, payload):
@@ -365,6 +366,9 @@ class DocumentCache:
         key = self.key_from_context()
         val_of_context = self.zato_service.kvdb.conn.get(key)
 
+        if val_of_context is None:
+            return None
+
         val_of_context = json.loads(val_of_context)
         return val_of_context
 
@@ -376,6 +380,9 @@ class DocumentCache:
         key = self.key_hash_template(self.zato_service.request.payload['template'])
         value = self.zato_service.kvdb.conn.get(key)
 
+        if value is None:
+            return None
+
         value = json.loads(value)
         return value
 
@@ -384,8 +391,10 @@ class DocumentCache:
         Check the data exists in Redis.
         :return: Return redis data or None
         """
+        self.zato_service.logger.info("CHECK THE CACHE")
         val_context = self.get_context()
         val_template = self.get_template()
+        self.zato_service.logger.info("GET CONT and TEMPLATE CONTEXT : {}")
 
         key_template = self.key_hash_template(self.zato_service.request.payload['template'])
         modify_date = self.zato_service.request.payload['modify_date']
