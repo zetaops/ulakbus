@@ -96,8 +96,8 @@ class BAPEtkinlikBasvuru(CrudView):
             butce['ilgili_proje_id'] = etkinlik.key
             BAPEtkinlikButcePlani(**butce).blocking_save()
 
-        wf = BPMNWorkflow.objects.get(name='bap_etkinlik_basvuru_inceleme')
-        perm = Permission.objects.get('bap_etkinlik_basvuru_inceleme.koordinasyon_birimi')
+        wf = BPMNWorkflow.objects.get(name='bap_etkinlik_basvuru_incele')
+        perm = Permission.objects.get('bap_etkinlik_basvuru_incele.koordinasyon_birimi')
         today = datetime.today()
         for role in perm.get_permitted_roles():
             wfi = WFInstance(
