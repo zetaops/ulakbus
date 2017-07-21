@@ -134,6 +134,13 @@ class ZatoService(object):
         return response_data
 
 
+class DocumentRender(ZatoService):
+    def __init__(self, template, context, pdf, modify_date):
+        self.service_uri = service_url_paths[self.__class__.__name__]['url']
+        payload = {"template": template, "context": context, "pdf": pdf, "modify_date": modify_date}
+        self.payload = json.dumps(payload)
+
+
 class TcknService(ZatoService):
     @staticmethod
     def check_turkish_identity_number(tckn):
@@ -159,7 +166,6 @@ class TcknService(ZatoService):
             raise Exception("tckn length must be 11")
 
         return tckn
-
 
 class HitapService(TcknService):
     pass
