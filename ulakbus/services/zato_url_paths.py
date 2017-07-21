@@ -83,5 +83,6 @@ service_url_paths = {
     "KPSAdresBilgileriGetir": {"url": "nvi-adres-sorgula"},
     "DersProgramiOlustur": {"url": "ders-programi-olustur"},
     "SinavProgramiOlustur": {"url": "sinav-programi-olustur"},
-    "E_PostaYolla": {"url": "e-posta"}
+    "E_PostaYolla": {"url": "e-posta"},
+    "DocumentRender" : {"url": "render/document"}
 }
