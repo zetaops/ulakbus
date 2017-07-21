@@ -135,7 +135,20 @@ class ZatoService(object):
 
 
 class DocumentRender(ZatoService):
+    """
+        Usage :
+            zs = DocumentRender(template=template, context=context, pdf=pdf, modify_date=modify_date)
+            resp = zs.zato_request()
+    """
     def __init__(self, template, context, pdf, modify_date):
+        """
+        Render document, with context data.
+        Args:
+            template: Name of odt template
+            context: Jinja variables, it must be a <dict>
+            pdf: True or false, If you want pdf version give True.
+            modify_date: Modify_date of template. It's <str>
+        """
         self.service_uri = service_url_paths[self.__class__.__name__]['url']
         payload = {"template": template, "context": context, "pdf": pdf, "modify_date": modify_date}
         self.payload = json.dumps(payload)
