@@ -90,7 +90,7 @@ class BAPEtkinlikBasvuru(CrudView):
         """
         etkinlik = BAPEtkinlikProje(**self.current.task_data['EtkinlikBilgiForm'])
         butceler = self.current.task_data['ButcePlanForm']['Butce']
-        # etkinlik.basvuru_yapan alanına Okutman koyulacak self.current.user'dan
+        etkinlik.basvuru_yapan = self.current.user.personel.okutman
         etkinlik.blocking_save()
         for butce in butceler:
             butce['ilgili_proje_id'] = etkinlik.key
