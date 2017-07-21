@@ -6,10 +6,15 @@
 
 from ulakbus.models import BAPEtkinlikButcePlani
 from ulakbus.models import BAPEtkinlikProje
+from ulakbus.models import Permission
 from zengine.forms import JsonForm, fields
+from zengine.models import BPMNWorkflow
+from zengine.models import TaskInvitation
+from zengine.models import WFInstance
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from pyoko import ListNode
+from datetime import datetime, timedelta
 
 YURTICI = _(
 u"""Konaklama Faturası
@@ -85,13 +90,46 @@ class BAPEtkinlikBasvuru(CrudView):
         """
         etkinlik = BAPEtkinlikProje(**self.current.task_data['EtkinlikBilgiForm'])
         butceler = self.current.task_data['ButcePlanForm']['Butce']
+        # etkinlik.basvuru_yapan alanına Okutman koyulacak self.current.user'dan
         etkinlik.blocking_save()
         for butce in butceler:
             butce['ilgili_proje_id'] = etkinlik.key
             BAPEtkinlikButcePlani(**butce).blocking_save()
 
+        wf = BPMNWorkflow.objects.get(name='bap_etkinlik_basvuru_inceleme')
+        perm = Permission.objects.get('bap_etkinlik_basvuru_inceleme.koordinasyon_birimi')
+        today = datetime.today()
+        for role in perm.get_permitted_roles():
+            wfi = WFInstance(
+                wf=wf,
+                current_actor=role,
+                task=None,
+                name=wf.name,
+                wf_object=etkinlik.key
+            )
+            wfi.data = dict()
+            wfi.data['flow'] = None
+            wfi.data['etkinlik_basvuru_id'] = etkinlik.key
+            wfi.pool = {}
+            wfi.blocking_save()
+            inv = TaskInvitation(
+                instance=wfi,
+                role=role,
+                wf_name=wfi.wf.name,
+                progress=30,
+                start_date=today,
+                finish_date=today + timedelta(15)
+            )
+            inv.title = wfi.wf.title
+            inv.save()
+
     def basari_mesaji_goster(self):
-        pass
+        form = JsonForm(title=_(u"Başvurunuzu tamamladınız!"))
+        form.help_text = _(u'Başvurunuz BAP birimine başarıyla iletilmiştir. '
+                         u'Değerlendirme sürecinde size bilgi verilecektir.')
+        form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
 
     def yonlendir(self):
-        pass
+        self.current.output['cmd'] = 'reload'
+
