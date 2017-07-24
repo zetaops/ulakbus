@@ -6,9 +6,9 @@
         <camunda:property name="menu_category" value="hidden" />
       </camunda:properties>
     </bpmn:extensionElements>
-    <bpmn:participant id="Participant_1azy883" processRef="bap_etkinlik_basvuru_incele" />
+    <bpmn:participant id="Participant_1azy883" name="Etkinlik Başvuru" processRef="bap_etkinlik_basvuru_incele" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_etkinlik_basvuru_incele" isExecutable="false">
+  <bpmn:process id="bap_etkinlik_basvuru_incele" name="Etkinlik Başvuru" isExecutable="false">
     <bpmn:laneSet>
       <bpmn:lane id="koordinasyon_birimi" name="Koordinasyon Birimi">
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
@@ -16,7 +16,7 @@
         <bpmn:flowNodeRef>EndEvent_1a9gc9p</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>etkinlik_basvuru_incele</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>reddet</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_15ofk1f</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>gorev_basligi_ekle</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="komisyon_baskani" name="Komisyon Başkanı">
         <bpmn:flowNodeRef>etkinlik_basvuru_incele_kb</bpmn:flowNodeRef>
@@ -89,14 +89,14 @@
       <bpmn:incoming>SequenceFlow_03r37mo</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1fqlo20</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_00ek4br" sourceRef="ExclusiveGateway_10h25xj" targetRef="Task_15ofk1f">
+    <bpmn:sequenceFlow id="SequenceFlow_00ek4br" sourceRef="ExclusiveGateway_10h25xj" targetRef="gorev_basligi_ekle">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='komisyon']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Task_15ofk1f" name="Görev Başlığı Ekle">
+    <bpmn:serviceTask id="gorev_basligi_ekle" name="Görev Başlığı Ekle" camunda:class="bap.bap_etkinlik_basvuru_inceleme.EtkinlikBasvuruInceleme.gorev_basligi_ekle">
       <bpmn:incoming>SequenceFlow_00ek4br</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0qgtskk</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_0qgtskk" sourceRef="Task_15ofk1f" targetRef="etkinlik_basvuru_incele_kb" />
+    <bpmn:sequenceFlow id="SequenceFlow_0qgtskk" sourceRef="gorev_basligi_ekle" targetRef="etkinlik_basvuru_incele_kb" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0rkvmha">
@@ -243,7 +243,7 @@
           <dc:Bounds x="474" y="342" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_1p7h45l_di" bpmnElement="Task_15ofk1f">
+      <bpmndi:BPMNShape id="ServiceTask_1p7h45l_di" bpmnElement="gorev_basligi_ekle">
         <dc:Bounds x="409" y="361" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0qgtskk_di" bpmnElement="SequenceFlow_0qgtskk">

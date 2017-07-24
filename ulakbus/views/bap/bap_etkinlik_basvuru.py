@@ -4,7 +4,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPEtkinlikButcePlani
 from ulakbus.models import BAPEtkinlikProje
 from ulakbus.models import Permission
 from zengine.forms import JsonForm, fields
@@ -56,7 +55,7 @@ class ButcePlanForm(JsonForm):
 class EtkinlikBilgiForm(JsonForm):
     class Meta:
         title = _(u"Etkinlik Bilgileri")
-        exclude = ['basvuru_yapan']
+        exclude = ['basvuru_yapan', 'durum', 'onay_tarihi', 'EtkinlikButce']
 
     ileri = fields.Button(_(u"İleri"))
 

@@ -4,7 +4,6 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models import AbstractRole
-from ulakbus.models import BAPEtkinlikButcePlani
 from ulakbus.models import BAPEtkinlikProje
 from ulakbus.models import Role
 from ulakbus.models import User
@@ -45,10 +44,12 @@ class EtkinlikBasvuruInceleme(CrudView):
         form.daha_sonra_incele = fields.Button(_(u"Daha Sonra İncele"), cmd='daha_sonra_incele')
         form.reddet = fields.Button(_(u"Reddet"), cmd='red')
         form.komisyon = fields.Button(_(u"Komisyon Başkanına Gönder"), cmd='komisyon')
-        butceler = BAPEtkinlikButcePlani.objects.filter(ilgili_proje_id=key)
+        butceler = BAPEtkinlikProje.objects.get(key).EtkinlikButce
         for butce in butceler:
             form.Butce(talep_turu=butce.talep_turu, istenen_tutar=butce.istenen_tutar)
         self.form_out(form)
+        self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def reddet_ve_bildirim_gonder(self):
         """
@@ -67,22 +68,30 @@ class EtkinlikBasvuruInceleme(CrudView):
         self.current.output['cmd'] = 'reload'
 
     def gorev_basligi_ekle(self):
-        # self.current.task_data['INVITATION_TITLE'] = title
-        pass
+        """
+        Komisyon başkanına gösterilecek görevin başlığı değiştirilir.
+        """
+        etkinlik = BAPEtkinlikProje.objects.get(self.current.task_data['etkinlik_basvuru_id'])
+        wfi = WFInstance.objects.get(self.current.token)
+        title = "%s | %s" % (etkinlik.__unicode__(), wfi.wf.title)
+        self.current.task_data['INVITATION_TITLE'] = title
 
     def incele_kb(self):
         """
         Komisyon başkanının başvuruyu incelediği adımdır.
         """
         key = self.current.task_data['etkinlik_basvuru_id']
+        self.show()
         form = EtkinlikBasvuruInceleForm(title="asd")
         form.daha_sonra_incele = fields.Button(_(u"Daha Sonra İncele"), cmd='daha_sonra_devam_et')
         form.reddet = fields.Button(_(u"Reddet"), cmd='red')
         form.komisyon = fields.Button(_(u"Komisyon Üyesi Ata"), cmd='komisyon_uyesi_ata')
-        butceler = BAPEtkinlikButcePlani.objects.filter(ilgili_proje_id=key)
+        butceler = BAPEtkinlikProje.objects.get(key).EtkinlikButce
         for butce in butceler:
             form.Butce(talep_turu=butce.talep_turu, istenen_tutar=butce.istenen_tutar)
         self.form_out(form)
+        self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def daha_sonra_devam_et(self):
         self.current.output['cmd'] = 'reload'
@@ -94,10 +103,11 @@ class EtkinlikBasvuruInceleme(CrudView):
         choices = [(rol.key, rol.user.personel.__unicode__()) for rol in roller]
         form.komisyon_uye = fields.String(_(u"Komisyon Üyesi"), required=True, choices=choices)
         form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
 
     def komisyon_uyesine_davet_gonder(self):
         etkinlik_key = self.current.task_data['etkinlik_basvuru_id']
-        rol_key = self.input['komisyon_uye']
+        rol_key = self.input['form']['komisyon_uye']
         role = Role.objects.get(rol_key)
         wf = BPMNWorkflow.objects.get(name='bap_etkinlik_basvuru_degerlendir')
         today = datetime.today()
