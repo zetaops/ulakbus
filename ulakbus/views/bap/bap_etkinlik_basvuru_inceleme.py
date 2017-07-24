@@ -66,6 +66,10 @@ class EtkinlikBasvuruInceleme(CrudView):
                                )
         self.current.output['cmd'] = 'reload'
 
+    def gorev_basligi_ekle(self):
+        # self.current.task_data['INVITATION_TITLE'] = title
+        pass
+
     def incele_kb(self):
         """
         Komisyon başkanının başvuruyu incelediği adımdır.

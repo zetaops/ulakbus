@@ -476,28 +476,22 @@ class BAPEtkinlikProje(Model):
     etkinlik_lokasyon = field.Integer(__(u"Etkinlik Türü"), required=True,
                                       choices="arastirma_hedef_lokasyon")
     basvuru_yapan = Okutman()
-
-    def __unicode__(self):
-        return "%s | %s" % (self.bildiri_basligi, self.basvuru_yapan.__unicode__())
-
-
-class BAPEtkinlikButcePlani(Model):
-    class Meta:
-        verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planı")
-        verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planları")
-
-    talep_turu = field.Integer(__(u"Talep Türü"), required=True,
-                               choices='bap_bilimseL_etkinlik_butce_talep_turleri')
-    muhasebe_kod = field.String(__(u"Muhasebe Kod"),
-                                choices='analitik_butce_dorduncu_duzey_gider_kodlari',
-                                default="03.2.6.90")
-    ilgili_proje = BAPEtkinlikProje()
-
-    istenen_tutar = field.Float(__(u"Talep Edilen Tutar"), required=True)
-
     durum = field.Integer(__(u"Durum"), choices='bap_bilimsel_etkinlik_butce_talep_durum')
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
 
-    def __unicode__(self):
-        return "%s / %s " % (self.talep_turu, self.ilgili_proje.__unicode__())
+    class EtkinlikButce(ListNode):
+        class Meta:
+            verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planı")
+            verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planları")
 
+        talep_turu = field.Integer(__(u"Talep Türü"), required=True,
+                                   choices='bap_bilimseL_etkinlik_butce_talep_turleri')
+        muhasebe_kod = field.String(__(u"Muhasebe Kod"),
+                                    choices='analitik_butce_dorduncu_duzey_gider_kodlari',
+                                    default="03.2.6.90")
+        istenen_tutar = field.Float(__(u"Talep Edilen Tutar"), required=True)
+
+
+
+    def __unicode__(self):
+        return "%s | %s" % (self.bildiri_basligi, self.basvuru_yapan.__unicode__())

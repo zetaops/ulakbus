@@ -91,10 +91,9 @@ class BAPEtkinlikBasvuru(CrudView):
         etkinlik = BAPEtkinlikProje(**self.current.task_data['EtkinlikBilgiForm'])
         butceler = self.current.task_data['ButcePlanForm']['Butce']
         etkinlik.basvuru_yapan = self.current.user.personel.okutman
-        etkinlik.blocking_save()
         for butce in butceler:
-            butce['ilgili_proje_id'] = etkinlik.key
-            BAPEtkinlikButcePlani(**butce).blocking_save()
+            etkinlik.EtkinlikButce(**butce)
+        etkinlik.blocking_save()
 
         wf = BPMNWorkflow.objects.get(name='bap_etkinlik_basvuru_incele')
         perm = Permission.objects.get('bap_etkinlik_basvuru_incele.koordinasyon_birimi')
