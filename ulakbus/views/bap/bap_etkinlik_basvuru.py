@@ -105,7 +105,7 @@ class BAPEtkinlikBasvuru(CrudView):
         etkinlik = BAPEtkinlikProje(**self.current.task_data['EtkinlikBilgiForm'])
         butceler = self.current.task_data['ButcePlanForm']['Butce']
         etkinlik.basvuru_yapan = self.current.user.personel.okutman
-        etkinlik.durum = 1
+        etkinlik.durum = 4
         for butce in butceler:
             etkinlik.EtkinlikButce(**butce)
         etkinlik.blocking_save()

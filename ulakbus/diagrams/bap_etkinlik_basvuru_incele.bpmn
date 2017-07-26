@@ -13,7 +13,7 @@
       <bpmn:lane id="koordinasyon_birimi" name="Koordinasyon Birimi">
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_10h25xj</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent_1a9gc9p</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>etkinlik_basvuru_incele</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>reddet</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>gorev_basligi_ekle</bpmn:flowNodeRef>
@@ -37,7 +37,7 @@
       <bpmn:outgoing>SequenceFlow_00ek4br</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_027cyh7" sourceRef="etkinlik_basvuru_incele" targetRef="ExclusiveGateway_10h25xj" />
-    <bpmn:endEvent id="EndEvent_1a9gc9p">
+    <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_16q5yli</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_05tj8hn</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0sy9lzu</bpmn:incoming>
@@ -45,8 +45,8 @@
     <bpmn:sequenceFlow id="SequenceFlow_0fcw23w" sourceRef="ExclusiveGateway_10h25xj" targetRef="reddet">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='red']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_16q5yli" sourceRef="reddet" targetRef="EndEvent_1a9gc9p" />
-    <bpmn:sequenceFlow id="SequenceFlow_05tj8hn" sourceRef="ExclusiveGateway_10h25xj" targetRef="EndEvent_1a9gc9p">
+    <bpmn:sequenceFlow id="SequenceFlow_16q5yli" sourceRef="reddet" targetRef="EndEvent" />
+    <bpmn:sequenceFlow id="SequenceFlow_05tj8hn" sourceRef="ExclusiveGateway_10h25xj" targetRef="EndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='daha_sonra_incele']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="etkinlik_basvuru_incele" name="Etkinlik Basvurusu İncele" camunda:assignee="bap.bap_etkinlik_basvuru_inceleme.EtkinlikBasvuruInceleme.incele">
@@ -66,7 +66,7 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1fqlo20" sourceRef="daha_sonra_devam_et" targetRef="etkinlik_basvuru_incele_kb" />
     <bpmn:sequenceFlow id="SequenceFlow_0fsk1ls" sourceRef="komisyon_uyesi_ata" targetRef="komisyon_uyesi_etkinlik_degerlendirme_daveti_gonder" />
-    <bpmn:sequenceFlow id="SequenceFlow_0sy9lzu" sourceRef="komisyon_uyesi_etkinlik_degerlendirme_daveti_gonder" targetRef="EndEvent_1a9gc9p" />
+    <bpmn:sequenceFlow id="SequenceFlow_0sy9lzu" sourceRef="komisyon_uyesi_etkinlik_degerlendirme_daveti_gonder" targetRef="EndEvent" />
     <bpmn:userTask id="etkinlik_basvuru_incele_kb" name="Etkinlik Başvurusu İncele" camunda:assignee="bap.bap_etkinlik_basvuru_inceleme.EtkinlikBasvuruInceleme.incele_kb">
       <bpmn:incoming>SequenceFlow_1fqlo20</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0qgtskk</bpmn:incoming>
@@ -129,7 +129,7 @@
           <dc:Bounds x="405" y="283" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_1a9gc9p_di" bpmnElement="EndEvent_1a9gc9p">
+      <bpmndi:BPMNShape id="EndEvent_1a9gc9p_di" bpmnElement="EndEvent">
         <dc:Bounds x="721" y="280" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="739" y="316" width="0" height="0" />

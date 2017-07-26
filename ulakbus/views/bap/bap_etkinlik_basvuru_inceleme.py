@@ -89,6 +89,8 @@ class EtkinlikBasvuruInceleme(CrudView):
         Komisyon başkanına gösterilecek görevin başlığı değiştirilir.
         """
         etkinlik = BAPEtkinlikProje.objects.get(self.current.task_data['etkinlik_basvuru_id'])
+        etkinlik.durum = 5
+        etkinlik.blocking_save()
         wfi = WFInstance.objects.get(self.current.token)
         title = "%s | %s" % (etkinlik.__unicode__(), wfi.wf.title)
         self.current.task_data['INVITATION_TITLE'] = title
@@ -163,4 +165,7 @@ class EtkinlikBasvuruInceleme(CrudView):
         )
         inv.title = wfi.wf.title
         inv.save()
+        etkinlik = BAPEtkinlikProje.objects.get(etkinlik_key)
+        etkinlik.durum = 6
+        etkinlik.blocking_save()
 
