@@ -50,7 +50,7 @@ class EtkinlikBasvuruInceleme(CrudView):
         """
         key = self.current.task_data['etkinlik_basvuru_id']
         self.show()
-        form = EtkinlikBasvuruInceleForm(title="asd")
+        form = EtkinlikBasvuruInceleForm(title=_(u"Etkinlik Başvuru Detayları"))
         form.help_text = _(
             u"Bu projeyi daha sonra etkinlik listele iş akışından ulaşarak inceleyebilirsiniz.")
         form.reddet = fields.Button(_(u"Reddet"), cmd='red')
@@ -95,7 +95,7 @@ class EtkinlikBasvuruInceleme(CrudView):
         """
         key = self.current.task_data['etkinlik_basvuru_id']
         self.show()
-        form = EtkinlikBasvuruInceleForm(title="asd")
+        form = EtkinlikBasvuruInceleForm(title=_(u"Etkinlik Başvuru Detayları"))
         form.daha_sonra_incele = fields.Button(_(u"Daha Sonra İncele"), cmd='daha_sonra_devam_et')
         form.reddet = fields.Button(_(u"Reddet"), cmd='red')
         form.komisyon = fields.Button(_(u"Komisyon Üyesi Ata"), cmd='komisyon_uyesi_ata')

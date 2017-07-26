@@ -491,7 +491,5 @@ class BAPEtkinlikProje(Model):
                                     default="03.2.6.90")
         istenen_tutar = field.Float(__(u"Talep Edilen Tutar"), required=True)
 
-
-
     def __unicode__(self):
         return "%s | %s" % (self.bildiri_basligi, self.basvuru_yapan.__unicode__())
