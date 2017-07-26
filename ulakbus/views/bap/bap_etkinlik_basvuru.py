@@ -61,19 +61,34 @@ class EtkinlikBilgiForm(JsonForm):
 
 
 class BAPEtkinlikBasvuru(CrudView):
+    """
+    Öğretim üyesinin etkinlik başvurusu yaptığı adımdır. Etkinlik bilgilerini ve talep ettiği
+    bütçeyi girer ve seçilen etkinlik bilgileri doğrultusunda gereken evraklar öğretim üyesine
+    gösterilir. Öğretim üyesinin onayı doğrultusunda etkinlik başvurusu koordinasyon birimine
+    gönderilir.
+    """
 
     class Meta:
         model = 'BAPEtkinlikProje'
 
     def etkinlik_bilgi_gir(self):
+        """
+        Etkinlik genel bilgilerinin girildiği adımdır.
+        """
         form = EtkinlikBilgiForm(self.object, current=self.current)
         self.form_out(form)
 
     def butce_plani_olustur(self):
+        """
+        Etkinlik bütçe planının oluşturulduğu adımdır.
+        """
         form = ButcePlanForm()
         self.form_out(form)
 
     def evrak_goster(self):
+        """
+        Etkinlik için etkinlik türüne göre gerekli evrakların gösterildiği adımdır.
+        """
         form = JsonForm(title=_(u"Gerekli Evraklar"))
         form.ileri = fields.Button(_(u"Anladım, Onaya Gönder"))
         if self.current.task_data['EtkinlikBilgiForm']['etkinlik_lokasyon'] == 2:
@@ -122,6 +137,9 @@ class BAPEtkinlikBasvuru(CrudView):
             inv.save()
 
     def basari_mesaji_goster(self):
+        """
+        Başvuru sonunda kullanıcıya başarı mesajının gösterildiği adımdır.
+        """
         form = JsonForm(title=_(u"Başvurunuzu tamamladınız!"))
         form.help_text = _(u'Başvurunuz BAP birimine başarıyla iletilmiştir. '
                          u'Değerlendirme sürecinde size bilgi verilecektir.')
@@ -129,5 +147,8 @@ class BAPEtkinlikBasvuru(CrudView):
         self.form_out(form)
 
     def yonlendir(self):
+        """
+        Başvuru sonunda kullanıcıyı anasayfaya taşıyan metoddur.
+        """
         self.current.output['cmd'] = 'reload'
 

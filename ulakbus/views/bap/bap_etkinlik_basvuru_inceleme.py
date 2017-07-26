@@ -25,16 +25,29 @@ class EtkinlikBasvuruInceleForm(JsonForm):
 
 
 class EtkinlikBasvuruInceleme(CrudView):
+    """
+    Koordinasyon birimi ve komisyon başkanının gelen bilimsel araştırma etkinlik başvurularını
+    incelediği ve karar verdiği iş akışıdır. Koordinasyon birimi kendisine gelen görev üzerinden
+    ya da etkinlik listeleme iş akışı üzerinden etkinlik inceleme iş akışını başlatır.
+    Şeklen etkinlik başvurusunun uygun olduğuna karar verirse başvuruyu komisyon başkanına iletir.
+    Komisyon başkanı başvuruyu değerlendirmek üzere bir komisyon üyesi seçer. Seçilen komisyon
+    üyesine etkinlik başvuru değerlendirme görevi gönderilir.
+    """
     class Meta:
         model = 'BAPEtkinlikProje'
 
     def __init__(self, current=None):
         super(EtkinlikBasvuruInceleme, self).__init__(current)
+        # Task invitation oluşturulurken etkinlik id'si task data içine yerleştirilir. Eğer task
+        # datada yoksa listeleme iş akışından gelindiği varsayılarak gelen inputtan alınır.
         key = self.current.task_data['etkinlik_basvuru_id'] = self.input.get(
             'object_id', False) or self.current.task_data.get('etkinlik_basvuru_id', False)
         self.object = BAPEtkinlikProje.objects.get(key)
 
     def incele(self):
+        """
+        Koordinasyon biriminin etkinlik başvurusunu incelediği adımdır.
+        """
         key = self.current.task_data['etkinlik_basvuru_id']
         self.show()
         form = EtkinlikBasvuruInceleForm(title="asd")
@@ -94,9 +107,18 @@ class EtkinlikBasvuruInceleme(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def daha_sonra_devam_et(self):
+        """
+        İş akışını uygun adıma taşıyarak ana sayfaya yöndlendirir.
+        """
         self.current.output['cmd'] = 'reload'
 
     def komisyon_uyesi_ata(self):
+        """
+        Komisyon başkanının projeyi değerlendirmesi için komisyon üyesi seçtiği adımdır.
+        Komisyon üyesi abstract rolüne sahip olan rollerin kullanıcıları listelenir. Daha sonra
+        seçilen rol için proje değerlendirme görevi oluşturulup, ilgili rolün görev yöneticisine
+        düşürülür.
+        """
         form = JsonForm(title=_(u"Komisyon Üyesi Seç"))
         roller = Role.objects.filter(abstract_role=AbstractRole.objects.get(
             name='Bilimsel Arastirma Projesi Komisyon Uyesi'))
@@ -106,6 +128,10 @@ class EtkinlikBasvuruInceleme(CrudView):
         self.form_out(form)
 
     def komisyon_uyesine_davet_gonder(self):
+        """
+        Seçilen komisyon üyesinin görev yöneticisine proje değerlendirme iş akışının yerleştirildiği
+        adımdır.
+        """
         etkinlik_key = self.current.task_data['etkinlik_basvuru_id']
         rol_key = self.input['form']['komisyon_uye']
         role = Role.objects.get(rol_key)
