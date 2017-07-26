@@ -69,11 +69,15 @@ class EtkinlikBasvuruInceleme(CrudView):
         Etkinlik başvurusunu yapan öğretim üyesine, başvurunun koordinasyon birimi tarafından
         reddedildiği bildiriminin gönderildiği adımdır.
         """
+        key = self.current.task_data['etkinlik_basvuru_id']
+        etkinlik = BAPEtkinlikProje.objects.get(key)
+        etkinlik.durum = 3
+        etkinlik.blocking_save()
         role = Role.objects.filter(user=self.object.basvuru_yapan.personel.user)[0]
         sistem_user = User.objects.get(username='sistem_bilgilendirme')
         role.send_notification(title=_(u"Bilimsel Etkinlik Projesi Başvurusu"),
                                message=_(u"%s başlıklı bilimsel etkinlik projesi başvurunuz "
-                                         u"koordinasyon birimi tarafondan reddedilmiştir." %
+                                         u"koordinasyon birimi tarafından reddedilmiştir." %
                                          self.object.bildiri_basligi),
                                typ=1,
                                sender=sistem_user

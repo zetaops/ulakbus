@@ -22,11 +22,15 @@ class OEEtkinlikBasvuruListeleme(CrudView):
         allow_search = True
         model = 'BAPEtkinlikProje'
 
+    def __init__(self, current=None):
+        CrudView.__init__(self, current)
+        self.ListForm.add = None
+
     def listele(self):
         """
         Öğretim üyesinin yapmış olduğu etkinlik başvurularını incelediği adımdır.
         """
-        self.list(list_fields=['ad', 'durum'])
+        self.list(list_fields=['bildiri_basligi', 'durum'])
 
     def goruntule(self):
         """

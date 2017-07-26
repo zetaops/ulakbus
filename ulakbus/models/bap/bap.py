@@ -465,6 +465,7 @@ class BAPEtkinlikProje(Model):
     class Meta:
         verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği")
         verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Destekleri")
+        list_filters = ['durum']
 
     ulke = field.String(__(u"Ülke"), required=True)
     sehir = field.String(__(u"Şehir"), required=True)

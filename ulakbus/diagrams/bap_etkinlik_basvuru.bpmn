@@ -3,7 +3,12 @@
   <bpmn:collaboration id="Collaboration_1doay8v">
     <bpmn:participant id="Participant_0y0jazc" name="Bilimsel Etkinlik Başvuru" processRef="bap_etkinlik_basvuru" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_etkinlik_basvuru" isExecutable="false">
+  <bpmn:process id="bap_etkinlik_basvuru" name="Bilimsel Etkinlik Başvuru" isExecutable="false">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="BAP" />
+      </camunda:properties>
+    </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_0h1anyq</bpmn:outgoing>
     </bpmn:startEvent>
