@@ -49,10 +49,20 @@ class Template(Model):
     """Template Model.
 
     """
+
     template_type = field.Integer(choices=TEMPLATE_TYPES)
     template = field.File("Template")
     description = field.String("Description")
     preview = field.File("Preview")
+    creation_date =
+    version =
+    hash =
+
+    def pre_save(self):
+        self.hash = self.get_hash()
+
+    def get_hash(self):
+        hash_content = hashlib.sha256(content).hexdigest()
 
     class Meta:
         app = 'Document'
