@@ -141,7 +141,7 @@ class EtkinlikBasvuruInceleme(CrudView):
         etkinlik_key = self.current.task_data['etkinlik_basvuru_id']
         rol_key = self.input['form']['komisyon_uye']
         role = Role.objects.get(rol_key)
-        wf = BPMNWorkflow.objects.get(name='bap_etkinlik_basvuru_degerlendir')
+        wf = BPMNWorkflow.objects.get(name='bap_komisyon_uyesi_etkinlik_basvuru_degerlendir')
         today = datetime.today()
         wfi = WFInstance(
             wf=wf,
