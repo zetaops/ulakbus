@@ -9,7 +9,6 @@ from ..personel import Personel
 from pyoko import Model, field
 from zengine.lib.translation import gettext_lazy as _, gettext
 import datetime
-from .hitap_sebep import HitapSebep
 
 
 class NufusKayitlari(Model):
@@ -68,8 +67,8 @@ class HizmetKurs(Model):
     denklik_bolum = field.String(_(u"Denklik Bölüm"), index=True)
     kurum_onay_tarihi = field.Date(_(u"Kurum Onay Tarihi"), index=True, format="%d.%m.%Y")
     sync = field.Integer(_(u"Senkronize"), index=True, hidden=True)
-    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"),format="%d.%m.%Y")
-    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"),format="%d.%m.%Y")
+    ilk_gonderim_tarihi = field.DateTime(_(u"İlk Hitap'a Gönderim Tarihi"), format="%d.%m.%Y")
+    son_senkronize_tarihi = field.DateTime(_(u"Son Senkronize Tarihi"), format="%d.%m.%Y")
     personel = Personel()
 
     class Meta:

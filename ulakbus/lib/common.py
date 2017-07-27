@@ -6,6 +6,9 @@
 
 import datetime
 from math import floor
+
+from zengine.lib.catalog_data import catalog_data_manager
+
 from ulakbus import settings
 from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi, User
 from zengine.lib.translation import gettext as _
@@ -34,6 +37,23 @@ parola_kalibi = re.compile(
 
 e_posta_kalibi = re.compile('[^@]+@[^@]+\.[^@]+')
 
+
+def prepare_options_from_catalog_data(catalog_key):
+    """
+    prepare options from for field from catalog data
+    Args:
+
+        catalog_key (str): catalog key, e.g gender
+    Returns:
+        list: list of dict of options [{"value": 1, "label": "Male"},
+        {"value": 2, "label": "Female"}]
+    """
+    return [
+        {
+            "value": item['value'],
+            "label": item['name']
+        } for item in catalog_data_manager.get_all(catalog_key)
+    ]
 
 def get_temp_password():
     return uuid.uuid4().hex

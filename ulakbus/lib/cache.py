@@ -88,6 +88,16 @@ class DataModel(Cache):
         return hashlib.sha256("%s:%s" % (self.model._get_bucket_name(), kw_string)).hexdigest()
 
 
+class HitapPersonelGirisBilgileri(Cache):
+    """
+
+    """
+    PREFIX = "HITPER"
+
+    def __init__(self, key):
+        Cache.__init__(self, key, serialize=True)
+
+
 class ModelLabelValue(DataModel):
     """
 
@@ -106,13 +116,3 @@ class ModelQuery(DataModel):
 
     def get_data_to_cache(self):
         return [{"value": u.key, "label": u.name} for u in self.model.objects.all(**self.filters)]
-
-
-class HitapPersonelGirisBilgileri(Cache):
-    """
-
-    """
-    PREFIX = "HITPER"
-
-    def __init__(self, key):
-        Cache.__init__(self, key, serialize=True)

@@ -8,6 +8,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from collections import OrderedDict
 
+from ulakbus.lib.common import prepare_options_from_catalog_data
 from ulakbus.lib.data_grid import DataGrid
 
 from ulakbus.models import Personel
@@ -118,21 +119,3 @@ class PersonelDataGridView(CrudView):
     def csv_indir(self):
         grid = self.get_grid_data()
         self.output['download_url'] = grid.generate_csv_link()
-
-
-def prepare_options_from_catalog_data(catalog_key):
-    """
-    prepare options from for field from catalog data
-    Args:
-
-        catalog_key (str): catalog key, e.g gender
-    Returns:
-        list: list of dict of options [{"value": 1, "label": "Male"},
-        {"value": 2, "label": "Female"}]
-    """
-    return [
-        {
-            "value": item['value'],
-            "label": item['name']
-        } for item in catalog_data_manager.get_all(catalog_key)
-    ]

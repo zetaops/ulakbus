@@ -325,20 +325,8 @@ class PersonelAtama(CrudView):
             "msg": _(u'Atama İşlemi başarıyla gerçekleştirildi. ') + hitap_sonuc
         }
 
-    def hitap_bilgi_getir(self):
-        """
-        Personelin hitap bilgilerini getirir.
-
-        """
-        personel = Personel.objects.get(self.current.task_data['personel_id'])
-        hizmet_cetveli = TcknService(service_name='hizmet-cetveli-sync',
-                                     payload={"tckn": str(personel.tckn)})
-
-        try:
-            hizmet_cetveli.zato_request()
-            self.current.task_data['hitap_tamam'] = True
-        except:
-            self.current.task_data['hitap_tamam'] = False
+    def hitap_bilgileri_hazirla(self):
+        pass
 
 
 class EksikBilgiForm(JsonForm):
