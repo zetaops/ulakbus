@@ -117,7 +117,7 @@ class BAPProje(Model):
     basvuru_rolu = Role()
 
     # Komisyon kararıyla doldurulacak alanlar
-    proje_no = field.String(_(u"Proje No"))
+    proje_no = field.Integer(_(u"Proje No"))
     kabul_edilen_baslama_tarihi = field.Date(_(u"Kabul Edilen Başlama Tarihi"))
     kabul_edilen_butce = field.Float(_(u"Kabul Edilen Bütçe"))
 
@@ -135,13 +135,13 @@ class BAPProje(Model):
     teklif_edilen_baslama_tarihi = field.Date(_(u"Teklif Edilen Başlama Tarihi"))
     teklif_edilen_butce = field.Float(_(u"Teklif Edilen Bütçe"))
 
-    konu_ve_kapsam = field.Text(_(u"Konu ve Kapsam"), min_length=50, max_length=500)
-    literatur_ozeti = field.Text(_(u"Literatür Özeti"), min_length=50, max_length=500)
-    ozgun_deger = field.Text(_(u"Özgün Değer"), min_length=50, max_length=500)
-    hedef_ve_amac = field.Text(_(u"Hedef ve Amaç"), min_length=50, max_length=500)
-    yontem = field.Text(_(u"Yöntem"), min_length=50, max_length=500)
-    basari_olcutleri = field.Text(_(u"Başarı Ölçütleri"), min_length=50, max_length=500)
-    b_plani = field.Text(_(u"B Planı"), min_length=50, max_length=500)
+    konu_ve_kapsam = field.Text(_(u"Konu ve Kapsam"), min_length=650, max_length=1000)
+    literatur_ozeti = field.Text(_(u"Literatür Özeti"), min_length=650, max_length=1000)
+    ozgun_deger = field.Text(_(u"Özgün Değer"), min_length=650, max_length=1000)
+    hedef_ve_amac = field.Text(_(u"Hedef ve Amaç"), min_length=650, max_length=1000)
+    yontem = field.Text(_(u"Yöntem"), min_length=650, max_length=1000)
+    basari_olcutleri = field.Text(_(u"Başarı Ölçütleri"), min_length=650, max_length=1000)
+    b_plani = field.Text(_(u"B Planı"), min_length=650, max_length=1000)
 
     bitis_tarihi = field.Date(_(u"Tamamlanma Tarihi"))
 
@@ -171,6 +171,7 @@ class BAPProje(Model):
         soyad = field.String(_(u"Soyad"))
         nitelik = field.String(_(u"Nitelik"))
         calismaya_katkisi = field.String(_(u"Çalışmaya Katkısı"))
+        kurum = field.String(_(u"Kurum"))
 
     class UniversiteDisiUzmanlar(ListNode):
         class Meta:
@@ -234,6 +235,10 @@ class BAPProje(Model):
     def yurutucu_diger_projeler(self):
         return self.objects.filter(yurutucu=self.yurutucu)
 
+    @lazy_property
+    def proje_kodu(self):
+        return "%s%s" % (self.tur.kod, self.proje_no)
+
     class Meta:
         app = 'BAP'
         verbose_name = _(u"BAP Proje")
@@ -241,6 +246,7 @@ class BAPProje(Model):
         list_fields = ['ad', 'yurutucu']
         search_fields = ['ad']
         list_filters = ['durum']
+        unique_together = [('tur', 'proje_no')]
 
     def __unicode__(self):
         return "%s: %s" % (self.ad, self.yurutucu.__unicode__())
@@ -293,9 +299,7 @@ class BAPButcePlani(Model):
     class Meta:
         verbose_name = __(u"Bap Bütçe Planı")
         verbose_name_plural = __(u"Bap Bütçe Planları")
-        list_fields = ['_muhasebe_kod', 'kod_adi', 'ad', 'birim_fiyat', 'adet',
-                       'toplam_fiyat']
-
+        list_fields = ['kod_adi', 'ad', 'birim_fiyat', 'adet', 'toplam_fiyat']
     # Öğretim üyesinin seçeceği muhasebe kodları
     muhasebe_kod_genel = field.Integer(__(u"Muhasebe Kod"),
                                        choices='bap_ogretim_uyesi_gider_kodlari', default=1)
@@ -304,22 +308,23 @@ class BAPButcePlani(Model):
                                 default="03.2.6.90")
     kod_adi = field.String(__(u"Kod Adı"))
     ad = field.String(__(u"Alınacak Malzemenin Adı"))
-    birim_fiyat = field.Float(__(u"Birim Fiyat"))
+    birim_fiyat = field.Float(__(u"Birim Fiyat"),
+                              help_text=__(u"Birim fiyatlar KDV dahil fiyatlar olmalıdır!"))
     adet = field.Integer(__(u"Adet"))
     toplam_fiyat = field.Float(__(u"Toplam Fiyat"))
     gerekce = field.Text(__(u"Gerekçe"))
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
+    ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
     kazanan_firma = BAPFirma()
 
     def __unicode__(self):
-        return "%s / %s / %s" % (self.muhasebe_kod, self.kod_adi, self.ad)
+        return "%s / %s / %s" % (self.muhasebe_kod or self.muhasebe_kod_genel, self.kod_adi,
+                                 self.ad)
 
     def _muhasebe_kod(self):
-        return self.muhasebe_kod
-
-    _muhasebe_kod.title = __(u"Muhasebe Kodu")
+        return self.muhasebe_kod or self.muhasebe_kod_genel
 
 
 class BAPGundem(Model):
