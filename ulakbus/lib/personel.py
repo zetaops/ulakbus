@@ -11,15 +11,6 @@ from ulakbus.lib.date_time_helper import zaman_araligi
 
 __author__ = 'Ali Riza Keles'
 
-#2017 guncel gunluk yevmiye ucretleri
-EK_GOSTERGE_8K = 48.25
-EK_GOSTERGE_5800_8K = 45
-EK_GOSTERGE_3K_5800 = 42.25
-DERECE_1_4 = 37.25
-DERECE_5_15 = 36.25
-
-#km katsayisi
-KM_KATSAYISI = 5 / 100.0
 
 def personel_izin_gunlerini_getir(okutman, yil, ay):
     """
@@ -205,8 +196,6 @@ def terfi_tarhine_gore_personel_listesi(baslangic_tarihi=None, bitis_tarihi=None
     return personeller
 
 
-
-
 def yevmiye_ucreti(derece, ek_gosterge):
 
     """
@@ -214,7 +203,7 @@ def yevmiye_ucreti(derece, ek_gosterge):
     Ek göstergesi 5800(dahil)-8000 (hariç) olan kadrolarda bulunanlar 45
     Ek göstergesi 3000(dahil)-5800(hariç) olan kadrolarda bulunanlar 42,25
     Aylık/kadro derecesi 1-4 olanlar 37,25
-    Aylık/kadro derecesi 5-15 olanlar
+    Aylık/kadro derecesi 5-15 olanlar, 36,25
 
     Args:
         derece (int): yevmiye için personel derecesi
@@ -224,6 +213,8 @@ def yevmiye_ucreti(derece, ek_gosterge):
         personelin derecesine yada ek gostergesine baglı olarak gunluk yevmiye
 
     """
+    from ulakbus.settings import EK_GOSTERGE_8K,EK_GOSTERGE_5800_8K,EK_GOSTERGE_3K_5800
+    from ulakbus.settings import DERECE_1_4,DERECE_5_15
 
     if ek_gosterge >= 8000:
         return EK_GOSTERGE_8K
@@ -279,11 +270,10 @@ def yevmiye_hesapla(konaklama_gun_sayisi, derece, ek_gosterge):
     return toplam
 
 
-
 def yol_masrafi_hesapla(derece, ek_gosterge, km, tasit_ucreti, yolculuk_gun_sayisi,
                         birey_sayisi):
-    """
 
+    """
     Bu metot toplam yol masraflarını hesaplar
 
     Yevmiye-Yol mesafe ücreti-Taşıt ücreti-Seyahat günlerine ait yevmiyeler
@@ -305,6 +295,9 @@ def yol_masrafi_hesapla(derece, ek_gosterge, km, tasit_ucreti, yolculuk_gun_sayi
         toplam_yol _masrafi (float) : birey sayısına gore toplam yol masrafı dondurulur
 
     """
+
+    from ulakbus.settings import KM_KATSAYISI
+
     yevmiye = yevmiye_ucreti(derece, ek_gosterge)
     mesafe_ucreti = yevmiye * KM_KATSAYISI
     tasit_ucreti = (birey_sayisi + 1) * tasit_ucreti
