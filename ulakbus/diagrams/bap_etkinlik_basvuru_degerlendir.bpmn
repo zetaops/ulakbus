@@ -37,11 +37,11 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1q6gfpa" sourceRef="etkinlik_basvuru_reddet" targetRef="EndEvent" />
     <bpmn:sequenceFlow id="SequenceFlow_1mwzin2" sourceRef="etkinlik_basvuru_onayla" targetRef="EndEvent" />
-    <bpmn:serviceTask id="etkinlik_basvuru_onayla" name="Onayla" camunda:class="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.">
+    <bpmn:serviceTask id="etkinlik_basvuru_onayla" name="Onayla" camunda:class="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.onayla">
       <bpmn:incoming>SequenceFlow_117044k</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1mwzin2</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="etkinlik_basvuru_reddet" name="Reddet" camunda:class="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.">
+    <bpmn:serviceTask id="etkinlik_basvuru_reddet" name="Reddet" camunda:class="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.reddet">
       <bpmn:incoming>SequenceFlow_0ckh8n6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1q6gfpa</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -49,7 +49,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='daha_sonra_degerlendir']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0ih84na" sourceRef="daha_sonra_degerlendir" targetRef="etkinlik_basvuru_degerlendir" />
-    <bpmn:serviceTask id="daha_sonra_degerlendir" name="Daha Sonra Değerlendir" camunda:class="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.">
+    <bpmn:serviceTask id="daha_sonra_degerlendir" name="Daha Sonra Değerlendir" camunda:class="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.daha_sonra_degerlendir">
       <bpmn:incoming>SequenceFlow_1aw4t50</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ih84na</bpmn:outgoing>
     </bpmn:serviceTask>

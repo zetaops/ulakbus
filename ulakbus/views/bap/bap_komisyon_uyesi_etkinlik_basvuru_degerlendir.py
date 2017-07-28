@@ -57,7 +57,7 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
         self.form_out(form)
 
     def hakem_sec(self):
-        form = HakemSecForm()
+        form = HakemSecForm(current=self.current)
         self.form_out(form)
         self.output["meta"]["allow_add_listnode"] = False
         self.output['meta']['allow_actions'] = False
@@ -65,7 +65,7 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
 
     def hakeme_gonder(self):
         etkinlik = BAPEtkinlikProje.objects.get(self.current.task_data['etkinlik_basvuru_id'])
-        hakem_id = self.input['forms']['hakem_id']
+        hakem_id = self.input['form']['hakem_id']
         hakem = Okutman.objects.get(hakem_id)
         role = hakem.personel.user.role_set[0].role
 

@@ -488,14 +488,14 @@ class ProjeBasvuru(CrudView):
         """
         Öğretim üyesinin laboratuvar arayıp başvurusuna dahil ettiği adımdır.
         """
-        form = LabEkleForm()
+        form = LabEkleForm(current=self.current)
         self.form_out(form)
 
     def personel_ekle(self):
         """
         Öğretim üyesinin personel arayıp başvurusuna dahil ettiği adımdır.
         """
-        form = PersonelEkleForm()
+        form = PersonelEkleForm(self.current)
         self.form_out(form)
 
     def olanak_kaydet(self):

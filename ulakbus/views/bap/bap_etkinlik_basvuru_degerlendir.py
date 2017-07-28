@@ -11,6 +11,7 @@ from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy as __
+from datetime import datetime
 
 
 class EtkinlikBasvuruDegerlendirForm(JsonForm):
@@ -81,6 +82,8 @@ class BAPEtkinlikBasvuruDegerlendir(CrudView):
         """
         key = self.current.task_data['etkinlik_basvuru_id']
         etkinlik = BAPEtkinlikProje.objects.get(key)
+        etkinlik.onay_tarihi = datetime.today()
+        etkinlik.blocking_save()
         msg = _(u"%s başlıklı bilimsel etkinlik projesi başvurunuz onaylanmıştır." %
                 etkinlik.bildiri_basligi)
         self.red_onay(etkinlik, 2, msg)
