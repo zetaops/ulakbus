@@ -1,0 +1,5405 @@
+# English translations for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-02-23 16:42+0300\n"
+"PO-Revision-Date: 2017-02-23 16:50+0300\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+"Last-Translator: Anil Can Aydin <anlcnydn@gmail.com>\n"
+"X-Generator: Poedit 1.8.12\n"
+
+#: lib/common.py:245
+msgid "Kullanıcı adınızı yanlış girdiniz. Lütfen tekrar deneyiniz."
+msgstr ""
+
+#: lib/common.py:248
+msgid "Yeni kullanıcı adınız ile eski kullanıcı adınız aynı olmamalıdır."
+msgstr ""
+
+#: lib/common.py:251
+msgid ""
+"Böyle bir kullanıcı adı bulunmaktadır.\n"
+"        Lütfen başka bir kullanıcı adı deneyiniz."
+msgstr ""
+
+#: lib/common.py:274
+msgid "Kullanmakta olduğunuz parolanızı yanlış girdiniz."
+msgstr ""
+
+#: lib/common.py:276
+msgid "Yeni parolanız ve tekrarı uyuşmamaktadır."
+msgstr ""
+
+#: lib/common.py:278
+msgid "Yeni parolanız ile eski parolanız aynı olmamalıdır."
+msgstr ""
+
+#: lib/common.py:280
+msgid ""
+"Girmiş olduğunuz parola kurallara uymamaktadır.\n"
+"        Lütfen parola kural setini dikkate alarak tekrar deneyiniz."
+msgstr ""
+
+#: lib/date_time_helper.py:19
+msgid "Sabah"
+msgstr ""
+
+#: lib/date_time_helper.py:20
+msgid "Öğle"
+msgstr ""
+
+#: lib/date_time_helper.py:21
+msgid "Akşam"
+msgstr ""
+
+#: lib/raporlama_eklentisi.py:95
+msgid "İçeren"
+msgstr ""
+
+#: lib/raporlama_eklentisi.py:130 models/auth.py:510 models/ogrenci.py:548
+#: models/ogrenci.py:1219 models/personel.py:449
+#: views/common/akademik_takvim.py:77
+msgid "Başlangıç"
+msgstr ""
+
+#: lib/raporlama_eklentisi.py:133 models/auth.py:511 models/ogrenci.py:1220
+#: models/personel.py:450 views/common/akademik_takvim.py:78
+msgid "Bitiş"
+msgstr ""
+
+#: lib/raporlama_eklentisi.py:141
+msgid "En çok"
+msgstr ""
+
+#: lib/raporlama_eklentisi.py:144
+msgid "En az"
+msgstr ""
+
+#: lib/raporlama_eklentisi.py:151
+msgid "Başlayan"
+msgstr ""
+
+#: lib/raporlama_eklentisi.py:161 models/ders_sinav_programi.py:80
+#: models/ders_sinav_programi.py:100 models/ogrenci.py:1172 models/personel.py:96
+#: models/personel.py:285 models/personel.py:419
+msgid "Birim"
+msgstr ""
+
+#: lib/raporlama_eklentisi.py:163 views/personel/atama.py:387
+msgid "Başlama Sebep"
+msgstr ""
+
+#: lib/role.py:29
+msgid "Fakülte Yönetim Kurulu Üyesi"
+msgstr ""
+
+#: lib/role.py:30
+msgid "Fakülte Yönetim Kurulu Başkanı (Dekan)"
+msgstr ""
+
+#: lib/role.py:31
+msgid "Fakülte Dekan Sekreteri"
+msgstr ""
+
+#: lib/role.py:32
+msgid "Fakülte Dekanı"
+msgstr ""
+
+#: lib/role.py:33
+msgid "Fakülte Öğrenci İşleri Şefi"
+msgstr ""
+
+#: lib/role.py:34
+msgid "Fakülte Kurulu Üyesi"
+msgstr ""
+
+#: lib/role.py:35
+msgid "Fakülte Sekreteri"
+msgstr ""
+
+#: lib/role.py:36
+msgid "Fakülte Etik Kurulu Başkanı"
+msgstr ""
+
+#: lib/role.py:37
+msgid "Fakülte Etik Kurulu Üyesi"
+msgstr ""
+
+#: lib/role.py:38
+msgid "Fakülte Öğrenci İşleri Personeli"
+msgstr ""
+
+#: lib/role.py:39
+msgid "Fakülte Dekan Yardımcısı"
+msgstr ""
+
+#: lib/role.py:40
+msgid "Fakülte Kurulu Başkanı (Dekan)"
+msgstr ""
+
+#: lib/role.py:41
+msgid "Enstitü Müdürü"
+msgstr ""
+
+#: lib/role.py:42
+msgid "Enstitü Yönetim Kurulu Başkanı"
+msgstr ""
+
+#: lib/role.py:43
+msgid "Enstitü Öğrenci İşleri Personeli"
+msgstr ""
+
+#: lib/role.py:44
+msgid "Enstitü Yönetim Kurulu Üyesi"
+msgstr ""
+
+#: lib/role.py:45
+msgid "Enstitü Sekreteri"
+msgstr ""
+
+#: lib/role.py:46
+msgid "Enstitü Öğrenci İşleri Şefi"
+msgstr ""
+
+#: lib/role.py:47
+msgid "Enstitü Müdür Yardımcısı"
+msgstr ""
+
+#: lib/role.py:48
+msgid "Enstitü Muhasebe İşleri Personeli"
+msgstr ""
+
+#: lib/role.py:49
+msgid "Enstitü Kurulu Üyesi"
+msgstr ""
+
+#: lib/role.py:50
+msgid "Enstitü Muhasebe İşleri Şefi"
+msgstr ""
+
+#: lib/role.py:51
+msgid "Enstitü Kurulu Başkanı"
+msgstr ""
+
+#: lib/role.py:52
+msgid "Yüksekokul Kurulu Başkanı"
+msgstr ""
+
+#: lib/role.py:53
+msgid "Yüksekokul Yönetim Kurulu Başkanı"
+msgstr ""
+
+#: lib/role.py:54
+msgid "Yüksekokul Birim Koordinatörü"
+msgstr ""
+
+#: lib/role.py:55
+msgid "Yüksekokul Yönetim Kurulu Üyesi"
+msgstr ""
+
+#: lib/role.py:56
+msgid "Yüksekokul Müdürü"
+msgstr ""
+
+#: lib/role.py:57
+msgid "Yüksekokul Müdür Yardımcısı"
+msgstr ""
+
+#: lib/role.py:58
+msgid "Yüksekokul Sekreteri"
+msgstr ""
+
+#: lib/role.py:59
+msgid "Yüksekokul Öğrenci İşleri Şefi"
+msgstr ""
+
+#: lib/role.py:60
+msgid "Yüksekokul Kurulu Üyesi"
+msgstr ""
+
+#: lib/role.py:61
+msgid "Yüksekokul Muhasebe İşleri Şefi"
+msgstr ""
+
+#: lib/role.py:62
+msgid "Yüksekokul Muhasebe İşleri Personeli"
+msgstr ""
+
+#: lib/role.py:63
+msgid "Yüksekokul Öğrenci İşleri Personeli"
+msgstr ""
+
+#: lib/role.py:64
+msgid "Tıp Fakültesi Eğitim Komisyonu Üyesi"
+msgstr ""
+
+#: lib/role.py:65
+msgid "Tıp Fakültesi Baş Koordinatör Yardımcısı"
+msgstr ""
+
+#: lib/role.py:66
+msgid "Tıp Fakültesi Eğitim Komisyonu Başkanı"
+msgstr ""
+
+#: lib/role.py:67
+msgid "Tıp Fakültesi Dönem Koordinatörü"
+msgstr ""
+
+#: lib/role.py:68
+msgid "Tıp Fakültesi Baş Koordinatörü"
+msgstr ""
+
+#: lib/role.py:69
+msgid "Ön Lisans Programı Öğrencisi - Aktif"
+msgstr ""
+
+#: lib/role.py:70
+msgid "Ön Lisans Programı Öğrencisi - Kayıt Silinmiş"
+msgstr ""
+
+#: lib/role.py:71
+msgid "Ön Lisans Programı Öğrencisi - Kayıt Dondurmuş"
+msgstr ""
+
+#: lib/role.py:72
+msgid "Lisans Programı Öğrencisi - Aktif"
+msgstr ""
+
+#: lib/role.py:73
+msgid "Lisans Programı Öğrencisi - Kayıt Silinmiş"
+msgstr ""
+
+#: lib/role.py:74
+msgid "Lisans Programı Öğrencisi - Kayıt Dondurmuş"
+msgstr ""
+
+#: lib/role.py:75
+msgid "Yüksek Lisans Programı Öğrencisi - Aktif"
+msgstr ""
+
+#: lib/role.py:76
+msgid "Yüksek Lisans Programı Öğrencisi - Kayıt Silinmiş"
+msgstr ""
+
+#: lib/role.py:77
+msgid "Yüksek Lisans Programı Öğrencisi - Kayıt Dondurmuş"
+msgstr ""
+
+#: lib/role.py:78
+msgid "Doktora Programı Öğrencisi - Aktif"
+msgstr ""
+
+#: lib/role.py:79
+msgid "Doktora Programı Öğrencisi - Kayıt Silinmiş"
+msgstr ""
+
+#: lib/role.py:80
+msgid "Doktora Programı Öğrencisi - Kayıt Dondurmuş"
+msgstr ""
+
+#: lib/role.py:81 models/ders_sinav_programi.py:79
+#: models/ders_sinav_programi.py:108 models/ders_sinav_programi.py:166
+#: models/ogrenci.py:1057
+msgid "Öğretim Elemanı"
+msgstr ""
+
+#: lib/role.py:82
+msgid "Ana Bilim Dalı Üyesi"
+msgstr ""
+
+#: lib/role.py:83
+msgid "Ana Bilim Dalı Başkanı"
+msgstr ""
+
+#: lib/role.py:84
+msgid "Bilim Dalı Üyesi"
+msgstr ""
+
+#: lib/role.py:85
+msgid "Bilim Dalı Başkanı"
+msgstr ""
+
+#: lib/role.py:86 models/ogrenci.py:403
+msgid "Bölüm Başkanı"
+msgstr ""
+
+#: lib/role.py:87
+msgid "Bölüm Kurulu Başkanı"
+msgstr ""
+
+#: lib/role.py:88
+msgid "Bölüm Kurulu Üyesi"
+msgstr ""
+
+#: lib/role.py:89
+msgid "Bölüm Sekreteri"
+msgstr ""
+
+#: lib/role.py:90
+msgid "Daire Başkanı"
+msgstr ""
+
+#: lib/role.py:91
+msgid "Şube Şefi"
+msgstr ""
+
+#: lib/role.py:92
+msgid "Daire Şube Müdürü"
+msgstr ""
+
+#: lib/role.py:93
+msgid "Daire Personeli"
+msgstr ""
+
+#: lib/role.py:94
+msgid "Rektör"
+msgstr ""
+
+#: lib/role.py:95
+msgid "Danışman"
+msgstr ""
+
+#: lib/role.py:96
+msgid "Ders Programı Koordinatörü"
+msgstr ""
+
+#: lib/role.py:97
+msgid "BaseAbsRole"
+msgstr ""
+
+#: lib/role.py:98
+msgid "Genel Sekreter"
+msgstr ""
+
+#: lib/role.py:99
+msgid "Mutemet"
+msgstr ""
+
+#: models/akademik_faaliyet.py:27
+msgid "Akademik Faaliyet Türü"
+msgstr ""
+
+#: models/akademik_faaliyet.py:28
+msgid "Akademik Faaliyet Türleri"
+msgstr ""
+
+#: models/akademik_faaliyet.py:33
+#, python-format
+msgid "%(faaliyet)s | %(detay)s"
+msgstr ""
+
+#: models/akademik_faaliyet.py:49
+msgid "Faaliyet Tipi"
+msgstr ""
+
+#: models/akademik_faaliyet.py:50 views/personel/akademik_faaliyet.py:241
+msgid "Faaliyet Adı"
+msgstr ""
+
+#: models/akademik_faaliyet.py:51 models/hitap/hitap.py:151
+#: models/hitap/hitap.py:288 models/hitap/hitap.py:320 models/hitap/hitap.py:341
+#: models/hitap/hitap.py:365 models/hitap/hitap.py:445 models/personel.py:283
+#: models/personel.py:345 views/personel/akademik_faaliyet.py:241
+#: views/personel/gorevlendirme.py:64
+msgid "Başlama Tarihi"
+msgstr ""
+
+#: models/akademik_faaliyet.py:52 models/hitap/hitap.py:152
+#: models/hitap/hitap.py:289 models/hitap/hitap.py:321 models/hitap/hitap.py:342
+#: models/hitap/hitap.py:366 models/hitap/hitap.py:446 models/ogrenci.py:56
+#: models/personel.py:284 models/personel.py:346 models/personel.py:617
+#: views/common/yeni_donem_olusturma.py:23
+#: views/common/yeni_donem_olusturma.py:26
+#: views/personel/akademik_faaliyet.py:241 views/personel/gorevlendirme.py:64
+#: views/personel/kadro.py:412
+msgid "Bitiş Tarihi"
+msgstr ""
+
+#: models/akademik_faaliyet.py:53 models/ders_sinav_programi.py:131
+#: models/hitap/hitap.py:33 models/personel.py:418 views/ogrenci/ogrenci.py:649
+#: views/personel/atama.py:402
+msgid "Durum"
+msgstr ""
+
+#: models/akademik_faaliyet.py:54
+msgid "Kaç kişiyle yapıldığı"
+msgstr ""
+
+#: models/akademik_faaliyet.py:55 models/hitap/hitap.py:184
+#: models/hitap/hitap.py:367 models/personel.py:286 models/personel.py:311
+#: models/personel.py:354 models/personel.py:368
+msgid "Görev"
+msgstr ""
+
+#: models/akademik_faaliyet.py:60
+msgid "Akademik Faaliyet"
+msgstr ""
+
+#: models/akademik_faaliyet.py:61
+msgid "Akademik Faaliyetler"
+msgstr ""
+
+#: models/akademik_faaliyet.py:66
+#, python-format
+msgid "%(ad)s %(tur)s"
+msgstr ""
+
+#: models/auth.py:48
+msgid "Profil Fotoğrafı"
+msgstr ""
+
+#: models/auth.py:49
+msgid "Kullanıcı Adı"
+msgstr ""
+
+#: models/auth.py:50
+msgid "Parola"
+msgstr ""
+
+#: models/auth.py:51 models/ogrenci.py:221 models/ogrenci.py:695
+#: models/personel.py:44
+msgid "E-Posta"
+msgstr ""
+
+#: models/auth.py:52 models/hitap/hitap.py:282 models/ogrenci.py:54
+#: models/ogrenci.py:299 models/ogrenci.py:434 models/ogrenci.py:528
+#: models/ogrenci.py:666 views/ders_programi/program_olustur.py:213
+#: views/ders_programi/program_olustur.py:227 views/personel/kadro.py:292
+msgid "Ad"
+msgstr ""
+
+#: models/auth.py:53 models/hitap/hitap.py:283 models/ogrenci.py:300
+#: models/ogrenci.py:667 views/ders_programi/program_olustur.py:213
+#: views/ders_programi/program_olustur.py:228
+msgid "Soyad"
+msgstr ""
+
+#: models/auth.py:54
+msgid "Super user"
+msgstr ""
+
+#: models/auth.py:55
+msgid "Son Giriş Yapılan Rol"
+msgstr ""
+
+#: models/auth.py:57
+msgid "Tercih Edilen Dil Formatı"
+msgstr ""
+
+#: models/auth.py:62
+msgid "Tercih Edilen Gün ve Zaman Formatı"
+msgstr ""
+
+#: models/auth.py:65
+msgid "Tercih Edilen Sayı Formatı"
+msgstr ""
+
+#: models/auth.py:71
+msgid "Kullanıcı"
+msgstr ""
+
+#: models/auth.py:72
+msgid "Kullanıcılar"
+msgstr ""
+
+#: models/auth.py:117 models/auth.py:169 models/auth.py:241
+#: models/buildings_rooms.py:35 models/buildings_rooms.py:71
+#: models/buildings_rooms.py:127 views/personel/kadro.py:374
+msgid "İsim"
+msgstr ""
+
+#: models/auth.py:118
+msgid "Kod Adı"
+msgstr ""
+
+#: models/auth.py:119 models/ogrenci.py:394 models/ogrenci.py:436
+msgid "Tanım"
+msgstr ""
+
+#: models/auth.py:123
+msgid "Yetki"
+msgstr ""
+
+#: models/auth.py:124
+msgid "Yetkiler"
+msgstr ""
+
+#: models/auth.py:168
+msgid "ID No"
+msgstr ""
+
+#: models/auth.py:170
+msgid "Read Only"
+msgstr ""
+
+#: models/auth.py:174
+msgid "Soyut Rol"
+msgstr ""
+
+#: models/auth.py:175
+msgid "Soyut Roller"
+msgstr ""
+
+#: models/auth.py:242
+msgid "Tam İsim"
+msgstr ""
+
+#: models/auth.py:243
+msgid "Yoksis ID"
+msgstr ""
+
+#: models/auth.py:244
+msgid "Birim Tipi"
+msgstr ""
+
+#: models/auth.py:245
+msgid "Üst Birim ID"
+msgstr ""
+
+#: models/auth.py:246
+msgid "Guncel Durum"
+msgstr ""
+
+#: models/auth.py:247
+msgid "Öğrenim Dili"
+msgstr ""
+
+#: models/auth.py:248
+msgid "Öğrenme Tipi"
+msgstr ""
+
+#: models/auth.py:249
+msgid "ÖSYM Kodu"
+msgstr ""
+
+#: models/auth.py:250 models/personel.py:615
+msgid "Açılış Tarihi"
+msgstr ""
+
+#: models/auth.py:251
+msgid "Öğrenme Süresi"
+msgstr ""
+
+#: models/auth.py:252
+msgid "İngilizce Birim Adı."
+msgstr ""
+
+#: models/auth.py:253
+msgid "Birim Kontenjan"
+msgstr ""
+
+#: models/auth.py:254
+msgid "Şehir Kodu"
+msgstr ""
+
+#: models/auth.py:255
+msgid "Semt Kodu"
+msgstr ""
+
+#: models/auth.py:256
+msgid "Birim Grup"
+msgstr ""
+
+#: models/auth.py:257
+msgid "FOET Kodu"
+msgstr ""
+
+#: models/auth.py:258 views/personel/kadro.py:415 views/system.py:201
+msgid "Akademik"
+msgstr ""
+
+#: models/auth.py:259 models/buildings_rooms.py:137 models/ogrenci.py:254
+#: views/personel/izin.py:56
+msgid "Aktif"
+msgstr ""
+
+#: models/auth.py:261
+msgid "Üst Birim"
+msgstr ""
+
+#: models/auth.py:286
+msgid "Unit"
+msgstr ""
+
+#: models/auth.py:287
+msgid "Units"
+msgstr ""
+
+#: models/auth.py:296 models/personel.py:133
+#: views/personel/akademik_faaliyet.py:241 views/system.py:200
+msgid "Personel"
+msgstr ""
+
+#: models/auth.py:297
+msgid "Ogrenci"
+msgstr ""
+
+#: models/auth.py:298
+msgid "Harici"
+msgstr ""
+
+#: models/auth.py:324
+msgid "Rol Tipi"
+msgstr ""
+
+#: models/auth.py:325
+msgid "Rol Adı"
+msgstr ""
+
+#: models/auth.py:329
+msgid "Rol"
+msgstr ""
+
+#: models/auth.py:330
+msgid "Roller"
+msgstr ""
+
+#: models/auth.py:334
+msgid "İzinleri Düzenle"
+msgstr ""
+
+#: models/auth.py:352
+#, python-format
+msgid "Role %s"
+msgstr ""
+
+#: models/auth.py:509
+msgid "Yasakla / İzin Ver"
+msgstr ""
+
+#: models/auth.py:519
+msgid "Sınırlandırılmış Yetki"
+msgstr ""
+
+#: models/auth.py:520
+msgid "Sınırlandırılmış Yetkiler"
+msgstr ""
+
+#: models/buildings_rooms.py:34 models/buildings_rooms.py:70
+#: models/buildings_rooms.py:126 models/ogrenci.py:435
+msgid "Kod"
+msgstr ""
+
+#: models/buildings_rooms.py:36 models/buildings_rooms.py:72
+msgid "X Koordinatı"
+msgstr ""
+
+#: models/buildings_rooms.py:37 models/buildings_rooms.py:73
+msgid "Y Koordinatı"
+msgstr ""
+
+#: models/buildings_rooms.py:40
+msgid "Yerleşke"
+msgstr ""
+
+#: models/buildings_rooms.py:41
+msgid "Yerleşkeler"
+msgstr ""
+
+#: models/buildings_rooms.py:77
+msgid "Bina"
+msgstr ""
+
+#: models/buildings_rooms.py:78
+msgid "Binalar"
+msgstr ""
+
+#: models/buildings_rooms.py:102 models/buildings_rooms.py:107
+#: models/buildings_rooms.py:128
+msgid "Oda Tipi"
+msgstr ""
+
+#: models/buildings_rooms.py:103 models/ogrenci.py:230 models/ogrenci.py:1065
+#: models/personel.py:54 models/personel.py:244
+msgid "Notlar"
+msgstr "Grades"
+
+#: models/buildings_rooms.py:104
+msgid "Sınav Amaçlı Kullanılabilir"
+msgstr ""
+
+#: models/buildings_rooms.py:108
+msgid "Oda Tipleri"
+msgstr ""
+
+#: models/buildings_rooms.py:129 models/ders_sinav_programi.py:42
+#: models/ders_sinav_programi.py:169 models/ders_sinav_programi.py:209
+#: models/ders_sinav_programi.py:331 models/ders_sinav_programi.py:352
+#: models/hitap/hitap.py:90 models/ogrenci.py:390 models/ogrenci.py:410
+#: models/ogrenci.py:800
+msgid "Bölüm"
+msgstr ""
+
+#: models/buildings_rooms.py:132
+msgid "Kat"
+msgstr ""
+
+#: models/buildings_rooms.py:133
+msgid "Kapasite"
+msgstr ""
+
+#: models/buildings_rooms.py:135
+msgid "Sınav Kapasitesi"
+msgstr ""
+
+#: models/buildings_rooms.py:141
+msgid "Oda"
+msgstr ""
+
+#: models/buildings_rooms.py:142
+msgid "Odalar"
+msgstr ""
+
+#: models/ders_sinav_programi.py:21
+msgid "Uygun"
+msgstr ""
+
+#: models/ders_sinav_programi.py:22
+msgid "Mümkünse Uygun Değil"
+msgstr ""
+
+#: models/ders_sinav_programi.py:23
+msgid "Kesinlikle Uygun Değil"
+msgstr ""
+
+#: models/ders_sinav_programi.py:29
+msgid "Herkese Açık"
+msgstr ""
+
+#: models/ders_sinav_programi.py:30
+msgid "Bölüme Ait"
+msgstr ""
+
+#: models/ders_sinav_programi.py:31
+msgid "Herkese Kapalı"
+msgstr ""
+
+#: models/ders_sinav_programi.py:37 models/ders_sinav_programi.py:102
+msgid "Zaman Dilimi"
+msgstr ""
+
+#: models/ders_sinav_programi.py:38
+msgid "Zaman Dilimleri"
+msgstr ""
+
+#: models/ders_sinav_programi.py:43 models/ders_sinav_programi.py:332
+#: views/ders_programi/zaman_dilimi.py:23
+msgid "Gün Dilimi"
+msgstr ""
+
+#: models/ders_sinav_programi.py:45 models/ders_sinav_programi.py:333
+msgid "Başlama Saati"
+msgstr ""
+
+#: models/ders_sinav_programi.py:46 models/ders_sinav_programi.py:334
+msgid "Başlama Dakikası"
+msgstr ""
+
+#: models/ders_sinav_programi.py:48 models/ders_sinav_programi.py:129
+#: models/ders_sinav_programi.py:185 models/ders_sinav_programi.py:336
+#: views/ders_programi/zaman_dilimi.py:52
+msgid "Bitiş Saati"
+msgstr ""
+
+#: models/ders_sinav_programi.py:49 models/ders_sinav_programi.py:130
+#: models/ders_sinav_programi.py:186 models/ders_sinav_programi.py:337
+#: views/ders_programi/zaman_dilimi.py:53
+msgid "Bitiş Dakikası"
+msgstr ""
+
+#: models/ders_sinav_programi.py:52
+msgid "Ders Süresi"
+msgstr ""
+
+#: models/ders_sinav_programi.py:53
+msgid "Tenefüs Süresi"
+msgstr ""
+
+#: models/ders_sinav_programi.py:55
+msgid "Zaman Dilimi Süresi"
+msgstr ""
+
+#: models/ders_sinav_programi.py:74
+msgid "Öğretim Elemanı Zaman Kaydı"
+msgstr ""
+
+#: models/ders_sinav_programi.py:75
+msgid "Öğretim Elemanı Zaman Kayıtları"
+msgstr ""
+
+#: models/ders_sinav_programi.py:81
+msgid "Öğretim Elemanı Toplam Ders Saati"
+msgstr ""
+
+#: models/ders_sinav_programi.py:94
+msgid "Zaman Cetveli"
+msgstr ""
+
+#: models/ders_sinav_programi.py:95
+msgid "Zaman Cetvelleri"
+msgstr ""
+
+#: models/ders_sinav_programi.py:101 models/ders_sinav_programi.py:126
+#: models/ders_sinav_programi.py:182 models/ders_sinav_programi.py:356
+#: models/personel.py:579
+msgid "Gün"
+msgstr ""
+
+#: models/ders_sinav_programi.py:104 models/ders_sinav_programi.py:355
+msgid "Uygunluk Durumu"
+msgstr ""
+
+#: models/ders_sinav_programi.py:117
+msgid "Derslik Zaman Planı"
+msgstr ""
+
+#: models/ders_sinav_programi.py:118
+msgid "Derslik Zaman Planları"
+msgstr ""
+
+#: models/ders_sinav_programi.py:127 models/ders_sinav_programi.py:183
+#: views/ders_programi/zaman_dilimi.py:50
+msgid "Başlangıç Saati"
+msgstr ""
+
+#: models/ders_sinav_programi.py:128 models/ders_sinav_programi.py:184
+#: views/ders_programi/zaman_dilimi.py:51
+msgid "Başlangıç Dakikası"
+msgstr ""
+
+#: models/ders_sinav_programi.py:158
+msgid "Ders Etkinliği"
+msgstr ""
+
+#: models/ders_sinav_programi.py:159
+msgid "Ders Etkinlikleri"
+msgstr ""
+
+#: models/ders_sinav_programi.py:162
+msgid "Ders Planı Çözüm Durumu"
+msgstr ""
+
+#: models/ders_sinav_programi.py:164
+msgid "Bölüm Yöksis Numarası"
+msgstr ""
+
+#: models/ders_sinav_programi.py:165
+msgid "İşleneceği Oda Türü"
+msgstr ""
+
+#: models/ders_sinav_programi.py:167 models/ders_sinav_programi.py:206
+#: models/ogrenci.py:560
+msgid "Şube"
+msgstr ""
+
+#: models/ders_sinav_programi.py:168 models/ders_sinav_programi.py:208
+#: models/ogrenci.py:105 models/ogrenci.py:788 models/ogrenci.py:1056
+#: views/ogrenci/ogrenci.py:483
+msgid "Dönem"
+msgstr ""
+
+#: models/ders_sinav_programi.py:170
+msgid "Ders Planı Yayınlanma Durumu"
+msgstr ""
+
+#: models/ders_sinav_programi.py:172 models/ders_sinav_programi.py:207
+#: models/ogrenci.py:493 views/ogrenci/ogrenci.py:693
+msgid "Ders"
+msgstr ""
+
+#: models/ders_sinav_programi.py:181 models/ders_sinav_programi.py:351
+msgid "Derslik"
+msgstr ""
+
+#: models/ders_sinav_programi.py:202
+msgid "Sınav Etkinliği"
+msgstr ""
+
+#: models/ders_sinav_programi.py:203
+msgid "Sınav Etkinlikleri"
+msgstr ""
+
+#: models/ders_sinav_programi.py:212
+msgid "Sınav Planı Çözüm Durumu"
+msgstr ""
+
+#: models/ders_sinav_programi.py:215
+msgid "Sınav Planı Yayınlanma Durumu"
+msgstr ""
+
+#: models/ders_sinav_programi.py:218
+msgid "Arşivlenmiş"
+msgstr ""
+
+#: models/ders_sinav_programi.py:220 models/ogrenci.py:606 models/ogrenci.py:1059
+msgid "Sınav Tarihi"
+msgstr ""
+
+#: models/ders_sinav_programi.py:223 models/ders_sinav_programi.py:227
+msgid "Sınav Yeri"
+msgstr ""
+
+#: models/ders_sinav_programi.py:226
+msgid "Öğrenci"
+msgstr ""
+
+#: models/ders_sinav_programi.py:321
+msgid "Henüz zamanlanmadi"
+msgstr ""
+
+#: models/ders_sinav_programi.py:326 models/ders_sinav_programi.py:354
+msgid "Sınav Zaman Dilimi"
+msgstr ""
+
+#: models/ders_sinav_programi.py:327
+msgid "Sınav Zaman Dilimleri"
+msgstr ""
+
+#: models/ders_sinav_programi.py:346
+msgid "Derslik Sınav Planı"
+msgstr ""
+
+#: models/ders_sinav_programi.py:347
+msgid "Derslik Sınav Planları"
+msgstr ""
+
+#: models/ders_sinav_programi.py:353
+msgid "Güncel Dönem"
+msgstr ""
+
+#: models/form.py:27
+msgid "Form Adı"
+msgstr ""
+
+#: models/form.py:28
+msgid "File"
+msgstr ""
+
+#: models/form.py:31
+msgid "Form Tarihi"
+msgstr ""
+
+#: models/form.py:35
+msgid "Form"
+msgstr ""
+
+#: models/form.py:36
+msgid "Formlar"
+msgstr ""
+
+#: models/form.py:52 models/form.py:59 models/form.py:60
+msgid "Form Data"
+msgstr ""
+
+#: models/form.py:55
+msgid "Form Data Tarihi"
+msgstr ""
+
+#: models/ogrenci.py:34 models/ogrenci.py:392 models/ogrenci.py:1055
+msgid "Yıl"
+msgstr ""
+
+#: models/ogrenci.py:35 models/ogrenci.py:58 models/ogrenci.py:1174
+msgid "Öğretim Yılı"
+msgstr ""
+
+#: models/ogrenci.py:55 models/ogrenci.py:1272 models/personel.py:616
+#: views/common/yeni_donem_olusturma.py:22
+#: views/common/yeni_donem_olusturma.py:24 views/personel/kadro.py:409
+msgid "Başlangıç Tarihi"
+msgstr ""
+
+#: models/ogrenci.py:106
+msgid "Dönemler"
+msgstr ""
+
+#: models/ogrenci.py:206 models/personel.py:31 views/personel/personel_test.py:21
+#: views/personel/yeni_personel.py:180
+msgid "TC No"
+msgstr ""
+
+#: models/hitap/hitap.py:17 models/ogrenci.py:207 models/ogrenci.py:393
+#: models/personel.py:33
+msgid "Adı"
+msgstr ""
+
+#: models/hitap/hitap.py:18 models/ogrenci.py:208 models/personel.py:34
+msgid "Soyadı"
+msgstr ""
+
+#: models/hitap/hitap.py:21 models/ogrenci.py:209 models/ogrenci.py:668
+#: models/personel.py:35 views/ogrenci/ogrenci.py:248
+msgid "Cinsiyet"
+msgstr ""
+
+#: models/ogrenci.py:210 models/ogrenci.py:692 models/personel.py:36
+#: views/ogrenci/ogrenci.py:250
+msgid "Uyruk"
+msgstr ""
+
+#: models/ogrenci.py:211 models/ogrenci.py:693 models/personel.py:65
+#: views/ogrenci/ogrenci.py:255
+msgid "Medeni Hali"
+msgstr ""
+
+#: models/ogrenci.py:213 models/personel.py:37
+#: views/personel/yeni_personel.py:222
+msgid "İkamet Adresi"
+msgstr ""
+
+#: models/ogrenci.py:214 models/ogrenci.py:685 models/personel.py:38
+msgid "İkamet İl"
+msgstr ""
+
+#: models/ogrenci.py:215 models/ogrenci.py:686 models/personel.py:39
+msgid "İkamet İlçe"
+msgstr ""
+
+#: models/ogrenci.py:216 models/personel.py:40
+#: views/personel/yeni_personel.py:225
+msgid "Adres 2"
+msgstr ""
+
+#: models/ogrenci.py:217 views/personel/yeni_personel.py:226
+msgid "Adres 2 Posta Kodu"
+msgstr ""
+
+#: models/ogrenci.py:218 models/ogrenci.py:697 models/personel.py:586
+msgid "Telefon Numarası"
+msgstr ""
+
+#: models/ogrenci.py:219 models/personel.py:41
+msgid "Oda Numarası"
+msgstr ""
+
+#: models/ogrenci.py:220 models/personel.py:42
+#: views/personel/yeni_personel.py:227
+msgid "Oda Telefon Numarası"
+msgstr ""
+
+#: models/ogrenci.py:222 models/personel.py:45
+#: views/personel/yeni_personel.py:230
+msgid "E-Posta 2"
+msgstr ""
+
+#: models/ogrenci.py:223 models/personel.py:46
+#: views/personel/yeni_personel.py:231
+msgid "E-Posta 3"
+msgstr ""
+
+#: models/ogrenci.py:224 models/personel.py:47
+#: views/personel/yeni_personel.py:232
+msgid "Web Sitesi"
+msgstr ""
+
+#: models/ogrenci.py:225 models/personel.py:48
+msgid "Yayınlar"
+msgstr ""
+
+#: models/ogrenci.py:226 models/personel.py:49
+msgid "Projeler"
+msgstr ""
+
+#: models/ogrenci.py:227 models/ogrenci.py:699 models/personel.py:50
+msgid "Kan Grubu"
+msgstr ""
+
+#: models/ogrenci.py:228 models/ogrenci.py:694 models/personel.py:51
+msgid "Ehliyet"
+msgstr ""
+
+#: models/ogrenci.py:229 models/personel.py:53
+msgid "Biyografi"
+msgstr ""
+
+#: models/ogrenci.py:231 models/personel.py:55
+#: views/personel/yeni_personel.py:234
+msgid "Engellilik"
+msgstr ""
+
+#: models/ogrenci.py:232 models/personel.py:56
+#: views/personel/yeni_personel.py:235
+msgid "Engel Grubu"
+msgstr ""
+
+#: models/ogrenci.py:233 models/personel.py:57
+#: views/personel/yeni_personel.py:236
+msgid "Engel Derecesi"
+msgstr ""
+
+#: models/ogrenci.py:234 views/personel/yeni_personel.py:237
+msgid "Engellilik Orani"
+msgstr ""
+
+#: models/ogrenci.py:235 models/ogrenci.py:670 models/personel.py:59
+msgid "Seri"
+msgstr ""
+
+#: models/ogrenci.py:236 models/ogrenci.py:671 models/personel.py:60
+msgid "Seri No"
+msgstr ""
+
+#: models/ogrenci.py:237
+msgid "Ana Adi"
+msgstr ""
+
+#: models/ogrenci.py:238
+msgid "Baba Adi"
+msgstr ""
+
+#: models/hitap/hitap.py:20 models/ogrenci.py:239 models/ogrenci.py:690
+#: models/personel.py:63 views/ogrenci/ogrenci.py:251
+msgid "Doğum Tarihi"
+msgstr ""
+
+#: models/ogrenci.py:240 models/ogrenci.py:691 models/personel.py:64
+#: views/ogrenci/ogrenci.py:252
+msgid "Doğum Yeri"
+msgstr ""
+
+#: models/ogrenci.py:241 models/ogrenci.py:672 models/personel.py:66
+#: models/personel.py:262
+msgid "İl"
+msgstr ""
+
+#: models/ogrenci.py:242 models/ogrenci.py:673 models/personel.py:67
+#: models/personel.py:261
+msgid "İlçe"
+msgstr ""
+
+#: models/ogrenci.py:243
+msgid "Mahalle/Koy"
+msgstr ""
+
+#: models/ogrenci.py:244 models/ogrenci.py:675 models/personel.py:69
+msgid "Cilt No"
+msgstr ""
+
+#: models/ogrenci.py:245 models/ogrenci.py:676 models/personel.py:70
+msgid "Aile Sıra No"
+msgstr ""
+
+#: models/ogrenci.py:246 models/ogrenci.py:677 models/personel.py:71
+msgid "Sıra No"
+msgstr ""
+
+#: models/ogrenci.py:247
+msgid "Cüzdanin Verildiği Yer"
+msgstr ""
+
+#: models/ogrenci.py:248
+msgid "Cüzdanin Veriliş Nedeni"
+msgstr ""
+
+#: models/ogrenci.py:249 models/personel.py:74
+msgid "Cüzdan Kayıt No"
+msgstr ""
+
+#: models/ogrenci.py:250 models/personel.py:75
+msgid "Cüzdan Kayıt Tarihi"
+msgstr ""
+
+#: models/ogrenci.py:251
+msgid "Akademik Yayınları"
+msgstr ""
+
+#: models/ogrenci.py:252 models/personel.py:52
+msgid "Verdiği Dersler"
+msgstr ""
+
+#: models/ogrenci.py:253 models/ogrenci.py:301 models/personel.py:421
+msgid "Unvan"
+msgstr ""
+
+#: models/ogrenci.py:259
+msgid "Harici Okutman"
+msgstr ""
+
+#: models/ogrenci.py:260
+msgid "Harici Okutmanlar"
+msgstr ""
+
+#: models/ogrenci.py:307
+msgid "Yoksis No"
+msgstr ""
+
+#: models/ogrenci.py:311 views/ders/ders.py:184
+#: views/reports/ders_ucreti_hesaplama.py:52
+msgid "Okutman"
+msgstr ""
+
+#: models/ogrenci.py:312
+msgid "Okutmanlar"
+msgstr ""
+
+#: models/ogrenci.py:332 models/ogrenci.py:731 models/personel.py:247
+#, python-format
+msgid "%(ad)s %(soyad)s"
+msgstr ""
+
+#: models/ogrenci.py:389
+msgid "YOKSIS ID"
+msgstr ""
+
+#: models/hitap/hitap.py:370 models/ogrenci.py:391
+msgid "Ücret"
+msgstr ""
+
+#: models/ogrenci.py:395
+msgid "Yeterlilik Koşulları Açıklaması"
+msgstr ""
+
+#: models/ogrenci.py:397
+msgid "Program Çıktıları"
+msgstr ""
+
+#: models/ogrenci.py:398
+msgid "Mezuniyet Koşulları"
+msgstr ""
+
+#: models/ogrenci.py:399
+msgid "Kabul Koşulları"
+msgstr ""
+
+#: models/ogrenci.py:400
+msgid "Sürdüğü Dönem Sayısı"
+msgstr ""
+
+#: models/ogrenci.py:401
+msgid "Farklı Bir Programdan Ders Seçebilme"
+msgstr ""
+
+#: models/ogrenci.py:404
+msgid "ECTS Bölüm Koordinator"
+msgstr ""
+
+#: models/ogrenci.py:406
+msgid "Akademik Koordinator"
+msgstr ""
+
+#: models/ogrenci.py:408
+msgid "YÖKSİS Program"
+msgstr ""
+
+#: models/ogrenci.py:418
+msgid "Program"
+msgstr ""
+
+#: models/ogrenci.py:419
+msgid "Programlar"
+msgstr ""
+
+#: models/hitap/hitap.py:28 models/hitap/hitap.py:128 models/ogrenci.py:437
+#: models/ogrenci.py:609 models/ogrenci.py:905 models/ogrenci.py:1250
+#: models/ogrenci.py:1273 models/personel.py:287 models/personel.py:347
+#: models/personel.py:420 views/ders/ders.py:195 views/ders/ders.py:596
+#: views/ders/ders.py:621 views/ders_programi/zaman_tablosu.py:384
+#: views/ogrenci/katilim_durumu.py:34 views/ogrenci/katilim_durumu.py:50
+#: views/personel/kadro.py:551
+msgid "Açıklama"
+msgstr ""
+
+#: models/ogrenci.py:438
+msgid "Önkoşul"
+msgstr ""
+
+#: models/ogrenci.py:439
+msgid "Uygulama Saati"
+msgstr ""
+
+#: models/ogrenci.py:440
+msgid "Teori Saati"
+msgstr ""
+
+#: models/ogrenci.py:441
+msgid "ECTS Kredisi"
+msgstr ""
+
+#: models/ogrenci.py:442
+msgid "Yerel Kredisi"
+msgstr ""
+
+#: models/ogrenci.py:443
+msgid "Zorunlu"
+msgstr ""
+
+#: models/ogrenci.py:444
+msgid "Ders Dili"
+msgstr ""
+
+#: models/ogrenci.py:445
+msgid "Ders Türü"
+msgstr ""
+
+#: models/ogrenci.py:446
+msgid "Ders Amacı"
+msgstr ""
+
+#: models/ogrenci.py:447
+msgid "Öğrenme Çıktıları"
+msgstr ""
+
+#: models/ogrenci.py:448
+msgid "Ders İçeriği"
+msgstr ""
+
+#: models/ogrenci.py:449
+msgid "Ders Kategorisi"
+msgstr ""
+
+#: models/ogrenci.py:450
+msgid "Ders Kaynakları"
+msgstr ""
+
+#: models/ogrenci.py:451
+msgid "Ders Müfredatı"
+msgstr ""
+
+#: models/ogrenci.py:452
+msgid "Veriliş Biçimi"
+msgstr ""
+
+#: models/ogrenci.py:454
+msgid "Katılım Şartı"
+msgstr ""
+
+#: models/ogrenci.py:455 models/ogrenci.py:529
+msgid "Kontenjan"
+msgstr ""
+
+#: models/ogrenci.py:456 models/ogrenci.py:530
+msgid "Dış Kontenjan"
+msgstr ""
+
+#: models/ogrenci.py:458
+msgid "Programda Yeraldığı Dönem"
+msgstr ""
+
+#: models/ogrenci.py:461
+msgid "Yerine Açılan Ders"
+msgstr ""
+
+#: models/ogrenci.py:464
+msgid "Değerlendirme Türü"
+msgstr ""
+
+#: models/ogrenci.py:465
+msgid "Sınav Süresi (dakika)"
+msgstr ""
+
+#: models/ogrenci.py:466
+msgid "Toplam Puana Etki Yüzdesi"
+msgstr ""
+
+#: models/ogrenci.py:485 models/ogrenci.py:641
+msgid "Ders Saati"
+msgstr ""
+
+#: models/ogrenci.py:494 views/ders/ders.py:283
+msgid "Dersler"
+msgstr ""
+
+#: models/ogrenci.py:534 views/ogrenci/ogrenci.py:649
+msgid "Ders Adi"
+msgstr ""
+
+#: models/ogrenci.py:546 models/ogrenci.py:844
+msgid "Harf"
+msgstr ""
+
+#: models/ogrenci.py:549
+msgid "Bitis"
+msgstr ""
+
+#: models/ogrenci.py:561 views/ders/ders.py:179
+msgid "Şubeler"
+msgstr ""
+
+#: models/ogrenci.py:607
+msgid "Yapılacağı Yer"
+msgstr ""
+
+#: models/ogrenci.py:608
+msgid "Sınav Türü"
+msgstr ""
+
+#: models/ogrenci.py:611
+msgid "Değerlendirme Durumu"
+msgstr ""
+
+#: models/ogrenci.py:615 models/ogrenci.py:1049
+msgid "Puan"
+msgstr ""
+
+#: models/ogrenci.py:620
+msgid "Sınav"
+msgstr ""
+
+#: models/ogrenci.py:621
+msgid "Sınavlar"
+msgstr ""
+
+#: models/ogrenci.py:640
+msgid "Ders Günü"
+msgstr ""
+
+#: models/ogrenci.py:647
+msgid "Ders Programı"
+msgstr ""
+
+#: models/ogrenci.py:648
+msgid "Ders Programları"
+msgstr ""
+
+#: models/hitap/hitap.py:55 models/hitap/hitap.py:86 models/hitap/hitap.py:114
+#: models/hitap/hitap.py:147 models/hitap/hitap.py:181 models/hitap/hitap.py:207
+#: models/hitap/hitap.py:232 models/hitap/hitap.py:280 models/hitap/hitap.py:318
+#: models/hitap/hitap.py:339 models/hitap/hitap.py:363 models/hitap/hitap.py:460
+#: models/ogrenci.py:669
+msgid "TC Kimlik No"
+msgstr ""
+
+#: models/ogrenci.py:674 models/personel.py:68
+msgid "Mahalle/Köy"
+msgstr ""
+
+#: models/ogrenci.py:678
+msgid "Nüfus Cüzdanı Verildiği Yer"
+msgstr ""
+
+#: models/ogrenci.py:679
+msgid "Nüfus Cüzdanı Veriliş Nedeni"
+msgstr ""
+
+#: models/ogrenci.py:680
+msgid "Nüfus Cüzdanı Kayıt No"
+msgstr ""
+
+#: models/ogrenci.py:681
+msgid "Nüfus Cüzdanı Veriliş Tarihi"
+msgstr ""
+
+#: models/ogrenci.py:683 models/personel.py:62
+msgid "Ana Adı"
+msgstr ""
+
+#: models/ogrenci.py:684 models/personel.py:61 views/ogrenci/ogrenci.py:253
+msgid "Baba Adı"
+msgstr ""
+
+#: models/ogrenci.py:687
+msgid "İkametgah Adresi"
+msgstr ""
+
+#: models/ogrenci.py:688
+msgid "2.Adres"
+msgstr ""
+
+#: models/ogrenci.py:689
+msgid "Posta Kodu"
+msgstr ""
+
+#: models/ogrenci.py:696
+msgid "2.E-Posta"
+msgstr ""
+
+#: models/ogrenci.py:698
+msgid "Cep Tel"
+msgstr ""
+
+#: models/ogrenci.py:700
+msgid "Babanızın Aylık Kazancı"
+msgstr ""
+
+#: models/ogrenci.py:701
+msgid "Babanızın Öğrenim Durumu"
+msgstr ""
+
+#: models/ogrenci.py:703
+msgid "Babanızın Mesleği"
+msgstr ""
+
+#: models/ogrenci.py:704
+msgid "Annenizin Öğrenim Durumu"
+msgstr ""
+
+#: models/ogrenci.py:706
+msgid "Annenizin Mesleği"
+msgstr ""
+
+#: models/ogrenci.py:707
+msgid "Annenizin Aylık Kazancı"
+msgstr ""
+
+#: models/ogrenci.py:708
+msgid "Masraflarınız Kim Tarafından Karşılanacak"
+msgstr ""
+
+#: models/ogrenci.py:710
+msgid "Velinizin Emeklilik Durumu"
+msgstr ""
+
+#: models/ogrenci.py:711
+msgid "Kız Kardeş Sayısı"
+msgstr ""
+
+#: models/ogrenci.py:712
+msgid "Erkek Kardeş Sayısı"
+msgstr ""
+
+#: models/ogrenci.py:713
+msgid "Öğrenim Gören Kardeş Sayısı"
+msgstr ""
+
+#: models/ogrenci.py:714
+msgid "Kredi ve Yurtlar Kurumundan Aldığınız Kredi ve Burs No"
+msgstr ""
+
+#: models/ogrenci.py:716
+msgid "Ailenizin Ev Tel"
+msgstr ""
+
+#: models/ogrenci.py:717
+msgid "Ailenizin Cep Tel"
+msgstr ""
+
+#: models/ogrenci.py:718
+msgid "Ailenizin Daimi İkamet Ettiği Adres"
+msgstr ""
+
+#: models/ogrenci.py:719
+msgid "Varsa Özür Durumunuz"
+msgstr ""
+
+#: models/ogrenci.py:720
+msgid "Varsa Özür Oranınız %"
+msgstr ""
+
+#: models/ogrenci.py:725
+msgid "Ögrenci"
+msgstr ""
+
+#: models/ogrenci.py:726
+msgid "Ögrenciler"
+msgstr ""
+
+#: models/ogrenci.py:749
+msgid "Mezun Olduğu Okul"
+msgstr ""
+
+#: models/ogrenci.py:750
+msgid "Diploma Notu"
+msgstr ""
+
+#: models/ogrenci.py:751
+msgid "Mezuniyet Yılı"
+msgstr ""
+
+#: models/ogrenci.py:756
+msgid "Önceki Eğitim Bilgisi"
+msgstr ""
+
+#: models/ogrenci.py:757
+msgid "Önceki Eğitim Bilgileri"
+msgstr ""
+
+#: models/ogrenci.py:783
+msgid "Öğrenci Numarası"
+msgstr ""
+
+#: models/ogrenci.py:784
+msgid "Giriş Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:58 models/hitap/hitap.py:88 models/ogrenci.py:785
+msgid "Mezuniyet Tarihi"
+msgstr ""
+
+#: models/ogrenci.py:786
+msgid "Puan Türü"
+msgstr ""
+
+#: models/ogrenci.py:787
+msgid "Giriş Puani"
+msgstr ""
+
+#: models/ogrenci.py:789
+msgid "Öğrencilik Statüsü"
+msgstr ""
+
+#: models/ogrenci.py:791
+msgid "Öğrencilik Ders Kayıt Statüsü"
+msgstr ""
+
+#: models/hitap/hitap.py:161 models/ogrenci.py:793
+msgid "Ayrılma Nedeni"
+msgstr ""
+
+#: models/ogrenci.py:794
+msgid "Başarı Durumu"
+msgstr ""
+
+#: models/ogrenci.py:795
+msgid "Diploma No"
+msgstr ""
+
+#: models/ogrenci.py:804
+msgid "Öğrenci Programı"
+msgstr ""
+
+#: models/ogrenci.py:805
+msgid "Öğrenci Programları"
+msgstr ""
+
+#: models/ogrenci.py:808
+msgid "Belge Tipi"
+msgstr ""
+
+#: models/ogrenci.py:809
+msgid "Ek Açıklama"
+msgstr ""
+
+#: models/ogrenci.py:810
+msgid "Belge kontrol edildi"
+msgstr ""
+
+#: models/ogrenci.py:839
+msgid "Dersi Alış Biçimi"
+msgstr ""
+
+#: models/ogrenci.py:843 views/ogrenci/ogrenci.py:649
+msgid "Ortalama"
+msgstr ""
+
+#: models/ogrenci.py:845
+msgid "Devamsızlıktan Kalma"
+msgstr ""
+
+#: models/ogrenci.py:853
+msgid "Ögrenci Dersi"
+msgstr ""
+
+#: models/ogrenci.py:854
+msgid "Öğrenci Dersleri"
+msgstr ""
+
+#: models/ogrenci.py:901 views/ogrenci/katilim_durumu.py:33
+#: views/ogrenci/katilim_durumu.py:49
+msgid "Katılım Durumu"
+msgstr ""
+
+#: models/ogrenci.py:909
+msgid "Ders Devamsızlığı"
+msgstr ""
+
+#: models/ogrenci.py:910
+msgid "Ders Devamsızlıklari"
+msgstr ""
+
+#: models/ogrenci.py:943
+msgid "Borç Miktarı"
+msgstr ""
+
+#: models/ogrenci.py:944
+msgid "Para Birimi"
+msgstr ""
+
+#: models/ogrenci.py:945
+msgid "Borç Sebebi"
+msgstr ""
+
+#: models/ogrenci.py:946
+msgid "Son Ödeme Tarihi"
+msgstr ""
+
+#: models/ogrenci.py:947
+msgid "Tahakkuk Referans No"
+msgstr ""
+
+#: models/ogrenci.py:948
+msgid "Borç Açıklaması"
+msgstr ""
+
+#: models/ogrenci.py:954
+msgid "Borç"
+msgstr ""
+
+#: models/ogrenci.py:955
+msgid "Borçlar"
+msgstr ""
+
+#: models/ogrenci.py:1022
+msgid "Username"
+msgstr ""
+
+#: models/ogrenci.py:1023
+msgid "Password"
+msgstr ""
+
+#: models/ogrenci.py:1027
+msgid "Banka Kullanicisi"
+msgstr ""
+
+#: models/ogrenci.py:1028
+msgid "Banka Kullanicilari"
+msgstr ""
+
+#: models/ogrenci.py:1052
+msgid "Puan Açıklaması"
+msgstr ""
+
+#: models/ogrenci.py:1058 views/ders/ders.py:593 views/ders/ders.py:617
+#: views/ogrenci/katilim_durumu.py:31 views/ogrenci/katilim_durumu.py:47
+msgid "Öğrenci No"
+msgstr ""
+
+#: models/ogrenci.py:1064 views/ders/ders.py:194
+#: views/personel/yeni_personel.py:233
+msgid "Not"
+msgstr "Grade"
+
+#: models/ogrenci.py:1085
+msgid "Yeni Öğrenci Ön Kayıt"
+msgstr ""
+
+#: models/ogrenci.py:1086
+msgid "Güz Dönem Başlangıcı"
+msgstr ""
+
+#: models/ogrenci.py:1087
+msgid "Derslerin Acılması"
+msgstr ""
+
+#: models/ogrenci.py:1088
+msgid "Subelendirme ve Ders Programının Ilan Edilmesi"
+msgstr ""
+
+#: models/ogrenci.py:1089 models/ogrenci.py:1124
+msgid "Öğrenci Harç"
+msgstr ""
+
+#: models/ogrenci.py:1090 models/ogrenci.py:1125
+msgid "Öğrenci Ek Harç"
+msgstr ""
+
+#: models/ogrenci.py:1091 models/ogrenci.py:1126
+msgid "Mazeretli Öğrenci Harç"
+msgstr ""
+
+#: models/ogrenci.py:1092
+msgid "Yeni Öğrenci Ders Kayıt"
+msgstr ""
+
+#: models/ogrenci.py:1093
+msgid "Yeni Öğrenci Danışman Onay"
+msgstr ""
+
+#: models/ogrenci.py:1094 models/ogrenci.py:1127
+msgid "Ders Kayıt"
+msgstr ""
+
+#: models/ogrenci.py:1095 models/ogrenci.py:1128
+msgid "Danışman Onay"
+msgstr ""
+
+#: models/ogrenci.py:1096 models/ogrenci.py:1129
+msgid "Mazeretli Ders Kayıt"
+msgstr ""
+
+#: models/ogrenci.py:1097 models/ogrenci.py:1130
+msgid "Mazeretli Danışman Onay"
+msgstr ""
+
+#: models/ogrenci.py:1098 models/ogrenci.py:1131
+msgid "Derslerin Başlangıcı"
+msgstr ""
+
+#: models/ogrenci.py:1099
+msgid "Ders Ekle/Bırak"
+msgstr ""
+
+#: models/ogrenci.py:1100
+msgid "Ders Ekle/Bırak Danışman Onay"
+msgstr ""
+
+#: models/ogrenci.py:1101
+msgid "Danışman Dersten Çekilme İşlemleri"
+msgstr ""
+
+#: models/ogrenci.py:1102 models/ogrenci.py:1134
+msgid "Ara Sinav"
+msgstr ""
+
+#: models/ogrenci.py:1103 models/ogrenci.py:1135
+msgid "Ara Sınav Not Giriş"
+msgstr ""
+
+#: models/ogrenci.py:1104 models/ogrenci.py:1136
+msgid "Ara Sınav Notlarının Öğrenciye Yayınlanması"
+msgstr ""
+
+#: models/ogrenci.py:1105 models/ogrenci.py:1137
+msgid "Ara Sinav Mazeretli"
+msgstr ""
+
+#: models/ogrenci.py:1106 models/ogrenci.py:1138
+msgid "Ara Sınav Mazeret Not Giriş"
+msgstr ""
+
+#: models/ogrenci.py:1107 models/ogrenci.py:1139
+msgid "Ara Sınav Mazeret Notlarının Öğrenciye Yayınlanması"
+msgstr ""
+
+#: models/ogrenci.py:1108 models/ogrenci.py:1140
+msgid "Sınav Maddi Hata Düzeltme"
+msgstr ""
+
+#: models/ogrenci.py:1109 models/ogrenci.py:1141
+msgid "Derslerin Bitişi"
+msgstr ""
+
+#: models/ogrenci.py:1110
+msgid "Yariyil Sinav"
+msgstr ""
+
+#: models/ogrenci.py:1111 models/ogrenci.py:1143
+msgid "Yarıyıl Sınavı Not Giriş"
+msgstr ""
+
+#: models/ogrenci.py:1112 models/ogrenci.py:1144
+msgid "Yarıyıl Sınavı Notlarının Öğrenciye Yayınlanmasi"
+msgstr ""
+
+#: models/ogrenci.py:1113
+msgid "Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı"
+msgstr ""
+
+#: models/ogrenci.py:1114
+msgid "Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Not Giriş"
+msgstr ""
+
+#: models/ogrenci.py:1115
+msgid ""
+"Bütünleme ve Yarı Yıl Sonu Mazeret Sınavı Notlarının Öğrenciye Yayınlanması"
+msgstr ""
+
+#: models/ogrenci.py:1116
+msgid "Harf Notlarının Öğrenciye Yayınlanması"
+msgstr ""
+
+#: models/ogrenci.py:1117
+msgid "Bütünleme Harf Notlarının Öğrenciye Yayınlanması"
+msgstr ""
+
+#: models/ogrenci.py:1118 models/ogrenci.py:1145
+msgid "Öğretim Elemanı Yoklama Girişi"
+msgstr ""
+
+#: models/ogrenci.py:1119
+msgid "Güz Dönemi Bitiş"
+msgstr ""
+
+#: models/ogrenci.py:1120
+msgid "Bahar Dönemi Başlangıcı"
+msgstr ""
+
+#: models/ogrenci.py:1121
+msgid "Bahar Donemi Derslerin Acilmasi"
+msgstr ""
+
+#: models/ogrenci.py:1122
+msgid "Bahar Donemi Subelendirme ve Ders Programının Ilan Edilmesi"
+msgstr ""
+
+#: models/ogrenci.py:1123
+msgid "Bahar Dönem Başlangıcı"
+msgstr ""
+
+#: models/ogrenci.py:1132
+msgid "Ders Ekle / Bırak"
+msgstr ""
+
+#: models/ogrenci.py:1133
+msgid "Ders Ekle / Bırak Onay"
+msgstr ""
+
+#: models/ogrenci.py:1142
+msgid "Yariyil Sinav baslangic"
+msgstr ""
+
+#: models/ogrenci.py:1146
+msgid "Bahar Dönem Bitişi"
+msgstr ""
+
+#: models/ogrenci.py:1147
+msgid "Yaz Dönemi Başlangıcı"
+msgstr ""
+
+#: models/ogrenci.py:1148
+msgid "Yaz Dönemi Derslerin Bitişi"
+msgstr ""
+
+#: models/ogrenci.py:1149
+msgid "Yaz Dönemi Sınavların Başlangıcı"
+msgstr ""
+
+#: models/ogrenci.py:1150
+msgid "Yaz Dönemi Bitişi"
+msgstr ""
+
+#: models/ogrenci.py:1151
+msgid "Güz Dönemi Dersler"
+msgstr ""
+
+#: models/ogrenci.py:1152
+msgid "Bahar Dönemi Dersler"
+msgstr ""
+
+#: models/ogrenci.py:1153
+msgid "Yaz Dönemi Dersler"
+msgstr ""
+
+#: models/ogrenci.py:1154
+msgid "1 Mayıs İşçi Bayrami"
+msgstr ""
+
+#: models/ogrenci.py:1155
+msgid "23 Nisan Ulusal Egemenlik ve Çocuk Bayramı"
+msgstr ""
+
+#: models/ogrenci.py:1156
+msgid "19 Mayıs Genclik ve Spor Bayramı"
+msgstr ""
+
+#: models/ogrenci.py:1178 models/ogrenci.py:1221
+msgid "Akademik Takvim"
+msgstr ""
+
+#: models/ogrenci.py:1179
+msgid "Akademik Takvimler"
+msgstr ""
+
+#: models/ogrenci.py:1205
+#, python-format
+msgid "%s başlangıç"
+msgstr ""
+
+#: models/ogrenci.py:1206
+#, python-format
+msgid "%s bitiş"
+msgstr ""
+
+#: models/ogrenci.py:1218 views/common/akademik_takvim.py:76
+msgid "Etkinlik"
+msgstr ""
+
+#: models/ogrenci.py:1222
+msgid "Resmi Tatil"
+msgstr ""
+
+#: models/ogrenci.py:1230
+msgid "Takvim"
+msgstr ""
+
+#: models/ogrenci.py:1231
+msgid "Takvimler"
+msgstr ""
+
+#: models/ogrenci.py:1254
+msgid "Dönem Danışman"
+msgstr ""
+
+#: models/ogrenci.py:1255
+msgid "Dönem Danışmanları"
+msgstr ""
+
+#: models/ogrenci.py:1277
+msgid "Dondurulmuş Kayıt"
+msgstr ""
+
+#: models/ogrenci.py:1278
+msgid "Dondurulmuş Kayıtlar"
+msgstr ""
+
+#: models/personel.py:32 views/personel/atama.py:116
+msgid "Kurum Sicil No"
+msgstr ""
+
+#: models/personel.py:43 views/personel/yeni_personel.py:228
+msgid "Cep Telefonu"
+msgstr ""
+
+#: models/personel.py:58
+msgid "Engellilik Oranı"
+msgstr ""
+
+#: models/personel.py:72
+msgid "Cüzdanın Verildiği Yer"
+msgstr ""
+
+#: models/personel.py:73
+msgid "Cüzdanın Veriliş Nedeni"
+msgstr ""
+
+#: models/personel.py:77
+msgid "Güncel Kazanılmış Hak Derece"
+msgstr ""
+
+#: models/personel.py:78
+msgid "Güncel Kazanılmış Hak Kademe"
+msgstr ""
+
+#: models/personel.py:79
+msgid "Kazanılmış Hak Ek Gösterge"
+msgstr ""
+
+#: models/personel.py:81
+msgid "Güncel Görev Aylığı Derece"
+msgstr ""
+
+#: models/personel.py:82
+msgid "Güncel Görev Aylığı Kademe"
+msgstr ""
+
+#: models/personel.py:83
+msgid "Görev Aylığı Ek Gösterge"
+msgstr ""
+
+#: models/personel.py:85
+msgid "Güncel Emekli Müktesebat Derece"
+msgstr ""
+
+#: models/personel.py:86
+msgid "Güncel Emekli Müktesebat Kademe"
+msgstr ""
+
+#: models/personel.py:87
+msgid "Emekli Müktesebat Ek Gösterge"
+msgstr ""
+
+#: models/personel.py:89
+msgid "Kazanılmış Hak Sonraki Terfi Tarihi"
+msgstr ""
+
+#: models/personel.py:91
+msgid "Görev Aylığı Sonraki Terfi Tarihi"
+msgstr ""
+
+#: models/personel.py:93
+msgid "Emekli Müktesebat Sonraki Terfi Tarihi"
+msgstr ""
+
+#: models/personel.py:99 views/personel/atama.py:119
+msgid "Personel Unvan"
+msgstr ""
+
+#: models/hitap/hitap.py:22 models/personel.py:102 views/personel/atama.py:121
+msgid "Emekli Sicil No"
+msgstr ""
+
+#: models/personel.py:103 views/personel/atama.py:137
+msgid "Emekliliğe Giriş Tarihi"
+msgstr ""
+
+#: models/personel.py:105 views/personel/kadro.py:415
+msgid "Personel Türü"
+msgstr ""
+
+#: models/hitap/hitap.py:211 models/hitap/hitap.py:371 models/personel.py:106
+#: models/personel.py:511 views/personel/atama.py:122
+msgid "Hizmet Sınıfı"
+msgstr ""
+
+#: models/personel.py:107 views/personel/atama.py:124
+msgid "Statü"
+msgstr ""
+
+#: models/personel.py:108 views/personel/atama.py:125
+msgid "Branş"
+msgstr ""
+
+#: models/personel.py:111 views/personel/atama.py:126
+msgid "Görev Süresi Başlama"
+msgstr ""
+
+#: models/personel.py:112 views/personel/atama.py:128
+msgid "Görev Süresi Bitiş"
+msgstr ""
+
+#: models/personel.py:118 models/personel.py:505 views/personel/atama.py:130
+#: views/personel/atama.py:405
+msgid "Göreve Başlama Tarihi"
+msgstr ""
+
+#: models/personel.py:122 views/personel/atama.py:135 views/personel/atama.py:369
+msgid "Mecburi Hizmet Süresi"
+msgstr ""
+
+#: models/personel.py:134
+msgid "Personeller"
+msgstr ""
+
+#: models/personel.py:240
+msgid "Görevden Ayrılma Tarihi"
+msgstr ""
+
+#: models/personel.py:259
+msgid "Adres Adı"
+msgstr ""
+
+#: models/personel.py:260
+msgid "Adres"
+msgstr ""
+
+#: models/personel.py:266
+msgid "Adres Bilgisi"
+msgstr ""
+
+#: models/personel.py:267 views/personel/yeni_personel.py:111
+#: views/personel/yeni_personel.py:193
+msgid "Adres Bilgileri"
+msgstr ""
+
+#: models/personel.py:282 models/personel.py:344
+#: views/personel/gorevlendirme.py:64
+msgid "Görev Tipi"
+msgstr ""
+
+#: models/personel.py:288 models/personel.py:348
+msgid "Resmi Yazı Sayı"
+msgstr ""
+
+#: models/personel.py:289 models/personel.py:349
+msgid "Resmi Yazı Tarihi"
+msgstr ""
+
+#: models/personel.py:304 views/personel/gorevlendirme.py:144
+msgid "Kurum İçi Görevlendirme"
+msgstr ""
+
+#: models/personel.py:305
+msgid "Kurum İçi Görevlendirmeler"
+msgstr ""
+
+#: models/personel.py:324 models/personel.py:382
+msgid "Resmi Yazi"
+msgstr ""
+
+#: models/personel.py:350
+msgid "Maaş"
+msgstr ""
+
+#: models/hitap/hitap.py:369 models/personel.py:351
+msgid "Yevmiye"
+msgstr ""
+
+#: models/personel.py:352
+msgid "Yolluk"
+msgstr ""
+
+#: models/personel.py:353
+msgid "Ülke"
+msgstr ""
+
+#: models/personel.py:358 views/personel/gorevlendirme.py:190
+msgid "Kurum Dışı Görevlendirme"
+msgstr ""
+
+#: models/personel.py:359
+msgid "Kurum Dışı Görevlendirmeler"
+msgstr ""
+
+#: models/personel.py:416
+msgid "Kadro No"
+msgstr ""
+
+#: models/hitap/hitap.py:285 models/personel.py:417
+msgid "Derece"
+msgstr ""
+
+#: models/personel.py:422
+msgid "Unvan Aciklama"
+msgstr ""
+
+#: models/personel.py:426
+msgid "Kadro"
+msgstr ""
+
+#: models/personel.py:427
+msgid "Kadrolar"
+msgstr ""
+
+#. Kadro bilgileri gösterilirken kullanılan mesaj
+#: models/personel.py:434
+#, python-format
+msgid "%(no)s - %(unvan)s %(derece)s. derece"
+msgstr ""
+
+#: models/personel.py:448 models/personel.py:475
+msgid "Tip"
+msgstr ""
+
+#: models/personel.py:451
+msgid "Onay"
+msgstr ""
+
+#: models/personel.py:452
+msgid "Geçireği Adres"
+msgstr ""
+
+#: models/personel.py:453 views/ogrenci/ogrenci.py:259
+msgid "Telefon"
+msgstr ""
+
+#: models/personel.py:459
+msgid "İzin"
+msgstr ""
+
+#: models/personel.py:460
+msgid "İzinler"
+msgstr ""
+
+#: models/personel.py:476 views/personel/izin.py:208
+msgid "İzin Başlangıç Tarihi"
+msgstr ""
+
+#: models/personel.py:477 views/personel/izin.py:209
+msgid "İzin Bitiş Tarihi"
+msgstr ""
+
+#: models/personel.py:478
+msgid "Dönüş Tarihi"
+msgstr ""
+
+#: models/personel.py:479
+msgid "Dönüş Tip"
+msgstr ""
+
+#: models/personel.py:480 models/personel.py:582
+msgid "Onay Tarihi"
+msgstr ""
+
+#: models/personel.py:485 views/personel/izin.py:201
+msgid "Ücretsiz İzin"
+msgstr ""
+
+#: models/personel.py:486
+msgid "Ücretsiz İzinler"
+msgstr ""
+
+#: models/personel.py:501 views/personel/atama.py:401
+msgid "İbraz Tarihi"
+msgstr ""
+
+#: models/personel.py:503 views/personel/atama.py:403
+msgid "Nereden"
+msgstr ""
+
+#: models/personel.py:504 views/personel/atama.py:404
+msgid "Atama Açıklama"
+msgstr ""
+
+#: models/personel.py:506 views/personel/atama.py:406
+msgid "Göreve Başlama Açıklama"
+msgstr ""
+
+#: models/personel.py:507
+msgid "Sicil No"
+msgstr ""
+
+#: models/personel.py:515
+msgid "Atama"
+msgstr ""
+
+#: models/personel.py:516
+msgid "Atamalar"
+msgstr ""
+
+#: models/personel.py:577
+msgid "Raporu Alan Personel"
+msgstr ""
+
+#: models/personel.py:578 views/personel/saglik_raporu.py:21
+msgid "Rapor Çeşidi"
+msgstr ""
+
+#: models/personel.py:580
+msgid "Rapor Başlangıç Tarihi"
+msgstr ""
+
+#: models/personel.py:581
+msgid "Raporlu Olduğu Son Gün"
+msgstr ""
+
+#: models/personel.py:583
+msgid "Raporun Alındığı İl"
+msgstr ""
+
+#: models/personel.py:584
+msgid "Sağlık Raporunun Alındığı Kurum"
+msgstr ""
+
+#: models/personel.py:585
+msgid "Geçireceği Adres"
+msgstr ""
+
+#: models/personel.py:589 views/personel/saglik_raporu.py:133
+msgid "Sağlık Raporu"
+msgstr ""
+
+#: models/personel.py:590
+msgid "Sağlık Raporları"
+msgstr ""
+
+#: models/personel.py:607
+msgid "Dosya No"
+msgstr ""
+
+#: models/personel.py:608
+msgid "Muhbir veya Müştekinin Adı Soyadı"
+msgstr ""
+
+#: models/personel.py:610
+msgid "İhbar, Şikayet veya Suçun Öğrenildiği Tarih"
+msgstr ""
+
+#: models/personel.py:611
+msgid "Soruşturma Yapılan Personel"
+msgstr ""
+
+#: models/personel.py:612
+msgid "Suçun Nev'i"
+msgstr ""
+
+#: models/personel.py:613
+msgid "Af Kapsamı"
+msgstr ""
+
+#: models/personel.py:614
+msgid "Kapsadığı Dönem Tarihler"
+msgstr ""
+
+#: models/personel.py:618
+msgid "Teklif Edilen Ceza"
+msgstr ""
+
+#: models/personel.py:620
+msgid "Takdir Edilen Ceza"
+msgstr ""
+
+#: models/personel.py:622
+msgid "Kararın Tebliğ Tarihi"
+msgstr ""
+
+#: models/personel.py:623
+msgid "İtiraz Edilmişse Neticesi"
+msgstr ""
+
+#: models/personel.py:624
+msgid "Düşünceler"
+msgstr ""
+
+#: models/personel.py:629
+msgid "Soruşturmacının Adı Soyadı"
+msgstr ""
+
+#: models/personel.py:632
+msgid "İdari Ceza"
+msgstr ""
+
+#: models/personel.py:633
+msgid "İdari Cezalar"
+msgstr ""
+
+#: models/zato.py:14 models/zato.py:24
+msgid "Zato cluster"
+msgstr ""
+
+#: models/zato.py:15
+msgid "Module’s file name"
+msgstr ""
+
+#: models/zato.py:16
+msgid "BASE64-encoded"
+msgstr ""
+
+#: models/zato.py:17
+msgid "Deploy Service"
+msgstr ""
+
+#: models/zato.py:25
+msgid "Channel id"
+msgstr ""
+
+#: models/zato.py:26
+msgid "Channel name"
+msgstr ""
+
+#: models/zato.py:27
+msgid "channel or outgoing connection"
+msgstr ""
+
+#: models/zato.py:28
+msgid "plain_http or soap"
+msgstr ""
+
+#: models/zato.py:29
+msgid "Example: /test/zato-url-path"
+msgstr ""
+
+#: models/zato.py:30
+msgid "xml or json"
+msgstr ""
+
+#: models/zato.py:33
+msgid "Service Id"
+msgstr ""
+
+#: models/zato.py:34
+msgid "Service name"
+msgstr ""
+
+#: models/zato.py:35
+msgid "Deploy Channel"
+msgstr ""
+
+#: models/hitap/hitap.py:16
+msgid "Sigortalının TC Kimlik No"
+msgstr ""
+
+#: models/hitap/hitap.py:19
+msgid "Memuriyete Girişteki İlk Soyadı"
+msgstr ""
+
+#: models/hitap/hitap.py:23
+msgid "Memuriyete İlk Başlama Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:25
+msgid "Kurum Sicili"
+msgstr ""
+
+#: models/hitap/hitap.py:26
+msgid "Malul Kod"
+msgstr ""
+
+#: models/hitap/hitap.py:27
+msgid "Yetki Seviyesi"
+msgstr ""
+
+#: models/hitap/hitap.py:29
+msgid "Kuruma Başlama Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:30
+msgid "Emeklilik Sonrası Göreve Başlama Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:32
+msgid "2. Emekli Sicil No"
+msgstr ""
+
+#: models/hitap/hitap.py:34
+msgid "Sebep"
+msgstr ""
+
+#: models/hitap/hitap.py:35 models/hitap/hitap.py:69 models/hitap/hitap.py:98
+#: models/hitap/hitap.py:131 models/hitap/hitap.py:164 models/hitap/hitap.py:190
+#: models/hitap/hitap.py:216 models/hitap/hitap.py:264 models/hitap/hitap.py:302
+#: models/hitap/hitap.py:323 models/hitap/hitap.py:347 models/hitap/hitap.py:388
+#: models/hitap/hitap.py:465
+msgid "Senkronize"
+msgstr ""
+
+#: models/hitap/hitap.py:42
+msgid "Nüfus Bilgisi"
+msgstr ""
+
+#: models/hitap/hitap.py:43
+msgid "Nüfus Bilgileri"
+msgstr ""
+
+#: models/hitap/hitap.py:47
+#, python-format
+msgid "%(ad)s %(soyad)s %(sicil_no)s"
+msgstr ""
+
+#: models/hitap/hitap.py:56
+msgid "Kursa Kayıt No"
+msgstr ""
+
+#: models/hitap/hitap.py:57
+msgid "Kurs Öğrenim Süresi"
+msgstr ""
+
+#: models/hitap/hitap.py:59
+msgid "Kurs Nevi"
+msgstr ""
+
+#: models/hitap/hitap.py:60
+msgid "Bölüm Adı"
+msgstr ""
+
+#: models/hitap/hitap.py:62 models/hitap/hitap.py:89
+msgid "Okul Adı"
+msgstr ""
+
+#: models/hitap/hitap.py:64 models/hitap/hitap.py:91
+msgid "Öğrenim Yeri"
+msgstr ""
+
+#: models/hitap/hitap.py:65 models/hitap/hitap.py:92
+msgid "Denklik Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:66
+msgid "Denklik Okulu"
+msgstr ""
+
+#: models/hitap/hitap.py:67 models/hitap/hitap.py:94
+msgid "Denklik Bölüm"
+msgstr ""
+
+#: models/hitap/hitap.py:68 models/hitap/hitap.py:97 models/hitap/hitap.py:130
+#: models/hitap/hitap.py:163 models/hitap/hitap.py:189 models/hitap/hitap.py:214
+#: models/hitap/hitap.py:263 models/hitap/hitap.py:301 models/hitap/hitap.py:346
+#: models/hitap/hitap.py:387 models/hitap/hitap.py:463
+#: views/personel/atama.py:407
+msgid "Kurum Onay Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:74
+msgid "Kurs"
+msgstr ""
+
+#: models/hitap/hitap.py:75
+msgid "Kurslar"
+msgstr ""
+
+#: models/hitap/hitap.py:85 models/hitap/hitap.py:115 models/hitap/hitap.py:148
+#: models/hitap/hitap.py:180 models/hitap/hitap.py:233 models/hitap/hitap.py:281
+#: models/hitap/hitap.py:319 models/hitap/hitap.py:340 models/hitap/hitap.py:364
+#: models/hitap/hitap.py:447
+msgid "Kayıt No"
+msgstr ""
+
+#: models/hitap/hitap.py:87
+msgid "Öğrenim Durumu"
+msgstr ""
+
+#: models/hitap/hitap.py:93
+msgid "Denklik Okul"
+msgstr ""
+
+#: models/hitap/hitap.py:95
+msgid "Öğrenim Süresi"
+msgstr ""
+
+#: models/hitap/hitap.py:96
+msgid "Hazırlık"
+msgstr ""
+
+#: models/hitap/hitap.py:103
+msgid "Okul"
+msgstr ""
+
+#: models/hitap/hitap.py:104
+msgid "Okullar"
+msgstr ""
+
+#: models/hitap/hitap.py:116
+msgid "Mahkeme Adı"
+msgstr ""
+
+#: models/hitap/hitap.py:117
+msgid "Mahkeme Sebebi"
+msgstr ""
+
+#: models/hitap/hitap.py:118
+msgid "Mahkeme Karar Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:119
+msgid "Karar Sayısı"
+msgstr ""
+
+#: models/hitap/hitap.py:120
+msgid "Kesinleşme Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:121
+msgid "Asıl Doğum Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:122
+msgid "Tashih Doğum Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:123
+msgid "Asıl Ad"
+msgstr ""
+
+#: models/hitap/hitap.py:124
+msgid "Tashih Ad"
+msgstr ""
+
+#: models/hitap/hitap.py:125
+msgid "Asıl Soyad"
+msgstr ""
+
+#: models/hitap/hitap.py:126
+msgid "Tashih Soyad"
+msgstr ""
+
+#: models/hitap/hitap.py:127
+msgid "Geçerli Doğum Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:129 models/hitap/hitap.py:290 models/hitap/hitap.py:343
+msgid "Gün Sayısı"
+msgstr ""
+
+#: models/hitap/hitap.py:136
+msgid "Mahkeme"
+msgstr ""
+
+#: models/hitap/hitap.py:137
+msgid "Mahkemeler"
+msgstr ""
+
+#: models/hitap/hitap.py:149
+msgid "SGK Nevi"
+msgstr ""
+
+#: models/hitap/hitap.py:150
+msgid "SGK Sicil No"
+msgstr ""
+
+#: models/hitap/hitap.py:153
+msgid "Süre"
+msgstr ""
+
+#: models/hitap/hitap.py:154
+msgid "Kamu İşyeri Adı"
+msgstr ""
+
+#: models/hitap/hitap.py:155
+msgid "Özel İşyeri Adı"
+msgstr ""
+
+#: models/hitap/hitap.py:156
+msgid "Bağ-Kur Meslek"
+msgstr ""
+
+#: models/hitap/hitap.py:157
+msgid "Ülke Kodu"
+msgstr ""
+
+#: models/hitap/hitap.py:158
+msgid "Banka Sandık Kodu"
+msgstr ""
+
+#: models/hitap/hitap.py:159
+msgid "Kıdem Tazminat Ödeme Durumu"
+msgstr ""
+
+#: models/hitap/hitap.py:162 models/hitap/hitap.py:345
+msgid "KHA Durum"
+msgstr ""
+
+#: models/hitap/hitap.py:169
+msgid "Birleştirme"
+msgstr ""
+
+#: models/hitap/hitap.py:170
+msgid "Birleştirmeler"
+msgstr ""
+
+#: models/hitap/hitap.py:182 models/hitap/hitap.py:208
+msgid "Ünvan Kodu"
+msgstr ""
+
+#: models/hitap/hitap.py:183
+msgid "Makam"
+msgstr ""
+
+#: models/hitap/hitap.py:185
+msgid "Temsil"
+msgstr ""
+
+#: models/hitap/hitap.py:186
+msgid "Tazminat Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:187
+msgid "Tazminat Bitiş Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:188
+msgid "Kadrosuzluk"
+msgstr ""
+
+#: models/hitap/hitap.py:195
+msgid "Tazminat"
+msgstr ""
+
+#: models/hitap/hitap.py:196
+msgid "Tazminatlar"
+msgstr ""
+
+#: models/hitap/hitap.py:206
+msgid "Hizmet Kayıt No"
+msgstr ""
+
+#: models/hitap/hitap.py:209
+msgid "Ünvan Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:210
+msgid "Ünvan Bitiş Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:212
+msgid "Asıl Vekil"
+msgstr ""
+
+#: models/hitap/hitap.py:213
+msgid "Atama Sekli"
+msgstr ""
+
+#: models/hitap/hitap.py:215
+msgid "FHZ Oranı"
+msgstr ""
+
+#: models/hitap/hitap.py:221
+msgid "Ünvan"
+msgstr ""
+
+#: models/hitap/hitap.py:222
+msgid "Ünvanlar"
+msgstr ""
+
+#: models/hitap/hitap.py:234
+msgid "Açığa Alınma Şekli"
+msgstr ""
+
+#: models/hitap/hitap.py:235
+msgid "İade Şekil"
+msgstr ""
+
+#: models/hitap/hitap.py:236
+msgid "Hizmet Durumu"
+msgstr ""
+
+#: models/hitap/hitap.py:237
+msgid "Husus"
+msgstr ""
+
+#: models/hitap/hitap.py:238
+msgid "Husus Açıklaması"
+msgstr ""
+
+#: models/hitap/hitap.py:239
+msgid "Açığa Alınma Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:240
+msgid "Göreve Son Tarih"
+msgstr ""
+
+#: models/hitap/hitap.py:242
+msgid "Göreve İade İstem Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:246
+msgid "Göreve İade Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:248
+msgid "Açık Aylık Başlama Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:252
+msgid "Açık Aylık Bitiş Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:254
+msgid "Göreve Sonlandırma Aylık Başlangıç Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:258
+msgid "Göreve Sonlandırma Aylık Bitiş Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:260
+msgid "Sıkı Yönetim Kaldırıldığı Tarih"
+msgstr ""
+
+#: models/hitap/hitap.py:262
+msgid "Açıktan Atanma Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:269
+msgid "Açığa Alınma"
+msgstr ""
+
+#: models/hitap/hitap.py:270
+msgid "Açığa Alınmalar"
+msgstr ""
+
+#: models/hitap/hitap.py:284
+msgid "Emekli Sicili"
+msgstr ""
+
+#: models/hitap/hitap.py:286
+msgid "Kademe"
+msgstr ""
+
+#: models/hitap/hitap.py:287
+msgid "Ek Gösterge"
+msgstr ""
+
+#: models/hitap/hitap.py:291
+msgid "Kanun Kodu"
+msgstr ""
+
+#: models/hitap/hitap.py:292
+msgid "Borç Nevi"
+msgstr ""
+
+#: models/hitap/hitap.py:293
+msgid "Toplam Tutar"
+msgstr ""
+
+#: models/hitap/hitap.py:294
+msgid "Ödenen Miktar"
+msgstr ""
+
+#: models/hitap/hitap.py:295
+msgid "çalıştığı Kurum"
+msgstr ""
+
+#: models/hitap/hitap.py:296
+msgid "İşyeri İli"
+msgstr ""
+
+#: models/hitap/hitap.py:297
+msgid "İşyeri İlçesi"
+msgstr ""
+
+#: models/hitap/hitap.py:299
+msgid "Borçlanma Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:300
+msgid "Ödeme Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:307
+msgid "Borçlanma"
+msgstr ""
+
+#: models/hitap/hitap.py:308
+msgid "Borçlanmalar"
+msgstr ""
+
+#: models/hitap/hitap.py:322
+msgid "İHZ Nevi"
+msgstr ""
+
+#: models/hitap/hitap.py:328
+msgid "İtibari Hizmet Süresi"
+msgstr ""
+
+#: models/hitap/hitap.py:329
+msgid "İtibari Hizmet Süreleri"
+msgstr ""
+
+#: models/hitap/hitap.py:344
+msgid "İstisnai İlgi Nevi"
+msgstr ""
+
+#: models/hitap/hitap.py:352
+msgid "İstisnai İlgi"
+msgstr ""
+
+#: models/hitap/hitap.py:353
+msgid "İstisnai İlgiler"
+msgstr ""
+
+#: models/hitap/hitap.py:368
+msgid "Unvan Kod"
+msgstr ""
+
+#: models/hitap/hitap.py:373
+msgid "Kadro Derecesi"
+msgstr ""
+
+#: models/hitap/hitap.py:374
+msgid "Ödeme Derecesi"
+msgstr ""
+
+#: models/hitap/hitap.py:375
+msgid "Ödeme Kademesi"
+msgstr ""
+
+#: models/hitap/hitap.py:376
+msgid "Ödeme Ek Göstergesi"
+msgstr ""
+
+#: models/hitap/hitap.py:377
+msgid "Kazanılmış Hak Aylığı Derecesi"
+msgstr ""
+
+#: models/hitap/hitap.py:379
+msgid "Kazanılmış Hak Aylığı Kademesi"
+msgstr ""
+
+#: models/hitap/hitap.py:381
+msgid "Kazanılmış Hak Aylığı Ek Göstergesi"
+msgstr ""
+
+#: models/hitap/hitap.py:383
+msgid "Emekli Derecesi"
+msgstr ""
+
+#: models/hitap/hitap.py:384
+msgid "Emekli Kademe"
+msgstr ""
+
+#: models/hitap/hitap.py:385
+msgid "Emekli Ek Göstergesi"
+msgstr ""
+
+#: models/hitap/hitap.py:386 models/hitap/hitap_sebep.py:15
+msgid "Hitap Sebep Kodu"
+msgstr ""
+
+#: models/hitap/hitap.py:400 models/hitap/hitap.py:470
+msgid "Kayıt"
+msgstr ""
+
+#: models/hitap/hitap.py:401 models/hitap/hitap.py:471
+msgid "Kayıtlar"
+msgstr ""
+
+#: models/hitap/hitap.py:444
+msgid "Askerlik Nevi"
+msgstr ""
+
+#: models/hitap/hitap.py:448
+msgid "Kıta Başlama Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:449
+msgid "Kıta Bitiş Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:450
+msgid "Muafiyet Neden"
+msgstr ""
+
+#: models/hitap/hitap.py:451
+msgid "Sayılmayan Gün Sayısı"
+msgstr ""
+
+#: models/hitap/hitap.py:452
+msgid "Sınıf Okulu Sicil"
+msgstr ""
+
+#: models/hitap/hitap.py:453
+msgid "Subaylıktan Erliğe Geçiş Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:456
+msgid "Subay Okulu Giriş Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:461
+msgid "Teğmen Nasp Tarihi"
+msgstr ""
+
+#: models/hitap/hitap.py:462
+msgid "Görev Yeri"
+msgstr ""
+
+#: models/hitap/hitap.py:464
+msgid "Asteğmen Nasp Tarihi"
+msgstr ""
+
+#: models/hitap/hitap_sebep.py:8
+msgid "Sebep No"
+msgstr ""
+
+#: models/hitap/hitap_sebep.py:9
+msgid "Sebep Adı"
+msgstr ""
+
+#: models/hitap/hitap_sebep.py:10
+msgid "Sebep Nevi"
+msgstr ""
+
+#: models/hitap/hitap_sebep.py:11
+msgid "Zorunlu Alan"
+msgstr ""
+
+#: models/hitap/hitap_sebep.py:16
+msgid "Hitap Sebep Kodları"
+msgstr ""
+
+#: views/system.py:199
+msgid "Toplam"
+msgstr ""
+
+#: views/system.py:199
+msgid "Kadın"
+msgstr ""
+
+#: views/system.py:199
+msgid "Erkek"
+msgstr ""
+
+#: views/personel/kadro.py:415 views/system.py:203
+msgid "İdari"
+msgstr ""
+
+#: views/system.py:204
+msgid "Yardımcı Doçent"
+msgstr ""
+
+#: views/system.py:205
+msgid "Doçent"
+msgstr ""
+
+#: views/system.py:206
+msgid "Profesör"
+msgstr ""
+
+#: views/system.py:207
+msgid "Araştırma Görevlisi"
+msgstr ""
+
+#: views/system.py:208
+msgid "Engelli(Akademik)"
+msgstr ""
+
+#: views/system.py:210
+msgid "Engelli(İdari)"
+msgstr ""
+
+#: views/common/e_posta_degistir.py:19
+#: views/common/profil_sayfasi_goruntuleme.py:26
+msgid "Birincil e-postanız"
+msgstr ""
+
+#: views/common/e_posta_degistir.py:37
+msgid "Geçersiz E-Posta Adresi"
+msgstr ""
+
+#: views/common/e_posta_degistir.py:40
+msgid "Yeni E-Posta Girişi"
+msgstr ""
+
+#: views/common/e_posta_degistir.py:41
+msgid ""
+"Birincil olarak belirlemek istediğiniz e-posta adresinize\n"
+"                          doğrulama linki gönderilecektir."
+msgstr ""
+
+#: views/common/e_posta_degistir.py:45
+msgid "Birincil olarak belirlemek istediğiniz e-posta adresinizi yazınız."
+msgstr ""
+
+#: views/common/e_posta_degistir.py:46
+msgid "Doğrulama Linki Yolla"
+msgstr ""
+
+#: views/common/e_posta_degistir.py:55
+msgid ""
+"Girmiş olduğunuz e-posta adresi geçersizdir.\n"
+"                                        Lütfen düzelterek tekrar deneyiniz."
+msgstr ""
+
+#: views/common/e_posta_degistir.py:93
+#, python-format
+msgid ""
+"'%s' adresinize doğrulama linki gönderilmiştir.\n"
+"        Lütfen e-posta'nızdaki bağlantı linkine tıklayarak e-posta adresinin "
+"size ait\n"
+"        olduğunu doğrulayınız. "
+msgstr ""
+
+#: views/common/guncel_donem_degistirme.py:34 views/ogrenci/ogrenci.py:683
+msgid "Dönem Seçiniz"
+msgstr ""
+
+#: views/common/guncel_donem_degistirme.py:35
+#: views/common/profil_sayfasi_goruntuleme.py:106
+#: views/common/yeni_donem_olusturma.py:62 views/ders/danisman.py:44
+#: views/ders/ders.py:70 views/ders/ders.py:77 views/ders/ders.py:642
+#: views/ders_programi/zaman_dilimi.py:54 views/ogrenci/katilim_durumu.py:158
+#: views/ogrenci/kayit_silme.py:167 views/ogrenci/ogrenci.py:54
+#: views/ogrenci/ogrenci.py:124 views/ogrenci/ogrenci.py:193
+#: views/ogrenci/ogrenci.py:292 views/ogrenci/ogrenci.py:487
+#: views/ogrenci/ogrenci.py:509 views/ogrenci/ogrenci.py:920
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:29
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:85 views/ogrenci/on_kayit.py:30
+#: views/ogrenci/on_kayit.py:58 views/ogrenci/on_kayit.py:74
+#: views/personel/akademik_faaliyet.py:81 views/personel/atama.py:388
+#: views/personel/atama.py:409 views/personel/gorevlendirme.py:260
+#: views/personel/idari_cezalar.py:19 views/personel/kadro.py:117
+#: views/personel/kadro.py:619 views/personel/kimlik_ve_iletisim.py:41
+#: views/personel/kimlik_ve_iletisim.py:57
+#: views/personel/kimlik_ve_iletisim.py:73 views/personel/personel_test.py:58
+#: views/personel/saglik_raporu.py:22 views/personel/ucretsiz_izin.py:35
+#: views/personel/ucretsiz_izin.py:41
+msgid "Kaydet"
+msgstr ""
+
+#: views/common/guncel_donem_degistirme.py:64
+msgid "Güncel Dönem Seçiniz"
+msgstr ""
+
+#: views/common/guncel_donem_degistirme.py:102
+msgid "Güncel Dönem Değiştirme"
+msgstr ""
+
+#: views/common/guncel_donem_degistirme.py:103
+msgid "{donem} dönemi güncel dönem olarak atanmıştır"
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:29
+msgid "Kullanıcı Adı Hatalı"
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:31
+msgid "Kullanıcı Adı Değiştirme"
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:32
+msgid "Şu an kullandığınız kullanıcı adınızı giriniz."
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:33
+msgid "Yeni kullanıcı adınızı giriniz."
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:34
+#: views/common/profil_sayfasi_goruntuleme.py:103
+msgid "Kullanıcı Adı Değiştir"
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:58
+msgid "Hatalı Parola Girişi"
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:59
+msgid "İşlem Onayı İçin Parola Doğrulama"
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:61
+msgid ""
+"Bu işlemi gerçekleştirebilmek için güncel parolanızı girmeniz gerekmektedir."
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:63
+msgid "Parola Doğrula"
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:75
+msgid "Parolanızı yanlış girdiniz. Lütfen tekrar deneyiniz."
+msgstr ""
+
+#: views/common/kullanici_adi_degistir.py:102
+#, python-format
+msgid ""
+"'%s' olan kullanıcı adınız\n"
+"                                                 '%s' olarak değiştirilmiştir."
+"Çıkış yapıp yeni kullanıcı\n"
+"                                                 adınızla giriş yapabilirsiniz "
+msgstr ""
+
+#: views/common/parola_degistir.py:27
+msgid "Parola Hatalı"
+msgstr ""
+
+#: views/common/parola_degistir.py:29
+msgid "Parola Değiştirme"
+msgstr ""
+
+#: views/common/parola_degistir.py:30 views/common/yeni_parola_belirle.py:43
+msgid ""
+"Kendi güvenliğiniz ve sistem güvenliği için yeni oluşturacağınız parola:\n"
+"\n"
+"* Türkçe karakter içermemeli,\n"
+"* 8 karakterden büyük olmalı,\n"
+"* En az bir küçük harf, bir büyük harf, bir sayı ve bir özel karakter "
+"içermeli,\n"
+"* Eski şifrenizle aynı olmamalıdır,\n"
+"* Özel karakterler = ()[]{}!@#$%^&*+=-§±_~/|\"><\\.,:;≤≥\n"
+"* Örnek parola = Ulakbus3\\*"
+msgstr ""
+
+#: views/common/parola_degistir.py:40
+msgid "Şu an kullandığınız parolanızı giriniz."
+msgstr ""
+
+#: views/common/parola_degistir.py:42 views/common/yeni_parola_belirle.py:53
+msgid "Yeni parolanızı giriniz."
+msgstr ""
+
+#: views/common/parola_degistir.py:43 views/common/yeni_parola_belirle.py:54
+msgid "Yeni parolanızı tekrar giriniz."
+msgstr ""
+
+#: views/common/parola_degistir.py:45
+#: views/common/profil_sayfasi_goruntuleme.py:102
+msgid "Parola Değiştir"
+msgstr ""
+
+#: views/common/parola_degistir.py:77
+msgid ""
+"Parolanız başarıyla değiştirildi. Çıkış\n"
+"                                                    yapıp yeni parolanızla "
+"giriş yapabilirsiniz"
+msgstr ""
+
+#: views/common/parolami_unuttum.py:47
+msgid "Hatalı Bilgi"
+msgstr ""
+
+#: views/common/parolami_unuttum.py:49
+msgid "Parola Sıfırlama"
+msgstr ""
+
+#: views/common/parolami_unuttum.py:50
+msgid ""
+"Girdiğiniz kullanıcı adınıza kayıtlı birincil e-posta\n"
+"                                adresinize parola sıfırlama linki "
+"gönderilecektir."
+msgstr ""
+
+#: views/common/parolami_unuttum.py:52
+msgid "Kullanıcı adınızı giriniz:"
+msgstr ""
+
+#: views/common/parolami_unuttum.py:53
+msgid "Parola Sıfırlama Linki Gönder"
+msgstr ""
+
+#: views/common/parolami_unuttum.py:69
+msgid "Böyle bir kullanıcı bulunmamaktadır. Lütfen tekrar deneyiniz."
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:68
+msgid ""
+"E-Postanızı onaylamanız için\n"
+"            gönderilen link geçersiz olmuştur. Lütfen tekrar deneyiniz."
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:70
+msgid "Geçersiz İşlem"
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:85
+msgid "E-Posta Değişikliği"
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:86
+msgid "E-Posta değiştirme işleminiz başarıyla gerçekleştirilmiştir."
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:101
+#, python-format
+msgid "%s %s Profil Sayfası"
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:105
+msgid "E-Posta Değiştir"
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:115
+#, python-format
+msgid ""
+"%s ya da çıkış yapmadan devam edebilirsiniz.\n"
+"                            Eğer eski bilgilerinizin bilindiği şüphesine "
+"sahipseniz 'Çıkış Yap'\n"
+"                            seçeneğini seçmenizi öneririz."
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:121
+msgid "İşlem Seçeneği"
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:122
+msgid "Çıkış Yap"
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:123
+msgid "Çıkış Yapmadan Devam Et"
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:146
+msgid "Dil, Sayı, Zaman Formatı Değişikliği"
+msgstr ""
+
+#: views/common/profil_sayfasi_goruntuleme.py:147
+msgid ""
+"Değişiklikleriniz başarıyla kaydedilmiştir. Ana sayfaya yönlendiriliyorsunuz."
+msgstr ""
+
+#: views/common/yeni_donem_olusturma.py:34
+msgid "Güz Dönemi"
+msgstr ""
+
+#: views/common/yeni_donem_olusturma.py:44
+msgid "Bahar Dönemi"
+msgstr ""
+
+#: views/common/yeni_donem_olusturma.py:89
+#: views/common/yeni_donem_olusturma.py:128
+msgid "Güz ve Bahar Dönemi"
+msgstr ""
+
+#: views/common/yeni_donem_olusturma.py:93
+msgid ""
+"Kayıtlardaki en son donem {donem}\n"
+"        Başlangıç Tarihi: {baslangic},\n"
+"        Bitiş Tarihi: {bitis}\n"
+"        "
+msgstr ""
+
+#: views/common/yeni_donem_olusturma.py:118
+msgid "Bahar"
+msgstr ""
+
+#: views/common/yeni_donem_olusturma.py:119
+msgid "Güz"
+msgstr ""
+
+#: views/common/yeni_donem_olusturma.py:129
+msgid "Güz ve Bahar Dönemi başarıyla oluşturulmuştur."
+msgstr ""
+
+#: views/common/yeni_parola_belirle.py:42
+msgid "Yeni Parola Girişi"
+msgstr ""
+
+#: views/common/yeni_parola_belirle.py:56 views/ders_programi/zaman_tablosu.py:20
+#: views/personel/kadro.py:540 views/workflow/workflow_management.py:46
+msgid "Onayla"
+msgstr ""
+
+#: views/common/yeni_parola_belirle.py:67
+msgid "Hatalı Şifre"
+msgstr ""
+
+#: views/ders/danisman.py:32 views/ders_programi/derslik_ders_programlari.py:24
+#: views/ders_programi/derslik_sinav_programlari.py:21
+#: views/ogrenci/ogrenci.py:695 views/ogrenci/ogrenci.py:900
+#: views/ogrenci/on_kayit.py:13 views/personel/izin.py:219
+msgid "İleri"
+msgstr ""
+
+#: views/ders/danisman.py:40 views/reports/ders_ucreti_hesaplama.py:51
+msgid "Seçim"
+msgstr ""
+
+#: views/ders/danisman.py:41 views/ders/ders.py:193
+#: views/ogrenci/katilim_durumu.py:32 views/ogrenci/katilim_durumu.py:48
+#: views/ogrenci/ogrenci.py:247
+msgid "Ad Soyad"
+msgstr ""
+
+#: views/ders/danisman.py:42 views/ders/ders.py:196
+msgid "Key"
+msgstr ""
+
+#: views/ders/danisman.py:90 views/reports/ders_ucreti_hesaplama.py:135
+msgid "Okutman Seçiniz"
+msgstr ""
+
+#: views/ders/danisman.py:145
+msgid "Danismanlar Kaydedildi"
+msgstr ""
+
+#: views/ders/danisman.py:146
+#, python-format
+msgid ""
+"%(donem)s dönemi için %(unit)s programına ait danışman listesi kaydedilmiştir"
+msgstr ""
+
+#: views/ders/danisman.py:150 views/ogrenci/ogrenci.py:385
+msgid "Danışman Atama"
+msgstr ""
+
+#: views/ders/danisman.py:151
+#, python-format
+msgid "%s dönemi için  danışman olarak atandınız."
+msgstr ""
+
+#: views/ders/ders.py:51 views/ders/ders.py:153 views/ders/ders.py:162
+#: views/ders/ders.py:443 views/ders/ders.py:476
+#: views/ogrenci/katilim_durumu.py:98 views/ogrenci/kayit_silme.py:180
+#: views/ogrenci/ogrenci.py:283 views/ogrenci/ogrenci.py:301
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:112
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:127 views/personel/kadro.py:290
+msgid "Seç"
+msgstr ""
+
+#: views/ders/ders.py:78
+msgid "Kaydet/Yeni Kayıt Ekle"
+msgstr ""
+
+#: views/ders/ders.py:170 views/ders/ders.py:643
+msgid "Kaydet ve Ders Seçim Ekranına Dön"
+msgstr ""
+
+#: views/ders/ders.py:172
+msgid "Kaydet ve Program Seçim Ekranına Dön"
+msgstr ""
+
+#: views/ders/ders.py:174
+msgid "Tamamla ve Hocaları Bilgilendir"
+msgstr ""
+
+#: views/ders/ders.py:181
+msgid "Şube Adı"
+msgstr ""
+
+#: views/ders/ders.py:182
+msgid "Şube Kontenjanı"
+msgstr ""
+
+#: views/ders/ders.py:183
+msgid "Şube Dış Kontenjanı"
+msgstr ""
+
+#: views/ders/ders.py:192
+msgid "No"
+msgstr ""
+
+#: views/ders/ders.py:259 views/ogrenci/ogrenci_isleri_not_duzenleme.py:94
+msgid "Program Seçiniz."
+msgstr ""
+
+#: views/ders/ders.py:306
+#, python-format
+msgid ""
+"* **%(unvan)s %(ad)s %(soyad)s**\n"
+"                                Sube: %(sube)s - Kontenjan: %(kontenjan)s"
+msgstr ""
+
+#: views/ders/ders.py:314
+msgid "Şubelendir"
+msgstr ""
+
+#: views/ders/ders.py:336
+#, python-format
+msgid "%(donem)s / %(ders)s dersi için şubelendirme"
+msgstr ""
+
+#: views/ders/ders.py:381
+msgid "Şubelendirme"
+msgstr ""
+
+#: views/ders/ders.py:383
+#, python-format
+msgid "Bölüm Başkanı %s tarafından şubelerinizde değişiklikler yapılmıştır."
+msgstr ""
+
+#: views/ders/ders.py:405 views/ders/ders.py:410
+msgid "Mesaj İletildi"
+msgstr ""
+
+#: views/ders/ders.py:406
+#, python-format
+msgid "Şubelendirme bilgileri şu hocalara iletildi: %s"
+msgstr ""
+
+#: views/ders/ders.py:411
+msgid "Derse ait şubelerde değişiklik yapmadınız."
+msgstr ""
+
+#: views/ders/ders.py:437 views/ogrenci/katilim_durumu.py:25
+msgid "Ders Seçim Formu"
+msgstr ""
+
+#: views/ders/ders.py:440
+msgid "Şube Seçiniz"
+msgstr ""
+
+#: views/ders/ders.py:443
+msgid "Ders Şubesi Seçin"
+msgstr ""
+
+#: views/ders/ders.py:466
+msgid "Sınav Seçim Formu"
+msgstr ""
+
+#: views/ders/ders.py:473
+msgid "Sınav Seçiniz"
+msgstr ""
+
+#: views/ders/ders.py:476
+msgid "Sınav Seçin"
+msgstr ""
+
+#: views/ders/ders.py:525
+msgid "Not Giriş Formu"
+msgstr ""
+
+#: views/ders/ders.py:558 views/ogrenci/katilim_durumu.py:134
+msgid "Önizleme"
+msgstr ""
+
+#: views/ders/ders.py:584
+msgid "Not Önizleme Ekranı"
+msgstr ""
+
+#: views/ders/ders.py:594 views/ders/ders.py:618
+msgid "Adı Soyadı"
+msgstr ""
+
+#: views/ders/ders.py:595 views/ders/ders.py:620
+msgid "Değerlendirme"
+msgstr ""
+
+#: views/ders/ders.py:628
+msgid "Notlar Onaylandı"
+msgstr ""
+
+#: views/ders/ders.py:629
+msgid "Bu derse ait notlar onaylanmış olduğu için içeriği değiştirilemez."
+msgstr ""
+
+#: views/ders/ders.py:632
+msgid "Ders Seçim Ekranına Dön"
+msgstr ""
+
+#: views/ders/ders.py:634
+msgid "Sınav Seçim Ekranına Dön"
+msgstr ""
+
+#: views/ders/ders.py:639
+msgid "Sınav Notlarını Onaylıyorum (Bu işlem geri alınamaz!)"
+msgstr ""
+
+#: views/ders/ders.py:640
+msgid "Notları Düzenle"
+msgstr ""
+
+#: views/ders/ders.py:646
+msgid "Kaydet ve Sınav Seçim Ekranına Dön"
+msgstr ""
+
+#: views/ders/ders.py:711
+msgid "Notlar Kaydedildi"
+msgstr ""
+
+#: views/ders/ders.py:712
+#, python-format
+msgid "%(ders)s dersine ait %(tarih)s tarihli sınav notları kaydedildi"
+msgstr ""
+
+#: views/ders_programi/derslik_ders_programlari.py:66
+msgid "Yayınlanmamış Dersler"
+msgstr ""
+
+#: views/ders_programi/derslik_ders_programlari.py:67
+msgid "Yayınlanmış dersler bulunmamaktadır."
+msgstr ""
+
+#: views/ders_programi/derslik_ders_programlari.py:75
+#: views/ders_programi/derslik_sinav_programlari.py:73
+msgid "Derslik Seçiniz"
+msgstr ""
+
+#: views/ders_programi/derslik_ders_programlari.py:120
+#, python-format
+msgid "%s Dersliğine Ait Ders Programları"
+msgstr ""
+
+#: views/ders_programi/derslik_ders_programlari.py:121
+msgid "Pdf yazdır"
+msgstr ""
+
+#: views/ders_programi/derslik_sinav_programlari.py:64
+msgid "Yayınlanmamış Sınavlar"
+msgstr ""
+
+#: views/ders_programi/derslik_sinav_programlari.py:65
+msgid "Yayınlanmış sınavlar bulunmamaktadır."
+msgstr ""
+
+#: views/ders_programi/derslik_sinav_programlari.py:118
+#, python-format
+msgid "%s Dersliğine Ait Sınav Programlar"
+msgstr ""
+
+#: views/ders_programi/derslik_sinav_programlari.py:119
+msgid "Pdf Yazdır"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:26
+msgid "Yayınlanmış Program Var!"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:27
+msgid "Yayınlanan programınız bulunmaktadır. Tekrardan program oluşturamazsınız."
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:29
+msgid "Yayınlanmamış Program Var!"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:30
+#: views/ders_programi/program_olustur.py:37
+msgid "Yayınlanmayan programınızı inceleyip yayınlayabilirsiniz."
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:32
+msgid "Hatalı Sonuçlar Var!"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:33
+msgid ""
+"Oluşturulan programda hatalı sonuçlar bulunmaktadır. Lütfen tekrardanverileri "
+"düzenleyip çalıştırınız."
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:36
+msgid "Program Başarıyla Oluşturuldu!"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:39
+msgid "Program Yayınlandı!"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:40
+msgid "Oluşturulan Program Başarıyla Yayınlandı"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:45
+msgid "Öğretim Elemanı veya Derslik Ara"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:47
+msgid "Arama Seçeneği"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:48
+#: views/ders_programi/program_olustur.py:331
+msgid " "
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:49
+msgid "Ara"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:50
+#: views/ders_programi/program_olustur.py:322
+#: views/workflow/workflow_management.py:47
+msgid "Geri"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:91
+msgid "Program Oluştur"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:92
+msgid "Başlat"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:109
+msgid "Program Oluşturuluyor"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:110
+msgid "Program için yaptığınız taleb başarıyla alınmıştır."
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:114
+msgid "Sistemde Sorun Oluştu"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:115
+msgid "Lütfen tekrardan programı oluşturmayı çalıştırnız!"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:149
+msgid "İşleme devam etmek için tıklayınız!"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:150 views/personel/isten_ayrilma.py:67
+msgid "Devam"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:158
+msgid "Programı İncele Veya Yayınla"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:159
+msgid "İncele"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:160
+msgid "Yayınla"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:221
+#: views/ders_programi/program_olustur.py:230
+msgid "Code"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:221
+#: views/ders_programi/program_olustur.py:231
+msgid "Name"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:236
+msgid "Goster"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:256
+#: views/ders_programi/program_olustur.py:290
+msgid "Pazartesi"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:256
+#: views/ders_programi/program_olustur.py:290
+msgid "Salı"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:256
+#: views/ders_programi/program_olustur.py:290
+msgid "Çarşamba"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:256
+#: views/ders_programi/program_olustur.py:290
+msgid "Perşembe"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:256
+#: views/ders_programi/program_olustur.py:290
+msgid "Cuma"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:256
+#: views/ders_programi/program_olustur.py:290
+msgid "Cumartesi"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:256
+#: views/ders_programi/program_olustur.py:290
+msgid "Pazar"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:319
+msgid " Detaylı Zaman Tablosu"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:320
+#: views/ders_programi/program_olustur.py:332
+#: views/ders_programi/zaman_dilimi.py:42 views/personel/isten_ayrilma.py:76
+msgid "Bitir"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:327
+msgid "Kayıt Bulunamadı"
+msgstr ""
+
+#: views/ders_programi/program_olustur.py:328
+msgid "İlgili kayıt bulunamadı."
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:23
+msgid "Zaman Aralığı"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:32
+msgid "Varsayılan Zaman Dilimleri"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:36
+msgid "Değiştir"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:41
+msgid "Güncel Zaman Dilimleri"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:48
+msgid "ZAMAN DİLİMİ"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:49
+msgid "GÜN DİLİMİ"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:55 views/personel/atama.py:389
+#: views/personel/atama.py:410 views/personel/idari_cezalar.py:20
+#: views/personel/isten_ayrilma.py:165 views/personel/personel_test.py:79
+#: views/personel/yeni_personel.py:99 views/personel/yeni_personel.py:170
+#: views/reports/ders_ucreti_hesaplama.py:111
+#: views/reports/ders_ucreti_hesaplama.py:174
+msgid "İptal"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:68
+msgid "Kaydedildi!"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:69
+msgid "Kaydınız başarıyla gerçekleşti"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:74
+msgid "Kayıt Başarısız Oldu!"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:75
+msgid "Malesef kaydınız başarısız oldu"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:81
+msgid "Kayıt İşleminiz Tamamlanmıştır!"
+msgstr ""
+
+#: views/ders_programi/zaman_dilimi.py:82
+msgid "Güncel Zaman Dilimleri Zaman Tablosuna eklenmiştir"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:21 views/personel/kadro.py:541
+msgid "Reddet"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:180
+msgid "Talebiniz Bölüm Başkanı Tarafından Reddedildi"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:183 views/personel/kadro.py:449
+msgid "Onaya Gönder"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:303
+msgid "Programı Bölüm Başkanına yollamak istiyor musunuz?"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:304 views/personel/gorevlendirme.py:122
+#: views/personel/idari_cezalar.py:74 views/personel/kadro.py:182
+#: views/personel/saglik_raporu.py:59
+msgid "Evet"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:305 views/personel/gorevlendirme.py:123
+#: views/personel/idari_cezalar.py:75 views/personel/kadro.py:183
+#: views/personel/saglik_raporu.py:60
+msgid "Hayır"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:309
+msgid "Onay İçin Gönderildi!"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:310
+msgid "Talebiniz Başarıyla iletildi."
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:385
+msgid "Gönder"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:390
+msgid "Red Açıklaması Gönderildi!"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:391
+msgid "İşleminiz başarıyla gerçeklesmistir"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:396
+msgid "Talebiniz Onaylandı!"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:397
+msgid "Gönderdiğiniz zaman tablosu Bölüm Başkanı tarafından onaylandı."
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:402
+msgid "Zaman Tablosunu Onayladınız!"
+msgstr ""
+
+#: views/ders_programi/zaman_tablosu.py:403
+msgid "Bölüm ders programı koordinatörüne onaylama iletildi."
+msgstr ""
+
+#: views/ogrenci/katilim_durumu.py:29 views/ogrenci/katilim_durumu.py:45
+msgid "Öğrenciler"
+msgstr ""
+
+#: views/ogrenci/katilim_durumu.py:41
+msgid "Katılım Durumu Bilgileri Önizleme Ekranı"
+msgstr ""
+
+#: views/ogrenci/katilim_durumu.py:93
+msgid "Şube Seçiniz."
+msgstr ""
+
+#: views/ogrenci/katilim_durumu.py:95
+msgid "Sube Seçiniz"
+msgstr ""
+
+#: views/ogrenci/katilim_durumu.py:108
+msgid "Ders Katılımı Giriş Formu"
+msgstr ""
+
+#: views/ogrenci/katilim_durumu.py:149
+msgid "Geri Dön ve Düzenle"
+msgstr ""
+
+#: views/ogrenci/katilim_durumu.py:183
+msgid "Devamsızlıklar Kaydedildi"
+msgstr ""
+
+#: views/ogrenci/katilim_durumu.py:184
+#, python-format
+msgid ""
+"%s dersine ait öğrencilerin katılım bilgileri                            "
+"başarıyla kaydedildi"
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:123
+msgid "Kayıt Silme Başarılı"
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:124
+#, python-format
+msgid " %s adlı öğrencinin kaydı daha önceden silinmiştir."
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:136
+msgid "Kayıt Silme İşlemini Onaylayınız."
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:137
+#, python-format
+msgid "%s adlı öğrencinin %s rollerini silmek üzerisiniz. Emin misiniz?"
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:152
+msgid "Kayıt Silme İşlemi"
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:153
+msgid "Kayıt silme işlemi iptal edilmiştir."
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:165 views/ogrenci/ogrenci.py:507
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:83
+msgid "Fakülte Yönetim Kurulunun Karar Numarasını Giriniz."
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:166 views/ogrenci/ogrenci.py:508
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:84
+msgid "Karar No"
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:177
+msgid "Öğrencinin Ayrılma Nedenini Seçiniz"
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:179
+msgid "Açıklama Yazınız"
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:223 views/ogrenci/kayit_silme.py:241
+#: views/ogrenci/kayit_silme.py:245
+msgid "Kayıt Silme"
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:224
+#, python-format
+msgid ""
+"%s adlı öğrencinin kaydı silinmiştir.\n"
+"                            Öğrenci farklı rollere sahiptir."
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:242
+#, python-format
+msgid "Öğrencinin kaydı %s nedeniyle silinmiştir."
+msgstr ""
+
+#: views/ogrenci/kayit_silme.py:246
+#, python-format
+msgid "%s adlı öğrencinin kaydı %s nedeniyle silinmiştir."
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:55
+msgid "Mernis Sorgula"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:125
+msgid "KPS Sorgula"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:249
+msgid "Kimlik No"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:254
+msgid "Anne Adı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:258
+msgid "Eposta"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:260
+msgid "Sitem Kullanıcı Adı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:265
+msgid "Kimlik Bilgileri"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:270 views/personel/yeni_personel.py:204
+msgid "İletişim Bilgileri"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:336 views/ogrenci/ogrenci.py:418
+#: views/ogrenci/ogrenci.py:518 views/ogrenci/ogrenci.py:754
+#: views/ogrenci/ogrenci.py:896 views/ogrenci/ogrenci.py:897
+msgid "Öğrenci Programı Seçiniz"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:349
+msgid "Danışman Seçiniz"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:377
+msgid "Danışman Ataması Yapıldı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:378
+#, python-format
+msgid ""
+"%(ogrenci)s adlı öğrenciye %(danisman)s adlı personel                         "
+"danışman olarak atandı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:386
+#, python-format
+msgid "%(ogrenci)s adlı öğrenciye danışman olarak atandınız."
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:441
+msgid "Öğrenci Mezuniyet Kaydı Başarılı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:442
+#, python-format
+msgid ""
+"%(ogrenci_no)s numaralı %(ogrenci)s adlı öğrenci %(bolum)s "
+"adlı                 bölümden %(diploma)s diploma numarası ile mezun edilmiştir"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:453 views/ogrenci/ogrenci.py:938
+msgid "Bir Hata Oluştu"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:454
+#, python-format
+msgid "Öğrenci Mezuniyet Kaydı Başarısız. Hata Kodu : %s"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:479
+msgid "Kayıt Dondurma Başlangıç Tarihi"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:485
+msgid "Aciklama"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:535
+msgid "Lütfen Dönem Seçiniz"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:553
+msgid "Minimum 1 dönem, maximum 2 dönem kayıt dondurabilir."
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:571
+#, python-format
+msgid "%s dönem seçtiniz. En az 1 dönem, en çok 2 dönem kayıt dondurabilir."
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:603
+#, python-format
+msgid ""
+"%s numaralı, %s adlı öğrencinin %s programındaki kaydı\n"
+"                                 dondurulmuştur."
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:612
+msgid "Öğrenci Kaydı Donduruldu"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:615
+#, python-format
+msgid "%s dönemleri için kaydınız dondurulmuştur."
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:620
+msgid "Kayıt Dondurma"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:624
+msgid "Öğrenci Kayıt Dondurma Başarılı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:649
+msgid "Ders Kodu"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:649
+msgid "Sinav Notlari"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:667
+msgid "Geçti"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:667
+msgid "Kaldı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:773 views/ogrenci/ogrenci.py:781
+msgid "Ders Seçiniz"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:863 views/ogrenci/ogrenci.py:868
+msgid "Öğrenci Ders Ekleme"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:864
+msgid "Ders seçimi yapılmadı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:869
+msgid "Seçilen ders başarıyla eklendi."
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:918
+msgid "Fakülte Yönetim Kurulu Karar No Giriniz"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:919
+msgid "Fakülte Yönetim Kurulu Karar No"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:924
+msgid "Öğrenci Ders Kaydı Yapamaz"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:925
+msgid "Öğrenci Durum Kodu Ders Kaydı İçin Uygun Değil"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:939
+#, python-format
+msgid "Öğrenci Ders Kayıt Durumu Değiştirme Başarısız. Hata Kodu : %s"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:951
+msgid "Öğrenci Ders Kayıt Durumu Değiştirme Başarılı"
+msgstr ""
+
+#: views/ogrenci/ogrenci.py:952
+#, python-format
+msgid ""
+"%s nolu %s adlı öğrencinin %s programına ait ders\n"
+"                          kayıt durumu \"Mazeretli\" olarak güncellendi"
+msgstr ""
+
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:109
+msgid "Ders Seçiniz."
+msgstr ""
+
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:124
+msgid "Sınav Seçiniz."
+msgstr ""
+
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:144
+#, python-format
+msgid "%(ogrenci)s adlı öğrencinin %(sinav)s sınava ait notunu düzenleyiniz."
+msgstr ""
+
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:165
+msgid "Not Düzeltme Tamamlandı"
+msgstr ""
+
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:166
+#, python-format
+msgid ""
+"%(ogrenci)s adlı öğrencinin, %(sinav)s sınavına ait\n"
+"            %(onceki_puan)s olan notu, %(yeni_puan)s ile değiştilmiştir."
+msgstr ""
+
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:174
+msgid "Not Düzenleme"
+msgstr ""
+
+#: views/ogrenci/ogrenci_isleri_not_duzenleme.py:175
+#, python-format
+msgid ""
+"%(sinav)s sınavınıza ait %(onceki_puan)s olan notu,\n"
+"                        %(yeni_puan)s ile değiştirilmiştir."
+msgstr ""
+
+#: views/ogrenci/on_kayit.py:51
+msgid "Kişisel Bilgiler"
+msgstr ""
+
+#: views/ogrenci/on_kayit.py:75
+msgid "Ön Kayıt Onayla"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:68
+msgid "Faaliyet Seçiniz"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:70 views/personel/akademik_faaliyet.py:74
+#: views/personel/akademik_faaliyet.py:144
+#: views/personel/akademik_faaliyet.py:156
+msgid "Ileri"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:107
+msgid "Listeye Dön"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:111
+msgid "Faaliyet Türünü Seçiniz"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:121
+#: views/personel/akademik_faaliyet.py:122
+msgid "Alt Faaliyet Seçiniz"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:130
+msgid "Detay Seçiniz"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:153
+msgid "Görev Seçiniz"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:164
+msgid "Faaliyet bilgilerini giriniz"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:192
+msgid "Akademik Faaliyet Kayit"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:194
+msgid "Listeye Geri Don"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:200 views/personel/gorevlendirme.py:71
+#: views/personel/idari_cezalar.py:124 views/personel/isten_ayrilma.py:164
+#: views/personel/kadro.py:245 views/personel/saglik_raporu.py:141
+#: views/personel/ucretsiz_izin.py:127
+msgid "Sil"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:201 views/personel/idari_cezalar.py:123
+msgid "Görüntüle"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:218
+msgid "Faaliyet"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:218
+msgid "Toplam Sayı"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:226
+msgid "Detaylar"
+msgstr ""
+
+#: views/personel/akademik_faaliyet.py:241
+msgid "Oran"
+msgstr ""
+
+#: views/personel/atama.py:85 views/personel/atama.py:235
+msgid "Personel Atama Başarısız"
+msgstr ""
+
+#: views/personel/atama.py:86 views/personel/atama.py:236
+msgid "Kadrolar dolu olduğu için atama yapılamaz."
+msgstr ""
+
+#: views/personel/atama.py:117
+msgid "Personel Tipi"
+msgstr ""
+
+#: views/personel/atama.py:202
+msgid ""
+"**Adı**: {ad}\n"
+"                              **Soyadı**: {soyad}\n"
+"                              **Personel Tipi**: {personel_turu}"
+msgstr ""
+
+#: views/personel/atama.py:208
+msgid ""
+"**Hizmet Sınıfı**: {hizmet_sinifi}\n"
+"**Birim**:{0}\n"
+msgstr ""
+
+#: views/personel/atama.py:210 views/personel/atama.py:357
+msgid "Genel Bilgiler"
+msgstr ""
+
+#: views/personel/atama.py:211 views/personel/atama.py:280
+#: views/personel/atama.py:398
+msgid "Atama Bilgileri"
+msgstr ""
+
+#: views/personel/atama.py:220
+msgid "Personel Atama Bilgileri"
+msgstr ""
+
+#: views/personel/atama.py:221 views/personel/gorevlendirme.py:73
+#: views/personel/idari_cezalar.py:125 views/personel/kadro.py:280
+#: views/personel/saglik_raporu.py:142
+msgid "Düzenle"
+msgstr ""
+
+#: views/personel/atama.py:222 views/personel/yeni_personel.py:150
+msgid "Atama Yap"
+msgstr ""
+
+#: views/personel/atama.py:265
+msgid "Hata Oluştu"
+msgstr ""
+
+#: views/personel/atama.py:266 views/personel/saglik_raporu.py:76
+#, python-format
+msgid "%s"
+msgstr ""
+
+#: views/personel/atama.py:274
+msgid ""
+"**Adı**: {ad}\n"
+"                              **Soyad**: {soyad}"
+msgstr ""
+
+#: views/personel/atama.py:277
+msgid "**Atama**: {atama}\n"
+msgstr ""
+
+#: views/personel/atama.py:279 views/personel/yeni_personel.py:111
+#: views/personel/yeni_personel.py:115
+msgid "Kişi Bilgileri"
+msgstr ""
+
+#: views/personel/atama.py:285
+msgid "Personel Ataması Başarı ile Tamamlandı"
+msgstr ""
+
+#: views/personel/atama.py:291
+msgid "Kişi ve Atama Bilgileri"
+msgstr ""
+
+#: views/personel/atama.py:293
+msgid "Hitap ile Eşleştir"
+msgstr ""
+
+#: views/personel/atama.py:294 views/personel/yeni_personel.py:152
+msgid "İşlemi Bitir"
+msgstr ""
+
+#: views/personel/atama.py:303
+msgid "Atama İptal Edildi"
+msgstr ""
+
+#: views/personel/atama.py:304
+msgid "Personel atama işlemi iptal edildi."
+msgstr ""
+
+#: views/personel/atama.py:315
+msgid "Personel için hitap bilgileri Hitap sunucusu ile eşleştirildi."
+msgstr ""
+
+#: views/personel/atama.py:317
+msgid ""
+"\n"
+"                    Personel için hitap bilgileri Hitap sunucusu ile "
+"eşleştirilemedi!!\n"
+"                    Bu işlemi daha sonra tekrar başlatabilirsiniz.\n"
+"                    "
+msgstr ""
+
+#: views/personel/atama.py:323
+msgid "Personel Atama Başarılı"
+msgstr ""
+
+#: views/personel/atama.py:324
+msgid "Atama İşlemi başarıyla gerçekleştirildi. "
+msgstr ""
+
+#: views/personel/atama.py:349
+msgid "Personelin Eksik Bilgileri"
+msgstr ""
+
+#: views/personel/atama.py:350
+msgid "Atama Öncesi Personelin Eksik Bilgilerini Düzenlenleyiniz."
+msgstr ""
+
+#: views/personel/atama.py:379
+msgid "Görev Süresi"
+msgstr ""
+
+#: views/personel/atama.py:400
+msgid "Atanacak Kadro Seçiniz"
+msgstr ""
+
+#: views/personel/crud_hitap.py:49 views/personel/personel_test.py:23
+msgid "Ekle"
+msgstr ""
+
+#: views/personel/crud_hitap.py:50
+msgid "HITAP ile senkronize et"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:31
+msgid "Yeni Ekle"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:36
+msgid "Görevlendirme Tür Seç"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:38
+msgid "Görevlendirme Tür"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:39 views/personel/gorevlendirme.py:146
+#: views/personel/gorevlendirme.py:192 views/personel/personel_test.py:59
+msgid "Kaydet ve Devam Et"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:62
+msgid "Görevlendirme Listesi"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:104
+msgid "Görev Silme İşlemi"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:105
+#, python-format
+msgid ""
+"Ad Soyad: **%(ad)s** **%(soyad)s**\n"
+"\n"
+"Başlama Tarihi: **%(baslama_tarihi)s**\n"
+"\n"
+"Bitiş Tarihi: **%(bitis_tarihi)s**\n"
+"\n"
+"Görev Tipi: **%(sure)s**\n"
+"\n"
+"Bilgilerin bulunduğu görevi silmek istiyor musunuz?"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:156 views/personel/gorevlendirme.py:202
+msgid "Hatalı Tarih Girişi"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:157 views/personel/gorevlendirme.py:203
+#, python-format
+msgid "%(hata_msg)s"
+msgstr ""
+
+#: views/personel/gorevlendirme.py:258
+msgid "Hizmet Cetveli Form"
+msgstr ""
+
+#: views/personel/idari_cezalar.py:37
+msgid "Değişiklikleriniz Kaydedildi"
+msgstr ""
+
+#: views/personel/idari_cezalar.py:40
+msgid "İdari Ceza Oluşturuldu"
+msgstr ""
+
+#: views/personel/idari_cezalar.py:44
+msgid "Silme İşlemi Başarılı"
+msgstr ""
+
+#: views/personel/idari_cezalar.py:47
+#, python-format
+msgid "dosya sıra numaralı ceza kaydı %s"
+msgstr ""
+
+#: views/personel/idari_cezalar.py:50
+msgid "İdari Ceza Silme İşlemi"
+msgstr ""
+
+#: views/personel/idari_cezalar.py:51
+#, python-format
+msgid ""
+"Ad Soyad: **%(ad)s** **%(soyad)s**\n"
+"\n"
+"Dosya Sıra No: **%(dosya_sira_no)s**\n"
+"\n"
+"Açılış Tarihi: **%(acilis_tarihi)s**\n"
+"\n"
+"Başlama Tarihi: **%(baslama_tarihi)s**\n"
+"\n"
+"Bitiş Tarihi: **%(bitis_tarihi)s**\n"
+"\n"
+"Ceza Türü: **%(ceza_turu)s**\n"
+"\n"
+"Bilgilerinin bulunduğu idari cezayı silme işlemini onaylıyor musunuz?"
+msgstr ""
+
+#: views/personel/idari_cezalar.py:116
+msgid "Tamam"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:27 views/personel/isten_ayrilma.py:59
+msgid "Personel İşten Ayrılma"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:31
+msgid "Personele Ait Silinmis Kayit Bilgileri"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:32 views/personel/isten_ayrilma.py:61
+msgid "Ayrılma Sebebi"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:33 views/personel/isten_ayrilma.py:64
+msgid "Ayrılma Tarihi"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:34 views/personel/isten_ayrilma.py:65
+msgid "Ayrılma Notu"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:45
+msgid "Personele ait silinmiş kayıt bulunmamaktadır."
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:48
+msgid "İşten Ayrıl"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:58
+msgid "Personel işten ayrılma formu"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:74
+msgid "Kullanıcıya Ait Aktif Görevler"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:79
+msgid "WF Adı"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:80
+msgid "Eski Rol"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:81
+msgid "Yeni Rol"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:162
+#, python-format
+msgid "%(title)s"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:163
+#, python-format
+msgid "%(msg)s"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:239
+msgid "Ayrılma İşlemi Başarıyla Gerçekleşti"
+msgstr ""
+
+#: views/personel/isten_ayrilma.py:240
+#, python-format
+msgid "%(ad)s %(soyad)s adlı personel işten ayrıldı."
+msgstr ""
+
+#: views/personel/izin.py:56
+msgid "Pasif"
+msgstr ""
+
+#: views/personel/izin.py:197
+msgid "Yıllık İzin"
+msgstr ""
+
+#: views/personel/izin.py:198
+msgid "Mazeret İzni"
+msgstr ""
+
+#: views/personel/izin.py:199
+msgid "Refakat İzni"
+msgstr ""
+
+#: views/personel/izin.py:200
+msgid "Fazla Mesai İzni"
+msgstr ""
+
+#: views/personel/izin.py:206
+msgid "İzin Türü Seçiniz"
+msgstr ""
+
+#: views/personel/izin.py:207
+msgid "Ait Olduğu Yıl"
+msgstr ""
+
+#: views/personel/izin.py:210
+msgid "İzindeki Adres"
+msgstr ""
+
+#: views/personel/izin.py:211
+msgid "İzin Talep Eden"
+msgstr ""
+
+#: views/personel/izin.py:212
+msgid "Görevi"
+msgstr ""
+
+#: views/personel/izin.py:213
+msgid "Sicil no"
+msgstr ""
+
+#: views/personel/izin.py:214
+msgid "Birimi"
+msgstr ""
+
+#: views/personel/izin.py:215
+msgid "Yol İzni"
+msgstr ""
+
+#: views/personel/izin.py:216
+msgid "Kullanacağı İzin Süresi(Gün)"
+msgstr ""
+
+#: views/personel/izin.py:217
+msgid "Kalan İzin Süresi(Gün)"
+msgstr ""
+
+#: views/personel/izin.py:233
+msgid "İzin Başvuru"
+msgstr ""
+
+#: views/personel/izin.py:234
+#, python-format
+msgid "%s yılı için izin kullanımlarınız bitmiştir."
+msgstr ""
+
+#: views/personel/izin.py:257
+msgid "İzin Talep Formu"
+msgstr ""
+
+#: views/personel/izin.py:263
+msgid ""
+"{onceki} yılına ait izinli gün sayınız {onceki_izin}, Kalan gün sayınız "
+"{onceki_kalan}\n"
+"                          {guncel} yılına ait izinli gün sayınız {guncel_izin},"
+"Toplam izinli gün sayınız  {guncel_kalan}\n"
+"                          'dir.\n"
+"                          "
+msgstr ""
+
+#: views/personel/izin.py:321
+msgid "İzin Başvurusu Yapıldı"
+msgstr ""
+
+#: views/personel/izin.py:322
+#, python-format
+msgid "%s %s tarih aralığı için yaptığınız izin talebi başarıyla alınmıştır."
+msgstr ""
+
+#: views/personel/izin.py:347
+msgid "İzin Başvurusu Onaylandı"
+msgstr ""
+
+#: views/personel/izin.py:348
+msgid "İzin talebi başarıyla onaylanmıştır."
+msgstr ""
+
+#: views/personel/izin.py:359
+msgid "İzin Talep Önizleme Formu"
+msgstr ""
+
+#: views/personel/kadro.py:92
+msgid "Ünvan ve Derece"
+msgstr ""
+
+#: views/personel/kadro.py:102
+msgid "Diğer"
+msgstr ""
+
+#: views/personel/kadro.py:199
+#, python-format
+msgid ""
+"Akademik unvanı: **%(unvan)s**\n"
+"        Kadro numarası: **%(kadro)s**\n"
+"        Açıklaması: **%(aciklama)s**\n"
+"\n"
+"        bilgilerine sahip kadroyu silmek istiyor musunuz ?"
+msgstr ""
+
+#: views/personel/kadro.py:246
+msgid "İzinli Yap"
+msgstr ""
+
+#: views/personel/kadro.py:263
+msgid "Sakli Yap"
+msgstr ""
+
+#: views/personel/kadro.py:291
+msgid "TCK No"
+msgstr ""
+
+#: views/personel/kadro.py:293 views/personel/kadro.py:375
+msgid "Kadro Derece"
+msgstr ""
+
+#. Görev Aylığı
+#: views/personel/kadro.py:296 views/personel/kadro.py:378
+msgid "GA"
+msgstr ""
+
+#. Kazanılmış Hak
+#: views/personel/kadro.py:298 views/personel/kadro.py:380
+msgid "KH"
+msgstr ""
+
+#. Emekli Muktesebat
+#: views/personel/kadro.py:300 views/personel/kadro.py:382
+msgid "EM"
+msgstr ""
+
+#. Yeni Görev Aylığı
+#: views/personel/kadro.py:303
+msgid "Yeni GA"
+msgstr ""
+
+#. Yeni Kazanılmış Hak
+#: views/personel/kadro.py:305
+msgid "Yeni KH"
+msgstr ""
+
+#. Yeni Emekli Muktesebat
+#: views/personel/kadro.py:307
+msgid "Yeni EM"
+msgstr ""
+
+#: views/personel/kadro.py:361
+msgid ""
+"\n"
+"        GA: Görev Aylığı\n"
+"        KH: Kazanılmış Hak\n"
+"        EM: Emekli Muktesebat\n"
+"\n"
+"        D: Derece\n"
+"        K: Kademe\n"
+"        G: Gorunen\n"
+"        "
+msgstr ""
+
+#: views/personel/kadro.py:373
+msgid "T.C. No"
+msgstr ""
+
+#. Yeni Görev Aylığı Derece
+#: views/personel/kadro.py:385
+msgid "GAD"
+msgstr ""
+
+#. Yeni Görev Aylığı Kademe
+#: views/personel/kadro.py:387
+msgid "GAK"
+msgstr ""
+
+#. Yeni Görev Aylığı Görünen
+#: views/personel/kadro.py:389
+msgid "GAG"
+msgstr ""
+
+#. Kazanılmış Görev Aylığı Derece
+#: views/personel/kadro.py:392
+msgid "KHD"
+msgstr ""
+
+#. Kazanılmış Görev Aylığı Derece
+#: views/personel/kadro.py:394
+msgid "KHK"
+msgstr ""
+
+#. Kazanılmış Görev Aylığı Derece
+#: views/personel/kadro.py:396
+msgid "KHG"
+msgstr ""
+
+#. Emekli Muktesebat Derece
+#: views/personel/kadro.py:399
+msgid "EMD"
+msgstr ""
+
+#. Emekli Muktesebat Derece
+#: views/personel/kadro.py:401
+msgid "EMK"
+msgstr ""
+
+#. Emekli Muktesebat Derece
+#: views/personel/kadro.py:403
+msgid "EMG"
+msgstr ""
+
+#: views/personel/kadro.py:405 views/personel/kadro.py:552
+msgid "Devam Et"
+msgstr ""
+
+#: views/personel/kadro.py:418
+msgid "Sorgula"
+msgstr ""
+
+#: views/personel/kadro.py:427
+msgid "Terfisi Yapılacak Personel Kriterleri"
+msgstr ""
+
+#: views/personel/kadro.py:446 views/personel/kadro.py:536
+msgid "Terfi İşlemi"
+msgstr ""
+
+#: views/personel/kadro.py:450
+msgid "Terfi Düzenle"
+msgstr ""
+
+#: views/personel/kadro.py:458
+msgid "Terfi Bekleyen Personel Bulunamadı"
+msgstr ""
+
+#: views/personel/kadro.py:459
+#, python-format
+msgid ""
+"%(baslangic)s - %(bitis)s tarih aralığında terfi bekleyen personel bulunamadı."
+msgstr ""
+
+#: views/personel/kadro.py:529
+msgid "Personeller Onay Icin Gonderildi!"
+msgstr ""
+
+#: views/personel/kadro.py:530
+msgid "Talebiniz Basariyla iletildi."
+msgstr ""
+
+#: views/personel/kadro.py:548
+msgid "Terfi İşlemi Reddedildi."
+msgstr ""
+
+#: views/personel/kadro.py:549
+msgid ""
+"Terfi işlemini onaylamadınız. İlgili personele bir açıklama\n"
+"                                  yazmak ister misiniz?"
+msgstr ""
+
+#: views/personel/kadro.py:583
+msgid "Personel Terfi Islemi Onaylandi!"
+msgstr ""
+
+#: views/personel/kadro.py:584
+msgid "Onay Belgesi icin Personel Islerine Gonderildi."
+msgstr ""
+
+#: views/personel/kadro.py:591
+msgid "Terfi İşlemleri Onay Belgesi!"
+msgstr ""
+
+#: views/personel/kadro.py:592
+msgid "Toplu terfi İşleminiz Onaylandı"
+msgstr ""
+
+#: views/personel/kadro.py:611
+msgid "Görev Süresi Bitiş Tarihi"
+msgstr ""
+
+#: views/personel/kadro.py:651
+msgid "Görev Süresi Uzat"
+msgstr ""
+
+#: views/personel/kadro.py:657 views/personel/kadro.py:666
+msgid "HATA !"
+msgstr ""
+
+#: views/personel/kadro.py:658
+#, python-format
+msgid "%(ad)s %(soyad)s akademik bir personel değildir."
+msgstr ""
+
+#: views/personel/kadro.py:667
+#, python-format
+msgid "%(ad)s %(soyad)s e ait bir atama kaydı bulunamadı"
+msgstr ""
+
+#: views/personel/kimlik_ve_iletisim.py:42
+msgid "Mernis'ten Kimlik Bilgileri Getir"
+msgstr ""
+
+#: views/personel/kimlik_ve_iletisim.py:58
+msgid "KPS'den Adres Bilgileri Getir"
+msgstr ""
+
+#: views/personel/personel_test.py:19
+msgid "Yeni Personel"
+msgstr ""
+
+#: views/personel/personel_test.py:22
+msgid "Ekleme"
+msgstr ""
+
+#: views/personel/personel_test.py:36
+#, python-format
+msgid "%s TC no için Hitap servisi başlatıldı"
+msgstr ""
+
+#: views/personel/personel_test.py:48
+#, python-format
+msgid "%s için Mernis'e erişilemedi"
+msgstr ""
+
+#: views/personel/personel_test.py:64
+msgid "İşlem Başarısız Oldu"
+msgstr ""
+
+#: views/personel/personel_test.py:69
+msgid "Tekrar Dene"
+msgstr ""
+
+#: views/personel/personel_test.py:70
+msgid "İşlemi İptal Et"
+msgstr ""
+
+#: views/personel/personel_test.py:79
+msgid "Başarıyla iptal edildi"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:19
+msgid "Sağlık Raporu Formu"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:35
+msgid "Sağlık Raporu Silme İşlemi"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:36
+#, python-format
+msgid ""
+"\n"
+"* **Ad Soyad:** %(ad)s %(soyad)s\n"
+"\n"
+"* **Başlama Tarihi:** %(baslama_tarihi)s\n"
+"\n"
+"* **Bitiş Tarihi:** %(bitis_tarihi)s\n"
+"\n"
+"* **Gün:** %(sure)s\n"
+"\n"
+"* **Nereden:** %(nerden_alindigi)s\n"
+"\n"
+"* **Rapor Çeşidi:** %(rapor_cesidi)s\n"
+"\n"
+"Bilgilerin bulunduğu raporu silmek istiyor musunuz?"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:78
+msgid "Hatalı Veri Girişi"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:123
+#, python-format
+msgid "%s %s adlı personelin %s başarılı bir şekilde kaydedildi."
+msgstr ""
+
+#: views/personel/saglik_raporu.py:135
+msgid "Raporlar"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:163
+msgid "Gün sayısı 0 veya negatif bir değer alamaz!"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:165
+msgid "Başlangıç tarihi bitiş tarihinden büyük olmamalıdır!"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:167
+msgid "Gün süresi ile tarih aralıkları eşleşmiyor!"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:171
+#, python-format
+msgid "%s süresi 10 günden fazla olamaz!"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:174
+#, python-format
+msgid "% s için yıl içerisinde 40 günden fazla rapor alamazsınız!"
+msgstr ""
+
+#: views/personel/saglik_raporu.py:178
+msgid ""
+"Bu raporu sadece kadın personeller alabilir. Lütfen size uygun bir rapor "
+"seçiniz."
+msgstr ""
+
+#: views/personel/saglik_raporu.py:182
+msgid "Doğum öncesi ve sonrası raporlar 8 haftadan fazla olamaz."
+msgstr ""
+
+#: views/personel/ucretsiz_izin.py:13 views/personel/ucretsiz_izin.py:62
+msgid "Ücretsiz İzine Ayır"
+msgstr ""
+
+#: views/personel/ucretsiz_izin.py:33
+msgid "İzine Ayır"
+msgstr ""
+
+#: views/personel/ucretsiz_izin.py:59
+msgid "Ücretsiz İzin Dönüşü"
+msgstr ""
+
+#: views/personel/yeni_personel.py:50
+msgid "Personel Daha Önce Kaydedilmiş"
+msgstr ""
+
+#: views/personel/yeni_personel.py:67
+#, python-format
+msgid "%s TC no için Mernis servisi başlatıldı"
+msgstr ""
+
+#: views/personel/yeni_personel.py:86
+msgid "Personel Kayıt Uyarısı"
+msgstr ""
+
+#: views/personel/yeni_personel.py:87
+msgid ""
+"\n"
+"                      Lütfen Personel bilgilerinin doğruluğunu kontrol "
+"ediniz.\n"
+"                      Kayıt işlemi geri döndürülemez.\n"
+"                      "
+msgstr ""
+
+#: views/personel/yeni_personel.py:97
+msgid "Kaydet (Bu işlem geri alınamaz!)"
+msgstr ""
+
+#: views/personel/yeni_personel.py:101
+msgid ""
+"**Adı**: {ad}\n"
+"                              **Soyad**: {soyad}\n"
+"                              **Doğum Tarihi**: {dogum_tarihi}\n"
+"                              "
+msgstr ""
+
+#: views/personel/yeni_personel.py:106
+msgid ""
+"**İl**: {ikamet_il}\n"
+"                             **İlçe**: {ikamet_ilce}\n"
+"                             **Adres**: {ikamet_adresi}\n"
+"                             "
+msgstr ""
+
+#: views/personel/yeni_personel.py:138
+#, python-format
+msgid "%(ad)s %(soyad)s Başarı İle Kaydedildi"
+msgstr ""
+
+#: views/personel/yeni_personel.py:141
+msgid ""
+"\n"
+"                      Personel Başarı ile Kaydedildi, Personele atama "
+"yapabilir veya daha sonra\n"
+"                      atama yapmak için \"İşlemi Bitir\" Butonuna "
+"tıklayabilirsiniz\n"
+"                      "
+msgstr ""
+
+#: views/personel/yeni_personel.py:161
+msgid ""
+"Bilinmeyen bir hata oluştu :( sebebini biliyorsanız bizede söyleyinde "
+"düzeltelim"
+msgstr ""
+
+#: views/personel/yeni_personel.py:163
+msgid "İşlem Başarısız"
+msgstr ""
+
+#: views/personel/yeni_personel.py:168
+msgid "Yeni bir Tc Kimlik Numarası ile dene"
+msgstr ""
+
+#: views/personel/yeni_personel.py:177
+msgid "Yeni Personel Ekle"
+msgstr ""
+
+#: views/personel/yeni_personel.py:178
+msgid "Kimlik Numarası ile MERNIS ve HITAP bilgileri getir."
+msgstr ""
+
+#: views/personel/yeni_personel.py:181
+msgid "Bilgileri Getir"
+msgstr ""
+
+#: views/personel/yeni_personel.py:186
+msgid "Bilgi Kontrol Ekranı"
+msgstr ""
+
+#: views/personel/yeni_personel.py:187
+msgid "Yeni Personelin Iletisim Bilgilerini Duzenle."
+msgstr ""
+
+#: views/personel/yeni_personel.py:215
+msgid "Engel Bilgileri"
+msgstr ""
+
+#: views/personel/yeni_personel.py:223
+msgid "İkamet Il"
+msgstr ""
+
+#: views/personel/yeni_personel.py:224
+msgid "İkamet Ilce"
+msgstr ""
+
+#: views/personel/yeni_personel.py:229
+msgid "Kurum E-Posta(Yeni Personel için boş bırakınız)"
+msgstr ""
+
+#: views/reports/base.py:86
+msgid "Yazdır"
+msgstr ""
+
+#: views/reports/base.py:100
+msgid "Kayıt bulunamadı"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:35
+msgid "Yıl Seçiniz"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:37
+msgid "Ay Seçiniz"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:78
+msgid "Puantaj Tablosu Hazırlamak İstediğiniz Yıl ve Ayı Seçiniz"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:79
+#: views/reports/ders_ucreti_hesaplama.py:145
+#: views/workflow/workflow_management.py:99
+msgid "İlerle"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:106
+msgid "Dönem Bulunamadı"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:107
+msgid ""
+"Seçtiğiniz yıl ve aya ait dönem bulunamadı. Tarih\n"
+"                          seçimine geri dönmek için Geri Dön butonuna, işlemi\n"
+"                          iptal etmek için İptal butonuna basabilirsiniz."
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:110
+#: views/reports/ders_ucreti_hesaplama.py:173
+msgid "Geri Dön"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:121
+msgid "Durum Mesajı"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:122
+msgid "Puantaj cetveli görüntüleme işleminiz iptal edilmiştir."
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:169
+msgid "Öğretim Görevlisi Seçmelisiniz"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:170
+msgid ""
+"İşlem yapabilmek için en az bir öğretim görevlisi seçmelisiniz.\n"
+"                                Öğretim görevlisi seçimine geri dönmek için "
+"Geri Dön butonuna,\n"
+"                                işlemi iptal etmek için İptal butonuna "
+"basabilirsiniz."
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:182
+msgid "Puantaj Tablosu Hesaplama Türü Seçiniz"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:183
+msgid "Ders Ücreti Hesapla"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:184
+msgid "Ek Ders Ücreti Hesapla"
+msgstr ""
+
+#: views/reports/ders_ucreti_hesaplama.py:227
+#, python-format
+msgid "%(baslik)s %(yil)s-%(ay)s AYI %(ders)s DERS PUANTAJ TABLOSU"
+msgstr ""
+
+#: views/reports/ogrenci.py:17
+msgid "Cinsiyete göre öğrenci sayıları"
+msgstr ""
+
+#: views/reports/ogrenci.py:32
+msgid "Doğum yerine göre öğrenci sayıları"
+msgstr ""
+
+#: views/reports/ogrenci.py:40
+msgid "Doğum tarihine göre öğrenci sayıları"
+msgstr ""
+
+#: views/reports/ogrenci.py:50
+msgid "Harç Bilgileri"
+msgstr ""
+
+#: views/reports/ogrenci.py:63
+msgid "Kapasitesine Göre Mekanlar"
+msgstr ""
+
+#: views/reports/personel.py:18
+msgid "Cinsiyete göre personel sayıları"
+msgstr ""
+
+#: views/reports/personel.py:33
+msgid "Akademik / İdari Personel Sayısı"
+msgstr ""
+
+#: views/reports/personel.py:48
+msgid "Genel Kadro Durumları"
+msgstr ""
+
+#: views/reports/personel.py:63
+msgid "Terfisi Tıkanan Personel Listesi"
+msgstr ""
+
+#: views/reports/personel.py:113
+msgid "Görev Süresi Dolan Personel Listesi"
+msgstr ""
+
+#: views/sinav_programi/sinav_programi_goruntule.py:55
+msgid "Uyarı!"
+msgstr ""
+
+#: views/sinav_programi/sinav_programi_goruntule.py:56
+msgid ""
+"Bulunduğunuz döneme ait, güncel yayınlanmış sınav programı bulunmamaktadır."
+msgstr ""
+
+#: views/sinav_programi/sinav_programi_goruntule.py:99
+#, python-format
+msgid "%(ad)s / %(donem)s / Yarıyıl Sınav Programı"
+msgstr ""
+
+#: views/workflow/workflow_management.py:20
+#: views/workflow/workflow_management.py:124
+msgid "İşlem Başarılı"
+msgstr ""
+
+#: views/workflow/workflow_management.py:21
+msgid "İlgili birime bağlı kişilere iş akışı aktarıldı."
+msgstr ""
+
+#: views/workflow/workflow_management.py:55
+msgid ""
+"Modelin seçildiği, role özel atanan iş akışı atama formu:\n"
+"* Model tipi seçilmesi zorunludur.\n"
+"* Soyut rol secilmesi zorunludur.\n"
+"* Arama sorgusu yazılması zorunludur ve \"role\" ile başlamalıdır.\n"
+"Örnek: Şube modelini kullanan bir iş akışının okutmanlara özel gitmesi için "
+"sorgunun;\n"
+"okutman=role.user.personel.okutman şeklinde olmalıdır.\n"
+"* Birim seçilmesi zorunludur. Eğer seçilen birim Fakülte ise\n"
+"alt birimlerde ki rolleri getir seçeneği işaretlenmesi zorunludur.\n"
+"* İş akışının başlangıç ve bitiş zamanlari girilmesi zorunludur.\n"
+msgstr ""
+
+#: views/workflow/workflow_management.py:67
+msgid ""
+"Modelin seçildiği, aynı soyut role sahip kişilere aynı iş akışı atama formu:\n"
+"* Model tipi seçilmesi zorunludur.\n"
+"* Arama sorgusu yapılması zorunlu değildir.\n"
+"Eğer bir sorgu yapılacak ise sorgu kodu \"role\" ile başlamamalıdır.\n"
+"Örnek: personel modelini kullanan bir iş akışı için sorgu şu şekilde olabilir; "
+"personel_turu=2\n"
+"* Eğer rolleri getir secenegi kullanılırsa, birim ile soyut rol kullanılmaz.\n"
+"Bu tam tersi durum içinde geçerlidir.\n"
+"* İş akışının başlangıç ve bitiş zamanlari girilmesi zorunludur.\n"
+"\n"
+msgstr ""
+
+#: views/workflow/workflow_management.py:78
+msgid ""
+"Modelin olmadığı, aynı soyut role sahip kişilere aynı iş akışı atama formu:\n"
+"* Burada iki seçenek vardır. Ya rolleri getir secenegi kullanılır ya da soyut "
+"rol seçeneği.\n"
+msgstr ""
+
+#: views/workflow/workflow_management.py:82
+msgid ""
+"Modelin olmadığı aynı soyut role sahip, role özel atanan iş akışı atama "
+"formu:\n"
+" * Birim secilirse, soyut rol seceneğininde secilmezi zorunludur.\n"
+" Eğer birim fakülte ise alt birimlerde ki rolleri getir seçeneğinin de "
+"seçilmesi zorunludur.\n"
+" get_roles_from seçenegi boş bırakılır.\n"
+" * rolleri getir seçeneği seçilirse, diger seçenekler boş bırakılır\n"
+msgstr ""
+
+#: views/workflow/workflow_management.py:97
+msgid "İş Yöneticisi"
+msgstr ""
+
+#: views/workflow/workflow_management.py:98
+msgid "Workflow Seçiniz"
+msgstr ""
+
+#: views/workflow/workflow_management.py:123
+msgid "info"
+msgstr ""
+
+#: views/workflow/workflow_management.py:125
+msgid "İş akışı ilgili rollere aktarıldı."
+msgstr ""

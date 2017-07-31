@@ -1,0 +1,3067 @@
+{
+  "vergi_daireleri": {
+    "1114": {
+      "tr": "ADANA/Aladağ/Aladağ Malmüdürlüğü"
+    },
+    "1201": {
+      "tr": "ADANA/Ceyhan/Ceyhan Vergi Dairesi Müdürlüğü"
+    },
+    "1103": {
+      "tr": "ADANA/Feke/Feke Malmüdürlüğü"
+    },
+    "1115": {
+      "tr": "ADANA/İmamoğlu/İmamoğlu Malmüdürlüğü"
+    },
+    "1105": {
+      "tr": "ADANA/Karaisalı/Karaisalı Malmüdürlüğü"
+    },
+    "1205": {
+      "tr": "ADANA/Karataş/Karataş Vergi Dairesi Müdürlüğü"
+    },
+    "1203": {
+      "tr": "ADANA/Kozan/Kozan Vergi Dairesi Müdürlüğü"
+    },
+    "1251": {
+      "tr": "ADANA/Merkez/5 Ocak Vergi Dairesi Müdürlüğü"
+    },
+    "1255": {
+      "tr": "ADANA/Merkez/Çukurova Vergi Dairesi Müdürlüğü"
+    },
+    "1253": {
+      "tr": "ADANA/Merkez/Seyhan Vergi Dairesi Müdürlüğü"
+    },
+    "1252": {
+      "tr": "ADANA/Merkez/Yüreğir Vergi Dairesi Müdürlüğü"
+    },
+    "1254": {
+      "tr": "ADANA/Merkez/Ziyapaşa Vergi Dairesi Müdürlüğü"
+    },
+    "1109": {
+      "tr": "ADANA/Pozantı/Pozantı Malmüdürlüğü"
+    },
+    "1110": {
+      "tr": "ADANA/Saimbeyli/Saimbeyli Malmüdürlüğü"
+    },
+    "1111": {
+      "tr": "ADANA/Tufanbeyli/Tufanbeyli Malmüdürlüğü"
+    },
+    "1112": {
+      "tr": "ADANA/Yumurtalık/Yumurtalık Malmüdürlüğü"
+    },
+    "2101": {
+      "tr": "ADIYAMAN/Besni/Besni Malmüdürlüğü"
+    },
+    "2102": {
+      "tr": "ADIYAMAN/Çelikhan/Çelikhan Malmüdürlüğü"
+    },
+    "2103": {
+      "tr": "ADIYAMAN/Gerger/Gerger Malmüdürlüğü"
+    },
+    "2104": {
+      "tr": "ADIYAMAN/Gölbaşı/Gölbaşı Malmüdürlüğü"
+    },
+    "2261": {
+      "tr": "ADIYAMAN/Kahta/Kahta Vergi Dairesi Müdürlüğü"
+    },
+    "2260": {
+      "tr": "ADIYAMAN/Merkez/Adıyaman Vergi Dairesi Müdürlüğü"
+    },
+    "2106": {
+      "tr": "ADIYAMAN/Samsat/Samsat Malmüdürlüğü"
+    },
+    "2107": {
+      "tr": "ADIYAMAN/Sincik/Sincik Malmüdürlüğü"
+    },
+    "2108": {
+      "tr": "ADIYAMAN/Tut/Tut Malmüdürlüğü"
+    },
+    "3111": {
+      "tr": "AFYONKARAHİSAR/Başmakçı/Başmakçı Malmüdürlüğü"
+    },
+    "3112": {
+      "tr": "AFYONKARAHİSAR/Bayat/Bayat Malmüdürlüğü"
+    },
+    "3261": {
+      "tr": "AFYONKARAHİSAR/Bolvadin/Bolvadin Vergi Dairesi Müdürlüğü"
+    },
+    "3202": {
+      "tr": "AFYONKARAHİSAR/Çay/Çay Vergi Dairesi Müdürlüğü"
+    },
+    "3114": {
+      "tr": "AFYONKARAHİSAR/Çobanlar/Çobanlar Malmüdürlüğü"
+    },
+    "3103": {
+      "tr": "AFYONKARAHİSAR/Dazkırı/Dazkırı Malmüdürlüğü"
+    },
+    "3260": {
+      "tr": "AFYONKARAHİSAR/Dinar/Dinar Vergi Dairesi Müdürlüğü"
+    },
+    "3262": {
+      "tr": "AFYONKARAHİSAR/Emirdağ/Emirdağ Vergi Dairesi Müdürlüğü"
+    },
+    "3115": {
+      "tr": "AFYONKARAHİSAR/Evciler/Evciler Malmüdürlüğü"
+    },
+    "3116": {
+      "tr": "AFYONKARAHİSAR/Hocalar/Hocalar Malmüdürlüğü"
+    },
+    "3105": {
+      "tr": "AFYONKARAHİSAR/İhsaniye/İhsaniye Malmüdürlüğü"
+    },
+    "3264": {
+      "tr": "AFYONKARAHİSAR/İscehisar/İscehisar Vergi Dairesi Müdürlüğü"
+    },
+    "3117": {
+      "tr": "AFYONKARAHİSAR/Kızılören/Kızılören Malmüdürlüğü"
+    },
+    "3280": {
+      "tr": "AFYONKARAHİSAR/Merkez/Kocatepe Vergi Dairesi Müdürlüğü"
+    },
+    "3201": {
+      "tr": "AFYONKARAHİSAR/Merkez/Tınaztepe Vergi Dairesi Müdürlüğü"
+    },
+    "3263": {
+      "tr": "AFYONKARAHİSAR/Sandıklı/Sandıklı Vergi Dairesi Müdürlüğü"
+    },
+    "3107": {
+      "tr": "AFYONKARAHİSAR/Sinanpaşa/Sinanpaşa Malmüdürlüğü"
+    },
+    "3108": {
+      "tr": "AFYONKARAHİSAR/Sultandağı/Sultandağı Malmüdürlüğü"
+    },
+    "3109": {
+      "tr": "AFYONKARAHİSAR/Şuhut/Şuhut Malmüdürlüğü"
+    },
+    "4101": {
+      "tr": "AĞRI/Diyadin/Diyadin Malmüdürlüğü"
+    },
+    "4261": {
+      "tr": "AĞRI/Doğubeyazıt/Doğubeyazıt Vergi Dairesi Müdürlüğü"
+    },
+    "4103": {
+      "tr": "AĞRI/Eleşkirt/Eleşkirt Malmüdürlüğü"
+    },
+    "4104": {
+      "tr": "AĞRI/Hamur/Hamur Malmüdürlüğü"
+    },
+    "4260": {
+      "tr": "AĞRI/Merkez/Ağrı Vergi Dairesi Müdürlüğü"
+    },
+    "4105": {
+      "tr": "AĞRI/Patnos/Patnos Malmüdürlüğü"
+    },
+    "4106": {
+      "tr": "AĞRI/Taşlıçay/Taşlıçay Malmüdürlüğü"
+    },
+    "4107": {
+      "tr": "AĞRI/Tutak/Tutak Malmüdürlüğü"
+    },
+    "68101": {
+      "tr": "AKSARAY/Ağaçören/Ağaçören Malmüdürlüğü"
+    },
+    "68105": {
+      "tr": "AKSARAY/Eskil/Eskil Malmüdürlüğü"
+    },
+    "68106": {
+      "tr": "AKSARAY/Gülağaç/Gülağaç Malmüdürlüğü"
+    },
+    "68102": {
+      "tr": "AKSARAY/Güzelyurt/Güzelyurt Malmüdürlüğü"
+    },
+    "68201": {
+      "tr": "AKSARAY/Merkez/Aksaray Vergi Dairesi Müdürlüğü"
+    },
+    "68103": {
+      "tr": "AKSARAY/Ortaköy/Ortaköy Malmüdürlüğü"
+    },
+    "68104": {
+      "tr": "AKSARAY/Sarıyahşi/Sarıyahşi Malmüdürlüğü"
+    },
+    "5101": {
+      "tr": "AMASYA/Göynücek/Göynücek Malmüdürlüğü"
+    },
+    "5262": {
+      "tr": "AMASYA/Gümüşhacıköy/Gümüşhacıköy Vergi Dairesi Müdürlüğü"
+    },
+    "5106": {
+      "tr": "AMASYA/Hamamözü/Hamamözü Malmüdürlüğü"
+    },
+    "5260": {
+      "tr": "AMASYA/Merkez/Amasya Vergi Dairesi Müdürlüğü"
+    },
+    "5261": {
+      "tr": "AMASYA/Merzifon/Merzifon Vergi Dairesi Müdürlüğü"
+    },
+    "5264": {
+      "tr": "AMASYA/Suluova/Suluova Vergi Dairesi Müdürlüğü"
+    },
+    "5263": {
+      "tr": "AMASYA/Taşova/Taşova Vergi Dairesi Müdürlüğü"
+    },
+    "6209": {
+      "tr": "ANKARA/Beypazarı/Beypazarı Vergi Dairesi Müdürlüğü"
+    },
+    "6106": {
+      "tr": "ANKARA/Çamlıdere/Çamlıdere Malmüdürlüğü"
+    },
+    "6127": {
+      "tr": "ANKARA/Evren/Evren Malmüdürlüğü"
+    },
+    "6110": {
+      "tr": "ANKARA/Güdül/Güdül Malmüdürlüğü"
+    },
+    "6213": {
+      "tr": "ANKARA/Haymana/Haymana Vergi Dairesi Müdürlüğü"
+    },
+    "6115": {
+      "tr": "ANKARA/Kızılcahamam/Kızılcahamam Malmüdürlüğü"
+    },
+    "6125": {
+      "tr": "ANKARA/Merkez-(5216)/Akyurt Malmüdürlüğü"
+    },
+    "6102": {
+      "tr": "ANKARA/Merkez-(5216)/Ayaş Malmüdürlüğü"
+    },
+    "6103": {
+      "tr": "ANKARA/Merkez-(5216)/Bala Malmüdürlüğü"
+    },
+    "6211": {
+      "tr": "ANKARA/Merkez-(5216)/Çubuk Vergi Dairesi Müdürlüğü"
+    },
+    "6215": {
+      "tr": "ANKARA/Merkez-(5216)/Elmadağ Vergi Dairesi Müdürlüğü"
+    },
+    "6112": {
+      "tr": "ANKARA/Merkez-(5216)/Kalecik Malmüdürlüğü"
+    },
+    "6279": {
+      "tr": "ANKARA/Merkez-(5216)/Kazan Vergi Dairesi Müdürlüğü"
+    },
+    "6280": {
+      "tr": "ANKARA/Merkez/Anadolu İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    "6281": {
+      "tr": "ANKARA/Merkez/Ankara İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    "6276": {
+      "tr": "ANKARA/Merkez/Başkent Vergi Dairesi Müdürlüğü"
+    },
+    "6277": {
+      "tr": "ANKARA/Merkez/Cumhuriyet Vergi Dairesi Müdürlüğü"
+    },
+    "6257": {
+      "tr": "ANKARA/Merkez/Çankaya Vergi Dairesi Müdürlüğü"
+    },
+    "6264": {
+      "tr": "ANKARA/Merkez/Dikimevi Vergi Dairesi Müdürlüğü"
+    },
+    "6265": {
+      "tr": "ANKARA/Merkez/Doğanbey Vergi Dairesi Müdürlüğü"
+    },
+    "6274": {
+      "tr": "ANKARA/Merkez/Dışkapı Vergi Dairesi Müdürlüğü"
+    },
+    "6275": {
+      "tr": "ANKARA/Merkez/Etimesgut Vergi Dairesi Müdürlüğü"
+    },
+    "6272": {
+      "tr": "ANKARA/Merkez/Gölbaşı Vergi Dairesi Müdürlüğü"
+    },
+    "6268": {
+      "tr": "ANKARA/Merkez/Hitit Vergi Dairesi Müdürlüğü"
+    },
+    "6253": {
+      "tr": "ANKARA/Merkez/Kavaklıdere Vergi Dairesi Müdürlüğü"
+    },
+    "6278": {
+      "tr": "ANKARA/Merkez/Keçiören Vergi Dairesi Müdürlüğü"
+    },
+    "6258": {
+      "tr": "ANKARA/Merkez/Kızılbey Vergi Dairesi Müdürlüğü"
+    },
+    "6254": {
+      "tr": "ANKARA/Merkez/Maltepe Vergi Dairesi Müdürlüğü"
+    },
+    "6259": {
+      "tr": "ANKARA/Merkez/Mithatpaşa Vergi Dairesi Müdürlüğü"
+    },
+    "6270": {
+      "tr": "ANKARA/Merkez/Muhammet Karagüzel Vergi Dairesi Müdürlüğü"
+    },
+    "6271": {
+      "tr": "ANKARA/Merkez/Ostim Vergi Dairesi Müdürlüğü"
+    },
+    "6262": {
+      "tr": "ANKARA/Merkez/Seğmenler Vergi Dairesi Müdürlüğü"
+    },
+    "6273": {
+      "tr": "ANKARA/Merkez/Sincan Vergi Dairesi Müdürlüğü"
+    },
+    "6260": {
+      "tr": "ANKARA/Merkez/Ulus Vergi Dairesi Müdürlüğü"
+    },
+    "6252": {
+      "tr": "ANKARA/Merkez/Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    "6269": {
+      "tr": "ANKARA/Merkez/Yahya Galip Vergi Dairesi Müdürlüğü"
+    },
+    "6266": {
+      "tr": "ANKARA/Merkez/Yeğenbey Vergi Dairesi Müdürlüğü"
+    },
+    "6255": {
+      "tr": "ANKARA/Merkez/Yenimahalle Vergi Dairesi Müdürlüğü"
+    },
+    "6261": {
+      "tr": "ANKARA/Merkez/Yıldırım Beyazıt Vergi Dairesi Müdürlüğü"
+    },
+    "6117": {
+      "tr": "ANKARA/Nallıhan/Nallıhan Malmüdürlüğü"
+    },
+    "6205": {
+      "tr": "ANKARA/Polatlı/Polatlı Vergi Dairesi Müdürlüğü"
+    },
+    "6207": {
+      "tr": "ANKARA/Şereflikoçhisar/Şereflikoçhisar Vergi Dairesi Müdürlüğü"
+    },
+    "7101": {
+      "tr": "ANTALYA/Akseki/Akseki Malmüdürlüğü"
+    },
+    "7201": {
+      "tr": "ANTALYA/Alanya/Alanya Vergi Dairesi Müdürlüğü"
+    },
+    "7112": {
+      "tr": "ANTALYA/Demre/Demre Malmüdürlüğü"
+    },
+    "7204": {
+      "tr": "ANTALYA/Elmalı/Elmalı Vergi Dairesi Müdürlüğü"
+    },
+    "7104": {
+      "tr": "ANTALYA/Finike/Finike Malmüdürlüğü"
+    },
+    "7105": {
+      "tr": "ANTALYA/Gazipaşa/Gazipaşa Malmüdürlüğü"
+    },
+    "7106": {
+      "tr": "ANTALYA/Gündoğmuş/Gündoğmuş Malmüdürlüğü"
+    },
+    "7113": {
+      "tr": "ANTALYA/İbradı/İbradı Malmüdürlüğü"
+    },
+    "7107": {
+      "tr": "ANTALYA/Kaş/Kaş Malmüdürlüğü"
+    },
+    "7205": {
+      "tr": "ANTALYA/Kemer/Kemer Vergi Dairesi Müdürlüğü"
+    },
+    "7108": {
+      "tr": "ANTALYA/Korkuteli/Korkuteli Malmüdürlüğü"
+    },
+    "7206": {
+      "tr": "ANTALYA/Kumluca/Kumluca Vergi Dairesi Müdürlüğü"
+    },
+    "7203": {
+      "tr": "ANTALYA/Manavgat/Manavgat Vergi Dairesi Müdürlüğü"
+    },
+    "7255": {
+      "tr": "ANTALYA/Merkez/Antalya Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    "7254": {
+      "tr": "ANTALYA/Merkez/Düden Vergi Dairesi Müdürlüğü"
+    },
+    "7252": {
+      "tr": "ANTALYA/Merkez/Kalekapı Vergi Dairesi Müdürlüğü"
+    },
+    "7253": {
+      "tr": "ANTALYA/Merkez/Muratpaşa Vergi Dairesi Müdürlüğü"
+    },
+    "7251": {
+      "tr": "ANTALYA/Merkez/Üçkapılar Vergi Dairesi Müdürlüğü"
+    },
+    "7202": {
+      "tr": "ANTALYA/Serik/Serik Vergi Dairesi Müdürlüğü"
+    },
+    "75101": {
+      "tr": "ARDAHAN/Çıldır/Çıldır Malmüdürlüğü"
+    },
+    "75102": {
+      "tr": "ARDAHAN/Damal/Damal Malmüdürlüğü"
+    },
+    "75103": {
+      "tr": "ARDAHAN/Göle/Göle Malmüdürlüğü"
+    },
+    "75104": {
+      "tr": "ARDAHAN/Hanak/Hanak Malmüdürlüğü"
+    },
+    "75201": {
+      "tr": "ARDAHAN/Merkez/Ardahan Vergi Dairesi Müdürlüğü"
+    },
+    "75105": {
+      "tr": "ARDAHAN/Posof/Posof Malmüdürlüğü"
+    },
+    "8101": {
+      "tr": "ARTVİN/Ardanuç/Ardanuç Malmüdürlüğü"
+    },
+    "8262": {
+      "tr": "ARTVİN/Arhavi/Arhavi Vergi Dairesi Müdürlüğü"
+    },
+    "8103": {
+      "tr": "ARTVİN/Borçka/Borçka Malmüdürlüğü"
+    },
+    "8261": {
+      "tr": "ARTVİN/Hopa/Hopa Vergi Dairesi Müdürlüğü"
+    },
+    "8260": {
+      "tr": "ARTVİN/Merkez/Artvin Vergi Dairesi Müdürlüğü"
+    },
+    "8107": {
+      "tr": "ARTVİN/Murgul/Murgul Malmüdürlüğü"
+    },
+    "8105": {
+      "tr": "ARTVİN/Şavşat/Şavşat Malmüdürlüğü"
+    },
+    "8106": {
+      "tr": "ARTVİN/Yusufeli/Yusufeli Malmüdürlüğü"
+    },
+    "9101": {
+      "tr": "AYDIN/Bozdoğan/Bozdoğan Malmüdürlüğü"
+    },
+    "9112": {
+      "tr": "AYDIN/Buharkent/Buharkent Malmüdürlüğü"
+    },
+    "9262": {
+      "tr": "AYDIN/Çine/Çine Vergi Dairesi Müdürlüğü"
+    },
+    "9281": {
+      "tr": "AYDIN/Didim/Didim Vergi Dairesi Müdürlüğü"
+    },
+    "9263": {
+      "tr": "AYDIN/Germencik/Germencik Vergi Dairesi Müdürlüğü"
+    },
+    "9113": {
+      "tr": "AYDIN/İncirliova/İncirliova Malmüdürlüğü"
+    },
+    "9104": {
+      "tr": "AYDIN/Karacasu/Karacasu Malmüdürlüğü"
+    },
+    "9114": {
+      "tr": "AYDIN/Karpuzlu/Karpuzlu Malmüdürlüğü"
+    },
+    "9105": {
+      "tr": "AYDIN/Koçarlı/Koçarlı Malmüdürlüğü"
+    },
+    "9115": {
+      "tr": "AYDIN/Köşk/Köşk Malmüdürlüğü"
+    },
+    "9265": {
+      "tr": "AYDIN/Kuşadası/Kuşadası Vergi Dairesi Müdürlüğü"
+    },
+    "9107": {
+      "tr": "AYDIN/Kuyucak/Kuyucak Malmüdürlüğü"
+    },
+    "9201": {
+      "tr": "AYDIN/Merkez/Efeler Vergi Dairesi Müdürlüğü"
+    },
+    "9280": {
+      "tr": "AYDIN/Merkez/Güzelhisar Vergi Dairesi Müdürlüğü"
+    },
+    "9260": {
+      "tr": "AYDIN/Nazilli/Nazilli Vergi Dairesi Müdürlüğü"
+    },
+    "9261": {
+      "tr": "AYDIN/Söke/Söke Vergi Dairesi Müdürlüğü"
+    },
+    "9110": {
+      "tr": "AYDIN/Sultanhisar/Sultanhisar Malmüdürlüğü"
+    },
+    "9111": {
+      "tr": "AYDIN/Yenipazar/Yenipazar Malmüdürlüğü"
+    },
+    "10260": {
+      "tr": "BALIKESİR/Ayvalık/Ayvalık Vergi Dairesi Müdürlüğü"
+    },
+    "10102": {
+      "tr": "BALIKESİR/Balya/Balya Malmüdürlüğü"
+    },
+    "10261": {
+      "tr": "BALIKESİR/Bandırma/Bandırma Vergi Dairesi Müdürlüğü"
+    },
+    "10267": {
+      "tr": "BALIKESİR/Bigadiç/Bigadiç Vergi Dairesi Müdürlüğü"
+    },
+    "10262": {
+      "tr": "BALIKESİR/Burhaniye/Burhaniye Vergi Dairesi Müdürlüğü"
+    },
+    "10269": {
+      "tr": "BALIKESİR/Dursunbey/Dursunbey Vergi Dairesi Müdürlüğü"
+    },
+    "10263": {
+      "tr": "BALIKESİR/Edremit/Edremit Vergi Dairesi Müdürlüğü"
+    },
+    "10266": {
+      "tr": "BALIKESİR/Erdek/Erdek Vergi Dairesi Müdürlüğü"
+    },
+    "10118": {
+      "tr": "BALIKESİR/Gömeç/Gömeç Malmüdürlüğü"
+    },
+    "10264": {
+      "tr": "BALIKESİR/Gönen/Gönen Vergi Dairesi Müdürlüğü"
+    },
+    "10110": {
+      "tr": "BALIKESİR/Havran/Havran Malmüdürlüğü"
+    },
+    "10111": {
+      "tr": "BALIKESİR/İvrindi/İvrindi Malmüdürlüğü"
+    },
+    "10112": {
+      "tr": "BALIKESİR/Kepsut/Kepsut Malmüdürlüğü"
+    },
+    "10113": {
+      "tr": "BALIKESİR/Manyas/Manyas Malmüdürlüğü"
+    },
+    "10117": {
+      "tr": "BALIKESİR/Marmara/Marmara Malmüdürlüğü"
+    },
+    "10201": {
+      "tr": "BALIKESİR/Merkez/Karesi Vergi Dairesi Müdürlüğü"
+    },
+    "10280": {
+      "tr": "BALIKESİR/Merkez/Kurtdereli Vergi Dairesi Müdürlüğü"
+    },
+    "10114": {
+      "tr": "BALIKESİR/Savaştepe/Savaştepe Malmüdürlüğü"
+    },
+    "10265": {
+      "tr": "BALIKESİR/Susurluk/Susurluk Vergi Dairesi Müdürlüğü"
+    },
+    "10268": {
+      "tr": "BALIKESİR/Sındırgı/Sındırgı Vergi Dairesi Müdürlüğü"
+    },
+    "74101": {
+      "tr": "BARTIN/Amasra/Amasra Malmüdürlüğü"
+    },
+    "74102": {
+      "tr": "BARTIN/Kurucaşile/Kurucaşile Malmüdürlüğü"
+    },
+    "74260": {
+      "tr": "BARTIN/Merkez/Bartın Vergi Dairesi Müdürlüğü"
+    },
+    "74103": {
+      "tr": "BARTIN/Ulus/Ulus Malmüdürlüğü"
+    },
+    "72101": {
+      "tr": "BATMAN/Beşiri/Beşiri Malmüdürlüğü"
+    },
+    "72102": {
+      "tr": "BATMAN/Gercüş/Gercüş Malmüdürlüğü"
+    },
+    "72103": {
+      "tr": "BATMAN/Hasankeyf/Hasankeyf Malmüdürlüğü"
+    },
+    "72104": {
+      "tr": "BATMAN/Kozluk/Kozluk Malmüdürlüğü"
+    },
+    "72260": {
+      "tr": "BATMAN/Merkez/Batman Vergi Dairesi Müdürlüğü"
+    },
+    "72105": {
+      "tr": "BATMAN/Sason/Sason Malmüdürlüğü"
+    },
+    "69101": {
+      "tr": "BAYBURT/Aydıntepe/Aydıntepe Malmüdürlüğü"
+    },
+    "69102": {
+      "tr": "BAYBURT/Demirözü/Demirözü Malmüdürlüğü"
+    },
+    "69201": {
+      "tr": "BAYBURT/Merkez/Bayburt Vergi Dairesi Müdürlüğü"
+    },
+    "11261": {
+      "tr": "BİLECİK/Bozüyük/Bozüyük Vergi Dairesi Müdürlüğü"
+    },
+    "11102": {
+      "tr": "BİLECİK/Gölpazarı/Gölpazarı Malmüdürlüğü"
+    },
+    "11107": {
+      "tr": "BİLECİK/İnhisar/İnhisar Malmüdürlüğü"
+    },
+    "11260": {
+      "tr": "BİLECİK/Merkez/Bilecik Vergi Dairesi Müdürlüğü"
+    },
+    "11103": {
+      "tr": "BİLECİK/Osmaneli/Osmaneli Malmüdürlüğü"
+    },
+    "11104": {
+      "tr": "BİLECİK/Pazaryeri/Pazaryeri Malmüdürlüğü"
+    },
+    "11105": {
+      "tr": "BİLECİK/Söğüt/Söğüt Malmüdürlüğü"
+    },
+    "11106": {
+      "tr": "BİLECİK/Yenipazar/Yenipazar Malmüdürlüğü"
+    },
+    "12105": {
+      "tr": "BİNGÖL/Adaklı/Adaklı Malmüdürlüğü"
+    },
+    "12101": {
+      "tr": "BİNGÖL/Genç/Genç Malmüdürlüğü"
+    },
+    "12102": {
+      "tr": "BİNGÖL/Karlıova/Karlıova Malmüdürlüğü"
+    },
+    "12103": {
+      "tr": "BİNGÖL/Kiğı/Kiğı Malmüdürlüğü"
+    },
+    "12260": {
+      "tr": "BİNGÖL/Merkez/Bingöl Vergi Dairesi Müdürlüğü"
+    },
+    "12104": {
+      "tr": "BİNGÖL/Solhan/Solhan Malmüdürlüğü"
+    },
+    "12106": {
+      "tr": "BİNGÖL/Yayladere/Yayladere Malmüdürlüğü"
+    },
+    "12107": {
+      "tr": "BİNGÖL/Yedisu/Yedisu Malmüdürlüğü"
+    },
+    "13101": {
+      "tr": "BİTLİS/Adilcevaz/Adilcevaz Malmüdürlüğü"
+    },
+    "13102": {
+      "tr": "BİTLİS/Ahlat/Ahlat Malmüdürlüğü"
+    },
+    "13106": {
+      "tr": "BİTLİS/Göroymak/Güroymak Malmüdürlüğü"
+    },
+    "13103": {
+      "tr": "BİTLİS/Hizan/Hizan Malmüdürlüğü"
+    },
+    "13260": {
+      "tr": "BİTLİS/Merkez/Bitlis Vergi Dairesi Müdürlüğü"
+    },
+    "13104": {
+      "tr": "BİTLİS/Mutki/Mutki Malmüdürlüğü"
+    },
+    "13261": {
+      "tr": "BİTLİS/Tatvan/Tatvan Vergi Dairesi Müdürlüğü"
+    },
+    "14113": {
+      "tr": "BOLU/Dörtdivan/Dörtdivan Malmüdürlüğü"
+    },
+    "14262": {
+      "tr": "BOLU/Gerede/Gerede Vergi Dairesi Müdürlüğü"
+    },
+    "14104": {
+      "tr": "BOLU/Göynük/Göynük Malmüdürlüğü"
+    },
+    "14105": {
+      "tr": "BOLU/Kıbrıscık/Kıbrıscık Malmüdürlüğü"
+    },
+    "14106": {
+      "tr": "BOLU/Mengen/Mengen Malmüdürlüğü"
+    },
+    "14260": {
+      "tr": "BOLU/Merkez/Bolu Vergi Dairesi Müdürlüğü"
+    },
+    "14107": {
+      "tr": "BOLU/Mudurnu/Mudurnu Malmüdürlüğü"
+    },
+    "14108": {
+      "tr": "BOLU/Seben/Seben Malmüdürlüğü"
+    },
+    "14114": {
+      "tr": "BOLU/Yeniçağa/Yeniçağa Malmüdürlüğü"
+    },
+    "15101": {
+      "tr": "BURDUR/Ağlasun/Ağlasun Malmüdürlüğü"
+    },
+    "15108": {
+      "tr": "BURDUR/Altınyayla/Altınyayla Malmüdürlüğü"
+    },
+    "15261": {
+      "tr": "BURDUR/Bucak/Bucak Vergi Dairesi Müdürlüğü"
+    },
+    "15109": {
+      "tr": "BURDUR/Çavdır/Çavdır Malmüdürlüğü"
+    },
+    "15110": {
+      "tr": "BURDUR/Çeltikçi/Çeltikçi Malmüdürlüğü"
+    },
+    "15103": {
+      "tr": "BURDUR/Gölhisar/Gölhisar Malmüdürlüğü"
+    },
+    "15106": {
+      "tr": "BURDUR/Karamanlı/Karamanlı Malmüdürlüğü"
+    },
+    "15107": {
+      "tr": "BURDUR/Kemer/Kemer Malmüdürlüğü"
+    },
+    "15260": {
+      "tr": "BURDUR/Merkez/Burdur Vergi Dairesi Müdürlüğü"
+    },
+    "15104": {
+      "tr": "BURDUR/Tefenni/Tefenni Malmüdürlüğü"
+    },
+    "15105": {
+      "tr": "BURDUR/Yeşilova/Yeşilova Malmüdürlüğü"
+    },
+    "16112": {
+      "tr": "BURSA/Büyükorhan/Büyükorhan Malmüdürlüğü"
+    },
+    "16111": {
+      "tr": "BURSA/Harmancık/Harmancık Malmüdürlüğü"
+    },
+    "16202": {
+      "tr": "BURSA/İnegöl/İnegöl Vergi Dairesi Müdürlüğü"
+    },
+    "16207": {
+      "tr": "BURSA/İznik/İznik Vergi Dairesi Müdürlüğü"
+    },
+    "16203": {
+      "tr": "BURSA/Karacabey/Karacabey Vergi Dairesi Müdürlüğü"
+    },
+    "16105": {
+      "tr": "BURSA/Keles/Keles Malmüdürlüğü"
+    },
+    "16201": {
+      "tr": "BURSA/Merkez-(5216)/Gemlik Vergi Dairesi Müdürlüğü"
+    },
+    "16205": {
+      "tr": "BURSA/Merkez-(5216)/Mudanya Vergi Dairesi Müdürlüğü"
+    },
+    "16253": {
+      "tr": "BURSA/Merkez/Çekirge Vergi Dairesi Müdürlüğü"
+    },
+    "16258": {
+      "tr": "BURSA/Merkez/Ertuğrulgazi Vergi Dairesi Müdürlüğü"
+    },
+    "16259": {
+      "tr": "BURSA/Merkez/Gökdere Vergi Dairesi Müdürlüğü"
+    },
+    "16257": {
+      "tr": "BURSA/Merkez/Nilüfer Vergi Dairesi Müdürlüğü"
+    },
+    "16251": {
+      "tr": "BURSA/Merkez/Osmangazi Vergi Dairesi Müdürlüğü"
+    },
+    "16254": {
+      "tr": "BURSA/Merkez/Setbaşı Vergi Dairesi Müdürlüğü"
+    },
+    "16255": {
+      "tr": "BURSA/Merkez/Uludağ Vergi Dairesi Müdürlüğü"
+    },
+    "16256": {
+      "tr": "BURSA/Merkez/Yeşil Vergi Dairesi Müdürlüğü"
+    },
+    "16252": {
+      "tr": "BURSA/Merkez/Yıldırım Vergi Dairesi Müdürlüğü"
+    },
+    "16204": {
+      "tr": "BURSA/Mustafakemalpaşa/Mustafakemalpaşa Vergi Dairesi Müdürlüğü"
+    },
+    "16108": {
+      "tr": "BURSA/Orhaneli/Orhaneli Malmüdürlüğü"
+    },
+    "16206": {
+      "tr": "BURSA/Orhangazi/Orhangazi Vergi Dairesi Müdürlüğü"
+    },
+    "16208": {
+      "tr": "BURSA/Yenişehir/Yenişehir Vergi Dairesi Müdürlüğü"
+    },
+    "17101": {
+      "tr": "ÇANAKKALE/Ayvacık/Ayvacık Malmüdürlüğü"
+    },
+    "17102": {
+      "tr": "ÇANAKKALE/Bayramiç/Bayramiç Malmüdürlüğü"
+    },
+    "17261": {
+      "tr": "ÇANAKKALE/Biga/Biga Vergi Dairesi Müdürlüğü"
+    },
+    "17104": {
+      "tr": "ÇANAKKALE/Bozcaada/Bozcaada Malmüdürlüğü"
+    },
+    "17262": {
+      "tr": "ÇANAKKALE/Çan/Çan Vergi Dairesi Müdürlüğü"
+    },
+    "17106": {
+      "tr": "ÇANAKKALE/Eceabat/Eceabat Malmüdürlüğü"
+    },
+    "17107": {
+      "tr": "ÇANAKKALE/Ezine/Ezine Malmüdürlüğü"
+    },
+    "17263": {
+      "tr": "ÇANAKKALE/Gelibolu/Gelibolu Vergi Dairesi Müdürlüğü"
+    },
+    "17109": {
+      "tr": "ÇANAKKALE/Gökçeada/Gökçeada Malmüdürlüğü"
+    },
+    "17110": {
+      "tr": "ÇANAKKALE/Lapseki/Lapseki Malmüdürlüğü"
+    },
+    "17260": {
+      "tr": "ÇANAKKALE/Merkez/Çanakkale Vergi Dairesi Müdürlüğü"
+    },
+    "17111": {
+      "tr": "ÇANAKKALE/Yenice/Yenice Malmüdürlüğü"
+    },
+    "18110": {
+      "tr": "ÇANKIRI/Atkaracalar/Atkaracalar Malmüdürlüğü"
+    },
+    "18112": {
+      "tr": "ÇANKIRI/Bayramören/Bayramören Malmüdürlüğü"
+    },
+    "18101": {
+      "tr": "ÇANKIRI/Çerkeş/Çerkeş Malmüdürlüğü"
+    },
+    "18102": {
+      "tr": "ÇANKIRI/Eldivan/Eldivan Malmüdürlüğü"
+    },
+    "18104": {
+      "tr": "ÇANKIRI/Ilgaz/Ilgaz Malmüdürlüğü"
+    },
+    "18113": {
+      "tr": "ÇANKIRI/Korgun/Korgun Malmüdürlüğü"
+    },
+    "18105": {
+      "tr": "ÇANKIRI/Kurşunlu/Kurşunlu Malmüdürlüğü"
+    },
+    "18111": {
+      "tr": "ÇANKIRI/Kızılırmak/Kızılırmak Malmüdürlüğü"
+    },
+    "18260": {
+      "tr": "ÇANKIRI/Merkez/Çankırı Vergi Dairesi Müdürlüğü"
+    },
+    "18106": {
+      "tr": "ÇANKIRI/Orta/Orta Malmüdürlüğü"
+    },
+    "18108": {
+      "tr": "ÇANKIRI/Şabanözü/Şabanözü Malmüdürlüğü"
+    },
+    "18109": {
+      "tr": "ÇANKIRI/Yapraklı/Yapraklı Malmüdürlüğü"
+    },
+    "19101": {
+      "tr": "ÇORUM/Alaca/Alaca Malmüdürlüğü"
+    },
+    "19102": {
+      "tr": "ÇORUM/Bayat/Bayat Malmüdürlüğü"
+    },
+    "19109": {
+      "tr": "ÇORUM/Boğazkale/Boğazkale Malmüdürlüğü"
+    },
+    "19111": {
+      "tr": "ÇORUM/Dodurga/Dodurga Malmüdürlüğü"
+    },
+    "19103": {
+      "tr": "ÇORUM/İskilip/İskilip Malmüdürlüğü"
+    },
+    "19104": {
+      "tr": "ÇORUM/Kargı/Kargı Malmüdürlüğü"
+    },
+    "19113": {
+      "tr": "ÇORUM/Laçin/Laçin Malmüdürlüğü"
+    },
+    "19105": {
+      "tr": "ÇORUM/Mecitözü/Mecitözü Malmüdürlüğü"
+    },
+    "19260": {
+      "tr": "ÇORUM/Merkez/Çorum Vergi Dairesi Müdürlüğü"
+    },
+    "19112": {
+      "tr": "ÇORUM/Oğuzlar/Oğuzlar Malmüdürlüğü"
+    },
+    "19106": {
+      "tr": "ÇORUM/Ortaköy/Ortaköy Malmüdürlüğü"
+    },
+    "19107": {
+      "tr": "ÇORUM/Osmancık/Osmancık Malmüdürlüğü"
+    },
+    "19261": {
+      "tr": "ÇORUM/Sungurlu/Sungurlu Vergi Dairesi Müdürlüğü"
+    },
+    "19110": {
+      "tr": "ÇORUM/Uğurludağ/Uğurludağ Malmüdürlüğü"
+    },
+    "20261": {
+      "tr": "DENİZLİ/Acıpayam/Acıpayam Vergi Dairesi Müdürlüğü"
+    },
+    "20115": {
+      "tr": "DENİZLİ/Akköy/Akköy Malmüdürlüğü"
+    },
+    "20111": {
+      "tr": "DENİZLİ/Babadağ/Babadağ Malmüdürlüğü"
+    },
+    "20116": {
+      "tr": "DENİZLİ/Baklan/Baklan Malmüdürlüğü"
+    },
+    "20112": {
+      "tr": "DENİZLİ/Bekilli/Bekilli Malmüdürlüğü"
+    },
+    "20117": {
+      "tr": "DENİZLİ/Beyağaç/Beyağaç Malmüdürlüğü"
+    },
+    "20118": {
+      "tr": "DENİZLİ/Bozkurt/Bozkurt Malmüdürlüğü"
+    },
+    "20263": {
+      "tr": "DENİZLİ/Buldan/Buldan Vergi Dairesi Müdürlüğü"
+    },
+    "20264": {
+      "tr": "DENİZLİ/Çal/Çal Vergi Dairesi Müdürlüğü"
+    },
+    "20104": {
+      "tr": "DENİZLİ/Çameli/Çameli Malmüdürlüğü"
+    },
+    "20105": {
+      "tr": "DENİZLİ/Çardak/Çardak Malmüdürlüğü"
+    },
+    "20265": {
+      "tr": "DENİZLİ/Çivril/Çivril Vergi Dairesi Müdürlüğü"
+    },
+    "20107": {
+      "tr": "DENİZLİ/Güney/Güney Malmüdürlüğü"
+    },
+    "20113": {
+      "tr": "DENİZLİ/Honaz/Honaz Malmüdürlüğü"
+    },
+    "20108": {
+      "tr": "DENİZLİ/Kale/Kale Malmüdürlüğü"
+    },
+    "20202": {
+      "tr": "DENİZLİ/Merkez/Çınar Vergi Dairesi Müdürlüğü"
+    },
+    "20203": {
+      "tr": "DENİZLİ/Merkez/Gökpınar Vergi Dairesi Müdürlüğü"
+    },
+    "20280": {
+      "tr": "DENİZLİ/Merkez/Pamukkale Vergi Dairesi Müdürlüğü"
+    },
+    "20201": {
+      "tr": "DENİZLİ/Merkez/Saraylar Vergi Dairesi Müdürlüğü"
+    },
+    "20260": {
+      "tr": "DENİZLİ/Sarayköy/Sarayköy Vergi Dairesi Müdürlüğü"
+    },
+    "20114": {
+      "tr": "DENİZLİ/Serinhisar/Serinhisar Malmüdürlüğü"
+    },
+    "20262": {
+      "tr": "DENİZLİ/Tavas/Tavas Vergi Dairesi Müdürlüğü"
+    },
+    "21101": {
+      "tr": "DİYARBAKIR/Bismil/Bismil Malmüdürlüğü"
+    },
+    "21102": {
+      "tr": "DİYARBAKIR/Çermik/Çermik Malmüdürlüğü"
+    },
+    "21104": {
+      "tr": "DİYARBAKIR/Çüngüş/Çüngüş Malmüdürlüğü"
+    },
+    "21103": {
+      "tr": "DİYARBAKIR/Çınar/Çınar Malmüdürlüğü"
+    },
+    "21105": {
+      "tr": "DİYARBAKIR/Dicle/Dicle Malmüdürlüğü"
+    },
+    "21112": {
+      "tr": "DİYARBAKIR/Eğil/Eğil Malmüdürlüğü"
+    },
+    "21106": {
+      "tr": "DİYARBAKIR/Ergani/Ergani Malmüdürlüğü"
+    },
+    "21107": {
+      "tr": "DİYARBAKIR/Hani/Hani Malmüdürlüğü"
+    },
+    "21108": {
+      "tr": "DİYARBAKIR/Hazro/Hazro Malmüdürlüğü"
+    },
+    "21113": {
+      "tr": "DİYARBAKIR/Kocaköy/Kocaköy Malmüdürlüğü"
+    },
+    "21109": {
+      "tr": "DİYARBAKIR/Kulp/Kulp Malmüdürlüğü"
+    },
+    "21110": {
+      "tr": "DİYARBAKIR/Lice/Lice Malmüdürlüğü"
+    },
+    "21282": {
+      "tr": "DİYARBAKIR/Merkez/Cahit Sıtkı Tarancı Vergi Dairesi Müdürlüğü"
+    },
+    "21251": {
+      "tr": "DİYARBAKIR/Merkez/Gökalp Vergi Dairesi Müdürlüğü"
+    },
+    "21281": {
+      "tr": "DİYARBAKIR/Merkez/Süleymannazif Vergi Dairesi Müdürlüğü"
+    },
+    "21111": {
+      "tr": "DİYARBAKIR/Silvan/Silvan Malmüdürlüğü"
+    },
+    "81261": {
+      "tr": "DÜZCE/Akçakoca/Akçakoca Vergi Dairesi Müdürlüğü"
+    },
+    "81102": {
+      "tr": "DÜZCE/Cumayeri/Cumayeri Malmüdürlüğü"
+    },
+    "81103": {
+      "tr": "DÜZCE/Çilimli/Çilimli Malmüdürlüğü"
+    },
+    "81104": {
+      "tr": "DÜZCE/Gölyaka/Gölyaka Malmüdürlüğü"
+    },
+    "81105": {
+      "tr": "DÜZCE/Gümüşova/Gümüşova Malmüdürlüğü"
+    },
+    "81106": {
+      "tr": "DÜZCE/Kaynaşlı/Kaynaşlı Malmüdürlüğü"
+    },
+    "81260": {
+      "tr": "DÜZCE/Merkez/Düzce Vergi Dairesi Müdürlüğü"
+    },
+    "81107": {
+      "tr": "DÜZCE/Yığılca/Yığılca Malmüdürlüğü"
+    },
+    "22101": {
+      "tr": "EDİRNE/Enez/Enez Malmüdürlüğü"
+    },
+    "22263": {
+      "tr": "EDİRNE/Havsa/Havsa Vergi Dairesi Müdürlüğü"
+    },
+    "22264": {
+      "tr": "EDİRNE/İpsala/İpsala Vergi Dairesi Müdürlüğü"
+    },
+    "22261": {
+      "tr": "EDİRNE/Keşan/Keşan Vergi Dairesi Müdürlüğü"
+    },
+    "22105": {
+      "tr": "EDİRNE/Lalapaşa/Lalapaşa Malmüdürlüğü"
+    },
+    "22106": {
+      "tr": "EDİRNE/Meriç/Meriç Malmüdürlüğü"
+    },
+    "22201": {
+      "tr": "EDİRNE/Merkez/Arda Vergi Dairesi Müdürlüğü"
+    },
+    "22260": {
+      "tr": "EDİRNE/Merkez/Kırkpınar Vergi Dairesi Müdürlüğü"
+    },
+    "22108": {
+      "tr": "EDİRNE/Süloğlu/Süloğlu Malmüdürlüğü"
+    },
+    "22262": {
+      "tr": "EDİRNE/Uzunköprü/Uzunköprü Vergi Dairesi Müdürlüğü"
+    },
+    "23101": {
+      "tr": "ELAZIĞ/Ağın/Ağın Malmüdürlüğü"
+    },
+    "23110": {
+      "tr": "ELAZIĞ/Alacakaya/Alacakaya Malmüdürlüğü"
+    },
+    "23108": {
+      "tr": "ELAZIĞ/Arıcak/Arıcak Malmüdürlüğü"
+    },
+    "23102": {
+      "tr": "ELAZIĞ/Baskil/Baskil Malmüdürlüğü"
+    },
+    "23103": {
+      "tr": "ELAZIĞ/Karakoçan/Karakoçan Malmüdürlüğü"
+    },
+    "23104": {
+      "tr": "ELAZIĞ/Keban/Keban Malmüdürlüğü"
+    },
+    "23109": {
+      "tr": "ELAZIĞ/Kovancılar/Kovancılar Malmüdürlüğü"
+    },
+    "23105": {
+      "tr": "ELAZIĞ/Maden/Maden Malmüdürlüğü"
+    },
+    "23201": {
+      "tr": "ELAZIĞ/Merkez/Harput Vergi Dairesi Müdürlüğü"
+    },
+    "23280": {
+      "tr": "ELAZIĞ/Merkez/Hazar Vergi Dairesi Müdürlüğü"
+    },
+    "23106": {
+      "tr": "ELAZIĞ/Palu/Palu Malmüdürlüğü"
+    },
+    "23107": {
+      "tr": "ELAZIĞ/Sivrice/Sivrice Malmüdürlüğü"
+    },
+    "24101": {
+      "tr": "ERZİNCAN/Çayırlı/Çayırlı Malmüdürlüğü"
+    },
+    "24102": {
+      "tr": "ERZİNCAN/İliç/İliç Malmüdürlüğü"
+    },
+    "24103": {
+      "tr": "ERZİNCAN/Kemah/Kemah Malmüdürlüğü"
+    },
+    "24104": {
+      "tr": "ERZİNCAN/Kemaliye/Kemaliye Malmüdürlüğü"
+    },
+    "24260": {
+      "tr": "ERZİNCAN/Merkez/Fevzipaşa Vergi Dairesi Müdürlüğü"
+    },
+    "24108": {
+      "tr": "ERZİNCAN/Otlukbeli/Otlukbeli Malmüdürlüğü"
+    },
+    "24105": {
+      "tr": "ERZİNCAN/Refahiye/Refahiye Malmüdürlüğü"
+    },
+    "24106": {
+      "tr": "ERZİNCAN/Tercan/Tercan Malmüdürlüğü"
+    },
+    "24107": {
+      "tr": "ERZİNCAN/Üzümlü/Üzümlü Malmüdürlüğü"
+    },
+    "25101": {
+      "tr": "ERZURUM/Aşkale/Aşkale Malmüdürlüğü"
+    },
+    "25102": {
+      "tr": "ERZURUM/Çat/Çat Malmüdürlüğü"
+    },
+    "25104": {
+      "tr": "ERZURUM/Horasan/Horasan Malmüdürlüğü"
+    },
+    "25103": {
+      "tr": "ERZURUM/Hınıs/Hınıs Malmüdürlüğü"
+    },
+    "25105": {
+      "tr": "ERZURUM/İspir/İspir Malmüdürlüğü"
+    },
+    "25114": {
+      "tr": "ERZURUM/Karaçoban/Karaçoban Malmüdürlüğü"
+    },
+    "25106": {
+      "tr": "ERZURUM/Karayazı/Karayazı Malmüdürlüğü"
+    },
+    "25118": {
+      "tr": "ERZURUM/Köprüköy/Köprüköy Malmüdürlüğü"
+    },
+    "25117": {
+      "tr": "ERZURUM/Merkez-(5216)/Aziziye (Ilıca) Malmüdürlüğü"
+    },
+    "25251": {
+      "tr": "ERZURUM/Merkez/Aziziye Vergi Dairesi Müdürlüğü"
+    },
+    "25280": {
+      "tr": "ERZURUM/Merkez/Kazımkarabekir Vergi Dairesi Müdürlüğü"
+    },
+    "25107": {
+      "tr": "ERZURUM/Narman/Narman Malmüdürlüğü"
+    },
+    "25108": {
+      "tr": "ERZURUM/Oltu/Oltu Malmüdürlüğü"
+    },
+    "25109": {
+      "tr": "ERZURUM/Olur/Olur Malmüdürlüğü"
+    },
+    "25110": {
+      "tr": "ERZURUM/Pasinler/Pasinler Malmüdürlüğü"
+    },
+    "25116": {
+      "tr": "ERZURUM/Pazaryolu/Pazaryolu Malmüdürlüğü"
+    },
+    "25111": {
+      "tr": "ERZURUM/Şenkaya/Şenkaya Malmüdürlüğü"
+    },
+    "25112": {
+      "tr": "ERZURUM/Tekman/Tekman Malmüdürlüğü"
+    },
+    "25113": {
+      "tr": "ERZURUM/Tortum/Tortum Malmüdürlüğü"
+    },
+    "25115": {
+      "tr": "ERZURUM/Uzundere/Uzundere Malmüdürlüğü"
+    },
+    "26107": {
+      "tr": "ESKİŞEHİR/Alpu/Alpu Malmüdürlüğü"
+    },
+    "26108": {
+      "tr": "ESKİŞEHİR/Beylikova/Beylikova Malmüdürlüğü"
+    },
+    "26110": {
+      "tr": "ESKİŞEHİR/Günyüzü/Günyüzü Malmüdürlüğü"
+    },
+    "26111": {
+      "tr": "ESKİŞEHİR/Han/Han Malmüdürlüğü"
+    },
+    "26109": {
+      "tr": "ESKİŞEHİR/İnönü/İnönü Malmüdürlüğü"
+    },
+    "26102": {
+      "tr": "ESKİŞEHİR/Mahmudiye/Mahmudiye Malmüdürlüğü"
+    },
+    "26250": {
+      "tr": "ESKİŞEHİR/Merkez Başkanlık/Eskişehir Vergi Dairesi Başkanlığı"
+    },
+    "26112": {
+      "tr": "ESKİŞEHİR/Mihalgazi/Mihalgazi Malmüdürlüğü"
+    },
+    "26103": {
+      "tr": "ESKİŞEHİR/Mihalıççık/Mihalıççık Malmüdürlüğü"
+    },
+    "26104": {
+      "tr": "ESKİŞEHİR/Sarıcakaya/Sarıcakaya Malmüdürlüğü"
+    },
+    "26105": {
+      "tr": "ESKİŞEHİR/Seyitgazi/Seyitgazi Malmüdürlüğü"
+    },
+    "27101": {
+      "tr": "GAZİANTEP/Araban/Araban Malmüdürlüğü"
+    },
+    "27203": {
+      "tr": "GAZİANTEP/İslahiye/İslahiye Vergi Dairesi Müdürlüğü"
+    },
+    "27107": {
+      "tr": "GAZİANTEP/Karkamış/Karkamış Malmüdürlüğü"
+    },
+    "27105": {
+      "tr": "GAZİANTEP/Merkez-(5216)/Oğuzeli Malmüdürlüğü"
+    },
+    "27254": {
+      "tr": "GAZİANTEP/Merkez/Gazikent Vergi Dairesi Müdürlüğü"
+    },
+    "27255": {
+      "tr": "GAZİANTEP/Merkez/Kozanlı Vergi Dairesi Müdürlüğü"
+    },
+    "27251": {
+      "tr": "GAZİANTEP/Merkez/Suburcu Vergi Dairesi Müdürlüğü"
+    },
+    "27253": {
+      "tr": "GAZİANTEP/Merkez/Şahinbey Vergi Dairesi Müdürlüğü"
+    },
+    "27252": {
+      "tr": "GAZİANTEP/Merkez/Şehitkamil Vergi Dairesi Müdürlüğü"
+    },
+    "27202": {
+      "tr": "GAZİANTEP/Nizip/Nizip Vergi Dairesi Müdürlüğü"
+    },
+    "27108": {
+      "tr": "GAZİANTEP/Nurdağı/Nurdağı Malmüdürlüğü"
+    },
+    "27106": {
+      "tr": "GAZİANTEP/Yavuzeli/Yavuzeli Malmüdürlüğü"
+    },
+    "28101": {
+      "tr": "GİRESUN/Alucra/Alucra Malmüdürlüğü"
+    },
+    "28261": {
+      "tr": "GİRESUN/Bulancak/Bulancak Vergi Dairesi Müdürlüğü"
+    },
+    "28114": {
+      "tr": "GİRESUN/Çamoluk/Çamoluk Malmüdürlüğü"
+    },
+    "28112": {
+      "tr": "GİRESUN/Çanakçı/Çanakçı Malmüdürlüğü"
+    },
+    "28103": {
+      "tr": "GİRESUN/Dereli/Dereli Malmüdürlüğü"
+    },
+    "28115": {
+      "tr": "GİRESUN/Doğankent/Doğankent Malmüdürlüğü"
+    },
+    "28104": {
+      "tr": "GİRESUN/Espiye/Espiye Malmüdürlüğü"
+    },
+    "28105": {
+      "tr": "GİRESUN/Eynesil/Eynesil Malmüdürlüğü"
+    },
+    "28106": {
+      "tr": "GİRESUN/Görele/Görele Malmüdürlüğü"
+    },
+    "28113": {
+      "tr": "GİRESUN/Güce/Güce Malmüdürlüğü"
+    },
+    "28107": {
+      "tr": "GİRESUN/Keşap/Keşap Malmüdürlüğü"
+    },
+    "28260": {
+      "tr": "GİRESUN/Merkez/Giresun Vergi Dairesi Müdürlüğü"
+    },
+    "28110": {
+      "tr": "GİRESUN/Piraziz/Piraziz Malmüdürlüğü"
+    },
+    "28108": {
+      "tr": "GİRESUN/Şebinkarahisar/Şebinkarahisar Malmüdürlüğü"
+    },
+    "28109": {
+      "tr": "GİRESUN/Tirebolu/Tirebolu Malmüdürlüğü"
+    },
+    "28111": {
+      "tr": "GİRESUN/Yağlıdere/Yağlıdere Malmüdürlüğü"
+    },
+    "29102": {
+      "tr": "GÜMÜŞHANE/Kelkit/Kelkit Malmüdürlüğü"
+    },
+    "29107": {
+      "tr": "GÜMÜŞHANE/Köse/Köse Malmüdürlüğü"
+    },
+    "29108": {
+      "tr": "GÜMÜŞHANE/Kürtün/Kürtün Malmüdürlüğü"
+    },
+    "29260": {
+      "tr": "GÜMÜŞHANE/Merkez/Gümüşhane Vergi Dairesi Müdürlüğü"
+    },
+    "29103": {
+      "tr": "GÜMÜŞHANE/Şiran/Şiran Malmüdürlüğü"
+    },
+    "29104": {
+      "tr": "GÜMÜŞHANE/Torul/Torul Malmüdürlüğü"
+    },
+    "30102": {
+      "tr": "HAKKARİ/Çukurca/Çukurca Malmüdürlüğü"
+    },
+    "30260": {
+      "tr": "HAKKARİ/Merkez/Hakkari Vergi Dairesi Müdürlüğü"
+    },
+    "30103": {
+      "tr": "HAKKARİ/Şemdinli/Şemdinli Malmüdürlüğü"
+    },
+    "30261": {
+      "tr": "HAKKARİ/Yüksekova/Yüksekova Vergi Dairesi Müdürlüğü"
+    },
+    "31101": {
+      "tr": "HATAY/Altınözü/Altınözü Malmüdürlüğü"
+    },
+    "31110": {
+      "tr": "HATAY/Belen/Belen Malmüdürlüğü"
+    },
+    "31260": {
+      "tr": "HATAY/Dörtyol/Dörtyol Vergi Dairesi Müdürlüğü"
+    },
+    "31109": {
+      "tr": "HATAY/Erzin/Erzin Malmüdürlüğü"
+    },
+    "31103": {
+      "tr": "HATAY/Hassa/Hassa Malmüdürlüğü"
+    },
+    "31281": {
+      "tr": "HATAY/İskenderun/Akdeniz Vergi Dairesi Müdürlüğü"
+    },
+    "31290": {
+      "tr": "HATAY/İskenderun/Asım Gündüz Vergi Dairesi Müdürlüğü"
+    },
+    "31202": {
+      "tr": "HATAY/İskenderun/Sahil Vergi Dairesi Müdürlüğü"
+    },
+    "31111": {
+      "tr": "HATAY/Kumlu/Kumlu Malmüdürlüğü"
+    },
+    "31261": {
+      "tr": "HATAY/Kırıkhan/Kırıkhan Vergi Dairesi Müdürlüğü"
+    },
+    "31201": {
+      "tr": "HATAY/Merkez/23 Temmuz Vergi Dairesi Müdürlüğü"
+    },
+    "31203": {
+      "tr": "HATAY/Merkez/Antakya Vergi Dairesi Müdürlüğü"
+    },
+    "31280": {
+      "tr": "HATAY/Merkez/Şükrükanatlı Vergi Dairesi Müdürlüğü"
+    },
+    "31262": {
+      "tr": "HATAY/Reyhanlı/Reyhanlı Vergi Dairesi Müdürlüğü"
+    },
+    "31263": {
+      "tr": "HATAY/Samandağ/Samandağ Vergi Dairesi Müdürlüğü"
+    },
+    "31108": {
+      "tr": "HATAY/Yayladağı/Yayladağı Malmüdürlüğü"
+    },
+    "76101": {
+      "tr": "IĞDIR/Aralık/Aralık Malmüdürlüğü"
+    },
+    "76102": {
+      "tr": "IĞDIR/Karakoyunlu/Karakoyunlu Malmüdürlüğü"
+    },
+    "76201": {
+      "tr": "IĞDIR/Merkez/Iğdır Vergi Dairesi Müdürlüğü"
+    },
+    "76103": {
+      "tr": "IĞDIR/Tuzluca/Tuzluca Malmüdürlüğü"
+    },
+    "32110": {
+      "tr": "ISPARTA/Aksu/Aksu Malmüdürlüğü"
+    },
+    "32101": {
+      "tr": "ISPARTA/Atabey/Atabey Malmüdürlüğü"
+    },
+    "32261": {
+      "tr": "ISPARTA/Eğirdir/Eğirdir Vergi Dairesi Müdürlüğü"
+    },
+    "32103": {
+      "tr": "ISPARTA/Gelendost/Gelendost Malmüdürlüğü"
+    },
+    "32111": {
+      "tr": "ISPARTA/Gönen/Gönen Malmüdürlüğü"
+    },
+    "32104": {
+      "tr": "ISPARTA/Keçiborlu/Keçiborlu Malmüdürlüğü"
+    },
+    "32201": {
+      "tr": "ISPARTA/Merkez/Davraz Vergi Dairesi Müdürlüğü"
+    },
+    "32260": {
+      "tr": "ISPARTA/Merkez/Kaymakkapı Vergi Dairesi Müdürlüğü"
+    },
+    "32105": {
+      "tr": "ISPARTA/Senirkent/Senirkent Malmüdürlüğü"
+    },
+    "32106": {
+      "tr": "ISPARTA/Sütçüler/Sütçüler Malmüdürlüğü"
+    },
+    "32107": {
+      "tr": "ISPARTA/Şarkikaraağaç/Şarkikaraağaç Malmüdürlüğü"
+    },
+    "32108": {
+      "tr": "ISPARTA/Uluborlu/Uluborlu Malmüdürlüğü"
+    },
+    "32262": {
+      "tr": "ISPARTA/Yalvaç/Yalvaç Vergi Dairesi Müdürlüğü"
+    },
+    "32112": {
+      "tr": "ISPARTA/Yenişarbademli/Yenişarbademli Malmüdürlüğü"
+    },
+    "34230": {
+      "tr": "İSTANBUL/Merkez Başkanlık/Büyük Mükellefler Vergi Dairesi Başkanlığı"
+    },
+    "34295": {
+      "tr": "İSTANBUL/Merkez-(5216)/Adalar Vergi Dairesi Müdürlüğü"
+    },
+    "34204": {
+      "tr": "İSTANBUL/Merkez-(5216)/Büyükçekmece Vergi Dairesi Müdürlüğü"
+    },
+    "34203": {
+      "tr": "İSTANBUL/Merkez-(5216)/Silivri Vergi Dairesi Müdürlüğü"
+    },
+    "34205": {
+      "tr": "İSTANBUL/Merkez-(5216)/Şile Vergi Dairesi Müdürlüğü"
+    },
+    "34244": {
+      "tr": "İSTANBUL/Merkez/Anadolu Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    "34291": {
+      "tr": "İSTANBUL/Merkez/Atışalanı Vergi Dairesi Müdürlüğü"
+    },
+    "34294": {
+      "tr": "İSTANBUL/Merkez/Avcılar Vergi Dairesi Müdürlüğü"
+    },
+    "34284": {
+      "tr": "İSTANBUL/Merkez/Bakırköy Vergi Dairesi Müdürlüğü"
+    },
+    "34264": {
+      "tr": "İSTANBUL/Merkez/Bayrampaşa Vergi Dairesi Müdürlüğü"
+    },
+    "34251": {
+      "tr": "İSTANBUL/Merkez/Beşiktaş Vergi Dairesi Müdürlüğü"
+    },
+    "34265": {
+      "tr": "İSTANBUL/Merkez/Beyazıt Vergi Dairesi Müdürlüğü"
+    },
+    "34281": {
+      "tr": "İSTANBUL/Merkez/Beykoz Vergi Dairesi Müdürlüğü"
+    },
+    "34297": {
+      "tr": "İSTANBUL/Merkez/Beylikdüzü Vergi Dairesi Müdürlüğü"
+    },
+    "34266": {
+      "tr": "İSTANBUL/Merkez/Beyoğlu Vergi Dairesi Müdürlüğü"
+    },
+    "34231": {
+      "tr": "İSTANBUL/Merkez/Boğaziçi Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    "34234": {
+      "tr": "İSTANBUL/Merkez/Davutpaşa Vergi Dairesi Müdürlüğü"
+    },
+    "34256": {
+      "tr": "İSTANBUL/Merkez/Erenköy Vergi Dairesi Müdürlüğü"
+    },
+    "34235": {
+      "tr": "İSTANBUL/Merkez/Esenler Vergi Dairesi Müdürlüğü"
+    },
+    "34236": {
+      "tr": "İSTANBUL/Merkez/Fatih Vergi Dairesi Müdürlüğü"
+    },
+    "34269": {
+      "tr": "İSTANBUL/Merkez/Gaziosmanpaşa Vergi Dairesi Müdürlüğü"
+    },
+    "34270": {
+      "tr": "İSTANBUL/Merkez/Göztepe Vergi Dairesi Müdürlüğü"
+    },
+    "34261": {
+      "tr": "İSTANBUL/Merkez/Güneşli Vergi Dairesi Müdürlüğü"
+    },
+    "34259": {
+      "tr": "İSTANBUL/Merkez/Güngören Vergi Dairesi Müdürlüğü\n"
+    },
+    "34220": {
+      "tr": "İSTANBUL/Merkez/Haliç Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    "34278": {
+      "tr": "İSTANBUL/Merkez/Halkalı Vergi Dairesi Müdürlüğü"
+    },
+    "34257": {
+      "tr": "İSTANBUL/Merkez/Hisar Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    "34271": {
+      "tr": "İSTANBUL/Merkez/Hocapaşa Vergi Dairesi Müdürlüğü"
+    },
+    "34249": {
+      "tr": "İSTANBUL/Merkez/İkitelli Vergi Dairesi Müdürlüğü"
+    },
+    "34272": {
+      "tr": "İSTANBUL/Merkez/Kadıköy Vergi Dairesi Müdürlüğü"
+    },
+    "34279": {
+      "tr": "İSTANBUL/Merkez/Kağıthane Vergi Dairesi Müdürlüğü"
+    },
+    "34285": {
+      "tr": "İSTANBUL/Merkez/Kartal Vergi Dairesi Müdürlüğü"
+    },
+    "34255": {
+      "tr": "İSTANBUL/Merkez/Kasımpaşa Vergi Dairesi Müdürlüğü"
+    },
+    "34273": {
+      "tr": "İSTANBUL/Merkez/Kocamustafapaşa Vergi Dairesi Müdürlüğü"
+    },
+    "34260": {
+      "tr": "İSTANBUL/Merkez/Kocasinan Vergi Dairesi Müdürlüğü"
+    },
+    "34246": {
+      "tr": "İSTANBUL/Merkez/Kozyatağı Vergi Dairesi Müdürlüğü"
+    },
+    "34296": {
+      "tr": "İSTANBUL/Merkez/Küçükçekmece Vergi Dairesi Müdürlüğü"
+    },
+    "34237": {
+      "tr": "İSTANBUL/Merkez/Küçükköy Vergi Dairesi Müdürlüğü"
+    },
+    "34262": {
+      "tr": "İSTANBUL/Merkez/Küçükyalı Vergi Dairesi Müdürlüğü"
+    },
+    "34232": {
+      "tr": "İSTANBUL/Merkez/Marmara Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    "34247": {
+      "tr": "İSTANBUL/Merkez/Maslak Vergi Dairesi Müdürlüğü"
+    },
+    "34274": {
+      "tr": "İSTANBUL/Merkez/Mecidiyeköy Vergi Dairesi Müdürlüğü"
+    },
+    "34239": {
+      "tr": "İSTANBUL/Merkez/Merter Vergi Dairesi Müdürlüğü"
+    },
+    "34287": {
+      "tr": "İSTANBUL/Merkez/Nakil Vasıtaları Vergi Dairesi Müdürlüğü"
+    },
+    "34263": {
+      "tr": "İSTANBUL/Merkez/Pendik Vergi Dairesi Müdürlüğü"
+    },
+    "34254": {
+      "tr": "İSTANBUL/Merkez/Rıhtım Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    "34288": {
+      "tr": "İSTANBUL/Merkez/Sarıgazi Vergi Dairesi Müdürlüğü"
+    },
+    "34283": {
+      "tr": "İSTANBUL/Merkez/Sarıyer Vergi Dairesi Müdürlüğü"
+    },
+    "34242": {
+      "tr": "İSTANBUL/Merkez/Sultanbeyli Vergi Dairesi Müdürlüğü"
+    },
+    "34276": {
+      "tr": "İSTANBUL/Merkez/Şişli Vergi Dairesi Müdürlüğü"
+    },
+    "34258": {
+      "tr": "İSTANBUL/Merkez/Tuna Vergi Dairesi Müdürlüğü"
+    },
+    "34245": {
+      "tr": "İSTANBUL/Merkez/Tuzla Vergi Dairesi Müdürlüğü"
+    },
+    "34252": {
+      "tr": "İSTANBUL/Merkez/Ümraniye Vergi Dairesi Müdürlüğü"
+    },
+    "34277": {
+      "tr": "İSTANBUL/Merkez/Üsküdar Vergi Dairesi Müdürlüğü"
+    },
+    "34221": {
+      "tr": "İSTANBUL/Merkez/Vatan İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    "34292": {
+      "tr": "İSTANBUL/Merkez/Yakacık Vergi Dairesi Müdürlüğü"
+    },
+    "34253": {
+      "tr": "İSTANBUL/Merkez/Yeditepe Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    "34293": {
+      "tr": "İSTANBUL/Merkez/Yenibosna Vergi Dairesi Müdürlüğü"
+    },
+    "34280": {
+      "tr": "İSTANBUL/Merkez/Zeytinburnu Vergi Dairesi Müdürlüğü"
+    },
+    "34248": {
+      "tr": "İSTANBUL/Merkez/Zincirlikuyu Vergi Dairesi Müdürlüğü"
+    },
+    "35201": {
+      "tr": "İZMİR/Bayındır/Bayındır Vergi Dairesi Müdürlüğü"
+    },
+    "35202": {
+      "tr": "İZMİR/Bergama/Bergama Vergi Dairesi Müdürlüğü"
+    },
+    "35120": {
+      "tr": "İZMİR/Beydağ/Beydağ Malmüdürlüğü"
+    },
+    "35212": {
+      "tr": "İZMİR/Çeşme/Çeşme Vergi Dairesi Müdürlüğü"
+    },
+    "35105": {
+      "tr": "İZMİR/Dikili/Dikili Malmüdürlüğü"
+    },
+    "35107": {
+      "tr": "İZMİR/Karaburun/Karaburun Malmüdürlüğü"
+    },
+    "35211": {
+      "tr": "İZMİR/Kiraz/Kiraz Vergi Dairesi Müdürlüğü"
+    },
+    "35210": {
+      "tr": "İZMİR/Kınık/Kınık Vergi Dairesi Müdürlüğü"
+    },
+    "35213": {
+      "tr": "İZMİR/Merkez-(5216)/Aliağa Vergi Dairesi Müdürlüğü"
+    },
+    "35106": {
+      "tr": "İZMİR/Merkez-(5216)/Foça Malmüdürlüğü"
+    },
+    "35207": {
+      "tr": "İZMİR/Merkez-(5216)/Kemalpaşa Vergi Dairesi Müdürlüğü"
+    },
+    "35215": {
+      "tr": "İZMİR/Merkez-(5216)/Menderes Vergi Dairesi Müdürlüğü"
+    },
+    "35203": {
+      "tr": "İZMİR/Merkez-(5216)/Menemen Vergi Dairesi Müdürlüğü"
+    },
+    "35114": {
+      "tr": "İZMİR/Merkez-(5216)/Seferihisar Malmüdürlüğü"
+    },
+    "35206": {
+      "tr": "İZMİR/Merkez-(5216)/Torbalı Vergi Dairesi Müdürlüğü"
+    },
+    "35208": {
+      "tr": "İZMİR/Merkez-(5216)/Urla Vergi Dairesi Müdürlüğü"
+    },
+    "35251": {
+      "tr": "İZMİR/Merkez/9 Eylül Vergi Dairesi Müdürlüğü"
+    },
+    "35266": {
+      "tr": "İZMİR/Merkez/Balçova Vergi Dairesi Müdürlüğü"
+    },
+    "35255": {
+      "tr": "İZMİR/Merkez/Basmane Vergi Dairesi Müdürlüğü"
+    },
+    "35254": {
+      "tr": "İZMİR/Merkez/Belkahve Vergi Dairesi Müdürlüğü"
+    },
+    "35264": {
+      "tr": "İZMİR/Merkez/Bornova Vergi Dairesi Müdürlüğü"
+    },
+    "35265": {
+      "tr": "İZMİR/Merkez/Çakabey Vergi Dairesi Müdürlüğü"
+    },
+    "35269": {
+      "tr": "İZMİR/Merkez/Çiğli Vergi Dairesi Müdürlüğü"
+    },
+    "35268": {
+      "tr": "İZMİR/Merkez/Ege Vergi Dairesi Müdürlüğü"
+    },
+    "35267": {
+      "tr": "İZMİR/Merkez/Gaziemir Vergi Dairesi Müdürlüğü"
+    },
+    "35263": {
+      "tr": "İZMİR/Merkez/Hasan Tahsin Vergi Dairesi Müdürlüğü"
+    },
+    "35261": {
+      "tr": "İZMİR/Merkez/Kadifekale Vergi Dairesi Müdürlüğü"
+    },
+    "35256": {
+      "tr": "İZMİR/Merkez/Karşıyaka Vergi Dairesi Müdürlüğü"
+    },
+    "35257": {
+      "tr": "İZMİR/Merkez/Kemeraltı Vergi Dairesi Müdürlüğü"
+    },
+    "35258": {
+      "tr": "İZMİR/Merkez/Konak Vergi Dairesi Müdürlüğü"
+    },
+    "35259": {
+      "tr": "İZMİR/Merkez/Kordon Vergi Dairesi Müdürlüğü"
+    },
+    "35260": {
+      "tr": "İZMİR/Merkez/Şirinyer Vergi Dairesi Müdürlüğü"
+    },
+    "35262": {
+      "tr": "İZMİR/Merkez/Taşıtlar Vergi Dairesi Müdürlüğü"
+    },
+    "35252": {
+      "tr": "İZMİR/Merkez/Yamanlar Vergi Dairesi Müdürlüğü"
+    },
+    "35204": {
+      "tr": "İZMİR/Ödemiş/Ödemiş Vergi Dairesi Müdürlüğü"
+    },
+    "35209": {
+      "tr": "İZMİR/Selçuk/Selçuk Vergi Dairesi Müdürlüğü"
+    },
+    "35205": {
+      "tr": "İZMİR/Tire/Tire Vergi Dairesi Müdürlüğü"
+    },
+    "46261": {
+      "tr": "KAHRAMANMARAŞ/Afşin/Afşin Vergi Dairesi Müdürlüğü"
+    },
+    "46102": {
+      "tr": "KAHRAMANMARAŞ/Andırın/Andırın Malmüdürlüğü"
+    },
+    "46107": {
+      "tr": "KAHRAMANMARAŞ/Çağlayancerit/Çağlayancerit Malmüdürlüğü"
+    },
+    "46108": {
+      "tr": "KAHRAMANMARAŞ/Ekinözü/Ekinözü Malmüdürlüğü"
+    },
+    "46260": {
+      "tr": "KAHRAMANMARAŞ/Elbistan/Elbistan Vergi Dairesi Müdürlüğü"
+    },
+    "46104": {
+      "tr": "KAHRAMANMARAŞ/Göksun/Göksun Malmüdürlüğü"
+    },
+    "46280": {
+      "tr": "KAHRAMANMARAŞ/Merkez/Aksu Vergi Dairesi Müdürlüğü"
+    },
+    "46201": {
+      "tr": "KAHRAMANMARAŞ/Merkez/Aslanbey Vergi Dairesi Müdürlüğü"
+    },
+    "46109": {
+      "tr": "KAHRAMANMARAŞ/Nurhak/Nurhak Malmüdürlüğü"
+    },
+    "46262": {
+      "tr": "KAHRAMANMARAŞ/Pazarcık/Pazarcık Vergi Dairesi Müdürlüğü"
+    },
+    "46106": {
+      "tr": "KAHRAMANMARAŞ/Türkoğlu/Türkoğlu Malmüdürlüğü"
+    },
+    "78101": {
+      "tr": "KARABÜK/Eflani/Eflani Malmüdürlüğü"
+    },
+    "78102": {
+      "tr": "KARABÜK/Eskipazar/Eskipazar Malmüdürlüğü"
+    },
+    "78201": {
+      "tr": "KARABÜK/Merkez/Karabük Vergi Dairesi Müdürlüğü"
+    },
+    "78103": {
+      "tr": "KARABÜK/Ovacık/Ovacık Malmüdürlüğü"
+    },
+    "78260": {
+      "tr": "KARABÜK/Safranbolu/Safranbolu Vergi Dairesi Müdürlüğü"
+    },
+    "78105": {
+      "tr": "KARABÜK/Yenice/Yenice Malmüdürlüğü"
+    },
+    "70101": {
+      "tr": "KARAMAN/Ayrancı/Ayrancı Malmüdürlüğü"
+    },
+    "70104": {
+      "tr": "KARAMAN/Başyayla/Başyayla Malmüdürlüğü"
+    },
+    "70102": {
+      "tr": "KARAMAN/Ermenek/Ermenek Malmüdürlüğü"
+    },
+    "70103": {
+      "tr": "KARAMAN/Kazım Karabekir/Kazım Karabekir Malmüdürlüğü"
+    },
+    "70201": {
+      "tr": "KARAMAN/Merkez/Karaman Vergi Dairesi Müdürlüğü"
+    },
+    "70105": {
+      "tr": "KARAMAN/Sarıveliler/Sarıveliler Malmüdürlüğü"
+    },
+    "36115": {
+      "tr": "KARS/Akyaka/Akyaka Malmüdürlüğü"
+    },
+    "36103": {
+      "tr": "KARS/Arpaçay/Arpaçay Malmüdürlüğü"
+    },
+    "36105": {
+      "tr": "KARS/Digor/Digor Malmüdürlüğü"
+    },
+    "36109": {
+      "tr": "KARS/Kağızman/Kağızman Malmüdürlüğü"
+    },
+    "36260": {
+      "tr": "KARS/Merkez/Kars Vergi Dairesi Müdürlüğü"
+    },
+    "36111": {
+      "tr": "KARS/Sarıkamış/Sarıkamış Malmüdürlüğü"
+    },
+    "36112": {
+      "tr": "KARS/Selim/Selim Malmüdürlüğü"
+    },
+    "36113": {
+      "tr": "KARS/Susuz/Susuz Malmüdürlüğü"
+    },
+    "37112": {
+      "tr": "KASTAMONU/Abana/Abana Malmüdürlüğü"
+    },
+    "37116": {
+      "tr": "KASTAMONU/Ağlı/Ağlı Malmüdürlüğü"
+    },
+    "37101": {
+      "tr": "KASTAMONU/Araç/Araç Malmüdürlüğü"
+    },
+    "37102": {
+      "tr": "KASTAMONU/Azdavay/Azdavay Malmüdürlüğü"
+    },
+    "37103": {
+      "tr": "KASTAMONU/Bozkurt/Bozkurt Malmüdürlüğü"
+    },
+    "37104": {
+      "tr": "KASTAMONU/Cide/Cide Malmüdürlüğü"
+    },
+    "37105": {
+      "tr": "KASTAMONU/Çatalzeytin/Çatalzeytin Malmüdürlüğü"
+    },
+    "37106": {
+      "tr": "KASTAMONU/Daday/Daday Malmüdürlüğü"
+    },
+    "37107": {
+      "tr": "KASTAMONU/Devrekani/Devrekani Malmüdürlüğü"
+    },
+    "37117": {
+      "tr": "KASTAMONU/Doğanyurt/Doğanyurt Malmüdürlüğü"
+    },
+    "37118": {
+      "tr": "KASTAMONU/Hanönü/Hanönü Malmüdürlüğü"
+    },
+    "37113": {
+      "tr": "KASTAMONU/İhsangazi/İhsangazi Malmüdürlüğü"
+    },
+    "37108": {
+      "tr": "KASTAMONU/İnebolu/İnebolu Malmüdürlüğü"
+    },
+    "37109": {
+      "tr": "KASTAMONU/Küre/Küre Malmüdürlüğü"
+    },
+    "37260": {
+      "tr": "KASTAMONU/Merkez/Kastamonu Vergi Dairesi Müdürlüğü"
+    },
+    "37114": {
+      "tr": "KASTAMONU/Pınarbaşı/Pınarbaşı Malmüdürlüğü"
+    },
+    "37119": {
+      "tr": "KASTAMONU/Seydiler/Seydiler Malmüdürlüğü"
+    },
+    "37115": {
+      "tr": "KASTAMONU/Şenpazar/Şenpazar Malmüdürlüğü"
+    },
+    "37262": {
+      "tr": "KASTAMONU/Taşköprü/Taşköprü Vergi Dairesi Müdürlüğü"
+    },
+    "37261": {
+      "tr": "KASTAMONU/Tosya/Tosya Vergi Dairesi Müdürlüğü"
+    },
+    "38111": {
+      "tr": "KAYSERİ/Akkışla/Akkışla Malmüdürlüğü"
+    },
+    "38203": {
+      "tr": "KAYSERİ/Bünyan/Bünyan Vergi Dairesi Müdürlüğü"
+    },
+    "38201": {
+      "tr": "KAYSERİ/Develi/Develi Vergi Dairesi Müdürlüğü"
+    },
+    "38103": {
+      "tr": "KAYSERİ/Felahiye/Felahiye Malmüdürlüğü"
+    },
+    "38104": {
+      "tr": "KAYSERİ/İncesu/İncesu Malmüdürlüğü"
+    },
+    "38113": {
+      "tr": "KAYSERİ/Merkez-(5216)/Hacılar Malmüdürlüğü"
+    },
+    "38252": {
+      "tr": "KAYSERİ/Merkez/Erciyes Vergi Dairesi Müdürlüğü"
+    },
+    "38254": {
+      "tr": "KAYSERİ/Merkez/Gevher Nesibe Vergi Dairesi Müdürlüğü"
+    },
+    "38253": {
+      "tr": "KAYSERİ/Merkez/Kaleönü Vergi Dairesi Müdürlüğü"
+    },
+    "38251": {
+      "tr": "KAYSERİ/Merkez/Mimar Sinan Vergi Dairesi Müdürlüğü"
+    },
+    "38114": {
+      "tr": "KAYSERİ/Özvatan/Özvatan Malmüdürlüğü"
+    },
+    "38202": {
+      "tr": "KAYSERİ/Pınarbaşı/Pınarbaşı Vergi Dairesi Müdürlüğü"
+    },
+    "38106": {
+      "tr": "KAYSERİ/Sarıoğlan/Sarıoğlan Malmüdürlüğü"
+    },
+    "38107": {
+      "tr": "KAYSERİ/Sarız/Sarız Malmüdürlüğü"
+    },
+    "38108": {
+      "tr": "KAYSERİ/Tomarza/Tomarza Malmüdürlüğü"
+    },
+    "38109": {
+      "tr": "KAYSERİ/Yahyalı/Yahyalı Malmüdürlüğü"
+    },
+    "38110": {
+      "tr": "KAYSERİ/Yeşilhisar/Yeşilhisar Malmüdürlüğü"
+    },
+    "71105": {
+      "tr": "KIRIKKALE/Balışeyh/Balışeyh Malmüdürlüğü"
+    },
+    "71106": {
+      "tr": "KIRIKKALE/Çelebi/Çelebi Malmüdürlüğü"
+    },
+    "71101": {
+      "tr": "KIRIKKALE/Delice/Delice Malmüdürlüğü"
+    },
+    "71107": {
+      "tr": "KIRIKKALE/Karakeçili/Karakeçili Malmüdürlüğü"
+    },
+    "71102": {
+      "tr": "KIRIKKALE/Keskin/Keskin Malmüdürlüğü"
+    },
+    "71201": {
+      "tr": "KIRIKKALE/Merkez/Irmak Vergi Dairesi Müdürlüğü"
+    },
+    "71202": {
+      "tr": "KIRIKKALE/Merkez/Kaletepe Vergi Dairesi Müdürlüğü"
+    },
+    "71103": {
+      "tr": "KIRIKKALE/Sulakyurt/Sulakyurt Malmüdürlüğü"
+    },
+    "39262": {
+      "tr": "KIRKLARELİ/Babaeski/Babaeski Vergi Dairesi Müdürlüğü"
+    },
+    "39102": {
+      "tr": "KIRKLARELİ/Demirköy/Demirköy Malmüdürlüğü"
+    },
+    "39103": {
+      "tr": "KIRKLARELİ/Kofçaz/Kofçaz Malmüdürlüğü"
+    },
+    "39261": {
+      "tr": "KIRKLARELİ/Lüleburgaz/Lüleburgaz Vergi Dairesi Müdürlüğü"
+    },
+    "39260": {
+      "tr": "KIRKLARELİ/Merkez/Kırklareli Vergi Dairesi Müdürlüğü"
+    },
+    "39105": {
+      "tr": "KIRKLARELİ/Pehlivanköy/Pehlivanköy Malmüdürlüğü"
+    },
+    "39106": {
+      "tr": "KIRKLARELİ/Pınarhisar/Pınarhisar Malmüdürlüğü"
+    },
+    "39107": {
+      "tr": "KIRKLARELİ/Vize/Vize Malmüdürlüğü"
+    },
+    "40105": {
+      "tr": "KIRŞEHİR/Akçakent/Akçakent Malmüdürlüğü"
+    },
+    "40104": {
+      "tr": "KIRŞEHİR/Akpınar/Akpınar Malmüdürlüğü"
+    },
+    "40106": {
+      "tr": "KIRŞEHİR/Boztepe/Boztepe Malmüdürlüğü"
+    },
+    "40101": {
+      "tr": "KIRŞEHİR/Çiçekdağı/Çiçekdağı Malmüdürlüğü"
+    },
+    "40261": {
+      "tr": "KIRŞEHİR/Kaman/Kaman Vergi Dairesi Müdürlüğü"
+    },
+    "40260": {
+      "tr": "KIRŞEHİR/Merkez/Kırşehir Vergi Dairesi Müdürlüğü"
+    },
+    "40103": {
+      "tr": "KIRŞEHİR/Mucur/Mucur Malmüdürlüğü"
+    },
+    "79201": {
+      "tr": "KİLİS/Merkez/Kilis Vergi Dairesi Müdürlüğü"
+    },
+    "41207": {
+      "tr": "KOCAELİ/Merkez-(5216)/Derince Vergi Dairesi Müdürlüğü"
+    },
+    "41204": {
+      "tr": "KOCAELİ/Merkez-(5216)/Gölcük Vergi Dairesi Müdürlüğü"
+    },
+    "41203": {
+      "tr": "KOCAELİ/Merkez-(5216)/İlyasbey Vergi Dairesi Müdürlüğü"
+    },
+    "41103": {
+      "tr": "KOCAELİ/Merkez-(5216)/Kandıra Malmüdürlüğü"
+    },
+    "41205": {
+      "tr": "KOCAELİ/Merkez-(5216)/Karamürsel Vergi Dairesi Müdürlüğü"
+    },
+    "41206": {
+      "tr": "KOCAELİ/Merkez-(5216)/Körfez Vergi Dairesi Müdürlüğü"
+    },
+    "41202": {
+      "tr": "KOCAELİ/Merkez-(5216)/Uluçınar Vergi Dairesi Müdürlüğü"
+    },
+    "41290": {
+      "tr": "KOCAELİ/Merkez/Acısu Vergi Dairesi Müdürlüğü"
+    },
+    "41253": {
+      "tr": "KOCAELİ/Merkez/Alemdar Vergi Dairesi Müdürlüğü"
+    },
+    "41252": {
+      "tr": "KOCAELİ/Merkez/Tepecik Vergi Dairesi Müdürlüğü"
+    },
+    "42124": {
+      "tr": "KONYA/Ahırlı/Ahırlı Malmüdürlüğü"
+    },
+    "42118": {
+      "tr": "KONYA/Akören/Akören Malmüdürlüğü"
+    },
+    "42201": {
+      "tr": "KONYA/Akşehir/Akşehir Vergi Dairesi Müdürlüğü"
+    },
+    "42119": {
+      "tr": "KONYA/Altınekin/Altınekin Malmüdürlüğü"
+    },
+    "42204": {
+      "tr": "KONYA/Beyşehir/Beyşehir Vergi Dairesi Müdürlüğü"
+    },
+    "42103": {
+      "tr": "KONYA/Bozkır/Bozkır Malmüdürlüğü"
+    },
+    "42205": {
+      "tr": "KONYA/Cihanbeyli/Cihanbeyli Vergi Dairesi Müdürlüğü"
+    },
+    "42125": {
+      "tr": "KONYA/Çeltik/Çeltik Malmüdürlüğü"
+    },
+    "42206": {
+      "tr": "KONYA/Çumra/Çumra Vergi Dairesi Müdürlüğü"
+    },
+    "42126": {
+      "tr": "KONYA/Derbent/Derbent Malmüdürlüğü"
+    },
+    "42121": {
+      "tr": "KONYA/Derebucak/Derebucak Malmüdürlüğü"
+    },
+    "42106": {
+      "tr": "KONYA/Doğanhisar/Doğanhisar Malmüdürlüğü"
+    },
+    "42127": {
+      "tr": "KONYA/Emirgazi/Emirgazi Malmüdürlüğü"
+    },
+    "42202": {
+      "tr": "KONYA/Ereğli/Ereğli Vergi Dairesi Müdürlüğü"
+    },
+    "42128": {
+      "tr": "KONYA/Güneysınır/Güneysınır Malmüdürlüğü"
+    },
+    "42109": {
+      "tr": "KONYA/Hadim/Hadim Malmüdürlüğü"
+    },
+    "42129": {
+      "tr": "KONYA/Halkapınar/Halkapınar Malmüdürlüğü"
+    },
+    "42122": {
+      "tr": "KONYA/Hüyük/Hüyük Malmüdürlüğü"
+    },
+    "42208": {
+      "tr": "KONYA/Ilgın/Ilgın Vergi Dairesi Müdürlüğü"
+    },
+    "42111": {
+      "tr": "KONYA/Kadınhanı/Kadınhanı Malmüdürlüğü"
+    },
+    "42113": {
+      "tr": "KONYA/Karapınar/Karapınar Malmüdürlüğü"
+    },
+    "42209": {
+      "tr": "KONYA/Kulu/Kulu Vergi Dairesi Müdürlüğü"
+    },
+    "42254": {
+      "tr": "KONYA/Merkez/Alaaddin Vergi Dairesi Müdürlüğü"
+    },
+    "42253": {
+      "tr": "KONYA/Merkez/Meram Vergi Dairesi Müdürlüğü"
+    },
+    "42252": {
+      "tr": "KONYA/Merkez/Mevlana Vergi Dairesi Müdürlüğü"
+    },
+    "42251": {
+      "tr": "KONYA/Merkez/Selçuk Vergi Dairesi Müdürlüğü"
+    },
+    "42115": {
+      "tr": "KONYA/Sarayönü/Sarayönü Malmüdürlüğü"
+    },
+    "42207": {
+      "tr": "KONYA/Seydişehir/Seydişehir Vergi Dairesi Müdürlüğü"
+    },
+    "42123": {
+      "tr": "KONYA/Taşkent/Taşkent Malmüdürlüğü"
+    },
+    "42130": {
+      "tr": "KONYA/Tuzlukçu/Tuzlukçu Malmüdürlüğü"
+    },
+    "42131": {
+      "tr": "KONYA/Yalıhüyük/Yalıhüyük Malmüdürlüğü"
+    },
+    "42117": {
+      "tr": "KONYA/Yunak/Yunak Malmüdürlüğü"
+    },
+    "43101": {
+      "tr": "KÜTAHYA/Altıntaş/Altıntaş Malmüdürlüğü"
+    },
+    "43107": {
+      "tr": "KÜTAHYA/Aslanapa/Aslanapa Malmüdürlüğü"
+    },
+    "43111": {
+      "tr": "KÜTAHYA/Çavdarhisar/Çavdarhisar Malmüdürlüğü"
+    },
+    "43102": {
+      "tr": "KÜTAHYA/Domaniç/Domaniç Malmüdürlüğü"
+    },
+    "43108": {
+      "tr": "KÜTAHYA/Dumlupınar/Dumlupınar Malmüdürlüğü"
+    },
+    "43263": {
+      "tr": "KÜTAHYA/Emet/Emet Vergi Dairesi Müdürlüğü"
+    },
+    "43260": {
+      "tr": "KÜTAHYA/Gediz/Gediz Vergi Dairesi Müdürlüğü"
+    },
+    "43109": {
+      "tr": "KÜTAHYA/Hisarcık/Hisarcık Malmüdürlüğü"
+    },
+    "43201": {
+      "tr": "KÜTAHYA/Merkez/30 Ağustos Vergi Dairesi Müdürlüğü"
+    },
+    "43280": {
+      "tr": "KÜTAHYA/Merkez/Çinili Vergi Dairesi Müdürlüğü"
+    },
+    "43112": {
+      "tr": "KÜTAHYA/Pazarlar/Pazarlar Malmüdürlüğü"
+    },
+    "43261": {
+      "tr": "KÜTAHYA/Simav/Simav Vergi Dairesi Müdürlüğü"
+    },
+    "43110": {
+      "tr": "KÜTAHYA/Şaphane/Şaphane Malmüdürlüğü"
+    },
+    "43262": {
+      "tr": "KÜTAHYA/Tavşanlı/Tavşanlı Vergi Dairesi Müdürlüğü"
+    },
+    "44101": {
+      "tr": "MALATYA/Akçadağ/Akçadağ Malmüdürlüğü"
+    },
+    "44102": {
+      "tr": "MALATYA/Arapgir/Arapgir Malmüdürlüğü"
+    },
+    "44103": {
+      "tr": "MALATYA/Arguvan/Arguvan Malmüdürlüğü"
+    },
+    "44109": {
+      "tr": "MALATYA/Battalgazi/Battalgazi Malmüdürlüğü"
+    },
+    "44104": {
+      "tr": "MALATYA/Darende/Darende Malmüdürlüğü"
+    },
+    "44105": {
+      "tr": "MALATYA/Doğanşehir/Doğanşehir Malmüdürlüğü"
+    },
+    "44110": {
+      "tr": "MALATYA/Doğanyol/Doğanyol Malmüdürlüğü"
+    },
+    "44106": {
+      "tr": "MALATYA/Hekimhan/Hekimhan Malmüdürlüğü"
+    },
+    "44111": {
+      "tr": "MALATYA/Kale/Kale Malmüdürlüğü"
+    },
+    "44112": {
+      "tr": "MALATYA/Kuluncak/Kuluncak Malmüdürlüğü"
+    },
+    "44252": {
+      "tr": "MALATYA/Merkez/Beydağı Vergi Dairesi Müdürlüğü"
+    },
+    "44251": {
+      "tr": "MALATYA/Merkez/Fırat Vergi Dairesi Müdürlüğü"
+    },
+    "44107": {
+      "tr": "MALATYA/Pütürge/Pütürge Malmüdürlüğü"
+    },
+    "44113": {
+      "tr": "MALATYA/Yazıhan/Yazıhan Malmüdürlüğü"
+    },
+    "44108": {
+      "tr": "MALATYA/Yeşilyurt/Yeşilyurt Malmüdürlüğü"
+    },
+    "45113": {
+      "tr": "MANİSA/Ahmetli/Ahmetli Malmüdürlüğü"
+    },
+    "45201": {
+      "tr": "MANİSA/Akhisar/Akhisar Vergi Dairesi Müdürlüğü"
+    },
+    "45202": {
+      "tr": "MANİSA/Alaşehir/Alaşehir Vergi Dairesi Müdürlüğü"
+    },
+    "45203": {
+      "tr": "MANİSA/Demirci/Demirci Vergi Dairesi Müdürlüğü"
+    },
+    "45114": {
+      "tr": "MANİSA/Gölmarmara/Gölmarmara Malmüdürlüğü"
+    },
+    "45210": {
+      "tr": "MANİSA/Gördes/Gördes Vergi Dairesi Müdürlüğü"
+    },
+    "45115": {
+      "tr": "MANİSA/Köprübaşı/Köprübaşı Malmüdürlüğü"
+    },
+    "45211": {
+      "tr": "MANİSA/Kula/Kula Vergi Dairesi Müdürlüğü"
+    },
+    "45204": {
+      "tr": "MANİSA/Kırkağaç/Kırkağaç Vergi Dairesi Müdürlüğü"
+    },
+    "45251": {
+      "tr": "MANİSA/Merkez/Alaybey Vergi Dairesi Müdürlüğü"
+    },
+    "45252": {
+      "tr": "MANİSA/Merkez/Mesir Vergi Dairesi Müdürlüğü"
+    },
+    "45205": {
+      "tr": "MANİSA/Salihli/Salihli Adil Oral Vergi Dairesi Müdürlüğü"
+    },
+    "45207": {
+      "tr": "MANİSA/Saruhanlı/Saruhanlı Vergi Dairesi Müdürlüğü"
+    },
+    "45206": {
+      "tr": "MANİSA/Sarıgöl/Sarıgöl Vergi Dairesi Müdürlüğü"
+    },
+    "45110": {
+      "tr": "MANİSA/Selendi/Selendi Malmüdürlüğü"
+    },
+    "45208": {
+      "tr": "MANİSA/Soma/Soma Vergi Dairesi Müdürlüğü"
+    },
+    "45209": {
+      "tr": "MANİSA/Turgutlu/Turgutlu Vergi Dairesi Müdürlüğü"
+    },
+    "47112": {
+      "tr": "MARDİN/Dargeçit/Dargeçit Malmüdürlüğü"
+    },
+    "47102": {
+      "tr": "MARDİN/Derik/Derik Malmüdürlüğü"
+    },
+    "47261": {
+      "tr": "MARDİN/Kızıltepe/Kızıltepe Vergi Dairesi Müdürlüğü"
+    },
+    "47106": {
+      "tr": "MARDİN/Mazıdağı/Mazıdağı Malmüdürlüğü"
+    },
+    "47260": {
+      "tr": "MARDİN/Merkez/Mardin Vergi Dairesi Müdürlüğü"
+    },
+    "47107": {
+      "tr": "MARDİN/Midyat/Midyat Malmüdürlüğü"
+    },
+    "47262": {
+      "tr": "MARDİN/Nusaybin/Nusaybin Vergi Dairesi Müdürlüğü"
+    },
+    "47109": {
+      "tr": "MARDİN/Ömerli/Ömerli Malmüdürlüğü"
+    },
+    "47110": {
+      "tr": "MARDİN/Savur/Savur Malmüdürlüğü"
+    },
+    "47113": {
+      "tr": "MARDİN/Yeşilli/Yeşilli Malmüdürlüğü"
+    },
+    "33203": {
+      "tr": "MERSİN/Anamur/Anamur Vergi Dairesi Müdürlüğü"
+    },
+    "33107": {
+      "tr": "MERSİN/Aydıncık/Aydıncık Malmüdürlüğü"
+    },
+    "33108": {
+      "tr": "MERSİN/Bozyazı/Bozyazı Malmüdürlüğü"
+    },
+    "33109": {
+      "tr": "MERSİN/Çamlıyayla/Çamlıyayla Malmüdürlüğü"
+    },
+    "33201": {
+      "tr": "MERSİN/Erdemli/Erdemli Vergi Dairesi Müdürlüğü"
+    },
+    "33103": {
+      "tr": "MERSİN/Gülnar/Gülnar Malmüdürlüğü"
+    },
+    "33250": {
+      "tr": "MERSİN/Merkez/İstiklal Vergi Dairesi Müdürlüğü"
+    },
+    "33254": {
+      "tr": "MERSİN/Merkez/Liman Vergi Dairesi Müdürlüğü"
+    },
+    "33255": {
+      "tr": "MERSİN/Merkez/Toros Vergi Dairesi Müdürlüğü"
+    },
+    "33252": {
+      "tr": "MERSİN/Merkez/Uray Vergi Dairesi Müdürlüğü"
+    },
+    "33104": {
+      "tr": "MERSİN/Mut/Mut Malmüdürlüğü"
+    },
+    "33202": {
+      "tr": "MERSİN/Silifke/Silifke Vergi Dairesi Müdürlüğü"
+    },
+    "33204": {
+      "tr": "MERSİN/Tarsus/Kızılmurat Vergi Dairesi Müdürlüğü"
+    },
+    "33205": {
+      "tr": "MERSİN/Tarsus/Şehitkerim Vergi Dairesi Müdürlüğü"
+    },
+    "48261": {
+      "tr": "MUĞLA/Bodrum/Bodrum Vergi Dairesi Müdürlüğü"
+    },
+    "48109": {
+      "tr": "MUĞLA/Dalaman/Dalaman Malmüdürlüğü"
+    },
+    "48102": {
+      "tr": "MUĞLA/Datça/Datça Malmüdürlüğü"
+    },
+    "48262": {
+      "tr": "MUĞLA/Fethiye/Fethiye Vergi Dairesi Müdürlüğü"
+    },
+    "48111": {
+      "tr": "MUĞLA/Kavaklıdere/Kavaklıdere Malmüdürlüğü"
+    },
+    "48263": {
+      "tr": "MUĞLA/Köyceğiz/Köyceğiz Vergi Dairesi Müdürlüğü"
+    },
+    "48265": {
+      "tr": "MUĞLA/Marmaris/Marmaris Vergi Dairesi Müdürlüğü"
+    },
+    "48260": {
+      "tr": "MUĞLA/Merkez/Muğla Vergi Dairesi Müdürlüğü"
+    },
+    "48264": {
+      "tr": "MUĞLA/Milas/Milas Vergi Dairesi Müdürlüğü"
+    },
+    "48110": {
+      "tr": "MUĞLA/Ortaca/Ortaca Malmüdürlüğü"
+    },
+    "48113": {
+      "tr": "MUĞLA/Seydiemer/Seydikemer Malmüdürlüğü"
+    },
+    "48108": {
+      "tr": "MUĞLA/Ula/Ula Malmüdürlüğü"
+    },
+    "48266": {
+      "tr": "MUĞLA/Yatağan/Yatağan Vergi Dairesi Müdürlüğü"
+    },
+    "49101": {
+      "tr": "MUŞ/Bulanık/Bulanık Malmüdürlüğü"
+    },
+    "49104": {
+      "tr": "MUŞ/Hasköy/Hasköy Malmüdürlüğü"
+    },
+    "49105": {
+      "tr": "MUŞ/Korkut/Korkut Malmüdürlüğü"
+    },
+    "49102": {
+      "tr": "MUŞ/Malazgirt/Malazgirt Malmüdürlüğü"
+    },
+    "49260": {
+      "tr": "MUŞ/Merkez/Muş Vergi Dairesi Müdürlüğü"
+    },
+    "49103": {
+      "tr": "MUŞ/Varto/Varto Malmüdürlüğü"
+    },
+    "50107": {
+      "tr": "NEVŞEHİR/Acıgöl/Acıgöl Malmüdürlüğü"
+    },
+    "50101": {
+      "tr": "NEVŞEHİR/Avanos/Avanos Malmüdürlüğü"
+    },
+    "50102": {
+      "tr": "NEVŞEHİR/Derinkuyu/Derinkuyu Malmüdürlüğü"
+    },
+    "50103": {
+      "tr": "NEVŞEHİR/Gülşehir/Gülşehir Malmüdürlüğü"
+    },
+    "50104": {
+      "tr": "NEVŞEHİR/Hacıbektaş/Hacıbektaş Malmüdürlüğü"
+    },
+    "50105": {
+      "tr": "NEVŞEHİR/Kozaklı/Kozaklı Malmüdürlüğü"
+    },
+    "50260": {
+      "tr": "NEVŞEHİR/Merkez/Nevşehir Vergi Dairesi Müdürlüğü"
+    },
+    "50106": {
+      "tr": "NEVŞEHİR/Ürgüp/Ürgüp Malmüdürlüğü"
+    },
+    "51106": {
+      "tr": "NİĞDE/Altunhisar/Altunhisar Malmüdürlüğü"
+    },
+    "51262": {
+      "tr": "NİĞDE/Bor/Bor Vergi Dairesi Müdürlüğü"
+    },
+    "51103": {
+      "tr": "NİĞDE/Çamardı/Çamardı Malmüdürlüğü"
+    },
+    "51107": {
+      "tr": "NİĞDE/Çiftlik/Çiftlik Malmüdürlüğü"
+    },
+    "51260": {
+      "tr": "NİĞDE/Merkez/Niğde Vergi Dairesi Müdürlüğü"
+    },
+    "51105": {
+      "tr": "NİĞDE/Ulukışla/Ulukışla Malmüdürlüğü"
+    },
+    "52101": {
+      "tr": "ORDU/Akkuş/Akkuş Malmüdürlüğü"
+    },
+    "52102": {
+      "tr": "ORDU/Aybastı/Aybastı Malmüdürlüğü"
+    },
+    "52113": {
+      "tr": "ORDU/Çamaş/Çamaş Malmüdürlüğü"
+    },
+    "52114": {
+      "tr": "ORDU/Çatalpınar/Çatalpınar Malmüdürlüğü"
+    },
+    "52115": {
+      "tr": "ORDU/Çaybaşı/Çaybaşı Malmüdürlüğü"
+    },
+    "52261": {
+      "tr": "ORDU/Fatsa/Fatsa Vergi Dairesi Müdürlüğü"
+    },
+    "52104": {
+      "tr": "ORDU/Gölköy/Gölköy Malmüdürlüğü"
+    },
+    "52111": {
+      "tr": "ORDU/Gülyalı/Gülyalı Malmüdürlüğü"
+    },
+    "52112": {
+      "tr": "ORDU/Gürgentepe/Gürgentepe Malmüdürlüğü"
+    },
+    "52116": {
+      "tr": "ORDU/İkizce/İkizce Malmüdürlüğü"
+    },
+    "52117": {
+      "tr": "ORDU/Kabadüz/Kabadüz Malmüdürlüğü"
+    },
+    "52118": {
+      "tr": "ORDU/Kabataş/Kabataş Malmüdürlüğü"
+    },
+    "52105": {
+      "tr": "ORDU/Korgan/Korgan Malmüdürlüğü"
+    },
+    "52106": {
+      "tr": "ORDU/Kumru/Kumru Malmüdürlüğü"
+    },
+    "52201": {
+      "tr": "ORDU/Merkez/Boztepe Vergi Dairesi Müdürlüğü"
+    },
+    "52260": {
+      "tr": "ORDU/Merkez/Köprübaşı Vergi Dairesi Müdürlüğü"
+    },
+    "52107": {
+      "tr": "ORDU/Mesudiye/Mesudiye Malmüdürlüğü"
+    },
+    "52108": {
+      "tr": "ORDU/Perşembe/Perşembe Malmüdürlüğü"
+    },
+    "52109": {
+      "tr": "ORDU/Ulubey/Ulubey Malmüdürlüğü"
+    },
+    "52262": {
+      "tr": "ORDU/Ünye/Ünye Vergi Dairesi Müdürlüğü"
+    },
+    "80101": {
+      "tr": "OSMANİYE/Bahçe/Bahçe Malmüdürlüğü"
+    },
+    "80102": {
+      "tr": "OSMANİYE/Düziçi/Düziçi Malmüdürlüğü"
+    },
+    "80104": {
+      "tr": "OSMANİYE/Hasanbeyli/Hasanbeyli Malmüdürlüğü"
+    },
+    "80260": {
+      "tr": "OSMANİYE/Kadirli/Kadirli Vergi Dairesi Müdürlüğü"
+    },
+    "80201": {
+      "tr": "OSMANİYE/Merkez/Osmaniye Vergi Dairesi Müdürlüğü"
+    },
+    "80105": {
+      "tr": "OSMANİYE/Sumbas/Sumbas Malmüdürlüğü"
+    },
+    "80106": {
+      "tr": "OSMANİYE/Toprakkale/Toprakkale Malmüdürlüğü"
+    },
+    "53263": {
+      "tr": "RİZE/Ardeşen/Ardeşen Vergi Dairesi Müdürlüğü"
+    },
+    "53102": {
+      "tr": "RİZE/Çamlıhemşin/Çamlıhemşin Malmüdürlüğü"
+    },
+    "53261": {
+      "tr": "RİZE/Çayeli/Çayeli Vergi Dairesi Müdürlüğü"
+    },
+    "53109": {
+      "tr": "RİZE/Derepazarı/Derepazarı Malmüdürlüğü"
+    },
+    "53104": {
+      "tr": "RİZE/Fındıklı/Fındıklı Malmüdürlüğü"
+    },
+    "53108": {
+      "tr": "RİZE/Güneysu/Güneysu Malmüdürlüğü"
+    },
+    "53110": {
+      "tr": "RİZE/Hemşin/Hemşin Malmüdürlüğü"
+    },
+    "53105": {
+      "tr": "RİZE/İkizdere/İkizdere Malmüdürlüğü"
+    },
+    "53111": {
+      "tr": "RİZE/İyidere/İyidere Malmüdürlüğü"
+    },
+    "53106": {
+      "tr": "RİZE/Kalkandere/Kalkandere Malmüdürlüğü"
+    },
+    "53201": {
+      "tr": "RİZE/Merkez/Kaçkar Vergi Dairesi Müdürlüğü"
+    },
+    "53260": {
+      "tr": "RİZE/Merkez/Yeşilçay Vergi Dairesi Müdürlüğü"
+    },
+    "53262": {
+      "tr": "RİZE/Pazar/Pazar Vergi Dairesi Müdürlüğü"
+    },
+    "54202": {
+      "tr": "SAKARYA/Geyve/Geyve Vergi Dairesi Müdürlüğü"
+    },
+    "54203": {
+      "tr": "SAKARYA/Hendek/Hendek Vergi Dairesi Müdürlüğü"
+    },
+    "54204": {
+      "tr": "SAKARYA/Karasu/Karasu Vergi Dairesi Müdürlüğü"
+    },
+    "54105": {
+      "tr": "SAKARYA/Kaynarca/Kaynarca Malmüdürlüğü"
+    },
+    "54107": {
+      "tr": "SAKARYA/Kocaali/Kocaali Malmüdürlüğü"
+    },
+    "54201": {
+      "tr": "SAKARYA/Merkez-(5216)/Akyazı Vergi Dairesi Müdürlüğü"
+    },
+    "54111": {
+      "tr": "SAKARYA/Merkez-(5216)/Karapürçek Malmüdürlüğü"
+    },
+    "54106": {
+      "tr": "SAKARYA/Merkez-(5216)/Sapanca Malmüdürlüğü"
+    },
+    "54252": {
+      "tr": "SAKARYA/Merkez/Ali Fuat Cebesoy Vergi Dairesi Müdürlüğü"
+    },
+    "54251": {
+      "tr": "SAKARYA/Merkez/Gümrükönü Vergi Dairesi Müdürlüğü"
+    },
+    "54108": {
+      "tr": "SAKARYA/Pamukova/Pamukova Malmüdürlüğü"
+    },
+    "54109": {
+      "tr": "SAKARYA/Taraklı/Taraklı Malmüdürlüğü"
+    },
+    "55101": {
+      "tr": "SAMSUN/Alaçam/Alaçam Malmüdürlüğü"
+    },
+    "55109": {
+      "tr": "SAMSUN/Asarcık/Asarcık Malmüdürlüğü"
+    },
+    "55113": {
+      "tr": "SAMSUN/Ayvacık/Ayvacık Malmüdürlüğü"
+    },
+    "55202": {
+      "tr": "SAMSUN/Bafra/Bafra Vergi Dairesi Müdürlüğü"
+    },
+    "55203": {
+      "tr": "SAMSUN/Çarşamba/Çarşamba Vergi Dairesi Müdürlüğü"
+    },
+    "55205": {
+      "tr": "SAMSUN/Havza/Havza Vergi Dairesi Müdürlüğü"
+    },
+    "55105": {
+      "tr": "SAMSUN/Kavak/Kavak Malmüdürlüğü"
+    },
+    "55106": {
+      "tr": "SAMSUN/Ladik/Ladik Malmüdürlüğü"
+    },
+    "55112": {
+      "tr": "SAMSUN/Merkez-(5216)/Tekkeköy Malmüdürlüğü"
+    },
+    "55251": {
+      "tr": "SAMSUN/Merkez/19 Mayıs Vergi Dairesi Müdürlüğü"
+    },
+    "55252": {
+      "tr": "SAMSUN/Merkez/Gaziler Vergi Dairesi Müdürlüğü"
+    },
+    "55290": {
+      "tr": "SAMSUN/Merkez/Zafer Vergi Dairesi Müdürlüğü"
+    },
+    "55110": {
+      "tr": "SAMSUN/Ondokuz Mayıs/Ondokuz Mayıs Malmüdürlüğü"
+    },
+    "55111": {
+      "tr": "SAMSUN/Salıpazarı/Salıpazarı Malmüdürlüğü"
+    },
+    "55204": {
+      "tr": "SAMSUN/Terme/Terme Vergi Dairesi Müdürlüğü"
+    },
+    "55108": {
+      "tr": "SAMSUN/Vezirköprü/Vezirköprü Malmüdürlüğü"
+    },
+    "55114": {
+      "tr": "SAMSUN/Yakakent/Yakakent Malmüdürlüğü"
+    },
+    "56102": {
+      "tr": "SİİRT/Baykan/Baykan Malmüdürlüğü"
+    },
+    "56104": {
+      "tr": "SİİRT/Eruh/Eruh Malmüdürlüğü"
+    },
+    "56106": {
+      "tr": "SİİRT/Kurtalan/Kurtalan Malmüdürlüğü"
+    },
+    "56260": {
+      "tr": "SİİRT/Merkez/Siirt Vergi Dairesi Müdürlüğü"
+    },
+    "56107": {
+      "tr": "SİİRT/Pervari/Pervari Malmüdürlüğü"
+    },
+    "56110": {
+      "tr": "SİİRT/Şirvan/Şirvan Malmüdürlüğü"
+    },
+    "57101": {
+      "tr": "SİNOP/Ayancık/Ayancık Malmüdürlüğü"
+    },
+    "57261": {
+      "tr": "SİNOP/Boyabat/Boyabat Vergi Dairesi Müdürlüğü"
+    },
+    "57107": {
+      "tr": "SİNOP/Dikmen/Dikmen Malmüdürlüğü"
+    },
+    "57103": {
+      "tr": "SİNOP/Durağan/Durağan Malmüdürlüğü"
+    },
+    "57104": {
+      "tr": "SİNOP/Erfelek/Erfelek Malmüdürlüğü"
+    },
+    "57105": {
+      "tr": "SİNOP/Gerze/Gerze Malmüdürlüğü"
+    },
+    "57260": {
+      "tr": "SİNOP/Merkez/Sinop Vergi Dairesi Müdürlüğü"
+    },
+    "57108": {
+      "tr": "SİNOP/Saraydüzü/Saraydüzü Malmüdürlüğü"
+    },
+    "57106": {
+      "tr": "SİNOP/Türkeli/Türkeli Malmüdürlüğü"
+    },
+    "58112": {
+      "tr": "SİVAS/Akıncılar/Akıncılar Malmüdürlüğü"
+    },
+    "58113": {
+      "tr": "SİVAS/Altınyayla/Altınyayla Malmüdürlüğü"
+    },
+    "58101": {
+      "tr": "SİVAS/Divriği/Divriği Malmüdürlüğü"
+    },
+    "58114": {
+      "tr": "SİVAS/Doğanşar/Doğanşar Malmüdürlüğü"
+    },
+    "58102": {
+      "tr": "SİVAS/Gemerek/Gemerek Malmüdürlüğü"
+    },
+    "58115": {
+      "tr": "SİVAS/Gölova/Gölova Malmüdürlüğü"
+    },
+    "58103": {
+      "tr": "SİVAS/Gürün/Gürün Malmüdürlüğü"
+    },
+    "58104": {
+      "tr": "SİVAS/Hafik/Hafik Malmüdürlüğü"
+    },
+    "58105": {
+      "tr": "SİVAS/İmranlı/İmranlı Malmüdürlüğü"
+    },
+    "58106": {
+      "tr": "SİVAS/Kangal/Kangal Malmüdürlüğü"
+    },
+    "58107": {
+      "tr": "SİVAS/Koyulhisar/Koyulhisar Malmüdürlüğü"
+    },
+    "58201": {
+      "tr": "SİVAS/Merkez/Kale Vergi Dairesi Müdürlüğü"
+    },
+    "58280": {
+      "tr": "SİVAS/Merkez/Site Vergi Dairesi Müdürlüğü"
+    },
+    "58109": {
+      "tr": "SİVAS/Suşehri/Suşehri Malmüdürlüğü"
+    },
+    "58260": {
+      "tr": "SİVAS/Şarkışla/Şarkışla Vergi Dairesi Müdürlüğü"
+    },
+    "58116": {
+      "tr": "SİVAS/Ulaş/Ulaş Malmüdürlüğü"
+    },
+    "58110": {
+      "tr": "SİVAS/Yıldızeli/Yıldızeli Malmüdürlüğü"
+    },
+    "58111": {
+      "tr": "SİVAS/Zara/Zara Malmüdürlüğü"
+    },
+    "63101": {
+      "tr": "ŞANLIURFA/Akçakale/Akçakale Malmüdürlüğü"
+    },
+    "63262": {
+      "tr": "ŞANLIURFA/Birecik/Birecik Vergi Dairesi Müdürlüğü"
+    },
+    "63103": {
+      "tr": "ŞANLIURFA/Bozova/Bozova Malmüdürlüğü"
+    },
+    "63109": {
+      "tr": "ŞANLIURFA/Ceylanpınar/Ceylanpınar Malmüdürlüğü"
+    },
+    "63104": {
+      "tr": "ŞANLIURFA/Halfeti/Halfeti Malmüdürlüğü"
+    },
+    "63110": {
+      "tr": "ŞANLIURFA/Harran/Harran Malmüdürlüğü"
+    },
+    "63105": {
+      "tr": "ŞANLIURFA/Hilvan/Hilvan Malmüdürlüğü"
+    },
+    "63201": {
+      "tr": "ŞANLIURFA/Merkez/Şehitlik Vergi Dairesi Müdürlüğü"
+    },
+    "63280": {
+      "tr": "ŞANLIURFA/Merkez/Topçu Meydanı Vergi Dairesi Müdürlüğü"
+    },
+    "63260": {
+      "tr": "ŞANLIURFA/Siverek/Siverek Vergi Dairesi Müdürlüğü"
+    },
+    "63107": {
+      "tr": "ŞANLIURFA/Suruç/Suruç Malmüdürlüğü"
+    },
+    "63261": {
+      "tr": "ŞANLIURFA/Viranşehir/Viranşehir Vergi Dairesi Müdürlüğü"
+    },
+    "73101": {
+      "tr": "ŞIRNAK/Beytüşşebap/Beytüşşebap Malmüdürlüğü"
+    },
+    "73261": {
+      "tr": "ŞIRNAK/Cizre/Cizre Vergi Dairesi Müdürlüğü"
+    },
+    "73103": {
+      "tr": "ŞIRNAK/Güçlükonak/Güçlükonak Malmüdürlüğü"
+    },
+    "73104": {
+      "tr": "ŞIRNAK/İdil/İdil Malmüdürlüğü"
+    },
+    "73260": {
+      "tr": "ŞIRNAK/Merkez/Şırnak Vergi Dairesi Müdürlüğü"
+    },
+    "73262": {
+      "tr": "ŞIRNAK/Silopi/Silopi Vergi Dairesi Müdürlüğü"
+    },
+    "73106": {
+      "tr": "ŞIRNAK/Uludere/Uludere Malmüdürlüğü"
+    },
+    "59261": {
+      "tr": "TEKİRDAĞ/Çerkezköy/Çerkezköy Vergi Dairesi Müdürlüğü"
+    },
+    "59262": {
+      "tr": "TEKİRDAĞ/Çorlu/Çorlu Vergi Dairesi Müdürlüğü"
+    },
+    "59263": {
+      "tr": "TEKİRDAĞ/Hayrabolu/Hayrabolu Vergi Dairesi Müdürlüğü"
+    },
+    "59264": {
+      "tr": "TEKİRDAĞ/Malkara/Malkara Vergi Dairesi Müdürlüğü"
+    },
+    "59108": {
+      "tr": "TEKİRDAĞ/Marmara Ereğlisi/Marmara Ereğlisi Malmüdürlüğü"
+    },
+    "59260": {
+      "tr": "TEKİRDAĞ/Merkez/Namık Kemal Vergi Dairesi Müdürlüğü"
+    },
+    "59201": {
+      "tr": "TEKİRDAĞ/Merkez/Süleymanpaşa Vergi Dairesi Müdürlüğü"
+    },
+    "59265": {
+      "tr": "TEKİRDAĞ/Muratlı/Muratlı Vergi Dairesi Müdürlüğü"
+    },
+    "59106": {
+      "tr": "TEKİRDAĞ/Saray/Saray Malmüdürlüğü"
+    },
+    "59107": {
+      "tr": "TEKİRDAĞ/Şarköy/Şarköy Malmüdürlüğü"
+    },
+    "60101": {
+      "tr": "TOKAT/Almus/Almus Malmüdürlüğü"
+    },
+    "60102": {
+      "tr": "TOKAT/Artova/Artova Malmüdürlüğü"
+    },
+    "60110": {
+      "tr": "TOKAT/Başçiftlik/Başçiftlik Malmüdürlüğü"
+    },
+    "60261": {
+      "tr": "TOKAT/Erbaa/Erbaa Vergi Dairesi Müdürlüğü"
+    },
+    "60260": {
+      "tr": "TOKAT/Merkez/Tokat Vergi Dairesi Müdürlüğü"
+    },
+    "60262": {
+      "tr": "TOKAT/Niksar/Niksar Vergi Dairesi Müdürlüğü"
+    },
+    "60108": {
+      "tr": "TOKAT/Pazar/Pazar Malmüdürlüğü"
+    },
+    "60105": {
+      "tr": "TOKAT/Reşadiye/Reşadiye Malmüdürlüğü"
+    },
+    "60111": {
+      "tr": "TOKAT/Sulusaray/Sulusaray Malmüdürlüğü"
+    },
+    "60263": {
+      "tr": "TOKAT/Turhal/Turhal Vergi Dairesi Müdürlüğü"
+    },
+    "60109": {
+      "tr": "TOKAT/Yeşilyurt/Yeşilyurt Malmüdürlüğü"
+    },
+    "60264": {
+      "tr": "TOKAT/Zile/Zile Vergi Dairesi Müdürlüğü"
+    },
+    "61260": {
+      "tr": "TRABZON/Akçaabat/Akçaabat Vergi Dairesi Müdürlüğü"
+    },
+    "61102": {
+      "tr": "TRABZON/Araklı/Araklı Malmüdürlüğü"
+    },
+    "61103": {
+      "tr": "TRABZON/Arsin/Arsin Malmüdürlüğü"
+    },
+    "61111": {
+      "tr": "TRABZON/Beşikdüzü/Beşikdüzü Malmüdürlüğü"
+    },
+    "61113": {
+      "tr": "TRABZON/Çarşıbaşı/Çarşıbaşı Malmüdürlüğü"
+    },
+    "61104": {
+      "tr": "TRABZON/Çaykara/Çaykara Malmüdürlüğü"
+    },
+    "61114": {
+      "tr": "TRABZON/Dernekpazarı/Dernekpazarı Malmüdürlüğü"
+    },
+    "61115": {
+      "tr": "TRABZON/Düzköy/Düzköy Malmüdürlüğü"
+    },
+    "61116": {
+      "tr": "TRABZON/Hayrat/Hayrat Malmüdürlüğü"
+    },
+    "61117": {
+      "tr": "TRABZON/Köprübaşı/Köprübaşı Malmüdürlüğü"
+    },
+    "61105": {
+      "tr": "TRABZON/Maçka/Maçka Malmüdürlüğü"
+    },
+    "61201": {
+      "tr": "TRABZON/Merkez/Hızırbey Vergi Dairesi Müdürlüğü"
+    },
+    "61280": {
+      "tr": "TRABZON/Merkez/Karadeniz Vergi Dairesi Müdürlüğü"
+    },
+    "61261": {
+      "tr": "TRABZON/Of/Of Vergi Dairesi Müdürlüğü"
+    },
+    "61107": {
+      "tr": "TRABZON/Sürmene/Sürmene Malmüdürlüğü"
+    },
+    "61112": {
+      "tr": "TRABZON/Şalpazarı/Şalpazarı Malmüdürlüğü"
+    },
+    "61108": {
+      "tr": "TRABZON/Tonya/Tonya Malmüdürlüğü"
+    },
+    "61262": {
+      "tr": "TRABZON/Vakfıkebir/Vakfıkebir Vergi Dairesi Müdürlüğü"
+    },
+    "61110": {
+      "tr": "TRABZON/Yomra/Yomra Malmüdürlüğü"
+    },
+    "62101": {
+      "tr": "TUNCELİ/Çemişgezek/Çemişgezek Malmüdürlüğü"
+    },
+    "62102": {
+      "tr": "TUNCELİ/Hozat/Hozat Malmüdürlüğü"
+    },
+    "62103": {
+      "tr": "TUNCELİ/Mazgirt/Mazgirt Malmüdürlüğü"
+    },
+    "62260": {
+      "tr": "TUNCELİ/Merkez/Tunceli Vergi Dairesi Müdürlüğü"
+    },
+    "62104": {
+      "tr": "TUNCELİ/Nazimiye/Nazimiye Malmüdürlüğü"
+    },
+    "62105": {
+      "tr": "TUNCELİ/Ovacık/Ovacık Malmüdürlüğü"
+    },
+    "62106": {
+      "tr": "TUNCELİ/Pertek/Pertek Malmüdürlüğü"
+    },
+    "62107": {
+      "tr": "TUNCELİ/Pülümür/Pülümür Malmüdürlüğü"
+    },
+    "64261": {
+      "tr": "UŞAK/Banaz/Banaz Vergi Dairesi Müdürlüğü"
+    },
+    "64262": {
+      "tr": "UŞAK/Eşme/Eşme Vergi Dairesi Müdürlüğü"
+    },
+    "64103": {
+      "tr": "UŞAK/Karahallı/Karahallı Malmüdürlüğü"
+    },
+    "64260": {
+      "tr": "UŞAK/Merkez/Uşak Vergi Dairesi Müdürlüğü"
+    },
+    "64105": {
+      "tr": "UŞAK/Sivaslı/Sivaslı Malmüdürlüğü"
+    },
+    "64104": {
+      "tr": "UŞAK/Ulubey/Ulubey Malmüdürlüğü"
+    },
+    "65108": {
+      "tr": "VAN/Bahçesaray/Bahçesaray Malmüdürlüğü"
+    },
+    "65101": {
+      "tr": "VAN/Başkale/Başkale Malmüdürlüğü"
+    },
+    "65109": {
+      "tr": "VAN/Çaldıran/Çaldıran Malmüdürlüğü"
+    },
+    "65102": {
+      "tr": "VAN/Çatak/Çatak Malmüdürlüğü"
+    },
+    "65110": {
+      "tr": "VAN/Edremit/Edremit Malmüdürlüğü"
+    },
+    "65201": {
+      "tr": "VAN/Erciş/Erciş Vergi Dairesi Müdürlüğü"
+    },
+    "65104": {
+      "tr": "VAN/Gevaş/Gevaş Malmüdürlüğü"
+    },
+    "65105": {
+      "tr": "VAN/Gürpınar/Gürpınar Malmüdürlüğü"
+    },
+    "65260": {
+      "tr": "VAN/Merkez/Van Vergi Dairesi Müdürlüğü"
+    },
+    "65106": {
+      "tr": "VAN/Muradiye/Muradiye Malmüdürlüğü"
+    },
+    "65107": {
+      "tr": "VAN/Özalp/Özalp Malmüdürlüğü"
+    },
+    "65111": {
+      "tr": "VAN/Saray/Saray Malmüdürlüğü"
+    },
+    "77101": {
+      "tr": "YALOVA/Altınova/Altınova Malmüdürlüğü"
+    },
+    "77102": {
+      "tr": "YALOVA/Armutlu/Armutlu Malmüdürlüğü"
+    },
+    "77103": {
+      "tr": "YALOVA/Çınarcık/Çınarcık Malmüdürlüğü"
+    },
+    "77201": {
+      "tr": "YALOVA/Merkez/Yalova Vergi Dairesi Müdürlüğü"
+    },
+    "66101": {
+      "tr": "YOZGAT/Akdağmadeni/Akdağmadeni Malmüdürlüğü"
+    },
+    "66109": {
+      "tr": "YOZGAT/Aydıncık/Aydıncık Malmüdürlüğü"
+    },
+    "66261": {
+      "tr": "YOZGAT/Boğazlıyan/Boğazlıyan Vergi Dairesi Müdürlüğü"
+    },
+    "66110": {
+      "tr": "YOZGAT/Çandır/Çandır Malmüdürlüğü"
+    },
+    "66103": {
+      "tr": "YOZGAT/Çayıralan/Çayıralan Malmüdürlüğü"
+    },
+    "66104": {
+      "tr": "YOZGAT/Çekerek/Çekerek Malmüdürlüğü"
+    },
+    "66111": {
+      "tr": "YOZGAT/Kadışehri/Kadışehri Malmüdürlüğü"
+    },
+    "66260": {
+      "tr": "YOZGAT/Merkez/Yozgat Vergi Dairesi Müdürlüğü"
+    },
+    "66112": {
+      "tr": "YOZGAT/Saraykent/Saraykent Malmüdürlüğü"
+    },
+    "66105": {
+      "tr": "YOZGAT/Sarıkaya/Sarıkaya Malmüdürlüğü"
+    },
+    "66262": {
+      "tr": "YOZGAT/Sorgun/Sorgun Vergi Dairesi Müdürlüğü"
+    },
+    "66106": {
+      "tr": "YOZGAT/Şefaatli/Şefaatli Malmüdürlüğü"
+    },
+    "66113": {
+      "tr": "YOZGAT/Yenifakılı/Yenifakılı Malmüdürlüğü"
+    },
+    "66263": {
+      "tr": "YOZGAT/Yerköy/Yerköy Vergi Dairesi Müdürlüğü"
+    },
+    "67110": {
+      "tr": "ZONGULDAK/Alaplı/Alaplı Malmüdürlüğü"
+    },
+    "67263": {
+      "tr": "ZONGULDAK/Çaycuma/Çaycuma Vergi Dairesi Müdürlüğü"
+    },
+    "67264": {
+      "tr": "ZONGULDAK/Devrek/Devrek Vergi Dairesi Müdürlüğü"
+    },
+    "67261": {
+      "tr": "ZONGULDAK/Ereğli/Ereğli Vergi Dairesi Müdürlüğü"
+    },
+    "67113": {
+      "tr": "ZONGULDAK/Gökçebey/Gökçebey Malmüdürlüğü"
+    },
+    "67280": {
+      "tr": "ZONGULDAK/Merkez/Kara Elmas Vergi Dairesi Müdürlüğü"
+    },
+    "67201": {
+      "tr": "ZONGULDAK/Merkez/Uzunmehmet Vergi Dairesi Müdürlüğü"
+    }
+  }
+}

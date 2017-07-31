@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.2">
+  <bpmn:collaboration id="Collaboration_1l3mhaq">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="BAP" />
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:participant id="Participant_0nrci7x" name="Bap Takvim" processRef="bap_takvim" />
+  </bpmn:collaboration>
+  <bpmn:process id="bap_takvim" name="Bap Takvim" isExecutable="false">
+    <bpmn:sequenceFlow id="SequenceFlow_1q5scvu" sourceRef="takvim_goruntule" targetRef="ExclusiveGateway_1thl0m9" />
+    <bpmn:sequenceFlow id="SequenceFlow_17zs6kb" sourceRef="ExclusiveGateway_1thl0m9" targetRef="takvim_proje_sil_onay">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='confirm_deletion']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_19estkq" sourceRef="takvim_proje_sil_onay" targetRef="ExclusiveGateway_0fj35eq" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ize8ln" sourceRef="ExclusiveGateway_1thl0m9" targetRef="takvim_proje_ekle_duzenle">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='add_edit_form']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0ooktzl" sourceRef="takvim_proje_ekle_duzenle" targetRef="ExclusiveGateway_083pimk" />
+    <bpmn:sequenceFlow id="SequenceFlow_17gk8x6" sourceRef="takvim_proje_kaydet" targetRef="takvim_goruntule" />
+    <bpmn:sequenceFlow id="SequenceFlow_11rypa9" sourceRef="StartEvent_1" targetRef="takvim_goruntule" />
+    <bpmn:sequenceFlow id="SequenceFlow_0fd20fg" sourceRef="ExclusiveGateway_1thl0m9" targetRef="takvim_yayinla_onay" />
+    <bpmn:userTask id="takvim_yayinla_onay" name="Takvim Yayinlansin mi?" camunda:assignee="bap.bap_takvim.BapTakvim.takvim_yayinla_onay">
+      <bpmn:incoming>SequenceFlow_0fd20fg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13057yw</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_012085y" default="SequenceFlow_0is9sbj">
+      <bpmn:incoming>SequenceFlow_13057yw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0is9sbj</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0wfd282</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_13057yw" sourceRef="takvim_yayinla_onay" targetRef="ExclusiveGateway_012085y" />
+    <bpmn:sequenceFlow id="SequenceFlow_0is9sbj" sourceRef="ExclusiveGateway_012085y" targetRef="takvim_goruntule" />
+    <bpmn:sequenceFlow id="SequenceFlow_0wfd282" sourceRef="ExclusiveGateway_012085y" targetRef="takvim_yayinla">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='yayinla']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="takvim_yayinla" name="Yayinla" camunda:class="bap.bap_takvim.BapTakvim.takvim_yayinla">
+      <bpmn:incoming>SequenceFlow_0wfd282</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1uqx70s</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_19mp5o9">
+      <bpmn:incoming>SequenceFlow_1uqx70s</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1uqx70s" sourceRef="takvim_yayinla" targetRef="EndEvent_19mp5o9" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1thl0m9" default="SequenceFlow_0fd20fg">
+      <bpmn:incoming>SequenceFlow_1q5scvu</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_17zs6kb</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0ize8ln</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0fd20fg</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="takvim_proje_ekle_duzenle" name="Takvime Yeni Proje Ekle veya Duzenle" camunda:assignee="bap.bap_takvim.BapTakvim.add_edit_form">
+      <bpmn:incoming>SequenceFlow_0ize8ln</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ooktzl</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="takvim_proje_sil_onay" name="Takvimden Projeyi Silmek Istiyormusunuz ?" camunda:assignee="bap.bap_takvim.BapTakvim.confirm_deletion">
+      <bpmn:incoming>SequenceFlow_17zs6kb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19estkq</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1ijokou" sourceRef="takvim_proje_sil" targetRef="takvim_goruntule" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_11rypa9</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="takvim_goruntule" name="Takvim Goruntule" camunda:assignee="bap.bap_takvim.BapTakvim.list">
+      <bpmn:incoming>SequenceFlow_17gk8x6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_11rypa9</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0is9sbj</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1ijokou</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_19iyljo</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1nv1zi5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1q5scvu</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="takvim_proje_kaydet" name="Projeyi Kaydet" camunda:class="bap.bap_takvim.BapTakvim.save">
+      <bpmn:incoming>SequenceFlow_1yqueh2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_17gk8x6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="takvim_proje_sil" name="Projeyi Sil" camunda:class="bap.bap_takvim.BapTakvim.delete">
+      <bpmn:incoming>SequenceFlow_09p5ddy</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ijokou</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0fj35eq">
+      <bpmn:incoming>SequenceFlow_19estkq</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_09p5ddy</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_19iyljo</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_09p5ddy" sourceRef="ExclusiveGateway_0fj35eq" targetRef="takvim_proje_sil">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='delete']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_19iyljo" sourceRef="ExclusiveGateway_0fj35eq" targetRef="takvim_goruntule">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='list']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_083pimk" default="SequenceFlow_1yqueh2">
+      <bpmn:incoming>SequenceFlow_0ooktzl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1yqueh2</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1nv1zi5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1yqueh2" sourceRef="ExclusiveGateway_083pimk" targetRef="takvim_proje_kaydet" />
+    <bpmn:sequenceFlow id="SequenceFlow_1nv1zi5" sourceRef="ExclusiveGateway_083pimk" targetRef="takvim_goruntule">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='list']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1l3mhaq">
+      <bpmndi:BPMNShape id="Participant_0nrci7x_di" bpmnElement="Participant_0nrci7x">
+        <dc:Bounds x="95" y="80" width="1077" height="554" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="138" y="313" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="111" y="349" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1b4ccpd_di" bpmnElement="takvim_goruntule">
+        <dc:Bounds x="213" y="291" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1vi6w7k_di" bpmnElement="takvim_proje_ekle_duzenle">
+        <dc:Bounds x="513" y="173" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1thl0m9_di" bpmnElement="ExclusiveGateway_1thl0m9" isMarkerVisible="true">
+        <dc:Bounds x="538" y="305.684633027523" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="518" y="355.684633027523" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1q5scvu_di" bpmnElement="SequenceFlow_1q5scvu">
+        <di:waypoint xsi:type="dc:Point" x="313" y="331" />
+        <di:waypoint xsi:type="dc:Point" x="538" y="331" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="380.5" y="306" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_17zs6kb_di" bpmnElement="SequenceFlow_17zs6kb">
+        <di:waypoint xsi:type="dc:Point" x="563" y="356" />
+        <di:waypoint xsi:type="dc:Point" x="563" y="385" />
+        <di:waypoint xsi:type="dc:Point" x="563" y="385" />
+        <di:waypoint xsi:type="dc:Point" x="563" y="415" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="533" y="375" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0q33nux_di" bpmnElement="takvim_proje_sil_onay">
+        <dc:Bounds x="513" y="415" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_19estkq_di" bpmnElement="SequenceFlow_19estkq">
+        <di:waypoint xsi:type="dc:Point" x="513" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="482" y="455" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="452.5" y="430" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ize8ln_di" bpmnElement="SequenceFlow_0ize8ln">
+        <di:waypoint xsi:type="dc:Point" x="563" y="306" />
+        <di:waypoint xsi:type="dc:Point" x="563" y="279" />
+        <di:waypoint xsi:type="dc:Point" x="563" y="279" />
+        <di:waypoint xsi:type="dc:Point" x="563" y="253" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="533" y="269" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ooktzl_di" bpmnElement="SequenceFlow_0ooktzl">
+        <di:waypoint xsi:type="dc:Point" x="513" y="213" />
+        <di:waypoint xsi:type="dc:Point" x="441" y="213" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="432" y="188" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_07yfacp_di" bpmnElement="takvim_proje_kaydet">
+        <dc:Bounds x="213" y="173" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_17gk8x6_di" bpmnElement="SequenceFlow_17gk8x6">
+        <di:waypoint xsi:type="dc:Point" x="263" y="253" />
+        <di:waypoint xsi:type="dc:Point" x="263" y="291" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="233" y="262" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_11rypa9_di" bpmnElement="SequenceFlow_11rypa9">
+        <di:waypoint xsi:type="dc:Point" x="174" y="331" />
+        <di:waypoint xsi:type="dc:Point" x="213" y="331" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="148.5" y="306" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fd20fg_di" bpmnElement="SequenceFlow_0fd20fg">
+        <di:waypoint xsi:type="dc:Point" x="588" y="331" />
+        <di:waypoint xsi:type="dc:Point" x="669" y="331" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="583.5" y="306" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0tj248x_di" bpmnElement="takvim_yayinla_onay">
+        <dc:Bounds x="669" y="291" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_012085y_di" bpmnElement="ExclusiveGateway_012085y" isMarkerVisible="true">
+        <dc:Bounds x="813.276376146789" y="306" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="793.276376146789" y="356" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_13057yw_di" bpmnElement="SequenceFlow_13057yw">
+        <di:waypoint xsi:type="dc:Point" x="769" y="331" />
+        <di:waypoint xsi:type="dc:Point" x="813" y="331" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="746" y="306" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0is9sbj_di" bpmnElement="SequenceFlow_0is9sbj">
+        <di:waypoint xsi:type="dc:Point" x="838" y="356" />
+        <di:waypoint xsi:type="dc:Point" x="838" y="561" />
+        <di:waypoint xsi:type="dc:Point" x="234" y="561" />
+        <di:waypoint xsi:type="dc:Point" x="234" y="371" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="491" y="536" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wfd282_di" bpmnElement="SequenceFlow_0wfd282">
+        <di:waypoint xsi:type="dc:Point" x="863" y="331" />
+        <di:waypoint xsi:type="dc:Point" x="923" y="331" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="848" y="306" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1wbx5xq_di" bpmnElement="takvim_yayinla">
+        <dc:Bounds x="923" y="291" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_19mp5o9_di" bpmnElement="EndEvent_19mp5o9">
+        <dc:Bounds x="1095.276376146789" y="313" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1068.276376146789" y="349" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1uqx70s_di" bpmnElement="SequenceFlow_1uqx70s">
+        <di:waypoint xsi:type="dc:Point" x="1023" y="331" />
+        <di:waypoint xsi:type="dc:Point" x="1095" y="331" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1014" y="306" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ijokou_di" bpmnElement="SequenceFlow_1ijokou">
+        <di:waypoint xsi:type="dc:Point" x="297" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="263" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="263" y="371" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="235" y="430" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_11rzq4x_di" bpmnElement="takvim_proje_sil">
+        <dc:Bounds x="297" y="415" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0fj35eq_di" bpmnElement="ExclusiveGateway_0fj35eq" isMarkerVisible="true">
+        <dc:Bounds x="432.27637614678895" y="430" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="412.27637614678895" y="480" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_09p5ddy_di" bpmnElement="SequenceFlow_09p5ddy">
+        <di:waypoint xsi:type="dc:Point" x="432" y="455" />
+        <di:waypoint xsi:type="dc:Point" x="397" y="455" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="369.5" y="430" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_19iyljo_di" bpmnElement="SequenceFlow_19iyljo">
+        <di:waypoint xsi:type="dc:Point" x="457" y="430" />
+        <di:waypoint xsi:type="dc:Point" x="457" y="355" />
+        <di:waypoint xsi:type="dc:Point" x="313" y="355" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="427" y="382.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_083pimk_di" bpmnElement="ExclusiveGateway_083pimk" isMarkerVisible="true">
+        <dc:Bounds x="391" y="188" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="371" y="238" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1yqueh2_di" bpmnElement="SequenceFlow_1yqueh2">
+        <di:waypoint xsi:type="dc:Point" x="391" y="213" />
+        <di:waypoint xsi:type="dc:Point" x="313" y="213" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="307" y="188" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1nv1zi5_di" bpmnElement="SequenceFlow_1nv1zi5">
+        <di:waypoint xsi:type="dc:Point" x="402" y="224" />
+        <di:waypoint xsi:type="dc:Point" x="308" y="296" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="310" y="235" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

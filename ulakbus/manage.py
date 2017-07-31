@@ -20,6 +20,9 @@ class CreateUser(Command):
         {'name': 'password', 'required': True, 'help': 'Login password'},
         {'name': 'abstract_role', 'default': 'BaseAbsRole', 'help': 'Name of the AbstractRole'},
         {'name': 'super', 'action': 'store_true', 'help': 'This is a super user'},
+        {'name': 'active', 'action': 'store_true', 'help': 'This is a active user'},
+        {'name': 'toggle_is_user_active',
+         'help': 'Toggle user active flag, True is to activate user; False is to deactivate user'},
         {'name': 'permission_query', 'default': "code:crud* OR code:login* OR code:logout*",
          'help': 'Permissions which will be returned from this query will be granted to the user. '
                  'Defaults to: "code:crud* OR code:login* OR code:logout*"'},
@@ -27,11 +30,35 @@ class CreateUser(Command):
 
     def run(self):
         from ulakbus.models import AbstractRole, User, Role, Permission
+        import distutils.util
+        from pyoko.exceptions import ObjectDoesNotExist
+
+        # update existing users
+        if self.manager.args.toggle_is_user_active is not None:
+            try:
+                user = User.objects.get(username=self.manager.args.username)
+            except ObjectDoesNotExist:
+                print "Böyle bir kullanıcı bulunmamaktadır."
+                return
+            activeness = self.manager.args.toggle_is_user_active
+            try:
+                user.is_active = distutils.util.strtobool(activeness)
+            except ValueError:
+                print "Lütfen True ya da False değeri giriniz."
+                return
+            user.blocking_save()
+            return
+
+        # create new user
         if User.objects.filter(username=self.manager.args.username).count():
             print("User already exists!")
             return
+        if not self.manager.args.active:
+            print(
+                "Kullanıcının sisteme login olmasını istiyorsanız aktifleştirmeyi unutmayınız. Aktifleştirmek için --toggle_is_user_active parametresini kullanınız.")
         abs_role, new = AbstractRole.objects.get_or_create(name=self.manager.args.abstract_role)
-        user = User(username=self.manager.args.username, superuser=self.manager.args.super)
+        user = User(username=self.manager.args.username, superuser=self.manager.args.super,
+                    is_active=self.manager.args.active)
         user.set_password(self.manager.args.password)
         user.save()
         role = Role(user=user, abstract_role=abs_role)
@@ -270,30 +297,38 @@ class DeployZatoServices(Command):
     @staticmethod
     def create_channel_and_service_object(service, path):
         from ulakbus.models.zato import ZatoServiceChannel
-        from pyoko.lib.utils import un_camel
 
-        create_channel = ZatoServiceChannel()
+        service_name = service.get_name()
+        channel_name = service_name + "-channel"
+
+        create_channel, b = ZatoServiceChannel.objects.get_or_create(channel_name=channel_name)
         create_channel.cluster_id = 1
-        create_channel.service_name = service.get_name()
-        create_channel.channel_name = service.get_name() + "-channel"
-        create_channel.channel_url_path = '/%s/%s' % ('/'.join(path.split('/')[:-1]),
-                                                      un_camel(service.__name__, dash='-'))
+        create_channel.service_name = service_name
+        create_channel.channel_name = channel_name
+        create_channel.channel_url_path = '/%s/%s' % ('/'.join(path.split('/')[:-1]), service_name)
         create_channel.channel_connection = "channel"
         create_channel.channel_data_format = "json"
         create_channel.channel_is_internal = False
         create_channel.channel_is_active = True
         create_channel.channel_transport = "plain_http"
+        create_channel.class_name = service.__name__
+        create_channel.module_path = '.'.join(path.rsplit('.')[0].split('/'))
+        if not b:
+            create_channel.deploy = False
         create_channel.save()
 
     def create_service_file_object(self, path):
         from ulakbus.models.zato import ZatoServiceFile
 
         service_payload = self.get_service_payload_data(path)
+        payload_name = service_payload["payload_name"]
 
-        upload_service = ZatoServiceFile()
+        upload_service, b = ZatoServiceFile.objects.get_or_create(service_payload_name=payload_name)
         upload_service.cluster_id = 1
-        upload_service.service_payload_name = service_payload["payload_name"]
+        upload_service.service_payload_name = payload_name
         upload_service.service_payload = service_payload["payload"]
+        if not b:
+            upload_service.deploy = False
         upload_service.save()
 
     @staticmethod
@@ -309,6 +344,7 @@ class DeployZatoServices(Command):
         service_payload["payload"] = payload
 
         return service_payload
+
 
 environ['PYOKO_SETTINGS'] = 'ulakbus.settings'
 environ['ZENGINE_SETTINGS'] = 'ulakbus.settings'

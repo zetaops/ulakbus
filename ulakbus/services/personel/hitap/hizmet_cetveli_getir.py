@@ -21,50 +21,35 @@ class HizmetCetveliGetir(HITAPSorgula):
 
     """
     HAS_CHANNEL = True
-
-    def handle(self):
-        """
-        Servis çağrıldığında tetiklenen metod.
-
-        Attributes:
-            service_name (str): İlgili Hitap sorgu servisinin adı
-            bean_name (str): Hitap'tan gelen bean nesnesinin adı
-            service_dict (dict): Hitap servisinden gelen kayıtların alanları,
-                    ``HizmetKayitlari`` modelinin alanlarıyla eşlenmektedir.
-                    Filtreden geçecek tarih alanları listede tutulmaktadır.
-
-        """
-
-        self.service_name = 'HizmetCetvelSorgula'
-        self.bean_name = 'HizmetCetveliServisBean'
-        self.service_dict = {
-            'fields': {
-                'tckn': 'tckn',
-                'baslama_tarihi': 'baslamaTarihi',
-                'bitis_tarihi': 'bitisTarihi',
-                'emekli_derece': 'emekliDerece',
-                'emekli_kademe': 'emekliKademe',
-                'gorev': 'gorev',
-                'unvan_kod': 'unvanKod',
-                'hizmet_sinifi': 'hizmetSinifi',
-                'kayit_no': 'kayitNo',
-                'kazanilmis_hak_ayligi_derece': 'kazanilmisHakAyligiDerece',
-                'kazanilmis_hak_ayligi_kademe': 'kazanilmisHakAyligiKademe',
-                'odeme_derece': 'odemeDerece',
-                'odeme_kademe': 'odemeKademe',
-                'emekli_ek_gosterge': 'emekliEkGosterge',
-                'kadro_derece': 'kadroDerece',
-                'kazanilmis_hak_ayligi_ekgosterge': 'kazanilmisHakAyligiEkGosterge',
-                'odeme_ekgosterge': 'odemeEkGosterge',
-                'sebep_kod': 'sebepKod',
-                'ucret':'ucret',
-                'yevmiye': 'yevmiye',
-                'kurum_onay_tarihi': 'kurumOnayTarihi'
-            },
-            'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
-            'required_fields': ['tckn']
-        }
-        super(HizmetCetveliGetir, self).handle()
+    service_dict = {
+        'service_name': 'HizmetCetvelSorgula',
+        'bean_name': 'HizmetCetveliServisBean',
+        'fields': {
+            'tckn': 'tckn',
+            'baslama_tarihi': 'baslamaTarihi',
+            'bitis_tarihi': 'bitisTarihi',
+            'emekli_derece': 'emekliDerece',
+            'emekli_kademe': 'emekliKademe',
+            'gorev': 'gorev',
+            'unvan_kod': 'unvanKod',
+            'hizmet_sinifi': 'hizmetSinifi',
+            'kayit_no': 'kayitNo',
+            'kazanilmis_hak_ayligi_derece': 'kazanilmisHakAyligiDerece',
+            'kazanilmis_hak_ayligi_kademe': 'kazanilmisHakAyligiKademe',
+            'odeme_derece': 'odemeDerece',
+            'odeme_kademe': 'odemeKademe',
+            'emekli_ek_gosterge': 'emekliEkGosterge',
+            'kadro_derece': 'kadroDerece',
+            'kazanilmis_hak_ayligi_ekgosterge': 'kazanilmisHakAyligiEkGosterge',
+            'odeme_ekgosterge': 'odemeEkGosterge',
+            'sebep_kod': 'sebepKod',
+            'ucret': 'ucret',
+            'yevmiye': 'yevmiye',
+            'kurum_onay_tarihi': 'kurumOnayTarihi'
+        },
+        'date_filter': ['baslama_tarihi', 'bitis_tarihi', 'kurum_onay_tarihi'],
+        'required_fields': ['tckn']
+    }
 
     def custom_filter(self, hitap_dict):
         """

@@ -109,11 +109,11 @@ class ZamanTablosu(CrudView):
             elif self.current.task_data['cmd'] == 'hayir':
                 pass
             else:
-                self.current.task_data['rooms'] = list(set(obj.objects.filter(
+                self.current.task_data['rooms'] = list(set(obj.objects.all(
                                                         birim=self.current.role.unit).values_list('derslik_id')))
                 self.current.task_data['room_key'] = self.current.task_data['rooms'][0]
         except:
-            self.current.task_data['rooms'] = list(set(obj.objects.filter(
+            self.current.task_data['rooms'] = list(set(obj.objects.all(
                                                         birim=self.current.role.unit).values_list('derslik_id')))
             self.current.task_data['room_key'] = self.current.task_data['rooms'][0]
 

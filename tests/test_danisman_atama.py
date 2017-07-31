@@ -80,6 +80,7 @@ class TestCase(BaseTestCase):
         assert len(log_bucket.get_keys()) == log_bucket_count
         # Yeni versiyon kayıt keyleri alınır.
         yeni_versiyon_keyleri = list(set(version_bucket.get_keys()) - set(version_bucket_keys))
+
         # ogrenci_program modeline ait olan versiyon keyi alınır.
         op_versiyon_key = list(
             filter(lambda x: version_bucket.get(x).data['model'] == 'ogrenci_program',

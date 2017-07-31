@@ -26,10 +26,10 @@ class RenderDocument(Service):
         - download_url : The URL of the rendered template
 
     :::    Client    :::
-        # >>> curl localhost:11223/render/document -X POST -i -H "Content-Type: application/json" -d '{"template": "http://example.com/sample_template.odt", "context": {"name": "ali", "pdf":"1"}, "template_hash": "[hash_value_of_template]"}'
+        # >>> curl localhost:11223/render/document -X POST -i -H "Content-Type: application/json" -d '{"template": "http://example.com/sample_template.odt", "context": {"name": "ali", "pdf":"1"}, "modify_date": "[hash_value_of_template]"}'
         --- The service will download the template and render with context data. Download rendred template and convert pdf file.
 
-        # >>> curl localhost:11223/render/document -X POST -i -H "Content-Type: application/json" -d "{\"template\": \"`base64 -w 0 template.odt`\", \"context\": {\"name\": \"ali\"}, "template_hash": "[hash_value_of_template]"}"
+        # >>> curl localhost:11223/render/document -X POST -i -H "Content-Type: application/json" -d "{\"template\": \"`base64 -w 0 template.odt`\", \"context\": {\"name\": \"ali\"}, "modify_date": "[hash_value_of_template]"}"
         --- The service will decode the template and render with context data.
 
         The response is compatible with Zato-Wrapper.
@@ -54,13 +54,19 @@ class RenderDocument(Service):
         self.S3_PROXY_PORT = self.user_config.zetaops.zetaops3s.S3_PROXY_PORT
         self.S3_BUCKET_NAME = self.user_config.zetaops.zetaops3s.S3_BUCKET_NAME
 
-        self.wants_pdf = 'pdf' in self.request.payload
+        self.logger.info("PAYLOAD CONTENT : {}".format(self.request.payload))
+
+        if 'pdf' in self.request.payload:
+            if self.request.payload['pdf'] == True:
+                self.wants_pdf = True
+            else:
+                self.wants_pdf = False
         self.document_cache = DocumentCache(self, self.wants_pdf)
         # Check the request in the cache
         cache_stat = self.document_cache.check_the_cache()
 
         if cache_stat is not None:
-        # No action required
+            # No action required
             if 'odt_url' in cache_stat:
                 if self.wants_pdf:
                     self.logger.info("NO ACTION WASN'T REQUIRED, SENDED PDF URL")
@@ -69,7 +75,7 @@ class RenderDocument(Service):
                     resp = self.prepare_response('ok', cache_stat['odt_url'])
                     self.logger.info("NO ACTION WASN'T REQUIRED, SENDED ODT URL")
             # No need to download template
-            elif 'template_hash' in cache_stat:
+            elif 'modify_date' in cache_stat:
                 self.logger.info("NO NEED TO DOWNLOAD TEMPLATE")
                 new_payload = copy.copy(self.request.payload)
                 new_payload['template'] = cache_stat['template']
@@ -97,6 +103,8 @@ class RenderDocument(Service):
             payload['template'] = base64.b64encode(template_file.getvalue())
 
         file_content = payload['template']
+
+        self.logger.info("TYPE : {}, CONTENT : {}".format(type(payload), payload))
 
         resp = self.render_document(payload=payload)
 
@@ -310,11 +318,11 @@ class DocumentCache:
     Caching mechanism. Add and get request and template from redis.
 
     ::: Scenario 1
-        - If we have performed the request and template_hash of template on redis is equal the request template_hash
+        - If we have performed the request and modify_date of template on redis is equal the request modify_date
           send user the ODT or PDF URL.
 
     ::: Scenario 2
-        - If we have performed the request and template_hash isn't equal the redis value. Send base64 content of template
+        - If we have performed the request and modify_date isn't equal the redis value. Send base64 content of template
           Or, We have the template but context isn't equal the redis value, don't download the template. Send base64
           content of template
 
@@ -383,9 +391,9 @@ class DocumentCache:
 
         """
 
-        template_hash = self.zato_service.request.payload['template_hash']
+        modify_date = self.zato_service.request.payload['modify_date']
         template_content = file_content
-        return {'template_hash': template_hash, 'template': template_content}
+        return {'modify_date': modify_date, 'template': template_content}
 
     def key_hash_template(self, payload):
         """
@@ -410,7 +418,7 @@ class DocumentCache:
         Add to redis that rendered document. PDF url is null, because it hasn't produced yet.
         It will add 2 rows to redis.
         First; Key: Context. Value: PDF_URL, ODT_URL and TEMPLATE_KEY
-        Second, Key: TEMPLATE_KEY. Value: TEMPLATE_HASH and TEMPLATE. TEMPLATE is base64 encoded.
+        Second, Key: TEMPLATE_KEY. Value: modify_date and TEMPLATE. TEMPLATE is base64 encoded.
         Args:
             file_name: key on redis.
             odt_url: rendered odt file url. type: <str>
@@ -507,7 +515,7 @@ class DocumentCache:
         val_template = self.get_template()
 
         key_template = self.key_hash_template(self.zato_service.request.payload['template'])
-        template_hash = self.zato_service.request.payload['template_hash']
+        modify_date = self.zato_service.request.payload['modify_date']
 
 
         # This request wasn't proceded before.
@@ -519,14 +527,14 @@ class DocumentCache:
                 return None
             else:
                 # We have the template, but is it newest?
-                if val_template['template_hash'] == template_hash:
+                if val_template['modify_date'] == modify_date:
                     return val_template
                 else:
                     return None
 
         else:
             # Check the context. Is it newest?
-            if val_context['template'] == key_template and val_template['template_hash'] == template_hash:
+            if val_context['template'] == key_template and val_template['modify_date'] == modify_date:
                 # PDF wants?
                 if self.wants_pdf:
                     # We have the pdf url, return context.
@@ -538,3 +546,4 @@ class DocumentCache:
                     return val_context
             else:
                 return None
+

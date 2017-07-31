@@ -1,0 +1,340 @@
+{
+  "onemli_tarih_aciklama": {
+    "1": {
+      "tr": "Proje başvuruları",
+      "en": ""
+    },
+    "2": {
+      "tr": "Proje değerlendirmeleri",
+      "en": ""
+    },
+    "3": {
+      "tr": "Proje Sözleşmeleri",
+      "en": ""
+    }
+  },
+  "analitik_butce_dorduncu_duzey_gider_kodlari": {
+   "03.2.1.01":{
+      "en":"",
+      "tr":"03.2.1.01 - Kırtasiye Alımları"
+   },
+   "03.2.1.02":{
+      "en":"",
+      "tr":"03.2.1.02 - Büro Malzemesi Alımları"
+   },
+   "03.2.1.03":{
+      "en":"",
+      "tr":"03.2.1.03 - Periyodik Yayın Alımları"
+   },
+   "03.2.1.04":{
+      "en":"",
+      "tr":"03.2.1.04 - Diğer Yayın Alımları"
+   },
+   "03.2.1.05":{
+      "en":"",
+      "tr":"03.2.1.05 - Baskı ve Cilt Giderleri"
+   },
+   "03.2.1.90":{
+      "en":"",
+      "tr":"03.2.1.90 - Diğer Kırtasiye ve Büro malzeme alımları"
+   },
+   "03.2.3.02":{
+      "en":"",
+      "tr":"03.2.3.02 - Akaryakıt ve Yağ Alımları"
+   },
+   "03.2.4.03":{
+      "en":"",
+      "tr":"03.2.4.03 - Yem Alımları"
+   },
+   "03.2.6.01":{
+      "en":"",
+      "tr":"03.2.6.01 - Laboratuvar Malzemesi ile Kimyevi ve Temrinlik Malzeme Alımı"
+   },
+   "03.2.6.02":{
+      "en":"",
+      "tr":"03.2.6.02 - Tıbbi Malzeme ve İlaç Alımları"
+   },
+   "03.2.6.03":{
+      "en":"",
+      "tr":"03.2.6.03 - Zirai Malzeme ve İlaç Alımları"
+   },
+   "03.2.6.04":{
+      "en":"",
+      "tr":"03.2.6.04 - Canlı Hayvan Alım, Bakım ve Diğer Giderleri"
+   },
+   "03.2.6.90":{
+      "en":"",
+      "tr":"03.2.6.90 - Diğer Özel Malzeme Alımları"
+   },
+   "03.2.9.01":{
+      "en":"",
+      "tr":"03.2.9.01 - Bahçe Malzemesi Alımları ile Yapım ve Bakım Giderleri "
+   },
+   "03.2.9.90":{
+      "en":"",
+      "tr":"03.2.9.90 - Diğer Tüketim Mal ve Malzemesi Alımları"
+   },
+   "03.3.1.01":{
+      "en":"",
+      "tr":"03.3.1.01 - Yurtiçi Geçici Görev Yollukları"
+   },
+   "03.3.3.01":{
+      "en":"",
+      "tr":"03.3.3.01 - Yurtdışı Geçici Görev Yollukları"
+   },
+   "03.5.1.01":{
+      "en":"",
+      "tr":"03.5.1.01 - Etüt-Proje Bilirkişi Ekspertiz Giderleri"
+   },
+   "03.5.1.02":{
+      "en":"",
+      "tr":"03.5.1.02 - Araştırma ve Geliştirme Giderleri"
+   },
+   "03.5.1.05":{
+      "en":"",
+      "tr":"03.5.1.05 - Harita Yapım ve Alım Giderleri"
+   },
+   "03.5.1.06":{
+      "en":"",
+      "tr":"03.5.1.06 - Enformasyon ve Raporlama Giderleri"
+   },
+   "03.5.1.90":{
+      "en":"",
+      "tr":"03.5.1.90 - Diğer Müşavir Firma ve Kişilere Ödemeler"
+   },
+   "03.5.5.01":{
+      "en":"",
+      "tr":"03.5.5.01 - Dayanıklı Mal ve Malzeme Kiralama Giderleri"
+   },
+   "03.5.5.02":{
+      "en":"",
+      "tr":"03.5.5.02 - Taşıt Kiralaması Giderleri"
+   },
+   "03.5.5.08":{
+      "en":"",
+      "tr":"03.5.5.08 - Yüzer Taşıt Kiralaması Giderleri"
+   },
+   "03.5.9.03":{
+      "en":"",
+      "tr":"03.5.9.03 - Kurslara Katılma Giderleri"
+   },
+   "03.7.1.01":{
+      "en":"",
+      "tr":"03.7.1.01 - Büro ve İşyeri Mal , Malzeme Alımları"
+   },
+   "03.7.1.02":{
+      "en":"",
+      "tr":"03.7.1.02 - Büro ve İşyeri Makine ve Teçhizat Alımları"
+   },
+   "03.7.1.03":{
+      "en":"",
+      "tr":"03.7.1.03 - Avadanlık ve Yedek Parça Alımları (Herhangi bir bakım sözleşmesinden veya işinden bağımsız olarak alınan yedek parçalar)"
+   },
+   "03.7.1.90":{
+      "en":"",
+      "tr":"03.7.1.90 - Diğer Dayanıklı Mal ve Malzeme Alımı"
+   },
+   "03.7.2.01":{
+      "en":"",
+      "tr":"03.7.2.01 - Bilgisayar Yazılım Alımları ve Yapımları"
+   },
+   "03.7.3.01":{
+      "en":"",
+      "tr":"03.7.3.01 - Tefrişat Bakım ve Onarım Giderleri"
+   },
+   "03.7.3.02":{
+      "en":"",
+      "tr":"03.7.3.02 - Makine Teçhizat Bakım ve Onarım Giderleri"
+   }
+  },
+  "bap_proje_durum": {
+    "1": {
+      "tr": "Kaydedildi",
+      "en": ""
+    },
+    "2": {
+      "tr": "Koordinasyon Birimi Onayı Bekliyor",
+      "en": ""
+    },
+    "3": {
+      "tr": "Koordinasyon Birimi Tarafından Öğretim Üyesine Düzenleme Talebiyle Gönderildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Komisyon Onayı Bekliyor",
+      "en": ""
+    },
+    "5": {
+      "tr": "Komisyon Tarafından Onaylandı",
+      "en": ""
+    },
+    "6": {
+      "tr": "Komisyon Tarafından Reddedildi",
+      "en": ""
+    }
+  },
+  "bap_komisyon_gundemleri": {
+    "1": {
+      "tr": "Proje başvurusu",
+      "en": ""
+    },
+    "2": {
+      "tr": "Ek bütçe talebi",
+      "en": ""
+    },
+    "3": {
+      "tr": "Fasıl aktarım talebi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Ek süre talebi",
+      "en": ""
+    },
+    "5": {
+      "tr": "Proje sonuç raporu",
+      "en": ""
+    },
+    "6": {
+      "tr": "Proje dönem raporu",
+      "en": ""
+    },
+    "7": {
+      "tr": "Proje iptal talebi",
+      "en": ""
+    },
+    "8": {
+      "tr": "Yürütücü değişikliği",
+      "en": ""
+    },
+    "9": {
+      "tr": "Diğer",
+      "en": ""
+    }
+  },
+  "bap_satin_alma_durum": {
+    "1": {
+      "tr": "Teklife Açık",
+      "en": ""
+    },
+    "2": {
+      "tr": "Teklife Kapatıldı",
+      "en": ""
+    },
+    "3": {
+      "tr": "Teklif Sonuçlandı",
+      "en": ""
+    },
+    "4": {
+      "tr": "Satın Alma Sürecinde",
+      "en": ""
+    },
+    "5": {
+      "tr": "Teslim Alındı",
+      "en": ""
+    }
+  },
+  "bap_firma_durum": {
+    "1": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "2": {
+      "tr": "Kabul Edildi",
+      "en": ""
+    },
+    "3": {
+      "tr": "Reddedildi",
+      "en": ""
+    }
+  },
+  "bap_teklif_durum": {
+    "1": {
+      "tr": "Teklif Süreci Devam Ediyor",
+      "en": ""
+    },
+    "2": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "3": {
+      "tr": "Kabul Edildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Reddedildi",
+      "en": ""
+    }
+  },
+  "bap_proje_degerlendirme_sonuc": {
+    "1": {
+      "tr": "Olumlu/Proje Desteklenmelidir",
+      "en": "Affirmative/The Project should be Supported"
+    },
+    "2": {
+      "tr": "Olumsuz/Proje Desteklenmemelidir",
+      "en": "Negative/The Project SHOULD NOT be Supported"
+    }
+  },
+  "bap_proje_degerlendirme_secenekler": {
+    "1": {
+      "tr": "Çok İyi",
+      "en": "Very Good"
+    },
+    "2": {
+      "tr": "İyi",
+      "en": "Good"
+    },
+    "3": {
+      "tr": "Yeterli",
+      "en": "Satisfactory"
+    },
+    "4": {
+      "tr": "Yetersiz",
+      "en": "Unsatisfactory"
+    }
+  },
+  "bap_proje_hakem_degerlendirme_durum": {
+    "1": {
+      "tr": "Hakem Listesine Eklendi",
+      "en": ""
+    },
+    "2": {
+      "tr": "Hakemlik Daveti Gönderildi",
+      "en": ""
+    },
+    "3": {
+      "tr": "Hakemlik Daveti Kabul Edildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Hakemlik Daveti Reddedildi",
+      "en": ""
+    },
+    "5": {
+      "tr": "Proje Değerlendirildi",
+      "en": ""
+    }
+  },
+  "bap_ogretim_uyesi_gider_kodlari": {
+    "1": {
+      "tr": "Hizmet Alımı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Yolluk",
+      "en": ""
+    },
+    "3": {
+      "tr": "Tüketim Malzemesi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Makine Teçhizat",
+      "en": ""
+    },
+    "5": {
+      "tr": "Yazılım",
+      "en": ""
+    }
+  }
+}
