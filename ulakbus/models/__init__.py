@@ -19,3 +19,5 @@ from .zato import *
 from .akademik_faaliyet import *
 from .bap.bap import *
 from .demirbas import *
+from .document import Template
+
