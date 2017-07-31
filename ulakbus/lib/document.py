@@ -119,7 +119,7 @@ if __name__ == "__main__":
     Usage of these classes.
     """
     foo_renderer = FooFile()
-    result = foo_renderer.render(wants_pdf=True, title="Baslik", content="icerik", date="27July2017")
+    result = foo_renderer.render(wants_pdf=True, title="Baslik", content="icerik")
     print result
 
 
