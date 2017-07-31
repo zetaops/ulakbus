@@ -14,11 +14,11 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 import six
 
 
-# class ListFormHitap(JsonForm):
-#     """
-#     Hitapa Gönder eklenmis list view formu.
-#     """
-#     gonder = fields.Button(_(u"New"), cmd="gonder")
+class ListFormHitap(JsonForm):
+    """
+    Hitapa Gönder eklenmis list view formu.
+    """
+    gonder = fields.Button(_(u"Yeni"), cmd="gonder")
 
 
 class IslemSecimForm(JsonForm):
@@ -36,7 +36,7 @@ class IslemSecimForm(JsonForm):
 class HitapIslemleri(CrudView):
     def __init__(self, current=None):
         CrudView.__init__(self, current)
-        # self.ListForm = ListFormHitap
+        self.ListForm = ListFormHitap
         self.model = self.model_class
         if 'id' in self.input:
             self.current.task_data['personel_id'] = self.input['id']
@@ -61,8 +61,17 @@ class HitapIslemleri(CrudView):
         # Tab'li yapı implementasyonu yapılacaktır.
         self.form_out(IslemSecimForm(current=self.current))
 
+    def _list(self):
+        self.current.output["meta"]["allow_search"] = False
+        personel_ad = Personel.objects.get(self.personel_id).__unicode__()
+        form = JsonForm(current=self.current,
+                        title='{} {} Hitap Kayıtları'.format(personel_ad,
+                                                             six.text_type(
+                                                                 self.model().get_verbose_name())))
+        form.new = fields.Button('New')
+        self.list(custom_form=form)
+
     def get_columns(self):
-        from ulakbus.views.reports import personel_genel_raporlama
         columns = []
         for field_name in self.model.Meta.list_fields:
             model_field = self.model._fields[field_name]
@@ -105,66 +114,11 @@ class HitapIslemleri(CrudView):
 
     def degisiklik_ekrani_hazirla(self):
         grid_data = {'read_only_fields': ['tckn', 'kayit_no', 'son_senkronize_tarihi'],
+                     'hidden_fields': ['key', 'sync'],
                      'columns': self.get_columns(),
                      'initial_data': self.get_initial_data()
                      }
         self.output['grid_data'] = grid_data
-
-    # def kaydet(self):
-    #     """
-    #     Gelen nesnenin kayit_no field'ı boş ise hitapa hiç gitmemiş demektir ve yeni bir kayıttır.
-    #     Değişiklikler kaydedilir ve sync field'ı yeni kayıt anlamına gelen 2 yapılır. kayit_no
-    #     fieldı mevcut ise hitapta va demektir, değişiklikler kaydedilir ve sync'i güncellenecek
-    #     anlamına gelen 4 yapılır.
-    #     """
-    #     # self.set_form_data_to_object()
-    #     self.object.sync = 4 if self.object.kayit_no else 2
-    #     self.object.blocking_save(meta=self.meta, index_fields=self.index_fields)
-
-    # def sil(self):
-    #     """
-    #     Silinmek istenen kayıt yeni kayıt ise direk silinir, mevcut bir kayıt ise sync'i silinecek
-    #     kayıt anlamına gelen 3 yapılır.
-    #     """
-    #     if not self.object.kayit_no:
-    #         self.object.blocking_delete(meta=self.meta, index_fields=self.index_fields)
-    #     else:
-    #         self.object.sync = 3
-    #         self.object.blocking_save(meta=self.meta, index_fields=self.index_fields)
-
-    # def hitaptaki_kaydi_getir(self):
-    #     # Tekil hitaptaki kaydı getirip yereldeki datayı onunla değiştirecek servis yapılacaktır.
-    #     pass
-
-    # def create_grid_json(self):
-    #     pass
-    #
-    # grid_data = {
-    #     'columns': [
-    #         {'field': 'tckn', 'title': 'TC Kimlik No', 'type': 'input', 'editable': False,
-    #          'choices': None},
-    #         {'field': 'kayit_no', 'title': 'Kursa Kayıt No', 'type': 'input', 'editable': False,
-    #          'choices': None},
-    #         {'field': 'mezuniyet_tarihi', 'title': 'Terfi Tarihi', 'type': 'date', 'editable': True,
-    #          'choices': None},
-    #         {'field': 'okul_ad', 'title': 'Okul Adı', 'type': 'select', 'editable': True,
-    #          'choices': [
-    #              {"value": 1, "label": "MIT"}, {"value": 2, "label": "IZTECH"}
-    #          ]
-    #          },
-    #         {'field': 'son_senkronize_tarihi', 'title': 'Son Senkronize Tarihi', 'type': 'datetime',
-    #          'editable': False, 'choices': None},
-    #
-    #     ],
-    #     'initial_data': [
-    #         {'key': '21hso1j129389102iek', 'tckn': '98548836369', 'kayit_no': "325",
-    #          'mezuniyet_tarihi': '18.04.2012', 'okul_ad': "MIT",
-    #          'son_senkronize_tarihi': '21.07.2017 07:45:03'},
-    #         {'key': 'asbdjsa7dsak0323224', 'tckn': '52328727230', 'kayit_no': "964",
-    #          'mezuniyet_tarihi': '20.05.2010', 'okul_ad': "IZTECH",
-    #          'son_senkronize_tarihi': '15.05.2017 21:12:20'},
-    #     ]
-    # }
 
     def hitapa_gonder(self):
         """
@@ -215,43 +169,17 @@ class HitapIslemleri(CrudView):
             "msg": _(u'Kayıtlar Hitap ile başarıyla senkronize edildi.')
         }
 
-    # grid_data = {
-    #     'columns': [
-    #         {'field': 'tckn', 'title': 'TC Kimlik No', 'type': 'input', 'editable': False,
-    #          'choices': None},
-    #         {'field': 'kayit_no', 'title': 'Kursa Kayıt No', 'type': 'input', 'editable': False,
-    #          'choices': None},
-    #         {'field': 'mezuniyet_tarihi', 'title': 'Terfi Tarihi', 'type': 'date', 'editable': True,
-    #          'choices': None},
-    #         {'field': 'okul_ad', 'title': 'Okul Adı', 'type': 'select', 'editable': True,
-    #          'choices': [
-    #              {"value": 1, "label": "MIT"}, {"value": 2, "label": "IZTECH"}
-    #          ]
-    #          },
-    #         {'field': 'son_senkronize_tarihi', 'title': 'Son Senkronize Tarihi', 'type': 'datetime',
-    #          'editable': False, 'choices': None},
-    #
-    #     ],
-    #     'initial_data': [
-    #         {'key': '21hso1j129389102iek', 'tckn': '98548836369', 'kayit_no': "325",
-    #          'mezuniyet_tarihi': '18.04.2012', 'okul_ad': "MIT",
-    #          'son_senkronize_tarihi': '21.07.2017 07:45:03'},
-    #         {'key': 'asbdjsa7dsak0323224', 'tckn': '52328727230', 'kayit_no': "964",
-    #          'mezuniyet_tarihi': '20.05.2010', 'okul_ad': "IZTECH",
-    #          'son_senkronize_tarihi': '15.05.2017 21:12:20'},
-    #     ]
-    # }
-
-
-
-
     # {'name': _(u'Kaydet'), 'cmd': 'save', 'mode': 'normal', 'show_as': 'button'}
     @obj_filter
     def hitap_islemleri(self, obj, result):
+        import random
+        random_list = [_(u'Sil'), _(u'Geri Al'), _(u'Hitaptan Getir')]
+
         result['actions'] = [
-            {'name': _(u'Delete'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'},
+            {'name': random.choice(random_list), 'cmd': 'delete', 'mode': 'normal',
+             'show_as': 'button'},
         ]
 
     @list_query
     def list_by_personel_id(self, queryset):
-        return queryset.filter(personel_id=self.personel_id, sync=1)
+        return queryset.filter(personel_id=self.personel_id)
