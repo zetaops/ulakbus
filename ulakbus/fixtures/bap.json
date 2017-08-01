@@ -209,6 +209,10 @@
     "9": {
       "tr": "Diğer",
       "en": ""
+    },
+    "10": {
+      "tr": "Bilimsel Etkinlik Başvurusu",
+      "en": ""
     }
   },
   "bap_satin_alma_durum": {
@@ -347,7 +351,7 @@
       "en": ""
     }
   },
-  "bap_bilimseL_etkinlik_butce_talep_turleri": {
+  "bap_bilimsel_etkinlik_butce_talep_turleri": {
      "1": {
       "tr": "Konaklama",
       "en": ""
@@ -388,6 +392,10 @@
     },
      "6": {
       "tr": "Komisyon Üyesi ve/veya Hakem Değerlendirmesi Bekleniyor",
+      "en": ""
+    },
+    "7": {
+      "tr": "Gündeme Alındı",
       "en": ""
     }
   }

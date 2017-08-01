@@ -46,7 +46,7 @@ class ButcePlanForm(JsonForm):
 
     class Butce(ListNode):
         talep_turu = fields.Integer(__(u"Talep Türü"), required=True,
-                                    choices='bap_bilimseL_etkinlik_butce_talep_turleri')
+                                    choices='bap_bilimsel_etkinlik_butce_talep_turleri')
         istenen_tutar = fields.Float(__(u"Talep Edilen Tutar"), required=True)
 
     ileri = fields.Button(_(u"İleri"))
@@ -55,7 +55,7 @@ class ButcePlanForm(JsonForm):
 class EtkinlikBilgiForm(JsonForm):
     class Meta:
         title = _(u"Etkinlik Bilgileri")
-        exclude = ['basvuru_yapan', 'durum', 'onay_tarihi', 'EtkinlikButce']
+        exclude = ['basvuru_yapan', 'durum', 'onay_tarihi', 'EtkinlikButce', 'Degerlendirmeler']
 
     ileri = fields.Button(_(u"İleri"))
 
@@ -113,6 +113,7 @@ class BAPEtkinlikBasvuru(CrudView):
         wf = BPMNWorkflow.objects.get(name='bap_etkinlik_basvuru_incele')
         perm = Permission.objects.get('bap_etkinlik_basvuru_incele.koordinasyon_birimi')
         today = datetime.today()
+        title = "%s | %s" % (etkinlik.__unicode__(), wf.title)
         for role in perm.get_permitted_roles():
             wfi = WFInstance(
                 wf=wf,
@@ -134,7 +135,7 @@ class BAPEtkinlikBasvuru(CrudView):
                 start_date=today,
                 finish_date=today + timedelta(15)
             )
-            inv.title = wfi.wf.title
+            inv.title = title
             inv.save()
 
     def basari_mesaji_goster(self):

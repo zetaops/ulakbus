@@ -5,6 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko import ListNode
 from ulakbus.models import BAPEtkinlikProje
+from ulakbus.models import BAPGundem
 from ulakbus.models import Role
 from ulakbus.models import User
 from zengine.forms import JsonForm
@@ -23,10 +24,13 @@ class EtkinlikBasvuruDegerlendirForm(JsonForm):
                                     choices='bap_bilimseL_etkinlik_butce_talep_turleri')
         istenen_tutar = fields.Float(__(u"Talep Edilen Tutar"), required=True)
 
+    aciklama = fields.Text(_(u"Açıklama"), required=False)
+    sonuc = fields.Integer(_(u"Değerlendirme Sonucu"), choices='bap_proje_degerlendirme_sonuc')
+
     daha_sonra_degerlendir = fields.Button(_(u"Daha Sonra Değerlendir"),
-                                           cmd='daha_sonra_degerlendir')
-    reddet = fields.Button(_(u"Reddet"), cmd='reddet')
-    onayla = fields.Button(_(u"Onayla"), cmd='onayla')
+                                           cmd='daha_sonra_degerlendir', form_validation=False)
+
+    degerlendirme_kaydet = fields.Button(_(u"Değerlendirme Kaydet"), cmd='degerlendir')
 
 
 class BAPEtkinlikBasvuruDegerlendir(CrudView):
@@ -65,37 +69,38 @@ class BAPEtkinlikBasvuruDegerlendir(CrudView):
         """
         self.current.output['cmd'] = 'reload'
 
-    def reddet(self):
+    def degerlendirme_kaydet(self):
         """
-        Etkinlik başvurusunun reddedildiği adımdır.
-        """
-        key = self.current.task_data['etkinlik_basvuru_id']
-        etkinlik = BAPEtkinlikProje.objects.get(key)
-        msg = _(u"%s başlıklı bilimsel etkinlik projesi başvurunuz reddedilmiştir." %
-                etkinlik.bildiri_basligi)
-        self.red_onay(etkinlik, 3, msg)
-        self.current.output['cmd'] = 'reload'
-
-    def onayla(self):
-        """
-        Etkinlik başvurusunun onaylandığı adımdır.
+        Hakem ya da komisyon üyesinin değerlendirmesi kaydedilir ve değerlendirme sonrasında
+        otomatik olarak bir gündem nesnesi oluşturulur.
         """
         key = self.current.task_data['etkinlik_basvuru_id']
         etkinlik = BAPEtkinlikProje.objects.get(key)
-        etkinlik.onay_tarihi = datetime.today()
+        aciklama = self.input['form']['aciklama']
+        sonuc = self.input['form']['sonuc']
+        etkinlik.Degerlendirmeler(aciklama=aciklama, degerlendirme_sonuc=sonuc)
+        etkinlik.durum = 7
         etkinlik.blocking_save()
-        msg = _(u"%s başlıklı bilimsel etkinlik projesi başvurunuz onaylanmıştır." %
-                etkinlik.bildiri_basligi)
-        self.red_onay(etkinlik, 2, msg)
-        self.current.output['cmd'] = 'reload'
-
-    def red_onay(self, etkinlik, durum, msg):
-        etkinlik.durum = durum
-        etkinlik.blocking_save()
+        BAPGundem(
+            etkinlik=etkinlik,
+            gundem_tipi=10
+        ).blocking_save()
         role = Role.objects.filter(user=etkinlik.basvuru_yapan.personel.user)[0]
         sistem_user = User.objects.get(username='sistem_bilgilendirme')
         role.send_notification(title=_(u"Bilimsel Etkinlik Projesi Başvurusu"),
-                               message=msg,
+                               message=_(u"Etkinlik Başvurunuz Değerlendirilip Gündeme Alınmıştır."),
                                typ=1,
                                sender=sistem_user
                                )
+
+    def basari_mesaji_goster(self):
+        """
+        Değerlendirmenin başarılı olduğuna dair bir mesaj gösterilir.
+        """
+        key = self.current.task_data['etkinlik_basvuru_id']
+        etkinlik = BAPEtkinlikProje.objects.get(key)
+        form = JsonForm(title=_(u"Değerlendirme Başarılı"))
+        form.help_text = _(
+            u"%s Etkinlik Başvurusunu Başarıyla Değerlendirdiniz" % etkinlik.bildiri_basligi)
+        form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)

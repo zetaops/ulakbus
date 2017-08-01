@@ -139,10 +139,12 @@ class EtkinlikBasvuruInceleme(CrudView):
         adımdır.
         """
         etkinlik_key = self.current.task_data['etkinlik_basvuru_id']
+        etkinlik = BAPEtkinlikProje.objects.get(etkinlik_key)
         rol_key = self.input['form']['komisyon_uye']
         role = Role.objects.get(rol_key)
         wf = BPMNWorkflow.objects.get(name='bap_komisyon_uyesi_etkinlik_basvuru_degerlendir')
         today = datetime.today()
+        title = "%s | %s" % (etkinlik.__unicode__(), wf.title)
         wfi = WFInstance(
             wf=wf,
             current_actor=role,
@@ -163,7 +165,7 @@ class EtkinlikBasvuruInceleme(CrudView):
             start_date=today,
             finish_date=today + timedelta(15)
         )
-        inv.title = wfi.wf.title
+        inv.title = title
         inv.save()
         etkinlik = BAPEtkinlikProje.objects.get(etkinlik_key)
         etkinlik.durum = 6

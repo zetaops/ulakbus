@@ -327,6 +327,50 @@ class BAPButcePlani(Model):
         return self.muhasebe_kod or self.muhasebe_kod_genel
 
 
+class BAPEtkinlikProje(Model):
+    class Meta:
+        verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği")
+        verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Destekleri")
+        list_filters = ['durum']
+
+    ulke = field.String(__(u"Ülke"), required=True)
+    sehir = field.String(__(u"Şehir"), required=True)
+    bildiri_basligi = field.String(__(u"Etkinlik Başlığı"), required=True)
+    baslangic = field.Date(__(u"Başlangıç Tarihi"), required=True)
+    bitis = field.Date(__(u"Bitiş Tarihi"), required=True)
+    katilim_turu = field.Integer(__(u"Katılım Turu"), required=True,
+                                 choices='bap_bilimsel_etkinlik_katilim_turu')
+    etkinlik_lokasyon = field.Integer(__(u"Etkinlik Türü"), required=True,
+                                      choices="arastirma_hedef_lokasyon")
+    basvuru_yapan = Okutman()
+    durum = field.Integer(__(u"Durum"), choices='bap_bilimsel_etkinlik_butce_talep_durum')
+    onay_tarihi = field.Date(__(u"Onay Tarihi"))
+
+    class EtkinlikButce(ListNode):
+        class Meta:
+            verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planı")
+            verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planları")
+
+        talep_turu = field.Integer(__(u"Talep Türü"), required=True,
+                                   choices='bap_bilimseL_etkinlik_butce_talep_turleri')
+        muhasebe_kod = field.String(__(u"Muhasebe Kod"),
+                                    choices='analitik_butce_dorduncu_duzey_gider_kodlari',
+                                    default="03.2.6.90")
+        istenen_tutar = field.Float(__(u"Talep Edilen Tutar"), required=True)
+
+    class Degerlendirmeler(ListNode):
+        class Meta:
+            verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği Değerlendirmesi")
+            verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Desteği Değerlendirmeleri")
+
+        aciklama = field.Text(_(u"Açıklama"), required=False)
+        degerlendirme_sonuc = field.Integer(_(u"Değerlendirme Sonucu"),
+                                            choices='bap_proje_degerlendirme_sonuc')
+
+    def __unicode__(self):
+        return "%s | %s" % (self.bildiri_basligi, self.basvuru_yapan.__unicode__())
+
+
 class BAPGundem(Model):
     class Meta:
         verbose_name = __(u"Gündem")
@@ -335,6 +379,7 @@ class BAPGundem(Model):
                        'oturum_tarihi', 'karar_no', 'karar_tarihi']
 
     proje = BAPProje()
+    etkinlik = BAPEtkinlikProje()
     gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
     gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
     oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
@@ -345,12 +390,14 @@ class BAPGundem(Model):
     sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
 
     def _proje_adi(self):
-        return "%s" % self.proje.ad
+        return "%s" % self.proje.ad if self.proje.key else self.etkinlik.bildiri_basligi
 
     _proje_adi.title = __(u"Projenin Adı")
 
     def _proje_yurutucusu(self):
-        return "%s %s" % (self.proje.yurutucu.ad, self.proje.yurutucu.soyad)
+        return "%s %s" % (
+            (self.proje.yurutucu.ad, self.proje.yurutucu.soyad) if self.proje.key else (
+                self.etkinlik.basvuru_yapan.ad, self.etkinlik.basvuru_yapan.soyad))
 
     _proje_yurutucusu.title = __(u"Proje Yürütücüsü")
 
@@ -461,36 +508,3 @@ class BAPTeklifFiyatIsleme(Model):
         return firmalar[0], firmalar[1]
 
 
-class BAPEtkinlikProje(Model):
-    class Meta:
-        verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği")
-        verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Destekleri")
-        list_filters = ['durum']
-
-    ulke = field.String(__(u"Ülke"), required=True)
-    sehir = field.String(__(u"Şehir"), required=True)
-    bildiri_basligi = field.String(__(u"Etkinlik Başlığı"), required=True)
-    baslangic = field.Date(__(u"Başlangıç Tarihi"), required=True)
-    bitis = field.Date(__(u"Bitiş Tarihi"), required=True)
-    katilim_turu = field.Integer(__(u"Katılım Turu"), required=True,
-                                 choices='bap_bilimsel_etkinlik_katilim_turu')
-    etkinlik_lokasyon = field.Integer(__(u"Etkinlik Türü"), required=True,
-                                      choices="arastirma_hedef_lokasyon")
-    basvuru_yapan = Okutman()
-    durum = field.Integer(__(u"Durum"), choices='bap_bilimsel_etkinlik_butce_talep_durum')
-    onay_tarihi = field.Date(__(u"Onay Tarihi"))
-
-    class EtkinlikButce(ListNode):
-        class Meta:
-            verbose_name = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planı")
-            verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planları")
-
-        talep_turu = field.Integer(__(u"Talep Türü"), required=True,
-                                   choices='bap_bilimseL_etkinlik_butce_talep_turleri')
-        muhasebe_kod = field.String(__(u"Muhasebe Kod"),
-                                    choices='analitik_butce_dorduncu_duzey_gider_kodlari',
-                                    default="03.2.6.90")
-        istenen_tutar = field.Float(__(u"Talep Edilen Tutar"), required=True)
-
-    def __unicode__(self):
-        return "%s | %s" % (self.bildiri_basligi, self.basvuru_yapan.__unicode__())

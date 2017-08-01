@@ -70,6 +70,7 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
         role = hakem.personel.user.role_set[0].role
 
         wf = BPMNWorkflow.objects.get(name='bap_etkinlik_basvuru_degerlendir')
+        title = "%s | %s" % (etkinlik.__unicode__(), wf.title)
         today = datetime.today()
         wfi = WFInstance(
             wf=wf,
@@ -91,8 +92,14 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
             start_date=today,
             finish_date=today + timedelta(15)
         )
-        inv.title = wfi.wf.title
+        inv.title = title
         inv.save()
+
+    def basari_mesaj_goster(self):
+        form = JsonForm(title=_(u"Hakem Seçimi Başarılı"))
+        form.help_text = _(u"Seçtiğiniz hakeme basvuru değerlendirme daveti başarıyla gönderildi")
+        form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
 
     def daha_sonra_karar_ver(self):
         self.current.output['cmd'] = 'reload'
