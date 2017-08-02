@@ -209,6 +209,10 @@
     "9": {
       "tr": "Diğer",
       "en": ""
+    },
+    "10": {
+      "tr": "Bilimsel Etkinlik Başvurusu",
+      "en": ""
     }
   },
   "bap_satin_alma_durum": {
@@ -334,6 +338,64 @@
     },
     "5": {
       "tr": "Yazılım",
+      "en": ""
+    }
+  },
+  "bap_bilimsel_etkinlik_katilim_turu": {
+    "1": {
+      "tr": "Sözlü",
+      "en": ""
+    },
+    "2": {
+      "tr": "Katılımcı",
+      "en": ""
+    }
+  },
+  "bap_bilimsel_etkinlik_butce_talep_turleri": {
+     "1": {
+      "tr": "Konaklama",
+      "en": ""
+    },
+    "2": {
+      "tr": "Ulaşım",
+      "en": ""
+    },
+     "3": {
+      "tr": "Yevmiye",
+      "en": ""
+    },
+    "4": {
+      "tr": "Katılım Ücreti",
+      "en": ""
+    }
+  },
+  "bap_bilimsel_etkinlik_butce_talep_durum": {
+    "1": {
+      "tr": "Talep Yapıldı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Onaylandı",
+      "en": ""
+    },
+     "3": {
+      "tr": "Reddedildi",
+      "en": ""
+    },
+     "4": {
+      "tr": "Koordinasyon Birimi Tarafından İnceleniyor",
+      "en": ""
+    },
+     "5": {
+      "tr": "Komisyon Başkanının Üye Ataması Bekleniyor",
+      "en": ""
+    },
+     "6": {
+      "tr": "Komisyon Üyesi ve/veya Hakem Değerlendirmesi Bekleniyor",
+      "en": ""
+    },
+    "7": {
+      "tr": "Gündeme Alındı",
       "en": ""
     }
   }
