@@ -24,6 +24,10 @@ class HakemSecForm(JsonForm):
 
 
 class KUEtkinlikBasvuruDegerlendirme(CrudView):
+    """
+    Komisyon üyesinin etkinlik başvurusu değerlendirdiği ya da değerlendirmesi için hakem seçtiği
+    iş akışıdır. Seçilen hakeme etkinlik değerlendirme iş akışı gönderilir.
+    """
     class Meta:
         model = 'BAPEtkinlikProje'
 
@@ -36,6 +40,9 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
         self.object = BAPEtkinlikProje.objects.get(key)
 
     def listele(self):
+        """
+        Komisyon üyesinin kendisine gelen etkinlik başvurusunu liste şeklinde gördüğü adımdır.
+        """
         key = self.current.task_data['etkinlik_basvuru_id']
         etkinlik = BAPEtkinlikProje.objects.get(key)
         self.output['objects'] = [
@@ -57,6 +64,9 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
         self.form_out(form)
 
     def hakem_sec(self):
+        """
+        Komisyon üyesinin hakem seçtiği adımdır.
+        """
         form = HakemSecForm(current=self.current)
         self.form_out(form)
         self.output["meta"]["allow_add_listnode"] = False
@@ -64,6 +74,9 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
         self.output['meta']['allow_filters'] = False
 
     def hakeme_gonder(self):
+        """
+        Bu adımda komisyon üyesinin seçtiği hakeme değerlendirme iş akışı gönderilir.
+        """
         etkinlik = BAPEtkinlikProje.objects.get(self.current.task_data['etkinlik_basvuru_id'])
         hakem_id = self.input['form']['hakem_id']
         hakem = Okutman.objects.get(hakem_id)
@@ -96,12 +109,18 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
         inv.save()
 
     def basari_mesaj_goster(self):
+        """
+        Komisyon üyesine işlem başarılı mesajının gösterildiği adımdır.
+        """
         form = JsonForm(title=_(u"Hakem Seçimi Başarılı"))
         form.help_text = _(u"Seçtiğiniz hakeme basvuru değerlendirme daveti başarıyla gönderildi")
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
 
     def daha_sonra_karar_ver(self):
+        """
+         Komisyon üyesini başvuruyu daha sonra değerlendirmek üzere anasayfaya yönlendiren adımdır.
+        """
         self.current.output['cmd'] = 'reload'
 
 
