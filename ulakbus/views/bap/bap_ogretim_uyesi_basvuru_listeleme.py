@@ -31,7 +31,11 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         self.ListForm.add = None
 
     def goruntule(self):
-        self.current.task_data['external_wf']="bap_ogrbasvuru_goruntule"
+        """
+        Proje goruntuleme harici is akisi task dataya konulur.
+
+        """
+        self.current.task_data['external_wf'] = "bap_ogrbasvuru_goruntule"
 
     def basvuru_listele(self):
         """

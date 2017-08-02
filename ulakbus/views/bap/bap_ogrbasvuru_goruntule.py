@@ -39,7 +39,6 @@ class OgrBasvuruInceleme(BasvuruInceleme):
         BasvuruInceleme.__init__(self, current)
         self.genel_form = OgrGenelProjeForm
 
-
     def proje_ozet_goster(self):
         """
         Proje hakkında genel bilgileri gösterir.
@@ -55,5 +54,3 @@ class OgrBasvuruInceleme(BasvuruInceleme):
         ])
         self.output['object'] = proje_ozeti
         self.form_out(ProjeOzetForm(title=__('Proje Özeti')))
-
-

@@ -59,6 +59,8 @@ class BasvuruInceleme(CrudView):
             self.object = self.model_class.objects.get(self.current.task_data.get('bap_proje_id',self.input['object_id']))
         self.current.output["meta"]["allow_search"] = False
 
+        # Genel form, bu nesneyi extend eden digerleri tarafindan degistirilebilsin
+        # bkz: bap_ogrbasvuru_goruntule.py
         self.genel_form = GenelProjeForm
 
     def genel_proje_bilgileri_goster(self):

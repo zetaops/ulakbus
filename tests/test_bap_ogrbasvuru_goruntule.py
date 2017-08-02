@@ -4,7 +4,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import BAPProje, User
+from ulakbus.models import User
 from zengine.lib.test_utils import BaseTestCase
 
 
