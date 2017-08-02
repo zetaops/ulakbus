@@ -37,7 +37,11 @@ Kongre Sonuç Raporu *
 
 (**) Başvuruda talep edildiyse""")
 
-YURTDISI = _(u"Pasaport Giriş Çıkış Fotokopi")
+YURTDISI = """
+%s
+
+%s
+""" % (_(u"Pasaport Giriş Çıkış Fotokopi"), YURTICI)
 
 
 class ButcePlanForm(JsonForm):
@@ -45,6 +49,9 @@ class ButcePlanForm(JsonForm):
         title = _(u"Bütçe Planı")
 
     class Butce(ListNode):
+        class Meta:
+            title = _(u"Bütçe Planı")
+
         talep_turu = fields.Integer(__(u"Talep Türü"), required=True,
                                     choices='bap_bilimsel_etkinlik_butce_talep_turleri')
         istenen_tutar = fields.Float(__(u"Talep Edilen Tutar"), required=True)

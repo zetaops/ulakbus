@@ -60,7 +60,7 @@ class Gundem(CrudView):
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
-        self.output['object_title'] = _(u"%s / %s") % (self.object.proje.ad,
+        self.output['object_title'] = _(u"%s / %s") % (self.object._proje_adi(),
                                                        self.object.get_gundem_tipi_display())
         sonuc = _(u"Sonuçlandı") if self.output['object'][u'Kararın Sonuçlandırılması'] == u'True' \
             else _(u"Sonuçlanmadı")

@@ -19,8 +19,11 @@ from datetime import datetime, timedelta
 
 class EtkinlikBasvuruInceleForm(JsonForm):
     class Butce(ListNode):
+        class Meta:
+            title = "Bütçe"
+
         talep_turu = fields.Integer(__(u"Talep Türü"), required=True,
-                               choices='bap_bilimseL_etkinlik_butce_talep_turleri')
+                                    choices='bap_bilimseL_etkinlik_butce_talep_turleri')
         istenen_tutar = fields.Float(__(u"Talep Edilen Tutar"), required=True)
 
 
@@ -33,6 +36,7 @@ class EtkinlikBasvuruInceleme(CrudView):
     Komisyon başkanı başvuruyu değerlendirmek üzere bir komisyon üyesi seçer. Seçilen komisyon
     üyesine etkinlik başvuru değerlendirme görevi gönderilir.
     """
+
     class Meta:
         model = 'BAPEtkinlikProje'
 
@@ -170,4 +174,3 @@ class EtkinlikBasvuruInceleme(CrudView):
         etkinlik = BAPEtkinlikProje.objects.get(etkinlik_key)
         etkinlik.durum = 6
         etkinlik.blocking_save()
-
