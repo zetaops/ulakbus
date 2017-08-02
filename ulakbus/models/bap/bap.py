@@ -282,7 +282,7 @@ class BAPFirma(Model):
     adres = field.String(__(u"Adres"), required=True)
     e_posta = field.String(__(u"E-posta Adresi"), required=True, unique=True)
     vergi_no = field.String(__(u"Vergi Kimlik Numarası"), required=True)
-    vergi_dairesi = field.String(__(u"Vergi Dairesi"), required=True)
+    vergi_dairesi = field.Integer(__(u"Vergi Dairesi"), choices='vergi_daireleri', required=True)
     faaliyet_belgesi = field.File(_(u"Firma Faaliyet Belgesi"), random_name=False, required=True)
     faaliyet_belgesi_verilis_tarihi = field.Date(__(u"Faaliyet Belgesi Veriliş Tarihi"),
                                                  required=True)
