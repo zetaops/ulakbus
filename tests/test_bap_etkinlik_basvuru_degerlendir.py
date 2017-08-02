@@ -18,8 +18,13 @@ class TestCase(BaseTestCase):
         user = User.objects.get(username='bap_komisyon_uyesi_1')
 
         self.prepare_client('/bap_komisyon_uyesi_etkinlik_basvuru_degerlendir', user=user)
-        self.client.current.task_data['object_id'] = etkinlik_id
         self.client.post()
+
+        resp = self.client.post(cmd='goruntule', object_id=etkinlik_id)
+
+        assert resp.json['object_title'] == 'Bilimsel Etkinliklere Katılım Desteği : Çay Yaprağı ' \
+                                            'Paradoksunda Akışkanlar Mekaniğinin Yeri | Henife ' \
+                                            'Şener'
 
         resp = self.client.post(cmd='hakem')
 
@@ -39,8 +44,16 @@ class TestCase(BaseTestCase):
 
         self.prepare_client('/bap_etkinlik_basvuru_degerlendir', user=user)
         self.client.current.task_data['etkinlik_basvuru_id'] = etkinlik_id
+        self.client.current.task_data['hakem'] = True
+        resp = self.client.post(object_id=etkinlik_id, hakem=True)
 
-        self.client.post()
+        assert resp.json['object_title'] == 'Bilimsel Etkinliklere Katılım Desteği : Çay Yaprağı ' \
+                                            'Paradoksunda Akışkanlar Mekaniğinin Yeri | Henife ' \
+                                            'Şener'
+
+        resp = self.client.post(cmd='degerlendir')
+
+        assert resp.json['forms']['schema']['title'] == 'Etkinlik Başvuru Değerlendir'
 
         form = {
             'aciklama': 'Olmamış',
@@ -54,11 +67,3 @@ class TestCase(BaseTestCase):
                                    'Etkinlik Başvurusunu Başarıyla Değerlendirdiniz'
 
         assert BAPGundem.objects.count() == gundem_sayisi + 1
-
-        token = self.client.current.token
-
-        wfi = WFInstance.objects.get(token)
-
-        TaskInvitation.objects.get(instance=wfi).blocking_delete()
-        wfi.blocking_delete()
-

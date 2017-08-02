@@ -57,8 +57,10 @@ class BAPEtkinlikBasvuruDegerlendir(CrudView):
         self.object = BAPEtkinlikProje.objects.get(key)
 
     def kontrol(self):
-        self.current.task_data['cmd'] = 'hakem' if self.current.task_data.pop('hakem',
-                                                                              False) else 'komisyon'
+        if self.current.task_data.pop('hakem', False) or self.input.pop('hakem', False):
+            self.current.task_data['cmd'] = 'hakem'
+        else:
+            self.current.task_data['cmd'] = 'komisyon'
 
     def goruntule(self):
         key = self.current.task_data['etkinlik_basvuru_id']
