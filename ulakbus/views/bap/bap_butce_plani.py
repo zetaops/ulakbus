@@ -59,7 +59,7 @@ class BapButcePlani(CrudView):
 
         form = ButcePlaniForm(self.object, current=self.current)
         form.exclude = ['muhasebe_kod', 'muhasebe_kod_genel', 'kod_adi', 'onay_tarihi',
-                        'ilgili_proje', 'durum', 'toplam_fiyat']
+                        'ilgili_proje', 'durum', 'toplam_fiyat', 'kazanan_firma']
         form.title = "%s Bütçe Planı" % self.object.kod_adi
         form.help_text = "Yapacağınız bütçe planı %s adlı proje için yapılacaktır." % \
                          proje_ad
