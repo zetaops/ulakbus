@@ -56,7 +56,6 @@ class BapButcePlani(CrudView):
             okutman = Okutman.objects.get(personel=personel)
             self.current.task_data['proje_data'] = [(proje.key, proje.ad) for proje in
                                                     BAPProje.objects.filter(yurutucu=okutman)]
-
             self.current.task_data['proje_sec'] = True
 
     def proje_sec(self):
