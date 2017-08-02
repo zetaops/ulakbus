@@ -3,6 +3,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.views.bap.bap_etkinlik_basvuru_inceleme import EtkinlikBasvuruInceleForm
+
 from ulakbus.models import BAPEtkinlikProje
 from ulakbus.models import Okutman
 from zengine.forms import JsonForm
@@ -51,9 +53,8 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
             "fields": [etkinlik.bildiri_basligi, etkinlik.basvuru_yapan.__unicode__(),
                        etkinlik.durum],
             "actions": [
-                {'name': _(u'Değerlendir'), 'cmd': 'degerlendir', 'mode': 'normal',
+                {'name': _(u'Görüntüle'), 'cmd': 'goruntule', 'mode': 'normal',
                  'show_as': 'button'},
-                {'name': _(u'Hakem Seç'), 'cmd': 'hakem', 'mode': 'normal', 'show_as': 'button'},
             ],
             "key": key,
         }
@@ -62,6 +63,21 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
         form.daha_sonra_karar_ver = fields.Button(_(u"Daha Sonra Karar Ver"),
                                                   cmd='daha_sonra_karar_ver')
         self.form_out(form)
+
+    def goruntule(self):
+        key = self.current.task_data['etkinlik_basvuru_id']
+        self.show()
+        form = EtkinlikBasvuruInceleForm(title=_(u"Etkinlik Başvuru Detayları"))
+        form.daha_sonra_incele = fields.Button(_(u"Daha Sonra Değerlendir"),
+                                               cmd='daha_sonra_karar_ver')
+        form.hakeme_gonder = fields.Button(_(u"Hakeme Gönder"), cmd='hakem')
+        form.degerlendir = fields.Button(_(u"Değerlendir"), cmd='degerlendir')
+        butceler = BAPEtkinlikProje.objects.get(key).EtkinlikButce
+        for butce in butceler:
+            form.Butce(talep_turu=butce.talep_turu, istenen_tutar=butce.istenen_tutar)
+        self.form_out(form)
+        self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
 
     def hakem_sec(self):
         """
@@ -95,6 +111,7 @@ class KUEtkinlikBasvuruDegerlendirme(CrudView):
         wfi.data = dict()
         wfi.data['flow'] = None
         wfi.data['etkinlik_basvuru_id'] = etkinlik.key
+        wfi.data['hakem'] = True
         wfi.pool = {}
         wfi.blocking_save()
         inv = TaskInvitation(
