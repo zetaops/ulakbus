@@ -15,23 +15,31 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 from datetime import datetime
 
 
-class EtkinlikBasvuruDegerlendirForm(JsonForm):
+class EtkinlikBasvuruGoruntuleForm(JsonForm):
     class Meta:
-        title = _(u"Etkinlik Başvuru Değerlendir")
+        title = _(u"Etkinlik Başvuru Görüntüle")
 
     class Butce(ListNode):
         talep_turu = fields.Integer(__(u"Talep Türü"), required=True,
                                     choices='bap_bilimseL_etkinlik_butce_talep_turleri')
         istenen_tutar = fields.Float(__(u"Talep Edilen Tutar"), required=True)
 
-    aciklama = fields.Text(_(u"Açıklama"), required=False)
-    sonuc = fields.Integer(_(u"Değerlendirme Sonucu"), choices='bap_proje_degerlendirme_sonuc')
-
     daha_sonra_degerlendir = fields.Button(_(u"Daha Sonra Değerlendir"),
                                            cmd='daha_sonra_degerlendir', form_validation=False)
 
-    degerlendirme_kaydet = fields.Button(_(u"Değerlendirme Kaydet"), cmd='degerlendir')
+    degerlendirme_kaydet = fields.Button(_(u"Değerlendir"), cmd='degerlendir')
 
+
+class EtkinlikBasvuruDegerlendirForm(JsonForm):
+    class Meta:
+        title = _(u"Etkinlik Başvuru Değerlendir")
+
+    aciklama = fields.Text(_(u"Açıklama"), required=False)
+    sonuc = fields.Integer(_(u"Değerlendirme Sonucu"), choices='bap_proje_degerlendirme_sonuc')
+
+    degerlendir = fields.Button(_(u"Değerlendirme Kaydet"), cmd='degerlendir')
+    daha_sonra_degerlendir = fields.Button(_(u"Daha Sonra Değerlendir"),
+                                           cmd='daha_sonra_degerlendir')
 
 class BAPEtkinlikBasvuruDegerlendir(CrudView):
     """
@@ -48,19 +56,29 @@ class BAPEtkinlikBasvuruDegerlendir(CrudView):
             'object_id', False) or self.current.task_data.get('etkinlik_basvuru_id', False)
         self.object = BAPEtkinlikProje.objects.get(key)
 
-    def basvuru_degerlendir(self):
-        """
-        Komisyon üyesi veya hakemin etkinlik başvurusunu değerlendirdiği adımdır.
-        """
+    def kontrol(self):
+        if self.current.task_data.pop('hakem', False) or self.input.pop('hakem', False):
+            self.current.task_data['cmd'] = 'hakem'
+        else:
+            self.current.task_data['cmd'] = 'komisyon'
+
+    def goruntule(self):
         key = self.current.task_data['etkinlik_basvuru_id']
         self.show()
-        form = EtkinlikBasvuruDegerlendirForm()
+        form = EtkinlikBasvuruGoruntuleForm()
         butceler = BAPEtkinlikProje.objects.get(key).EtkinlikButce
         for butce in butceler:
             form.Butce(talep_turu=butce.talep_turu, istenen_tutar=butce.istenen_tutar)
         self.form_out(form)
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
+
+    def basvuru_degerlendir(self):
+        """
+        Komisyon üyesi veya hakemin etkinlik başvurusunu değerlendirdiği adımdır.
+        """
+        form = EtkinlikBasvuruDegerlendirForm()
+        self.form_out(form)
 
     def daha_sonra_degerlendir(self):
         """
