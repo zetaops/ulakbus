@@ -63,6 +63,7 @@ class Personel(Model):
     dogum_tarihi = field.Date(_(u"Doğum Tarihi"), format="%d.%m.%Y")
     dogum_yeri = field.String(_(u"Doğum Yeri"))
     medeni_hali = field.Integer(_(u"Medeni Hali"), choices="medeni_hali")
+    bakmakla_yukumlu_kisi_sayisi = field.Integer(_(u"Yükümlü Olduğu Kişi Sayısı"))
     kayitli_oldugu_il = field.String(_(u"İl"))
     kayitli_oldugu_ilce = field.String(_(u"İlçe"))
     kayitli_oldugu_mahalle_koy = field.String(_(u"Mahalle/Köy"))

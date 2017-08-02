@@ -279,3 +279,12 @@ MESSAGES = {
 }
 
 DATA_GRID_PAGE_SIZE = 100
+
+#Personel yolluk ve yevmiye katsayıları her yıl değişmektedir.
+#2017 için guncel yolluk ve yevmiye katsayıları
+EK_GOSTERGE_8K = 48.25
+EK_GOSTERGE_5800_8K = 45
+EK_GOSTERGE_3K_5800 = 42.25
+DERECE_1_4 = 37.25
+DERECE_5_15 = 36.25
+KM_KATSAYISI = 5 / 100.0
