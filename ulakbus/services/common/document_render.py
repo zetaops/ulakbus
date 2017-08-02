@@ -19,46 +19,45 @@ from boto.s3.key import Key
 
 class RenderDocument(Service):
     """ The submitted template is rendered with the context data and the download link is sent back.
-        If context data includes 'pdf', rendered document is converted to pdf.
+            If context data includes 'pdf', rendered document is converted to pdf.
 
-    ::: Requirements :::
-        - template : It can be base64 encoded data or URL
-        - context  : Have to be a dict.
-            - pdf  : Rendered document is converted to pdf.
+        ::: Requirements :::
+            - template : It can be base64 encoded data or URL
+            - context  : Have to be a dict.
+                - pdf  : Rendered document is converted to pdf.
 
-    :::   Response   :::
-        - status       : Status of request.
-        - download_url : The URL of the rendered template
+        :::   Response   :::
+            - status       : Status of request.
+            - download_url : The URL of the rendered template
 
-    :::    Client    :::
-        # >>> curl localhost:11223/render/document -X POST -i -H "Content-Type: application/json" \
-         - d '{"template": "http://example.com/sample_template.odt", \
-         "context": {"name": "ali", "pdf":"1"}, "modify_date": "[hash_value_of_template]"}'
+        :::    Client    :::
+            # >>> curl localhost:11223/render/document -X POST -i -H "Content-Type: application/json" \
+             - d '{"template": "http://example.com/sample_template.odt", \
+             "context": {"name": "ali", "pdf":"1"}, "modify_date": "[hash_value_of_template]"}'
 
-        --- The service will download the template and render with context data.
-            Download rendred template and convert pdf file.
+            --- The service will download the template and render with context data.
+                Download rendred template and convert pdf file.
 
-        # >>> curl localhost:11223/render/document -X POST -i -H "Content-Type: application/json" \
-        -d "{\"template\": \"`base64 -w 0 template.odt`\", \"context\": {\"name\": \"ali\"}, \
-         "modify_date": "[hash_value_of_template]"}"
+            # >>> curl localhost:11223/render/document -X POST -i -H "Content-Type: application/json" \
+            -d "{\"template\": \"`base64 -w 0 template.odt`\", \"context\": {\"name\": \"ali\"}, \
+             "modify_date": "[hash_value_of_template]"}"
 
-        --- The service will decode the template and render with context data.
+            --- The service will decode the template and render with context data.
 
-        The response is compatible with Zato-Wrapper.
-        ::: On Success :::
-            {"status": "finished", "result": "http://example.com/sample_rendered.odt"}
-            {"status": "finished", "result": "http://example.com/sample.pdf"}
+            The response is compatible with Zato-Wrapper.
+            ::: On Success :::
+                {"status": "finished", "result": "http://example.com/sample_rendered.odt"}
+                {"status": "finished", "result": "http://example.com/sample.pdf"}
 
-        :::   On Fail  :::
-            {"status": "Error!", "result": "None"}
-    """
+            :::   On Fail  :::
+                {"status": "Error!", "result": "None"}
+        """
 
     HAS_CHANNEL = True
 
     def handle(self):
-
-        self.s3connect = False
         # Load the 3S configuration from ZATO.
+        self.s3connect = False
         self.S3_PROXY_URL = self.user_config.zetaops.zetaops3s.S3_PROXY_URL
         self.S3_ACCESS_KEY = self.user_config.zetaops.zetaops3s.S3_ACCESS_KEY
         self.S3_SECRET_KEY = self.user_config.zetaops.zetaops3s.S3_SECRET_KEY
@@ -66,87 +65,99 @@ class RenderDocument(Service):
         self.S3_PROXY_PORT = self.user_config.zetaops.zetaops3s.S3_PROXY_PORT
         self.S3_BUCKET_NAME = self.user_config.zetaops.zetaops3s.S3_BUCKET_NAME
 
+        self.wants_pdf = False
         if 'pdf' in self.request.payload:
             self.wants_pdf = self.request.payload['pdf']
-        else:
-            self.wants_pdf = False
 
-        self.document_cache = DocumentCache(self, self.wants_pdf)
-        # Check the request in the cache
+        self.document_cache = DocumentCache(payload=self.request.payload,
+                                            kvdb_conn=self.kvdb.conn,
+                                            wants_pdf=self.wants_pdf,
+                                            logger=self.logger)
+
         cache_stat = self.document_cache.check_the_cache()
 
-        if cache_stat is not None:
-            # No action required
-            if 'odt_url' in cache_stat:
-                if self.wants_pdf:
-                    self.logger.info("NO ACTION WASN'T REQUIRED, SENDED PDF URL")
-                    resp = self.prepare_response('ok', cache_stat['pdf_url'])
-                else:
-                    resp = self.prepare_response('ok', cache_stat['odt_url'])
-                    self.logger.info("NO ACTION WASN'T REQUIRED, SENDED ODT URL")
-            # No need to download template
-            elif 'modify_date' in cache_stat:
-                self.logger.info("NO NEED TO DOWNLOAD TEMPLATE")
-                new_payload = copy.copy(self.request.payload)
-                new_payload['template'] = cache_stat['template']
-                resp = self.standard_process(new_payload)
-                # Standard rendering process
+        if cache_stat is None:
+            self.logger.info("STANDART RENDERING PROCESS STARTED")
+            resp = self.standard_process(payload=self.request.payload)
+
         else:
-            self.logger.info("STANDARD RENDERING PROCESS")
-            resp = self.standard_process(self.request.payload)
+            # `cache_stat` can be context_value or template_value.
+            value = self.get_value_from_cache(cache_stat=cache_stat)
+
+            # if `value` is `template`. Use content of `template` on Redis.
+            if value == self.document_cache.template:
+                self.logger.info("NO NEED TO DOWNLOAD TEMPLATE")
+
+                new_payload = self.create_new_payload()
+                resp = self.standard_process(payload=new_payload)
+            else:
+                self.logger.info("NO ACTION WASN'T REQUIRED, SENDED URL")
+                resp = self.prepare_response('ok', value)
 
         self.response.status_code = 200
         self.response.payload = resp
+
+    def create_new_payload(self):
+        """
+        Create a new payload for no download the `template`
+        Returns:
+            dict: New payload.
+        """
+        new_payload = copy.copy(self.request.payload)
+        new_payload['template'] = self.document_cache.template['content']
+        return new_payload
+
+    def get_value_from_cache(self, cache_stat):
+        """
+        Get URL on returned value from `DocumentCache`.
+        Args:
+            cache_stat (dict): Redis value.
+        Returns:
+            str: URL
+            dict: `template` value on Redis.
+        """
+        def check_is_none(url, cache_stat):
+            """
+            Check url. If it's None, return `template`.
+            Args:
+                url (str):
+                cache_stat (dict):
+            Returns:
+                str: URL
+                dict: `template` value on Redis.
+            """
+            url_val = cache_stat.get(url, None)
+            if url_val is None:
+                return self.document_cache.template
+            else:
+                return url_val
+
+        if self.wants_pdf:
+            return check_is_none('pdf_url', cache_stat)
+
+        else:
+            return check_is_none('odt_url', cache_stat)
 
     def standard_process(self, payload):
         """
         It's a standard render process. The lead is shaped according to payload.
         Args:
-            payload: type: <dict>
+            payload (dict)
 
-        Returns: Response. type: <dict>
+        Returns:
+            dict: Response.
 
         """
-        file_name = payload['template']
-        if payload['template'].startswith('http'):
-            template_file = self.download_template(payload['template'])
-            payload['template'] = base64.b64encode(template_file.getvalue())
-
-        file_content = payload['template']
-
-        self.logger.info("TYPE : {}, CONTENT : {}".format(type(payload), payload))
-
         resp = self.render_document(payload=payload)
-
-        self.document_cache.add_rendered_doc(file_name=file_name,
-                                             odt_url=resp.data['download_url'],
-                                             file_content=file_content)
+        self.document_cache.add_rendered_doc(odt_url=resp.data['download_url'])
 
         if self.wants_pdf:
-            file_desc = self.make_file_like_object(resp.data['download_url'])
+            file_desc = self.make_file_like_object(resp.data['download_url'], download_token=1)
             pdf_resp = self.create_pdf(file_desc)
-            self.document_cache.add_rendered_pdf_doc(file_name=file_name,
-                                                     pdf_url=pdf_resp['download_url'],
-                                                     odt_url=resp.data['download_url'])
-
-            resp = self.prepare_response("ok", pdf_resp['download_url'])
+            self.document_cache.add_rendered_pdf_doc(pdf_url=pdf_resp['download_url'])
+            resp = self.prepare_response(pdf_resp['status'], pdf_resp['download_url'])
         else:
             resp = self.prepare_response('ok', resp.data['download_url'])
-        return resp
-
-    @staticmethod
-    def prepare_response(status, url):
-        """
-        Prepare response for client. It's compatible with Zato-Wrapper.
-
-        Args:
-            status: Status of process. type: <str>
-            url: Download url of produced document. type: <str>
-
-        Returns: type: <dict>
-
-        """
-        resp = {"status": status, "result": url}
         return resp
 
     def render_document(self, payload):
@@ -154,12 +165,13 @@ class RenderDocument(Service):
         Render ODT template file with context data.
 
         Args:
-            payload: Context data is variable of Jinja.
+            payload (dict): Context data is variable of Jinja.
 
-        Returns: Response object.
+        Returns:
+             response : Response object.
 
         """
-        self.logger.info('{} :: Document render service called'.format(time.ctime()))
+        self.logger.info('{} :: DOCUMENT RENDER SERVICE CALLED '.format(time.ctime()))
 
         renderer = self.outgoing.plain_http.get('document.renderer')
         headers = {'X-App-Name': 'Zato', 'Content-Type': 'application/json'}
@@ -167,45 +179,23 @@ class RenderDocument(Service):
         resp = renderer.conn.send(self.cid, data=payload, headers=headers)
         return resp
 
-    @staticmethod
-    def make_file_like_object(data, download_token=1):
-        """
-        Make the data file-like object.
-
-        Args:
-            data: type: <bytes>, but you must assign download_token to 0.
-                  It can be <str>
-            download_token: <optional> type: <int>
-
-        Returns: BytesIO object.
-
-        """
-        file_desc = None
-        if download_token == 1:
-            s3_resp = requests.get(data)
-            file_desc = io.BytesIO(s3_resp.content)
-        else:
-            file_desc = io.BytesIO(data)
-        file_desc.seek(0)
-        return file_desc
-
     def create_pdf(self, file_desc):
         """
         Process of ODF to PDF. It's uses DocsBox Service.
 
         Args:
-            file_desc: File or file-like object.
+            file_desc (File or BytesIO): File or file-like object.
 
-        Returns: type: <dict>
+        Returns:
+            dict: Status of process and download_url of pdf file.
 
         """
-        self.logger.info('{} :: Docsbox service called'.format(time.ctime()))
+        self.logger.info('{} :: DOCSBOX SERVICE CALLED'.format(time.ctime()))
         # Get outgoing way.
         pdf_writer = self.outgoing.plain_http.get('docsbox.out')
 
         # Add to queue
         files = {'file': file_desc}
-        headers = {'Content-Type': 'multipart/form-data'}
 
         result = pdf_writer.conn.post(self.cid, files=files)
         task_info = json.loads(result.text)
@@ -224,15 +214,46 @@ class RenderDocument(Service):
             task_queue_status['download_url'] = "{0}{1}".format(self.S3_PUBLIC_URL, s3_url)
             return task_queue_status
         else:
-            return {"status": "Error!", "download_url": "None"}
+            return {"status": "error", "download_url": "None"}
+
+    def check_the_status(self, request_period, task_id):
+        """
+        Check the status of task_id according to given request_period
+
+        Args:
+            request_period (int): How many times in second.
+            task_id (str): ID of task.
+
+        Returns:
+            dict: return queue stats of task id.
+
+        """
+        pdf_writer_queue = self.outgoing.plain_http.get('docsbox.out.queue')
+        start_time = time.time()
+        now_time = 0.0
+        while True:
+            # TODO: Remove some parts of this loop.
+            params = {'task_id': '{}'.format(task_id)}
+
+            queue_info = pdf_writer_queue.conn.get(self.cid, params)
+            queue_info = json.loads(queue_info.text)
+
+            if queue_info['status'] == 'finished':
+                break
+            now_time = time.time()
+            if (now_time - start_time) >= request_period:
+                break
+        self.logger.info('ELAPSED TIME : {}'.format(now_time - start_time))
+        return queue_info
 
     def download_pdf_file(self, result_url):
         """
         Download pdf file from DocsBox Service. It has own channel.
         Args:
-            result_url: This will be downloaded.
+            result_url (str): This will be downloaded.
 
-        Returns: PDF file, type: <BytesIO>
+        Returns:
+             BytesIO: PDF file.
 
         """
         # Get outgoing connection of zato.
@@ -246,41 +267,9 @@ class RenderDocument(Service):
 
         return pdf_file
 
-    def check_the_status(self, request_period, task_id):
-        """
-        Check the status of task_id according to given request_period
-
-        Args:
-            request_period: type: <int>
-            task_id: type: <str>
-
-        Returns: type: <dict>
-
-        """
-        pdf_writer_queue = self.outgoing.plain_http.get('docsbox.out.queue')
-        self.logger.info('ATTR : {}'.format(pdf_writer_queue.__dict__))
-        start_time = time.time()
-        now_time = 0.0
-        while True:
-            params = {'task_id': '{}'.format(task_id)}
-
-            queue_info = pdf_writer_queue.conn.get(self.cid, params)
-            queue_info = json.loads(queue_info.text)
-
-            if queue_info['status'] == 'finished':
-                break
-            now_time = time.time()
-            if (now_time - start_time) >= request_period:
-                break
-        self.logger.info('Elapsed time : {}'.format(now_time - start_time))
-        return queue_info
-
     def s3_connect(self):
         """
         Connect to 3S server.
-
-        Returns: None
-
         """
         if self.s3connect:
             return
@@ -293,21 +282,236 @@ class RenderDocument(Service):
         self.bucket = conn.get_bucket(self.S3_BUCKET_NAME)
         self.s3connect = True
 
-    def save_document(self, pdf_file):
+    def save_document(self, file_desc):
         """
         Save document to 3S bucket.
 
         Args:
-            pdf_file: file-like object. type: <BytesIO>
+            file_desc (File or BytesIO): File or file-like object.
 
-        Returns: key of file.
+        Returns:
+             str: Key of saved file.
 
         """
         self.s3_connect()
         k = Key(self.bucket)
-        k.set_contents_from_string(pdf_file.getvalue())
+        k.set_contents_from_string(file_desc.getvalue())
         self.bucket.set_acl('public-read', k.key)
         return k.key
+
+    @staticmethod
+    def make_file_like_object(data, download_token=1):
+        """
+        Make the data file-like object.
+
+        Args:
+            data (bytes or str): If you send bytes, download_token must be 0.
+            download_token (int): optional
+
+        Returns:
+            BytesIO: File-like object.
+
+        """
+        if download_token == 1:
+            resp = requests.get(data)
+            data = resp.content
+
+        file_desc = io.BytesIO(data)
+        file_desc.seek(0)
+
+        return file_desc
+
+    @staticmethod
+    def prepare_response(status, url):
+        """
+        Prepare response for client. It's compatible with Zato-Wrapper.
+
+        Args:
+            status (str): Status of process.
+            url (str): Download url of produced document.
+
+        Returns:
+            dict: Response for client.
+
+        """
+        resp = {"status": status, "result": url}
+        return resp
+
+
+class DocumentCache(object):
+    """
+
+        Caching mechanism. Add and get request and template from redis.
+
+        ::: Scenario 1
+            - If we have performed the request and modify_date of template on redis is equal
+              the request modify_date send user the ODT or PDF URL.
+
+        ::: Scenario 2
+            - If we have performed the request and modify_date isn't equal the redis value.
+              send base64 content of template. Or, We have the template but context isn't equal
+              the redis value, don't download the template. Send base64 content of template
+
+        """
+
+    def __init__(self, payload, kvdb_conn, wants_pdf, logger):
+        """
+        Args:
+            payload (dict): received request.
+            kvdb_conn (object) : redis connection object.
+            wants_pdf (bool):
+        """
+        self.kvdb_conn = kvdb_conn
+        self.payload = payload
+        self.wants_pdf = wants_pdf
+        self.logger = logger
+
+        self.context_key = self.key_from_context(context=self.payload['context'])
+        self.template_key = self.key_from_template(template=self.payload['template'])
+
+        self.context_value = None
+        self.template_value = None
+
+        self.template = None
+
+    def key_from_context(self, context):
+        """
+        Sort and hash the `payload` data. It's the key of redis.
+        Args:
+            context (dict): Jinja2 variables.
+        Returns:
+            str: Sorted and hashed data.
+        """
+        key = "".join(["{}{}".format(k, v) for k, v in sorted(context.items())])
+        key = self.hashing(key.encode())
+        return key
+
+    def key_from_template(self, template):
+        """
+        Take the hash of the template.
+        If template is base64 encoded data, before decode it.
+
+        Args:
+            template (str): base64 encoded bytes or url
+
+        Returns:
+            str: Key format for redis. Hashed template.
+        """
+
+        if not template.startswith('http'):
+            template = base64.b64decode(template)
+
+        return self.hashing(template)
+
+    def is_template_newest(self):
+        """
+        TODO : context_and_template_compatible can combine.
+        Check the `modify_date` are equal?
+        Returns:
+            bool:
+        """
+        if self.template_value is not None:
+            return self.template_value['modify_date'] == self.payload['modify_date']
+
+    def context_and_template_compatible(self):
+        """
+        Check `template` of `context_value` is equal to `template_key`
+        Compare two entries on Redis.
+        Returns:
+            Bool: Is equal, returns True.
+            None:
+        """
+        if self.context_value is not None:
+            return self.context_value['template'] == self.template_key
+
+    def check_the_cache(self):
+        """
+        Check the cache for the request processed before?
+
+        Returns:
+            dict: Template, context or None
+
+        """
+        self.context_value = self.get_value(self.context_key)
+        self.template_value = self.get_value(self.template_key)
+
+        if self.is_template_newest():
+            self.template = self.template_value
+
+        if self.template:
+            if self.context_value and self.context_and_template_compatible():
+                return self.context_value
+
+        return self.template
+
+    def get_value(self, key):
+        """
+        Get value of the `key` from redis.
+        Args:
+            key (str): Redis key.
+
+        Returns:
+            dict: Redis value or None.
+        """
+        value = self.kvdb_conn.get(key)
+
+        if value is not None:
+            return json.loads(value)
+
+    def set_value(self, key, value):
+        """
+        Set key-value pair to Redis
+        Args:
+            key (str):
+            value (object): This will dump with JSON.
+        """
+        value = json.dumps(value)
+        self.kvdb_conn.set(key, value)
+
+    def add_rendered_doc(self, odt_url):
+        """
+        Add rendered document url to Redis.
+        Args:
+            odt_url (str): S3 url of rendered ODT document.
+        """
+
+        # Add first entry to Redis. This is `context`.
+
+        context_value = {"template": self.template_key,
+                         "odt_url": odt_url,
+                         "pdf_url": None}
+
+        self.set_value(self.context_key, context_value)
+
+        self.logger.info("CONTEXT VALUE ADDED TO REDIS")
+
+        # If template is empty, we need to add second entry to Redis. This is `template`.
+
+        if self.template is None:
+
+            template_content = self.payload['template']
+            if self.payload['template'].startswith('http'):
+                self.logger.info("TEMPLATE IS DOWNLOADED and ADDED TO REDIS")
+                file_desc = self.download_template(self.payload['template'])
+                template_content = base64.b64encode(file_desc.getvalue())
+
+            template_value = {"modify_date": self.payload['modify_date'],
+                              "content": template_content}
+
+            self.set_value(self.template_key, template_value)
+
+    def add_rendered_pdf_doc(self, pdf_url):
+        """
+        Update value of `context` key.
+        Args:
+            pdf_url (str):
+        """
+        context_value = self.get_value(self.context_key)
+
+        if context_value is not None:
+            self.logger.info("PDF URL ADDING TO REDIS")
+            context_value['pdf_url'] = pdf_url
+            self.set_value(self.context_key, context_value)
 
     @staticmethod
     def download_template(template_url):
@@ -321,236 +525,16 @@ class RenderDocument(Service):
         file_desc = io.BytesIO(response.content)
         return file_desc
 
-
-class DocumentCache(object):
-    """
-
-    Caching mechanism. Add and get request and template from redis.
-
-    ::: Scenario 1
-        - If we have performed the request and modify_date of template on redis is equal
-          the request modify_date send user the ODT or PDF URL.
-
-    ::: Scenario 2
-        - If we have performed the request and modify_date isn't equal the redis value.
-          send base64 content of template. Or, We have the template but context isn't equal
-          the redis value, don't download the template. Send base64 content of template
-
-    """
-
-    def __init__(self, zato_service, wants_pdf):
-        """
-        Constructor of caching mechanism.
-
-        Args:
-            zato_service: It's a ZatoService. i.e DocumentRender.
-            wants_pdf (bool): if user wants pdf
-        """
-        self.zato_service = zato_service
-        self.wants_pdf = wants_pdf
-
     @staticmethod
     def hashing(data):
         """
         Returns hashed value of the param `data`.
 
         Args:
-            data: Encoded bytes data.
+            data (str): Encoded bytes
 
         Returns:
             str: Hashed data.
 
         """
         return hashlib.sha256(data).hexdigest()
-
-    def key_from_context(self):
-        """
-        Sort and hash the context data. It's the key of redis.
-
-        Returns:
-            str: Sorted and hashed data.
-
-        """
-        context = self.zato_service.request.payload['context']
-        key = "".join(["{}{}".format(k, v) for k, v in sorted(context.items())])
-        key = self.hashing(key.encode())
-        return key
-
-    def value_of_context(self, file_name, pdf_url, odt_url):
-        """
-        Make dict. The produced data will be used for redis value of context key.
-
-        Args:
-            file_name (str): url or base64 encoded bytes
-            pdf_url (str): pdf url
-            odt_url (str): odt url
-
-        Returns:
-            dict: Return value of context key.
-
-        """
-        # Hash value of template.
-        template = self.key_hash_template(payload=file_name)
-        return {"template": template, "odt_url": odt_url, "pdf_url": pdf_url}
-
-    def value_of_template(self, file_content):
-        """
-        Make dict. The produced data will be used for redis value of template key.
-
-        Args:
-            file_content (str): base64 encoded data
-
-        Returns:
-            dict: Value of template key on redis.
-
-        """
-
-        return {
-            'modify_date': self.zato_service.request.payload['modify_date'],
-            'template': file_content
-        }
-
-    def key_hash_template(self, payload):
-        """
-        Take the hash of the template.
-        If template is base64 encoded data, before decode it.
-
-        Args:
-            payload (str): base64 encoded bytes or url
-
-        Returns:
-            str: Key format for redis. Hashed template.
-        """
-
-        if not payload.startswith('http'):
-            payload = base64.b64decode(payload)
-
-        return self.hashing(payload)
-
-    def add_rendered_doc(self, file_name, odt_url, file_content):
-        """
-        Add to redis that rendered document. PDF url is null, because it hasn't produced yet.
-        It will add 2 rows to redis.
-        First; Key: Context. Value: PDF_URL, ODT_URL and TEMPLATE_KEY
-        Second, Key: TEMPLATE_KEY. Value: modify_date and TEMPLATE. TEMPLATE is base64 encoded.
-        Args:
-            file_name (str): key on redis.
-            odt_url (str): rendered odt file url.
-            file_content (str): base64 encoded data of rendered document.
-
-        """
-        self.zato_service.logger.info("ADD_RENDERED_DOC method is runining..")
-        key = self.key_from_context()
-        value = self.value_of_context(file_name=file_name, odt_url=odt_url, pdf_url=None)
-
-        value = json.dumps(value)
-        self.zato_service.kvdb.conn.set(key, value)
-
-        template_key = self.key_hash_template(file_name)
-        template_value = self.value_of_template(file_content)
-
-        template_value = json.dumps(template_value)
-        self.zato_service.kvdb.conn.set(template_key, template_value)
-
-    def add_rendered_pdf_doc(self, file_name=None, pdf_url=None, odt_url=None):
-        """
-        Get context key from redis and update pdf_url
-
-        Args:
-            file_name:
-            pdf_url:
-            odt_url:
-
-        """
-        self.zato_service.logger.info("add_rendered_pdf_doc cagirildi")
-        key = self.key_from_context()
-        template_key = self.key_hash_template(file_name)
-
-        value = self.zato_service.kvdb.conn.get(key)
-        value = json.loads(value)
-
-        if value['template'] == template_key:
-            self.zato_service.logger.info(
-                "template ile template_key karşılaştırıldı ve pdf_url güncelleniyor.")
-            value['pdf_url'] = pdf_url
-
-            value = json.dumps(value)
-            self.zato_service.kvdb.conn.set(key, value)
-
-    def get_context(self):
-        """
-        Convert context to key format. (Sorted and hashed)
-        Get key from redis.
-
-        Returns: If redis has the key, return value. type: <dict>
-                 If redis hasn't the key, return None. type: <NoneType>
-
-        """
-        key = self.key_from_context()
-        val_of_context = self.zato_service.kvdb.conn.get(key)
-
-        if not val_of_context:
-            return json.loads(val_of_context)
-
-    def get_template(self):
-        """
-        Convert template to key format. (Hashed)
-        Get key from redis.
-
-        Returns: If redis has the key, return value. type: <dict>
-                 If redis hasn't the key, return None. type: <NoneType>
-
-        """
-        key = self.key_hash_template(self.zato_service.request.payload['template'])
-        value = self.zato_service.kvdb.conn.get(key)
-
-        if value is None:
-            return None
-
-        value = json.loads(value)
-        return value
-
-    def check_the_cache(self):
-        """
-        Check the request for we have already performed the request.
-        Get context and template from redis.
-
-        Returns: If we have performed the request, return value of redis. type: <dict>
-                 If we haven't performed the request, return None. type: <NoneType>
-
-        """
-        val_context = self.get_context()
-        val_template = self.get_template()
-
-        key_template = self.key_hash_template(self.zato_service.request.payload['template'])
-        modify_date = self.zato_service.request.payload['modify_date']
-
-        # This request wasn't proceded before.
-        if val_context is None:
-            # So Should we download template file?
-
-            if val_template is None:
-                # No, this request hasn't seen before.
-                return None
-            else:
-                # We have the template, but is it newest?
-                if val_template['modify_date'] == modify_date:
-                    return val_template
-                else:
-                    return None
-
-        else:
-            # Check the context. Is it newest?
-            if val_context['template'] == key_template and \
-                            val_template['modify_date'] == modify_date:
-                # PDF wants?
-                if self.wants_pdf:
-                    # We have the pdf url, return context.
-                    if val_context['pdf_url'] is not None:
-                        return val_context
-                    else:
-                        return val_template
-                else:
-                    return val_context
-            else:
-                return None
