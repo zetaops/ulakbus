@@ -30,6 +30,13 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         CrudView.__init__(self, current)
         self.ListForm.add = None
 
+    def goruntule(self):
+        """
+        Proje goruntuleme harici is akisi task dataya konulur.
+
+        """
+        self.current.task_data['external_wf'] = "bap_ogrbasvuru_goruntule"
+
     def basvuru_listele(self):
         """
         Öğretim üyesinin hali hazırdaki başvurularının listelendiği adımdır.

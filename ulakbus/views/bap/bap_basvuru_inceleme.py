@@ -56,9 +56,12 @@ class BasvuruInceleme(CrudView):
     def __init__(self, current):
         CrudView.__init__(self, current)
         if not self.object.key:
-            self.object = self.model_class.objects.get(self.current.task_data['bap_proje_id'])
-
+            self.object = self.model_class.objects.get(self.current.task_data.get('bap_proje_id',self.input['object_id']))
         self.current.output["meta"]["allow_search"] = False
+
+        # Genel form, bu nesneyi extend eden digerleri tarafindan degistirilebilsin
+        # bkz: bap_ogrbasvuru_goruntule.py
+        self.genel_form = GenelProjeForm
 
     def genel_proje_bilgileri_goster(self):
         """
@@ -84,7 +87,7 @@ class BasvuruInceleme(CrudView):
             ('B Planı', self.object.b_plani),
         ])
         self.output['object'] = proje_bilgileri
-        self.form_out(GenelProjeForm(title=__('Proje Hakkında')))
+        self.form_out(self.genel_form(title=__('Proje Hakkında')))
 
     def proje_calisanlari_goster(self):
         """
@@ -94,7 +97,7 @@ class BasvuruInceleme(CrudView):
 
         self.current.output["meta"]["allow_actions"] = False
         self.output['objects'] = [[_(u'Ad'), _(u'Soyad'), _(u'Nitelik'), _(u'Çalışmaya Katkısı')]]
-        self.form_out(GenelProjeForm(title=__('Proje Çalışanları')))
+        self.form_out(self.genel_form(title = __('Proje Çalışanları')))
         for calisan in self.object.ProjeCalisanlari:
             ad = calisan.ad
             soyad = calisan.soyad
@@ -131,7 +134,7 @@ class BasvuruInceleme(CrudView):
                 "actions": "",
             }
             self.output['objects'].append(list_item)
-        self.form_out(GenelProjeForm(title=__('Bütçe Planı')))
+        self.form_out(self.genel_form(title=__('Bütçe Planı')))
 
     def is_plani_goster(self):
         """
@@ -157,7 +160,7 @@ class BasvuruInceleme(CrudView):
                 'key': plan.key}
 
             self.output['objects'].append(list_item)
-        self.form_out(GenelProjeForm(title=__('İş Planı')))
+        self.form_out(self.genel_form(title=__('İş Planı')))
 
     def is_plani_ayrintili_goster(self):
         """
