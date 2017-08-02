@@ -232,7 +232,6 @@ class RenderDocument(Service):
         start_time = time.time()
         now_time = 0.0
         while True:
-            # TODO: Remove some parts of this loop.
             params = {'task_id': '{}'.format(task_id)}
 
             queue_info = pdf_writer_queue.conn.get(self.cid, params)
@@ -405,7 +404,6 @@ class DocumentCache(object):
 
     def is_template_newest(self):
         """
-        TODO : context_and_template_compatible can combine.
         Check the `modify_date` are equal?
         Returns:
             bool:
