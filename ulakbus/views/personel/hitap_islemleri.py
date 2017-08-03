@@ -5,7 +5,6 @@
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.lib.common import prepare_options_from_catalog_data
 from ulakbus.settings import DATE_DEFAULT_FORMAT
-
 from pyoko.lib.utils import un_camel
 from ulakbus.models import Personel
 from zengine.views.crud import CrudView, list_query, obj_filter
@@ -14,11 +13,16 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 import six
 
 
-class ListFormHitap(JsonForm):
+class HitapBilgileriForm(JsonForm):
     """
-    Hitapa Gönder eklenmis list view formu.
+    
     """
-    gonder = fields.Button(_(u"Yeni"), cmd="gonder")
+
+    class Meta:
+        title = _(u"Hitap {} Bilgileri")
+
+    sync = fields.Button(_(u"Hitap İle Senkronize Et"), cmd='sync')
+    geri_don = fields.Button(_(u"Geri Dön"), cmd='geri_don')
 
 
 class IslemSecimForm(JsonForm):
@@ -36,22 +40,11 @@ class IslemSecimForm(JsonForm):
 class HitapIslemleri(CrudView):
     def __init__(self, current=None):
         CrudView.__init__(self, current)
-        self.ListForm = ListFormHitap
         self.model = self.model_class
         if 'id' in self.input:
             self.current.task_data['personel_id'] = self.input['id']
             self.current.task_data['personel_tckn'] = Personel.objects.get(self.input['id']).tckn
         self.personel_id = self.current.task_data['personel_id']
-
-        # self.meta = {'user': self.current.user_id,
-        #              'role': self.current.role_id,
-        #              'wf_name': self.current.workflow_name,
-        #              # 'model_name': self.model.__name__,
-        #              'personel': self.personel_id
-        #              }
-        #
-        # self.index_fields = [('user', 'bin'), ('role', 'bin'), ('wf_name', 'bin'),
-        #                      ('model_name', 'bin'), ('personel', 'bin')]
 
     def islem_secim(self):
         """
@@ -60,16 +53,6 @@ class HitapIslemleri(CrudView):
         """
         # Tab'li yapı implementasyonu yapılacaktır.
         self.form_out(IslemSecimForm(current=self.current))
-
-    def _list(self):
-        self.current.output["meta"]["allow_search"] = False
-        personel_ad = Personel.objects.get(self.personel_id).__unicode__()
-        form = JsonForm(current=self.current,
-                        title='{} {} Hitap Kayıtları'.format(personel_ad,
-                                                             six.text_type(
-                                                                 self.model().get_verbose_name())))
-        form.new = fields.Button('New')
-        self.list(custom_form=form)
 
     def get_columns(self):
         columns = []
@@ -93,8 +76,7 @@ class HitapIslemleri(CrudView):
         for obj in self.model.objects.filter(personel_id=self.personel_id):
             list_fields = self.model.Meta.list_fields
             field_dict = {field: self.get_field_as_str(obj, field) for field in list_fields}
-            field_dict['key'] = obj.key
-            field_dict['sync'] = obj.sync
+            field_dict.update({'key': obj.key, 'sync': obj.sync})
             initial_data.append(field_dict)
         return initial_data
 
@@ -119,6 +101,9 @@ class HitapIslemleri(CrudView):
                      'initial_data': self.get_initial_data()
                      }
         self.output['grid_data'] = grid_data
+
+    def tekil_sync_bilgi_hazirla(self):
+        self.current.task_data['hitap_islemleri']['tekil_sync'] = 'Dto0uUbtn2zVSHw1f6HAeqKFL95'
 
     def hitapa_gonder(self):
         """
@@ -148,17 +133,14 @@ class HitapIslemleri(CrudView):
         Yerelde bulunan en son senkronize edilmiş bilgiler gösterilir. Hitap ile senkronize et
         butonuna basıldığında senkronize servis çağrısı gerçekleşir.
         """
-        self.list()
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_search"] = False
-        model_adi = six.text_type(self.model.Meta.verbose_name)
-        form = JsonForm(title=_(u"Hitap %s Bilgileri") % model_adi)
+        form = HitapBilgileriForm(current=self.current)
+        form.title = form.title.format(six.text_type(self.model.Meta.verbose_name))
+        self.list(custom_form=form)
 
-        form.senkronize = fields.Button(_(u"Hitap İle Senkronize Et"), cmd='sync')
-        self.form_out(form)
-
-    def servis_adi_belirle(self):
-        self.current.task_data['hitap_operation'] = 'sync'
+    def sync_bilgi_hazirla(self):
+        self.current.task_data['hitap_islemleri']['sync'] = True
 
     def islem_mesaji_olustur(self):
         """
@@ -169,17 +151,6 @@ class HitapIslemleri(CrudView):
             "msg": _(u'Kayıtlar Hitap ile başarıyla senkronize edildi.')
         }
 
-    # {'name': _(u'Kaydet'), 'cmd': 'save', 'mode': 'normal', 'show_as': 'button'}
-    @obj_filter
-    def hitap_islemleri(self, obj, result):
-        import random
-        random_list = [_(u'Sil'), _(u'Geri Al'), _(u'Hitaptan Getir')]
-
-        result['actions'] = [
-            {'name': random.choice(random_list), 'cmd': 'delete', 'mode': 'normal',
-             'show_as': 'button'},
-        ]
-
-    @list_query
-    def list_by_personel_id(self, queryset):
-        return queryset.filter(personel_id=self.personel_id)
+        @list_query
+        def list_by_personel_id(self, queryset):
+            return queryset.filter(personel_id=self.personel_id, sync=1)

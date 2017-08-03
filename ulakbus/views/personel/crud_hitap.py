@@ -68,10 +68,6 @@ class CrudHitap(CrudView, object):
             self.current.task_data['personel_id'] = self.input['id']
             self.current.task_data['personel_tckn'] = Personel.objects.get(self.input['id']).tckn
 
-    def call(self):
-        getattr(self, self.current.task_data['hitap_operation'])()
-        del self.current.task_data['hitap_operation']
-
     @view_method
     def sync(self):
         """Crud Hitap Sync
@@ -83,7 +79,7 @@ class CrudHitap(CrudView, object):
 
         # Sync işleminden önce ekleme veya güncelleme işlemlerinden biri yapıldıysa
         # self.current.task_data nın içinde en son işlem yapılan objenin keyi bulunuyor
-        # eğer bu obje hitap ile sync işleminde silinirse 404 hatasına sebep oluyor.
+        # eğer bu obje hitap ile sync işleminde silinirse 404 hatasına sebeb oluyor.
         # bu sorunu cozmek için aşağıdaki yöntem uygulanmıştır.
         if 'object_id' in self.current.task_data:
             del self.current.task_data['object_id']
@@ -91,14 +87,6 @@ class CrudHitap(CrudView, object):
         service_name = un_camel(self.model_class.__name__, dash='-') + '-sync'
         service = TcknService(service_name=service_name,
                               payload={"tckn": str(self.current.task_data['personel_tckn']),
-                                       "meta": {'user': self.current.user_id,
-                                                'role': self.current.role_id,
-                                                'wf_name': self.current.workflow_name,
-                                                'model_name': self.model_class.__name__,
-                                                'personel': self.current.task_data['personel_id']},
-                                       "index_fields": [('user', 'bin'), ('role', 'bin'),
-                                                        ('wf_name', 'bin'), ('model_name', 'bin'),
-                                                        ('personel', 'bin')],
                                        "kullanici_ad": "",
                                        "kullanici_sifre": ""})
         service.zato_request()

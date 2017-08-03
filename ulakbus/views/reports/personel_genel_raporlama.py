@@ -7,13 +7,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from collections import OrderedDict
-
 from ulakbus.lib.common import prepare_options_from_catalog_data
 from ulakbus.lib.data_grid import DataGrid
-
 from ulakbus.models import Personel
 from ulakbus.models import Unit
-from zengine.lib.catalog_data import catalog_data_manager
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 

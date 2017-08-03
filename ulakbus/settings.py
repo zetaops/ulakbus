@@ -141,34 +141,34 @@ OBJECT_MENU = {
          'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetOkul', 'verbose_name': 'Okul Bilgileri', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetMahkeme', 'verbose_name': 'Mahkeme Bilgileri', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetBirlestirme', 'verbose_name': 'Hizmet Birleştirme', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetTazminat', 'verbose_name': 'Tazminat Bilgileri', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetUnvan', 'verbose_name': 'Ünvan', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetAcikSure', 'verbose_name': 'Açık Süre Bilgileri', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetBorclanma', 'verbose_name': 'Borçlanma Bilgileri', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetIHS', 'verbose_name': 'İtibari Hizmet', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'HizmetIstisnaiIlgi', 'verbose_name': 'İstisnai İlgi', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
 
         {'name': 'AskerlikKayitlari', 'verbose_name': 'Askerlik Kayıtları', 'field': 'personel_id',
-         'category': 'Hitap İşlemleri', 'wf': 'crud_hitap'},
+         'category': 'Hitap İşlemleri', 'wf': 'hitap_islemleri'},
     ],
     'ogrenci': [
         {'name': 'Borc', 'verbose_name': 'Harç Bilgileri', 'field': 'ogrenci_id'},
