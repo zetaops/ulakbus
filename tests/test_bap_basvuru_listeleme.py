@@ -172,8 +172,7 @@ class TestCase(BaseTestCase):
         # Proje adı Otomatik Süpürge olarak değiştirilir.
         resp = self.client.post(wf='bap_proje_basvuru',
                                 form={'ad': 'Otomatik Süpürge',
-                                      'teklif_edilen_baslama_tarihi': "29.04.2017",
-                                      'detay_gir': 1})
+                                      'detay_gir': 1}, cmd='detay_gir')
         assert resp.json['forms']['schema']['title'] == 'Proje Detayları'
         assert 'Lorem ipsum' in resp.json['forms']['model']['hedef_ve_amac']
         resp = self.client.post(wf='bap_proje_basvuru', form={'proje_belgeleri': 1})
@@ -186,20 +185,24 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['model']['Calisan'][0]['ad'] == 'Kerim'
 
         resp = self.client.post(cmd='ileri', wf='bap_proje_basvuru', form={'ileri': 1})
+        assert resp.json['forms']['schema']['title'] == "Üniversite Dışı Uzman Ekle"
+        resp = self.client.post(wf='bap_proje_basvuru', cmd='ileri', form={'ileri': 1})
         assert resp.json['forms']['schema']['title'] == "Bap İş Paketi Takvimi"
         resp = self.client.post(wf='bap_proje_basvuru', cmd='bitir', form={'bitir': 1})
-        assert "Otomatik Süpürge" in resp.json['forms']['schema']['title']
-        resp = self.client.post(wf='bap_proje_basvuru', cmd='bitir', form={'bitir': 1})
 
-        assert resp.json['forms']['schema']['title'] == "Üniversite Dışı Uzman Ekle"
-        resp = self.client.post(wf='bap_proje_basvuru', form={'ileri': 1})
         assert resp.json['forms']['schema']['title'] == "Üniversite Dışı Destek Ekle"
         resp = self.client.post(wf='bap_proje_basvuru', form={'ileri': 1})
+        assert resp.json['forms']['schema']['title'] == "Otomatik Süpürge projesi için Bütçe Planı"
+        resp = self.client.post(wf='bap_proje_basvuru', cmd='bitir', form={'bitir': 1})
+
         assert resp.json['forms']['schema']['title'] == "Yürütücü Tecrübesi"
         resp = self.client.post(cmd='ileri', wf='bap_proje_basvuru', form={'ileri': 1})
         assert resp.json['forms']['schema']['title'] == "Yürütücünün Halihazırdaki Projeleri"
         resp = self.client.post(cmd="ileri", wf='bap_proje_basvuru',
                                 form={'ileri': 1, 'form_name': "YurutucuProjeForm"})
+        assert resp.json['forms']['schema']['title'] == "Proje Gerçekleştirme Görevlisi Seçimi"
+        resp = self.client.post(wf='bap_proje_basvuru',
+                                form={'sec': 1, 'form_name': "GerceklestirmeGorevlisiForm"})
 
         # Revize edildikten sonra onaya göndermeden önceki gösterimde
         # projenin adının değiştiği kontrol edilir.
@@ -208,7 +211,7 @@ class TestCase(BaseTestCase):
         # Onaya gönderilir.
         resp = self.client.post(cmd='onay', wf='bap_proje_basvuru', form={'ileri': 1})
         # Başarılı işlem mesajı kontrol edilir.
-        assert resp.json['msgbox']['title'] == "Teşekkürler!"
+        assert resp.json['msgbox']['title'] == "Başvurunuzu tamamladınız!"
 
         project.reload()
         # Projenin durumu 2 yani koordinasyon biriminin onayına gönderildi olarak

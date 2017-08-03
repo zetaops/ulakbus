@@ -109,6 +109,8 @@ class ProjeTurleri(CrudView):
         proje_turu.max_sure = self.current.task_data['proje_turu_bilgileri']['max_sure']
         proje_turu.butce_ust_limit = \
             self.current.task_data['proje_turu_bilgileri']['butce_ust_limit']
+        proje_turu.gerceklestirme_gorevlisi_yurutucu_ayni_mi = \
+        self.current.task_data['proje_turu_bilgileri']['gerceklestirme_gorevlisi_yurutucu_ayni_mi']
         if belgeler:
             [proje_turu.Belgeler(
                 ad=belge['ad'],
@@ -148,7 +150,10 @@ class ProjeTurleri(CrudView):
                 obj_data[key] = ' - '.join(data)
             else:
                 obj_data[key] = str(d['value'])
-
+        durum = (
+        obj_data[u'Projenin gerçekleştirme görevlisi ile yürütücüsü aynı kişi mi?'] == 'True')
+        obj_data[
+            u'Projenin gerçekleştirme görevlisi ile yürütücüsü aynı kişi mi?'] = 'Evet' if durum else 'Hayır'
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)

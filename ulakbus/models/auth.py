@@ -97,13 +97,13 @@ class User(Model, BaseUser):
     def post_creation(self):
         self.prepare_channels()
 
-    def get_avatar_url(self):
-        if self.avatar:
-            return BaseUser.get_avatar_url(self)
-        else:
-            # FIXME: This is for fun, remove when we resolve static hosting problem
-            return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
-                "%s@gmail.com" % self.username).hexdigest()
+    # def get_avatar_url(self):
+    #     if self.avatar:
+    #         return BaseUser.get_avatar_url(self)
+    #     else:
+    #         # FIXME: This is for fun, remove when we resolve static hosting problem
+    #         return "https://www.gravatar.com/avatar/%s" % hashlib.md5(
+    #             "%s@gmail.com" % self.username).hexdigest()
 
     def __unicode__(self):
         return "%s %s" % (self.name, self.surname)
@@ -678,8 +678,8 @@ class AuthBackend(object):
 
         """
         user = User.objects.get(username=username)
-        is_login_ok = user.check_password(password)
-        if is_login_ok and user.is_active:
+        is_login_ok = user.check_password(password) and user.is_active
+        if is_login_ok:
             self.set_user(user)
         else:
             pass

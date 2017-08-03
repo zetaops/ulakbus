@@ -3,26 +3,28 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from pyoko.exceptions import IntegrityError, ObjectDoesNotExist
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models import Okutman
+from ulakbus.models import Role
 from zengine.forms import JsonForm, fields
+from zengine.models import TaskInvitation
 from zengine.models import WFInstance
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 from pyoko import ListNode
-import datetime
+from datetime import datetime, timedelta
 from ulakbus.settings import DATE_DEFAULT_FORMAT
 from pyoko.fields import DATE_TIME_FORMAT
 
 
 class ProjeTurForm(JsonForm):
     class Meta:
-        include = ['tur']
         title = _(u'Proje Türü Seçiniz')
         always_blank = False
 
-    # tur = fields.String(_(u"Proje Türleri"))
+    tur = fields.String(_(u"Proje Türleri"), required=True)
     sec = fields.Button(_(u"Seç"), cmd="kaydet_ve_kontrol")
 
 
@@ -43,12 +45,13 @@ class GerekliBelgeForm(JsonForm):
 
 class GenelBilgiGirForm(JsonForm):
     class Meta:
-        include = ['ad', 'sure', 'anahtar_kelimeler', 'teklif_edilen_baslama_tarihi',
-                   'teklif_edilen_butce']
+        include = ['ad', 'sure', 'anahtar_kelimeler', 'teklif_edilen_butce']
         title = _(u"Proje Genel Bilgileri")
         always_blank = False
 
-    detay_gir = fields.Button(_(u"Proje Detay Bilgileri"))
+    daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
+                                        form_validation=False)
+    detay_gir = fields.Button(_(u"Proje Detay Bilgileri"), cmd='detay_gir')
 
 
 class ArastirmaOlanaklariForm(JsonForm):
@@ -65,6 +68,8 @@ class ArastirmaOlanaklariForm(JsonForm):
         ad = fields.String(_(u"Adı"), readonly=True)
         tur = fields.String(_(u"Türü"), readonly=True)
 
+    daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
+                                        form_validation=False)
     lab_ekle = fields.Button(_(u"Laboratuvar Ekle"), cmd='lab')
     demirbas_ekle = fields.Button(_(u"Demirbas Ekle"), cmd='demirbas')
     personel_ekle = fields.Button(_(u"Personel Ekle"), cmd='personel')
@@ -75,7 +80,7 @@ class LabEkleForm(JsonForm):
     class Meta:
         title = _(u"Laboratuvar Seç")
 
-    lab = fields.String(_(u"Laboratuvar"))
+    lab = Room()
     lab_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
     iptal = fields.Button(_(u"İptal"))
 
@@ -93,7 +98,7 @@ class PersonelEkleForm(JsonForm):
     class Meta:
         title = _(u"Personel Seç")
 
-    personel = fields.String(_(u"Personel"))
+    personel = Personel()
     personel_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
     iptal = fields.Button(_(u"İptal"))
 
@@ -110,6 +115,7 @@ class ProjeCalisanlariForm(JsonForm):
         soyad = fields.String(_(u"Soyad"), readonly=True)
         nitelik = fields.String(_(u"Nitelik"), readonly=True)
         calismaya_katkisi = fields.String(_(u"Çalışmaya Katkısı"), readonly=True)
+        kurum = fields.String(_(u"Kurum"), readonly=True)
 
     ileri = fields.Button(_(u"İleri"), cmd='ileri')
 
@@ -131,7 +137,9 @@ class UniversiteDisiUzmanForm(JsonForm):
         faks = fields.String(_(u"Faks"), readonly=True, required=False)
         eposta = fields.String(_(u"E-posta"), readonly=True)
 
-    ileri = fields.Button(_(u"İleri"))
+    daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
+                                        form_validation=False)
+    ileri = fields.Button(_(u"İleri"), cmd='ileri')
 
 
 class UniversiteDisiDestekForm(JsonForm):
@@ -165,6 +173,8 @@ class YurutucuTecrubesiForm(JsonForm):
         bitis = fields.Date(_(u'Bitiş'), readonly=True)
         durum = fields.Integer(_(u'Durum'), readonly=True)
 
+    daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
+                                        form_validation=False)
     ileri = fields.Button(_(u"İleri"), cmd='ileri')
     ekle = fields.Button(_(u"Ekle"), cmd='ekle')
 
@@ -201,23 +211,41 @@ class ProjeBelgeForm(JsonForm):
     arastirma_olanaklari = fields.Button(_(u"Araştırma Olanakları"))
 
 
+class GerceklestirmeGorevlisiForm(JsonForm):
+    class Meta:
+        title = _(u"Proje Gerçekleştirme Görevlisi Seçimi")
+        include = ['gerceklestirme_gorevlisi']
+        always_blank = False
+
+    sec = fields.Button(_(u"Gerçekleştirme Görevlisi Seç"))
+
+
 class ProjeBasvuru(CrudView):
+    """
+    Öğretim üyesinin bilimsel araştırma proje başvurusu yaptığı iş akışıdır.
+    """
     class Meta:
         model = "BAPProje"
 
-    def proje_olustur(self):
-        proje_id = BAPProje().blocking_save().key
-        self.current.task_data['bap_proje_id'] = proje_id
-
     def proje_tur_sec(self):
-        form = ProjeTurForm(self.object, current=self.current)
+        """
+        Proje türünün seçildiği adımdır.
+        Makine teçhizat ekle adımı için task_data'ya proje_basvuru değeri True olarak eklenir.
+        """
+        self.current.task_data['proje_basvuru'] = True
+        form = ProjeTurForm(current=self.current)
+        choices = prepare_choices_for_model(BAPProjeTurleri)
+        form.set_choices_of('tur', choices)
+        form.set_default_of('tur', choices[0][0])
         self.form_out(form)
 
     def gerekli_belge_form(self):
-        wfi = WFInstance.objects.get(self.current.token)
-        wfi.wf_object = self.current.task_data['bap_proje_id']
-        wfi.blocking_save()
-        tur_id = self.current.task_data['ProjeTurForm']['tur_id']
+        """
+        Proje türü için gerekli belgelerin gösterildiği, öğretim üyesinin belgelerini kontrol ederek
+        belgelerinin hazır olduğunu beyan ettiği adımdır. Belgeler hazırsa proje genel bilgileri
+        adımına geçilir, hazır değilse proje türü adımına geri dönülür.
+        """
+        tur_id = self.current.task_data['ProjeTurForm']['tur']
         tur = BAPProjeTurleri.objects.get(tur_id)
         form = GerekliBelgeForm()
         if 'hedef_proje' not in self.current.task_data:
@@ -235,19 +263,164 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
 
+    def gerceklestirme_gorevlisi_kontrolu(self):
+        """
+        Seçilen proje türüne göre, gerçekleştirme görevlisinin projenin yürütücüsü ile aynı kişi 
+        olması durumu kontrol edilir. Aynı kişi olması gerekiyorsa projenin gerçekleştirme 
+        görevlisi, proje başvurusu yapan öğretim görevlisi olarak atanır.
+
+        """
+        td = self.current.task_data
+        proje = BAPProje.objects.get(td['bap_proje_id'])
+        tur = BAPProjeTurleri.objects.get(td['ProjeTurForm']['tur'])
+        if 'GerceklestirmeGorevlisiForm' in td and proje.gerceklestirme_gorevlisi.key != \
+                td['GerceklestirmeGorevlisiForm']['gerceklestirme_gorevlisi_id']:
+            del td['GerceklestirmeGorevlisiForm']
+        aynilik_durumu = tur.gerceklestirme_gorevlisi_yurutucu_ayni_mi
+        td['gerceklestirme_gorevlisi_yurutucu_ayni_mi'] = aynilik_durumu
+        if aynilik_durumu:
+            proje.gerceklestirme_gorevlisi = self.current.user.personel
+            proje.blocking_save()
+
+    def gerceklestirme_gorevlisi_sec(self):
+        """
+        Gerçekleştirme görevlisinin, proje yürütücüsünün farklı olması gereken durumda yürütücüden 
+        projesi için bir gerçekleştirme görevlisi seçmesi istenir.
+
+        """
+        self.form_out(GerceklestirmeGorevlisiForm(self.object, current=self.current))
+
+    def gorevli_secim_kontrolu(self):
+        """
+        Gerçekleştirme görevlisi seçim formunun boş submit edilip edilmediğini kontrol eder. Boş 
+        seçilmiş ise kullanıcı bir seçim yapması yönünde uyarılır ve seçim ekranına tekrardan 
+        yönlendirilir.
+
+        """
+        gorevli_id = self.input['form']['gerceklestirme_gorevlisi_id']
+        self.current.task_data['gorevli_secimi_uygunlugu'] = True if gorevli_id else False
+
+    def gorevli_secim_uyari_mesaji(self):
+        """
+        Uyarı mesajı oluşturulur.         
+
+        """
+        self.current.output['msgbox'] = {'type': 'warning',
+                                         "title": _(u"Gerçekleştirme Görevlisi Seçimi Hatası"),
+                                         "msg": _(u"İlerlemek için projenize bir gerçekleştirme "
+                                                  u"görevlisi seçmelisiniz.")}
+
+    def gerceklestirme_gorevlisi_kaydet(self):
+        """
+        Formdan seçilen personel, projenin gerçekleştirme görevlisi olarak kaydedilir.
+                
+        """
+        gorevli = Personel.objects.get(self.input['form']['gerceklestirme_gorevlisi_id'])
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        proje.gerceklestirme_gorevlisi = gorevli
+        proje.blocking_save()
+
     def proje_genel_bilgilerini_gir(self):
+        """
+        Proje genel bilgilerinin girildiği adımdır.
+        """
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))
 
+    def proje_no_kaydet(self):
+        """
+        Genel bilgi gir adımından sonra proje bir proje nuarası oluşturularak kaydedilir. Projeler
+        türleri üzerinde numaralandırılır. Proje üzerinde son kaydedilmiş projenin proje_no alanı
+        değerinin bir fazlası bir sonraki projenin proje_no'su olarak kaydedilir.
+
+        Örnek: Altyapı projeleri için proje tür kodu ALT olacağı
+        için numaralandırma artan bir şekilde devam ettiğinde kaydedilecek projeler ALT1, ALT2,
+        ALT3... şeklinde numaralandırılacaktır.
+
+        Proje türü ve proje numarası unique_together olduğundan kayıt sırasında IntegrityError
+        beklenir. Eğer IntegrityError yakalanırsa, sorgu tekrar atılır ve tekrar kayıt yapılır.
+
+        """
+        if self.current.task_data['cmd'] == 'retry':
+            self.current.task_data['cmd'] = self.current.task_data['pre_cmd']
+        tur_id = self.current.task_data['ProjeTurForm']['tur']
+        proje_id = self.current.task_data.get('bap_proje_id', False)
+        if proje_id:
+            proje = BAPProje.objects.get(proje_id)
+            if proje.tur.key != tur_id:
+                proje.proje_no = self.proje_no_belirle(tur_id)
+        else:
+            proje = BAPProje()
+            proje.proje_no = self.proje_no_belirle(tur_id)
+        proje.tur = BAPProjeTurleri.objects.get(tur_id)
+        try:
+            proje.blocking_save()
+        except IntegrityError:
+            self.current.task_data['pre_cmd'] = self.current.task_data['cmd']
+            self.current.task_data['cmd'] = 'retry'
+        proje_id = proje.key
+        self.current.task_data['bap_proje_id'] = proje_id
+
+        wfi = WFInstance.objects.get(self.current.token)
+        wfi.wf_object = proje_id
+        wfi.blocking_save()
+
+    def proje_no_belirle(self, tur_id):
+        """
+        Proje ve türe özgü proje_no alanının belirlendiği adımdır.
+        """
+        r = BAPProje.objects.set_params(rows=1).filter(tur_id=tur_id).order_by(
+            '-proje_no').values_list('proje_no')
+        r.extend(BAPProje.objects.set_params(rows=1).filter(tur_id=tur_id, deleted=True).order_by(
+            '-proje_no').values_list('proje_no'))
+        return max(r) + 1 if r else 1
+
+    def kaydet_ve_draft_olustur(self):
+        """
+        Öğretim üyesinin projeye daha sonra devam etmek istediği takdirde çalışacak adımdır.
+        Projenin tur ve proje_no alanları kaydedilir. Çalışan wfi instance'ı ile bir TaskInvitation
+        oluşturularak kullanıcının görev yöneticisine projenin en baştan formları dolu bir şekilde
+        devam edebileceği bir task koyulur. Proje başvurusu tamamlandığında bu task görev
+        yöneticisinden silinecektir.
+        """
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        today = datetime.today()
+        wfi = WFInstance.objects.get(self.current.token)
+        role = Role.objects.get(user=self.current.user)
+        inv = TaskInvitation.objects.get_or_none(role=role, instance=wfi)
+        if not inv:
+            inv = TaskInvitation(
+                instance=wfi,
+                role=role,
+                wf_name=wfi.wf.name,
+                progress=30,
+                start_date=today,
+                finish_date=today + timedelta(15)
+            )
+        inv.title = "%s | %s" % (proje.proje_kodu, wfi.wf.title)
+        inv.blocking_save()
+        self.current.output['cmd'] = 'reload'
+
     def proje_detay_gir(self):
+        """
+        Proje detay bilgilerinin girildiği adımdır.
+        """
+        self.object.ad = self.input['form']['ad']
+        self.object.blocking_save()
         self.form_out(ProjeDetayForm(self.object, current=self.current))
 
     def proje_belgeleri(self):
+        """
+        Proje belgelerinin eklendiği adımdır.
+        """
         form = ProjeBelgeForm(self.object, current=self.current)
         self.form_out(form)
         if 'arastirma_olanaklari' not in self.current.task_data['hedef_proje']:
             self.current.task_data['hedef_proje']['arastirma_olanaklari'] = []
 
     def proje_belge_kaydet(self):
+        """
+        Eklenen proje belgelerinin kaydedildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         form_proje_belgeleri = self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri']
 
@@ -265,6 +438,10 @@ class ProjeBasvuru(CrudView):
         self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = proje.ProjeBelgeleri.clean_value()
 
     def arastirma_olanagi_ekle(self):
+        """
+        Araştırma olanaklarının proje başvurusuna eklendiği adımdır.
+        Bu adımda demirbaş, personel ve laboratuvar proje başvurusuna eklenebilir.
+        """
         form = ArastirmaOlanaklariForm(current=self.current)
         for olanak in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
             o = olanak.items()[0]
@@ -282,6 +459,9 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def arastirma_olanagi_senkronize_et(self):
+        """
+        Submit edilen form ile kaydedilecek araştırma olanaklarını senkronize eden adımdır.
+        """
         value_map = {
             'lab': _(u"Laboratuvar"),
             'demirbas': _(u"Demirbaş"),
@@ -305,49 +485,57 @@ class ProjeBasvuru(CrudView):
             self.current.task_data['hedef_proje']['arastirma_olanaklari'] = list_to_remove
 
     def lab_ekle(self):
-        form = LabEkleForm()
-        ch = prepare_choices_for_model(Room)
-        form.set_choices_of('lab', ch)
-        form.set_default_of('lab', ch[0][0])
-        self.form_out(form)
-
-    def demirbas_ekle(self):
-        form = DemirbasEkleForm()
-        ch = prepare_choices_for_model(Demirbas)
-        form.set_choices_of('demirbas', ch)
-        form.set_default_of('demirbas', ch[0][0])
+        """
+        Öğretim üyesinin laboratuvar arayıp başvurusuna dahil ettiği adımdır.
+        """
+        form = LabEkleForm(current=self.current)
         self.form_out(form)
 
     def personel_ekle(self):
-        form = PersonelEkleForm()
-        ch = prepare_choices_for_model(Personel)
-        form.set_choices_of('personel', ch)
-        form.set_default_of('personel', ch[0][0])
+        """
+        Öğretim üyesinin personel arayıp başvurusuna dahil ettiği adımdır.
+        """
+        form = PersonelEkleForm(self.current)
         self.form_out(form)
 
     def olanak_kaydet(self):
-        if 'lab' in self.input['form']:
-            olanak = {'lab': self.input['form']['lab']}
-        elif 'demirbas' in self.input['form']:
-            olanak = {'demirbas': self.input['form']['demirbas']}
+        """
+        Araştırma olanaklarının task_data'ya kaydedildiği adımdır.
+        """
+        if 'form' in self.input and 'lab_id' in self.input['form']:
+            olanak = {'lab': self.input['form']['lab_id']}
+        elif 'demirbas' in self.current.task_data:
+            olanak = {'demirbas': self.current.task_data.pop('demirbas')}
         else:
-            olanak = {'personel': self.input['form']['personel']}
+            olanak = {'personel': self.input['form']['personel_id']}
 
         self.current.task_data['hedef_proje']['arastirma_olanaklari'].append(olanak)
 
     def calisan_ekle(self):
+        """
+        Proje çalışanlarının eklendiği adımdır.
+        """
         form = ProjeCalisanlariForm(current=self.current)
         self.form_out(form)
 
     def universite_disi_uzman_ekle(self):
+        """
+        Proje başvurusuna üniversite dışı uzman eklendiği adımdır.
+        """
         form = UniversiteDisiUzmanForm(current=self.current)
         self.form_out(form)
 
     def universite_disi_destek_ekle(self):
+        """
+        Proje başvurusuna üniversite dışı destek eklendiği adımdır.
+        """
         form = UniversiteDisiDestekForm(current=self.current)
         self.form_out(form)
 
     def universite_disi_destek_kaydet(self):
+        """
+        Universite dışı desteklerin kaydedildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         form_destek = self.current.task_data['UniversiteDisiDestekForm']['Destek']
 
@@ -370,10 +558,10 @@ class ProjeBasvuru(CrudView):
         for fd in form_destek:
             if 'file_content' in fd['destek_belgesi']:
                 try:
-                    tarih = datetime.datetime.strptime(
+                    tarih = datetime.strptime(
                         fd['verildigi_tarih'], DATE_TIME_FORMAT).date()
                 except ValueError:
-                    tarih = datetime.datetime.strptime(fd['verildigi_tarih'],
+                    tarih = datetime.strptime(fd['verildigi_tarih'],
                                                        DATE_DEFAULT_FORMAT).date()
                 proje.UniversiteDisiDestek(
                     destek_belgesi=fd['destek_belgesi'],
@@ -406,6 +594,9 @@ class ProjeBasvuru(CrudView):
         self.current.task_data['UniversiteDisiDestekForm']['Destek'] = destek_form
 
     def yurutucu_tecrubesi(self):
+        """
+        Öğretim üyesinin önceki akademik faaliyetlerinin listelendiği adımdır.
+        """
         personel = Personel.objects.get(user_id=self.current.user_id)
         faaliyetler = AkademikFaaliyet.objects.all(personel=personel)
 
@@ -419,6 +610,9 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def yurutucu_projeleri(self):
+        """
+        Yürütücünün halihazırdaki projelerinin listelendiği adımdır.
+        """
         personel = Personel.objects.get(user_id=self.current.user_id)
         projeler = BAPProje.objects.all(yurutucu=Okutman.objects.get(personel=personel))
 
@@ -438,6 +632,9 @@ class ProjeBasvuru(CrudView):
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def proje_kaydet(self):
+        """
+        Projenin son haliyle kaydedildiği adımdır.
+        """
         td = self.current.task_data
         proje = BAPProje.objects.get(td['bap_proje_id'])
         yurutucu = Okutman.objects.get(personel=Personel.objects.get(user_id=self.current.user_id))
@@ -458,9 +655,6 @@ class ProjeBasvuru(CrudView):
             proje.anahtar_kelimeler = td['GenelBilgiGirForm'][
                 'anahtar_kelimeler']
             proje.sure = td['GenelBilgiGirForm']['sure']
-            proje.teklif_edilen_baslama_tarihi = datetime.datetime.strptime(
-                td['GenelBilgiGirForm']['teklif_edilen_baslama_tarihi'],
-                DATE_DEFAULT_FORMAT)
             proje.teklif_edilen_butce = td['GenelBilgiGirForm'][
                 'teklif_edilen_butce']
         if 'ProjeDetayForm' in td:
@@ -472,13 +666,14 @@ class ProjeBasvuru(CrudView):
             proje.literatur_ozeti = td['ProjeDetayForm']['literatur_ozeti']
             proje.yontem = td['ProjeDetayForm']['yontem']
         if 'ProjeTurForm' in td:
-            proje.tur_id = str(td['ProjeTurForm']['tur_id'])
+            proje.tur_id = str(td['ProjeTurForm']['tur'])
         if 'ProjeCalisanlariForm' in td:
             proje.ProjeCalisanlari.clear()
             for calisan in td['ProjeCalisanlariForm']['Calisan']:
                 proje.ProjeCalisanlari(ad=calisan['ad'], soyad=calisan['soyad'],
                                        nitelik=calisan['nitelik'],
-                                       calismaya_katkisi=calisan['calismaya_katkisi'])
+                                       calismaya_katkisi=calisan['calismaya_katkisi'],
+                                       kurum=calisan['kurum'])
         if 'UniversiteDisiUzmanForm' in td:
             proje.UniversiteDisiUzmanlar.clear()
             for uzman in td['UniversiteDisiUzmanForm']['Uzman']:
@@ -494,13 +689,16 @@ class ProjeBasvuru(CrudView):
 
         proje.ProjeIslemGecmisi(eylem=_(u"Kayıt"),
                                 aciklama=_(u"Öğretim üyesi tarafından kaydedildi"),
-                                tarih=datetime.datetime.now())
+                                tarih=datetime.now())
         proje.durum = 1
         if not proje.basvuru_rolu.exist:
             proje.basvuru_rolu = self.current.role
         proje.blocking_save()
 
     def proje_goster(self):
+        """
+        Proje başvurusunun öğretim üyesine özet halinde gösterildiği adımdır.
+        """
         self.object = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.show()
         form = JsonForm()
@@ -508,14 +706,34 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def onaya_gonder(self):
+        """
+        Projenin onaya gönderildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         proje.durum = 2
         proje.ProjeIslemGecmisi(eylem=_(u"Onaya Gönderildi"),
                                 aciklama=_(u"Koordinasyon Birimine onaya gönderildi"),
-                                tarih=datetime.datetime.now())
+                                tarih=datetime.now())
         proje.blocking_save()
+        msg = {"title": _(u'Başvurunuzu tamamladınız!'),
+               "body": _(u'Proje başvurunuz BAP birimine başarıyla iletilmiştir. '
+                         u'Değerlendirme sürecinde size bilgi verilecektir.')}
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
+
+        role = Role.objects.get(user=self.current.user)
+        wfi = WFInstance.objects.get(self.current.token)
+        inv = TaskInvitation.objects.get_or_none(instance=wfi, role=role)
+        if inv:
+            title = inv.title
+            inv.blocking_delete()
+        else:
+            title = "%s | %s" % (proje.proje_kodu, wfi.wf.title)
+        self.current.task_data['INVITATION_TITLE'] = title
 
     def bildirim_gonder(self):
+        """
+        Koordinasyon biriminin kararı sonucu öğretim üyesine bildirim gönderilen adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         role = proje.yurutucu().okutman().user().role_set[0].role
         if self.cmd == 'iptal' or self.current.task_data['karar'] == 'iptal':
@@ -549,6 +767,10 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
 
     def revizyon_mesaji_goster(self):
+        """
+        Koordinasyon biriminin revizyon kararı sonrasında revizyon talebi mesajının öğretim üyesine
+        gösterildiği adımdır.
+        """
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         baslik = _(u"#### Revizyon Gerekçeleri:\n")
         msg = self.current.task_data['revizyon_gerekce']

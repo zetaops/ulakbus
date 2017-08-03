@@ -5,6 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.lib.view_helpers import prepare_choices_for_model
+from ulakbus.models import BAPGundem
 from ulakbus.models import BAPProje
 
 from zengine.views.crud import CrudView, obj_filter, list_query
@@ -29,6 +30,7 @@ class Gundem(CrudView):
         model = "BAPGundem"
 
     def list(self, custom_form=None):
+        self.current.task_data.pop('object_id', None)
         custom_form = JsonForm(current=self.current, title=_(u"Gündem Listesi"))
         custom_form.ekle = fields.Button(_(u"Yeni Gündem Oluştur"), cmd='yeni_gundem')
         CrudView.list(self, custom_form=custom_form)
@@ -45,9 +47,10 @@ class Gundem(CrudView):
 
     def add_edit_form(self):
         form = JsonForm(self.object)
-        form.title = _(u"%s / %s  - Komisyon Kararı") % (self.object.proje.ad,
-                                                          self.object.get_gundem_tipi_display())
-        form.exclude = ['proje', 'gundem_tipi', 'sonuclandi']
+        form.title = _(u"%s / %s  - Komisyon Kararı") % (
+            self.object.proje.ad, self.object.get_gundem_tipi_display()) if self.object.proje else (
+            self.object.etkinlik.bildiri_basligi, self.object.get_gundem_tipi_display())
+        form.exclude = ['etkinlik', 'proje', 'gundem_tipi', 'sonuclandi']
         form.kaydet = fields.Button(_(u"Kaydet"), cmd='save')
         form.iptal = fields.Button(_(u"İptal"), form_validation=False)
         self.form_out(_form=form)
@@ -57,7 +60,7 @@ class Gundem(CrudView):
         form = JsonForm()
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
-        self.output['object_title'] = _(u"%s / %s") % (self.object.proje.ad,
+        self.output['object_title'] = _(u"%s / %s") % (self.object._proje_adi(),
                                                        self.object.get_gundem_tipi_display())
         sonuc = _(u"Sonuçlandı") if self.output['object'][u'Kararın Sonuçlandırılması'] == u'True' \
             else _(u"Sonuçlanmadı")

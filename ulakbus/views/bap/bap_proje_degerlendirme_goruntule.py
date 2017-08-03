@@ -54,9 +54,8 @@ class ProjeDegerlendirmeGoruntule(CrudView):
         self.output['objects'] = [
             [_(u'Hakem'), _(u'Değerlendirme Durumu'), _(u'Değerlendirme Sonucu')]
         ]
-        cd_durum = catalog_to_dict(
-            catalog_data_manager.get_all('bap_proje_hakem_degerlendirme_durum'))
-        cd_sonuc = catalog_to_dict(catalog_data_manager.get_all('bap_proje_degerlendirme_sonuc'))
+        cd_durum = catalog_data_manager.get_all_as_dict('bap_proje_hakem_degerlendirme_durum')
+        cd_sonuc = catalog_data_manager.get_all_as_dict('bap_proje_degerlendirme_sonuc')
         for degerlendirme in proje.ProjeDegerlendirmeleri:
             hakem = degerlendirme.hakem().okutman().__unicode__()
             durum = cd_durum[degerlendirme.hakem_degerlendirme_durumu]
@@ -85,10 +84,8 @@ class ProjeDegerlendirmeGoruntule(CrudView):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         hakem_id = self.input['object_id']
         f = ProjeDegerlendirmeForm()
-        cd_degerlendirme = catalog_to_dict(catalog_data_manager.get_all(
-            'bap_proje_degerlendirme_secenekler'))
-        cd_sonuc = catalog_to_dict(catalog_data_manager.get_all(
-            'bap_proje_degerlendirme_sonuc'))
+        cd_degerlendirme = catalog_data_manager.get_all_as_dict('bap_proje_degerlendirme_secenekler')
+        cd_sonuc = catalog_data_manager.get_all_as_dict('bap_proje_degerlendirme_sonuc')
         obj = OrderedDict()
         for degerlendirme in proje.ProjeDegerlendirmeleri:
             if hakem_id == degerlendirme.hakem().okutman().key:
@@ -106,10 +103,3 @@ class ProjeDegerlendirmeGoruntule(CrudView):
         del self.current.task_data['object_id']
         self.output['object'] = obj
         self.form_out(ProjeDegerlendirmeDetayGoruntuleForm())
-
-
-def catalog_to_dict(l):
-    d = dict()
-    for item in l:
-        d[item['value']] = item['name']
-    return d
