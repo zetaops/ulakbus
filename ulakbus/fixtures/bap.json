@@ -173,6 +173,30 @@
       "en": ""
     }
   },
+  "bap_rapor_turu": {
+    "1": {
+      "tr": "Dönem Raporu",
+      "en": ""
+    },
+    "2": {
+      "tr": "Sonuç Raporu",
+      "en": ""
+    }
+  },
+  "bap_rapor_durum": {
+    "1": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "2": {
+      "tr": "Başarılı",
+      "en": ""
+    },
+    "3": {
+      "tr": "Başarısız",
+      "en": ""
+    }
+  },
   "bap_komisyon_gundemleri": {
     "1": {
       "tr": "Proje başvurusu",
