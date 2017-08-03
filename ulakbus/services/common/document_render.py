@@ -65,9 +65,7 @@ class RenderDocument(Service):
         self.S3_PROXY_PORT = self.user_config.zetaops.zetaops3s.S3_PROXY_PORT
         self.S3_BUCKET_NAME = self.user_config.zetaops.zetaops3s.S3_BUCKET_NAME
 
-        self.wants_pdf = False
-        if 'pdf' in self.request.payload:
-            self.wants_pdf = self.request.payload['pdf']
+        self.wants_pdf = self.request.payload.get('pdf', False)
 
         self.document_cache = DocumentCache(payload=self.request.payload,
                                             kvdb_conn=self.kvdb.conn,
