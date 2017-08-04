@@ -30,7 +30,7 @@ class YurutucuDegisikligi(CrudView):
         okutman = Okutman.objects.get(personel=personel)
         if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
             self.current.task_data['cmd'] = 'bilgilendir'
-            self.current.task_data['bilgilendirme'] = 'jjhvjgjhbjhbjh'
+            self.current.task_data['bilgilendirme'] = 'Devam eden projeniz yok.'
         elif 'kabul' in self.current.task_data:
             self.current.task_data['cmd'] = 'bilgilendir'
             self.current.task_data['bilgilendirme'] = self.current.task_data['kabul']
