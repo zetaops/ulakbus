@@ -535,3 +535,15 @@ class BAPTeklifFiyatIsleme(Model):
             '-toplam_fiyat')
 
         return firmalar[0], firmalar[1]
+
+
+class BAPGenel(Model):
+    toplam_kasa = field.Float(__(u"Toplam Kasa"))
+
+    class KasaGirisi(ListNode):
+        miktar = field.Float(__(u"Miktar"))
+        tarih = field.Date(_(u"Tarih"), index=True, format="%d.%m.%Y")
+
+    @staticmethod
+    def get():
+        return BAPGenel.objects.get("BAP_GENEL_TEK_KAYIT")
