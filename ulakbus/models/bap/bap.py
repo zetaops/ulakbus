@@ -145,6 +145,8 @@ class BAPProje(Model):
 
     bitis_tarihi = field.Date(_(u"Tamamlanma Tarihi"))
 
+    yurutucu_talep = field.String(__(u"Yürütücü Değişikliği Talebi"), hidden=True, required=False)
+
     class ProjeBelgeleri(ListNode):
         class Meta:
             verbose_name = __(u"Proje Belgesi")
