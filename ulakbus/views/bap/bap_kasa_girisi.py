@@ -37,7 +37,8 @@ class KasaIslemGecmisiForm(JsonForm):
     class Meta:
         title = __(u"Kasa İşlem Geçmişi")
 
-    geri = fields.Button(__(u"Geri Dön"))
+    ekle = fields.Button(__(u"Ekle"),cmd='ekle')
+    ana_menu_don = fields.Button(__(u"Ana Menüye Dön"))
 
 
 class KasaGirisi(CrudView):
@@ -53,7 +54,7 @@ class KasaGirisi(CrudView):
                                title=__(u"Lütfen Kasa Girişi Yapınız"))
         self.form_out(_form)
 
-    def bilgi_ver_form(self):
+    def onay_form(self):
         """
         Para Girişinin Onaylanma veya İptal Formu
 
@@ -81,9 +82,22 @@ class KasaGirisi(CrudView):
 
     def kayit_giris_bilgilendirme(self):
         """
+        Kayıt bilgi form
+        """
+        form = JsonForm(title="Kasa Giriş Kaydı")
+        form.help_text = "Kasa giriş kaydınız başarılı bir şekilde gerçekleştirildi"
+        form.tamam = fields.Button(__(u'Tamam'))
+        self.form_out(form)
 
+    def yonlendir(self):
+        """
+        Anasayfaya Yonlendirme İşlemi
+        """
+        self.current.output['cmd'] = 'reload'
+
+    def kasa_gecmisi_listele(self):
+        """
         Kasa Girişinin Başarılı bir şekilde gerçekleştiğini gösterme
-
         """
 
         self.current.output["meta"]["allow_actions"] = False  # yapılacak bir işlem yok
@@ -98,9 +112,3 @@ class KasaGirisi(CrudView):
             }
             self.output['objects'].append(list_item)
         self.form_out(KasaIslemGecmisiForm())
-
-    def yonlendir(self):
-        """
-        Anasayfaya Yonlendirme İşlemi
-        """
-        self.current.output['cmd'] = 'reload'
