@@ -171,6 +171,10 @@
     "6": {
       "tr": "Komisyon Tarafından Reddedildi",
       "en": ""
+    },
+    "7": {
+      "tr": "Bütçe Fişleri Kesildi",
+      "en": ""
     }
   },
   "bap_komisyon_gundemleri": {
