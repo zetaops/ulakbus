@@ -339,6 +339,10 @@
     "4": {
       "tr": "Teslim Alındı",
       "en": ""
+    },
+    "5": {
+      "tr": "Talep Yapılmadı",
+      "en": ""
     }
   },
   "bap_ogretim_uyesi_gider_kodlari": {
