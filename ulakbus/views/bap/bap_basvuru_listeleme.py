@@ -132,6 +132,8 @@ class BasvuruListeleme(CrudView):
             {'name': _(u'İşlem Geçmişi'), 'cmd': 'islem_gecmisi', 'mode': 'normal',
              'show_as': 'button'},
             {'name': _(u'Hakem Daveti'), 'cmd': 'hakem_daveti', 'mode': 'normal',
+             'show_as': 'button'},
+            {'name': _(u'Komisyon Üyesi Ata'), 'cmd': 'komisyon_uyesi_atama', 'mode': 'normal',
              'show_as': 'button'}
         ]
         if obj.ProjeDegerlendirmeleri:

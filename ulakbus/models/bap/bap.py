@@ -146,6 +146,7 @@ class BAPProje(Model):
     bitis_tarihi = field.Date(_(u"Tamamlanma Tarihi"))
 
     yurutucu_talep = field.String(__(u"Yürütücü Değişikliği Talebi"), hidden=True, required=False)
+    komisyon_uyesi = Role(__(u"Komisyon Üyesi"), hidden=True)
 
     class ProjeBelgeleri(ListNode):
         class Meta:
@@ -534,5 +535,3 @@ class BAPTeklifFiyatIsleme(Model):
             '-toplam_fiyat')
 
         return firmalar[0], firmalar[1]
-
-

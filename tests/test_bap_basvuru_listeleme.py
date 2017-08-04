@@ -5,6 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models import BAPProje, User
+from ulakbus.models import Role
 from zengine.lib.test_utils import BaseTestCase
 from zengine.models import WFInstance, Message
 import time
@@ -44,6 +45,35 @@ class TestCase(BaseTestCase):
         del resp.json['objects'][0]
         project_name_list = [obj['fields'][0] for obj in resp.json['objects']]
         assert "Akıllı Robot" in project_name_list
+
+        # Komisyon üyesi atama bölümü
+        komisyon_uyesi_role_key = "GbviU7cmCejVzjO8IB8LV6WCGIf" # Dirican Seven
+        komisyon_uyesi = Role.objects.get(komisyon_uyesi_role_key)
+        self.client.post(cmd='komisyon_uyesi_atama', object_id=project.key)
+        resp = self.client.post(form={'komisyon_uyesi': komisyon_uyesi_role_key,
+                                      'ilerle': 1})
+        assert resp.json['forms']['form'][0]['helpvalue'] == "%s projesine %s " \
+                                                              "komisyon üyesini atayacaksınız." % \
+                                                              (project.ad, komisyon_uyesi.user())
+        resp = self.client.post(form={'onayla': 1})
+
+        assert resp.json['forms']['form'][0]['helpvalue'] == "%s projesine %s adlı komisyon " \
+                                                              "üyesini başarıyla atadınız." % \
+                                                              (project.ad, komisyon_uyesi.user())
+        self.client.post(form={'tamam': 1})
+
+        resp = self.client.post(cmd='komisyon_uyesi_atama', object_id=project.key)
+        assert resp.json['forms']['form'][0]['helpvalue'] == "%s projesinin zaten bir komisyon " \
+                                                             "üyesi bulunmaktadır. Mevcut " \
+                                                             "komisyon üyesinin ismi: %s 'dir. " \
+                                                             "Eğer mevcut komisyon üyesinin " \
+                                                             "yerine bir başkasını atamak " \
+                                                             "istiyorsanız işleme devam ediniz." % \
+                                                             (project.ad, komisyon_uyesi.user())
+        resp = self.client.post(cmd='iptal', form={'iptal': 1})
+        assert resp.json['forms']['form'][0]['helpvalue'] == "Başvuru listeleme ekranına " \
+                                                             "geri dönüyorsunuz"
+        self.client.post(form={'tamam': 1})
 
         # Seçilen proje için işlem geçmişi butonuna basılır ve projenin işlem geçmişi görüntülenir.
         resp = self.client.post(cmd='islem_gecmisi', object_id=project.key,
