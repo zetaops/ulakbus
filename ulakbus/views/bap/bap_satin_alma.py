@@ -5,7 +5,7 @@
 # (GPLv3).  See LICENSE.txt for details.
 from collections import OrderedDict
 
-from ulakbus.views.bap.bap_proje_degerlendirme_goruntule import catalog_to_dict
+
 from pyoko import ListNode
 from ulakbus.models import AbstractRole
 from ulakbus.models import BAPButcePlani, BAPProje
@@ -91,7 +91,7 @@ class BAPSatinAlmaView(CrudView):
         self.output['objects'] = [[_(u'Ad'), _(u'Teklife Açılma Tarihi'),
                                    _(u"Teklife Kapanma Tarihi"), _(u"Durum")], ]
 
-        d = catalog_to_dict(catalog_data_manager.get_all('bap_satin_alma_durum'))
+        d = catalog_data_manager.get_all_as_dict('bap_satin_alma_durum')
 
         for s in satin_almalar:
             tat = s.teklife_acilma_tarihi.strftime(DATETIME_DEFAULT_FORMAT)
@@ -180,7 +180,7 @@ class BAPSatinAlmaView(CrudView):
         """
 
         satin_alma = BAPSatinAlma.objects.get(self.input.get('satin_alma'))
-        d = catalog_to_dict(catalog_data_manager.get_all('bap_satin_alma_durum'))
+        d = catalog_data_manager.get_all_as_dict('bap_satin_alma_durum')
         satin_alma_bilgileri = OrderedDict([
             (_(u"Satın Alma Başlığı"), satin_alma.ad),
             (_(u"Teklife Açılma Tarihi"),
