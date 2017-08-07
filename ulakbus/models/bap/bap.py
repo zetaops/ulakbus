@@ -544,6 +544,13 @@ class BAPGenel(Model):
         miktar = field.Float(__(u"Miktar"))
         tarih = field.Date(_(u"Tarih"), index=True, format="%d.%m.%Y")
 
-    @staticmethod
-    def get():
-        return BAPGenel.objects.get("BAP_GENEL_TEK_KAYIT")
+    @classmethod
+    def get(cls):
+        """
+        Bu modelde tek kayit tutulmaktadir. `get` icin bu kaydi donduren
+        ozel bir method yazilmistir.
+
+        Returns (BAPGenel): BAPGenel instance
+
+        """
+        return cls.objects.get("BAP_GENEL_TEK_KAYIT")
