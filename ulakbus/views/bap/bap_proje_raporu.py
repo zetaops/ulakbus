@@ -73,7 +73,6 @@ class BapProjeRaporu(CrudView):
         self.form_out(form)
 
     def rapor_kaydet(self):
-        # TODO:proje id'si gelecek. Ona göre işlemler yapılacak.
         """
         Seçili olan rapor dosyasının veritabanına kaydedilmesi işlemini gerçekleştirir.
 
@@ -153,7 +152,6 @@ class BapProjeRaporu(CrudView):
         self.form_out(form)
 
     def gundeme_al(self):
-        # TODO:proje id'si gelecek. Ona göre işlemler yapılacak.
         """
         Koordinasyon birimi tarafından onaylanan projenin gündeme alınması işlemini gerçekleştirir.
         Rapor nesnesini başarılı durumuna getirme işlemini gerçekleştirir.
