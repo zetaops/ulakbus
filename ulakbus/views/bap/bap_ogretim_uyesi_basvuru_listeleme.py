@@ -32,10 +32,13 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
 
     def goruntule(self):
         """
-        Proje goruntuleme harici is akisi task dataya konulur.
+        Talepler harici is akisi task dataya konulur. BAP proje id task dataya konulur.
 
         """
-        self.current.task_data['external_wf'] = "bap_ogrbasvuru_goruntule"
+        self.current.task_data['bap_proje_id'] = self.current.task_data.pop('object_id',
+                                                                            self.current.task_data[
+                                                                                'bap_proje_id'])
+        self.current.task_data['external_wf'] = self.current.input['cmd']
 
     def basvuru_listele(self):
         """
@@ -86,13 +89,15 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         """
         # todo externaL_wf'ler tamamlandıkça actionlara eklenecek
         result['actions'] = [
-            {'name': _(u'Görüntüle'), 'cmd': 'goruntule', 'mode': 'normal', 'show_as': 'button'},
+            {'name': _(u'Görüntüle'), 'cmd': 'bap_ogrbasvuru_goruntule', 'mode': 'normal',
+             'show_as': 'button'},
         ]
         if obj.durum == 5:
             result['actions'].append({'name': _(u'Talepler'), 'cmd': 'talepler', 'mode': 'normal',
                                       'show_as': 'button'})
-            # result['actions'].append({'name': _(u'Raporlar'), 'cmd': 'rapor', 'mode': 'normal',
-            #                           'show_as': 'button'})
+            result['actions'].append(
+                {'name': _(u'Rapor Ekle'), 'cmd': 'bap_proje_raporu', 'mode': 'normal',
+                 'show_as': 'button'})
 
     @list_query
     def list_by_personel_id(self, queryset):
@@ -100,5 +105,3 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         Öğretim üyesinin kendi projeleri filtrelenmiştir.
         """
         return queryset.filter(yurutucu=self.current.user.personel.okutman)
-
-

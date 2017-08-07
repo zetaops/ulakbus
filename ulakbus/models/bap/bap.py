@@ -537,6 +537,20 @@ class BAPTeklifFiyatIsleme(Model):
         return firmalar[0], firmalar[1]
 
 
+class BAPRapor(Model):
+    class Meta:
+        verbose_name = __(u"Proje Rapor")
+        verbose_name_plural = __(u"Proje Raporları")
+
+    proje = BAPProje()
+    tur = field.Integer(__(u"Rapor Türü"), choices='bap_rapor_turu')
+    durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum')
+    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=False)
+
+    def __unicode__(self):
+        return "%s-%s" % (self.proje.ad, self.get_tur_display())
+
+
 class BAPGenel(Model):
     toplam_kasa = field.Float(__(u"Toplam Kasa"))
 
