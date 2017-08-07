@@ -549,3 +549,22 @@ class BAPRapor(Model):
 
     def __unicode__(self):
         return "%s-%s" % (self.proje.ad, self.get_tur_display())
+
+
+class BAPGenel(Model):
+    toplam_kasa = field.Float(__(u"Toplam Kasa"))
+
+    class KasaGirisi(ListNode):
+        miktar = field.Float(__(u"Miktar"))
+        tarih = field.Date(_(u"Tarih"), index=True, format="%d.%m.%Y")
+
+    @classmethod
+    def get(cls):
+        """
+        Bu modelde tek kayit tutulmaktadir. `get` icin bu kaydi donduren
+        ozel bir method yazilmistir.
+
+        Returns (BAPGenel): BAPGenel instance
+
+        """
+        return cls.objects.get("BAP_GENEL_TEK_KAYIT")
