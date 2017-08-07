@@ -376,7 +376,7 @@ class BAPEtkinlikProje(Model):
             verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planları")
 
         talep_turu = field.Integer(__(u"Talep Türü"), required=True,
-                                   choices='bap_bilimseL_etkinlik_butce_talep_turleri')
+                                   choices='bap_bilimsel_etkinlik_butce_talep_turleri')
         muhasebe_kod = field.String(__(u"Muhasebe Kod"),
                                     choices='analitik_butce_dorduncu_duzey_gider_kodlari',
                                     default="03.2.6.90")

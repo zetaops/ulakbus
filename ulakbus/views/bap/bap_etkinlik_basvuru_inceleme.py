@@ -23,7 +23,7 @@ class EtkinlikBasvuruInceleForm(JsonForm):
             title = "Bütçe"
 
         talep_turu = fields.Integer(__(u"Talep Türü"), required=True,
-                                    choices='bap_bilimseL_etkinlik_butce_talep_turleri')
+                                    choices='bap_bilimsel_etkinlik_butce_talep_turleri')
         istenen_tutar = fields.Float(__(u"Talep Edilen Tutar"), required=True)
 
 
