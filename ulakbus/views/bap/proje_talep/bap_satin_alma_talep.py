@@ -60,6 +60,7 @@ class BAPSatinAlmaTalep(CrudView):
         self.current.task_data['bap_proje_id'] = 'WlRiJzMM4XExfmbgVyJDBZAUGg'
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         # todo satın almaya talebine uygun bütçe planlarını göstermek gerekli
+        # butce_planlari = BAPButcePlani.objects.filter(ilgili_proje=proje, satin_alma_durum=5)
         butce_planlari = BAPButcePlani.objects.filter(ilgili_proje=proje)
         form = ButceKalemleriForm()
         for bp in butce_planlari:
@@ -67,7 +68,7 @@ class BAPSatinAlmaTalep(CrudView):
                 sec=False,
                 ad=bp.ad,
                 adet=bp.adet,
-                alim_kalemi_sartnamesi="",
+                alim_kalemi_sartnamesi=bp.teknik_sartname,
                 genel_sartname="",
                 butce_plan_key=bp.key,
             )
@@ -86,7 +87,7 @@ class BAPSatinAlmaTalep(CrudView):
         self.current.output['meta']['allow_add_listnode'] = False
 
     def butce_kalem_kaydet(self):
-        pass
+        print "asd"
 
     def revizyon_mesaji_goster(self):
         pass
