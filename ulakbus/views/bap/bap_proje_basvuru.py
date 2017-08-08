@@ -495,7 +495,7 @@ class ProjeBasvuru(CrudView):
         """
         Öğretim üyesinin personel arayıp başvurusuna dahil ettiği adımdır.
         """
-        form = PersonelEkleForm(self.current)
+        form = PersonelEkleForm(current=self.current)
         self.form_out(form)
 
     def olanak_kaydet(self):

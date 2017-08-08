@@ -336,7 +336,7 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
-    ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
+    ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=False)
     kazanan_firma = BAPFirma()
 
     teknik_sartname = BAPTeknikSartname()
