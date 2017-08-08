@@ -12,7 +12,6 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_18jzp9v</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0ih84na" sourceRef="daha_sonra_degerlendir" targetRef="etkinlik_basvuru_degerlendir" />
     <bpmn:sequenceFlow id="SequenceFlow_14w10it" sourceRef="etkinlik_basvuru_degerlendir" targetRef="ExclusiveGateway_0x3390f" />
     <bpmn:sequenceFlow id="SequenceFlow_0ckh8n6" sourceRef="ExclusiveGateway_0x3390f" targetRef="etkinlik_basvuru_reddet">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='degerlendir']]></bpmn:conditionExpression>
@@ -33,7 +32,6 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='hakem']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="etkinlik_basvuru_degerlendir" name="Etkinlik Başvuru Değerlendir" camunda:assignee="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.basvuru_degerlendir">
-      <bpmn:incoming>SequenceFlow_0ih84na</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0yiy35g</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1rdh35d</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_14w10it</bpmn:outgoing>
@@ -45,6 +43,7 @@
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="goruntule" name="Görüntüle" camunda:assignee="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.goruntule">
       <bpmn:incoming>SequenceFlow_05uk8zk</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0qkth26</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_09vt8o0</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_0yiy35g" sourceRef="ExclusiveGateway_1z0piwj" targetRef="etkinlik_basvuru_degerlendir">
@@ -85,8 +84,9 @@
     <bpmn:serviceTask id="daha_sonra_degerlendir" name="Daha Sonra Değerlendir" camunda:class="bap.bap_etkinlik_basvuru_degerlendir.BAPEtkinlikBasvuruDegerlendir.daha_sonra_degerlendir">
       <bpmn:incoming>SequenceFlow_1aw4t50</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1etzcx6</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0ih84na</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0qkth26</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0qkth26" sourceRef="daha_sonra_degerlendir" targetRef="goruntule" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1wmfajs">
@@ -136,13 +136,6 @@
         <di:waypoint xsi:type="dc:Point" x="673" y="413" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="688" y="390" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0ih84na_di" bpmnElement="SequenceFlow_0ih84na">
-        <di:waypoint xsi:type="dc:Point" x="629" y="417" />
-        <di:waypoint xsi:type="dc:Point" x="586" y="379" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="608" y="383" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_06lyrui_di" bpmnElement="daha_sonra_degerlendir">
@@ -242,6 +235,15 @@
         <di:waypoint xsi:type="dc:Point" x="623" y="453" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="596" y="438" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0qkth26_di" bpmnElement="SequenceFlow_0qkth26">
+        <di:waypoint xsi:type="dc:Point" x="673" y="493" />
+        <di:waypoint xsi:type="dc:Point" x="673" y="519" />
+        <di:waypoint xsi:type="dc:Point" x="423" y="519" />
+        <di:waypoint xsi:type="dc:Point" x="423" y="493" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="548" y="504" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
