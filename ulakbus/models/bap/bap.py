@@ -336,7 +336,7 @@ class BAPButcePlani(Model):
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
-    ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
+    ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=False)
     kazanan_firma = BAPFirma()
 
     teknik_sartname = BAPTeknikSartname()
@@ -362,7 +362,7 @@ class BAPEtkinlikProje(Model):
     bildiri_basligi = field.String(__(u"Etkinlik Başlığı"), required=True)
     baslangic = field.Date(__(u"Başlangıç Tarihi"), required=True)
     bitis = field.Date(__(u"Bitiş Tarihi"), required=True)
-    katilim_turu = field.Integer(__(u"Katılım Turu"), required=True,
+    katilim_turu = field.Integer(__(u"Katılım Türü"), required=True,
                                  choices='bap_bilimsel_etkinlik_katilim_turu')
     etkinlik_lokasyon = field.Integer(__(u"Etkinlik Türü"), required=True,
                                       choices="arastirma_hedef_lokasyon")

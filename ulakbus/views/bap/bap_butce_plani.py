@@ -12,6 +12,8 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 
 
 class ButcePlaniForm(JsonForm):
+    class Meta:
+        include = ['ad', 'birim_fiyat', 'adet', 'gerekce', 'ozellik']
     kaydet = fields.Button(__(u"Kaydet"))
     iptal = fields.Button(__(u"İptal"), cmd='iptal', form_validation=False)
 
@@ -71,7 +73,8 @@ class BapButcePlani(CrudView):
         self.form_out(form)
 
     def add_edit_form(self):
-        proje_ad = BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad
+        proje_ad = BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad or \
+                   self.current.task_data['GenelBilgiGirForm']['ad']
         self.object.muhasebe_kod_genel = self.input['form']['muhasebe_kod_genel']
         self.object.kod_adi = self.object.get_muhasebe_kod_genel_display()
 
@@ -79,8 +82,6 @@ class BapButcePlani(CrudView):
         self.current.task_data['kod_adi'] = self.object.kod_adi
 
         form = ButcePlaniForm(self.object, current=self.current)
-        form.exclude = ['muhasebe_kod', 'muhasebe_kod_genel', 'kod_adi', 'onay_tarihi',
-                        'ilgili_proje', 'durum', 'toplam_fiyat']
         form.title = "%s Bütçe Planı" % self.object.kod_adi
         form.help_text = "Yapacağınız bütçe planı %s adlı proje için yapılacaktır." % \
                          proje_ad

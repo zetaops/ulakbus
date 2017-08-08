@@ -126,7 +126,7 @@ class EkButceTalep(CrudView):
 
         if not self.object.key:
             self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-            self.object.muhasebe_kod = self.current.task_data['muhasebe_kod']
+            self.object.muhasebe_kod_genel = self.current.task_data['muhasebe_kod_genel']
             self.object.kod_adi = self.current.task_data['kod_adi']
             self.object.durum = 1
             self.set_form_data_to_object()
@@ -144,7 +144,7 @@ class EkButceTalep(CrudView):
              'eski_birim_fiyat': self.object.birim_fiyat if not self.object.durum == 1 else '',
              'yeni_birim_fiyat': self.input['form']['birim_fiyat'],
              'eski_toplam_fiyat': self.object.toplam_fiyat if not self.object.durum == 1 else '',
-             'yeni_toplam_fiyat': self.input['form']['toplam_fiyat'],
+             'yeni_toplam_fiyat': self.input['form']['adet'] * self.input['form']['birim_fiyat'],
              'gerekce': self.input['form']['gerekce']}
 
     def butce_kalemini_sil(self):
