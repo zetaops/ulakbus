@@ -134,6 +134,7 @@ class BAPProje(Model):
     anahtar_kelimeler = field.String(_(u"Anahtar Kelimeler(Virgülle Ayrılmış Şekilde Olmalıdır)"))
     teklif_edilen_baslama_tarihi = field.Date(_(u"Teklif Edilen Başlama Tarihi"))
     teklif_edilen_butce = field.Float(_(u"Teklif Edilen Bütçe"))
+    butce_fazlaligi = field.Float(_(u"Bütçe Fazlalığı"),default=0.0)
 
     konu_ve_kapsam = field.Text(_(u"Konu ve Kapsam"), min_length=650, max_length=1000)
     literatur_ozeti = field.Text(_(u"Literatür Özeti"), min_length=650, max_length=1000)
@@ -337,8 +338,10 @@ class BAPButcePlani(Model):
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
     ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=False)
+    proje_durum = field.Integer(__(u"Proje Durum"), choices='bap_butce_kalemi_durum', default=1)
+    satin_alma_durum = field.Integer(__(u"Satın Alma Durumu"),
+                                     choices='bap_butce_plani_satin_alma_durumu', default=5)
     kazanan_firma = BAPFirma()
-
     teknik_sartname = BAPTeknikSartname()
 
     def __unicode__(self):
