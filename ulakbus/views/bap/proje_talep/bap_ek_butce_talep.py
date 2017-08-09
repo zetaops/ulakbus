@@ -10,13 +10,33 @@ from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _
 
+talep_durum = {1: 'Yeni',
+               2: 'Silinecek',
+               3: 'Düzenlendi',
+               4: 'Düzenlenmedi'}
+
 
 class OnaylaForm(JsonForm):
     class Meta:
-        title = 'Ek Bütçe Talebi Onaylama Ekranı'
+        title = _(u"Ek Bütçe Talebi Onaylama Ekranı")
 
     onayla = fields.Button("Onayla", cmd='onayla')
     geri_don = fields.Button("Geri Dön", cmd='geri_don')
+
+class EkButceTalepForm(JsonForm):
+    class Meta:
+        title = _(u"{} - Bap Ek Bütçe Talep")
+
+    tamam = fields.Button(_(u"Onaya Yolla"))
+    ekle = fields.Button(_(u"Yeni Bütçe Kalemi Ekle"), cmd='add_edit_form')
+    iptal = fields.Button(_(u"İptal"), cmd='iptal')
+
+class KomisyonAciklamaForm(JsonForm):
+    class Meta:
+        title = _(u"Komisyon Açıklaması")
+
+    komisyon_aciklama = fields.Text(_(u"Açıklama Yazınız"))
+    yolla = fields.Button(_(u"Yolla"))
 
 
 class EkButceTalep(CrudView):
@@ -24,60 +44,22 @@ class EkButceTalep(CrudView):
         model = 'BAPButcePlani'
 
     # ---------- Proje Yürütücüsü ----------
-    def proje_id_kontrol(self):
-        self.current.task_data['cmd'] = 'proje_id_var' if 'bap_proje_id' in self.current.task_data \
-            else 'proje_id_yok'
-
-    def kontrol(self):
-        if 'bap_proje_id' in self.current.task_data and 'red_aciklama' not in \
-                self.current.task_data and 'onay' not in self.current.task_data:
-            self.current.task_data['onaylandi'] = 2
-        else:
-            personel = Personel.objects.get(user=self.current.user)
-            okutman = Okutman.objects.get(personel=personel)
-            if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
-                self.current.task_data['onaylandi'] = 1
-                self.current.task_data['proje_yok'] = {
-                    'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
-                           'bulunamadı. Size bağlı olan proje '
-                           'olmadığı için ek bütçe talebinde '
-                           'bulunamazsınız.',
-                    'title': 'Proje Bulunamadı'}
-            elif 'red_aciklama' in self.current.task_data:
-                self.current.task_data['onaylandi'] = 2
-            elif 'onaylandi' not in self.current.task_data:
-                self.current.task_data['onaylandi'] = 0
-
-    def proje_sec(self):
-        personel = Personel.objects.get(user=self.current.user)
-        okutman = Okutman.objects.get(personel=personel)
-        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
-                                                                           durum__in=[3, 5])]
-
-        form = JsonForm(title=_(u"Proje Seçiniz"))
-        form.proje = fields.String(choices=data)
-        form.ilerle = fields.Button(_(u"İlerle"))
-        self.form_out(form)
-
     def list(self, custom_form=None):
         if 'yeni_butceler' not in self.current.task_data:
             self.current.task_data['yeni_butceler'] = defaultdict(dict)
-
-        if 'form' in self.input and 'proje' in self.input['form']:
-            self.current.task_data['bap_proje_id'] = self.input['form']['proje']
 
         self.output['objects'] = [['Muhasebe Kodu', 'Kod Adı', 'Alınacak Malzemenin Adı',
                                    'Birim Fiyat', 'Adet', 'Toplam Fiyat', 'Durum']]
 
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        butce_planlari = BAPButcePlani.objects.filter(ilgili_proje=proje)
+        butce_planlari = BAPButcePlani.objects.filter(ilgili_proje=proje,
+                                                      satin_alma_durum=5,
+                                                      ).order_by()
         toplam = 0
         for butce in butce_planlari:
             if butce.key not in self.current.task_data['yeni_butceler']:
-                butce.durum = 4
-                butce.save()
                 self.current.task_data['yeni_butceler'][butce.key] = {
-                    'durum': butce.get_durum_display(),
+                    'durum': 4,
                     'kod_ad': butce.kod_adi,
                     'ad': butce.ad,
                     'eski_adet': butce.adet,
@@ -90,19 +72,22 @@ class EkButceTalep(CrudView):
                 }
             durum = self.current.task_data['yeni_butceler'][butce.key]['durum']
             toplam_fiyat = self.current.task_data['yeni_butceler'][butce.key]['yeni_toplam_fiyat']
+            butce_bilgileri = self.current.task_data['yeni_butceler'][butce.key]
+            yeni_birim, yeni_adet, yeni_toplam = \
+                (str(butce_bilgileri['yeni_birim_fiyat']),
+                 str(butce_bilgileri['yeni_adet']),
+                 str(butce_bilgileri['yeni_toplam_fiyat'])) if durum not in [2, 4] else \
+                    (str(butce.birim_fiyat), str(butce.adet), str(butce.toplam_fiyat))
             item = {
                 "fields": [
                     butce.muhasebe_kod,
                     butce.kod_adi,
                     butce.ad,
-                    str(self.current.task_data['yeni_butceler'][butce.key]['yeni_birim_fiyat'])
-                    if butce.durum not in [2, 4] else str(butce.birim_fiyat),
-                    str(self.current.task_data['yeni_butceler'][butce.key]['yeni_adet'])
-                    if butce.durum not in [2, 4] else str(butce.adet),
-                    str(self.current.task_data['yeni_butceler'][butce.key]['yeni_toplam_fiyat'])
-                    if butce.durum not in [2, 4] else str(butce.toplam_fiyat),
-                    durum],
-                "actions": [{'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal',
+                    yeni_birim,
+                    yeni_adet,
+                    yeni_toplam,
+                    talep_durum[durum]],
+                "actions": [{'name': _(u'Ayrıntı Göster'), 'cmd': 'show', 'mode': 'normal',
                              'show_as': 'button'},
                             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
                              'show_as': 'button'},
@@ -111,10 +96,13 @@ class EkButceTalep(CrudView):
                 'key': butce.key
             }
             self.output['objects'].append(item)
-            toplam += toplam_fiyat if toplam_fiyat else butce.toplam_fiyat
 
-        mevcut_toplam = self.current.task_data.get('mevcut_toplam',None) or self.mevcut_butce_hesapla()
-        self.current.task_data['mevcut_toplam']=toplam
+            fiyat = toplam_fiyat if toplam_fiyat else butce.toplam_fiyat
+            toplam += -fiyat if durum ==2 else fiyat
+
+        mevcut_toplam = self.current.task_data.get('mevcut_toplam',
+                                                   None) or self.mevcut_butce_hesapla()
+        self.current.task_data['mevcut_toplam'] = mevcut_toplam
         self.current.task_data['toplam'] = toplam
 
         self.output['objects'].extend(
@@ -126,20 +114,13 @@ class EkButceTalep(CrudView):
               'actions': ''}]
         )
 
-        form = JsonForm(title=_(u"%s - Bap Ek Bütçe Talep") % proje.ad)
+        form = EkButceTalepForm(current=self.current)
+        form.title = form.title.format(proje.ad)
         if proje.butce_fazlaligi:
             form.help_text = _(
                 u"Kullanabileceğiniz {} TL tutarında bütçe fazlalığınız bulunmaktadır.".format(
                     proje.butce_fazlaligi))
-        form.tamam = fields.Button(_(u"Onaya Yolla"))
-        form.ekle = fields.Button(_(u"Yeni Bütçe Kalemi Ekle"), cmd='add_edit_form')
-        form.iptal = fields.Button(_(u"İptal"), cmd='iptal')
         self.form_out(form)
-        if 'red_aciklama' in self.current.task_data:
-            self.current.msg_box(msg=self.current.task_data['red_aciklama'],
-                                 title=_(u"Talebiniz Reddedildi."),
-                                 typ='warning')
-            del self.current.task_data['red_aciklama']
 
     def kaydet(self):
         if 'yeni_butceler' not in self.current.task_data:
@@ -149,89 +130,100 @@ class EkButceTalep(CrudView):
             self.object.ilgili_proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
             self.object.muhasebe_kod_genel = self.current.task_data['muhasebe_kod_genel']
             self.object.kod_adi = self.current.task_data['kod_adi']
-            self.object.durum = 1
-            self.object.toplam_fiyat = self.input['form']['birim_fiyat']*self.input['form']['adet']
+            durum = 1
+            self.object.toplam_fiyat = self.input['form']['birim_fiyat'] * self.input['form'][
+                'adet']
             self.set_form_data_to_object()
+            self.object.blocking_save()
         else:
-            self.object.durum = 3
-
-        self.object.blocking_save()
+            durum = 3 if self.current.task_data['yeni_butceler'][self.object.key][
+                             'durum'] in [2, 3, 4] else 1
 
         self.current.task_data['yeni_butceler'][self.object.key] = \
-            {'durum': self.object.get_durum_display(),
+            {'durum': durum,
              'kod_ad': self.current.task_data['kod_adi'],
              'ad': self.object.ad,
-             'eski_adet': self.object.adet if not self.object.durum == 1 else '',
+             'eski_adet': self.object.adet if not durum == 1 else '',
              'yeni_adet': self.input['form']['adet'],
-             'eski_birim_fiyat': self.object.birim_fiyat if not self.object.durum == 1 else '',
+             'eski_birim_fiyat': self.object.birim_fiyat if not durum == 1 else '',
              'yeni_birim_fiyat': self.input['form']['birim_fiyat'],
-             'eski_toplam_fiyat': self.object.toplam_fiyat if not self.object.durum == 1 else '',
+             'eski_toplam_fiyat': self.object.toplam_fiyat if not durum == 1 else '',
              'yeni_toplam_fiyat': self.input['form']['adet'] * self.input['form']['birim_fiyat'],
              'gerekce': self.input['form']['gerekce']}
 
+    def yeni_kalem_sil(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        for kalem in BAPButcePlani.objects.filter(ilgili_proje=proje,
+                                                  proje_durum=1):
+            kalem.blocking_delete()
+
     def butce_kalemini_sil(self):
-        if 'yeni_butceler' not in self.current.task_data:
-            self.current.task_data['yeni_butceler'] = defaultdict(dict)
 
-        self.object.durum = 2
-        self.object.save()
-
-        self.current.task_data['yeni_butceler'][self.object.key] = \
-            {'durum': self.object.get_durum_display(),
-             'kod_ad': self.object.kod_adi,
-             'ad': self.object.ad,
-             'eski_adet': self.object.adet,
-             'yeni_adet': '',
-             'eski_birim_fiyat': self.object.birim_fiyat,
-             'yeni_birim_fiyat': '',
-             'eski_toplam_fiyat': self.object.toplam_fiyat,
-             'yeni_toplam_fiyat': '',
-             'gerekce': self.object.gerekce}
+        if self.current.task_data['yeni_butceler'][self.object.key]['durum'] == 1:
+            self.object.blocking_delete()
+            del self.current.task_data['object_id']
+        else:
+            self.current.task_data['yeni_butceler'][self.object.key] = \
+                {'durum': 2,
+                 'kod_ad': self.object.kod_adi,
+                 'ad': self.object.ad,
+                 'eski_adet': self.object.adet,
+                 'yeni_adet': '',
+                 'eski_birim_fiyat': self.object.birim_fiyat,
+                 'yeni_birim_fiyat': '',
+                 'eski_toplam_fiyat': self.object.toplam_fiyat,
+                 'yeni_toplam_fiyat': '',
+                 'gerekce': self.object.gerekce}
 
     def onaylama_kontrol(self):
         td = self.current.task_data
-        duzenlenen = any(x['durum'] != 'Düzenlenmedi' for x in td['yeni_butceler'].values())
+        td['talep_varmi'] = any(x['durum'] != 'Düzenlenmedi' for x in td['yeni_butceler'].values())
 
-        if not duzenlenen:
-            self.current.task_data['cmd'] = 'talep_yok'
-            self.current.output['msgbox'] = {
-                'type': 'warning', "title": _(u'Ek Bütçe Talebi'),
-                "msg": _(u'Ek bütçe talebinde bulunmanız için var olan kalemlerinizde '
-                         u'değişiklikler yapmanız ya da yeni kalem eklemeniz gerekmektedir.')}
+    def hata_mesaji_olustur(self):
+        self.current.output['msgbox'] = {
+            'type': 'warning', "title": _(u'Ek Bütçe Talebi'),
+            "msg": _(u'Ek bütçe talebinde bulunmanız için var olan kalemlerinizde '
+                     u'değişiklikler yapmanız ya da yeni kalem eklemeniz gerekmektedir.')}
 
     def onaylama_karari(self):
-        form = OnaylaForm(current=self.current)
-        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         td = self.current.task_data
-        butceler = td['yeni_butceler'][self.object.key]
+        proje = BAPProje.objects.get(td['bap_proje_id'])
+        form = OnaylaForm(current=self.current)
+        form.help_text = _(
+u"""YENi TOPLAM BÜTÇE: **{}**,  
 
-        text = "YENi TOPLAM BÜTÇE:{},  MEVCUT TOPLAM BÜTÇE:{}".format(td['toplam'],td['mevcut_toplam'])
+MEVCUT TOPLAM BÜTÇE: **{}**
+
+""".format(td['toplam'], td['mevcut_toplam']))
 
         if proje.butce_fazlaligi:
-            text = "{} NOT: {} tutarında bütçe fazlalığınız bulunmaktadır. Bütçe talebiniz " \
-                   "değerlendirilirken bütçe fazlası miktarınız dikkate alınacaktır.".format(text,
-                                                                                   str(proje.butce_fazlaligi))
+            form.help_text = _(
+u"""{}
 
-        form.help_text = text
+NOT: {} tutarında bütçe fazlalığınız bulunmaktadır. Bütçe talebiniz değerlendirilirken 
+bütçe fazlası miktarınız dikkate alınacaktır.
+""".format(form.help_text, str(proje.butce_fazlaligi)))
+
         self.form_out(form)
 
     def onayla(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        proje.durum = 2  # koordinasyon birimi onayi bekleniyor.
+        proje.talep_uygunlugu = False  # koordinasyon birimi onayi bekleniyor.
         proje.save()
 
-    def sonuc(self):
-        if 'proje_yok' in self.current.task_data:
-            self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
-                                 title=self.current.task_data['proje_yok']['title'])
-        else:
-            self.current.msg_box(msg=self.current.task_data['onay'], title=_(u"Talebiniz Kabul "
-                                                                             u"Edildi."))
+    # def sonuc(self):
+    #     if 'proje_yok' in self.current.task_data:
+    #         self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
+    #                              title=self.current.task_data['proje_yok']['title'])
+    #     else:
+    #         self.current.msg_box(msg=self.current.task_data['onay'], title=_(u"Talebiniz Kabul "
+    #                                                                          u"Edildi."))
 
     def mevcut_butce_hesapla(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         return sum([x.toplam_fiyat for x in BAPButcePlani.objects.filter(ilgili_proje=proje,
-                                                                         proje_durum=2)])
+                                                                         proje_durum=2,
+                                                                         satin_alma_durum=5)])
 
 
 
@@ -241,16 +233,16 @@ class EkButceTalep(CrudView):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Ek bütçe talebi") % \
                                       (proje.yurutucu, proje.ad)
-        self.output['objects'] = [['Kod Adi', 'Ad', 'Eski Toplam Fiyati', 'Yeni Toplam Fiyati',
+        self.output['objects'] = [['Kod Adı', 'Ad', 'Eski Toplam Fiyatı', 'Yeni Toplam Fiyatı',
                                    'Durum']]
         for key, talep in self.current.task_data['yeni_butceler'].items():
             item = {
                 "fields": [talep['kod_ad'],
                            talep['ad'],
-                           str(talep['eski_toplam_fiyat']),
-                           str(talep['yeni_toplam_fiyat']),
-                           talep['durum']],
-                "actions": [{'name': _(u'Göster'), 'cmd': 'goster', 'mode': 'normal',
+                           str(talep['eski_toplam_fiyat']) if talep['durum']!= 1 else '-',
+                           str(talep['yeni_toplam_fiyat']) if talep['durum'] not in [2, 4] else '-',
+                           talep_durum[talep['durum']]],
+                "actions": [{'name': _(u'Ayrıntı Göster'), 'cmd': 'goster', 'mode': 'normal',
                              'show_as': 'button'}],
                 'key': key
             }
@@ -278,25 +270,19 @@ class EkButceTalep(CrudView):
                     'Gerekçe': data['gerekce']}
         self.output['object'] = obj_data
 
-        form = JsonForm()
+        form = JsonForm(current=self.current)
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
 
     def komisyon_aciklamasi(self):
-        form = JsonForm(title=_(u"Komisyon Açıklaması"))
-        form.komisyon_aciklama = fields.Text(_(u"Açıklama Yazınız"))
-        form.yolla = fields.Button(_(u"Yolla"))
-        self.form_out(form)
+        self.form_out(KomisyonAciklamaForm(current=self.current))
 
     def kabul_et_ve_komisyona_yolla(self):
-        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        gundem = BAPGundem()
-        gundem.proje = proje
-        gundem.gundem_tipi = 2
-        gundem.gundem_aciklama = self.input['form']['komisyon_aciklama']
-        gundem.save()
-        proje.durum = 4  # Komisyon Onayı Bekliyor
-        proje.save()
+        BAPGundem(proje_id=self.current.task_data['bap_proje_id'],
+                  gundem_tipi=2,
+                  gundem_aciklama=self.input['form']['komisyon_aciklama'],
+                  gundem_eks).save()
+
         self.current.task_data['onaylandi'] = 1
 
     def reddet_ve_aciklama_yaz(self):
@@ -317,6 +303,8 @@ class EkButceTalep(CrudView):
                                              "olup, komisyonun gündemine alınmıştır."
 
     def nesne_id_sil(self):
+        self.yeni_kalem_sil()
+        del self.current.task_data['yeni_butceler']
         self.current.task_data.pop('object_id', None)
 
     # ---------------------------------------
@@ -325,9 +313,11 @@ class EkButceTalep(CrudView):
     def proje_turu_islem(self, obj, result):
         result['actions'] = [
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
-            {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
+            {'name': _(u'Ayrıntı Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'}]
 
     @list_query
     def list_by_bap_proje_id(self, queryset):
-        return queryset.filter(ilgili_proje_id=self.current.task_data['bap_proje_id']).order_by()
+        return queryset.filter(ilgili_proje_id=self.current.task_data['bap_proje_id'],
+                               satin_alma_durum=5,
+                               proje_durum=2).order_by()

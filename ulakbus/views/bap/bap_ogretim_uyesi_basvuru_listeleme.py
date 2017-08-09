@@ -35,10 +35,9 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
         Talepler harici is akisi task dataya konulur. BAP proje id task dataya konulur.
 
         """
-        self.current.task_data['bap_proje_id'] = self.current.task_data.pop('object_id',
-                                                                            self.current.task_data[
-                                                                                'bap_proje_id'])
-        self.current.task_data['external_wf'] = self.current.input['cmd']
+        td = self.current.task_data
+        td['bap_proje_id'] = td.get('bap_proje_id', td.pop('object_id', ''))
+        td['external_wf'] = self.current.input['cmd']
 
     def basvuru_listele(self):
         """

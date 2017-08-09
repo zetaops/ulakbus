@@ -3,6 +3,8 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from collections import OrderedDict
+
 import six
 
 from ulakbus.models.form import Form
@@ -134,7 +136,7 @@ class ProjeTurleri(CrudView):
         self.set_client_cmd('show')
         obj_form = JsonForm(self.object, current=self.current,
                             models=False)._serialize(readable=True)
-        obj_data = {}
+        obj_data = OrderedDict()
         for d in obj_form:
             key = six.text_type(d['title'])
             if d['type'] == 'ListNode' and d['value'] is not None:
@@ -149,7 +151,7 @@ class ProjeTurleri(CrudView):
                     data.append(string)
                 obj_data[key] = ' - '.join(data)
             else:
-                obj_data[key] = str(d['value'])
+                obj_data[key] = str(d['value']) if d['value'] is not None else ''
         durum = (
         obj_data[u'Projenin gerçekleştirme görevlisi ile yürütücüsü aynı kişi mi?'] == 'True')
         obj_data[

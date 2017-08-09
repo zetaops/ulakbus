@@ -148,6 +148,7 @@ class BAPProje(Model):
 
     yurutucu_talep = field.String(__(u"Yürütücü Değişikliği Talebi"), hidden=True, required=False)
     komisyon_uyesi = Role(__(u"Komisyon Üyesi"), hidden=True)
+    talep_uygunlugu = field.Boolean(__(u"Talep Uygunluğu"), hidden=True, default=True)
 
     class ProjeBelgeleri(ListNode):
         class Meta:

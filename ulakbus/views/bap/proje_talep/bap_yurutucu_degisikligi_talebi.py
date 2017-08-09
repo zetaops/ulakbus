@@ -55,7 +55,7 @@ class YurutucuDegisikligi(CrudView):
         if 'form' in self.input and 'proje' in self.input['form']:
             self.current.task_data['bap_proje_id'] = self.input['form']['proje']
 
-        self.form_out(TalepForm(self.object))
+        self.form_out(TalepForm(self.object, current=self.current))
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def koordinasyona_gonder_onay(self):
