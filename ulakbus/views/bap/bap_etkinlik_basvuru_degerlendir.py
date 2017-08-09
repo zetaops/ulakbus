@@ -39,7 +39,7 @@ class EtkinlikBasvuruDegerlendirForm(JsonForm):
 
     degerlendir = fields.Button(_(u"Değerlendirme Kaydet"), cmd='degerlendir')
     daha_sonra_degerlendir = fields.Button(_(u"Daha Sonra Değerlendir"),
-                                           cmd='daha_sonra_degerlendir')
+                                           cmd='daha_sonra_degerlendir', form_validation=False)
 
 class BAPEtkinlikBasvuruDegerlendir(CrudView):
     """
