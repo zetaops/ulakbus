@@ -3,9 +3,9 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-
+import json
 from collections import defaultdict
-from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
+from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, User
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _
@@ -23,6 +23,7 @@ class OnaylaForm(JsonForm):
     onayla = fields.Button("Onayla", cmd='onayla')
     geri_don = fields.Button("Geri Dön", cmd='geri_don')
 
+
 class EkButceTalepForm(JsonForm):
     class Meta:
         title = _(u"{} - Bap Ek Bütçe Talep")
@@ -31,12 +32,25 @@ class EkButceTalepForm(JsonForm):
     ekle = fields.Button(_(u"Yeni Bütçe Kalemi Ekle"), cmd='add_edit_form')
     iptal = fields.Button(_(u"İptal"), cmd='iptal')
 
+
 class KomisyonAciklamaForm(JsonForm):
     class Meta:
-        title = _(u"Komisyon Açıklaması")
+        title = _(u"Komisyon Açıklama")
+        always_blank = False
 
-    komisyon_aciklama = fields.Text(_(u"Açıklama Yazınız"))
-    yolla = fields.Button(_(u"Yolla"))
+    aciklama = fields.Text(_(u"Komisyon Değerlendirmesi İçin Açıklama Yazınız"))
+    gonder = fields.Button(_(u"Gönder"), cmd='komisyon_gonder')
+    geri = fields.Button(_(u"Tabloya Geri Dön"), cmd='geri_don', form_validation=False)
+
+
+class RedAciklamaForm(JsonForm):
+    class Meta:
+        title = _(u"Talep Reddi Açıklama")
+        always_blank = False
+
+    gerekce = fields.Text(_(u"Reddetme Gerekçenizi Yazınız"))
+    gonder = fields.Button(_(u"Gönder"), cmd='red_gonder')
+    geri = fields.Button(_(u"Tabloya Geri Dön"), cmd='geri_don', form_validation=False)
 
 
 class EkButceTalep(CrudView):
@@ -98,7 +112,7 @@ class EkButceTalep(CrudView):
             self.output['objects'].append(item)
 
             fiyat = toplam_fiyat if toplam_fiyat else butce.toplam_fiyat
-            toplam += -fiyat if durum ==2 else fiyat
+            toplam += -fiyat if durum == 2 else fiyat
 
         mevcut_toplam = self.current.task_data.get('mevcut_toplam',
                                                    None) or self.mevcut_butce_hesapla()
@@ -208,16 +222,13 @@ bütçe fazlası miktarınız dikkate alınacaktır.
 
     def onayla(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        proje.talep_uygunlugu = False  # koordinasyon birimi onayi bekleniyor.
+        proje.talep_uygunlugu = False
         proje.save()
-
-    # def sonuc(self):
-    #     if 'proje_yok' in self.current.task_data:
-    #         self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
-    #                              title=self.current.task_data['proje_yok']['title'])
-    #     else:
-    #         self.current.msg_box(msg=self.current.task_data['onay'], title=_(u"Talebiniz Kabul "
-    #                                                                          u"Edildi."))
+        msg = {"title": _(u'İşlem Bilgilendirme'),
+               "body": _(u'Ek bütçe talebiniz koordinasyon birimine iletilmiştir. Koordinasyon '
+                         u'biriminin değerlendirmesi sonrasında tekrar bilgilendirme '
+                         u'yapılacaktır.')}
+        self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def mevcut_butce_hesapla(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
@@ -239,7 +250,7 @@ bütçe fazlası miktarınız dikkate alınacaktır.
             item = {
                 "fields": [talep['kod_ad'],
                            talep['ad'],
-                           str(talep['eski_toplam_fiyat']) if talep['durum']!= 1 else '-',
+                           str(talep['eski_toplam_fiyat']) if talep['durum'] != 1 else '-',
                            str(talep['yeni_toplam_fiyat']) if talep['durum'] not in [2, 4] else '-',
                            talep_durum[talep['durum']]],
                 "actions": [{'name': _(u'Ayrıntı Göster'), 'cmd': 'goster', 'mode': 'normal',
@@ -280,27 +291,32 @@ bütçe fazlası miktarınız dikkate alınacaktır.
     def kabul_et_ve_komisyona_yolla(self):
         BAPGundem(proje_id=self.current.task_data['bap_proje_id'],
                   gundem_tipi=2,
-                  gundem_aciklama=self.input['form']['komisyon_aciklama'],
-                  gundem_eks).save()
+                  gundem_aciklama=self.input['form']['aciklama'],
+                  gundem_ekstra_bilgiler=json.dumps(
+                      {'ek_butce': self.current.task_data['yeni_butceler']})
+                  ).save()
 
-        self.current.task_data['onaylandi'] = 1
+    def onay_mesaji_hazirla(self):
+        mesaj = "Ek bütçe için bulunduğunuz talep koordinasyon birimi tarafından kabul edilmiş " \
+                "olup, komisyonun gündemine alınmıştır. Komisyon değerlendirmesinden sonra " \
+                "karar hakkında tekrar bilgilendirilme yapılacaktır."
+        self.current.task_data['bildirim_mesaji'] = mesaj
 
     def reddet_ve_aciklama_yaz(self):
-        form = JsonForm(title=_(u"Red Açıklaması Yazınız"))
-        form.red_aciklama = fields.Text(_(u"Red Açıklaması"))
-        form.red_gonder = fields.Button(_(u"Gönder"))
-        self.form_out(form)
+        self.form_out(RedAciklamaForm(current=self.current))
+
+    def red_mesaji_hazirla(self):
+        gerekce = self.input['form']['gerekce']
+        mesaj = "Ek bütçe için bulunduğunuz talep reddedilmiştir. Red Gerekçesi: {}".format(gerekce)
+        self.current.task_data['bildirim_mesaji'] = mesaj
 
     def bilgilendir(self):
-        if 'red_aciklama' in self.input['form']:
-            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-            proje.durum = 3
-            proje.save()
-            self.current.task_data['red_aciklama'] = self.input['form']['red_aciklama']
-            del self.current.task_data['yeni_butceler']
-        else:
-            self.current.task_data['onay'] = "Ek bütçe için bulunduğunuz talep kabul edilmiş " \
-                                             "olup, komisyonun gündemine alınmıştır."
+        basvuru_rol = BAPProje.objects.get(self.current.task_data['bap_proje_id']).basvuru_rolu
+        sistem_kullanicisi = User.objects.get(username='sistem_bilgilendirme')
+        basvuru_rol.send_notification(message=self.current.task_data['bildirim_mesaji'],
+                                      title=_(
+                                          u"Ek Bütçe Talebi Koordinasyon Birimi Değerlendirmesi"),
+                                      sender=sistem_kullanicisi)
 
     def nesne_id_sil(self):
         self.yeni_kalem_sil()

@@ -415,12 +415,15 @@ class BAPGundem(Model):
     etkinlik = BAPEtkinlikProje()
     gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
     gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
-    oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
+    oturum_numarasi = field.String(__(u"Oturum Numarası"))
     oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
-    karar_no = field.Integer(__(u"Karar No"), default=0)
-    karar = field.Text(__(u"Karar"))
+    karar_no = field.String(__(u"Karar No"))
     karar_tarihi = field.Date(__(u"Karar Tarihi"))
     sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
+    karar_metni = field.Text(__(u"Karar Metni"))
+    karar_gerekcesi = field.Text(
+        __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"))
+    gundem_ekstra_bilgiler = field.String(__(u"Gündem Ekstra Bilgileri"), hidden=True)
 
     def _proje_adi(self):
         return "%s" % self.proje.ad if self.proje.key else self.etkinlik.bildiri_basligi
