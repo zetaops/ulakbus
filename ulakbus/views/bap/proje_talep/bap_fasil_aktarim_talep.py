@@ -221,6 +221,18 @@ bütçe fazlası miktarınız dikkate alınacaktır.
             self.output['objects'].append(item)
 
         form = JsonForm()
+        form.help_text = _(
+u"""YENi TOPLAM BÜTÇE: **{}**,  
+
+MEVCUT TOPLAM BÜTÇE: **{}**
+
+""".format(td['toplam_butce'], td['mevcut_toplam']))
+        if proje.butce_fazlaligi:
+            form.help_text = _(
+u"""{}
+
+BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
+
         form.onayla = fields.Button(_(u"Komisyona Yolla"), cmd='kabul')
         form.reddet = fields.Button(_(u"Reddet"), cmd='red')
         form.butun = fields.Button(_(u"Bütün Kalemleri Gör"), cmd='butun')

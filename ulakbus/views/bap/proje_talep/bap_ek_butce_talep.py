@@ -205,19 +205,19 @@ class EkButceTalep(CrudView):
         proje = BAPProje.objects.get(td['bap_proje_id'])
         form = OnaylaForm(current=self.current)
         form.help_text = _(
-            u"""YENi TOPLAM BÜTÇE: **{}**,  
-            
-            MEVCUT TOPLAM BÜTÇE: **{}**
-            
-            """.format(td['toplam'], td['mevcut_toplam']))
+u"""YENi TOPLAM BÜTÇE: **{}**,  
+
+MEVCUT TOPLAM BÜTÇE: **{}**
+
+""".format(td['toplam'], td['mevcut_toplam']))
 
         if proje.butce_fazlaligi:
             form.help_text = _(
-                u"""{}
-                
-                NOT: {} tutarında bütçe fazlalığınız bulunmaktadır. Bütçe talebiniz değerlendirilirken 
-                bütçe fazlası miktarınız dikkate alınacaktır.
-                """.format(form.help_text, str(proje.butce_fazlaligi)))
+u"""{}
+
+NOT: {} tutarında bütçe fazlalığınız bulunmaktadır. Bütçe talebiniz değerlendirilirken 
+bütçe fazlası miktarınız dikkate alınacaktır.
+""".format(form.help_text, str(proje.butce_fazlaligi)))
 
         self.form_out(form)
 
