@@ -68,6 +68,7 @@ class EkButceTalep(CrudView):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         butce_planlari = BAPButcePlani.objects.filter(ilgili_proje=proje,
                                                       satin_alma_durum=5,
+                                                      proje_durum__in=[1, 2]
                                                       ).order_by()
         toplam = 0
         for butce in butce_planlari:
@@ -115,7 +116,7 @@ class EkButceTalep(CrudView):
             toplam += -fiyat if durum == 2 else fiyat
 
         mevcut_toplam = self.current.task_data.get('mevcut_toplam',
-                                                   None) or self.mevcut_butce_hesapla()
+                                                   None) or BAPButcePlani.mevcut_butce(proje)
         self.current.task_data['mevcut_toplam'] = mevcut_toplam
         self.current.task_data['toplam'] = toplam
 
@@ -191,7 +192,7 @@ class EkButceTalep(CrudView):
 
     def onaylama_kontrol(self):
         td = self.current.task_data
-        td['talep_varmi'] = any(x['durum'] != 'Düzenlenmedi' for x in td['yeni_butceler'].values())
+        td['talep_varmi'] = any(x['durum'] != 4 for x in td['yeni_butceler'].values())
 
     def hata_mesaji_olustur(self):
         self.current.output['msgbox'] = {
@@ -229,13 +230,6 @@ bütçe fazlası miktarınız dikkate alınacaktır.
                          u'biriminin değerlendirmesi sonrasında tekrar bilgilendirme '
                          u'yapılacaktır.')}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
-
-    def mevcut_butce_hesapla(self):
-        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        return sum([x.toplam_fiyat for x in BAPButcePlani.objects.filter(ilgili_proje=proje,
-                                                                         proje_durum=2,
-                                                                         satin_alma_durum=5)])
-
 
 
         # ---------- Koordinasyon Birimi --------
@@ -311,12 +305,15 @@ bütçe fazlası miktarınız dikkate alınacaktır.
         self.current.task_data['bildirim_mesaji'] = mesaj
 
     def bilgilendir(self):
-        basvuru_rol = BAPProje.objects.get(self.current.task_data['bap_proje_id']).basvuru_rolu
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        basvuru_rol = proje.basvuru_rolu
         sistem_kullanicisi = User.objects.get(username='sistem_bilgilendirme')
         basvuru_rol.send_notification(message=self.current.task_data['bildirim_mesaji'],
                                       title=_(
                                           u"Ek Bütçe Talebi Koordinasyon Birimi Değerlendirmesi"),
                                       sender=sistem_kullanicisi)
+        proje.talep_uygunlugu = True
+        proje.blocking_save({'talep_uygunlugu': True})
 
     def nesne_id_sil(self):
         self.yeni_kalem_sil()
@@ -331,9 +328,3 @@ bütçe fazlası miktarınız dikkate alınacaktır.
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Ayrıntı Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'}]
-
-    @list_query
-    def list_by_bap_proje_id(self, queryset):
-        return queryset.filter(ilgili_proje_id=self.current.task_data['bap_proje_id'],
-                               satin_alma_durum=5,
-                               proje_durum=2).order_by()

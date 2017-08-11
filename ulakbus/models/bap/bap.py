@@ -354,6 +354,12 @@ class BAPButcePlani(Model):
 
     _muhasebe_kod.title = __(u"Muhasebe Kodu")
 
+    @classmethod
+    def mevcut_butce(cls, proje):
+        return sum([x.toplam_fiyat for x in BAPButcePlani.objects.filter(ilgili_proje=proje,
+                                                                         proje_durum=2,
+                                                                         satin_alma_durum=5)])
+
 
 class BAPEtkinlikProje(Model):
     class Meta:
