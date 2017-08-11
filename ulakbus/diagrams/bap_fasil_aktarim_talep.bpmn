@@ -31,7 +31,6 @@
         <bpmn:flowNodeRef>ExclusiveGateway_19euqtr</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="koordinasyon_birimi" name="Bap Koordinasyon Birimi">
-        <bpmn:flowNodeRef>talep_detay_goster</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>reddet_ve_aciklama_yaz</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>komisyon_aciklamasi</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>talep_kontrol</bpmn:flowNodeRef>
@@ -42,6 +41,8 @@
         <bpmn:flowNodeRef>ExclusiveGateway_05vdxr3</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0c8f18e</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_1pn3x4c</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>talep_detay_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>KalemGostermeSecenegiBelirle</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:serviceTask id="kaydet" name="Kaydet" camunda:class="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.kaydet">
@@ -73,10 +74,6 @@
     <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_0x0gbbl</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="talep_detay_goster" name="Detay Göster" camunda:assignee="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.talep_detay_goster">
-      <bpmn:incoming>SequenceFlow_0vatgq1</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0pijx51</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:userTask id="reddet_ve_aciklama_yaz" name="Reddet veRed Açıklama Yaz" camunda:assignee="bap.proje_talep.bap_ek_butce_talep.EkButceTalep.reddet_ve_aciklama_yaz">
       <bpmn:incoming>SequenceFlow_0r7iust</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rp7fda</bpmn:outgoing>
@@ -92,16 +89,18 @@
       <bpmn:incoming>SequenceFlow_0wgxi9y</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ftma9o</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_0c8f18e" default="SequenceFlow_0wgxi9y">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0c8f18e" default="SequenceFlow_0yi9gvk">
       <bpmn:incoming>SequenceFlow_18mt2g7</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0r7iust</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0wgxi9y</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0vatgq1</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0yi9gvk</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="talep_kontrol" name="Fasıl Talep Kontrol" camunda:assignee="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.talep_kontrol">
       <bpmn:incoming>SequenceFlow_0pijx51</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1yltop0</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1fd1dm6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_07xpxxa</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_18mt2g7</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="komisyona_gonder" name="Onayla ve Komisyona Gönder" camunda:class="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.komisyona_gonder">
@@ -214,7 +213,9 @@
     <bpmn:sequenceFlow id="SequenceFlow_1hxnpgr" sourceRef="ExclusiveGateway_05vdxr3" targetRef="RedMesajiHazirla">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == 'red_gonder']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0wgxi9y" sourceRef="ExclusiveGateway_0c8f18e" targetRef="komisyon_aciklamasi" />
+    <bpmn:sequenceFlow id="SequenceFlow_0wgxi9y" sourceRef="ExclusiveGateway_0c8f18e" targetRef="komisyon_aciklamasi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd == '']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_18mt2g7" sourceRef="talep_kontrol" targetRef="ExclusiveGateway_0c8f18e" />
     <bpmn:sequenceFlow id="SequenceFlow_1fd1dm6" sourceRef="Onayla" targetRef="talep_kontrol" />
     <bpmn:sequenceFlow id="SequenceFlow_0moo4pn" sourceRef="komisyona_gonder" targetRef="OnayMesajiHazirla" />
@@ -246,6 +247,16 @@
       <bpmn:incoming>SequenceFlow_017vopv</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_017vopv" sourceRef="bilgilendir" targetRef="EndEvent_1pn3x4c" />
+    <bpmn:userTask id="talep_detay_goster" name="Detay Göster" camunda:assignee="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.talep_detay_goster">
+      <bpmn:incoming>SequenceFlow_0vatgq1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0pijx51</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0yi9gvk" sourceRef="ExclusiveGateway_0c8f18e" targetRef="KalemGostermeSecenegiBelirle" />
+    <bpmn:sequenceFlow id="SequenceFlow_07xpxxa" sourceRef="KalemGostermeSecenegiBelirle" targetRef="talep_kontrol" />
+    <bpmn:serviceTask id="KalemGostermeSecenegiBelirle" name="Kalem Gösterme Seçeneği Belirle" camunda:class="bap.proje_talep.bap_ek_butce_talep.EkButceTalep.kalem_gosterme_secenegi_belirle">
+      <bpmn:incoming>SequenceFlow_0yi9gvk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_07xpxxa</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_01849bd">
@@ -462,22 +473,22 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0vatgq1_di" bpmnElement="SequenceFlow_0vatgq1">
-        <di:waypoint xsi:type="dc:Point" x="634" y="673" />
-        <di:waypoint xsi:type="dc:Point" x="634" y="749" />
-        <di:waypoint xsi:type="dc:Point" x="589" y="749" />
+        <di:waypoint xsi:type="dc:Point" x="623" y="662" />
+        <di:waypoint xsi:type="dc:Point" x="560" y="749" />
+        <di:waypoint xsi:type="dc:Point" x="529" y="749" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="649" y="711" width="0" height="0" />
+          <dc:Bounds x="592" y="690.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_03mgdkx_di" bpmnElement="talep_detay_goster">
-        <dc:Bounds x="489" y="709" width="100" height="80" />
+        <dc:Bounds x="429" y="709" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0pijx51_di" bpmnElement="SequenceFlow_0pijx51">
-        <di:waypoint xsi:type="dc:Point" x="489" y="749" />
+        <di:waypoint xsi:type="dc:Point" x="429" y="749" />
         <di:waypoint xsi:type="dc:Point" x="406" y="749" />
         <di:waypoint xsi:type="dc:Point" x="406" y="688" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="448" y="734" width="0" height="0" />
+          <dc:Bounds x="418" y="734" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0ftma9o_di" bpmnElement="SequenceFlow_0ftma9o">
@@ -672,6 +683,24 @@
         <di:waypoint xsi:type="dc:Point" x="1263" y="507" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1226" y="482" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1tw3a0o_di" bpmnElement="KalemGostermeSecenegiBelirle">
+        <dc:Bounds x="584" y="757" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0yi9gvk_di" bpmnElement="SequenceFlow_0yi9gvk">
+        <di:waypoint xsi:type="dc:Point" x="634" y="673" />
+        <di:waypoint xsi:type="dc:Point" x="634" y="757" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="649" y="715" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_07xpxxa_di" bpmnElement="SequenceFlow_07xpxxa">
+        <di:waypoint xsi:type="dc:Point" x="584" y="817" />
+        <di:waypoint xsi:type="dc:Point" x="392" y="817" />
+        <di:waypoint xsi:type="dc:Point" x="392" y="688" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="488" y="802" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

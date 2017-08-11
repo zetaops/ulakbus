@@ -191,24 +191,29 @@ bütçe fazlası miktarınız dikkate alınacaktır.
                    u'biriminin değerlendirmesi sonrasında tekrar bilgilendirme '
                    u'yapılacaktır.')}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
+        self.current.task_data['degisenleri_goster'] = True
 
     # ---------------------------------------
 
     # ---------- Koordinasyon Birimi --------
 
     def talep_kontrol(self):
-        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        td = self.current.task_data
+        proje = BAPProje.objects.get(td['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Fasıl Aktarım Talebi") % \
                                       (proje.yurutucu, proje.ad)
         self.output['objects'] = [['Kalem Adı', 'Eski Birim Fiyat', 'Yeni Birim Fiyat',
-                                   'Eski Toplam Fiyat', 'Yeni Toplam Fiyat']]
-        for key, talep in self.current.task_data['fasil_islemleri'].items():
+                                   'Eski Toplam Fiyat', 'Yeni Toplam Fiyat', 'Durum']]
+        for key, talep in td['fasil_islemleri'].items():
+            if td['degisenleri_goster'] and talep['durum'] == 2:
+                continue
             item = {
                 "fields": [talep['ad'],
                            str(talep['eski_birim_fiyat']),
                            str(talep['yeni_birim_fiyat']),
                            str(talep['eski_toplam_fiyat']),
-                           str(talep['yeni_toplam_fiyat'])],
+                           str(talep['yeni_toplam_fiyat']),
+                           talep_durum[talep['durum']]],
                 "actions": [{'name': _(u'Ayrıntı Göster'), 'cmd': 'show', 'mode': 'normal',
                              'show_as': 'button'}],
                 'key': key
@@ -218,6 +223,8 @@ bütçe fazlası miktarınız dikkate alınacaktır.
         form = JsonForm()
         form.onayla = fields.Button(_(u"Komisyona Yolla"), cmd='kabul')
         form.reddet = fields.Button(_(u"Reddet"), cmd='red')
+        form.butun = fields.Button(_(u"Bütün Kalemleri Gör"), cmd='butun')
+        form.degisiklik = fields.Button(_(u"Değişen Kalemleri Gör"), cmd='degisiklik')
         self.form_out(form)
 
     def talep_detay_goster(self):

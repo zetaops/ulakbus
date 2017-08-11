@@ -205,19 +205,19 @@ class EkButceTalep(CrudView):
         proje = BAPProje.objects.get(td['bap_proje_id'])
         form = OnaylaForm(current=self.current)
         form.help_text = _(
-u"""YENi TOPLAM BÜTÇE: **{}**,  
-
-MEVCUT TOPLAM BÜTÇE: **{}**
-
-""".format(td['toplam'], td['mevcut_toplam']))
+            u"""YENi TOPLAM BÜTÇE: **{}**,  
+            
+            MEVCUT TOPLAM BÜTÇE: **{}**
+            
+            """.format(td['toplam'], td['mevcut_toplam']))
 
         if proje.butce_fazlaligi:
             form.help_text = _(
-u"""{}
-
-NOT: {} tutarında bütçe fazlalığınız bulunmaktadır. Bütçe talebiniz değerlendirilirken 
-bütçe fazlası miktarınız dikkate alınacaktır.
-""".format(form.help_text, str(proje.butce_fazlaligi)))
+                u"""{}
+                
+                NOT: {} tutarında bütçe fazlalığınız bulunmaktadır. Bütçe talebiniz değerlendirilirken 
+                bütçe fazlası miktarınız dikkate alınacaktır.
+                """.format(form.help_text, str(proje.butce_fazlaligi)))
 
         self.form_out(form)
 
@@ -230,17 +230,21 @@ bütçe fazlası miktarınız dikkate alınacaktır.
                          u'biriminin değerlendirmesi sonrasında tekrar bilgilendirme '
                          u'yapılacaktır.')}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
+        self.current.task_data['degisenleri_goster'] = True
 
 
         # ---------- Koordinasyon Birimi --------
 
     def ek_butce_talep_kontrol(self):
-        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        td = self.current.task_data
+        proje = BAPProje.objects.get(td['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Ek bütçe talebi") % \
                                       (proje.yurutucu, proje.ad)
         self.output['objects'] = [['Kod Adı', 'Ad', 'Eski Toplam Fiyatı', 'Yeni Toplam Fiyatı',
                                    'Durum']]
-        for key, talep in self.current.task_data['yeni_butceler'].items():
+        for key, talep in td['yeni_butceler'].items():
+            if td['degisenleri_goster'] and talep['durum'] == 4:
+                continue
             item = {
                 "fields": [talep['kod_ad'],
                            talep['ad'],
@@ -254,9 +258,27 @@ bütçe fazlası miktarınız dikkate alınacaktır.
             self.output['objects'].append(item)
 
         form = JsonForm()
+        form.help_text = _(
+u"""YENi TOPLAM BÜTÇE: **{}**,  
+
+MEVCUT TOPLAM BÜTÇE: **{}**
+
+""".format(td['toplam'], td['mevcut_toplam']))
+        if proje.butce_fazlaligi:
+            form.help_text=_(
+u"""{}
+
+BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
+
         form.onayla = fields.Button(_(u"Komisyona Yolla"), cmd='kabul')
         form.reddet = fields.Button(_(u"Reddet"), cmd='iptal')
+        form.butun = fields.Button(_(u"Bütün Kalemleri Gör"), cmd='butun')
+        form.degisiklik = fields.Button(_(u"Değişen Kalemleri Gör"), cmd='degisiklik')
         self.form_out(form)
+
+    def kalem_gosterme_secenegi_belirle(self):
+        td = self.current.task_data
+        td['degisenleri_goster'] = True if self.input['form']['degisiklik'] else False
 
     def talep_detay_goster(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
