@@ -41,6 +41,7 @@
         <bpmn:flowNodeRef>bilgilendir</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_05vdxr3</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0c8f18e</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1pn3x4c</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:serviceTask id="kaydet" name="Kaydet" camunda:class="bap.proje_talep.bap_fasil_aktarim_talep.FasilAktarimTalep.kaydet">
@@ -118,6 +119,7 @@
     <bpmn:serviceTask id="bilgilendir" name="Bilgilendir" camunda:class="bap.proje_talep.bap_ek_butce_talep.EkButceTalep.bilgilendir">
       <bpmn:incoming>SequenceFlow_0g4ea9h</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1hikmmi</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_017vopv</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_0ey0ddj</bpmn:outgoing>
@@ -240,6 +242,10 @@
     <bpmn:sequenceFlow id="SequenceFlow_174e3qw" sourceRef="detay_goster" targetRef="kalem_listesi" />
     <bpmn:sequenceFlow id="SequenceFlow_1lq9ltk" sourceRef="HataMesajiGoster" targetRef="kalem_listesi" />
     <bpmn:sequenceFlow id="SequenceFlow_18wavba" sourceRef="butce_kalemini_duzenle" targetRef="ExclusiveGateway_19euqtr" />
+    <bpmn:endEvent id="EndEvent_1pn3x4c">
+      <bpmn:incoming>SequenceFlow_017vopv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_017vopv" sourceRef="bilgilendir" targetRef="EndEvent_1pn3x4c" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_01849bd">
@@ -653,6 +659,19 @@
         <di:waypoint xsi:type="dc:Point" x="539" y="207" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="554" y="215.5" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1pn3x4c_di" bpmnElement="EndEvent_1pn3x4c">
+        <dc:Bounds x="1262.477027027027" y="489" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1281" y="525" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_017vopv_di" bpmnElement="SequenceFlow_017vopv">
+        <di:waypoint xsi:type="dc:Point" x="1188" y="507" />
+        <di:waypoint xsi:type="dc:Point" x="1263" y="507" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1226" y="482" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

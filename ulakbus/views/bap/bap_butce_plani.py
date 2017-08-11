@@ -46,7 +46,7 @@ class BapButcePlani(CrudView):
     def __init__(self, current):
         CrudView.__init__(self, current)
         if 'object_id' in self.current.task_data and self.cmd == 'add_edit_form' and \
-                        'object_id' not in self.input:
+                'object_id' not in self.input:
             del self.current.task_data['object_id']
             self.object = BAPButcePlani()
 
@@ -89,8 +89,8 @@ class BapButcePlani(CrudView):
 
     def sartname_sec_veya_olustur(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        sartnameler = [(sartname.key, sartname.aciklama) for sartname in
-                       BAPTeknikSartname.objects.filter(ilgili_proje=proje)]
+        sartnameler = [(sartname.key, sartname.aciklama) for sartname in BAPTeknikSartname.objects.all(
+            ilgili_proje=proje)]
         form = JsonForm(title=_(u"Teknik Şartname Seç Veya Oluştur"))
         if not sartnameler:
             form.help_text = _(u"Kayıtlı Teknik şartnameniz bulunmamaktadır. Lütfen yeni bir "

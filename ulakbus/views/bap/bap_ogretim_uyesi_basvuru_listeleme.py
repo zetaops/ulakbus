@@ -92,7 +92,6 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
              'show_as': 'button'},
         ]
         if obj.durum == 5:
-
             result['actions'].append(
                 {'name': _(u'Rapor Ekle'), 'cmd': 'bap_proje_raporu', 'mode': 'normal',
                  'show_as': 'button'})

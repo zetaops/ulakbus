@@ -337,7 +337,6 @@ class BAPButcePlani(Model):
     gerekce = field.Text(__(u"Gerekçe"))
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
-    durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
     ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=False)
     proje_durum = field.Integer(__(u"Proje Durum"), choices='bap_butce_kalemi_durum', default=1)
     satin_alma_durum = field.Integer(__(u"Satın Alma Durumu"),
