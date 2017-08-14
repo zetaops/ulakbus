@@ -231,6 +231,9 @@ bütçe fazlası miktarınız dikkate alınacaktır.
                          u'yapılacaktır.')}
         self.current.task_data['LANE_CHANGE_MSG'] = msg
         self.current.task_data['degisenleri_goster'] = True
+        self.current.task_data['INVITATION_TITLE'] = "{} | {} | Ek Bütçe Talebi".format(
+            proje.yurutucu.__unicode__(),
+            proje.ad)
 
 
         # ---------- Koordinasyon Birimi --------
