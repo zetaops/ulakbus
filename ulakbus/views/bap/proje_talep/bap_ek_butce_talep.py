@@ -6,6 +6,7 @@
 import json
 from collections import defaultdict
 from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, User
+from zengine.models import TaskInvitation, WFInstance
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _
@@ -235,7 +236,6 @@ bütçe fazlası miktarınız dikkate alınacaktır.
             proje.yurutucu.__unicode__(),
             proje.ad)
 
-
         # ---------- Koordinasyon Birimi --------
 
     def ek_butce_talep_kontrol(self):
@@ -335,10 +335,19 @@ BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
         sistem_kullanicisi = User.objects.get(username='sistem_bilgilendirme')
         basvuru_rol.send_notification(message=self.current.task_data['bildirim_mesaji'],
                                       title=_(
-                                          u"Ek Bütçe Talebi Koordinasyon Birimi Değerlendirmesi"),
+                                          u"Talep Koordinasyon Birimi Değerlendirmesi"),
                                       sender=sistem_kullanicisi)
         proje.talep_uygunlugu = True
         proje.blocking_save({'talep_uygunlugu': True})
+        self.current.output['msgbox'] = {
+            'type': 'info',
+            "title": _(u"İşlem Mesajı"),
+            "msg": "Talep değerlendirmeniz başarılı ile gerçekleştirilmiştir. Proje yürütücüsü "
+                   "{} değerlendirmeniz hakkında bilgilendirilmiştir.".format(
+                proje.yurutucu.__unicode__())}
+        wfi = WFInstance.objects.get(self.current.token)
+        TaskInvitation.objects.filter(instance = wfi,
+                                      role = self.current.role).delete()
 
     def nesne_id_sil(self):
         self.yeni_kalem_sil()
