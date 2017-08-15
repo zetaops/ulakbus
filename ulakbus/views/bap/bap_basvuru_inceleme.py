@@ -56,7 +56,7 @@ class BasvuruInceleme(CrudView):
     def __init__(self, current):
         CrudView.__init__(self, current)
         if not self.object.key:
-            self.object = self.model_class.objects.get(self.current.task_data.get('bap_proje_id',self.input['object_id']))
+            self.object = self.model_class.objects.get(self.current.task_data.get('bap_proje_id',self.input.pop('object_id', '')))
         self.current.output["meta"]["allow_search"] = False
 
         # Genel form, bu nesneyi extend eden digerleri tarafindan degistirilebilsin

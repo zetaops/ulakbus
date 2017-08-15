@@ -145,6 +145,9 @@ class BAPProje(Model):
 
     bitis_tarihi = field.Date(_(u"Tamamlanma Tarihi"))
 
+    yurutucu_talep = field.String(__(u"Yürütücü Değişikliği Talebi"), hidden=True, required=False)
+    komisyon_uyesi = Role(__(u"Komisyon Üyesi"), hidden=True)
+
     class ProjeBelgeleri(ListNode):
         class Meta:
             verbose_name = __(u"Proje Belgesi")
@@ -362,7 +365,7 @@ class BAPEtkinlikProje(Model):
     bildiri_basligi = field.String(__(u"Etkinlik Başlığı"), required=True)
     baslangic = field.Date(__(u"Başlangıç Tarihi"), required=True)
     bitis = field.Date(__(u"Bitiş Tarihi"), required=True)
-    katilim_turu = field.Integer(__(u"Katılım Turu"), required=True,
+    katilim_turu = field.Integer(__(u"Katılım Türü"), required=True,
                                  choices='bap_bilimsel_etkinlik_katilim_turu')
     etkinlik_lokasyon = field.Integer(__(u"Etkinlik Türü"), required=True,
                                       choices="arastirma_hedef_lokasyon")
@@ -376,7 +379,7 @@ class BAPEtkinlikProje(Model):
             verbose_name_plural = __(u"Bilimsel Etkinliklere Katılım Desteği Bütçe Planları")
 
         talep_turu = field.Integer(__(u"Talep Türü"), required=True,
-                                   choices='bap_bilimseL_etkinlik_butce_talep_turleri')
+                                   choices='bap_bilimsel_etkinlik_butce_talep_turleri')
         muhasebe_kod = field.String(__(u"Muhasebe Kod"),
                                     choices='analitik_butce_dorduncu_duzey_gider_kodlari',
                                     default="03.2.6.90")
@@ -541,3 +544,34 @@ class BAPTeklifFiyatIsleme(Model):
         return firmalar[0], firmalar[1]
 
 
+class BAPRapor(Model):
+    class Meta:
+        verbose_name = __(u"Proje Rapor")
+        verbose_name_plural = __(u"Proje Raporları")
+
+    proje = BAPProje()
+    tur = field.Integer(__(u"Rapor Türü"), choices='bap_rapor_turu')
+    durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum')
+    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=False)
+
+    def __unicode__(self):
+        return "%s-%s" % (self.proje.ad, self.get_tur_display())
+
+
+class BAPGenel(Model):
+    toplam_kasa = field.Float(__(u"Toplam Kasa"))
+
+    class KasaGirisi(ListNode):
+        miktar = field.Float(__(u"Miktar"))
+        tarih = field.Date(_(u"Tarih"), index=True, format="%d.%m.%Y")
+
+    @classmethod
+    def get(cls):
+        """
+        Bu modelde tek kayit tutulmaktadir. `get` icin bu kaydi donduren
+        ozel bir method yazilmistir.
+
+        Returns (BAPGenel): BAPGenel instance
+
+        """
+        return cls.objects.get("BAP_GENEL_TEK_KAYIT")

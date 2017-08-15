@@ -60,7 +60,7 @@ class BAPMakineTechizatAra(CrudView):
         """
         Makine, teçhizatların aranıp listelendiği iş akışı adımıdır.
         """
-        form = MakineTechizatAraForm()
+        form = MakineTechizatAraForm(current=self.current)
         # Arama sonuclari task_data'dan alınır.
         arama_sonuclari = self.current.task_data.pop('arama_sonuclari', False)
         if arama_sonuclari:
