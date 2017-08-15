@@ -5,6 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models import BAPProje, User
+from ulakbus.models import Role
 from zengine.lib.test_utils import BaseTestCase
 from zengine.models import WFInstance, Message
 import time
@@ -44,6 +45,35 @@ class TestCase(BaseTestCase):
         del resp.json['objects'][0]
         project_name_list = [obj['fields'][0] for obj in resp.json['objects']]
         assert "Akıllı Robot" in project_name_list
+
+        # Komisyon üyesi atama bölümü
+        komisyon_uyesi_role_key = "GbviU7cmCejVzjO8IB8LV6WCGIf" # Dirican Seven
+        komisyon_uyesi = Role.objects.get(komisyon_uyesi_role_key)
+        self.client.post(cmd='komisyon_uyesi_atama', object_id=project.key)
+        resp = self.client.post(form={'komisyon_uyesi': komisyon_uyesi_role_key,
+                                      'ilerle': 1})
+        assert resp.json['forms']['form'][0]['helpvalue'] == "%s projesine %s " \
+                                                              "komisyon üyesini atayacaksınız." % \
+                                                              (project.ad, komisyon_uyesi.user())
+        resp = self.client.post(form={'onayla': 1})
+
+        assert resp.json['forms']['form'][0]['helpvalue'] == "%s projesine %s adlı komisyon " \
+                                                              "üyesini başarıyla atadınız." % \
+                                                              (project.ad, komisyon_uyesi.user())
+        self.client.post(form={'tamam': 1})
+
+        resp = self.client.post(cmd='komisyon_uyesi_atama', object_id=project.key)
+        assert resp.json['forms']['form'][0]['helpvalue'] == "%s projesinin zaten bir komisyon " \
+                                                             "üyesi bulunmaktadır. Mevcut " \
+                                                             "komisyon üyesinin ismi: %s 'dir. " \
+                                                             "Eğer mevcut komisyon üyesinin " \
+                                                             "yerine bir başkasını atamak " \
+                                                             "istiyorsanız işleme devam ediniz." % \
+                                                             (project.ad, komisyon_uyesi.user())
+        resp = self.client.post(cmd='iptal', form={'iptal': 1})
+        assert resp.json['forms']['form'][0]['helpvalue'] == "Başvuru listeleme ekranına " \
+                                                             "geri dönüyorsunuz"
+        self.client.post(form={'tamam': 1})
 
         # Seçilen proje için işlem geçmişi butonuna basılır ve projenin işlem geçmişi görüntülenir.
         resp = self.client.post(cmd='islem_gecmisi', object_id=project.key,
@@ -172,8 +202,7 @@ class TestCase(BaseTestCase):
         # Proje adı Otomatik Süpürge olarak değiştirilir.
         resp = self.client.post(wf='bap_proje_basvuru',
                                 form={'ad': 'Otomatik Süpürge',
-                                      'teklif_edilen_baslama_tarihi': "29.04.2017",
-                                      'detay_gir': 1})
+                                      'detay_gir': 1}, cmd='detay_gir')
         assert resp.json['forms']['schema']['title'] == 'Proje Detayları'
         assert 'Lorem ipsum' in resp.json['forms']['model']['hedef_ve_amac']
         resp = self.client.post(wf='bap_proje_basvuru', form={'proje_belgeleri': 1})
@@ -186,20 +215,24 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['model']['Calisan'][0]['ad'] == 'Kerim'
 
         resp = self.client.post(cmd='ileri', wf='bap_proje_basvuru', form={'ileri': 1})
+        assert resp.json['forms']['schema']['title'] == "Üniversite Dışı Uzman Ekle"
+        resp = self.client.post(wf='bap_proje_basvuru', cmd='ileri', form={'ileri': 1})
         assert resp.json['forms']['schema']['title'] == "Bap İş Paketi Takvimi"
         resp = self.client.post(wf='bap_proje_basvuru', cmd='bitir', form={'bitir': 1})
-        assert "Otomatik Süpürge" in resp.json['forms']['schema']['title']
-        resp = self.client.post(wf='bap_proje_basvuru', cmd='bitir', form={'bitir': 1})
 
-        assert resp.json['forms']['schema']['title'] == "Üniversite Dışı Uzman Ekle"
-        resp = self.client.post(wf='bap_proje_basvuru', form={'ileri': 1})
         assert resp.json['forms']['schema']['title'] == "Üniversite Dışı Destek Ekle"
         resp = self.client.post(wf='bap_proje_basvuru', form={'ileri': 1})
+        assert resp.json['forms']['schema']['title'] == "Otomatik Süpürge projesi için Bütçe Planı"
+        resp = self.client.post(wf='bap_proje_basvuru', cmd='bitir', form={'bitir': 1})
+
         assert resp.json['forms']['schema']['title'] == "Yürütücü Tecrübesi"
         resp = self.client.post(cmd='ileri', wf='bap_proje_basvuru', form={'ileri': 1})
         assert resp.json['forms']['schema']['title'] == "Yürütücünün Halihazırdaki Projeleri"
         resp = self.client.post(cmd="ileri", wf='bap_proje_basvuru',
                                 form={'ileri': 1, 'form_name': "YurutucuProjeForm"})
+        assert resp.json['forms']['schema']['title'] == "Proje Gerçekleştirme Görevlisi Seçimi"
+        resp = self.client.post(wf='bap_proje_basvuru',
+                                form={'sec': 1, 'form_name': "GerceklestirmeGorevlisiForm"})
 
         # Revize edildikten sonra onaya göndermeden önceki gösterimde
         # projenin adının değiştiği kontrol edilir.
@@ -208,7 +241,7 @@ class TestCase(BaseTestCase):
         # Onaya gönderilir.
         resp = self.client.post(cmd='onay', wf='bap_proje_basvuru', form={'ileri': 1})
         # Başarılı işlem mesajı kontrol edilir.
-        assert resp.json['msgbox']['title'] == "Teşekkürler!"
+        assert resp.json['msgbox']['title'] == "Başvurunuzu tamamladınız!"
 
         project.reload()
         # Projenin durumu 2 yani koordinasyon biriminin onayına gönderildi olarak

@@ -5,17 +5,45 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.models import BAPProje
+from ulakbus.models import Demirbas
 from ulakbus.models import User
 from zengine.lib.test_utils import BaseTestCase
 from time import sleep
 
+DUMMY_TEXT = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula " \
+             "eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient " \
+             "montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, " \
+             "pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla " \
+             "vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, " \
+             "venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer " \
+             "tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend " \
+             "tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. " \
+             "Aliquam lorem ante, dapibus in, viverra quis, feugiat a,"
+
+pdf_belge = {u'belge': {
+    u'file_content': u"""data:application/pdf;base64,JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeX
+    BlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgI
+    CAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICAPgplbmRvYmoKC
+    jMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8
+    PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICA
+    gICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgIC
+    AgICAPgogICAgICAgICAgID4CiAgICAgICAPgogICAgICAvQ29udGVudHMgNCAwIFIKICAPgplbmRvYmoKCjQgMCBvYmoKI
+    CA8PCAvTGVuZ3RoIDU1ID4CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkK
+    SBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAw
+    MCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGV
+    yCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICAPgpzdGFydHhyZWYKNTY1CiUlRU9GCg==""",
+    u'file_name': u'pdf_trial.pdf', u'isImage': False}, u'aciklama': u'pdf denemesi'}
 
 class TestCase(BaseTestCase):
 
     def test_bap_proje_basvuru(self):
 
         for loop in range(2):
+            form = {
+                'sec': 1,
+            }
             if loop == 1:
+                form['tur'] = 'NHOloQ0kAy3Reb03aSlrfEnnlJb'
                 sleep(1)
                 token, user = self.get_user_token('ogretim_uyesi_1')
                 self.prepare_client('/bap_proje_basvuru', user=user, token=token)
@@ -37,17 +65,14 @@ class TestCase(BaseTestCase):
                 assert 'UniversiteDisiDestekForm' in self.client.current.task_data
                 assert 'UniversiteDisiUzmanForm' in self.client.current.task_data
                 assert 'YurutucuTecrubesiForm' in self.client.current.task_data
+                assert 'GerceklestirmeGorevlisiForm' in self.client.current.task_data
 
                 self.client.post(form={'devam': 1})
             else:
+                form['tur'] = 'Kvu9MRWA52accYwKfWKegtZr2BA'
                 user = User.objects.get(username='ogretim_uyesi_1')
                 self.prepare_client('/bap_proje_basvuru', user=user)
                 self.client.post()
-
-            form = {
-                'sec': 1,
-                'tur_id': 'Kvu9MRWA52accYwKfWKegtZr2BA'
-            }
 
             sleep(1)
 
@@ -61,28 +86,36 @@ class TestCase(BaseTestCase):
 
             assert resp.json['forms']['model']['form_name'] == 'GenelBilgiGirForm'
 
+            if loop == 0:
+                self.client.post(cmd='daha_sonra_devam_et')
+                token, user = self.get_user_token('ogretim_uyesi_1')
+                self.prepare_client('/bap_proje_basvuru', user=user, token=token)
+                self.client.post()
+                self.client.post(cmd='kaydet_ve_kontrol')
+                resp = self.client.post(cmd='genel')
+                assert resp.json['forms']['model']['form_name'] == 'GenelBilgiGirForm'
+
             form = {
                 'ad': "Proje1",
                 'anahtar_kelimeler': "proje, bap, bilimsel, araştırma",
                 'detay_gir': 1,
                 'sure': 12,
-                'teklif_edilen_baslama_tarihi': "28.04.2017",
                 'teklif_edilen_butce': 1234
             }
 
-            resp = self.client.post(form=form)
+            resp = self.client.post(form=form, cmd='detay_gir')
 
             assert resp.json['forms']['model']['form_name'] == 'ProjeDetayForm'
 
             form = {
-                'b_plani': "asd",
-                'basari_olcutleri': "asd",
-                'hedef_ve_amac': "asd",
-                'konu_ve_kapsam': "asd",
-                'literatur_ozeti': "asd",
-                'ozgun_deger': "asd",
+                'b_plani': DUMMY_TEXT,
+                'basari_olcutleri': DUMMY_TEXT,
+                'hedef_ve_amac': DUMMY_TEXT,
+                'konu_ve_kapsam': DUMMY_TEXT,
+                'literatur_ozeti': DUMMY_TEXT,
+                'ozgun_deger': DUMMY_TEXT,
                 'proje_belgeleri': 1,
-                'yontem': "asd",
+                'yontem': DUMMY_TEXT,
             }
 
             resp = self.client.post(form=form)
@@ -102,8 +135,7 @@ class TestCase(BaseTestCase):
                 assert resp.json['forms']['model']['form_name'] == 'LabEkleForm'
 
                 # Lab eklenir
-                resp = self.client.post(cmd='ekle', form={'lab': "6Jy9r5e05DwsnkPGOesSvG9v6T8",
-                                                          'lab_ekle': 1})
+                resp = self.client.post(cmd='ekle', form={'lab_id': "6Jy9r5e05DwsnkPGOesSvG9v6T8"})
 
                 olanak = resp.json['forms']['model']['Olanak']
 
@@ -118,12 +150,33 @@ class TestCase(BaseTestCase):
                 assert resp.json['forms']['model']['form_name'] == 'PersonelEkleForm'
 
                 # Personel eklenir
-                resp = self.client.post(cmd='ekle', form={'personel': "L6j4ZvGts0XY5PKEiRPUiWxdTvy",
+                resp = self.client.post(cmd='ekle', form={'personel_id': "L6j4ZvGts0XY5PKEiRPUiWxdTvy",
                                                           'personel_ekle': 1})
 
                 assert resp.json['forms']['model']['form_name'] == 'ArastirmaOlanaklariForm'
 
                 assert len(resp.json['forms']['model']['Olanak']) == 2
+
+                # Demirbas ekleme ekranına gidilir
+                resp = self.client.post(cmd='demirbas')
+
+                assert resp.json['forms']['schema']['title'] == "Makine, Teçhizat Ekle"
+
+                resp = self.client.post(cmd='devam')
+
+                assert resp.json['forms']['model']['form_name'] == 'MakineTechizatAraForm'
+
+                resp = self.client.post(form={'ad': 'masa'}, cmd='ara')
+
+                count = Demirbas.objects.all().search_on(
+                    'ad', 'teknik_ozellikler', 'etiketler', contains='masa').count()
+                dem = Demirbas.objects.all().search_on(
+                    'ad', 'teknik_ozellikler', 'etiketler', contains='masa').values_list('key')[0]
+                assert len(resp.json['objects']) == count + 1
+
+                resp = self.client.post(object_id=dem, cmd='listeye_ekle')
+
+                assert len(resp.json['forms']['model']['Olanak']) == 3
 
             resp = self.client.post(cmd='ilerle', form={'ileri': 1})
 
@@ -136,15 +189,40 @@ class TestCase(BaseTestCase):
                             'ad': "Orhan",
                             'soyad': "Veli",
                             'nitelik': "Şair",
-                            'calismaya_katkisi': "Şiir"
+                            'calismaya_katkisi': "Şiir",
+                            'kurum': 'Ölü Ozanlar Derneği'
                         }
                     ],
                     'ileri': 1
                 }
                 # Calisan eklenir
-                self.client.post(cmd='ileri', form=form)
+                resp = self.client.post(cmd='ileri', form=form)
             else:
-                self.client.post(cmd='ileri')
+                resp = self.client.post(cmd='ileri')
+
+            assert resp.json['forms']['model']['form_name'] == 'UniversiteDisiUzmanForm'
+
+            if loop == 0:
+                form = {
+                    'Uzman': [
+                        {
+                            'ad': "Osman",
+                            'eposta': "osman@zops.com",
+                            'faks': "2324568",
+                            'kurum': "Zetaops",
+                            'soyad': "Uyar",
+                            'tel': "2324567",
+                            'unvan': "Geliştirici"
+                        }
+                    ],
+                    'ileri': 1
+                }
+
+                resp = self.client.post(cmd='ileri', form=form)
+            else:
+                resp = self.client.post(cmd='ileri')
+
+            assert resp.json['forms']['schema']['title'] == "Bap İş Paketi Takvimi"
 
             # İş paketi ekranı
             form = {
@@ -208,52 +286,64 @@ class TestCase(BaseTestCase):
             form['iptal'] = 1
 
             self.client.post(cmd='iptal', form=form)
-            self.client.post(cmd='bitir', form={'bitir': 1})
-
-            # Bütçe planı ekranı
             resp = self.client.post(cmd='bitir', form={'bitir': 1})
 
-            assert resp.json['forms']['model']['form_name'] == 'UniversiteDisiUzmanForm'
+            assert resp.json['forms']['model']['form_name'] == 'UniversiteDisiDestekForm'
 
             if loop == 0:
                 form = {
-                    'Uzman': [
+                    'Destek': [
                         {
-                            'ad': "Osman",
-                            'eposta': "osman@zops.com",
-                            'faks': "2324568",
-                            'kurum': "Zetaops",
-                            'soyad': "Uyar",
-                            'tel': "2324567",
-                            'unvan': "Geliştirici"
+                            'destek_belgesi': pdf_belge,
+                            'destek_belgesi_aciklamasi': "asd",
+                            'destek_miktari': "asd",
+                            'kurulus': "asd",
+                            'sure': 12,
+                            'tur': "asd",
+                            'verildigi_tarih': "2017-07-17T21:00:00.000Z"
                         }
                     ],
                     'ileri': 1
                 }
-
                 resp = self.client.post(form=form)
             else:
                 resp = self.client.post()
 
-            sleep(1)
-            assert resp.json['forms']['model']['form_name'] == 'UniversiteDisiDestekForm'
+            assert resp.json['forms']['schema']['title'] == "Proje1 projesi için Bütçe Planı"
 
-            destek = resp.json['forms']['model']['Destek']
+            # Bütçe planı ekranı
+            resp = self.client.post(cmd='bitir', form={'bitir': 1})
 
-            resp = self.client.post(form={'ileri': 1, 'Destek': destek if destek else []})
             assert resp.json['forms']['model']['form_name'] == 'YurutucuTecrubesiForm'
             akademik_faaliyet = resp.json['forms']['model']['AkademikFaaliyet']
 
             resp = self.client.post(form={'ileri': 1,
                                           'AkademikFaaliyet': akademik_faaliyet if
-                                          akademik_faaliyet else []})
+                                          akademik_faaliyet else []}, cmd='ileri')
 
             assert resp.json['forms']['model']['form_name'] == 'YurutucuProjeForm'
             proje = resp.json['forms']['model']['Proje']
 
-            # Görüntüle
-            self.client.post(cmd='ileri', form={'ileri': 1,
-                                                'Proje': proje if proje else []})
+            resp = self.client.post(cmd='ileri', form={'ileri': 1,
+                                                       'Proje': proje if proje else []})
+
+            # Proje Gerçekleştiricisi
+            proje = BAPProje.objects.get(self.client.current.task_data['bap_proje_id'])
+            if loop == 0:
+                assert "Gerçekleştirme Görevlisi" in resp.json['forms']['schema']['title']
+                resp = self.client.post(wf='bap_proje_basvuru',
+                                        form={'gerceklestirme_gorevlisi_id': None, 'sec': 1})
+                assert resp.json['msgbox']['title'] == "Gerçekleştirme Görevlisi Seçimi Hatası"
+                assert "Gerçekleştirme Görevlisi" in resp.json['forms']['schema']['title']
+                self.client.post(wf='bap_proje_basvuru',
+                                 form={'gerceklestirme_gorevlisi_id': "DFAhsiUW9rhz0bhmM5C9WOacorI",
+                                       'sec': 1})
+                proje.reload()
+                assert proje.gerceklestirme_gorevlisi.key == "DFAhsiUW9rhz0bhmM5C9WOacorI"
+
+            if loop == 1:
+                proje.reload()
+                assert proje.gerceklestirme_gorevlisi.user == self.client.current.user
 
             # Onaya gönder
             resp = self.client.post(cmd='onay', form={'onay': 1})

@@ -83,8 +83,26 @@ def is_akisini_belli_bir_adimdan_aktif_et(role,object,data,step,title,message,se
 def get_temp_password():
     return uuid.uuid4().hex
 
+
 def get_file_url(key):
     return "%s%s" % (settings.S3_PUBLIC_URL, key)
+
+
+def e_mail_star_formatter(e_mail):
+    """
+    Formats with stars first part and second part of e-mail address.
+    Example output:
+        given e-mail address: info@zetaops.io
+        formatted output: in***@ze***
+    
+    Args:
+        e_mail(str): e-mail address 
+
+    Returns(str): e-mail address formatted with star
+
+    """
+    first, second = tuple(e_mail.split('@'))
+    return "{}***@{}***".format(first[:2], second[:2])
 
 
 def saat2slot(saat):

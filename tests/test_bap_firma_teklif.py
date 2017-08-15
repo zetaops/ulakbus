@@ -49,7 +49,6 @@ class TestCase(BaseTestCase):
         satin_alma = BAPSatinAlma.objects.get('EEEKHshgTCZXSl02obdeZckzut2')
         user = User.objects.get(username='bap_firma_yetkilisi_1')
         firma = user.bap_firma_set[0].bap_firma
-        BAPTeklif.objects.filter(firma=firma, durum=1).delete()
         self.prepare_client('/bap_firma_teklif', user=user)
         resp = self.client.post()
 
@@ -59,7 +58,8 @@ class TestCase(BaseTestCase):
         assert resp.json['forms']['schema']['properties']['add']['title'] == "Tekliflerimi Göster"
         assert "Satın Alma Duyuru Adı" in resp.json['objects'][0]
         assert "Teklife Açılma Tarihi" in resp.json['objects'][0]
-        action_names = ["Teklifte Bulun", "Ayrıntı Gör"]
+        action_names = ["Teklifte Bulun", "Ayrıntı Gör", "Teklif Belgeleri Düzenle",
+                        "Teklif Belgeleri İndir"]
         for action in resp.json['objects'][1]['actions']:
             assert action['name'] in action_names
 
@@ -77,8 +77,7 @@ class TestCase(BaseTestCase):
         resp = self.client.post(wf='bap_firma_teklif', cmd="ayrinti",
                                 data_key="GSX4LNZntJicEmD4k0DQ3u7M9ME")
 
-        assert resp.json['forms']['schema'][
-                   'title'] == "4 Kalem Malzeme Alımı Satın Alma Duyurusu Bütçe Kalemleri"
+        assert "4 Kalem Kırtasiye Malzemesi Alımı" in resp.json['forms']['schema']['title']
 
         assert "Bütçe Kalemi Adı" in resp.json['objects'][0]
         assert "Adet" in resp.json['objects'][0]

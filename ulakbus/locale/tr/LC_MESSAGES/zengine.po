@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-02-23 16:42+0300\n"
-"PO-Revision-Date: 2017-02-23 16:51+0300\n"
+"POT-Creation-Date: 2017-08-08 15:59+0300\n"
+"PO-Revision-Date: 2017-08-08 16:21+0300\n"
 "Last-Translator: Anil Can Aydin <anlcnydn@gmail.com>\n"
 "Language: tr\n"
 "Language-Team: tr <LL@li.org>\n"
@@ -17,51 +17,51 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.1\n"
 
-#: ../../zengine/zengine/management_commands.py:568
+#: ../../zengine/zengine/management_commands.py:577
 msgid "Checking migration and solr ..."
 msgstr "Migration ve solr kontrol ediliyor ..."
 
-#: ../../zengine/zengine/management_commands.py:573
+#: ../../zengine/zengine/management_commands.py:582
 msgid "{0}Error not connected, open redis and rabbitmq{1}"
 msgstr "{0}Hata, Open Redis ve rabbitmq'ya bağlanılamadı.{1}"
 
-#: ../../zengine/zengine/management_commands.py:589
+#: ../../zengine/zengine/management_commands.py:598
 msgid "{0}Redis is not working{1} "
 msgstr "{0}Redis çalışmıyor{1} "
 
-#: ../../zengine/zengine/management_commands.py:603
+#: ../../zengine/zengine/management_commands.py:612
 msgid "{0}Riak is working{1}"
 msgstr "{0}Riak çalışıyor{1}"
 
-#: ../../zengine/zengine/management_commands.py:605
-#: ../../zengine/zengine/management_commands.py:607
+#: ../../zengine/zengine/management_commands.py:614
+#: ../../zengine/zengine/management_commands.py:616
 msgid "{0}Riak is not working{1}"
 msgstr "{0}Riak çalışmıyor{1}"
 
-#: ../../zengine/zengine/management_commands.py:623
+#: ../../zengine/zengine/management_commands.py:632
 msgid "{0}RabbitMQ is working{1}"
 msgstr "{0}RabbitMQ çalışıyor{1}"
 
-#: ../../zengine/zengine/management_commands.py:625
-#: ../../zengine/zengine/management_commands.py:627
+#: ../../zengine/zengine/management_commands.py:634
+#: ../../zengine/zengine/management_commands.py:636
 msgid "{0}RabbitMQ is not working!{1}"
 msgstr "{0}RabbitMQ çalışmıyor!{1}"
 
-#: ../../zengine/zengine/management_commands.py:629
+#: ../../zengine/zengine/management_commands.py:638
 msgid "{0}RabbitMQ username and password wrong{1}"
 msgstr "{0}RabbitMQ kullanıcı adı ve şifre hatalı{1}"
 
-#: ../../zengine/zengine/management_commands.py:641
+#: ../../zengine/zengine/management_commands.py:650
 msgid "{0}File system encoding correct{1}"
 msgstr "{0}Dosya sistemi şifrelemesi doğru{1}"
 
-#: ../../zengine/zengine/management_commands.py:644
+#: ../../zengine/zengine/management_commands.py:653
 msgid "{0}File system encoding wrong!!{1}"
 msgstr "{0}Dosya sistemi şifrelemesi hatalı{1}"
 
-#: ../../zengine/zengine/management_commands.py:653
+#: ../../zengine/zengine/management_commands.py:662
 msgid "{0}{1} : {2}{3}"
 msgstr "{0}{1} : {2}{3}"
 
@@ -377,7 +377,7 @@ msgstr "Görev İsmi"
 
 #: ../../zengine/zengine/models/workflow_manager.py:643
 msgid "Combined full-text search data"
-msgstr "Birleştirilmiş tam metin arama verisi."
+msgstr "Birleştirilmiş tam metin arama verisi"
 
 #: ../../zengine/zengine/views/channel_management.py:30
 #: ../../zengine/zengine/views/channel_management.py:40
@@ -436,7 +436,7 @@ msgstr "Oluştur"
 
 #: ../../zengine/zengine/views/channel_management.py:135
 msgid "Choose a Channel Which Will Be Merged With Chosen Channels"
-msgstr "Seçili Kanallarla Birleştirilecek bir Kanal Seçiniz."
+msgstr "Seçili Kanallarla Birleştirilecek bir Kanal Seçiniz"
 
 #: ../../zengine/zengine/views/channel_management.py:143
 msgid "Choose"
@@ -448,7 +448,7 @@ msgstr "İşlem yapmak için sadece bir kanal seçmelisiniz."
 
 #: ../../zengine/zengine/views/channel_management.py:170
 msgid "Choose Subscribers to Migrate"
-msgstr "Taşıyacağınız Aboneleri Seçiniz "
+msgstr "Taşıyacağınız Aboneleri Seçiniz"
 
 #: ../../zengine/zengine/views/channel_management.py:176
 msgid "Move to a New Channel"
@@ -495,29 +495,47 @@ msgstr "Kanal ayırma işlemi için bir kanal seçmelisiniz."
 msgid "Add"
 msgstr "Ekle"
 
-#: ../../zengine/zengine/views/crud.py:47 ../../zengine/zengine/views/crud.py:255
+#: ../../zengine/zengine/views/crud.py:47 ../../zengine/zengine/views/crud.py:263
 msgid "Save"
 msgstr "Kaydet"
 
-#: ../../zengine/zengine/views/crud.py:48 ../../zengine/zengine/views/crud.py:256
+#: ../../zengine/zengine/views/crud.py:48 ../../zengine/zengine/views/crud.py:264
 msgid "Save and List"
 msgstr "Kaydet ve Listele"
 
-#: ../../zengine/zengine/views/crud.py:49 ../../zengine/zengine/views/crud.py:258
+#: ../../zengine/zengine/views/crud.py:49 ../../zengine/zengine/views/crud.py:266
 msgid "Save as New"
 msgstr "Yeni Olarak Kaydet"
 
-#: ../../zengine/zengine/views/crud.py:51 ../../zengine/zengine/views/crud.py:260
+#: ../../zengine/zengine/views/crud.py:51 ../../zengine/zengine/views/crud.py:268
 msgid "Save as New and List"
 msgstr "Yeni Olarak Kaydet ve Listele"
 
-#: ../../zengine/zengine/views/crud.py:245
+#: ../../zengine/zengine/views/crud.py:58
+msgid "Cancel"
+msgstr "İptal"
+
+#: ../../zengine/zengine/views/crud.py:59
+msgid "Confirm"
+msgstr "Onayla"
+
+#: ../../zengine/zengine/views/crud.py:252
 msgid "Delete"
 msgstr "Sil"
 
-#: ../../zengine/zengine/views/crud.py:246
+#: ../../zengine/zengine/views/crud.py:254
 msgid "Edit"
 msgstr "Düzenle"
+
+#: ../../zengine/zengine/views/crud.py:864
+msgid "Deletion Confirmation"
+msgstr "Silme Onayı"
+
+# Format does not work for translations
+#: ../../zengine/zengine/views/crud.py:865
+#, python-format
+msgid "Do you confirm the deletion of %s ?"
+msgstr "Silme işlemini onaylıyor musunuz %s ?"
 
 #: ../../zengine/zengine/views/role_switching.py:26
 msgid "Switch Role"
