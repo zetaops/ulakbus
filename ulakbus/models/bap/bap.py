@@ -257,8 +257,7 @@ class BAPProje(Model):
         return "%s: %s" % (self.ad, self.yurutucu.__unicode__())
 
     def post_save(self):
-        changed_fields = self.changed_fields()
-        if self.durum == 5 and "durum" in changed_fields:
+        if self.durum == 5 and self.is_changed('durum'):
             genel = BAPGenel.get()
             genel.toplam_taahhut += self.kabul_edilen_butce
             genel.save()
@@ -414,11 +413,10 @@ class BAPEtkinlikProje(Model):
         return "Var" if self.teknik_sartname.aciklama else "Yok"
 
     def post_save(self):
-        changed_fields = self.changed_fields()
-        if self.durum==2 and "durum" in changed_fields:
+        if self.durum == 2 and self.is_changed('durum'):
             for islem in self.EtkinlikButce:
                 self.toplam_butce += islem.istenen_tutar
-            genel=BAPGenel.get()
+            genel = BAPGenel.get()
             genel.toplam_taahhut += self.toplam_butce
             genel.save()
 
@@ -524,8 +522,7 @@ class BAPSatinAlma(Model):
         return "%s" % self.ad
 
     def post_save(self):
-        changed_fields = self.changed_fields()
-        if self.teklif_durum==5 and "teklif_durum" in changed_fields:
+        if self.teklif_durum == 3 and self.is_changed('teklif_durum'):
             genel = BAPGenel.get()
             genel.toplam_kasa -= self.gerceklesen_satin_alma
             genel.toplam_taahhut -= self.taahhut_edilen
