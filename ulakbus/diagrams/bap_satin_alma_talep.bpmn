@@ -24,7 +24,7 @@
         <bpmn:flowNodeRef>butce_kalem_kaydet</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>revizyon_mesaj_goster</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_1izetx2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_0iak1yq</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>daha_sonra_devam_et</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="mali_koordinator_lane" name="Mali Koordinatör">
@@ -132,14 +132,14 @@
     <bpmn:sequenceFlow id="SequenceFlow_0o6n38t" sourceRef="ExclusiveGateway_020fdj8" targetRef="EndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1fv0ls2" sourceRef="ExclusiveGateway_1izetx2" targetRef="Task_0iak1yq">
+    <bpmn:sequenceFlow id="SequenceFlow_1fv0ls2" sourceRef="ExclusiveGateway_1izetx2" targetRef="daha_sonra_devam_et">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='daha_sonra_devam_et']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Task_0iak1yq" name="Daha Sonra Devam Et">
+    <bpmn:serviceTask id="daha_sonra_devam_et" name="Daha Sonra Devam Et">
       <bpmn:incoming>SequenceFlow_1fv0ls2</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1uezxxl</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_1uezxxl" sourceRef="Task_0iak1yq" targetRef="revizyon_mesaj_goster" />
+    <bpmn:sequenceFlow id="SequenceFlow_1uezxxl" sourceRef="daha_sonra_devam_et" targetRef="revizyon_mesaj_goster" />
     <bpmn:sequenceFlow id="SequenceFlow_1sygw4t" sourceRef="revizyon_gerekce_gir" targetRef="revizyon_talep_gonder" />
     <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_1wuq2a0</bpmn:incoming>
@@ -356,7 +356,7 @@
           <dc:Bounds x="378" y="246" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0m72g0t_di" bpmnElement="Task_0iak1yq">
+      <bpmndi:BPMNShape id="ServiceTask_0m72g0t_di" bpmnElement="daha_sonra_devam_et">
         <dc:Bounds x="401" y="221" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1uezxxl_di" bpmnElement="SequenceFlow_1uezxxl">
