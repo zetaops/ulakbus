@@ -92,11 +92,13 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
              'show_as': 'button'},
         ]
         if obj.durum == 5:
-            result['actions'].append({'name': _(u'Talepler'), 'cmd': 'talepler', 'mode': 'normal',
-                                      'show_as': 'button'})
             result['actions'].append(
                 {'name': _(u'Rapor Ekle'), 'cmd': 'bap_proje_raporu', 'mode': 'normal',
                  'show_as': 'button'})
+            if obj.talep_uygunlugu:
+                result['actions'].append(
+                    {'name': _(u'Talepler'), 'cmd': 'talepler', 'mode': 'normal',
+                     'show_as': 'button'})
 
     @list_query
     def list_by_personel_id(self, queryset):
