@@ -256,6 +256,13 @@ class BAPProje(Model):
     def __unicode__(self):
         return "%s: %s" % (self.ad, self.yurutucu.__unicode__())
 
+    def post_save(self):
+        changed_fields = self.changed_fields()
+        if self.durum == 5 and "durum" in changed_fields:
+            genel = BAPGenel.get()
+            genel.toplam_taahhut += self.kabul_edilen_butce
+            genel.save()
+
 
 class BAPIsPaketi(Model):
     class Meta:
@@ -378,6 +385,7 @@ class BAPEtkinlikProje(Model):
     basvuru_yapan = Okutman()
     durum = field.Integer(__(u"Durum"), choices='bap_bilimsel_etkinlik_butce_talep_durum')
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
+    toplam_butce = field.Float(_(u"Taahhüt Edilen Bütçe"))
 
     class EtkinlikButce(ListNode):
         class Meta:
@@ -399,12 +407,20 @@ class BAPEtkinlikProje(Model):
         aciklama = field.Text(_(u"Açıklama"), required=False)
         degerlendirme_sonuc = field.Integer(_(u"Değerlendirme Sonucu"),
                                             choices='bap_proje_degerlendirme_sonuc')
-
     def __unicode__(self):
         return "%s | %s" % (self.bildiri_basligi, self.basvuru_yapan.__unicode__())
 
     def _teknik_sartname(self):
         return "Var" if self.teknik_sartname.aciklama else "Yok"
+
+    def post_save(self):
+        changed_fields = self.changed_fields()
+        if self.durum==2 and "durum" in changed_fields:
+            for islem in self.EtkinlikButce:
+                self.toplam_butce += islem.istenen_tutar
+            genel=BAPGenel.get()
+            genel.toplam_taahhut += self.toplam_butce
+            genel.save()
 
     _teknik_sartname.title = __(u"Teknik Şartname")
 
@@ -498,12 +514,26 @@ class BAPSatinAlma(Model):
     sonuclanma_tarihi = field.Date(__(u"Teklifin Sonuçlanma Tarihi"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
     sorumlu = Role()
+    taahhut_edilen = field.Float(_(u"Taahhüt Edilen Bütçe"))
+    gerceklesen_satin_alma = field.Float(_(u"Gerçekleşen Satın Alma Fiyatı"))
 
     class ButceKalemleri(ListNode):
         butce = BAPButcePlani()
 
     def __unicode__(self):
         return "%s" % self.ad
+
+    def post_save(self):
+        changed_fields = self.changed_fields()
+        if self.teklif_durum==5 and "teklif_durum" in changed_fields:
+            genel = BAPGenel.get()
+            genel.toplam_kasa -= self.gerceklesen_satin_alma
+            genel.toplam_taahhut -= self.taahhut_edilen
+            genel.gerceklesen_taahhut_farki += (self.taahhut_edilen - self.gerceklesen_satin_alma)
+            genel.save()
+            hareket = BapKasaHareketi(miktar=-self.gerceklesen_satin_alma,
+                                      tarih=self.sonuclanma_tarihi, sebep=3)
+            hareket.save()
 
 
 class BAPTeklif(Model):
@@ -562,13 +592,22 @@ class BAPRapor(Model):
     def __unicode__(self):
         return "%s-%s" % (self.proje.ad, self.get_tur_display())
 
+class BapKasaHareketi(Model):
+    class Meta:
+        verbose_name = __(u"Kasa Hareketi")
+        verbose_name_plural = __(u"Kasa Hareketleri")
+    miktar = field.Float(__(u"Miktar"))
+    tarih = field.Date(_(u"Tarih"), index=True, format="%d.%m.%Y")
+    sebep = field.Integer(_(u"Kasa Giriş Sebebi"), index=True, choices="kasa_giris_sebepleri")
+
 
 class BAPGenel(Model):
-    toplam_kasa = field.Float(__(u"Toplam Kasa"))
+    class Meta:
+        verbose_name = __(u"BAPGenel")
 
-    class KasaGirisi(ListNode):
-        miktar = field.Float(__(u"Miktar"))
-        tarih = field.Date(_(u"Tarih"), index=True, format="%d.%m.%Y")
+    toplam_kasa = field.Float(__(u"Toplam Kasa"))
+    toplam_taahhut = field.Float(__(u"Taahhüt Edilen Tutar"))
+    gerceklesen_taahhut_farki = field.Float(__(u"Gerçekleşen Taahhüt Farkı"))
 
     @classmethod
     def get(cls):
@@ -580,3 +619,5 @@ class BAPGenel(Model):
 
         """
         return cls.objects.get("BAP_GENEL_TEK_KAYIT")
+
+
