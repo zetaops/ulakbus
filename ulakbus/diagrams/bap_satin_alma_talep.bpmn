@@ -11,6 +11,11 @@
     </bpmn:extensionElements>
     <bpmn:laneSet>
       <bpmn:lane id="ogretim_uyesi_lane" name="Öğretim Üyesi">
+        <bpmn:extensionElements>
+          <camunda:properties>
+            <camunda:property name="menu_category" value="BAP" />
+          </camunda:properties>
+        </bpmn:extensionElements>
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>butce_kalemleri_listele_sec</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_1thwpgr</bpmn:flowNodeRef>
@@ -19,8 +24,8 @@
         <bpmn:flowNodeRef>butce_kalem_kaydet</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>revizyon_mesaj_goster</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_1izetx2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_0iak1yq</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="mali_koordinator_lane" name="Mali Koordinatör">
         <bpmn:flowNodeRef>satin_alma_talep_incele</bpmn:flowNodeRef>
@@ -41,7 +46,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='talep_gonder']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1gvm0ez" sourceRef="butce_kalem_kaydet" targetRef="satin_alma_talep_incele" />
-    <bpmn:userTask id="satin_alma_talep_incele" name="Satın Alma Talebini İncele">
+    <bpmn:userTask id="satin_alma_talep_incele" name="Satın Alma Talebini İncele" camunda:assignee="bap.proje_talep.bap_satin_alma_talep.BAPSatinAlmaTalep.satin_alma_talep_incele">
       <bpmn:incoming>SequenceFlow_1gvm0ez</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0o3bova</bpmn:outgoing>
     </bpmn:userTask>
@@ -87,7 +92,7 @@
       <bpmn:outgoing>SequenceFlow_0qhar31</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0o6n38t</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="butce_kalem_kaydet" name="Seçilen Bütçe Kalemlerini Kaydet">
+    <bpmn:serviceTask id="butce_kalem_kaydet" name="Seçilen Bütçe Kalemlerini Kaydet" camunda:class="bap.proje_talep.bap_satin_alma_talep.BAPSatinAlmaTalep.butce_kalem_kaydet">
       <bpmn:incoming>SequenceFlow_0lfpi8c</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1gvm0ez</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -120,11 +125,6 @@
     <bpmn:sequenceFlow id="SequenceFlow_0qhar31" sourceRef="ExclusiveGateway_020fdj8" targetRef="butce_kalemleri_listele_sec">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='geri_don']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:endEvent id="EndEvent">
-      <bpmn:incoming>SequenceFlow_1wuq2a0</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_05jwxhf</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_0o6n38t</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1wuq2a0" sourceRef="koordinasyon_birimine_gonder" targetRef="EndEvent" />
     <bpmn:sequenceFlow id="SequenceFlow_05jwxhf" sourceRef="ExclusiveGateway_1thwpgr" targetRef="EndEvent">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
@@ -141,6 +141,11 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1uezxxl" sourceRef="Task_0iak1yq" targetRef="revizyon_mesaj_goster" />
     <bpmn:sequenceFlow id="SequenceFlow_1sygw4t" sourceRef="revizyon_gerekce_gir" targetRef="revizyon_talep_gonder" />
+    <bpmn:endEvent id="EndEvent">
+      <bpmn:incoming>SequenceFlow_1wuq2a0</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_05jwxhf</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0o6n38t</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1kapu2j">
@@ -313,35 +318,35 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_1p7vra4_di" bpmnElement="EndEvent">
-        <dc:Bounds x="977.8302354399009" y="316.8946716232962" width="36" height="36" />
+        <dc:Bounds x="986" y="370" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="996" y="352.8946716232962" width="0" height="0" />
+          <dc:Bounds x="1004" y="406" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1wuq2a0_di" bpmnElement="SequenceFlow_1wuq2a0">
         <di:waypoint xsi:type="dc:Point" x="870" y="665" />
         <di:waypoint xsi:type="dc:Point" x="924" y="665" />
-        <di:waypoint xsi:type="dc:Point" x="924" y="335" />
-        <di:waypoint xsi:type="dc:Point" x="978" y="335" />
+        <di:waypoint xsi:type="dc:Point" x="924" y="388" />
+        <di:waypoint xsi:type="dc:Point" x="986" y="388" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="939" y="490" width="0" height="0" />
+          <dc:Bounds x="939" y="526.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_05jwxhf_di" bpmnElement="SequenceFlow_05jwxhf">
         <di:waypoint xsi:type="dc:Point" x="451" y="154" />
         <di:waypoint xsi:type="dc:Point" x="451" y="189" />
-        <di:waypoint xsi:type="dc:Point" x="996" y="189" />
-        <di:waypoint xsi:type="dc:Point" x="996" y="317" />
+        <di:waypoint xsi:type="dc:Point" x="1004" y="189" />
+        <di:waypoint xsi:type="dc:Point" x="1004" y="370" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="724" y="174" width="0" height="0" />
+          <dc:Bounds x="728" y="174" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0o6n38t_di" bpmnElement="SequenceFlow_0o6n38t">
         <di:waypoint xsi:type="dc:Point" x="709" y="154" />
-        <di:waypoint xsi:type="dc:Point" x="709" y="335" />
-        <di:waypoint xsi:type="dc:Point" x="978" y="335" />
+        <di:waypoint xsi:type="dc:Point" x="709" y="388" />
+        <di:waypoint xsi:type="dc:Point" x="986" y="388" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="724" y="244.5" width="0" height="0" />
+          <dc:Bounds x="724" y="271" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1fv0ls2_di" bpmnElement="SequenceFlow_1fv0ls2">

@@ -51,6 +51,22 @@ class ButceKalemGosterForm(JsonForm):
     kaydet = fields.Button(_(u"Kaydet"), cmd='talep_gonder')
 
 
+class TalepInceleForm(JsonForm):
+    class Meta:
+        title = __(u"Satın Alması Talep Edilen Bütçe Kalemleri")
+
+    class Kalem(ListNode):
+        class Meta:
+            title = __(u"Bütçe Kalemleri")
+        ad = fields.String(_(u"Tanımı/Adı"), readonly=True)
+        adet = fields.Integer(_(u"Adet"), readonly=True)
+        alim_kalemi_sartnamesi = fields.String(_(u"Alım Kalemi Şartnamesi"), readonly=True)
+        genel_sartname = fields.String(_(u"Genel Şartname"), readonly=True)
+        butce_plan_key = fields.String(_(u"Key"), hidden=True)
+
+    revizyon = fields.Button(_(u"Revizyona Gönder"), cmd='revizyon')
+    calisan_ata = fields.Button(_(u"Çalışan Ata"), cmd='koordinasyon')
+
 
 class BAPSatinAlmaTalep(CrudView):
 
@@ -68,7 +84,7 @@ class BAPSatinAlmaTalep(CrudView):
                 sec=False,
                 ad=bp.ad,
                 adet=bp.adet,
-                alim_kalemi_sartnamesi=bp.teknik_sartname,
+                alim_kalemi_sartnamesi=bp.teknik_sartname.__unicode__(),
                 genel_sartname="",
                 butce_plan_key=bp.key,
             )
@@ -87,7 +103,8 @@ class BAPSatinAlmaTalep(CrudView):
         self.current.output['meta']['allow_add_listnode'] = False
 
     def butce_kalem_kaydet(self):
-        print "asd"
+        self.current.task_data['satin_almasi_talep_edilen_butce_kalemleri'] = self.input['form'][
+            'Kalem']
 
     def revizyon_mesaji_goster(self):
         pass
@@ -99,7 +116,13 @@ class BAPSatinAlmaTalep(CrudView):
     # Mali koordinator
 
     def satin_alma_talep_incele(self):
-        pass
+        form = TalepInceleForm()
+        butce_kalemleri = self.current.task_data['satin_almasi_talep_edilen_butce_kalemleri']
+        for bk in butce_kalemleri:
+            if bk['sec']:
+                form.Kalem(**bk)
+        self.form_out(form)
+        self.current.output['meta']['allow_add_listnode'] = False
 
     def koordinasyon_birimi_gorevlisi_sec(self):
         pass
