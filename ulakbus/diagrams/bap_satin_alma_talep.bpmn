@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1kapu2j">
     <bpmn:extensionElements>
       <camunda:properties>
-        <camunda:property />
+        <camunda:property name="menu_category" value="hidden" />
       </camunda:properties>
     </bpmn:extensionElements>
     <bpmn:participant id="Participant_0xcvflj" processRef="bap_satin_alma_talep" />
@@ -16,11 +16,6 @@
     </bpmn:extensionElements>
     <bpmn:laneSet>
       <bpmn:lane id="ogretim_uyesi_lane" name="Öğretim Üyesi">
-        <bpmn:extensionElements>
-          <camunda:properties>
-            <camunda:property name="menu_category" value="hidden" />
-          </camunda:properties>
-        </bpmn:extensionElements>
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>butce_kalemleri_listele_sec</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>revizyon_mesaj_goster</bpmn:flowNodeRef>

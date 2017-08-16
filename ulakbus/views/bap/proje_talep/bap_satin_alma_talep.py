@@ -76,6 +76,7 @@ class KoordinasyonCalisaniSecForm(JsonForm):
         title = __(u"Koordinasyon Birimi Çalışanı")
 
     calisan_rol = fields.String(_(u"Takip Edecek Personel"))
+    satin_alma_turu = fields.Integer(_(u"Satın Alma Türü"), choices='bap_satin_alma_turleri')
 
     iptal = fields.Button(_(u"İptal"), cmd='iptal', form_validation=False)
     gonder = fields.Button(_(u"Gönder"), cmd='gonder')
@@ -196,8 +197,7 @@ class BAPSatinAlmaTalep(CrudView):
         rol_key = self.input['form']['calisan_rol']
         role = Role.objects.get(rol_key)
 
-        # wf = BPMNWorkflow.objects.get(name='bap_tasinir_kodlari')
-        wf = BPMNWorkflow.objects.get(name='bap_butce_fisi')
+        wf = BPMNWorkflow.objects.get(name='bap_tasinir_kodlari')
         today = datetime.today()
         wfi = WFInstance(
             wf=wf,
@@ -208,6 +208,8 @@ class BAPSatinAlmaTalep(CrudView):
         wfi.data = dict()
         wfi.data['flow'] = None
         wfi.data['secilen_butce_planlari'] = self.current.task_data['secilen_butce_planlari']
+        wfi.data['satin_alma_turu'] = self.input['form']['satin_alma_turu']
+        wfi.data['bap_proje_id'] = self.current.task_data['bap_proje_id']
         wfi.pool = {}
         wfi.blocking_save()
         inv = TaskInvitation(
@@ -218,8 +220,7 @@ class BAPSatinAlmaTalep(CrudView):
             start_date=today,
             finish_date=today + timedelta(15)
         )
-        #inv.title = wf.name
-        inv.title = "DENEME"
+        inv.title = wf.name
         inv.save()
 
         if self.current.task_data['toplam_bk'] - len(

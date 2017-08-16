@@ -493,6 +493,9 @@ class BAPSatinAlma(Model):
     aciklama = field.Text(__(u"Açıklama"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
     ilgili_proje = BAPProje()
+    tek_firma = BAPFirma()
+    tur = field.Integer(_(u"Satın Alma Türü"), choices='bap_satin_alma_turleri')
+    duyuruda = field.Boolean(_(u"Duyuru Durumu"), default=False)
     sorumlu = Role()
 
     class ButceKalemleri(ListNode):

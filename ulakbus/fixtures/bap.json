@@ -448,5 +448,15 @@
       "tr": "Gündeme Alındı",
       "en": ""
     }
+  },
+  "bap_satin_alma_turleri": {
+    "1": {
+      "tr": "Tek Firma",
+      "en": ""
+    },
+    "2": {
+      "tr": "Herkese Açık",
+      "en": ""
+    }
   }
 }
