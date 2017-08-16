@@ -19,7 +19,7 @@ class MakineTechizatAraForm(JsonForm):
         title = _(u"Teçhizat Arama")
 
     ad = fields.String(_(u"Mal/Malzeme"), required=True)
-    birim = fields.String(_(u"Birim"), required=True)
+    birim = fields.String(_(u"Birim"))
 
     ara = fields.Button(_(u"Ara"), cmd='ara')
     iptal = fields.Button(_(u"İptal"), cmd='iptal', form_validation=False)
