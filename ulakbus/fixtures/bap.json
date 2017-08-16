@@ -293,6 +293,28 @@
       "en": ""
     }
   },
+  "bap_butce_plani_satin_alma_durumu": {
+    "1": {
+      "tr": "Öğretim Üyesi Tarafından Satın Alma Talebi Yapıldı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Satın Alma İlanında",
+      "en": ""
+    },
+    "3": {
+      "tr": "Teslim Alma Sürecinde",
+      "en": ""
+    },
+    "4": {
+      "tr": "Teslim Alındı",
+      "en": ""
+    },
+    "5": {
+      "tr": "Talep Yapılmadı",
+      "en": ""
+    }
+  },
   "bap_firma_durum": {
     "1": {
       "tr": "Değerlendirme Sürecinde",

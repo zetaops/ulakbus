@@ -343,6 +343,7 @@ class BAPButcePlani(Model):
                                      choices='bap_butce_plani_satin_alma_durumu', default=5)
     kazanan_firma = BAPFirma()
     teknik_sartname = BAPTeknikSartname()
+    satin_alma_durum = field.Integer(__(u"Satın Alma Durumu"), choices='bap_butce_plani_satin_alma_durumu', default=None)
 
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod or self.muhasebe_kod_genel, self.kod_adi,
