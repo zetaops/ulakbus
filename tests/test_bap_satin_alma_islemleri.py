@@ -11,7 +11,7 @@ from zengine.lib.test_utils import BaseTestCase
 
 class TestCase(BaseTestCase):
     """
-    BAP satın alma duyurularının listelenmesini ve duyurulara ait işlemlerin gerçekleştirilmesini sağlayan iş akışı testi. İş akışının doğru çalışması için her çalıştırıldığında BAPSatinAlma modeli resetlenmeli ve bap_proje.csv yeniden yüklenmelidir.
+    BAP satın alma duyurularının listelenmesini ve duyurulara ait işlemlerin gerçekleştirilmesini sağlayan iş akışı testi. İş akışının doğru çalışması için her çalıştırıldığında BAPSatinAlma modeli resetlenmeli ve bap_satin_alma.csv yeniden yüklenmelidir.
 
     """
 
