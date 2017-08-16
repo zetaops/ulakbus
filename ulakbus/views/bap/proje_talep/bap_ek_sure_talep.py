@@ -75,13 +75,12 @@ class EkSureTalebi(CrudView):
         self.current.task_data['ek_sure'] = self.input['form']['ek_sure']
         self.current.task_data['aciklama'] = self.input['form']['aciklama']
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        proje.durum = 2  # koordinasyon birimi onayi bekleniyor.
         proje.save()
 
     def talebi_goruntule(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Ek süre talebi") % \
-                                      (proje.yurutucu, proje.ad)
+                                       (proje.yurutucu, proje.ad)
         obj_data = {"Talep Edilen Süre(Ay olarak)": str(self.current.task_data['ek_sure']),
                     "Açıklama": self.current.task_data['aciklama']}
         self.output['object'] = obj_data
@@ -104,29 +103,23 @@ class EkSureTalebi(CrudView):
 
     def komisyona_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        ekstra = {'ek_sure': self.current.task_data['ek_sure'],
-                  'aciklama': "Projenin mevcut süresi: {} ay, Talep edilen süre: {} ay".
-                      format(proje.sure, self.current.task_data['ek_sure'])}
         gundem = BAPGundem()
         gundem.proje = proje
         gundem.gundem_tipi = 4
         gundem.gundem_aciklama = self.input['form']['komisyon_aciklama']
-        gundem.gundem_ekstra_bilgiler = json.dumps(ekstra)
+        gundem.gundem_ekstra_bilgiler = json.dumps({'ek_sure': self.current.task_data['ek_sure'],
+                                                    'aciklama': self.current.task_data['aciklama']})
         gundem.save()
-        proje.durum = 4  # Komisyon Onayı Bekliyor
         proje.save()
         self.current.task_data['onaylandi'] = 1
 
     def bilgilendir(self):
         if 'red_aciklama' in self.input['form']:
             proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-            proje.durum = 3
             proje.save()
             self.current.task_data['red_aciklama'] = "%s için yaptığınız %s aylık ek süre talebi " \
                                                      "reddedildi. RED Açıklaması: %s" % (
-                                                         proje.ad,
-                                                         self.current.task_data['ek_sure'],
-                                                         self.input['form']['red_aciklama'])
+                proje.ad, self.current.task_data['ek_sure'], self.input['form']['red_aciklama'])
         else:
             self.current.task_data['onay'] = "Ek süre için bulunduğunuz talep kabul edilmiş " \
                                              "olup, komisyonun gündemine alınmıştır."

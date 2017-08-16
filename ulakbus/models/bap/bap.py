@@ -412,21 +412,21 @@ class BAPGundem(Model):
         verbose_name = __(u"Gündem")
         verbose_name_plural = __(u"Gündemler")
         list_fields = ['_proje_adi', '_proje_yurutucusu', 'gundem_tipi', 'oturum_numarasi',
-                       'oturum_tarihi', 'karar_no', 'karar_tarihi']
+                       'oturum_tarihi', 'karar_no']
 
     proje = BAPProje()
     etkinlik = BAPEtkinlikProje()
-    gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
-    gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
-    oturum_numarasi = field.String(__(u"Oturum Numarası"))
-    oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
-    karar_no = field.String(__(u"Karar No"))
-    karar = field.String(__(u"Karar"), choices='')
-    karar_tarihi = field.Date(__(u"Karar Tarihi"))
+    gundem_tipi = field.Integer(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
+    gundem_aciklama = field.Text(__(u"Gündem Açıklaması"), required=False)
+    oturum_numarasi = field.String(__(u"Oturum Numarası"), default="", required=False)
+    oturum_tarihi = field.Date(__(u"Oturum Tarihi"),required=False)
+    karar_no = field.String(__(u"Karar No"), default="", required=False)
+    karar = field.String(__(u"Karar"), default="", required=False)
     sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
-    karar_metni = field.Text(__(u"Karar Metni"))
+    karar_metni = field.Text(__(u"Karar Metni"), required=False)
     karar_gerekcesi = field.Text(
-        __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"))
+        __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"),
+        required=False)
     gundem_ekstra_bilgiler = field.String(__(u"Gündem Ekstra Bilgileri"), hidden=True)
 
     def _proje_adi(self):
@@ -497,6 +497,7 @@ class BAPSatinAlma(Model):
     sonuclanma_tarihi = field.Date(__(u"Teklifin Sonuçlanma Tarihi"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
     sorumlu = Role()
+    ilgili_proje = BAPProje()
 
     class ButceKalemleri(ListNode):
         butce = BAPButcePlani()
@@ -555,7 +556,7 @@ class BAPRapor(Model):
 
     proje = BAPProje()
     tur = field.Integer(__(u"Rapor Türü"), choices='bap_rapor_turu')
-    durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum')
+    durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum', default=1)
     belge = field.File(_(u"Proje Rapor Belgesi"), random_name=True)
 
     def __unicode__(self):

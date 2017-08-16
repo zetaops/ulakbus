@@ -277,20 +277,6 @@
     "3": {
       "tr": "Teklif Sonuçlandı",
       "en": ""
-    }
-  },
-  "bap_butce_kalemi_durum": {
-    "1": {
-      "tr": "Değerlendirme Sürecinde",
-      "en": ""
-    },
-    "2": {
-      "tr": "Onaylandı",
-      "en": ""
-    },
-    "3": {
-      "tr": "Reddedildi",
-      "en": ""
     },
     "4": {
       "tr": "İptal Edildi",

@@ -5,24 +5,43 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 from ulakbus.lib.view_helpers import prepare_choices_for_model
-from ulakbus.models import BAPGundem
 from ulakbus.models import BAPProje
-
-from zengine.views.crud import CrudView, obj_filter, list_query
+from zengine.views.crud import CrudView, obj_filter
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
+from ulakbus.lib.komisyon_sonrasi_adimlar import KomisyonKarariSonrasiAdimlar, gundem_kararlari
 
 
 class YeniGundemForm(JsonForm):
     class Meta:
         title = __(u"Yeni Gündem")
+        include = ['proje','gundem_tipi','gundem_aciklama','oturum_numarasi','oturum_tarihi']
 
-    proje = fields.String(__(u"Proje Seçiniz"))
-    gundem_tipi = fields.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
-    gundem_aciklama = fields.Text(__(u"Gündem Açıklaması"), required=False)
-    oturum_numarasi = fields.Integer(__(u"Oturum Numarası"), required=False)
-    oturum_tarihi = fields.Date(__(u"Oturum Tarihi"), required=False)
     kaydet = fields.Button(__(u"Kaydet"))
+
+    # proje = fields.String(__(u"Proje Seçiniz"))
+    # gundem_tipi = fields.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
+    # gundem_aciklama = fields.Text(__(u"Gündem Açıklaması"), required=False)
+    # oturum_numarasi = fields.Integer(__(u"Oturum Numarası"), required=False)
+    # oturum_tarihi = fields.Date(__(u"Oturum Tarihi"), required=False)
+    # kaydet = fields.Button(__(u"Kaydet"))
+
+
+class GundemDuzenleForm(JsonForm):
+    class Meta:
+        title = _(u"{} / {}  - Komisyon Kararı")
+        exclude = ['etkinlik', 'proje', 'gundem_tipi', 'sonuclandi', 'karar']
+
+    kaydet = fields.Button(_(u"Kaydet"), cmd='save')
+    iptal = fields.Button(_(u"Geri Dön"), form_validation=False)
+
+
+class KararOnaylamaForm(JsonForm):
+    class Meta:
+        title = __(u"Gündem Sonuç Karar Onaylama")
+
+    onayla = fields.Button(__(u"Onayla"), cmd='onayla')
+    geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 
 
 class Gundem(CrudView):
@@ -36,7 +55,7 @@ class Gundem(CrudView):
         CrudView.list(self, custom_form=custom_form)
 
     def yeni_gundem_olustur(self):
-        form = YeniGundemForm()
+        form = YeniGundemForm(self.object, current=self.current)
         form.set_choices_of('proje', prepare_choices_for_model(BAPProje))
         self.form_out(form)
 
@@ -46,14 +65,46 @@ class Gundem(CrudView):
         self.object.blocking_save()
 
     def add_edit_form(self):
-        form = JsonForm(self.object)
-        form.title = _(u"%s / %s  - Komisyon Kararı") % (
-            self.object.proje.ad, self.object.get_gundem_tipi_display()) if self.object.proje else (
+        form = GundemDuzenleForm(self.object, current=self.current)
+        form.title = form.title.format(
+            self.object.proje.ad,
+            self.object.get_gundem_tipi_display() if self.object.proje else
             self.object.etkinlik.bildiri_basligi, self.object.get_gundem_tipi_display())
-        form.exclude = ['etkinlik', 'proje', 'gundem_tipi', 'sonuclandi']
-        form.kaydet = fields.Button(_(u"Kaydet"), cmd='save')
-        form.iptal = fields.Button(_(u"İptal"), form_validation=False)
+        help_text = _(u"Sonuçlandı") if self.object.sonuclandi else _(u"Sonuçlanmadı")
+        form.help_text = (u"Gündem Durumu: {}").format(help_text)
+        params = {'required': False,
+                  'choices': gundem_kararlari[self.object.gundem_tipi]['kararlar']}
+        params.update({'readonly': True,
+                       'default': self.object.karar} if self.object.sonuclandi else {})
+
+        form.gundem_karar = fields.String(__(u"Karar"), **params)
         self.form_out(_form=form)
+
+    def gundem_sonuc_kontrol(self):
+        td = self.current.task_data
+        td['yeni'] = True if not self.object.sonuclandi and self.input['form'].get('gundem_karar',
+                                                                                   None) else False
+
+    def karar_onaylama(self):
+        obj = self.object
+        karar = dict(gundem_kararlari[obj.gundem_tipi]['kararlar'])[
+            self.input['form']['gundem_karar']]
+        form = KararOnaylamaForm(current=self.current)
+        form.help_text = _(
+            u"'{}' projesinin '{}' gündemi hakkında verdiğiniz karar '{}' dır. Bu karar "
+            u"geri alınamaz! Bu işlemi onaylıyor musunuz?".
+                format(obj.proje.ad,
+                       obj.get_gundem_tipi_display(),
+                       karar))
+
+        self.form_out(form)
+
+    def duzenleme_mesaji_olustur(self):
+        self.object = self.object_form.deserialize(self.current.task_data['GundemDuzenleForm'])
+        self.object.save()
+        self.current.msg_box(title=_(u"İşlem Mesajı"),
+                             msg=_(u"%s projesi başarı ile düzenlenmiştir.") % self.object.proje,
+                             typ='info')
 
     def show(self):
         CrudView.show(self)
@@ -66,33 +117,31 @@ class Gundem(CrudView):
             else _(u"Sonuçlanmadı")
 
         self.output['object'][u'Kararın Sonuçlandırılması'] = sonuc
+        del self.output['object'][u'Gündem Ekstra Bilgileri']
 
-    def komisyon_kararini_ilet(self):
-        self.object.proje.yurutucu.personel.user.send_notification(
-            title=_(u"Komisyon Kararı"),
-            message=_(u"%s adlı projenizin %s komisyon kararı Karar: %s") % (
-                self.object.proje.ad,
-                self.object.get_gundem_tipi_display(),
-                self.input['form']['karar']),
-            sender=self.current.role.user)
-
-    def karar_sonrasi_adimlar(self):
-        pass
+    def ilgili_methodu_cagir(self):
+        karar = self.current.task_data['GundemDuzenleForm']['gundem_karar']
+        self.object = self.object_form.deserialize(self.current.task_data['GundemDuzenleForm'])
+        self.object.save()
+        kararlar = gundem_kararlari[self.object.gundem_tipi]
+        method = '_'.join([kararlar['tip_adi'], karar])
+        getattr(KomisyonKarariSonrasiAdimlar(self.object, self.current.user), method)()
 
     def bilgilendirme(self):
+        karar = self.current.task_data['GundemDuzenleForm'].pop('gundem_karar', '')
+        self.object.karar = karar
         self.object.sonuclandi = True
         self.object.save()
-        self.current.msg_box(title=_(u"%s") % self.object.proje,
-                             msg=_(u"%s projesi başarı ile sonuçlandırılmıştır") %
-                             self.object.proje,
+        self.current.msg_box(title=_(u"İşlem Mesajı"),
+                             msg=_(
+                                 u"%s projesinin gündemi başarı ile sonuçlandırılmıştır. "
+                                 u"İlgili kişiler bilgilendirilmiştir.") % self.object.proje,
                              typ='info')
 
     @obj_filter
     def proje_turu_islem(self, obj, result):
-        sonuc = {'name': _(u'Sonuç'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'}
+        sonuc = {'name': _(u'Sonuçlandır/Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
+                 'show_as': 'button'}
         goster = {'name': _(u'Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'}
         sil = {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'}
-        if obj.sonuclandi:
-            result['actions'] = ([goster, sil])
-        else:
-            result['actions'] = ([sonuc, goster, sil])
+        result['actions'] = ([sonuc, goster, sil])

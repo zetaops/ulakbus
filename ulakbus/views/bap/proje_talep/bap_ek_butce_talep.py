@@ -308,12 +308,15 @@ BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
         self.form_out(KomisyonAciklamaForm(current=self.current))
 
     def kabul_et_ve_komisyona_yolla(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         BAPGundem(proje_id=self.current.task_data['bap_proje_id'],
                   gundem_tipi=2,
                   gundem_aciklama=self.input['form']['aciklama'],
                   gundem_ekstra_bilgiler=json.dumps(
-                      {'ek_butce': self.current.task_data['yeni_butceler']})
-                  ).save()
+                      {'ek_butce': self.current.task_data['yeni_butceler'],
+                       'mevcut_toplam': self.current.task_data['mevcut_toplam'],
+                       'yeni_toplam': self.current.task_data['toplam'],
+                       'butce_fazlaligi': proje.butce_fazlaligi})).save()
 
     def onay_mesaji_hazirla(self):
         mesaj = "Ek bütçe için bulunduğunuz talep koordinasyon birimi tarafından kabul edilmiş " \

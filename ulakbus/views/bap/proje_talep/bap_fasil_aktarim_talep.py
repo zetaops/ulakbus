@@ -280,7 +280,10 @@ BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
         BAPGundem(proje=proje, gundem_tipi=3,
                   gundem_aciklama=self.input['form']['aciklama'],
                   gundem_ekstra_bilgiler=json.dumps(
-                      {'ek_butce': self.current.task_data['fasil_islemleri']})).save()
+                      {'fasil_islemleri': self.current.task_data['fasil_islemleri'],
+                       'mevcut_toplam': self.current.task_data['mevcut_toplam'],
+                       'yeni_toplam': self.current.task_data['toplam_butce'],
+                       'butce_fazlaligi': proje.butce_fazlaligi})).save()
 
     def nesne_id_sil(self):
         self.current.task_data.pop('object_id', None)

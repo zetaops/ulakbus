@@ -4,9 +4,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.lib.common import is_akisini_belli_bir_adimdan_aktif_et
-from ulakbus.models import BAPButcePlani, BAPRapor, Okutman, Role
+from ulakbus.models import BAPButcePlani, BAPRapor, Okutman, Permission, User, BAPSatinAlma
 from zengine.lib.translation import gettext as _
-from datetime import datetime
+from datetime import datetime, timedelta
+from zengine.models import WFInstance, BPMNWorkflow, TaskInvitation
 import json
 
 gundem_kararlari = {
@@ -47,7 +48,6 @@ class KomisyonKarariSonrasiAdimlar():
         Projenin durumu komisyon tarafından onaylandı anlamına gelen 5 yapılır.
     
         """
-        # todo bütçe fişi iş akışını tetikle
         eylem = "Onaylandı"
         aciklama = "Proje, komisyon tarafından {} karar numarası ile onaylandı."
         self.islem_gecmisi_guncelle(eylem, aciklama, durum=5)
@@ -58,6 +58,7 @@ class KomisyonKarariSonrasiAdimlar():
                        self.object.proje.ad, self.object.karar_no)
 
         self.bildirim_gonder(bildirim)
+        self.butce_fisi_is_akisini_tetikle()
 
     def proje_basvurusu_red(self):
         """
@@ -102,22 +103,24 @@ class KomisyonKarariSonrasiAdimlar():
         Silinecek olan ve yeni eklenen kalemlerin durumları değiştirilir.
         
         """
-        ek_butce_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)
-        for kalem_id, data in ek_butce_bilgileri['degisen_kalemler'].items():
+        ek_butce_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)['ek_butce']
+        for kalem_id, data in ek_butce_bilgileri.items():
+            if data['durum'] == 4:
+                continue
             kalem = BAPButcePlani.objects.get(kalem_id)
-            if data['durum'] == 'Silinecek':
-                kalem.durum = 3
-            # elif data['durum'] == 'Düzenlendi':
-            #     for k, v in kalem_degisiklik.items():
-            #         setattr(kalem, k, data[v])
-            else:
-                kalem.durum = 2
+            if data['durum'] == 3:
+                kalem.birim_fiyat = data['yeni_birim_fiyat']
+                kalem.toplam_fiyat = data['yeni_toplam_fiyat']
+                kalem.adet = data['yeni_adet']
+                kalem.gerekce = data['gerekce']
+
+            kalem.proje_durum = 2 if data['durum'] == 1 else 4
             kalem.save()
 
+        # todo taahhut edilen miktari arttir.
+
         eylem = "Ek Bütçe Talebi Kabulü"
-        aciklama = ' '.join([
-            "Ek bütçe talebi komisyon tarafından {} karar numarası ile kabul edildi.",
-            ek_butce_bilgileri['degisen_kalemler_aciklama']])
+        aciklama = "Ek bütçe talebi komisyon tarafından {} karar numarası ile kabul edildi."
         self.islem_gecmisi_guncelle(eylem, aciklama)
 
         bildirim = _(
@@ -132,7 +135,7 @@ class KomisyonKarariSonrasiAdimlar():
         Silinecek olan ve yeni eklenen kalemlerin durumları değiştirilir.
 
         """
-        yeni_kalemler = BAPButcePlani.objects.filter(ilgili_proje=self.object.proje, durum=1)
+        yeni_kalemler = BAPButcePlani.objects.filter(ilgili_proje=self.object.proje, proje_durum=1)
         self.butce_kalemleri_durum_degistir(durum=3, kalemler=yeni_kalemler)
 
         eylem = "Ek Bütçe Talebi Reddi"
@@ -152,17 +155,20 @@ class KomisyonKarariSonrasiAdimlar():
         güncellenir. Proje işlem geçmişi güncellenir. 
         
         """
-        fasil_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)
-        for kalem_id, data in fasil_bilgileri['degisen_kalemler'].items():
-            kalem = BAPButcePlani.objects.get(kalem_id)
-            # for k, v in kalem_degisiklik.items():
-            #     setattr(kalem, k, data[v])
-            # kalem.save()
+        fasil_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)['fasil_islemleri']
+        for kalem_id, data in fasil_bilgileri.items():
+            if data['durum'] == 2:
+                continue
+            else:
+                kalem = BAPButcePlani.objects.get(kalem_id)
+                kalem.birim_fiyat = data['yeni_birim_fiyat']
+                kalem.toplam_fiyat = data['yeni_toplam_fiyat']
+                kalem.adet = data['yeni_adet']
+                kalem.gerekce = data['gerekce']
+                kalem.save()
 
         eylem = "Fasıl Aktarım Talebi Kabulü"
-        aciklama = ' '.join([
-            "Fasıl aktarımı talebi komisyon tarafından {} karar numarası ile kabul edildi.",
-            fasil_bilgileri['degisen_kalemler_aciklama']])
+        aciklama = "Fasıl aktarımı talebi komisyon tarafından {} karar numarası ile kabul edildi."
         self.islem_gecmisi_guncelle(eylem, aciklama)
 
         bildirim = _(
@@ -203,8 +209,9 @@ class KomisyonKarariSonrasiAdimlar():
              ek_sure_bilgileri['aciklama']])
         self.islem_gecmisi_guncelle(eylem, aciklama)
         bildirim = _(
-            u"%s adlı projeniz için yapmış olduğunuz ek süre talebi %s karar numarası ile "
-            u"komisyon tarafından kabul edilmiştir.") % (self.object.proje.ad, self.object.karar_no)
+            u"{} adlı projeniz için yapmış olduğunuz ek süre talebi {} karar numarası ile "
+            u"komisyon tarafından kabul edilmiştir.".format(self.object.proje.ad,
+                                                            self.object.karar_no))
 
         self.bildirim_gonder(bildirim)
 
@@ -256,22 +263,6 @@ class KomisyonKarariSonrasiAdimlar():
                        self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
         self.bildirim_gonder(bildirim)
 
-    # def proje_sonuc_raporu_revizyon(self):
-    #     """
-    #     Proje sonuç raporu kabul edildiğinde, proje raporunun durumu değiştirilir.
-    #     Proje geçmişi güncellenir ve öğretim üyesi karar hakkında bilgilendirilir.
-    #
-    #     """
-    #     self.rapor_durum_degistir(4)
-    #     eylem = 'Proje Sonuç Raporu Kabulü'
-    #     aciklama = "Sonuç raporu komisyon tarafından {} karar numarası ile revizyona gonderildi."
-    #     self.islem_gecmisi_guncelle(eylem, aciklama)
-    #     bildirim = _(
-    #         u"%s adlı projeniz için sunduğunuz sonuç raporu %s karar numarası ile "
-    #         u"komisyon tarafından revizyona gonderilmiştir. Gerekçe: %s") % (
-    #                    self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
-    #     self.bildirim_gonder(bildirim)
-
     def proje_donem_raporu_basarili(self):
         """
         Proje dönem raporu kabul edildiğinde, proje raporunun durumu değiştirilir.
@@ -303,30 +294,27 @@ class KomisyonKarariSonrasiAdimlar():
                        self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
         self.bildirim_gonder(bildirim)
 
-    # def proje_donem_raporu_revizyon(self):
-    #     self.rapor_durum_degistir(4)
-    #     eylem = 'Proje Dönem Raporu Revizyonu'
-    #     aciklama = "Dönem raporu için komisyon tarafından {} karar numarası ile revizyon istendi."
-    #     self.islem_gecmisi_guncelle(eylem, aciklama)
-    #     bildirim = _(u"%s adlı projeniz için sunduğunuz dönem raporu için %s karar numarası ile "
-    #                  u"komisyon tarafından revizyon istenmiştir. Gerekçe: %s") % (
-    #                    self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
-    #     self.bildirim_gonder(bildirim)
-
     def proje_iptal_talebi_kabul(self):
         """
-        Öğretim üyesinin proje iptal talebinin kabulünde, projenin durumu 
-        iptal anlamına gelen 8 yapılır. Projeye ait onaylanmış bütçe 
-        kalemlerinin durumu iptal edildi anlamına gelen 4 yapılır.
+        Öğretim üyesinin proje iptal talebinin kabulünde, projenin durumu iptal anlamına gelen 
+        8 yapılır. Projeye ait onaylanmış bütçe kalemlerinin durumu iptal edildi anlamına gelen 
+        4 yapılır. Proje ile ilgili olan teklife açık satın alma duyurularının durumu iptal 
+        anlamına gelen 4 yapılır.
         
         """
+        mevcut_butce = BAPButcePlani.mevcut_butce(proje=self.object.proje)
+        butce_fazlaligi = self.object.proje.butce_fazlaligi
+
+        # todo taahhut edilen butceyi arttir.
+
         eylem = "İptal Talebi Kabulü"
         aciklama = "Projenin iptal talebi komisyon tarafından {} karar numarası ile kabul edildi."
         self.islem_gecmisi_guncelle(eylem, aciklama, durum=8)
         self.butce_kalemleri_durum_degistir(4)
 
-        # todo satin almalari durdur
-        # todo proje gerceklestiricisini iptal et
+        for duyuru in BAPSatinAlma.objects.filter(ilgili_proje=self.object.proje, teklif_durum=1):
+            duyuru.teklif_durum = 4
+            duyuru.save()
 
         bildirim = _(
             u"%s adlı projeniz için yapmış olduğunuz iptal talebi %s karar numarası ile komisyon "
@@ -359,10 +347,8 @@ class KomisyonKarariSonrasiAdimlar():
         
         """
         yurutucu_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)
-        yeni_yurutucu_id = yurutucu_bilgileri['yurutucu_id']
-        yeni_yurutucu_role_id = yurutucu_bilgileri['role_id']
+        yeni_yurutucu_id = yurutucu_bilgileri['yeni_yurutucu_id']
         yeni_yurutucu = Okutman.objects.get(yeni_yurutucu_id)
-        yeni_yurutucu_role = Role.objects.get(yeni_yurutucu_role_id)
 
         self.object.proje.yurutucu = yeni_yurutucu
         self.object.proje.yurutucu.save()
@@ -382,9 +368,13 @@ class KomisyonKarariSonrasiAdimlar():
         yeni_yurutucu_bildirim = _(
             u"%s karar numarası ile %s adlı projenin yeni yürütücüsü olmanız komisyon tarafından "
             u"onay verilmiştir.") % (
-                                     self.object.proje.ad, self.object.karar_no,
+                                     self.object.proje.ad,
+                                     self.object.karar_no,
                                      yeni_yurutucu.__unicode__)
-        self.bildirim_gonder(yeni_yurutucu_bildirim, role=yeni_yurutucu_role)
+
+        yeni_yurutucu.personel.user.send_notification(title='Komisyon Kararı',
+                                                      message=yeni_yurutucu_bildirim,
+                                                      sender=self.user)
 
     def yurutucu_degisikligi_red(self):
         """
@@ -460,3 +450,41 @@ class KomisyonKarariSonrasiAdimlar():
         rapor = BAPRapor.objects.get(rapor_id)
         rapor.durum = durum
         rapor.save()
+
+    def butce_fisi_is_akisini_tetikle(self):
+        wf = BPMNWorkflow.objects.get(name='bap_butce_fisi')
+        perm = Permission.objects.get('bap_butce_fisi')
+        sistem_user = User.objects.get(username='sistem_bilgilendirme')
+        today = datetime.today()
+        for role in perm.get_permitted_roles():
+            wfi = WFInstance(
+                wf=wf,
+                current_actor=role,
+                task=None,
+                name=wf.name,
+                wf_object=self.object.proje.key
+            )
+            wfi.data = {'bap_proje_id': self.object.proje.key}
+            wfi.pool = {}
+            wfi.blocking_save()
+            role.send_notification(title=_(u"{} | {} | Bütçe Fişi İş Akışı".format(
+                self.object.proje.yurutucu.__unicode__(),
+                self.object.proje.ad)),
+                message=_(u"""{} adlı onaylanmış projenin bütçe fişi kesilmesi gerekmektedir. 
+                        Görev yöneticinizden ilgili isteğe ulaşabilir, 
+                        iş akışını çalıştırabilirsiniz.""".format(self.object.ad)),
+                typ=1,
+                sender=sistem_user
+            )
+            inv = TaskInvitation(
+                instance=wfi,
+                role=role,
+                wf_name=wfi.wf.name,
+                progress=30,
+                start_date=today,
+                finish_date=today + timedelta(15)
+            )
+            inv.title = _(u"{} | {} | Bütçe Fişi İş Akışı".format(
+                self.object.proje.yurutucu.__unicode__(),
+                self.object.proje.ad))
+            inv.save()
