@@ -149,8 +149,7 @@ class TeklifDegerlendirme(CrudView):
 
     def _list(self):
         """
-        Koordinasyon birimi görevlisinin kendi üstünde bulunan, teklif süresi dolmuş ve
-        değerlendirilmemiş satın alma duyurularını listeler.
+        Koordinasyon birimi görevlisinin kendi üstünde bulunan satın alma duyurularını listeler.
 
         """
         form = JsonForm(title=__(u"Satın Alma Duyurularının Listesi"))
@@ -445,12 +444,11 @@ class TeklifDegerlendirme(CrudView):
         datadaki veriler kullanılır.
 
         """
-        data = {0: {"name": "Düzenle", "cmd": "duzenle"},
-                1: {"name": "Teklife Kapat", "cmd": "teklife_kapat"},
+        data = {1: {"name": "Teklife Kapat", "cmd": "teklife_kapat"},
                 2: {"name": "Teklifleri Değerlendir", "cmd": "degerlendir"},
                 3: {"name": "Satın Alma Bilgilerini Güncelle", "cmd": "satin_alma"}}
         if obj.teklif_durum == 1 and obj.teklife_kapanma_tarihi < datetime.now():
-            result['actions'] = [{'name': data[0]["name"], 'cmd': data[0]["cmd"], "mode": "normal",
+            result['actions'] = [{'name': "Düzenle", 'cmd': "duzenle", "mode": "normal",
                                   "show_as": "button"}]
         else:
             result['actions'] = [{"name": data[obj.teklif_durum]["name"],
