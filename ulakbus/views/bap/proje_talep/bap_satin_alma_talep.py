@@ -6,8 +6,16 @@
 
 from collections import defaultdict
 
+from datetime import datetime, timedelta
+
 from pyoko import ListNode
+from ulakbus.lib.s3_file_manager import S3FileManager
+from ulakbus.models import AbstractRole
 from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
+from ulakbus.models import Role
+from zengine.models import BPMNWorkflow
+from zengine.models import TaskInvitation
+from zengine.models import WFInstance
 
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
@@ -25,11 +33,10 @@ class ButceKalemleriForm(JsonForm):
         sec = fields.Boolean(_(u"Seç"), type="checkbox")
         ad = fields.String(_(u"Tanımı/Adı"), readonly=True)
         adet = fields.Integer(_(u"Adet"), readonly=True)
-        alim_kalemi_sartnamesi = fields.String(_(u"Alım Kalemi Şartnamesi"), readonly=True)
-        genel_sartname = fields.String(_(u"Genel Şartname"), readonly=True)
+        toplam_fiyat = fields.Float(_(u"Toplam Fiyat"), readonly=True)
         butce_plan_key = fields.String(_(u"Key"), hidden=True)
 
-    iptal = fields.Button(_(u"İptal Et ve Proje Listesine Dön"), cmd='iptal')
+    iptal = fields.Button(_(u"İptal Et ve Proje Listesine Dön"), cmd='iptal', form_validation=False)
     ileri = fields.Button(_(u"Tamam"), cmd='ileri')
 
 
@@ -42,8 +49,7 @@ class ButceKalemGosterForm(JsonForm):
             title = __(u"Seçilen Bütçe Kalemleri")
         ad = fields.String(_(u"Tanımı/Adı"), readonly=True)
         adet = fields.Integer(_(u"Adet"), readonly=True)
-        alim_kalemi_sartnamesi = fields.String(_(u"Alım Kalemi Şartnamesi"), readonly=True)
-        genel_sartname = fields.String(_(u"Genel Şartname"), readonly=True)
+        toplam_fiyat = fields.Float(_(u"Toplam Fiyat"), readonly=True)
         butce_plan_key = fields.String(_(u"Key"), hidden=True)
 
     butce_kalem_listesine_geri_don = fields.Button(_(u"Bütçe Kalem Listesine Geri Dön"),
@@ -54,18 +60,25 @@ class ButceKalemGosterForm(JsonForm):
 class TalepInceleForm(JsonForm):
     class Meta:
         title = __(u"Satın Alması Talep Edilen Bütçe Kalemleri")
+        inline_edit = ['sec']
 
-    class Kalem(ListNode):
-        class Meta:
-            title = __(u"Bütçe Kalemleri")
-        ad = fields.String(_(u"Tanımı/Adı"), readonly=True)
-        adet = fields.Integer(_(u"Adet"), readonly=True)
-        alim_kalemi_sartnamesi = fields.String(_(u"Alım Kalemi Şartnamesi"), readonly=True)
-        genel_sartname = fields.String(_(u"Genel Şartname"), readonly=True)
-        butce_plan_key = fields.String(_(u"Key"), hidden=True)
+    Kalem = ButceKalemleriForm.Kalem
 
+    daha_sonra_incele = fields.Button(_(u"Daha Sonra İncele"), cmd='daha_sonra_devam_et',
+                                      form_validation=False)
+    sartnameleri_indir = fields.Button(_(u"Şartnameleri İndir"), cmd='sartname')
     revizyon = fields.Button(_(u"Revizyona Gönder"), cmd='revizyon')
     calisan_ata = fields.Button(_(u"Çalışan Ata"), cmd='koordinasyon')
+
+
+class KoordinasyonCalisaniSecForm(JsonForm):
+    class Meta:
+        title = __(u"Koordinasyon Birimi Çalışanı")
+
+    calisan_rol = fields.String(_(u"Takip Edecek Personel"))
+
+    iptal = fields.Button(_(u"İptal"), cmd='iptal', form_validation=False)
+    gonder = fields.Button(_(u"Gönder"), cmd='gonder')
 
 
 class BAPSatinAlmaTalep(CrudView):
@@ -73,19 +86,20 @@ class BAPSatinAlmaTalep(CrudView):
     # Ogretim uyesi
 
     def butce_kalem_sec(self):
-        self.current.task_data['bap_proje_id'] = 'WlRiJzMM4XExfmbgVyJDBZAUGg'
+        hata_mesaji = self.current.task_data.pop('hata_mesaji', False)
+        if hata_mesaji:
+            self.current.output['msgbox'] = {'type': 'error',
+                                             "title": _(u"Seçim Hatası"),
+                                             "msg": hata_mesaji}
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        # todo satın almaya talebine uygun bütçe planlarını göstermek gerekli
-        # butce_planlari = BAPButcePlani.objects.filter(ilgili_proje=proje, satin_alma_durum=5)
-        butce_planlari = BAPButcePlani.objects.filter(ilgili_proje=proje)
+        butce_planlari = BAPButcePlani.objects.filter(ilgili_proje=proje, satin_alma_durum=5)
         form = ButceKalemleriForm()
         for bp in butce_planlari:
             form.Kalem(
                 sec=False,
                 ad=bp.ad,
                 adet=bp.adet,
-                alim_kalemi_sartnamesi=bp.teknik_sartname.__unicode__(),
-                genel_sartname="",
+                toplam_fiyat=bp.toplam_fiyat,
                 butce_plan_key=bp.key,
             )
         self.form_out(form)
@@ -105,35 +119,138 @@ class BAPSatinAlmaTalep(CrudView):
     def butce_kalem_kaydet(self):
         self.current.task_data['satin_almasi_talep_edilen_butce_kalemleri'] = self.input['form'][
             'Kalem']
+        for bp in self.current.task_data['ou_secilen_butce_planlari']:
+            bp_obj = BAPButcePlani.objects.get(bp)
+            bp_obj.satin_alma_durum = 1
+            bp_obj.blocking_save()
 
     def revizyon_mesaji_goster(self):
-        pass
+        form = JsonForm(title=_(u"Revizyon Talebi"))
+        form.help_text = self.current.task_data['revizyon_mesaji']
+        form.daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Revize Et"),
+                                                 cmd='daha_sonra_devam_et')
+        form.revize_et = fields.Button(_(u"Revize Et"), cmd='revize_et')
+        self.form_out(form)
 
     def daha_sonra_devam_et(self):
-        pass
+        self.current.output['cmd'] = 'reload'
+
+    def kontrol_ou(self):
+        secilen_butce_planlari = []
+        for bp in self.input['form']['Kalem']:
+            if bp['sec']:
+                secilen_butce_planlari.append(bp['butce_plan_key'])
+
+        if self.cmd != 'iptal' and not secilen_butce_planlari:
+            self.current.task_data['cmd'] = 'hata'
+            self.current.task_data['hata_mesaji'] = _(
+                u"Yapmak istediğiniz işlem seçim yapmanızı gerektiriyor. Lütfen listeden seçim "
+                u"yapınız.")
+        else:
+            self.current.task_data['ou_secilen_butce_planlari'] = secilen_butce_planlari
 
 
     # Mali koordinator
 
     def satin_alma_talep_incele(self):
+        hata_mesaji = self.current.task_data.pop('hata_mesaji', False)
+        onceki_adimda_secilen_butce_planlari = self.current.task_data.pop('secilen_butce_planlari',
+                                                                          [])
+        if hata_mesaji:
+            self.current.output['msgbox'] = {'type': 'error',
+                                             "title": _(u"Seçim Hatası"),
+                                             "msg": hata_mesaji}
         form = TalepInceleForm()
         butce_kalemleri = self.current.task_data['satin_almasi_talep_edilen_butce_kalemleri']
-        for bk in butce_kalemleri:
-            if bk['sec']:
+        for i, bk in enumerate(butce_kalemleri):
+                bk['sec'] = False
                 form.Kalem(**bk)
         self.form_out(form)
+        self.current.output['meta']['allow_actions'] = False
         self.current.output['meta']['allow_add_listnode'] = False
+        self.current.task_data['toplam_bk'] = len(form.Kalem)
+
+    def kontrol(self):
+        secilen_butce_planlari = []
+        for bp in self.input['form']['Kalem']:
+            if bp['sec']:
+                secilen_butce_planlari.append(bp['butce_plan_key'])
+
+        if self.cmd not in ['revizyon', 'daha_sonra_devam_et'] and not secilen_butce_planlari:
+            self.current.task_data['cmd'] = 'hata'
+            self.current.task_data['hata_mesaji'] = _(
+                u"Yapmak istediğiniz işlem seçim yapmanızı gerektiriyor. Lütfen listeden seçim "
+                u"yapınız.")
+        else:
+            self.current.task_data['secilen_butce_planlari'] = secilen_butce_planlari
 
     def koordinasyon_birimi_gorevlisi_sec(self):
-        pass
+        abstract_role = AbstractRole.objects.get('UlB96RW78vE1iuEnoQ9JwBBHO9r')
+        roller = Role.objects.filter(abstract_role=abstract_role)
+        choices = [(r.key, "%s %s" % (r.user.personel.ad, r.user.personel.soyad)) for r in roller]
+        form = KoordinasyonCalisaniSecForm()
+        form.set_choices_of('calisan_rol', choices=choices)
+        self.form_out(form)
 
     def koordinasyon_birimine_gonder(self):
-        pass
+        rol_key = self.input['form']['calisan_rol']
+        role = Role.objects.get(rol_key)
+
+        # wf = BPMNWorkflow.objects.get(name='bap_tasinir_kodlari')
+        wf = BPMNWorkflow.objects.get(name='bap_butce_fisi')
+        today = datetime.today()
+        wfi = WFInstance(
+            wf=wf,
+            current_actor=role,
+            task=None,
+            name=wf.name
+        )
+        wfi.data = dict()
+        wfi.data['flow'] = None
+        wfi.data['secilen_butce_planlari'] = self.current.task_data['secilen_butce_planlari']
+        wfi.pool = {}
+        wfi.blocking_save()
+        inv = TaskInvitation(
+            instance=wfi,
+            role=role,
+            wf_name=wfi.wf.name,
+            progress=30,
+            start_date=today,
+            finish_date=today + timedelta(15)
+        )
+        #inv.title = wf.name
+        inv.title = "DENEME"
+        inv.save()
+
+        if self.current.task_data['toplam_bk'] - len(
+            self.current.task_data['secilen_butce_planlari']) == 0:
+            self.current.task_data['cmd'] = 'bitti'
+        else:
+            self.current.task_data['cmd'] = 'devam'
+            for sbp in self.current.task_data['satin_almasi_talep_edilen_butce_kalemleri']:
+                if sbp['butce_plan_key'] in self.current.task_data['secilen_butce_planlari']:
+                    self.current.task_data['satin_almasi_talep_edilen_butce_kalemleri'].remove(sbp)
 
     def revizyon_gerekcesi_gir(self):
-        pass
+        form = JsonForm(title=_(u"Revizyon Gerekçesi"))
+        form.gerekce = fields.Text(_(u"Gerekçe"))
+        form.iptal = fields.Button(_(u"İptal"), cmd='iptal', form_validation=False)
+        form.gonder = fields.Button(_(u"Gönder"), cmd='revizyon')
+        self.form_out(form)
 
     def revizyon_talebi_gonder(self):
-        pass
+        self.current.task_data['revizyon_mesaji'] = self.input['form']['gerekce']
+
+    def sartname_indir(self):
+        s3 = S3FileManager()
+        keys = []
+        for bt in self.current.task_data['secilen_butce_planlari']:
+            butce_plani = BAPButcePlani.objects.get(bt)
+            if butce_plani.teknik_sartname:
+                keys.append(butce_plani.teknik_sartname.sartname_dosyasi)
+        zip_name = "teknik-sartnameler"
+        zip_url = s3.download_files_as_zip(keys, zip_name)
+        self.set_client_cmd('download')
+        self.current.output['download_url'] = zip_url
 
 

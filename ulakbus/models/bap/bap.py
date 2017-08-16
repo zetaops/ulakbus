@@ -337,11 +337,12 @@ class BAPButcePlani(Model):
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
     durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
     satin_alma_durum = field.Integer(__(u"Satın Alma Durumu"),
-                                     choices='bap_butce_plani_satin_alma_durumu', default=None)
+                                     choices='bap_butce_plani_satin_alma_durumu', default=5)
     ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
     kazanan_firma = BAPFirma()
 
     teknik_sartname = BAPTeknikSartname()
+    tasinir_kodu = field.String(__(u"Taşınır Kodu"), choices="tasinir_kodlari")
 
 
     def __unicode__(self):

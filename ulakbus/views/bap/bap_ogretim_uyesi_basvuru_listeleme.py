@@ -57,7 +57,7 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
             (1, _(u"Ek Bütçe Talebi")),
             (2, _(u"Fasıl Aktarımı Talebi")),
             (3, _(u"Ek Süre Talebi")),
-            # (4, _(u"Satın Alma Talebi")),
+            (4, _(u"Satın Alma Talebi")),
             (5, _(u"Yürütücü Değişikliği Talebi")),
             (6, _(u"Proje İptal Talebi")),
         ]
