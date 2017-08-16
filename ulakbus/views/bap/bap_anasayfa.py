@@ -26,7 +26,7 @@ class BAPAnasayfa(CrudView):
                     "text": _(u"Projeler"),
                     "hasChild": False,
                     "param": "id",
-                    "wf": "bap_projeler"
+                    "wf": "bap_proje_arama"
                 },
                 {
                     "text": _(u"Yardım"),
@@ -86,7 +86,7 @@ class BAPAnasayfa(CrudView):
             {
                 "text": _(u"Makina, Teçhizat Ara"),
                 "param": "id",
-                "wf": "demirbas"
+                "wf": "bap_makine_techizat_ara"
             },
             {
                 "text": _(u"Proje Arşivi Ara"),
