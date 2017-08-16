@@ -5,7 +5,8 @@
 # (GPLv3).  See LICENSE.txt for details.
 
 import json
-from ulakbus.models import BAPProje, BAPGundem, Personel, Okutman
+from ulakbus.models import BAPProje, BAPGundem, Okutman
+from zengine.models import WFInstance, TaskInvitation
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
@@ -15,7 +16,8 @@ class TalepForm(JsonForm):
     class Meta:
         include = ['yurutucu', 'aciklama']
         title = __(u"Yürütücü Değişikliği Talebi")
-        help_text = __(u"Projeye yeni yürütücü atamak için  yürütücünün ismini yazıp ilerleyiniz")
+        help_text = __(u"Lütfen projeye yeni yürütücü atamak için yürütücünün ismini yazıp "
+                       u"ilerleyiniz.")
 
     aciklama = fields.Text(__(u"Açıklama"), required=True)
     ilerle = fields.Button(_(u"İlerle"))
@@ -25,40 +27,8 @@ class YurutucuDegisikligi(CrudView):
     class Meta:
         model = "BAPProje"
 
-    def kontrol(self):
-        if 'detay_goruntule' in self.current.task_data:
-            self.current.task_data['cmd'] = 'goruntule'
-        else:
-            personel = Personel.objects.get(user=self.current.user)
-            okutman = Okutman.objects.get(personel=personel)
-            if BAPProje.objects.filter(yurutucu=okutman, durum__in=[3, 5]).count() == 0:
-                self.current.task_data['cmd'] = 'bilgilendir'
-                self.current.task_data['bilgilendirme'] = 'jjhvjgjhbjhbjh'
-            elif 'kabul' in self.current.task_data:
-                self.current.task_data['cmd'] = 'bilgilendir'
-                self.current.task_data['bilgilendirme'] = self.current.task_data['kabul']
-            elif 'red_msg' in self.current.task_data:
-                self.current.task_data['cmd'] = 'bilgilendir'
-                self.current.task_data['bilgilendirme'] = self.current.task_data['red_msg']
-            elif 'bap_proje_id' not in self.current.task_data:
-                self.current.task_data['cmd'] = 'proje_yok'
-
-    def proje_sec(self):
-        personel = Personel.objects.get(user=self.current.user)
-        okutman = Okutman.objects.get(personel=personel)
-        data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
-                                                                           durum__in=[3, 5])]
-
-        form = JsonForm(title=_(u"Proje Seçiniz"))
-        form.proje = fields.String(choices=data, default=data[0][0])
-        form.ilerle = fields.Button(_(u"İlerle"))
-        self.form_out(form)
-
     def yurutucu_degisikligi_talebi(self):
-        if 'form' in self.input and 'proje' in self.input['form']:
-            self.current.task_data['bap_proje_id'] = self.input['form']['proje']
-
-        self.form_out(TalepForm(self.object))
+        self.form_out(TalepForm(self.object, current=self.current))
         self.current.output["meta"]["allow_add_listnode"] = False
 
     def koordinasyona_gonder_onay(self):
@@ -76,15 +46,16 @@ class YurutucuDegisikligi(CrudView):
         form.iptal = fields.Button(_(u"İptal"), cmd='iptal')
         self.form_out(form)
 
-    def bilgilendirme(self):
-        form = JsonForm()
-        form.title = self.current.task_data['bilgilendirme']['title']
-        form.help_text = self.current.task_data['bilgilendirme']['msg']
-        form.bitir = fields.Button(_(u"Tamam"), cmd='reload')
-        self.form_out(form)
+    def talebi_gonder(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        proje.yurutucu_talep = {'yurutucu_id': self.current.task_data['yeni_yurutucu_id'],
+                                'yurutucu_aciklama': self.current.task_data['yurutucu_aciklama']}
+        proje.talep_uygunlugu = False
+        proje.save()
 
-    def ana_sayfaya_yonlendir(self):
-        self.current.output['cmd'] = 'reload'
+        self.current.task_data['INVITATION_TITLE'] = "{} | {} | Yürütücü Değişikliği Talebi".format(
+            proje.yurutucu.__unicode__(),
+            proje.ad)
 
     def degisiklik_talebini_goruntule(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
@@ -133,22 +104,35 @@ class YurutucuDegisikligi(CrudView):
         form = JsonForm(title=_(u"Red Açıklaması Yazınız"))
         form.red_aciklama = fields.Text(_(u"Red Açıklaması"))
         form.red_gonder = fields.Button(_(u"Gönder"))
-        form.red_iptal = fields.Button(_(u"İptal"), cmd='iptal')
+        form.red_iptal = fields.Button(_(u"İptal"), cmd='iptal',form_validation=False)
         self.form_out(form)
 
     def yurutucuyu_bilgilendir(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        proje.talep_uygunlugu = True
+        proje.save()
         yeni_yurutucu = Okutman.objects.get(self.current.task_data['yeni_yurutucu_id'])
         if 'form' in self.input and 'red_gonder' in self.input['form']:
             title = "Talebiniz Koordinasyon Birimi Tarafından Reddedildi"
             msg = "%s projeniz için %s 'in yerine %s 'in yürütücü olarak atanması talebiniz " \
                   "reddedilmiştir. Red Açıklaması: %s" % (proje.ad, proje.yurutucu, yeni_yurutucu,
                                                           self.input['form']['red_aciklama'])
-            self.current.task_data['red_msg'] = {'title': title, 'msg': msg}
         else:
             title = "Talebiniz Komisyonun Gündemine Alınmıştır"
             msg = "%s projeniz için %s 'in yerine %s 'in yürütücü olarak atanması talebiniz " \
                   "koordinasyon birimi tarafından kabul edilip Komisyon Gündemine alınmıştır." % (
                         proje.ad, proje.yurutucu, yeni_yurutucu)
 
-            self.current.task_data['kabul'] = {'title': title, 'msg': msg}
+        self.current.output['msgbox'] = {
+            'type': 'info',
+            "title": _(u"İşlem Mesajı"),
+            "msg": "Talep değerlendirmeniz başarılı ile gerçekleştirilmiştir. Proje yürütücüsü "
+                   "{} değerlendirmeniz hakkında bilgilendirilmiştir.".format(
+                proje.yurutucu.__unicode__())}
+
+        proje.basvuru_rolu.send_notification(title=title,
+                                             message=msg,
+                                             sender=self.current.user)
+        wfi = WFInstance.objects.get(self.current.token)
+        TaskInvitation.objects.filter(instance=wfi,
+                                      role=self.current.role).delete()
