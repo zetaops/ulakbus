@@ -454,5 +454,19 @@
       "tr": "Gündeme Alındı",
       "en": ""
     }
+  },
+  "kasa_giris_sebepleri": {
+    "1": {
+      "tr": "Kasa Giriş",
+      "en": ""
+    },
+    "2": {
+      "tr": "Proje Kabul",
+      "en": ""
+    },
+    "3": {
+      "tr": "Satın Alma",
+      "en": ""
+    }
   }
 }

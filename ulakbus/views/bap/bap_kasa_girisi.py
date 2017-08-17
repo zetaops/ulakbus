@@ -13,6 +13,7 @@ from zengine.lib.translation import gettext_lazy as __
 import datetime
 from pyoko.fields import DATE_TIME_FORMAT
 from ulakbus.models.bap.bap import BAPGenel
+from ulakbus.models.bap.bap import BapKasaHareketi
 from ulakbus.settings import DATE_DEFAULT_FORMAT
 
 
@@ -37,7 +38,7 @@ class KasaIslemGecmisiForm(JsonForm):
     class Meta:
         title = __(u"Kasa İşlem Geçmişi")
 
-    ekle = fields.Button(__(u"Ekle"),cmd='ekle')
+    ekle = fields.Button(__(u"Ekle"), cmd='ekle')
     ana_menu_don = fields.Button(__(u"Ana Menüye Dön"))
 
 
@@ -73,12 +74,14 @@ class KasaGirisi(CrudView):
 
         """
 
-        genel = BAPGenel.get()
         miktar = self.current.task_data['KasaGirisiForm']['para_miktari']
         tarih = self.current.task_data['KasaGirisiForm']['giris_tarihi']
+        kasa_hareketi = BapKasaHareketi(miktar=miktar, tarih=tarih,
+                                        sebep=1)
+        genel = BAPGenel.get()
         genel.toplam_kasa += miktar
-        genel.KasaGirisi(miktar=miktar, tarih=tarih)  # ListNode ekleme Yontemi
         genel.blocking_save()
+        kasa_hareketi.blocking_save()
 
     def kayit_giris_bilgilendirme(self):
         """
@@ -101,13 +104,14 @@ class KasaGirisi(CrudView):
         """
 
         self.current.output["meta"]["allow_actions"] = False  # yapılacak bir işlem yok
-        bap_genel = BAPGenel.get()
-        self.output['objects'] = [[__(u'Miktar'), __(u'Tarih')]]
-        for islem in sorted(bap_genel.KasaGirisi, key=lambda x: x.tarih, reverse=True):
+        # bap_genel = BAPGenel.get()
+        self.output['objects'] = [[__(u'Miktar'), __(u'Tarih'), __(u"Sebep")]]
+        for islem in BapKasaHareketi.objects.filter().order_by('-tarih'):
             miktar = islem.miktar
+            sebep = islem.sebep
             tarih = islem.tarih.strftime(DATE_DEFAULT_FORMAT) if islem.tarih else ''
             list_item = {
-                "fields": [str(miktar), tarih],
+                "fields": [str(miktar), tarih, str(sebep)],
                 "actions": '',
             }
             self.output['objects'].append(list_item)
