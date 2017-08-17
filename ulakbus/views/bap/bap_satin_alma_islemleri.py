@@ -9,7 +9,6 @@ from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.s3_file_manager import S3FileManager
-from pyoko.exceptions import ObjectDoesNotExist
 from datetime import datetime, time
 from ulakbus.settings import DATETIME_DEFAULT_FORMAT
 
@@ -109,11 +108,12 @@ class TeklifIsleForm(JsonForm):
 
 class SatinAlmaBilgileriDuzenleForm(JsonForm):
     """
-         Seçilen satın alma duyurusuna ait teklife kapanma tarihi ve isim bilgilerini düzenleme işlemini içerir.
+         Seçilen satın alma duyurusuna ait teklife kapanma tarihi ve isim bilgilerini düzenleme
+         işlemini içerir.
     """
 
     class Meta:
-        include = ['ad', 'teklife_kapanma_tarihi']
+        include = ['ad', 'teklife_acilma_tarihi', 'teklife_kapanma_tarihi', 'aciklama']
         title = _(u'Duyuru Bilgileri Düzenle')
 
     kaydet = fields.Button(__(u"Kaydet"), cmd="kaydet")
@@ -397,6 +397,7 @@ class TeklifDegerlendirme(CrudView):
 
         """
         self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
         form = ButceKalemiBilgileriForm(title="{} Bütçe Kalemlerinin Bilgileri".format(self.object.ad))
         for kalem in self.object.ButceKalemleri:
             form.KalemBilgileri(ad=kalem.butce.ad, adet=kalem.butce.adet,
@@ -426,9 +427,12 @@ class TeklifDegerlendirme(CrudView):
         Seçilen satın alma duyurusunda yapılan değişiklikleri kaydetme işlemini içerir.
 
         """
-        date_time = "{} {}".format(self.input["form"]["teklife_kapanma_tarihi"], time(17))
-        self.object.teklife_kapanma_tarihi = datetime.strptime(date_time, DATETIME_DEFAULT_FORMAT)
+        tat = "{} {}".format(self.input["form"]["teklife_acilma_tarihi"], time(17))
+        tkt = "{} {}".format(self.input["form"]["teklife_kapanma_tarihi"], time(17))
+        self.object.teklife_acilma_tarihi = datetime.strptime(tat, DATETIME_DEFAULT_FORMAT)
+        self.object.teklife_kapanma_tarihi = datetime.strptime(tkt, DATETIME_DEFAULT_FORMAT)
         self.object.ad = self.input["form"]["ad"]
+        self.object.aciklama = self.input['form']['aciklama']
         self.object.save()
 
     @obj_filter
