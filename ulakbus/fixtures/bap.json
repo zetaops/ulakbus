@@ -185,24 +185,6 @@
       "en": ""
     }
   },
-  "bap_butce_kalemi_durum": {
-    "1": {
-      "tr": "Değerlendirme Sürecinde",
-      "en": ""
-    },
-    "2": {
-      "tr": "Onaylandı",
-      "en": ""
-    },
-    "3": {
-      "tr": "Reddedildi",
-      "en": ""
-    },
-    "4": {
-      "tr": "İptal Edildi",
-      "en": ""
-    }
-  },
   "bap_rapor_turu": {
     "1": {
       "tr": "Dönem Raporu",
@@ -280,6 +262,24 @@
     },
     "3": {
       "tr": "Teklif Sonuçlandı",
+      "en": ""
+    },
+    "4": {
+      "tr": "İptal Edildi",
+      "en": ""
+    }
+  },
+  "bap_butce_kalemi_durum": {
+    "1": {
+      "tr": "Değerlendirme Sürecinde",
+      "en": ""
+    },
+    "2": {
+      "tr": "Onaylandı",
+      "en": ""
+    },
+    "3": {
+      "tr": "Reddedildi",
       "en": ""
     },
     "4": {

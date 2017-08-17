@@ -4,13 +4,10 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.settings import DATETIME_DEFAULT_FORMAT
-from pyoko.db.connection import cache
 from zengine.forms import JsonForm
 from zengine.forms import fields
-from zengine.models import TaskInvitation, WFInstance
 from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.lib.translation import gettext as _, gettext_lazy as __
-from datetime import datetime, timedelta
 from ulakbus.lib.common import is_akisini_belli_bir_adimdan_aktif_et
 
 

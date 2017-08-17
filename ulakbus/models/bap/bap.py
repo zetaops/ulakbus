@@ -519,11 +519,11 @@ class BAPSatinAlma(Model):
     ekleyen = Personel()
     aciklama = field.Text(__(u"Açıklama"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
+    ilgili_proje = BAPProje()
     tek_firma = BAPFirma()
     tur = field.Integer(_(u"Satın Alma Türü"), choices='bap_satin_alma_turleri')
     duyuruda = field.Boolean(_(u"Duyuru Durumu"), default=False)
     sorumlu = Role()
-    ilgili_proje = BAPProje()
     taahhut_edilen = field.Float(_(u"Taahhüt Edilen Bütçe"))
     gerceklesen_satin_alma = field.Float(_(u"Gerçekleşen Satın Alma Fiyatı"))
 

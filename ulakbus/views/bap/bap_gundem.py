@@ -17,10 +17,6 @@ class YeniGundemForm(JsonForm):
         title = __(u"Yeni Gündem")
         include = ['gundem_aciklama', 'oturum_numarasi', 'oturum_tarihi', 'karar_metni']
 
-    # gundem_aciklama = fields.Text(__(u"Gündem Açıklaması"), required=False)
-    # oturum_numarasi = fields.Integer(__(u"Oturum Numarası"), required=False)
-    # oturum_tarihi = fields.Date(__(u"Oturum Tarihi"), required=False)
-    # ilgili_proje = fields.String(__(u"Proje Seçiniz"), required=True)
     kaydet = fields.Button(__(u"Kaydet"))
     geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 

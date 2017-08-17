@@ -107,8 +107,8 @@ class KomisyonKarariSonrasiAdimlar():
         Silinecek olan ve yeni eklenen kalemlerin durumları değiştirilir.
         
         """
-        ek_butce_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)['ek_butce']
-        for kalem_id, data in ek_butce_bilgileri.items():
+        ek_butce_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)
+        for kalem_id, data in ek_butce_bilgileri['ek_butce'].items():
             if data['durum'] == 4:
                 continue
             kalem = BAPButcePlani.objects.get(kalem_id)
@@ -121,7 +121,10 @@ class KomisyonKarariSonrasiAdimlar():
             kalem.proje_durum = 2 if data['durum'] == 1 else 4
             kalem.save()
 
-        # todo taahhut edilen miktari arttir.
+        genel = BAPGenel.get()
+        mevcut_taahhut_farki = ek_butce_bilgileri['toplam'] - ek_butce_bilgileri['mevcut_toplam']
+        genel.toplam_taahhut += mevcut_taahhut_farki
+        genel.save()
 
         eylem = "Ek Bütçe Talebi Kabulü"
         aciklama = "Ek bütçe talebi komisyon tarafından {} karar numarası ile kabul edildi."
@@ -159,8 +162,8 @@ class KomisyonKarariSonrasiAdimlar():
         güncellenir. Proje işlem geçmişi güncellenir. 
         
         """
-        fasil_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)['fasil_islemleri']
-        for kalem_id, data in fasil_bilgileri.items():
+        fasil_bilgileri = json.loads(self.object.gundem_ekstra_bilgiler)
+        for kalem_id, data in fasil_bilgileri['fasil_islemleri'].items():
             if data['durum'] == 2:
                 continue
             else:
@@ -170,6 +173,11 @@ class KomisyonKarariSonrasiAdimlar():
                 kalem.adet = data['yeni_adet']
                 kalem.gerekce = data['gerekce']
                 kalem.save()
+
+        genel = BAPGenel.get()
+        mevcut_taahhut_farki = fasil_bilgileri['yeni_toplam'] - fasil_bilgileri['mevcut_toplam']
+        genel.toplam_taahhut += mevcut_taahhut_farki
+        genel.save()
 
         eylem = "Fasıl Aktarım Talebi Kabulü"
         aciklama = "Fasıl aktarımı talebi komisyon tarafından {} karar numarası ile kabul edildi."
