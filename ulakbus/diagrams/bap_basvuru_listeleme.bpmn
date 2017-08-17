@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
   <bpmn:collaboration id="Collaboration_1izhmpx">
     <bpmn:extensionElements>
       <camunda:properties>
@@ -148,24 +148,24 @@
         <dc:Bounds x="-300" y="150" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_09rnmwx_di" bpmnElement="ExclusiveGateway_09rnmwx" isMarkerVisible="true">
-        <dc:Bounds x="-155" y="165" width="50" height="50" />
+        <dc:Bounds x="-155" y="190" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-130" y="215" width="0" height="0" />
+          <dc:Bounds x="-130" y="240" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0xpdj3l_di" bpmnElement="SequenceFlow_0xpdj3l">
-        <di:waypoint xsi:type="dc:Point" x="-130" y="165" />
+        <di:waypoint xsi:type="dc:Point" x="-130" y="189" />
         <di:waypoint xsi:type="dc:Point" x="-130" y="78" />
         <di:waypoint xsi:type="dc:Point" x="170" y="78" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-160" y="121.5" width="90" height="0" />
+          <dc:Bounds x="-115" y="133.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0dfdewb_di" bpmnElement="SequenceFlow_0dfdewb">
-        <di:waypoint xsi:type="dc:Point" x="-200" y="190" />
-        <di:waypoint xsi:type="dc:Point" x="-155" y="190" />
+        <di:waypoint xsi:type="dc:Point" x="-200" y="215" />
+        <di:waypoint xsi:type="dc:Point" x="-155" y="215" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-177" y="175" width="0" height="0" />
+          <dc:Bounds x="-177" y="200" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1fxuclx_di" bpmnElement="BasvuruKarari">
@@ -292,11 +292,11 @@
         <dc:Bounds x="660" y="150" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0l34gm3_di" bpmnElement="SequenceFlow_0l34gm3">
-        <di:waypoint xsi:type="dc:Point" x="-119" y="176" />
+        <di:waypoint xsi:type="dc:Point" x="-129" y="191" />
         <di:waypoint xsi:type="dc:Point" x="-87" y="133" />
         <di:waypoint xsi:type="dc:Point" x="-9" y="133" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-148" y="139.5" width="90" height="0" />
+          <dc:Bounds x="-108" y="147" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1ap00qs_di" bpmnElement="hakemlik_daveti">

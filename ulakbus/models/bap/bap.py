@@ -349,6 +349,8 @@ class BAPButcePlani(Model):
                                      choices='bap_butce_plani_satin_alma_durumu', default=5)
     kazanan_firma = BAPFirma()
     teknik_sartname = BAPTeknikSartname()
+    tasinir_kodu = field.String(__(u"Taşınır Kodu"), choices="tasinir_kodlari")
+
 
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod or self.muhasebe_kod_genel, self.kod_adi,
@@ -513,7 +515,14 @@ class BAPSatinAlma(Model):
     teklife_acilma_tarihi = field.DateTime(__(u"Teklife Açılma Tarihi"))
     teklife_kapanma_tarihi = field.DateTime(__(u"Teklife Kapanma Tarihi"))
     sonuclanma_tarihi = field.Date(__(u"Teklifin Sonuçlanma Tarihi"))
+    onay_tarih_sayi = field.String(__(u"Onay Tarih/Sayı"))
+    ekleyen = Personel()
+    aciklama = field.Text(__(u"Açıklama"))
     teklif_durum = field.Integer(__(u"Teklif Durum"), choices='bap_satin_alma_durum')
+    ilgili_proje = BAPProje()
+    tek_firma = BAPFirma()
+    tur = field.Integer(_(u"Satın Alma Türü"), choices='bap_satin_alma_turleri')
+    duyuruda = field.Boolean(_(u"Duyuru Durumu"), default=False)
     sorumlu = Role()
     taahhut_edilen = field.Float(_(u"Taahhüt Edilen Bütçe"))
     gerceklesen_satin_alma = field.Float(_(u"Gerçekleşen Satın Alma Fiyatı"))
