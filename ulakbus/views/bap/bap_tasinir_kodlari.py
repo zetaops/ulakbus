@@ -12,7 +12,7 @@ from ulakbus.models import BAPSatinAlma
 from ulakbus.models import User
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext as _
+from zengine.lib.translation import gettext as _, gettext_lazy as __
 
 from datetime import datetime
 from ulakbus.settings import DATE_DEFAULT_FORMAT
@@ -20,7 +20,7 @@ from ulakbus.settings import DATE_DEFAULT_FORMAT
 
 class ButceKalemleriForm(JsonForm):
     class Meta:
-        inline_edit = ['tasinir_kod']
+        inline_edit = ['tasinir_kodu']
         always_blank = False
 
     class ButceKalemList(ListNode):
@@ -35,7 +35,7 @@ class ButceKalemleriForm(JsonForm):
         tasinir_kodu = fields.String(_(u"Taşınır Kodu"), choices='tasinir_kodlari')
         key = fields.String("Key", hidden=True)
 
-    iptal = fields.Button(_(u"İptal"), cmd='iptal')
+    iptal = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et')
     kaydet = fields.Button(_(u"Kaydet ve Listele"), cmd='kaydet')
 
 
@@ -91,7 +91,7 @@ class BAPTasinirKodlari(CrudView):
                 ad=bk.ad,
                 muhasebe_kod_genel=bk.muhasebe_kod_genel,
                 muhasebe_kod=bk.muhasebe_kod,
-                tasinir_kodu="",
+                tasinir_kodu=bk.tasinir_kodu,
                 key=bki
             )
         self.current.output["meta"]["allow_actions"] = False
@@ -131,7 +131,7 @@ class BAPTasinirKodlari(CrudView):
         self.form_out(form)
 
     def tek_firma_satin_alma_bilgi_gir(self):
-        self.current.task_data['tek_firma'] = self.input['firma_id']
+        self.current.task_data['tek_firma'] = self.input['form']['firma_id']
         form = TekFirmaSatinAlmaBilgiGirForm()
         self.form_out(form)
 
@@ -148,8 +148,8 @@ class BAPTasinirKodlari(CrudView):
             sorumlu=self.current.role
         ).blocking_save()
         sistem_user = User.objects.get(username='sistem_bilgilendirme')
-        for y in firma.Yetkili:
-            y.send_notification(
+        for y in firma.Yetkililer:
+            y.yetkili.send_notification(
                 title=_(u"Proje Hakemlik Daveti Yanıtı"),
                 message=_(u"%s adlı satın alma için teklif vermeniz beklenmektedir. Satın alma "
                           u"duyurularından satın almayı bulup teklif verebilirsiniz." %
@@ -160,7 +160,7 @@ class BAPTasinirKodlari(CrudView):
 
     def davet_basarili(self):
         form = JsonForm(title=_(u"Firma Teklif Daveti Başarılı"))
-        form.help_text(_(u"Seçtiğiniz firmaya teklif daveti başarıyla gönderilmiştir."))
+        form.help_text = _(u"Seçtiğiniz firmaya teklif daveti başarıyla gönderilmiştir.")
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
 
@@ -174,7 +174,7 @@ class BAPTasinirKodlari(CrudView):
         BAPSatinAlma(
             ad=self.input['form']['ad'],
             teklife_acilma_tarihi=datetime(d1.year, d1.month, d1.day, 9, 0, 0, 0),
-            teklife_kapanma_tarihi=datetime.datetime(d2.year, d2.month, d2.day, 16, 0, 0, 0),
+            teklife_kapanma_tarihi=datetime(d2.year, d2.month, d2.day, 16, 0, 0, 0),
             ekleyen=self.current.role.user.personel,
             aciklama=self.input['form']['aciklama'],
             teklif_durum=1,
