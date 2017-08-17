@@ -411,7 +411,15 @@ class TeklifDegerlendirme(CrudView):
         """
         for obj in self.input["form"]["KalemBilgileri"]:
             kalem = BAPButcePlani.objects.get(obj["key"])
-            kalem.satin_alma_durum = obj["satin_alma_durum"]
+
+            if obj["satin_alma_durum"] == 4:
+                try:
+                    BAPTeklifFiyatIsleme.objects.get(kalem=kalem, firma=kalem.kazanan_firma)
+                    kalem.satin_alma_durum = obj["satin_alma_durum"]
+                except ObjectDoesNotExist:
+                    pass
+            else:
+                kalem.satin_alma_durum = obj["satin_alma_durum"]
             kalem.save()
 
     def satin_alma_bilgilerini_duzenle(self):
