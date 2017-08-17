@@ -134,6 +134,7 @@ class BAPProje(Model):
     anahtar_kelimeler = field.String(_(u"Anahtar Kelimeler(Virgülle Ayrılmış Şekilde Olmalıdır)"))
     teklif_edilen_baslama_tarihi = field.Date(_(u"Teklif Edilen Başlama Tarihi"))
     teklif_edilen_butce = field.Float(_(u"Teklif Edilen Bütçe"))
+    butce_fazlaligi = field.Float(_(u"Bütçe Fazlalığı"),default=0.0)
 
     konu_ve_kapsam = field.Text(_(u"Konu ve Kapsam"), min_length=650, max_length=1000)
     literatur_ozeti = field.Text(_(u"Literatür Özeti"), min_length=650, max_length=1000)
@@ -147,6 +148,7 @@ class BAPProje(Model):
 
     yurutucu_talep = field.String(__(u"Yürütücü Değişikliği Talebi"), hidden=True, required=False)
     komisyon_uyesi = Role(__(u"Komisyon Üyesi"), hidden=True)
+    talep_uygunlugu = field.Boolean(__(u"Talep Uygunluğu"), hidden=True, default=True)
 
     class ProjeBelgeleri(ListNode):
         class Meta:
@@ -254,6 +256,12 @@ class BAPProje(Model):
     def __unicode__(self):
         return "%s: %s" % (self.ad, self.yurutucu.__unicode__())
 
+    def post_save(self):
+        if self.durum == 5 and self.is_changed('durum'):
+            genel = BAPGenel.get()
+            genel.toplam_taahhut += self.kabul_edilen_butce
+            genel.save()
+
 
 class BAPIsPaketi(Model):
     class Meta:
@@ -335,12 +343,11 @@ class BAPButcePlani(Model):
     gerekce = field.Text(__(u"Gerekçe"))
     ilgili_proje = BAPProje()
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
-    durum = field.Integer(__(u"Durum"), choices=talep_durum, default=1)
+    ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=False)
+    proje_durum = field.Integer(__(u"Proje Durum"), choices='bap_butce_kalemi_durum', default=1)
     satin_alma_durum = field.Integer(__(u"Satın Alma Durumu"),
                                      choices='bap_butce_plani_satin_alma_durumu', default=5)
-    ozellik = field.Text(__(u"Özellik(Şartname Özeti)"), required=True)
     kazanan_firma = BAPFirma()
-
     teknik_sartname = BAPTeknikSartname()
     tasinir_kodu = field.String(__(u"Taşınır Kodu"), choices="tasinir_kodlari")
 
@@ -353,6 +360,12 @@ class BAPButcePlani(Model):
         return self.muhasebe_kod or self.muhasebe_kod_genel
 
     _muhasebe_kod.title = __(u"Muhasebe Kodu")
+
+    @classmethod
+    def mevcut_butce(cls, proje):
+        return sum([x.toplam_fiyat for x in BAPButcePlani.objects.filter(ilgili_proje=proje,
+                                                                         proje_durum=2,
+                                                                         satin_alma_durum=5)])
 
 
 class BAPEtkinlikProje(Model):
@@ -373,6 +386,7 @@ class BAPEtkinlikProje(Model):
     basvuru_yapan = Okutman()
     durum = field.Integer(__(u"Durum"), choices='bap_bilimsel_etkinlik_butce_talep_durum')
     onay_tarihi = field.Date(__(u"Onay Tarihi"))
+    toplam_butce = field.Float(_(u"Taahhüt Edilen Bütçe"))
 
     class EtkinlikButce(ListNode):
         class Meta:
@@ -394,12 +408,22 @@ class BAPEtkinlikProje(Model):
         aciklama = field.Text(_(u"Açıklama"), required=False)
         degerlendirme_sonuc = field.Integer(_(u"Değerlendirme Sonucu"),
                                             choices='bap_proje_degerlendirme_sonuc')
-
     def __unicode__(self):
         return "%s | %s" % (self.bildiri_basligi, self.basvuru_yapan.__unicode__())
 
     def _teknik_sartname(self):
         return "Var" if self.teknik_sartname.aciklama else "Yok"
+
+    def post_save(self):
+        if self.durum == 2 and self.is_changed('durum'):
+            for islem in self.EtkinlikButce:
+                self.toplam_butce += islem.istenen_tutar
+            self.save(internal=True)
+
+            # BAP genel butce guncelle
+            genel = BAPGenel.get()
+            genel.toplam_taahhut += self.toplam_butce
+            genel.save()
 
     _teknik_sartname.title = __(u"Teknik Şartname")
 
@@ -415,12 +439,15 @@ class BAPGundem(Model):
     etkinlik = BAPEtkinlikProje()
     gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
     gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
-    oturum_numarasi = field.Integer(__(u"Oturum Numarası"), default=0)
+    oturum_numarasi = field.String(__(u"Oturum Numarası"))
     oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
-    karar_no = field.Integer(__(u"Karar No"), default=0)
-    karar = field.Text(__(u"Karar"))
+    karar_no = field.String(__(u"Karar No"))
     karar_tarihi = field.Date(__(u"Karar Tarihi"))
     sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
+    karar_metni = field.Text(__(u"Karar Metni"))
+    karar_gerekcesi = field.Text(
+        __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"))
+    gundem_ekstra_bilgiler = field.String(__(u"Gündem Ekstra Bilgileri"), hidden=True)
 
     def _proje_adi(self):
         return "%s" % self.proje.ad if self.proje.key else self.etkinlik.bildiri_basligi
@@ -497,12 +524,25 @@ class BAPSatinAlma(Model):
     tur = field.Integer(_(u"Satın Alma Türü"), choices='bap_satin_alma_turleri')
     duyuruda = field.Boolean(_(u"Duyuru Durumu"), default=False)
     sorumlu = Role()
+    taahhut_edilen = field.Float(_(u"Taahhüt Edilen Bütçe"))
+    gerceklesen_satin_alma = field.Float(_(u"Gerçekleşen Satın Alma Fiyatı"))
 
     class ButceKalemleri(ListNode):
         butce = BAPButcePlani()
 
     def __unicode__(self):
         return "%s" % self.ad
+
+    def post_save(self):
+        if self.teklif_durum == 3 and self.is_changed('teklif_durum'):
+            genel = BAPGenel.get()
+            genel.toplam_kasa -= self.gerceklesen_satin_alma
+            genel.toplam_taahhut -= self.taahhut_edilen
+            genel.gerceklesen_taahhut_farki += (self.taahhut_edilen - self.gerceklesen_satin_alma)
+            genel.save()
+            hareket = BapKasaHareketi(miktar=-self.gerceklesen_satin_alma,
+                                      tarih=self.sonuclanma_tarihi, sebep=3)
+            hareket.save()
 
 
 class BAPTeklif(Model):
@@ -561,13 +601,22 @@ class BAPRapor(Model):
     def __unicode__(self):
         return "%s-%s" % (self.proje.ad, self.get_tur_display())
 
+class BapKasaHareketi(Model):
+    class Meta:
+        verbose_name = __(u"Kasa Hareketi")
+        verbose_name_plural = __(u"Kasa Hareketleri")
+    miktar = field.Float(__(u"Miktar"))
+    tarih = field.Date(_(u"Tarih"), index=True, format="%d.%m.%Y")
+    sebep = field.Integer(_(u"Kasa Giriş Sebebi"), index=True, choices="kasa_giris_sebepleri")
+
 
 class BAPGenel(Model):
-    toplam_kasa = field.Float(__(u"Toplam Kasa"))
+    class Meta:
+        verbose_name = __(u"BAPGenel")
 
-    class KasaGirisi(ListNode):
-        miktar = field.Float(__(u"Miktar"))
-        tarih = field.Date(_(u"Tarih"), index=True, format="%d.%m.%Y")
+    toplam_kasa = field.Float(__(u"Toplam Kasa"))
+    toplam_taahhut = field.Float(__(u"Taahhüt Edilen Tutar"))
+    gerceklesen_taahhut_farki = field.Float(__(u"Gerçekleşen Taahhüt Farkı"))
 
     @classmethod
     def get(cls):

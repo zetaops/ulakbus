@@ -14,138 +14,138 @@
     }
   },
   "analitik_butce_dorduncu_duzey_gider_kodlari": {
-   "03.2.1.01":{
-      "en":"",
-      "tr":"03.2.1.01 - Kırtasiye Alımları"
-   },
-   "03.2.1.02":{
-      "en":"",
-      "tr":"03.2.1.02 - Büro Malzemesi Alımları"
-   },
-   "03.2.1.03":{
-      "en":"",
-      "tr":"03.2.1.03 - Periyodik Yayın Alımları"
-   },
-   "03.2.1.04":{
-      "en":"",
-      "tr":"03.2.1.04 - Diğer Yayın Alımları"
-   },
-   "03.2.1.05":{
-      "en":"",
-      "tr":"03.2.1.05 - Baskı ve Cilt Giderleri"
-   },
-   "03.2.1.90":{
-      "en":"",
-      "tr":"03.2.1.90 - Diğer Kırtasiye ve Büro malzeme alımları"
-   },
-   "03.2.3.02":{
-      "en":"",
-      "tr":"03.2.3.02 - Akaryakıt ve Yağ Alımları"
-   },
-   "03.2.4.03":{
-      "en":"",
-      "tr":"03.2.4.03 - Yem Alımları"
-   },
-   "03.2.6.01":{
-      "en":"",
-      "tr":"03.2.6.01 - Laboratuvar Malzemesi ile Kimyevi ve Temrinlik Malzeme Alımı"
-   },
-   "03.2.6.02":{
-      "en":"",
-      "tr":"03.2.6.02 - Tıbbi Malzeme ve İlaç Alımları"
-   },
-   "03.2.6.03":{
-      "en":"",
-      "tr":"03.2.6.03 - Zirai Malzeme ve İlaç Alımları"
-   },
-   "03.2.6.04":{
-      "en":"",
-      "tr":"03.2.6.04 - Canlı Hayvan Alım, Bakım ve Diğer Giderleri"
-   },
-   "03.2.6.90":{
-      "en":"",
-      "tr":"03.2.6.90 - Diğer Özel Malzeme Alımları"
-   },
-   "03.2.9.01":{
-      "en":"",
-      "tr":"03.2.9.01 - Bahçe Malzemesi Alımları ile Yapım ve Bakım Giderleri "
-   },
-   "03.2.9.90":{
-      "en":"",
-      "tr":"03.2.9.90 - Diğer Tüketim Mal ve Malzemesi Alımları"
-   },
-   "03.3.1.01":{
-      "en":"",
-      "tr":"03.3.1.01 - Yurtiçi Geçici Görev Yollukları"
-   },
-   "03.3.3.01":{
-      "en":"",
-      "tr":"03.3.3.01 - Yurtdışı Geçici Görev Yollukları"
-   },
-   "03.5.1.01":{
-      "en":"",
-      "tr":"03.5.1.01 - Etüt-Proje Bilirkişi Ekspertiz Giderleri"
-   },
-   "03.5.1.02":{
-      "en":"",
-      "tr":"03.5.1.02 - Araştırma ve Geliştirme Giderleri"
-   },
-   "03.5.1.05":{
-      "en":"",
-      "tr":"03.5.1.05 - Harita Yapım ve Alım Giderleri"
-   },
-   "03.5.1.06":{
-      "en":"",
-      "tr":"03.5.1.06 - Enformasyon ve Raporlama Giderleri"
-   },
-   "03.5.1.90":{
-      "en":"",
-      "tr":"03.5.1.90 - Diğer Müşavir Firma ve Kişilere Ödemeler"
-   },
-   "03.5.5.01":{
-      "en":"",
-      "tr":"03.5.5.01 - Dayanıklı Mal ve Malzeme Kiralama Giderleri"
-   },
-   "03.5.5.02":{
-      "en":"",
-      "tr":"03.5.5.02 - Taşıt Kiralaması Giderleri"
-   },
-   "03.5.5.08":{
-      "en":"",
-      "tr":"03.5.5.08 - Yüzer Taşıt Kiralaması Giderleri"
-   },
-   "03.5.9.03":{
-      "en":"",
-      "tr":"03.5.9.03 - Kurslara Katılma Giderleri"
-   },
-   "03.7.1.01":{
-      "en":"",
-      "tr":"03.7.1.01 - Büro ve İşyeri Mal , Malzeme Alımları"
-   },
-   "03.7.1.02":{
-      "en":"",
-      "tr":"03.7.1.02 - Büro ve İşyeri Makine ve Teçhizat Alımları"
-   },
-   "03.7.1.03":{
-      "en":"",
-      "tr":"03.7.1.03 - Avadanlık ve Yedek Parça Alımları (Herhangi bir bakım sözleşmesinden veya işinden bağımsız olarak alınan yedek parçalar)"
-   },
-   "03.7.1.90":{
-      "en":"",
-      "tr":"03.7.1.90 - Diğer Dayanıklı Mal ve Malzeme Alımı"
-   },
-   "03.7.2.01":{
-      "en":"",
-      "tr":"03.7.2.01 - Bilgisayar Yazılım Alımları ve Yapımları"
-   },
-   "03.7.3.01":{
-      "en":"",
-      "tr":"03.7.3.01 - Tefrişat Bakım ve Onarım Giderleri"
-   },
-   "03.7.3.02":{
-      "en":"",
-      "tr":"03.7.3.02 - Makine Teçhizat Bakım ve Onarım Giderleri"
-   }
+    "03.2.1.01": {
+      "en": "",
+      "tr": "03.2.1.01 - Kırtasiye Alımları"
+    },
+    "03.2.1.02": {
+      "en": "",
+      "tr": "03.2.1.02 - Büro Malzemesi Alımları"
+    },
+    "03.2.1.03": {
+      "en": "",
+      "tr": "03.2.1.03 - Periyodik Yayın Alımları"
+    },
+    "03.2.1.04": {
+      "en": "",
+      "tr": "03.2.1.04 - Diğer Yayın Alımları"
+    },
+    "03.2.1.05": {
+      "en": "",
+      "tr": "03.2.1.05 - Baskı ve Cilt Giderleri"
+    },
+    "03.2.1.90": {
+      "en": "",
+      "tr": "03.2.1.90 - Diğer Kırtasiye ve Büro malzeme alımları"
+    },
+    "03.2.3.02": {
+      "en": "",
+      "tr": "03.2.3.02 - Akaryakıt ve Yağ Alımları"
+    },
+    "03.2.4.03": {
+      "en": "",
+      "tr": "03.2.4.03 - Yem Alımları"
+    },
+    "03.2.6.01": {
+      "en": "",
+      "tr": "03.2.6.01 - Laboratuvar Malzemesi ile Kimyevi ve Temrinlik Malzeme Alımı"
+    },
+    "03.2.6.02": {
+      "en": "",
+      "tr": "03.2.6.02 - Tıbbi Malzeme ve İlaç Alımları"
+    },
+    "03.2.6.03": {
+      "en": "",
+      "tr": "03.2.6.03 - Zirai Malzeme ve İlaç Alımları"
+    },
+    "03.2.6.04": {
+      "en": "",
+      "tr": "03.2.6.04 - Canlı Hayvan Alım, Bakım ve Diğer Giderleri"
+    },
+    "03.2.6.90": {
+      "en": "",
+      "tr": "03.2.6.90 - Diğer Özel Malzeme Alımları"
+    },
+    "03.2.9.01": {
+      "en": "",
+      "tr": "03.2.9.01 - Bahçe Malzemesi Alımları ile Yapım ve Bakım Giderleri "
+    },
+    "03.2.9.90": {
+      "en": "",
+      "tr": "03.2.9.90 - Diğer Tüketim Mal ve Malzemesi Alımları"
+    },
+    "03.3.1.01": {
+      "en": "",
+      "tr": "03.3.1.01 - Yurtiçi Geçici Görev Yollukları"
+    },
+    "03.3.3.01": {
+      "en": "",
+      "tr": "03.3.3.01 - Yurtdışı Geçici Görev Yollukları"
+    },
+    "03.5.1.01": {
+      "en": "",
+      "tr": "03.5.1.01 - Etüt-Proje Bilirkişi Ekspertiz Giderleri"
+    },
+    "03.5.1.02": {
+      "en": "",
+      "tr": "03.5.1.02 - Araştırma ve Geliştirme Giderleri"
+    },
+    "03.5.1.05": {
+      "en": "",
+      "tr": "03.5.1.05 - Harita Yapım ve Alım Giderleri"
+    },
+    "03.5.1.06": {
+      "en": "",
+      "tr": "03.5.1.06 - Enformasyon ve Raporlama Giderleri"
+    },
+    "03.5.1.90": {
+      "en": "",
+      "tr": "03.5.1.90 - Diğer Müşavir Firma ve Kişilere Ödemeler"
+    },
+    "03.5.5.01": {
+      "en": "",
+      "tr": "03.5.5.01 - Dayanıklı Mal ve Malzeme Kiralama Giderleri"
+    },
+    "03.5.5.02": {
+      "en": "",
+      "tr": "03.5.5.02 - Taşıt Kiralaması Giderleri"
+    },
+    "03.5.5.08": {
+      "en": "",
+      "tr": "03.5.5.08 - Yüzer Taşıt Kiralaması Giderleri"
+    },
+    "03.5.9.03": {
+      "en": "",
+      "tr": "03.5.9.03 - Kurslara Katılma Giderleri"
+    },
+    "03.7.1.01": {
+      "en": "",
+      "tr": "03.7.1.01 - Büro ve İşyeri Mal , Malzeme Alımları"
+    },
+    "03.7.1.02": {
+      "en": "",
+      "tr": "03.7.1.02 - Büro ve İşyeri Makine ve Teçhizat Alımları"
+    },
+    "03.7.1.03": {
+      "en": "",
+      "tr": "03.7.1.03 - Avadanlık ve Yedek Parça Alımları (Herhangi bir bakım sözleşmesinden veya işinden bağımsız olarak alınan yedek parçalar)"
+    },
+    "03.7.1.90": {
+      "en": "",
+      "tr": "03.7.1.90 - Diğer Dayanıklı Mal ve Malzeme Alımı"
+    },
+    "03.7.2.01": {
+      "en": "",
+      "tr": "03.7.2.01 - Bilgisayar Yazılım Alımları ve Yapımları"
+    },
+    "03.7.3.01": {
+      "en": "",
+      "tr": "03.7.3.01 - Tefrişat Bakım ve Onarım Giderleri"
+    },
+    "03.7.3.02": {
+      "en": "",
+      "tr": "03.7.3.02 - Makine Teçhizat Bakım ve Onarım Giderleri"
+    }
   },
   "bap_proje_durum": {
     "1": {
@@ -255,13 +255,23 @@
     "3": {
       "tr": "Teklif Sonuçlandı",
       "en": ""
-    },
-    "4": {
-      "tr": "Satın Alma Sürecinde",
+    }
+  },
+  "bap_butce_kalemi_durum": {
+    "1": {
+      "tr": "Değerlendirme Sürecinde",
       "en": ""
     },
-    "5": {
-      "tr": "Teslim Alındı",
+    "2": {
+      "tr": "Onaylandı",
+      "en": ""
+    },
+    "3": {
+      "tr": "Reddedildi",
+      "en": ""
+    },
+    "4": {
+      "tr": "İptal Edildi",
       "en": ""
     }
   },
@@ -402,7 +412,7 @@
     }
   },
   "bap_bilimsel_etkinlik_butce_talep_turleri": {
-     "1": {
+    "1": {
       "tr": "Konaklama",
       "en": ""
     },
@@ -410,7 +420,7 @@
       "tr": "Ulaşım",
       "en": ""
     },
-     "3": {
+    "3": {
       "tr": "Yevmiye",
       "en": ""
     },
@@ -428,19 +438,19 @@
       "tr": "Onaylandı",
       "en": ""
     },
-     "3": {
+    "3": {
       "tr": "Reddedildi",
       "en": ""
     },
-     "4": {
+    "4": {
       "tr": "Koordinasyon Birimi Tarafından İnceleniyor",
       "en": ""
     },
-     "5": {
+    "5": {
       "tr": "Komisyon Başkanının Üye Ataması Bekleniyor",
       "en": ""
     },
-     "6": {
+    "6": {
       "tr": "Komisyon Üyesi ve/veya Hakem Değerlendirmesi Bekleniyor",
       "en": ""
     },
@@ -456,6 +466,20 @@
     },
     "2": {
       "tr": "21-d",
+      "en": ""
+    }
+  },
+  "kasa_giris_sebepleri": {
+    "1": {
+      "tr": "Kasa Giriş",
+      "en": ""
+    },
+    "2": {
+      "tr": "Proje Kabul",
+      "en": ""
+    },
+    "3": {
+      "tr": "Satın Alma",
       "en": ""
     }
   }
