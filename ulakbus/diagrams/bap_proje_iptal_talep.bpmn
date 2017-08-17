@@ -14,8 +14,8 @@
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>proje_iptal_talebi</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>talebi_gonder_onay_ekrani</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_01hqnh5</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>TalebiGonder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_01hqnh5</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="koordinasyon_birimi" name="Koordinasyon Birimi">
         <bpmn:flowNodeRef>talebi_goruntule</bpmn:flowNodeRef>
@@ -25,8 +25,8 @@
         <bpmn:flowNodeRef>ExclusiveGateway_0h0p4rj</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_046l97b</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_1gqlv9i</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent_0umhwkm</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>yurutucuyu_bilgilendir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0umhwkm</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="StartEvent_1">
@@ -120,7 +120,7 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1c6ddzs">
       <bpmndi:BPMNShape id="Participant_0udoivw_di" bpmnElement="Participant_0udoivw">
-        <dc:Bounds x="253" y="-42" width="1187" height="817" />
+        <dc:Bounds x="253" y="100" width="1187" height="675" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="320" y="157" width="36" height="36" />
@@ -129,7 +129,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1rkwaci_di" bpmnElement="proje_yurutucusu">
-        <dc:Bounds x="283" y="-42" width="1157" height="491" />
+        <dc:Bounds x="283" y="100" width="1157" height="349" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1iaxumo_di" bpmnElement="koordinasyon_birimi">
         <dc:Bounds x="283" y="449" width="1157" height="326" />

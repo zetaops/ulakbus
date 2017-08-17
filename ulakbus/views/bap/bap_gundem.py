@@ -15,16 +15,14 @@ from ulakbus.lib.komisyon_sonrasi_adimlar import KomisyonKarariSonrasiAdimlar, g
 class YeniGundemForm(JsonForm):
     class Meta:
         title = __(u"Yeni Gündem")
-        include = ['proje','gundem_tipi','gundem_aciklama','oturum_numarasi','oturum_tarihi']
+        include = ['gundem_aciklama', 'oturum_numarasi', 'oturum_tarihi', 'karar_metni']
 
-    kaydet = fields.Button(__(u"Kaydet"))
-
-    # proje = fields.String(__(u"Proje Seçiniz"))
-    # gundem_tipi = fields.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
     # gundem_aciklama = fields.Text(__(u"Gündem Açıklaması"), required=False)
     # oturum_numarasi = fields.Integer(__(u"Oturum Numarası"), required=False)
     # oturum_tarihi = fields.Date(__(u"Oturum Tarihi"), required=False)
-    # kaydet = fields.Button(__(u"Kaydet"))
+    # ilgili_proje = fields.String(__(u"Proje Seçiniz"), required=True)
+    kaydet = fields.Button(__(u"Kaydet"))
+    geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 
 
 class GundemDuzenleForm(JsonForm):
@@ -54,14 +52,19 @@ class Gundem(CrudView):
         custom_form.ekle = fields.Button(_(u"Yeni Gündem Oluştur"), cmd='yeni_gundem')
         CrudView.list(self, custom_form=custom_form)
 
+    def gundem_tipi_kontrol(self):
+        self.current.task_data['diger_gundem'] = (self.object.gundem_tipi == 9)
+
     def yeni_gundem_olustur(self):
         form = YeniGundemForm(self.object, current=self.current)
-        form.set_choices_of('proje', prepare_choices_for_model(BAPProje))
+        form.gundem_tipi = fields.String(__(u"Gündem Tipi"),
+                                         choices='bap_komisyon_gundemleri',
+                                         default=9,
+                                         readonly=True)
         self.form_out(form)
 
     def yeni_gundem_kaydet(self):
         self.set_form_data_to_object()
-        self.object.proje = BAPProje.objects.get(self.input['form']['proje'])
         self.object.blocking_save()
 
     def add_edit_form(self):
