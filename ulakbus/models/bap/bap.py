@@ -416,6 +416,9 @@ class BAPEtkinlikProje(Model):
         if self.durum == 2 and self.is_changed('durum'):
             for islem in self.EtkinlikButce:
                 self.toplam_butce += islem.istenen_tutar
+            self.save(internal=True)
+
+            # BAP genel butce guncelle
             genel = BAPGenel.get()
             genel.toplam_taahhut += self.toplam_butce
             genel.save()
@@ -616,5 +619,3 @@ class BAPGenel(Model):
 
         """
         return cls.objects.get("BAP_GENEL_TEK_KAYIT")
-
-
