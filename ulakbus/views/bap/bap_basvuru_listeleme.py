@@ -3,7 +3,6 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
-from ulakbus.models import BAPButcePlani
 from ulakbus.settings import DATETIME_DEFAULT_FORMAT
 from pyoko.db.connection import cache
 from zengine.forms import JsonForm
@@ -142,15 +141,6 @@ class BasvuruListeleme(CrudView):
                 {'name': _(u'Değerlendirmeler'), 'cmd': 'degerlendirmeler', 'mode': 'normal',
                  'show_as': 'button'}
             )
-        if obj.durum == 5:
-            butceler = BAPButcePlani.objects.filter(ilgili_proje=obj)
-            for butce in butceler:
-                if butce.satin_alma_durum == 1:
-                    result['actions'].append(
-                        {'name': _(u'Satın Alma'), 'cmd': 'satin_alma', 'mode': 'normal',
-                         'show_as': 'button'}
-                    )
-                    break
 
     @list_query
     def list_by_ordered(self, queryset):

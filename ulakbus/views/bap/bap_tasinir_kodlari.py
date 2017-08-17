@@ -121,7 +121,7 @@ class BAPTasinirKodlari(CrudView):
         self.current.output['cmd'] = 'reload'
 
     def satin_alma_tur_kontrol(self):
-        if self.current.task_data['satin_alma_turu'] == 1:
+        if self.current.task_data['satin_alma_turu'] in [1, 2, 3]:
             self.current.task_data['cmd'] = 'tek_firma'
         else:
             self.current.task_data['cmd'] = 'ilan'

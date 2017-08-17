@@ -4,20 +4,16 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from collections import defaultdict
-
 from datetime import datetime, timedelta
-
 from pyoko import ListNode
 from ulakbus.lib.s3_file_manager import S3FileManager
 from ulakbus.models import AbstractRole
-from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem, Personel, Okutman
+from ulakbus.models import BAPProje, BAPButcePlani
 from ulakbus.models import Role
 from zengine.models import BPMNWorkflow
 from zengine.models import TaskInvitation
 from zengine.models import WFInstance
-
-from zengine.views.crud import CrudView, obj_filter, list_query
+from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 
@@ -253,5 +249,3 @@ class BAPSatinAlmaTalep(CrudView):
         zip_url = s3.download_files_as_zip(keys, zip_name)
         self.set_client_cmd('download')
         self.current.output['download_url'] = zip_url
-
-
