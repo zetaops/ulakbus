@@ -4,7 +4,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from ulakbus.lib.common import is_akisini_belli_bir_adimdan_aktif_et
-from ulakbus.models import BAPButcePlani, BAPRapor, Okutman, Permission, User, BAPSatinAlma
+from ulakbus.models import BAPButcePlani, BAPRapor, Okutman, Permission, User, BAPSatinAlma, \
+    BAPGenel
 from zengine.lib.translation import gettext as _
 from datetime import datetime, timedelta
 from zengine.models import WFInstance, BPMNWorkflow, TaskInvitation
@@ -33,6 +34,9 @@ gundem_kararlari = {
         'kararlar': [('kabul', 'Kabul'), ('red', 'Red')],
         'default': 'kabul'},
     8: {'tip_adi': 'yurutucu_degisikligi',
+        'kararlar': [('kabul', 'Kabul'), ('red', 'Red')],
+        'default': 'kabul'},
+    9: {'tip_adi': 'etkinlik_basvuru',
         'kararlar': [('kabul', 'Kabul'), ('red', 'Red')],
         'default': 'kabul'},
 }
@@ -303,9 +307,9 @@ class KomisyonKarariSonrasiAdimlar():
         
         """
         mevcut_butce = BAPButcePlani.mevcut_butce(proje=self.object.proje)
-        butce_fazlaligi = self.object.proje.butce_fazlaligi
-
-        # todo taahhut edilen butceyi arttir.
+        genel = BAPGenel.get()
+        genel.toplam_taahhut += mevcut_butce
+        genel.save()
 
         eylem = "İptal Talebi Kabulü"
         aciklama = "Projenin iptal talebi komisyon tarafından {} karar numarası ile kabul edildi."
@@ -392,6 +396,39 @@ class KomisyonKarariSonrasiAdimlar():
                        self.object.proje.ad, self.object.karar_no, self.object.karar_gerekcesi)
 
         self.bildirim_gonder(bildirim)
+
+    def etkinlik_basvuru_kabul(self):
+        """
+        Etkinlik başvuru kabulünde başvuru yapan öğretim üyesine bildirim gönderilir. Durumu 
+        onaylandı anlamına gelen 2 yapılır.
+
+        """
+        self.object.etkinlik.durum = 2
+        self.object.save()
+
+        bildirim = _(
+            u"Yapmış olduğunuz etkinlik başvurusu talebi %s karar numarası "
+            u"ile komisyon tarafından kabul edilmiştir.") % (self.object.karar_no)
+
+        self.object.etkinlik.basvuru_yapan.personel.user.send_notification(
+            title="Etkinlik Başvurusu Komisyon Kararı",
+            message=bildirim)
+
+    def etkinlik_basvuru_red(self):
+        """
+        Etkinlik başvuru kabulünde başvuru yapan öğretim üyesine bildirim gönderilir. Durumu 
+        reddedildi anlamına gelen 3 yapılır.
+        
+        """
+        self.object.etkinlik.durum = 3
+        self.object.save()
+        bildirim = _(
+            u"Yapmış olduğunuz etkinlik başvurusu talebi %s karar numarası "
+            u"ile komisyon tarafından reddedilmiştir. Gerekçe: %s") % (self.object.karar_no,
+                                                                       self.object.karar_gerekcesi)
+        self.object.etkinlik.basvuru_yapan.personel.user.send_notification(
+            title="Etkinlik Başvurusu Komisyon Kararı",
+            message=bildirim)
 
     def islem_gecmisi_guncelle(self, eylem, aciklama, durum=None):
         """

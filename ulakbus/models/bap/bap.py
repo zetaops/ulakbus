@@ -449,12 +449,13 @@ class BAPGundem(Model):
     gundem_ekstra_bilgiler = field.String(__(u"Gündem Ekstra Bilgileri"), hidden=True)
 
     def _proje_adi(self):
-        return "%s" % self.proje.ad if self.proje.key else self.etkinlik.bildiri_basligi
+        return "Diğer" if self.gundem_tipi == 10 else "%s" % self.proje.ad if self.proje.key else \
+            self.etkinlik.bildiri_basligi
 
     _proje_adi.title = __(u"Projenin Adı")
 
     def _proje_yurutucusu(self):
-        return "%s %s" % (
+        return "Diğer" if self.gundem_tipi == 10 else "%s %s" % (
             (self.proje.yurutucu.ad, self.proje.yurutucu.soyad) if self.proje.key else (
                 self.etkinlik.basvuru_yapan.ad, self.etkinlik.basvuru_yapan.soyad))
 

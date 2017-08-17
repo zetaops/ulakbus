@@ -101,7 +101,7 @@ class BAPEtkinlikBasvuruDegerlendir(CrudView):
         etkinlik.blocking_save()
         BAPGundem(
             etkinlik=etkinlik,
-            gundem_tipi=10
+            gundem_tipi=9
         ).blocking_save()
         role = Role.objects.filter(user=etkinlik.basvuru_yapan.personel.user)[0]
         sistem_user = User.objects.get(username='sistem_bilgilendirme')

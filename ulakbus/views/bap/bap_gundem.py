@@ -53,13 +53,13 @@ class Gundem(CrudView):
         CrudView.list(self, custom_form=custom_form)
 
     def gundem_tipi_kontrol(self):
-        self.current.task_data['diger_gundem'] = (self.object.gundem_tipi == 9)
+        self.current.task_data['diger_gundem'] = (self.object.gundem_tipi == 10)
 
     def yeni_gundem_olustur(self):
         form = YeniGundemForm(self.object, current=self.current)
         form.gundem_tipi = fields.String(__(u"Gündem Tipi"),
                                          choices='bap_komisyon_gundemleri',
-                                         default=9,
+                                         default=10,
                                          readonly=True)
         self.form_out(form)
 
