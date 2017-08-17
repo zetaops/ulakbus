@@ -489,6 +489,11 @@ class KomisyonKarariSonrasiAdimlar():
         rapor.save()
 
     def butce_fisi_is_akisini_tetikle(self):
+        """
+        Projenin kabulü sonrası, bütçe fişi iş akışını çalıştırma izini olan personele davet 
+        yollanır.
+                
+        """
         wf = BPMNWorkflow.objects.get(name='bap_butce_fisi')
         perm = Permission.objects.get('bap_butce_fisi')
         sistem_user = User.objects.get(username='sistem_bilgilendirme')
