@@ -435,7 +435,7 @@ class KomisyonKarariSonrasiAdimlar():
         """
         kalemler = kalemler or BAPButcePlani.objects.filter(ilgili_proje=self.object.proje)
         for kalem in kalemler:
-            kalem.durum = durum
+            kalem.proje_durum = durum
             kalem.save()
 
     def rapor_durum_degistir(self, durum):
