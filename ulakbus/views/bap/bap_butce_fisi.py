@@ -84,6 +84,9 @@ class BAPButceFisiView(CrudView):
             if butce_plani.muhasebe_kod != bk['muhasebe_kod']:
                 butce_plani.muhasebe_kod = bk['muhasebe_kod']
                 butce_plani.blocking_save()
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+        proje.durum = 7
+        proje.blocking_save()
 
     def yonlendir(self):
         """

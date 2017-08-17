@@ -3,6 +3,7 @@
 #
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
+from ulakbus.models import BAPProje
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView, list_query, obj_filter
 from zengine.lib.translation import gettext as _
@@ -56,10 +57,13 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
             (1, _(u"Ek Bütçe Talebi")),
             (2, _(u"Fasıl Aktarımı Talebi")),
             (3, _(u"Ek Süre Talebi")),
-            # (4, _(u"Satın Alma Talebi")),
+            (4, _(u"Satın Alma Talebi")),
             (5, _(u"Yürütücü Değişikliği Talebi")),
             (6, _(u"Proje İptal Talebi")),
         ]
+        proje = BAPProje.objects.get(self.current.task_data['object_id'])
+        if proje.durum == 7:
+            talep_list.append((4, _(u"Satın Alma Talebi")))
         form.set_choices_of('talepler', talep_list)
         form.set_default_of('talepler', 1)
         self.form_out(form)
@@ -74,7 +78,7 @@ class OgretimUyesiBasvuruListelemeView(CrudView):
             1: 'bap_ek_butce_talep',
             2: 'bap_fasil_aktarim_talep',
             3: 'bap_ek_sure_talep',
-            # 4: 'bap_satin_alma_talep',
+            4: 'bap_satin_alma_talep',
             5: 'bap_yurutucu_degisikligi_talebi',
             6: 'bap_proje_iptal_talep',
         }

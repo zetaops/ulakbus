@@ -173,10 +173,14 @@
       "en": ""
     },
     "7": {
-      "tr": "Komisyon Tarafından Öğretim Üyesine Düzenleme Talebiyle Gönderildi",
+      "tr": "Bütçe Fişleri Kesildi",
       "en": ""
     },
     "8": {
+      "tr": "Komisyon Tarafından Öğretim Üyesine Düzenleme Talebiyle Gönderildi",
+      "en": ""
+    },
+    "9": {
       "tr": "Komisyon Tarafından İptal Edildi",
       "en": ""
     }
@@ -283,28 +287,6 @@
       "en": ""
     }
   },
-  "bap_butce_plani_satin_alma_durumu": {
-    "1": {
-      "tr": "Öğretim Üyesi Tarafından Satın Alma Talebi Yapıldı",
-      "en": ""
-    },
-    "2": {
-      "tr": "Satın Alma İlanında",
-      "en": ""
-    },
-    "3": {
-      "tr": "Teslim Alma Sürecinde",
-      "en": ""
-    },
-    "4": {
-      "tr": "Teslim Alındı",
-      "en": ""
-    },
-    "5": {
-      "tr": "Talep Yapılmadı",
-      "en": ""
-    }
-  },
   "bap_firma_durum": {
     "1": {
       "tr": "Değerlendirme Sürecinde",
@@ -387,6 +369,28 @@
       "en": ""
     }
   },
+  "bap_butce_plani_satin_alma_durumu": {
+    "1": {
+      "tr": "Öğretim Üyesi Tarafından Satın Alma Talebi Yapıldı",
+      "en": ""
+    },
+    "2": {
+      "tr": "Satın Alma İlanında",
+      "en": ""
+    },
+    "3": {
+      "tr": "Teslim Alma Sürecinde",
+      "en": ""
+    },
+    "4": {
+      "tr": "Teslim Alındı",
+      "en": ""
+    },
+    "5": {
+      "tr": "Talep Yapılmadı",
+      "en": ""
+    }
+  },
   "bap_ogretim_uyesi_gider_kodlari": {
     "1": {
       "tr": "Hizmet Alımı",
@@ -464,6 +468,38 @@
     },
     "7": {
       "tr": "Gündeme Alındı",
+      "en": ""
+    }
+  },
+  "bap_satin_alma_turleri": {
+    "1": {
+      "tr": "21-a",
+      "en": ""
+    },
+    "2": {
+      "tr": "21-b",
+      "en": ""
+    },
+    "3": {
+      "tr": "21-c",
+      "en": ""
+    },
+    "4": {
+      "tr": "21-d",
+      "en": ""
+    }
+  },
+  "kasa_giris_sebepleri": {
+    "1": {
+      "tr": "Kasa Giriş",
+      "en": ""
+    },
+    "2": {
+      "tr": "Proje Kabul",
+      "en": ""
+    },
+    "3": {
+      "tr": "Satın Alma",
       "en": ""
     }
   }

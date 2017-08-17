@@ -130,5 +130,6 @@ class BasvuruListeleme(CrudView):
         2: Öğretim elemanı tarafından koordinasyon birimine onaya gönderildi.
         3: Koordinasyon birimi tarafından öğretim elemanına revizyon için gönderildi.
         4: Koordinasyon birimi projeyi onayladı.
+        5: Komisyon projeyi onayladı.
         """
-        return queryset.filter(durum__in=[2, 3, 4]).order_by()
+        return queryset.filter(durum__in=[2, 3, 4, 5]).order_by()
