@@ -12,6 +12,7 @@ from pyoko.lib.utils import lazy_property
 from zengine.lib.translation import gettext_lazy as __, gettext as _
 
 from pyoko import Model, field, ListNode
+from pyoko.exceptions import ObjectDoesNotExist
 
 talep_durum = [(1, 'Yeni'),
                (2, 'Silinecek'),
@@ -351,6 +352,25 @@ class BAPButcePlani(Model):
     teknik_sartname = BAPTeknikSartname()
     tasinir_kodu = field.String(__(u"Taşınır Kodu"), choices="tasinir_kodlari")
 
+    gerceklesen_satin_alma_fiyati = field.Float(_(u"Gerçekleşen Satın Alma Fiyatı"))
+
+    def post_save(self):
+        try:
+            kazanan_teklif = BAPTeklifFiyatIsleme.objects.get(kalem=self, firma=self.kazanan_firma)
+            if self.satin_alma_durum == 4 and self.is_changed('satin_alma_durum'):
+
+                self.gerceklesen_satin_alma_fiyati = kazanan_teklif.toplam_fiyat
+                genel = BAPGenel.get()
+                genel.toplam_kasa -= self.gerceklesen_satin_alma_fiyati
+                genel.toplam_taahhut -= self.toplam_fiyat
+                genel.gerceklesen_taahhut_farki += (self.toplam_fiyat - self.gerceklesen_satin_alma_fiyati)
+                genel.save()
+                hareket = BapKasaHareketi(miktar=-self.gerceklesen_satin_alma_fiyati,
+                                          tarih=self.sonuclanma_tarihi, sebep=3)
+                hareket.save()
+                self.save(internal=True)
+        except ObjectDoesNotExist:
+            pass
 
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod or self.muhasebe_kod_genel, self.kod_adi,
@@ -524,25 +544,12 @@ class BAPSatinAlma(Model):
     tur = field.Integer(_(u"Satın Alma Türü"), choices='bap_satin_alma_turleri')
     duyuruda = field.Boolean(_(u"Duyuru Durumu"), default=False)
     sorumlu = Role()
-    taahhut_edilen = field.Float(_(u"Taahhüt Edilen Bütçe"))
-    gerceklesen_satin_alma = field.Float(_(u"Gerçekleşen Satın Alma Fiyatı"))
 
     class ButceKalemleri(ListNode):
         butce = BAPButcePlani()
 
     def __unicode__(self):
         return "%s" % self.ad
-
-    def post_save(self):
-        if self.teklif_durum == 3 and self.is_changed('teklif_durum'):
-            genel = BAPGenel.get()
-            genel.toplam_kasa -= self.gerceklesen_satin_alma
-            genel.toplam_taahhut -= self.taahhut_edilen
-            genel.gerceklesen_taahhut_farki += (self.taahhut_edilen - self.gerceklesen_satin_alma)
-            genel.save()
-            hareket = BapKasaHareketi(miktar=-self.gerceklesen_satin_alma,
-                                      tarih=self.sonuclanma_tarihi, sebep=3)
-            hareket.save()
 
 
 class BAPTeklif(Model):

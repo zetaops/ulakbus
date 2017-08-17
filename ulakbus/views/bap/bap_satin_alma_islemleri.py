@@ -9,14 +9,14 @@ from zengine.views.crud import CrudView, obj_filter, list_query
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.s3_file_manager import S3FileManager
-from pyoko.exceptions import ObjectDoesNotExist
-from datetime import datetime
+from datetime import datetime, time
+from ulakbus.settings import DATETIME_DEFAULT_FORMAT
 
 
 class KazananFirmalarForm(JsonForm):
     """
     Bütçe kalemleri için kazanan firmaların belirlenmesi formunu oluşturur.
-    
+
     """
 
     class Meta:
@@ -42,7 +42,7 @@ class KazananFirmalarForm(JsonForm):
 class KazananFirmalarGosterForm(KazananFirmalarForm):
     """
     KazananFirmalarForm un read only olarak gösterilmesi için kalıtım formu.
-    
+
     """
 
     class Meta:
@@ -71,7 +71,7 @@ class TeklifGorForm(JsonForm):
 class KararVerForm(JsonForm):
     """
     Karar verme ekranına gitmek için kullanılan form.
-    
+
     """
 
     class Meta:
@@ -106,6 +106,38 @@ class TeklifIsleForm(JsonForm):
     geri = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 
 
+class SatinAlmaBilgileriDuzenleForm(JsonForm):
+    """
+         Seçilen satın alma duyurusuna ait teklife kapanma tarihi ve isim bilgilerini düzenleme
+         işlemini içerir.
+    """
+
+    class Meta:
+        include = ['ad', 'teklife_acilma_tarihi', 'teklife_kapanma_tarihi', 'aciklama']
+        title = _(u'Duyuru Bilgileri Düzenle')
+
+    kaydet = fields.Button(__(u"Kaydet"), cmd="kaydet")
+    geri_don = fields.Button(__(u"Geri Dön"), cmd="geri_don")
+
+
+class ButceKalemiBilgileriForm(JsonForm):
+    class Meta:
+        inline_edit = ['satin_alma_durum']
+
+    class KalemBilgileri(ListNode):
+        class Meta:
+            title = __(u"Bütçe Kalemi Bilgileri")
+
+        ad = fields.String(__(u"Ad"))
+        adet = fields.Integer(__(u"Adet"))
+        satin_alma_durum = fields.Integer(__(u"Satın Alma Durumu"),
+                                          choices='bap_butce_plani_satin_alma_durumu', default=None)
+        key = fields.String('Key', hidden=True)
+
+    guncelle = fields.Button(__(u"Güncelle"), cmd="satin_alma_islemler")
+    geri_don = fields.Button(__(u"Geri Dön"), cmd="geri_don")
+
+
 class TeklifDegerlendirme(CrudView):
     """
     Seçilen satın alma duyurusuna yapılmış tekliflerin değerlendirildiği view.
@@ -117,17 +149,16 @@ class TeklifDegerlendirme(CrudView):
 
     def _list(self):
         """
-        Koordinasyon birimi görevlisinin kendi üstünde bulunan, teklif süresi dolmuş ve 
-        değerlendirilmemiş satın alma duyurularını listeler.
-        
+        Koordinasyon birimi görevlisinin kendi üstünde bulunan satın alma duyurularını listeler.
+
         """
-        form = JsonForm(title=__(u"Teklife Kapanmış Satın Alma Duyuruları"))
+        form = JsonForm(title=__(u"Satın Alma Duyurularının Listesi"))
         self.list(custom_form=form)
 
     def teklifleri_gor(self):
         """
         Seçilen satın alma duyurusuna teklif yapmış firmalar listelenir.
-        
+
         """
         self.output['objects'] = [[_(u'Firma Adı')]]
         for teklif in BAPTeklif.objects.filter(satin_alma=self.object).order_by():
@@ -148,7 +179,7 @@ class TeklifDegerlendirme(CrudView):
 
     def belge_indir(self):
         """
-        Duyuruya teklif vermiş bütün firmaların teklifleri topluca bir zip dosyası halinde 
+        Duyuruya teklif vermiş bütün firmaların teklifleri topluca bir zip dosyası halinde
         indirilir.
 
         """
@@ -161,7 +192,7 @@ class TeklifDegerlendirme(CrudView):
 
     def teklifleri_isle_duzenle(self):
         """
-        Firmaların verdiği teklifler birim fiyatolarak işlenir. Adet ve birim fiyat kullanılarak 
+        Firmaların verdiği teklifler birim fiyatolarak işlenir. Adet ve birim fiyat kullanılarak
         toplam fiyat hesaplanir. Eğer önceden işlenmiş ise düzenlenebilir.
 
         """
@@ -192,9 +223,9 @@ class TeklifDegerlendirme(CrudView):
 
     def teklif_islemeleri_kaydet(self):
         """
-        Yeni girilen teklif işlemeleri ya da düzenlenen teklif işlemeleri kaydedilir. Teklife ilk 
+        Yeni girilen teklif işlemeleri ya da düzenlenen teklif işlemeleri kaydedilir. Teklife ilk
         defa işleme yapılıyor ise fiyat işlemesi fieldı True yapılır.
-        
+
         """
         teklif = BAPTeklif.objects.get(self.current.task_data['teklif_id'])
         self.current.task_data['firma_ad'] = teklif.firma.ad
@@ -217,7 +248,7 @@ class TeklifDegerlendirme(CrudView):
 
     def islem_mesaji_olustur(self):
         """
-        Teklif işleme kaydetme ya da düzenleme işleminden sonra başarılı işlem mesajı gösterilir.     
+        Teklif işleme kaydetme ya da düzenleme işleminden sonra başarılı işlem mesajı gösterilir.
 
         """
         islem_mesaji = _(u"{} firmasının teklif işleme işlemi başarıyla gerçekleştirilmiştir. "
@@ -229,7 +260,7 @@ class TeklifDegerlendirme(CrudView):
 
     def degerlendirme_kontrol(self):
         """
-        Tekliflerin değerlendirilebilmesi için duyuruya yapılmış bütün tekliflerin işlemelerinin 
+        Tekliflerin değerlendirilebilmesi için duyuruya yapılmış bütün tekliflerin işlemelerinin
         yapılmış olması gerekmektedir. Bu durum kontrol edilir.
 
         """
@@ -238,9 +269,9 @@ class TeklifDegerlendirme(CrudView):
 
     def degerlendirme_hata_mesaji_olustur(self):
         """
-        Eğer işlemesi yapılmayan teklifler varken değerlendirme yapılması denenirse önce 
-        işlemelerin yapılması gerektiği hakkında uyarı mesajı oluşturulur. 
-        
+        Eğer işlemesi yapılmayan teklifler varken değerlendirme yapılması denenirse önce
+        işlemelerin yapılması gerektiği hakkında uyarı mesajı oluşturulur.
+
         """
         hata_mesaji = _(u"'{}' adlı satın almaya ait teklif fiyatları işlemediğiniz firmalar "
                         u"bulunmaktadır. Karar vermeden önce lütfen teklif veren tüm firmaların "
@@ -251,8 +282,8 @@ class TeklifDegerlendirme(CrudView):
 
     def teklifleri_degerlendir(self):
         """
-        Bütçe kalemlerine firmaların verdiği teklifler toplam fiyat olarak gösterilir. 
-                
+        Bütçe kalemlerine firmaların verdiği teklifler toplam fiyat olarak gösterilir.
+
         """
         self.current.output["meta"]["allow_actions"] = False
         form = KararVerForm(current=self.current)
@@ -281,7 +312,7 @@ class TeklifDegerlendirme(CrudView):
     def kazanan_firmalari_belirle(self):
         """
         Seçilen satın alma duyurusunda bulunan her bir bütçe kalemi için kazanan firma belirlenir.
-        
+
         """
         self.current.output["meta"]["allow_add_listnode"] = False
         self.current.output["meta"]["allow_actions"] = False
@@ -299,9 +330,9 @@ class TeklifDegerlendirme(CrudView):
 
     def onaylama_ekrani_goster(self):
         """
-        Seçimlerin onaylanmadan önce son kontrol için bütçe kalemleri için seçilen kazanan firma 
+        Seçimlerin onaylanmadan önce son kontrol için bütçe kalemleri için seçilen kazanan firma
         gösterilir.
-        
+
         """
         self.current.output["meta"]["allow_add_listnode"] = False
         self.current.output["meta"]["allow_actions"] = False
@@ -338,26 +369,108 @@ class TeklifDegerlendirme(CrudView):
     def islem_mesaji_goster(self):
         """
         Kaydedilme işleminden sonra, başarılı işlem mesajı gösterilir.
-                
+
         """
         self.current.output['msgbox'] = {
             'type': 'info', "title": _(u'İşlem Bilgilendirme'),
             "msg": _(u'{} adlı satın alma duyurusu için teklifler değerlendirildi ve kazanan '
                      u'firma/firmalar belirlendi.'.format(self.object.ad))}
 
+    def teklife_kapat(self):
+        """
+        Durumu Teklife Açık olan satın alma duyurusunun durumunu Teklife Kapalı olarak
+        değiştirir.
+
+        """
+        self.object.teklif_durum = 2
+        self.object.blocking_save({'teklif_durum': 2})
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": _(u'İşlem Bilgilendirme'),
+            "msg": _(
+                u'{} adlı satın alma duyurusu teklife kapatıldı. Teklifleri Değerlendir butonuna '
+                u'tıklayarak duyuruya ait teklifleri değerlendirebilirsiniz.'.format(
+                    self.object.ad))}
+
+    def satin_alma(self):
+        """
+        Seçili olan satın alma duyurusuna ait bütçe kalemlerinin bilgilerini listeler.
+
+        """
+        self.current.output["meta"]["allow_actions"] = False
+        self.current.output["meta"]["allow_add_listnode"] = False
+        form = ButceKalemiBilgileriForm(title="{} Bütçe Kalemlerinin Bilgileri".format(self.object.ad))
+        for kalem in self.object.ButceKalemleri:
+            form.KalemBilgileri(ad=kalem.butce.ad, adet=kalem.butce.adet,
+                                satin_alma_durum=kalem.butce.satin_alma_durum, key=kalem.butce.key)
+        self.form_out(form)
+
+    def satin_alma_islemler(self):
+        """
+        Seçili olan satın alma duyurusunun satın alma durumunun belirlenmesi işlemini içerir.
+
+        """
+        for obj in self.input["form"]["KalemBilgileri"]:
+            kalem = BAPButcePlani.objects.get(obj["key"])
+
+            if obj["satin_alma_durum"] == 4:
+                try:
+                    BAPTeklifFiyatIsleme.objects.get(kalem=kalem, firma=kalem.kazanan_firma)
+                    kalem.satin_alma_durum = obj["satin_alma_durum"]
+                except ObjectDoesNotExist:
+                    pass
+            else:
+                kalem.satin_alma_durum = obj["satin_alma_durum"]
+            kalem.save()
+
+    def satin_alma_bilgilerini_duzenle(self):
+        """
+        Seçili olan satın alma duyurusunun bilgilerini düzenleme işlemini içerir.
+
+        """
+        form = SatinAlmaBilgileriDuzenleForm(self.object, current=self.current)
+        self.form_out(form)
+
+    def degisiklikleri_kaydet(self):
+        """
+        Seçilen satın alma duyurusunda yapılan değişiklikleri kaydetme işlemini içerir.
+
+        """
+        tat = "{} {}".format(self.input["form"]["teklife_acilma_tarihi"], time(17))
+        tkt = "{} {}".format(self.input["form"]["teklife_kapanma_tarihi"], time(17))
+        self.object.teklife_acilma_tarihi = datetime.strptime(tat, DATETIME_DEFAULT_FORMAT)
+        self.object.teklife_kapanma_tarihi = datetime.strptime(tkt, DATETIME_DEFAULT_FORMAT)
+        self.object.ad = self.input["form"]["ad"]
+        self.object.aciklama = self.input['form']['aciklama']
+        self.object.save()
+
     @obj_filter
-    def teklife_kapanmis_satin_alma_actions(self, obj, result):
-        result['actions'] = [
-            {'name': _(u'Teklifleri Gör'), 'cmd': 'gor', 'mode': 'normal', 'show_as': 'button'},
-        ]
+    def satin_alma_duyurulari_actions(self, obj, result):
+        """
+        Satın Alma Duyurularının butonları 4 duruma göre eklenir.
+        1) Düzenle: Durumu Teklife açık olan ve teklife kapanma tarihi sonlanmayan duyurular için.
+        2) Teklife Kapat: Durumu Teklife açık olan ve teklife kapanma tarihi sonlanan duyurular için.
+        3) Teklifleri Değerlendir: Durumu Teklife Kapalı olan duyurular için.
+        4) Satın Alma Gerçekleştir: Durumu Değerlendirildi olan duyurular için.
+
+        data(dict): Buton ismi ve cmd değerlerini içerir. Gelen nesnenin teklif durumuna göre
+        datadaki veriler kullanılır.
+
+        """
+        data = {1: {"name": "Teklife Kapat", "cmd": "teklife_kapat"},
+                2: {"name": "Teklifleri Değerlendir", "cmd": "degerlendir"},
+                3: {"name": "Satın Alma Bilgilerini Güncelle", "cmd": "satin_alma"}}
+        if obj.teklif_durum == 1 and obj.teklife_kapanma_tarihi < datetime.now():
+            result['actions'] = [{'name': "Düzenle", 'cmd': "duzenle", "mode": "normal",
+                                  "show_as": "button"}]
+        else:
+            result['actions'] = [{"name": data[obj.teklif_durum]["name"],
+                                  "cmd": data[obj.teklif_durum]["cmd"], "mode": "normal",
+                                  "show_as": "button"}]
 
     @list_query
-    def teklife_kapanmis_satin_almalari_listele(self, queryset):
+    def satin_alma_duyurularini_listele(self, queryset):
         """
-        Durumu 1 olan, teklif kapanma tarihi geçmiş ve kullanıcının sorumlu olduğu satın alma 
-        duyuruları listelenir.
+        Sorumluya gösterilecek satın alma duyuruları listelenir.
 
         """
-        return queryset.filter(teklife_kapanma_tarihi__lt=datetime.now(),
-                               teklif_durum=1,
-                               sorumlu=self.current.role).order_by()
+        return queryset.filter(sorumlu=self.current.role).order_by()
