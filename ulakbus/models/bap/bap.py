@@ -351,7 +351,6 @@ class BAPButcePlani(Model):
     teknik_sartname = BAPTeknikSartname()
     tasinir_kodu = field.String(__(u"Taşınır Kodu"), choices="tasinir_kodlari")
 
-
     def __unicode__(self):
         return "%s / %s / %s" % (self.muhasebe_kod or self.muhasebe_kod_genel, self.kod_adi,
                                  self.ad)
