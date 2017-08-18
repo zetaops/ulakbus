@@ -83,18 +83,6 @@ class HatirlatmaOnayForm(JsonForm):
     onayla = fields.Button(__(u"Onayla"), cmd='onayla')
 
 
-class IslemMesajiForm(JsonForm):
-    """
-    Firma kayıt başvurusu sonrası gösterilecek form.
-
-    """
-
-    class Meta:
-        title = __(u"Firma Kaydı İşlem Mesajı")
-
-    tamam = fields.Button(__(u"Çıkışa Yönlendir"))
-
-
 class BapFirmaKayit(CrudView):
     """
     Firmaların firma bilgileri ve yetkili bilgisini girerek teklif verebilmek 
@@ -261,12 +249,11 @@ class BapFirmaKayit(CrudView):
         Kayıt başvurusunun alındığına dair işlem sonrası mesaj üretilir ve gösterilir. 
     
         """
-        form = IslemMesajiForm(current=self.current)
-        form.help_text = _(
-            u"""Koordinasyon birimi %s adlı firmanız için yaptığınız kayıt başvurusu hakkında 
+        self.current.output['msgbox'] = {
+            'type': 'info', "title": _(u'Firma Kaydı Başarılı'),
+            "msg": _(u"""Koordinasyon birimi %s adlı firmanız için yaptığınız kayıt başvurusu hakkında 
             bilgilendirilmiştir. Başvurunuz değerlendirildikten sonra sonucu hakkında
-            bilgilendirileceksiniz.""" % self.input['form']['ad'])
-        self.form_out(form)
+            bilgilendirileceksiniz.""" % self.input['form']['ad'])}
 
     def uygunluk_kontrolleri(self, form):
         """
