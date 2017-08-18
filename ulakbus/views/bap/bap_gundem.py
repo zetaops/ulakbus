@@ -137,6 +137,13 @@ class Gundem(CrudView):
                                  u"İlgili kişiler bilgilendirilmiştir.") % self.object.proje,
                              typ='info')
 
+    def confirm_deletion(self):
+        form = JsonForm(title=_(u"Silme İşlemi"))
+        form.help_text = _(u"Silme işlemini onaylıyor musunuz?")
+        form.evet = fields.Button(_(u"Onayla"), cmd='delete')
+        form.iptal = fields.Button(_(u"İptal"))
+        self.form_out(form)
+
     @obj_filter
     def proje_turu_islem(self, obj, result):
         sonuc = {'name': _(u'Sonuçlandır/Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
