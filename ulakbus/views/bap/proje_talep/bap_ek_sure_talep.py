@@ -19,7 +19,6 @@ class EkSureTalepForm(JsonForm):
     ek_sure = fields.Integer(__(u"Ek Süre (Ay Olarak)"))
     aciklama = fields.Text(__(u"Açıklama"))
     gonder = fields.Button(__(u"Onaya Gönder"))
-    iptal = fields.Button(__(u"İptal"), cmd='iptal', form_validation=False)
 
 
 class TalepOnaylaForm(JsonForm):

@@ -31,6 +31,16 @@ class YurutucuDegisikligi(CrudView):
         self.form_out(TalepForm(self.object, current=self.current))
         self.current.output["meta"]["allow_add_listnode"] = False
 
+    def yurutucu_secim_kontrol(self):
+        td = self.current.task_data
+        td['yurutucu_var'] = self.input['form']['yurutucu_id'] is not None
+
+    def secim_uyari_mesaji(self):
+        self.current.output['msgbox'] = {
+            'type': 'warning',
+            "title": _(u"Hatalı Yürütücü Seçimi"),
+            "msg": _("İşlem yapabilmek için yürütücü seçmeniz gerekmektedir.")}
+
     def koordinasyona_gonder_onay(self):
         self.current.task_data['yurutucu_aciklama'] = self.input['form']['aciklama']
         self.current.task_data['yeni_yurutucu_id'] = self.input['form']['yurutucu_id']
