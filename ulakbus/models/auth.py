@@ -658,6 +658,9 @@ class AuthBackend(object):
             PermissionDenied:
 
         """
+        if getattr(self.current, 'workflow_name', False) in settings.ANONYMOUS_WORKFLOWS:
+            return Role.objects.get(key="ANONYMOUS")
+
         if 'role_id' in self.session:
             return Role.objects.get(self.session['role_id'])
         else:
