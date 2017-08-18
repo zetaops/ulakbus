@@ -19,7 +19,7 @@ class MakineTechizatAraForm(JsonForm):
         title = _(u"Teçhizat Arama")
 
     ad = fields.String(_(u"Mal/Malzeme"), required=True)
-    birim = fields.String(_(u"Birim"))
+    birim = fields.String(_(u"Birim"), required=False)
 
     ara = fields.Button(_(u"Ara"), cmd='ara')
     iptal = fields.Button(_(u"İptal"), cmd='iptal', form_validation=False)
@@ -62,7 +62,7 @@ class BAPMakineTechizatAra(CrudView):
         Makine, teçhizatların aranıp listelendiği iş akışı adımıdır.
         """
         form = MakineTechizatAraForm(current=self.current)
-        form.set_choices_of('birim',choices = prepare_choices_for_model(Unit))
+        form.set_choices_of('birim',choices = prepare_choices_for_model(Unit, unit_type="Bölüm"))
 
         # Arama sonuclari task_data'dan alınır.
         arama_sonuclari = self.current.task_data.pop('arama_sonuclari', False)
