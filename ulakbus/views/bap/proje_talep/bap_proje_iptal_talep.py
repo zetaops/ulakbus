@@ -17,9 +17,9 @@ class ProjeIptal(CrudView):
 
     def proje_iptal_talebi(self):
         self.object = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        self.show()
-        self.output['object_title'] = _(u"Proje iptal talebi : %s") % self.object
-        form = JsonForm()
+        form = JsonForm(current=self.current,
+                        title=_(u"{} Projesi / Proje İptal Talebi".format(self.object.ad)))
+        form.help_text = _(u"Lütfen proje iptal talebi için açıklama giriniz.")
         form.aciklama = fields.Text(_(u"Açıklama"))
         form.onay = fields.Button(_(u"Onaya Gönder"))
         self.form_out(form)
@@ -44,11 +44,10 @@ class ProjeIptal(CrudView):
 
     def talebi_goruntule(self):
         self.object = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        self.show()
-        self.output['object_title'] = _(u"Proje iptal talebi : %s") % self.object
-        self.output['object']['İptal Talep Açıklama'] = self.current.task_data[
-            'proje_iptal_aciklama']
-        form = JsonForm()
+        form = JsonForm(current=self.current,
+                        title=_(u"{} Projesi / Proje İptal Talebi".format(self.object.ad)))
+        form.help_text = _(u"İPTAL TALEBİ AÇIKLAMA: {}".format(
+            self.current.task_data['proje_iptal_aciklama']))
         form.onayla = fields.Button(_(u"Komisyona Yolla"), cmd='onayla')
         form.reddet = fields.Button(_(u"Reddet"))
         self.form_out(form)
