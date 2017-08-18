@@ -105,7 +105,7 @@ class BAPMakineTechizatAra(CrudView):
         adımdır.
         """
         ad = self.input['form']['ad']
-        birim_id = self.input['form']['birim_id']
+        birim_id = self.input['form']['birim']
         qs = Demirbas.objects
         qs = qs.all(birim_id=birim_id) if birim_id else qs
         self.current.task_data['arama_sonuclari'] = qs.search_on(
