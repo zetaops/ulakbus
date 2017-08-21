@@ -117,16 +117,6 @@ class FasilAktarimTalep(CrudView):
         form.birim_fiyat = birim_fiyat
         self.form_out(form)
 
-
-
-        # form = JsonForm(self.object, current=self.current)
-        # form.include = ['ad', 'birim_fiyat', 'adet', 'gerekce', 'ozellik']
-        # form.title = "%s Kodlu / %s / Kalem Adı: %s" % (
-        #     self.object.muhasebe_kod, self.object.kod_adi, self.object.ad)
-        # form.ilerle = fields.Button(_(u"İlerle"), cmd='ilerle')
-        # form.geri = fields.Button(_(u"Geri Dön"), cmd='iptal')
-        # self.form_out(form)
-
     def butce_kalem_kontrol(self):
         kalem_toplam_fiyat = self.input['form']['birim_fiyat'] * self.input['form']['adet']
         toplam_fiyat = sum(BAPButcePlani.objects.exclude(key=self.object.key).filter(
@@ -307,18 +297,3 @@ BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
     def nesne_id_sil(self):
         self.current.task_data.pop('object_id', None)
         del self.current.task_data['fasil_islemleri']
-
-    # # ---------------------------------------
-    #
-    # @obj_filter
-    # def proje_turu_islem(self, obj, result):
-    #
-    #     result['actions'] = []
-    #     if 'onay' not in self.current.task_data:
-    #         duzenle = {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
-    #                    'show_as': 'button'}
-    #         result['actions'].append(duzenle)
-    #
-    #     goster = {'name': _(u'Ayrıntı Göster'), 'cmd': 'show', 'mode': 'normal',
-    #               'show_as': 'button'}
-    #     result['actions'].append(goster)

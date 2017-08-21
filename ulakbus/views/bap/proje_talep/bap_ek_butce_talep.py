@@ -371,7 +371,6 @@ BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
         mesaj = "Ek bütçe için bulunduğunuz talep reddedilmiştir. Red Gerekçesi: {}".format(gerekce)
         self.current.task_data['bildirim_mesaji'] = mesaj
 
-
     def bilgilendir(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         basvuru_rol = proje.basvuru_rolu
@@ -396,13 +395,3 @@ BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
         self.yeni_kalem_sil()
         del self.current.task_data['yeni_butceler']
         self.current.task_data.pop('object_id', None)
-
-
-    # ---------------------------------------
-
-    # @obj_filter
-    # def proje_turu_islem(self, obj, result):
-    #     result['actions'] = [
-    #         {'name': _(u'Düzenle'), 'cmd': 'duzenle', 'mode': 'normal', 'show_as': 'button'},
-    #         {'name': _(u'Ayrıntı Göster'), 'cmd': 'show', 'mode': 'normal', 'show_as': 'button'},
-    #         {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'}]
