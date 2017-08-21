@@ -11,6 +11,7 @@ from zengine.forms import fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 from ulakbus.settings import DATE_DEFAULT_FORMAT
+from ulakbus.lib.view_helpers import prepare_choices_for_model
 
 
 class MakineTechizatAraForm(JsonForm):
@@ -18,7 +19,7 @@ class MakineTechizatAraForm(JsonForm):
         title = _(u"Teçhizat Arama")
 
     ad = fields.String(_(u"Mal/Malzeme"), required=True)
-    birim = Unit()
+    birim = fields.String(_(u"Birim"), required=False)
 
     ara = fields.Button(_(u"Ara"), cmd='ara')
     iptal = fields.Button(_(u"İptal"), cmd='iptal', form_validation=False)
@@ -61,6 +62,8 @@ class BAPMakineTechizatAra(CrudView):
         Makine, teçhizatların aranıp listelendiği iş akışı adımıdır.
         """
         form = MakineTechizatAraForm(current=self.current)
+        form.set_choices_of('birim',choices = prepare_choices_for_model(Unit, unit_type="Bölüm"))
+
         # Arama sonuclari task_data'dan alınır.
         arama_sonuclari = self.current.task_data.pop('arama_sonuclari', False)
         if arama_sonuclari:
@@ -102,7 +105,7 @@ class BAPMakineTechizatAra(CrudView):
         adımdır.
         """
         ad = self.input['form']['ad']
-        birim_id = self.input['form']['birim_id']
+        birim_id = self.input['form']['birim']
         qs = Demirbas.objects
         qs = qs.all(birim_id=birim_id) if birim_id else qs
         self.current.task_data['arama_sonuclari'] = qs.search_on(

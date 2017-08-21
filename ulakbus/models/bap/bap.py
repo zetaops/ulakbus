@@ -539,6 +539,7 @@ class BAPSatinAlma(Model):
     tur = field.Integer(_(u"Satın Alma Türü"), choices='bap_satin_alma_turleri')
     duyuruda = field.Boolean(_(u"Duyuru Durumu"), default=False)
     sorumlu = Role()
+    duyuruda = field.Boolean(__(u"Duyurulma Durumu"), default=False)
 
     class ButceKalemleri(ListNode):
         butce = BAPButcePlani()
