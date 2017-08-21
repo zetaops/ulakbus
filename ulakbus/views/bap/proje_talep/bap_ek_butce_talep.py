@@ -105,6 +105,7 @@ class EkButceTalep(CrudView):
                     'yeni_toplam_fiyat': '',
                     'gerekce': butce.gerekce
                 }
+            ad = self.current.task_data['yeni_butceler'][butce.key]['ad']
             durum = self.current.task_data['yeni_butceler'][butce.key]['durum']
             toplam_fiyat = self.current.task_data['yeni_butceler'][butce.key]['yeni_toplam_fiyat']
             butce_bilgileri = self.current.task_data['yeni_butceler'][butce.key]
@@ -117,7 +118,7 @@ class EkButceTalep(CrudView):
                 "fields": [
                     butce.muhasebe_kod,
                     butce.kod_adi,
-                    butce.ad,
+                    ad,
                     yeni_birim,
                     yeni_adet,
                     yeni_toplam,
@@ -196,7 +197,7 @@ class EkButceTalep(CrudView):
             {'durum': durum,
              'kod_ad': kod_adi,
              'muhasebe_kod_genel': muhasebe_kod_genel,
-             'ad': self.object.ad,
+             'ad': self.input['form']['ad'],
              'eski_adet': self.object.adet if not durum == 1 else '',
              'yeni_adet': self.input['form']['adet'],
              'eski_birim_fiyat': self.object.birim_fiyat if not durum == 1 else '',
