@@ -4,83 +4,58 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from ulakbus.models import BAPProje, BAPGundem, Personel, Okutman
-
+from ulakbus.models import BAPProje, BAPGundem
+from zengine.models import WFInstance, TaskInvitation
 from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy as __
+import json
 
 
 class EkSureTalepForm(JsonForm):
     class Meta:
-        title = __(u"Ek Süre Talebi")
+        title = __(u"{}/Ek Süre Talebi")
+
     ek_sure = fields.Integer(__(u"Ek Süre (Ay Olarak)"))
     aciklama = fields.Text(__(u"Açıklama"))
     gonder = fields.Button(__(u"Onaya Gönder"))
-    iptal = fields.Button(__(u"İptal"), cmd='iptal', form_validation=False)
+
+
+class TalepOnaylaForm(JsonForm):
+    class Meta:
+        title = __(u"Ek Süre Talep Onaylama")
+
+    onayla = fields.Button(__(u"Onayla"), cmd='onayla')
+    geri_don = fields.Button(__(u"Geri Dön"), cmd='geri_don')
 
 
 class EkSureTalebi(CrudView):
-
-    def proje_id_kontrol(self):
-        if 'bap_proje_id' in self.current.task_data:
-            self.current.task_data['cmd'] = 'proje_id_var'
-            proje_data = [(self.current.task_data['bap_proje_id'],
-                           BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad)]
-            self.current.task_data['proje_data'] = proje_data
-        else:
-            self.current.task_data['cmd'] = 'proje_id_yok'
-
-    def kontrol(self):
-        if 'bap_proje_id' not in self.current.task_data:
-            personel = Personel.objects.get(user=self.current.user)
-            okutman = Okutman.objects.get(personel=personel)
-            data = [(proje.key, proje.ad) for proje in BAPProje.objects.filter(yurutucu=okutman,
-                                                                               durum__in=[3, 5])]
-            if data:
-                self.current.task_data['proje_data'] = data
-            else:
-                self.current.task_data['onaylandi'] = 1
-                self.current.task_data['proje_yok'] = {
-                    'msg': 'Yürütücüsü olduğunuz herhangi bir proje '
-                           'bulunamadı. Size bağlı olan proje '
-                           'olmadığı için ek süre talebinde '
-                           'bulunamazsınız.',
-                    'title': 'Proje Bulunamadı'}
-        else:
-            data = [(self.current.task_data['bap_proje_id'],
-                     BAPProje.objects.get(self.current.task_data['bap_proje_id']).ad)]
-            self.current.task_data['proje_data'] = data
-
-        if 'onaylandi' not in self.current.task_data:
-            self.current.task_data['onaylandi'] = 0
-
     def ek_sure_talep_gir(self):
-        if 'red_aciklama' in self.current.task_data:
-            self.current.msg_box(msg=self.current.task_data['red_aciklama'],
-                                 title=_(u"Talebiniz Reddedildi."),
-                                 typ='warning')
-            del self.current.task_data['red_aciklama']
-
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         form = EkSureTalepForm(self.object, current=self.current)
-        form.proje = fields.String(_(u"Proje Seçiniz"),
-                                   choices=self.current.task_data['proje_data'],
-                                   default=self.current.task_data['proje_data'][0][0])
+        form.title = form.title.format(proje.ad)
+        self.form_out(form)
+
+    def talep_onaylama(self):
+        self.current.task_data['ek_sure'] = self.input['form']['ek_sure']
+        self.current.task_data['aciklama'] = self.input['form']['aciklama']
+        form = TalepOnaylaForm(current=self.current)
+        form.help_text = __(u"{} ay ek süre talebinde bulunmak üzeresiniz. Bu işlemi onaylıyor "
+                            u"musunuz?".format(self.current.task_data['ek_sure']))
         self.form_out(form)
 
     def onaya_gonder(self):
-        if 'proje' in self.input['form']:
-            self.current.task_data['bap_proje_id'] = self.input['form']['proje']
-        self.current.task_data['ek_sure'] = self.input['form']['ek_sure']
-        self.current.task_data['aciklama'] = self.input['form']['aciklama']
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        proje.durum = 2     # koordinasyon birimi onayi bekleniyor.
+        self.current.task_data['INVITATION_TITLE'] = "{} | {} | Ek Süre Talebi".format(
+            proje.yurutucu.__unicode__(),
+            proje.ad)
+        proje.talep_uygunlugu = False
         proje.save()
 
     def talebi_goruntule(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         self.output['object_title'] = _(u"Yürütücü: %s / Proje: %s - Ek süre talebi") % \
-                                       (proje.yurutucu, proje.ad)
+                                      (proje.yurutucu, proje.ad)
         obj_data = {"Talep Edilen Süre(Ay olarak)": str(self.current.task_data['ek_sure']),
                     "Açıklama": self.current.task_data['aciklama']}
         self.output['object'] = obj_data
@@ -92,42 +67,50 @@ class EkSureTalebi(CrudView):
     def red_yazisi_yaz(self):
         form = JsonForm(title=_(u"Red Açıklaması Yazınız"))
         form.red_aciklama = fields.Text(_(u"Red Açıklaması"))
-        form.red_gonder = fields.Button(_(u"Gönder"))
+        form.red_gonder = fields.Button(_(u"Gönder"), cmd='red')
+        form.geri_don = fields.Button(_(u"Geri Dön"), cmd='geri_don', form_validation=False)
         self.form_out(form)
 
     def komisyon_aciklamasi(self):
         form = JsonForm(title=_(u"Komisyon Açıklaması"))
         form.komisyon_aciklama = fields.Text(_(u"Açıklama Yazınız"))
-        form.yolla = fields.Button(_(u"Yolla"))
+        form.yolla = fields.Button(_(u"Gönder"), cmd='onayla')
+        form.geri_don = fields.Button(_(u"Geri Dön"), cmd='geri_don', form_validation=False)
         self.form_out(form)
 
     def komisyona_gonder(self):
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        gundem = BAPGundem()
-        gundem.proje = proje
-        gundem.gundem_tipi = 4
-        gundem.gundem_aciklama = self.input['form']['komisyon_aciklama']
-        gundem.save()
-        proje.durum = 4     # Komisyon Onayı Bekliyor
-        proje.save()
-        self.current.task_data['onaylandi'] = 1
+        BAPGundem(proje=proje,
+                  gundem_tipi=4,
+                  gundem_aciklama=self.input['form']['komisyon_aciklama'],
+                  gundem_ekstra_bilgiler=json.dumps({
+                      'ek_sure': self.current.task_data['ek_sure'],
+                      'aciklama': self.current.task_data['aciklama']})).save()
 
     def bilgilendir(self):
+        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         if 'red_aciklama' in self.input['form']:
-            proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-            proje.durum = 3
-            proje.save()
-            self.current.task_data['red_aciklama'] = "%s için yaptığınız %s aylık ek süre talebi " \
-                                                     "reddedildi. RED Açıklaması: %s" % (
-                proje.ad, self.current.task_data['ek_sure'], self.input['form']['red_aciklama'])
+            mesaj = "%s için yaptığınız %s aylık ek süre talebi " \
+                    "reddedildi. RED Açıklaması: %s" % (
+                        proje.ad, self.current.task_data['ek_sure'],
+                        self.input['form']['red_aciklama'])
         else:
-            self.current.task_data['onay'] = "Ek süre için bulunduğunuz talep kabul edilmiş " \
-                                             "olup, komisyonun gündemine alınmıştır."
+            mesaj = "Ek süre için bulunduğunuz talep kabul edilmiş olup, komisyonun gündemine " \
+                    "alınmıştır."
 
-    def bilgilendirme(self):
-        if 'proje_yok' in self.current.task_data:
-            self.current.msg_box(msg=self.current.task_data['proje_yok']['msg'],
-                                 title=self.current.task_data['proje_yok']['title'])
-        else:
-            self.current.msg_box(msg=self.current.task_data['onay'], title=_(u"Talebiniz Kabul "
-                                                                             u"Edildi."))
+        proje.talep_uygunlugu = True
+        proje.save()
+        proje.basvuru_rolu.send_notification(title="Koordinasyon Birimi Ek Süre Talep Kararı",
+                                             message=mesaj,
+                                             sender=self.current.user)
+
+        self.current.output['msgbox'] = {
+            'type': 'info',
+            "title": _(u"İşlem Mesajı"),
+            "msg": "Talep değerlendirmeniz başarılı ile gerçekleştirilmiştir. Proje yürütücüsü "
+                   "{} değerlendirmeniz hakkında bilgilendirilmiştir.".format(
+                proje.yurutucu.__unicode__())}
+
+        wfi = WFInstance.objects.get(self.current.token)
+        TaskInvitation.objects.filter(instance=wfi,
+                                      role=self.current.role).delete()

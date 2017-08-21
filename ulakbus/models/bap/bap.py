@@ -8,16 +8,9 @@ from ulakbus.models.form import Form
 from ulakbus.models import Room, Personel, Role, User
 from ulakbus.models.demirbas import Demirbas
 from pyoko.lib.utils import lazy_property
-
 from zengine.lib.translation import gettext_lazy as __, gettext as _
-
 from pyoko import Model, field, ListNode
 from pyoko.exceptions import ObjectDoesNotExist
-
-talep_durum = [(1, 'Yeni'),
-               (2, 'Silinecek'),
-               (3, 'Düzenlendi'),
-               (4, 'Düzenlenmedi')]
 
 
 class BAPProjeTurleri(Model):
@@ -453,29 +446,31 @@ class BAPGundem(Model):
         verbose_name = __(u"Gündem")
         verbose_name_plural = __(u"Gündemler")
         list_fields = ['_proje_adi', '_proje_yurutucusu', 'gundem_tipi', 'oturum_numarasi',
-                       'oturum_tarihi', 'karar_no', 'karar_tarihi']
+                       'oturum_tarihi', 'karar_no']
 
     proje = BAPProje()
     etkinlik = BAPEtkinlikProje()
-    gundem_tipi = field.String(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
-    gundem_aciklama = field.Text(__(u"Gündem Açıklaması"))
-    oturum_numarasi = field.String(__(u"Oturum Numarası"))
-    oturum_tarihi = field.Date(__(u"Oturum Tarihi"))
-    karar_no = field.String(__(u"Karar No"))
-    karar_tarihi = field.Date(__(u"Karar Tarihi"))
+    gundem_tipi = field.Integer(__(u"Gündem Tipi"), choices='bap_komisyon_gundemleri', default=1)
+    gundem_aciklama = field.Text(__(u"Gündem Açıklaması"), required=False)
+    oturum_numarasi = field.String(__(u"Oturum Numarası"), default="", required=False)
+    oturum_tarihi = field.Date(__(u"Oturum Tarihi"),required=False)
+    karar_no = field.String(__(u"Karar No"), default="", required=False)
+    karar = field.String(__(u"Karar"), default="", required=False)
     sonuclandi = field.Boolean(__(u"Kararın Sonuçlandırılması"), default=False)
-    karar_metni = field.Text(__(u"Karar Metni"))
+    karar_metni = field.Text(__(u"Karar Metni"), required=False)
     karar_gerekcesi = field.Text(
-        __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"))
+        __(u"Karar Gerekçesi (Reddetme ve revizyon kararlarında gerekçe belirtilmelidir.)"),
+        required=False)
     gundem_ekstra_bilgiler = field.String(__(u"Gündem Ekstra Bilgileri"), hidden=True)
 
     def _proje_adi(self):
-        return "%s" % self.proje.ad if self.proje.key else self.etkinlik.bildiri_basligi
+        return "Diğer" if self.gundem_tipi == 10 else "%s" % self.proje.ad if self.proje.key else \
+            self.etkinlik.bildiri_basligi
 
     _proje_adi.title = __(u"Projenin Adı")
 
     def _proje_yurutucusu(self):
-        return "%s %s" % (
+        return "Diğer" if self.gundem_tipi == 10 else "%s %s" % (
             (self.proje.yurutucu.ad, self.proje.yurutucu.soyad) if self.proje.key else (
                 self.etkinlik.basvuru_yapan.ad, self.etkinlik.basvuru_yapan.soyad))
 
@@ -603,8 +598,8 @@ class BAPRapor(Model):
 
     proje = BAPProje()
     tur = field.Integer(__(u"Rapor Türü"), choices='bap_rapor_turu')
-    durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum')
-    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=False)
+    durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum', default=1)
+    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=True)
 
     def __unicode__(self):
         return "%s-%s" % (self.proje.ad, self.get_tur_display())

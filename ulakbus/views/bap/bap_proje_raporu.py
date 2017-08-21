@@ -14,6 +14,7 @@ from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _
 from ulakbus.lib.common import get_file_url
+import json
 
 
 class RaporTurForm(JsonForm):
@@ -162,7 +163,9 @@ class BapProjeRaporu(CrudView):
         rapor.save()
         proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
         gundem_tipi = 6 if self.current.task_data['RaporTurForm']['tur'] == 1 else 5
-        gundem = BAPGundem(gundem_tipi=gundem_tipi, proje=proje)
+        gundem = BAPGundem(gundem_tipi=gundem_tipi,
+                           proje=proje,
+                           gundem_ekstra_bilgiler=json.dumps({'rapor': rapor.key}))
         gundem.save()
         self.current.user.send_notification(title=_(u"Proje Rapor Yanıtı"),
                                             message=_(u"""%s projenize ait raporunuz koordinasyon birimi

@@ -7,9 +7,11 @@
 import datetime
 from math import floor
 from ulakbus import settings
+from zengine.models import WFInstance, TaskInvitation
 from ..models import AkademikTakvim, ObjectDoesNotExist, Unit, Room, DersEtkinligi, SinavEtkinligi, User
 from zengine.lib.translation import gettext as _
 from zengine.lib.cache import Cache
+from pyoko.db.connection import cache
 import random
 import hashlib
 import re
@@ -34,6 +36,49 @@ parola_kalibi = re.compile(
 
 e_posta_kalibi = re.compile('[^@]+@[^@]+\.[^@]+')
 
+
+def is_akisini_belli_bir_adimdan_aktif_et(role,object,data,step,title,message,sender):
+
+    """
+    Bir iş akışını çalıştırmaya yetkili kullanıcıya, belli bir adımdan o iş akışını devam 
+    için davet yollar. Gönderilen taraf davete tıkladığında, belirtilen adımdan iş akışını, 
+    çalıştırır.
+    
+    Args:
+        role(obj): Bildirimin gönderileceği rol nesnesi.
+        object(obj): WF'nin çalıştığı wf instance'ın kaydedildiği main object.
+        data(dict): bağlanılacak yerde kullanılacak data, task data bu data ile güncellenecektir.
+        step(str): bağlanılacak iş akışı adımı, örnek: '"SequenceFlow_18o8591", 1'
+        title(str): gönderilecek bildirimin başlığı
+        message(str): gönderilecek bildirim mesajı
+        sender(obj): daveti gönderen user nesnesi
+
+    """
+    today = datetime.datetime.today()
+    wfi = WFInstance.objects.get(wf_object=object.key, finished=True)
+    wfi.finished = False
+    wfi.data.update(data)
+    wfi.step = step
+    wfi.blocking_save()
+
+    cache.delete(wfi.key)
+
+    role.send_notification(title=title,
+                           message=message,
+                           typ=1,
+                           url='',
+                           sender=sender
+                           )
+    inv = TaskInvitation(
+        instance=wfi,
+        role=role,
+        wf_name=wfi.wf.name,
+        progress=30,
+        start_date=today,
+        finish_date=today + datetime.timedelta(15)
+    )
+    inv.title = wfi.wf.title
+    inv.save()
 
 def get_temp_password():
     return uuid.uuid4().hex

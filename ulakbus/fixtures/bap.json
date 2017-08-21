@@ -175,6 +175,14 @@
     "7": {
       "tr": "Bütçe Fişleri Kesildi",
       "en": ""
+    },
+    "8": {
+      "tr": "Komisyon Tarafından Öğretim Üyesine Düzenleme Talebiyle Gönderildi",
+      "en": ""
+    },
+    "9": {
+      "tr": "Komisyon Tarafından İptal Edildi",
+      "en": ""
     }
   },
   "bap_rapor_turu": {
@@ -235,11 +243,11 @@
       "en": ""
     },
     "9": {
-      "tr": "Diğer",
+      "tr": "Bilimsel Etkinlik Başvurusu",
       "en": ""
     },
     "10": {
-      "tr": "Bilimsel Etkinlik Başvurusu",
+      "tr": "Diğer",
       "en": ""
     }
   },
@@ -254,6 +262,10 @@
     },
     "3": {
       "tr": "Teklif Sonuçlandı",
+      "en": ""
+    },
+    "4": {
+      "tr": "İptal Edildi",
       "en": ""
     }
   },
