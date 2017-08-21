@@ -117,6 +117,7 @@ class KomisyonKarariSonrasiAdimlar():
                 kalem.toplam_fiyat = data['yeni_toplam_fiyat']
                 kalem.adet = data['yeni_adet']
                 kalem.gerekce = data['gerekce']
+                kalem.muhasebe_kod_genel = data['muhasebe_kod_genel']
 
             kalem.proje_durum = 2 if data['durum'] == 1 else 4
             kalem.save()
@@ -172,6 +173,7 @@ class KomisyonKarariSonrasiAdimlar():
                 kalem.toplam_fiyat = data['yeni_toplam_fiyat']
                 kalem.adet = data['yeni_adet']
                 kalem.gerekce = data['gerekce']
+                kalem.muhasebe_kod_genel = data['muhasebe_kod_genel']
                 kalem.save()
 
         genel = BAPGenel.get()

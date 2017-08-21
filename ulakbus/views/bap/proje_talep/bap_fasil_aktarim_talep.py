@@ -5,9 +5,10 @@
 # (GPLv3).  See LICENSE.txt for details.
 from collections import defaultdict
 from ulakbus.models import BAPProje, BAPButcePlani, BAPGundem
-from zengine.views.crud import CrudView, obj_filter
+from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _
+from ulakbus.views.bap.proje_talep.bap_ek_butce_talep import ButcePlaniForm
 import json
 
 talep_durum = {1: 'Düzenlendi',
@@ -44,6 +45,7 @@ class FasilAktarimTalep(CrudView):
             if butce.key not in self.current.task_data['fasil_islemleri']:
                 self.current.task_data['fasil_islemleri'][butce.key] = {
                     'durum': 2,
+                    'muhasebe_kod_genel': butce.muhasebe_kod_genel,
                     'kod_ad': butce.kod_adi,
                     'ad': butce.ad,
                     'eski_adet': butce.adet,
@@ -95,20 +97,35 @@ class FasilAktarimTalep(CrudView):
         form = JsonForm(title=_(u"%s için Fasıl Aktarım Talebi") % proje.ad)
         if proje.butce_fazlaligi:
             form.help_text = _(
-                u"Kullanabileceğiniz {} TL tutarında bütçe fazlalığınız bulunmaktadır. KULLANILABİLİR BÜTÇE tutarı bu bütçe fazlalığının da eklenmiş halidir.".format(
+                u"Kullanabileceğiniz {} TL tutarında bütçe fazlalığınız bulunmaktadır. "
+                u"KULLANILABİLİR BÜTÇE tutarı bu bütçe fazlalığının da eklenmiş halidir.".format(
                     proje.butce_fazlaligi))
         form.tamam = fields.Button(_(u"Onaya Yolla"), cmd='yolla')
         form.bitir = fields.Button(_(u"Vazgeç"), cmd='bitir')
         self.form_out(form)
 
     def add_edit_form(self):
-        form = JsonForm(self.object, current=self.current)
-        form.include = ['ad', 'birim_fiyat', 'adet', 'gerekce', 'ozellik']
-        form.title = "%s Kodlu / %s / Kalem Adı: %s" % (
-            self.object.muhasebe_kod, self.object.kod_adi, self.object.ad)
-        form.ilerle = fields.Button(_(u"İlerle"), cmd='ilerle')
-        form.geri = fields.Button(_(u"Geri Dön"), cmd='iptal')
+        keys = ['ad', 'muhasebe_kod_genel', 'gerekce']
+        form = ButcePlaniForm(current=self.current)
+        yeni_data = self.current.task_data['fasil_islemleri'][self.object.key]
+        for key in keys:
+            setattr(form, key, yeni_data[key])
+
+        adet, birim_fiyat = (yeni_data['yeni_adet'], yeni_data['yeni_birim_fiyat']) if \
+            yeni_data['durum'] == 1 else (self.object.adet, self.object.birim_fiyat)
+        form.adet = adet
+        form.birim_fiyat = birim_fiyat
         self.form_out(form)
+
+
+
+        # form = JsonForm(self.object, current=self.current)
+        # form.include = ['ad', 'birim_fiyat', 'adet', 'gerekce', 'ozellik']
+        # form.title = "%s Kodlu / %s / Kalem Adı: %s" % (
+        #     self.object.muhasebe_kod, self.object.kod_adi, self.object.ad)
+        # form.ilerle = fields.Button(_(u"İlerle"), cmd='ilerle')
+        # form.geri = fields.Button(_(u"Geri Dön"), cmd='iptal')
+        # self.form_out(form)
 
     def butce_kalem_kontrol(self):
         kalem_toplam_fiyat = self.input['form']['birim_fiyat'] * self.input['form']['adet']
@@ -120,7 +137,8 @@ class FasilAktarimTalep(CrudView):
         if self.current.task_data['toplam_butce'] < (kalem_toplam_fiyat + toplam_fiyat):
             self.current.output['msgbox'] = {'type': 'warning',
                                              'title': 'Bütçe Fazlası!',
-                                             'msg': 'Kabul edilen toplam bütçeden fazlasını talep                                                       edemezsiniz.'}
+                                             'msg': 'Kabul edilen toplam bütçeden fazlasını talep '
+                                                    'edemezsiniz.'}
             self.current.task_data['cmd'] = 'iptal'
         else:
             self.current.task_data['duzenlenmis_data'] = self.input['form']
@@ -133,13 +151,14 @@ class FasilAktarimTalep(CrudView):
 
     def kaydet(self):
         kalem = BAPButcePlani.objects.get(self.object.key)
-        for key, value in self.current.task_data['duzenlenmis_data'].items():
+        for key, value in self.current.task_data['ButcePlaniForm'].items():
             if hasattr(self.object, key):
                 self.object.setattr(key, value)
 
         self.current.task_data['fasil_islemleri'][self.object.key] = \
             {'ad': self.object.ad,
              'durum': 1,
+             'muhasebe_kod_genel': self.object.muhasebe_kod_genel,
              'kod_ad': self.object.kod_adi,
              'eski_adet': kalem.adet,
              'yeni_adet': self.object.adet,
@@ -289,17 +308,17 @@ BÜTÇE FAZLALIĞI: **{}**""".format(form.help_text, proje.butce_fazlaligi))
         self.current.task_data.pop('object_id', None)
         del self.current.task_data['fasil_islemleri']
 
-    # ---------------------------------------
-
-    @obj_filter
-    def proje_turu_islem(self, obj, result):
-
-        result['actions'] = []
-        if 'onay' not in self.current.task_data:
-            duzenle = {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
-                       'show_as': 'button'}
-            result['actions'].append(duzenle)
-
-        goster = {'name': _(u'Ayrıntı Göster'), 'cmd': 'show', 'mode': 'normal',
-                  'show_as': 'button'}
-        result['actions'].append(goster)
+    # # ---------------------------------------
+    #
+    # @obj_filter
+    # def proje_turu_islem(self, obj, result):
+    #
+    #     result['actions'] = []
+    #     if 'onay' not in self.current.task_data:
+    #         duzenle = {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal',
+    #                    'show_as': 'button'}
+    #         result['actions'].append(duzenle)
+    #
+    #     goster = {'name': _(u'Ayrıntı Göster'), 'cmd': 'show', 'mode': 'normal',
+    #               'show_as': 'button'}
+    #     result['actions'].append(goster)
