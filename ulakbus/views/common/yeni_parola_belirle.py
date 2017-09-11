@@ -35,7 +35,7 @@ class YeniParolaBelirle(UlakbusView):
 
         """
 
-        if 'msg' in self.current.task_data:
+        if self.current.task_data.get('msg', None):
             self.mesaj_kutusu_goster(self.current.task_data['title'],
                                      self.current.task_data['type'])
 

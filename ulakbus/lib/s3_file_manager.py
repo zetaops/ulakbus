@@ -73,3 +73,16 @@ class S3FileManager(object):
         content = base64.b64encode(temp_zip_file.getvalue())
         key = self.store_file(name=zip_name, content=content, type='application/zip', ext='zip')
         return get_file_url(key)
+
+    def get_last_modified_date(self, key):
+        """
+
+        Args:
+            key(str): s3 key
+
+        Returns (str):
+            last modified datetime of object
+
+        """
+        k = self.bucket.get_key(key)
+        return k.last_modified
