@@ -11,7 +11,6 @@ from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from zengine.forms import fields
 from datetime import datetime, timedelta
-
 from pyoko import field
 
 
@@ -159,3 +158,14 @@ class HakemlikDaveti(CrudView):
         """)
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
+
+    def hakem_secim_kontrolu(self):
+        self.current.task_data['hakem_sayisi'] = len(self.object.ProjeDegerlendirmeleri)
+
+    def hakem_secilmedi_mesaj_goster(self):
+        form = JsonForm(title=_(u"Hakem Seçilmedi"))
+        form.help_text = _(u"""Lütfen hakem daveti göndermek için önce hakem listesinden hakem seçip ekle butonuna basınız.
+                """)
+        form.tamam = fields.Button(_(u"Tamam"))
+        self.form_out(form)
+

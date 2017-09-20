@@ -77,7 +77,7 @@ class BapFirmaBasvuruDegerlendirme(CrudView):
             ('Telefon', self.object.telefon),
             ('E-Posta', str(self.object.e_posta)),
             ('Vergi No', self.object.vergi_no),
-            ('Vergi Dairesi', self.object.vergi_dairesi),
+            ('Vergi Dairesi', self.object.get_vergi_dairesi_display()),
             ('Faaliyet Belgesi Veriliş Tarihi',
              self.object.faaliyet_belgesi_verilis_tarihi.strftime(DATE_DEFAULT_FORMAT)),
             ('Firma Yetkilisi Adı', yetkili.name),
@@ -105,7 +105,6 @@ class BapFirmaBasvuruDegerlendirme(CrudView):
         """
         self.current.task_data["firma_key"] = self.object.key
         self.current.task_data["firma_ad"] = self.object.ad
-        self.current.task_data["e_posta"] = self.object.Yetkililer[0].yetkili.e_mail
         form = KararVerForm(current=self.current)
         form.title = _(u"%s Firması Başvuru Değerlendirme Kararı") % self.object.ad
         form.help_text = _(u"Lütfen %s firması kayıt başvurusu hakkında değerlendirme kararınızı"
@@ -172,12 +171,21 @@ class BapFirmaBasvuruDegerlendirme(CrudView):
         gecici_parola = get_temp_password()
         kullanici.password = gecici_parola
         kullanici.blocking_save()
-        self.current.task_data["message"] = "İyi günler.\n\n%s adlı firmanızın kayıt başvurusu " \
-                                            "tarafımızdan onaylanmıştır. Aşağıdaki giriş " \
-                                            "bilgilerini kullanarak sisteme giriş yapabilirsiniz." \
-                                            "\n\nKullanıcı Adı: '%s'\nParola: '%s'" % \
-                                            (self.current.task_data["firma_ad"],
-                                             kullanici.username, gecici_parola)
+        yetkili_onay_msg = "İyi günler.\n\n%s adlı firmanızın kayıt başvurusu tarafımızdan " \
+                           "onaylanmıştır. Aşağıdaki giriş bilgilerini kullanarak sisteme giriş " \
+                           "yapabilirsiniz." \
+                           "\n\nKullanıcı Adı: '%s'\nParola: '%s'" % \
+                           (self.current.task_data["firma_ad"],
+                            kullanici.username, gecici_parola)
+
+        self.e_posta_yolla(yetkili_onay_msg, kullanici.e_mail)
+
+        firma_onay_msg = "İyi günler.\n\n%s adlı firmanızın kayıt başvurusu tarafımızdan " \
+                         "onaylanmıştır. Sisteme giriş yapabilmeniz için gereken bilgiler " \
+                         "firma yetkilisinin e-postasına gönderilmiştir." % self.current.task_data[
+                             "firma_ad"]
+
+        self.e_posta_yolla(firma_onay_msg, self.object.e_posta)
 
     def red_e_posta_icerik_hazirla(self):
         """
@@ -186,27 +194,27 @@ class BapFirmaBasvuruDegerlendirme(CrudView):
         reddetme gerekçesi de içeriğe eklenir. 
 
         """
-        kullanici =self.object.Yetkililer[0].yetkili
-        self.object.blocking_delete()
+        kullanici = self.object.Yetkililer[0].yetkili
+        red_msg = "İyi günler.\n\n%s adlı firmanızın kayıt başvurusu tarafımızdan " \
+                  "reddedilmiştir. Reddedilme gerekçesinde belirtilen kriterleri düzeltip " \
+                  "sisteme tekrardan kayıt başvurusu yapabilirsiniz.\n\nReddedilme Gerekçesi: " \
+                  "%s" % (self.current.task_data["firma_ad"],
+                          self.current.task_data['RedGerekceForm']['gerekce'])
+        self.e_posta_yolla(red_msg, self.object.e_posta)
+        self.e_posta_yolla(red_msg, kullanici.e_mail)
         kullanici.blocking_delete()
+        self.object.blocking_delete()
         del self.current.task_data['object_id']
-        self.current.task_data["message"] = "İyi günler.\n\n%s adlı firmanızın kayıt başvurusu " \
-                                            "tarafımızdan reddedilmiştir. Reddedilme gerekçesinde" \
-                                            " belirtilen kriterleri düzeltip sisteme tekrardan " \
-                                            "kayıt başvurusu yapabilirsiniz.\n\nReddedilme " \
-                                            "Gerekçesi: %s" % (self.current.task_data["firma_ad"],
-                                                               self.current.task_data[
-                                                                   'RedGerekceForm']['gerekce'])
 
-    def e_posta_yolla(self):
+    def e_posta_yolla(self, msg, e_posta):
         """
         Firma yetkilisine karar hakkında e-posta gönderilir.        
         
         """
         posta_gonder = ZatoService(service_name='e-posta-yolla',
                                    payload={"default_e_mail": MAIL_ADDRESS,
-                                            "e_posta": self.current.task_data["e_posta"],
-                                            "message": self.current.task_data["message"],
+                                            "e_posta": e_posta,
+                                            "message": msg,
                                             "subject": _(
                                                 u"Firma Kayıt Başvurusu Değerlendirme Sonucu")})
 

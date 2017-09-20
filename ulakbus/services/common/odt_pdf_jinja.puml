@@ -1,0 +1,28 @@
+@startuml
+
+actor Client
+boundary Zato
+control CZato
+control DocumentRenderer
+control DocsBox
+entity S3
+entity Redis
+
+Client -> Zato : Send template_url or template_content\nwith context data.
+Zato -> CZato : Pass previous payload.
+CZato -> Redis : Check the cache for we've handled this request.
+Redis -> CZato : Send URL/Content/None.
+CZato -> DocumentRenderer : Send template and context data.
+DocumentRenderer -> S3 : Save rendered document.
+DocumentRenderer -> CZato : Send URL of rendered document on S3.
+CZato -> Redis : Add rendered document url to cache.
+CZato -> DocsBox : Send rendered document and get the status.
+DocsBox -> CZato : Send status of task.
+CZato -> DocsBox : Until status is finished, make request. (3 secs.)
+DocsBox -> CZato : Send pdf document URI.
+CZato -> S3 : Save pdf document.
+CZato -> Redis : Update pdf_url of rendered document on cache.
+CZato -> Zato : Send response payload.
+Zato -> Client : Pass the response.
+
+@enduml

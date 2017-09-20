@@ -269,4 +269,4 @@ class BapFirmaTeklif(CrudView):
         Durumu 1 olan yani, teklife açık olan satın alma duyuruları listelenir.
                 
         """
-        return queryset.filter(teklif_durum=1)
+        return queryset.filter(teklif_durum=1, teklife_kapanma_tarihi__lte=datetime.now())

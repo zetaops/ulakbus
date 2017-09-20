@@ -59,7 +59,10 @@ ABSTRACT_ROLE_MODEL = 'ulakbus.models.auth.AbstractRole'
 
 # diagrams that does not require logged in user
 ANONYMOUS_WORKFLOWS.extend(
-    ['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle', 'bap_firma_kayit', 'bap_duyurulari_goruntule'])
+    ['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle', 'bap_firma_kayit',
+     'bap_duyurulari_goruntule', 'bap_makine_techizat_ara', 'bap_anasayfa',
+     'bap_komisyon_uyeleri', 'bap_iletisim', 'bap_proje_arama',
+     ])
 
 #: Ortak kullanılan workflowlar
 COMMON_WORKFLOWS.extend(['profil_sayfasi_goruntuleme', 'e_posta_degistir', 'kullanici_adi_degistir',
@@ -103,9 +106,6 @@ OBJECT_MENU = {
         {'name': 'Personel', 'wf': 'kimlik_ve_iletisim_bilgileri',
          'verbose_name': 'Kimlik ve Iletisim Bilgileri Düzenle', 'field': 'object_id'},
 
-        {'name' : 'Personel', 'wf' : 'kanunla_verilen_terfi',
-         'verbose_name' : 'Kanunla Verilen Terfi', 'field' : 'object_id'},
-
         {'name': 'Izin', 'wf': 'izin', 'verbose_name': 'İzin İşlemleri', 'field': 'personel_id'},
 
         {'name': 'UcretsizIzin', 'wf': 'ucretsiz_izin', 'verbose_name': 'Ücretsiz İzin İşlemleri',
@@ -118,9 +118,6 @@ OBJECT_MENU = {
 
         # {'name': 'Izin', 'verbose_name': 'İzin Başvuru', 'wf': 'izin_basvuru',
         #  'field': 'personel_id'},
-
-        {'name': 'Personel', 'verbose_name': 'Personel Terfi', 'wf': 'tekil_personel_terfi',
-         'field': 'personel_id'},
 
         {'name': 'Personel', 'verbose_name': 'Akademik Personel Görev Süresi Uzatma',
          'wf': 'gorev_suresi_uzatma', 'field': 'personel_id'},
@@ -136,9 +133,6 @@ OBJECT_MENU = {
 
         {'name': 'SaglikRaporu', 'verbose_name': 'Sağlık Raporu', 'field': 'personel_id',
          'wf': 'saglik_raporu_olusturma'},
-
-        {'name': 'Personel', 'wf': 'hizmet_sureleri',
-         'verbose_name': 'Hizmet Süreleri', 'field': 'object_id'},
 
         # Hitap İşlemleri
         {'name': 'HizmetKayitlari', 'verbose_name': 'Hizmet Cetveli', 'field': 'personel_id',
@@ -216,11 +210,18 @@ ZATO_SERVER = os.environ.get('ZATO_SERVER', 'http://localhost:11223')
 ENABLE_SIMPLE_CRUD_MENU = False
 
 ALLOWED_ORIGINS += [
-    'http://ulakbus.konya.edu.tr',
-    'http://ulakbus-nightly.konya.edu.tr'
+    'http://ulakbus.net',
+    'http://www.ulakbus.net',
+    'http://dev.zetaops.io',
+    'http://nightly.zetaops.io',
+    'http://nightly.ulakbus.net'
 ]
 
+# Universite ID'sidir
 UID = 173500
+
+UNIVERSITY_NAME = os.environ.get('UNIVERSITY_NAME', 'ULAKBUS')
+UNIVERSITY_LOGO = os.environ.get('UNIVERSITY_LOGO', None)
 
 FILE_MANAGER = 'ulakbus.lib.s3_file_manager.S3FileManager'
 ALLOWED_FILE_TYPES = {
@@ -244,7 +245,7 @@ S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
 S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY')
 S3_PUBLIC_URL = os.environ.get('S3_PUBLIC_URL')
 S3_PROXY_PORT = os.environ.get('S3_PROXY_PORT', '80')
-S3_BUCKET_NAME = 'neu'
+S3_BUCKET_NAME = 'ulakbus'
 
 QUICK_MENU = [
     'kadro_islemleri',
@@ -283,3 +284,12 @@ MESSAGES = {
 }
 
 DATA_GRID_PAGE_SIZE = 100
+
+#Personel yolluk ve yevmiye katsayıları her yıl değişmektedir.
+#2017 için guncel yolluk ve yevmiye katsayıları
+EK_GOSTERGE_8K = 48.25
+EK_GOSTERGE_5800_8K = 45
+EK_GOSTERGE_3K_5800 = 42.25
+DERECE_1_4 = 37.25
+DERECE_5_15 = 36.25
+KM_KATSAYISI = 5 / 100.0

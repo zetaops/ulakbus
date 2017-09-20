@@ -41,15 +41,6 @@ class TestCase(BaseTestCase):
         resp = self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="geri_don")
         assert resp.json['forms']['schema']['title'] == "Firma Başvuru Değerlendirmeleri"
 
-        # belge indir
-        self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="incele",
-                         object_id="5uGjOb0fj9rzGwfIwYoSIN2pNRH")
-        resp = self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="indir",
-                                form={"belge_indir": 1})
-        assert resp.json['download_url'] == "%s%s" % (
-            settings.S3_PUBLIC_URL, firma.faaliyet_belgesi)
-        self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="geri_don")
-
         # karar, geri don
         resp = self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="karar_ver",
                                 object_id="5uGjOb0fj9rzGwfIwYoSIN2pNRH")
@@ -85,8 +76,11 @@ class TestCase(BaseTestCase):
         assert User.objects.filter(key=kullanici.key).count() == 0
         assert BAPFirma.objects.filter(key="5uGjOb0fj9rzGwfIwYoSIN2pNRH").count() == 0
         firma = BAPFirma.objects.filter(key="5uGjOb0fj9rzGwfIwYoSIN2pNRH", deleted=True)[0]
+        kullanici = User.objects.filter(key=kullanici.key, deleted=True)[0]
         firma.deleted = False
         firma.save()
+        kullanici.deleted = False
+        kullanici.save()
 
         # karar, onayla
         assert resp.json['forms']['schema']['title'] == "Firma Başvuru Değerlendirmeleri"
@@ -118,3 +112,16 @@ class TestCase(BaseTestCase):
         firma.blocking_save()
         kullanici.is_active = False
         kullanici.blocking_save()
+
+        # belge indir
+        firma = BAPFirma.objects.get("5uGjOb0fj9rzGwfIwYoSIN2pNRH")
+        self.prepare_client('/bap_firma_basvuru_degerlendirme',
+                            username='bap_koordinasyon_birimi_1')
+        self.client.post()
+
+        self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="incele",
+                         object_id="5uGjOb0fj9rzGwfIwYoSIN2pNRH")
+        resp = self.client.post(wf='bap_firma_basvuru_degerlendirme', cmd="indir",
+                                form={"belge_indir": 1})
+        assert resp.json['download_url'] == "%s%s" % (
+            settings.S3_PUBLIC_URL, firma.faaliyet_belgesi)
