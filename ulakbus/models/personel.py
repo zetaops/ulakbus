@@ -96,7 +96,7 @@ class Personel(Model):
     em_sonraki_terfi_tarihi = field.Date(_(u"Emekli Müktesebat Sonraki Terfi Tarihi"), index=True,
                                          format="%d.%m.%Y")
 
-    birim = Unit(_(u"Birim"))
+    #birim = Unit(_(u"Birim"))
 
     # Personelin Kendi Ünvanı
     unvan = field.Integer(_(u"Personel Unvan"), index=True, choices="unvan_kod", required=False)
@@ -180,6 +180,16 @@ class Personel(Model):
         # Mevcut pyoko API'i ile uyumlu olmasi icin, geriye bos bir Atama nesnesi dondurur.
         atamalar = Atama.objects.order_by('-goreve_baslama_tarihi').filter(personel=self)
         return atamalar[0] if atamalar else Atama()
+
+    @lazy_property
+    def birim(self):
+        """
+        Personelin en son atandığı birimi döndürür.
+        Returns:
+            Unit örneği (instance)
+
+        """
+        return self.atama.kadro.birim if self.atama else Unit()
 
     @lazy_property
     def kadro(self):

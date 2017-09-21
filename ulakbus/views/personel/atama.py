@@ -404,8 +404,7 @@ class PersonelAtama(CrudView):
         """
 
         _form = JsonForm(current=self.current, title=_(u"Devam Etmek İstediğiniz İşlemi Seçiniz"))
-        _form.hitap = fields.Button(_(u"Hitap ile Eşleştir"), cmd="hitap_getir", btn='hitap')
-        _form.bitir = fields.Button(_(u"İşlemi Bitir"), cmd="bitir", form_validation=False)
+        _form.devam = fields.Button(_(u"Devam"))
         self.form_out(_form)
 
     def atama_iptal(self):
@@ -436,21 +435,6 @@ class PersonelAtama(CrudView):
             'type': 'info', "title": _(u'Personel Atama Başarılı'),
             "msg": _(u'Atama İşlemi başarıyla gerçekleştirildi. ') + hitap_sonuc
         }
-
-    def hitap_bilgi_getir(self):
-        """
-        Personelin hitap bilgilerini getirir.
-
-        """
-        personel = Personel.objects.get(self.current.task_data['personel_id'])
-        hizmet_cetveli = TcknService(service_name='hizmet-cetveli-sync',
-                                     payload={"tckn": str(personel.tckn)})
-
-        try:
-            hizmet_cetveli.zato_request()
-            self.current.task_data['hitap_tamam'] = True
-        except:
-            self.current.task_data['hitap_tamam'] = False
 
 
 class AtamalarForm(JsonForm):
@@ -543,7 +527,11 @@ class PersonelBilgiForm(JsonForm):
     Personel Atama wf  için form olarak kullanılır.
 
     """
-    durum = [(m.key, m.__unicode__()) for m in HitapSebep.objects.filter(nevi=1)[0:10]]
+    def __init__(self):
+        JsonForm.__init__(self);
+        self.durum_choices = [(m.key, m.__unicode__()) for m in HitapSebep.objects.filter(nevi=1)[0:10]]
+        self.durum = fields.String(_(u"Durum"), choices=self.durum_choices)  # typeahead olacak
+
     kurum_sicil_no_int = fields.Integer(_(u"Kurum Sicil No"))
     personel_turu = fields.Integer(_(u"Personel Tip"), choices="personel_turu")
     aday_memur = fields.Boolean(_(u"Aday"))
@@ -556,7 +544,6 @@ class PersonelBilgiForm(JsonForm):
     kurum_durum = fields.String(_(u"Durumu"))
     goreve_baslama_tarihi = fields.Date(_(u"Göreve Başlama Tarihi"))
     ibraz_tarihi = fields.Date(_(u"İbraz Tarihi"))
-    durum = fields.String(_(u"Durum"), choices =durum )  # typeahead olacak
     atama_aciklama = fields.Text(_(u"Atama Açıklama"), required=False)
     nereden = fields.Integer(_(u"Nereden"),choices='universiteler',type='typeahead')
     mecburi_hizmet_suresi = fields.Date(_(u"Mecburi Hizmet Süresi"), index=True, format="%d.%m.%Y")
