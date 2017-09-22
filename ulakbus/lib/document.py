@@ -47,7 +47,7 @@ class RenderDocument(ZatoService):
         """
         try:
             t = Template.objects.get(name=self.file_name)
-            return {"template": "{}{}".format(settings.S3_PUBLIC_URL, t.template),
+            return {"template": "{}/{}".format(settings.S3_PUBLIC_URL, t.template),
                     "modify_date": "{}".format(t.modify_date)}
         except ObjectDoesNotExist:
             raise ValueError("%s geçerli bir template değildir. "
@@ -64,7 +64,7 @@ class RenderDocument(ZatoService):
 
         payload = {"template": template_info['template'],
                    "context": self.context,
-                   "wants_pdf": self.wants_pdf,
+                   "pdf": self.wants_pdf,
                    "modify_date": template_info['modify_date']
                    }
 

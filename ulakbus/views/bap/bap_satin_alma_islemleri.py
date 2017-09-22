@@ -11,6 +11,7 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 from ulakbus.lib.s3_file_manager import S3FileManager
 from datetime import datetime, time
 from ulakbus.settings import DATETIME_DEFAULT_FORMAT
+import ulakbus.lib.doc_render as render
 
 
 class KazananFirmalarForm(JsonForm):
@@ -18,7 +19,6 @@ class KazananFirmalarForm(JsonForm):
     Bütçe kalemleri için kazanan firmaların belirlenmesi formunu oluşturur.
 
     """
-
     class Meta:
         inline_edit = ['firma']
         title = __(u"{} İçin Kazanan Firmaların Belirlenmesi")
@@ -136,6 +136,26 @@ class ButceKalemiBilgileriForm(JsonForm):
 
     guncelle = fields.Button(__(u"Güncelle"), cmd="satin_alma_islemler")
     geri_don = fields.Button(__(u"Geri Dön"), cmd="geri_don")
+
+
+class ButceKalemiSec(JsonForm):
+    class Meta:
+        title = _(u"Bütçe Kalemi Seç")
+
+    fields.Button(__(u"Go"))
+
+
+class TemplateSecForm(JsonForm):
+    class Meta:
+        title = _(u"Belge İndir")
+
+    belge = fields.String(__(u"Belge Adı"),
+                          choices=[('piyasa_fiyat_arastirmasi_tutanagi', 'Piyasa Fiyat Araştırması Tutanağı'),
+                                   ('siparis_formu', 'Sipariş Formu'),
+                                   ('muayene_gorevlendirmesi', 'Muayene Görevlendirmesi'),
+                                   ('bap_muayene_ve_kabul_komisyon_tutanagi', 'BAP Muayene ve Kabul Komisyon Tutanağı')])
+    geri_don = fields.Button(__(u"Geri Dön"), cmd="geri_don")
+    indir = fields.Button(__(u"İndir"), cmd="template_indir")
 
 
 class TeklifDegerlendirme(CrudView):
@@ -443,6 +463,238 @@ class TeklifDegerlendirme(CrudView):
         self.object.aciklama = self.input['form']['aciklama']
         self.object.save()
 
+    def butce_kalemi_sec(self):
+        """
+            Something.
+        Returns:
+
+        """
+        satin_alma_object = self.model_class.objects.get(self.current.task_data['object_id'])
+        butce_kalemleri = satin_alma_object.ButceKalemleri
+
+        self.output['objects'] = [[_(u'Bütçe Kalemi'),
+                                   _(u'Adet'),
+                                   _(u'Birim Fiyat'),
+                                   _(u'Toplam Fiyat'),
+                                   _(u'Gerekçe'),
+                                   _(u'Kazanan Firma')]]
+        for butce_kalemi in butce_kalemleri:
+            name, cmd = (_(u'Seç'), 'sec')
+            list_item = {
+                "fields": [butce_kalemi.butce.ad,
+                           str(butce_kalemi.butce.adet),
+                           str(butce_kalemi.butce.birim_fiyat),
+                           str(butce_kalemi.butce.toplam_fiyat),
+                           butce_kalemi.butce.gerekce,
+                           butce_kalemi.butce.kazanan_firma.ad],
+                "actions": [
+                    {'name': name, 'cmd': cmd, 'show_as': 'button', 'object_key': 'data_key'}
+                ],
+                'key': butce_kalemi.butce.key}
+
+            self.output['objects'].append(list_item)
+
+        """form = TeklifGorForm(current=self.current)
+        form.title = form.title.format(self.object.ad)
+        self.form_out(form)"""
+
+        form = ButceKalemiSec(current=self.current)
+        self.form_out(form)
+
+    def template_sec(self):
+        """
+        DocumentRender servisine gönderilecek belgenin seçilmesi ve belgenin oluşturulup, indirilmesi.
+
+        """
+        form = TemplateSecForm()
+        self.form_out(form)
+
+    def template_indir(self):
+        """
+        Template seçimine göre, `render_function_map` dict'inden `render` ve `context` fonksiyonları elde edilir.
+        Sonuç olarak bunları çalıştırdığımızda elimizde render edilmiş bir template'in URL'i olur.
+
+        """
+        template_name = self.current.task_data.get('TemplateSecForm').get('belge')
+
+        render_function_map = {'piyasa_fiyat_arastirmasi_tutanagi':
+                                   [render.piyasa_fiyat_arastirmasi_tutanagi_uret,
+                                    self.piyasa_fiyat_arastirmasi_tutanagi_context,
+                                    False],
+                               'siparis_formu':
+                                   [render.siparis_formu_uret,
+                                    self.siparis_formu_context,
+                                    False],
+                               'muayene_gorevlendirmesi':
+                                   [render.muayene_gorevlendirmesi_uret,
+                                    self.muayene_gorevlendirmesi_context,
+                                    False],
+                               'bap_muayene_ve_kabul_komisyon_tutanagi':
+                                   [render.bap_muayene_ve_kabul_komisyonu_tutanagi_uret,
+                                    self.bap_muayene_ve_kabul_komisyon_tutanagi,
+                                    False]}
+
+        render_function, context_function, wants_pdf = render_function_map[template_name]
+
+        self.set_client_cmd('download')
+        self.current.output['download_url'] = render_function(context_data=context_function(),
+                                                              wants_pdf=wants_pdf)
+
+    def piyasa_fiyat_arastirmasi_tutanagi_context(self):
+        """
+        Piyasa fiyat araştırması tutanagı için gerekli verileri veritabanından okuyarak, context datası oluşturur.
+        Returns:
+            dict: Context data for template file.
+
+        """
+        satin_alma_object = self.model_class.objects.get(self.current.task_data['object_id'])
+        malzemeler = satin_alma_object.ButceKalemleri
+
+        kazanan_firma = malzemeler[0].butce.kazanan_firma
+        firma2, firma3 = BAPTeklifFiyatIsleme.en_iyi_teklif_veren_ikinci_ve_ucuncu_firmayi_getir(malzemeler[0].butce)
+
+        rightnow = datetime.now()
+        formatted_date = datetime.strftime(rightnow, '%d.%m.%Y')
+
+        context = {
+            "idare_adi": "YILDIRIM BEYAZIT ÜNİVERSİTESİ REKTÖRLÜĞÜ BİLİMSEL ARAŞTIRMA PROJELERİ KOORDİNASYON BİRİMİ",
+            "yapilan_isin_adi": "Mal Alımı, Malzeme Alımı",
+            "alim_yapan_gorevlilere_iliskin": "",
+            "ihale_onay_belgesi_tarih_sayi": satin_alma_object.onay_tarih_sayi,
+            "malzemeler": [],
+            "firmalar": [kazanan_firma.ad,
+                         firma2.ad,
+                         firma3.ad],
+            "f1_genel_toplam": 0,
+            "f2_genel_toplam": 0,
+            "f3_genel_toplam": 0,
+            "malzeme_sayisi": 0,
+            "uygun_gorulen_firma_adi_adresi": kazanan_firma.adres,
+            "uygun_gorulen_teklif_tutari": 0,
+            "gorevli": [
+                {"ad": str(satin_alma_object.sorumlu.user), "unvan": "Proje Yürütücüsü"},
+                {"ad": "", "unvan": ""},
+                {"ad": "", "unvan": ""}
+            ],
+            "harcama_yetkilisi": {"ad": "", "unvan": ""},
+            "belge_imza_tarihi": formatted_date
+        }
+
+        i = 0
+        for malz in malzemeler:
+            i += 1
+            teklifler = []
+            for firm in [kazanan_firma, firma2, firma3]:
+                teklifler.append(BAPTeklifFiyatIsleme.objects.get(firma=firm,
+                                                                  kalem=malz.butce))
+
+            # Firmaların verdiği teklifler ve malzemeler liste olarak context'e ekleniyor.
+            context['malzemeler'].append({"sira_no": i,
+                                          "adi": malz.butce.ad,
+                                          "miktar": malz.butce.adet,
+                                          "birim": "Adet",
+                                          "f1_birim": teklifler[0].birim_fiyat,
+                                          "f1_toplam": teklifler[0].toplam_fiyat,
+                                          "f2_birim": teklifler[1].birim_fiyat,
+                                          "f2_toplam": teklifler[1].toplam_fiyat,
+                                          "f3_birim": teklifler[2].birim_fiyat,
+                                          "f3_toplam": teklifler[2].toplam_fiyat
+                                          })
+            # Firmaların verdiği tekliflerin toplam tutuarı bulunuyor.
+            context['f1_genel_toplam'] += teklifler[0].toplam_fiyat
+            context['f2_genel_toplam'] += teklifler[1].toplam_fiyat
+            context['f3_genel_toplam'] += teklifler[2].toplam_fiyat
+
+        context['malzeme_sayisi'] = i
+        context['uygun_gorulen_teklif_tutari'] = context['f1_genel_toplam']
+
+        return context
+
+    def siparis_formu_context(self):
+        """
+        Context data for siparis_formu template file.
+        Returns:
+            dict: Context data.
+        """
+        satin_alma_object = self.model_class.objects.get(self.current.task_data['object_id'])
+        selected_butce_kalemi = self.input.get('data_key')
+        selected_butce_kalemi = BAPButcePlani.objects.get(selected_butce_kalemi)
+
+        context = {
+            "isin_niteligi": selected_butce_kalemi.kod_adi,
+            "butce_tertibi": "2.20.00.00.00 1",
+            "isin_adi_veya_miktari": "",
+            "malzemeler": [
+                {
+                    "sira_no": 1,
+                    "adi": selected_butce_kalemi.ad,
+                    "miktar": selected_butce_kalemi.adet,
+                    "birim": "Kalem"
+                }
+            ],
+            "yuklenici_firma_adi": selected_butce_kalemi.kazanan_firma.ad,
+            "tebligata_esas_adresi": selected_butce_kalemi.kazanan_firma.adres,
+            "siparis_bedeli": selected_butce_kalemi.toplam_fiyat,
+            "odeme_saymanligi": "Strateji Geliştirme Dairesi Başkanlığı",
+            "vergi_resim_ve_harclar": "Yükleniciye Aittir",
+            "garanti_suresi_ve_sartlar": "",
+            "yedek_parca_montaj_sartlari": "",
+            "teslim_suresi": "",
+            "gerceklestirme_gorevlisi": {"ad": str(satin_alma_object.sorumlu.user), "unvan": "Proje Yürütücüsü"},
+            "harcama_yetkilisi": {"ad": "", "unvan": ""},
+            "belge_yili": datetime.now().year
+        }
+        return context
+
+    def muayene_gorevlendirmesi_context(self):
+        """
+        Context variables for muayene_gorevlendirmesi file.
+        Returns:
+            dict: Context data.
+        """
+        satin_alma_object = self.model_class.objects.get(self.current.task_data['object_id'])
+        rightnow = datetime.now()
+        context = {
+            "dilekce_sayisi": "",
+            "dilekce_tarihi": datetime.strftime(rightnow,'%d.%m.%Y'),
+            "gerceklestirme_gorevlisi": {"ad": str(satin_alma_object.sorumlu.user), "unvan": "Proje Yürütücüsü"},
+            "harcama_yetkilisi": {"ad": "", "unvan": ""},
+            "muayene_komisyonu_idari_uzman": "",
+            "muayene_komisyonu_teknik_uzman": "",
+            "muayene_komisyonu_ambar_gorevlisi": ""
+        }
+        return context
+
+    def bap_muayene_ve_kabul_komisyon_tutanagi(self):
+        """
+        Prepare context data.
+        Returns:
+            dict:
+        """
+        satin_alma_object = self.model_class.objects.get(self.current.task_data['object_id'])
+        malzemeler = satin_alma_object.ButceKalemleri
+        kazanan_firma = malzemeler[0].butce.kazanan_firma
+
+        context = {
+            "i_f_no": "",
+            "nereden_geldigi": kazanan_firma.ad,
+            "dayandigi_belge_sayisi": "",
+            "dayandigi_belge_tarihi": "",
+            "muayene_kabul_komisyonu_tutanagi_tarihi": "",
+            "tasinirlar": [],
+            "tasinir_sayisi": len(malzemeler),
+            "baskan": {"adi": str(satin_alma_object.sorumlu.user), "unvan": "Proje Yürütücüsü"},
+            "uye1": {"adi": "", "unvan": ""},
+            "uye2": {"adi": "", "unvan": ""}
+        }
+        for malz in malzemeler:
+            context['tasinirlar'].append({
+                "miktari": malz.butce.adet,
+                "birimi": "Adet",
+                "adi_ve_ozellikleri": "{} {}".format(malz.butce.ad, malz.butce.ozellik)
+            })
+        return context
+
     @obj_filter
     def satin_alma_duyurulari_actions(self, obj, result):
         """
@@ -457,11 +709,17 @@ class TeklifDegerlendirme(CrudView):
 
         """
         data = {1: {"name": "Teklife Kapat", "cmd": "teklife_kapat"},
-                2: {"name": "Teklifleri Değerlendir", "cmd": "degerlendir"},
-                3: {"name": "Satın Alma Bilgilerini Güncelle", "cmd": "satin_alma"}}
+                2: {"name": "Teklifleri Değerlendir", "cmd": "degerlendir"}}
         if obj.teklif_durum == 1 and obj.teklife_kapanma_tarihi < datetime.now():
             result['actions'] = [{'name': "Düzenle", 'cmd': "duzenle", "mode": "normal",
                                   "show_as": "button"}]
+
+        elif obj.teklif_durum == 3:
+            result['actions'] = [{"name": "Satın Alma Bilgilerini Güncelle", "cmd": "satin_alma", "mode": "normal",
+                                  "show_as": "button"},
+                                 {"name": "Belgeleri İndir", "cmd": "template_sec", "mode": "normal",
+                                  "show_as": "button"}]
+
         else:
             result['actions'] = [{"name": data[obj.teklif_durum]["name"],
                                   "cmd": data[obj.teklif_durum]["cmd"], "mode": "normal",

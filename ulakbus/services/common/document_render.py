@@ -66,7 +66,7 @@ class RenderDocument(Service):
         self.S3_BUCKET_NAME = self.user_config.zetaops.zetaops3s.S3_BUCKET_NAME
 
         self.wants_pdf = self.request.payload.get('pdf', False)
-
+        self.logger.info("WANTS PDF : {} ".format(self.wants_pdf))
         self.document_cache = DocumentCache(payload=self.request.payload,
                                             kvdb_conn=self.kvdb.conn,
                                             wants_pdf=self.wants_pdf,
@@ -81,16 +81,26 @@ class RenderDocument(Service):
         else:
             # `cache_stat` can be context_value or template_value.
             value = self.get_value_from_cache(cache_stat=cache_stat)
+            # `value` is a dict.
 
             # if `value` is `template`. Use content of `template` on Redis.
-            if value == self.document_cache.template:
+            if value['mimetype'] == "template":
                 self.logger.info("NO NEED TO DOWNLOAD TEMPLATE")
 
                 new_payload = self.create_new_payload()
                 resp = self.standard_process(payload=new_payload)
             else:
-                self.logger.info("NO ACTION WASN'T REQUIRED, SENDED URL")
-                resp = self.prepare_response('ok', value)
+                self.logger.info("ACTIONS TO DO : ")
+                if value['mimetype'] == "odt" and self.wants_pdf is True:
+                    self.logger.info("DOWNLOAD ODT and CONVERT to PDF")
+                    # Download odt and convert to PDF
+                    file_object = self.make_file_like_object(value['value'], download_token=1)
+                    pdf_resp = self.create_pdf(file_object)
+                    # ADD to cache PDF URL.
+                    self.document_cache.add_rendered_pdf_doc(pdf_url=pdf_resp['download_url'])
+                    value['value'] = pdf_resp['download_url']
+
+                resp = self.prepare_response('ok', value['value'])
 
         self.response.status_code = 200
         self.response.payload = resp
@@ -111,8 +121,7 @@ class RenderDocument(Service):
         Args:
             cache_stat (dict): Redis value.
         Returns:
-            str: URL
-            dict: `template` value on Redis.
+            dict: Formatted dict data.
         """
         def check_is_none(url, cache_stat):
             """
@@ -130,11 +139,21 @@ class RenderDocument(Service):
             else:
                 return url_val
 
-        if self.wants_pdf:
-            return check_is_none('pdf_url', cache_stat)
+        pdf_value = check_is_none('pdf_url', cache_stat)
+        odt_value = check_is_none('odt_url', cache_stat)
 
+        # `odt_value` is equal `template`, return template.
+        if odt_value is self.document_cache.template:
+            return {"mimetype": "template", "value": odt_value}
+        # That means `odt_value` is equal the URL.
         else:
-            return check_is_none('odt_url', cache_stat)
+            # Client wants pdf.
+            if self.wants_pdf is True:
+                # `pdf_value` is not equal to `template`
+                if pdf_value is not self.document_cache.template:
+                    return {"mimetype": "pdf", "value": pdf_value}
+
+            return {"mimetype": "odt", "value": odt_value}
 
     def standard_process(self, payload):
         """
@@ -153,6 +172,7 @@ class RenderDocument(Service):
             file_desc = self.make_file_like_object(resp.data['download_url'], download_token=1)
             pdf_resp = self.create_pdf(file_desc)
             self.document_cache.add_rendered_pdf_doc(pdf_url=pdf_resp['download_url'])
+            self.logger.info("PDF RESPONSE : {}".format(pdf_resp['status']))
             resp = self.prepare_response(pdf_resp['status'], pdf_resp['download_url'])
         else:
             resp = self.prepare_response('ok', resp.data['download_url'])
@@ -201,7 +221,7 @@ class RenderDocument(Service):
         task_id = task_info['id'].encode('utf-8')
 
         # Chect the queue for 3 seconds.
-        task_queue_status = self.check_the_status(request_period=3,
+        task_queue_status = self.check_the_status(request_period=8,
                                                   task_id=task_id)
         # Send back to client
         if task_queue_status['status'] == 'finished':
@@ -210,6 +230,7 @@ class RenderDocument(Service):
             # Save PDF file to S3 Server
             s3_url = self.save_document(pdf_file)
             task_queue_status['download_url'] = "{0}{1}".format(self.S3_PUBLIC_URL, s3_url)
+            task_queue_status['status'] = 'ok'
             return task_queue_status
         else:
             return {"status": "error", "download_url": "None"}
@@ -434,8 +455,8 @@ class DocumentCache(object):
         if self.is_template_newest():
             self.template = self.template_value
 
-        if self.template:
-            if self.context_value and self.context_and_template_compatible():
+        if self.template is not None:
+            if self.context_value is not None and self.context_and_template_compatible():
                 return self.context_value
 
         return self.template
@@ -505,7 +526,6 @@ class DocumentCache(object):
         context_value = self.get_value(self.context_key)
 
         if context_value is not None:
-            self.logger.info("PDF URL ADDING TO REDIS")
             context_value['pdf_url'] = pdf_url
             self.set_value(self.context_key, context_value)
 
