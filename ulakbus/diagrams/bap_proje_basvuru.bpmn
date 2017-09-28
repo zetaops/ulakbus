@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.0">
   <bpmn:collaboration id="Collaboration_0zvk5l8">
     <bpmn:extensionElements>
       <camunda:properties>
@@ -11,56 +11,61 @@
   <bpmn:process id="bap_proje_basvuru" name="Proje Başvuru" isExecutable="false">
     <bpmn:laneSet>
       <bpmn:lane id="koordinasyon_birimi" name="Koordinasyon Birimi">
-        <bpmn:flowNodeRef>geri_bildirim_goster</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>geri_bildirim_gonder</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_0zxfcws</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>basvuru_gozden_gecir</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_0suxe5p</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_bap_project</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0suxe5p</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>basvuru_gozden_gecir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0zxfcws</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>geri_bildirim_gonder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>geri_bildirim_goster</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="ogretim_uyesi_lane" name="Öğretim Üyesi">
-        <bpmn:flowNodeRef>ExclusiveGateway_0rv1xo9</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>olanak_kaydet</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>arastirma_olanagi_ekle</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_genel_bilgi_gir</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_detay_gir</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_yurutucu_tecrubesi</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>tecrube_ekle</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_belgelerini_yukle</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>revizyon_mesaj_goster</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_calisan_ekle</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_14emyvv</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>arastirma_olanak_senkironize</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>lab_ekle</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>personel_ekle</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_0nkhywo</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_belge_kaydet</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_turu_sec</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>gerekli_belge_bildir</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>yurutucu_projeleri</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>GerceklestirmeGorevlisiKontrolu</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_1uwt77n</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>GerceklestirmeGorevlisiSec</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_0gjmki2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>onaya_gonder</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_goster</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>proje_kaydet</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>GerceklestirmeGorevlisiKaydet</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_1gx85j2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>GorevliSecimUyariMesaji</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>GorevliSecimKontrolu</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>universite_disi_uzman_ekle</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>butce_plani_olustur</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>uygulama_ve_is_plani_olustur</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>universite_disi_destek_kaydet</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>draft_olustur</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ExclusiveGateway_0t5hs88</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>proje_no_kaydet</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0t5hs88</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>draft_olustur</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>universite_disi_destek_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>uygulama_ve_is_plani_olustur</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>butce_plani_olustur</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>universite_disi_uzman_ekle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GorevliSecimKontrolu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GorevliSecimUyariMesaji</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1gx85j2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GerceklestirmeGorevlisiKaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>onaya_gonder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0gjmki2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GerceklestirmeGorevlisiSec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_1uwt77n</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GerceklestirmeGorevlisiKontrolu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>yurutucu_projeleri</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>gerekli_belge_bildir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_turu_sec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_belge_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0nkhywo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>personel_ekle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>lab_ekle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>arastirma_olanak_senkironize</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_14emyvv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_calisan_ekle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>revizyon_mesaj_goster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_belgelerini_yukle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>tecrube_ekle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_yurutucu_tecrubesi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_detay_gir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>proje_genel_bilgi_gir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>arastirma_olanagi_ekle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>olanak_kaydet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0rv1xo9</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_0uk01qj</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>universite_disi_destek_ekle</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_00zchlz</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>demirbas_ekle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SonucRaporuKontrol</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ExclusiveGateway_0fhk1fh</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BilgilendirmeMesajiGoster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0jb9pmr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AnasayfayaYonlendir</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="SequenceFlow_0a9cfvn" sourceRef="proje_no_kaydet" targetRef="ExclusiveGateway_0t5hs88" />
@@ -99,7 +104,6 @@
     <bpmn:sequenceFlow id="SequenceFlow_1vnsalf" sourceRef="yurutucu_projeleri" targetRef="GerceklestirmeGorevlisiKontrolu" />
     <bpmn:sequenceFlow id="SequenceFlow_0uwcpc6" sourceRef="gerekli_belge_bildir" targetRef="ExclusiveGateway_0gjmki2" />
     <bpmn:sequenceFlow id="SequenceFlow_0wo95u0" sourceRef="proje_turu_sec" targetRef="gerekli_belge_bildir" />
-    <bpmn:sequenceFlow id="SequenceFlow_15e0b86" sourceRef="StartEvent_1" targetRef="proje_turu_sec" />
     <bpmn:sequenceFlow id="SequenceFlow_1jx39aj" sourceRef="draft_olustur" targetRef="proje_turu_sec" />
     <bpmn:sequenceFlow id="SequenceFlow_14b6h7v" sourceRef="ExclusiveGateway_0gjmki2" targetRef="proje_turu_sec">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='iptal']]></bpmn:conditionExpression>
@@ -150,9 +154,6 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='ileri']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1qzlrpa" sourceRef="proje_yurutucu_tecrubesi" targetRef="ExclusiveGateway_0rv1xo9" />
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>SequenceFlow_15e0b86</bpmn:outgoing>
-    </bpmn:startEvent>
     <bpmn:serviceTask id="proje_no_kaydet" name="Proje No Kaydet" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.proje_no_kaydet">
       <bpmn:incoming>SequenceFlow_1mkeoyi</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0wyalhe</bpmn:incoming>
@@ -275,7 +276,7 @@
       <bpmn:incoming>SequenceFlow_14b6h7v</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1vy30sg</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1jx39aj</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_15e0b86</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0mlmmrt</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0wo95u0</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="proje_belge_kaydet" name="Proje Belgelerini Kaydet" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.proje_belge_kaydet">
@@ -396,20 +397,51 @@
       <bpmn:incoming>SequenceFlow_13u5lbv</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_102qwuo</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1jgcxm2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="SonucRaporuKontrol" name="Sonuç Raporu Kontrol" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.rapor_kontrol">
+      <bpmn:incoming>SequenceFlow_1jgcxm2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1b2c72k</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0fhk1fh" default="SequenceFlow_0mlmmrt">
+      <bpmn:incoming>SequenceFlow_1b2c72k</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0mlmmrt</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0vsg58a</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="BilgilendirmeMesajiGoster" name="Bilgilendirme Mesajı Göster" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.rapor_bilgilendirme">
+      <bpmn:incoming>SequenceFlow_0vsg58a</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0j66m2w</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1jgcxm2" sourceRef="StartEvent_1" targetRef="SonucRaporuKontrol" />
+    <bpmn:sequenceFlow id="SequenceFlow_1b2c72k" sourceRef="SonucRaporuKontrol" targetRef="ExclusiveGateway_0fhk1fh" />
+    <bpmn:sequenceFlow id="SequenceFlow_0mlmmrt" sourceRef="ExclusiveGateway_0fhk1fh" targetRef="proje_turu_sec" />
+    <bpmn:sequenceFlow id="SequenceFlow_0vsg58a" sourceRef="ExclusiveGateway_0fhk1fh" targetRef="BilgilendirmeMesajiGoster">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">kontrol</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_0jb9pmr">
+      <bpmn:incoming>SequenceFlow_19ba904</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="AnasayfayaYonlendir" name="Anasayfaya Yönlendir" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.anasayfaya_yonlendir">
+      <bpmn:incoming>SequenceFlow_0j66m2w</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19ba904</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0j66m2w" sourceRef="BilgilendirmeMesajiGoster" targetRef="AnasayfayaYonlendir" />
+    <bpmn:sequenceFlow id="SequenceFlow_19ba904" sourceRef="AnasayfayaYonlendir" targetRef="EndEvent_0jb9pmr" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0zvk5l8">
       <bpmndi:BPMNShape id="Participant_0vl3cpf_di" bpmnElement="proje_basvuru">
-        <dc:Bounds x="543" y="-782" width="1889" height="1463" />
+        <dc:Bounds x="247" y="-867" width="2185" height="1548" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="601" y="-424" width="36" height="36" />
+        <dc:Bounds x="290" y="-424" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="619" y="-388" width="0" height="0" />
+          <dc:Bounds x="263" y="-388" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1iwgdin_di" bpmnElement="ogretim_uyesi_lane">
-        <dc:Bounds x="573" y="-782" width="1859" height="1043" />
+        <dc:Bounds x="277" y="-867" width="2155" height="1128" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_1femds5_di" bpmnElement="proje_turu_sec">
         <dc:Bounds x="689" y="-446" width="100" height="80" />
@@ -616,7 +648,7 @@
         <dc:Bounds x="1074" y="-325" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_0uyjrcq_di" bpmnElement="koordinasyon_birimi">
-        <dc:Bounds x="573" y="261" width="1859" height="420" />
+        <dc:Bounds x="277" y="261" width="2155" height="420" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_09g84xd_di" bpmnElement="SequenceFlow_09g84xd">
         <di:waypoint xsi:type="dc:Point" x="869" y="83" />
@@ -972,13 +1004,6 @@
           <dc:Bounds x="1139" y="-558" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_15e0b86_di" bpmnElement="SequenceFlow_15e0b86">
-        <di:waypoint xsi:type="dc:Point" x="637" y="-406" />
-        <di:waypoint xsi:type="dc:Point" x="689" y="-406" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="663" y="-421" width="0" height="0" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_107sxgk_di" bpmnElement="SequenceFlow_107sxgk">
         <di:waypoint xsi:type="dc:Point" x="1651" y="-431" />
         <di:waypoint xsi:type="dc:Point" x="1651" y="-695" />
@@ -1074,6 +1099,69 @@
       <bpmndi:BPMNShape id="ServiceTask_0k4mcql_di" bpmnElement="demirbas_ekle">
         <dc:Bounds x="1510" y="-314" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1v1vtqe_di" bpmnElement="SonucRaporuKontrol">
+        <dc:Bounds x="375" y="-446" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0fhk1fh_di" bpmnElement="ExclusiveGateway_0fhk1fh" isMarkerVisible="true">
+        <dc:Bounds x="553.0277777777778" y="-431" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="578.0277777777778" y="-378" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1xe7p2i_di" bpmnElement="BilgilendirmeMesajiGoster">
+        <dc:Bounds x="528" y="-569" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1jgcxm2_di" bpmnElement="SequenceFlow_1jgcxm2">
+        <di:waypoint xsi:type="dc:Point" x="326" y="-406" />
+        <di:waypoint xsi:type="dc:Point" x="375" y="-406" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="350.5" y="-428" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1b2c72k_di" bpmnElement="SequenceFlow_1b2c72k">
+        <di:waypoint xsi:type="dc:Point" x="475" y="-406" />
+        <di:waypoint xsi:type="dc:Point" x="553" y="-406" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="514" y="-428" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0mlmmrt_di" bpmnElement="SequenceFlow_0mlmmrt">
+        <di:waypoint xsi:type="dc:Point" x="603" y="-406" />
+        <di:waypoint xsi:type="dc:Point" x="689" y="-406" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="646" y="-428" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0vsg58a_di" bpmnElement="SequenceFlow_0vsg58a">
+        <di:waypoint xsi:type="dc:Point" x="578" y="-431" />
+        <di:waypoint xsi:type="dc:Point" x="578" y="-489" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="593" y="-467" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0jb9pmr_di" bpmnElement="EndEvent_0jb9pmr">
+        <dc:Bounds x="560" y="-801" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="533" y="-762" width="90" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0erlyxj_di" bpmnElement="AnasayfayaYonlendir">
+        <dc:Bounds x="528" y="-714" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0j66m2w_di" bpmnElement="SequenceFlow_0j66m2w">
+        <di:waypoint xsi:type="dc:Point" x="578" y="-569" />
+        <di:waypoint xsi:type="dc:Point" x="578" y="-634" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="593" y="-608.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_19ba904_di" bpmnElement="SequenceFlow_19ba904">
+        <di:waypoint xsi:type="dc:Point" x="578" y="-714" />
+        <di:waypoint xsi:type="dc:Point" x="578" y="-765" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="593" y="-746.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

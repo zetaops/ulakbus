@@ -34,8 +34,8 @@ pdf_belge = {u'belge': {
     yCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICAPgpzdGFydHhyZWYKNTY1CiUlRU9GCg==""",
     u'file_name': u'pdf_trial.pdf', u'isImage': False}, u'aciklama': u'pdf denemesi'}
 
-class TestCase(BaseTestCase):
 
+class TestCase(BaseTestCase):
     def test_bap_proje_basvuru(self):
 
         for loop in range(2):
@@ -47,7 +47,11 @@ class TestCase(BaseTestCase):
                 sleep(1)
                 token, user = self.get_user_token('ogretim_uyesi_1')
                 self.prepare_client('/bap_proje_basvuru', user=user, token=token)
-                resp = self.client.post()
+                # Süresi geçen rapor var mı kontrolü yapılır.
+                self.client.post()
+                # Süresi geçen raporun olmadığı kabul edilir.
+                resp = self.client.post(form={kontrol: False})
+
                 assert resp.json['forms']['form'][0][
                            'helpvalue'] == "#### Revizyon Gerekçeleri:\n" + \
                                            "Bu bir revizyon gerekçesi."
@@ -72,7 +76,10 @@ class TestCase(BaseTestCase):
                 form['tur'] = 'Kvu9MRWA52accYwKfWKegtZr2BA'
                 user = User.objects.get(username='ogretim_uyesi_1')
                 self.prepare_client('/bap_proje_basvuru', user=user)
+                # Süresi geçen rapor var mı kontrolü yapılır.
                 self.client.post()
+                # Süresi geçen raporun olmadığı kabul edilir.
+                resp = self.client.post(form={kontrol: False})
 
             sleep(1)
 
@@ -150,8 +157,9 @@ class TestCase(BaseTestCase):
                 assert resp.json['forms']['model']['form_name'] == 'PersonelEkleForm'
 
                 # Personel eklenir
-                resp = self.client.post(cmd='ekle', form={'personel_id': "L6j4ZvGts0XY5PKEiRPUiWxdTvy",
-                                                          'personel_ekle': 1})
+                resp = self.client.post(cmd='ekle',
+                                        form={'personel_id': "L6j4ZvGts0XY5PKEiRPUiWxdTvy",
+                                              'personel_ekle': 1})
 
                 assert resp.json['forms']['model']['form_name'] == 'ArastirmaOlanaklariForm'
 
