@@ -37,6 +37,10 @@ pdf_belge = {u'belge': {
 
 class TestCase(BaseTestCase):
     def test_bap_proje_basvuru(self):
+        """
+        BAP proje işlemlerinin gerçekleştirilmesini sağlayan iş akışı testi.
+
+        """
 
         for loop in range(2):
             form = {
@@ -47,10 +51,8 @@ class TestCase(BaseTestCase):
                 sleep(1)
                 token, user = self.get_user_token('ogretim_uyesi_1')
                 self.prepare_client('/bap_proje_basvuru', user=user, token=token)
-                # Süresi geçen rapor var mı kontrolü yapılır.
+
                 self.client.post()
-                # Süresi geçen raporun olmadığı kabul edilir.
-                resp = self.client.post(form={kontrol: False})
 
                 assert resp.json['forms']['form'][0][
                            'helpvalue'] == "#### Revizyon Gerekçeleri:\n" + \
@@ -77,9 +79,8 @@ class TestCase(BaseTestCase):
                 user = User.objects.get(username='ogretim_uyesi_1')
                 self.prepare_client('/bap_proje_basvuru', user=user)
                 # Süresi geçen rapor var mı kontrolü yapılır.
-                self.client.post()
                 # Süresi geçen raporun olmadığı kabul edilir.
-                resp = self.client.post(form={kontrol: False})
+                self.client.post()
 
             sleep(1)
 

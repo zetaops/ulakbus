@@ -235,15 +235,21 @@ class ProjeBasvuru(CrudView):
     def rapor_kontrol(self):
         """
         Projelere ait raporlar istenen sürede verildi mi kontrolü yapılır.
+        Birinci kontrol süresi gelen sonuç raporunun olması durumudur.
+        İkinci kontrol ise süresi gelen dönem raporunun olmaması durumunu içerir.
 
         """
         okutman = Okutman.objects.get(personel=self.current.user.personel)
         projeler = BAPProje.objects.filter(yurutucu=okutman)
-        kontrol = False
+        kontrol = True
         for proje in projeler:
-            gecen_sure = proje.kabul_edilen_baslama_tarihi + relativedelta(months=proje.sure)
-            if BAPRapor.objects.filter(proje=proje, olusturulma_tarihi__gte=gecen_sure):
-                kontrol = True
+            bitis_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(months=proje.sure)
+            donem_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(months=6)
+            if BAPRapor.objects.filter(proje=proje, tur=2, olusturulma_tarihi__gte=bitis_suresi):
+                continue
+            if not BAPRapor.objects.filter(proje=proje, tur=1,
+                                           olusturulma_tarihi__gte=donem_suresi):
+                kontrol = False
                 self.current.task_data['proje_id'] = proje.key
                 break
         self.current.task_data['kontrol'] = kontrol
@@ -256,8 +262,8 @@ class ProjeBasvuru(CrudView):
         """
         proje = BAPProje.objects.get(self.current.task_data['proje_id'])
         form = JsonForm(title=_(u"Sonuç Raporu Bilgilendirme"))
-        form.help_text = "%d ay içinde raporu yüklenmesi gereken %s projenize ait rapor süresi geçmiştir. Lütfen proje başvurusu yapabilmek için raporunuzu yükleyiniz." % (
-            proje.sure, proje.ad)
+        form.help_text = "%s projenize ait rapor yükleme süresi geçmiştir. Lütfen proje başvurusu yapabilmek için raporunuzu yükleyiniz." % (
+            proje.ad)
         form.yonlendir = fields.Button(_(u"Anasayfaya Git"))
         self.form_out(form)
 

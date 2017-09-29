@@ -404,7 +404,7 @@
       <bpmn:incoming>SequenceFlow_1jgcxm2</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1b2c72k</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_0fhk1fh" default="SequenceFlow_0mlmmrt">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0fhk1fh" default="SequenceFlow_0vsg58a">
       <bpmn:incoming>SequenceFlow_1b2c72k</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0mlmmrt</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0vsg58a</bpmn:outgoing>
@@ -415,10 +415,10 @@
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_1jgcxm2" sourceRef="StartEvent_1" targetRef="SonucRaporuKontrol" />
     <bpmn:sequenceFlow id="SequenceFlow_1b2c72k" sourceRef="SonucRaporuKontrol" targetRef="ExclusiveGateway_0fhk1fh" />
-    <bpmn:sequenceFlow id="SequenceFlow_0mlmmrt" sourceRef="ExclusiveGateway_0fhk1fh" targetRef="proje_turu_sec" />
-    <bpmn:sequenceFlow id="SequenceFlow_0vsg58a" sourceRef="ExclusiveGateway_0fhk1fh" targetRef="BilgilendirmeMesajiGoster">
+    <bpmn:sequenceFlow id="SequenceFlow_0mlmmrt" sourceRef="ExclusiveGateway_0fhk1fh" targetRef="proje_turu_sec">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">kontrol</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0vsg58a" sourceRef="ExclusiveGateway_0fhk1fh" targetRef="BilgilendirmeMesajiGoster" />
     <bpmn:endEvent id="EndEvent_0jb9pmr">
       <bpmn:incoming>SequenceFlow_19ba904</bpmn:incoming>
     </bpmn:endEvent>
