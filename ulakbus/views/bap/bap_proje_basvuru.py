@@ -235,8 +235,11 @@ class ProjeBasvuru(CrudView):
     def rapor_kontrol(self):
         """
         Projelere ait raporlar istenen sürede verildi mi kontrolü yapılır.
-        Birinci kontrol süresi gelen sonuç raporunun olması durumudur.
-        İkinci kontrol ise süresi gelen dönem raporunun olmaması durumunu içerir.
+        Birinci kontrol, süresi gelen sonuç raporunun verilmiş olması durumu ve
+        rapor süresi gelmeyen projenin durumunu içerir. İlk dönem süresi kontrolü için proje başlama
+        tarihine 6 ay eklenerek kontrol yapılır.
+        İkinci kontrol ise süresi gelen dönem raporunun olmaması durumunu içerir. Dönem rapor süresi
+        gecen süre 6 aya bölünerek bulunur.
 
         """
         okutman = Okutman.objects.get(personel=self.current.user.personel)
@@ -244,9 +247,13 @@ class ProjeBasvuru(CrudView):
         kontrol = True
         for proje in projeler:
             bitis_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(months=proje.sure)
-            donem_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(months=6)
-            if BAPRapor.objects.filter(proje=proje, tur=2, olusturulma_tarihi__gte=bitis_suresi):
+            ilk_donem_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(months=6)
+            if BAPRapor.objects.filter(proje=proje, tur=2, olusturulma_tarihi__gte=bitis_suresi) \
+                    or ilk_donem_suresi > datetime.now().date():
                 continue
+            gecen_sure = datetime.now().date() - proje.kabul_edilen_baslama_tarihi
+            donem_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(
+                months=gecen_sure.days / 180)
             if not BAPRapor.objects.filter(proje=proje, tur=1,
                                            olusturulma_tarihi__gte=donem_suresi):
                 kontrol = False
