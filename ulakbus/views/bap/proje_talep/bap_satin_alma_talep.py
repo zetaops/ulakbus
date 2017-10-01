@@ -21,16 +21,18 @@ from zengine.lib.translation import gettext as _, gettext_lazy as __
 class ButceKalemleriForm(JsonForm):
     class Meta:
         title = __(u"Bütçe Kalemleri")
-        inline_edit = ['sec']
+        inline_edit = ['sec', 'parca_adet']
 
     class Kalem(ListNode):
         class Meta:
             title = __(u"Bütçe Kalemleri")
+
         sec = fields.Boolean(_(u"Seç"), type="checkbox")
         ad = fields.String(_(u"Tanımı/Adı"), readonly=True)
         adet = fields.Integer(_(u"Adet"), readonly=True)
         toplam_fiyat = fields.Float(_(u"Toplam Fiyat"), readonly=True)
         butce_plan_key = fields.String(_(u"Key"), hidden=True)
+        parca_adet = fields.Integer(_(u"Adet Gir"))
 
     iptal = fields.Button(_(u"İptal Et ve Proje Listesine Dön"), cmd='iptal', form_validation=False)
     ileri = fields.Button(_(u"Tamam"), cmd='ileri')
@@ -43,6 +45,7 @@ class ButceKalemGosterForm(JsonForm):
     class Kalem(ListNode):
         class Meta:
             title = __(u"Seçilen Bütçe Kalemleri")
+
         ad = fields.String(_(u"Tanımı/Adı"), readonly=True)
         adet = fields.Integer(_(u"Adet"), readonly=True)
         toplam_fiyat = fields.Float(_(u"Toplam Fiyat"), readonly=True)
@@ -79,7 +82,6 @@ class KoordinasyonCalisaniSecForm(JsonForm):
 
 
 class BAPSatinAlmaTalep(CrudView):
-
     # Ogretim uyesi
 
     def butce_kalem_sec(self):
@@ -104,21 +106,46 @@ class BAPSatinAlmaTalep(CrudView):
         self.current.output['meta']['allow_add_listnode'] = False
 
     def butce_kalem_goster(self):
+        """
+        Satın alma talebi yapılan bütçe kalemlerinin listesi gösterilir. Seç butonu seçildiğinde
+        toplam adet gösterilir. Parçalı adet girilmesi durumunda ise parçalı adet bilgisi gösterilir.
+
+        """
         form = ButceKalemGosterForm()
         butce_kalemleri = self.input['form']['Kalem']
         for bk in butce_kalemleri:
             if bk['sec']:
                 form.Kalem(**bk)
+            if bk['parca_adet']:
+                form.Kalem(ad=bk['ad'], adet=bk['parca_adet'], toplam_fiyat=bk['toplam_fiyat'],
+                           butce_plan_key=bk['butce_plan_key'])
+
         self.form_out(form)
         self.current.output['meta']['allow_actions'] = False
         self.current.output['meta']['allow_add_listnode'] = False
 
     def butce_kalem_kaydet(self):
+        """
+        Satın alma talebi yapılan bütçe kalemleri BAPButcePlanı modelinden bulunarak "Öğretim Üyesi
+        Tarafından Satın Alma Talebi Yapıldı" şeklinde değiştirilir. Parçalı adet girilmesi durumunda
+        girilen adet önceki adetle değiştirilir ve kalan adet için yeni bir BAPButcePlanı nesnesi
+        oluşturulur.
+
+        """
         self.current.task_data['satin_almasi_talep_edilen_butce_kalemleri'] = self.input['form'][
             'Kalem']
-        for bp in self.current.task_data['ou_secilen_butce_planlari']:
-            bp_obj = BAPButcePlani.objects.get(bp)
+        for bp, sec in zip(self.input['form']['Kalem'], self.current.task_data['sec_durum']):
+            bp_obj = BAPButcePlani.objects.get(bp['butce_plan_key'])
             bp_obj.satin_alma_durum = 1
+            if not sec:
+                kalan_adet = bp_obj.adet - int(bp['adet'])
+                bp_obj.adet = int(bp['adet'])
+                new_bp_obj = BAPButcePlani(ad=bp['ad'], adet=kalan_adet,
+                                           toplam_fiyat=bp['toplam_fiyat'],
+                                           ilgili_proje=bp_obj.ilgili_proje, gerekce=bp_obj.gerekce,
+                                           proje_durum=bp_obj.proje_durum,
+                                           muhasebe_kod=bp_obj.muhasebe_kod)
+                new_bp_obj.blocking_save()
             bp_obj.blocking_save()
 
     def revizyon_mesaji_goster(self):
@@ -133,19 +160,23 @@ class BAPSatinAlmaTalep(CrudView):
         self.current.output['cmd'] = 'reload'
 
     def kontrol_ou(self):
-        secilen_butce_planlari = []
-        for bp in self.input['form']['Kalem']:
-            if bp['sec']:
-                secilen_butce_planlari.append(bp['butce_plan_key'])
+        """
+        Seçilen bütçe kalemleri listeye eklenir. Bütçe kaleminin seçilmemesi durumunda hata mesajı
+        gösterilir.
 
-        if self.cmd != 'iptal' and not secilen_butce_planlari:
+        """
+        sec_durum = []
+        for bp in self.input['form']['Kalem']:
+            if bp['sec'] or bp['parca_adet']:
+                sec_durum.append(bp['sec'])
+
+        if self.cmd != 'iptal' and not sec_durum:
             self.current.task_data['cmd'] = 'hata'
             self.current.task_data['hata_mesaji'] = _(
                 u"Yapmak istediğiniz işlem seçim yapmanızı gerektiriyor. Lütfen listeden seçim "
                 u"yapınız.")
         else:
-            self.current.task_data['ou_secilen_butce_planlari'] = secilen_butce_planlari
-
+            self.current.task_data['sec_durum'] = sec_durum
 
     # Mali koordinator
 
@@ -160,8 +191,8 @@ class BAPSatinAlmaTalep(CrudView):
         form = TalepInceleForm()
         butce_kalemleri = self.current.task_data['satin_almasi_talep_edilen_butce_kalemleri']
         for i, bk in enumerate(butce_kalemleri):
-                bk['sec'] = False
-                form.Kalem(**bk)
+            bk['sec'] = False
+            form.Kalem(**bk)
         self.form_out(form)
         self.current.output['meta']['allow_actions'] = False
         self.current.output['meta']['allow_add_listnode'] = False
@@ -220,7 +251,7 @@ class BAPSatinAlmaTalep(CrudView):
         inv.save()
 
         if self.current.task_data['toplam_bk'] - len(
-            self.current.task_data['secilen_butce_planlari']) == 0:
+                self.current.task_data['secilen_butce_planlari']) == 0:
             self.current.task_data['cmd'] = 'bitti'
         else:
             self.current.task_data['cmd'] = 'devam'
