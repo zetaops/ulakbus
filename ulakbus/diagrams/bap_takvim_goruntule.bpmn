@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+  <bpmn:collaboration id="Collaboration_08abjp6">
+    <bpmn:participant id="BapTakvimGoruntule" name="Bap Takvim Görüntüle" processRef="bap_takvim_goruntule" />
+  </bpmn:collaboration>
+  <bpmn:process id="bap_takvim_goruntule" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_183ux1f</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="TakvimGoruntule" name="Takvim Goruntule" camunda:assignee="bap.bap_takvim_goruntule.TakvimListele.takvim_listele">
+      <bpmn:incoming>SequenceFlow_183ux1f</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0y0e16d</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0x034x1" default="SequenceFlow_0p7scdg">
+      <bpmn:incoming>SequenceFlow_0y0e16d</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1rajhki</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0p7scdg</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_183ux1f" sourceRef="StartEvent_1" targetRef="TakvimGoruntule" />
+    <bpmn:endEvent id="EndEvent_0m7v9b0">
+      <bpmn:incoming>SequenceFlow_0p7scdg</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1v1v9q4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1rajhki" sourceRef="ExclusiveGateway_0x034x1" targetRef="AnasayfaYonlendir">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='ana_sayfa']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0p7scdg" sourceRef="ExclusiveGateway_0x034x1" targetRef="EndEvent_0m7v9b0" />
+    <bpmn:serviceTask id="AnasayfaYonlendir" name="Yonlendir" camunda:class="bap.bap_takvim_goruntule.TakvimListele.yonlendir">
+      <bpmn:incoming>SequenceFlow_1rajhki</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1v1v9q4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0y0e16d" sourceRef="TakvimGoruntule" targetRef="ExclusiveGateway_0x034x1" />
+    <bpmn:sequenceFlow id="SequenceFlow_1v1v9q4" sourceRef="AnasayfaYonlendir" targetRef="EndEvent_0m7v9b0" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_08abjp6">
+      <bpmndi:BPMNShape id="Participant_1ut62fy_di" bpmnElement="BapTakvimGoruntule">
+        <dc:Bounds x="217" y="142" width="527" height="244" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="263" y="263" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="236" y="299" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_183ux1f_di" bpmnElement="SequenceFlow_183ux1f">
+        <di:waypoint xsi:type="dc:Point" x="299" y="281" />
+        <di:waypoint xsi:type="dc:Point" x="340" y="281" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="274.5" y="260" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_14xucb3_di" bpmnElement="TakvimGoruntule">
+        <dc:Bounds x="340" y="241" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0x034x1_di" bpmnElement="ExclusiveGateway_0x034x1" isMarkerVisible="true">
+        <dc:Bounds x="463.86956521739125" y="256" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="488.86956521739125" y="310" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0m7v9b0_di" bpmnElement="EndEvent_0m7v9b0">
+        <dc:Bounds x="679.8695652173913" y="162.3201581027668" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="697.8695652173913" y="202.3201581027668" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1rajhki_di" bpmnElement="SequenceFlow_1rajhki">
+        <di:waypoint xsi:type="dc:Point" x="514" y="281" />
+        <di:waypoint xsi:type="dc:Point" x="554" y="281" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="534" y="260" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0p7scdg_di" bpmnElement="SequenceFlow_0p7scdg">
+        <di:waypoint xsi:type="dc:Point" x="489" y="256" />
+        <di:waypoint xsi:type="dc:Point" x="489" y="180" />
+        <di:waypoint xsi:type="dc:Point" x="680" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="504" y="212" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1395re9_di" bpmnElement="AnasayfaYonlendir">
+        <dc:Bounds x="554" y="241" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0y0e16d_di" bpmnElement="SequenceFlow_0y0e16d">
+        <di:waypoint xsi:type="dc:Point" x="440" y="281" />
+        <di:waypoint xsi:type="dc:Point" x="464" y="281" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="452" y="260" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1v1v9q4_di" bpmnElement="SequenceFlow_1v1v9q4">
+        <di:waypoint xsi:type="dc:Point" x="654" y="281" />
+        <di:waypoint xsi:type="dc:Point" x="698" y="281" />
+        <di:waypoint xsi:type="dc:Point" x="698" y="198" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="676" y="260" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
