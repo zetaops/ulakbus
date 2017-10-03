@@ -116,7 +116,7 @@ class BAPSatinAlmaTalep(CrudView):
         for bk in butce_kalemleri:
             if bk['sec']:
                 form.Kalem(**bk)
-            if bk['parca_adet']:
+            if bk['parca_adet'] and not bk['sec']:
                 form.Kalem(ad=bk['ad'], adet=bk['parca_adet'], toplam_fiyat=bk['toplam_fiyat'],
                            butce_plan_key=bk['butce_plan_key'])
 
@@ -166,11 +166,21 @@ class BAPSatinAlmaTalep(CrudView):
 
         """
         sec_durum = []
+        hatali_giris = False
         for bp in self.input['form']['Kalem']:
-            if bp['sec'] or bp['parca_adet']:
+            if bp['sec']:
                 sec_durum.append(bp['sec'])
-
-        if self.cmd != 'iptal' and not sec_durum:
+            if not bp['sec'] and bp['parca_adet']:
+                if int(bp['parca_adet']) > int(bp['adet']):
+                    hatali_giris = True
+                    self.current.task_data['cmd'] = 'hata'
+                    self.current.task_data['hata_mesaji'] = _(
+                        u"%s bütçe kalemi için yapmak istediğiniz işlem için maksimum %d adet "
+                        u"girmeniz gerekiyor. Lütfen en fazla %d adet giriniz." % (
+                            bp['ad'], bp['adet'], bp['adet']))
+                else:
+                    sec_durum.append(bp['sec'])
+        if self.cmd != 'iptal' and not sec_durum and not hatali_giris:
             self.current.task_data['cmd'] = 'hata'
             self.current.task_data['hata_mesaji'] = _(
                 u"Yapmak istediğiniz işlem seçim yapmanızı gerektiriyor. Lütfen listeden seçim "
