@@ -547,7 +547,6 @@ class BAPSatinAlma(Model):
     ilgili_proje = BAPProje()
     tek_firma = BAPFirma()
     tur = field.Integer(_(u"Satın Alma Türü"), choices='bap_satin_alma_turleri')
-    duyuruda = field.Boolean(_(u"Duyuru Durumu"), default=False)
     sorumlu = Role()
     duyuruda = field.Boolean(__(u"Duyurulma Durumu"), default=False)
 

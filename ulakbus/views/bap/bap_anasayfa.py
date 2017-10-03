@@ -35,6 +35,12 @@ class BAPAnasayfa(CrudView):
                     "wf": "bap_takvim_goruntule"
                 },
                 {
+                    "text": _(u"Satın Alma"),
+                    "hasChild": False,
+                    "param": "id",
+                    "wf": "bap_satin_alma_duyurulari_listeleme"
+                },
+                {
                     "text": _(u"Yardım"),
                     "hasChild": False,
                     "param": "id",
@@ -110,14 +116,14 @@ class BAPAnasayfa(CrudView):
             bidding_announcements.append({
                 "text": sa.ad,
                 "object_id": sa.key,
-                "wf": 'bap_satin_alma_duyuru_goruntule'
+                "wf": 'bap_satin_alma_duyurulari_listeleme'
             })
 
         self.output['bidding'] = {
            "announcements": bidding_announcements,
            "more": {
                "text": _(u"Daha Fazla..."),
-               "wf": "bap_satin_alma_duyuru_listele"
+               "wf": "bap_satin_alma_duyurulari_listeleme"
            }
         }
         announcements = []
