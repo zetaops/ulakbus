@@ -600,6 +600,7 @@ class BAPRapor(Model):
     tur = field.Integer(__(u"Rapor Türü"), choices='bap_rapor_turu')
     durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum', default=1)
     belge = field.File(_(u"Proje Rapor Belgesi"), random_name=True)
+    olusturulma_tarihi = field.Date(_(u"Rapor Oluşturulma Tarihi"))
 
     def __unicode__(self):
         return "%s-%s" % (self.proje.ad, self.get_tur_display())

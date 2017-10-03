@@ -4,7 +4,8 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko.exceptions import IntegrityError, ObjectDoesNotExist
-from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet
+from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet, \
+    BAPRapor
 from ulakbus.lib.view_helpers import prepare_choices_for_model
 from ulakbus.models import Okutman
 from ulakbus.models import Role
@@ -17,6 +18,7 @@ from pyoko import ListNode
 from datetime import datetime, timedelta
 from ulakbus.settings import DATE_DEFAULT_FORMAT
 from pyoko.fields import DATE_TIME_FORMAT
+from dateutil.relativedelta import relativedelta
 
 
 class ProjeTurForm(JsonForm):
@@ -35,9 +37,9 @@ class GerekliBelgeForm(JsonForm):
     class BelgeForm(ListNode):
         class Meta:
             title = _(u"Gerekli Belge ve Formlar")
+
         ad = fields.String(_(u"Belge Adı"), readonly=True)
         gereklilik = fields.String(_(u"Gereklilik Durumu"), readonly=True)
-
 
     iptal = fields.Button(_(u"İptal"), cmd='iptal')
     belgelerim_hazir = fields.Button(_(u"Belgelerim Hazır"), cmd='genel')
@@ -65,6 +67,7 @@ class ArastirmaOlanaklariForm(JsonForm):
     class Olanak(ListNode):
         class Meta:
             title = _(u"Olanaklar")
+
         ad = fields.String(_(u"Adı"), readonly=True)
         tur = fields.String(_(u"Türü"), readonly=True)
 
@@ -111,6 +114,7 @@ class ProjeCalisanlariForm(JsonForm):
     class Calisan(ListNode):
         class Meta:
             title = _(u"Çalışanlar")
+
         ad = fields.String(_(u"Adı"), readonly=True)
         soyad = fields.String(_(u"Soyad"), readonly=True)
         nitelik = fields.String(_(u"Nitelik"), readonly=True)
@@ -224,8 +228,58 @@ class ProjeBasvuru(CrudView):
     """
     Öğretim üyesinin bilimsel araştırma proje başvurusu yaptığı iş akışıdır.
     """
+
     class Meta:
         model = "BAPProje"
+
+    def rapor_kontrol(self):
+        """
+        Projelere ait raporlar istenen sürede verildi mi kontrolü yapılır.
+        Birinci kontrol, süresi gelen sonuç raporunun verilmiş olması durumu ve
+        rapor süresi gelmeyen projenin durumunu içerir. İlk dönem süresi kontrolü için proje başlama
+        tarihine 6 ay eklenerek kontrol yapılır.
+        İkinci kontrol ise süresi gelen dönem raporunun olmaması durumunu içerir. Dönem rapor süresi
+        gecen süre 6 aya bölünerek bulunur.
+
+        """
+        okutman = Okutman.objects.get(personel=self.current.user.personel)
+        projeler = BAPProje.objects.filter(yurutucu=okutman)
+        kontrol = True
+        for proje in projeler:
+            bitis_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(months=proje.sure)
+            ilk_donem_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(months=6)
+            if BAPRapor.objects.filter(proje=proje, tur=2, olusturulma_tarihi__gte=bitis_suresi) \
+                    or ilk_donem_suresi > datetime.now().date():
+                continue
+            gecen_sure = datetime.now().date() - proje.kabul_edilen_baslama_tarihi
+            donem_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(
+                months=gecen_sure.days / 180)
+            if not BAPRapor.objects.filter(proje=proje, tur=1,
+                                           olusturulma_tarihi__gte=donem_suresi):
+                kontrol = False
+                self.current.task_data['proje_id'] = proje.key
+                break
+        self.current.task_data['kontrol'] = kontrol
+
+    def rapor_bilgilendirme(self):
+        """
+        Öğretim üyesine projelerinde rapor süresi geçen bir projesi olduğuna dair bilgi
+        mesajı gösterilir.
+
+        """
+        proje = BAPProje.objects.get(self.current.task_data['proje_id'])
+        form = JsonForm(title=_(u"Sonuç Raporu Bilgilendirme"))
+        form.help_text = "%s projenize ait rapor yükleme süresi geçmiştir. Lütfen proje başvurusu yapabilmek için raporunuzu yükleyiniz." % (
+            proje.ad)
+        form.yonlendir = fields.Button(_(u"Anasayfaya Git"))
+        self.form_out(form)
+
+    def anasayfaya_yonlendir(self):
+        """
+        Anasayfaya yönlendirme işlemini gerçekleştirir.
+
+        """
+        self.current.output['cmd'] = 'reload'
 
     def proje_tur_sec(self):
         """
@@ -435,7 +489,8 @@ class ProjeBasvuru(CrudView):
         proje.reload()
 
         # Dosya adını key ile form datasının içine koymuş olduk
-        self.current.task_data['ProjeBelgeForm']['ProjeBelgeleri'] = proje.ProjeBelgeleri.clean_value()
+        self.current.task_data['ProjeBelgeForm'][
+            'ProjeBelgeleri'] = proje.ProjeBelgeleri.clean_value()
 
     def arastirma_olanagi_ekle(self):
         """
@@ -477,7 +532,8 @@ class ProjeBasvuru(CrudView):
             list_to_remove = list(self.current.task_data['hedef_proje']['arastirma_olanaklari'])
             for aotd in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
                 item = {
-                    'ad': query_map[aotd.items()[0][0]].objects.get(aotd.items()[0][1]).__unicode__(),
+                    'ad': query_map[aotd.items()[0][0]].objects.get(
+                        aotd.items()[0][1]).__unicode__(),
                     'tur': value_map[aotd.items()[0][0]]
                 }
                 if item not in self.current.task_data['ArastirmaOlanaklariForm']['Olanak']:
@@ -562,7 +618,7 @@ class ProjeBasvuru(CrudView):
                         fd['verildigi_tarih'], DATE_TIME_FORMAT).date()
                 except ValueError:
                     tarih = datetime.strptime(fd['verildigi_tarih'],
-                                                       DATE_DEFAULT_FORMAT).date()
+                                              DATE_DEFAULT_FORMAT).date()
                 proje.UniversiteDisiDestek(
                     destek_belgesi=fd['destek_belgesi'],
                     destek_miktari=fd['destek_miktari'],
@@ -744,23 +800,26 @@ class ProjeBasvuru(CrudView):
                 sender=self.current.user
             )
             karar = 'iptal'
-            help_text = _(u"%s adlı projeye daha sonra karar vermeyi seçtiniz. Başvuru Listeleme iş "
-                     u"akışından bu projeye ulaşabilirsiniz." % proje.ad)
+            help_text = _(
+                u"%s adlı projeye daha sonra karar vermeyi seçtiniz. Başvuru Listeleme iş "
+                u"akışından bu projeye ulaşabilirsiniz." % proje.ad)
 
         elif self.current.task_data['karar'] == 'onayla':
             role.send_notification(
                 title=_(u"Proje Başvuru Durumu: %s" % proje.ad),
-                message=_(u"%s adlı proje başvurunuz koordinasyon birimi tarafından onaylanarak gündeme "
-                          u"alınmıştır." % proje.ad),
+                message=_(
+                    u"%s adlı proje başvurunuz koordinasyon birimi tarafından onaylanarak gündeme "
+                    u"alınmıştır." % proje.ad),
                 sender=self.current.user
             )
             karar = 'onayla'
-            help_text = _(u"%s adlı projeyi onayladınız. Kararınızı değiştirmek istiyorsanız Başvuru "
-                     u"Listeleme iş akışından bu projeye ulaşabilirsiniz." % proje.ad)
+            help_text = _(
+                u"%s adlı projeyi onayladınız. Kararınızı değiştirmek istiyorsanız Başvuru "
+                u"Listeleme iş akışından bu projeye ulaşabilirsiniz." % proje.ad)
         else:
             karar = 'revizyon'
             help_text = _(u"%s adlı projeyi revizyona gönderdiniz. %s, revizyon talebi hakkında "
-                     u"bilgilendirildi." % (proje.ad, proje.yurutucu))
+                          u"bilgilendirildi." % (proje.ad, proje.yurutucu))
         form = JsonForm(title=_(u"%s Hakkındaki Kararınız" % proje.ad))
         form.help_text = help_text
         form.tamam = fields.Button(_(u"Tamam"), cmd=karar)
@@ -778,5 +837,3 @@ class ProjeBasvuru(CrudView):
         form.help_text = baslik + msg
         form.devam = fields.Button(_(u"Revize Et"))
         self.form_out(form)
-
-
