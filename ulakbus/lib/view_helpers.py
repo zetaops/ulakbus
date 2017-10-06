@@ -29,7 +29,8 @@ def prepare_choices_for_model(model, **kwargs):
 
     cache = ChoicesFromModel(cache_key)
     return cache.get() or cache.set(
-        [(m.key, m.__unicode__()) for m in model.objects.order_by().all(**kwargs)]
+        [(m.key, m.__unicode__()) for m in model.objects.order_by().all(**kwargs)],
+        lifetime=3600
     )
 
 
