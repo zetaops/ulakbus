@@ -46,7 +46,7 @@ setup(
         'dateutils'
     ],
     url='https://github.com/zetaops/ulakbus',
-    packages=find_packages(exclude=['tests', 'tests.*']),
+    packages=find_packages(exclude=['tests', 'tests.*', '*.odt']),
     download_url='https://github.com/zetaops/ulakbus/archive/master.zip',
     package_data={
         'ulakbus': ['diagrams/*.bpmn'],
