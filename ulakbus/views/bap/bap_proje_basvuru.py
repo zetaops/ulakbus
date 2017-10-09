@@ -5,13 +5,10 @@
 # (GPLv3).  See LICENSE.txt for details.
 from pyoko.exceptions import IntegrityError, ObjectDoesNotExist
 from ulakbus.models import BAPProjeTurleri, BAPProje, Room, Demirbas, Personel, AkademikFaaliyet, \
-    BAPRapor
+    BAPRapor, Unit, Okutman, Role
 from ulakbus.lib.view_helpers import prepare_choices_for_model
-from ulakbus.models import Okutman
-from ulakbus.models import Role
 from zengine.forms import JsonForm, fields
-from zengine.models import TaskInvitation
-from zengine.models import WFInstance
+from zengine.models import TaskInvitation, WFInstance
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _
 from pyoko import ListNode
@@ -70,12 +67,13 @@ class ArastirmaOlanaklariForm(JsonForm):
 
         ad = fields.String(_(u"Adı"), readonly=True)
         tur = fields.String(_(u"Türü"), readonly=True)
+        projedeki_gorevi = fields.String(_(u"Projedeki Görevi"), readonly=True)
 
     daha_sonra_devam_et = fields.Button(_(u"Daha Sonra Devam Et"), cmd='daha_sonra_devam_et',
                                         form_validation=False)
     lab_ekle = fields.Button(_(u"Laboratuvar Ekle"), cmd='lab')
     demirbas_ekle = fields.Button(_(u"Demirbas Ekle"), cmd='demirbas')
-    personel_ekle = fields.Button(_(u"Personel Ekle"), cmd='personel')
+    arastirmaci_ekle = fields.Button(_(u"Araştırmacı Ekle"), cmd='arastirmaci')
     ileri = fields.Button(_(u"İleri"), cmd='ilerle')
 
 
@@ -97,13 +95,35 @@ class DemirbasEkleForm(JsonForm):
     iptal = fields.Button(_(u"İptal"))
 
 
-class PersonelEkleForm(JsonForm):
+class ArastirmaciEkleForm(JsonForm):
     class Meta:
-        title = _(u"Personel Seç")
+        title = _(u"Araştırmacı Ekleme")
+
+    kurum_ici = fields.Button(_(u"Kurum İçi Araştırmacı Ekle"), cmd="kurum_ici")
+    kurum_disi = fields.Button(_(u"Kurum Dışı Araştırmacı Ekle"), cmd="kurum_disi")
+    geri_don = fields.Button(_(u"Geri Dön"), cmd="geri_don")
+
+
+class KurumIciArastirmaciEkleForm(JsonForm):
+    class Meta:
+        title = _(u"Kurum İçi Araştırmacı Ekleme")
 
     personel = Personel()
     personel_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
-    iptal = fields.Button(_(u"İptal"))
+    projedeki_gorevi = fields.String(_(u"Projedeki Görevi"))
+    iptal = fields.Button(_(u"İptal"), form_validation=False)
+
+
+class KurumDisiArastirmaciEkleForm(JsonForm):
+    class Meta:
+        title = _(u"Kurum Dışı Araştırmacı Ekleme")
+
+    ad = fields.String(_(u"Ad"))
+    soyad = fields.String(_(u"Soyad"))
+    birim = fields.String(_(u"Birim"))
+    projedeki_gorevi = fields.String(_(u"Projedeki Görevi"))
+    personel_ekle = fields.Button(_(u"Ekle"), cmd='ekle')
+    iptal = fields.Button(_(u"İptal"), form_validation=False)
 
 
 class ProjeCalisanlariForm(JsonForm):
@@ -215,15 +235,6 @@ class ProjeBelgeForm(JsonForm):
     arastirma_olanaklari = fields.Button(_(u"Araştırma Olanakları"))
 
 
-class GerceklestirmeGorevlisiForm(JsonForm):
-    class Meta:
-        title = _(u"Proje Gerçekleştirme Görevlisi Seçimi")
-        include = ['gerceklestirme_gorevlisi']
-        always_blank = False
-
-    sec = fields.Button(_(u"Gerçekleştirme Görevlisi Seç"))
-
-
 class ProjeBasvuru(CrudView):
     """
     Öğretim üyesinin bilimsel araştırma proje başvurusu yaptığı iş akışıdır.
@@ -293,6 +304,16 @@ class ProjeBasvuru(CrudView):
         form.set_default_of('tur', choices[0][0])
         self.form_out(form)
 
+    def proje_turu_kontrol(self):
+        """
+        Proje türü kontrol edilir. Proje türü bilimsel etkinlik başvuru seçilmiş ise bap_etkinlik_basvuru iş akışına yönlendirilir. Bilimsel etkinlik başvuru seçilmemiş ise Gerekli Belge ve Formları İndir iş akışı adımından devam edilir.
+
+        """
+        if self.current.task_data['ProjeTurForm']['tur'] == "813fxTqzcfE5wl1M1ZYc7kPo50I":
+            self.current.task_data['etkinlik_basvuru'] = True
+        else:
+            self.current.task_data['etkinlik_basvuru'] = False
+
     def gerekli_belge_form(self):
         """
         Proje türü için gerekli belgelerin gösterildiği, öğretim üyesinin belgelerini kontrol ederek
@@ -316,63 +337,6 @@ class ProjeBasvuru(CrudView):
         self.form_out(form)
         self.current.output["meta"]["allow_actions"] = False
         self.current.output["meta"]["allow_add_listnode"] = False
-
-    def gerceklestirme_gorevlisi_kontrolu(self):
-        """
-        Seçilen proje türüne göre, gerçekleştirme görevlisinin projenin yürütücüsü ile aynı kişi 
-        olması durumu kontrol edilir. Aynı kişi olması gerekiyorsa projenin gerçekleştirme 
-        görevlisi, proje başvurusu yapan öğretim görevlisi olarak atanır.
-
-        """
-        td = self.current.task_data
-        proje = BAPProje.objects.get(td['bap_proje_id'])
-        tur = BAPProjeTurleri.objects.get(td['ProjeTurForm']['tur'])
-        if 'GerceklestirmeGorevlisiForm' in td and proje.gerceklestirme_gorevlisi.key != \
-                td['GerceklestirmeGorevlisiForm']['gerceklestirme_gorevlisi_id']:
-            del td['GerceklestirmeGorevlisiForm']
-        aynilik_durumu = tur.gerceklestirme_gorevlisi_yurutucu_ayni_mi
-        td['gerceklestirme_gorevlisi_yurutucu_ayni_mi'] = aynilik_durumu
-        if aynilik_durumu:
-            proje.gerceklestirme_gorevlisi = self.current.user.personel
-            proje.blocking_save()
-
-    def gerceklestirme_gorevlisi_sec(self):
-        """
-        Gerçekleştirme görevlisinin, proje yürütücüsünün farklı olması gereken durumda yürütücüden 
-        projesi için bir gerçekleştirme görevlisi seçmesi istenir.
-
-        """
-        self.form_out(GerceklestirmeGorevlisiForm(self.object, current=self.current))
-
-    def gorevli_secim_kontrolu(self):
-        """
-        Gerçekleştirme görevlisi seçim formunun boş submit edilip edilmediğini kontrol eder. Boş 
-        seçilmiş ise kullanıcı bir seçim yapması yönünde uyarılır ve seçim ekranına tekrardan 
-        yönlendirilir.
-
-        """
-        gorevli_id = self.input['form']['gerceklestirme_gorevlisi_id']
-        self.current.task_data['gorevli_secimi_uygunlugu'] = True if gorevli_id else False
-
-    def gorevli_secim_uyari_mesaji(self):
-        """
-        Uyarı mesajı oluşturulur.         
-
-        """
-        self.current.output['msgbox'] = {'type': 'warning',
-                                         "title": _(u"Gerçekleştirme Görevlisi Seçimi Hatası"),
-                                         "msg": _(u"İlerlemek için projenize bir gerçekleştirme "
-                                                  u"görevlisi seçmelisiniz.")}
-
-    def gerceklestirme_gorevlisi_kaydet(self):
-        """
-        Formdan seçilen personel, projenin gerçekleştirme görevlisi olarak kaydedilir.
-                
-        """
-        gorevli = Personel.objects.get(self.input['form']['gerceklestirme_gorevlisi_id'])
-        proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
-        proje.gerceklestirme_gorevlisi = gorevli
-        proje.blocking_save()
 
     def proje_genel_bilgilerini_gir(self):
         """
@@ -499,17 +463,22 @@ class ProjeBasvuru(CrudView):
         """
         form = ArastirmaOlanaklariForm(current=self.current)
         for olanak in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
-            o = olanak.items()[0]
+            o = olanak.items()[1]
             if o[0] == 'lab':
                 ad = Room.objects.get(o[1]).__unicode__()
                 tur = _(u"Laboratuvar")
             elif o[0] == 'demirbas':
                 ad = Demirbas.objects.get(o[1]).__unicode__()
                 tur = _(u"Demirbaş")
-            else:
+            elif o[0] == 'kurum_ici':
                 ad = Personel.objects.get(o[1]).__unicode__()
-                tur = _(u"Personel")
-            form.Olanak(ad=ad, tur=tur)
+                tur = _(u"Kurum İçi Araştırmacı")
+                gorev = olanak.items()[0][1]
+            else:
+                ad = o[1]
+                tur = _(u"Kurum Dışı Araştırmacı")
+                gorev = olanak.items()[0][1]
+            form.Olanak(ad=ad, tur=tur, projedeki_gorevi=gorev)
         self.form_out(form)
         self.current.output["meta"]["allow_add_listnode"] = False
 
@@ -547,11 +516,31 @@ class ProjeBasvuru(CrudView):
         form = LabEkleForm(current=self.current)
         self.form_out(form)
 
-    def personel_ekle(self):
+    def arastirmaci_ekle(self):
         """
-        Öğretim üyesinin personel arayıp başvurusuna dahil ettiği adımdır.
+        Hangi tür araştırmacının ekleneceğinin belirlendiği adımdır. Kurum içi ve kurum dışı olmak
+        üzere iki çeşit araştırmacı eklenebilir.
+
         """
-        form = PersonelEkleForm(current=self.current)
+        form = ArastirmaciEkleForm(title=_(u"Araştırmacı Ekleme"))
+        form.help_text = "Hangi tür araştırmacı eklemek istediğinizi seçiniz."
+        self.form_out(form)
+
+    def kurum_ici_arastirmaci_ekle(self):
+        """
+        Öğretim üyesinin kurum içi araştırmacıyı arayıp projedeki görevini girerek başvurusuna dahil
+        ettiği adımdır.
+        """
+        form = KurumIciArastirmaciEkleForm(current=self.current)
+        self.form_out(form)
+
+    def kurum_disi_arastirmaci_ekle(self):
+        """
+        Öğretim üyesinin ad, soyad, birim, ve projedeki görevi kısımlarını girerek kurum dışı
+        araştırmacı eklediği adımdır.
+        """
+        form = KurumDisiArastirmaciEkleForm(current=self.current)
+        form.set_choices_of('birim', choices=prepare_choices_for_model(Unit, unit_type="Bölüm"))
         self.form_out(form)
 
     def olanak_kaydet(self):
@@ -562,9 +551,19 @@ class ProjeBasvuru(CrudView):
             olanak = {'lab': self.input['form']['lab_id']}
         elif 'demirbas' in self.current.task_data:
             olanak = {'demirbas': self.current.task_data.pop('demirbas')}
+        elif self.current.task_data['ArastirmaciEkleForm']['kurum_ici']:
+            olanak = {'kurum_ici': self.input['form']['personel_id'],
+                      'projedeki_gorevi': self.input['form']['projedeki_gorevi']}
         else:
-            olanak = {'personel': self.input['form']['personel_id']}
-
+            kurum_disi_bilgi = self.input['form']
+            self.current.task_data['kurum_disi_bilgi'] = {'ad': self.input['form']['ad'],
+                                                          'soyad': self.input['form']['soyad'],
+                                                          'birim': self.input['form']['birim'],
+                                                          'projedeki_gorevi':
+                                                              self.input['form'][
+                                                                  'projedeki_gorevi']}
+            olanak = {'kurum_disi': '%s %s' % (kurum_disi_bilgi['ad'], kurum_disi_bilgi['soyad']),
+                      "projedeki_gorevi": kurum_disi_bilgi['projedeki_gorevi']}
         self.current.task_data['hedef_proje']['arastirma_olanaklari'].append(olanak)
 
     def calisan_ekle(self):
@@ -693,6 +692,8 @@ class ProjeBasvuru(CrudView):
         """
         td = self.current.task_data
         proje = BAPProje.objects.get(td['bap_proje_id'])
+        proje.gerceklestirme_gorevlisi = self.current.user.personel
+        proje.blocking_save()
         yurutucu = Okutman.objects.get(personel=Personel.objects.get(user_id=self.current.user_id))
         proje.yurutucu = yurutucu
         if 'arastirma_olanaklari' in td['hedef_proje']:
@@ -703,9 +704,16 @@ class ProjeBasvuru(CrudView):
                 elif 'demirbas' in olanak:
                     proje.ArastirmaOlanaklari(lab=None, demirbas_id=olanak['demirbas'],
                                               personel=None)
-                else:
+                elif 'kurum_ici' in olanak:
                     proje.ArastirmaOlanaklari(lab=None, demirbas=None,
-                                              personel_id=olanak['personel'])
+                                              personel_id=olanak['kurum_ici'])
+                else:
+                    bilgi = self.current.task_data['kurum_disi_bilgi']
+                    proje = BAPProje.objects.get(self.current.task_data['bap_proje_id'])
+                    proje.KurumDisiArastirmacilar(ad=bilgi['ad'], soyad=bilgi['soyad'],
+                                                  birim=bilgi['birim'],
+                                                  projedeki_gorevi=bilgi['projedeki_gorevi'])
+                    proje.save()
         if 'GenelBilgiGirForm' in td:
             proje.ad = td['GenelBilgiGirForm']['ad']
             proje.anahtar_kelimeler = td['GenelBilgiGirForm'][
