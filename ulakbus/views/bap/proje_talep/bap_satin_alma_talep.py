@@ -30,6 +30,7 @@ class ButceKalemleriForm(JsonForm):
         sec = fields.Boolean(_(u"Seç"), type="checkbox")
         ad = fields.String(_(u"Tanımı/Adı"), readonly=True)
         adet = fields.Integer(_(u"Adet"), readonly=True)
+        birim_fiyat = fields.Float(_(u"Birim Fiyat"), readonly=True, hidden=True)
         toplam_fiyat = fields.Float(_(u"Toplam Fiyat"), readonly=True)
         butce_plan_key = fields.String(_(u"Key"), hidden=True)
         parca_adet = fields.Integer(_(u"Adet Gir"))
@@ -98,6 +99,7 @@ class BAPSatinAlmaTalep(CrudView):
                 sec=False,
                 ad=bp.ad,
                 adet=bp.adet,
+                birim_fiyat=bp.birim_fiyat,
                 toplam_fiyat=bp.toplam_fiyat,
                 butce_plan_key=bp.key,
             )
@@ -117,7 +119,8 @@ class BAPSatinAlmaTalep(CrudView):
             if bk['sec']:
                 form.Kalem(**bk)
             if bk['parca_adet'] and not bk['sec']:
-                form.Kalem(ad=bk['ad'], adet=bk['parca_adet'], toplam_fiyat=bk['toplam_fiyat'],
+                form.Kalem(ad=bk['ad'], adet=bk['parca_adet'],
+                           toplam_fiyat=bk['birim_fiyat'] * int(bk['parca_adet']),
                            butce_plan_key=bk['butce_plan_key'])
 
         self.form_out(form)
