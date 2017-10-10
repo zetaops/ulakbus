@@ -281,7 +281,7 @@ def yol_masrafi_hesapla(derece, ek_gosterge, km, tasit_ucreti, yolculuk_gun_sayi
     Aile fertleri için 10 kati
     Yol mesafe ücreti: Her kilometre basına (gundelik_yevmiye*5)/100
     Taşıt ücreti: en uygun yol ve tasıta gore verilir
-    seyahat suresi 24 saatlik dilimde birey sayısına gore yevmiye eklenir
+    seyahat ucreti 24 saatlik dilimde birey sayısına gore yevmiye eklenir
 
     Args:
         derece (int): yevmiye için personel derecesi
@@ -301,9 +301,9 @@ def yol_masrafi_hesapla(derece, ek_gosterge, km, tasit_ucreti, yolculuk_gun_sayi
     yevmiye = yevmiye_ucreti(derece, ek_gosterge)
     mesafe_ucreti = yevmiye * KM_KATSAYISI
     tasit_ucreti = (birey_sayisi + 1) * tasit_ucreti
-    seyahat_suresi = (birey_sayisi + 1) * yevmiye * yolculuk_gun_sayisi
+    seyahat_ucreti = (birey_sayisi + 1) * yevmiye * yolculuk_gun_sayisi
 
-    toplam_yol_masrafi = 20 * yevmiye + mesafe_ucreti * km + tasit_ucreti + seyahat_suresi
+    toplam_yol_masrafi = 20 * yevmiye + mesafe_ucreti * km + tasit_ucreti + seyahat_ucreti
 
     if birey_sayisi == 0:
         return toplam_yol_masrafi
