@@ -242,6 +242,19 @@ def yevmiye_hesapla(konaklama_gun_sayisi, derece, ek_gosterge):
     ilk 10 günü için gündeliklerinin %50 artırımlı miktarı,
     takip eden 80 günü için gündeliklerinin %50’si
 
+
+    ORNEK: aylık/kadro derecesi 2 olan ve 2016 Yılı
+     yurtiçi gündeliği 35,24 TL olarak belirlenen bir memurun yurtiçinde 200 gün süre
+     ile sınırlı olarak ikamet etmesi sonucu ne kadar konaklama parası alır (ORN: 180 gun).
+
+    -Görevlendirmenin ilk 10 günü için gündeliğinin %50 artırımlı miktarı olan 52,86 TL,
+    52,86 x 10 = 528,60 TL
+    -Takip eden 80 gün için gündeliğinin %50'si olan 17,62 TL,
+    17,62 x 80 = 1.409,60 TL
+    -Müteakip 90 gün için de gündeliğinin 2/3'ünün %40'ı olan 9,39 TL,
+    9,39 x 90 = 845,10 TL
+    olmak üzere toplam olarak 2.783,30 TL tutarında konaklama gideri ödenmesi gerekmektedir.
+
     Args:
         konaklama_gun_sayisi (int): konaklama gun sayisi yevmiye hesabı için
         derece (int): yevmiye için personel derecesi
@@ -274,14 +287,25 @@ def yol_masrafi_hesapla(derece, ek_gosterge, km, tasit_ucreti, yolculuk_gun_sayi
                         birey_sayisi):
 
     """
-    Bu metot toplam yol masraflarını hesaplar
-
     Yevmiye-Yol mesafe ücreti-Taşıt ücreti-Seyahat günlerine ait yevmiyeler
     Kendisi için yurtiçi gündeliğinin 20 (yirmi) katı
     Aile fertleri için 10 kati
     Yol mesafe ücreti: Her kilometre basına (gundelik_yevmiye*5)/100
     Taşıt ücreti: en uygun yol ve tasıta gore verilir
     seyahat ucreti 24 saatlik dilimde birey sayısına gore yevmiye eklenir
+
+    ORN:ÖRNEK 2) A ilinden B iline tayin olan bir memurun;
+        Derecesi: 5/1 , Km: 1000, Taşıt ücreti: 90 TL, evli, eşi çalışmıyor ve 2 çocuklu
+
+    Hesaplama:
+        20 x 36,25 = 725 (alacağı yevmiye)
+        10 x 36,25 = 362,5 (eşi için yevmiye)
+        10 x 36,25 = 362,5 (1.çocuk için yevmiye)
+        10 x 36,25 = 362,5 (2.çocuk için yevmiye)
+        1000 x 1,8125 = 1812,5 (yol mesafe ücreti)
+        90 x 4 = 360 (taşıt ücreti)
+        36,25 x 4 = 145 (24 saate kadar olan seyahat süresi için yevmiye)
+        725 + 362,5 + 362,5 + 362,5 + 1812,5 + 360 + 145= 4130 TL harcırah alır
 
     Args:
         derece (int): yevmiye için personel derecesi
