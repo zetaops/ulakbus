@@ -5,7 +5,7 @@
 # This file is licensed under the GNU General Public License v3
 # (GPLv3).  See LICENSE.txt for details.
 
-from zato.server.service import Service
+from ulakbus.services.ulakbus_service import UlakbusService
 import time
 import requests
 import io
@@ -17,7 +17,7 @@ from boto.s3.connection import S3Connection as s3
 from boto.s3.key import Key
 
 
-class RenderDocument(Service):
+class RenderDocument(UlakbusService):
     """ The submitted template is rendered with the context data and the download link is sent back.
             If context data includes 'pdf', rendered document is converted to pdf.
 
