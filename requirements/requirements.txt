@@ -15,7 +15,7 @@ requests
 boto
 reportlab
 six
-pika
+pika==0.10.0
 tornado
 lxml
 streamingxmlwriter
