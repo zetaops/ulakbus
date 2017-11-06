@@ -19,6 +19,7 @@ from zengine.views.crud import CrudView
 from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _, gettext_lazy
 from ulakbus.models.personel import Personel, Atama, Kadro
+from ulakbus.services.zato_wrapper import TcknService
 
 
 class PersonelAtama(CrudView):
@@ -130,7 +131,7 @@ class PersonelAtama(CrudView):
         _form.goreve_baslama_tarihi = fields.Date(_(u"Göreve Başlama Tarihi"),
                                                   default=str(personel.goreve_baslama_tarihi))
         # TODO: ulakbüs yavaşladığından dolayı choices slice edildi, typeahead olacak.
-        _form.set_choices_of('baslama_sebep', choices=prepare_choices_for_model(HitapSebep, nevi=1)[0:10])
+        _form.set_choices_of('baslama_sebep', choices=prepare_choices_for_model(HitapSebep))
         # Date formatında mı olacak? yoksa 2 yıl 3 ay gibisinden mi?
         _form.mecburi_hizmet_suresi = fields.Date(_(u"Mecburi Hizmet Süresi"),
                                                   default=str(personel.mecburi_hizmet_suresi))
@@ -192,7 +193,7 @@ class PersonelAtama(CrudView):
                                )
 
         _form.set_choices_of('kadro', choices=prepare_choices_for_model(Kadro, durum=2))
-        _form.set_choices_of('durum', choices=prepare_choices_for_model(HitapSebep, nevi=1)[0:10])
+        _form.set_choices_of('durum', choices=prepare_choices_for_model(HitapSebep))
         self.form_out(_form)
 
     def kadro_bilgileri_goster(self):
@@ -258,7 +259,6 @@ class PersonelAtama(CrudView):
                 hk.sync = 1  # TODO: Düzeltilecek, beta boyunca senkronize etmemesi için 1 yapıldı
                 hk.blocking_save()
                 self.current.task_data['h_k'] = hk.key
-                print  "dskshskj"
             except Exception as e:
                 # Herhangi bir hata oluşursa atama silinecek
                 atama.delete()
@@ -331,8 +331,8 @@ class PersonelAtama(CrudView):
 
         """
         personel = Personel.objects.get(self.current.task_data['personel_id'])
-        from ulakbus.services.zato_wrapper import HitapHizmetCetveliSenkronizeEt
-        hizmet_cetveli = HitapHizmetCetveliSenkronizeEt(tckn=str(personel.tckn))
+        hizmet_cetveli = TcknService(service_name='hizmet-cetveli-sync',
+                                     payload={"tckn": str(personel.tckn)})
 
         try:
             hizmet_cetveli.zato_request()

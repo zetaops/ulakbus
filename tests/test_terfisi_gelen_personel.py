@@ -32,9 +32,9 @@ class TestCase(BaseTestCase):
         ter_gel_id_per = resp.json['forms']['model']['Personel']
         assert len(ter_gel_id_per) == 3
 
-        idari_per_db = len(Personel.objects.filter(personel_turu=2))
+        idari_per_db = len(Personel.objects.all(personel_turu=2))
 
-        assert idari_per_db - len(ter_gel_id_per) == 17
+        assert idari_per_db - len(ter_gel_id_per) == 2517
 
         # Terfisi yapilacak personel onaya gonder
         resp = self.client.post(cmd='onaya_gonder', form={'Personel': ter_gel_id_per,
@@ -51,7 +51,7 @@ class TestCase(BaseTestCase):
         self.client.post(cmd="red_aciklamasi_yaz",
                          form={'Personel': ter_gel_id_per,
                                'duzenle': 1})
-        Message.objects.filter().delete()
+        Message.objects.all().delete()
         self.client.post()
         resp = self.client.post(
             wf='terfisi_gelen_personel_listesi',
@@ -66,7 +66,7 @@ class TestCase(BaseTestCase):
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
         ter_gel_id_per = resp.json['forms']['model']['Personel']
-        Message.objects.filter().delete()
+        Message.objects.all().delete()
 
         assert len(ter_gel_id_per) == 3
 
@@ -113,7 +113,7 @@ class TestCase(BaseTestCase):
         self.prepare_client('/terfisi_gelen_personel_listesi', user=user, token=token)
         resp = self.client.post(token=token)
         assert len(resp.json['forms']['model']['Personel']) == 3
-        Message.objects.filter().delete()
+        Message.objects.all().delete()
 
         ter_gel_id_per = resp.json['forms']['model']['Personel']
 
@@ -128,6 +128,6 @@ class TestCase(BaseTestCase):
         token, user = self.get_user_token('personel_isleri_1')
         self.prepare_client('/terfisi_gelen_personel_listesi', user=usr, token=token)
         resp = self.client.post()
-        Message.objects.filter().delete()
+        Message.objects.all().delete()
 
         assert resp.json['msgbox']['title'] == "Terfi İşlemleri Onay Belgesi!"

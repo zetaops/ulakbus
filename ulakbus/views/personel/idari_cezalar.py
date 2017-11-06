@@ -119,11 +119,11 @@ Bilgilerinin bulunduğu idari cezayı silme işlemini onaylıyor musunuz?"""
 
     @obj_filter
     def idari_ceza_islem(self, obj, result):
-        result['actions'].extend([
+        result['actions'] = [
             {'name': _(u'Görüntüle'), 'cmd': 'goruntule', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Sil'), 'cmd': 'delete', 'mode': 'normal', 'show_as': 'button'},
             {'name': _(u'Düzenle'), 'cmd': 'add_edit_form', 'mode': 'normal', 'show_as': 'button'}
-        ])
+        ]
 
     @list_query
     def list_by_personel_id(self, queryset):

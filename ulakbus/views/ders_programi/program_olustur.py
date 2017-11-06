@@ -11,11 +11,10 @@
 from zengine.forms import JsonForm, fields
 from zengine.views.crud import CrudView
 from collections import OrderedDict
-from ulakbus.services.zato_wrapper import DersProgramiOlustur
-from ulakbus.services.zato_wrapper import SinavProgramiOlustur
-from ulakbus.models import Room, Okutman, DersEtkinligi, Donem, DerslikZamanPlani, SinavEtkinligi, Sube
+from ulakbus.models import Room, Okutman, DersEtkinligi, Donem, SinavEtkinligi, Sube
 from zengine.lib.translation import gettext_lazy as __, gettext as _, format_time, format_datetime
 from datetime import time
+from ulakbus.services.zato_wrapper import ZatoService
 
 ARAMA_TURU = [
     (1, 'Derslik'),
@@ -63,7 +62,8 @@ class ProgramOlustur(CrudView):
                  published_count >> yayınlanan model sayısı
 
         """
-        model_object = obj.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem(self.current))
+        model_object = obj.objects.filter(bolum=self.current.role.unit,
+                                          donem=Donem.guncel_donem(self.current))
 
         solved_count = model_object.filter(solved=True).count()
 
@@ -116,16 +116,18 @@ class ProgramOlustur(CrudView):
             self.current.task_data['LANE_CHANGE_MSG'] = msg
 
     def sinav_programi_hesapla(self):
-        sp = SinavProgramiOlustur(service_payload={"bolum": self.current.role.unit.yoksis_no,
-                                                   "kullanici": self.current.user.key,
-                                                   "sinav_turleri": [1],
-                                                   "url": self.current.get_wf_link()})
+        sp = ZatoService(service_name='sinav-plani-start-exam-solver',
+                         payload={"bolum": self.current.role.unit.yoksis_no,
+                                  "kullanici": self.current.user.key,
+                                  "sinav_turleri": [1],
+                                  "url": self.current.get_wf_link()})
         self.program_hesapla(sp)
 
     def ders_programi_hesapla(self):
-        dp = DersProgramiOlustur(service_payload={"bolum": self.current.role.unit.yoksis_no,
-                                                  "kullanici": self.current.user.key,
-                                                  "url": self.current.get_wf_link()})
+        dp = ZatoService(service_name='ders-programi-start-solver',
+                         payload={"bolum": self.current.role.unit.yoksis_no,
+                                  "kullanici": self.current.user.key,
+                                  "url": self.current.get_wf_link()})
 
         self.program_hesapla(dp)
 
@@ -253,7 +255,8 @@ class ProgramOlustur(CrudView):
             data_etkinlik = DersEtkinligi.objects.filter(okutman_id=obj_key)
             obj = Okutman.objects.get(obj_key)
 
-        days = [_(u"Pazartesi"), _(u"Salı"), _(u"Çarşamba"), _(u"Perşembe"), _(u"Cuma"), _(u"Cumartesi"), _(u"Pazar")]
+        days = [_(u"Pazartesi"), _(u"Salı"), _(u"Çarşamba"), _(u"Perşembe"),
+                _(u"Cuma"), _(u"Cumartesi"), _(u"Pazar")]
         self.output['objects'] = [days]
 
         def etkinlik(de):
@@ -264,8 +267,10 @@ class ProgramOlustur(CrudView):
             :return: ders adi ve zamani
             """
             aralik = "{baslangic} - {bitis}".format(
-                                        baslangic=format_time(time(int(de.baslangic_saat), int(de.baslangic_dakika))),
-                                        bitis=format_time(time(int(de.bitis_saat), int(de.bitis_dakika))))
+                                        baslangic=format_time(time(int(de.baslangic_saat),
+                                                                   int(de.baslangic_dakika))),
+                                        bitis=format_time(time(int(de.bitis_saat),
+                                                               int(de.bitis_dakika))))
 
             return "\n\n**%s**\n%s\n\n" % (aralik, de.ders.ad)
 
@@ -283,11 +288,13 @@ class ProgramOlustur(CrudView):
             obj = Room.objects.get(obj_key)
 
         else:
-            sinav_etkinligi = map(lambda s: SinavEtkinligi.objects.get(sube=s), Sube.objects.filter(
-                                                            okutman_id=obj_key, donem=Donem.guncel_donem(self.current)))
+            sinav_etkinligi = map(lambda s: SinavEtkinligi.objects.get(sube=s),
+                                  Sube.objects.filter(okutman_id=obj_key,
+                                                      donem=Donem.guncel_donem(self.current)))
             obj = Okutman.objects.get(obj_key)
 
-        days = [_(u"Pazartesi"), _(u"Salı"), _(u"Çarşamba"), _(u"Perşembe"), _(u"Cuma"), _(u"Cumartesi"), _(u"Pazar")]
+        days = [_(u"Pazartesi"), _(u"Salı"), _(u"Çarşamba"), _(u"Perşembe"),
+                _(u"Cuma"), _(u"Cumartesi"), _(u"Pazar")]
 
         self.output['objects'] = [days]
 
@@ -336,13 +343,15 @@ class ProgramOlustur(CrudView):
         self.current.output['msgbox'] = MESSAGE['kayit_var']
 
     def sinav_yayinla(self):
-        se = SinavEtkinligi.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem(self.current))
+        se = SinavEtkinligi.objects.filter(bolum=self.current.role.unit,
+                                           donem=Donem.guncel_donem(self.current))
         for s in se:
             s.published = True
             s.save()
 
     def ders_yayinla(self):
-        de = DersEtkinligi.objects.filter(bolum=self.current.role.unit, donem=Donem.guncel_donem(self.current))
+        de = DersEtkinligi.objects.filter(bolum=self.current.role.unit,
+                                          donem=Donem.guncel_donem(self.current))
         for d in de:
             d.published = True
             d.save()

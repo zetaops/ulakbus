@@ -95,6 +95,14 @@
     "2": {
       "tr": "Heyet Raporu",
       "en": ""
+    },
+    "3": {
+      "tr": "Tek Hekim Raporu Doğum Öncesi",
+      "en": ""
+    },
+    "4": {
+      "tr": "Tek Hekim Raporu Doğum Sonrası",
+      "en": ""
     }
   },
   "ceza_turleri": {
@@ -156,6 +164,24 @@
     },
     "15": {
       "tr": "Diploma İptali (İntihal)"
+    }
+  },
+  "personel_engellilik": {
+    "1" : {
+      "tr" : "Engelli Değil",
+      "en" : "Not Disabled"
+    },
+    "2" : {
+      "tr" : "1. Derece %80-%100",
+      "en" : "1. Degree %80-%100"
+    },
+    "3" : {
+      "tr" : "2. Derece %60-%79",
+      "en" : "2. Degree %60-%79"
+    },
+    "4" : {
+      "tr" : "3. Derece %40-%59",
+      "en" : "3. Degree %40-%59"
     }
   }
 }

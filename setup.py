@@ -30,13 +30,13 @@ def create_mo_files():
 
 setup(
     name='Ulakbus',
-    version='0.9.3',
+    version='0.9.4',
     description='Ulakbus Butunlesik Universite Sistemi',
     author='Zetaops',
     license='GPL v3',
     author_email='info@zetaops.io',
     install_requires=[
-        'zengine==0.7.9',
+        'zengine==0.8.1',
         'requests',
         'boto',
         'reportlab',

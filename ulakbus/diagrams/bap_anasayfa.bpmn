@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+  <bpmn:collaboration id="Collaboration_1ccggiz">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="BAP" />
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:participant id="Participant_08e6ki4" name="BAP Anasayfa" processRef="bap_anasayfa" />
+  </bpmn:collaboration>
+  <bpmn:process id="bap_anasayfa" name="BAP Anasayfa" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1q1ac7t</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1q1ac7t" sourceRef="StartEvent_1" targetRef="anasayfa" />
+    <bpmn:userTask id="anasayfa" name="BAP Anasayfa" camunda:assignee="bap.bap_anasayfa.BAPAnasayfa.anasayfa_goster">
+      <bpmn:incoming>SequenceFlow_1q1ac7t</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0sa25ve</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_18hy79m">
+      <bpmn:incoming>SequenceFlow_0sa25ve</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0sa25ve" sourceRef="anasayfa" targetRef="EndEvent_18hy79m" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1ccggiz">
+      <bpmndi:BPMNShape id="Participant_08e6ki4_di" bpmnElement="Participant_08e6ki4">
+        <dc:Bounds x="114" y="170" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="202" y="277" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="220" y="313" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1q1ac7t_di" bpmnElement="SequenceFlow_1q1ac7t">
+        <di:waypoint xsi:type="dc:Point" x="238" y="295" />
+        <di:waypoint xsi:type="dc:Point" x="368" y="295" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="303" y="280" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0fs5m0p_di" bpmnElement="anasayfa">
+        <dc:Bounds x="368" y="255" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_18hy79m_di" bpmnElement="EndEvent_18hy79m">
+        <dc:Bounds x="534" y="277" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="552" y="313" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sa25ve_di" bpmnElement="SequenceFlow_0sa25ve">
+        <di:waypoint xsi:type="dc:Point" x="468" y="295" />
+        <di:waypoint xsi:type="dc:Point" x="534" y="295" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="501" y="270" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

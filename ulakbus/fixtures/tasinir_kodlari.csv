@@ -1,0 +1,3260 @@
+150,,,,,,İlk Madde ve Malzemeler 
+150,01,,,,,Kırtasiye Malzemeleri Grubu
+150,01,01,,,,Yazı Araçları 
+150,01,01,01,,,Roller Kalemler 
+150,01,01,02,,,Kalem Takımları
+150,01,01,03,,,Mürekkepli (Dolma) Kalemler
+150,01,01,04,,,Tükenmez Kalemler 
+150,01,01,05,,,Mekanizmalı (Mekanik) Kalemler
+150,01,01,06,,,Kurşun Kalemler
+150,01,01,07,,,İşaretleme Kalemleri ve Fosforlu Kalemler
+150,01,01,08,,,Boya Kalemleri
+150,01,01,08,01,,Su Bazlı Boya Kalemleri
+150,01,01,08,02,,Çözücü Bazlı Boya Kalemleri
+150,01,01,08,03,,Yıkanınca Çıkan Boya Kalemleri
+150,01,01,08,04,,Güzel Yazı İçin Boya Kalemleri
+150,01,01,08,05,,Kumaşa Yazabilen Boya Kalemleri
+150,01,01,08,06,,Metale Yazabilen Boya Kalemleri
+150,01,01,08,07,,Balmumu Bazlı Mum Boyalar
+150,01,01,08,08,,Soya Yağı Bazlı Mum Boyalar
+150,01,01,08,09,,Özellikli Mum Boyalar
+150,01,01,08,10,,Suluboya Mum Boyalar
+150,01,01,08,11,,Kuru Pastel Boyalar
+150,01,01,08,12,,Tebeşir Pastel Boyalar
+150,01,01,08,13,,Yağlı Pastel Boyalar
+150,01,01,08,99,,Diğer Boya Kalemleri
+150,01,01,09,,,Çizim Kalemleri
+150,01,01,09,01,,Sıkıştırılmış Karakalemler
+150,01,01,09,02,,Doldurulmuş Karakalemler
+150,01,01,09,03,,Grafit Kalemler
+150,01,01,09,04,,Balmumu Bazlı Renkli Çizim Kalemleri
+150,01,01,09,99,,Diğer Çizim Kalemleri
+150,01,01,10,,,Teknik Çizim Kalemleri
+150,01,01,11,,,Asetat Kalemleri
+150,01,01,12,,,Kopyatif Kalemler
+150,01,01,13,,,CD Kalemleri
+150,01,01,14,,,Koli Kalemleri
+150,01,01,15,,,Para Kontrol Kalemleri
+150,01,01,16,,,Yazı Tahtası Kalemleri
+150,01,01,17,,,Yazı Tebeşirleri
+150,01,01,18,,,İşaretleme Kalemleri İç Yedekleri
+150,01,01,19,,,Kurşun Kalem ve Tükenmez Kalem İç Yedekleri
+150,01,01,20,,,Baskı ve Çizim Mürekkepleri
+150,01,01,20,01,,Dolmakalem Mürekkepleri
+150,01,01,20,02,,Istampa Mürekkepleri
+150,01,01,20,03,,Su Bazlı Poster Mürekkepleri
+150,01,01,20,04,,Su Bazlı Akrilik Mürekkepleri
+150,01,01,20,05,,Yağ Bazlı İpek Kağıt Mürekkepleri
+150,01,01,20,06,,Su Bazlı Dokuma Mürekkepleri
+150,01,01,20,07,,Yağ Bazlı Dokuma Mürekkepleri
+150,01,01,20,08,,Süblime Baskı Mürekkepleri
+150,01,01,20,09,,Yağ Bazlı Oyma veya Taş Baskı Mürekkepleri
+150,01,01,20,10,,Yağ Bazlı Tek Baskı Mürekkepleri
+150,01,01,20,11,,Su Bazlı Tek Baskı Mürekkepleri
+150,01,01,20,12,,Su Bazlı Çizim Mürekkepleri
+150,01,01,20,13,,Çözücü Bazlı Çizim Mürekkepleri
+150,01,01,20,14,,Güzel Yazı Çizim Mürekkepleri
+150,01,01,20,15,,İpek Kağıt Mürekkepleri
+150,01,01,20,16,,Taş Baskı Vernikleri
+150,01,01,20,17,,Divit ve Aksesuarları
+150,01,01,20,99,,Diğer Baskı ve Çizim Mürekkepleri
+150,01,01,99,,,Diğer Yazı Araçları
+150,01,02,,,,"Yazım, Çizim ve Ölçüm Araç ve Malzemeleri "
+150,01,02,01,,,Yazı Şablonları
+150,01,02,02,,,Güzel Yazı Setleri
+150,01,02,03,,,Pergel Takımları
+150,01,02,04,,,Gönye Takımları
+150,01,02,05,,,Çizim Saptayıcıları
+150,01,02,06,,,Çizim Örtüleri
+150,01,02,07,,,Teknik Çizim Setleri
+150,01,02,08,,,Kalem Tutacakları
+150,01,02,09,,,Cetveller
+150,01,02,10,,,Şerit Metreler
+150,01,02,99,,,"Diğer Yazım, Çizim ve Ölçüm Araç ve Malzemeleri"
+150,01,03,,,,Kağıt Ürünler
+150,01,03,01,,,Baskı ve Yazı Kağıtları
+150,01,03,01,01,,Ham ve Hamur Kağıtlar
+150,01,03,01,02,,Baskı Kağıtları
+150,01,03,01,03,,Yazı  Kağıtları
+150,01,03,01,04,,Basılı  Kağıtlar
+150,01,03,01,05,,Baskısız Bilgisayar Formları
+150,01,03,01,06,,Daktilo  Kağıtları
+150,01,03,01,07,,Faks  Kağıtları
+150,01,03,01,08,,Karbon  Kağıtları
+150,01,03,01,09,,Mumlu  Kağıtları
+150,01,03,01,10,,Çizim  Kağıtları
+150,01,03,01,11,,Yapışkanlı (Postit) Not  Kağıtları
+150,01,03,01,12,,Etiketler
+150,01,03,01,13,,Yazarkasa - Hesap Makinesi Bobinleri
+150,01,03,01,14,,Teleks Bobinleri
+150,01,03,01,15,,İndeks Kartları
+150,01,03,01,16,,Karton ve Ambalaj Kağıtları
+150,01,03,01,17,,Kuşe Kağıtlar
+150,01,03,01,18,,Gazete ve Ofset Kağıtları
+150,01,03,01,99,,Diğer Baskı ve Yazı Kağıtları
+150,01,03,02,,,Dosya ve Klasörler
+150,01,03,02,01,,Karton Dosya Gömleği
+150,01,03,02,02,,Tam Kapaklı Karton Telli Dosyalar
+150,01,03,02,03,,Yarım Kapaklı Karton Telli Dosyalar
+150,01,03,02,04,,Askılı Dosyalar (Dosya Havuzu için)
+150,01,03,02,05,,Mekanizmalı Klasörler
+150,01,03,02,06,,Bağlı Klasörler
+150,01,03,02,07,,Dosya Havuzları
+150,01,03,02,08,,Körüklü Dosyalar
+150,01,03,02,09,,Arşiv Kutuları
+150,01,03,02,10,,İmza Kartonları
+150,01,03,02,11,,Plastik Dosya Gömlekleri
+150,01,03,02,12,,Plastik Poşet Dosyalar
+150,01,03,02,13,,Plastik Telli Dosyalar 
+150,01,03,02,14,,Sunum Dosyaları
+150,01,03,02,16,,Sekreter Notlukları
+150,01,03,02,17,,Dosya Sunum Üniteleri
+150,01,03,02,18,,Plastik Cilt Kapakları
+150,01,03,02,19,,Muhtelif Dosyalar
+150,01,03,03,,,Zarflar
+150,01,03,03,01,,Normal Zarflar
+150,01,03,03,02,,Kese (Torba) Zarflar
+150,01,03,03,03,,Vergi İade Zarfları
+150,01,03,03,04,,Tebligat Zarfları
+150,01,03,03,99,,Diğer Zarflar
+150,01,03,99,,,Diğer Kağıt Ürünler
+150,01,04,,,,"Yazıcı, Faksimile Cihazı, Fotokopi ve Baskı Makinesi Malzemeleri"
+150,01,04,01,,,Tonerler
+150,01,04,02,,,Kartuşlar
+150,01,04,03,,,Rulolar ve Masterler/ Baskı Kalıpları
+150,01,04,04,,,Şeritler
+150,01,04,05,,,Filmler
+150,01,04,06,,,Developer
+150,01,04,07,,,Mürekkep Kutuları
+150,01,04,08,,,Mürekkep Çubukları
+150,01,04,09,,,"Yazıcı, Faksimile Cihazı ve Fotokopi Temizleme Malzemeleri"
+150,01,04,10,,,"Yazıcı, Faksimile veya Fotokopi Cihazı Rulo Kılavuzlar"
+150,01,04,99,,,"Yazıcı, Faksimile Cihazı, Fotokopi ve Baskı Makinesi Diğer Malzemeleri"
+150,01,05,,,,"Kağıt Tutturucuları, Tutkallar ve Bantlar"
+150,01,05,01,,,Tutturucular
+150,01,05,01,01,,Ataçlar
+150,01,05,01,02,,İğneler
+150,01,05,01,03,,Zımba Telleri
+150,01,05,01,04,,Raptiyeler
+150,01,05,01,05,,Cilt tutturma Vidaları 
+150,01,05,01,06,,Cilt Sırtlıkları
+150,01,05,01,07,,Cilt Bezleri
+150,01,05,01,08,,Duvar veya Pano Klipsleri
+150,01,05,01,09,,Tutturma Halkaları
+150,01,05,01,10,,Etiket Çengelleri
+150,01,05,01,11,,İpler ve Ambalaj Malzemeleri
+150,01,05,01,99,,Diğer Tutturucular
+150,01,05,02,,,Tutkallar
+150,01,05,02,01,,Zamklar
+150,01,05,02,02,,Sentetik Yapıştırıcılar
+150,01,05,02,99,,Diğer Tutkallar
+150,01,05,03,,,Lastik  Bantlar
+150,01,05,03,01,,Selefon Bantlar
+150,01,05,03,02,,Çift Yönlü Bantlar
+150,01,05,03,03,,Maskeleme Bantları
+150,01,05,03,04,,Montaj Bantları
+150,01,05,03,05,,Koli Bantları
+150,01,05,03,99,,Diğer Lastik Bantlar
+150,01,05,99,,,"Diğer Kağıt Tutturucuları, Tutkallar ve Bantlar"
+150,01,06,,,,Yazı Düzelticiler
+150,01,06,01,,,Düzeltici Bantlar
+150,01,06,02,,,Sıvı Düzelticiler
+150,01,06,03,,,Kalem Silgileri
+150,01,06,04,,,Yumuşak Silgiler
+150,01,06,05,,,Vinil Silgiler
+150,01,06,06,,,Plastik Silgiler
+150,01,06,07,,,Mürekkep Silgileri
+150,01,06,08,,,Elektronik Siliciler
+150,01,06,09,,,Mum Boyası Silicileri
+150,01,06,99,,,Diğer Yazı Düzelticiler
+150,01,07,,,,Küçük Kırtasiye Gereç ve Malzemeleri
+150,01,07,01,,,Istampalar 
+150,01,07,02,,,Zımbalar
+150,01,07,03,,,Delgeçler
+150,01,07,04,,,Tel Sökücüleri
+150,01,07,05,,,Çağrı Zilleri
+150,01,07,06,,,Makaslar
+150,01,07,07,,,"Maket Bıçakları, Yedek Uçları ve Falçatalar"
+150,01,07,08,,,Makas Bileyiciler
+150,01,07,09,,,Kalem Açma Makineleri
+150,01,07,10,,,Sümen ve Aksesuarları
+150,01,07,11,,,Zarf Zamkı Islatıcıları
+150,01,07,12,,,Zarf Açacakları
+150,01,07,13,,,Tutkal Fırçaları
+150,01,07,14,,,Yapıştırıcı Sökücüler
+150,01,07,15,,,Ayraçlar
+150,01,07,16,,,Ataçlık veya Ataç Koyma Kutuları
+150,01,07,17,,,Mühür Mumları
+150,01,07,18,,,Mühür İpleri
+150,01,07,19,,,Bantlama Makineleri 
+150,01,07,20,,,Süngerlikler
+150,01,07,21,,,Takvimler ve Takvim Altlıkları
+150,01,07,22,,,"Defterler, Ajandalar ve Fihristler"
+150,01,07,23,,,Toplantı Çizelgeleri
+150,01,07,24,,,Öneri Kutuları
+150,01,07,25,,,Duvar Çizelgeleri
+150,01,07,26,,,Posta Pulları
+150,01,07,27,,,Prespapyeler
+150,01,07,28,,,Kaşeler ve Kaşe Askıları
+150,01,07,29,,,Numaratörler
+150,01,07,99,,,Diğer Küçük Kırtasiye Gereç ve Malzemeleri
+150,01,08,,,,Bilişim Malzemeleri
+150,01,08,01,,,Çıkarılabilir Saklama Ortamı
+150,01,08,01,01,,CD'ler
+150,01,08,01,02,,Kasetler
+150,01,08,01,03,,DVD'ler
+150,01,08,01,04,,Disketler
+150,01,08,01,05,,Flaş Diskler
+150,01,08,01,06,,Manyeto-optik (MO) Diskler
+150,01,08,01,07,,Yüksek Kapasiteli Çıkarılabilir Boş Ortam Diskleri
+150,01,08,01,08,,Boş Yüksek Yoğunluklu Optik (UDO) Diskler
+150,01,08,01,99,,Diğer Çıkarılabilir Saklama Ortamı
+150,01,08,02,,,Çıkarılabilir Saklama Ortamı Aksesuarları
+150,01,08,02,01,,CD Çantaları
+150,01,08,02,02,,Disket Kutuları
+150,01,08,02,03,,Çoklu Ortam Depolama Cihazı Muhafazaları 
+150,01,08,02,04,,VHS (Vertical Helix Scan) Videotape Depolayıcı veya Aksesuarları
+150,01,08,02,99,,Diğer Çıkarılabilir Saklama Ortamı Aksesuarları
+150,01,08,99,,,Diğer Bilişim Malzemeleri
+150,02,,,,,Beslenme/Gıda Amaçlı ve  Mutfakta Kullanılan Tüketim Malzemeleri Grubu 
+150,02,01,,,,Tek Kullanımlık Mutfak Eşyaları
+150,02,01,01,,,Tek Kullanımlık Pişirme Kapları
+150,02,01,02,,,Tek Kullanımlık Tabaklar
+150,02,01,03,,,Tek Kullanımlık Çatallar
+150,02,01,04,,,Tek Kullanımlık Bıçaklar
+150,02,01,05,,,Tek Kullanımlık Kaşıklar
+150,02,01,06,,,Tek Kullanımlık Bardaklar
+150,02,01,07,,,Tek Kullanımlık Kaplar 
+150,02,01,08,,,Tek Kullanımlık Kapaklar
+150,02,01,09,,,Tek Kullanımlık Karıştırıcılar
+150,02,01,10,,,Pipetler
+150,02,01,11,,,Aliminyum Folyolar
+150,02,01,12,,,Streç Filmler
+150,02,01,13,,,Buzdolabı Poşetleri
+150,02,01,14,,,Fincan ve Tepsi Altlıkları
+150,02,01,99,,, Tek Kullanımlık Diğer Mutfak Eşyaları
+150,02,02,,,,Servis ve Saklama Kapları
+150,02,02,01,,,Yemek Saklama Kapları
+150,02,02,02,,,Sos Kapları
+150,02,02,03,,,Servis Kaseleri
+150,02,02,04,,,Çaydanlıklar 
+150,02,02,05,,,Cezveler
+150,02,02,06,,,Termoslar
+150,02,02,07,,,Buz Kalıpları
+150,02,02,08,,,Ekmek Kutuları
+150,02,02,09,,,Sefer Tasları
+150,02,02,99,,,Diğer Servis ve Saklama Kapları
+150,02,03,,,,Sofra Takımı ve Çatal Bıçak Takımı
+150,02,03,01,,,Yemek Tabağı Takımları
+150,02,03,02,,,Yemek Tabakları
+150,02,03,03,,,Çorba ve Salata Kaseleri
+150,02,03,04,,,Servis Tabakları 
+150,02,03,05,,,Çatal Kaşık Setleri
+150,02,03,06,,,Çatallar
+150,02,03,07,,,Kaşıklar
+150,02,03,08,,,Bıçaklar
+150,02,03,09,,,Kaşıklıklar
+150,02,03,99,,,Diğer Sofra Takımı ve Çatal Bıçak Takımı ve Ekipmanları
+150,02,04,,,,İçecek Servis Takımları
+150,02,04,01,,,Fincanlar
+150,02,04,02,,,Bardaklar
+150,02,04,03,,,Kupalar
+150,02,04,04,,,Kadehler
+150,02,04,05,,,Sürahiler
+150,02,04,06,,,Biberonlar ve Aksesuarları
+150,02,04,99,,,Diğer İçecek Servis Takımları
+150,02,05,,,,Mutfak Araç ve Gereçleri
+150,02,05,01,,,Öğütücü ve Ezici Aletler
+150,02,05,01,01,,Rendeler
+150,02,05,01,02,,Püre Ezme Aletleri
+150,02,05,01,03,,Sarımsak Eziciler
+150,02,05,01,04,,Havanlar
+150,02,05,01,05,,Et Kütükleri
+150,02,05,01,06,,Et Dövecekleri
+150,02,05,01,07,,Manuel Et Yumuşatma Aletleri
+150,02,05,01,08,,Manuel Meyve ve Sebze Sıkacakları
+150,02,05,01,99,,Diğer Öğütücü ve Ezici Aletler
+150,02,05,02,,,Kesici Aletler ve Yardımcı Araçlar
+150,02,05,02,01,,Bıçaklar
+150,02,05,02,02,,Dilimleyiciler
+150,02,05,02,03,,Sebze ve Meyve Soyma Aletleri
+150,02,05,02,04,,Sebze Oyma Aletleri
+150,02,05,02,05,,Bıçak Bileyiciler
+150,02,05,02,06,,Doğrama Tahtaları
+150,02,05,02,99,,Diğer Kesici Aletler ve Yardımcı Araçlar
+150,02,05,03,,,Tatlandırıcı Kapları ve Baharatlıklar
+150,02,05,03,01,,Tuzluklar
+150,02,05,03,02,,Şekerlikler
+150,02,05,03,03,,Baharatlıklar
+150,02,05,03,99,,Diğer Tatlandırıcı Kapları
+150,02,05,04,,,Servis Aletleri
+150,02,05,04,01,,Kepçeler 
+150,02,05,04,02,,Spatulalar
+150,02,05,04,03,,Maşalar
+150,02,05,04,04,,Kaşıklar
+150,02,05,04,05,,Çatallar
+150,02,05,04,99,,Diğer Servis Aletleri
+150,02,05,05,,,Süzme Aletleri
+150,02,05,05,01,,Kevgirler
+150,02,05,05,02,,Süzgeçler
+150,02,05,05,03,,Kalburlar
+150,02,05,05,04,,Huniler
+150,02,05,05,99,,Diğer Süzme Aletleri
+150,02,05,06,,,Açacaklar
+150,02,05,06,01,,Şişe Açacakları
+150,02,05,06,02,,Konserve Açacakları
+150,02,05,06,03,,Tirbüşonlar
+150,02,05,06,99,,Diğer Açacaklar
+150,02,05,07,,,Unlu Mamül Hazırlama Araçları
+150,02,05,07,01,,Hamur Kalıpları
+150,02,05,07,02,,Oklava ve Merdaneler
+150,02,05,07,03,,Pasta Süsleme Araçları
+150,02,05,07,04,,Hamur Karıştırıcıları
+150,02,05,07,05,,Fırçalar
+150,02,05,07,06,,Ahşap Fırın Küreği
+150,02,05,07,07,,Ölçme Kapları
+150,02,05,07,08,,Çırpma Telleri (Mikser vb için)
+150,02,05,07,99,,Diğer Unlu Mamül Hazırlama Araçları
+150,02,05,99,,,Diğer Mutfak Araç ve Gereçleri
+150,03,,,,,Tıbbi ve Laboratuvar Sarf Malzemeleri Grubu
+150,03,01,,,,İlaçlar ve Farmakolojik Ürünler
+150,03,01,01,,,Anti Enfeksiyon İlaçları
+150,03,01,01,01,,Antibiyotikler
+150,03,01,01,02,,Amibisidler ve Trikomonasidler ve Antiprotozolalar
+150,03,01,01,03,,Antihelmintikler ve Diğer Antiparaziterler
+150,03,01,01,04,,Antifungal İlaçlar
+150,03,01,01,05,,Antimalaryal İlaçlar
+150,03,01,01,06,,Antitüberküloz İlaçlar
+150,03,01,01,07,,Leprostatikler
+150,03,01,01,08,,Üriner Antienfektifler ve Analjezikler
+150,03,01,01,09,,Antiviral İlaçlar
+150,03,01,01,10,,Oftalmik
+150,03,01,01,11,,Veterinerlik Antihelmintik
+150,03,01,01,12,,Veterinerlik Antibiyotikler
+150,03,01,01,13,,Antiseptikler
+150,03,01,01,99,,Diğer Anti Enfeksiyon İlaçları
+150,03,01,02,,,Antineoplastik Ajanlar
+150,03,01,02,01,,Alkile Edici Ajanlar
+150,03,01,02,02,,Antimetabolitler
+150,03,01,02,03,,Antineoplastik Antibiyotikler
+150,03,01,02,04,,Hormonlar ve Antihormonlar
+150,03,01,02,05,,Doğal Antineoplastik Ürünler
+150,03,01,02,99,,Diğer Antineoplastik Ajanlar
+150,03,01,03,,,Kalp ve Damar Hastalıkları İçin İlaçlar
+150,03,01,03,01,,Antiarrythmic İlaçlar
+150,03,01,03,02,,Antianginal İlaçlar
+150,03,01,03,03,,AntiHypertensive İlaçlar
+150,03,01,03,04,,Vasodilator
+150,03,01,03,05,,Antihypotensive İlaçlar
+150,03,01,03,06,,Cardioplegic Ajanlar
+150,03,01,03,99,,Kalp ve Damar Hastalıkları İçin Diğer İlaçlar
+150,03,01,04,,,Kan İlaçları
+150,03,01,04,01,,Antiaritmikler
+150,03,01,04,02,,Antianjinal İlaçlar
+150,03,01,04,03,,Antihipertansif İlaçlar
+150,03,01,04,04,,Trombolitik İlaçlar ve Trombosit Agregasyon İnhibitörleri
+150,03,01,04,05,,Koagulanlar ve Sistemik Hemostatik Ajanlar
+150,03,01,04,06,,Kan ve Plazma Yerine Kullanılan İlaçlar ve Plazma Genişleticiler 
+150,03,01,04,07,,Hemorolojik Ajanlar
+150,03,01,04,08,,Antihiperlipidemik ve Hiperkolesterolemik Ajanlar
+150,03,01,04,99,,Diğer Kan İlaçları
+150,03,01,05,,,Merkezi Sinir Sistemi İlaçları
+150,03,01,05,01,,Antikonvulsanlar
+150,03,01,05,02,,Antidepresanlar
+150,03,01,05,03,,Antipsikotik Ajanlar
+150,03,01,05,04,,Hipnotikler
+150,03,01,05,05,,Tranklizanlar ve Antimanik ve Antianksiyete İlaçları
+150,03,01,05,06,,Narkotık Olmayan Analjezikler ve Antipiretikler
+150,03,01,05,07,,Nonsteroıdal Antı Inflamatuvar İlaçlar Nsaıdler
+150,03,01,05,08,,Narcotık Analjezikler
+150,03,01,05,09,,Narkotık Antagonıstler
+150,03,01,05,10,,Vasküler ve Migren Tipi Başağrılarında Kullanılan İlaçlar
+150,03,01,05,11,,Antiparkinson İlaçlar
+150,03,01,05,12,,Stimülanlar ve Anoreksiyanlar (İştah Kesiciler)
+150,03,01,05,13,,Veterinerlikte Kullanılan Nonsteroid Antienflamatuvar İlaçlar Vnsaidler
+150,03,01,05,14,,Anti Amiyotrofık Lateral Skleroz ALS İlaçları
+150,03,01,05,15,,Anestetik İlaçlar ve Anesteziye Yardımcı İlaçlar ve Antiepileptikler
+150,03,01,05,99,,Diğer Merkezi Sinir Sistemi İlaçları
+150,03,01,06,,,Otonom Sinir Sistemi İlaçları
+150,03,01,06,01,,Kolınerjık İlaçlar ve Kolınesteraz Inhıbıtorleri
+150,03,01,06,02,,Kolınerjik Bloke Edici Ajanlar
+150,03,01,06,03,,Sempatomımetık veya Adrenerjik İlaçlar
+150,03,01,06,04,,Adrenerjik Bloke Edici Ajanlar
+150,03,01,06,05,,Merkezi Etkili İskelet Kası Gevşeticileri 
+150,03,01,06,06,,Nöromusküler Bloke Edici Ajanlar
+150,03,01,06,99,,Diğer Otonom Sinir Sistemi İlaçları
+150,03,01,07,,,Solunum Yollarına Etki Eden İlaçlar
+150,03,01,07,01,,Antiastmatik İlaçlar
+150,03,01,07,02,,Antihistaminikler veya H1 Blokerleri
+150,03,01,07,03,,Solunum Yolu Hastalıklarında Kullanılan İlaçlar
+150,03,01,07,04,,Öksürük ve Soğuk Algınlığı ve Antialerji Ürünleri
+150,03,01,07,05,,Nazal Dekonjestantlar
+150,03,01,07,99,,Solunum Yollarına Etki Eden Diğer İlaçlar
+150,03,01,08,,,Mide ve Bağırsağa Etki Eden İlaçlar
+150,03,01,08,01,,Antasitler ve Gaz İlaçları
+150,03,01,08,02,,Laksatifler
+150,03,01,08,03,,Antidiyare İlaçları
+150,03,01,08,04,,Bulantı ve Kusmaya Karşı Kullanılan ve Antivertigo İlaçları 
+150,03,01,08,05,,Antiulser ve İlişkili Gastrointestinal İlaçlar
+150,03,01,08,06,,Safra Kesesi Hastalıklarında Kullanılan İlaçlar
+150,03,01,08,07,,Antispazmolitikler
+150,03,01,08,99,,Mide ve Bağırsağa Etki Eden Diğer İlaçlar
+150,03,01,09,,,Hormonlar ve Hormon Antagonistleri
+150,03,01,09,01,,Antidiyabetik Ajanlar ve Hiperglisemik Ajanlar
+150,03,01,09,02,,Tiroid ve Antitiroid İlaçları
+150,03,01,09,03,,Kortikosteroidler
+150,03,01,09,04,,Östrojenler ve Progestinler ve İnternal Kontraseptifler
+150,03,01,09,05,,Gonadotropik Hormonlar ve Ovariyan Stimule Ediciler ve İnhibitörleri
+150,03,01,09,06,,Androjenler ve Androjen İnhibitörleri
+150,03,01,09,07,,Posterior Pitüiter Hormonlar
+150,03,01,09,08,,Doğumu İndükleyen İlaçlar
+150,03,01,09,09,,Büyüme Hormonları ve İnhibitörleri
+150,03,01,09,10,,Kalsiyum Tuzları ve Kalsiyum Düzenleyiciler
+150,03,01,09,99,,Diğer Hormonlar ve Hormon Antagonistleri
+150,03,01,10,,,Sıvıya ve Elektrolite Etki Eden İlaçlar
+150,03,01,10,01,,Diüretikler
+150,03,01,10,02,,Elektrolitler
+150,03,01,10,03,,Alkalize Edici Ajanlar
+150,03,01,10,04,,Potasyum Tuzları
+150,03,01,10,05,,Dıyet Destekleri ve Beslenme Terapisi Ürünleri
+150,03,01,10,99,,Sıvıya ve Elektrolite Etki Eden Diğer İlaçlar
+150,03,01,11,,,İmmun Modüle Edici İlaçlar
+150,03,01,11,01,,İmmuno pressanlar - İmmun Baskılayıcılar
+150,03,01,11,02,,Aşılar ve Antijenler ve Toksoidler
+150,03,01,11,03,,Poultry Aşıları
+150,03,01,11,04,,İmmuno stimule Edici Ajanlar
+150,03,01,11,05,,Multipl Skleroz MS Ajanları
+150,03,01,11,99,,İmmun Modüle Edici Diğer İlaçlar
+150,03,01,12,,,Muhtelif İlaç Kategorileri
+150,03,01,12,01,,Antigut İlaçları
+150,03,01,12,02,,Antidotlar
+150,03,01,12,03,,Veterinerlikte Kullanılan Anestetik İlaçlar
+150,03,01,12,04,,Bitkisel Kaynaklı (Herbal) İlaçlar
+150,03,01,12,05,,Dental İlaçlar
+150,03,01,12,06,,Anti Abuse İlaçlar – Bağımlılıkta Kullanılan İlaçlar
+150,03,01,12,07,,Tanı Amaçlı Kullanılan (Diyagnostik) Ajanlar ve Radyofarmasötikler 
+150,03,01,12,08,,Seksüel Bozukluk Tedavisinde Kullanılan İlaçlar
+150,03,01,12,99,,Diğer Muhtelif İlaçlar
+150,03,01,13,,,"Kulağa , Göze , Buruna ve Deriye Etki Eden İlaçlar"
+150,03,01,13,01,,Kulak Preparatları
+150,03,01,13,02,,Oftalmik Ajanlar
+150,03,01,13,03,,Dermatolojik Ajanlar
+150,03,01,13,04,,Astranjanlar
+150,03,01,13,99,,"Kulağa , Göze , Buruna ve Deriye Etki Eden Diğer İlaçlar"
+150,03,01,14,,,Veteriner Beslenmeye İlişkin Ekler
+150,03,01,99,,,Diğer İlaçlar ve Farmakolojik Ürünler
+150,03,02,,,,Biyokimyasallar ve Gaz Maddeleri  İçeren Kimyasallar
+150,03,02,01,,,İnorganik Asit ve Anidritler
+150,03,02,02,,,İnorganik Alkaliler ve Hidroksitler
+150,03,02,03,,,Sodyum Türevleri
+150,03,02,04,,,"Kalsiyum, Strontiyum ve Talyum Türevleri"
+150,03,02,05,,,Potasyum ve Amonyum Türevleri
+150,03,02,06,,,Demir Türevleri ve Çelik Alaşımların Bileşenleri 
+150,03,02,07,,,"Ağır Metal Türevleri, Demir Madeni Hariç "
+150,03,02,08,,,Hafif Metal Türevleri
+150,03,02,09,,,NDA Metallerin Türevleri 
+150,03,02,10,,,"Baryum, Bor, Brom, Klor, Fluor, İyot ve Selenyum Türevleri "
+150,03,02,11,,,"Fosfor, Kükürt, Kömür, Silisyum ve Sezyum Türevleri "
+150,03,02,12,,,Sıkıştırılmış ve Sıvılaştırılmış Gazlar. Soğutucu Kimyevî Ürünler.
+150,03,02,13,,,"Organik Asitler, Anidritleri ve Halojenürleri ( Sıvı )"
+150,03,02,14,,,Halojenli Hidrokarbürler ve Türevleri 
+150,03,02,15,,,Alkoller ve Epoksitler 
+150,03,02,16,,,"Fenoller, Polifenoller, Eterler, Aldehitler, Ketonlar, Kuinonlar "
+150,03,02,17,,,"NES İçeren Aminler, Tuzlar, Amitler ve Diğer Nitrojen Bileşenleri "
+150,03,02,18,,,Organik Asitlerin Esterleri ve Tuzları 
+150,03,02,19,,,Katalizörler 
+150,03,02,20,,,Çeşitli Organik Kimyasallar. Mineral ve Organo-Metalik Bileşenler 
+150,03,02,21,,,Solventler
+150,03,02,22,,,Yüzey Aktifler
+150,03,02,23,,,Aromatik Ara Maddeleri
+150,03,02,99,,, Biyokimyasallar ve Gaz Maddeleri  İçeren Diğer Kimyasallar
+150,03,03,,,,Medikal Malzemeler
+150,03,03,01,,,Medikal Sarf Malzemeleri
+150,03,03,01,01,,Enjektörler ve Atık Kutuları
+150,03,03,01,02,,Ateş Ölçerler
+150,03,03,01,03,,Flasterler
+150,03,03,01,04,,Elastik Bandajlar
+150,03,03,01,05,,Sargı Bezleri
+150,03,03,01,06,,Gazlı Bezler
+150,03,03,01,07,,Sondalar
+150,03,03,01,08,,Piller
+150,03,03,01,09,,Test Malzeme ve Kitleri ile Deney Tüpleri
+150,03,03,01,10,,Tıbbi Amaçlı Nakil ve Depolama Kapları
+150,03,03,01,99,,Diğer Medikal Sarf Malzemleri
+150,03,03,02,,,"Tıbbi Donanım Aksesuarları, Malzemeleri ve Ürünleri"
+150,03,03,02,01,,Veterinerlik Donanımı ve Malzemeleri
+150,03,03,02,02,,Hasta Bakım ve Tedavi Ürünleri ve Malzemeleri
+150,03,03,02,03,,Diş Donanımı ve Malzemeleri
+150,03,03,02,04,,Diyaliz Donanımı ve Malzemeleri
+150,03,03,02,05,,Acil ve Saha Tıbbi Hizmetleri İçin Ürünler
+150,03,03,02,06,,Hasta İnceleme ve İzlemeye Yönelik Ürünler
+150,03,03,02,07,,Tıbbi Tesis Ürünleri
+150,03,03,02,08,,Tıbbi Tanısal Görüntüleme ve Nükleer Tıp Ürünleri
+150,03,03,02,09,,Fiziksel Engelliler İçin Bağımsız Yaşam Yardımcıları
+150,03,03,02,10,,İntravenöz ve Arteryel Uygulama Ürünleri
+150,03,03,02,11,,Klinik Beslenme Ürünleri ve Malzemeleri
+150,03,03,02,12,,"Ortopedi, Protez ve Spor Hekimliği Ürünleri"
+150,03,03,02,13,,"Fiziksel, Uğraş Terapisi ve Rehabilitasyon Ürünleri"
+150,03,03,02,14,,Ceset ve Morg Donanımı ve Malzemeleri
+150,03,03,02,15,,"Solunum, Anestezi ve Resüsitasyon Ürünleri"
+150,03,03,02,16,,Tıbbi Sterilizasyon Ürünleri
+150,03,03,02,17,,Cerrahi Ürünler
+150,03,03,02,18,,Tıbbi Eğitim ve Uygulama Malzemeleri
+150,03,03,02,19,,Yara Bakım Ürünleri
+150,03,03,02,99,,"Diğer Tıbbi Donanım Aksesuarları, Malzemeleri ve Ürünleri"
+150,03,03,99,,,Diğer Medikal Malzemeler
+150,03,04,,,,Laboratuvar Malzemeleri
+150,04,,,,,"Yakıtlar, Yakıt Katkıları ve Katkı Yağlar Grubu "
+150,04,01,,,,Katı Yakıtlar
+150,04,01,01,,,Odunlar
+150,04,01,02,,,Çıralar
+150,04,01,03,,,Kömürler
+150,04,01,99,,,Diğer Katı Yakıtlar
+150,04,02,,,,Sıvı Yakıtlar
+150,04,02,01,,,Benzinler
+150,04,02,02,,,Mazotlar
+150,04,02,03,,,Gazyağları
+150,04,02,04,,,Fuel Oiller
+150,04,02,99,,,Diğer Sıvı Yakıtlar
+150,04,03,,,,Gaz Yakıtlar
+150,04,03,01,,,Doğalgazlar
+150,04,03,02,,,Tüp Gazlar (LPG)
+150,04,03,99,,,Diğer Gaz Yakıtlar
+150,04,04,,,,Yağlar ve Katkı Yağlar
+150,04,04,01,,,Madeni Yağlar
+150,04,04,01,01,,Genel Makine Yağları
+150,04,04,01,02,,Dişli Yağları
+150,04,04,01,03,,"Kompresör, Turbin, Pnömatik ve Şanzıman Yağları"
+150,04,04,01,04,,Takım Tezgahı ve Kızak Yağları
+150,04,04,01,05,,Metal İşleme Yağları
+150,04,04,01,06,,Gres Yağları
+150,04,04,01,07,,Motor Yağları
+150,04,04,01,08,,Hidrolik Yağları
+150,04,04,01,99,,Diğer Madeni Yağlar
+150,04,04,02,,,Yağ ve Yakıt Katkıları
+150,04,04,02,01,,Motor Yağı Katkıları
+150,04,04,02,02,,Şanzıman Katkıları
+150,04,04,02,03,,Antfrizler
+150,04,04,02,99,,Diğer Yağ ve Yakıt Katkıları
+150,04,04,99,,,Diğer Yağlar ve Katkı Yağlar
+150,04,05,,,,Kimyevi Maddeler
+150,04,05,01,,,Eterler
+150,04,05,02,,,Saf Alkoller
+150,04,05,03,,,İspirtolar
+150,04,05,99,,,Diğer Kimyevi Maddeler
+150,05,,,,,Temizleme Ekipmanları Grubu 
+150,05,01,,,,Temizlik Malzemeleri
+150,05,01,01,,,Temizleme Tüyleri
+150,05,01,02,,,Temizlik Bezleri
+150,05,01,03,,,Temizlik Süngerleri
+150,05,01,04,,,Temizlik Telleri
+150,05,01,05,,,Lastik Eldivenler
+150,05,01,06,,,Kazıyıcı Yedek Uçları
+150,05,01,07,,,Kağıt Temizlik Ürünleri
+150,05,01,08,,,Hijyenik Ürünler
+150,05,01,99,,,Diğer Temizlik Malzemeleri
+150,05,02,,,,Temizlik Araç ve Gereçleri
+150,05,02,01,,,Atık Toplama Araçları ile Muhafazalı Kaplar
+150,05,02,01,01,,Çöp Kutuları ve Kovaları
+150,05,02,01,02,,Atık Konteynırları
+150,05,02,01,03,,Küllükler
+150,05,02,01,04,,Sıhhi Malzeme Kutuları
+150,05,02,01,05,,Çöp Torbaları
+150,05,02,01,06,,Temizlik Kovaları ve Leğenleri
+150,05,02,01,07,,Maşrapalar
+150,05,02,01,08,,Kağıt Havlu Kutuları
+150,05,02,01,09,,Kağıt Mendil Kutuları
+150,05,02,01,10,,Tuvalet Kağıdı Kutuları
+150,05,02,01,11,,Sabun ve Losyon Kapları
+150,05,02,01,99,,Diğer Atık Toplama Araçları İle Muhafazalı Kaplar
+150,05,02,02,,,"Süpürge, Fırça, Paspas ve Emici Malzemeler ile Aksesuarları"
+150,05,02,02,01,,Süpürgeler ve Ekipmanları
+150,05,02,02,02,,Fırçalar
+150,05,02,02,03,,Paspaslar
+150,05,02,02,04,,Emici Malzemeler 
+150,05,02,02,99,,"Diğer Süpürge, Fırça, Paspas ve Emici Malzemeler ile Aksesuarları"
+150,05,02,03,,,Yün ve Tüy Toplama Araçları
+150,05,02,04,,,Kanalizasyon ve Boru Temizleme Ekipmanları
+150,05,02,05,,,Kazıyıcılar
+150,05,02,99,,,Diğer Temizlik Araç ve Gereçleri
+150,05,03,,,,Temizleme ve Dezenfeksiyon Solüsyonları
+150,05,03,01,,,Genel Amaçlı Temizleyiciler
+150,05,03,01,01,,Sabunlar
+150,05,03,01,02,,Amonyaklı Temizleyiciler
+150,05,03,01,03,,Beyazlatıcılar 
+150,05,03,01,04,,Leke Temizleyicileri veya Gidericileri
+150,05,03,01,05,,"Karbon, Yağ, Pas ve Kireç Sökücü Temizliyiciler"
+150,05,03,01,06,,Yakıcı ve Aşındırıcı Temizleyiciler
+150,05,03,01,07,,Kuru Mikrop Öldürücüler
+150,05,03,01,08,,Petrol Ürünü Temizleyiciler
+150,05,03,01,09,,Buz Çözücü ve Buğu Önleyiciler
+150,05,03,01,10,,Cilalar
+150,05,03,01,11,,Kolonyalar
+150,05,03,01,12,,Dezenfektanlar 
+150,05,03,01,99,,Diğer Genel Amaçlı Temizleyiciler
+150,05,03,02,,,Mutfak Grubu Temizlik Ürünleri
+150,05,03,02,01,,Mineralli Sıvı Temizleyiciler
+150,05,03,02,02,,Bulaşık Makine Deterjanları
+150,05,03,02,03,,Elde Bulaşık Yıkama Sıvıları
+150,05,03,02,04,,Bulaşık Makine Parlatıcıları
+150,05,03,02,99,,Mutfak Grubu Diğer Temizlik Ürünleri
+150,05,03,03,,,Çamaşır Grubu Temizlik Ürünleri
+150,05,03,03,01,,Çamaşır Yumuşatıcıları
+150,05,03,03,02,,Çamaşır Suları
+150,05,03,03,03,,Matik Deterjanlar
+150,05,03,03,04,,Çamaşır ve Tül Beyazlatıcıları
+150,05,03,03,05,,Çamaşır Elde Yıkama Toz Deterjanları
+150,05,03,03,06,,Renkliler Leke Çıkarıcılar
+150,05,03,03,07,,Toz Kireç Temizleyiciler
+150,05,03,03,08,,Oksijen Bazlı Ağartıcılar 
+150,05,03,03,99,,Çamaşır Grubu Diğer Temizlik Ürünleri
+150,05,03,04,,,Kozmetik ve Kişisel Bakım Temizlik Ürünleri
+150,05,03,04,01,,Sabunlar
+150,05,03,04,02,,Saç Şampuanları
+150,05,03,04,03,,Saç Kremleri
+150,05,03,04,04,,Saç Boyaları
+150,05,03,04,05,,Saç Spreyleri
+150,05,03,04,06,,El ve Vücut Losyonları
+150,05,03,04,07,,Duş Jelleri
+150,05,03,04,08,,Joleler
+150,05,03,04,09,,Briyantinler
+150,05,03,04,10,,Parfümler
+150,05,03,04,11,,Diş Macunları
+150,05,03,04,12,,Diş Fırçaları
+150,05,03,04,13,,Diş İpleri
+150,05,03,04,14,,Makyaj Malzemeleri
+150,05,03,04,99,,Diğer Kozmetik ve Kişisel Bakım Temizlik Ürünleri
+150,05,03,05,,,Oto Temizlik Ürünleri
+150,05,03,05,01,,Oto Şampuanları
+150,05,03,05,02,,Torpido Parlatıcıları
+150,05,03,05,03,,Lastik Parlatıcıları
+150,05,03,05,04,,Oto Parfümleri
+150,05,03,05,05,,Oto Pastaları
+150,05,03,05,06,,Oto Cilaları
+150,05,03,05,07,,Oto Kaporta Koruyucuları
+150,05,03,05,08,,Oto Döşeme Koruyucular
+150,05,03,05,99,,Diğer Oto Temizlik Ürünleri
+150,05,03,06,,,Cam veya Pencere Temizleyicileri
+150,05,03,07,,,Döşeme Temizleyicileri
+150,05,03,08,,,Mobilya Temizleyicileri
+150,05,03,09,,,Hava Temizleyiciler
+150,05,03,10,,,Metal Temizleyicileri veya Parlatıcıları
+150,05,03,11,,,Mücevher Temizleme Solüsyonları
+150,05,03,99,,,Diğer Temizleme ve Dezenfeksiyon Solüsyonları
+150,06,,,,,"Giyecek, Mefruşat ve Tuhafiye Malzemeleri Grubu"
+150,06,01,,,,Giyecekler
+150,06,01,01,,,Kıyafetler
+150,06,01,01,01,,Pantolon veya Şortlar
+150,06,01,01,02,,Gömlek ve Bluzlar
+150,06,01,01,03,,Süveterler
+150,06,01,01,04,,Ceketler
+150,06,01,01,05,,Takım Elbiseler
+150,06,01,01,06,,Elbiseler ve Etekler 
+150,06,01,01,07,,Kaban ve Yağmurluklar
+150,06,01,01,08,,Tulumlar
+150,06,01,01,09,,Spor Kıyafetleri
+150,06,01,01,10,,Gecelikler ve Bornozlar
+150,06,01,01,11,,Yerel Kıyafetler
+150,06,01,01,12,,İç Çamaşırlar
+150,06,01,01,13,,Çoraplar ve Taytlar
+150,06,01,01,14,,Giysi Aksesuarları
+150,06,01,01,15,,Üniformalar ve İş Kıyafetleri
+150,06,01,01,16,,Tören Kıyafetleri
+150,06,01,01,17,,Yüzme Giysileri
+150,06,01,01,99,,Diğer Kıyafetler
+150,06,01,02,,,"Ayakkabılar, Terlikler ve Aksesuarları"
+150,06,01,02,01,,Botlar
+150,06,01,02,02,,Çizmeler
+150,06,01,02,03,,Ayakkabılar
+150,06,01,02,04,,Terlikler
+150,06,01,02,05,,Sandaletler
+150,06,01,02,06,,Spor Ayakkabıları
+150,06,01,02,07,,Ayakkabı Aksesuarları
+150,06,01,99,,,Diğer Giyecekler
+150,06,02,,,,Mefruşat Ürünleri
+150,06,02,01,,,Yatak Ürünleri
+150,06,02,01,01,,Yatak Örtüleri
+150,06,02,01,02,,Yatak Pedleri
+150,06,02,01,03,,Çarşaflar
+150,06,02,01,04,,Yastık Kılıfları
+150,06,02,01,05,,Pikeler
+150,06,02,01,06,,Minderler
+150,06,02,01,07,,Cibinlikler
+150,06,02,01,99,,Diğer Yatak Ürünleri
+150,06,02,02,,,Masa ve Mutfak Örtüleri
+150,06,02,02,01,,Peçeteler
+150,06,02,02,02,,Masa Örtüleri 
+150,06,02,02,03,,Fırın Eldiveni veya Tutacaklar
+150,06,02,02,04,,Servis Altlıkları
+150,06,02,02,99,,Diğer Masa ve Mutfak Örtüleri
+150,06,02,03,,,Perde ve Perde Sistemleri
+150,06,02,03,01,,Perdeler 
+150,06,02,03,02,,Panjur ve Gölgelikler
+150,06,02,03,03,,Perde Sistemleri Aksesuarları ve Donanımları
+150,06,02,03,99,,Diğer Perde ve Perde Sistemleri
+150,06,02,04,,,Yer Döşemeleri
+150,06,02,05,,,Havlular
+150,06,02,06,,,Kumaşlar
+150,06,02,06,01,,Perde Kumaşları
+150,06,02,06,02,,Nevresim ve Çarşaf Kumaşları
+150,06,02,06,03,,Yatak Örtüsü Kumaşları
+150,06,02,06,04,,Giyim Amaçlı Kumaşlar
+150,06,02,06,05,,Döşemelik Kumaşlar
+150,06,02,06,99,,Diğer Kumaşlar
+150,06,02,99,,,Diğer Mefruşat Ürünleri
+150,06,03,,,,Tuhafiye Malzemeleri
+150,06,03,01,,,Dikiş Malzemeleri ve Aksesuarları
+150,06,03,02,,,Örgü Malzemeleri ve Aksesuarları
+150,06,03,03,,,Nakış Malzemeleri ve Aksesuarları
+150,06,03,04,,,Dokuma Malzemeleri ve Aksesuaraları
+150,06,03,99,,,Diğer Tuhafiye Malzemeleri
+150,07,,,,,Yiyecek Grubu
+150,07,01,,,,Bakliyat
+150,07,01,01,,,Buğdaylar
+150,07,01,02,,,Bulgurlar
+150,07,01,03,,,Mısırlar
+150,07,01,04,,,Pirinçler
+150,07,01,05,,,Mercimekler
+150,07,01,06,,,Fasülyeler
+150,07,01,07,,,Nohutlar
+150,07,01,99,,,Diğer Bakliyat
+150,07,02,,,,Yemeklik Yağlar
+150,07,02,01,,,Sıvı Yağlar
+150,07,02,01,01,,Ayçiçek Yağları
+150,07,02,01,02,,Soya Yağları
+150,07,02,01,03,,Zeytin Yağları
+150,07,02,01,04,,Pamuk Yağları
+150,07,02,01,05,,Palm Yağları
+150,07,02,01,06,,Mısır Yağları
+150,07,02,01,07,,Fındık Yağları
+150,07,02,01,99,,Diğer Sıvı Yağlar
+150,07,02,02,,,Katı Yağlar
+150,07,02,02,01,,Margarinler
+150,07,02,02,02,,Hayvansal Yağlar
+150,07,02,99,,,Diğer Yağlar
+150,07,03,,,,"Sebze, Meyve, Yemiş ve Çekirdekler"
+150,07,03,01,,,Sebzeler
+150,07,03,01,01,,Taze Sebzeler
+150,07,03,01,02,,Dondurulmuş Sebzeler 
+150,07,03,01,03,,Konserve Sebzeler
+150,07,03,01,04,,Kuru Sebzeler
+150,07,03,02,,,Meyveler
+150,07,03,02,01,,Taze Meyveler
+150,07,03,02,02,,Dondurulmuş Meyveler
+150,07,03,02,99,,Diğer Meyveler
+150,07,03,03,,,Yemişler
+150,07,03,03,01,,Kabuksuz Yemişler
+150,07,03,03,02,,Kabuklu Yemişler
+150,07,03,99,,,"Diğer Sebze, Meyve, Yemiş ve Çekirdekler"
+150,07,04,,,,Un ve Unlu Gıdalar
+150,07,04,01,,,Unlar 
+150,07,04,01,01,,Buğday Unları
+150,07,04,01,02,,Pirinç Unları
+150,07,04,01,03,,Mısır Unları
+150,07,04,01,04,,Çavdar Unları
+150,07,04,01,05,,Yulaf Unları
+150,07,04,01,06,,Nisaştalar
+150,07,04,01,99,,Diğer Unlar 
+150,07,04,02,,,Unlu Gıdalar
+150,07,04,02,01,,Ekmekler
+150,07,04,02,02,,Makarnalar
+150,07,04,02,99,,Diğer Unlu Gıdalar
+150,07,04,99,,,Diğer Unlar ve Unlu Gıdalar
+150,07,05,,,,Baharat ve Çeşniler ile Çikolata ve Tatlandırıcılar
+150,07,05,01,,,"Baharat, Esanslar ve Lezzet Artırıcılar"
+150,07,05,01,01,,Baharatlar
+150,07,05,01,02,,Esanslar
+150,07,05,01,03,,Tuzlar
+150,07,05,01,04,,Çeşni ve Lezzet Arttırıcılar
+150,07,05,02,,,Soslar
+150,07,05,03,,,Turşular
+150,07,05,04,,,Tatlılar ve Tatlandırıcılar
+150,07,05,04,01,,Şekerler
+150,07,05,04,02,,Reçeller
+150,07,05,04,03,,Ballar ve Polenler
+150,07,05,04,04,,Çikolatalar
+150,07,05,04,05,,Tatlılar 
+150,07,05,99,,,Diğer Baharat ve Çeşniler ile Çikolata ve Tatlandırıcılar
+150,07,06,,,,Günlük Tüketilmesi Gereken Ürünler
+150,07,06,01,,,Yumurtalar
+150,07,06,02,,,Yoğurtlar
+150,07,06,03,,,Peynirler
+150,07,06,04,,,Zeytinler
+150,07,06,99,,,Günlük Tüketilmesi Gereken Diğer Ürünler
+150,07,07,,,,Etler ve Et Ürünleri
+150,07,07,01,,,Kırmızı Et
+150,07,07,02,,,Beyaz Et
+150,07,07,03,,,Sakatatlar
+150,07,07,04,,,İşlenmiş Et Ürünleri
+150,07,07,99,,,Diğer Etler ve Et Ürünleri
+150,07,08,,,,Deniz Ürünleri
+150,07,08,01,,,Balıklar
+150,07,08,02,,,Diğer Deniz Ürünleri
+150,08,,,,,İçecek Grubu 
+150,08,01,,,,Alkolsüz İçecekler
+150,08,01,01,,,İçme Suları
+150,08,01,02,,,Meyve Suları 
+150,08,01,03,,,Sütler
+150,08,01,04,,,Ayranlar
+150,08,01,05,,,Gazlı İçecekler
+150,08,01,06,,,İçecek Katkı Maddeleri
+150,08,01,06,01,,Çaylar
+150,08,01,06,02,,Kahveler
+150,08,01,06,03,,Süt Tozu ve Kremaları
+150,08,01,06,04,,Oraletler
+150,08,01,06,05,,Salepler
+150,08,01,06,99,,Diğer İçecek Katkı Maddeleri
+150,08,01,99,,,Diğer Alkolsüz İçecekler
+150,08,02,,,,Alkollü İçecekler
+150,09,,,,,Canlı Hayvanlar Grubu 
+150,09,01,,,,Çiftlik Hayvanları
+150,09,01,01,,,Büyükbaş Hayvanlar
+150,09,01,02,,,Küçükbaş Hayvanlar
+150,09,01,03,,,Kuşlar ve Kümes Hayvanları
+150,09,01,99,,,Diğer Çiftlik Hayvanları ve Ekipmanları
+150,09,02,,,,Hizmet Amaçlı Hayvanlar
+150,09,02,01,,,Köpekler
+150,09,02,02,,,Atlar 
+150,09,02,03,,,Eşekler
+150,09,02,04,,,Katırlar
+150,09,02,99,,,Diğer Hizmet Amaçlı Hayvanlar ve Ekipmanları
+150,09,03,,,,Gösteri Amaçlı Hayvanlar
+150,09,03,01,,,Küçükbaş Hayvanlar
+150,09,03,02,,,Kümes Hayvanları
+150,09,03,03,,,Vahşi Hayvanlar
+150,09,03,04,,,Suda Yaşayan Canlılar
+150,09,03,05,,,Evcil Hayvanlar
+150,09,03,06,,,Sürüngenler
+150,09,03,07,,,Kemirgenler
+150,09,03,08,,,Böcekler
+150,09,03,09,,,Atlar ve Eşekler
+150,09,03,99,,,Diğer Gösteri Amaçlı Hayvanlar ve Ekipmanları
+150,09,04,,,,Deney Amaçlı Hayvanlar
+150,09,04,01,,,Küçükbaş Hayvanlar
+150,09,04,02,,,Büyükbaş Hayvanlar
+150,09,04,03,,,Kuşlar ve Kümes Hayvanları
+150,09,04,04,,,Vahşi Hayvanlar
+150,09,04,05,,,Suda Yaşayan Canlılar
+150,09,04,06,,,Sürüngenler
+150,09,04,07,,,Kemirgenler
+150,09,04,08,,,Böcekler
+150,09,04,99,,,Diğer Deney Amaçlı Hayvanlar ve Ekipmanları
+150,09,05,,,,Koruma Altına Alınan Hayvanlar
+150,09,05,01,,,Suda Yaşayan Canlılar
+150,09,05,02,,,Vahşi Hayvanlar
+150,09,05,03,,,Evcil Hayvanlar
+150,09,05,04,,,Sürüngenler
+150,09,05,05,,,Kemirgenler
+150,09,05,06,,,Böcekler
+150,09,05,99,,,Diğer Koruma Altına Alınan Hayvanlar ve Ekipmanları
+150,10,,,,,Zirai Maddeler Grubu 
+150,10,01,,,,"Tohum, Fideler, Filizler, Fidanlar ve Çiçek Tohumları"
+150,10,01,01,,,Sebze Tohumları ve Filizleri
+150,10,01,02,,,Tahıl Tohumları 
+150,10,01,03,,,Çimen ve Ot tohumları
+150,10,01,04,,,Baharat Ürünleri Tohum veya Filizleri
+150,10,01,05,,,"Çiçek Tohumları, Soğanları, Filizleri ve Çelikleri"
+150,10,01,06,,,Ağaç ve Fundalık Çelikleri ve Fidanları
+150,10,01,07,,,Lifli Ürün Tohum ve Filizleri
+150,10,01,99,,,"Diğer Tohum, Fideler, Filizler, Fidanlar ve Çiçek Tohumları"
+150,10,02,,,,"Gübre, Bitki Gıdaları ve Bitki İlaçları "
+150,10,02,01,,,Organik Gübre ve Bitki Gıdaları
+150,10,02,01,01,,Gübreler
+150,10,02,01,02,,Bitki Hormonları
+150,10,02,01,03,,Balık Unları
+150,10,02,02,,,Kimyasal Gübre ve Bitki Gıdaları 
+150,10,02,02,01,,Azotlu Gübreler
+150,10,02,02,02,,Potasyumlu Gübreler
+150,10,02,02,03,,Fosfatlı Gübreler
+150,10,02,02,04,,Sülfürlü Gübreler
+150,10,02,02,05,,"Azot, Fosfor, Potasyum Karışımları"
+150,10,02,03,,,Bitki İlaçları 
+150,10,02,03,01,,Zararlı Otlar İçin İlaçlar
+150,10,02,03,02,,Mantar Öldürücü İlaçlar
+150,10,02,99,,,"Diğer Gübre, Bitki Gıdaları ve Bitki İlaçları "
+150,10,03,,,,Haşerelere Karşı Mücadele Ürünleri
+150,10,03,01,,,Pestisitler veya Haşare Kovucular 
+150,10,03,01,01,,Kemirgen Öldürücüler
+150,10,03,01,02,,Kuş Kovucular
+150,10,03,01,03,,Karınca Kovucular
+150,10,03,02,,,Haşare Kontrol Aletleri 
+150,10,03,02,01,,Hayvan Kontrol Kapanları
+150,10,03,02,02,,Uçan Böcek Kontrol Kapanları
+150,10,03,02,03,,Sinek Kovucular
+150,10,03,02,04,,Sinek Raketi
+150,10,03,02,05,,Kementler 
+150,10,03,99,,,Haşerelere Karşı Diğer Mücadele Ürünleri
+150,10,04,,,,Hayvan Yetiştiriciliğinde Kullanılan Maddeler
+150,10,04,01,,,Aşılar 
+150,10,04,02,,,Serumlar
+150,10,04,99,,,Hayvan Yetiştiriciliğinde Kullanılan Diğer Maddeler
+150,10,05,,,,Çiçekler 
+150,10,05,01,,,Canlı Çiçekler
+150,10,05,02,,,Kuru Çiçekler
+150,10,05,03,,,Kesilmiş Çiçekler
+150,10,05,99,,,Diğer Malzemeler
+150,11,,,,,Yem Grubu
+150,11,01,,,,Çiftlik Hayvan Yemleri
+150,11,01,01,,,Yemlik Buğday ve Buğday Kepekleri
+150,11,01,02,,,Yemlik Yulaflar
+150,11,01,03,,,Yemlik Mısırlar
+150,11,01,04,,,Yemlik Darılar
+150,11,01,05,,,Yemlik Arpalar
+150,11,01,06,,,Samanlar
+150,11,01,07,,,Küspeler
+150,11,01,08,,,Yoncalar
+150,11,01,09,,,Fiğler
+150,11,01,10,,,Burçaklar
+150,11,01,99,,,Diğer Çitflik Hayvan Yemleri
+150,11,02,,,,Kuş ve Kümes Hayvan Yemleri
+150,11,02,01,,,Kuşlar İçin Canlı Besinler
+150,11,02,02,,,Kuş Yemleri
+150,11,02,03,,,Kümes Hayvanı Yemleri
+150,11,03,,,,Balık Yemleri
+150,11,03,01,,,Taze veya Donmuş Salamuralar
+150,11,03,02,,,Balık Yemi Taneleri
+150,11,03,99,,,Diğer Balık Yemleri
+150,11,04,,,,Köpek ve Kedi Yemleri
+150,11,04,01,,,Köpekler İçin Kuru Yiyecekler
+150,11,04,02,,,Köpekler İçin Yaş Yiyecekler
+150,11,04,03,,,Kedi ve Köpekler İçin Sütler
+150,11,04,04,,,Kediler İçin Kuru Yiyecekler
+150,11,04,05,,,Kediler İçin Yaş Yiyecekler
+150,11,04,99,,,Diğer Köpek ve Kedi Yemleri
+150,11,05,,,,Kemirgen Hayvan Yemleri
+150,11,06,,,,Sürüngen Yemleri
+150,11,06,01,,,Sürüngen Hayvanlar İçin Pelletized Yemler
+150,11,06,02,,,Sürüngen Hayvanlar İçin Yaş Yemler
+150,11,06,03,,,Sürüngen Hayvanlar İçin Canlı Yemler
+150,11,06,99,,,Diğer Sürüngen Yemleri
+150,11,99,,,,Diğer Hayvan Yemleri
+150,12,,,,,Bakım Onarım ve Üretim Malzemeleri Grubu 
+150,12,01,,,,Küçük El Aletleri ve Gereçleri
+150,12,01,01,,,"Kesici, Sökücü ve Çakıcı Aletler"
+150,12,01,01,01,,Baltalar
+150,12,01,01,02,,Hızarlar
+150,12,01,01,03,,Budama Makasları
+150,12,01,01,04,,Tırpanlar
+150,12,01,01,05,,Oraklar
+150,12,01,01,06,,Keserler
+150,12,01,01,07,,Keskiler
+150,12,01,01,08,,El Tipi Testereler
+150,12,01,01,09,,Tornavidalar ve Tornavida Uçları
+150,12,01,01,10,,Kargaburunlar
+150,12,01,01,11,,Penseler
+150,12,01,01,12,,Kerpetenler
+150,12,01,01,13,,Balyoz
+150,12,01,01,14,,Çekiçler 
+150,12,01,01,15,,"Kesme, Oyma, Bileme ve Zımparalama Taşları ve Keçeleri ile Muhtelif Uçlar "
+150,12,01,01,99,,"Diğer Kesici, Sökücü ve Çakıcı Aletler"
+150,12,01,02,,,Anahtarlar
+150,12,01,02,01,,Tork Anahtarları ve Uçları
+150,12,01,02,02,,Boru Anahtarları
+150,12,01,02,03,,İngiliz Anahtarlar (Kurbacık)
+150,12,01,02,04,,Bijon Anahtarları
+150,12,01,02,05,,Yıldız Anahtarlar
+150,12,01,02,06,,İki Ağız Anahtarlar
+150,12,01,02,99,,Diğer Anahtarlar
+150,12,01,03,,,"Sıva, Boya ve Badana Aletleri"
+150,12,01,03,01,,Elekler
+150,12,01,03,02,,Malalar-Mastarlar
+150,12,01,03,03,,Raspalar-Spatulalar
+150,12,01,03,04,,Fırçalar
+150,12,01,03,05,,Rulolar
+150,12,01,03,06,,Şaküller
+150,12,01,03,99,,"Diğer Sıva, Boya ve Badana Aletleri"
+150,12,01,04,,,"Toprak İşleme, Toplama, Sulama ve Temizleme Alet ve Malzemeleri"
+150,12,01,04,01,,Kazmalar
+150,12,01,04,02,,Kürekler
+150,12,01,04,03,,Bel Kürekleri
+150,12,01,04,04,,Çapalar
+150,12,01,04,05,,Tırmıklar
+150,12,01,04,99,,"Diğer Toprak İşleme, Toplama, Sulama ve Temizleme Alet ve Malzemeleri"
+150,12,01,05,,,Çekme Alet ve Gereçleri
+150,12,01,99,,,Diğer Küçük El Aletleri ve Gereçleri
+150,12,02,,,,Tutturucular
+150,12,02,01,,,"Çiviler, Vidalar ve Aksesuarları"
+150,12,02,01,01,,Çiviler
+150,12,02,01,02,,Vidalar ve Civatalar
+150,12,02,01,03,,Aksesuarlar
+150,12,02,02,,,Yapıştırıcılar 
+150,12,02,02,01,,Seramik ve Tahta Yapıştırıcılar
+150,12,02,02,02,,Metal Yapıştırıcılar 
+150,12,02,02,03,,Cam Ürünleri Yapıştırıcıları
+150,12,02,02,99,,Diğer Yapıştırıcılar
+150,12,02,03,,,Kilitler
+150,12,02,99,,,Diğer Tutturucu Malzemeler
+150,12,03,,,,Kaplayıcılar
+150,12,03,01,,,Sıvı ve Kağıt Kaplayıcılar
+150,12,03,01,01,,Boyalar 
+150,12,03,01,02,,Cilalar
+150,12,03,01,03,,Duvar Kağıtları
+150,12,03,01,99,,Diğer Sıvı ve Kağıt Kaplayıcılar
+150,12,03,02,,,Yapı Malzemeleri
+150,12,03,02,01,,Fayanslar
+150,12,03,02,02,,Kiremitler
+150,12,03,02,03,,Tuğlalar
+150,12,03,02,04,,Biriketler
+150,12,03,02,05,,Granül Kırma Taşları
+150,12,03,02,99,,Diğer Yapı Malzemeleri
+150,12,03,03,,,Ahşap Kaplama Malzemeleri
+150,12,03,03,01,,Parkeler
+150,12,03,03,02,,Lambiri ve Laminantlar
+150,12,03,03,03,,Süpürgelikler
+150,12,03,03,99,,Diğer Ahşap Kaplama Malzemeleri
+150,12,03,04,,,PVC ve Metal Kaplama Malzemeleri
+150,12,03,04,01,,Serflor Malzemeleri
+150,12,03,04,02,,Parksayding Malzemeleri
+150,12,03,04,03,,Aliminyum Kaplama Malzemeleri
+150,12,03,04,99,,Diğer PVC ve Metal Kaplama Malzemeleri
+150,12,03,05,,,"Sıva, Dolgu ve Yapıştırıcı Malzemeler"
+150,12,03,05,01,,Kalekim ve Derz Dolguları
+150,12,03,05,02,,Kireçler
+150,12,03,05,03,,Alçılar
+150,12,03,05,04,,Çimentolar
+150,12,03,05,05,,Kumlar
+150,12,03,05,99,,"Diğer Sıva, Dolgu ve Yapıştırıcı Malzemeler"
+150,12,03,06,,,Sızmayı Önleyici Kaplama Malzemeleri
+150,12,03,06,01,,Macunlar
+150,12,03,06,02,,Slikonlar
+150,12,03,06,99,,Diğer Sızmayı Önleyici Kaplama Malzemeleri
+150,12,03,99,,,Kaplama İşlerinde Kullanılan Diğer Malzemeler
+150,12,04,,,,Elektrik-Elektronik ve Aydınlatma Malzemeleri
+150,12,04,01,,,Lambalar
+150,12,04,01,01,,Normal Lambalar
+150,12,04,01,02,,Grup Lambalar
+150,12,04,01,03,,Aplikler
+150,12,04,01,04,,Fluoresan Lambalar
+150,12,04,01,05,,Enerji Tasarruflu Lambalar
+150,12,04,01,06,,Akkor Ampuller
+150,12,04,01,07,,Civa Buharlı Lambalar
+150,12,04,01,08,,Halojen Lambalar
+150,12,04,01,09,,Neon Lambaları
+150,12,04,01,10,,Metal Deşarj Lambaları
+150,12,04,01,11,,Kızılötesi Lambalar
+150,12,04,01,12,,Sahne veya Stüdyo Lambaları
+150,12,04,01,13,,Ultraviole Lambalar
+150,12,04,01,14,,Yüksek Basınçlı Sodyum Lambası
+150,12,04,01,15,,Alçak Basınçlı Sodyum Lambası
+150,12,04,01,16,,Solar Lambalar
+150,12,04,01,17,,Projeksiyon Lambaları
+150,12,04,01,18,,Armatürler
+150,12,04,01,99,,Diğer Lambalar
+150,12,04,02,,,Kablo
+150,12,04,02,01,,Alçak Gerilim Kabloları
+150,12,04,02,02,,Orta ve Yüksek Gerilim Kabloları
+150,12,04,02,04,,Diğer Kablolar
+150,12,04,03,,,Kablo Yardımcı Malzemeleri
+150,12,04,03,01,,Yeraltı Kablo Kofreleri
+150,12,04,03,02,,Yeraltı Kablo Başlıkları
+150,12,04,03,03,,Yeraltı Kablo Buatları
+150,12,04,03,04,,Kablo Kanalları ve Bağlantı Elemanları
+150,12,04,03,05,,Kablo Sargı Spiralleri
+150,12,04,03,06,,Kablo Sıkacakları
+150,12,04,03,07,,Kablo Kanal Dönüşüm Elemanları
+150,12,04,03,99,,Diğer Kablo Yardımcı Malzemeleri
+150,12,04,04,,,Sarj Aletleri
+150,12,04,05,,,Fişler
+150,12,04,06,,,Prizler
+150,12,04,07,,,Duylar
+150,12,04,08,,,Anahtarlar
+150,12,04,08,01,,Tekli Düğmeli Anahtarlar
+150,12,04,08,02,,Çift Düğmeli Anahtarlar
+150,12,04,08,03,,Grup Anahtarlar
+150,12,04,08,99,,Diğer Anahtarlar
+150,12,04,09,,,Sigortalar
+150,12,04,10,,,Klemensler
+150,12,04,11,,,Şalterler
+150,12,04,12,,,Kontaktörler
+150,12,04,12,01,,Kuru Tip Koruyucusuz Kontaktörler
+150,12,04,12,02,,Kuru Tip Termik Kontaktörler
+150,12,04,12,03,,Normal Kontaktörler
+150,12,04,12,99,,Diğer Kontaktörler
+150,12,04,13,,,Roleler
+150,12,04,13,01,,Zaman Roleleri
+150,12,04,13,02,,İmpuls (Darbe Akımlı) Roleler
+150,12,04,13,03,,Reakktif Güç Kontrol Röleleri
+150,12,04,13,04,,Akım Röleleri
+150,12,04,13,05,,Koruma Röleleri
+150,12,04,13,99,,Diğer Roleler
+150,12,04,14,,,Transformatörler
+150,12,04,15,,,Adaptörler
+150,12,04,16,,,İzalatörler
+150,12,04,17,,,Piller
+150,12,04,99,,,Diğer Elektrik-Elektronik ve Aydınlatma Malzemeleri
+150,12,05,,,,Ağaç Ürünleri
+150,12,05,01,,,Sunta ve Suntalamlar
+150,12,05,02,,,Tahtalar
+150,12,05,03,,,Keresteler
+150,12,05,04,,,Tomruklar
+150,12,05,05,,,Kontrapilak
+150,12,05,99,,,Diğer Ağaç Ürünler
+150,12,06,,,,Metal Ürünler
+150,12,06,01,,,Saç Levhalar
+150,12,06,02,,,Teller
+150,12,06,03,,,Profiller
+150,12,06,04,,,Menteşeler
+150,12,06,05,,,Köşebentler
+150,12,06,06,,,Demir Çubuklar
+150,12,06,07,,,Borular
+150,12,06,08,,,Kapı Kolları ve Pencere Tutacakları ile Ekipmanları
+150,12,06,98,,,"Tanıtım ve Bilgi Levha, Tabela ,Pano ve Flamaları"
+150,12,06,99,,,Diğer Metal Ürünler
+150,12,07,,,,Cam Ürünler 
+150,12,07,01,,,Camlar 
+150,12,07,02,,,Aynalar
+150,12,07,99,,,Diğer Cam Ürünler
+150,12,08,,,,Plastik Ürünler
+150,12,09,,,,Karayolları Yapım ve Trafik Malzemeleri
+150,12,09,01,,,Karayolu Yapım Malzemeleri
+150,12,09,01,01,,Bitümler
+150,12,09,01,02,,Asfaltlar
+150,12,09,01,03,,Asfalt Emilsiyonları 
+150,12,09,01,04,,Katranlar
+150,12,09,02,,,Karayolu Trafik Malzemeleri
+150,12,09,02,01,,Retforeflektifler
+150,12,09,02,02,,Levhalar
+150,12,09,02,03,,Reflektif Malzeme
+150,12,09,02,04,,Yol Bakım onarım Malzemeleri
+150,12,09,02,05,,Boyalar
+150,12,09,99,,,Diğer Karayolları Yapım ve Trafik Malzemeleri
+150,12,10,,,,Kaynak Malzemeleri
+150,13,,,,,Yedek Parçalar Grubu 
+150,13,01,,,,Makineler ve Aletler Grubu Yedek Parçaları
+150,13,02,,,,Cihazlar ve Aletler Grubu Yedek Parçaları
+150,13,03,,,,Taşıtlar Grubu Yedek Parçaları
+150,13,03,01,,,Motor Yedek Parçaları
+150,13,03,02,,,Kaporta Yedek Parçaları
+150,13,03,03,,,"Aydınlatma, Elektrik Sistemi Yedek Parçaları"
+150,13,03,04,,,Soğutma ve Isıtma Sistemi Yedek Parçaları
+150,13,03,05,,,Süspansiyon Sistemi Yedek Parçaları
+150,13,03,06,,,Fren Sistemi Yedek Parçaları
+150,13,03,07,,,Aktarma Sistemi Yedek Parçaları
+150,13,03,08,,,Ateşleme Sistemi Yedek Parçaları
+150,13,03,09,,,Egzoz Sistemi Yedek Parçaları
+150,13,03,10,,,Yakıt Sistemi Yedek Parçaları
+150,13,03,11,,,İç ve Dış Tirim Parçaları
+150,13,03,12,,,Camlar
+150,13,03,13,,,Filtreler
+150,13,03,14,,,Oto Aksesuarları Grubu
+150,13,03,99,,,Diğer Oto Yedek Parçaları
+150,13,04,,,,Büro Makineleri Grubu Yedek Parçaları
+150,13,04,01,,,Bilgisayar ve Sunucu Yedek Parçaları
+150,13,04,01,01,,Bilgisayar Veri Giriş Cihazları
+150,13,04,01,01,01,Klavyeler
+150,13,04,01,01,02,Fareler
+150,13,04,01,01,03,Mikrofonlar
+150,13,04,01,01,04,Modemler
+150,13,04,01,01,05,Kalemler (Stylus) 
+150,13,04,01,01,06,Tabletler
+150,13,04,01,01,99,Diğer Bilgisayar Veri Giriş Cihazları
+150,13,04,01,02,,Bilgisayar Veri Çıkış Cihazları
+150,13,04,01,02,01,Hoparlörler
+150,13,04,01,02,02,Kulaklıklar
+150,13,04,01,02,99,Diğer Bilgisayar Veri Çıkış Cihazları
+150,13,04,01,03,,Ortam Depolama Cihazları
+150,13,04,01,03,01,Disket Sürücüleri
+150,13,04,01,03,02,Cd Sürücüleri
+150,13,04,01,03,03,Dvd Sürücüleri
+150,13,04,01,03,04,Sabit Disk  Dizileri
+150,13,04,01,03,05,Sabit Disk Sürücüleri
+150,13,04,01,03,06,Teyp Kümeleri
+150,13,04,01,03,07,Teyp Sürücüleri
+150,13,04,01,03,08,Salt Okunur Cd'ler
+150,13,04,01,03,09,Manyeto-Optik (Mo) Sürücüler
+150,13,04,01,03,10,Yüksek Kapasiteli Çıkarılabilir Ortam Sürücüleri 
+150,13,04,01,03,11,Elektronik Ortam veya Veri Çoğaltma Ekipmanları
+150,13,04,01,03,12,Çevre Birimleri Mikrokanal Bağlantı Yapısı Okuyucu ve Yazıcı Sürücüleri
+150,13,04,01,03,13,Yüksek Yoğunluklu Optik (Udo) Sürücüler veya Autoloader veya Kitaplıklar
+150,13,04,01,03,99,Diğer Ortam Depolama Cihazları
+150,13,04,01,04,,Ortam Depolama Cihazı Aksesuarları
+150,13,04,01,04,01,Optik Disk Değiştiricileri
+150,13,04,01,04,02,Teyp Sürücü Kitaplıkları
+150,13,04,01,04,99,Diğer Ortam Depolama Cihazı Aksesuarları
+150,13,04,01,05,,Sistem Panelleri İşlemci Arabirimleri veya Modülleri
+150,13,04,01,05,01,Eşzamansız Aktarım Modu (Atm) Telekomünikasyon Cihazları Arabirim Kartları 
+150,13,04,01,05,02,Audio Hızlandırıcı Kartları
+150,13,04,01,05,03,Merkezi İşlem Birimi (Cpu) İşlemcileri
+150,13,04,01,05,04,Ek Plaketler
+150,13,04,01,05,05,Dispersion Compensation Fiber Module (Dcfm)
+150,13,04,01,05,06,Exchange Datacom Modules (Santral Veri İletişim Modülleri)
+150,13,04,01,05,07,Anakartlar
+150,13,04,01,05,08,Paralel Port Kartları
+150,13,04,01,05,09,Video Yakalama Kartları
+150,13,04,01,05,10,Mıdı (Müzik Aleti Sayısal Arabirimi) Arayüzü
+150,13,04,01,05,11,Santral Öğesi Codec Arayüzü
+150,13,04,01,05,12,Seri Kızılötesi Portlar
+150,13,04,01,05,13,Yazıcı Paylaştırıcılar
+150,13,04,01,05,14,Merkezi İşlem Birimi Soğutucuları
+150,13,04,01,05,15,Konsol Kontrol Ana Çerçevesi
+150,13,04,01,05,16,Kanal Dönüştürücü
+150,13,04,01,05,17,Kanaldan Kanala Arayüzey Ana Çerçevesi
+150,13,04,01,05,18,Kontrol Ünitesi
+150,13,04,01,05,19,Coupler Facility Mainframe (Kuplör Ana Çatısı)
+150,13,04,01,05,20,Arayüz Bus Dönüştürücü Veya Kontrol Birimi
+150,13,04,01,05,21,Faks Kartları
+150,13,04,01,05,22,Audio Konferans Kartları
+150,13,04,01,05,23,Ses Kartları
+150,13,04,01,05,24,Arayüz Bus Anahtarları
+150,13,04,01,05,25,Ağ Paketi Veri Senkronizasyon Cihazları
+150,13,04,01,05,26,Donanım veya Telefon Adaptörleri
+150,13,04,01,05,27,Alıcı Vericiler ve Medya Dönüştürücüleri
+150,13,04,01,05,28,Pc Tv (Kişisel Bilgisayar Televizyon) Ayarlayıcıları
+150,13,04,01,05,29,Pc Radyo Alıcıları
+150,13,04,01,05,30,Scsı Adaptörleri
+150,13,04,01,05,31,Raıd (Birleştirilmiş Bağımsız Disk Dizilimi) Kontrol Kartları
+150,13,04,01,05,32,Fiber Kanal Kontrol Birimleri
+150,13,04,01,05,33,Seri Port Kartları
+150,13,04,01,05,34,Ekran Kartları
+150,13,04,01,05,35,RAM 
+150,13,04,01,05,99,Diğer Sistem Panelleri İşlemci Arabirimleri veya Modülleri
+150,13,04,01,06,,Şasi Elemanları
+150,13,04,01,06,01,Bilgisayar Şasileri
+150,13,04,01,06,02,Ağ Donanımı Şasileri
+150,13,04,01,06,03,Şasi Yığıt Öğeleri
+150,13,04,01,06,04,Elektronik Teçhizat Yuvaları
+150,13,04,01,06,05,Genişleticiler (Expanders)
+150,13,04,01,06,06,Drive Frames
+150,13,04,01,06,07,Depolama Cihazı Tepsi veya Aksesuarları
+150,13,04,01,06,08,Arka Yüz Veya Paneller ya da Asambleler
+150,13,04,01,06,09,Bilgisayar Önyüzleri
+150,13,04,01,06,10,Konsol Genişleticileri
+150,13,04,01,06,11,Sürücü Yuvası Kapak Kitleri
+150,13,04,01,06,12,Sabit Disk Sürücü Dizilim Kasaları
+150,13,04,01,06,13,Kart Kafesleri
+150,13,04,01,06,14,Bilgisayar Çatısı Elemanları
+150,13,04,01,06,99,Diğer Şasi Elemanları
+150,13,04,01,99,,Diğer Bilgisayar ve Sunucu Yedek Parçaları
+150,13,04,02,,,"Yazıcı, Fotokopi ve Faksimile Yedek Parçaları"
+150,13,04,02,01,,"Yazıcı, Faks ve Fotokopi Kayışları"
+150,13,04,02,02,,"Yazıcı, Faksimile Cihazı ve Fotokopi Makaraları (Drum)"
+150,13,04,02,03,,Yazıcı Kafaları
+150,13,04,02,04,,Phaser veya İnkjet Yazıcı Takımları
+150,13,04,02,05,,Laserjet Kaplama Takımları
+150,13,04,02,06,,Fotokopi Makineleri İçin Isı Transfer Kağıtları
+150,13,04,02,07,,Toner Toplayıcılar
+150,13,04,02,08,,Renk Opsiyonları veya Kaliteyi Yükseltme 
+150,13,04,02,09,,Kağıt Giriş ve Çıkış Tepsileri
+150,13,04,02,10,,Kağıt Giriş ve Çıkıi Üniteleri
+150,13,04,02,11,,Faksimile Ahizeleri
+150,13,04,02,12,,Ofis Makineleri Tepsi ve Besleme Üniteleri
+150,13,04,02,13,,Fotoiletken Üniteler veya Görüntüleme Üniteleri
+150,13,04,02,14,,Zımbalama Üniteleri
+150,13,04,02,15,,Ozon Filtreleri
+150,13,04,02,16,,Ayna Takımları
+150,13,04,02,17,,Manyetik Pikap Asambleleri
+150,13,04,02,18,,Komprosör Takımları
+150,13,04,02,19,,Mailbox İstifleyicileri
+150,13,04,02,20,,Kopya Sayıcılar
+150,13,04,02,21,,Ofis Makineleri İçin Faksimile Üniteleri
+150,13,04,02,22,,Delgi Üniteleri
+150,13,04,02,23,,Kızılötesi Adaptörler
+150,13,04,02,24,,Kopyalama veya Tarama Donanımları
+150,13,04,02,25,,Dil Karakterleri
+150,13,04,02,26,,Araç Masuraları
+150,13,04,02,27,,Güç Yükselticileri
+150,13,04,02,28,,Çok Fonksiyonlu Yükselticiler
+150,13,04,02,29,,Yazıcı Kabinleri
+150,13,04,02,30,,Yazıcı Emülasyon Yükselticileri
+150,13,04,02,31,,Yazıcı Standları
+150,13,04,02,32,,Rulo Besleme Üniteleri
+150,13,04,02,33,,Çıktı Sayfası İstifleyicileri
+150,13,04,02,99,," Yazıcı, Fotokopi ve Faksimile Diğer Yedek Parçaları"
+150,13,04,03,,,Tarayıcı ve Okuyucu Donanımları
+150,13,04,04,,,İletişim Tesisatı Yedek Parçaları
+150,13,04,99,,,Diğer Büro Makineleri Grubu Yedek Parçaları
+150,13,05,,,,Su ve Sıhhi Tesisatı Yedek Parçaları
+150,13,06,,,,Tesis Yedek Parçaları
+150,13,99,,,,Diğer Yedek Parçalar
+150,14,,,,,Nakil Vasıtaları Lastikleri Grubu 
+150,14,01,,,,Otomobil Lastikleri
+150,14,02,,,,"Minibüs, Kamyonet Lastikleri"
+150,14,03,,,,"Kamyon, Otobüs Lastikleri"
+150,14,04,,,,Traktör ve İş Makinesi Lastikleri
+150,14,05,,,,Bisiklet Lastikleri
+150,15,,,,,"Değişim, Bağış ve Satış Amaçlı Yayınlar Grubu "
+150,15,01,,,,Basılı Yayınlar
+150,15,01,01,,,Kitaplar
+150,15,01,01,01,,Ansiklopediler
+150,15,01,01,02,,Sözlükler
+150,15,01,01,03,,Atlaslar
+150,15,01,01,04,,Mevzuat Kitapları
+150,15,01,01,99,,Diğer Kitaplar
+150,15,01,02,,,"Harita, Grafik, Plan ve Paftalar"
+150,15,01,03,,,Notalar
+150,15,01,99,,,Diğer Basılı Yayınlar
+150,16,,,,,Spor Malzemeleri Grubu 
+150,16,01,,,,Doğa Sporlarında Kullanılan Spor Malzemeleri
+150,16,02,,,,Salon Sporlarında Kullanılan Spor Malzemeleri
+150,16,03,,,,Saha Sporlarında Kullanılan Spor Malzemeleri
+150,16,99,,,,Diğer Spor Malzemeleri
+150,17,,,,,Basınçlı Ekipmanlar
+150,17,01,,,,Pompalar
+150,17,01,01,,,Dalgıç Pompaları
+150,17,01,02,,,Derin Kuyu Pompaları
+150,17,01,03,,,Peristaltik Pompalar
+150,17,01,04,,,Mekanik Pompalar
+150,17,01,05,,,Çok Kanallı Pompalar
+150,17,01,06,,,Devirdaim Pompalar
+150,17,01,07,,,Difüzyon Pompaları
+150,17,01,08,,,Sıvı İletim Pompaları
+150,17,01,09,,,Yüksek Basınçlı Rulman Yataklı Pompalar
+150,17,01,10,,,Dozaj Pompaları
+150,17,01,11,,,Yağ Pompaları
+150,17,01,12,,,Bor Yağı Pompaları
+150,17,01,13,,,Yağ Soğutmalı Pompalar
+150,17,01,14,,,Kademeli Pompalar
+150,17,01,15,,,Direnaj Pompaları
+150,17,01,16,,,Vakum Pompaları
+150,17,01,17,,,Asit  Baz Pompaları
+150,17,01,18,,,Hız Kontrollü Pompalar
+150,17,01,19,,,Foseptik Pompaları
+150,17,01,20,,,Multifox Pompaları
+150,17,01,21,,,Dağıtıcı Pompaları
+150,17,01,22,,,Sızdırmaz Pompalar
+150,17,01,23,,,Pistonlu Pompalar
+150,17,01,24,,,Sirkülasyon Pompaları
+150,17,01,25,,,Hidrolik Pompalar
+150,17,01,26,,,Dijital Pompalar
+150,17,01,27,,,İlaç Pompaları
+150,17,01,99,,,Diğer Pompalar
+150,99,,,,,Diğer Tüketim Amaçlı Malzemeler
+150,99,01,,,,Hediye Amaçlı Alınan Taşınırlar
+150,99,02,,,,Ödül Amaçlı Alınan Taşınırlar
+150,99,03,,,,"Güvenlik, Korunma ve Gösteri Amaçlı Tüketim Malzemeleri"
+150,99,03,01,,,Mühimmat ve Mühimmat Malzemeleri
+150,99,03,02,,,Koruyucu Malzemeler 
+150,99,03,03,,,Gösteri Amaçlı Tüketim Malzemeleri
+150,99,03,99,,,"Diğer Güvenlik, Korunma, Yangın ve Gösteri Amaçlı Tüketim Malzemeleri"
+150,99,04,,,,Eğitim ve Öğretim Amaçlı Kullanılan Madde ve Malzemeler
+150,99,05,,,,"Sahne  Dekor, Kostüm ve Aksesuarları"
+150,99,06,,,,Meteoroloji Bilimi Tüketim Malzemeleri
+150,99,07,,,,Sosyal Yardım Amaçlı Taşınırlar
+150,99,08,,,,Halka Açık Alanlarda Kullanılmak Üzere Edinilen Taşınırlar
+150,99,09,,,,Sağlıklı Yaşam Amaçlı Edinilen Taşınırlar
+150,99,10,,,,İlgili Mevzuatla Verilen Görev ve Yetkiye Dayanılarak Diğer İdarelere Verilmek Üzere Temin Edilen Taşınırlar
+150,99,98,,,,"Üretimde Kullanılacak İlk Madde ve Malzemeler (Bu kod, kapsamdaki idarelerden üretim yapan TBMM, Atom Enerjisi Kurumu vb. idarelerin üretimde kullanacakları ilk madde ve malzemelerin kaydı için açılmıştır. Diğer idareler kullanamaz)"
+253,,,,,,"Tesis, Makine ve Cihazlar"
+253,01,,,,,Tesisler Grubu
+253,01,01,,,,İletişim/Haberleşme Tesisleri
+253,01,02,,,,Enerji Tesisleri
+253,01,03,,,,"Görüntüleme, Bilgi Toplama ve Takip Sitemleri"
+253,01,99,,,,Diğer Tesis ve Sistemler
+253,02,,,,,Makineler ve Aletler Grubu
+253,02,01,,,,Tarım ve Ormancılık Makineleri ve Aletleri
+253,02,01,01,,,"Toprak İşleme, Hasat ve Harman Makineleri"
+253,02,01,01,01,,Toprak İşleme Makineleri
+253,02,01,01,02,,"Ekim, Dikim, Çukur Açma Makineleri"
+253,02,01,01,03,,Hasat ve Harman Makineleri
+253,02,01,01,04,,Gübreleme Makineleri
+253,02,01,01,99,,"Diğer Toprak İşleme, Hasat ve Harman Makineleri"
+253,02,01,02,,,Zirai Mücadele Makineleri
+253,02,01,02,01,," Pülverizatörler, Atomizör ve Sisleme Cihazları"
+253,02,01,02,02,,Tohum İlaçlayıcılar
+253,02,01,02,03,,Bitki Koruma Makineleri
+253,02,01,02,99,,Diğer Zirai Mücadele Makineleri
+253,02,01,03,,,Tarla ve Bahçe Düzenleme ve Sulama Makineleri
+253,02,01,03,01,,Çim Biçme Makineleri ve Traktörleri
+253,02,01,03,02,,Budama Makineleri
+253,02,01,03,03,,Çit Düzeltme Makineleri
+253,02,01,03,04,,Motorlu Tırpanlar 
+253,02,01,03,05,,Sulama Amaçlı Motorlar
+253,02,01,03,99,,Diğer Tarla ve Bahçe Düzenleme ve Sulama Makineleri
+253,02,01,04,,,Yem İşleme ve Hazırlama Makineleri
+253,02,01,05,,,Set Makineleri
+253,02,01,06,,,Tarım ve Ormancılık Makineleri ve Ekipmanları
+253,02,01,06,05,,Ağaç Kesme Makineleri
+253,02,01,06,06,,Ağaç Sökme Makineleri
+253,02,01,06,07,,Tomruk İstifleme ve Yükleme Makineleri
+253,02,01,06,99,,Diğer Tarım ve Ormancılık Makineleri ve Ekipmanları
+253,02,01,07,,,Hayvancılık Makineleri ve Ekipmanları
+253,02,01,99,,,Diğer Tarım ve Ormancılık Makineleri ve Aletleri
+253,02,02,,,,İnşaat Makineleri ve Aletleri 
+253,02,02,01,,,İnşaat Makineleri
+253,02,02,01,01,,Harç Makineleri
+253,02,02,01,02,,Mozaik Makineleri
+253,02,02,01,03,,Çini ve Fayans Makineleri
+253,02,02,01,04,,Briket İmalinde Kulllanılan Makineler
+253,02,02,01,05,,Harç Tekne ve Kalıpları
+253,02,02,01,06,,"Sıva, Boya, Badana Makineleri"
+253,02,02,01,07,,Dekupaj Makineleri
+253,02,02,01,08,,Titreşim Makineleri
+253,02,02,01,09,,Perdah Makineleri
+253,02,02,01,10,,Betoniyerler
+253,02,02,01,11,,Portatif Kaloriferler
+253,02,02,01,12,,Demir Bükme ve Kesme Makineleri
+253,02,02,01,13,,Zemin Frezeleri
+253,02,02,01,14,,Çivileme Makineleri
+253,02,02,01,15,,Raptiyeleme Zımbalama Makineleri
+253,02,02,01,99,,Diğer İnşaat Makineleri
+253,02,02,02,,,İnşaat Aletleri
+253,02,02,02,01,,El Arabaları
+253,02,02,02,02,,Asma İskeleler
+253,02,02,02,03,,Su Terazileri
+253,02,02,02,04,,Vibratörler
+253,02,02,02,05,,Nivo Aletleri
+253,02,02,02,06,,Beton Test Tabancaları
+253,02,02,02,07,,Merdivenler
+253,02,02,02,08,,Tesviyeci Pergelleri
+253,02,02,02,09,,Raspalama Makineleri
+253,02,02,02,99,,Diğer İnşaat Aletleri
+253,02,02,99,,,Diğer İnşaat Makineleri ve Aletleri 
+253,02,03,,,,Atölye Makineleri ve Aletleri
+253,02,03,01,,,Genel Amaçlı Atölye Makineleri
+253,02,03,01,01,,Torna Tezgahları ve Makineleri
+253,02,03,01,02,,Freze Tezgahları ve Makineleri
+253,02,03,01,03,,Palanya Tezgahları ve Makineleri
+253,02,03,01,04,,Tesviye Tezgahları ve Makineleri
+253,02,03,01,05,,Pres Makineleri
+253,02,03,01,06,,Matkap Makineleri
+253,02,03,01,07,,Kaynak Makineleri
+253,02,03,01,08,,Punto Makineleri
+253,02,03,01,09,,Kesme Makineleri ve Giyotinler
+253,02,03,01,10,,Bileme Makineleri
+253,02,03,01,11,,Bükme ve Kıvırma Makineleri
+253,02,03,01,12,,Kertme Makineleri
+253,02,03,01,13,,Kopya Makineleri
+253,02,03,01,14,,Kordon Makineleri
+253,02,03,01,15,,Klavuz Çekme Makineleri
+253,02,03,01,16,,Diş Çentik Açma Makineleri 
+253,02,03,01,17,,Bobin Sarma Makineleri
+253,02,03,01,18,,Karo Makineleri
+253,02,03,01,19,,Tenekeleme Makineleri
+253,02,03,01,20,,Ezici Makineler
+253,02,03,01,21,,Serigrafi Makineleri
+253,02,03,01,22,,Rötuş Makineleri
+253,02,03,01,23,,Orta Kayıt Alıştırma Makineleri
+253,02,03,01,24,,Taşlama Makineleri
+253,02,03,01,25,,Zımparalama Makineleri
+253,02,03,01,26,,Somun Sıkma Makineleri
+253,02,03,01,27,,Peletleme Makineleri
+253,02,03,01,28,,Örnek Hazırlama Makineleri (Bölücü ve Parçalayıcılar)
+253,02,03,01,29,,Öğütme (Değirmenler) Kırma ve Doldurma Makineleri
+253,02,03,01,30,,Boru Genişleticiler
+253,02,03,01,99,,Genel Amaçlı Diğer Atölye Makineleri
+253,02,03,02,,,Genel Amaçlı Atölye Alet ve Gereçleri
+253,02,03,02,01,,Anahtar Takımları ve Takım Çantaları
+253,02,03,02,02,,Filler Çakısı
+253,02,03,02,03,,Makaslar
+253,02,03,02,04,,Atölye ve El Tabancaları
+253,02,03,02,05,,Takımlar
+253,02,03,02,06,,Mengeneler
+253,02,03,02,07,,Tutucular
+253,02,03,02,08,,Isıl İşlem Aletleri
+253,02,03,02,99,,Diğer Genel Amaçlı Atölye Alet ve Gereçler
+253,02,03,03,,,Marangoz Atölyesi Makine ve Aletleri
+253,02,03,03,01,,Yapıştırma Makineleri
+253,02,03,03,02,,Motorlu Testereler
+253,02,03,03,03,,Panel Ebatlama Makineleri
+253,02,03,03,04,,Temizleme Makineleri
+253,02,03,03,05,,Kesim Makineleri
+253,02,03,03,06,,PVC Makineleri
+253,02,03,03,07,,Hızar Arabaları
+253,02,03,03,08,,Transpoar Tezgahları
+253,02,03,03,09,,Palanyalar
+253,02,03,03,99,, Marangoz Atölyesinde Kullanılan Diğer Makine ve Aletler
+253,02,03,04,,,Oto Tamir Atölyesi Makine ve Aletleri
+253,02,03,04,01,,Kompresyon Ölçerler
+253,02,03,04,02,,Buji Temizleyiciler
+253,02,03,04,03,,Motor Test Makineleri
+253,02,03,04,04,,Kaporta İşleme Makineleri
+253,02,03,04,05,,Oto Tamir Atölyesinde Kullanılan Ölçüm ve Ayar Cihaz ve Aletleri
+253,02,03,04,06,,Muhtelif Tamir Takımları ve Takım Çantaları
+253,02,03,04,99,,Oto Tamir Atölyesinde Kullanılan Diğer Makine ve Aletler
+253,02,03,05,,,Cam İşleme Atölyesi Makine ve Aletleri
+253,02,03,05,01,,Cam İşleme ve Temperleme Makineleri
+253,02,03,05,02,,Cam Kesme Makineleri
+253,02,03,05,03,,Cam Yıkama Presleme Makineleri
+253,02,03,05,04,,Broşlama Makineleri
+253,02,03,05,05,,Cam Taşıma Vantuzları
+253,02,03,05,06,,Bizote Makineleri
+253,02,03,05,07,,Cam Üretim Makineleri
+253,02,03,05,08,,Cam Taşıma Dorseleri
+253,02,03,05,09,,Cam İşleme Aletleri
+253,02,03,05,99,,Cam İşleme Atölyesinde Kullanılan Diğer Makine ve Aletler
+253,02,03,06,,,El Sanatları Atölyesi Makine ve Aletleri
+253,02,03,06,01,,Tekstil Makineleri ve Aletleri
+253,02,03,06,02,,Kuyumculuk Makine ve Aletleri
+253,02,03,06,99,,Diğer El Sanatları Atölyesi Makine ve Aletleri
+253,02,03,99,,,Diğer Atölye Makineleri ve Aletleri
+253,02,04,,,,İş Makineleri ve Aletleri
+253,02,04,01,,,Traktörler
+253,02,04,02,,,Dozerler
+253,02,04,03,,,Vinçler
+253,02,04,04,,,Kepçeler
+253,02,04,05,,,Ekskavatörler
+253,02,04,06,,,Greyderler
+253,02,04,07,,,Asfalt Makineleri
+253,02,04,08,,,Silindirler
+253,02,04,09,,,Kırma Makineleri
+253,02,04,10,,,Eleme Makineleri
+253,02,04,11,,,Betonlama  Makineleri
+253,02,04,12,,,Sondaj Makineleri
+253,02,04,13,,,Yükleyiciler
+253,02,04,14,,,Kaya Kamyonları
+253,02,04,15,,,Ekonomik Üretim Makineleri
+253,02,04,16,,,Motor Yenileme Makineleri
+253,02,04,17,,,Cıvata ve Somun Üretim Makineleri
+253,02,04,18,,,Forklifler
+253,02,04,19,,,Kırıcı ve Deliciler
+253,02,04,20,,,Derz ve Asfalt Kesme Makineleri
+253,02,04,21,,,Maden Makineleri
+253,02,04,22,,,Transpaletler
+253,02,04,23,,,Beko Loderler
+253,02,04,99,,,Diğer İş Makineleri ve Aletleri
+253,02,05,,,,Güç Elektroniği ve Basınçlı Makineler ile Aletleri
+253,02,05,01,,,Sıkıştırma Makineleri (Kompresörler)
+253,02,05,01,01,,Yağlı Kompresörler
+253,02,05,01,02,,Yağsız Kompresörler
+253,02,05,01,03,,Kasnaklı Yağlı Kompresörler
+253,02,05,01,04,,Yağsız Vidalı Kompresörler
+253,02,05,01,05,,Vidalı Sigma Profilli Kompresörler
+253,02,05,01,06,,Vidalı Kompresörler
+253,02,05,01,07,,Medikal Kompresörler
+253,02,05,01,08,,Pistonlu Hava Kompresörleri
+253,02,05,01,09,,Tek/ Çift Kademeli Pistonlu Tip Kompresörler
+253,02,05,01,10,,Teneffüs Havalı Kompresörler
+253,02,05,01,11,,Soğutma Kompresörleri
+253,02,05,01,12,,Alçak Basınç Kompresörleri
+253,02,05,01,13,,Yüksek Basınç Kompresörleri
+253,02,05,01,14,,Direkt Akuple Tek Silindirli Kompresörler
+253,02,05,01,15,,Hermetik Kompresörler
+253,02,05,01,16,,Dişçi Kompresörler
+253,02,05,01,17,,Vakumlu Kompresörler
+253,02,05,01,18,,Seyyar Kompresörler
+253,02,05,01,19,,Kompresör Saatleri
+253,02,05,01,99,,Diğer Sıkıştırma Makineleri (Kompresörler)
+253,02,05,02,,,Pompalar
+253,02,05,03,,,Hidroforlar  
+253,02,05,03,01,,Tek Kademeli Hidroforlar
+253,02,05,03,02,,Çok Kademeli Hidroforlar
+253,02,05,03,03,,Jet Tipi Hidroforlar
+253,02,05,03,04,,Çok Pompalı Yüksek Kapasiteli Hidroforlar
+253,02,05,03,05,,Paslanmaz Çelik Gövdeli Hidroforlar
+253,02,05,03,06,,Komple Paslanmaz Çalik Gövdeli Hidroforlar
+253,02,05,03,07,,Pres Tipi Hidroforlar
+253,02,05,03,08,,Tam Otomatik Dikey Hidroforlar
+253,02,05,03,09,,Hız Kontrollü Hidroforlar
+253,02,05,03,10,,Yangın Hidroforları
+253,02,05,03,11,,Piston Pompalı Hidroforlar
+253,02,05,03,99,,Diğer Hidroforlar
+253,02,05,04,,,Tulumbalar
+253,02,05,04,01,,Emme Basma Tulumbaları
+253,02,05,04,02,,Tazyik Tulumbaları
+253,02,05,04,03,,Dalgıç Tulumbaları
+253,02,05,04,99,,Diğer Tulumbalar
+253,02,05,05,,,Ekovatlar ve Pnömatik Çekiçler
+253,02,05,05,01,,Ekovatlar
+253,02,05,05,02,,Pnömatik Çekiçler
+253,02,05,06,,,Jeneratörler
+253,02,05,06,01,,Dizel Jeneratörler
+253,02,05,06,02,,Benzinli Jeneratörler
+253,02,05,06,03,,Portatif Jeneratörler
+253,02,05,06,99,,Diğer Jenaratörler
+253,02,05,07,,,Kesintisiz Güç Kaynakları
+253,02,05,08,,,Regülatörler
+253,02,05,09,,,Hız Kontrol Birimleri
+253,02,05,09,01,,Motor Hız Kontrol Birimleri
+253,02,05,09,02,,Takojeneratörler
+253,02,05,09,99,,Diğer Hız Kontrol Birimleri
+253,02,05,10,,,Motorlar
+253,02,05,10,01,,Adım Motorlar ( Step Motor )
+253,02,05,10,02,,Asenkron Monofaze Motorlar
+253,02,05,10,03,,Asenkron Trifaze Motorlar
+253,02,05,10,04,,DC (Doğru Akım) Motorlar
+253,02,05,10,05,,Kalem Motorlar
+253,02,05,10,06,,Senkron Motorlar
+253,02,05,10,07,,Servomotorlar
+253,02,05,10,99,,Diğer Motorlar
+253,02,05,11,,,Çeviriciler (Transformatörler)
+253,02,05,12,,,Akü Şarj Sistemleri
+253,02,05,13,,,Kondansatörler ve Ekipmanları
+253,02,05,99,,,Diğer Güç Elektroniği ve Basınçlı Makineler ile Aletleri
+253,02,06,,,,Posta Makineleri
+253,02,06,01,,,Mektup Pullama Makineleri
+253,02,06,02,,,Mektup Açma Makineleri
+253,02,06,03,,,Mektup Damgalama Makineleri
+253,02,06,04,,,İptal Damgası Makineleri
+253,02,06,05,,,Adresleme Makineleri
+253,02,06,06,,,Kağıt Katlama Cihazları
+253,02,06,07,,,Pul Yapıştırma Makineleri
+253,02,06,08,,,Posta Makinesi Donanımları
+253,02,06,09,,,Posta Ücret Ödeme Makineleri
+253,02,06,99,,,Diğer Posta Makineleri
+253,02,07,,,,Paketleme Makineleri
+253,02,07,01,,,Desteleme Makineleri
+253,02,07,02,,,Ambalajlama Makineleri
+253,02,07,03,,,Mühür Baskıları
+253,02,07,04,,,Paket Kapatma Makinesi
+253,02,07,05,,,Bant Germe veya  Tutturma Mekanizmaları
+253,02,07,06,,,Bağlama Makineleri
+253,02,07,07,,,Kart Birleştiriciler
+253,02,07,99,,,Diğer Paketleme Makineleri
+253,02,08,,,,Etiketleme ve Numaralandırma Makineleri
+253,02,08,01,,,Tarihlendirme ve Numaralandırma Makineleri
+253,02,08,02,,,Kimlik Baskı ve Pres Makineleri
+253,02,08,03,,,Etiket Yapıştırma Makineleri
+253,02,08,04,,,Etiket Hazırlama Makineleri
+253,02,08,05,,,Harfleme Ekipmanları
+253,02,08,06,,,Bantlama Makineleri
+253,02,08,07,,,Otomatik Etiketleme Sistemleri
+253,02,08,08,,,Yarı Otomatik Etiketleme Sistemleri
+253,02,08,09,,,Yapışkan Etiket Kutuları
+253,02,08,99,,,Diğer Etiketlendirme ve Numaralandırma Makineleri
+253,02,09,,,,"Ayırma, Sınıflandırma Makineleri"
+253,02,09,01,,,Para Sayma Makineleri
+253,02,09,02,,,Ayırıcılar
+253,02,09,03,,,Bozuk Para  Paketleme Makineleri
+253,02,09,99,,,Diğer Ayırma ve Sınıflandırma Makineleri
+253,02,10,,,,Matbaacılıkta Kullanılan Makine ve Aletler
+253,02,10,01,,,Yazım Makinelerı ve Ekipmanları
+253,02,10,01,01,,Ofset Baskı Makineleri
+253,02,10,01,02,,Tifdruk Baskı Makineleri
+253,02,10,01,03,,İpek Ekran Baskı Makineleri 
+253,02,10,01,04,,UV Rotatif Baskı Makineleri
+253,02,10,01,05,,Fleksografik Baskı Makineleri
+253,02,10,01,06,,Sıcak Damga Baskı Makineleri
+253,02,10,01,07,,Ticari Baskı Uygulamaları İçin İnkjet Baskı Makineleri
+253,02,10,01,08,,Ticari Baskı Uygulamaları İçin Termal Transfer Baskı Makineleri
+253,02,10,01,09,,Laminasyon Makineleri
+253,02,10,01,10,,Laminatör Makineleri
+253,02,10,01,11,,Linotip Ekipmanları
+253,02,10,01,12,,Litografik Baskı Ekipmanları
+253,02,10,01,13,,Tampon Baskı Klişe
+253,02,10,01,99,,Diğer Yazım Makineleri ve Ekipmanları
+253,02,10,02,,,"Zımbalama, Dikim ve Ciltleme Makineleri ile Ekipmanları"
+253,02,10,02,01,,Ciltleme Makineleri
+253,02,10,02,02,,Cilt Presleme Makineleri
+253,02,10,02,03,,Kırım Makineleri
+253,02,10,02,04,,Kesme Makineleri
+253,02,10,02,05,,Delgi Makineleri
+253,02,10,02,06,,Dikme Makineleri
+253,02,10,02,07,,Zımbalama Makineleri
+253,02,10,02,08,,Zımba Dikiş Makineleri
+253,02,10,02,09,,Sarsma Makineleri
+253,02,10,02,10,,Harmanlama Makineleri
+253,02,10,02,11,,Sayfa Düzenleme Makineleri
+253,02,10,02,12,,Kağıt Ayırma Makineleri
+253,02,10,02,13,,Kitap Katlama Makineleri
+253,02,10,02,14,,Kağıt Öğütme Makineleri
+253,02,10,02,15,,Tutkallama Makineleri
+253,02,10,02,16,,Ozalit Makineleri
+253,02,10,02,17,,Ozalit Plan Kopya Makineleri
+253,02,10,02,99,,"Diğer Zımbalama, Dikim ve Ciltleme Makineleri ile Ekipmanları"
+253,02,10,03,,,Dizgi Makineleri
+253,02,10,03,01,,İntertip Dizgi Makineleri
+253,02,10,03,02,,Linotip Dizgi Makineleri
+253,02,10,03,03,,Fotoğraf Dizgi Makineleri
+253,02,10,03,04,,Monotip Dizgi Makineleri
+253,02,10,03,05,,Fototip Tertip Makineleri
+253,02,10,03,99,,Diğer Dizgi Makineleri
+253,02,10,04,,,Kalıp Hazırlama Makineleri ve Ekipmanları
+253,02,10,04,01,,Kalıp Hazırlama Makineleri
+253,02,10,04,02,,Kalıp Maşaları
+253,02,10,04,99,,Diğer Kalıp Hazırlama Makineleri ve Ekipmanları
+253,02,10,05,,,Pliyaj-Bükme Makineleri
+253,02,10,06,,,Pozlandırma Makineleri
+253,02,10,07,,,Kağıt Kesme Makineleri
+253,02,10,07,01,,El Tipi Kağıt Kesme Giyotinleri
+253,02,10,07,02,,Matbaa Tipi Kağıt Kesme Giyotinleri
+253,02,10,99,,,"Diğer Matbaa Makine, Araç ve Gereçleri"
+253,02,10,99,01,,Film Yıkama Cihazları
+253,02,10,99,02,,Film Kurutma Cihazları
+253,02,10,99,03,,Film Sarma Makineleri
+253,02,10,99,04,,Film Baskı Makineleri
+253,02,10,99,05,,Film Aydınlatma ve Ölçme Cihazları
+253,02,10,99,06,,Film Kopya Aletleri
+253,02,10,99,07,,Mürekkep Tabancaları
+253,02,10,99,08,,Tutkal Kazanları
+253,02,10,99,09,,Reflektörler
+253,02,10,99,10,,Recognita-Multi
+253,02,10,99,11,,Renkli Fotomat IIC ve Akrasitor
+253,02,10,99,12,,Leicafleks
+253,02,10,99,13,,Argandizör
+253,02,10,99,14,,Pulser
+253,02,10,99,15,,Poz Saatleri
+253,02,10,99,16,,Işıklı Tabları
+253,02,10,99,17,,Çalışma Tezgahları
+253,02,10,99,18,,Saç Masalar 
+253,02,10,99,19,,Vivitar Sehpaları
+253,02,10,99,99,,Diğerleri
+253,03,,,,,Cihazlar ve Aletler Grubu
+253,03,01,,,,"Yıkama, Temizleme ve Ütüleme Cihaz ve Araçları"
+253,03,01,01,,,Zemin Temizleme Cihazları 
+253,03,01,01,01,,Vakumlu Temizleyiciler
+253,03,01,01,02,,Zemin Süpürme Makineleri
+253,03,01,01,03,,Zemin Yıkama Makineleri
+253,03,01,01,04,,Zemin Kazıyıcılar
+253,03,01,01,05,,Zemin Parlatıcılar
+253,03,01,01,99,,Diğer Zemin Temizleme Cihazları
+253,03,01,02,,,Çamaşır Yıkama ve Kurutma Makineleri ve Ekipmanları
+253,03,01,02,01,,Çamaşır Yıkama Makineleri
+253,03,01,02,02,,Çamaşır Kurutma Makineleri
+253,03,01,02,03,,Kuru Temizleme Cihazları
+253,03,01,02,04,,Leke Çıkarma Cihazları
+253,03,01,02,05,,Çamaşır Makinesi Jeton Üniteleri
+253,03,01,02,06,,Çamaşır Arabaları
+253,03,01,02,99,,Diğer Çamaşır Yıkama ve Kurutma Makineleri ve Ekipmanları
+253,03,01,03,,,Bulaşık Yıkama Makineleri ve Ekipmanları
+253,03,01,04,,,Ütüleme - Katlama Makineleri ve Ekipmanları
+253,03,01,04,01,,Ütü ve Pres Makineleri
+253,03,01,04,02,,Katlama Makineleri
+253,03,01,04,03,,Çamaşır Katlama Tezgahları
+253,03,01,04,99,,Diğer Ütüleme - Katlama Makineleri ve Ekipmanları
+253,03,01,05,,,Oto Yıkama Makineleri
+253,03,01,05,01,,Yüksek Basınçlı Portatif Yıkama Cihazları
+253,03,01,05,02,,Vakumlu Temizliyiciler
+253,03,01,05,99,,Diğer Oto Yıkama Makineleri
+253,03,01,99,,,"Diğer Yıkama, Temizleme ve Ütüleme Cihaz ve Araçları"
+253,03,02,,,,Beslenme/Gıda ve Mutfak Cihaz ve Aletleri
+253,03,02,01,,,Soğutma ve Dondurma Amaçlı Cihazlar
+253,03,02,01,01,,Buzdolapları
+253,03,02,01,02,,Dondurucular
+253,03,02,01,03,,Dondurma Makineleri
+253,03,02,01,99,,Diğer Soğutma ve Dondurma Amaçlı Cihazlar
+253,03,02,02,,,Pişirme ve Isıtma Amaçlı Cihazlar
+253,03,02,02,01,,Fırınlar
+253,03,02,02,02,,Ocaklar
+253,03,02,02,03,,Yemek Isıtma Makineleri
+253,03,02,02,04,,Şofbenler
+253,03,02,02,05,,Elektrikli Su Isıtıcıları
+253,03,02,02,06,,Elektrikli Barbeküler
+253,03,02,02,07,,Elektrikli Izgaralar
+253,03,02,02,08,,Elektrikli Tost Makineleri
+253,03,02,02,09,,Yumurta Kaynatma Makineleri
+253,03,02,02,10,,Elektrikli Tavalar
+253,03,02,02,99,,Diğer Pişirme ve Isıtma Amaçlı Cihazlar
+253,03,02,03,,,Kızartma Amaçlı Cihazlar
+253,03,02,03,01,,Fritözler
+253,03,02,03,02,,Ekmek Kızartma Makineleri
+253,03,02,03,03,,Piliç Kızartma Makineleri
+253,03,02,03,04,,Elektrikli Kızartma Tencereleri
+253,03,02,03,99,,Diğer Kızartma Amaçlı Cihazlar
+253,03,02,04,,,"Karıştırma, Sıkma ve Dilimleme Amaçlı Cihazlar"
+253,03,02,04,01,,Mikserler
+253,03,02,04,02,,Blenderlar 
+253,03,02,04,03,,Mutfak Robotları
+253,03,02,04,04,,Meyve Sıkacakları
+253,03,02,04,99,,"Diğer Karıştırma, Sıkma ve Dilimleme Amaçlı Cihazlar"
+253,03,02,05,,,Havalandırma Amaçlı Cihazlar
+253,03,02,05,01,,Davlumbazlar
+253,03,02,05,02,,Aspiratörler ve Fanlar
+253,03,02,05,99,,Diğer Havalandırma Amaçlı Cihazlar
+253,03,02,06,,,"Öğütme, Kıyma ve Püre Yapma Amaçlı Cihazlar"
+253,03,02,06,01,,Çöp Öğütme Makineleri
+253,03,02,06,02,,Püre Makineleri
+253,03,02,06,03,,Kıyma Makineleri
+253,03,02,06,04,,Sebze Doğrama Makineleri
+253,03,02,06,05,,Biber veya Tuz Öğütücüsü veya Değirmenleri
+253,03,02,06,06,,Kahve Öğütücüleri
+253,03,02,06,99,,"Diğer Öğütme, Kıyma ve Püre Yapma Amaçlı Cihazlar"
+253,03,02,07,,,İçecek Hazırlama Makineleri
+253,03,02,07,01,,Kahve Makineleri
+253,03,02,07,02,,Çay Makineleri
+253,03,02,07,03,,Kapuçino ve Ekspresso Makineleri
+253,03,02,07,04,,Milkshake Makineleri
+253,03,02,07,99,,Diğer İçecek Hazırlama Makineleri
+253,03,02,99,,,Diğer Cihaz ve Makineler
+253,03,02,99,01,,Vakum Makineleri
+253,03,02,99,02,,Ekmek Yapma Makineleri
+253,03,02,99,03,,Hamur Yoğurma Makineleri
+253,03,02,99,04,,Yoğurt Yapma Makineleri
+253,03,02,99,05,,Kurabiye Makineleri
+253,03,02,99,06,,Sebze ve Meyve Soyma Makineleri
+253,03,02,99,07,,Elektrikli Konserve Açacakları
+253,03,02,99,08,,Elektrikli Bıçaklar
+253,03,02,99,09,,Mutfak veya Gıda Termometreleri
+253,03,02,99,10,,Su Isıtıcıları ve Soğutucuları
+253,03,02,99,11,,Mısır Patlatma Makineleri
+253,03,02,99,12,,Pamuk Şeker Makineleri ve Donanımları
+253,03,02,99,13,,Sebze ve Meyve Yıkama Makineleri
+253,03,02,99,14,,Bulaşık Küveti
+253,03,02,99,15,,Yukarıdaki Gruplarda Sınıflandırılamayan Diğer Cihaz ve Makineler
+253,03,03,,,,Kurtarma Amaçlı Cihaz ve Aletler
+253,03,03,01,,,Deprem ve Göçükte Kullanılan Cihazlar
+253,03,03,02,,,"Dağcılık, Arama ve Kurtarmada Kullanılan Cihazlar ve Ekipmanlar "
+253,03,03,99,,,Kurtarma Amaçlı Diğer Cihaz ve Aletler
+253,03,04,,,,"Ölçüm, Tartı, Çizim Cihazları ve Aletleri"
+253,03,04,01,,,"Ağırlık, Hacim, Uzunluk ve Mesafe Ölçme Cihaz ve Aletleri"
+253,03,04,01,01,,"Ağırlık  Ölçme Cihaz, Alet ve Ekipmanları"
+253,03,04,01,02,,Uzunluk Ölçme Cihaz ve Aletleri
+253,03,04,01,03,,Mesafe ve Yükseklik Ölçme Cihaz ve Aletleri
+253,03,04,01,04,,Hacim Ölçme Cihaz ve Aletleri
+253,03,04,02,,,Hassas Ölçü Aletleri
+253,03,04,02,01,,Mikrometreler
+253,03,04,02,02,,Kumpaslar
+253,03,04,02,03,,Mihengirler
+253,03,04,02,04,,Komparatörler
+253,03,04,02,05,,İndikatörler
+253,03,04,02,99,,Diğer Hassas Ölçü Aletleri
+253,03,04,03,,,Açı ve Eğim Ölçme Cihazları
+253,03,04,03,01,,Gonimetreler
+253,03,04,03,02,,Gönyeler 
+253,03,04,03,03,,Pergeller
+253,03,04,03,04,,Klizimetre
+253,03,04,03,99,,Diğer Açı ve Eğim Ölçme Cihazları
+253,03,04,04,,,Nem ve Yoğunluk Ölçme ve Kontrol Cihazları
+253,03,04,05,,,Elektrik/Elektronik Konusu Ölçüm Cihazları
+253,03,04,05,01,,Ampermetreler
+253,03,04,05,02,,Voltmetreler-Manovoltmetreler
+253,03,04,05,03,,Multimetreler ( Avometreler )
+253,03,04,05,04,,Analizörler
+253,03,04,05,05,,Çeviriciler ( Konvertörler )
+253,03,04,05,06,,Çoklayıcılar ( Multiplexer )
+253,03,04,05,07,,Direnç Ölçerler
+253,03,04,05,08,,Elektrik Şebekesi Özel Test ve Ölçme Cihazları
+253,03,04,05,09,,Elektromagnetik Özellikleri Ölçme ve Test Cihazları
+253,03,04,05,10,,Fluksmetreler ( Akı Ölçer )
+253,03,04,05,11,,Empedans Ölçme Cihazları
+253,03,04,05,12,,Emülatörler
+253,03,04,05,13,,Endüktans ve Kapasitans Ölçme Cihazları
+253,03,04,05,14,,Entegre Devre Test Cihazları ( Yarı İletken Test Cihazları )
+253,03,04,05,15,,Gerilim Kontrol Cihazları
+253,03,04,05,16,,Güç Ölçerler
+253,03,04,05,17,,Gürültü Ölçerler
+253,03,04,05,18,,Hata Ölçme Düzenleri
+253,03,04,05,19,,"İşaret Üreteçleri, Tarayıcılar"
+253,03,04,05,20,,Kalibrasyon Cihazlar
+253,03,04,05,21,,Karakteristik Ölçerler
+253,03,04,05,22,,Kaydediciler
+253,03,04,05,23,,"Kazanç, Zayıf. Grup Gecikme ve Distorisyon Ölçme Düzenekleri"
+253,03,04,05,24,,Kodlayıcılar
+253,03,04,05,25,,Kuvvetlendiriciler ( Amplifikatörler )
+253,03,04,05,26,,Akım Kuvvetlendiricileri
+253,03,04,05,27,,Mikrodalga Ölçme Test Cihazları
+253,03,04,05,28,,Frekansmetreler
+253,03,04,05,29,,Osilatörler
+253,03,04,05,30,,Osiloskoplar
+253,03,04,05,31,,Q-Metreler
+253,03,04,05,32,,Sayıcılar
+253,03,04,05,33,,Sentetizörler
+253,03,04,05,34,,Simülatörler
+253,03,04,05,35,,Vektörskoplar
+253,03,04,05,36,,Veri Toplayıcılar
+253,03,04,05,37,,Zayıflatıcılar
+253,03,04,05,99,,Diğer Elektrik/Elektronik Konusu Ölçüm Cihazları
+253,03,04,06,,,Çizim Cihazları
+253,03,04,99,,,"Diğer Ağırlık, Hacim, Uzunluk ve Mesafe Ölçme Cihaz ve Aletleri"
+253,03,05,,,,Tıbbi ve Biyolojik Amaçlı Kullanılan Cihazlar ve Aletler 
+253,03,05,01,,,Genel Amaçlı Tıbbi Cihazlar ve Aletler
+253,03,05,02,,,Mikro Biyoloji ve Gen Transfer Cihazları
+253,03,05,03,,,Moleküler Biyoloji Özel Çalışma Cihazları
+253,03,05,04,,,Kültür Ortam Cihazları 
+253,03,05,05,,,Sentezleyiciler
+253,03,05,06,,,Cerrahi (Ameliyathane) Amaçlı Kullanılan Cihaz ve Aletler
+253,03,05,07,,,Cildiye-Puva Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,08,,,Diş Hekimliği Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,09,,,Fizik Tedavi Ünitesi Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,10,,,Gastroentoloji Ünitesi Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,11,,,Göğüs Hastalıkları Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,12,,,Göz Hastalıkları Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,13,,,KBB Hastalıkları Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,14,,,Kadın Hastalıkları Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,15,,,Kardiyolojı-Anjiyo Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,16,,,Üroloji-Taşkırma Ünitesi Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,17,,,Nükleer Tıp Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,18,,,Radyasyon Onkolojisi Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,19,,,Çocuk Servisi Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,20,,,Patoloji Teşhis ve Tedavi Cihaz ve Aletleri
+253,03,05,21,,,Kan Bankası Cihazları
+253,03,05,22,,,Biyolojik Araştırmada Kullanılan Cihaz ve Aletler
+253,03,05,98,,,Veterinerlikte Kullanılan Cihaz ve Aletler
+253,03,05,99,,,Diğer İhtisas Bölümlerinde Kullanılan Tıbbi Cihaz ve Aletler
+253,03,06,,,,Araştırma ve Üretim Amaçlı Cihazları ve Aletleri 
+253,03,06,01,,,Kimyasal Analiz Cihazları
+253,03,06,01,02,,Fraksiyon Kollektörleri
+253,03,06,01,03,,Korozyon Test Cihazları
+253,03,06,01,04,,Kromotografi Cihazları
+253,03,06,01,05,,Oksijenmetreler
+253,03,06,01,06,,Resprometreler-Pyrometreler
+253,03,06,01,07,,Sedimantasyon Test Cihazları
+253,03,06,01,08,,Spektrometreler/Spektrofotometreler/ Difraktometreler
+253,03,06,01,99,,Diğer Kimyasal Analiz Cihazları
+253,03,06,02,,,Fiziksel Özellikleri Ölçme ve Test Cihazları
+253,03,06,02,01,,Sertlik Ölçerler ( Dürometreler )
+253,03,06,02,02,,Bulanıklık Ölçerler
+253,03,06,02,03,,Deformasyon Test Cihazları
+253,03,06,02,04,,Doku Ölçme Cihazları
+253,03,06,02,05,,Elipsometreler
+253,03,06,02,06,,"Erime, Kaynama, Donma, Yanma Noktası Tayin Cihazları"
+253,03,06,02,07,,Ferrit Oranı Pıezoelektrik Özellikleri Ölçme Cihazları
+253,03,06,02,08,,Geçirgenlik Ölçerler
+253,03,06,02,09,,Termal Analiz ve Isıl Özellikleri Ölçme Cihazları
+253,03,06,02,10,,Metal Tabaka Direnci Ölçerler
+253,03,06,02,11,,Partikül Ölçerler ( Coulter Counter )
+253,03,06,02,12,,Polariskoplar
+253,03,06,02,13,,Potensiyostatlar
+253,03,06,02,14,,Soyulma Test Cihazları
+253,03,06,02,15,,"Sıcaklık, İletkenlik ve PH Ölçme Cihazları"
+253,03,06,02,16,,Tuzluluk Oranı Ölçerler ( Salinometreler )
+253,03,06,02,17,,Spektrometreler-Difraktometreler
+253,03,06,02,18,,Vizkozimetreler
+253,03,06,02,19,,Sürtünme Test Cihazları
+253,03,06,02,20,,Tahribatsız Muayene Cihazları
+253,03,06,02,21,,Renk Ölçerler ( Tintometreler ) Uzama Ölçerler
+253,03,06,02,22,,Örnekleyiciler
+253,03,06,02,23,,Vakum Ölçme Cihazları
+253,03,06,02,24,,Akış Ölçerler ( Flowmetreler )
+253,03,06,02,25,,Yüzey Alanı Ölçme Cihazları
+253,03,06,02,26,,Basınç Ölçme Cihazları
+253,03,06,02,27,,Yıkama ve Ovalama Cihazları
+253,03,06,02,28,,Hız Ölçüm Cihazları
+253,03,06,02,29,,Gaz Ölçüm Cihazları
+253,03,06 ,02,30,,Tarım ve Alet Makineleri Test Cihazları
+253,03,06,02,31,,Oto Test Cihazları
+253,03,06,02,32,,İnşaat Test ve Ölçüm Cihaz ve Setleri
+253,03,06,02,99,,Diğer Fiziksel Özellikleri Ölçme ve Test Cihazları
+253,03,06,03, ,,"Kimyasal, Fiziksel ve Fiziko Kimyasal Cihazlar"
+253,03,06,03,01,,"Etüvler, İnkübatörler ve Durulayıcı Kurutucular"
+253,03,06,03,02,,Fermentörler
+253,03,06,03,03,,Ayırıcılar ( Ekstraktörler ) Elektrodializ Cihazları
+253,03,06,03,04,,"Aşındırıcılar, Parlatıcılar ve Dağlayıcılar"
+253,03,06,03,05,,Akışkan Yataklar
+253,03,06,03,06,,Besleyiciler
+253,03,06,03,07,,Baskı Devre Hazırlama Düzenleri
+253,03,06,03,08,,"Evaparatörler, Buharlaştırıcılar"
+253,03,06,03,09,,Cevher Zenginleştirme Cihazları
+253,03,06,03,10,,Damıtma ( Distilasyon ) Cihazları ve Damlatıcılar
+253,03,06,03,11,,Elektroforez Cihazları
+253,03,06,03,12,,İncelticiler
+253,03,06,03,13,,"Kaplama, Kalıplama Cihazları"
+253,03,06,03,14,,Kristalizatörler
+253,03,06,03,15,,"Otoklavlar, Sterilizatörler"
+253,03,06,03,16,,Pülverizatörler
+253,03,06,03,17,,Püskürtücüler ( Eksruder )
+253,03,06,03,18,,"Saflaştırıcılar, Gaz Temizleyiciler"
+253,03,06,03,19,,Santrifüjler
+253,03,06,03,20,,Titratörler
+253,03,06,03,21,,Ultrafiltrasyon Cihazları
+253,03,06,03,22,,Yakma Cihazları
+253,03,06,03,23,,Rotovaporlar
+253,03,06,03,24,,Homojenizatörler
+253,03,06,03,99,,"Diğer Kimyasal, Fiziksel ve Fiziko Kimyasal Cihazlar"
+253,03,06,04,,,Laboratuvar ve Hastane Tipi Isıtıcılar ve Soğutucular
+253,03,06,04,01,,Laboratuvar Tipi Isıtıcılar ve Isı Reflektörleri
+253,03,06,04,02,,LaboratuvarTipi Fırınlar
+253,03,06,04,03,,Laboratuvar Tipi Soğutucular
+253,03,06,04,99,,Diğer Laboratuvar ve Hastane Tipi Isıtıcılar ve Soğutucular
+253,03,06,05,,,Metalürjik Analiz ve Test Cihazları
+253,03,06,05,01,,İzabe ve Kristal Çekme Cihazları
+253,03,06,05,02,,Ergitme Cihazları
+253,03,06,05,03,,Döküm Çamurları Test Dolapları
+253,03,06,05,04,,Düaloskoplar
+253,03,06,05,05,,Flatasyon Hücre Cihazları
+253,03,06,05,06,,Kabuk Kalıp Test Cihazları
+253,03,06,05,07,,Magnetik Özellikler Test Cihazları
+253,03,06,05,08,,Mekanik Özellikler Test Cihazları ve Durometreler
+253,03,06,05,09,,Metalograflar
+253,03,06,05,10,,Sınıflandırıcılar
+253,03,06,05,11,,Tane İrilik Dağılımı Analiz Cihazları
+253,03,06,05,99,,Diğer Metalürjik Analiz ve Test Cihazları
+253,03,06,06,,,Optik ve Eketrooptik Cihazlar ve Aletler
+253,03,06,06,01,,Elektron Mikroskopları
+253,03,06,06,02,,Optik Mikroskoplar
+253,03,06,06,03,,"Dilimleyiciler, Optik - Elektronik"
+253,03,06,06,04,,Enterferometreler
+253,03,06,06,05,,Dedektörler
+253,03,06,06,06,,Lazerler
+253,03,06,06,07,,Optik Lif Enstrümantasyonları
+253,03,06,06,08,,Optometreler
+253,03,06,06,09,,Radyografik Muayene Cihazları 
+253,03,06,06,10,,Refraktometreler
+253,03,06,06,99,,Diğer Optik ve Eketrooptik Cihazlar ve Aletler
+253,03,06,07,,,Gıda ve Beslenme Konusu Cihaz ve Aletler
+253,03,06,07,01,,Emülsiyon Kapasitesi Ölçme Düzenleri
+253,03,06,07,02,,Penetrometreler
+253,03,06,07,03,,Planimetreler
+253,03,06,07,04,,Straktoragraflar
+253,03,06,07,05,,Vitoskoplar
+253,03,06,07,06,,Hamur Kabartma Kaydedicileri
+253,03,06,07,99,,Diğer Gıda ve Beslenme Konusu Cihaz ve Aletler
+253,03,06,08,,,Meteoroloji Bilimi Cihazları
+253,03,06,08,01,,Rüzgar Ölçüm Setleri
+253,03,06,08,02,,Rüzgar Türbinleri
+253,03,06,08,03,,Hava Radyo Alıcıları
+253,03,06,08,04,,Hava İstasyonları
+253,03,06,08,99,,Diğer Meteoroloji Bilimi Cihazları
+253,03,06,09,,,Yer Bilimleri
+253,03,06,09,01,,Sismik Hareket Algılama ve Kaydetme Cihazları
+253,03,06,09,02,,GPS Cihazları ve Kayıtçılar
+253,03,06,09,03,,Gaz Ölçüm Cihazları
+253,03,06,09,04,,Yer İstasyonlar
+253,03,06,09,05,,Sayısallaştırıcılar
+253,03,06,09,06,,Petrol ve Jeo Kimyası Cihazlarları
+253,03,06,09,07,,Kaya ve Katman Ölçüm Araçları
+253,03,06,09,08,,Toprak Ölçüm Araçları
+253,03,06,09,99,,Diğer Yer Bilimleri Cihaz ve Aletleri
+253,03,06,10,,,Çevre Bilimleri Ölçüm ve Test Cihazları
+253,03,06,10,01,,Emisyon Ölçme Cihazları
+253,03,06,10,02,,Katı Atık Analiz Cihazları
+253,03,06,10,03,,Sıvı Yakıt ( Petrol Ürünleri ) Analiz Cihazları
+253,03,06,10,04,,Katı Yakıt ( Kömür ) Analiz Cihazları
+253,03,06,10,05,,Su ve Atık Su Analiz Cihazları
+253,03,06,10,06,,Yaşlandırma Cihazları
+253,03,06,10,07,,Yakıt Pilleri
+253,03,06,10,08,,Güneş Işını Ölçerler ( Piranometreler )
+253,03,06,10,09,,Albedometreler
+253,03,06,10,99,,Diğer Çevre Bilimleri Ölçüm ve Test Cihazları
+253,03,06,11,,,Deniz Bilimleri ( Oşinografi ) Cihaz ve Aletleri
+253,03,06,11,01,,"CTD Problar, Sıcaklık, Tuzluluk Ölçerler"
+253,03,06,11,02,,Işık Ölçerler
+253,03,06,11,03,,Sıvı Sintilasyon Sayaçları
+253,03,06,11,04,,Toksitite Ölçüm Cihazları ( Bakteriyel-Toxalert )
+253,03,06,11,05,,Deniz Suyu Örnekleyicileri
+253,03,06,11,06,,Akıntı Ölçerler
+253,03,06,11,07,,Seki Diskleri
+253,03,06,11,08,,Analiz Cihazları-Oşinografi
+253,03,06,11,09,,Çamur Örnekleyicileri
+253,03,06,11,10,,Süzücüler
+253,03,06,11,11,,Tortu Tayin Cihazları
+253,03,06,11,99,,Diğer Deniz Bilimleri ( Oşinografi ) Cihaz ve Aletleri
+253,03,06,12,,,Akustik ve Elektro Akustik Cihazlar
+253,03,06,12,01,,Ses Seviye Ölçerler
+253,03,06,12,02,,Transdüserler
+253,03,06,12,03,,Hidrofonlar
+253,03,06,12,04,,Akustik Kaynaklar
+253,03,06,12,99,,Diğer Akustik ve Elektro Akustik Cihazlar
+253,03,06,99,,,Diğer Araştırma ve Üretim Amaçlı Laboratuvar Cihaz ve Aletleri 
+253,03,07,,,,Müzik Aletleri ve Aksesuarları
+253,03,07,01,,,Klavyeli Enstrümanlar
+253,03,07,01,01,,Piyanolar
+253,03,07,01,02,,Akordiyonlar
+253,03,07,01,03,,Orglar
+253,03,07,01,04,,Çelestalar
+253,03,07,01,99,,Diğer Klavyeli Enstrümanlar
+253,03,07,02,,,Prinç Çalgılar
+253,03,07,02,01,,Trompetler
+253,03,07,02,02,,Trombonlar
+253,03,07,02,03,,Suzafonlar
+253,03,07,02,04,,Saksafonlar
+253,03,07,02,05,,Düdükler
+253,03,07,02,06,,Borular
+253,03,07,02,07,,Alaşımlı Çalgılar
+253,03,07,02,08,,Kornolar
+253,03,07,02,09,,Melofonlar
+253,03,07,02,10,,Alto Kornolar
+253,03,07,02,11,,Bariton Kornolar
+253,03,07,02,12,,Büğlüler
+253,03,07,02,99,,Diğer Prinç Çalgılar
+253,03,07,03,,,Tahtadan Yapılmış Nefesli Çalgılar
+253,03,07,03,01,,Klarnetler
+253,03,07,03,02,,Obualar
+253,03,07,03,03,,Flütler
+253,03,07,03,04,,Küçük Flütler
+253,03,07,03,05,,Kornetler
+253,03,07,03,06,,Tulumlar
+253,03,07,03,07,,Mızıkalar
+253,03,07,03,08,,Kazoolar
+253,03,07,03,09,,İngiliz Kornoları
+253,03,07,03,10,,Okarinalar
+253,03,07,03,99,,Tahtadan Yapılmış Diğer Nefesli Çalgılar 
+253,03,07,04,,,Yaylı ve Telli Çalgılar
+253,03,07,04,01,,Harpsikordlar
+253,03,07,04,02,,Klavikordlar
+253,03,07,04,03,,Gitarlar
+253,03,07,04,04,,Kemanlar
+253,03,07,04,05,,Arplar
+253,03,07,04,06,,Bançolar
+253,03,07,04,07,,Mandolinler
+253,03,07,04,08,,Viyolonseller
+253,03,07,04,09,,Baslar
+253,03,07,04,10,,Sazlar
+253,03,07,04,11,,Udlar
+253,03,07,04,12,,Kemençeler
+253,03,07,04,99,,Yaylı ve Telli Diğer Çalgılar 
+253,03,07,05,,,Vurmalı Çalgılar
+253,03,07,05,01,,Ziller
+253,03,07,05,02,,Çanlar
+253,03,07,05,03,,Tefler
+253,03,07,05,04,,Kastanyetler
+253,03,07,05,05,,Davullar ve Trampetler
+253,03,07,05,06,,Ksilifonlar
+253,03,07,05,07,,Vibrafonlar
+253,03,07,05,08,,Dümbelek ve Darbukalar
+253,03,07,05,09,,Marimbalar
+253,03,07,05,99,,Vurmalı Diğer Çalgılar
+253,03,07,06,,,Müzik Aleti Parçaları ve Aksesuarları
+253,03,07,06,01,,Metronomlar
+253,03,07,06,02,,Kamışlar
+253,03,07,06,03,,Akort Anahtarları
+253,03,07,06,04,,Müzik Aleti Sehpaları veya Nota Sehpaları
+253,03,07,06,05,,Yaylı Çalgılar İçin Aksesuarlar
+253,03,07,06,06,,Vurmalı Çalgılar İçin Aksesuarlar
+253,03,07,06,07,,Müzik Kutuları veya Mekanizmaları
+253,03,07,06,08,,Ağızlıklar
+253,03,07,06,09,,"Müzik Aleti Keseleri, Kutuları veya Aksesuaları"
+253,03,07,06,10,,Susturucular
+253,03,07,06,12,,Orkestra Şefi Çubukları
+253,03,07,06,99,,Diğer Müzik Aletleri ve Aksesuarları
+253,03,07,07,,,Çalgı Setleri
+253,03,07,08,,,Alternatif Sesli Çalgılar
+253,03,07,08,01,,Boomwhackers Gümbürtülü Çalgılar
+253,03,07,08,02,,Ritim Çalgıları
+253,03,07,08,99,,Diğer Alternatif Sedli Çalgılar
+253,03,07,09,,,Müzik ve Dans Aksesuarları
+253,03,07,09,01,,Dans Pantalonları
+253,03,07,09,02,,Ritim veya Ölçü Çubukları
+253,03,07,09,03,,Ritim Değnekleri veya Çemberleri
+253,03,07,09,99,,Diğer Müzik ve Dans Aksesuarları
+253,03,07,99,,,Diğer Müzik Aletleri ve Aksesuarları
+253,03,08,,,,Spor Amaçlı Kullanılan Cihaz ve Aletler
+253,03,08,01,,,Kondisyon Cihazları
+253,03,08,01,01,,Elektronik Koşu ve Yürüme Bantları
+253,03,08,01,02,,Elektronik Bisikletler
+253,03,08,01,99,,Diğer Kondisyon Cihazları
+253,03,08,02,,,Vücut Analiz Cihazları
+253,03,08,02,01,,Yağ Monitörleri
+253,03,08,02,02,,Yağ ve Sıvı Analiz Cihazları
+253,03,08,02,99,,Diğer Vucut Analiz Cihazları
+253,03,08,99,,,Diğer Spor Amaçlı Kullanılan Cihaz ve Aletler
+254,,,,,,Taşıtlar Grubu
+254,01,,,,,Karayolu Taşıtları Grubu
+254,01,01,,,,Otomobiller
+254,01,01,01,,,Makam Araçları
+254,01,01,02,,,Hizmet Araçları
+254,01,02,,,,Yolcu Taşıma Araçları
+254,01,02,01,,,Otobüsler
+254,01,02,02,,,Minibüsler
+254,01,02,03,,,Midibüsler
+254,01,02,04,,,Minivanlar veya Vanlar
+254,01,02,99,,,Diğer Yolcu Taşıma Araçları
+254,01,03,,,,Yük Taşıma Araçları
+254,01,03,01,,,Tırlar 
+254,01,03,02,,,Kamyonlar
+254,01,03,03,,,Kamyonetler
+254,01,03,04,,,Kargo Kamyonları
+254,01,03,05,,,Pick-uplar
+254,01,03,99,,,Diğer Yük Taşıma Araçları
+254,01,04,,,,Arazi Taşıtları
+254,01,04,01,,,Binek Arazi Taşıtları
+254,01,04,02,,,Kaptı Kaçtı Arazi Taşıtları
+254,01,04,99,,,Diğer Arazi Taşıtları
+254,01,05,,,,Özel Amaçlı Taşıtlar
+254,01,05,01,,,Ambulanslar
+254,01,05,02,,,Cenaze Araçları
+254,01,05,03,,,İtfaiyeler
+254,01,05,04,,,Çekme ve Kurtarma Amaçlı Taşıtlarlar
+254,01,05,05,,,Yol Süpürme ve Yıkama Taşıtları
+254,01,05,06,,,Can Kurtaranlar
+254,01,05,07,,,Tankerler
+254,01,05,08,,,Arazözler
+254,01,05,09,,,Vidanjörler
+254,01,05,10,,,Çöp Kamyonları
+254,01,05,11,,,Çöp Yıkama Fırınları
+254,01,05,12,,,Uydu Sistemleri ve Bilgisayarlar ile Donatılmış Özel Amaçlı Taşıtlar
+254,01,05,99,,,Diğer Özel Amaçlı Taşıtlar
+254,01,06,,,,Mopet ve Motosikletler
+254,01,06,01,,,Mopetler
+254,01,06,02,,,Motosikletler
+254,01,06,03,,,Motorlu Bisikletler
+254,01,07,,,,Motorsuz Kara Araçları
+254,01,07,01,,,Bisikletler
+254,01,07,02,,,Römorklar
+254,01,07,03,,,Çekili Karavanlar
+254,01,07,99,,,Diğer Motorsuz Kara Taşıtları
+254,02,,,,,Su ve Deniz Taşıtları Grubu
+254,02,01,,,,Gemiler
+254,02,01,01,,,Uçak Gemileri
+254,02,01,02,,,Balıkçı Gemileri
+254,02,01,03,,,"Yük Gemileri, Şilepler"
+254,02,01,04,,,Mavnalar
+254,02,01,05,,,Kruvaziyer
+254,02,01,06,,,Kurtarma Gemileri
+254,02,01,07,,,Yangın Söndürme Gemileri
+254,02,01,08,,,Sismik Gemiler
+254,02,01,99,,,Diğer Gemiler
+254,02,02,,,,Tankerler
+254,02,03,,,,Deniz Altılar
+254,02,04,,,,Römorkörler ve İtici Gemiler
+254,02,05,,,,Yüzer Yapılar
+254,02,05,01,,,Yüzer Vinçler
+254,02,05,02,,,Yüzer Platformlar
+254,02,05,03,,,Yüzer veya Dalabilen Sondaj ve Üretim Platformları
+254,02,05,99,,,Diğer Yüzer Yapılar
+254,02,06,,,,Tekneler
+254,02,06,01,,,Balıkçılık Tekneleri
+254,02,06,02,,,Sürat Tekneleri
+254,02,06,03,,,Spor Amaçlı Tekneler
+254,02,06,04,,,Şişirilebilir Tekneler
+254,02,06,99,,,Diğer Tekneler
+254,02,07,,,,Botlar
+254,02,07,01,,,Petrol veya Gaz Tankeri Mürettebatı Botu
+254,02,07,02,,,Motor Botlar
+254,02,07,99,,,Diğer Botlar
+254,02,08,,,,Yelkenliler
+254,02,09,,,,Kanolar ve Kayıklar
+254,02,10,,,,Yatlar ve Kotralar
+254,02,11,,,,Sandallar ve Sallar
+254,03,,,,,Hava Taşıtları Grubu
+254,03,01,,,,Motorlu Hava Taşıtları
+254,03,01,01,,,Uçaklar
+254,03,01,01,01,,Sabit Kanatlı Tarım Uçakları
+254,03,01,01,02,,Pervaneli Kargo Uçakları
+254,03,01,01,03,,Deniz Uçakları
+254,03,01,01,04,,Ticari Pervaneli Yolcu Uçakları
+254,03,01,01,05,,Jet Kargo Uçakları
+254,03,01,01,06,,Ticari Jet Yolcu Uçakları
+254,03,01,01,07,,Pervaneli Özel Uçaklar veya İş Uçakları
+254,03,01,01,08,,Jet Özel Uçaklar veya İş Uçakları
+254,03,01,01,99,,Diğer Uçaklar
+254,03,01,02,,,Helikopterler
+254,03,01,02,01,,Yolcu Taşıma Helikopterleri
+254,03,01,02,02,,Kargo Taşıma Helikopterleri
+254,03,01,02,03,,Tarım Helikopterleri
+254,03,01,02,04,,Ambulans Helikopter veya Kurtarma Helikopterleri
+254,03,01,02,99,,Diğer Helikopterler
+254,03,01,99,,,Diğer Motorlu Hava Taşıtları
+254,03,02,,,,Motorsuz Hava Taşıtları
+254,03,02,01,,,Planörler
+254,03,02,02,,,Balonlar
+254,03,02,03,,,Hava Gemileri
+254,03,02,99,,,Diğer Motorsuz Hava Taşıtları
+254,03,03,,,,Uzay Araçları
+254,03,03,01,,,Uzay Gemileri
+254,03,03,01,01,,İnsanlı Uzay Araçları
+254,03,03,01,02,,Uzay Aracı Yapıları
+254,03,03,02,,,Uydular
+254,03,03,02,01,,Haberleşme Uyduları
+254,03,03,02,02,,Hava Uyduları
+254,03,03,02,03,,Bilimsel veya Araştırma Uyduları
+254,03,03,02,04,,Seyrüsefer Uyduları
+254,03,03,02,05,,Yerdurağan Uydular
+254,03,03,02,06,,Alçak Yörünge Uyduları
+254,03,03,02,07,,Güneş Eş Zamanlı Yörünge Uyduları
+254,03,03,02,08,,Jeosenkronize Uydular
+254,03,03,02,99,,Diğer Uydular
+254,04,,,,,Demiryolu ve Tramvay Taşıtları Grubu
+254,04,01,,,,Lokomotifler ve Elektrikli Troleybüsler
+254,04,01,01,,,Yük Lokomotifleri
+254,04,01,02,,,Yolcu Lokomotifleri
+254,04,01,03,,,Troleybüsler
+254,04,01,04,,,Tramvaylar
+254,04,01,99,,,Diğer Lokomotifler ve Elektrikli Troleybüsler
+254,04,02,,,,Demiryolu Araçları
+254,04,02,01,,,Yük Vagonları
+254,04,02,02,,,Tanker Vagonları
+254,04,02,03,,,Yolcu Vagonları
+254,04,02,04,,,Depo Vagonlar
+254,04,02,05,,,Treyler
+254,04,02,99,,,Diğer Demiryolu Araçları
+255,,,,,,Demirbaşlar Grubu
+255,01,,,,,Döşeme ve Mefruşat Grubu
+255,01,01,,,,Döşeme Demirbaşları
+255,01,01,01,,,Halılar ve Yolluklar
+255,01,01,01,01,,İpek Halılar
+255,01,01,01,02,,Zemin Halıları
+255,01,01,01,03,,Yün Halılar
+255,01,01,01,04,,Pamuklu Halılar
+255,01,01,01,05,,Sentetik Halılar
+255,01,01,01,06,,Örgü Halılar
+255,01,01,01,07,,Yolluklar
+255,01,01,01,99,,Diğer Halılar ve Yolluklar
+255,01,01,02,,,Mefruşat Ürünleri
+255,01,01,02,01,,Yataklar
+255,01,01,02,02,,Yorganlar
+255,01,01,02,03,,Battaniyeler
+255,01,01,02,04,,Yastıklar
+255,01,01,02,05,,Nevresim Takımları
+255,01,01,02,99,,Diğer Mefruşat Ürünleri
+255,01,01,03,,,Çadırlar ve Aksesuarları
+255,01,01,03,01,,Çadırlar
+255,01,01,03,02,,Tenteler
+255,01,01,03,03,,Özel Şemsiyeler
+255,01,01,99,,,Diğer Döşeme Demirbaşları
+255,01,02,,,,Temsil ve Tören Demirbaşları
+255,01,02,01,,,Bayrak ve Flamalar ile İç Mekan Direkleri
+255,01,02,02,,,"Atatürk Büst, Mask, Pano ve Posterleri"
+255,01,02,03,,,Atatürk Köşeleri ve Anıtları
+255,01,02,04,,,Atatürk Resimleri
+255,01,02,05,,,Metal Çelenkler
+255,01,02,06,,,Mehter Takımları
+255,01,02,07,,,Bando Takımları
+255,01,02,08,,,Boru-Trampet Takımları
+255,01,02,99,,,Diğer Temsil ve Tören Demirbaşları
+255,01,03,,,,Koruyucu Giysi ve Malzemeler
+255,01,03,01,,,Genel Amaçlı Kullanılan Koruyucu Giysi ve Ekipmanlar
+255,01,03,01,01,,Giysiler
+255,01,03,01,02,,Baş ve Yüz Koruyucular
+255,01,03,01,03,,El Koruyucular 
+255,01,03,01,04,,Ayak Koruyucular
+255,01,03,01,05,,Göz Koruyucular
+255,01,03,01,06,,Solunum Koruyucular
+255,01,03,01,07,,Kulak Koruyucular
+255,01,03,01,99,,Diğer Genel Amaçlı Kullanılan Koruyucu Giysi ve Ekipmanlar
+255,01,03,02,,,Balıkadam Giysileri ve Ekipmanları
+255,01,03,02,01,,Balıkadam Giysileri 
+255,01,03,02,02,,Paletler
+255,01,03,02,03,,Snorkerler
+255,01,03,02,04,,Solunum Tüpleri
+255,01,03,02,99,,Diğer Balıkadam Ekipmanları
+255,01,03,03,,,Kimyasal Maddelerden Koruyucu Giyisiler
+255,01,03,03,01,,Gaz Maskeleri 
+255,01,03,03,02,,Data Eldivenler
+255,01,03,03,03,,Koruyucu Kılıf ve Giyisiler
+255,01,03,03,99,,Diğer Koruyucu Ekipmanlar
+255,01,03,99,,,Diğer Koruyucu Giysi ve Malzemeler
+255,01,04,,,,"Seyahat, Muhafaza ve Taşıma Amaçlı Demirbaş Niteliğindeki Taşınırlar"
+255,01,04,01,,,Seyahat Amaçlı Çantalar
+255,01,04,01,01,,Elbise Çantaları
+255,01,04,01,02,,Bavul Setleri
+255,01,04,01,03,,Tekli Bavullar
+255,01,04,01,04,,Seyahat Kitleri
+255,01,04,01,99,,Diğer Seyahat Amaçlı Çantalar
+255,01,04,02,,,İş Çantaları
+255,01,04,02,01,,Evrak Çantası
+255,01,04,02,02,,Portföyler
+255,01,04,02,03,,Ekipman Çantaları
+255,01,04,02,04,,Bilgisayar Çantaları
+255,01,04,02,05,,Bond Tipi Çantalar
+255,01,04,02,99,,Diğer İş Çantaları
+255,01,04,03,,,Taşıyıcı Arabalar
+255,01,04,03,01,,Dosya Taşıma Arabaları
+255,01,04,03,02,,"Dergi, Gazete vb.Taşıma Arabaları"
+255,01,04,03,03,,Cihaz Taşıma Arabaları
+255,01,04,03,04,,"Tüp, Un ve Şeker Taşıma Arabaları"
+255,01,04,03,05,,"Çay, Kahve Servisi Arabaları"
+255,01,04,03,06,,Takım/Alet Taşıma Arabaları
+255,01,04,03,07,,Kitap Taşıma Arabaları
+255,01,04,03,99,,Diğer Taşıyıcı Arabalar
+255,01,04,99,,,"Seyahat, Muhafaza ve Taşıma Amaçlı Demirbaş Niteliğindeki Diğer Taşınırlar"
+255,01,05,,,,Hastanede Kullanılan Demirbaş Niteliğindeki Taşınırlar
+255,01,05,01,,,Ameliyat Masaları
+255,01,05,02,,,Hasta Muayene Masaları
+255,01,05,02,01,,Sabit Ayaklı Hasta Muayene Masaları
+255,01,05,02,02,,Katlanır Ayaklı Hasta Muayene Masaları
+255,01,05,02,03,,Çekmeceli veya Dolaplı Hasta Muayene Masaları
+255,01,05,02,99,,Diğer Hasta Muayene Masaları
+255,01,05,03,,,Hasta Önü Yemek ve Servis Masaları
+255,01,05,04,,,Hasta Komidinleri ve Etejerleri
+255,01,05,04,01,,Yemek Tablalı Hasta Komidinleri
+255,01,05,04,02,,Yemek Tablasız Hasta Komidinleri
+255,01,05,04,99,,Diğer Hasta Komidinleri ve Masaları
+255,01,05,05,,,Hasta Yatakları
+255,01,05,05,01,,İki Parçalı Hasta Yatakları
+255,01,05,05,02,,Üç Parçalı Hasta Yatakları
+255,01,05,05,03,,Dört Parçalı Hasta Yatakları
+255,01,05,05,04,,Viscoelastik Yataklar
+255,01,05,05,05,,Su Geçirmez Antibakteriyel Yataklar
+255,01,05,05,06,,Tıbbi Poliüretan Kılıflı Yataklar
+255,01,05,05,99,,Diğer Hasta Yatakları
+255,01,05,06,,,Hasta ve Yoğun Bakım Karyaloları
+255,01,05,06,01,,Çocuk Karyolaları
+255,01,05,06,02,,Yetişkin Karyolaları
+255,01,05,06,03,,Yoğun Bakım Karyolaları
+255,01,05,07,,,Hasta Sedyeleri
+255,01,05,07,01,,Hasta Yıkama Sedyeleri
+255,01,05,07,02,,Standart Sedyeler
+255,01,05,07,03,,Tekerlekli Sedyeler
+255,01,05,07,04,,Ambulans Sedyeleri
+255,01,05,07,05,,Hasta Transfer Sedyeleri
+255,01,05,07,06,,Fonksiyonel Sedyeler
+255,01,05,07,07,,Portatif Sedyeler
+255,01,05,07,08,,Vakum Sedyeler
+255,01,05,07,09,,Faraş (Kaşık) Sedyeler
+255,01,05,07,99,,Diğer Hasta Sedyeleri
+255,01,05,08,,,Bebek Kodları
+255,01,05,09,,,Paravanlar
+255,01,05,09,01,,İkili Paravanlar
+255,01,05,09,02,,Üçlü Paravanlar
+255,01,05,09,03,,Dörtlü Paravanlar
+255,01,05,09,99,,Diğer Paravanlar
+255,01,05,10,,,"İlaç, Tedavi ve Pansuman Arabaları"
+255,01,05,10,01,,Pansuman Arabası 
+255,01,05,10,02,,Malzeme Taşıma Arabası
+255,01,05,10,03,,Tedavi Arabası
+255,01,05,10,04,,Acil Müdahale ve Tedavi Arabası
+255,01,05,10,05,,Acil Yardım Pansuman ve İnfüzyon Arabası
+255,01,05,10,06,,Genel Amaçlı Tedavi Arabası
+255,01,05,10,07,,Hastane İlaç Arabaları
+255,01,05,10,08,,Narkoz Arabaları
+255,01,05,10,99,,"Diğer İlaç, Tedavi ve Pansuman Arabaları"
+255,01,05,11,,,Eğitim Maketleri
+255,01,05,12,,,Morg Üniteleri
+255,01,05,13,,,Serum Askılıkları
+255,01,05,14,,,Sandalye ve Tabureler
+255,01,05,14,01,,Fonksiyonel Hasta Taşıma Sandalyeleri
+255,01,05,14,02,,Tekerlikli Hasta Taşıma Sandalyeleri
+255,01,05,14,03,,Tekerlekli Sandalyeler
+255,01,05,14,04,,Sırtlıklı Doktor Tabureleri
+255,01,05,14,05,,Doktor Tabureleri
+255,01,05,14,99,,Diğer Sandalye ve Tabureler
+255,01,05,15,,,Özel Amaçlı Koltuklar
+255,01,05,15,01,,Diyaliz Koltukları
+255,01,05,15,02,,Kan Alma Koltukları
+255,01,05,15,03,,Dişçilikte Kullanılan Koltuklar
+255,01,05,15,99,,Diğer Özel Amaçlı Koltuklar
+255,01,05,16,,,Hastane Tipi Buzdolapları ve Dolaplar
+255,01,05,16,01,,Derin Dondurucular
+255,01,05,16,02,,Kan Dolapları
+255,01,05,16,03,,Kit Saklama Dolapları
+255,01,05,16,04,,İlaç Dolapları
+255,01,05,16,05,,Alet Dolapları
+255,01,05,16,99,,Diğer Hastane Tipi Buzdolapları ve Dolaplar
+255,01,05,99,,,Hastanede Kullanılan Demirbaş Niteliğindeki Diğer Taşınırlar
+255,02,,,,,Büro Makineleri Grubu
+255,02,01,,,,Bilgisayarlar ve Sunucular
+255,02,01,01,,,Bilgisayarlar ve Ekipmanları
+255,02,01,01,01,,Masaüstü Bilgisayarlar
+255,02,01,01,01,01,Bilgisayar Kasaları
+255,02,01,01,01,02,Thin Client (İnce İstemci) 
+255,02,01,01,01,03,Ekranlar
+255,02,01,01,02,,Dizüstü Bilgisayarlar
+255,02,01,01,03,,Tablet Bilgisayarlar
+255,02,01,01,04,,Cep Bilgisayarları
+255,02,01,01,05,,All in One/ Tümleşik Bilgisayarlar
+255,02,01,01,99,,Diğer Bilgisayarlar
+255,02,01,02,,,Bilgisayar Sunucu Kasaları ve Ekipmanları
+255,02,01,02,01,,Kule Sunucular
+255,02,01,02,02,,Blade Sunucular
+255,02,01,02,03,,Raf Sunucular
+255,02,01,02,04,,Data Kasaları ile Sunucu ve Ağ Cihazı Kabinleri
+255,02,01,02,99,,Diğer Bilgisayar Sunucu Kasaları ve Ekipmanları
+255,02,01,03,,,Bilgisayar Destekli Cihazlar
+255,02,01,03,01,,Elektronik Ajandalar 
+255,02,01,03,02,,Küçük İstemciler
+255,02,01,03,03,,Anaçatı Konsolu veya Programlanamayan Uçbirimler
+255,02,01,03,04,,Giysi Bilgisayar Cihazları
+255,02,01,03,05,,Anaçatı Bilgisayar
+255,02,01,03,99,,Diğer Bilgisayar Destekli Cihazlar
+255,02,02,,,,Bilgisayar Çevre Birimleri  
+255,02,02,01,,,Yazıcılar ve Okuyucular
+255,02,02,01,01,,Nokta Vuruşlu (Matris) Yazıcılar
+255,02,02,01,02,,Mürekkep Püskürtmeli (Deskjet)Yazıcılar
+255,02,02,01,03,,Lazer Yazıcılar
+255,02,02,01,04,,Plotter Yazıcılar
+255,02,02,01,05,,Termal Yazıcılar
+255,02,02,01,06,,İnkjet Yazıcılar
+255,02,02,01,07,,Portatif Yazıcılar
+255,02,02,01,08,,Çok Fonksiyonlu Yazıcılar
+255,02,02,01,09,,Uçak Bileti veya Biniş Kartı (ATB) Yazıcıları
+255,02,02,01,10,,Satış Fişi (POS) Yazıcıları
+255,02,02,01,11,,Etiket Yazıcıları ve Okuyucuları
+255,02,02,01,12,,Harici CD ve DVD Yazıcıları ve Okuyucuları
+255,02,02,01,13,,"Barkod Yazıcılar ve Okuyucular, Optik Okuyucular"
+255,02,02,01,99,,Diğer Yazıcılar ve Okuyucular
+255,02,02,02,,,Tarayıcılar
+255,02,02,02,01,,El Tarayıcıları
+255,02,02,02,02,,Masaüstü Tarayıcılar
+255,02,02,02,03,,Paralel Porttan Tarayıcılar
+255,02,02,02,04,,USB Tarayıcılar
+255,02,02,02,99,,Diğer Tarayıcılar
+255,02,02,03,,,Çiziciler
+255,02,02,03,01,,Termal Çiziciler
+255,02,02,03,02,,Recorderpik Çiziciler
+255,02,02,03,99,,Diğer Çiziciler
+255,02,02,04,,,Yedekleme Cihazları
+255,02,02,05,,,"Klavye, Monitör ve Fare Çoklayıcıları (KVM)"
+255,02,02,99,,,Diğer  Bilgisayar Çevre Birimleri  
+255,02,03,,,,Teksir ve Çoğaltma Makineleri
+255,02,03,01,,,Fotokopi Makineleri
+255,02,03,02,,,Faksimile Makineleri
+255,02,03,03,,,Çok Amaçlı Makineler
+255,02,03,04,,,Dijital Göndericiler
+255,02,03,05,,,Teksir Makineleri
+255,02,03,06,,,Faxswitch Makineleri
+255,02,03,99,,,Diğer Teksir ve Çoğaltma Makineleri
+255,02,04,,,,Haberleşme Cihazları
+255,02,04,01,,,Telefonlar
+255,02,04,01,01,,Sabit Telefonlar
+255,02,04,01,02,,Telsiz Telefonlar
+255,02,04,01,03,,Telsizler
+255,02,04,01,04,,CepTelefonları 
+255,02,04,01,05,,Araç Telefonları
+255,02,04,01,06,,IP Telefonlar
+255,02,04,01,07,,Çağrı Cihazları
+255,02,04,01,08,,Santraller
+255,02,04,01,09,,Çağrı Kayıt ve Takip Sistemleri
+255,02,04,01,10,,Uydu Telefonları 
+255,02,04,01,99,,Diğer Telefonlar
+255,02,04,02,,,Faks Cihazları 
+255,02,04,03,,,Network Cihazları
+255,02,04,03,01,,Modemler (SDH ve Erişim Cihazları)
+255,02,04,03,02,,Swichler (Anahtarlar)
+255,02,04,03,03,,Hublar
+255,02,04,03,04,,Routerler (Yönlendirici Cihazlar)
+255,02,04,03,05,,İletişim Ağ Cihazları 
+255,02,04,03,06,,Çok Fonksiyonlu Network Cihazları
+255,02,04,03,07,,İletişim Çeviricileri
+255,02,04,03,08,,Firewall Cihazları
+255,02,04,03,99,,Diğer Network Cihazları
+255,02,04,99,,,Diğer Haberleşme Cihazları
+255,02,05,,,,
+255,02,05,01,,,Sunum Cihazları ve Aksesuarları
+255,02,05,01,01,,Projektörler (Projeksiyon Cihazları)
+255,02,05,01,02,,Tepegözler (Slayt Cihazları)
+255,02,05,01,03,,Epediyaskoplar
+255,02,05,01,04,,Smartboardlar
+255,02,05,01,05,,Sunum Işık Kutuları
+255,02,05,01,06,,Projeksiyon Ekranları
+255,02,05,01,07,,Projeksiyon Perdeleri
+255,02,05,01,99,,Diğer Sunum Cihazları ve Ekipmanları
+255,02,05,02,,,Ses ve Görüntü Cihaz ve Aletleri
+255,02,05,02,01,,Müzik Çalarlar ve Kaydediciler ile Donanımları
+255,02,05,02,02,,Televizyonlar
+255,02,05,02,03,,Videolar
+255,02,05,02,99,,Diğer Ses ve Görüntü Cihaz ve Aletleri
+255,02,05,03,,,Ses ve Görüntü Hazırlama ve Dizgi Cihaz ve Aletleri
+255,02,05,03,01,,Lecterna ve Ses Sistemleri ve Donanımları
+255,02,05,03,01,01,Desteksiz Lecternler
+255,02,05,03,01,02,Masa Üstü Lecternleri
+255,02,05,03,01,03,Tokmaklar veya Vurma Blokları
+255,02,05,03,01,04,"Lecternler İçin Aydınlatma, Güç Kaynağı veya Veri Elemanları "
+255,02,05,03,01,99,Diğer Lecterna ve Ses Sistemleri ve Donanımları
+255,02,05,03,02,,İşitsel Sunum ve Dizgi Ekipmanları ve Donanımları
+255,02,05,03,02,01,Yardımcı Dinleme Cihazları
+255,02,05,03,02,02,Ses Bağlantı Kutusu
+255,02,05,03,02,03,Dinleme Merkezleri
+255,02,05,03,02,04,Ses Karıştıma Konsolları 
+255,02,05,03,02,05,Genel Yayın Sistemleri
+255,02,05,03,02,99,Diğer İşitsel Sunum ve Dizgi Ekipmanları ve Donanımları
+255,02,05,03,03,,Video ve Ekipmanı ile İşitsel Sunum Ekipmanları ve Kontrol Sistemleri
+255,02,05,03,03,01,Medya Kontrol Sistemleri
+255,02,05,03,03,02,Tarama Dönüştürücüleri
+255,02,05,03,03,03,Video Düzenleyiciler 
+255,02,05,03,03,04,Uzaktan Öğrenim Sistemleri
+255,02,05,03,03,05,Arabirimler
+255,02,05,03,03,06,Aydınlatma Kontrolleri
+255,02,05,03,03,07,Televizyon Bağlantı Aksesuarları
+255,02,05,03,03,08,Görsel Sunucular
+255,02,05,03,03,99,Diğer Video ve Ekipmanı ile İşitsel Sunum Ekipmanları ve Kontrol Sistemleri
+255,02,05,03,04,,Konferans Ekipmanları
+255,02,05,03,04,01,Audio Konferans Sistemleri
+255,02,05,03,04,02,Video Konferans Sistemleri
+255,02,05,03,04,03,Müzik ve Anons Sistemleri
+255,02,05,03,04,99,Diğer Konferans Ekipmanları
+255,02,05,03,05,,Mikrofilm Ekipmanları
+255,02,05,03,05,01,Mikrofiş veya Mikrofilm Görüntüleyicileri
+255,02,05,03,05,02,Mikrofiş Okuyucu Yazıcıları 
+255,02,05,03,05,99,Diğer Mikrofilm Ekipmanları
+255,02,05,03,06,,Anons ve Müzik Yayın Cihazları
+255,02,05,03,06,01,Megafonlar
+255,02,05,03,06,02,Mikrofonlar
+255,02,05,03,06,03,Hoparlörler
+255,02,05,03,06,04,Amfiler
+255,02,05,03,06,05,Kablosuz Mikrofon Alıcı Verici Sistemleri
+255,02,05,03,06,99,Diğer Anons ve Müzik Yayın Cihazları
+255,02,05,03,07,,Uydu Sistemleri
+255,02,05,03,07,01,Uydu Alıcıları
+255,02,05,03,07,02,Bina Sistemleri
+255,02,05,03,07,03,Yön Bulma Cihazları
+255,02,05,03,07,04,GPRS Cihazları
+255,02,05,03,07,99,Diğer Uydu Sistemleri
+255,02,05,03,99,,Diğerleri
+255,02,05,04,,,"Filme Alma, Fotoğraflama ve Gözlem Cihazları ve Aletleri"
+255,02,05,04,01,,Kameralar
+255,02,05,04,01,01,Sabit Kameralar
+255,02,05,04,01,02,Sürekli Çekim Kameraları
+255,02,05,04,01,03,Tek Çekimlik Kameralar
+255,02,05,04,01,04,Dijital Kameralar
+255,02,05,04,01,05,Sinema Çekim Kameraları
+255,02,05,04,01,06,Video Konferans Kameraları
+255,02,05,04,01,07,Aerial Kameraları
+255,02,05,04,01,08,Hızlı Kameralar
+255,02,05,04,01,09,Sualtı Kameraları
+255,02,05,04,01,10,Ofset Kameraları 
+255,02,05,04,01,11,Fotokopi Kameraları
+255,02,05,04,01,12,Analog Ses ve Görüntü Kaydediciler
+255,02,05,04,01,13,Dijital Ses ve Görüntü Kaydediciler
+255,02,05,04,01,14,Doküman Kameraları
+255,02,05,04,01,15,Kamera Takımları
+255,02,05,04,01,16,Düşük Işıkta Çekim Yapan Kameralar
+255,02,05,04,01,17,İnternet Kameraları
+255,02,05,04,01,18,Gece Görüş Kameraları
+255,02,05,04,01,99,Diğer Kameralar
+255,02,05,04,02,,Fotoğraf Makinelerı
+255,02,05,04,03,,Gözlem Cihaz ve Aletleri
+255,02,05,04,03,01,Teleskoplar
+255,02,05,04,03,02,Dürbünler
+255,02,05,04,03,99,Diğer Gözlem Cihaz ve Aletleri
+255,02,05,04,04,,"Filme Alma, Fotoğraflama ve Gözlem Cihaz Ekipmanları"
+255,02,05,04,99,,"Diğer Filme Alma , Fotoğraflama ve Gözlem Cihazları ve Aletleri"
+255,02,05,99,,,"Diğer Ses, Görüntü ve Sunum Cihazları"
+255,02,06,,,,Aydınlatma Cihazları
+255,02,06,01,,,Genel Aydınlatma Araçları 
+255,02,06,01,01,,Avizeler
+255,02,06,01,02,,Masa ve Yer Lambaları
+255,02,06,99,,,Diğer Aydınlatma Cihazları
+255,02,99,,,,Diğer Büro Makineleri ve Aletleri Grubu
+255,02,99,01,,,Hesaplama Makineleri
+255,02,99,01,01,,Hesap Makineleri
+255,02,99,01,02,,Toplama Makineler
+255,02,99,01,03,,Yazar Kasalar
+255,02,99,01,99,,Diğer Hesaplama Makineleri
+255,02,99,02,,,"Havayı Isıtma, Soğutma, Havalandırma ve Nemlendirme Cihazları ve Aletleri"
+255,02,99,02,01,,Sobalar
+255,02,99,02,02,,Radyatörler
+255,02,99,02,03,,Katalitikler
+255,02,99,02,04,,İnfrared Isıtıcılar
+255,02,99,02,05,,Klimalar
+255,02,99,02,06,,Vantilatörler
+255,02,99,02,07,,Hava Kurutma ve Nemlendirme Cihazları
+255,02,99,02,99,,"Diğer Isıtma, Soğutma, Havalandırma ve Nemlendirme Cihazları ve Aletleri"
+255,02,99,03,,,İmha Makineleri
+255,02,99,03,01,,Kaset veya Band Öğütücüleri
+255,02,99,03,02,,Evrak İmha Makineleri
+255,02,99,03,03,,CD İmha Edici Makineler
+255,02,99,03,99,,Diğer İmha Makineleri
+255,02,99,04,,,Yazı Makineleri ve Donanımları
+255,02,99,04,01,,Daktilolar
+255,02,99,04,01,01,Mekanik Yazı Makineleri
+255,02,99,04,01,02,Eletronik Yazı Makineleri
+255,02,99,04,01,03,Portatif Yazı Makineleri
+255,02,99,04,02,,Stenotip Makineleri
+255,02,99,04,03,,"Dikte, İmla Makineleri"
+255,02,99,04,04,,Kelime İşleyicileri
+255,02,99,04,99,,Diğer Yazı Makineleri ve Donanımları
+255,02,99,05,,,Bağlama ve Laminasyon Makineleri
+255,02,99,05,01,,Laminatörler
+255,02,99,05,99,,Diğer Bağlama ve Laminasyon Makineleri
+255,02,99,06,,,Çek Düzenleme ve Yazma Makineleri
+255,02,99,06,01,,Çek Düzenleme Makineleri
+255,02,99,06,02,,Çek Yazma Makineleri
+255,02,99,07,,,Baskı Amacıyla Kullanılan Aletler ve Aksesuarları
+255,02,99,07,01,,Mühürler
+255,02,99,07,02,,Soğuk Damgalar
+255,02,99,07,99,,Diğer Baskı Amacıyla Kullanılan Aletler ve Aksesuarları
+255,03,,,,,Mobilyalar Grubu
+255,03,01,,,,Büro Mobilyaları
+255,03,01,01,,,Dolaplar
+255,03,01,01,01,,Dosya Dolapları
+255,03,01,01,02,,ModülerTip Dolaplar
+255,03,01,01,03,,Arşiv Tipi Volanlı Dolaplar
+255,03,01,01,04,,Soyunma Dolapları
+255,03,01,01,05,,Malzeme/Alet Dolapları
+255,03,01,01,06,,Kartoteks Dolapları
+255,03,01,01,07,,Harita Plan Dolapları
+255,03,01,01,08,,Tezgah Dolapları
+255,03,01,01,09,,Masa Üstü Düzenleyici Dolapları
+255,03,01,01,10,,Vitrinler
+255,03,01,01,11,,Kitaplıklar
+255,03,01,01,12,,Malzeme Ayırma ve Düzenleme Raf ve Ranzaları
+255,03,01,01,13,,Veri Klasörü Rafları
+255,03,01,01,99,,Diğer Dolaplar
+255,03,01,02,,,Masalar 
+255,03,01,02,01,,Bilgisayar Masaları
+255,03,01,02,02,,Toplantı Masaları
+255,03,01,02,03,,Çalışma Masaları
+255,03,01,02,04,,Panel Masalar
+255,03,01,02,05,,Orta Masaları
+255,03,01,02,06,,Yemek Masaları
+255,03,01,02,07,,Çizim Masaları
+255,03,01,02,08,,Printer Masaları
+255,03,01,02,09,,Daktilo Masaları
+255,03,01,02,10,,Portatif Masalar
+255,03,01,02,99,,Diğer Masalar
+255,03,01,03,,,Koltuklar
+255,03,01,03,01,,Çalışma Koltukları
+255,03,01,03,02,,Misafir Koltukları
+255,03,01,03,03,,Bekleme Koltukları
+255,03,01,03,99,,Diğer Koltuklar
+255,03,01,04,,,Sandalyeler
+255,03,01,04,01,,Klasik Tip Sandalyeler
+255,03,01,04,02,,İstiflenebilen Sandalyeler
+255,03,01,04,03,,Portatif Sandalyeler
+255,03,01,04,04,,Ayakta Çalışma Destekli Sandalyeler
+255,03,01,04,05,,Konferans/Seminer Tipi Sandalyeler
+255,03,01,04,06,,Müzisyen Sandalyeleri
+255,03,01,04,07,,Banklar
+255,03,01,04,99,,Diğer Sandalyeler
+255,03,01,05,,,Tabureler
+255,03,01,05,01,,Metal Tabureler
+255,03,01,05,02,,Ahşap Tabureler
+255,03,01,05,03,,Portatif Tabureler
+255,03,01,05,99,,Diğer Tabureler
+255,03,01,06,,,Portmantolar
+255,03,01,06,01,,Ahşap Portmantolar
+255,03,01,06,02,,Madeni Portmantolar
+255,03,01,07,,,Sehpalar
+255,03,01,08,,,Etajerler ve Kesonlar
+255,03,01,09,,,Panolar
+255,03,01,10,,,Kasalar
+255,03,01,10,01,,Para Kasaları
+255,03,01,10,02,,Emanet Saklama Kasaları
+255,03,01,10,99,,Diğer Kasalar
+255,03,01,11,,,Panel Sistemleri
+255,03,01,11,01,,Panel Sistemi Ekranları
+255,03,01,11,02,,Panel Sistemi Muhafaza Dolapları
+255,03,01,11,03,,Panel Sistemi Düzenleme Dolapları
+255,03,01,11,04,,Panel Sistemleri İçin Çalışma Yüzeyleri
+255,03,01,11,05,,"Panel Sistemleri İçin Işıklandırma, Güç veya Veri Elemanları"
+255,03,01,11,99,,Diğer Panel Sistemleri
+255,03,01,12,,,Bankolar
+255,03,01,99,,,Diğer Büro Mobilyaları
+255,03,02,,,,"Misafirhane, Konaklama ve Barınma Amaçlı Mobilyalar"
+255,03,02,01,,,Yatma Amaçlı Mobilyalar
+255,03,02,01,01,,Karyalolar
+255,03,02,01,02,,Ranzalar
+255,03,02,01,03,,Somyalar
+255,03,02,01,04,,Bazalar
+255,03,02,01,99,,Diğer Yatma Amaçlı Mobilyalar
+255,03,02,02,,,Oturma ve Dinlenme Amaçlı Mobilyalar
+255,03,02,02,01,,Çekyatlar
+255,03,02,02,02,,Kanepeler
+255,03,02,02,03,,Koltuk Takımları
+255,03,02,02,99,,Diğer Oturma ve Dinlenme Amaçlı Mobilyalar
+255,03,02,03,,,Teşhir Amaçlı Mobilyalar
+255,03,02,04,,,Asma ve Muhafaza Amaçlı Mobilyalar
+255,03,02,04,01,,Gardroplar
+255,03,02,04,02,,Vestiyerler
+255,03,02,04,03,,Diğer Misafirhane Mobilyaları
+255,03,02,04,04,,Komidinler
+255,03,02,04,99,,Diğer Asma ve Muhafaza Amaçlı Mobilyalar
+255,03,02,99,,,"Misafirhane, Konaklama ve Barınma Amaçlı Diğer Mobilyalar"
+255,03,03,,,,Kafeterya ve Yemekhane Mobilyaları
+255,03,03,01,,,Masalar
+255,03,03,01,01,,Kombine Bank ve Masalar
+255,03,03,01,02,,Kombine Tabure ve Masalar
+255,03,03,01,03,,Kombine Sandalye ve Masalar
+255,03,03,01,04,,Hareket Edebilen Masalar
+255,03,03,01,05,,Yemek Masaları
+255,03,03,01,06,,Kokteyl Masaları
+255,03,03,01,99,,Diğer Masalar
+255,03,03,02,,,Yemek Sandalyeleri
+255,03,03,03,,,Klasik ve Katlanabilir İskemleler 
+255,03,03,04,,,Yemek Servis Arabaları
+255,03,03,99,,,Kafeterya ve Yemekhanede Kullanılan Diğer Mobilyalar
+255,03,04,,,,Bebek ve Çocuk Mobilyası ve Aksesuarları
+255,03,04,01,,,Bebek Arabaları
+255,03,04,02,,,Çocuk Karyolası veya Oyun Kafesi veya Aksesuarları 
+255,03,04,03,,,Araba Koltukları
+255,03,04,04,,,Mama Sandalyesi veya Aksesuarları
+255,03,04,05,,,Ana Kucakları
+255,03,04,06,,,Bebek Banyo Küvetleri
+255,03,04,07,,,Beşikler
+255,03,04,08,,,Alt Değiştirme Takımları veya Aksesuarları
+255,03,04,99,,,Diğer Bebek ve Çocuk Mobilyası ve Aksesuarları
+255,03,05,,,,Seminer ve Sunum Amaçlı Ürünler
+255,03,05,01,,,Kürsüler
+255,03,05,02,,,Yazı Tahtaları 
+255,03,05,99,,,Seminer ve Sunum Amaçlı Diğer Ürünler
+255,04,,,,,Beslenme/Gıda ve Mutfak Demirbaşları Grubu
+255,04,01,,,,Yemek Hazırlama Ekipmanları
+255,04,01,01,,,Pişirme Setleri
+255,04,01,01,01,,Tencereler
+255,04,01,01,02,,Tavalar
+255,04,01,01,03,,Çaydanlıklar
+255,04,01,01,04,,Izgaralar
+255,04,01,01,05,,Benmariler
+255,04,01,01,06,,Sıçrama Önleyici Araçlar
+255,04,01,01,07,,Barbeküler
+255,04,01,01,99,,Diğer Pişirme Setleri
+255,04,01,02,,,Fırın Setleri
+255,04,01,02,01,,Fırın Tepsileri
+255,04,01,02,02,,Kek veya Pasta Kalıpları
+255,04,01,02,03,,Fırın Tavaları
+255,04,01,02,04,,Fırın Kalıpları
+255,04,01,02,05,,Pizza Tepsileri
+255,04,01,02,06,,Tortilla Pişiriciler
+255,04,01,02,07,,Muffin Kalıpları
+255,04,01,02,99,,Diğer Fırın Setleri
+255,04,01,99,,,Diğer Yemek Hazırlama Ekipmanları
+255,05,,,,,Canlı Demirbaşlar Grubu
+255,05,01,,,,Çiftlik Hayvanları
+255,05,01,01,,,Büyükbaş Hayvanlar
+255,05,01,02,,,Küçükbaş Hayvanlar
+255,05,01,03,,,Kuşlar ve Kümes Hayvanları
+255,05,01,04,,,Atlar ve Eşekler
+255,05,01,99,,,Diğer Çiftlik Hayvanları ve Ekipmanları
+255,05,02,,,,Hizmet Amaçlı Hayvanlar
+255,05,02,01,,,Köpekler
+255,05,02,02,,,Atlar ve Eşekler
+255,05,02,99,,,Diğer Hizmet Amaçlı Hayvanlar ve Ekipmanları
+255,05,03,,,,Gösteri Amaçlı Hayvanlar
+255,05,03,01,,,Küçükbaş Hayvanlar
+255,05,03,02,,,Kümes Hayvanları
+255,05,03,03,,,Vahşi Hayvanlar
+255,05,03,04,,,Suda Yaşayan Canlılar
+255,05,03,05,,,Evcil Hayvanlar
+255,05,03,06,,,Sürüngenler
+255,05,03,07,,,Kemirgenler
+255,05,03,08,,,Böcekler
+255,05,03,09,,,Atlar ve Eşekler
+255,05,03,99,,,Diğer Gösteri Amaçlı Hayvanlar ve Ekipmanları
+255,05,04,,,,Koruma Altına Alınan Hayvanlar
+255,05,04,01,,,Suda Yaşayan Canlılar
+255,05,04,02,,,Vahşi Hayvanlar
+255,05,04,03,,,Evcil Hayvanlar
+255,05,04,04,,,Sürüngenler
+255,05,04,05,,,Kemirgenler
+255,05,04,06,,,Böcekler
+255,05,04,99,,,Diğer Koruma Altına Alınan Hayvanlar ve Ekipmanları
+255,06,,,,,Tarihi veya Sanat Değeri Olan Demirbaşlar Grubu
+255,06,01,,,,Etnografik Eserler
+255,06,02,,,,Arkeolojik Eserler
+255,06,03,,,,Geleneksel Türk Süslemeleri
+255,06,04,,,,Güzel Sanat Eserleri
+255,06,04,01,,,Tablolar
+255,06,04,02,,,Heykeller
+255,06,04,03,,,Büstler
+255,06,04,04,,,Figürler
+255,06,04,05,,,Gravürler
+255,06,04,06,,,Albüm Bütünlüğü Sağlanmış Fotoğraflar
+255,06,04,07,,,Seramik Eserler
+255,06,04,08,,,Özgün Baskı Eserler
+255,06,04,99,,,Diğer Güzel Sanat Eserleri
+255,06,05,,,,"Kitap, Belge, El Yazmaları ve Nadir Eserler"
+255,06,06,,,,"Para, Pul, Sikke ve Madalyonlar"
+255,06,07,,,,Tabletler
+255,06,08,,,,Mühür ve Mühür Baskıları
+255,06,09,,,,Arşiv Vesikaları
+255,06,10,,,,Fosiller
+255,06,11,,,,Kayaçlarve Mineraller
+255,06,12,,,,"Dondurulmuş, Kurutulmuş veya Doldurulmuş Bitki ve Hayvan Örnekleri"
+255,07,,,,,Kütüphane Demirbaşları Grubu
+255,07,01,,,,Kütüphane Mobilyaları
+255,07,01,01,,,Kütüphane Masaları
+255,07,01,01,01,,Okuma Masaları
+255,07,01,01,02,,Halk Erişim Masaları
+255,07,01,01,03,,Kitap Ödünç Alma-Verme ve Kütüphane Görevlisi Masaları  
+255,07,01,02,,,Kütüphane Stantları
+255,07,01,02,01,,Sözlük Standları
+255,07,01,02,02,,Bağımsız Dönen Standlar
+255,07,01,03,,,Kütüphane Üniteleri
+255,07,01,03,01,,Kitap Tarama Üniteleri
+255,07,01,03,02,,Kart Katalog Üniteleri
+255,07,01,04,,,Kitap İade Kutuları ve Döşeme Bankları
+255,07,01,04,01,,Kitap İade Kutuları
+255,07,01,04,02,,Döşeme Banklar
+255,07,01,05,,,Kitap Büfeleri ve Çanta Asma Rafları
+255,07,01,05,01,,Kitap Büfeleri
+255,07,01,05,02,,Kitaplıklar
+255,07,01,05,03,,Çanta Asma Rafları
+255,07,01,99,,,Diğer Kütüphane Mobilyaları
+255,07,02,,,,Basılı Yayınlar
+255,07,02,01,,,Kitaplar
+255,07,02,01,01,,Ansiklopediler
+255,07,02,01,02,,Sözlükler
+255,07,02,01,03,,Atlaslar
+255,07,02,01,04,,Nadir Eserler (El Yazması Olmayanlar) [Bu kod kaldırılmıştır. Bu kodda izlenen taşınırlar 255.06.05 kodunda izlenecektir.]
+255,07,02,01,05,,Mevzuat Kitapları
+255,07,02,01,06,,Diğer Kitaplar
+255,07,02,02,,,Süreli Yayınlar
+255,07,02,02,01,,Dergiler 
+255,07,02,02,02,,Gazeteler 
+255,07,02,02,99,,Diğer Süreli Yayınlar
+255,07,02,03,,,Tezler ve Araştırma Çalışmaları 
+255,07,02,04,,,"Harita, Grafik, Plan ve Paftalar"
+255,07,02,05,,,Notalar
+255,07,02,06,,,"Arşivlenen Kütüphane Meteryalleri (Mektuplar, Tutanaklar v.b.)"
+255,07,02,07,,,El Yazmaları ( Bu kod kaldırılmıştır. Bu kodda izlenen taşınırlar 255.06.05 kodunda izlenecektir.)
+255,07,02,99,,,Diğer Basılı Yayınlar 
+255,07,03,,,,Görsel ve İşitsel Kaynaklar
+255,07,03,01,,,Sinema Filmleri
+255,07,03,02,,,Film Şeritleri
+255,07,03,03,,,Mikrofişler
+255,07,03,04,,,Slaytlar
+255,07,03,05,,,Video Kasetleri
+255,07,03,06,,,Ses Kasetleri ve Makaraları
+255,07,03,07,,,CD'ler ve DVD'ler
+255,07,03,08,,,Tablolar
+255,07,03,99,,,Diğer Görsel ve İşitsel Kaynaklar
+255,07,04,,,,Bilgi Saklama Üniteleri 
+255,08,,,,,Eğitim Demirbaşları Grubu
+255,08,01,,,,Eğitim Mobilyaları ve Donanımları
+255,08,01,01,,,Genel Eğitim Tesisi Donanımları ve Sınıf Mobilyaları
+255,08,01,01,01,,Sıralar 
+255,08,01,01,02,,Masalar
+255,08,01,01,99,,Diğer Genel Eğitim Tesisi Donanımları ve Sınıf Mobilyaları
+255,08,01,99,,,Diğer Eğitim Mobilyaları ve Donanımları
+255,08,02,,,,Öğrenmeyi Kolaylaştırıcı Ekipmanlar
+255,08,02,01,,,Alfabe Beceri Malzemeleri ve Kaynakları
+255,08,02,01,02,,Harfler ve  Ekipmanları
+255,08,02,01,99,,Diğer Alfabe Beceri Malzemeleri ve Kaynakları
+255,08,02,02,,,Kelime Öğretici Kaynak Malzemeler veya Aksesuarlar
+255,08,02,02,01,,Konuşma Aynaları
+255,08,02,02,02,,Heceleme İçin Kaynak Malzemeler
+255,08,02,02,04,,Kelime Yapılandırıcı Ekipmanlar
+255,08,02,02,99,,Diğer Kelime Öğretici Kaynak Malzemeler veya Aksesuarları
+255,08,02,03,,,Başlangıç Matematiği İle Sayı Saymayı Öğretici Kaynaklar ve Aksesuarları
+255,08,02,03,01,,Sayı Sayma Araçları 
+255,08,02,03,03,,Matematik Öğretme Ekipmanları
+255,08,02,04,,,Temel Matematik Çalışmaları ve Numaralandırma Kaynakları ve Materyalleri
+255,08,02,04,01,,Temel Çalışma Modelleri
+255,08,02,04,02,,Yazı Masası İçin Sayı Bantları
+255,08,02,04,03,,Yüzlük Çizelgeler veya Tahtalar
+255,08,02,04,04,,Yüzlük Sayı Tabletleri
+255,08,02,04,05,,Sayı Ekipmanları
+255,08,02,04,06,,Sayı Dizileri
+255,08,02,04,07,,Domino Oyunları
+255,08,02,04,99,,Diğer Temel Matematik Çalışmaları ve Numaralandırma Kaynakları ve Materyalleri
+255,08,02,05,,,Olasılık veya Şans Verileri veya Sorun Çözmek İçin Öğretmen Malzemeleri
+255,08,02,05,01,,İki Taraflı Fişler veya Markalar
+255,08,02,05,02,,Zar Setleri
+255,08,02,05,03,,Yorum Yapmayı Öğretici Kalıplar
+255,08,02,05,04,,Yorumlama Aktivitesi Kartları
+255,08,02,05,05,,Grafikli Yer Örtüleri
+255,08,02,05,06,,Mantık Oyunları
+255,08,02,05,07,,Yorumlama Setleri veya Ekipmanları
+255,08,02,05,08,,Problem Çözme Kartları
+255,08,02,05,99,,Diğer Olasılık veya Şans Verileri veya Sorun Çözmek İçin Öğretmen Malzemeleri
+255,08,02,06,,,Modelleme veya Eşleştirme veya Analitik Düşünmeyi Sağlayıcı Kaynak Materyaller
+255,08,02,06,02,,Model Blokları
+255,08,02,06,03,,Model Blok Aktivitesi veya Model Kartlar
+255,08,02,06,04,,Model Blok Oyunları veya Aktivite Setleri
+255,08,02,06,05,,Model Blok Çıkartmaları
+255,08,02,06,06,,Model Blok Aynaları
+255,08,02,06,07,,Model Blok Çizelgeleri veya Posterleri
+255,08,02,06,08,,Birbirine Geçen Bloklar
+255,08,02,06,09,,Birbirine Geçen Blok Aktivitesi veya Model Kartları
+255,08,02,06,10,,Birbirine Geçen Blok Aktivite Setleri
+255,08,02,06,12,,Tangram Aktivitesi veya Model Kartlar
+255,08,02,06,13,,Tangram Yap Bozu Aktivite Setleri
+255,08,02,06,14,,Tangram Yap Bozları
+255,08,02,06,16,,Pentominoes Oyunları
+255,08,02,06,17,,Pentominoes Oyunu Aktivitesi Setleri
+255,08,02,06,99,,Diğer Modelleme veya Eşleştirme veya Analitik Düşünmeyi Sağlayıcı Kaynak Materyaller
+255,08,02,07,,,Test Materyalleri
+255,08,02,08,,,Para ve Zamanla İlgili Öğretmen Malzemesi
+255,08,02,08,02,,Manyetik Paralar
+255,08,02,08,03,,Para Yap Bozları
+255,08,02,08,04,,Bozuk Para Bankası
+255,08,02,08,05,,Para Oyunları veya Setleri
+255,08,02,08,06,,Saati Öğrenme Aktiviteleri veya Kaynak Kitaplar
+255,08,02,08,07,,Kauçuk Saat Pulları
+255,08,02,08,08,,Saat Setleri
+255,08,02,08,99,,Diğer Para ve Zamanla İlgili Öğretmen Malzemesi
+255,08,02,09,,,"Parçalara Ayırma, Pentominoes Oyunu ve Ondalıklı Sayıları Öğretme"
+255,08,02,09,01,,Parça Çember veya Kareler
+255,08,02,09,02,,Ondalıklı Kareler
+255,08,02,09,04,,Parçalara Ayırma Çubukları
+255,08,02,09,05,,Parçalara Ayırma Grafikleri
+255,08,02,09,06,,Parçalara Ayırma Zarları
+255,08,02,09,07,,Parçalara Ayırma Oyunları
+255,08,02,09,08,,Parçalara Ayırma Setleri
+255,08,02,09,09,,Parçalara Ayırma Tabletleri
+255,08,02,09,10,,Parçalara Ayırma Diskleri
+255,08,02,09,12,,Pentominoes Model Kartları
+255,08,02,09,99,,"Diğer Parçalara Ayırma, Pentominoes Oyunu ve Ondalıklı Sayıları Öğretme"
+255,08,02,10,,,Coğrafya ve Harita Bilgisi Kaynakları ve Aksesuarları
+255,08,02,10,01,,Coğrafya Çizelgeleri veya Posterleri
+255,08,02,10,03,,Coğrafya Referans Kılavuzları
+255,08,02,10,04,,Harita Çizmeye Yardımcı Aletler
+255,08,02,10,05,,Harita Şablon Setleri
+255,08,02,10,06,,Portatif Duvar Haritaları
+255,08,02,10,08,,Harita Ölçücüleri
+255,08,02,10,09,,Harita Öğretme Yardımcıları veya Materyalleri
+255,08,02,10,99,,Diğer Coğrafya ve Harita Bilgisi Kaynakları ve Aksesuarları
+255,08,02,11,,,Yaşayan Organizmalar ve Korunmuş Örnekler ve Onlarla ilişkili Malzemeler
+255,08,02,11,01,,Amfibi Modelleri
+255,08,02,11,02,,Kültür Kitleri ve Materyaller
+255,08,02,11,03,,Parçalara Ayırma Setleri veya Malzemeleri
+255,08,02,11,04,,Biyosferler
+255,08,02,11,05,,Biyoloji Deneyi Kitleri veya Malzemeleri
+255,08,02,11,06,,Korunmuş Yaşam Döngüsü Türleri
+255,08,02,11,07,,Biyoloji Referanslı Klavuzlar
+255,08,02,11,08,,"İskelet, Kemik veya Kabuk Örnekleri"
+255,08,02,11,09,,Biyoloji Çalışma veya Aktivite Setleri
+255,08,02,11,10,,Biyoloji Çizelgeleri veya Posterleri
+255,08,02,11,11,,Korunmuş Bitki Gövdesi veya Organ Türleri
+255,08,02,11,12,,Biyoloji Aktivite veya Fotoğraf Kartları
+255,08,02,11,13,,Bitki Yaşam Döngüsü Türleri
+255,08,02,11,14,,Hayvan Vücudu veya Vücut Parçası veya Organ Türleri
+255,08,02,11,15,,Ekosistem Gösterisi
+255,08,02,11,16,,İnsan Bedeni veya Vücut Parçası veya Organ Türleri
+255,08,02,11,17,,Anatomi Çizelgeleri veya Setleri
+255,08,02,11,99,,Diğer Yaşayan Organizmalar ve Korunmuş Örnekler ve Onlarla ilişkili Malzemeler
+255,08,02,12,,,"Biyoteknoloji , Biyokimya, Genetik ve Mikrobiyoloji ile ilgili Materyaller"
+255,08,02,12,01,,Deoksiribonükleikasit DNA Modelleri
+255,08,02,12,02,,Deoksiribonükleikasit DNA Deney Kitleri
+255,08,02,12,03,,Genetik Bilimi Kitleri
+255,08,02,12,04,,Bakterileri Öğretme Setleri
+255,08,02,12,05,,Bakterileri Test Etme Malzemeleri
+255,08,02,12,06,,Enzimoloji Setleri veya Malzemeleri
+255,08,02,12,07,,Proteinleri Test Etme Stleri veya Malzemeleri
+255,08,02,12,99,,"Diğer Biyoteknoloji , Biyokimya, Genetik ve Mikrobiyoloji ile ilgili Materyaller"
+255,08,02,13,,,Beden Sistemleri ve İlgili Materyaller
+255,08,02,13,01,,İnsan Bedeni veya Vücut Parçası veya Organ Modelleri
+255,08,02,13,02,,Hücre Modelleri
+255,08,02,13,03,,Hücre Yapısını Öğretici Kitler
+255,08,02,13,04,,Vücut Sistemlerini Öğretme Setleri
+255,08,02,13,05,,Vücut Sistemlerini Öğretme Yardımcıları
+255,08,02,13,06,,Bitki Gövdesi veya Paçası veya Organ Modelleri
+255,08,02,13,07,,Hayvan Vücudu veya Vücut Parçası veya Organ Modelleri
+255,08,02,13,99,,Diğer Beden Sistemleri ve İlgili Materyaller
+255,08,02,14,,,Jeoloji ve Yer Bilimi
+255,08,02,14,01,,Taş Numune Setleri
+255,08,02,14,02,,Taş Numuneleri
+255,08,02,14,03,,Fosiller
+255,08,02,14,04,,Jeolojik Oluşum Modelleri
+255,08,02,14,05,,Fosil Modelleri
+255,08,02,14,06,,Jeoloji Araçları ve Alanları
+255,08,02,14,07,,Jeoloji Çalışma Setleri
+255,08,02,14,99,,Diğer Jeoloji ve Yer Bilimi Materyalleri
+255,08,02,15,,,"Kimya, Elektrokimya ve Mikrokimya"
+255,08,02,15,01,,Periyodik Tablo Posterleri veya Not Tahtaları
+255,08,02,15,02,,Tüketici Analizi Setleri
+255,08,02,15,03,,Kimya Sınıfı Setleri
+255,08,02,15,04,,Kimya Gösteri Setleri
+255,08,02,15,05,,Atomik Modeller
+255,08,02,15,06,,Moleküler Modeller
+255,08,02,15,07,,Elektrokimyasal Gösteri Araçları
+255,08,02,15,08,,Elektrokimyasal Setler
+255,08,02,15,09,,Yakıt Hücreleri
+255,08,02,15,10,,Mikrokimya Araçları
+255,08,02,15,99,,"Diğer Kimya, Elektrokimya ve Mikrokimya Materyalleri"
+255,08,02,16,,,Mekanik Fizik Materyalleri
+255,08,02,16,01,,Yerçekimi Modelleri veya Model Setleri
+255,08,02,16,02,,Eğik Düzlemler
+255,08,02,16,03,,Sürtünme Apareyleri
+255,08,02,16,04,,Fizik Arabaları
+255,08,02,16,05,,Sarkaç Apareyleri
+255,08,02,16,06,,Döndürme Gücü Apareyleri
+255,08,02,16,07,,İtici Apareyler
+255,08,02,16,08,,Fizik Deneyi Masaları
+255,08,02,16,09,,Hava Apareyleri
+255,08,02,16,10,,Işık veya Fotoğraf Apareyleri
+255,08,02,16,99,,Diğer Mekanik Fizik Materyalleri
+255,08,02,17,,,Enerji ve Güç Fiziği Materyalleri
+255,08,02,17,01,,Güneş Işınlarını Toplayan Araçlar
+255,08,02,17,02,,Güneş Işını İçin Setler
+255,08,02,17,03,,Enerjiyi Gösteren Setler
+255,08,02,17,04,,Enerji Sınıf Setleri
+255,08,02,17,05,,Maddeyi Gösteren Setler
+255,08,02,17,06,,Madde Sınıf Setleri
+255,08,02,17,07,,Monometreler
+255,08,02,17,08,,Gaz Difüzyonu Apareyleri
+255,08,02,17,99,,Diğer Enerji ve Güç Fiziği Materyalleri
+255,08,02,18,,,Dalga ve Ses Fiziği Materyalleri
+255,08,02,18,01,,Dalga Jeneratörleri
+255,08,02,18,02,,Dalga Tankları
+255,08,02,18,03,,Dalga Kaynakları
+255,08,02,18,04,,Dalgayı Gösteren Setler
+255,08,02,18,05,,Ayarlama Maşaları
+255,08,02,18,06,,Frekans Göstericileri
+255,08,02,18,07,,Rezonans Apareyleri
+255,08,02,18,08,,Ses Ölçerler
+255,08,02,18,09,,Dalga Apareyleri
+255,08,02,18,10,,Spektroskopları
+255,08,02,18,11,,Dalga Boyu Çizelgeleri
+255,08,02,18,12,,Işık Gösterici Setler
+255,08,02,18,13,,Renk Çizelgeleri ve Numuneleri
+255,08,02,18,14,,Radyometreler
+255,08,02,18,15,,Yansıma veya Işığı Kırma Apareyleri
+255,08,02,18,16,,Optik Setler veya Kitler
+255,08,02,18,99,,Diğer Dalga ve Ses Fiziği Materyalleri
+255,08,02,19,,,Elektriksel Fizik Materyelleri
+255,08,02,19,01,,Van de Graff Jeneratörleri
+255,08,02,19,02,,Elektroskoplar
+255,08,02,19,03,,Elektrostatik Setler
+255,08,02,19,04,,Elektrik Setleri
+255,08,02,19,05,,Elektrik Gösterici Panolar
+255,08,02,19,06,,Batarya Takımları
+255,08,02,19,07,,Elle Çalıştırılan Jeneratörler
+255,08,02,19,08,,Elektromanyetik Apareyler
+255,08,02,19,09,,Mıknatıslık Apareyleri 
+255,08,02,19,10,,Elektromanyetizmalar
+255,08,02,19,99,,Diğer Elektriksel Fizik Materyelleri
+255,08,02,20,,,Nükleer Fizik Materyalleri
+255,08,02,20,01,,Radyoaktivite Setleri
+255,08,02,20,02,,Gayger Sayacları
+255,08,02,20,03,,Elektron Apareyleri
+255,08,02,20,04,,Radyasyon Uyarıcı İşaretler
+255,08,02,20,05,,Nükleer Fizik Diyapozitifleri
+255,08,02,20,06,,Nükleer Fizik Çizelgeleri
+255,08,02,20,99,,Diğer Nükleer Fizik Materyalleri
+255,08,02,21,,,Roket Bilimi ve Uçuş Materyalleri ve Malzemeleri
+255,08,02,21,01,,Roket Setleri
+255,08,02,21,02,,Fırlatma Apareyleri
+255,08,02,21,03,,İrtifa Ölçme Cihazları
+255,08,02,21,04,,Uçak Kitleri
+255,08,02,21,99,,Diğer Roket Bilimi ve Uçuş Materyalleri ve Malzemeleri
+255,08,02,22,,,Otomotiv Eğitim Seti
+255,08,02,23,,,Elektrik Eğitim Setleri
+255,08,02,24,,,Binicilik Eğitiminde Kullanılan Demirbaşlar 
+255,08,02,25,,,Kuaförlük Eğitiminde Kullanılan Demirbaşlar
+255,08,02,99,,,Öğrenmeyi Kolaylaştırıcı Diğer  Ekipmanlar
+255,08,03,,,,Derslik Süslemeleri
+255,08,03,01,,,Derslik Haritaları veya Derslik Posterleri
+255,08,03,01,01,,Panolara Asılacak Paketler
+255,08,03,01,02,,Derslik Çizelgeleri 
+255,08,03,01,03,,Deslik Posterler veya Setleri
+255,08,03,01,04,,Herşeyi Kendin Yap Posterleri
+255,08,03,01,05,,Çizelge Tutturaçları veya Aksesuarları
+255,08,03,01,99,,Diğer Derslik Haritaları veya Derslik Posterleri
+255,08,03,99,,,Diğer Derslik Süslemeleri
+255,08,04,,,,Okul Bahçesi ve Oyun Demirbaşları
+255,08,04,01,,,Kaydıraklar
+255,08,04,02,,,Tahterevalliler
+255,08,04,03,,,Salıncaklar
+255,08,04,04,,,Şezlonglar
+255,08,04,99,,,Diğer Okul Bahçesi ve Oyun Demirbaşları
+255,09,,,,,Spor Amaçlı Kullanılan Demirbaşlar Grubu
+255,09,01,,,,Doğa Sporlarında Kullanılan Demirbaşlar
+255,09,01,01,,,"Avcılık, Dağcılık ve Kamp Demirbaşları"
+255,09,01,01,01,,Balık Tutma Ekipmanları
+255,09,01,01,02,,Tırmanma Ekipmanları
+255,09,01,01,03,,Konaklama Ekipmanları
+255,09,01,01,04,,Pusulalar
+255,09,01,01,05,,Fenerler
+255,09,01,01,06,,Termos ve Mataralar
+255,09,01,01,07,,Kamp Gereçleri
+255,09,01,01,08,,Uyku Tulumları
+255,09,01,01,09,,Şişme Yataklar
+255,09,01,01,10,,Çadırlar
+255,09,01,01,99,,"Diğer Avcılık, Dağcılık ve Kamp Demirbaşları"
+255,09,01,02,,,Su Sporları
+255,09,01,02,01,,Şamandıralar
+255,09,01,02,02,,Vinsörfler
+255,09,01,02,03,,Sörfler
+255,09,01,02,99,,Diğer Su Sporları Demirbaşları
+255,09,01,03,,,Kayak Sporu Demirbaşları
+255,09,01,03,01,,Kayak Takımları
+255,09,01,03,02,,Kar Gözlükleri
+255,09,01,03,99,,Diğer Kayak Sporu Demirbaşları
+255,09,01,04,,,Okçuluk
+255,09,01,99,,,Doğa Sporlarında Kullanılan Diğer  Demirbaşlar
+255,09,02,,,,Salon Sporlarında Kullanılan Demirbaşlar
+255,09,02,01,,,Kondisyon Amaçlı Aletler
+255,09,02,01,01,,Mekanik Koşu ve Yürüme Bantları
+255,09,02,01,02,,Mekanik Bisikletler
+255,09,02,01,03,,Mekanik Kürekler
+255,09,02,01,04,,Ağırlık Sehpaları
+255,09,02,01,05,,Mekik Sehpaları
+255,09,02,01,06,,Mekik Aletleri
+255,09,02,01,07,,Step Tahtaları
+255,09,02,01,10,,Düz Sehpalar
+255,09,02,01,11,,Yer Minderleri
+255,09,02,01,12,,Jimnastik Sopaları
+255,09,02,01,13,,Karın Bölgesi Jimnastik Aletleri
+255,09,02,01,14,,Butterfly Jimnastik Aletleri
+255,09,02,01,15,,Barfiksler
+255,09,02,01,99,,Diğer Kondisyon Amaçlı Aletler
+255,09,02,02,,,Egzersiz Aletleri
+255,09,02,02,01,,Zıplama Topları
+255,09,02,02,02,,Masaj Topları
+255,09,02,02,03,,Ağırlık Topları
+255,09,02,02,04,,Egzersiz Topları
+255,09,02,02,05,,Atlama İpleri
+255,09,02,02,06,,Yaylar
+255,09,02,02,07,,Dambıllar
+255,09,02,02,99,,Diğer Egzersiz Aletleri
+255,09,02,03,,,Güreş Sporunda Kullanılan Demirbaşlar
+255,09,02,04,,,Hentbol Sporunda Kullanılan Demirbaşlar
+255,09,02,05,,,Basketbol Sporunda Kullanılan Demirbaşlar
+255,09,02,06,,,Voleybol Sporunda Kullanılan Demirbaşlar
+255,09,02,07,,,Tenis ve Squash Sporunda Kullanılan Demirbaşlar
+255,09,02,08,,,Masa Tenisi Sporunda Kullanılan Demirbaşlar
+255,09,02,09,,,Bilardo Sporunda Kullanılan Demirbaşlar
+255,09,02,10,,,Halter Sporunda Kullanılan Demirbaşlar
+255,09,02,11,,,Eskrim Sporunda Kullanılan Demirbaşlar
+255,09,02,12,,,Boks Sporunda Kullanılan Demirbaşlar
+255,09,02,99,,,Salon Sporlarında Kullanılan Diğer Demirbaşlar
+255,09,03,,,,Saha Sporlarında Kullanılan Demirbaşlar
+255,09,03,01,,,Atıcılık  Cihaz ve Aletleri
+255,09,03,01,01,,Silahlar
+255,09,03,01,02,,Plak Fırlatma Makineleri
+255,09,03,01,03,,Hedef Makineleri
+255,09,03,01,04,,Trap Makineleri
+255,09,03,01,05,,Hedef Taşıyıcı Makineleri
+255,09,03,01,06,,Tüfek Ağırlığı Ölçme Aletleri
+255,09,03,01,07,,Atış Zamanlama Cihazları
+255,09,03,01,08,,Tüfek Yatış Kontrol Aletleri
+255,09,03,01,09,,Diğer Atıcılık Malzemeleri
+255,09,03,02,,,Atletizm Cihaz ve Aletleri
+255,09,03,02,01,,Ciritler
+255,09,03,02,02,,Çıtalar
+255,09,03,02,03,,Sırıklar
+255,09,03,02,04,,Çekiçler
+255,09,03,02,05,,Gülleler
+255,09,03,02,06,,Diskler
+255,09,03,02,07,,Labutlar
+255,09,03,02,08,,Çemberler
+255,09,03,02,09,,Minderler
+255,09,03,02,11,,Paralel Barlar
+255,09,03,02,13,,Tramplenler
+255,09,03,02,14,,Trambolinler
+255,09,03,02,15,,Atlama ve Kulplu Beygirleri
+255,09,03,02,16,,Jimnastik Kasaları
+255,09,03,02,17,,Müsabaka Çıkış Takozları
+255,09,03,02,18,,Sırık Ölçme Aletleri
+255,09,03,02,19,,Foto Finish Cihazları
+255,09,03,02,20,,Rüzgar Ölçme Aletleri
+255,09,03,02,21,,Ayarlı Engeller
+255,09,03,02,22,,Diğer Atletizm Cihaz ve Aletleri
+255,09,03,03,,,Tenis
+255,09,03,04,,,Futbol
+255,09,03,99,,,Saha Sporlarında Kullanılan Diğer Demirbaşlar
+255,09,99,,,,Diğer Spor Amaçlı Kullanılan Demirbaşlar
+255,09,99,01,,,Spor Ölçüm Cihazları
+255,09,99,01,01,,Kalorimetreler
+255,09,99,01,02,,Kronometreler
+255,09,99,01,03,,Pedometre/Kalorimetreler
+255,09,99,01,04,,Nabız Ölçme Aletleri
+255,09,99,01,99,,Diğer Spor Ölçüm Cİhazları
+255,09,99,02,,,Çeşitli Spor Ekipmanları
+255,09,99,03,,,Oyun Takımları
+255,10,,,,,"Güvenlik, Kontrol ve Tedbir Amaçlı Demirbaşlar Grubu"
+255,10,01,,,,Güvenlik ve Korunma Amaçlı Araçlar
+255,10,01,01,,,Silahlar
+255,10,01,03,,,Çelik Yelekler
+255,10,01,99,,,Güvenlik ve Korunma Amaçlı Diğer Araçlar
+255,10,02,,,,Kontrol ve Güvenlik Sistemleri
+255,10,02,01,,,Saatler
+255,10,02,01,01,,Kart Basma Saatleri
+255,10,02,01,02,,Bekçi Kontrol Saatleri
+255,10,02,01,03,,Evrak Takip Saatleri
+255,10,02,01,99,,Diğer Saatler
+255,10,02,02,,,Geçiş Sistemleri
+255,10,02,02,01,,Turnikeli Geçiş Sistemleri
+255,10,02,02,02,,Kart Okuyucular
+255,10,02,02,03,,Parmak İzi Sistemleri
+255,10,02,02,04,,Trafik Bariyer ve Otopark Sistemleri
+255,10,02,02,05,,Plastik Kart Baskı Sistemleri
+255,10,02,02,99,,Diğer Geçiş Sistemleri
+255,10,02,03,,,Dedektörler ve Sensörler 
+255,10,02,03,01,,Metal Kapı Dedektörleri
+255,10,02,03,02,,El Tipi Metal Dedektörleri
+255,10,02,03,03,,Dış Alan Dedektörleri
+255,10,02,03,04,,Manyetik Kapı Dedektörleri
+255,10,02,03,05,,Sıcaklık Dedektörleri
+255,10,02,03,06,,Duman Dedektörleri
+255,10,02,03,07,,Gaz Dedektörleri
+255,10,02,03,08,,Optik Dedektörler
+255,10,02,03,09,,Yanıcı Gaz Algılayıcı Dedektörler
+255,10,02,03,10,,Sahte Para Dedektörleri
+255,10,02,03,11,,Araç Altı İnceleme Dedektörleri
+255,10,02,03,99,,Diğer Dedektörler ve Sensörler
+255,10,02,04,,,Hırsız Alarm Sistemleri
+255,10,02,05,,,Güvenlik Kamera Sistemleri
+255,10,02,05,01,,Dijital Kayıt Sistemleri
+255,10,02,05,02,,Görüntü/Ses Alıcılar
+255,10,02,05,03,,Görüntü/Ses Göndericiler
+255,10,02,05,04,,Görüntü Monitörleri
+255,10,02,05,99,,Diğer Güvenlik Kamera Sistemleri
+255,10,02,06,,,Uzaktan Kumanda Sistemleri
+255,10,02,07,,,Erişim Kontrol Sistemleri
+255,10,02,99,,,Diğer Kontrol ve Güvenlik Sistemleri
+255,10,03,,,,Yangın Söndürme ve Tedbir Cihaz ve Araçları
+255,10,03,01,,,Yangın Söndürmede Kullanılan Cihazlar
+255,10,03,01,01,,Yangın Söndürme Cihazları
+255,10,03,01,02,,Yangın İkaz Cihazları
+255,10,03,01,03,,Yangın Söndürme Sistemleri
+255,10,03,01,99,,Yangın Söndürmede Kullanılan Diğer Cihazlar
+255,10,03,02,,,Yangın Söndürmede Kullanılan Araçlar
+255,10,03,02,01,,Yaygın Dolapları
+255,10,03,02,02,,Uyarıcı Levhalar
+255,10,03,02,99,,Yangın Söndürmede Kullanılan Diğer Araçlar
+255,10,03,99,,,Diğer Yangın Söndürme ve Tedbir Cihaz ve Araçları
+255,11,,,,,Demirbaş Niteliğindeki Süs Eşyaları 
+255,11,01,,,,Vitrinde Sergilenen Eşyaları
+255,11,01,01,,,Yemek Takımları
+255,11,01,02,,,Kupalar
+255,11,01,03,,,Madalyalar
+255,11,01,04,,,Plaketler
+255,11,01,99,,,Vitrinde Sergilenen Diğer Eşyalar
+255,11,02,,,,Duvarda Sergilenen Süs Eşyaları
+255,11,02,01,,,Panolar
+255,11,02,02,,,Tablolar
+255,11,02,03,,,Saatler
+255,11,02,99,,,Duvarda Sergilenen Diğer Süs Eşyaları
+255,11,03,,,,"Masa, Sehpa ve Zeminde Sergilenen Süs Eşyaları"
+255,11,03,01,,,Vazolar
+255,11,03,02,,,Yapay Çiçekler
+255,11,03,99,,,"Masa, Sehpa ve Zeminde Sergilenen Diğer Süs Eşyaları"
+255,12,,,,,Kullanımda Olan Demirbaş Niteliğindeki Değerli Eşyalar
+255,12,01,,,,"Yemek, Servis ve Çatal-Bıçak Takımları"
+255,12,02,,,,Büro Malzemeleri
+255,99,,,,,Diğer Demirbaşlar Grubu
+255,99,01,,,,"Seyyar Kulube, Kabin,  Büfe, Sandık ve Kafesler"
+255,99,02,,,,Seyyar Tanklar ve Tüpler
+255,99,03,,,,Sergileme ve Tanıtım Amaçlı Taşınırlar

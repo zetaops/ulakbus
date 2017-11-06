@@ -85,7 +85,7 @@ class TerfisiTikananPersonel(Reporter):
         personel_list = []
         # todo: pyoko bir metod sagladiginda, raw yazilan bu sorguyu duzeltecegiz.
         p_query = Personel.objects.set_params(
-            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)").filter(
+            fq="{!frange l=0 u=0 incu=true}sub(gorev_ayligi_derece,kadro_derece)").all(
             gorev_ayligi_kademe__gte=4)
 
         for p in p_query:
@@ -122,7 +122,7 @@ class GorevSuresiBitenPersonel(Reporter):
         bitis_tarihi = simdi + datetime.timedelta(days=120)
 
         # todo: add order_by
-        personeller = Personel.objects.filter(
+        personeller = Personel.objects.all(
             gorev_suresi_bitis__lte=bitis_tarihi,
             personel_turu=1
         )
