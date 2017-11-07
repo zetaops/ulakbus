@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from ulakbus.models import Personel, HizmetBirlestirme, HizmetKayitlari
 from ulakbus.models import AskerlikKayitlari, HizmetOkul, UcretsizIzin
-from datetime import date
+from datetime import date, datetime
 from pyoko.exceptions import ObjectDoesNotExist
 class HizmetSureleri():
     """
@@ -355,3 +355,59 @@ class HizmetSureleri():
             #sure += (izin.bitis - izin.baslangic).days
 
         return sure
+
+def sicil_terfi_kazanan_personel_listesi(self):
+
+    def sure_hesapla(ui):
+        basla, bitis = ui.baslama_bitis_tarihleri()
+        delta = bitis - basla
+        return delta.days
+
+    def sicil_not_kontrol(p):
+        if not p.SicilNot:
+            return True
+
+        for s in p.SicilNot:
+            if s.yil in [2009, 2010] and s.puan < 80:
+                return False
+
+        return True
+
+    istifa_ucretsiz_izin_sebep_kodlari = [267, 268, 270, ]
+    today = date.today()
+    sekiz_yil_once = today - datetime.timedelta(days=8*365)
+    personeller = [h.personel for h in HizmetKayitlari.objects.filter().exclude(sebep_kod=278,
+                                                                                kurum_onay_tarihi__gt=sekiz_yil_once)]
+
+    terfi_alacak_personeller = []
+    for p in personeller:
+
+        sekiz_yillik_terfi = HizmetKayitlari.objects.filter(personel=p, sebep_kod=278).order_date('-order_date')
+        if sekiz_yillik_terfi:
+            son_8_yillik_terfi = sekiz_yillik_terfi[0].baslama_tarihi or sekiz_yillik_terfi[0].bitis_tarihi
+        else:
+            son_8_yillik_terfi = HizmetKayitlari.objects.filter(personel=p).order_date('order_date')[0].baslama_tarihi
+
+        if son_8_yillik_terfi.year <= 2010 :
+            sicil_not = sicil_not_kontrol(p)
+        else:
+            sicil_not = True
+
+        from ulakbus.models.personel import Ceza
+
+        ceza = Ceza.objects.filter(personel=p, baslama_tarihi__gt=son_8_yillik_terfi).count()
+
+        cikarilacak_sure = 0
+
+        cikarilacak_kayitlar = HizmetKayitlari.objects.filter(sebep_kod__in=istifa_ucretsiz_izin_sebep_kodlari,
+                                                              kurum_onay_tarihi__gt=son_8_yillik_terfi)
+
+        cikarilacak_sure += sum([sure_hesapla(ui) for ui in cikarilacak_kayitlar])
+
+        terfi_suresi = today - son_8_yillik_terfi
+        net_sure = terfi_suresi.days - cikarilacak_sure
+
+        if net_sure >= 365 * 8 and sicil_not and not ceza:
+            terfi_alacak_personeller.append(p)
+
+

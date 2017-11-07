@@ -141,6 +141,10 @@ class Personel(Model):
         hitap_sebep_no = field.String(_(u"Hitap Sebep No"))
         hitap_sebep_bilgi = field.String(_(u"Hitap Sebep"))
 
+    class SicilNotu(ListNode):
+        yil = field.Integer(_("Sicil Yılı"))
+        puan = field.Integer(_("Sicil Notu"))
+
     class Meta:
         app = 'Personel'
         verbose_name = _(u"Personel")

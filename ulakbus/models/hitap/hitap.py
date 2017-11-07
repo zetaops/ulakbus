@@ -438,6 +438,26 @@ class HizmetKayitlari(Model):
     def __unicode__(self):
         return '%s %s %s' % (self.unvan_kod, self.hizmet_sinifi, self.gorev)
 
+    @property
+    def sonraki(self):
+        sonrakiler = self.objects.filter(personel=self.personel, order_date__gt=self.order_date).order_by('-order_date')
+        return sonrakiler[0] if sonrakiler else None
+
+    @property
+    def onceki(self):
+        oncekiler = self.objects.filter(personel=self.personel, order_date__lt=self.order_date).order_by('order_date')
+        return oncekiler[0] if oncekiler else None
+
+    def baslama_bitis_tarihleri(self):
+        if self.baslama_tarihi and self.bitis_tarihi:
+            return self.baslama_tarihi, self.bitis_tarihi
+
+        if not self.baslama_tarihi:
+            return self.onceki.baslama_tarihi, self.bitis_tarihi
+
+        if not self.bitis_tarihi:
+            return self.baslama_tarihi, self.sonraki.bitis_tarihi
+
 
 class AskerlikKayitlari(Model):
     askerlik_nevi = field.Integer(_(u"Askerlik Nevi"), index=True, choices="askerlik_nevi")
