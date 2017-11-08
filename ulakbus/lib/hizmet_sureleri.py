@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from ulakbus.models import Personel, HizmetBirlestirme, HizmetKayitlari
 from ulakbus.models import AskerlikKayitlari, HizmetOkul, UcretsizIzin
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pyoko.exceptions import ObjectDoesNotExist
 class HizmetSureleri():
     """
@@ -356,7 +356,7 @@ class HizmetSureleri():
 
         return sure
 
-def sicil_terfi_kazanan_personel_listesi(self):
+def sicil_terfi_kazanan_personel_listesi():
 
     def sure_hesapla(ui):
         basla, bitis = ui.baslama_bitis_tarihleri()
@@ -375,8 +375,8 @@ def sicil_terfi_kazanan_personel_listesi(self):
 
     istifa_ucretsiz_izin_sebep_kodlari = [267, 268, 270, ]
     today = date.today()
-    sekiz_yil_once = today - datetime.timedelta(days=8*365)
-    personeller = [h.personel for h in HizmetKayitlari.objects.filter().exclude(sebep_kod=278,
+    sekiz_yil_once = today - timedelta(days=8*365)
+    personeller = [h.personel for h in HizmetKayitlari.objects.all().exclude(sebep_kod=278,
                                                                                 kurum_onay_tarihi__gt=sekiz_yil_once)]
 
     terfi_alacak_personeller = []
@@ -409,5 +409,7 @@ def sicil_terfi_kazanan_personel_listesi(self):
 
         if net_sure >= 365 * 8 and sicil_not and not ceza:
             terfi_alacak_personeller.append(p)
+
+    return terfi_alacak_personeller
 
 
