@@ -3,6 +3,9 @@ from ulakbus.models import Personel, HizmetBirlestirme, HizmetKayitlari
 from ulakbus.models import AskerlikKayitlari, HizmetOkul, UcretsizIzin
 from datetime import date, datetime, timedelta
 from pyoko.exceptions import ObjectDoesNotExist
+from ulakbus.models.personel import Ceza
+
+
 class HizmetSureleri():
     """
         Hizmet süreleri hesabı metodlarını içeren class'dır.
@@ -383,18 +386,17 @@ def sicil_terfi_kazanan_personel_listesi():
     sicil_notu_kotu_olanlar = []
     ceza_almislar = []
     for p in Personel.objects.all():
-        sekiz_yillik_terfi = HizmetKayitlari.objects.filter(personel=p, sebep_kod__in=[93, 278]).order_by('-order_date')
+        sekiz_yillik_terfi = HizmetKayitlari.objects.order_by('-order_date').filter(personel=p, sebep_kod__in=[93, 278])
         son_8_yillik_terfi = None
         if sekiz_yillik_terfi:
             son_8_yillik_terfi = sekiz_yillik_terfi[0].baslama_tarihi or sekiz_yillik_terfi[0].bitis_tarihi
         else:
-            hk = HizmetKayitlari.objects.filter(personel=p).order_by('order_date')
+            hk = HizmetKayitlari.objects.order_by('order_date').filter(personel=p)
             if hk:
-                son_8_yillik_terfi = hk[0].baslama_tarihi
-
-        if not son_8_yillik_terfi:
-            hic_hizmet_kaydi_olmayanlar.append(p)
-            continue
+                son_8_yillik_terfi = hk[0].baslama_tarihi or hk[0].bitis_tarihi
+            else:
+                hic_hizmet_kaydi_olmayanlar.append(p)
+                continue
 
         if son_8_yillik_terfi > sekiz_yil_once:
             terfi_almislar.append(p)
@@ -405,10 +407,6 @@ def sicil_terfi_kazanan_personel_listesi():
             if sicil_not is False:
                 sicil_notu_kotu_olanlar.append(p)
                 continue
-        else:
-            sicil_not = True
-
-        from ulakbus.models.personel import Ceza
 
         ceza = Ceza.objects.filter(personel=p, baslama_tarihi__gt=son_8_yillik_terfi).count()
         if ceza:
@@ -426,6 +424,6 @@ def sicil_terfi_kazanan_personel_listesi():
         net_sure = terfi_suresi.days - cikarilacak_sure
 
         if net_sure >= 365 * 8:
-            terfi_alacaklar.append(p)
+            terfi_alacaklar.append((p, net_sure, cikarilacak_sure))
 
     return terfi_alacaklar, terfi_almislar, hic_hizmet_kaydi_olmayanlar, sicil_notu_kotu_olanlar
