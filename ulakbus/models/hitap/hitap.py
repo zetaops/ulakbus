@@ -440,12 +440,12 @@ class HizmetKayitlari(Model):
 
     @property
     def sonraki(self):
-        sonrakiler = self.objects.filter(personel=self.personel, order_date__gt=self.order_date).order_by('-order_date')
+        sonrakiler = self.objects.order_by('-order_date').filter(personel=self.personel, order_date__gt=self.order_date)
         return sonrakiler[0] if sonrakiler else None
 
     @property
     def onceki(self):
-        oncekiler = self.objects.filter(personel=self.personel, order_date__lt=self.order_date).order_by('order_date')
+        oncekiler = self.objects.order_by('order_date').filter(personel=self.personel, order_date__lt=self.order_date)
         return oncekiler[0] if oncekiler else None
 
     def baslama_bitis_tarihleri(self):
