@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from ulakbus.models import Personel, HizmetBirlestirme, HizmetKayitlari
 from ulakbus.models import AskerlikKayitlari, HizmetOkul, UcretsizIzin
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pyoko.exceptions import ObjectDoesNotExist
 class HizmetSureleri():
     """
@@ -356,18 +356,19 @@ class HizmetSureleri():
 
         return sure
 
-def sicil_terfi_kazanan_personel_listesi(self):
 
+
+def sicil_terfi_kazanan_personel_listesi():
     def sure_hesapla(ui):
         basla, bitis = ui.baslama_bitis_tarihleri()
         delta = bitis - basla
         return delta.days
 
     def sicil_not_kontrol(p):
-        if not p.SicilNot:
+        if not p.SicilNotu:
             return True
 
-        for s in p.SicilNot:
+        for s in p.SicilNotu:
             if s.yil in [2009, 2010] and s.puan < 80:
                 return False
 
@@ -375,27 +376,47 @@ def sicil_terfi_kazanan_personel_listesi(self):
 
     istifa_ucretsiz_izin_sebep_kodlari = [267, 268, 270, ]
     today = date.today()
-    sekiz_yil_once = today - datetime.timedelta(days=8*365)
-    personeller = [h.personel for h in HizmetKayitlari.objects.filter().exclude(sebep_kod=278,
-                                                                                kurum_onay_tarihi__gt=sekiz_yil_once)]
+    sekiz_yil_once = today - timedelta(days=8 * 365)
 
-    terfi_alacak_personeller = []
-    for p in personeller:
+    terfi_alacaklar = []
+    terfi_almislar = []
+    hic_hizmet_kaydi_olmayanlar = []
+    sicil_notu_kotu_olanlar = []
+    ceza_almislar = []
+    for p in Personel.objects.all():
 
-        sekiz_yillik_terfi = HizmetKayitlari.objects.filter(personel=p, sebep_kod=278).order_date('-order_date')
+
+        sekiz_yillik_terfi = HizmetKayitlari.objects.filter(personel=p, sebep_kod__in=[93, 278]).order_by('-order_date')
+        son_8_yillik_terfi = None
         if sekiz_yillik_terfi:
             son_8_yillik_terfi = sekiz_yillik_terfi[0].baslama_tarihi or sekiz_yillik_terfi[0].bitis_tarihi
         else:
-            son_8_yillik_terfi = HizmetKayitlari.objects.filter(personel=p).order_date('order_date')[0].baslama_tarihi
+            hk = HizmetKayitlari.objects.filter(personel=p).order_by('order_date')
+            if hk:
+                son_8_yillik_terfi = hk[0].baslama_tarihi
 
-        if son_8_yillik_terfi.year <= 2010 :
+        if not son_8_yillik_terfi:
+            hic_hizmet_kaydi_olmayanlar.append(p)
+            continue
+
+        if son_8_yillik_terfi > sekiz_yil_once:
+            terfi_almislar.append(p)
+            continue
+
+        if son_8_yillik_terfi.year <= 2010:
             sicil_not = sicil_not_kontrol(p)
+            if sicil_not is False:
+                sicil_notu_kotu_olanlar.append(p)
+                continue
         else:
             sicil_not = True
 
         from ulakbus.models.personel import Ceza
 
         ceza = Ceza.objects.filter(personel=p, baslama_tarihi__gt=son_8_yillik_terfi).count()
+        if ceza:
+            ceza_almislar.append(p)
+            continue
 
         cikarilacak_sure = 0
 
@@ -407,7 +428,7 @@ def sicil_terfi_kazanan_personel_listesi(self):
         terfi_suresi = today - son_8_yillik_terfi
         net_sure = terfi_suresi.days - cikarilacak_sure
 
-        if net_sure >= 365 * 8 and sicil_not and not ceza:
-            terfi_alacak_personeller.append(p)
+        if net_sure >= 365 * 8:
+            terfi_alacaklar.append(p)
 
-
+    return terfi_alacaklar, terfi_almislar, hic_hizmet_kaydi_olmayanlar, sicil_notu_kotu_olanlar
