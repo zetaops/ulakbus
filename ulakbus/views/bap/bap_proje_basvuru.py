@@ -254,7 +254,7 @@ class ProjeBasvuru(CrudView):
 
         """
         okutman = Okutman.objects.get(personel=self.current.user.personel)
-        projeler = BAPProje.objects.filter(yurutucu=okutman)
+        projeler = BAPProje.objects.filter(yurutucu=okutman, durum__in=[5, 7])
         kontrol = True
         for proje in projeler:
             bitis_suresi = proje.kabul_edilen_baslama_tarihi + relativedelta(months=proje.sure)
