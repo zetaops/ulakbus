@@ -183,6 +183,8 @@ class BAPSatinAlmaTalep(CrudView):
                             bp['ad'], bp['adet'], bp['adet']))
                 else:
                     sec_durum.append(bp['sec'])
+            if hatali_giris:
+                break
         if self.cmd != 'iptal' and not sec_durum and not hatali_giris:
             self.current.task_data['cmd'] = 'hata'
             self.current.task_data['hata_mesaji'] = _(
