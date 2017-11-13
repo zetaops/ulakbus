@@ -213,18 +213,18 @@ def yevmiye_ucreti(derece, ek_gosterge):
         personelin derecesine yada ek gostergesine baglı olarak gunluk yevmiye
 
     """
-    from ulakbus.settings import EK_GOSTERGE_8K,EK_GOSTERGE_5800_8K,EK_GOSTERGE_3K_5800
-    from ulakbus.settings import DERECE_1_4,DERECE_5_15
+    from ulakbus.settings import EK_GOSTERGE_8K, EK_GOSTERGE_5800_8K, EK_GOSTERGE_3K_5800
+    from ulakbus.settings import DERECE_1_4, DERECE_5_15
 
     if ek_gosterge >= 8000:
         return EK_GOSTERGE_8K
-    elif ek_gosterge >= 5800 and ek_gosterge < 8000:
+    elif 5800 <= ek_gosterge < 8000:
         return EK_GOSTERGE_5800_8K
-    elif ek_gosterge >= 3000 and ek_gosterge < 5800:
+    elif 3000 <= ek_gosterge < 5800:
         return EK_GOSTERGE_3K_5800
-    elif derece > 0 and derece < 5:
+    elif 0 < derece < 5:
         return DERECE_1_4
-    elif derece > 4 and derece < 15:
+    elif 4 < derece < 15:
         return DERECE_5_15
 
 
@@ -241,6 +241,19 @@ def yevmiye_hesapla(konaklama_gun_sayisi, derece, ek_gosterge):
     (d) fıkrasına göre yapılacak ödemelerde ise görevlendirmenin
     ilk 10 günü için gündeliklerinin %50 artırımlı miktarı,
     takip eden 80 günü için gündeliklerinin %50’si
+
+
+    ORNEK: aylık/kadro derecesi 2 olan ve 2016 Yılı
+     yurtiçi gündeliği 35,24 TL olarak belirlenen bir memurun yurtiçinde 200 gün süre
+     ile sınırlı olarak ikamet etmesi sonucu ne kadar konaklama parası alır (ORN: 180 gun).
+
+    -Görevlendirmenin ilk 10 günü için gündeliğinin %50 artırımlı miktarı olan 52,86 TL,
+    52,86 x 10 = 528,60 TL
+    -Takip eden 80 gün için gündeliğinin %50'si olan 17,62 TL,
+    17,62 x 80 = 1.409,60 TL
+    -Müteakip 90 gün için de gündeliğinin 2/3'ünün %40'ı olan 9,39 TL,
+    9,39 x 90 = 845,10 TL
+    olmak üzere toplam olarak 2.783,30 TL tutarında konaklama gideri ödenmesi gerekmektedir.
 
     Args:
         konaklama_gun_sayisi (int): konaklama gun sayisi yevmiye hesabı için
@@ -274,14 +287,25 @@ def yol_masrafi_hesapla(derece, ek_gosterge, km, tasit_ucreti, yolculuk_gun_sayi
                         birey_sayisi):
 
     """
-    Bu metot toplam yol masraflarını hesaplar
-
     Yevmiye-Yol mesafe ücreti-Taşıt ücreti-Seyahat günlerine ait yevmiyeler
     Kendisi için yurtiçi gündeliğinin 20 (yirmi) katı
     Aile fertleri için 10 kati
     Yol mesafe ücreti: Her kilometre basına (gundelik_yevmiye*5)/100
     Taşıt ücreti: en uygun yol ve tasıta gore verilir
-    seyahat suresi 24 saatlik dilimde birey sayısına gore yevmiye eklenir
+    seyahat ucreti 24 saatlik dilimde birey sayısına gore yevmiye eklenir
+
+    ORN:ÖRNEK 2) A ilinden B iline tayin olan bir memurun;
+        Derecesi: 5/1 , Km: 1000, Taşıt ücreti: 90 TL, evli, eşi çalışmıyor ve 2 çocuklu
+
+    Hesaplama:
+        20 x 36,25 = 725 (alacağı yevmiye)
+        10 x 36,25 = 362,5 (eşi için yevmiye)
+        10 x 36,25 = 362,5 (1.çocuk için yevmiye)
+        10 x 36,25 = 362,5 (2.çocuk için yevmiye)
+        1000 x 1,8125 = 1812,5 (yol mesafe ücreti)
+        90 x 4 = 360 (taşıt ücreti)
+        36,25 x 4 = 145 (24 saate kadar olan seyahat süresi için yevmiye)
+        725 + 362,5 + 362,5 + 362,5 + 1812,5 + 360 + 145= 4130 TL harcırah alır
 
     Args:
         derece (int): yevmiye için personel derecesi
@@ -301,12 +325,12 @@ def yol_masrafi_hesapla(derece, ek_gosterge, km, tasit_ucreti, yolculuk_gun_sayi
     yevmiye = yevmiye_ucreti(derece, ek_gosterge)
     mesafe_ucreti = yevmiye * KM_KATSAYISI
     tasit_ucreti = (birey_sayisi + 1) * tasit_ucreti
-    seyahat_suresi = (birey_sayisi + 1) * yevmiye * yolculuk_gun_sayisi
+    seyahat_ucreti = (birey_sayisi + 1) * yevmiye * yolculuk_gun_sayisi
 
-    toplam_yol_masrafi = 20 * yevmiye + mesafe_ucreti * km + tasit_ucreti + seyahat_suresi
+    toplam_yol_masrafi = 20 * yevmiye + mesafe_ucreti * km + tasit_ucreti + seyahat_ucreti
 
     if birey_sayisi == 0:
         return toplam_yol_masrafi
     else:
-        #diger bireyler için yevmiyenin 10 katı
+        # diger bireyler için yevmiyenin 10 katı
         return toplam_yol_masrafi + 10 * (birey_sayisi) * yevmiye
