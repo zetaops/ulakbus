@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from ulakbus.models import Personel, HizmetBirlestirme, HizmetKayitlari
 from ulakbus.models import AskerlikKayitlari, HizmetOkul, UcretsizIzin
 from datetime import date, datetime, timedelta
@@ -13,7 +13,7 @@ class HizmetSureleri():
 
     personel = None
 
-    def __init__(self,personel=None,tckn=None):
+    def __init__(self, personel=None, tckn=None):
         if personel:
             self.personel = personel
         elif tckn:
@@ -25,7 +25,7 @@ class HizmetSureleri():
         Returns:
 
         """
-        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn,sgk_nevi__in=[3, 7, 4, 1,2, 6 ])
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[3, 7, 4, 1, 2, 6])
 
         sure = 0
         for hizmet in hizmetler:
@@ -34,10 +34,10 @@ class HizmetSureleri():
 
         return sure
         return self._emekli_sandigi_hesapla() + self._bagkur_tum_hesapla() \
-                + self._diger_hizmet_hesapla() + self._yurtdisi_tum_hesapla() \
-                + self._fiili_hizmet_hesapla() + self._ssk_tum_hesapla() \
-                + self._askerlik_hesapla() + self._ucretsiz_izin_hesapla() \
-                + self._fahri_gorev_hesapla() + self._yurtdisi_egitim_hesapla()
+               + self._diger_hizmet_hesapla() + self._yurtdisi_tum_hesapla() \
+               + self._fiili_hizmet_hesapla() + self._ssk_tum_hesapla() \
+               + self._askerlik_hesapla() + self._ucretsiz_izin_hesapla() \
+               + self._fahri_gorev_hesapla() + self._yurtdisi_egitim_hesapla()
 
     def fiili_hizmet_ayrinti(self):
         """
@@ -45,12 +45,12 @@ class HizmetSureleri():
         Returns:
 
         """
-        return { "emekli_sandigi": self._emekli_sandigi_hesapla(), "bagkur_tum": self._bagkur_tum_hesapla(),
+        return {"emekli_sandigi": self._emekli_sandigi_hesapla(), "bagkur_tum": self._bagkur_tum_hesapla(),
                 "diger_hizmet": self._diger_hizmet_hesapla(), "yurtdisi_tum": self._yurtdisi_tum_hesapla(),
                 "fiili_hizmet": self._fiili_hizmet_hesapla(), "ssk_tum": self._ssk_tum_hesapla(),
                 "askerlik_hesapla": self._askerlik_hesapla(), "ucretsiz_izin": self._ucretsiz_izin_hesapla(),
                 "fahri_gorev": self._fahri_gorev_hesapla(), "yurtdisi_egitim": self._yurtdisi_egitim_hesapla()
-            }
+                }
 
     def kidem_hizmet_getir(self):
         """
@@ -59,9 +59,9 @@ class HizmetSureleri():
 
         """
         return self._emekli_sandigi_hesapla() + self._askerlik_hesapla() \
-                + self._ssk_tum_hesapla() + self._bagkur_tum_hesapla() \
-                + self._yurtdisi_tum_hesapla() + self._diger_hizmet_hesapla() \
-                + self._fahri_gorev_hesapla() + self._yurtdisi_egitim_hesapla()
+               + self._ssk_tum_hesapla() + self._bagkur_tum_hesapla() \
+               + self._yurtdisi_tum_hesapla() + self._diger_hizmet_hesapla() \
+               + self._fahri_gorev_hesapla() + self._yurtdisi_egitim_hesapla()
 
     def kidem_hizmet_ayrinti(self):
         """
@@ -69,14 +69,14 @@ class HizmetSureleri():
         Returns:
 
         """
-        return { "emekli_sandigi": self._emekli_sandigi_hesapla(), "askerlik_hesapla": self._askerlik_hesapla(),
-                 "ssk_2_3" : self._ssk_2_3_hesapla(), "ssk_3_4" : self._ssk_3_4_hesapla(),
-                 "ssk_kamu" : self._ssk_kamu_hesapla(), "bagkur_2_3" : self._bagkur_2_3_hesapla(),
-                 "bagkur_3_4" : self._bagkur_3_4_hesapla(), "yurtdisi_2_3": self._yurtdisi_2_3_hesapla(),
+        return {"emekli_sandigi": self._emekli_sandigi_hesapla(), "askerlik_hesapla": self._askerlik_hesapla(),
+                "ssk_2_3": self._ssk_2_3_hesapla(), "ssk_3_4": self._ssk_3_4_hesapla(),
+                "ssk_kamu": self._ssk_kamu_hesapla(), "bagkur_2_3": self._bagkur_2_3_hesapla(),
+                "bagkur_3_4": self._bagkur_3_4_hesapla(), "yurtdisi_2_3": self._yurtdisi_2_3_hesapla(),
                 "yurtdisi_3_4": self._yurtdisi_3_4_hesapla(), "yurtdisi_tum": self._yurtdisi_tum_hesapla(),
                 "diger_hizmet": self._diger_hizmet_hesapla(), "fahri_gorev": self._fahri_gorev_hesapla(),
-                 "yurtdisi_egitim": self._yurtdisi_egitim_hesapla()
-            }
+                "yurtdisi_egitim": self._yurtdisi_egitim_hesapla()
+                }
 
     def izin_hizmet_getir(self):
         """
@@ -185,7 +185,7 @@ class HizmetSureleri():
 
         """
         # sgk_nevi = 4 / Yurt Dışı Hizmetleri / kha_durum = 2 - 3/4
-        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[4],kha_durum=2)
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[4], kha_durum=2)
 
         sure = 0
         for hizmet in hizmetler:
@@ -218,7 +218,7 @@ class HizmetSureleri():
 
         """
         # sgk_nevi = 1 / SSK Kamu - 2 / SSK Özel - 12 / SSK FHZ (01/10/2008 Sonrası İçin)
-        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[1, 2, 12],kha_durum=1)
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[1, 2, 12], kha_durum=1)
 
         sure = 0
         for hizmet in hizmetler:
@@ -233,7 +233,7 @@ class HizmetSureleri():
 
         """
         # sgk_nevi = 1 / SSK Kamu - 2 / SSK Özel - 12 / SSK FHZ (01/10/2008 Sonrası İçin)
-        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[1, 2, 12],kha_durum=2)
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[1, 2, 12], kha_durum=2)
 
         sure = 0
         for hizmet in hizmetler:
@@ -278,7 +278,7 @@ class HizmetSureleri():
 
         """
         # sgk_nevi = 3 / Bağ-Kur
-        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[3],kha_durum=1)
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[3], kha_durum=1)
 
         sure = 0
         for hizmet in hizmetler:
@@ -293,7 +293,7 @@ class HizmetSureleri():
 
         """
         # sgk_nevi = 3 / Bağ-Kur
-        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[3],kha_durum=2)
+        hizmetler = HizmetBirlestirme.objects.filter(tckn=self.personel.tckn, sgk_nevi__in=[3], kha_durum=2)
 
         sure = 0
         for hizmet in hizmetler:
@@ -355,10 +355,9 @@ class HizmetSureleri():
 
         for izin in ucretsiz_izinler:
             sure += self.tarih_fark_hesapla(izin.baslangic, izin.bitis)
-            #sure += (izin.bitis - izin.baslangic).days
+            # sure += (izin.bitis - izin.baslangic).days
 
         return sure
-
 
 
 def sicil_terfi_kazanan_personel_listesi():
@@ -386,30 +385,35 @@ def sicil_terfi_kazanan_personel_listesi():
     hic_hizmet_kaydi_olmayanlar = []
     sicil_notu_kotu_olanlar = []
     ceza_almislar = []
-    for p in Personel.objects.all():
-
+    baslama_bitis_tarihi_olmayan_kayitlar = []
+    for p in Personel.objects.all(arsiv=False):
 
         sekiz_yillik_terfi = HizmetKayitlari.objects.order_by('-order_date').filter(personel=p, sebep_kod__in=[93, 278])
-        son_8_yillik_terfi = None
+        son_8_yillik_terfi = date(1900, 1, 1)
         if sekiz_yillik_terfi:
             son_8_yillik_terfi = sekiz_yillik_terfi[0].baslama_tarihi or sekiz_yillik_terfi[0].bitis_tarihi
         else:
             hk = HizmetKayitlari.objects.order_by('order_date').filter(personel=p)
             if hk:
                 son_8_yillik_terfi = hk[0].baslama_tarihi or hk[0].bitis_tarihi
+                if not son_8_yillik_terfi:
+                    baslama_bitis_tarihi_olmayan_kayitlar.append(hk)
+                    continue
             else:
                 hic_hizmet_kaydi_olmayanlar.append(p)
                 continue
 
-        if son_8_yillik_terfi > sekiz_yil_once:
-            terfi_almislar.append(p)
-            continue
+        if isinstance(son_8_yillik_terfi, date):
 
-        if son_8_yillik_terfi.year <= 2010:
-            sicil_not = sicil_not_kontrol(p)
-            if sicil_not is False:
-                sicil_notu_kotu_olanlar.append(p)
+            if son_8_yillik_terfi > sekiz_yil_once:
+                terfi_almislar.append(p)
                 continue
+
+            if son_8_yillik_terfi.year <= 2010:
+                sicil_not = sicil_not_kontrol(p)
+                if sicil_not is False:
+                    sicil_notu_kotu_olanlar.append(p)
+                    continue
 
         ceza = Ceza.objects.filter(personel=p, baslama_tarihi__gt=son_8_yillik_terfi).count()
         if ceza:
@@ -429,4 +433,4 @@ def sicil_terfi_kazanan_personel_listesi():
         if net_sure >= 365 * 8:
             terfi_alacaklar.append((p, net_sure, cikarilacak_sure))
 
-    return terfi_alacaklar, terfi_almislar, hic_hizmet_kaydi_olmayanlar, sicil_notu_kotu_olanlar
+    return terfi_alacaklar, terfi_almislar, hic_hizmet_kaydi_olmayanlar, sicil_notu_kotu_olanlar, baslama_bitis_tarihi_olmayan_kayitlar
