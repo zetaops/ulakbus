@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.0">
   <bpmn:collaboration id="Collaboration_1doay8v">
     <bpmn:participant id="Participant_0y0jazc" name="Bilimsel Etkinlik Başvuru" processRef="bap_etkinlik_basvuru" />
   </bpmn:collaboration>
@@ -20,7 +20,7 @@
       <bpmn:incoming>SequenceFlow_159sjug</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rh8mts</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:endEvent id="EndEvent_0ugmdpm">
+    <bpmn:endEvent id="EndEvent">
       <bpmn:incoming>SequenceFlow_0ufap1q</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="anasayfa" name="Anasayfaya Yönlendir" camunda:class="bap.bap_etkinlik_basvuru.BAPEtkinlikBasvuru.yonlendir">
@@ -42,7 +42,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0h1anyq" sourceRef="StartEvent_1" targetRef="bilimsel_etkinlik_bilgi_gir" />
     <bpmn:sequenceFlow id="SequenceFlow_159sjug" sourceRef="bilimsel_etkinlik_bilgi_gir" targetRef="butce_plani" />
     <bpmn:sequenceFlow id="SequenceFlow_0rh8mts" sourceRef="butce_plani" targetRef="evrak_goster" />
-    <bpmn:sequenceFlow id="SequenceFlow_0ufap1q" sourceRef="anasayfa" targetRef="EndEvent_0ugmdpm" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ufap1q" sourceRef="anasayfa" targetRef="EndEvent" />
     <bpmn:sequenceFlow id="SequenceFlow_1w0hzko" sourceRef="basari_mesaji_goster" targetRef="anasayfa" />
     <bpmn:sequenceFlow id="SequenceFlow_12csoys" sourceRef="onayla_ve_kaydet" targetRef="basari_mesaji_goster" />
     <bpmn:sequenceFlow id="SequenceFlow_1nk89jo" sourceRef="evrak_goster" targetRef="onayla_ve_kaydet" />
@@ -122,7 +122,7 @@
       <bpmndi:BPMNShape id="ServiceTask_0bmx5uy_di" bpmnElement="anasayfa">
         <dc:Bounds x="973" y="199" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_0ugmdpm_di" bpmnElement="EndEvent_0ugmdpm">
+      <bpmndi:BPMNShape id="EndEvent_0ugmdpm_di" bpmnElement="EndEvent">
         <dc:Bounds x="1093" y="221" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1111" y="257" width="0" height="0" />

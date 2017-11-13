@@ -230,6 +230,16 @@ class BAPProje(Model):
         degerlendirme_sonucu = field.Integer(_(u"Değerlendirme Sonucu"),
                                              choices="bap_proje_degerlendirme_sonuc")
 
+    class KurumDisiArastirmacilar(ListNode):
+        class Meta:
+            verbose_name = __(u"Kurum Dışı Araştırmacı")
+            verbose_name_plural = __(u"Kurum Dışı Araştırmacılar")
+
+        ad = field.String(_(u"Ad"))
+        soyad = field.String(_(u"Soyad"))
+        birim = field.String(_(u"Birim"))
+        projedeki_gorevi = field.String(_(u"Projedeki Görevi"))
+
     @lazy_property
     def yurutucu_diger_projeler(self):
         return self.objects.filter(yurutucu=self.yurutucu)
