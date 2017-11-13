@@ -20,9 +20,7 @@ class ListeleForm(JsonForm):
     """
 
     class Meta:
-        title = __(u"Akademik Takvim")
-
-    ana_sayfa = fields.Button(__(u"Ana Menüye Dön"), cmd='ana_sayfa')
+        title = __(u"BAP Takvim")
 
 
 class TakvimListele(CrudView):
@@ -48,8 +46,3 @@ class TakvimListele(CrudView):
                 self.output['objects'].append(list_item)
         self.form_out(ListeleForm())
 
-    def yonlendir(self):
-        """
-        Anasayfaya Yonlendirme İşlemi
-        """
-        self.current.output['cmd'] = 'reload'
