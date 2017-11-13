@@ -9,7 +9,7 @@ from collections import OrderedDict
 from zengine.forms import JsonForm
 from zengine.forms import fields
 from zengine.views.crud import CrudView
-from zengine.lib.translation import gettext_lazy as __
+from zengine.lib.translation import gettext_lazy as __, gettext as _
 from ulakbus.lib.personel import yol_masrafi_hesapla, yevmiye_hesapla
 from ulakbus.models.personel import Personel
 
@@ -23,17 +23,6 @@ class BilgiAlmaForm(JsonForm):
 
     hesapla = fields.Button(__(u"Hesapla"))
 
-class BilgiAlmaForm2(JsonForm):
-    konaklama_gun_sayisi = fields.Integer(__(u"Konaklama gün sayısı"))
-    yolculuk_km = fields.Float(__(u"Yolculuk km "))
-    tasit_ucreti = fields.Float(__(u"Taşıt ücreti"))
-    yolculuk_gun_sayisi = fields.Integer(__(u"Yolculuk gün Sayısı"))
-    birey_sayisi = fields.Integer(__(u"Bakmakla yükümlü olduğu kişi sayısı"))
-    ekgosterge = fields.Integer(__(u"Personel ek gösterge"))
-    derece = fields.Integer(__(u"Personel Derece"))
-
-    hesapla = fields.Button(__(u"Hesapla"))
-
 
 class BilgiVerForm(JsonForm):
     tamam = fields.Button(__(u"Tamam"))
@@ -44,10 +33,9 @@ class YolYevmiyeHesapla(CrudView):
         model = "Personel"
 
     def kontrol(self):
-        #self.current.task_data['personel_id']="UuXR8pmKQNzfaPHB2K5wxhC7WDo" #calisiyor
-        self.current.task_data['kontrol'] = 0 # personel_id olmadıgında hata vermesin diye
+        self.current.task_data['kontrol'] = False  # personel_id olmadıgında hata vermesin diye
         if 'personel_id' in self.current.task_data:
-            self.current.task_data['kontrol'] = 1
+            self.current.task_data['kontrol'] = True
 
     def bilgi_al_form(self):
         _form = BilgiAlmaForm(current=self.current,
@@ -55,12 +43,14 @@ class YolYevmiyeHesapla(CrudView):
         self.form_out(_form)
 
     def bilgi_al_form2(self):
-        _form = BilgiAlmaForm2(current=self.current,
-                              title=__(u"Lütfen Tüm Alanları Eksiksiz Doldurun"))
+        _form = BilgiAlmaForm(current=self.current,
+                               title=__(u"Lütfen Tüm Alanları Eksiksiz Doldurun"))
+        _form.ekgosterge = fields.Integer(__(u"Personel ek gösterge"))
+        _form.derece = fields.Integer(__(u"Personel Derece"))
         self.form_out(_form)
 
     def hesapla(self):
-        if self.current.task_data['kontrol']==1:
+        if self.current.task_data['kontrol']:
             personel = Personel.objects.get(key=self.current.task_data.get('personel_id'))
             ekgosterge = personel.gorev_ayligi_ekgosterge
             derece = personel.gorev_ayligi_derece
@@ -81,8 +71,8 @@ class YolYevmiyeHesapla(CrudView):
     def bilgi_ver_form(self):
         self.current.output["meta"]["allow_actions"] = False
         bilgi_ver = OrderedDict([
-            ('yevmiye', str(self.current.task_data['yevmiye'])),
-            ('yol_masrafi', str(self.current.task_data['yol_masrafi'])),
+            (_(u"Yevmiye"), str(self.current.task_data['yevmiye'])),
+            (_(u"Yol Masrafı"), str(self.current.task_data['yol_masrafi'])),
         ])
         self.output['object'] = bilgi_ver
         self.form_out(BilgiVerForm(title=__('Toplam Masraflar')))

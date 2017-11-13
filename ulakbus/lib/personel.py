@@ -213,18 +213,18 @@ def yevmiye_ucreti(derece, ek_gosterge):
         personelin derecesine yada ek gostergesine baglı olarak gunluk yevmiye
 
     """
-    from ulakbus.settings import EK_GOSTERGE_8K,EK_GOSTERGE_5800_8K,EK_GOSTERGE_3K_5800
-    from ulakbus.settings import DERECE_1_4,DERECE_5_15
+    from ulakbus.settings import EK_GOSTERGE_8K, EK_GOSTERGE_5800_8K, EK_GOSTERGE_3K_5800
+    from ulakbus.settings import DERECE_1_4, DERECE_5_15
 
     if ek_gosterge >= 8000:
         return EK_GOSTERGE_8K
-    elif ek_gosterge >= 5800 and ek_gosterge < 8000:
+    elif 5800 <= ek_gosterge < 8000:
         return EK_GOSTERGE_5800_8K
-    elif ek_gosterge >= 3000 and ek_gosterge < 5800:
+    elif 3000 <= ek_gosterge < 5800:
         return EK_GOSTERGE_3K_5800
-    elif derece > 0 and derece < 5:
+    elif 0 < derece < 5:
         return DERECE_1_4
-    elif derece > 4 and derece < 15:
+    elif 4 < derece < 15:
         return DERECE_5_15
 
 
@@ -332,5 +332,5 @@ def yol_masrafi_hesapla(derece, ek_gosterge, km, tasit_ucreti, yolculuk_gun_sayi
     if birey_sayisi == 0:
         return toplam_yol_masrafi
     else:
-        #diger bireyler için yevmiyenin 10 katı
+        # diger bireyler için yevmiyenin 10 katı
         return toplam_yol_masrafi + 10 * (birey_sayisi) * yevmiye
