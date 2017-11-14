@@ -29,6 +29,12 @@ class BAPAnasayfa(CrudView):
                     "wf": "bap_proje_arama"
                 },
                 {
+                    "text": _(u"BAP Takvim"),
+                    "hasChild": False,
+                    "param": "id",
+                    "wf": "bap_takvim_goruntule"
+                },
+                {
                     "text": _(u"Yardım"),
                     "hasChild": False,
                     "param": "id",

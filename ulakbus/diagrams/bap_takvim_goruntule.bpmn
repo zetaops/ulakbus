@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+  <bpmn:collaboration id="Collaboration_08abjp6">
+    <bpmn:participant id="BapTakvimGoruntule" name="Bap Takvim Görüntüle" processRef="bap_takvim_goruntule" />
+  </bpmn:collaboration>
+  <bpmn:process id="bap_takvim_goruntule" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_183ux1f</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="TakvimGoruntule" name="Takvim Goruntule" camunda:assignee="bap.bap_takvim_goruntule.TakvimListele.takvim_listele">
+      <bpmn:incoming>SequenceFlow_183ux1f</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_018ompt</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_183ux1f" sourceRef="StartEvent_1" targetRef="TakvimGoruntule" />
+    <bpmn:endEvent id="EndEvent_0qiqj6n">
+      <bpmn:incoming>SequenceFlow_018ompt</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_018ompt" sourceRef="TakvimGoruntule" targetRef="EndEvent_0qiqj6n" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_08abjp6">
+      <bpmndi:BPMNShape id="Participant_1ut62fy_di" bpmnElement="BapTakvimGoruntule">
+        <dc:Bounds x="217" y="142" width="527" height="244" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="263" y="263" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="236" y="299" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_183ux1f_di" bpmnElement="SequenceFlow_183ux1f">
+        <di:waypoint xsi:type="dc:Point" x="299" y="281" />
+        <di:waypoint xsi:type="dc:Point" x="340" y="281" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="274.5" y="260" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_14xucb3_di" bpmnElement="TakvimGoruntule">
+        <dc:Bounds x="340" y="241" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0qiqj6n_di" bpmnElement="EndEvent_0qiqj6n">
+        <dc:Bounds x="475.480947476828" y="263" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="494" y="299" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_018ompt_di" bpmnElement="SequenceFlow_018ompt">
+        <di:waypoint xsi:type="dc:Point" x="440" y="281" />
+        <di:waypoint xsi:type="dc:Point" x="476" y="281" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="458" y="256" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
