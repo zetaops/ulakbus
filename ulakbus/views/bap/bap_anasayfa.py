@@ -38,19 +38,19 @@ class BAPAnasayfa(CrudView):
                     "text": _(u"Yardım"),
                     "hasChild": False,
                     "param": "id",
-                    "wf": "bap_hakkinda"
+                    "wf": "bap_yardim"
                 },
                 {
                     "text": _(u"Belgeler"),
                     "hasChild": False,
                     "param": "id",
-                    "wf": "bap_hakkinda"
+                    "wf": "bap_belgeler"
                 },
                 {
                     "text": _(u"Mevzuat"),
                     "hasChild": False,
                     "param": "id",
-                    "wf": "bap_hakkinda"
+                    "wf": "bap_mevzuat"
                 },
                 {
                     "text": _(u"BAP Komisyonu"),
@@ -68,7 +68,7 @@ class BAPAnasayfa(CrudView):
                     "text": _(u"BAP Raporları"),
                     "hasChild": False,
                     "param": "id",
-                    "wf": "bap_hakkinda"
+                    "wf": "bap_raporlari"
                 },
                 {
                     "text": _(u"İletişim"),

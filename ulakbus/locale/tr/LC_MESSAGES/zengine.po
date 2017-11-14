@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-08-08 15:59+0300\n"
-"PO-Revision-Date: 2017-08-08 16:21+0300\n"
+"POT-Creation-Date: 2017-11-14 11:44+0300\n"
+"PO-Revision-Date: 2017-11-14 12:39+0300\n"
 "Last-Translator: Anil Can Aydin <anlcnydn@gmail.com>\n"
 "Language: tr\n"
 "Language-Team: tr <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #: ../../zengine/zengine/management_commands.py:577
 msgid "Checking migration and solr ..."
@@ -491,51 +491,59 @@ msgstr "Mevcut bir kanalla birleştirme işlemi için en az bir kanal seçmelisi
 msgid "You should choose one channel for split operation."
 msgstr "Kanal ayırma işlemi için bir kanal seçmelisiniz."
 
-#: ../../zengine/zengine/views/crud.py:37
+#: ../../zengine/zengine/views/crud.py:38
 msgid "Add"
 msgstr "Ekle"
 
-#: ../../zengine/zengine/views/crud.py:47 ../../zengine/zengine/views/crud.py:263
+#: ../../zengine/zengine/views/crud.py:48 ../../zengine/zengine/views/crud.py:264
 msgid "Save"
 msgstr "Kaydet"
 
-#: ../../zengine/zengine/views/crud.py:48 ../../zengine/zengine/views/crud.py:264
+#: ../../zengine/zengine/views/crud.py:49 ../../zengine/zengine/views/crud.py:265
 msgid "Save and List"
 msgstr "Kaydet ve Listele"
 
-#: ../../zengine/zengine/views/crud.py:49 ../../zengine/zengine/views/crud.py:266
+#: ../../zengine/zengine/views/crud.py:50 ../../zengine/zengine/views/crud.py:267
 msgid "Save as New"
 msgstr "Yeni Olarak Kaydet"
 
-#: ../../zengine/zengine/views/crud.py:51 ../../zengine/zengine/views/crud.py:268
+#: ../../zengine/zengine/views/crud.py:52 ../../zengine/zengine/views/crud.py:269
 msgid "Save as New and List"
 msgstr "Yeni Olarak Kaydet ve Listele"
 
-#: ../../zengine/zengine/views/crud.py:58
+#: ../../zengine/zengine/views/crud.py:59
 msgid "Cancel"
 msgstr "İptal"
 
-#: ../../zengine/zengine/views/crud.py:59
+#: ../../zengine/zengine/views/crud.py:60
 msgid "Confirm"
 msgstr "Onayla"
 
-#: ../../zengine/zengine/views/crud.py:252
+#: ../../zengine/zengine/views/crud.py:253
 msgid "Delete"
 msgstr "Sil"
 
-#: ../../zengine/zengine/views/crud.py:254
+#: ../../zengine/zengine/views/crud.py:255
 msgid "Edit"
 msgstr "Düzenle"
 
-#: ../../zengine/zengine/views/crud.py:864
+#: ../../zengine/zengine/views/crud.py:866
 msgid "Deletion Confirmation"
 msgstr "Silme Onayı"
 
-# Format does not work for translations
-#: ../../zengine/zengine/views/crud.py:865
+#: ../../zengine/zengine/views/crud.py:867
 #, python-format
 msgid "Do you confirm the deletion of %s ?"
 msgstr "Silme işlemini onaylıyor musunuz %s ?"
+
+#: ../../zengine/zengine/views/not_found.py:14
+msgid "Not Found"
+msgstr "Bulunamadı"
+
+#: ../../zengine/zengine/views/not_found.py:22
+#, python-format
+msgid "Workflow %s is not found. It can be non existent or not ready yet."
+msgstr "%s adlı iş akışı bulunamadı ya da henüz hazır değil."
 
 #: ../../zengine/zengine/views/role_switching.py:26
 msgid "Switch Role"

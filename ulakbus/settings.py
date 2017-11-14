@@ -62,7 +62,7 @@ ANONYMOUS_WORKFLOWS.extend(
     ['login', 'logout', 'parolami_unuttum', 'yeni_parola_belirle', 'bap_firma_kayit',
      'bap_duyurulari_goruntule', 'bap_makine_techizat_ara', 'bap_anasayfa',
      'bap_komisyon_uyeleri', 'bap_iletisim', 'bap_proje_arama', 'bap_hakkinda',
-     'bap_takvim_goruntule',
+     'bap_takvim_goruntule', 'bap_yardim', 'bap_belgeler', 'bap_mevzuat', 'bap_raporlari',
      ])
 
 #: Ortak kullanılan workflowlar
