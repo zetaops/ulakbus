@@ -6,7 +6,7 @@
   <bpmn:process id="bap_ogretim_uyesi_etkinlik_basvuru_listele" name="Bilimsel Etkinlik Başvurularım" isExecutable="false">
     <bpmn:extensionElements>
       <camunda:properties>
-        <camunda:property name="menu_category" value="hidden" />
+        <camunda:property name="menu_category" value="BAP" />
       </camunda:properties>
     </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_1">
