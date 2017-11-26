@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.2">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.8.0">
   <bpmn:collaboration id="Collaboration_0a8mqal">
     <bpmn:documentation>Bütçe Kalemi Seç</bpmn:documentation>
     <bpmn:participant id="satin_alma_islemleri" name="BAP Satın Alma İşlemleri" processRef="bap_satin_alma_islemleri" />
@@ -234,10 +234,10 @@
       <bpmn:outgoing>SequenceFlow_06cd6wz</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_13vpeco</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0eiwiku" sourceRef="ExclusiveGateway_02vx8n2" targetRef="Task_15s0nfs">
+    <bpmn:sequenceFlow id="SequenceFlow_0eiwiku" sourceRef="ExclusiveGateway_02vx8n2" targetRef="OlusturulacakBelgeyiSec">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='template_sec']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="Task_15s0nfs" name="Oluşturulacak Belgeyi Seç" camunda:assignee="bap.bap_satin_alma_islemleri.TeklifDegerlendirme.template_sec">
+    <bpmn:userTask id="OlusturulacakBelgeyiSec" name="Oluşturulacak Belgeyi Seç" camunda:assignee="bap.bap_satin_alma_islemleri.TeklifDegerlendirme.template_sec">
       <bpmn:incoming>SequenceFlow_0eiwiku</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1voaykx</bpmn:outgoing>
     </bpmn:userTask>
@@ -247,24 +247,24 @@
       <bpmn:outgoing>SequenceFlow_0svy1ih</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1s8km8k</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_1voaykx" sourceRef="Task_15s0nfs" targetRef="ExclusiveGateway_1nmyid1" />
-    <bpmn:sequenceFlow id="SequenceFlow_0jonedk" sourceRef="ExclusiveGateway_1nmyid1" targetRef="Task_0vxdp66">
+    <bpmn:sequenceFlow id="SequenceFlow_1voaykx" sourceRef="OlusturulacakBelgeyiSec" targetRef="ExclusiveGateway_1nmyid1" />
+    <bpmn:sequenceFlow id="SequenceFlow_0jonedk" sourceRef="ExclusiveGateway_1nmyid1" targetRef="TemplateIndir">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='template_indir']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0svy1ih" sourceRef="ExclusiveGateway_1nmyid1" targetRef="ExclusiveGateway_06z2heg">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='geri_don']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0pwlicm" sourceRef="Task_0vxdp66" targetRef="SatinAlmaDuyurulariniListele" />
-    <bpmn:sequenceFlow id="SequenceFlow_1s8km8k" sourceRef="ExclusiveGateway_1nmyid1" targetRef="Task_0j3dbvm">
+    <bpmn:sequenceFlow id="SequenceFlow_0pwlicm" sourceRef="TemplateIndir" targetRef="SatinAlmaDuyurulariniListele" />
+    <bpmn:sequenceFlow id="SequenceFlow_1s8km8k" sourceRef="ExclusiveGateway_1nmyid1" targetRef="ButceKalemiSec">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[TemplateSecForm['belge'] == 'siparis_formu']]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="Task_0vxdp66" name="Template İndir" camunda:assignee="bap.bap_satin_alma_islemleri.TeklifDegerlendirme.template_indir">
+    <bpmn:userTask id="TemplateIndir" name="Template İndir" camunda:assignee="bap.bap_satin_alma_islemleri.TeklifDegerlendirme.template_indir">
       <bpmn:incoming>SequenceFlow_0jonedk</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_18voapg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0pwlicm</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_18voapg" sourceRef="Task_0j3dbvm" targetRef="Task_0vxdp66" />
-    <bpmn:userTask id="Task_0j3dbvm" name="Bütçe Kalemi Seç" camunda:assignee="bap.bap_satin_alma_islemleri.TeklifDegerlendirme.butce_kalemi_sec">
+    <bpmn:sequenceFlow id="SequenceFlow_18voapg" sourceRef="ButceKalemiSec" targetRef="TemplateIndir" />
+    <bpmn:userTask id="ButceKalemiSec" name="Bütçe Kalemi Seç" camunda:assignee="bap.bap_satin_alma_islemleri.TeklifDegerlendirme.butce_kalemi_sec">
       <bpmn:incoming>SequenceFlow_1s8km8k</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_18voapg</bpmn:outgoing>
     </bpmn:userTask>
@@ -705,7 +705,7 @@
           <dc:Bounds x="278" y="470.5" width="0" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_1i6w8kx_di" bpmnElement="Task_15s0nfs">
+      <bpmndi:BPMNShape id="UserTask_1i6w8kx_di" bpmnElement="OlusturulacakBelgeyiSec">
         <dc:Bounds x="306" y="622" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ExclusiveGateway_1nmyid1_di" bpmnElement="ExclusiveGateway_1nmyid1" isMarkerVisible="true">
@@ -745,7 +745,7 @@
           <dc:Bounds x="-88" y="467.5" width="90" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_03x76hj_di" bpmnElement="Task_0vxdp66">
+      <bpmndi:BPMNShape id="UserTask_03x76hj_di" bpmnElement="TemplateIndir">
         <dc:Bounds x="431" y="719" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1s8km8k_di" bpmnElement="SequenceFlow_1s8km8k">
@@ -755,7 +755,7 @@
           <dc:Bounds x="531.5" y="640.5" width="0" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_1p2al91_di" bpmnElement="Task_0j3dbvm">
+      <bpmndi:BPMNShape id="UserTask_1p2al91_di" bpmnElement="ButceKalemiSec">
         <dc:Bounds x="557" y="622" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_18voapg_di" bpmnElement="SequenceFlow_18voapg">

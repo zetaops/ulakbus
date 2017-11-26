@@ -12,6 +12,7 @@ from ulakbus.lib.s3_file_manager import S3FileManager
 from datetime import datetime, time
 from ulakbus.settings import DATETIME_DEFAULT_FORMAT
 import ulakbus.lib.doc_render as render
+from pyoko.exceptions import ObjectDoesNotExist
 
 
 class KazananFirmalarForm(JsonForm):
@@ -538,7 +539,7 @@ class TeklifDegerlendirme(CrudView):
 
         self.set_client_cmd('download')
         self.current.output['download_url'] = render_function(context_data=context_function(),
-                                                              wants_pdf=wants_pdf)
+                                                              wants_pdf=True)
 
     def piyasa_fiyat_arastirmasi_tutanagi_context(self):
         """
@@ -547,15 +548,13 @@ class TeklifDegerlendirme(CrudView):
             dict: Context data for template file.
 
         """
-        satin_alma_object = self.model_class.objects.get(self.current.task_data['object_id'])
-        malzemeler = satin_alma_object.ButceKalemleri
-
-        kazanan_firma = malzemeler[0].butce.kazanan_firma
-        firma2, firma3 = BAPTeklifFiyatIsleme.en_iyi_teklif_veren_ikinci_ve_ucuncu_firmayi_getir(malzemeler[0].butce)
-
         rightnow = datetime.now()
         formatted_date = datetime.strftime(rightnow, '%d.%m.%Y')
-
+        satin_alma_object = self.model_class.objects.get(self.current.task_data['object_id'])
+        malzemeler = satin_alma_object.ButceKalemleri
+        kazanan_firma = malzemeler[0].butce.kazanan_firma
+        firma2, firma3 = BAPTeklifFiyatIsleme.en_iyi_teklif_veren_ikinci_ve_ucuncu_firmayi_getir(
+        malzemeler[0].butce)
         context = {
             "idare_adi": "YILDIRIM BEYAZIT ÜNİVERSİTESİ REKTÖRLÜĞÜ BİLİMSEL ARAŞTIRMA PROJELERİ KOORDİNASYON BİRİMİ",
             "yapilan_isin_adi": "Mal Alımı, Malzeme Alımı",
@@ -579,19 +578,21 @@ class TeklifDegerlendirme(CrudView):
             "harcama_yetkilisi": {"ad": "", "unvan": ""},
             "belge_imza_tarihi": formatted_date
         }
-
         i = 0
-        for malz in malzemeler:
+        for malzeme in malzemeler:
             i += 1
             teklifler = []
+            kazanan_firma = malzeme.butce.kazanan_firma
+            firma2, firma3 = BAPTeklifFiyatIsleme.en_iyi_teklif_veren_ikinci_ve_ucuncu_firmayi_getir(
+                malzeme.butce)
             for firm in [kazanan_firma, firma2, firma3]:
                 teklifler.append(BAPTeklifFiyatIsleme.objects.get(firma=firm,
-                                                                  kalem=malz.butce))
+                                                                  kalem=malzeme.butce))
 
             # Firmaların verdiği teklifler ve malzemeler liste olarak context'e ekleniyor.
             context['malzemeler'].append({"sira_no": i,
-                                          "adi": malz.butce.ad,
-                                          "miktar": malz.butce.adet,
+                                          "adi": malzeme.butce.ad,
+                                          "miktar": malzeme.butce.adet,
                                           "birim": "Adet",
                                           "f1_birim": teklifler[0].birim_fiyat,
                                           "f1_toplam": teklifler[0].toplam_fiyat,
