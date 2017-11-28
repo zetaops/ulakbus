@@ -596,9 +596,9 @@ class BAPTeklifFiyatIsleme(Model):
     @classmethod
     def en_iyi_teklif_veren_ikinci_ve_ucuncu_firmayi_getir(cls, butce):
         firmalar = cls.objects.filter(kalem=butce).exclude(firma=butce.kazanan_firma).order_by(
-            '-toplam_fiyat')
+            'toplam_fiyat')
 
-        return firmalar[0], firmalar[1]
+        return firmalar[0].firma, firmalar[1].firma
 
 
 class BAPRapor(Model):
@@ -609,7 +609,7 @@ class BAPRapor(Model):
     proje = BAPProje()
     tur = field.Integer(__(u"Rapor Türü"), choices='bap_rapor_turu')
     durum = field.Integer(__(u"Rapor Durumu"), choices='bap_rapor_durum', default=1)
-    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=True)
+    belge = field.File(_(u"Proje Rapor Belgesi"), random_name=False)
     olusturulma_tarihi = field.Date(_(u"Rapor Oluşturulma Tarihi"))
 
     def __unicode__(self):

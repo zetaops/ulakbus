@@ -27,7 +27,7 @@ class RenderDocument(ZatoService):
             context (dict)      : Context data for Jinja2
             wants_pdf (bool)    : Wants pdf output.
         """
-        super(RenderDocument, self).__init__('document-render.render-document', None)
+        super(RenderDocument, self).__init__('render-document', None)
         self.file_name = template_name
         if context is not None:
             self.context = context
@@ -47,11 +47,11 @@ class RenderDocument(ZatoService):
         """
         try:
             t = Template.objects.get(name=self.file_name)
-            return {"template": "{}{}".format(settings.S3_PUBLIC_URL, t.template),
+            return {"template": "{}/{}".format(settings.S3_PUBLIC_URL, t.template),
                     "modify_date": "{}".format(t.modify_date)}
         except ObjectDoesNotExist:
-            raise ValueError("%s geçerli bir template değildir. "
-                             "Lütfen template dosyanızı kontol edin.")
+            raise ValueError("{} geçerli bir template değildir. "
+                             "Lütfen template dosyanızı kontol edin.".format(self.file_name))
 
     def render(self):
         """
@@ -64,7 +64,7 @@ class RenderDocument(ZatoService):
 
         payload = {"template": template_info['template'],
                    "context": self.context,
-                   "wants_pdf": self.wants_pdf,
+                   "pdf": self.wants_pdf,
                    "modify_date": template_info['modify_date']
                    }
 
