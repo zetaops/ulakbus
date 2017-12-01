@@ -26,7 +26,7 @@ class BapDuyurular(CrudView):
     def __init__(self, current):
         CrudView.__init__(self, current)
         if 'object_id' in self.current.task_data and self.cmd == 'add_edit_form' and \
-                'object_id' not in self.input:
+                        'object_id' not in self.input:
             del self.current.task_data['object_id']
             self.object = BAPDuyuru()
             self.object_form = DuyurularAddEditForm(self.object, current=self.current)
@@ -134,3 +134,6 @@ class BapDuyurular(CrudView):
         zip_url = s3.download_files_as_zip(keys, zip_name)
         self.set_client_cmd('download')
         self.output['download_url'] = zip_url
+
+    def check_object_id(self):
+        self.current.task_data['object_id'] = self.input.get('object_id', None)
