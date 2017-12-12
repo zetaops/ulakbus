@@ -339,7 +339,7 @@ class BAPButcePlani(Model):
                                 choices='analitik_butce_dorduncu_duzey_gider_kodlari',
                                 default="03.2.6.90")
     kod_adi = field.String(__(u"Kod Adı"))
-    ad = field.String(__(u"Alınacak Malzemenin Adı"))
+    ad = field.String(__(u"Alınacak Malzemenin Adı veya Hizmet Açıklaması"))
     birim_fiyat = field.Float(__(u"Birim Fiyat"),
                               help_text=__(u"Birim fiyatlar KDV dahil fiyatlar olmalıdır!"))
     adet = field.Integer(__(u"Adet"))
