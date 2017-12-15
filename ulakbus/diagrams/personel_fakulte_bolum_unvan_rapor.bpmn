@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
+  <bpmn:collaboration id="Collaboration_0wqw5e6">
+    <bpmn:participant id="personel_fakulte_bolum_unvan_raporlama" name="Akademik Personel Raporu" processRef="personel_fakulte_bolum_unvan_rapor" />
+  </bpmn:collaboration>
+  <bpmn:process id="personel_fakulte_bolum_unvan_rapor" name="Akademik Personel Raporu" isExecutable="false">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="menu_category" value="Raporlar" />
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0ds5nxc</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0ds5nxc" sourceRef="StartEvent_1" targetRef="rapor_goster" />
+    <bpmn:userTask id="rapor_goster" name="Rapor Göster" camunda:assignee="reports.personel_fakulte_bolum_unvan_rapor.PersonelFakulteBolumUnvanRaporDataGridView.grid_goster">
+      <bpmn:incoming>SequenceFlow_0ds5nxc</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1az2a6d</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_153b531</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_17wvacy</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_04j8ows" default="SequenceFlow_153b531">
+      <bpmn:incoming>SequenceFlow_17wvacy</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1pvloor</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_153b531</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_17wvacy" sourceRef="rapor_goster" targetRef="ExclusiveGateway_04j8ows" />
+    <bpmn:sequenceFlow id="SequenceFlow_1pvloor" sourceRef="ExclusiveGateway_04j8ows" targetRef="csv_disa_aktar">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='csv']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1az2a6d" sourceRef="csv_disa_aktar" targetRef="rapor_goster" />
+    <bpmn:sequenceFlow id="SequenceFlow_153b531" sourceRef="ExclusiveGateway_04j8ows" targetRef="rapor_goster" />
+    <bpmn:serviceTask id="csv_disa_aktar" name="CSV Disa Aktar" camunda:class="reports.personel_fakulte_bolum_unvan_rapor.PersonelFakulteBolumUnvanRaporDataGridView.csv_indir">
+      <bpmn:incoming>SequenceFlow_1pvloor</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1az2a6d</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0wqw5e6">
+      <bpmndi:BPMNShape id="Participant_10jf4w0_di" bpmnElement="personel_fakulte_bolum_unvan_raporlama">
+        <dc:Bounds x="333" y="202" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="386" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="404" y="338" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ds5nxc_di" bpmnElement="SequenceFlow_0ds5nxc">
+        <di:waypoint xsi:type="dc:Point" x="422" y="320" />
+        <di:waypoint xsi:type="dc:Point" x="487" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="455" y="305" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1w8qlhq_di" bpmnElement="rapor_goster">
+        <dc:Bounds x="487" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_04j8ows_di" bpmnElement="ExclusiveGateway_04j8ows" isMarkerVisible="true">
+        <dc:Bounds x="645" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="670" y="345" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_17wvacy_di" bpmnElement="SequenceFlow_17wvacy">
+        <di:waypoint xsi:type="dc:Point" x="587" y="320" />
+        <di:waypoint xsi:type="dc:Point" x="645" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="616" y="295" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1pvloor_di" bpmnElement="SequenceFlow_1pvloor">
+        <di:waypoint xsi:type="dc:Point" x="695" y="320" />
+        <di:waypoint xsi:type="dc:Point" x="748" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="722" y="305" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1az2a6d_di" bpmnElement="SequenceFlow_1az2a6d">
+        <di:waypoint xsi:type="dc:Point" x="798" y="360" />
+        <di:waypoint xsi:type="dc:Point" x="798" y="411" />
+        <di:waypoint xsi:type="dc:Point" x="537" y="411" />
+        <di:waypoint xsi:type="dc:Point" x="537" y="360" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="668" y="396" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_153b531_di" bpmnElement="SequenceFlow_153b531">
+        <di:waypoint xsi:type="dc:Point" x="670" y="295" />
+        <di:waypoint xsi:type="dc:Point" x="670" y="241" />
+        <di:waypoint xsi:type="dc:Point" x="537" y="241" />
+        <di:waypoint xsi:type="dc:Point" x="537" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="604" y="226" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1e8vbzm_di" bpmnElement="csv_disa_aktar">
+        <dc:Bounds x="748" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

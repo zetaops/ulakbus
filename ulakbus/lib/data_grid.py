@@ -11,7 +11,7 @@ import base64
 import csv
 from datetime import datetime
 from io import BytesIO
-from settings import DATA_GRID_PAGE_SIZE, DATE_DEFAULT_FORMAT
+from ulakbus.settings import DATA_GRID_PAGE_SIZE, DATE_DEFAULT_FORMAT
 from ulakbus.lib.common import get_file_url
 from pyoko.fields import DATE_FORMAT
 from ulakbus.lib.s3_file_manager import S3FileManager
@@ -44,9 +44,10 @@ class GridQueryCache(Cache):
 
 class DataGrid(object):
     def __init__(self, cache_key, model, page, filter_params, sort_params, columns, selectors=None,
-                 **kwargs):
+                 cache=None, query_cache=None, **kwargs):
         self.model = model
-        self.grid_cache = GridCache(cache_key)
+        self.grid_cache = GridCache(cache_key) if not cache else cache(cache_key)
+        self.grid_query_cache = GridQueryCache if not query_cache else query_cache
         self.grid_cache_data = self.grid_cache.get() or {}
         self.page = page
         self.filter_params = filter_params
@@ -198,7 +199,7 @@ class DataGrid(object):
 
         cache_key = hashlib.sha256(cache_key).hexdigest()
 
-        query_cache = GridQueryCache(cache_key)
+        query_cache = self.grid_query_cache(cache_key)
         cached_response = query_cache.get()
         if cached_response:
             return cached_response
