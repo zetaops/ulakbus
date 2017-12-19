@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_07fss3p">
     <bpmn:participant id="Participant_0fsgpu1" name="BAP Etkinlik Başvuruları" processRef="bap_etkinlik_basvuru_listele" />
   </bpmn:collaboration>
-  <bpmn:process id="bap_etkinlik_basvuru_listele" name="Bilimsel Etkinlik Başvuru Listeleme" isExecutable="false">
+  <bpmn:process id="bap_etkinlik_basvuru_listele" name="BAP Etkinlik Başvuruları" isExecutable="false">
     <bpmn:extensionElements>
       <camunda:properties>
         <camunda:property name="menu_category" value="BAP" />
