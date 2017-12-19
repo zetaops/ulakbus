@@ -6,7 +6,7 @@
         <camunda:property name="menu_category" value="BAP" />
       </camunda:properties>
     </bpmn:extensionElements>
-    <bpmn:participant id="basvuru_listeleme" name="BAP Başvuru Listeleme" processRef="bap_basvuru_listeleme" />
+    <bpmn:participant id="basvuru_listeleme" name="BAP Proje Başvuruları" processRef="bap_basvuru_listeleme" />
   </bpmn:collaboration>
   <bpmn:process id="bap_basvuru_listeleme" name="" isExecutable="false">
     <bpmn:userTask id="BasvuruListeleme" name="Başvuru Listeleme" camunda:assignee="bap.bap_basvuru_listeleme.BasvuruListeleme.list">
