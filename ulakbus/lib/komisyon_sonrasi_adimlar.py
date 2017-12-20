@@ -524,7 +524,7 @@ class KomisyonKarariSonrasiAdimlar():
                 self.object.proje.ad)),
                 message=_(u"""{} adlı onaylanmış projenin bütçe fişi kesilmesi gerekmektedir. 
                         Görev yöneticinizden ilgili isteğe ulaşabilir, 
-                        iş akışını çalıştırabilirsiniz.""".format(self.object.ad)),
+                        iş akışını çalıştırabilirsiniz.""".format(self.object.proje.ad)),
                 typ=1,
                 sender=sistem_user
             )

@@ -260,7 +260,11 @@ class BAPProje(Model):
     def __unicode__(self):
         return "%s: %s" % (self.ad, self.yurutucu.__unicode__())
 
+    def pre_save(self):
+        self.kabul_edilen_butce = self.teklif_edilen_butce
+
     def post_save(self):
+
         if self.durum == 5 and self.is_changed('durum'):
             genel = BAPGenel.get()
             genel.toplam_taahhut += self.kabul_edilen_butce
