@@ -116,7 +116,8 @@ class Gundem(CrudView):
             else _(u"Sonuçlanmadı")
 
         self.output['object'][u'Kararın Sonuçlandırılması'] = sonuc
-        del self.output['object'][u'Gündem Ekstra Bilgileri']
+        if u'Gündem Ekstra Bilgileri' in self.output['object']:
+            del self.output['object'][u'Gündem Ekstra Bilgileri']
 
     def ilgili_methodu_cagir(self):
         karar = self.current.task_data['GundemDuzenleForm']['gundem_karar']
