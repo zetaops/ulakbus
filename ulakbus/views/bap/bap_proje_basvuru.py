@@ -463,21 +463,21 @@ class ProjeBasvuru(CrudView):
         """
         form = ArastirmaOlanaklariForm(current=self.current)
         for olanak in self.current.task_data['hedef_proje']['arastirma_olanaklari']:
-            o = olanak.items()[1]
-            if o[0] == 'lab':
-                ad = Room.objects.get(o[1]).__unicode__()
+            gorev = "-"
+            if 'lab' in olanak:
+                ad = Room.objects.get(olanak['lab']).__unicode__()
                 tur = _(u"Laboratuvar")
-            elif o[0] == 'demirbas':
-                ad = Demirbas.objects.get(o[1]).__unicode__()
+            elif 'demirbas' in olanak:
+                ad = Demirbas.objects.get(olanak['demirbas']).__unicode__()
                 tur = _(u"Demirbaş")
-            elif o[0] == 'kurum_ici':
-                ad = Personel.objects.get(o[1]).__unicode__()
+            elif 'kurum_ici' in olanak:
+                ad = Personel.objects.get(olanak['kurum_ici']).__unicode__()
                 tur = _(u"Kurum İçi Araştırmacı")
-                gorev = olanak.items()[0][1]
+                gorev = olanak['projedeki_gorevi']
             else:
-                ad = o[1]
+                ad = olanak['kurum_disi']
                 tur = _(u"Kurum Dışı Araştırmacı")
-                gorev = olanak.items()[0][1]
+                gorev = olanak['projedeki_gorevi']
             form.Olanak(ad=ad, tur=tur, projedeki_gorevi=gorev)
         self.form_out(form)
         self.current.output["meta"]["allow_add_listnode"] = False
@@ -540,7 +540,6 @@ class ProjeBasvuru(CrudView):
         araştırmacı eklediği adımdır.
         """
         form = KurumDisiArastirmaciEkleForm(current=self.current)
-        form.set_choices_of('birim', choices=prepare_choices_for_model(Unit, unit_type="Bölüm"))
         self.form_out(form)
 
     def olanak_kaydet(self):
