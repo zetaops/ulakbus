@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.5.1">
   <bpmn:collaboration id="Collaboration_0zvk5l8">
     <bpmn:extensionElements>
       <camunda:properties>
@@ -144,6 +144,7 @@
       <bpmn:outgoing>SequenceFlow_0w4onin</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1d5oxvz</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0wyalhe</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_060jdp5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="draft_olustur" name="Kaydet ve Draft Oluştur" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.kaydet_ve_draft_olustur">
       <bpmn:incoming>SequenceFlow_1d5oxvz</bpmn:incoming>
@@ -239,6 +240,7 @@
     </bpmn:userTask>
     <bpmn:userTask id="proje_genel_bilgi_gir" name="Proje Genel Bilgilerini Gir" camunda:assignee="bap.bap_proje_basvuru.ProjeBasvuru.proje_genel_bilgilerini_gir">
       <bpmn:incoming>SequenceFlow_0h8912o</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_060jdp5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1mkeoyi</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="olanak_kaydet" name="Olanak Kaydet" camunda:class="bap.bap_proje_basvuru.ProjeBasvuru.olanak_kaydet">
@@ -428,6 +430,9 @@
       <bpmn:incoming>SequenceFlow_0m23h6x</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0n46tlk</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_060jdp5" sourceRef="ExclusiveGateway_0t5hs88" targetRef="proje_genel_bilgi_gir">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[cmd=='error']]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0zvk5l8">
@@ -1170,6 +1175,15 @@
         <di:waypoint xsi:type="dc:Point" x="1420" y="-574" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1435" y="-488" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_060jdp5_di" bpmnElement="SequenceFlow_060jdp5">
+        <di:waypoint xsi:type="dc:Point" x="1110" y="-607" />
+        <di:waypoint xsi:type="dc:Point" x="984" y="-607" />
+        <di:waypoint xsi:type="dc:Point" x="984" y="-448" />
+        <di:waypoint xsi:type="dc:Point" x="1074" y="-421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="999" y="-527.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

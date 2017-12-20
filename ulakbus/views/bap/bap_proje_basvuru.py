@@ -342,6 +342,13 @@ class ProjeBasvuru(CrudView):
         """
         Proje genel bilgilerinin girildiği adımdır.
         """
+        if self.current.task_data['cmd'] == 'error':
+            self.current.output['msgbox'] = {
+                'type': 'error',
+                 "title": _(u"Proje Bilgileri Hatalı"),
+                 "msg": self.current.task_data['error_msg']
+            }
+            self.current.task_data['cmd'] = self.current.task_data['pre_cmd']
         self.form_out(GenelBilgiGirForm(self.object, current=self.current))
 
     def proje_no_kaydet(self):
@@ -370,17 +377,26 @@ class ProjeBasvuru(CrudView):
             proje = BAPProje()
             proje.proje_no = self.proje_no_belirle(tur_id)
         proje.tur = BAPProjeTurleri.objects.get(tur_id)
-        try:
-            proje.blocking_save()
-        except IntegrityError:
+        proje_teklif_edilen_butce = self.current.task_data['GenelBilgiGirForm'][
+            'teklif_edilen_butce']
+        if proje_teklif_edilen_butce > proje.tur.butce_ust_limit:
             self.current.task_data['pre_cmd'] = self.current.task_data['cmd']
-            self.current.task_data['cmd'] = 'retry'
-        proje_id = proje.key
-        self.current.task_data['bap_proje_id'] = proje_id
+            self.current.task_data['cmd'] = 'error'
+            self.current.task_data['error_msg'] = _(
+                u"Projede teklif edilen bütçe proje türünün üst limitinden(%s) fazla olamaz. Lütfen"
+                u" seçimininzi gözden geçiriniz." % proje.tur.butce_ust_limit)
+        else:
+            try:
+                proje.blocking_save()
+            except IntegrityError:
+                self.current.task_data['pre_cmd'] = self.current.task_data['cmd']
+                self.current.task_data['cmd'] = 'retry'
+            proje_id = proje.key
+            self.current.task_data['bap_proje_id'] = proje_id
 
-        wfi = WFInstance.objects.get(self.current.token)
-        wfi.wf_object = proje_id
-        wfi.blocking_save()
+            wfi = WFInstance.objects.get(self.current.token)
+            wfi.wf_object = proje_id
+            wfi.blocking_save()
 
     def proje_no_belirle(self, tur_id):
         """

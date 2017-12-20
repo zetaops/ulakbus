@@ -22,7 +22,7 @@ class BAPSatinAlmaDuyurulariListeleme(CrudView):
         model = 'BAPSatinAlma'
 
     def object_id_kontrol(self):
-        self.current.task_data['object_id'] = self.input.get('object_key', None)
+        self.current.task_data['object_id'] = self.input.get('object_id', None)
 
     def satin_alma_duyurulari_list(self):
         """
@@ -55,6 +55,7 @@ class BAPSatinAlmaDuyurulariListeleme(CrudView):
         bulunan kalemlere indir butonu eklenir.
 
         """
+        self.current.task_data['object_id'] = self.input.get('object_id', None)
         form = JsonForm(current=self.current, title=_(u'%s Satın Alma Duyurusu Bütçe Kalemleri'
                                                       % self.object.ad))
         form.geri = fields.Button(__(u"Geri Dön"), cmd='geri_don')

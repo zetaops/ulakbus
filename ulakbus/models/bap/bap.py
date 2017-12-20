@@ -11,7 +11,7 @@ from pyoko.lib.utils import lazy_property
 from zengine.lib.translation import gettext_lazy as __, gettext as _
 from pyoko import Model, field, ListNode
 from pyoko.exceptions import ObjectDoesNotExist
-
+from datetime import datetime, timedelta
 
 class BAPProjeTurleri(Model):
     kod = field.String(__(u"Proje tür kodu"))
@@ -560,6 +560,15 @@ class BAPSatinAlma(Model):
     def __unicode__(self):
         return "%s" % self.ad
 
+    def post_save(self):
+        if not self.teklife_acilma_tarihi:
+            t = datetime.today() + timedelta(days=1)
+            self.teklife_acilma_tarihi = datetime(t.year, t.month, t.day, 9, 0, 0, 0)
+        if not self.teklife_kapanma_tarihi:
+            t = self.teklife_acilma_tarihi + timedelta(days=15)
+            self.teklife_kapanma_tarihi = datetime(t.year, t.month, t.day, 16, 0, 0, 0)
+
+        self.save(internal=True)
 
 class BAPTeklif(Model):
     class Meta:

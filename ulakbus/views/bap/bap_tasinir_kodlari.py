@@ -147,6 +147,7 @@ class BAPTasinirKodlari(CrudView):
             tur=self.current.task_data['satin_alma_turu'],
             sorumlu=self.current.role
         ).blocking_save()
+        self.butce_kalemleri_yapistir(satin_alma)
         sistem_user = User.objects.get(username='sistem_bilgilendirme')
         for y in firma.Yetkililer:
             y.yetkili.send_notification(
@@ -171,7 +172,7 @@ class BAPTasinirKodlari(CrudView):
     def satin_alma_kaydet(self):
         d1 = datetime.strptime(self.input['form']['teklife_acilma_tarihi'], DATE_DEFAULT_FORMAT)
         d2 = datetime.strptime(self.input['form']['teklife_kapanma_tarihi'], DATE_DEFAULT_FORMAT)
-        BAPSatinAlma(
+        satin_alma = BAPSatinAlma(
             ad=self.input['form']['ad'],
             teklife_acilma_tarihi=datetime(d1.year, d1.month, d1.day, 9, 0, 0, 0),
             teklife_kapanma_tarihi=datetime(d2.year, d2.month, d2.day, 16, 0, 0, 0),
@@ -183,9 +184,15 @@ class BAPTasinirKodlari(CrudView):
             duyuruda=True,
             sorumlu=self.current.role
         ).blocking_save()
+        self.butce_kalemleri_yapistir(satin_alma)
 
     def satin_alma_duyuru_basari(self):
         form = JsonForm(title=_(u"İlan Başarılı"))
         form.help_text = _(u"Satın alma duyurusu başarılı!")
         form.tamam = fields.Button(_(u"Tamam"))
         self.form_out(form)
+
+    def butce_kalemleri_yapistir(self, satin_alma):
+        for bki in self.current.task_data.get('secilen_butce_planlari'):
+            satin_alma.ButceKalemleri(butce_id=bki)
+        satin_alma.blocking_save()
