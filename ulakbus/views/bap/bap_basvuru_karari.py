@@ -8,6 +8,7 @@ from zengine.forms import fields
 from zengine.views.crud import CrudView
 from zengine.lib.translation import gettext as _, gettext_lazy as __
 from datetime import datetime
+from ulakbus.models import BAPGundem
 
 
 class RevizyonGerekceForm(JsonForm):
@@ -99,3 +100,9 @@ Projenin güncel durumu: %s
                                       tarih=datetime.now())
         self.object.durum = 4
         self.object.save()
+        gundem = BAPGundem()
+        gundem.proje = self.object
+        gundem.gundem_tipi = 1
+        gundem.gundem_aciklama = _(u"Yeni proje başvurusu.")
+        gundem.save()
+
