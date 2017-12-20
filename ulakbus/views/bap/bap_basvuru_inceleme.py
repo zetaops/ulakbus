@@ -73,9 +73,6 @@ class BasvuruInceleme(CrudView):
             ('Proje Adı', self.object.ad),
             ('Proje Yürütücüsü', self.object.yurutucu.__unicode__()),
             ('Proje Süresi(Ay)', str(self.object.sure)),
-            ('Teklif Edilen Başlama Tarihi',
-             self.object.teklif_edilen_baslama_tarihi.strftime(
-                 DATE_DEFAULT_FORMAT) if self.object.teklif_edilen_baslama_tarihi else ''),
             ('Teklif Edilen Bütçe', str(self.object.teklif_edilen_butce)),
             ('Anahtar Kelimeler', self.object.anahtar_kelimeler),
             ('Konu ve Kapsam', self.object.konu_ve_kapsam),
