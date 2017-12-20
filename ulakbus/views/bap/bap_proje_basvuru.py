@@ -345,7 +345,7 @@ class ProjeBasvuru(CrudView):
         if self.current.task_data['cmd'] == 'error':
             self.current.output['msgbox'] = {
                 'type': 'error',
-                 "title": _(u"Giriş Hatası"),
+                 "title": _(u"Proje Bilgileri Hatalı"),
                  "msg": self.current.task_data['error_msg']
             }
             self.current.task_data['cmd'] = self.current.task_data['pre_cmd']
