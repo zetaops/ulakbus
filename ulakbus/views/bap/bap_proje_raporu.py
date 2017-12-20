@@ -15,7 +15,7 @@ from zengine.forms import JsonForm, fields
 from zengine.lib.translation import gettext as _
 from ulakbus.lib.common import get_file_url
 import json
-
+from pyoko.exceptions import ObjectDoesNotExist
 
 class RaporTurForm(JsonForm):
     """
@@ -56,6 +56,10 @@ class RevizyonMesaji(JsonForm):
 class BapProjeRaporu(CrudView):
     class Meta:
         model = "BAPRapor"
+
+    def __init__(self, current):
+        _ = current.task_data.pop('object_id', None)
+        CrudView.__init__(self, current=current)
 
     def rapor_turu_sec(self):
         """
