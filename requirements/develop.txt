@@ -32,3 +32,4 @@ futures
 
 git+https://github.com/zetaops/pyoko.git#egg=pyoko
 git+https://github.com/zetaops/zengine.git#egg=zengine
+SQLAlchemy
